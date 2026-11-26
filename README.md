@@ -20,7 +20,7 @@ Windows 安装包在本仓库的 Releases 页。
 
 - 安装包**没有代码签名**。Windows 可能提示“Windows 已保护你的电脑”，点“更多信息”再点“仍要运行”。介意的话，先核对 Release 说明里的 SHA-256：
   ```powershell
-  Get-FileHash .\Manifest_0.1.0_x64-setup.exe -Algorithm SHA256
+  Get-FileHash .\Manifest_0.1.1_x64-setup.exe -Algorithm SHA256
   ```
 - 装在当前用户名下，不需要管理员权限。
 - 需要 WebView2 运行时（Windows 11 自带；没有的话安装程序会联网下载）。

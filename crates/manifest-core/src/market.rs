@@ -739,7 +739,7 @@ pub fn at_bound(defs: &StaticData, e: &MarketEntry) -> (bool, bool) {
 /// 普通买入与期货采购共用托运限制，卖出和无效数量沿用原校验。
 fn check_reservation(world: &World, loc: LocId, good: GoodId, side: Side, qty: i64) -> Result<(), CommandError> {
     if qty > 0 && side == Side::Buy && crate::contract::market_reserved(world, loc, good) {
-        return Err(crate::error::Reason::new("market.reserved", "（待写）").rule());
+        return Err(crate::error::Reason::new("market.reserved", "本港正托人运这种货，暂时不卖").rule());
     }
     Ok(())
 }

@@ -208,6 +208,9 @@ fn candidates_for_size(world: &World, faction: FactionId, small: bool) -> Vec<(L
             if r.enabled && !route_allowed(defs, loc, *good, small) {
                 continue;
             }
+            if r.enabled && !source_available(world, loc, *good, small) {
+                continue;
+            }
             out.push((loc, *good, mul_div(e.price, 100, e.base_price.max(1)).max(1)));
         }
     }
@@ -542,6 +545,29 @@ pub fn route_allowed(defs: &crate::StaticData, to: LocId, good: GoodId, small: b
     };
     let min_cells = if r.reserve_market && small { r.small_min_cells } else { r.min_cells };
     !sold && nearest_source(defs, good, to).is_some_and(|(_, cells)| cells >= min_cells)
+}
+
+/// 这张单的货玩家眼下确实买得到（发单时动态判断，不进存档）：
+/// - 起运地不能被别的未结委托占着（那张单的交货港正是这里的起运地），这张单也不能占住别的未结同货委托的起运地——
+///   否则两张单互相卡死，谁都买不到货；
+/// - 小单是给新手跑的：起运地的这种货对玩家不能有商誉门槛。
+pub fn source_available(world: &World, to: LocId, good: GoodId, small: bool) -> bool {
+    let defs = &world.defs;
+    let Some((source, _)) = nearest_source(defs, good, to) else { return false };
+    if market_reserved(world, source, good) {
+        return false;
+    }
+    let r = &defs.rules.contracts.v2;
+    if r.reserve_market
+        && world.state.contracts.values().any(|c| {
+            c.good == good
+                && c.source_port == Some(to)
+                && matches!(c.status, ContractStatus::Open | ContractStatus::Accepted(_))
+        })
+    {
+        return false;
+    }
+    !(small && world.rank_gate(OwnerId::Player, source, good).is_some())
 }
 
 /// 是否有未结委托占住本港这种货；不新增状态，多张同货委托全部结清才解除。
