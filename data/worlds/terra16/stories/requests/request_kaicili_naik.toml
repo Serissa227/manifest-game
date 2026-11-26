@@ -1,0 +1,144 @@
+# 请托：排不进议事日的国书（request_kaicili_naik）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：凯奇利·奈克（kaicili_naik，生年不详，男）；特尔纳特苏丹巴布拉派往伊比利亚的使者；势力 ternate；cast：cast/historical_03_indian_ocean.toml。
+# 类型：说服某人（persuade）。三章：offer（报价）、persuade（秘书署的书记，三条路）、result（议事会的回话，收尾）；timeout 与 done / failed 为终点。
+# 报价：T（当面）。auto=false，玩家在里斯本“问请托”（ask:request_kaicili_naik）启动；offer 章不写 at，objectives 为“在港里找到他”。
+#       窗口 1584-01-15 至 1584-10-31；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：persuade 章 deadline_days=90，超时走 failed，好感 -3，来信一封，旗标 _late；result 章 deadline_days=120，超时同上。
+# 依据·史实背景：1584 年凯奇利·奈克在里斯本等候，国书递进王室秘书署与议事会；1583 年后腓力二世不在里斯本，议事会由红衣主教阿尔布雷希特大公以总督身份治理的衙门代理（待核）；
+#       到达里斯本的年月待核，正文只写“半年”。
+# 依据·原创：河边客栈的窄走廊、书记桌上压着的那一摞文书、译本里被改掉的“要求惩办”、蜡染的头巾布、议事会回话的折痕。
+# 秘密：凯奇利主线 7 的德雷克、英格兰船与给女王的信物一字不写（归主线）；先苏丹的死因只说“当年请先苏丹进堡赴宴的人，要受罚”，不写细节。
+# 读的旗标：c13_main_kaicili（offer 的 when，值为 false；由凯奇利主线第一章设置，尚未写入）。不读任何 c7_ 旗标。
+# 设的旗标：c13_request_kaicili_naik_accepted（offer 两条接法）、_declined（offer 回绝）、
+#       _scheduled（persuade 的三条路：检定成功、对着原文改译本、付誊清费）、_delayed（persuade 检定失败，result 读它换开头）、
+#       _honest_translation（persuade 对着原文改译本，result 读它换一句）、_late（persuade 或 result 超时）、
+#       _done（result 两条收尾）、_advised_home（result 劝他回东方）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬（每条收尾只给一次）：stay 现金 2600、名声 +5（最好的结局）；go_home 现金 1300（折中 50%）、不加名声；两条都给特尔纳特声望 +2；好感最多 +15（2+5+8）；回忆 mem-request_kaicili_naik-result 只在 stay；不发物品。
+# 依赖：港口 lisbon（ports_iberia.toml）；技能 lang_malay（skills.toml，门槛 60）；势力 ternate；人物 kaicili_naik。无 B10b 改名。
+#       人物日程（cast）只写到 1584 年末：offer 的 person 目标只在 1584 年内用得上；result 章改用 at=lisbon 的地点目标，不依赖日程，拖到 1585 年也走得通（10-25 波次检查时改）。
+# 回忆插画清单：
+#   mem-request_kaicili_naik-result「蜡染的头巾布」：里斯本河边客栈的窗下，一张折了四折、折痕压平的公文回话；桌上摊着一块蓝白相间的蜡染头巾布。
+
+[[tracks]]
+key = "request_kaicili_naik"
+name = "排不进议事日的国书"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kaicili_naik"]
+
+# 一、半年的等待：里斯本河边的客栈，他听见你说马来话，先站了起来。
+[[tracks.chapters]]
+key = "offer"
+title = "半年的等待"
+text = "里斯本河边的客栈，二楼的走廊窄，只容一个人侧身过。门开着，屋里的人听见脚步，先站了起来。他穿长衣，缠头巾，见你张口说了一句马来话，脸上的神色一下子松开了。“你会说马来话？”他问，“这城里我只能跟通事说话。他们译的我又不全信。”半年前，他把特尔纳特的国书递进了王室秘书署，之后就没了下文。他要两件事：说动秘书署的一个书记，把国书排进议事的日子；再找一个不添油加醋的通事。"
+speaker = "kaicili_naik"
+mood = "sad"
+objectives = [{ kind = "person", person = "kaicili_naik", text = "在港里找到他" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1584, 1, 15], to = [1584, 10, 31] }, { kind = "flag", flag = "c13_main_kaicili", value = false }]
+deadline = [1584, 10, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下，先去秘书署找那个书记。"
+next = "persuade"
+reply = "他把国书的抄本递给你，用马来话一句一句念，念到先苏丹的名字，声音低下去。“书记我见过两回，话少，收礼也少。”他说，“你去，别带通事。”"
+effects = [{ kind = "affinity", person = "kaicili_naik", value = 2 }, { kind = "flag", flag = "c13_request_kaicili_naik_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_letter"
+text = "接下，先问：国书上要的是什么？"
+next = "persuade"
+reply = "“公道。”他说，“当年请先苏丹进堡赴宴的人，要受罚。”他停了一下，“别的，都不要。”说这话时，他没有看你，看的是窗外的河。"
+effects = [{ kind = "affinity", person = "kaicili_naik", value = 2 }, { kind = "flag", flag = "c13_request_kaicili_naik_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宫里的事我插不上手。"
+next = "failed"
+reply = "他客客气气地送你到门口，问你的船是不是往东去。是的话，替他看看马六甲有什么消息。“不勉强。”他说，“这城里的人，个个都说自己的事最要紧。”"
+effects = [{ kind = "flag", flag = "c13_request_kaicili_naik_declined" }]
+
+# 二、秘书署的书记：国书压在一摞文书的最底下，译本的错处一眼就能看见。
+[[tracks.chapters]]
+key = "persuade"
+title = "秘书署的书记"
+text = "里贝拉宫的王室秘书署，书记桌上压着一摞文书，特尔纳特的国书压在最底下。旁边摆着葡萄牙文的译本，你瞟了一眼，就看见好几处译得跟原文不一样：“要求惩办”成了“恳请垂怜”。书记抬起头，手还按在那一摞上，没有让开的意思。他袖口沾着墨，右手食指上磨出了茧。"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "alive", person = "kaicili_naik", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kaicili_naik", value = -3 }, { kind = "flag", flag = "c13_request_kaicili_naik_late" }, { kind = "letter", person = "kaicili_naik", text = "国书还压在秘书署那一摞底下。我每天去问一次，书记每天都说下个月。你若再来里斯本，客栈的人认得我。——凯奇利·奈克" }] }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟书记讲：远方的国书压久了，传出去不好看。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "书记想了想，把国书从底下抽出来，放到明天那一摞的最上面。“只排这一回。”他说，眼睛却不看你。"
+news = "里斯本的王室秘书署里，有人看见书记把一份远方来的国书抽到了最上面。"
+effects = [{ kind = "affinity", person = "kaicili_naik", value = 3 }, { kind = "flag", flag = "c13_request_kaicili_naik_scheduled" }]
+fail = { next = "result", effects = [{ kind = "affinity", person = "kaicili_naik", value = -2 }, { kind = "flag", flag = "c13_request_kaicili_naik_delayed" }], news = "里斯本的王室秘书署里，书记把一份远方来的国书往下压了几份，说下个月再看。" }
+
+[[tracks.chapters.choices]]
+key = "fix_translation"
+text = "对着马来文原文，一句一句指出译本哪里改了。"
+next = "result"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_malay", ge = 60, hard = true }]
+hint = "马来文原文上的字，你一个也认不得。"
+reply = "你念到“要求惩办”，书记的脸红了。译本是他手下的通事做的，他把那几页抽出来，叫人重译，又把国书排进了下个星期的议事日。"
+news = "里斯本的酒馆里，有人说王室秘书署的书记让一个东方来的船长指出了译本的错，脸红到脖子根，当场叫人重译。"
+effects = [{ kind = "affinity", person = "kaicili_naik", value = 5 }, { kind = "flag", flag = "c13_request_kaicili_naik_scheduled" }, { kind = "flag", flag = "c13_request_kaicili_naik_honest_translation" }]
+
+[[tracks.chapters.choices]]
+key = "copy_fee"
+text = "付一笔“誊清费”，请书记把国书誊清了排上去。"
+next = "result"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "书记报的誊清费，你付不起。"
+reply = "书记收了钱，塞进抽屉，国书就到了明天那一摞。译本他没动，只说：“誊清了，就是我的字，字是对的。”"
+news = "里斯本的酒馆里，有人说王室秘书署的书记收了一笔誊清费，才肯把一份远方来的国书往前排。"
+effects = [{ kind = "cash", value = -500 }, { kind = "affinity", person = "kaicili_naik", value = 3 }, { kind = "flag", flag = "c13_request_kaicili_naik_scheduled" }]
+
+# 三、议事会的回话：一张客气得滴水不漏的公文，他读了两遍，折成四折。
+[[tracks.chapters]]
+key = "result"
+title = "议事会的回话"
+text = "议事会的回话是一张盖了印的公文，客气得滴水不漏：此事要禀告国王，请使者耐心等候。凯奇利·奈克在客栈窗下把回话读了两遍，又折成四折，折痕压得很平。窗外的河上有船在卸糖，糖箱压弯了跳板，吆喝声一阵一阵地传上来。他没有说话，只是把回话又展开，对着光看纸背上透出来的印。"
+speaker = "kaicili_naik"
+mood = "sad"
+at = "lisbon"
+objectives = [{ kind = "at", at = "lisbon", text = "回里斯本河边的客栈去" }]
+when = [{ kind = "alive", person = "kaicili_naik", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kaicili_naik", value = -3 }, { kind = "flag", flag = "c13_request_kaicili_naik_late" }, { kind = "letter", person = "kaicili_naik", text = "议事会的回话我自己听了。谢谢你那天替我开的口。——凯奇利·奈克" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_delayed"
+when = [{ kind = "flag", flag = "c13_request_kaicili_naik_delayed" }]
+text = "议事日推迟了一个月，他每天早上去宫门口站一会儿，站到卫兵换岗才回来。议事会的回话终于下来了，还是那句客气话：此事要禀告国王，请使者耐心等候。他把回话折成四折，折痕压得很平，没有说话。窗外的河上有船在卸糖。"
+
+[[tracks.chapters.variants]]
+key = "v2_honest"
+when = [{ kind = "flag", flag = "c13_request_kaicili_naik_honest_translation" }]
+text = "议事会的回话这一次是照新译本转给他的，每一句都对得上原件。凯奇利·奈克读到“请使者耐心等候”那一句，停下来，用马来话把它又说了一遍，说得很慢，每个字都要对上号。他念完，手指压着那一行，没有再念下去。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "陪他把回话一句一句译清楚，告诉他这就是“再等”。"
+next = "done"
+reply = "他点头，把回话折好放进怀里：“我知道。我只是要他们听见。”他送了你一块蜡染的头巾布，说是离岛那天母亲塞进他行李里的，他一直没舍得系。"
+news = "里斯本的客栈里，特尔纳特来的使者拿着议事会的回话，坐了一下午。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "kaicili_naik", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ternate", value = 2 }, { kind = "memory", memory = "mem-request_kaicili_naik-result", title = "蜡染的头巾布" }, { kind = "flag", flag = "c13_request_kaicili_naik_done" }]
+
+[[tracks.chapters.choices]]
+key = "go_home"
+text = "劝他别再等了，找条船回东方去。"
+next = "done"
+reply = "他想了很久：“我回去，先苏丹的事就没人在这里说了。”他数出一半的钱推给你，剩下的收回了袖子里，没有答应。"
+news = "里斯本的客栈里，特尔纳特来的使者听人劝他回东方去，想了很久，没有应。"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "kaicili_naik", value = 4 }, { kind = "reputation", faction = "ternate", value = 2 }, { kind = "flag", flag = "c13_request_kaicili_naik_done" }, { kind = "flag", flag = "c13_request_kaicili_naik_advised_home" }]

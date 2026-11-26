@@ -1,0 +1,204 @@
+# 请托：一间讲室（request_aisha）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：阿伊莎（aisha，1541-08-13 生，女），格拉纳达流亡学者之女，在得土安自家屋里教邻舍的女孩认字；cast 在 cast/classmates_fez.toml。
+# 类型：说服（persuade）。四章：offer（报价）、persuade（见长老）、result（钥匙）、result_partial（只借两天的钥匙）。终点 done / failed。
+#   结构说明：persuade 的检定失败分支转入 result_partial，由它自己的两个选项结账（现金 500）；不用 variant 改现金，因为 variant 只能改文字。
+# 报价：V 到访（auto=true）。offer 章 at=tetouan，family=c13_offer_tetouan、冷却 20 天；deadline 为窗口止日 1590-06-30，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1572-01-01 至 1590-06-30；persuade 进入后 60 天期限；result 与 result_partial 1572-01-01 至 1590-12-31。
+# 依据·史实背景：北非的宗教捐产（habous）由长老管理；得土安是格拉纳达流亡者重建的城。长老是叙事人物，不进 cast，正文不写名字。
+# 依据·原创：阿伊莎、她的讲室、非斯清真寺旁那间空屋、门边的借书名单、学生们写的字、长老的帘子。
+# 依赖：港口 tetouan（ports_north_africa.toml）；技能 calligraphy（skills.toml）；人物 aisha。B10b：无需改名。主线门禁：无（阿伊莎不是主线人物）。
+# C7：不写娜拉、塔里克；C7 的家中学堂写作“家里那间屋子挤不下了”，本请托要的是清真寺旁的公家讲室。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：bond aisha 至少 C（offer 的 variant，只改开场的一句问话）。
+# 设的旗标：c13_request_aisha_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_two_days（persuade 检定失败，只借两天；只设不读）、_late（超时，终局）、_done（终局）、_partial（终局）。
+# 秘密：她想有自己的讲席，堂堂正正被人叫一声先生。正文只在 result 章长老称她“先生”时写“她愣了一下”，不解释；见闻不写。
+# 口头禅：阿伊莎的“这本书可以借，下一位也在等。”原句在 C7 的 bond_aisha 已用，跨文件不重复，所以本轨道只在 result 章 hang_key 的回复里用一次改字的呼应（“书可以借，下一位也在等。”）。
+# 报酬：现金最多 900（折中 500）；好感最多 +13；名声 +1；回忆 mem-request_aisha-result（只给 result 章的两条最好的结局）。
+# 回忆插画 mem-request_aisha-result：门边挂着一张借书的名单，名单旁边是一把黄铜钥匙，名单背面新写着一行字，窗外是得土安的白墙和晒着的布。
+
+[[tracks]]
+key = "request_aisha"
+name = "一间讲室"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["aisha"]
+
+# 一、门边的名单：阿伊莎下到得土安，名单比她带来的书还长。
+[[tracks.chapters]]
+key = "offer"
+title = "门边的名单"
+text = "阿伊莎下到得土安的码头，手里拿着一张借书的名单，名单比她带来的书还长。“家里那间屋子挤不下了。”她说，“女孩们坐到门外去，念字的声音一路能传到巷口。”非斯清真寺旁有一间空屋，归一份捐产，管捐产的长老住在得土安，不肯借给一个女先生。她自己去了三回，长老都隔着帘子跟她说话。“你去，他至少得掀开帘子。”她把名单折成一条，塞进你手里。"
+speaker = "captain"
+mood = "tense"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "到得土安去" }]
+when = [
+  { kind = "date", from = [1572, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "aisha", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "aisha", level = "C" }]
+text = "阿伊莎下到得土安的码头，见你走过来，先问了一句：“你送来的那几本书，学生们翻烂了，还有吗？”不等你答，她把手里的名单递过来，名单比她带来的书还长。“家里那间屋子挤不下了，女孩们坐到门外去了。非斯清真寺旁有一间空屋，归一份捐产，管捐产的长老住在得土安，不肯借给一个女先生。我去了三回，他都隔着帘子跟我说话。你去，他至少得掀开帘子。”"
+
+[[tracks.chapters.choices]]
+key = "see_elder"
+text = "接下，替她去见长老。"
+next = "persuade"
+reply = "她从布袋里一张一张拿出学生们写的字，理齐了装进布袋，系口时拉得很紧。“长老要是问她教得怎样，就给他看这个。”她把布袋塞给你，又补了一句，“别给他看我写的。”"
+effects = [
+  { kind = "affinity", person = "aisha", value = 2 },
+  { kind = "flag", flag = "c13_request_aisha_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_room"
+text = "接下，先问：那间空屋多大？"
+next = "persuade"
+reply = "“能坐二十个。”她说，“我从门外量过，门锁着，里头两扇窗朝着清真寺的院子。”说完，她把一布袋学生们写的字塞给你：“他要是问我教得怎样，就给他看这个。”"
+effects = [
+  { kind = "affinity", person = "aisha", value = 2 },
+  { kind = "flag", flag = "c13_request_aisha_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "长老的事，我一个外人说不上话。"
+next = "failed"
+reply = "她把名单折起来，说那她就再借一间邻居的屋子。“书可以借，屋子也可以。”她的声音没有变，只是下楼时走得很快，鞋跟敲在石阶上，一级一级都很响。"
+effects = [{ kind = "flag", flag = "c13_request_aisha_declined" }]
+
+# 二、帘子后面：长老家的客厅。他在帘子后面说话，帘子后面传来翻纸的声音。
+[[tracks.chapters]]
+key = "persuade"
+title = "帘子后面"
+text = "长老家的客厅挂着一道帘子，他坐在帘子后面说话，声音不高，也不急。“捐产是给讲经用的。”他说，“讲经的得是先生，先生没有女的。”客厅里的茶凉了，侍从站在门边，没人出声。你站在帘子外头，看得见他的影子，看不见他的脸。说完这句，帘子后面传来翻纸的声音，他在看你递进去的那袋学生的字。"
+speaker = "captain"
+mood = "tense"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "到得土安去" }]
+when = [
+  { kind = "date", from = [1572, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aisha", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "aisha", value = -3 }, { kind = "flag", flag = "c13_request_aisha_late" }, { kind = "letter", person = "aisha", text = "长老的帘子还挂着。我又借了一间邻居的屋子，女孩们坐得下了。——阿伊莎" }] }
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他讲：捐产的契上写的是“教人读书”，没写先生是男是女。"
+next = "result"
+reply = "帘子后面沉默了很久。长老掀开帘子一角，露出半张脸，说契他要再看一遍。第二天一早，他派人送来一把黄铜钥匙，钥匙上缠着一条旧纸，纸上是他自己抄的那一行“教人读书”。"
+check = { attr = "eloquence", base = 20, per = 7 }
+news = "得土安的书铺里有人说，管捐产的长老又把契看了一遍，松了口，派人送去一把钥匙。"
+fail = { next = "result_partial", news = "得土安有人说，管捐产的长老把契又翻了一遍，往后那间空屋每周只肯借出两天。", effects = [{ kind = "flag", flag = "c13_request_aisha_two_days" }, { kind = "affinity", person = "aisha", value = -2 }] }
+effects = [{ kind = "affinity", person = "aisha", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "show_hand"
+text = "请他细看那些字，指给他看哪一笔是哪个女孩写的。"
+next = "result"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "那些字的好处你看得出，可说不出好在哪一笔。"
+reply = "你一张一张讲，哪一笔起得稳，哪一笔收得好。长老掀开帘子，拿起最上面那张，说这孩子的字比他孙子的好。他把钥匙交到了你手里。"
+news = "得土安的脚夫们都在说，管捐产的长老掀开了帘子，看了一袋女孩写的字，说有一张比他孙子的好。"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "pay_repair"
+text = "提出捐钱修那间空屋的屋顶，算作捐产的一份。"
+next = "result"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "修屋顶的料钱，你身上凑不齐。"
+reply = "长老收下了修屋顶的钱，数也没数，只说一句：屋顶修好了，那间屋子也算捐产的一份，用的人他不好拦。他说完把帘子放下了，像是怕你再看他的脸。"
+news = "得土安的小贩说，一个外乡人出钱修了非斯清真寺旁那间空屋的屋顶，长老便不再拦那位女先生。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "aisha", value = 3 },
+]
+
+# 三、钥匙：钥匙交到阿伊莎手里。长老称她“先生”，她愣了一下。
+[[tracks.chapters]]
+key = "result"
+title = "一把钥匙"
+text = "你把钥匙交到阿伊莎手里，她握了很久，没有立刻说话。钥匙是铜的，柄上磨得发亮，是长老的管事一路从捐产的库房里翻出来的。长老又派人捎来一句话，说讲室归她用，称呼是“阿伊莎先生”。她愣了一下。随即把那张借书的名单翻过来，在背面写上一行新的：讲室开门的日子。门外的女孩们还坐在台阶上，有人探头往里看，又缩了回去。"
+news = "得土安的码头上传开了：非斯清真寺旁那间空屋的钥匙，交到了一位女先生手里，讲室归她用。"
+speaker = "captain"
+mood = "cheerful"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "到得土安去" }]
+when = [
+  { kind = "date", from = [1572, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aisha", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "first_day"
+text = "问她：开门那天，第一课讲什么？"
+next = "done"
+reply = "“先认门边那张名单上的名字。”她说，每个借过书的女孩，都得先认得自己的名字写在哪里。说完她付了钱，又抽出一张字塞给你，说那是比长老孙子写得好的孩子写的。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "aisha", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_aisha_done" },
+  { kind = "memory", memory = "mem-request_aisha-result", title = "钥匙与名单" },
+]
+
+[[tracks.chapters.choices]]
+key = "hang_key"
+text = "提议把钥匙挂在门边，跟名单挂在一起。"
+next = "done"
+reply = "她照办了。钥匙挂在名单旁边，两样东西轻轻碰了一下。“书可以借，下一位也在等。”她说讲室也一样，然后付了钱，数得清清楚楚。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "aisha", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_aisha_done" },
+  { kind = "memory", memory = "mem-request_aisha-result", title = "钥匙与名单" },
+]
+
+# 三之二、两天的钥匙：长老只借两天。阿伊莎说两天也是讲室。
+[[tracks.chapters]]
+key = "result_partial"
+title = "只借两天"
+text = "长老只肯把钥匙借出两天，每周一次，每次用完都要送回他家。阿伊莎接过来，数了数日子，没有推辞：“两天也是讲室。”她把名单翻过来，在背面写上两个日子，一个在周初，一个在周中。门外的女孩们等着她点名，有人踮着脚，把自己的名字小声念了一遍，念完又红着脸笑。"
+news = "得土安的码头上传开了：女先生拿到了非斯那间空屋的钥匙，说两天也是讲室。"
+speaker = "captain"
+mood = "tender"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "到得土安去" }]
+when = [
+  { kind = "date", from = [1572, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aisha", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "partial_first"
+text = "问她：两天的课，先讲什么？"
+next = "done"
+reply = "“先讲名字。”她说，名字写在哪一页，哪一天就是哪一页的课。她付了钱，把一张学生的字塞给你：“两天也要让她们看见自己的字。”"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "aisha", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_aisha_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "partial_hang"
+text = "提议把两天的日子写在名单最上面，钥匙挂在门边。"
+next = "done"
+reply = "她照办了。两个日子用炭笔写得很大，门外的人一抬头就看得见。“门外头看得见，就不算偷偷借。”她说，说完才付了钱，一句话也没多讲。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "aisha", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_aisha_partial" },
+]

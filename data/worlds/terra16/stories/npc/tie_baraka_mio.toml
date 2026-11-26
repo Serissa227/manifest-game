@@ -1,0 +1,62 @@
+# 从安土来的信（tie_baraka_mio）——主角之间的关系轨道（NPC—NPC），C13a—c，Claude（opus）写。
+# 标签：无恋爱（恋爱归 C7；NPC 主角之间不写恋情）。只写见闻，不用 heart、relation、tie、bond 效果。
+# 人物：一条澪（mio，土佐一条家的姬君，女，用“她”）；巴拉卡·宾·萨利姆（baraka，基尔瓦金商之子，1579 年起在蒙巴萨，用“他”）。
+#       两人都是 NPC：全文是酒馆与码头的转述，不写 speaker。
+# 轨道：tie_baraka_mio（request，auto=true，start t1_letter_west）。两章，都是见闻（rumor），没有选项，窗口一到走 default。
+#       门槛：t1 的 when 写两人的 c12_voyage_* 都为 false 且 upbringing_graduated（两人都不是玩家时才跑）。
+#       与 npc_mio 的堺那一章（信交到澪手里）错开：这里是长崎，信上了船；与 npc_mio_embassy 不同句。
+# 依据（史实）：1581 年弥助在织田信长身边（安土）；长崎在耶稣会与葡萄牙船的手里，往西去的信多走葡萄牙船与耶稣会的邮包。
+#       正文不点名弥助，只写“信长公身边那个高个子家臣”（内陆的安土不进正文）；弥助不在长崎，不进 cast。
+#       1583 年的蒙巴萨还没有葡萄牙人的教堂（港口设施只有清真寺），所以 t2 写“岸上过路的神父”（葡萄牙船上下来的），不写教堂。
+# 原创：澪在长崎问船的半个月、码头边小神社的铜铃、挑夫与老称量手的转述、神父念了三遍、多称的那一小块金子、捎回的一句话。
+#       神社檐下的铃是澪自己挂的，与 npc_mio_embassy 里“那个高个子挂在她船上”、随信交给玩家的那只不是同一只。
+# 待核：无。带信的人一律不写死（可能是玩家：第三方玩家可能正在 npc_mio_embassy 接过这封信），信的内容与捎回的那句话都不写。
+# 秘密：一个也不碰——澪的父亲、林晚灯的社学、巴拉卡与弥助的往事（main_baraka c01 才揭开）；见闻里不写。
+# 共享旗标：读 c12_voyage_baraka、c12_voyage_mio（都为 false）、upbringing_graduated。写：无。
+# 等待的包：A9 可把门槛改为 protagonist_in 排除两人（可选）。整合方：cast/ties.toml 里巴拉卡—澪那条已指向本轨道（key 不变）；
+#       在 world.toml 的 tables.stories 登记本文件，并从 runtime_links.toml 的 pending_tracks 删去 tie_baraka_mio。
+#       upbringing_graduated 由引擎在结业时设（upbringing/graduation.rs），故事审计的 free_1557 剧本不结业，审计里 t1 会停在门槛上，属正常。
+# HIST 占位清单：无。
+# 回忆插画清单：无（本轨道不设回忆）。
+# 写法注意：窗口里没有变体；news 只说码头上看得见的事，不说信是谁的、写了什么。
+
+[[tracks]]
+key = "tie_baraka_mio"
+name = "从安土来的信"
+kind = "request"
+start = "t1_letter_west"
+auto = true
+cast = ["baraka", "mio"]
+
+# 第一章（1581 秋冬）：长崎码头，信上了船。门槛章，两人都不是玩家时才跑。
+[[tracks.chapters]]
+key = "t1_letter_west"
+title = "神社的铜铃"
+text = "长崎的人说，信长公身边那个高个子家臣有一封信要送去东非，托给土佐一条家的姬君。姬君揣着信在码头问了半个月西去的船。葡萄牙人只捎主人的信，不捎随从的，话说得客气，舱门关得也快。信到底上了船，托给了谁，说法不一：有人说是个外来的船长，有人说进了耶稣会的邮包。姬君走前在码头边小神社的檐下挂了一只铜铃。挑夫说：“那只铃，北风一吹就响。姬君说，响一回，信就还在路上。”"
+stage = "rumor"
+window = [[1581, 10, 1], [1581, 12, 31]]
+at = "nagasaki"
+cast = ["mio"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c12_voyage_baraka", value = false }, { kind = "flag", flag = "c12_voyage_mio", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "长崎的人说，一条家的姬君为一封去东非的信问了半个月的船，走前在码头边的小神社挂了一只铜铃。"
+
+[tracks.chapters.default]
+next = "t2_three_times"
+effects = []
+
+# 第二章（1583—1584）：蒙巴萨的金市，信到了。见闻，无选项；关系轨道收尾。
+[[tracks.chapters]]
+key = "t2_three_times"
+title = "念了三遍"
+text = "蒙巴萨金市的人说，巴拉卡收到一封日本来的葡文信，请岸上过路的神父念。念完一遍，他说再念；又念完，还说再念。三遍念完，他摇头，信上写的一字不提，只笑：“再念，神父该收我两份钱了。”随手打开黄铜小箱，称了一小块金子，比念信的价多一倍。又托往东的船捎回一句话，捎给信上那个名字，和一路替他把信带到的人。老称量手说：“巴拉卡那天没砍价。我在这市上三十年，头一回见。”"
+stage = "rumor"
+window = [[1583, 6, 1], [1584, 5, 31]]
+at = "mombasa"
+cast = ["baraka"]
+mood = "tender"
+news = "蒙巴萨的金商说，巴拉卡收到一封日本来的信，请神父念了三遍，那天一个价也没砍。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []

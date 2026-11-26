@@ -1,0 +1,145 @@
+# 请托：夜里的三十袋（request_bayano）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：巴亚诺（bayano，生年不详，占位 0-1-1，男），巴拿马林中马龙人（逃亡者）的首领；cast：cast/historical_05_americas.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（河口交货）、settle（结账）。settle 的变体按 short / herbs 旗标换文字，选项不变。
+# 报价：L（遗事）。1557 年以后巴亚诺本人不下山，由农布雷德迪奥斯码头上的扛夫出面；auto=true，speaker 省略（扛夫不进 cast）。
+#   offer 写 family=c13_offer_nombre_de_dios、冷却 20 天；窗口 1557-01-15 至 1558-06-30，玩家满 17 岁。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：deliver 章 deadline_days=90，超时走 failed，好感 -5，旗标 _late，来一封扛夫带的信；settle 章 deadline_days=120，超时 next=done 并设 _partial，不写见闻（货已交，不付不罚）。
+# 依据·史实背景：1550 年代巴拿马地峡东部的逃亡者聚落，袭击驮银的骡队，与附近的印第安人结盟；殖民当局后来讨平了这些聚落（被讨平的年份待核，正文只写传闻，不写讨伐）。
+# 依据·原创：扛夫（不起名）、城东的河口、独木舟、手腕上的烙疤、夜里的三十袋玉米、巡逻兵的灯笼、一撮金砂。寨子的位置、进林子的路、人数一律不写。
+# 报酬：金砂折 300（settle 的收下与结账两个选项）；好感：接下 +2，路上办成 +3 或 +5，最好的结局 +8、不收金砂 +12；
+#   无名声、无声望（逃亡者的势力不是现有势力 key，不写 reputation）；不付货款（清贫档，决定表写明一文不付）；唯一奖励物品：无。
+#   回忆 mem-request_bayano-settle。
+# 依赖：港口 nombre_de_dios（ports_americas.toml）；货物 maize（goods/03_overseas_raw.toml）；技能 herbal_medicine（skills.toml）；属性 arms。无需 B10b 改名。
+# 招牌话：巴亚诺的原句只在 offer 正文里由扛夫转述一次（全轨道一次）。
+# 读的旗标：无。不读 c7_ 旗标；不写 relation / tie / bond / heart / growth 效果。
+# 设的旗标：c13_request_bayano_accepted（offer 接下）、_declined（offer 回绝，终局）、_herbs（deliver 煎药，分支）、_short（deliver 引开巡逻失败，分支）、_late（deliver 超时，终局）、_done（settle 终局）、_partial（settle 不留下或超时，终局）。
+# 回忆插画清单：
+#   mem-request_bayano-settle「河口没灯的夜」：城东河口的夜里没有月亮，四条独木舟没入黑影，沙滩那头一盏灯笼晃着，却没有往这边来。
+
+[[tracks]]
+key = "request_bayano"
+name = "夜里的三十袋"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["bayano"]
+
+# 一、报价：农布雷德迪奥斯的仓库后头，扛夫凑过来要三十袋玉米。
+[[tracks.chapters]]
+key = "offer"
+title = "仓库后面的扛夫"
+text = "农布雷德迪奥斯的仓库后头，骡子刚卸完一车银锭，过秤的人吆喝着，没人留意我。有人拍了拍我的袖子。是个扛夫，手腕上一圈旧烙疤，借着搬银锭的工夫凑到跟前，压低了声音：“雨季来了。山里发热的人一天比一天多，孩子最多。”他要三十袋玉米，夜里送到城东的河口，交给等在那里的独木舟。我问给多少钱。他把肩上那锭银子往车板上一扔，像是把别人的话原样搬过来：“我们缺的不是这个。是盐、铁，和不会出卖人的嘴。”玉米不在这里买，卡塔赫纳的仓库有。“不许问路，不许跟着，也不许问我叫什么。”"
+objectives = [{ kind = "at", at = "nombre_de_dios", text = "在农布雷德迪奥斯的仓库区" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 1, 15], to = [1558, 6, 30] }]
+at = "nombre_de_dios"
+mood = "tense"
+deadline = [1558, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_nombre_de_dios"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，夜里送到河口。"
+next = "deliver"
+reply = "他点一下头，扛起银锭走了，好像从没停过脚。"
+effects = [{ kind = "affinity", person = "bayano", value = 2 }, { kind = "flag", flag = "c13_request_bayano_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "sick"
+text = "接下，先问山里的人病得多重。"
+next = "deliver"
+reply = "“孩子。”他只说了这两个字，过了一会儿又补一句，“发热，吃不下东西。”"
+effects = [{ kind = "affinity", person = "bayano", value = 2 }, { kind = "flag", flag = "c13_request_bayano_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这种夜里的买卖我不做。"
+next = "failed"
+reply = "他把银锭换到另一边肩上，再没看我一眼。"
+effects = [{ kind = "flag", flag = "c13_request_bayano_declined" }]
+
+# 二、河口的独木舟：没有月亮，四条独木舟来取货。转折是巡逻的兵的灯笼。每个选项都会把货交出去。
+[[tracks.chapters]]
+key = "deliver"
+title = "河口的独木舟"
+text = "没有月亮。城东的河口漂来四条独木舟，划桨的人一句话不说，一袋一袋往舟里递。我站在木桩边数，数到二十七，黑暗里伸过来一只手，接走了第二十八袋。那只手腕上也有一圈烙疤。数到三十，海滩那头的路上亮起一盏灯笼，晃晃悠悠，朝这边过来。是巡逻的兵。划桨的人停了手，抬头看我，等我拿主意。"
+speaker = "captain"
+mood = "tense"
+night = true
+at = "nombre_de_dios"
+objectives = [{ kind = "goods", good = "maize", qty = 30, at = "nombre_de_dios", text = "三十袋玉米" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "bayano", value = -5 }, { kind = "flag", flag = "c13_request_bayano_late" }, { kind = "letter", person = "bayano", text = "雨季过了一半，林子里自己想了办法。那天夜里河口没有灯，我们记下了你没来。" }] }
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "灭了船上的灯，卸完就走。"
+next = "settle"
+reply = "灯笼在沙丘那头晃了晃，拐了回去。独木舟一条接一条，钻进河口的黑影里。"
+effects = [{ kind = "affinity", person = "bayano", value = 3 }]
+news = "农布雷德迪奥斯城东的河口夜里有人卸玉米，巡逻的兵提着灯笼走到沙丘就拐了回去。"
+
+[[tracks.chapters.choices]]
+key = "herbs"
+text = "留下来，教他们用船上的草药煎退热的汤。"
+next = "settle"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "船上的草药你认不全，不敢替人煎汤。"
+reply = "灯笼还在沙丘那头晃着，我借着火绳的光教他们认叶子、数碗数。划桨的人第一次开口，问的是孩子一天喝几碗。"
+effects = [{ kind = "affinity", person = "bayano", value = 5 }, { kind = "flag", flag = "c13_request_bayano_herbs" }]
+news = "农布雷德迪奥斯城东的河口夜里有人卸玉米，船上一个陌生人教划桨的人煎草药汤。"
+
+[[tracks.chapters.choices]]
+key = "lure"
+text = "带两个水手往沙丘另一头跑，把巡逻引开。"
+next = "settle"
+check = { attr = "arms", base = 20, per = 7 }
+fail = { next = "settle", effects = [{ kind = "affinity", person = "bayano", value = -2 }, { kind = "flag", flag = "c13_request_bayano_short" }], news = "农布雷德迪奥斯城东的沙滩上，巡逻的兵把几个水手拦到天亮盘问，滩上落着几个空麻袋。" }
+reply = "我们往沙丘另一头跑，故意踩碎贝壳，弄出动静。"
+effects = [{ kind = "affinity", person = "bayano", value = 3 }]
+news = "农布雷德迪奥斯城东的河口夜里有人卸玉米，巡逻的兵追着几个水手往沙丘那头去了。"
+
+# 三、一撮金砂：半个月后，扛夫又来，塞给你一个打了结的小包，问下回还靠不靠这个港。
+[[tracks.chapters]]
+key = "settle"
+title = "一撮金砂"
+text = "半个月后，那个扛夫又借着搬货凑过来。他没看我，把一个打了结的棉布小包塞进我手心。包得很紧，一角缝着三道短线，针脚是新的。捏在手里只有一小撮，是金砂，颜色发暗，还沾着河边的泥。“林子里的人说，会记得你。”他说完停了停，又问，“下回还靠不靠这个港？”身后的脚夫正把银锭往船上码，他等我答，眼睛却看着那些箱子。"
+speaker = "captain"
+mood = "tender"
+at = "nombre_de_dios"
+objectives = [{ kind = "wait", days = 15 }]
+deadline_days = 120
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_bayano_partial" }] }
+news = "农布雷德迪奥斯的巡逻兵说，城东河口夜里有独木舟，追过去只见到沙上的桨印。"
+
+[[tracks.chapters.variants]]
+key = "v1_short"
+when = [{ kind = "flag", flag = "c13_request_bayano_short" }]
+text = "半个月后，那个扛夫又借着搬货凑过来。他没看我，把一个打了结的棉布小包塞进我手心。“那一夜兵丁把几个人拦到天亮，沙滩上落下几袋。”他说得很平，“林子里的人都知道了。”说完停了停，问，“下回还靠不靠这个港？”"
+
+[[tracks.chapters.variants]]
+key = "v2_herbs"
+when = [{ kind = "flag", flag = "c13_request_bayano_herbs" }]
+text = "半个月后，那个扛夫又借着搬货凑过来。他没看我，把一个打了结的棉布小包塞进我手心。“那几碗汤，孩子们喝下去了。”他说，“有两个烧退了。”说完停了停，问，“下回还靠不靠这个港？”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下金砂。"
+next = "done"
+reply = "他咧嘴笑了一下，转身去扛下一箱。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "bayano", value = 8 }, { kind = "memory", memory = "mem-request_bayano-settle", title = "河口没灯的夜" }, { kind = "flag", flag = "c13_request_bayano_done" }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不收，让他们拿去换盐。"
+next = "done"
+reply = "他把小包攥回去，攥得很紧，像是在心里记一笔账。"
+effects = [{ kind = "affinity", person = "bayano", value = 12 }, { kind = "memory", memory = "mem-request_bayano-settle", title = "河口没灯的夜" }, { kind = "flag", flag = "c13_request_bayano_done" }]
+
+[[tracks.chapters.choices]]
+key = "no_more"
+text = "说下回不靠了。"
+next = "done"
+reply = "“那就把账结清。”他没问为什么，把小包往怀里一揣，混进了码头的人堆。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "bayano", value = 4 }, { kind = "flag", flag = "c13_request_bayano_partial" }]

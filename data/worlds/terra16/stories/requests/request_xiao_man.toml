@@ -1,0 +1,179 @@
+# C13d 人物的请托：符打哪儿来（2026-10-24，Claude 写）。
+# 标签：escort（押运／带人，乘客是叙事里的，不发物品；三章：offer → arrive → home）；T 当面（月港天妃宫前的符摊，auto=false，玩家“问请托”或 ask:request_xiao_man 启动）。
+# 人物：小蛮（xiao_man，1541-07-01 生），月港天妃宫前卖符的渔家女；cast 日程 1557—1590 年全程在月港（yuegang，temple）。白道长（bai_daozhang，1495 生）日程 1553—1590 年全程在宁波（ningbo，tavern），只在 home 的回述里说一句话。
+# 窗口：报价 1569-01-01 至 1590-06-30（offer 的 deadline 为窗口止日，到期走 timeout，不写见闻）；arrive 起算 90 天内要到宁波，逾期走 timeout（来信 + 好感 -3 + late 旗标）；home 没有期限，可一直等。
+# 依据·史实：妈祖（天妃）信仰，福建沿海的天妃宫向出海人卖平安符；“挂符、喊妈祖”是船上的老规矩。
+# 依据·原创：每年腊月来送一回符的挑担人、捆符的旧麻绳、玄妙观扫地的老道士、“讲完那一遍”的做法；符的雕版出处不作史实结论，本请托也不回答它。
+# 秘密：小蛮的秘密（她卖的符自己也说不清打哪儿来，夜里越想越怕）正是本请托的 premise，已摆上台面，本文可以写。
+#       白道长的秘密（月港那批符的来路与他有些牵连）永远不碰：他只在 home 的回述里说那一句话，不看符、不认符、不说来路；见闻里不写秘密，也不暗示他知道什么。
+# 与 C7 的衔接：bond_xiao_man 的 b2（1555 年）里白道长说过符的刻版出处，本请托不重复、不推翻——只写她仍然答不上“谁在送、为什么送”，且夜里怕；不写许采、船头的字（pair_xu_cai_xiao_man）。
+#       bond xiao_man ≥ C（林晚灯）只在 offer 的 variant 里出一句（挤眼，“你划船还是我教的”）；其余不读 C7 旗标，不设任何 c7_ 旗标。
+# 读的旗标：c13_request_xiao_man_asked_fear（arrive 的 variant，只读自己设的）。
+# 设的旗标：c13_request_xiao_man_accepted / declined / asked_fear / met / late / done。
+# 依赖：无 B10b 改名（yuegang、ningbo 为现有港口）；无主线门禁（c13_main_<主角> 对所有主角一样）。
+# 实现说明：arrive 的 walk_in 检定失败走 fail 分支——小蛮踏进一只脚又退出来，老道士走到门口请她，仍去 home，好感 -2；fail 分支没有单独的回复栏，失败那一句就写在它的 news 里。
+#       know_bai 用白道长的好感门槛（requires）；incense 用现钱门槛，现钱先 requires 再扣。
+# 报酬（与简报一致）：现金最多 900；好感合计 +2 +3 +8 = +13；名声 +1；回忆 mem-request_xiao_man-home。正文不写数字。
+# 回忆插画清单：
+#   mem-request_xiao_man-home（船头上喊话的小蛮）：回月港的船头，渔家女攥着舷索站得笔直，对着满港的帆张大了嘴，远处天妃宫的屋脊露出来，身后是收起一半的帆。
+
+[[tracks]]
+key = "request_xiao_man"
+name = "符打哪儿来"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["xiao_man", "bai_daozhang"]
+
+# 接下：1569 年以后，月港天妃宫前。一叠捆着旧麻绳的符，一个不敢一个人进道观门的卖符人。
+[[tracks.chapters]]
+key = "offer"
+title = "卖了半辈子的符"
+text = "天妃宫前的石阶上，小蛮吆喝了一上午，收摊时嗓子还亮着。她把剩下的符一张张理齐，理到最底下一叠，手停了，叠子上捆的还是那根旧麻绳。“每年腊月有个挑担的来送一回，”她没抬头，“钱数好就走，姓什么我都没问过。”话到一半，她冲街口喊了一嗓子：“过午风要转，别往外海去！”半条街都回了头。再开口，声音已经小了：“卖了半辈子的符，打哪儿来的我答不上来。夜里收摊，越想越怕。听说宁波玄妙观的白道长什么符都认得，我想去问问。你的船，捎我一程？”她把麻绳绕在指头上，“那道观的门，我一个人不敢进。”"
+mood = "tense"
+speaker = "captain"
+when = [
+  { kind = "date", from = [1569, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "xiao_man", ge = 18 },
+  { kind = "alive", person = "xiao_man", value = true },
+]
+objectives = [{ kind = "person", person = "xiao_man", text = "在天妃宫前的符摊找到她" }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "bond"
+when = [{ kind = "bond", person = "xiao_man", level = "C" }]
+text = "天妃宫前的石阶上，小蛮吆喝了一上午，收摊时嗓子还亮着。看见我，她先挤了挤眼：“你划船还是我教的，这话我就不绕了。”她把剩下的符一张张理齐，理到最底下一叠，手停了，叠子上捆的还是那根旧麻绳。“每年腊月有个挑担的来送一回，钱数好就走，姓什么我都没问过。”话到一半，她冲街口喊了一嗓子：“过午风要转，别往外海去！”半条街都回了头。再开口，声音已经小了：“卖了半辈子的符，打哪儿来的我答不上来。夜里收摊，越想越怕。听说宁波玄妙观的白道长什么符都认得，我想去问问。你的船，捎我一程？那道观的门，我一个人不敢进。”"
+
+[[tracks.chapters.choices]]
+key = "take_her"
+text = "接下，载她去宁波。"
+next = "arrive"
+effects = [
+  { kind = "affinity", person = "xiao_man", value = 2 },
+  { kind = "flag", flag = "c13_request_xiao_man_accepted" },
+]
+reply = "她把一张符折好塞进自己的衣襟，又拍了一张在我手里：“路上用得着，用不着也挂上。”嗓门一下子回来了，说摊子托给隔壁卖香烛的，明早退潮前在码头等我。"
+
+[[tracks.chapters.choices]]
+key = "ask_fear"
+text = "接下，先问：到底怕什么？"
+next = "arrive"
+effects = [
+  { kind = "affinity", person = "xiao_man", value = 2 },
+  { kind = "flag", flag = "c13_request_xiao_man_accepted" },
+  { kind = "flag", flag = "c13_request_xiao_man_asked_fear" },
+]
+reply = "“怕符是假的。”她说得很快，快得像怕被自己听见，“怕我卖出去的平安是假的。”声音小下去，又硬生生拔高：“怕也得问。问清了，才敢接着卖。”她把麻绳往袖子里一塞，说明早退潮出港。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "道观的事，我不懂。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_xiao_man_declined" }]
+reply = "“那……”她把符匣的盖子扣上，扣得比平时轻，“等有船去宁波，我再说。”吆喝声比早上小了一半，隔壁卖香烛的问她今天怎么不喊了，她说嗓子有点哑。"
+
+# 到宁波：玄妙观的门槛。老道士在院里扫地，不催她，也不开口。
+[[tracks.chapters]]
+key = "arrive"
+title = "道观的门"
+text = "宁波玄妙观的山门开着，香烟一缕一缕往外飘。小蛮在门槛外站住，那叠符攥在手里，纸边都攥起了毛。一路上她嘴没停过，讲风，讲鱼，讲谁家的价钱，这会儿一个字也没了。她把脚尖挪到门槛的石头边上，又缩回去。院里有个老道士在扫地，抬头看了她一眼，又低下头，扫帚沙沙地响，一下一下，不催。“门是开着的，”她小声说，像在跟自己讲，“我就是……迈不过去。”"
+at = "ningbo"
+mood = "mystic"
+speaker = "captain"
+news = "宁波玄妙观的门口，一个月港来的渔家女攥着一叠符，在门槛外站了很久，扫地的老道士也没催她。"
+when = [{ kind = "alive", person = "xiao_man", value = true }]
+objectives = [{ kind = "at", at = "ningbo", text = "把小蛮送到宁波玄妙观" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "letter", person = "xiao_man", text = "宁波我没去成。符还在卖，夜里还是怕。——小蛮" },
+  { kind = "affinity", person = "xiao_man", value = -3 },
+  { kind = "flag", flag = "c13_request_xiao_man_late" },
+]
+
+[[tracks.chapters.variants]]
+key = "asked_fear"
+when = [{ kind = "flag", flag = "c13_request_xiao_man_asked_fear" }]
+text = "宁波玄妙观的山门开着，香烟一缕一缕往外飘。小蛮在门槛外站住，那叠符攥在手里，纸边都攥起了毛。怕什么，她在月港已经对我说过了，一路上嘴也没停，讲风，讲鱼，讲谁家的价钱。这会儿她一个字也没有。脚尖挪到门槛的石头边上，又缩回去。院里有个老道士在扫地，抬头看了她一眼，又低下头，扫帚沙沙地响，一下一下，不催。“话我都说出来了，”她小声说，“脚还是不听我的。”"
+
+[[tracks.chapters.choices]]
+key = "walk_in"
+text = "陪她一起跨进门槛。"
+next = "home"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [
+  { kind = "affinity", person = "xiao_man", value = 3 },
+  { kind = "flag", flag = "c13_request_xiao_man_met" },
+]
+fail = { next = "home", effects = [{ kind = "affinity", person = "xiao_man", value = -2 }, { kind = "flag", flag = "c13_request_xiao_man_met" }], news = "宁波玄妙观门口，月港来的渔家女跨进去一只脚又退了出来，最后是扫地的老道士放下扫帚，走到门口请她进去。" }
+reply = "我先迈进去，回头伸手。她攥住我的袖子，闭着眼迈了一步，睁开眼时已经站在院子里。老道士放下扫帚，请她把符拿出来，一张一张摊在石桌上。"
+
+[[tracks.chapters.choices]]
+key = "know_bai"
+text = "先进去跟白道长打招呼，请他出来迎一迎。"
+next = "home"
+requires = [{ kind = "affinity", person = "bai_daozhang", ge = 20 }]
+hint = "这位老道士你不认得，贸然进去他只当你是来求符的。"
+effects = [
+  { kind = "affinity", person = "xiao_man", value = 3 },
+  { kind = "flag", flag = "c13_request_xiao_man_met" },
+]
+reply = "扫地的正是白道长，他认得我。我在院里低声说了几句，他把扫帚靠在墙根，自己走到门口，冲小蛮作了个揖，一句话没说。小蛮慌忙还礼，还得太深，头巾差点滑下来，等她直起腰，脚已经在门里面了。"
+
+[[tracks.chapters.choices]]
+key = "incense"
+text = "替她买一炷香，先在门口拜一拜。"
+next = "home"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "门口卖香的伸着手，你摸了摸钱袋，连一炷香的钱也凑不齐。"
+effects = [
+  { kind = "cash", value = -100 },
+  { kind = "affinity", person = "xiao_man", value = 2 },
+  { kind = "flag", flag = "c13_request_xiao_man_met" },
+]
+reply = "香点上了，青烟直直往上走。卖了半辈子的符，小蛮头一回站在别人的香炉前，拜了三拜。拜完她把香插进炉里，掸了掸袖口的灰，自己抬脚进了门。那叠符还攥着，纸边攥得松了些。"
+
+# 回月港：船头。白道长只说了一句话，她从头讲了一遍。
+[[tracks.chapters]]
+key = "home"
+title = "从头讲一遍"
+text = "回月港的路上，小蛮一直不说话，靠着舷墙看水。白道长没告诉她符打哪儿来，只让她从头讲一遍：头一回卖符是几岁，谁买过，后来那些船回没回来。她讲了小半个时辰，讲到有一条船再没回港，声音低得只剩气。老道士听完，只说了一句：“说清来由，比多烧一张符有用。”船进月港，天妃宫的屋脊露出来，小蛮忽然站到船头，对着满港的帆大声喊：“符挂上，舵还得自己掌！”喊完回头看我，眼睛是亮的：“讲完那一遍，我就不怕了。”"
+at = "yuegang"
+mood = "tender"
+speaker = "captain"
+news = "月港天妃宫前的符摊又开张了，卖符的渔家女先问人家去哪儿、几时回，然后才给符。"
+when = [{ kind = "alive", person = "xiao_man", value = true }]
+objectives = [{ kind = "at", at = "yuegang", text = "把小蛮送回月港" }]
+
+[[tracks.chapters.choices]]
+key = "ask_sell"
+text = "问她：往后还卖符吗？"
+next = "done"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "xiao_man", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xiao_man_done" },
+  { kind = "memory", memory = "mem-request_xiao_man-home", title = "船头上喊话的小蛮" },
+]
+reply = "“卖。”她答得没有一点犹豫，“只是往后买符的人，要先告诉我去哪儿、几时回。问清了，我再给符。”船靠了岸，她付了船钱，又把一张新符塞进我手里：“这张是问过你去哪儿以后才给的，别人的不算。”"
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "不问，让她在船头站着。"
+next = "done"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "xiao_man", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xiao_man_done" },
+  { kind = "memory", memory = "mem-request_xiao_man-home", title = "船头上喊话的小蛮" },
+]
+reply = "我没出声，她就那样站着，站到船靠了岸，跳下去，冲天妃宫的方向又吆喝了一嗓子，半条街都听见了。她付了船钱，数得很慢，每一枚都在掌心里翻了个面。码头上头一个来买符的船客，她没急着递，先问了一句：“去哪儿？几时回？”"

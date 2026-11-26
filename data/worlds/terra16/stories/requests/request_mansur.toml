@@ -1,0 +1,161 @@
+# 请托：最后一栏写的是饮水（request_mansur）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：曼苏尔（mansur，1534-11-15 生，男），吉达的朝圣船船东；势力 ottoman；cast：cast/story_indian_ocean.toml。
+# 类型：押运／带人（escort）。报价：T 当面，报价港 jeddah；auto=false，玩家“问请托”（ask:request_mansur）启动。
+#       窗口 1566-01-01 至 1590-06-30；主角 17 岁以后。offer 写 deadline=1590-06-30，timeout 直接 failed，不写见闻。
+# 章节（4 章；简报写的是 3 章，多出的一章见下）：
+#   offer（报价，无 at）→ pickup（马萨瓦，接人）→ 分岔：
+#   arrive_full（吉达，备足了水：show 给表，plain 只说人齐）；arrive_short（吉达，没备足水：plain，honest 照实说）。
+#   终点 done / partial / failed。
+# 为什么多一章：pickup 的 more_water 通过时设 c13_request_mansur_water；引擎不许在同一轨道上 requires 另一条路径设的旗标，
+#   所以 show 不写门禁，改用 next 分岔到 arrive_full / arrive_short，各自两个选项。
+# 与简报的出入：简报的 more_water 检定失败扣现金 100；本文件按“失败与超时不罚钱”改为：失败只是水没买够，
+#   好感 −2，人数分到 arrive_short（只载四十一个，与 leave_two 同一个结局）。more_water 另写 requires 现金 ≥ 100（花钱的选项）。
+# 依据·史实背景：红海与印度洋的朝圣航运，朝圣季的船位，朝圣者在港口等船（只作背景，正文不写通行证与卡塔兹）。
+# 依据·原创：曼苏尔、舱位表与最后一栏的“饮水”、马萨瓦码头的老人与包袱、吉达的跳板。
+# 秘密：cast 没写秘密。本请托的旧事（他头一回带船那年多卖了舱位、水不够、死了三个人）一律不写；
+#   最后一栏只写“饮水”，不解释为什么。C7 卡里姆×曼苏尔（1555—58、1565）：本轨道从 1566 年起，不写卡里姆。
+# 读的旗标：无（不读 c7_ 旗标）。
+# 设的旗标：c13_request_mansur_accepted（offer 两条接法）、_extra（offer 问了人数，pickup 变体读它）、_declined（offer 回绝）、
+#   _water（pickup 备足水）、_done（arrive_full 给表）、_partial（两章的只说人齐或照实说）、_late（超时）。
+#   终局旗标各路径只设一面：done、partial、declined、late。
+# 不用 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 报酬：现金最多 1250（plain 与 honest 折中 600；more_water 买水花 100，波次核查时补上）；好感最多 +13（offer +2、pickup +3、arrive_full show +8）；名声 +2；
+#   回忆 mem-request_mansur-arrive 只在 arrive_full show 给一次。
+# 检定：pickup 的 more_water，stewardship 一般 20/7。
+# 依赖：港口 massawa（ports_east_africa.toml）、jeddah（ports_red_sea_gulf.toml）；人物 mansur；无 B10b 改名；无主线门禁（gate_main 为空）。
+# 回忆插画清单：
+#   mem-request_mansur-arrive「最后一栏写满的舱位表」：船舱的小桌上摊着舱位表，最后一栏一格一格写着每天的桶数；一只手把那张纸折起来，放进怀里。
+
+[[tracks]]
+key = "request_mansur"
+name = "最后一栏写的是饮水"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["mansur"]
+
+# 一、报价：港里找到他，他把舱位表摊开，最后一栏写的是饮水。
+[[tracks.chapters]]
+key = "offer"
+title = "舱位表的最后一栏"
+text = "曼苏尔把舱位表摊在港务房的木桌上。一栏一栏是人名、行李、伙食，最后一栏写的是饮水，每人每天几瓢，一格不空。他的船满了，一个位子也不剩。“要搭船，先报人数，再报带了多少水。货的事最后说，要是还有地方的话。”他用笔尖点着最后一栏，“马萨瓦困着一群老人，还有病人，没有船肯载。你去接。多载一包货能多赚多少，我算得清。你别多载。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "mansur", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去马萨瓦接他们。"
+next = "pickup"
+reply = "他把舱位表的最后一栏抄了一份，递给你：“人数你自己数，水照这个备。”"
+effects = [{ kind = "affinity", person = "mansur", value = 2 }, { kind = "flag", flag = "c13_request_mansur_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_count"
+text = "先问他：船上到底有多少人？"
+next = "pickup"
+reply = "“四十一个。”他想了想，“也可能多一两个。多的，你也载。水按四十一个备，多的你自己添。”"
+effects = [{ kind = "affinity", person = "mansur", value = 2 }, { kind = "flag", flag = "c13_request_mansur_accepted" }, { kind = "flag", flag = "c13_request_mansur_extra" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "朝圣季的船位，我另有安排。"
+next = "failed"
+reply = "他点点头，在舱位表下面又加了一行，写的是马萨瓦，后面一格还没填。"
+effects = [{ kind = "flag", flag = "c13_request_mansur_declined" }]
+
+# 二、接人：马萨瓦的码头，比他说的多两个人，船上的水只备了四十一个人的。
+[[tracks.chapters]]
+key = "pickup"
+title = "多出来的两个"
+text = "马萨瓦的码头上，朝圣者坐在自己的包袱上，有的已经等了一个月。老人裹着毯子，年轻些的替病人打扇。你挨个数了一遍，比舱位表上的数多两个。一个年轻人把自己的毯子让给了老人，自己裹着一条破口袋，坐在风口上。一个抱着水罐的妇人在你身边停下，问船是不是去吉达。你船上的水，只备了四十一个人的。"
+speaker = "captain"
+mood = "tense"
+at = "massawa"
+when = [{ kind = "alive", person = "mansur", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "letter", person = "mansur", text = "马萨瓦那些人，有一半等到了下一季的船。另一半，我没问到。" }, { kind = "affinity", person = "mansur", value = -5 }, { kind = "flag", flag = "c13_request_mansur_late" }] }
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_mansur_extra" }]
+text = "马萨瓦的码头上，朝圣者坐在自己的包袱上，有的已经等了一个月。你想起曼苏尔那句“也可能多一两个”，就照多的数。数下来，比他说的多两个。一个年轻人把自己的毯子让给了老人，自己裹着一条破口袋，坐在风口上。一个抱着水罐的妇人在你身边停下，问船是不是去吉达。你船上的水，只备了四十一个人的，多出来的两个，水得在这里补。"
+
+[[tracks.chapters.choices]]
+key = "more_water"
+text = "在马萨瓦再买水，按人头备足。"
+next = "arrive_full"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "钱袋太薄，水商不肯赊给你。"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "水商张口就是两倍的价。你同他讲了一下午，桶一只只滚上船，船舱里的水声响了整夜。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "mansur", value = 3 }, { kind = "flag", flag = "c13_request_mansur_water" }]
+news = "马萨瓦码头上，外乡船的船东同水商讲了一下午的价，把等了一个月的朝圣者按人头备足了水。"
+fail = { next = "arrive_short", effects = [{ kind = "affinity", person = "mansur", value = -2 }], news = "马萨瓦码头上，水商抬价抬到两倍，外乡船的船东没讲下来，只带走了四十一个朝圣者。" }
+
+[[tracks.chapters.choices]]
+key = "leave_two"
+text = "只载四十一个，多的两个等下一条船。"
+next = "arrive_short"
+reply = "那两个人没说话，坐回了自己的包袱上。"
+effects = [{ kind = "affinity", person = "mansur", value = -2 }]
+news = "马萨瓦码头上，外乡船只载走四十一个朝圣者，另外两人没吭声，留在了码头上。"
+
+# 三、备足了水：四十三个人，水也够，船到吉达。
+[[tracks.chapters]]
+key = "arrive_full"
+title = "先看最后一栏"
+text = "船到吉达，朝圣者一个一个下跳板。有个老人腿软了，被人扶着，在码头上站了半天才挪开步子。曼苏尔在岸边数人，数完了，朝你伸出手要舱位表。他不看人数，手指直接落在最后一栏上，一格一格往下移。“水是按人头备的？”他问，移到最后一天才停。跳板下面的水是绿的，礁石一块挨一块。有人回头看船舷上的水桶，一只一只，都是满的。"
+speaker = "captain"
+mood = "tender"
+at = "jeddah"
+when = [{ kind = "alive", person = "mansur", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "mansur", text = "你的船没到吉达。那些人我托别人去接了。" }, { kind = "affinity", person = "mansur", value = -5 }, { kind = "flag", flag = "c13_request_mansur_late" }] }
+
+[[tracks.chapters.choices]]
+key = "show"
+text = "把舱位表给他看，最后一栏每天的饮水，一天不少。"
+next = "done"
+reply = "他看了很久，把那张表折起来放进自己怀里，说这张他留着。船钱一次付清，又说下一季他的船要是满了，还找你。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "mansur", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_mansur_done" }, { kind = "memory", memory = "mem-request_mansur-arrive", title = "最后一栏写满的舱位表" }]
+news = "吉达码头上，一条船载来四十多个老朝圣者，朝圣船的船东先看的是船上的饮水账。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "说人都到了，水也够。"
+next = "done"
+reply = "他又数了一遍，四十三个，手指还停在最后一栏上，没有往前翻。他收回手，只付了一半的船钱，转身去码头另一头，找下一季去马萨瓦的船。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "mansur", value = 2 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mansur_partial" }]
+news = "吉达码头上，一条外乡船靠岸，船东数完人头就没再翻账，只付了一半的船钱。"
+
+# 四、没备足水：只载了四十一个，水也只按四十一个人的备。船到吉达，他问另外两个。
+[[tracks.chapters]]
+key = "arrive_short"
+title = "另外两个人呢"
+text = "船到吉达，朝圣者一个一个下跳板。一个裹着头巾的妇人踩空了一步，身后的人伸手托了她一把。曼苏尔在岸边数人，数到四十一，停住，朝你伸出手要舱位表。他翻到最后一栏，眼睛顺着每天的格子往下看，看得很慢。船舷上的水桶数得清，有个年轻人数了一遍，没说什么。“另外两个人呢？”他问，没有抬头。跳板还搭在船舷上，最后一个朝圣者在上面停了停，才慢慢往下走。"
+speaker = "captain"
+mood = "tense"
+at = "jeddah"
+when = [{ kind = "alive", person = "mansur", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "mansur", text = "你的船没到吉达。船上那些人，我另托了别人去接，舱位表我又抄了一份。" }, { kind = "affinity", person = "mansur", value = -5 }, { kind = "flag", flag = "c13_request_mansur_late" }] }
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "说船上的人都到了，水也够。"
+next = "done"
+reply = "他没再问，把舱位表合上，像是信了，又像是懒得再算。付了一半的船钱，转身去码头另一头，找下一季去马萨瓦的船。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "mansur", value = 2 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mansur_partial" }]
+news = "吉达码头上，外乡船的船东没多看一眼，付了一半的船钱，又去打听下一季去马萨瓦的船。"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实说：另两个留在马萨瓦，水只按四十一个备的。"
+next = "done"
+reply = "你把两个人留在马萨瓦、水只按四十一个备的，照实说了。他听完，把表翻回第一页，指着人名那一栏，一个一个念给你听，念到第四十一个停住。“下一季过马萨瓦，替我问一声那两个人。”"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "mansur", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mansur_partial" }]
+news = "吉达码头上，外乡船的船东把马萨瓦留下的两个朝圣者的事，一句句说给了码头上的人听。"

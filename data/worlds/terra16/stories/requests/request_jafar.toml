@@ -1,0 +1,144 @@
+# C13d 人物的请托：哪几段是亲眼见的（request_jafar）。中文，Claude 写。
+# 人物：贾法尔 jafar（1488-08-27 生，男；霍尔木兹的盲眼说书人，身份档 0 平民；说他小时候见过伊本·马吉德）。
+# 类型：去某处（gs）；4 章 offer → arrive → report，或 arrive 的 listen 检定失败时走 report_muddled，终点 done / failed。
+#   结构说明：原先 report 的 tell_both 靠旗标 _two 门禁，审计机器人会报“准备后条件仍不满足”；改为 listen 失败直接走 report_muddled（没有 tell_both），report 里不再有旗标门禁。
+# 报价：当面（T）。人物按日程在霍尔木兹（hormuz_port，说书场），auto=false，玩家“问请托”（ask:request_jafar）启动。
+# 窗口：报价 1557-06-01 至 1590-06-30（offer 的 deadline 即窗口止日，到期走 failed，不写见闻）；去尤尔法 90 天（arrive 的 deadline_days，超时走 failed 并寄一封信）；回来说的那一章不设期限，可以一直等。普通章不写 window，窗口以 when 的日期条件表示。
+# 依据·史实：伊本·马吉德（约 1432—约 1500）的著作与传说；霍尔木兹与尤尔法（今哈伊马角一带）的航海传统；牵星板与老人星只作为旧器物与星名出现。正文用传闻口吻，出处不写进正文。
+# 依据·原创：说书场的石台与铜碗、手杖敲地、“亲眼见的”那几段要放慢声音、修船的孙子与老妇人、两处对不上的说法、“一个字也别替我改”。
+# 读的旗标：c13_main_najma（offer 门禁，纳吉玛主线写伊本·马吉德家的真相，为 false 才开放）。不读 c7_*：贾法尔没有 C7 线。
+# 设的旗标：c13_request_jafar_accepted（offer 接下）/ declined（回绝，终局 failed）/ two（arrive 把两处问清楚；现在只设不读）/ late（arrive 超时，终局 failed）/ done（report 照实或不下结论，终局 done）/ partial（report 遮过，终局 done）。
+# 依赖：B10b 改名 hormuz→hormuz_port（当面模式）；尤尔法港 julfar；技能 lang_arabic（skills.toml）；纳吉玛主线设 c13_main_najma。
+# 避开 C7：无 C7 线；不写恋爱、不写心动，效果里不用 relation / tie / bond / heart。cast 没写秘密，请托只让他“不承认添过故事”，不揭开。
+# 回忆插画：mem-request_jafar-report，画面：说书场散了，石台上只剩铜碗与手杖，碗底多了一枚新钱。
+
+[[tracks]]
+key = "request_jafar"
+name = "哪几段是亲眼见的"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["jafar"]
+
+# 一、放慢声音的那几段：在霍尔木兹找到他，他把一件事托给你。
+[[tracks.chapters]]
+key = "offer"
+title = "放慢声音的那几段"
+text = "霍尔木兹的说书场，就是港口边一块铺着旧毯子的石台。你挤进人堆坐下，贾法尔正讲伊本·马吉德。他两只眼睛蒙着白翳，手杖在地上敲一下，等满屋子的人静下来，才往下讲。讲到小时候亲眼见过的那几段，他把声音放得更慢。散场的时候，一个年轻领航员挤到石台前，问他：“哪几段是您亲眼见的？”贾法尔没有答。他摸到你的袖子，把你拉到跟前：“坐，坐近些。我看不见你，可闻得出来——你的鞋底还带着海上的盐。”然后他说：“去尤尔法，找一个老领航员的后人，把那几段对一对。”"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "flag", flag = "c13_main_najma", value = false }]
+objectives = [{ kind = "person", person = "jafar", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去尤尔法。"
+next = "arrive"
+reply = "他把那几段从头讲给你听。讲得很慢，每个地名都停一停，讲完才说：“一个字也别替我改。”他又敲了一下地，说那家人讲的话，你听了回来照原样说给他。"
+effects = [{ kind = "affinity", person = "jafar", value = 2 }, { kind = "flag", flag = "c13_request_jafar_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问他：为什么不自己说，是哪几段？"
+next = "arrive"
+reply = "他笑了，白翳下面的眼睛动了一下。“老了，记性跟故事搅在一起了。你去替我分开。”说完他又讲了一遍那几段，这一回比刚才还慢。"
+effects = [{ kind = "affinity", person = "jafar", value = 2 }, { kind = "flag", flag = "c13_request_jafar_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "老人的故事，你不去对。"
+next = "failed"
+reply = "他点点头，没有恼，也没有劝。他说那他就接着讲，讲到有人去对为止。手杖又敲了一下地，围在石台边的人重新坐下。"
+effects = [{ kind = "flag", flag = "c13_request_jafar_declined" }]
+
+# 二、是哪颗星：尤尔法的老妇人讲的跟他讲的对不上两处，你要把它们问清楚。
+[[tracks.chapters]]
+key = "arrive"
+title = "是哪颗星"
+text = "尤尔法的码头边，有人在修船，锤子一下一下敲在舷板上。你打听伊本·马吉德的老领航员，修船的年轻人说，祖父早就不在了，可他母亲记得祖父讲过的事。他朝屋里喊了一声。老妇人走出来，手里托着一块刻满刻线的木板，是祖父量星用的牵星板。她坐下来，把那一夜从头讲起。讲到一半，你发觉她讲的跟贾法尔讲的对不上，有两处。"
+speaker = "captain"
+mood = "mystic"
+at = "julfar"
+when = [{ kind = "alive", person = "jafar", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "jafar", value = -3 }, { kind = "flag", flag = "c13_request_jafar_late" }, { kind = "letter", person = "jafar", text = "（徒弟代笔）你没去尤尔法。师父还在讲，那几段讲得更慢了。" }] }
+news = "尤尔法的码头边，一个老妇人跟外乡船长讲了一下午她祖父说过的伊本·马吉德。"
+
+[[tracks.chapters.choices]]
+key = "arabic"
+text = "用阿拉伯话，跟她把那两处一句一句对清楚。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "她说得太快，你的阿拉伯话跟不上那两处的分别。"
+reply = "她说年份她不敢说准，年头太久，祖父自己也记不清。可星她记得，祖父说过好几回，是老人星，不是贾法尔讲的那一颗。你记下了，连她犹豫的地方也一并记上。"
+effects = [{ kind = "affinity", person = "jafar", value = 3 }, { kind = "flag", flag = "c13_request_jafar_two" }]
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "不打断，让她从头讲一遍。"
+next = "report"
+check = { attr = "eloquence", base = 35, per = 6 }
+fail = { next = "report_muddled", effects = [{ kind = "affinity", person = "jafar", value = -2 }] }
+reply = "她讲了又讲，中间喝了两回水，嗓子哑了还接着说，一直说到天色暗下来。她说的话你都记进了本子，乱处也照原样记着，回头你得自己一句一句理。"
+effects = [{ kind = "affinity", person = "jafar", value = 3 }, { kind = "flag", flag = "c13_request_jafar_two" }]
+
+# 三、你要我怎么讲：回去把两处说给他听，他决定怎么讲。
+[[tracks.chapters]]
+key = "report"
+title = "你要我怎么讲"
+text = "说书场散了，石台边的毯子还没收。贾法尔一个人坐在那里，手杖横在膝上。你把尤尔法的事照头到尾讲给他听：修船的孙子，牵星板，老妇人说的那一夜。你说得不快，有几处停下来想。他一直听着，不插话，手指在杖头那道旧裂纹上来回摸。讲到那两处对不上的地方，他的手指停住了，却没有问是哪两处。远处有人卸桶，一声一声敲在石头上。他只问：“你要我怎么讲。”"
+speaker = "captain"
+mood = "tender"
+at = "hormuz_port"
+when = [{ kind = "alive", person = "jafar", value = true }]
+objectives = [{ kind = "person", person = "jafar", text = "在霍尔木兹找到他" }]
+news = "霍尔木兹的说书场散了，盲眼说书人跟一个外乡船长在石台边坐了很久，谁也没去收他的铜碗。"
+
+[[tracks.chapters.choices]]
+key = "tell_both"
+text = "照实说那两处，让他自己决定以后怎么讲。"
+next = "done"
+reply = "他听完，很久没说话。第二天晚上他讲到那一夜，声音放得比往常还慢，讲的是老人星。讲完他说：“这一段，照尤尔法那家人的说法讲。”付钱的时候，他的手有点抖。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "jafar", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_jafar-report", title = "讲得更慢的那一夜" }, { kind = "flag", flag = "c13_request_jafar_done" }]
+
+[[tracks.chapters.choices]]
+key = "cover"
+text = "说：两处都差不多，您讲的对。"
+next = "done"
+reply = "他笑了，说你是个好心人，可好心人不该去对故事。他付了钱，把铜碗往你这边推了推，说：“下回来，还坐前排。”那一段照旧讲，讲得跟从前一样慢。"
+effects = [{ kind = "cash", value = 250 }, { kind = "affinity", person = "jafar", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jafar_partial" }]
+
+[[tracks.chapters.choices]]
+key = "no_verdict"
+text = "说：她记得的和您记得的，都写在这儿了，我不下结论。"
+next = "done"
+reply = "他让你把两段都念给他听，念完他说，那就两段都讲，让听的人自己挑。他把钱数给你，一枚一枚，数得很慢。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "jafar", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jafar_done" }]
+
+# 三之二、理不清的那一夜：listen 检定失败走到这里。本子上的字记乱了，tell_both 不在这一章，只剩“遮过”与“不下结论”两个选项。
+[[tracks.chapters]]
+key = "report_muddled"
+title = "理不清的那一夜"
+text = "说书场散了，石台边的毯子还没收。贾法尔一个人坐在那里，手杖横在膝上。你翻开本子，从修船的孙子讲起，讲牵星板，讲老妇人说的那一夜。她讲得乱，你记得也乱，讲到半路自己先卡住了，翻回去找哪一页。他等着，不插话，手指在杖头那道旧裂纹上来回摸。远处有人卸桶，一声一声敲在石头上。你合上本子，他才开口：“记乱了也是记，你只管说。”"
+speaker = "captain"
+mood = "tender"
+at = "hormuz_port"
+when = [{ kind = "alive", person = "jafar", value = true }]
+objectives = [{ kind = "person", person = "jafar", text = "回霍尔木兹的说书场找他" }]
+news = "霍尔木兹的说书场散了，盲眼说书人听一个外乡船长翻了半天本子，翻到最后谁也没听清他说了句什么。"
+
+[[tracks.chapters.choices]]
+key = "cover"
+text = "说：她讲得乱，没什么要紧，您那样讲就对。"
+next = "done"
+reply = "他伸手摸到你的本子，在封皮上按了一下，没有翻开。“记乱的东西，我这儿也有一箩筐。”他只数了一半的钱给你，说下回把本子理干净了再来。那一段，他照旧讲。"
+effects = [{ kind = "cash", value = 250 }, { kind = "affinity", person = "jafar", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jafar_partial" }]
+
+[[tracks.chapters.choices]]
+key = "no_verdict"
+text = "说：她讲的和您讲的我都原样记着，哪个对，我说不上来。"
+next = "done"
+reply = "他让你把本子念一遍，念不顺的地方也照念。念完他说，那就连乱处一起讲，让听的人自己去理。他数钱给你，一枚落在手心里，要等上好一阵才落下一枚。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "jafar", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jafar_done" }]

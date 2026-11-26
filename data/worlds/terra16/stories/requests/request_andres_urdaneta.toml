@@ -1,0 +1,141 @@
+# 请托：回不来的船的航簿（request_andres_urdaneta，C13d，find，3 章）
+# 人物：安德烈斯·德·乌尔达内塔（andres_urdaneta），1508 年生、1568 年卒；墨西哥城奥斯定会修士，从前随洛艾萨的船队到过摩鹿加的领航员。
+# 报价：来信／代理人（L）。韦拉克鲁斯的庶务修士出面（代理人，不入 cast）；offer 章 auto=true、at=veracruz，窗口 1559-06-01 至 1563-06-30，family c13_offer_veracruz，冷却 20 天。门槛：成年（17 岁）、名声 5。请托人是历史人物，成年，不设年龄门。
+# 章节：offer（修士的信，韦拉克鲁斯）→ archive（贸易总署的档案室，塞维利亚，300 天期限）→ handin（往北拐的那条线，韦拉克鲁斯，1564-09-30 期限，须持有皮加费塔并等满 30 天）；终点 done / failed。
+# 解法：archive 三条路——自己抄（制图 60）、说服书记（雄辩，一般检定 20/7，失败只抄一本）、雇抄写员（200 金）；handin 两条路——给书（最好的结局）、借书（书不扣）。
+# 依据：史实——乌尔达内塔 1560 年代在墨西哥城，关心北太平洋返航的西风与纬度；贸易总署收有 1520—40 年代那几条船队的航簿（史实，正文只写传闻口吻）；皮加费塔《第一次环球航行》法文节本（items/books_03_geography_01 的 pigafetta_paris，低地国家与北方的书商有卖）。正文只写“对上了”“往北拐”，不决定 1565 年回程航线（H24）。
+# 地点：报价与交货都在韦拉克鲁斯；档案室在塞维利亚。不用阿卡普尔科（1565 年以前是休眠港）。
+# 原创：庶务修士、书记、抄写员，“风”与旗子的口头禅，档案室的细节，两封信。
+# 秘密：条约的不安（西边的岛按条约归葡萄牙，后来服从了国王）只在 handin 的回复里出现半句，不进见闻，不进 offer。
+# 读的旗标：无（不读 c13_main_*，本条无主线门禁）。
+# 设的旗标：c13_request_andres_urdaneta_accepted（接下）、_declined（回绝）、_good_copy（抄好）、_partial_copy（只抄了一本）、_done（完成）、_lent（借书）、_late（超时）。
+# 依赖：无 B10b 改名（veracruz、seville、pigafetta_paris、cartography 均已存在，andres_urdaneta 已在 cast 且 tracks 已登记）。
+# 英文：不写（terra16 先只做中文，英文以后补）。
+# 回忆插画清单：
+#   mem-request_andres_urdaneta-handin「往北拐的线」：一张摊开的南海海图，红墨水圈着的纬度数字连成一条往北拐的细线。
+
+[[tracks]]
+key = "request_andres_urdaneta"
+name = "回不来的船的航簿"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["andres_urdaneta"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "修士的信"
+text = "韦拉克鲁斯的码头上，一个奥古斯丁会的庶务修士拦住你，手里捏着一封叠了三折的信。信是墨西哥城的一位修士写的，那人从前在南边的海上当过领航员。信头第一句是：“愿天主与你同在，兄弟。”往下写了半页风向与纬度，有一句写得特别用力：“北纬三十度以北，西风说转就转，我的日志里一天转了三次。”末了才是正事：一部皮加费塔的环球航行记，法文节本，低地国家与北方的书商有卖，他要拿它去对太平洋上的风；还有那些从西边回不来的船的旧航簿，在塞维利亚的贸易总署里，抄一份就好。"
+mood = "mystic"
+at = "veracruz"
+deadline = [1563, 6, 30]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1559, 6, 1], to = [1563, 6, 30] }, { kind = "fame", ge = 5 }]
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：一部书，一份抄本。"
+next = "archive"
+reply = "庶务修士把信折回原样交到你手里，又从袖口摸出一张纸条：“书铺的名字在这儿。他说，书要买新的，旧的不算。”"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = 2 }, { kind = "flag", flag = "c13_request_andres_urdaneta_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "接下，但问：他要这些做什么？"
+next = "archive"
+reply = "“他不说。”庶务修士笑了，“他只说风。每天晚上在院子里看旗子往哪边飘，看到半夜。”"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = 2 }, { kind = "flag", flag = "c13_request_andres_urdaneta_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "跨两次大洋，我这一年走不开。"
+next = "failed"
+reply = "庶务修士为你画了个十字，把信收回怀里，没有再劝。走出几步，他又回过头：“风是往北拐的。”"
+effects = [{ kind = "flag", flag = "c13_request_andres_urdaneta_declined" }]
+
+[[tracks.chapters]]
+key = "archive"
+title = "贸易总署的档案室"
+text = "塞维利亚贸易总署的档案室在北墙底下，窗小，纸页潮得发软。管航簿的书记搬出一摞本子，封皮上的船名有的已经褪成了灰。他翻开最上面一本，指给你看：那几条船从西边的群岛往东回，一次一次被逆风顶回去，有的漂了四个月，人死了一半。纬度一栏有人用红墨水圈过，圈的全是北边的数字。“没人翻过这些，”书记说，“除了老鼠。”"
+mood = "mystic"
+speaker = "captain"
+at = "seville"
+news = "塞维利亚贸易总署的档案室，一连几天有个外来的船长在抄几本发霉的旧航簿。"
+deadline_days = 300
+when = [{ kind = "alive", person = "andres_urdaneta", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = -3 }, { kind = "flag", flag = "c13_request_andres_urdaneta_late" }, { kind = "letter", person = "andres_urdaneta", text = "兄弟，抄本不必了。有人从里斯本带来了别的记录，够用了。风的事我另外问清了，不用再跑一趟。" }]
+news = "塞维利亚贸易总署的书记说，那一摞发霉的旧航簿搬回了架子上，再没有外来的人来问。"
+
+[[tracks.chapters.choices]]
+key = "copy_self"
+text = "自己抄纬度与风向那几栏。"
+next = "handin"
+reply = "你抄了三天。抄到最后，把那些红圈连起来，是一条往北拐的线。书记站在旁边看了很久，说你是第二个抄这几栏的人。"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = 3 }, { kind = "flag", flag = "c13_request_andres_urdaneta_good_copy" }]
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "那些栏目里的数字和记号，你分不清哪个是纬度。"
+
+[[tracks.chapters.choices]]
+key = "ask_clerk"
+text = "跟书记讲：一个修士要拿它救人命。"
+next = "handin"
+reply = "书记想了想，把档案室的门开到天黑。他说：“抄吧，抄完了把纸放回原处。”你抄完最后一页，手都僵了。"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = 3 }, { kind = "flag", flag = "c13_request_andres_urdaneta_good_copy" }]
+check = { attr = "eloquence", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "handin"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = -2 }, { kind = "flag", flag = "c13_request_andres_urdaneta_partial_copy" }]
+news = "塞维利亚贸易总署的档案室里，一个外来的船长跟书记说了半天，只抄回了一本旧航簿。"
+
+[[tracks.chapters.choices]]
+key = "hire_copyist"
+text = "雇总署的抄写员替你抄。"
+next = "handin"
+reply = "抄写员抄得又快又工整，就是不懂哪些栏要紧，连粮账也一并抄了。你把粮账撕下来，只留下那几页红圈。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "andres_urdaneta", value = 3 }, { kind = "flag", flag = "c13_request_andres_urdaneta_good_copy" }]
+requires = [{ kind = "cash", ge = 200 }]
+hint = "抄写员的价钱，你付不起。"
+
+[[tracks.chapters]]
+key = "handin"
+title = "往北拐的那条线"
+text = "庶务修士又在码头上等你，披风被海风吹得贴在腿上，他一手压着衣角。这回他没有先说祝福，先伸手要书。他翻到中间那几页，指尖停在一幅南海的岛图上，嘴里念着几个你读不顺的地名，停了很久。抄本摊在他另一只手里，纬度一栏的红圈还在。他抬头问：“这本书，你是借我，还是给我？”"
+mood = "mystic"
+at = "veracruz"
+news = "韦拉克鲁斯的奥古斯丁会庶务修士，从一个外来船长手里接过一本书和一份抄本，连夜往墨西哥城去了。"
+deadline = [1564, 9, 30]
+objectives = [{ kind = "item", item = "pigafetta_paris", qty = 1, text = "带上皮加费塔《第一次环球航行》（法文节本）" }, { kind = "wait", days = 30 }]
+when = [{ kind = "alive", person = "andres_urdaneta", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "andres_urdaneta", value = -3 }, { kind = "flag", flag = "c13_request_andres_urdaneta_late" }, { kind = "letter", person = "andres_urdaneta", text = "庶务修士来信：修士已经往太平洋岸去了。他走之前说，你若带着书来，就替他把最后那几章读完。" }]
+news = "韦拉克鲁斯的码头上，一个奥古斯丁会的庶务修士等到秋天，没等来那本书，托人留了封信就走了。"
+
+[[tracks.chapters.choices]]
+key = "give_book"
+text = "书和抄本都留给他。"
+next = "done"
+reply = "庶务修士说，修士读那本书读到了天亮，在页边写满了数字。一个月后，修士的信托人带来了，信上写：“书里写的风，跟红圈的数字对上了。”信封里还夹着一张他画的风向图，往北拐的那一段画得特别重。信末他又添了一句：“条约的事，就不提了。”"
+effects = [{ kind = "item", item = "pigafetta_paris", qty = -1 }, { kind = "cash", value = 2250 }, { kind = "affinity", person = "andres_urdaneta", value = 8 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "new_spain", value = 2 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "memory", memory = "mem-request_andres_urdaneta-handin", title = "往北拐的那条线" }, { kind = "flag", flag = "c13_request_andres_urdaneta_done" }]
+
+[[tracks.chapters.choices]]
+key = "lend_book"
+text = "书借他看，看完托人还来；抄本留给他。"
+next = "done"
+reply = "他接过书，说看完就托人送还，抄本他留下了。过了一个多月，书真的回来了，页边多了许多铅笔写的小数字，擦都擦不掉。信里写着：那些数字送给你。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "andres_urdaneta", value = 6 }, { kind = "fame", value = 3 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "flag", flag = "c13_request_andres_urdaneta_done" }, { kind = "flag", flag = "c13_request_andres_urdaneta_lent" }]
+
+[[tracks.chapters.variants]]
+key = "partial"
+when = [{ kind = "flag", flag = "c13_request_andres_urdaneta_partial_copy" }]
+text = "庶务修士又在码头上等你，披风被海风吹得贴在腿上，他一手压着衣角。这回他没有先说祝福，先伸手要书。他翻到中间那几页，指尖停在一幅南海的岛图上，嘴里念着几个你读不顺的地名，停了很久。抄本只有这一本，是你在档案室里熬出来的。他捧着它说：“够了，一本也够。”然后他抬头问：“这本书，你是借我，还是给我？”"

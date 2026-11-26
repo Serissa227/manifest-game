@@ -1,0 +1,708 @@
+# 商品。key 只允许在末尾追加，不要重排或删除（存档按顺序引用，美术图标也按 key 绘制）；name 与 description 可以随意改。
+# category 为类别（粮食 / 原料 / 矿产 / 嗜好品 / 奢侈品 / 加工品 / 军需）；“粮食”类商品可供殖民地居民食用。
+# tier 为加工层级（0 原料，1–3 加工品）；base_price 为基准价（金币）。
+# season_demand / season_supply 为春夏秋冬的需求与产量系数（省略则全为 1.0）。
+# license = true 表示买卖需要所在势力的许可证（军需品）。description 为界面显示的介绍（带点历史风味）。
+# crop = true 表示按季播种的作物（粮食、经济作物、茶与咖啡等种植园作物）：本地生产者的扩产或减产要到下一季开始才生效；
+# 其余商品（渔获、盐、矿、木材、畜产与加工品）滞后一个月（docs/ECONOMY.md 6.3）。
+# need 为需求层级（docs/ECONOMY.md 6.4）：essential 必需品（主食、盐、渔获、布）的需求不随繁荣度变；
+# comfort 舒适品（茶酒糖烟、家具铁器、成衣玻璃药剂等）的需求随繁荣度伸缩一半；luxury 奢侈品（香料、丝绸、珠宝、毛皮等）随繁荣度等比伸缩。
+# 省略 need 的是生产资料（原料、矿、半成品、船具与军需），需求只随人口变、不计入港口的满足度。
+# group 为替代组：同组商品满足同一种需求（主食 staple：谷物、玉米、马铃薯；热饮 brew：茶、咖啡、可可；
+# 烟草 smoke；酒 drink；甜食 sweets），按价格分摊需求，某一种短缺时需求转向其余几种，满足度按全组合计。同组商品的 need 必须相同。
+
+[[goods]]
+key = "grain"
+name = "谷物"
+description = "维斯塔海沿岸最寻常的口粮。埃斯佩兰的麦田据说是阿尔坎帝国的屯田旧址，农夫至今仍按帝国界石分块耕种。"
+category = "粮食"
+tier = 0
+need = "essential"
+group = "staple"
+crop = true
+base_price = 12
+season_demand = [1.0, 1.0, 1.0, 1.2]
+season_supply = [0.8, 1.0, 1.4, 0.8]
+
+[[goods]]
+key = "timber"
+name = "木材"
+description = "北地的松木与西陆的橡木，造船与建城的根本。阿尔坎帝国砍光了内海南岸的森林，如今好木料多从诺德海姆的峡湾顺流放下。"
+category = "原料"
+tier = 0
+base_price = 20
+season_supply = [1.0, 1.0, 1.0, 0.8]
+
+[[goods]]
+key = "cotton"
+name = "棉花"
+description = "卡迪尔绿洲与河谷出产的长绒棉，由驼队运到各港的纺纱作坊。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 18
+season_supply = [0.8, 1.1, 1.3, 0.8]
+
+[[goods]]
+key = "sugarcane"
+name = "甘蔗"
+description = "卡迪尔南部的甘蔗园自帝国末年兴起；新大陆湿热的海岸更适合它，那里的蔗田正一年年扩张。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 10
+season_supply = [0.9, 1.2, 1.1, 0.8]
+
+[[goods]]
+key = "iron_ore"
+name = "铁矿石"
+description = "诺德海姆山地的赤铁矿。矿工们还在沿用阿尔坎人开凿的竖井，井壁上刻着早已无人能读的帝国编号。"
+category = "矿产"
+tier = 0
+base_price = 16
+
+[[goods]]
+key = "copper_ore"
+name = "铜矿石"
+description = "范德兰与北地出产的铜矿，用来铸炮、炼黄铜、打造船钉与包覆船底。"
+category = "矿产"
+tier = 0
+base_price = 22
+
+[[goods]]
+key = "wool"
+name = "羊毛"
+description = "埃斯佩兰高原上的细毛羊。羊毛曾是王国最大的出口货，牧羊人的迁徙道路比国王的驿道还要古老。"
+category = "原料"
+tier = 0
+base_price = 24
+season_demand = [1.0, 0.9, 1.0, 1.2]
+season_supply = [1.3, 1.0, 0.9, 0.8]
+
+[[goods]]
+key = "cocoons"
+name = "蚕茧"
+description = "范德兰南部蚕房的蚕茧。蚕种是三百年前随沙漠商路偷偷带进旧世界的，据说当年藏在一根空心手杖里。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 40
+season_supply = [1.2, 1.3, 0.9, 0.6]
+
+[[goods]]
+key = "tea"
+name = "茶叶"
+description = "范德兰南部山坡上种的茶。行家都说比不上瑶华的新茶，可价钱便宜一半，港口酒馆里照样卖得最快。"
+category = "嗜好品"
+tier = 0
+need = "comfort"
+group = "brew"
+crop = true
+base_price = 60
+season_demand = [1.0, 1.0, 1.0, 1.1]
+season_supply = [1.4, 1.1, 0.8, 0.7]
+
+[[goods]]
+key = "spice"
+name = "香料"
+description = "胡椒、丁香与肉豆蔻，由卡迪尔驼队从南方荒漠尽头的绿洲运来。阿尔坎皇帝曾用它给军团发饷。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+crop = true
+base_price = 120
+season_demand = [1.0, 1.0, 1.1, 1.1]
+
+[[goods]]
+key = "fish"
+name = "咸鱼"
+description = "北地渔场的鳕鱼，剖开抹盐晾干，硬得能当木棍使，却是远航水手的主食。"
+category = "粮食"
+tier = 0
+need = "essential"
+base_price = 15
+season_demand = [1.0, 1.0, 1.0, 1.1]
+season_supply = [1.1, 1.2, 1.0, 0.7]
+
+[[goods]]
+key = "salt"
+name = "海盐"
+description = "马纳瓦群岛盐田晒出的海盐。腌鱼、腌肉离不开它，帝国时代的士兵甚至用盐领薪。"
+category = "粮食"
+tier = 0
+need = "essential"
+base_price = 8
+season_supply = [0.9, 1.3, 1.1, 0.7]
+
+[[goods]]
+key = "fur"
+name = "毛皮"
+description = "北地森林的貂皮与狐皮，议员的斗篷与贵妇的暖手筒都用它镶边。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+base_price = 90
+season_demand = [0.8, 0.7, 1.1, 1.4]
+season_supply = [1.0, 0.8, 1.0, 1.2]
+
+[[goods]]
+key = "grapes"
+name = "葡萄"
+description = "埃斯佩兰丘陵的酿酒葡萄，秋收时整条河谷都飘着果香。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 14
+season_supply = [0.6, 1.0, 1.7, 0.7]
+
+[[goods]]
+key = "cocoa"
+name = "可可豆"
+description = "卡迪尔南方引种的可可豆；新大陆翡翠湾的可可更香，却要穿过巨人之门才运得来。"
+category = "嗜好品"
+tier = 0
+need = "comfort"
+group = "brew"
+crop = true
+base_price = 35
+
+[[goods]]
+key = "tobacco"
+name = "烟叶"
+description = "卡迪尔的晒烟叶。水手们嚼，商人们抽，学者们为它有益还是有害争论了半个世纪。"
+category = "嗜好品"
+tier = 0
+need = "comfort"
+group = "smoke"
+crop = true
+base_price = 45
+season_demand = [1.0, 1.0, 1.0, 1.1]
+season_supply = [1.0, 1.2, 1.1, 0.7]
+
+[[goods]]
+key = "amber"
+name = "琥珀"
+description = "北方海岸冲上来的松脂化石，偶尔裹着远古的昆虫。阿尔坎人称之为“海的眼泪”，用来镶嵌皇冠。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+base_price = 150
+
+[[goods]]
+key = "pearl"
+name = "珍珠"
+description = "马纳瓦潜水者从深礁采来的珍珠。一颗上品能换一条小船，采珠人的肺活量是群岛上的骄傲。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+base_price = 300
+season_supply = [1.0, 1.1, 1.0, 0.9]
+
+[[goods]]
+key = "coral"
+name = "珊瑚"
+description = "马纳瓦浅海的红珊瑚，打磨后做念珠、镶首饰，也是护身符的上选。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+base_price = 110
+season_supply = [1.0, 1.1, 1.0, 0.9]
+
+[[goods]]
+key = "sulfur"
+name = "硫磺"
+description = "卡迪尔火山荒原上采来的硫磺，气味刺鼻，是配火药的原料之一。"
+category = "矿产"
+tier = 0
+base_price = 30
+
+[[goods]]
+key = "saltpeter"
+name = "硝石"
+description = "从卡迪尔盐碱地刮下硝土熬成的硝石，火药的主料。"
+category = "矿产"
+tier = 0
+base_price = 28
+
+[[goods]]
+key = "herbs"
+name = "药草"
+description = "范德兰园圃与群岛山林采集的草药，退烧、止血、防坏血病，药剂师按古方配伍。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 50
+season_demand = [1.0, 1.0, 1.0, 1.2]
+season_supply = [1.3, 1.1, 0.9, 0.7]
+
+[[goods]]
+key = "indigo"
+name = "靛蓝"
+description = "埃斯佩兰河谷种的靛草沤制成的蓝色染料，王国水兵的制服就是这个颜色。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 38
+season_supply = [1.0, 1.2, 1.1, 0.7]
+
+[[goods]]
+key = "yarn"
+name = "棉纱"
+description = "棉花纺成的纱线。卡迪尔的纺纱女工一边摇纺车一边唱歌，歌词里记着各家商队的欠账。"
+category = "加工品"
+tier = 1
+base_price = 40
+
+[[goods]]
+key = "cloth"
+name = "棉布"
+description = "棉纱织成的细布，从水手衬衫到贵妇裙衬都用得上。"
+category = "加工品"
+tier = 2
+need = "essential"
+base_price = 80
+season_demand = [1.0, 1.0, 1.0, 1.1]
+
+[[goods]]
+key = "garments"
+name = "成衣"
+description = "裁缝铺做好的外套与长裙，靛蓝染的最受欢迎。"
+category = "加工品"
+tier = 3
+need = "comfort"
+base_price = 180
+season_demand = [1.0, 1.0, 1.0, 1.2]
+
+[[goods]]
+key = "pig_iron"
+name = "生铁"
+description = "高炉炼出的铁锭，还要再锻打才能用。"
+category = "加工品"
+tier = 1
+base_price = 45
+
+[[goods]]
+key = "ironware"
+name = "铁器"
+description = "锚、钉、锅、锄头与船用铁件，殖民地开荒最缺的就是它。"
+category = "加工品"
+tier = 2
+need = "comfort"
+base_price = 95
+
+[[goods]]
+key = "cannon"
+license = true
+name = "火炮"
+description = "铁身铜箍的舰炮。买卖需要当地势力的许可状，私运被抓要吊在港口示众。"
+category = "军需"
+tier = 3
+base_price = 400
+
+[[goods]]
+key = "raw_silk"
+name = "生丝"
+description = "蚕茧缫出的生丝，光泽如水。"
+category = "加工品"
+tier = 1
+base_price = 110
+
+[[goods]]
+key = "silk"
+name = "丝绸"
+description = "航海历 1471 年瑶华宝船带来的丝绸让内海贵族趋之若鹜，范德兰织坊从此仿织至今。"
+category = "加工品"
+tier = 2
+need = "luxury"
+base_price = 260
+season_demand = [1.0, 1.0, 1.0, 1.1]
+
+[[goods]]
+key = "brocade"
+name = "织锦礼服"
+description = "丝绸织金、靛蓝刺绣的礼服，一件抵得上一座农庄的年收，宫廷舞会上没人肯穿第二次。"
+category = "加工品"
+tier = 3
+need = "luxury"
+base_price = 600
+season_demand = [1.0, 1.0, 1.0, 1.2]
+
+[[goods]]
+key = "sugar"
+name = "蔗糖"
+description = "熬制结晶的蔗糖，五十年前还是药铺里按钱论两卖的珍品。"
+category = "加工品"
+tier = 1
+need = "comfort"
+group = "sweets"
+base_price = 35
+season_demand = [1.0, 1.0, 1.0, 1.1]
+
+[[goods]]
+key = "candy"
+name = "糖渍果脯"
+description = "蜂蜜与蔗糖渍过的无花果、杏仁与柑橘皮，节庆与婚礼必备。"
+category = "加工品"
+tier = 2
+need = "comfort"
+group = "sweets"
+base_price = 120
+season_demand = [1.0, 1.0, 1.1, 1.3]
+
+[[goods]]
+key = "planks"
+name = "木板"
+description = "锯好的木板，修船、盖房、钉货箱都要。"
+category = "加工品"
+tier = 1
+base_price = 35
+
+[[goods]]
+key = "furniture"
+name = "家具"
+description = "胡桃木桌椅与雕花衣柜，新近流行镶一圈新大陆的桃花心木。"
+category = "加工品"
+tier = 2
+need = "comfort"
+base_price = 150
+
+[[goods]]
+key = "gunpowder"
+license = true
+name = "火药"
+description = "硝石、硫磺与木炭配成的黑火药，买卖需要许可状。"
+category = "军需"
+tier = 1
+base_price = 140
+
+[[goods]]
+key = "wine"
+name = "葡萄酒"
+description = "埃斯佩兰的红酒，陈放在阿尔坎人开凿的岩洞酒窖里，老酒桶上还烙着帝国的鹰徽。"
+category = "加工品"
+tier = 1
+need = "comfort"
+group = "drink"
+base_price = 70
+season_demand = [1.0, 1.0, 1.1, 1.3]
+
+# ── 航海历 1502 年追加的商品（新大陆作物、矿产、奇幻特产与新加工链）。顺序固定，美术图标按 key 绘制。──
+
+[[goods]]
+key = "maize"
+name = "玉米"
+description = "阿斯特里亚原野上的高秆谷物，产量是小麦的两倍。第一批殖民者靠它熬过了 1463 年的冬天。"
+category = "粮食"
+tier = 0
+need = "essential"
+group = "staple"
+crop = true
+base_price = 10
+season_supply = [0.7, 1.0, 1.5, 0.8]
+
+[[goods]]
+key = "potato"
+name = "马铃薯"
+description = "新大陆寒冷高地的块茎，耐寒耐旱。诺德海姆人最先把它种进菜园，如今北地农夫离不开它。"
+category = "粮食"
+tier = 0
+need = "essential"
+group = "staple"
+crop = true
+base_price = 8
+season_demand = [1.0, 1.0, 1.0, 1.1]
+season_supply = [0.8, 1.0, 1.4, 0.8]
+
+[[goods]]
+key = "coffee"
+name = "咖啡豆"
+description = "卡迪尔高原与新大陆雨林边缘的红果，烘焙后煮成苦而提神的黑汤。赫伦丹交易所旁开了旧世界第一家咖啡馆，行情都在那里谈成。"
+category = "嗜好品"
+tier = 0
+need = "comfort"
+group = "brew"
+crop = true
+base_price = 55
+season_demand = [1.0, 1.0, 1.0, 1.1]
+season_supply = [1.0, 0.9, 1.2, 0.9]
+
+[[goods]]
+key = "vanilla"
+name = "香草荚"
+description = "翡翠湾雨林里一种藤兰的豆荚，香气甜腻。宫廷糕点师愿意用同重的白银交换。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+crop = true
+base_price = 160
+season_demand = [1.0, 1.0, 1.1, 1.2]
+
+[[goods]]
+key = "cochineal"
+name = "胭脂虫"
+description = "寄生在荒原仙人掌上的小虫，晒干磨粉就是最艳的猩红染料。一磅虫粉要十万只虫子。"
+category = "原料"
+tier = 0
+base_price = 85
+
+[[goods]]
+key = "dyewood"
+name = "苏木"
+description = "新大陆沼泽边的红心木，劈碎煮出的汁液能染红褐与紫色，染坊按船收购。"
+category = "原料"
+tier = 0
+base_price = 28
+
+[[goods]]
+key = "mahogany"
+name = "桃花心木"
+description = "阿斯特里亚雨林的红色硬木，纹理细密、不怕船蛆。旧世界的船匠与细木匠都抢着要。"
+category = "原料"
+tier = 0
+base_price = 48
+season_supply = [1.0, 1.0, 1.0, 0.9]
+
+[[goods]]
+key = "flax"
+name = "亚麻"
+description = "诺德海姆与范德兰田里的亚麻，纤维纺线织布，最好的用来织船帆。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 16
+season_supply = [0.8, 1.2, 1.2, 0.8]
+
+[[goods]]
+key = "hemp"
+name = "粗麻"
+description = "耐海水浸泡的粗麻纤维，是船用缆绳的原料。"
+category = "原料"
+tier = 0
+crop = true
+base_price = 14
+season_supply = [0.8, 1.2, 1.2, 0.8]
+
+[[goods]]
+key = "quinine"
+name = "金鸡纳树皮"
+description = "新大陆高地的苦树皮，专治沼泽热病。第一批殖民者因为不认得它，在银雾河口死了一半的人。"
+category = "原料"
+tier = 0
+base_price = 75
+season_demand = [1.0, 1.2, 1.1, 0.9]
+
+[[goods]]
+key = "gold_ore"
+name = "金矿砂"
+description = "河床里淘出的金砂与含金的石英块。新大陆的淘金热让不少破落骑士翻了身，也让更多人埋骨荒野。"
+category = "矿产"
+tier = 0
+base_price = 90
+
+[[goods]]
+key = "silver_ore"
+name = "银矿石"
+description = "诺德海姆老矿与新大陆山地的银矿石，富矿的断面在阳光下像结了一层霜。"
+category = "矿产"
+tier = 0
+base_price = 50
+
+[[goods]]
+key = "gems"
+name = "宝石原石"
+description = "未经切磨的祖母绿、红玉与紫晶，原石看上去和河卵石差不多，只有行家识得。"
+category = "矿产"
+tier = 0
+base_price = 220
+
+[[goods]]
+key = "quartz_sand"
+name = "石英砂"
+description = "洁白的石英砂，熔炼玻璃的原料。卡迪尔海滩的沙子最纯。"
+category = "矿产"
+tier = 0
+base_price = 6
+
+[[goods]]
+key = "star_crystal"
+name = "星辉晶"
+description = "只在新大陆陨石坑附近出产的淡蓝晶体，夜里会自己发出微光。学者们争论它是否就是阿尔坎古籍里的“天火之石”。"
+category = "矿产"
+tier = 0
+base_price = 260
+
+[[goods]]
+key = "whale_oil"
+name = "鲸油"
+description = "北方捕鲸船熬出的鲸脂油，点灯、制皂、润滑绞盘，一桶鲸油能照亮一户人家整个冬天。"
+category = "原料"
+tier = 0
+need = "comfort"
+base_price = 40
+season_demand = [1.0, 0.9, 1.1, 1.2]
+season_supply = [0.9, 1.2, 1.0, 0.8]
+
+[[goods]]
+key = "kaolin"
+name = "高岭土"
+description = "洁白细腻的瓷土。瑶华官窑的秘密据说就在这种土里，范德兰的窑工仿了三十年，仍烧不出那样的薄胎。"
+category = "矿产"
+tier = 0
+base_price = 14
+
+[[goods]]
+key = "relics"
+name = "古代遗物"
+description = "从阿尔坎遗迹里发掘出的钱币、雕像与刻字石板。收藏家与学院出价极高，盗掘者也因此络绎不绝。"
+category = "奢侈品"
+tier = 0
+need = "luxury"
+base_price = 450
+
+[[goods]]
+key = "rum"
+name = "朗姆酒"
+description = "甘蔗汁发酵蒸馏的烈酒，殖民地的硬通货——工钱、赌债与婚礼聘礼都能用它结算。"
+category = "加工品"
+tier = 1
+need = "comfort"
+group = "drink"
+base_price = 45
+season_demand = [1.0, 1.0, 1.0, 1.2]
+
+[[goods]]
+key = "chocolate"
+name = "巧克力"
+description = "可可与蔗糖研磨成的甜饮与糖块，是维拉马雷宫廷里最时髦的享受。"
+category = "加工品"
+tier = 2
+need = "luxury"
+base_price = 130
+season_demand = [1.0, 0.9, 1.1, 1.3]
+
+[[goods]]
+key = "cigars"
+name = "雪茄"
+description = "卡迪尔工匠用整片烟叶手卷的烟卷，商人谈生意时点一支，谈不拢就掐灭。"
+category = "加工品"
+tier = 1
+need = "comfort"
+group = "smoke"
+base_price = 95
+
+[[goods]]
+key = "gold_ingot"
+name = "金锭"
+description = "熔铸的金锭，铸币厂与金匠的原料，每一块都打着熔铸所的印记。"
+category = "加工品"
+tier = 1
+base_price = 360
+
+[[goods]]
+key = "silver_ingot"
+name = "银锭"
+description = "熔铸的银锭。大量流入的新大陆白银正悄悄推高旧世界的物价，范德兰的学者称之为“白银的潮水”。"
+category = "加工品"
+tier = 1
+base_price = 200
+
+[[goods]]
+key = "jewelry"
+name = "珠宝"
+description = "镶宝石的金银首饰，赫伦丹与卡迪拉的金匠街终夜灯火通明。"
+category = "加工品"
+tier = 2
+need = "luxury"
+base_price = 700
+season_demand = [1.0, 1.0, 1.0, 1.2]
+
+[[goods]]
+key = "scarlet_cloth"
+name = "猩红呢绒"
+description = "细棉布与羊毛混纺、再用胭脂虫染成的猩红呢绒，只有王族、枢密大臣与将军才穿得起。"
+category = "加工品"
+tier = 3
+need = "luxury"
+base_price = 250
+season_demand = [1.0, 1.0, 1.0, 1.2]
+
+[[goods]]
+key = "sailcloth"
+name = "帆布"
+description = "亚麻织成的厚帆布，一艘大帆船的全套风帆要用上千码。"
+category = "加工品"
+tier = 1
+base_price = 55
+
+[[goods]]
+key = "rope"
+name = "缆绳"
+description = "粗麻绞成、浸过焦油的缆绳。一艘远洋船的索具加起来有好几里长。"
+category = "加工品"
+tier = 1
+base_price = 38
+
+[[goods]]
+key = "medicine"
+name = "药剂"
+description = "用金鸡纳树皮与药草熬制的退热药剂，殖民地医生的救命药，也是走私者的最爱。"
+category = "加工品"
+tier = 1
+need = "comfort"
+base_price = 150
+season_demand = [1.0, 1.2, 1.1, 1.0]
+
+[[goods]]
+key = "brass"
+name = "黄铜"
+description = "铜与菱锌矿熔成的黄铜，用来做航海仪器、炮饰与教堂的烛台。"
+category = "加工品"
+tier = 1
+base_price = 80
+
+[[goods]]
+key = "glass"
+name = "玻璃"
+description = "石英砂熔成的玻璃，窗户、酒瓶与透镜都用它。卡迪尔的吹玻璃手艺据说从帝国时代一脉相传。"
+category = "加工品"
+tier = 1
+need = "comfort"
+base_price = 35
+
+[[goods]]
+key = "instruments"
+name = "航海仪器"
+description = "黄铜星盘、罗盘、象限仪与望远镜。穿过巨人之门的船，能不能活着回来，一半看仪器的精度。"
+category = "加工品"
+tier = 2
+base_price = 240
+
+[[goods]]
+key = "crystal_lamp"
+name = "星辉灯"
+description = "把星辉晶嵌进航海仪器灯架的恒明灯，不用燃油、风雨不灭，灯芯还会微微偏向北方。远洋船长梦寐以求。"
+category = "加工品"
+tier = 3
+need = "luxury"
+base_price = 520
+
+[[goods]]
+key = "porcelain"
+name = "瓷器"
+description = "瑶华官窑的白瓷与青花，薄如纸、声如磬。一套茶具运到旧世界能换一座葡萄园。"
+category = "加工品"
+tier = 1
+need = "luxury"
+base_price = 120
+
+# ── 第六批追加：古籍。只在少数学术重镇与修道院所在的港口出产（world/ports.toml、world/overseas.toml
+#    中 supply 大于 demand 的条目：维拉马雷、赫伦丹、拉玛塔岛、琅京），各地都有需求（其余港口与城市 supply < demand，价高量少）。──
+[[goods]]
+key = "books"
+name = "古籍"
+description = "手抄本与印本、星图集、帝国时代的法典残卷与水手的航海日志。维拉马雷的王家书库、赫伦丹的印刷坊、琅京的书院和拉玛塔岛修道院的废墟是它们的来处，学者、贵族与船长们在各地都肯出高价。"
+category = "奢侈品"
+tier = 1
+need = "luxury"
+base_price = 320
+season_demand = [1.0, 0.9, 1.0, 1.2]  # 春夏秋冬：冬夜漫长，读书的人多

@@ -1,0 +1,615 @@
+/* 第九批：人物页、关系图与任务日志（components/people/）。窗口是羊皮纸底，这里只管内容；心动与羁绊的徽记沿用养成主画面（upbringing.css）。 */
+
+.pp-panel,
+.qs-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pp-panel > .ub-tabs {
+  align-items: center;
+}
+.pp-here {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+  font-size: 13px;
+}
+.pp-panel select,
+.pp-actions select {
+  font: inherit;
+  font-size: 13px;
+}
+.pp-body {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.4fr);
+  gap: 12px;
+  align-items: start;
+}
+.pp-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+.pp-card {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+  padding: 4px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  /* 浅底深字：不要外壳按钮的深色字影（深字叠深影，笔画糊成双影；docs/UI-REDESIGN.md 1.2 第 1 条） */
+  text-shadow: none;
+  cursor: pointer;
+}
+.pp-card:hover,
+.pp-card.is-on {
+  background: #fffaf070;
+  border-color: var(--line);
+}
+.pp-face,
+.pp-detail-face {
+  border: 2px solid #5c3a21;
+}
+.pp-card-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pp-card-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+}
+.pp-card-role,
+.pp-card-where,
+.pp-card-fleet {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pp-req {
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 400;
+  color: #fffaf0;
+  background: #2e5a86;
+}
+.pp-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fffaf0a0;
+  border: 2px solid var(--line);
+}
+.pp-detail-head {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
+}
+.pp-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 20px;
+}
+.pp-role {
+  margin: 2px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.pp-line,
+.pp-likes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 0;
+  font-size: 12px;
+}
+.pp-bio h5 {
+  margin: 4px 0 2px;
+  font-size: 13px;
+  color: #5c3a21;
+}
+.pp-bio p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.pp-memories {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #5c3a21;
+}
+.pp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pp-away {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 关系图 */
+.pp-graph {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  align-self: center;
+  background: #fffaf060;
+  border: 2px solid var(--line);
+}
+.pp-edge line {
+  stroke: #8a5a32;
+  stroke-width: 2;
+}
+.pp-edge text {
+  font-size: 11px;
+  fill: #5c3a21;
+  paint-order: stroke;
+  stroke: #f3e3c3;
+  stroke-width: 3px;
+}
+.pp-edge--lovers line,
+.pp-edge--partners line,
+.pp-edge--crush line {
+  stroke: #d9536f;
+}
+.pp-edge--rivals line,
+.pp-edge--enemies line {
+  stroke: #a3242f;
+  stroke-dasharray: 6 4;
+}
+.pp-edge--sisters line,
+.pp-edge--sworn line,
+.pp-edge--friends line {
+  stroke: #2e5a86;
+}
+.pp-edge--mentor line {
+  stroke: #4f9a5b;
+}
+.pp-node circle {
+  fill: #f3e3c3;
+  stroke: #2b1b17;
+  stroke-width: 2;
+}
+.pp-node--protagonist circle {
+  fill: #dca434;
+}
+.pp-node--person {
+  cursor: pointer;
+}
+.pp-node--person:hover circle {
+  fill: #fffaf0;
+  stroke: #239a9a;
+}
+.pp-node text {
+  font-size: 12px;
+  font-weight: 700;
+  fill: #2b1b17;
+  paint-order: stroke;
+  stroke: #f3e3c3;
+  stroke-width: 3px;
+}
+
+/* 任务日志 */
+.qs-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.qs-track {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-left: 5px solid #dca434;
+}
+.qs-track--waiting {
+  border-left-color: #7d5f36;
+}
+.qs-track--done {
+  border-left-color: #4f9a5b;
+  opacity: 0.8;
+}
+.qs-track--failed {
+  border-left-color: #a3242f;
+  opacity: 0.7;
+}
+.qs-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+}
+.qs-name {
+  font-weight: 700;
+}
+.qs-kind,
+.qs-status {
+  font-size: 11px;
+  color: var(--muted);
+}
+.qs-chapter {
+  margin: 2px 0 4px;
+  font-family: var(--font-title);
+  font-size: 14px;
+}
+/* 跨洋那几章的沿途补给（V01） */
+.qs-stopover {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.qs-objs {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.qs-objs li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.qs-objs li.is-done {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.qs-place {
+  font-size: 12px;
+  color: #2e5a86;
+}
+.qs-left {
+  font-size: 12px;
+  color: var(--muted);
+}
+.qs-left.is-urgent {
+  color: var(--down);
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .pp-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-list {
+    max-height: none;
+  }
+}
+
+/* 第九批 I10：自由对话（AI 打开时） */
+.pp-chat {
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px dashed color-mix(in srgb, var(--ink, #3a2a1a) 30%, transparent);
+  border-radius: 4px;
+}
+.pp-chat-turns {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.pp-chat-turn {
+  max-width: 88%;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--paper, #efe4cc) 80%, #fff);
+}
+.pp-chat-turn p {
+  margin: 0;
+}
+.pp-chat-turn--you {
+  justify-self: end;
+  background: color-mix(in srgb, #a7cbe0 40%, var(--paper, #efe4cc));
+}
+.pp-chat-turn[data-status="pending"] p {
+  opacity: 0.6;
+  letter-spacing: 2px;
+}
+.pp-chat-fallback,
+.pp-chat-left {
+  opacity: 0.7;
+  font-size: 12px;
+}
+.pp-chat-effects {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.pp-chat-effects li {
+  font-size: 12px;
+  padding: 0 6px;
+  border-radius: 8px;
+  background: color-mix(in srgb, #8fbf7f 35%, transparent);
+}
+.pp-chat-form {
+  display: flex;
+  gap: 6px;
+}
+.pp-chat-form input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ───── 第九批 I5b：见闻簿、人际与近况（NewsBook.tsx） ───── */
+/* 分页上的未读条数 */
+.pp-tab-count {
+  display: inline-block;
+  min-width: 16px;
+  margin-left: 5px;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+  color: #fffaf0;
+  background: var(--red-2);
+  border: 1px solid var(--red-0);
+  vertical-align: 1px;
+}
+/* 从别人的详情跳过来时的“回到某某” */
+.pp-back {
+  align-self: flex-start;
+  padding: 0 2px;
+  font: inherit;
+  font-size: 12px;
+  color: #2e5a86;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.pp-back:hover {
+  text-decoration: underline;
+}
+.pp-missing {
+  min-height: 0;
+}
+/* 小圆头像（人际、见闻里涉及的人物） */
+.pp-mini {
+  display: block;
+  flex: none;
+  background: #efe2c6;
+  border: 2px solid #5c3a21;
+  border-radius: 50%;
+}
+.pp-mini-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  font: inherit;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+}
+button.pp-mini-wrap {
+  cursor: pointer;
+}
+/* 触屏：小头像的点按区放大到 36 px（看得见的仍是那个小圆） */
+@media (pointer: coarse) {
+  button.pp-mini-wrap {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+button.pp-mini-wrap:hover .pp-mini {
+  border-color: #239a9a;
+}
+button.pp-mini-wrap:focus-visible,
+.pp-tie:focus-visible {
+  outline: 2px solid #239a9a;
+  outline-offset: 1px;
+}
+.pp-ties h5,
+.pp-recent h5,
+.pp-school h5 {
+  margin: 4px 0 4px;
+  padding-bottom: 2px;
+  font-size: 13px;
+  color: #5c3a21;
+  border-bottom: 1px dashed var(--parchment-dark);
+}
+/* 人际：对方的头像、名字、关系名（旁边一个很小的色点）与自何时 */
+.pp-ties ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(176px, 100%), 1fr));
+  gap: 2px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pp-ties li {
+  display: flex;
+}
+.pp-tie {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 3px 4px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  /* 浅底深字：不要外壳按钮的深色字影 */
+  text-shadow: none;
+  cursor: pointer;
+}
+.pp-tie:hover {
+  background: #fffaf070;
+  border-color: var(--line);
+}
+.pp-tie-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pp-tie-name {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pp-tie-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #5c3a21;
+}
+.pp-tie-since {
+  font-size: 11px;
+  color: var(--muted);
+}
+/* GL / BL / BG / GB：只是关系名前一个 4 像素的小方点（不写成标签） */
+.pp-tie-dot {
+  display: inline-block;
+  flex: none;
+  width: 4px;
+  height: 4px;
+  background: #8a5a32;
+}
+.pp-tie-dot[data-tag="GL"] {
+  background: #c4587c;
+}
+.pp-tie-dot[data-tag="BL"] {
+  background: #3c7fa6;
+}
+.pp-tie-dot[data-tag="BG"] {
+  background: #c08a2e;
+}
+.pp-tie-dot[data-tag="GB"] {
+  background: #7d5ba6;
+}
+/* 见闻：种类的小图标、日子、地点、哪条线、一段话、涉及的人物 */
+.pp-news-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pp-news {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+  padding: 8px 10px;
+  background: #fffaf080;
+  border: 1px solid var(--parchment-dark);
+  border-left: 4px solid var(--parchment-dark);
+}
+.pp-news.is-unread {
+  background: #fffaf0d0;
+  border-left-color: var(--red-2);
+}
+.pp-news-kind {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #efe2c6;
+  border: 2px solid #5c3a21;
+  box-shadow: inset 0 0 0 1px #f8eed8;
+}
+.pp-news-body {
+  min-width: 0;
+}
+.pp-news-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 10px;
+  margin: 0;
+  font-size: 12px;
+  color: #7a5b3a;
+}
+.pp-news-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--red-2);
+  border: 1px solid var(--red-0);
+  border-radius: 50%;
+}
+.pp-news-place {
+  color: #2e5a86;
+}
+.pp-news-track {
+  padding: 0 5px;
+  color: var(--red-1);
+  border: 1px solid #d3a9a0;
+}
+.pp-news-text {
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: #2b1b17;
+  overflow-wrap: anywhere;
+}
+.pp-news-faces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+}
+.pp-news-list.is-compact .pp-news {
+  gap: 8px;
+  padding: 6px 8px;
+}
+.pp-news-list.is-compact .pp-news-text {
+  font-size: 13px;
+}
+.pp-newsbook {
+  max-width: 760px;
+}
+
+/* A9 同窗：学院与结业日、结业时的情谊与约定（一行行小字），最后一句后来有没有再见 */
+.pp-school p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 0 0 2px;
+  font-size: 12px;
+}
+.pp-school .pp-school-after {
+  color: var(--muted);
+}

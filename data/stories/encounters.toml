@@ -1,0 +1,166 @@
+# 奇遇（第九批）：所有立过主角身世的船长都会遇到的小事件，带两三个选项。
+# 可以随意改文字与数值；key 只允许追加、不要改名或删除（存档按 key 记下遇到过哪些）。
+#
+# 只针对玩家，只在立过主角身世的对局里出现（无界面模拟、平衡 bot、没有身世的旧存档都不受影响）。
+# 随机数取自独立的随机域，不改变其他系统的结果。当天没有回应就当没发生过，不产生任何效果。
+#
+# ── 节奏 ──
+# 满足间隔时每天有 encounter_chance 的概率遇到一件；平均每年四五件（间隔 40 天 + 平均 33 天才遇到）。
+[rules]
+encounter_chance = 0.03    # 满足间隔时，每天遇到奇遇的概率
+gap_days = 40              # 两次奇遇至少间隔的天数
+first_day = 20             # 开局多少天之后才会遇到（先让新船长熟悉一下）
+#
+# ── 每一种奇遇 ──
+#   place        sea（舰队在海上）或 port（舰队停在港口）
+#   when         额外的条件（可省略）：at_sea = ["海区 key", …]、docked = ["港口 key", …]、fame、cash、ships、sighted、flag……
+#   weight       同一天可能遇到的几种之间的权重（缺省 1）
+#   once         每局只遇到一次；cooldown_days 同一种两次之间至少间隔的天数
+#   speaker      对话框里的头像：captain（主角）、mate:<航海士 key>、portrait:<头像 id>（要写 speaker_name）；不写表示旁白
+#   choices      1–3 个选项：text 选项、reply 选了之后的叙事、cost 要付的金币、give 要交出的货 { good, qty }、
+#                check 属性检定 { attr, base, per }（成功率 = base + 属性 × per %，夹在 5%–95%）、
+#                effects 效果（检定成功或没有检定时）、fail / fail_reply 检定失败时的效果与叙事
+#   效果（kind）：cash 金币、fame 名声、reputation 声望（不写 faction 为当地势力）、morale 士气、goods 货物（good、qty）、
+#                crew 水手、repair 修复 %、damage 损伤 %、supplies 粮水（天）、rumor 一条发现物传闻、
+#                reveal 标出发现物（discovery）、chart 海图（region）、mate 航海士加入、attr 主角属性（attr、value）、flag 故事标记
+
+[[encounters]]
+key = "bottle"
+title = "漂流瓶"
+text = "瞭望手从浪里捞起一只封着蜡的绿玻璃瓶，瓶里卷着一张发黄的纸。水手们围过来，谁也不敢先开口——海上的老规矩，捡到别人的信，要么替他送到，要么别看。"
+place = "sea"
+weight = 3
+cooldown_days = 150
+[[encounters.choices]]
+text = "打开看看。"
+reply = "纸上是一封没写完的信：“……要是有人捡到它，请告诉维拉马雷的玛尔塔，我没有死在风暴里。我在一座没有名字的岛上，岛上的沙子夜里会发光……”信的背面潦草地画着一段海岸线。"
+effects = [{ kind = "rumor" }]
+[[encounters.choices]]
+text = "原样扔回海里，让它漂到该去的地方。"
+reply = "瓶子在浪里打了个转，朝东边漂走了。水手们朝它挥了挥手，像在送一位远行的朋友。"
+effects = [{ kind = "morale", value = 4 }]
+
+[[encounters]]
+key = "castaway"
+title = "抱着桅杆的人"
+text = "海面上漂着一截断桅，上面趴着一个人，嘴唇干裂，胳膊还死死箍着木头。他的船三天前在风暴里散了架，他是唯一一个还有力气喊的人。"
+place = "sea"
+weight = 3
+cooldown_days = 120
+[[encounters.choices]]
+text = "放小艇，把他救上来。"
+reply = "他叫托马索，是个老帆工。喝完第三碗水，他已经开始挑你们帆索的毛病了——水手们嘴上骂他多事，第二天却都跟着他学打新的绳结。"
+effects = [{ kind = "crew", value = 1 }, { kind = "supplies", value = -1 }, { kind = "morale", value = 6 }]
+[[encounters.choices]]
+text = "扔给他一只水桶，照原定航线走。"
+reply = "水桶落在他够得着的地方。船走远了，还能看见他朝这边挥手。那天晚上，甲板上没有人唱歌。"
+effects = [{ kind = "morale", value = -6 }]
+
+[[encounters]]
+key = "dice"
+title = "码头的骰子"
+text = "货箱后面围着一圈人在掷骰子，吆喝声比海鸥还响。一个缺了半只耳朵的水手朝你招手：“船长，来一把？押五百，赢了翻倍——输了，就当请大伙喝酒。”"
+speaker = "portrait:keeper-frontier-tavern-c"
+speaker_name = "缺耳朵的水手"
+place = "port"
+weight = 2
+cooldown_days = 90
+[[encounters.choices]]
+text = "押五百。"
+cost = 500
+check = { attr = "eloquence", base = 35, per = 3 }
+reply = "三个六。缺耳朵的水手瞪着骰子看了半天，把钱推给你：“……船长，你是不是会看人下注？”"
+effects = [{ kind = "cash", value = 1000 }]
+fail_reply = "骰子在木板上转了很久，停在一个你最不想看见的数上。围观的人一哄而散，去酒馆花你的钱了。"
+[[encounters.choices]]
+text = "不赌，把自己的水手都叫回船上。"
+reply = "港务官在一旁看着，冲你点了点头。你的水手们嘟囔了一晚上，说船长比修道院的院长还古板。"
+effects = [{ kind = "reputation", value = 2 }, { kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "看一会儿就走。"
+reply = "你看了三局，没看出谁在出老千——这大概就说明，谁都在出老千。"
+
+[[encounters]]
+key = "old_sailor"
+title = "没人信的故事"
+text = "酒馆最暗的角落里，一个满脸皱纹的老水手敲了敲空酒杯：“请我喝一杯，我给你讲个没人信的故事。不好听，不要钱——好听的话，再请我一杯。”"
+speaker = "portrait:informant-islands-a"
+speaker_name = "老水手"
+place = "port"
+weight = 3
+cooldown_days = 120
+[[encounters.choices]]
+text = "请他喝一杯。"
+cost = 100
+reply = "“……那年我在孤灯海，夜里往船舷外一看，海底下有一座城，城里点着灯，一盏一盏，比港口还亮。船长说我喝多了。可我那天，一滴酒都没沾。”他用手指蘸着酒，在桌上画了一片海。"
+effects = [{ kind = "rumor" }]
+[[encounters.choices]]
+text = "婉拒。"
+reply = "“年轻人啊，”他摇摇头，把空杯子推到一边，“海上最值钱的，从来都不是货。”"
+
+[[encounters]]
+key = "shooting_stars"
+title = "星落之夜"
+text = "夜里，天上接二连三地落下流星，拖着淡蓝色的尾巴，全都落向同一个方向。水手们一个接一个跑上甲板，连厨子都举着锅铲出来了。"
+place = "sea"
+weight = 2
+cooldown_days = 240
+[[encounters.choices]]
+text = "让大家好好许个愿。"
+reply = "有人许愿发财，有人许愿回家，厨子许愿明天的汤别再糊。你许了什么，你没告诉任何人。"
+effects = [{ kind = "morale", value = 8 }]
+[[encounters.choices]]
+text = "拿出象限仪，记下流星落下的方向。"
+check = { attr = "numeracy", base = 30, per = 7 }
+reply = "你量了七颗流星，它们的尾巴都指向同一片海。卡迪尔的占星师说过，天火之石就是这样从天上落下来的。"
+effects = [{ kind = "rumor" }, { kind = "fame", value = 2 }]
+fail_reply = "你量到第三颗就晕了船，只好把象限仪收起来，跟大家一起许愿。"
+fail = [{ kind = "morale", value = 3 }]
+
+[[encounters]]
+key = "seabirds"
+title = "海鸟引路"
+text = "一群白腹的海鸟绕着桅杆打转，然后齐齐朝一个方向飞去，飞出一段又折回来，像是在等你。老水手说，跟着鸟走，要么有鱼，要么有岸。"
+place = "sea"
+weight = 2
+cooldown_days = 90
+[[encounters.choices]]
+text = "跟上它们。"
+reply = "它们领着你们找到了一大片鱼群，傍晚又赶上一场急雨，水桶全接满了。那天的晚饭，每人多了两条烤鱼。"
+effects = [{ kind = "supplies", value = 4 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "不理它们，照原定航线走。"
+reply = "海鸟又绕了两圈，失望地飞走了。"
+
+[[encounters]]
+key = "stowaway"
+title = "空酒桶里的人"
+text = "装货的时候，水手从一只空酒桶里拎出一个满身灰的年轻人。他说他会做饭、会补帆、会算账，什么都会——只求你带他离开这个港口，别问为什么。"
+place = "port"
+weight = 2
+cooldown_days = 150
+[[encounters.choices]]
+text = "留下他。"
+reply = "他叫阿米尔，做的豆子汤比原来的厨子强十倍。原来的厨子为此一个星期没跟你说话。"
+effects = [{ kind = "crew", value = 1 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "把他交给港务官。"
+reply = "港务官谢过你，说他是从债主家里逃出来的学徒。你看着他被带走，他回头看了你一眼，什么也没说。"
+effects = [{ kind = "reputation", value = 3 }]
+
+[[encounters]]
+key = "sea_serpent"
+title = "海蛇的脊背"
+text = "正午，海面忽然静了下来，连风都停了。离船不到一链远的地方，一道长满藤壶的脊背缓缓浮起，又缓缓沉下——比你的船还长。"
+place = "sea"
+once = true
+[[encounters.choices]]
+text = "悄悄绕开。"
+reply = "你们屏着气划了一个大弯。直到那片水面重新起了浪，才有人敢大声说话。"
+[[encounters.choices]]
+text = "远远地跟上去，看看它往哪儿去。"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "你们跟着它的尾迹走了半天，直到它潜进一道狭长的海峡。你把那个地方仔细地画在了海图上。"
+effects = [{ kind = "fame", value = 8 }, { kind = "reveal", discovery = "serpent_strait" }]
+fail_reply = "它的尾巴轻轻一扫，拍裂了你的船尾。你们一路舀着水逃开了，谁也没看清它去了哪里。"
+fail = [{ kind = "damage", value = 6 }, { kind = "morale", value = -5 }]

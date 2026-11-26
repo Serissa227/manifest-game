@@ -1,0 +1,140 @@
+# 请托：去看纸的七天（request_yun_haeri）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude（Haiku 5.5）执笔。
+# 人物：尹海梨 yun_haeri（1540-10-10 生，女），釜山纸商的女儿，学院同学（cast/classmates_custom_busan_interpreter.toml）。
+# 类型：押运／带人（escort）。章节：offer 说是去看纸 → arrive 严原的纸坊 → return 那边的错字；终局 done / failed。
+# 结构说明：arrive 的转折在第五天。objectives 写“到对马”加“住满五天”（wait 5），章节要到第五天才进入待决队列，书记拦门时选项才出现；“住七天”仍是原计划，pay_lodging 的回复写到七天。简报写的是 wait 7，但 wait 7 时“提前两天开船”无从谈起，所以改成五天，七天写在正文里。检定失败只有 fail 的 effects 与 news，没有回复（分支不带回复字段），回复沿用成功的那段。
+# 报价：当面（T）。auto=false，玩家在釜山她家纸铺找到她（ask:request_yun_haeri）。offer 窗口 1566-01-01 至 1586-06-30，deadline 1586-06-30，超时 next=failed，不写见闻。
+# 身份档 1（匠人、小商、年轻的同学）：现金基数 900，中档 ×1.4 = 1250。好感合计最多 +13（接下 +2，严原 +3，最好的结局 +8 或 +7）。不加名声（私下的出行）。
+# 依据（史实）：釜山与对马的往来，倭馆的书契与通事；对马宗氏的书记替宗家抄写书契（传闻口吻，正文不写具体年份与人名）。
+# 依据（原创）：尹海梨与她的纸铺、裁纸刀、两边错字的对照页、严原的纸坊与纸样。
+# 待核：严原纸坊的纸与墨的具体做法。正文只写看得见的差别：纸薄、墨淡、抄错了拿小刀刮。
+# 秘密：她想跟使臣的船出海，去看书契那头的人，只跟纸说过。本请托只写“跟父亲说是去看纸”，正文不写她想出使，见闻不写。
+# 读写的旗标：读 bond_yun_haeri 的 C 级（offer 的 variant，由羁绊线设）；只设 c13_request_yun_haeri_*（accepted / declined / asked / inside / late / done；asked 是 ask_father 设的分支旗标，arrive 的 v1_asked 读，好让两条接法的走向不一样）；不读也不设 c7_ 旗标；不涉及金文永。
+# 依赖：无改名依赖（busan、tsushima 现成）；技能 lang_japanese 现成；检定属性 seamanship 现成。
+# 回忆插画清单：
+#   mem-request_yun_haeri-return：两边错字的对照，一页纸，左边釜山、右边对马，中间一条线。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；arrive 超时她写信说纸够了，请托失败。return 没有期限，可以一直等。
+
+[[tracks]]
+key = "request_yun_haeri"
+name = "去看纸的七天"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["yun_haeri"]
+
+# offer · 1566—1586 · 釜山浦尹海梨家的纸铺：一叠错字的书契纸，她要去对马住七天
+[[tracks.chapters]]
+key = "offer"
+title = "说是去看纸"
+text = "釜山浦，尹海梨家的纸铺。柜台上摊着一叠对马来的书契纸，纸薄，边上齐，字却错了几处，错法跟这边通事写的一模一样。“你看这个。”她用指甲点着一个字。她看纸的时候不抬头，看完纸才看人。“这边念一个音，那边写另一个字，两边都照错的办。”她想去对马住七天，看那边的人怎么抄字。“跟我爹说的是去看纸。”说完她把裁纸刀往柜台上一放，“船上有没有地方放它？刀是我的，不借人。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "yun_haeri", text = "在釜山浦她家纸铺找到她" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1586, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "yun_haeri", ge = 18 }]
+deadline = [1586, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take_her"
+text = "接下，带她去严原住七天。"
+next = "arrive"
+effects = [{ kind = "affinity", person = "yun_haeri", value = 2 }, { kind = "flag", flag = "c13_request_yun_haeri_accepted" }]
+reply = "她当晚就把包袱收好了。包袱里一半是纸样，一半是干粮，纸样外面又包了一层油纸，怕海上受潮。第二天一早，她在码头上先把纸样数了一遍。"
+
+[[tracks.chapters.choices]]
+key = "ask_father"
+text = "接下，但问一句：她父亲真信是去看纸？"
+next = "arrive"
+effects = [{ kind = "affinity", person = "yun_haeri", value = 2 }, { kind = "flag", flag = "c13_request_yun_haeri_accepted" }, { kind = "flag", flag = "c13_request_yun_haeri_asked" }]
+reply = "“他信纸。”她把裁纸刀插进包袱，“纸是真要看的。他问我看什么，我就说看纸。”包袱上面那叠纸样，是他前天亲手挑的。她说完就蹲下去把包袱系紧，不再看你。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "她一个姑娘家去对马住七天，我担不起。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yun_haeri_declined" }]
+reply = "她把那叠纸收回柜台底下，一张一张抽出来，拿笔在错字上画圈。“那我先把错字都改了。”她头也没抬，笔尖沙沙地划过纸面，一连改了七八处。"
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "yun_haeri", level = "C" }]
+text = "釜山浦，尹海梨家的纸铺。她看见你进门，先把手里那张纸翻过来，像是要你先认出它的错字。“你当年就看过我改字，这回带我去看人家改。”纸薄，边上齐，字却错了几处，错法跟这边通事写的一模一样。她想去对马住七天，看那边的人怎么抄字。“跟我爹说的是去看纸。”说完她把裁纸刀往柜台上一放，“船上有没有地方放它？刀是我的，不借人。”"
+
+# arrive · 1566—1587 · 对马严原的纸坊：住满五天，宗家书记拦门
+[[tracks.chapters]]
+key = "arrive"
+title = "严原的纸坊"
+text = "海峡上风浪不小，尹海梨抱着包袱一声不吭，到了严原才吐了一回。前五天她泡在岛上的纸坊和宗家书记的房外头，看那边的人抄字。她看下来，纸比釜山的薄，墨比釜山的淡，抄错的字他们不涂，拿小刀一刮，照着原样再写。第五天一早，一个宗家的书记把她拦在门外，话问得又快又冷，问的是她是哪家的人。她听不懂，把手里的纸样往前一递：“纸。我看纸。”"
+speaker = "captain"
+mood = "tense"
+at = "tsushima"
+objectives = [{ kind = "at", at = "tsushima", text = "到对马严原" }, { kind = "wait", days = 5, text = "在严原住满五天" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1587, 8, 24] }, { kind = "alive", person = "yun_haeri", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "yun_haeri", text = "父亲说今年的纸够了，不用去看了。我先把柜台上的错字改完。" }, { kind = "affinity", person = "yun_haeri", value = -3 }, { kind = "flag", flag = "c13_request_yun_haeri_late" }] }
+
+[[tracks.chapters.choices]]
+key = "speak_for_her"
+text = "用日本话替她说明：釜山纸商家的，来看纸。"
+next = "return"
+requires = [{ kind = "skill", skill = "lang_japanese", ge = 60 }]
+hint = "书记的话你只听懂一半。想替她开口，又怕“纸商”两个字说出来变了味。"
+effects = [{ kind = "affinity", person = "yun_haeri", value = 3 }, { kind = "flag", flag = "c13_request_yun_haeri_inside" }]
+reply = "书记听说是纸商家的，反倒请她进去，拿出一叠写坏的纸问她哪里出了毛病。她指出三处，书记的脸一阵红一阵白。指完她就不再说话，把那叠纸一页页翻过来，看背面有没有写错的字。"
+news = "严原的宗家书记房里，一个釜山纸商家的姑娘指出了书契上三处错字，书记的脸红了一阵。"
+
+[[tracks.chapters.choices]]
+key = "pay_lodging"
+text = "替她付了纸坊的借宿钱，让纸坊主人出面担保。"
+next = "return"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "你摸了摸钱袋，里头的钱不够付这笔借宿钱，书记的脚步已经到了门口。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "yun_haeri", value = 3 }]
+reply = "纸坊主人说这姑娘是他的客人，书记就不再问了。她又在纸坊里看了两天，七天一满，才肯上船。纸坊主人教她的抄法，她一条条记进本子，每条后面都画了圈。"
+news = "严原的纸坊主人替一个釜山来的姑娘担了保，宗家书记不再追问，那姑娘又多看了两天纸。"
+
+[[tracks.chapters.choices]]
+key = "sail_out"
+text = "不惹事，提前两天开船。"
+next = "return"
+check = { attr = "seamanship", base = 35, per = 6 }
+fail = { next = "return", effects = [{ kind = "affinity", person = "yun_haeri", value = -2 }], news = "釜山来的船过对马海峡，赶上逆风，在海上多漂了一夜，船尾的姑娘一直没说话。" }
+effects = [{ kind = "affinity", person = "yun_haeri", value = 2 }]
+reply = "她站在船尾看严原的码头越来越小，纸样压在膝盖底下，一张一张对着看。“五天也够了，错字五天就看完了。”说完她把纸样收进包袱，系了两道结。"
+news = "对马严原来了个釜山纸商家的姑娘，只看了五天纸，嫌那边的墨淡，提前上船走了。"
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_yun_haeri_asked" }]
+text = "海峡上风浪不小，尹海梨抱着包袱一声不吭，到了严原才吐了一回。吐完她先把包袱打开，把纸样一张张摊在纸坊的桌上，说要看明白了，才好回去跟父亲交代。前五天她泡在岛上的纸坊和宗家书记的房外头，看那边的人抄字。她看下来，纸比釜山的薄，墨比釜山的淡，抄错的字他们不涂，拿小刀一刮，照着原样再写。第五天一早，一个宗家的书记把她拦在门外，话问得又快又冷，问的是她是哪家的人。她听不懂，把手里的纸样往前一递：“纸。我看纸。”"
+
+# return · 1566—1587 · 釜山浦：回程的船，她把错字的对照撕给你
+[[tracks.chapters]]
+key = "return"
+title = "那边的错字"
+text = "回程的船上，她一直在翻自己记的本子，膝盖上摊着两边抄来的字。本子的封皮是她自己糊的，糊歪了一角，她也不管。快到釜山浦时，她忽然问：“那边的人写错字，是不是也跟这边一样？”没等你答，她自己先答了：“一样。只是错的字不一样。”下船前，她把本子撕下一页给你，纸边还带着毛。左边写的是釜山的错字，右边是对马的，中间画了一条线。“拿着。”她说。"
+speaker = "captain"
+mood = "tender"
+at = "busan"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1587, 8, 24] }, { kind = "alive", person = "yun_haeri", value = true }]
+
+[[tracks.chapters.choices]]
+key = "keep_page"
+text = "收下那一页，说下回书契出错，先拿来对。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "yun_haeri", value = 8 }, { kind = "flag", flag = "c13_request_yun_haeri_done" }, { kind = "memory", memory = "mem-request_yun_haeri-return", title = "两边错字的对照" }]
+reply = "“正面是这边的，反面是那边的，别翻错了。”她说完跳下船，回纸铺去了，包袱里的纸样一张也没少。她托人送来船钱，多付了一点，说是那一页的纸钱。"
+news = "釜山浦的纸铺姑娘从对马回来了，她父亲说今年的纸样带得最多，还多带了一卷严原的薄纸。"
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "把那一页还给她：这该给通事们看，不该给我。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "yun_haeri", value = 7 }, { kind = "flag", flag = "c13_request_yun_haeri_done" }, { kind = "memory", memory = "mem-request_yun_haeri-return", title = "两边错字的对照" }]
+reply = "她想了想，把那页对折两下塞进本子。“那我就自己送去通事房，不说是我写的。”她付了船钱，一文不少。说完她先下了船，本子夹在胳膊底下。"
+news = "釜山浦的纸铺姑娘一下船就往通事房跑，手里攥着一页两边的错字，谁问都不说是她写的。"
+
+[[tracks.chapters.variants]]
+key = "v1_inside"
+when = [{ kind = "flag", flag = "c13_request_yun_haeri_inside" }]
+text = "回程的船上，她一直在翻自己记的本子。那边的书记请她明年再去，她说这话时没抬头。快到釜山浦时，她忽然问：“那边的人写错字，是不是也跟这边一样？”没等你答，她自己先答了：“一样。只是错的字不一样。”下船前，她撕下一页给你，左边写釜山，右边写对马。"

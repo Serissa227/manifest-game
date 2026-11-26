@@ -1,0 +1,2241 @@
+/* 新界面（试用）——经营扩展：商队、产业、殖民地、探险（docs/UI-REDESIGN.md 第 8 节第 5 组）。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ *
+ * 管到的根：.pn-caravans（商队窗口）、.pn-industry（产业窗口）、.pn-colonies（殖民地窗口、港口窗口里的殖民点 / 殖民地、
+ * “建立殖民地”对话框）、.pn-explore（探险窗口）。选择器一律从这几个根往下写，不碰别组面板里同名的 .pn-* 类。
+ *
+ * 做法：
+ * - 像素图（驮畜、护卫、产业与殖民建筑图标、发现物图章）一像素不动，只把外面的木框 / 斜面换成纸面上的细线小框；
+ * - 像素分段的数值条换成 6 px 的圆头细条（docs 第 4 节“进度”），颜色按含义取几种安静的色；
+ * - 卡片 1 px 细线、8 px 圆角；标题与名字用宋体（≥ 16 px），其余系统黑体；数字等宽；正文 ≥ 14 px（手机 15 px），说明 ≥ 12 px；
+ * - 每一处最多一个主按钮（组建商队、建设、建造、建立殖民地、全部报告）；收不回来的操作（解散、出售、放弃）是印章红描边的安静按钮，点了先确认；
+ * - 手机（.app.game[data-layout="phone"]）：表单单列、按钮 44 px、行内操作折成两列，页面不出现横向滚动；
+ * - 手机横屏（data-layout="short"，宽 568～932、高 < 500）不套手机竖屏的整套规则，靠格子自己随宽度折行：
+ *   自适应格子的最小宽度一律写 min(N px, 100%)，产业建设表单按自己的宽度排（容器查询），殖民地 ≤ 760 px 名册在上；
+ *   截图工具只有桌面与手机竖屏两种尺寸，横屏另用 667×375、568×320、844×390、932×430 量过（DECISIONS.md）。
+ */
+
+/* ═════════════════════════ 0. 四个窗口共用 ═════════════════════════ */
+/* 本组用到的几种浅底与种类色：一律从 base.css 的令牌调出来（color-mix 混进纸色），不另起颜色。
+   浅底上的字（涨绿、海蓝、印章红、墨色）对比度见 docs/DECISIONS.md 本组的“颜色改用令牌”一条，都 ≥ 4.5 : 1 */
+:root[data-ui="v2"] .pn-caravans,
+:root[data-ui="v2"] .pn-industry,
+:root[data-ui="v2"] .pn-colonies,
+:root[data-ui="v2"] .pn-explore {
+  /* 好消息 / 已完成的浅绿底 */
+  --bz-tint-up: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  /* 信息的浅蓝底 */
+  --bz-tint-sea: color-mix(in srgb, var(--v2-sea) 12%, var(--v2-paper-2));
+  /* 不满足条件的一行：很淡的红底 */
+  --bz-tint-seal: color-mix(in srgb, var(--v2-seal) 6%, var(--v2-paper-2));
+  /* 突出的一节（“在此建立殖民地”）：很淡的黄铜底 */
+  --bz-tint-brass: color-mix(in srgb, var(--v2-brass) 14%, var(--v2-paper-2));
+  /* 住房一类的砖红：黄铜与印章红对半调 */
+  --bz-brick: color-mix(in srgb, var(--v2-brass) 55%, var(--v2-seal));
+}
+/* 表单：标签在上、控件在下，几项排成一格一格（不再是“标签 控件 标签 控件”挤成一行） */
+:root[data-ui="v2"] .pn-caravans > .pn-section > .row,
+:root[data-ui="v2"] .pn-industry .pn-build-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+  gap: 10px 14px;
+  align-items: end;
+  margin: 8px 0 12px;
+}
+:root[data-ui="v2"] .pn-caravans > .pn-section > .row > .field,
+:root[data-ui="v2"] .pn-industry .pn-build-form > .field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-caravans > .pn-section > .row > .field > span,
+:root[data-ui="v2"] .pn-industry .pn-build-form > .field > span {
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-caravans > .pn-section > .row > .field select,
+:root[data-ui="v2"] .pn-caravans > .pn-section > .row > .field input,
+:root[data-ui="v2"] .pn-industry .pn-build-form > .field select {
+  width: 100%;
+  min-width: 0;
+}
+:root[data-ui="v2"] .pn-caravans input[type="number"],
+:root[data-ui="v2"] .pn-colonies input[type="number"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 等级小签（Lv2）：深海蓝的小方签，不再是像素斜面 */
+:root[data-ui="v2"] .pn-industry .pn-level,
+:root[data-ui="v2"] .pn-colonies .pn-level {
+  padding: 2px 6px;
+  font: 600 var(--v2-fs-xs) / 1.2 var(--v2-font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-on-night);
+  background: var(--v2-night-3);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* 说明小字：12 → 13 px */
+:root[data-ui="v2"] .pn-caravans .pn-note,
+:root[data-ui="v2"] .pn-industry .pn-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+
+/* 空状态的补充一句（共用组件，样式在 feedback.css）：中文长句折行时两行差不多长，第二行不只剩“型与配方就能建。”几个字 */
+:root[data-ui="v2"] .pn-caravans .v2-empty-hint,
+:root[data-ui="v2"] .pn-industry .v2-empty-hint,
+:root[data-ui="v2"] .pn-colonies .v2-empty-hint,
+:root[data-ui="v2"] .pn-explore .v2-empty-hint {
+  text-wrap: balance;
+}
+
+/* 收不回来的操作（解散商队、出售产业、放弃殖民地）：印章红描边的安静按钮，放在一排操作的最后；点了先确认 */
+:root[data-ui="v2"] .pn-caravans .pn-caravan .btn.danger,
+:root[data-ui="v2"] .pn-industry .pn-works .btn.danger,
+:root[data-ui="v2"] .pn-colonies .colony-detail > .pn-section:last-child .btn.danger {
+  color: var(--v2-seal);
+  background: var(--v2-paper-2);
+  border-color: rgba(163, 48, 42, 0.5);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan .btn.danger:hover:not(:disabled),
+:root[data-ui="v2"] .pn-industry .pn-works .btn.danger:hover:not(:disabled),
+:root[data-ui="v2"] .pn-colonies .colony-detail > .pn-section:last-child .btn.danger:hover:not(:disabled) {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan .btn.danger:disabled,
+:root[data-ui="v2"] .pn-industry .pn-works .btn.danger:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan .row > .btn.danger,
+:root[data-ui="v2"] .pn-industry .pn-works .row > .btn.danger {
+  margin-left: auto;
+}
+
+/* 不可用的主按钮：灰字淡底（base.css 的 .btn.primary 与 :disabled 特异度相同、排在后面，会把不可用的主按钮画成可点的样子） */
+:root[data-ui="v2"] .pn-caravans .btn.primary:disabled,
+:root[data-ui="v2"] .pn-industry .btn.primary:disabled,
+:root[data-ui="v2"] .pn-colonies .btn.primary:disabled,
+:root[data-ui="v2"] .pn-explore .btn.primary:disabled {
+  color: #8e8170;
+  font-weight: 500;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+
+/* 商品小签（谷物 ×2）：纸面上的小圆角签，图标是原来的像素图 */
+:root[data-ui="v2"] .pn-industry .pn-good-chip,
+:root[data-ui="v2"] .pn-colonies .colony-good {
+  gap: 4px;
+  padding: 2px 8px 2px 4px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-industry .pn-none {
+  padding: 2px 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-industry .pn-arrow {
+  color: var(--v2-ink-3);
+}
+
+/* 像素图标的底：凹一点的纸色小块（替代木框斜面）；不另画描边——它们都在卡片里，带框就成了卡片套卡片 */
+:root[data-ui="v2"] .pn-industry .pn-works-icon,
+:root[data-ui="v2"] .pn-colonies .colony-bicon {
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+
+/* ═════════════════════════ 1. 商队 ═════════════════════════ */
+/* 驮畜的队列：像素画的田野与土路照旧，外面加一道细线框、圆角，像一幅小插图 */
+:root[data-ui="v2"] .pn-caravans .pn-animal-pick,
+:root[data-ui="v2"] .pn-caravans .pn-caravan-road {
+  margin: 8px 0;
+  padding: 8px 12px 6px;
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: inset 0 0 0 2px rgba(255, 253, 248, 0.35);
+}
+:root[data-ui="v2"] .pn-caravans .pn-animal-info {
+  padding: 2px 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink);
+  background: rgba(255, 253, 248, 0.9);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-caravans .pn-train-more {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+/* 队列一行走完、不折行：折下去的驼畜会站到下面的土路上，小插图就破了。实在太长（四个护卫加五辆大车）
+   就在画框边上截住——驼畜、护卫的确切数目在卡片标题里写着，这里只是插图 */
+:root[data-ui="v2"] .pn-caravans .pn-train {
+  flex-wrap: nowrap;
+}
+:root[data-ui="v2"] .pn-caravans .pn-animal-pick,
+:root[data-ui="v2"] .pn-caravans .pn-caravan-road {
+  overflow: hidden;
+}
+/* 手机、手机横屏：驼畜挨紧一点（各让 6 px）；超过五头、队尾跟着“×7”时少画一头（四头 + ×7），
+   常见的两个护卫加一队骆驼、骡子正好一行，数目一直看得见 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans .pn-train-animal + .pn-train-animal,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-caravans .pn-train-animal + .pn-train-animal {
+  margin-left: -6px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans .pn-train-animal:has(+ .pn-train-more),
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-caravans .pn-train-animal:has(+ .pn-train-more) {
+  display: none;
+}
+
+/* 规划结果：五项小数字 + 逐段的路 */
+:root[data-ui="v2"] .pn-caravans .pn-route {
+  margin: 4px 0 12px;
+  padding: 12px 14px 10px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-plan {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(92px, 100%), 1fr));
+  gap: 8px 12px;
+  margin: 0 0 10px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-plan > div {
+  min-width: 0;
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-plan dt {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-plan dd {
+  margin: 2px 0 0;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-plan > .is-risky dd {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-caravans .pn-legs {
+  margin: 0 0 0 6px;
+  padding: 0 0 0 16px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+  border-left: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn-caravans .pn-legs li {
+  margin: 4px 0;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .pn-caravans .pn-legs li::before {
+  /* 7 + 2 × 2 = 11 px 的圆点，圆心正好落在 1 px 竖线的中线上 */
+  left: -22px;
+  top: 5px;
+  width: 7px;
+  height: 7px;
+  background: var(--v2-brass);
+  border: 2px solid var(--v2-paper-2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-caravans .pn-legs li.risky {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-caravans .pn-legs li.risky::before {
+  background: var(--v2-seal);
+  box-shadow: 0 0 0 1px var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-caravans > .pn-section > .btn.primary {
+  min-height: var(--v2-h-lg);
+  padding: 0 20px;
+  font-size: var(--v2-fs-lg);
+}
+
+/* 我的商队：一张卡一支队——标题（宋体）与副标题，路上的队列，所在、进度、驮载、货，最后一排操作 */
+:root[data-ui="v2"] .pn-caravans .pn-caravan {
+  margin: 10px 0;
+  padding: 14px 16px 12px;
+  background: var(--v2-paper-2);
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  font-weight: normal;
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  color: var(--v2-ink);
+  letter-spacing: 0.04em;
+}
+:root[data-ui="v2"] .pn-caravans .v2-cv-meta {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan-where {
+  margin: 6px 0 4px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-caravans .pn-leg-progress {
+  height: 6px;
+  margin: 2px 0 8px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-caravans .pn-leg-progress > i {
+  background: var(--v2-brass);
+  border-right: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-caravans .pn-goods {
+  gap: 6px 8px;
+  margin: 6px 0 10px;
+}
+:root[data-ui="v2"] .pn-caravans .pn-goods li {
+  padding: 2px 8px 2px 4px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan > .row > .btn:nth-child(2) {
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border-color: #b3852f;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan > .row > .btn:nth-child(2):hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan > .row {
+  gap: 8px;
+  margin: 4px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-caravans .pn-caravan > .v2-inline-error {
+  margin: 8px 0 0;
+}
+
+/* ═════════════════════════ 2. 产业 ═════════════════════════ */
+/* 一座产业一张卡：左边图标小框（等级小签在下），右边标题、配方、库存、四项日估算、一排操作 */
+:root[data-ui="v2"] .pn-industry .pn-works {
+  gap: 16px;
+  margin: 10px 0;
+  padding: 14px 16px;
+  background: var(--v2-paper-2);
+}
+:root[data-ui="v2"] .pn-industry .pn-works.stalled {
+  background: var(--v2-paper-2);
+  box-shadow: inset 3px 0 0 var(--v2-seal), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-industry .pn-works-icon {
+  gap: 6px;
+  padding: 8px;
+}
+:root[data-ui="v2"] .pn-industry .pn-works-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-industry .pn-works-head > strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink);
+}
+/* 缺料停工：印章红的小印，略斜 */
+:root[data-ui="v2"] .pn-industry .pn-stamp {
+  align-self: center;
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--v2-seal);
+  background: transparent;
+  border: 1px solid var(--v2-seal);
+  border-radius: var(--v2-r-xs);
+  transform: rotate(-3deg);
+}
+:root[data-ui="v2"] .pn-industry .pn-recipe,
+:root[data-ui="v2"] .pn-industry .pn-stock {
+  gap: 6px;
+  margin: 8px 0;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .pn-industry .pn-stock {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-industry .pn-recipe-name {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+/* 每日估算：产出、原料、人工维护、日盈亏（最大、正绿负红）。一排四项，每项至少 88 px；
+   卡片正文窄了（≤ 520 px：手机横屏、窄窗口；容器查询 v2-in-works）排成两行两列，不撑出横向滚动。
+   不再是卡片里再套一个带框的小框：上面一道细线隔开配方与库存，下面的细线是操作行自己的 */
+:root[data-ui="v2"] .pn-industry .pn-works-main {
+  container: v2-in-works / inline-size;
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 36px;
+  margin: 10px 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily > div {
+  flex: 0 0 auto;
+  min-width: 88px;
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily dt {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily dd {
+  margin: 2px 0 0;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily .is-profit dd {
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily .is-profit.up dd {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-industry .v2-in-daily .is-profit.down dd {
+  color: var(--v2-down);
+}
+/* 卡片正文窄了：两行两列（写在上面几条之后，同样的特异度要靠后才压得住） */
+@container v2-in-works (max-width: 520px) {
+  :root[data-ui="v2"] .pn-industry .v2-in-daily {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* 一排操作：升级、管理人、换配方（下拉）、最后是出售 */
+:root[data-ui="v2"] .pn-industry .pn-works .row {
+  gap: 8px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-industry .pn-works .row > .field {
+  gap: 6px;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-industry .pn-works .row > .field > span {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+/* 建设：图标小框 + 一格一格的表单 + 配方预览 + 主按钮。
+   表单按这一块自己的宽度排（容器查询 v2-in-build）：宽的时候“地点、类型”各一份、“配方”两份排一行；
+   窄了（手机横屏、窄窗口）“配方”换到下一行占满；再窄就一项一行——任何宽度都不撑出横向滚动 */
+:root[data-ui="v2"] .pn-industry .pn-build {
+  container: v2-in-build / inline-size;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-industry .pn-build > .pn-works-icon {
+  padding: 8px;
+}
+:root[data-ui="v2"] .pn-industry .pn-build-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 2fr);
+  margin: 0;
+}
+/* 表单不到约 560 px（这一块 ≤ 680 px：减去图标与内边距）：地点、类型一行两项，配方占满下一行 */
+@container v2-in-build (max-width: 680px) {
+  :root[data-ui="v2"] .pn-industry .pn-build-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :root[data-ui="v2"] .pn-industry .pn-build-form > label.field:nth-of-type(3) {
+    grid-column: 1 / -1;
+  }
+}
+/* 再窄（这一块 ≤ 420 px）：一项一行 */
+@container v2-in-build (max-width: 420px) {
+  :root[data-ui="v2"] .pn-industry .pn-build-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+:root[data-ui="v2"] .pn-industry .pn-build-form > .pn-recipe {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-industry .pn-build-form > .btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+  min-height: var(--v2-h-lg);
+  padding: 0 20px;
+  font-size: var(--v2-fs-lg);
+}
+
+/* ═════════════════════════ 3. 殖民地 ═════════════════════════ */
+:root[data-ui="v2"] .pn-colonies .colony-slots {
+  gap: 2px;
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-layout {
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+  gap: 20px;
+}
+/* 只有名册（上面显示殖民点卡片时）：同旧界面，名册占满一栏、卡片横排（上一条两栏的规则比旧界面的这一条更具体，要在这里写回来）；
+   每张卡至少 240 px（与两栏时左栏一样宽，“人口、士气、存粮”一行放得下） */
+:root[data-ui="v2"] .pn-colonies .colony-layout.is-roster-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .pn-colonies .colony-layout.is-roster-only .colony-roster ul {
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+}
+/* 窄屏（宽 ≤ 760 px，同旧界面的断点；含手机横屏）：名册在上、详情在下，名册两张一行。
+   原来只在手机竖屏改单栏，568 × 320 的横屏里左栏 190 px 把详情挤到 240 px，下面两栏的小节撑出横向滚动 */
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .pn-colonies .colony-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  :root[data-ui="v2"] .pn-colonies .colony-roster ul {
+    grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+  }
+}
+/* 名册在左栏时（桌面、平板）吸在左上：详情很长，滚到税率、装卸时左栏不再空着，换一处殖民地也不用先滚回顶上。
+   殖民地最多五处，名册比窗口高时在自己的栏里滚（留 3 px 给焦点环）。手机上名册在详情上面，不吸；
+   手机横屏（矮窗口）也不吸：窗口正文只有两百多像素高，吸顶的名册会成一个一百多像素的小滚动框，
+   第一张卡都放不下，手指从名册上划还带不动整页 */
+@media (min-width: 761px) {
+  :root[data-ui="v2"] .app.game:not([data-layout="phone"]):not([data-layout="short"]) .pn-colonies .colony-layout:not(.is-roster-only) > .colony-roster {
+    position: sticky;
+    top: 8px;
+    max-height: calc(100dvh - 240px);
+    margin: -3px;
+    padding: 3px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+:root[data-ui="v2"] .pn-colonies .colony-back-site {
+  gap: 6px;
+  margin: 4px 0 8px;
+}
+
+/* 名册：一处殖民地一行卡；选中的左边一道黄铜线、浅黄铜底；告急的左边一道印章红 */
+:root[data-ui="v2"] .pn-colonies .colony-roster ul {
+  gap: 8px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-item {
+  gap: 4px;
+  min-height: 0;
+  padding: 10px 12px 10px 14px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.45;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-item:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-line-strong);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-item:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-item.is-warn {
+  border-color: var(--v2-line);
+  box-shadow: inset 3px 0 0 var(--v2-brass), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-item.is-bad {
+  border-color: rgba(163, 48, 42, 0.45);
+  box-shadow: inset 3px 0 0 var(--v2-seal), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-item.is-on,
+:root[data-ui="v2"] .pn-colonies .colony-roster-item.is-on:hover:not(:disabled) {
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 4px 0 0 var(--v2-brass-ink), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-site {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-stats {
+  gap: 2px 10px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster-build {
+  gap: 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-roster .pn-icon {
+  margin-right: 3px;
+}
+
+/* 小签（断粮、存粮告急、袭击风险高、事件影响；袭击风险的高中低）：12 px、圆角、浅底 */
+:root[data-ui="v2"] .pn-colonies .colony-chips {
+  gap: 4px;
+  margin-top: 2px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-chip,
+:root[data-ui="v2"] .pn-colonies .colony-risk {
+  padding: 1px 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-colonies .colony-chip.bad,
+:root[data-ui="v2"] .pn-colonies .colony-risk.is-high {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+:root[data-ui="v2"] .pn-colonies .colony-chip.warn,
+:root[data-ui="v2"] .pn-colonies .colony-risk.is-mid {
+  color: #4d3407;
+  background: #f6e6c2;
+}
+:root[data-ui="v2"] .pn-colonies .colony-risk.is-low {
+  color: var(--v2-up);
+  background: var(--bz-tint-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-chip.event {
+  color: var(--v2-sea);
+  background: var(--bz-tint-sea);
+}
+
+/* 数值条：6 px 圆头细条（纯装饰，数值另有文字）；士气的增长门槛是一道细竖线 */
+:root[data-ui="v2"] .pn-colonies .colony-meter {
+  height: 6px;
+  min-width: 40px;
+  margin: 4px 0;
+  overflow: visible;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: inset 0 0 0 1px rgba(36, 28, 21, 0.06);
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-colonies .colony-meter::after {
+  display: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-meter > i {
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-meter > b {
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--v2-ink-2);
+  border-radius: 1px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-pop {
+  --bar: var(--v2-sea);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-morale,
+:root[data-ui="v2"] .pn-colonies .colony-tone-build,
+:root[data-ui="v2"] .pn-colonies .colony-tone-tax {
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-food,
+:root[data-ui="v2"] .pn-colonies .colony-tone-fertile {
+  --bar: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-cargo {
+  --bar: var(--v2-line-control);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-defense {
+  --bar: var(--v2-night-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-hazard,
+:root[data-ui="v2"] .pn-colonies .colony-meter.warn {
+  --bar: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tone-rich {
+  --bar: var(--v2-brass-ink);
+}
+
+/* 详情的标题：殖民地名（宋体 22）、立碑日期与账面价值、下面是殖民地总管 */
+:root[data-ui="v2"] .pn-colonies .colony-detail-head {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--v2-line);
+}
+/* 殖民地总管：头像是带衬边的插图（同交易所的掌柜），名字 14 px、头衔 12 px */
+:root[data-ui="v2"] .pn-colonies .colony-steward {
+  gap: 10px;
+  margin-top: 8px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-steward .cast-frame {
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-sm);
+  box-shadow: 0 0 0 2px var(--v2-paper-0), 0 0 0 3px var(--v2-line);
+}
+:root[data-ui="v2"] .pn-colonies .colony-steward .cast-text strong {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-steward .cast-text small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 双行名字的英文小行：不小于 12 px、不再半透明（缺省是 0.65 倍字号、72% 不透明，放在小字后面只剩八九像素） */
+:root[data-ui="v2"] .pn-colonies .bi-name-sub,
+:root[data-ui="v2"] .pn-explore .bi-name-sub {
+  margin-top: 2px;
+  font-size: max(var(--v2-fs-xs), 0.6em);
+  font-weight: normal;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink-3);
+  opacity: 1;
+}
+:root[data-ui="v2"] .pn-colonies .colony-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--v2-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-detail-head .sub {
+  margin: 4px 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+
+/* 状态牌：标签 12 px、大号等宽数字、细条；注意是黄铜色字，危险是印章红字 + 浅红底 */
+:root[data-ui="v2"] .pn-colonies .colony-tiles {
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-tiles.compact {
+  grid-template-columns: repeat(auto-fit, minmax(min(104px, 100%), 1fr));
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile {
+  gap: 4px;
+  padding: 10px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile-head {
+  gap: 2px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile-value {
+  font: 600 var(--v2-fs-xl) / 1.2 var(--v2-font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile.is-ok .colony-tile-value {
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile.is-warn {
+  border-color: var(--v2-line);
+  box-shadow: inset 0 3px 0 var(--v2-brass), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile.is-warn .colony-tile-value {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile.is-bad {
+  background: #f8e3dc;
+  border-color: rgba(163, 48, 42, 0.35);
+  box-shadow: inset 0 3px 0 var(--v2-seal), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile.is-bad .colony-tile-value {
+  color: var(--v2-seal);
+  animation: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-tile small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 状态牌是竖排的 flex：数值条带着 .pn-bar 的 flex: 1（基准 0），牌子没有多余高度时（手机上两张一行）被压成 0 px、看不见；
+   桌面上同一行的牌子被“月税收”撑高，条又会多长出 1 px。固定成 6 px、不伸缩。 */
+:root[data-ui="v2"] .pn-colonies .colony-tile > .colony-meter {
+  flex: none;
+  height: 6px;
+}
+
+/* 警示：断粮是印章红的浅底（与就地错误一样），存粮告急是黄铜色的一道 */
+:root[data-ui="v2"] .pn-colonies .colony-alert {
+  gap: 8px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: var(--v2-lh);
+  border: 1px solid;
+  border-radius: var(--v2-r-sm);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-alert.bad {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: rgba(163, 48, 42, 0.28);
+  border-left: 3px solid var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-colonies .colony-alert.warn {
+  color: #4d3407;
+  background: #f6e6c2;
+  border-color: rgba(179, 133, 47, 0.45);
+  border-left: 3px solid var(--v2-brass);
+}
+
+/* 小节里的文字：一行 14 px，说明 13 px */
+:root[data-ui="v2"] .pn-colonies .colony-grid2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 0 24px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-line {
+  gap: 4px 8px;
+  margin: 6px 0;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-note {
+  margin: 6px 0;
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-note.warn {
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-note.up,
+:root[data-ui="v2"] .pn-colonies .colony-line b.up {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-line b.down {
+  color: var(--v2-down);
+}
+/* 做不了的原因（建造选项、建立条件）：印章红字，前面一个空心的“!” */
+:root[data-ui="v2"] .pn-colonies .colony-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  line-height: var(--v2-lh);
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-colonies .colony-reason::before {
+  content: "!";
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 1;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+/* 士气构成：一行一项，右边是增减（正绿负红），行间细线 */
+:root[data-ui="v2"] .pn-colonies .colony-factors {
+  gap: 0;
+  margin: 8px 0;
+  font-size: var(--v2-fs-sm);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn-colonies .colony-factor {
+  padding: 6px 10px;
+  background: transparent;
+  border-left: 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-colonies .colony-factor:first-child {
+  border-top: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-factor.is-up b {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-factor.is-down b {
+  color: var(--v2-down);
+}
+
+/* 事件影响：左边一道细色线（增益绿、减益红），剩余天数黄铜色 */
+:root[data-ui="v2"] .pn-colonies .colony-events {
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-colonies .colony-event {
+  gap: 2px 10px;
+  padding: 8px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-up);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-colonies .colony-event.is-down {
+  border-left-color: var(--v2-down);
+}
+:root[data-ui="v2"] .pn-colonies .colony-event-label {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-event-text {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-event-left {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-brass-ink);
+}
+
+/* 建筑卡片与建造选项：纸面卡片，顶上一道 3 px 的颜色表示建筑种类（安静的几种色） */
+:root[data-ui="v2"] .pn-colonies .colony-cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+  gap: 10px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-card {
+  gap: 12px;
+  padding: 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-top: 3px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-food {
+  border-top-color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-extract {
+  border-top-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-process {
+  border-top-color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-storage {
+  border-top-color: var(--v2-line-control);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-defense {
+  border-top-color: var(--v2-night-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-morale {
+  border-top-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-dock {
+  border-top-color: var(--v2-sea);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card.kind-housing {
+  border-top-color: var(--bz-brick);
+}
+/* 街景里点了这座建筑：黄铜色的描边，不再闪 */
+:root[data-ui="v2"] .pn-colonies .colony-card.is-focus {
+  border-color: var(--v2-brass-ink);
+  box-shadow: 0 0 0 3px rgba(227, 176, 86, 0.45), var(--v2-shadow-1);
+  animation: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-option.is-blocked {
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-bicon {
+  padding: 6px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-line .colony-bicon,
+:root[data-ui="v2"] .pn-colonies .colony-producible .colony-bicon {
+  padding: 2px;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-colonies .colony-card-main {
+  gap: 4px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-card-head strong {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-pips {
+  gap: 3px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-pips i {
+  width: 14px;
+  height: 4px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-colonies .colony-pips i.on {
+  background: var(--v2-brass);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-kind,
+:root[data-ui="v2"] .pn-colonies .colony-card-foot {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-effect {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-effect.muted {
+  font-weight: normal;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-flow {
+  gap: 4px 6px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-colonies .colony-flow-label {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* “在此地产出谷物，产量 42%”：没有类名的 <small>，缺省是 smaller（13 px 下只剩 10.8 px），补到说明字的下限 */
+:root[data-ui="v2"] .pn-colonies .colony-flow > small {
+  flex-basis: 100%;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-good.bad {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: rgba(163, 48, 42, 0.35);
+}
+:root[data-ui="v2"] .pn-colonies .colony-good-qty {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .pn-colonies .colony-miss {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+/* 新建 / 升级的小签 */
+:root[data-ui="v2"] .pn-colonies .colony-tag {
+  padding: 1px 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tag.new {
+  color: var(--v2-up);
+  background: var(--bz-tint-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-cost {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2px 4px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-cost .colony-gap {
+  margin-left: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-card-actions {
+  padding-top: 8px;
+}
+
+/* 在建工程：一张虚线框的施工牌，进度是黄铜细条 */
+:root[data-ui="v2"] .pn-colonies .colony-construct {
+  gap: 12px;
+  padding: 12px 14px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px dashed var(--v2-brass-ink);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-construct-main strong {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-construct-main small {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+
+/* 税率：一排分段，选中的浅黄铜底 + 描边（单选） */
+:root[data-ui="v2"] .pn-colonies .colony-tax {
+  grid-template-columns: repeat(auto-fit, minmax(min(100px, 100%), 1fr));
+  gap: 0;
+  padding: 3px;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step {
+  gap: 2px;
+  min-height: 0;
+  padding: 8px 6px;
+  color: var(--v2-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step:hover:not(:disabled) {
+  background: rgba(255, 253, 248, 0.7);
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step.is-on,
+:root[data-ui="v2"] .pn-colonies .colony-tax-step.is-on:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-brass-ink);
+  box-shadow: var(--v2-shadow-1), inset 0 -3px 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step strong {
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step small {
+  font-size: var(--v2-fs-xs);
+  line-height: 1.45;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step small.up {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-tax-step small.down {
+  color: var(--v2-down);
+}
+
+/* 上月统计：两列一组的账目，桌面上并成四列 */
+:root[data-ui="v2"] .pn-colonies .colony-month {
+  grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr);
+  gap: 6px 16px;
+  padding: 12px 14px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-month dt {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+
+/* 装卸：船舱与殖民地仓库两栏；每行一种货：货名与数量、数量框、“一半 / 全部”、搬（写明数量） */
+:root[data-ui="v2"] .pn-colonies .colony-cargo-cols {
+  gap: 12px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-col {
+  padding: 10px 12px 12px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-head {
+  gap: 2px 10px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-head > strong {
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-head > small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-cap {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  /* “仓位 70 / 200”不在斜线处折开（手机上整组换到下一行） */
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-list {
+  gap: 0;
+}
+/* 栏是一个框；栏里的行不再各自成卡（不要卡片套卡片），行与行之间一道细线 */
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  grid-template-areas:
+    "good good good good"
+    "qty all half go";
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row:first-child {
+  padding-top: 2px;
+  border-top: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row:last-child {
+  padding-bottom: 0;
+}
+/* 对面满了：原因在这一栏的标题下写一次（每一行的按钮都 aria-describedby 指过来） */
+:root[data-ui="v2"] .pn-colonies .colony-cargo-col > .colony-cargo-full {
+  margin: 0 0 6px;
+}
+/* 这一行搬不了的原因（数量超出空位或存货）：占满一整行，写在按钮下面（按钮 aria-describedby 指过来） */
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .v2-inline-error {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .colony-good {
+  grid-area: good;
+  justify-self: start;
+  padding: 0;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .field {
+  grid-area: qty;
+  min-width: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row input[type="number"] {
+  width: 100%;
+  min-width: 64px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .colony-quick:nth-of-type(1) {
+  grid-area: all;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .colony-quick:nth-of-type(2) {
+  grid-area: half;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .btn.primary {
+  grid-area: go;
+  white-space: nowrap;
+}
+/* 一行一个、一张卡一个的操作（“卸货 60”“装船 130”、建造选项的“建造 / 升级”）：一键操作的浅黄铜底、黄铜描边
+   （同交易所的“买满 / 全卖”、探险卡片上的“报告”）——一节里有好几个，整块黄铜的主按钮就没有哪个突出了。
+   组件里仍是 kind="primary"（旧界面不变），只在这里换样子 */
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .btn.primary,
+:root[data-ui="v2"] .pn-colonies .colony-card-actions > .btn.primary {
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .btn.primary:hover:not(:disabled),
+:root[data-ui="v2"] .pn-colonies .colony-card-actions > .btn.primary:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-cargo-row > .btn.primary:disabled,
+:root[data-ui="v2"] .pn-colonies .colony-card-actions > .btn.primary:disabled {
+  color: #8e8170;
+  font-weight: 500;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+/* “全部 / 一半”：只改数量、不搬货——安静的细线小按钮，让同一行里真正搬货的那一下更醒目 */
+:root[data-ui="v2"] .pn-colonies .colony-quick {
+  min-height: var(--v2-h-sm);
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-quick:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-color: var(--v2-line-control);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-colonies .colony-quick:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+/* 从殖民地带人上船 */
+:root[data-ui="v2"] .pn-colonies .colony-crew {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-crew .sub {
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-crew .warn {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-colonies .colony-crew .hint {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-colonies .colony-crew input[type="number"] {
+  width: 84px;
+}
+
+/* 小节里的空状态（还没有建筑、仓库空……）：比整页的空状态小一号 */
+:root[data-ui="v2"] .pn-colonies .colony-detail .empty,
+:root[data-ui="v2"] .pn-colonies .colony-cargo-col .empty {
+  margin: 4px 0;
+  padding: 12px 14px;
+  font-size: var(--v2-fs-sm);
+}
+
+/* 放弃殖民地（旧界面的就地确认在 v2 下不出现：改用确认对话框） */
+:root[data-ui="v2"] .pn-colonies .colony-confirm {
+  padding: 10px 12px;
+  background: #f8e3dc;
+  border: 1px solid rgba(163, 48, 42, 0.35);
+  border-radius: var(--v2-r-sm);
+}
+
+/* ── 港口窗口里的殖民点、殖民地窗口的殖民点卡片 ── */
+:root[data-ui="v2"] .pn-colonies .colony-lore {
+  margin: 8px 0 12px;
+  padding: 4px 0 4px 12px;
+  font-style: normal;
+  font-size: var(--v2-fs-md);
+  line-height: 1.75;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border-left: 1px solid var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-colonies .colony-site-meters > span {
+  gap: 8px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .pn-colonies .pn-h4 {
+  margin: 12px 0 6px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-resources li {
+  gap: 10px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-colonies .colony-resources li small,
+:root[data-ui="v2"] .pn-colonies .colony-producible li small {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .pn-colonies .colony-producible li {
+  gap: 10px;
+  font-size: var(--v2-fs-md);
+}
+/* 条件逐项：每项一行，前面一个圆标（满足的绿勾、不满足的印章红叉）。
+   条件与停在此地的舰队接成同一张清单：没有自己的框与底（外面已经有殖民点卡片这一层框），行与行之间一道细线，
+   上下各一道细线收住 */
+:root[data-ui="v2"] .pn-colonies .colony-checks,
+:root[data-ui="v2"] .pn-colonies .colony-fleets {
+  gap: 0;
+  margin: 8px 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+  border-bottom: 1px solid var(--v2-line);
+  border-radius: 0;
+}
+/* 舰队紧接在条件下面：两张清单之间只有一道细线 */
+:root[data-ui="v2"] .pn-colonies .colony-checks + .colony-fleets {
+  margin-top: -9px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-checks li,
+:root[data-ui="v2"] .pn-colonies .colony-fleets li {
+  padding: 7px 8px 7px 32px;
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink);
+  background: transparent;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-colonies .colony-checks li:first-child,
+:root[data-ui="v2"] .pn-colonies .colony-fleets li:first-child {
+  border-top: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-checks li::before,
+:root[data-ui="v2"] .pn-colonies .colony-fleets li::before {
+  content: "✓";
+  left: 8px;
+  top: 9px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 1;
+  color: #fff8ee;
+  background: var(--v2-up);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .pn-colonies .colony-checks li.bad,
+:root[data-ui="v2"] .pn-colonies .colony-fleets li.bad {
+  color: var(--v2-seal);
+  background: var(--bz-tint-seal);
+}
+:root[data-ui="v2"] .pn-colonies .colony-checks li.bad::before,
+:root[data-ui="v2"] .pn-colonies .colony-fleets li.bad::before {
+  content: "✕";
+  color: #fff8ee;
+  background: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-colonies .colony-flag {
+  border-radius: 1px;
+}
+/* “在此建立殖民地”：浅黄铜底的一段（最前面），主按钮在段末；不另加框——外面的殖民点卡片已经是一层框 */
+:root[data-ui="v2"] .pn-colonies .colony-found-cta {
+  margin: 4px 0 14px;
+  padding: 2px 16px 14px;
+  background: var(--bz-tint-brass);
+  border: 0;
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-ready {
+  font-weight: 600;
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-colonies .colony-site .pn-section > .btn.primary,
+:root[data-ui="v2"] .pn-colonies .colony-here .pn-section > .btn.primary {
+  min-height: var(--v2-h-lg);
+  margin-top: 6px;
+  padding: 0 20px;
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .pn-colonies .colony-site-card {
+  margin: 0 0 16px;
+  padding: 14px 16px 6px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-colonies .colony-site-head {
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-colonies .colony-site-head small {
+  margin-left: 8px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  font-weight: normal;
+  letter-spacing: 0;
+  color: var(--v2-ink-3);
+}
+
+/* ── “建立殖民地”对话框：纸卡；手机上从底部升起，按钮整宽、“取消”在最下面 ── */
+:root[data-ui="v2"] .modal.colony-found-modal {
+  background: rgba(6, 11, 20, 0.66);
+}
+:root[data-ui="v2"] .pn-colonies.colony-found {
+  width: min(540px, calc(100vw - 32px));
+  padding: 22px 24px 18px;
+  border-radius: var(--v2-r-lg);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-title {
+  gap: 10px;
+  margin: 0 0 6px;
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+  border: 0;
+}
+:root[data-ui="v2"] .pn-colonies.colony-found > .sub {
+  margin: 0 0 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-name {
+  align-items: flex-end;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-name .field,
+:root[data-ui="v2"] .pn-colonies.colony-found > .field:not(.colony-found-settlers) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-name .field > span,
+:root[data-ui="v2"] .pn-colonies.colony-found > .field > span {
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-name input {
+  min-height: var(--v2-h-lg);
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-name .btn {
+  min-height: var(--v2-h-lg);
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-settlers {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-count {
+  min-width: 2.5em;
+  font: 700 var(--v2-fs-xl) / 1 var(--v2-font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-actions {
+  gap: 8px;
+  margin: 14px 0 0;
+}
+:root[data-ui="v2"] .pn-colonies .colony-found-actions .btn {
+  min-height: var(--v2-h-md);
+}
+@media (max-width: 719px) {
+  :root[data-ui="v2"] .modal.colony-found-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .pn-colonies.colony-found {
+    /* 手机正文 15 px（同下面“手机”一节对四个面板的处理） */
+    --v2-fs-md: 15px;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(var(--vh100, 100vh) - 24px - var(--safe-top, 0px));
+    padding: 22px 16px calc(14px + var(--safe-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+    position: relative;
+  }
+  /* 顶上一条可抓的短横：与共用确认对话框的 .v2-confirm-grip 同样大小、同样颜色（这里没有那个元素，用伪元素画） */
+  :root[data-ui="v2"] .pn-colonies.colony-found::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    background: var(--v2-line-strong);
+    border-radius: var(--v2-r-pill);
+  }
+  :root[data-ui="v2"] .pn-colonies .colony-found-title {
+    font-size: var(--v2-fs-xl);
+  }
+  :root[data-ui="v2"] .pn-colonies .colony-found-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  :root[data-ui="v2"] .pn-colonies .colony-found-actions .btn {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+  :root[data-ui="v2"] .pn-colonies .colony-found-name .field {
+    flex: 1 1 100%;
+  }
+  :root[data-ui="v2"] .pn-colonies .colony-found-name .btn {
+    min-height: var(--v2-h-touch);
+  }
+}
+
+/* ═════════════════════════ 4. 探险 ═════════════════════════ */
+/* 日志本身不再画横格与红页边线：窗口的纸面就是日志；标题宋体，下面一道 1 px 细线
+   （双细线只在窗口标题栏下——全界面唯一的装饰线，这里不再叠第二道） */
+:root[data-ui="v2"] .pn-explore .ex-journal {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-title {
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 4px 0 14px;
+  padding-bottom: 10px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--v2-ink);
+  text-shadow: none;
+  border-bottom: 1px solid var(--v2-line);
+}
+/* 卷首：名声（大号数字）与下一档航海士的门槛。
+   只留名声那一块深色小牌，卷首本身不再是带框的一块（原来框里套着名声的框，卡片套卡片） */
+:root[data-ui="v2"] .pn-explore .ex-head {
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 4px 0 6px;
+}
+:root[data-ui="v2"] .pn-explore .ex-fame {
+  gap: 2px;
+  min-width: 96px;
+  padding: 8px 14px 10px;
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-explore .ex-fame-label {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .pn-explore .ex-fame-value {
+  font: 700 var(--v2-fs-3xl) / 1.1 var(--v2-font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-brass-hi);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-subtitle {
+  margin: 0 0 6px;
+  font-style: normal;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-explore .ex-next {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-explore .ex-ladder {
+  gap: 6px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-explore .ex-rung {
+  gap: 6px;
+  padding: 2px 10px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-explore .ex-rung.is-ok {
+  color: var(--v2-up);
+  background: var(--bz-tint-up);
+  border: 1px solid rgba(43, 106, 59, 0.4);
+}
+
+/* 进度：数字 + 细条 + 待报告的小签 */
+:root[data-ui="v2"] .pn-explore .ex-progress {
+  gap: 12px;
+  margin: 6px 0 12px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .pn-explore .ex-progress .pn-bar {
+  max-width: 240px;
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-explore .ex-progress .pn-bar::after {
+  display: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-progress .pn-bar > i {
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-pending {
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+/* 六类发现兼作筛选：一排圆角小签，按下的浅黄铜底 + 描边（同港口设施的分页） */
+:root[data-ui="v2"] .pn-explore .ex-kinds {
+  gap: 8px;
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-btn {
+  gap: 6px;
+  min-height: var(--v2-h-md);
+  padding: 0 12px 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  text-shadow: none;
+  transform: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-btn:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: #fff;
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-btn.is-on,
+:root[data-ui="v2"] .pn-explore .ex-kind-btn.is-on:hover:not(:disabled) {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+  text-shadow: none;
+  transform: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-count {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+  opacity: 1;
+}
+
+/* 海上传闻：一行一条，行间细线；未证实的图章灰、已证实的绿签 */
+:root[data-ui="v2"] .pn-explore .ex-rumor-hint {
+  font-style: normal;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor-list {
+  gap: 0;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor {
+  gap: 2px 10px;
+  padding: 8px 12px;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor:first-child {
+  border-top: 0;
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor.is-found {
+  background: transparent;
+  border-left-color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor-text {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor-day {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor-tag {
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-explore .ex-rumor-tag.is-found {
+  color: var(--v2-up);
+  background: var(--bz-tint-up);
+}
+
+/* 报告栏：说明在左，选港口、“全部报告”（这一节的主按钮）在右；回执是绿色的一道 */
+:root[data-ui="v2"] .pn-explore .ex-report-bar {
+  gap: 8px 12px;
+  margin: 6px 0 12px;
+  padding: 10px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-explore .ex-report-hint {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-explore .ex-report-bar > .v2-inline-error {
+  flex: 1 1 240px;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-explore .ex-report-bar > .btn {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+}
+:root[data-ui="v2"] .pn-explore .ex-report-bar > .btn:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .pn-explore .ex-report-bar > .btn:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .pn-explore .ex-receipt {
+  gap: 6px;
+  margin: 6px 0 12px;
+  padding: 10px 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-up);
+  background: var(--bz-tint-up);
+  border: 1px solid rgba(43, 106, 59, 0.3);
+  border-left: 3px solid var(--v2-up);
+  border-radius: var(--v2-r-sm);
+}
+
+/* 日志条目：纸面卡片，左边一道 3 px 的种类色；名字宋体；简史正文字体、左边一道细线 */
+/* 没登记颜色的种类（往后新加的发现物）退回一道细线色：卡片左边仍有色条，不会整条边没了 */
+:root[data-ui="v2"] .pn-explore .ex-cards {
+  --ex-kind: var(--v2-line-strong);
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: 12px;
+  margin: 8px 0 0;
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-ruins {
+  --ex-kind: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-wonder {
+  --ex-kind: var(--v2-sea);
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-wreck {
+  --ex-kind: var(--v2-night-3);
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-relic {
+  --ex-kind: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-beast {
+  --ex-kind: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-explore .ex-kind-landmark {
+  --ex-kind: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-explore .ex-card {
+  gap: 14px;
+  padding: 14px 16px 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--ex-kind);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-explore .ex-card.is-reported {
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .pn-explore .ex-card-mark {
+  align-self: start;
+  padding: 6px;
+  background: var(--v2-paper-sunk);
+  /* 同产业的图标底：卡片里不另画框 */
+  border: 0;
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-explore .ex-card-head {
+  gap: 4px 8px;
+  padding-right: 76px;
+}
+:root[data-ui="v2"] .pn-explore .ex-card-name {
+  font: 700 var(--v2-fs-lg) / 1.35 var(--v2-font-display);
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+/* 种类小签：浅底墨字，前面一个种类色的小圆点（左边一道色条在小签上看着像半个方括号“[沉船”） */
+:root[data-ui="v2"] .pn-explore .ex-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 8px 1px 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-kind::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--ex-kind);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .pn-explore .ex-card-meta {
+  gap: 2px 14px;
+  margin: 4px 0;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-explore .ex-lore {
+  margin: 8px 0 10px;
+  padding: 2px 0 2px 12px;
+  font-family: var(--v2-font-ui);
+  font-style: normal;
+  font-size: var(--v2-fs-md);
+  line-height: 1.75;
+  color: var(--v2-ink-2);
+  border-left: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn-explore .ex-card-foot {
+  gap: 8px 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-explore .ex-bounty {
+  gap: 2px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-brass-ink);
+}
+/* 卡片上的“报告”：一键操作的浅黄铜底，放在卡片右下（“全部报告”才是主按钮） */
+:root[data-ui="v2"] .pn-explore .ex-card-foot > .btn.primary {
+  margin-left: auto;
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border-color: #b3852f;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-card-foot > .btn.primary:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+/* 印章：待报告是虚线小签；已报告是斜盖的印章红章 */
+:root[data-ui="v2"] .pn-explore .ex-seal {
+  top: 14px;
+  right: 14px;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--v2-ink-3);
+  border: 1px dashed currentColor;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-explore .ex-seal.is-done {
+  color: var(--v2-seal);
+  border: 1px solid currentColor;
+  transform: rotate(-5deg);
+  box-shadow: inset 0 0 0 2px rgba(163, 48, 42, 0.12);
+}
+/* 尚未发现：虚线框、无底色的空白条目 */
+:root[data-ui="v2"] .pn-explore .ex-unknown {
+  background: transparent;
+  border: 1px dashed var(--v2-line-strong);
+  border-left: 3px solid var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-explore .ex-unknown .ex-card-mark {
+  background: transparent;
+}
+:root[data-ui="v2"] .pn-explore .ex-unknown .ex-card-name {
+  letter-spacing: 0.3em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-explore .ex-unknown .ex-card-meta {
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+}
+
+/* ═════════════════════════ 5. 触屏与手机 ═════════════════════════ */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .pn-caravans .btn,
+  :root[data-ui="v2"] .pn-industry .btn,
+  :root[data-ui="v2"] .pn-colonies .btn,
+  :root[data-ui="v2"] .pn-explore .btn,
+  :root[data-ui="v2"] .pn-explore .ex-kind-btn,
+  :root[data-ui="v2"] .pn-colonies .colony-quick {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .pn-caravans select,
+  :root[data-ui="v2"] .pn-caravans input:not([type="range"]),
+  :root[data-ui="v2"] .pn-industry select,
+  :root[data-ui="v2"] .pn-colonies select,
+  :root[data-ui="v2"] .pn-colonies input:not([type="range"]),
+  :root[data-ui="v2"] .pn-explore select {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+}
+
+/* 手机：单列、正文 15 px；行内操作折成两列的整宽按钮，常用的在前；表单整宽。
+   本组的规则里正文写的是 --v2-fs-md（桌面 14 px）：在这四个面板里把它换成 15 px，正文就都到手机的 15 px；
+   次要文字（13 px）与说明（12 px）不变。变量只在这几个面板里改，不影响别组。 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore {
+  --v2-fs-md: 15px;
+  font-size: 15px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans > .pn-section > .row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans > .pn-section > .row > .field:nth-child(3):last-child {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans > .pn-section > .btn,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-build-form > .btn {
+  justify-self: stretch;
+  width: 100%;
+  min-height: var(--v2-h-touch);
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans .pn-caravan {
+  padding: 12px 12px 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans .pn-caravan > .row,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-works .row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-caravans .pn-caravan > .row > .btn,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-works .row > .btn {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0 8px;
+  white-space: normal;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-works .row > .field {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-works {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-works-icon {
+  flex-direction: row;
+  justify-self: start;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .v2-in-daily {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-build {
+  flex-direction: column;
+  /* 旧样式是 align-items: flex-start：竖排后表单只有内容那么宽，右边空出一截；表单撑满，图标保持原大 */
+  align-items: stretch;
+  gap: 10px;
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-build > .pn-works-icon {
+  align-self: flex-start;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-industry .pn-build-form {
+  grid-template-columns: minmax(0, 1fr);
+}
+/* 殖民地：名册两张一行，详情在下；状态牌两张一行；装卸的一行折成“货名 / 数量与按钮”两行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-layout {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-roster ul {
+  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-tiles,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-tiles.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-grid2,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-cards,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-cargo-cols {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-tax {
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-tax-step {
+  padding: 8px 2px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-month {
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-cargo-row {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "good good good"
+    "qty all half"
+    "go go go";
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-cargo-row > .btn.primary {
+  width: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-crew .row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-site .pn-section > .btn.primary,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-here .pn-section > .btn.primary {
+  width: 100%;
+  min-height: var(--v2-h-touch);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-colonies .colony-resources li {
+  grid-template-columns: minmax(6em, auto) auto minmax(40px, 1fr);
+}
+/* 探险：卷首竖排，名声横过来；卡片单列；报告栏的按钮整宽 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-head {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 0 0 4px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-fame {
+  flex-direction: row;
+  align-items: baseline;
+  justify-self: start;
+  gap: 10px;
+}
+/* 七个种类筛选：手机上一行左右滑、右边渐隐提示还有（同港口设施分页），不再折成三行占掉小半屏；
+   右边留出渐隐的宽度，滑到底时最后一个也完整露出；上下留 3 px 给焦点环 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-kinds {
+  flex-wrap: nowrap;
+  padding: 3px 40px 3px 3px;
+  margin: -3px -3px 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-kind-btn {
+  flex: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-cards {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-card {
+  padding: 12px;
+  gap: 10px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-report-bar > .btn,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-report-bar > .field {
+  flex: 1 1 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-card-foot > .btn.primary {
+  flex: 1 1 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-explore .ex-progress {
+  flex-wrap: wrap;
+}
+
+/* ═════════════════════════ 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .pn-colonies.colony-found {
+    animation: none;
+  }
+}

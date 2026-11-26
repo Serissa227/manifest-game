@@ -1,0 +1,109 @@
+# C13d 请托：替别人留的退路（request_vikram）。中文，Claude 写。
+# 人物：维克拉姆 vikram（1530-12-20 生，男；维查耶纳伽尔的马匹经纪人，常驻巴特卡尔马市，势力 vijayanagara；cast/story_indian_ocean.toml）。
+# 类型：押运／带人（escort）；3 章：offer → passage → arrive；没有 stage 章。
+# 报价：当面（T）。人物按日程在巴特卡尔（bhatkal，venue market），auto=false，玩家“问请托”（ask:request_vikram）启动。
+# 窗口：报价 1567-01-01..1590-06-30（offer 的 deadline 即止日，超时走 failed，不写见闻）；路上与到港两章用 when 的日期条件限在 1567-01-01..1590-12-31；到港章 deadline_days=60，超时走 failed 并寄一封信。
+# 终点：done（到果阿，把那张纸带回来或另找船）；failed（回绝、报价超时、到港超时）。
+# 依据：史实背景，1565 年塔利科塔之战之后维查耶纳伽尔陷落，马厩里的人逃向海边（史实）。巴特卡尔、果阿是 ports_india.toml 里已有的港口。马夫的名单、推荐信、老马夫与印度马贩子都是原创。
+# 读的旗标：无。
+# 设的旗标：c13_request_vikram_accepted（接下，路上）；c13_request_vikram_all（分支：路上说服了老马夫，几户人一个不少）；终局旗标 c13_request_vikram_declined（回绝）、c13_request_vikram_done（到港，照实交回）、c13_request_vikram_late（到港超时）。
+# 依赖：cast/story_indian_ocean.toml 的 vikram（tracks 已列 request_vikram）；地点 bhatkal、goa 已在 ports_india.toml。无主线门禁（gate_main 与 variant_main 皆空）。
+# 秘密：cast 没写秘密。他为什么不往果阿走，只在那张写了一半的推荐信上露一点，不进见闻。
+# 回忆插画清单：mem-request_vikram-arrive（写了一半的推荐信）：一张只写了名字、后面空着的推荐信，夹在一摞厚信封的最后。
+
+[[tracks]]
+key = "request_vikram"
+name = "替别人留的退路"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["vikram"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "一户一封"
+text = "巴特卡尔马市后巷的一间棚屋，门口挂着晒干的鱼。维克拉姆坐在木箱上给几户逃来的马夫分饼，一人一块，分完拿炭笔在木板上记一笔。“坐吧，账我已经对过三遍。先说好：买卖归买卖，你的人得先有退路。”墙角的马夫没人抬头，他也不催。这几户是城破以后从维查耶纳伽尔的马厩里跑出来的，一路走到海边，至今没有落脚的地方，身上只剩一袋饼。果阿的葡萄牙马厩肯雇马夫，他要你把这几户送过去。“推荐信我写好了，一户一封。”你问他自己走不走，他说再等等，把最厚的那封推到你面前。"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1567, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "vikram", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应载这几户人去果阿。"
+next = "passage"
+reply = "他把推荐信一封一封交给你，每封上写着一家人的名字，和这一家人会伺候什么样的马。最后一封他封得比别的厚，说里头还压着他的账，你别拆。路上要是有人问起，就说这几户是他点的名。"
+effects = [{ kind = "affinity", person = "vikram", value = 2 }, { kind = "flag", flag = "c13_request_vikram_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_him"
+text = "劝他一起走。"
+next = "passage"
+reply = "他笑了：“我替谁都留好了退路。我自己的，还没想好。”你说那就跟船走，船上还有个铺位。他摇摇头，把信交给你。手指在最后一封上停了一下，像是要说什么，又把话咽了回去。"
+effects = [{ kind = "affinity", person = "vikram", value = 2 }, { kind = "flag", flag = "c13_request_vikram_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟你不往果阿。"
+next = "failed"
+reply = "他点点头，把推荐信收回来，又分了一轮饼。你走的时候，他在木板上记了一笔，记的是这一趟没接，账上不挂你的名。“不接也好，明天还有别的船。”他说完又去分饼。"
+effects = [{ kind = "flag", flag = "c13_request_vikram_declined" }]
+
+[[tracks.chapters]]
+key = "passage"
+title = "马不认旗"
+text = "去果阿的船上，马夫们挤在甲板底下，马被拴在另一头，蹄子踩着湿稻草不停地动，底下的味道混着马粪和海水的咸。一个孩子扒着舱口的木栏问父亲：“葡萄牙人的马跟我们的马一样吗？”父亲说不知道，把孩子的帽子往下按了按。快靠岸时，一个老马夫坐在木箱上，手里攥着一条旧缰绳，磨得发亮。他说他不想替葡萄牙人牵马，宁可在半路下船。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "vikram", value = true }, { kind = "date", from = [1567, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "wait", days = 3, text = "在海上走三天" }]
+
+[[tracks.chapters.choices]]
+key = "persuade"
+text = "跟他说：马不认旗，伺候好了，就是你的本事。"
+next = "arrive"
+reply = "老马夫想了很久，把缰绳缠回手腕上：“马不认旗。这话是维克拉姆说的吧？”你还没答，他已经把缰绳盘好，没再提下船的事。他去同船的人那里借了一根新缰绳，说旧的就留给船上的老马。"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "vikram", value = -2 }], news = "果阿码头上，一个印度马贩子收下了一个不肯替葡萄牙人牵马的老马夫，说老手艺给谁牵都一样。" }
+effects = [{ kind = "affinity", person = "vikram", value = 3 }, { kind = "flag", flag = "c13_request_vikram_all" }]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "说：到了果阿，他想去哪就去哪。"
+next = "arrive"
+reply = "他点点头，没再说话。船靠岸的时候，他先朝你点了一下头，然后第一个下船，缰绳还攥在手里，往马市那头去了。你回头看，他没有回头。"
+effects = [{ kind = "affinity", person = "vikram", value = 2 }]
+
+[[tracks.chapters]]
+key = "arrive"
+title = "后面空着的那张"
+text = "果阿的马厩管事是个葡萄牙人，戴着宽檐帽，一封一封拆开推荐信，看完在名册上画一道。几户人都留下了，有人一放下包袱就往马房跑，像怕谁反悔。马房里的草是新铺的，还带着海风的咸味。最后一封的信封比别的厚，里头夹着一张写了一半的纸：抬头是维克拉姆的名字，底下没有一个字，后面空着。管事把纸翻过来看背面，又翻回去，问你这是谁的推荐信。你张了张嘴，说不清。"
+speaker = "captain"
+mood = "tender"
+at = "goa"
+when = [{ kind = "alive", person = "vikram", value = true }, { kind = "date", from = [1567, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "vikram", value = -3 }, { kind = "flag", flag = "c13_request_vikram_late" }, { kind = "letter", person = "vikram", text = "那几户人走陆路去了果阿，路上走散了一户。推荐信，我又写了一封。" }] }
+
+[[tracks.chapters.variants]]
+key = "all"
+when = [{ kind = "flag", flag = "c13_request_vikram_all" }]
+text = "果阿的马厩管事一封一封拆开推荐信，几户人一个不少地留下了。老马夫第一天就挑了马房里最烈的那匹，骑上去一句话也没说。马房里的草是新铺的，还带着海风的咸味。最后一封的信封比别的厚，里头夹着一张写了一半的纸：抬头是维克拉姆的名字，底下没有一个字，后面空着。管事把纸翻过来看背面，又翻回去，问你这是谁的推荐信。你张了张嘴，说不清。"
+
+[[tracks.chapters.choices]]
+key = "bring_back"
+text = "把那张纸带回巴特卡尔还给他。"
+next = "done"
+reply = "他接过那张纸，看了很久，说他还是再等等。可那天晚上，他第一次跟你打听果阿的马价，问得仔细，像是在替别人问。船钱他照数付给了你，那张纸的事，他再没有提起。"
+news = "果阿的葡萄牙马厩一下子留下了几户从维查耶纳伽尔逃来的马夫，每户都带着一封推荐信。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "vikram", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_vikram_done" }, { kind = "memory", memory = "mem-request_vikram-arrive", title = "写了一半的推荐信" }]
+
+[[tracks.chapters.choices]]
+key = "ask_keeper"
+text = "把那张纸给管事看，问他还缺不缺一个马匹经纪人。"
+next = "done"
+reply = "管事说缺，还说要的是懂马、会记账的人。你回到巴特卡尔，把这句话原样告诉维克拉姆。他笑了，说你也替他留了一条退路，可他走不走，是他的事。船钱他已经付了。"
+news = "果阿的葡萄牙马厩管事向送人来的船长打听，巴特卡尔那边有没有懂马又会记账的经纪人可荐。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "vikram", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_vikram_done" }]

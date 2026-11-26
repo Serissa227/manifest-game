@@ -1,0 +1,159 @@
+# 请托：慢了两天的历（request_tsuchimikado_ariharu）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：土御门有春（tsuchimikado_ariharu，1501 年生，男），阴阳道宗家，做过阴阳头；避居若狭名田庄编历观星，偶尔下到小浜。势力 imperial_court。
+#   cast：cast/historical_07_japan.toml（日程 1553—1568 在 natasho_city）。卒于 1569 年，cast 无 fate。
+# 类型：找东西（find）。章节：offer（名田庄下来的老人）→ handin（两部历对着摊开）→ use（第一弯新月，书留下的一支）/ use_lent（湾口外的西天，借抄的一支）；终点 done / failed。
+#   brief 写的是三章、use 的成功报酬按 gave / lent 两面旗标拆选项。为了不用 requires 去读本轨道在别的分支上设的旗标，handin 按选择分路：
+#   give 走 use，lend 走 use_lent；两章场面相同、正文与回复各写各的，各两个选项（sail 检定、stars 技能门槛），报酬按 brief 分开给。
+# 报价：V（到访）。auto=true，offer 写 at=obama（小浜，名田庄在山后），when 为 1557-06-01 起、玩家满 17；
+#   family="c13_offer_obama"、family_cooldown_days=20；deadline=1568-03-31，timeout 直接 failed，不写见闻。
+# 进行中：handin 写 at=obama，目标是带着《永久历书》到小浜；item 目标只查持有，交出的 give 自己扣一件，lend 不扣。
+#   deadline=1568-09-30（他 1569 年卒，绝对期限），超时 failed、旗标 _late、一封来信（≤120 字）。
+#   use / use_lent 写 at=obama，目标 wait 30 天 + 在小浜；deadline_days=120，超时 failed、旗标 _late，附一条见闻说清人回了山里。
+#   普通章（无 stage）不写 window 与 default；brief 的 window 只是规划用的出现区间。
+# 依据·史实：日本自贞观年间起沿用唐代的宣明历，用了八百多年，到十六世纪推算的朔日已比天象晚约两天（研究笔记）；到 1684 年贞享改历才换。
+#   土御门家（安倍氏）应仁之乱后避居若狭名田庄；阴阳道的方违（出门先绕开不利的方位）与坎日。扎库托《永久历书》1496 年莱里亚印行（拉丁文）。
+# 依据·原创：请托本身；码头上绕开的半圈；磨起毛的宫历与指甲划的那一行；寺檐下的草席与夹在今年那一页的松针；
+#   涂墨的木板与钉尖划出的白痕；湾口外守月的几晚；徒弟附笔“师父笑了半天”。
+# 秘密（式神）：有人问起，他只笑不答。本文件只写他笑，不写“有”也不写“没有”，不写“别信”；见闻一律不提式神。
+#   月亮早出两天是历法的误差，不写神迹。
+# 设的旗标：c13_request_tsuchimikado_ariharu_accepted（offer 接下）、_declined（offer 回绝，终局 failed）；
+#   分支旗标 _gave（handin 交书）、_lent（handin 借抄）；终局 _done（use / use_lent 成功的两条路）、_partial（sail 检定失败）、_late（三处超时之二：handin、use、use_lent）。
+#   每条路径只设一面终局旗标。不读任何旗标；不读也不设任何 c7_ 旗标（澪的养成支线“有春的式神”属养成，不碰）。
+# 报酬：现金 1600（交书后成功）或 900（借抄后成功），检定失败两支都给 800（brief 未按交书 / 借抄拆失败报酬，照写）；
+#   好感至多 +13（接下 2、交书 3、成功 8；借抄一支至多 +10）；imperial_court 声望 +2、名声 +3、回忆一张，只在成功时给。无物品奖励、无技能经验。
+#   来信两封：handin 超时一封，成功一封（use / use_lent 的成功分支，同一路径只会收到一封）。
+# 依赖：港口 obama（ports_east_asia.toml）；物品 zacuto_leiria（items/books_04_navigation.toml，有 shop）；技能 astral_navigation（skills.toml，门槛 60）；
+#   检定属性 seamanship；势力 imperial_court。
+#   整合问题：zacuto_leiria 的 shop.cultures 是 italian / iberian / low_countries，与寰宇港口的文化键对不上，眼下买不到——整合时统一文化键，本文件不改写。
+# 回忆插画清单：
+#   mem-request_tsuchimikado_ariharu-use「若狭湾的第一弯新月」：黄昏的若狭湾口，一弯细月贴着海面，船头的年轻徒弟把涂墨的木板举过头顶，板上一道白痕。
+
+[[tracks]]
+key = "request_tsuchimikado_ariharu"
+name = "慢了两天的历"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["tsuchimikado_ariharu"]
+
+# 一、名田庄下来的老人：小浜码头，他先绕了半圈，再把宫里的历翻给你看。
+[[tracks.chapters]]
+key = "offer"
+title = "名田庄下来的老人"
+text = "小浜的码头上晒着一排排若狭鲽，一个拄杖的老人从山道下来，没有直走，先往东边绕了半圈，绕过鱼架，才走到你跟前。他袖子里揣着一册宫里颁下的历，纸边磨得起了毛。“老朽土御门，从名田庄下来。”他把历翻到这个月，用指甲在一行上划了一道，“历书上说初三见月，天上初一就挂出来了。错两天，祭祀就错两天。”他听港里的人讲，西洋人有一部历书，往后上百年的日月都推好了，一天一天印在纸上。他要一部来，同宫里这部对一对。“书到了还不算。纸对纸，天上得给个证据。”一个光脚的孩子挤过来，仰着脸问他是不是真能叫出式神。老人低头看了那孩子一会儿，笑了，什么也没说。"
+at = "obama"
+speaker = "tsuchimikado_ariharu"
+mood = "mystic"
+when = [{ kind = "date", from = [1557, 6, 1] }, { kind = "age", ge = 17 }]
+deadline = [1568, 3, 31]
+timeout = { next = "failed" }
+family = "c13_offer_obama"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应替他找那部西洋历书"
+next = "handin"
+reply = "他点点头，把历揣回袖子里。你问谢礼怎么算，他说“随心”，拄着杖走出两步，又回过头来：“你的心别太小。”回山道的时候，他还是没走直路，贴着鱼架往东多绕了一截。"
+effects = [{ kind = "flag", flag = "c13_request_tsuchimikado_ariharu_accepted" }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "西洋的书太远，这件事接不了"
+next = "failed"
+reply = "他抬头看了看天，又看了看你那条船桅杆指着的方向，掐着手指算了一下：“今天本来就不宜谈事。”说完也不多留，拄着杖回了山道。那个光脚的孩子跟在后面走了一段，还在问。"
+effects = [{ kind = "flag", flag = "c13_request_tsuchimikado_ariharu_declined" }]
+
+# 二、两部历对着摊开：小浜港边一座寺的檐下，手指顺着朔日往下走，停在今年。
+[[tracks.chapters]]
+key = "handin"
+title = "两部历对着摊开"
+text = "你把扎库托的《永久历书》带回小浜。有春借了港边一座寺的檐下，叫徒弟铺开草席，把这部拉丁书和宣明历并排摊开。拉丁字他一个也不认；西洋的数码他盯着看了一个早上，说十个字罢了，记住了。月相的小圆图倒是一看就懂。他的手指顺着朔日往下走，左边一行，右边一行，走得很慢，徒弟在旁边磨墨，不敢出声。翻到今年，手指停住了：西洋书上这个月的朔，比宣明历早两天。他没有说话，从檐下的松枝上折了一根松针，夹进那一页。“纸上对上了，”他说，“还得看天。”"
+at = "obama"
+speaker = "captain"
+mood = "mystic"
+news = "小浜港边的寺里，名田庄的老阴阳头把一部西洋书和宫里的历并排摊在檐下，从早看到晚，末了只折了一根松针夹进去。"
+when = [{ kind = "alive", person = "tsuchimikado_ariharu", value = true }]
+objectives = [{ kind = "item", item = "zacuto_leiria", qty = 1, text = "带来扎库托的《永久历书》" }, { kind = "at", at = "obama", text = "回到小浜" }]
+deadline = [1568, 9, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tsuchimikado_ariharu_late" }, { kind = "letter", person = "tsuchimikado_ariharu", text = "船长：历的事，明年再说罢。我起了一卦，你那边的方位不利，书不必再寻。名田庄这一冬，照旧用宫里颁下的历。——有春" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把这部书留给他"
+next = "use"
+reply = "他把书合上，用袖口把封面擦了一遍，擦得比擦自家的历还仔细。“山里一落雪，路就断了。”他把书抱在怀里，“正好关起门来算，算到开春化冻。”那根松针还夹在今年那一页，露出一小截。"
+effects = [{ kind = "item", item = "zacuto_leiria", qty = -1 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 3 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_gave" }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借他抄一个月，书还要带回船上"
+next = "use_lent"
+reply = "他当晚就叫来两个徒弟，在寺里点灯抄表，一个念数码，一个往楮纸上写，念错一个字就从那一行重抄。一个月后，书用油纸包着送回你船上，原样，书角一点没折，夹在今年那一页的松针也还在。"
+effects = [{ kind = "flag", flag = "c13_request_tsuchimikado_ariharu_lent" }]
+
+# 三、第一弯新月（书留在名田庄的一支）：一个月后，带他的徒弟出海，看新月哪天黄昏露头。
+[[tracks.chapters]]
+key = "use"
+title = "第一弯新月"
+text = "一个月过去，照两部历推出来的朔日就在这几天。有春自己不上船，说他这把年纪，船一晃，方位都晃乱了。他把一个年轻的徒弟交给你，徒弟背着笔匣，怀里抱一块涂了墨的木板，要用钉尖在上面划出月牙离海面的高低。划痕是白的，海风吹不掉，比纸靠得住。“港里看不见，”有春拿杖指了指西边，“山影挡着西天。出到山影挡不住的地方，看第一弯新月是哪天黄昏露出来的。哪一天，哪个时辰，离海面几指，都记下。”那部西洋历书他也背下了山，包袱皮解开一角，松针还夹在今年那一页。"
+at = "obama"
+speaker = "captain"
+mood = "mystic"
+news = "若狭小浜有条船夜夜停在湾口看月亮，说是替名田庄的老阴阳头看的，船头还坐着个抱木板的年轻人。"
+when = [{ kind = "alive", person = "tsuchimikado_ariharu", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等到两部历推出的朔日" }, { kind = "at", at = "obama", text = "在小浜接上他的徒弟" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tsuchimikado_ariharu_late" }], news = "小浜港边那座寺的檐下，名田庄的老阴阳头等了几个朔日也没等来船，带着徒弟和一块空墨板回山里去了。" }
+
+[[tracks.chapters.choices]]
+key = "sail"
+text = "把船开到湾口外，一连几晚守着西天"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 2 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_partial" }], news = "若狭湾口一连三晚起雾，小浜那条替老阴阳头看月亮的船只看见了云，徒弟抱着一块没划过的墨板回了名田庄。" }
+reply = "第二晚黄昏，西边的云裂开一道缝，一弯细月贴着海面挂了出来，薄得像剪下的指甲。徒弟翻开带来的宣明历：这一天才初一，比历上见月的日子早了整整两天。他拿钉子去划墨板，手抖得划歪了两回，第三回才划直。回到小浜，有春把木板接过去，凑到灯下看了很久。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_done" }, { kind = "memory", memory = "mem-request_tsuchimikado_ariharu-use", title = "若狭湾的第一弯新月" }, { kind = "letter", person = "tsuchimikado_ariharu", text = "船长：徒弟回到名田庄，把那块墨板挂在了我书案对面。那一晚的日子、时辰、月离海面几指，我都记进了家里的历注，用朱笔写在宣明历那一行旁边。宫里改不改，是宫里的事；这一行，我家的子孙总要看见。徒弟说，那几晚船上的水手轮着问他式神的事。这件事，下次再说。——有春。徒弟附笔：师父写到这里，搁下笔，笑了半天。" }]
+
+[[tracks.chapters.choices]]
+key = "stars"
+text = "先量星高推月龄，算准哪一晚再出海"
+next = "done"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "你认不准那几颗星离海面有多高，推不出月亮哪一晚露头。"
+reply = "你在甲板上量了两夜星高，推出月亮该在哪一晚、哪个时辰贴着西天出来，只让徒弟上船一晚。船到湾口，太阳刚沉下去，那弯月就在算好的地方露了头。徒弟把墨板举过头顶，对着月牙划下一道白痕，划完才想起来喘气。宣明历上，这一天才初一。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_done" }, { kind = "memory", memory = "mem-request_tsuchimikado_ariharu-use", title = "若狭湾的第一弯新月" }, { kind = "letter", person = "tsuchimikado_ariharu", text = "船长：墨板挂在我书案对面，西洋那部书摊在底下，翻在今年。你只出一晚海，月亮就在你推的时辰露头。这一晚我用朱笔记进了家里的历注，写在宣明历那一行旁边，连你量星的法子也添了两句。京里认不认，由京里；山里这一部，往后照这一行推。徒弟说，船上的水手问了他一路式神的事。这件事，下次再说。——有春。徒弟附笔：师父写到这里，搁下笔，笑了半天。" }]
+news = "小浜的人说，那条替老阴阳头看月亮的船只出了一晚湾口，月亮就在船长算好的时辰露了头。"
+
+# 三之二、湾口外的西天（借抄的一支）：书已还回船上，名田庄留下的是一叠抄本。
+[[tracks.chapters]]
+key = "use_lent"
+title = "湾口外的西天"
+text = "一个月过去，照抄本推出来的朔日就在这几天。那一叠楮纸表用麻绳穿着，挂在有春腰上，纸角已经被他翻得卷了边。他不肯上船，拿杖敲了敲船帮：“老骨头经不起晃，一晃，东南西北都得重新认。”跟你走的是那晚念数码的徒弟，背上缚一块涂了墨的木板，腰里别一根钉子。有春把抄本解下来，系到徒弟腰上，拿杖往西一指：“港里看西天，有山挡着。往外走，走到海和天接得上的地方。抄本上哪一晚说见月，你们就早一晚去等——抄错一个数，就要白守一夜。”"
+at = "obama"
+speaker = "captain"
+mood = "mystic"
+news = "小浜的渔家说，近来湾口外夜夜泊着一条船，不打鱼，专等月亮，船上有个年轻人腰里挂着一叠名田庄抄的表。"
+when = [{ kind = "alive", person = "tsuchimikado_ariharu", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等到抄本推出的朔日" }, { kind = "at", at = "obama", text = "在小浜接上抄表的徒弟" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tsuchimikado_ariharu_late" }], news = "名田庄那位老阴阳头在小浜等船，等过了几个朔日，腰里那叠抄来的表一晚也没用上，前几天拄着杖回山了。" }
+
+[[tracks.chapters.choices]]
+key = "sail"
+text = "照抄本的日子，把船开到湾口外连守几晚"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 2 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_partial" }], news = "小浜的人说，湾口那几晚的雾浓得化不开，替名田庄守月亮的船空等了三夜，徒弟把那叠抄本又背回了山里。" }
+reply = "头一晚云压得低，什么也没有。第二晚刚过黄昏，西天的云脚退开，一线细月从海面上浮出来，淡得像瓷上刮出的一道釉痕。徒弟先翻腰上的抄本，又翻宣明历，来回翻了两遍：抄本说的正是今晚，宣明历上还是初一，离它写的见月还差两天。他把钉尖按在墨板上，按了好一会儿才敢划下去。回到小浜，有春把墨板和抄本并排搁在灯下，一个数一个数地往下比。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_done" }, { kind = "memory", memory = "mem-request_tsuchimikado_ariharu-use", title = "若狭湾的第一弯新月" }, { kind = "letter", person = "tsuchimikado_ariharu", text = "船长：抄本拿回名田庄，我叫徒弟在那一晚的数旁边用朱笔点了一点，又把日子、时辰、月离海面几指，记进家里的历注。墨板钉在书库门上，进出都看得见。书是你的，数是我的了，这样也好。徒弟说，那几晚船上的水手轮着问他式神的事。这件事，下次再说。——有春。徒弟附笔：师父写到这里，搁下笔，笑了半天。" }]
+
+[[tracks.chapters.choices]]
+key = "stars"
+text = "自己量星高，推一推抄本上的日子准不准"
+next = "done"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "那几颗星离海面几指，你量不准，推不出抄本上哪一晚是真的。"
+reply = "你在甲板上守了两夜，量几颗亮星离海面几指，一条一条记下，推出来的那一晚，正落在抄本写的日子上。于是只载徒弟出去一晚。太阳沉进丹后那边的海里，月牙就在推算的位置浮了出来。徒弟把墨板高高举起，钉尖划下的那道白痕一点没歪，划完他低头按住腰上的抄本，好像怕风把它掀走。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "tsuchimikado_ariharu", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_tsuchimikado_ariharu_done" }, { kind = "memory", memory = "mem-request_tsuchimikado_ariharu-use", title = "若狭湾的第一弯新月" }, { kind = "letter", person = "tsuchimikado_ariharu", text = "船长：你推的那一晚和抄本上的数对上了，徒弟回来说了三遍。我把你量星的几句话抄在抄本末页，那一晚记进了家里的历注，墨板钉在书库门上。宫里那部历，明年照旧颁下来，我照旧收着，只是山里看月亮，往后先翻抄本。徒弟说，船上的水手问了他一路式神的事。这件事，下次再说。——有春。徒弟附笔：师父写到这里，搁下笔，笑了半天。" }]
+news = "小浜码头上都在传，有个船长量了两夜星，只放一晚船去湾口，月亮果然那一晚出来，名田庄抄的表一个数没错。"

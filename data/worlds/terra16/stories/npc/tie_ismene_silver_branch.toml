@@ -1,0 +1,137 @@
+# C7 重写（2026-10-11，Claude Opus）：配角线 tie_ismene_silver_branch「学生也会问老师」，替换被退回的 GPT 稿。故事 2.0（DECISIONS“第九批 A5 / E37 开工：故事 2.0 TOML 契约”）。
+# 标签：GL 人物之间的师徒线（mentor），不是恋爱线。伊斯梅妮不开放恋爱；带银枝的女人生年不明（C11 定义），全线没有任何恋爱效果。
+# 人物：伊斯梅妮 ismene（1564-06-14 生，女，亚特兰蒂斯波塞冬神庙守山铜柱的“克莱托”里最年轻的一位；本线 1583—1586，十八九岁到二十一岁）；
+#   带银枝的女人 silver_branch_woman（女，女人之国的精灵，生年不明，由 C11 定义；不说名字、不碰铁、话极少，常以一句歌或一个反问代替回答）。
+# 依据（古典文献）：柏拉图《克里提亚斯篇》119c—120d——刻着律法与誓词的山铜柱、十王捕牛“不用铁器，只用木棍与绳套”、在柱前献牛起誓；
+#   《布兰航海记》——带开白花银枝的女子唱西方大洋里的“三倍五十座岛”（只取这一句的意思，自行转述）。
+#   精灵不说名字、不碰铁、七岛作客不过三夜（TERRA16 §6.6、§8.6）；外港与七岛的地貌照 ports_realm.toml。
+# 依据（本世界线 / 原创）：1583 年十王会议（TERRA16 §8.5）。柱上第七行少一个字、会上跳过的那一句、那页问题、1585 年外港三个月的雾、
+#   问笺与花瓣、改过的迎客律文、神庙扫地的老婆婆，都是原创。无史实待核项。
+# 缺省走向（玩家不在场也照样发生）：1583—84 会议散后，那页问题压在柱脚的石板下（mentor）→ 1585 春柱前读律文，老师把伊斯梅妮的口头禅还给她（回忆）→
+#   1585 夏外港三个月的雾，老师一次没来，伊斯梅妮写了问笺（传闻）→ 1585 秋问笺压在柱脚，老师来看一眼、唱一句就走 →
+#   1586 春老师来听改过的迎客律文，学生反问，老师笑了，留下一朵白花（mentor、回忆、落点旗标）。
+# 玩家能做的：choice 章替她把问笺送到七岛的白船（helped），或劝她自己去一趟（went）；两条与缺省都走到同一个落点，差别在回复、好感与旗标。
+# 旗标：写 c7_tie_ismene_silver_branch_helped、c7_tie_ismene_silver_branch_went、c7_tie_ismene_silver_branch_landing；
+#   读 atlantis_council_met（第一章 when：玩家参加过十王会议）。
+# 秘密：带银枝的女人的往事，本线一律不提；见闻只说外港看得见的事。
+# 整合：silver_branch_woman 由 C11 定义，定义以前本文件不登记。第一章窗口到 1584-12-31 为止：玩家没参加十王会议时本线静默失败。不改日程。
+
+[[tracks]]
+key = "tie_ismene_silver_branch"
+name = "学生也会问老师"
+kind = "request"
+start = "tie_ismene_silver_branch_meeting"
+auto = true
+cast = ["ismene", "silver_branch_woman"]
+
+# ── 相识（witness）：一页没回答的问题，一句外海的歌 ──
+[[tracks.chapters]]
+key = "tie_ismene_silver_branch_meeting"
+title = "没回答的一课"
+text = "十王的会议散了，柱前献牛的石槽也刷干净了。伊斯梅妮坐在铜柱下的石台上，膝头摊着一页纸，正反两面写满，页边也挤着小字。“这几年问她、她没答的，都在这儿。”她一行行点给我看：柱上第七行为什么少一个字；外海新来的人，该不该先听完誓词再上岸。最上面一行划掉了，我凑近才认出是“您叫什么”。带银枝的女人从柱子后面出来，雾跟着她，脸看不清，只觉得亮，比正午的太阳还亮。她接过那页纸，从头看到尾，还给伊斯梅妮，唱了一句：“西边的大海上，有三倍五十座岛。”唱完就走了。伊斯梅妮把这一句也抄在页尾，转头问我：“你听懂了吗？”我摇头。她咬着笔杆看了半天：“我也没有。”她把纸叠好，压进石台边一块松动的石板底下。"
+stage = "witness"
+window = [[1583, 6, 1], [1584, 12, 31]]
+at = "atlantis_port"
+cast = ["ismene", "silver_branch_woman"]
+speaker = "ismene"
+mood = "mystic"
+news = "亚特兰蒂斯外港的人说，十王的会议一散，守铜柱的小祭司就把一页写满问题的纸压在了柱脚的石板底下，神庙扫地的都绕着走。"
+when = [{ kind = "flag", flag = "atlantis_council_met" }]
+
+[tracks.chapters.default]
+next = "tie_ismene_silver_branch_closer"
+effects = [{ kind = "tie", a = "silver_branch_woman", b = "ismene", relation = "mentor" }]
+
+# ── 靠近（witness）：会上跳过的那一句，老师还回来的口头禅 ──
+[[tracks.chapters]]
+key = "tie_ismene_silver_branch_closer"
+title = "会议后的柱子"
+text = "这年开春，伊斯梅妮又从柱上第一行读起。她念一个字，指头隔着一指宽往下挪一个字，从不贴到铭文上。念到捕牛那一段，她停住了：“‘十王捕牛，不用铁器。’下一句，会上的人一口气跳过去了。”带银枝的女人站在她身后。她进神庙从不带铁，连挽头发的簪子都是骨头削的。她看着那一行看了很久，头一回开口说话，没有唱：“你读得比我当年听到的慢。”伊斯梅妮回过头：“慢，是好还是不好？”她的指头已经朝跳过去的那一句伸了过去。女人看着那根指头，把她平日拦外人的那句话原样还给了她：“把誓词读完，再碰那根柱子。”伊斯梅妮缩回手，转回柱子前，从会上跳过的那一句接着往下念。"
+stage = "witness"
+window = [[1585, 1, 1], [1585, 4, 30]]
+at = "atlantis_port"
+cast = ["ismene", "silver_branch_woman"]
+speaker = "silver_branch_woman"
+mood = "mystic"
+news = "亚特兰蒂斯神庙扫地的老婆婆说，守铜柱的小祭司在柱子前头一句一句地念律文，拿花枝的那个女人在她身后站着听，一直站到天黑，灯都没点。"
+
+[tracks.chapters.default]
+next = "tie_ismene_silver_branch_turning"
+effects = [{ kind = "memory", memory = "mem-tie_ismene_silver_branch-closer", title = "会议后的柱子" }]
+
+# ── 转折（rumor）：三个月的雾，拿花枝的女人一次没来 ──
+[[tracks.chapters]]
+key = "tie_ismene_silver_branch_turning"
+title = "雾里不来的人"
+text = "外港的雾从五月起就没散过，桅杆顶都看不见，渔船进出要一路摇铃。码头上的人说，那个拿花枝的女人一回也没来。“七岛的人就这样，”补网的老头说，“来的时候不打招呼，走的时候也不打。”有人说夜里在雾里听见过唱歌，从西边飘过来，就一句，翻来覆去：“……三倍五十座岛……”守铜柱的小祭司天天傍晚下到码头，在系缆的石桩边站一会儿，朝西看。有人问她等谁，她先反问人家来码头做什么；人家答了，她自己的却不说。站够了，她就回神庙，接着读她的柱子。七月底，看灯的人见她在码头边借了张桌子，写了一张问笺，折成窄窄一条，揣进袖子里：“雾一散，托第一条往西去的船。”"
+stage = "rumor"
+window = [[1585, 5, 1], [1585, 7, 31]]
+at = "atlantis_port"
+cast = ["ismene", "silver_branch_woman"]
+mood = "sad"
+news = "亚特兰蒂斯外港起了三个月的雾，拿花枝的那个女人一次也没来过；守铜柱的小祭司倒是天天傍晚到码头的石桩边站一会儿。"
+
+[tracks.chapters.default]
+next = "tie_ismene_silver_branch_choice"
+effects = []
+
+# ── 插手（involve）：问笺交到“我”手里 ──
+[[tracks.chapters]]
+key = "tie_ismene_silver_branch_choice"
+title = "把问题带回去"
+text = "雾在西边裂开了一角，七岛那边停着一条白船，没有桨手，也不挂帆，船头有一点亮，像有人举着一根开花的枝子。伊斯梅妮把问笺交到我手里，还是那窄窄的一条，没有封蜡：“不用封，她看得见。”她怕我不肯接，先把问的事说了：外海来的船一年比一年多，迎客那一段还是祖辈刻下的老话，该先叫船上的人听誓词，还是先给水给面包。第二条她念得很轻——守柱的人，能不能不同意自己的老师。“我想听她怎么答，”她把手缩回袖子里，“可港口的事得我来定。”码头上的老水手提醒我：七岛不许带铁上岸，刀、钉子、锚链，都得留在船上。"
+stage = "involve"
+window = [[1585, 8, 1], [1585, 11, 30]]
+at = "atlantis_port"
+cast = ["ismene", "silver_branch_woman"]
+speaker = "ismene"
+mood = "tender"
+news = "亚特兰蒂斯外港守铜柱的小祭司写了一张问笺，托一个外来的船长送进雾里的七岛，回来时纸里多夹了一片白花瓣。"
+
+[tracks.chapters.default]
+next = "tie_ismene_silver_branch_landing"
+effects = []
+news = "亚特兰蒂斯神庙的柱脚底下压着一张问笺，压了一整个秋天；拿花枝的女人来过一回，看了一眼，唱了一句又走了。"
+
+[[tracks.chapters.choices]]
+key = "carry_question"
+text = "替她把问笺送到七岛的白船上去。"
+reply = "我把腰刀和钉靴都留在自己船上，划小艇过去。带银枝的女人在白船船头把问笺读完，没要笔，一个字也没写。她从枝上摘下一片花瓣，夹进纸里，顺着原来的折痕折好，递还给我：“原样带回去。”回到外港，伊斯梅妮把问笺打开，花瓣落进她掌心，还是软的。她捏着看了很久：“她是说‘你自己定’。”当天夜里，她把那片花瓣夹进了律文的抄本，就夹在迎客那一页。"
+next = "tie_ismene_silver_branch_landing"
+effects = [
+  { kind = "flag", flag = "c7_tie_ismene_silver_branch_helped" },
+  { kind = "affinity", person = "ismene", value = 5 },
+]
+
+[[tracks.chapters.choices]]
+key = "go_yourself"
+text = "劝她自己去一趟——把铁器留在船上就行。"
+reply = "伊斯梅妮犹豫了好一阵，解下腰上削笔的小铁刀交给我，借了我的小艇，自己划进雾里。第三天傍晚她回来了，鞋上沾着七岛的白沙，一路没舍得跺掉。“她问了我三个问题，”她坐在码头边上，掰着指头数，“外海来的人渴不渴；誓词我自己读过几遍；我在怕什么。我问她的，她一句也没答。”她低头看着鞋上的沙：“可我好像都知道了。”"
+next = "tie_ismene_silver_branch_landing"
+news = "听说亚特兰蒂斯守铜柱的小祭司借了条小艇，自己划进雾里去了七岛，第三天傍晚才回来，鞋上全是白沙。"
+effects = [
+  { kind = "flag", flag = "c7_tie_ismene_silver_branch_went" },
+  { kind = "affinity", person = "ismene", value = 3 },
+  { kind = "affinity", person = "silver_branch_woman", value = 3 },
+]
+
+# ── 落点（witness）：学生反问，老师笑了 ──
+[[tracks.chapters]]
+key = "tie_ismene_silver_branch_landing"
+title = "还可以反问"
+text = "开春时雾薄了，带银枝的女人从七岛过来，手里只有那根银枝。伊斯梅妮站在铜柱前，把改过的迎客律文念给她听：“外海来的船，先问来意，给水，给面包；誓词念给船上的人听，念完了，再问是哪位王的客。”念完，女人只问了一句：“听不懂的呢？”伊斯梅妮没答。她从柱脚的石板底下抽出那页旧纸，翻到页尾，指着自己抄下的那句歌：“您唱‘三倍五十座岛’给我的时候，知道我听不懂吗？”女人笑了。在神庙扫了四十年地的老婆婆后来说，她头一回见这女人笑。银枝上的白花一阵轻响，女人摘下最小的一朵，放在柱脚下：“这一课，换你来问。”"
+stage = "witness"
+window = [[1586, 1, 1], [1586, 5, 31]]
+at = "atlantis_port"
+cast = ["ismene", "silver_branch_woman"]
+speaker = "ismene"
+mood = "mystic"
+news = "亚特兰蒂斯外港这几天都在传，拿花枝的女人在神庙的铜柱前头笑了，柱脚底下多了一朵小白花，守柱的小祭司不许人扫。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [
+  { kind = "tie", a = "silver_branch_woman", b = "ismene", relation = "mentor" },
+  { kind = "flag", flag = "c7_tie_ismene_silver_branch_landing" },
+  { kind = "memory", memory = "mem-tie_ismene_silver_branch-landing", title = "还可以反问" },
+]

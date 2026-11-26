@@ -1,0 +1,398 @@
+# C13d 请托：修过的旧茶碗（request_sen_rikyu）。Claude 写（2026-10-25），仅中文。
+# 人物：千利休 sen_rikyu（1522 生，男；cast 里月日不详，按 1522-01-01 记；1591 卒）。堺的商人茶人，此时称宗易——1585 年才受赐“利休”之号，
+#   本请托的窗口止于 1585 年，正文全程只称“宗易”。cast：cast/historical_07_japan.toml，势力 sakai，日程 1553—1590 在堺。
+#   秘密（经手铅弹火药的货单）本请托不碰；也不写纳屋家、小夜、枫（C7），不写名物狩、矢钱，不用后世伪托的茶道格言。
+# 类型：复合（mixed）。brief 五章（offer → inquire → turn → fetch → settle），实写八章：
+#   offer（报价）→ inquire（博多问来历）→ turn（听全了：对照）／turn_name（只有寺名：对照）→ fetch ／ fetch_name（两箱瓷器）→ settle ／ settle_name（茶会末座）；终点 done / failed。
+#   为什么拆：brief 的 settle 让“讲博多的事”用本轨道自设的旗标 _story 作 requires。照任务单的做法改为按 next 分流——inquire 里听全了的（陪她听完成功、买下字条）
+#   走 turn → fetch → settle，只问到寺名的（陪她听完失败、只问名字）走 turn_name → fetch_name → settle_name；settle_name 不给“讲出来”这一条，只有“说漆匠是谁”与“一句不说”。
+#   两条路的玩法、限期与报酬完全一样，只是正文与回复按“我”知道多少来写。
+# 报价：T 当面。宗易在堺（日程 at=sakai），交谈话题 ask:request_sen_rikyu 启动，auto=false；求见门槛（名声 10、堺声望 5）由 cast 的 audience 判定，本文件不写。
+#   offer 不写 at，用 person 目标；deadline 1584-03-31（窗口止日），timeout 直接 failed，不写见闻。
+# 进行中：inquire 在博多（at=hakata）限 150 天，超时 failed（旗标 _late、宗易一封 ≤120 字的来信）；turn / turn_name 回堺见他，限 120 天；
+#   fetch / fetch_name 在堺交两箱瓷器（goods 目标，回应任一选项都扣货，所以每个选项都付货款），限 180 天；settle / settle_name 先等 7 天、再见他，限 60 天。
+#   后三处超时都走 failed、设 _late，不另写来信（brief 如此）。普通章不写 window / default。
+# 依据·史实：堺与博多的商人茶会，茶人重唐物与茶器的“来历”（《天王寺屋会记》一类的会记里，器物的传来与前一任主人都要记）；
+#   1551 年大宁寺之变，大内义隆死，大内家此后没落，博多易主、几经兵火（研究笔记 P_eastasia_1540）；圣福寺是博多的老禅寺（荣西所开）。
+#   正文只说“大内家倒的那年”，不写具体战事与人名。
+# 依据·原创：那只褐釉旧茶碗与碗身一道黑漆补过的裂线（“像一条河”）、博多浜后街守空仓的老寡妇与她剥的豆子、丢在半路的钱箱、
+#   圣福寺的老漆匠觉了（原创人名，不冒用史料）与他那张“此碗不宜盛热汤”的字条、宗易挑走的那只素白盘、茶会上的盐商。
+#   黑漆补裂（不描金）是照当时的做法写的；不写金缮。
+# 商品：瓷器 porcelain ×2（月港 yuegang、广州 guangzhou、澳门 macao 有，堺不产）。货款 2 × 120 × 1.25 = 300，fetch / fetch_name 的每个选项都付。
+#   brief 的 turn 回复写“挑完剩下的，您拿去卖”，与 goods 目标扣货对不上；改成宗易两箱照价收下、只留一件，其余转给堺的瓷器铺。
+# 报酬：货款 300；报酬至多 1600（settle 的 tell / quiet、settle_name 的 quiet），只说漆匠 1300，转折处停下 900；
+#   唯一物品 longquan_celadon（龙泉青瓷盘）——茶会后宗易所赠，正文写明是他自家旧藏的一只，不是“我”运来、他挑走的那只素盘
+#   （brief 的 quiet 回复写“把那只素盘送给了我”，照 fixes 改正）；好感至多 +18（brief 记 +19，按各选项的数值逐项相加是 +18）；
+#   声望 sakai 至多 +3；名声至多 +5；回忆一张（只在 settle 的 tell）。
+# 门禁：offer 写日期起点 1570-01-15 与主角 ≥17 岁；之后每章 alive sen_rikyu（他没有 fate，1591 年才去世，窗口内一直在堺）。没有主线门禁，没有变体。
+# 读的旗标：无（分流靠 next，不用旗标挡选项）。
+# 设的旗标：c13_request_sen_rikyu_accepted / _declined；终局 _done / _partial / _late（每条路只设一面终局旗标）；
+#   分支三面：_story（听全了：陪她听完成功、买下字条）、_name_only（只问到寺名或漆匠的名号）、_fetched（两箱瓷器交到了）。
+#   brief 里还有一面 _second（turn 里答应再跑一趟），它与“走到了 fetch”同义、无人读取，为守住分支旗标至多三面的规矩不设。
+#   brief 的 point 成功分支没写 _fetched；交货在三条分支里都发生了，统一设上。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。来信全轨道一封（inquire 超时）。
+# 引擎注：检定失败没有回复字段，结果显示的是 fail 分支的见闻，所以 listen 与 point 的失败经过写在 fail 的 news 里。
+# 依赖：港口 hakata、sakai（ports_east_asia.toml）；商品 porcelain（goods/04_overseas_crafts.toml）；物品 longquan_celadon（items/items_curio_02.toml）；
+#   势力 sakai（factions/10_japan.toml）；属性 eloquence、commerce；人物 sen_rikyu。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_sen_rikyu-settle「末座上的旧茶碗」：小小的茶室，壁龛里一枝花苞，席上并排一只素白瓷盘与一只褐釉旧碗，碗身一道黑漆裂线；满座的客人低头看碗，末座的人在说话。
+
+[[tracks]]
+key = "request_sen_rikyu"
+name = "修过的旧茶碗"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["sen_rikyu"]
+
+# 一、漆线：堺，宗易的茶室。他要在下一回茶会上用一只碎过的碗。
+[[tracks.chapters]]
+key = "offer"
+title = "漆线"
+text = "宗易的茶室在仓房后头，门矮，进去得弯腰。炉上的水刚响，他不急着点茶，先解开一个布包，把一只旧茶碗放在我面前的席子上。碗是褐釉的，釉薄，碗身斜着一道黑漆补过的裂线，从碗口弯到碗底，像地图上的一条河。“下一回茶会，我想用它。”他停下来看了我一眼，“碗是好碗。可它碎过一回——谁修的、为什么修，我得知道。不然客人问起，我只能说它好看。”卖碗的人只交代过一句：上一任主人在博多，是一户老商家。“名号我有。”他说，“人还在不在，我不知道。”"
+when = [
+  { kind = "date", from = [1570, 1, 15] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "sen_rikyu", text = "在堺找到宗易" }]
+cast = ["sen_rikyu"]
+speaker = "sen_rikyu"
+mood = "tender"
+deadline = [1584, 3, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "替他去博多，问这只碗的上一任主人"
+next = "inquire"
+reply = "他把碗包回布里，系了两道绳，没有交给我，只把写着那户人家名号的纸条推了过来。“慢慢问。”他又给我添了一碗茶，这一碗点得很浓，碗沿一圈都是绿的。"
+effects = [
+  { kind = "flag", flag = "c13_request_sen_rikyu_accepted" },
+  { kind = "affinity", person = "sen_rikyu", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：博多这一趟，我腾不出船"
+next = "failed"
+reply = "他点点头，把碗收回布包里，系好绳，放到身后的架子上。炉上的水已经滚过了头，他舀掉一勺，掺进一勺凉的，从头开始点茶，像我刚进门时那样。"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_declined" }]
+
+# 二、博多的老寡妇：博多浜后街的空仓。她认得那道裂线。
+[[tracks.chapters]]
+key = "inquire"
+title = "博多的老寡妇"
+text = "纸条上的名号，在博多浜一条后街的尽头。仓房的门开着，里头是空的，只剩几只倒扣的米斗。守仓的老寡妇坐在门槛上剥豆子。我照宗易那只碗的样子，用指头在门槛上划那道裂线：从碗口斜下来，到底拐一个弯。她的手停了。“石阶上磕的。”她回头看了一眼空仓，“大内家倒的那年，城里起火，他抱着那只碗跑……”说到这里，她低下头，把一颗豆子剥了很久。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [{ kind = "at", at = "hakata", text = "去博多问茶碗的上一任主人" }]
+at = "hakata"
+speaker = "captain"
+mood = "sad"
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_sen_rikyu_late" },
+  { kind = "letter", person = "sen_rikyu", text = "宗易字：茶会改了日子。那只碗先收进箱里了，裂线朝下放着。博多的事，您不必再跑。" },
+]
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "在门槛边坐下，陪她把那一年的事听完"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "turn"
+reply = "她剥完了那一簸箕豆子，才讲完：丈夫跑到圣福寺前的石阶上滑了一跤，碗裂成两半，钱箱丢在了半路。寺里的老漆匠觉了师父把碎片捡回去，修了三个月，一文没要。“师父说，钱箱丢就丢了，碗还在你怀里，我来补。”她又想起一句：“补的地方别描金，黑的就好。”"
+news = "博多浜后街守空仓的老寡妇，跟来问茶碗的人讲了一下午，讲大内家倒的那年，她丈夫抱着一只碗逃命的事。"
+effects = [
+  { kind = "affinity", person = "sen_rikyu", value = 3 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_story" },
+]
+fail = { next = "turn_name", effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_name_only" }], news = "博多浜后街的老寡妇讲起大内家倒的那年，讲到一半就哭了。来问茶碗的人没再往下问，只记下了圣福寺三个字。" }
+
+[[tracks.chapters.choices]]
+key = "receipt"
+text = "出钱买下漆匠留给她家的那张字条"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋太瘪，这个口开不得。"
+next = "turn"
+reply = "她进屋翻了半天，捧出一只装碗的空木箱，箱盖里面贴着一张发黄的字条：“此碗不宜盛热汤。漆三月始干。圣福寺觉了。”她指着“三月”两个字说，那年城里起火，她男人抱着碗跑，钱箱扔在半路也顾不上，摔在寺前的石阶上；觉了师父补了三个月，没收钱。她把字条揭下来给我，收了钱，说留着也没人看。"
+news = "博多浜守空仓的老寡妇，把一只空木箱盖上发黄的字条卖给了外来的人，说那是圣福寺一个老漆匠留下的。"
+effects = [
+  { kind = "cash", value = -200 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_story" },
+]
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "只问修碗的漆匠是谁，不多打扰"
+next = "turn_name"
+reply = "寡妇松了口气，像放下了一担水。“圣福寺的觉了师父。早不在了吧，我也没去问过。”她又低头剥豆子，剥得很快，没再抬头看我。"
+news = "博多浜后街的老寡妇被人问起一只旧茶碗，只报了圣福寺一个老漆匠的名号，就低头剥她的豆子去了。"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_name_only" }]
+
+# 三、对照（听全了）：回到堺。宗易要在旧碗旁边摆一件新的。
+[[tracks.chapters]]
+key = "turn"
+title = "对照"
+text = "回到堺，我把博多听来的事一样一样说给宗易：那年的火，寺前的石阶，丢在半路的钱箱，修了三个月的漆。他听完，半天没说话，炉上的水响了又停。后来他把那只旧碗挪到席子正中，在它旁边空出一掌宽的地方，用指头点了点。“这里，要摆一件新的。完好的，唐土的瓷。”他看了我一眼，“客人看了新的，才看得见旧的。”他要我从月港、广州或澳门运两箱瓷器来，由他挑一件。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [{ kind = "person", person = "sen_rikyu", text = "回堺见宗易" }]
+cast = ["sen_rikyu"]
+speaker = "sen_rikyu"
+mood = "tender"
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_late" }]
+
+[[tracks.chapters.choices]]
+key = "again"
+text = "再跑一趟南边，运两箱唐土瓷器来"
+next = "fetch"
+reply = "“两箱我都照价收下。”他说，“我只用一件。剩下的，堺有的是人要。”说完他又看了一回那一掌宽的空处，像那里已经摆着什么了。"
+effects = [{ kind = "affinity", person = "sen_rikyu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "stop"
+text = "到此为止，把博多的话交给他就好"
+next = "done"
+reply = "他点头，叫仓房的伙计取来这一半的谢礼，包得方方正正。“茶会照开。没有对照也行——客人看不见，是客人的事。”他把旧碗收回布包，这回系绳系得比上回慢。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "sen_rikyu", value = 4 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "sakai", value = 2 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_partial" },
+]
+
+# 三·二、对照（只有寺名）：回到堺，能交给他的只有一个寺名。
+[[tracks.chapters]]
+key = "turn_name"
+title = "一个寺名"
+text = "回到堺，我能交给宗易的不多：碗是在博多圣福寺补的，补它的是寺里一位老漆匠，别的寡妇没说下去。他要了纸笔，把寺名写下来，折好，放进那只碗的木箱里。“是谁的手，有了。”他合上箱盖，没往下说。过了好一阵，他把旧碗取出来摆在席子正中，旁边空出一掌宽。“那就让客人自己去看。这里摆一件新的、完好的唐土瓷——新的在旁边，旧的才显得出来。”他要我从月港、广州或澳门运两箱瓷器来。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [{ kind = "person", person = "sen_rikyu", text = "回堺见宗易" }]
+cast = ["sen_rikyu"]
+speaker = "sen_rikyu"
+mood = "tender"
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_late" }]
+
+[[tracks.chapters.choices]]
+key = "again"
+text = "再跑一趟南边，替他运瓷器来"
+next = "fetch_name"
+reply = "“两箱都算我的。”他说，“我挑一件，其余的转给堺的瓷器铺，不叫您亏。”他把写着寺名的纸从箱里取出来又看了一遍，放了回去。"
+effects = [{ kind = "affinity", person = "sen_rikyu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "stop"
+text = "到此为止，寺名交给他就算办完"
+next = "done"
+reply = "他点头，付了这一半的谢礼。“茶会照开，没有对照也行。”他把那张纸压到箱底，说博多那位师父的事，等以后有船去，他再托人问。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "sen_rikyu", value = 4 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "sakai", value = 2 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_partial" },
+]
+
+# 四、两箱瓷器（听全了的路）：宗易的仓房，满满一席唐土瓷，他只拿起最素的那只。
+[[tracks.chapters]]
+key = "fetch"
+title = "两箱瓷器"
+text = "两箱瓷器在宗易的仓房里撬开，伙计把稻草一把把掏出来，一件件摆上草席：青花大盘、五彩的碗、开光的瓶，排了满满一席。宗易不看最贵的那几件，背着手绕着席子走了两圈，蹲下来，拿起一只最素的白盘子——没有花，只在盘心有一圈淡淡的旋纹——对着门外的光慢慢地转。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [{ kind = "goods", good = "porcelain", qty = 2, at = "sakai", text = "两箱唐土瓷器运到堺" }]
+at = "sakai"
+speaker = "captain"
+mood = "tender"
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_late" }]
+
+[[tracks.chapters.choices]]
+key = "let"
+text = "让他自己挑"
+next = "settle"
+reply = "他挑走了那只素盘，用一块旧布包好。剩下的叫伙计原样封箱，照价记进账里，当天就抬去了街口的瓷器铺。从头到尾，他没问过一句哪件最值钱。"
+news = "堺的宗易在仓房里看了满满一席唐土瓷器，只挑走一只最素的白盘，剩下的原样封箱，转给了街口的瓷器铺。"
+effects = [
+  { kind = "cash", value = 300 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_fetched" },
+]
+
+[[tracks.chapters.choices]]
+key = "point"
+text = "指给他看，哪一件是新窑仿的旧样"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "settle"
+reply = "我指的是一只青花盘：底足太白，旧款是后写上去的。他放下素盘，把青花盘翻过来看了很久，抬头看我一眼：“您的眼睛也是做买卖的。”他要的仍是那只素盘，青花盘随别的一起封了箱。"
+news = "堺的宗易仓房里，运瓷器来的人一眼认出一只仿旧款的青花盘，宗易翻过盘底看了半天，笑了一下。"
+effects = [
+  { kind = "cash", value = 300 },
+  { kind = "affinity", person = "sen_rikyu", value = 3 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_fetched" },
+]
+fail = { next = "settle", effects = [{ kind = "cash", value = 300 }, { kind = "flag", flag = "c13_request_sen_rikyu_fetched" }], news = "堺的宗易仓房里，运瓷器来的人把一只老窑的青花盘说成新窑仿的，宗易翻过盘底看了看，没有说破，照旧挑走了那只素盘。" }
+
+# 四·二、两箱瓷器（只有寺名的路）：同一张草席，他边挑边问圣福寺在哪一头。
+[[tracks.chapters]]
+key = "fetch_name"
+title = "一席瓷器"
+text = "仓房的地上铺开一张草席，两箱瓷器撬开了，伙计掏出稻草，把青花盘、五彩碗、开光的瓶一件挨一件排上去。宗易连看都不看最贵的，绕着席子走了两圈，在一只最素的白盘前蹲下，拿起来对着光转。转到一半，他问我：“圣福寺在博多哪一头？”我说在靠海的那一头。他“嗯”了一声，接着转那只盘子。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [{ kind = "goods", good = "porcelain", qty = 2, at = "sakai", text = "两箱唐土瓷器运到堺" }]
+at = "sakai"
+speaker = "captain"
+mood = "tender"
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_late" }]
+
+[[tracks.chapters.choices]]
+key = "let"
+text = "不插嘴，让他慢慢挑"
+next = "settle_name"
+reply = "他留下那只素盘，其余的叫伙计封回箱里，照价记账，转给街口的瓷器铺。他把素盘搁在旧碗的木箱旁边比了比高矮，又挪开了一寸。"
+news = "堺的宗易蹲在仓房的草席边挑了半天唐土瓷器，只留下一只白盘，边挑边打听博多的圣福寺在哪一头。"
+effects = [
+  { kind = "cash", value = 300 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_fetched" },
+]
+
+[[tracks.chapters.choices]]
+key = "point"
+text = "告诉他，席上哪一件是仿旧款的新货"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "settle_name"
+reply = "我说那只青花盘的款是后写的，底足白得不像旧窑。他接过去，用指甲刮了刮底足，抬眼看我：“做买卖的眼睛，您也有。”他把青花盘放回席上，手里还是那只素盘。"
+news = "堺的宗易仓房里，运瓷器的人认出一只后写款的青花盘，宗易用指甲刮了刮盘底，点了点头。"
+effects = [
+  { kind = "cash", value = 300 },
+  { kind = "affinity", person = "sen_rikyu", value = 3 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_fetched" },
+]
+fail = { next = "settle_name", effects = [{ kind = "cash", value = 300 }, { kind = "flag", flag = "c13_request_sen_rikyu_fetched" }], news = "堺的宗易仓房里，运瓷器的人把一只真旧的五彩碗错认成仿品，宗易看了一眼，没吭声，还是挑了那只素盘。" }
+
+# 五、末座（听全了的路）：茶会那天，客人问价，也问来历。宗易等“我”开口。
+[[tracks.chapters]]
+key = "settle"
+title = "末座"
+text = "茶会那天，客人从矮门一个个弯腰进来，宗易请我坐在末座，挨着墙。炉里的炭是天没亮就起的，屋里一股淡淡的松烟味。壁龛里只插了一枝没开的花苞。他点完茶，把那只旧碗和那只素盘并排放在席上。客人们先看素盘，再看旧碗，目光停在那道黑漆的裂线上。一个堺的盐商问这碗值多少，另一个问它从哪里来。宗易没有答，转过头来看着我，等我开口——或者不开口。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [
+  { kind = "wait", days = 7 },
+  { kind = "person", person = "sen_rikyu", text = "茶会那天去见宗易" },
+]
+cast = ["sen_rikyu"]
+speaker = "sen_rikyu"
+mood = "tender"
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_late" }]
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "把博多寡妇说的事，从头讲给满座的客人"
+next = "done"
+reply = "我从博多浜那间空仓讲起：起火那年，一个商人抱着这只碗往外跑，钱箱扔在半路，人在圣福寺前的石阶上摔倒，碗裂成两半；寺里的老漆匠补了三个月，一文没要。讲完，满座没人再问价。盐商把碗捧起来，看的是那道裂线。散会后宗易收拾茶具，说：“这只碗今天才算用上了。”他从里屋取出一只青瓷盘递给我——他家旧藏的龙泉盘，釉色青得发暗，比席上那只素盘老得多。“那一只留在席上。这一只，跟您的船走。”"
+news = "堺的宗易开了一场茶会，摆着一只用漆修过的旧碗，听说满座的客人后来都不谈价钱了。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "longquan_celadon", qty = 1 },
+  { kind = "affinity", person = "sen_rikyu", value = 8 },
+  { kind = "reputation", faction = "sakai", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "memory", memory = "mem-request_sen_rikyu-settle", title = "末座上的旧茶碗" },
+  { kind = "flag", flag = "c13_request_sen_rikyu_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "只说修碗的是博多圣福寺的漆匠"
+next = "done"
+reply = "客人们点点头，有人说圣福寺的漆工向来手细。话题绕了一圈，又回到价钱上：盐商报了个数，另一个客人往上加了一成。宗易看了我一眼，没说什么，只把旧碗往素盘那边挪近了一点。"
+news = "堺的宗易茶会上摆出一只漆补过的旧碗，席上只问出是博多圣福寺的漆匠修的，客人们转头又谈起了价钱。"
+effects = [
+  { kind = "cash", value = 1300 },
+  { kind = "affinity", person = "sen_rikyu", value = 4 },
+  { kind = "reputation", faction = "sakai", value = 2 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "一句不说，让碗自己摆着"
+next = "done"
+reply = "席上静了一会儿。盐商又问了一遍价，没人接，他也就不问了。末了有个年轻的客人什么也没问，只是看，一直看到炉上的水响了第二回。散会后，宗易从里屋取出一只龙泉青瓷盘给我，是他自家旧藏的；席上那只素盘，他留下了。“您今天一句也没说。”他停了停，“这盘子拿去盛东西，别供着。”"
+news = "堺的宗易开茶会，席上一只漆补过的旧碗，问价的人问了两回没人答，后来满座的人都只看不问了。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "longquan_celadon", qty = 1 },
+  { kind = "affinity", person = "sen_rikyu", value = 6 },
+  { kind = "reputation", faction = "sakai", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_done" },
+]
+
+# 五·二、末座（只有寺名的路）：同一场茶会，有人问是谁补的，“我”知道的只有一座寺。
+[[tracks.chapters]]
+key = "settle_name"
+title = "末座的客人"
+text = "茶会那天，矮门外的石子刚洒过水，客人一个个弯腰进来。宗易让我坐末座。壁龛里挂着一幅只写了一个字的墨迹，炉上的釜轻轻地响。他点完茶，把旧碗和素盘并排摆开，一件裂过，一件完好。有个客人凑近了看那道黑漆线，问是谁补的；另一个只问值多少。我知道的，只有博多的一座寺、寺里的一位老漆匠。宗易转过头来等着，看我说，还是不说。"
+when = [{ kind = "alive", person = "sen_rikyu", value = true }]
+objectives = [
+  { kind = "wait", days = 7 },
+  { kind = "person", person = "sen_rikyu", text = "茶会那天去见宗易" },
+]
+cast = ["sen_rikyu"]
+speaker = "sen_rikyu"
+mood = "tender"
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sen_rikyu_late" }]
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "告诉问话的客人：是博多圣福寺的老漆匠"
+next = "done"
+reply = "我说是博多圣福寺的一位老漆匠。客人们“哦”了一声，有人说博多的漆工手稳，话头随即又回到价钱，一个出价，一个压价。宗易没接话，往炉里添了一块炭。"
+news = "堺的宗易茶会上，有人问那只漆补的旧碗是谁修的，末座的人只答了博多圣福寺，席上随即又讨起了价。"
+effects = [
+  { kind = "cash", value = 1300 },
+  { kind = "affinity", person = "sen_rikyu", value = 4 },
+  { kind = "reputation", faction = "sakai", value = 2 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "不答，让客人自己看那道裂线"
+next = "done"
+reply = "我一句没说。问价的客人等了一会儿，见没人接话，自己也闭了嘴。后来那个问是谁补的客人一直看着裂线，看到碗里的茶都凉了。散会以后，宗易从里屋捧出一只龙泉青瓷盘给我：他家旧藏的，釉青得像深水；席上那只素盘仍和旧碗摆在一起。“那一只留给碗作伴。这一只，您带走。”"
+news = "堺的宗易开茶会，一只漆补的旧碗摆在素盘旁边，问来历的客人没得到回答，就那么看着，看到茶都凉了。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "longquan_celadon", qty = 1 },
+  { kind = "affinity", person = "sen_rikyu", value = 6 },
+  { kind = "reputation", faction = "sakai", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "flag", flag = "c13_request_sen_rikyu_done" },
+]

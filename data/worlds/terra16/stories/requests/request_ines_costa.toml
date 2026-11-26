@@ -1,0 +1,182 @@
+# C13d 请托：母子与小箱子（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：伊内丝·达·科斯塔 ines_costa（1540-07-19 生，cast 在 classmates_antwerp.toml）。里斯本河岸区船票铺的女人，葡萄牙商人团体书记的女儿，少女诗社的另一位创办人。
+# 类型与报价：押运／带人（es），4 章。kind=request，auto=false（T 当面）：人物按日程在 lisbon，玩家用“问请托”（ask:request_ines_costa）启动；offer 章不写 at，目标是在港里找到她。
+# 窗口：报价 1569-01-01 至 1590-06-30；offer 的 deadline 即窗口止日，到期走 timeout（next=failed，不写见闻）。pickup 起算 60 天，arrive 起算 150 天。
+# 依据：史实背景——1560 年代葡萄牙对新基督徒的追查，新基督徒家庭经安特卫普投亲。只作街面上的影子（盯行李的人、“不该出海的东西”），正文与见闻不写机构名、不写宗教名。安特卫普葡萄牙商人团体的账房与汇票，属于当时的商业常识。
+#   原创——母子两人、油布小箱子、戴黑帽的人、箱缝里的半张字条与口头禅、舅舅搬去城北、箍桶匠、拉罗谢尔的盐船。
+#   待核：无。
+# 读写的旗标：设 c13_request_ines_costa_accepted / _asked / _declined / _opened / _halfline / _done / _partial / _late（终局旗标每条只设一面：accepted 为接下，declined、done、partial、late 为结局，opened 与 halfline 为分支）。
+#   读 c7_pair_ines_costa_sophie_lemaire_together（offer 的变体，只读，一句，不提人名）与 bond ines_costa 的等级（offer 的变体，只读）。不设任何 c7_ 旗标。
+# 依赖：港口 lisbon、antwerp 都是现有港口，无 B10b 改名；无主线门禁（不读 c13_main_*）。
+# 缺省走向：不接，寡妇另找船（declined，failed）。接了但 60 天内没到里斯本码头，母子搭盐船去拉罗谢尔，再自己北上（late，failed）。
+#   到了海上，母子平安。到了安特卫普，找到舅舅（done，兑满）、找不到人但交给账房（partial，兑一半）；150 天内没到安特卫普，母子在拉罗谢尔下了船、自己北上，玩家收到一封信（late，failed）。
+# 回忆插画清单：
+#   mem-request_ines_costa-arrive「雨里的小箱子」：安特卫普雨夜的门口，舅舅开门，一只裹着油布的小箱子放在门槛内外之间。
+
+[[tracks]]
+key = "request_ines_costa"
+name = "母子与小箱子"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ines_costa"]
+
+# 报价：里斯本的船票铺。两张票，一个寡妇，一只不肯让人翻的箱子。
+[[tracks.chapters]]
+key = "offer"
+title = "两张船票"
+text = "伊内丝在河岸区的船票铺里把两张票举到窗前，一张一张对着光看，看完才收进袖子。票是替一个寡妇和她十岁的儿子买的，母子要去安特卫普投奔舅舅，行李只有一只裹着油布的小箱子。“码头上这几天总有人盯着谁家的行李，”她说，“有个戴黑帽的，老在问那条船几时开。”她没有多求，只提了一件：路上别让人翻那只小箱子。你问里面是什么，她说是孩子父亲的账，“别的，我没看。”说完，目光移到窗外的海上去了。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "ines_costa", text = "在里斯本的船票铺里找到她" }]
+deadline = [1590, 6, 30]
+when = [{ kind = "date", from = [1569, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "ines_costa", ge = 18 }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ines_costa_declined" }]
+
+[[tracks.chapters.choices]]
+key = "take_them"
+text = "让母子俩上我的船，箱子跟人一起走。"
+next = "pickup"
+effects = [{ kind = "affinity", person = "ines_costa", value = 2 }, { kind = "flag", flag = "c13_request_ines_costa_accepted" }]
+reply = "她松了口气，却不肯显出来，只把两张票推回柜台：“船是你的，票就用不上了。路上的面包钱，留给他们娘俩。”她写了几行字，要你交给那位舅舅，折了两折，没有封口。"
+
+[[tracks.chapters.choices]]
+key = "ask_chest"
+text = "先问清楚：箱子里到底装着什么，我才好替它挡人。"
+next = "pickup"
+effects = [{ kind = "affinity", person = "ines_costa", value = 2 }, { kind = "flag", flag = "c13_request_ines_costa_accepted" }, { kind = "flag", flag = "c13_request_ines_costa_asked" }]
+reply = "她想了很久，说：“再想想。”然后真的没有再提。第二天一早她来码头，把箱子的油布又缠了一道，亲手递到你手里。那一道是缠给你看的。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟我走不开，你另找船吧。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ines_costa_declined" }]
+reply = "她点点头，没有多问，把两张票又对着光看了一遍，才慢慢收进袖子。“这条船不好找，”她说，“我再想想。”"
+
+# 变体：老同学的口气（bond ≥ C）；柜台上的诗本（读 c7 的 together，只一句，不提人名）。同时满足时取 both。
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "bond", person = "ines_costa", level = "C" }, { kind = "flag", flag = "c7_pair_ines_costa_sophie_lemaire_together" }]
+text = "伊内丝在船票铺里见了你，先说：“你来得正好。”柜台上压着一本只写了一半的诗本。她没再绕弯子，把两张票拍在柜台上：一个寡妇，带着十岁的儿子，要去安特卫普投奔舅舅。码头上这几天有个戴黑帽的，老在问那条船几时开。她求你一件事：路上别让人翻那只小箱子。你问里面是什么，她说是孩子父亲的账，“别的，我没看。”"
+
+[[tracks.chapters.variants]]
+key = "half_book"
+when = [{ kind = "flag", flag = "c7_pair_ines_costa_sophie_lemaire_together" }]
+text = "伊内丝在河岸区的船票铺里把两张票举到窗前，一张一张对着光看。柜台上压着一本只写了一半的诗本，纸页还是新的。票是替一个寡妇和她十岁的儿子买的，母子要去安特卫普投奔舅舅，行李只有一只裹着油布的小箱子。“码头上这几天总有人盯着谁家的行李，”她说，“有个戴黑帽的，老在问那条船几时开。”她没有多求，只提了一件：路上别让人翻那只小箱子。你问里面是什么，她说是孩子父亲的账，“别的，我没看。”"
+
+[[tracks.chapters.variants]]
+key = "old_friend"
+when = [{ kind = "bond", person = "ines_costa", level = "C" }]
+text = "伊内丝在船票铺里见了你，先说：“你来得正好。”她没再绕弯子，把两张票拍在柜台上。票是替一个寡妇和她十岁的儿子买的，母子要去安特卫普投奔舅舅，行李只有一只裹着油布的小箱子。码头上这几天有个戴黑帽的，老在问那条船几时开。她求你一件事：路上别让人翻那只小箱子。你问里面是什么，她说是孩子父亲的账，“别的，我没看。”"
+
+# 上船：里斯本的码头，天没亮。黑帽子伸手去按搭扣。
+[[tracks.chapters]]
+key = "pickup"
+title = "黑帽子"
+text = "天还没亮，伊内丝把灯笼压低，站在跳板脚下，一句话也不说。寡妇抱着小箱子往上走，儿子攥着她的裙子。跳板头上早站着一个戴黑帽的人，自称替港口的公证人办事，要看箱子里有没有“不该出海的东西”。他的手已经按上了搭扣。水手们停了手里的活，都往这边看。伊内丝这才开口，声音压得很低：“他要看的是箱子，不是人。”又说，“别让他碰孩子。”"
+at = "lisbon"
+speaker = "captain"
+mood = "tense"
+news = "里斯本码头上，天没亮一条北上的船就开了，跳板头上有个戴黑帽的人站了很久。"
+objectives = [{ kind = "at", at = "lisbon", text = "在里斯本的码头上" }]
+deadline_days = 60
+when = [{ kind = "alive", person = "ines_costa", value = true }, { kind = "date", from = [1569, 1, 1], to = [1590, 12, 31] }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "ines_costa", text = "母子俩等不到你的船，搭了一条去拉罗谢尔的盐船，再自己找路北上。箱子还在，人也平安。——伊内丝" }, { kind = "affinity", person = "ines_costa", value = -3 }, { kind = "flag", flag = "c13_request_ines_costa_late" }]
+news = "里斯本码头上，一条去拉罗谢尔的盐船天没亮就开了，船上有个寡妇抱着个孩子。"
+
+[[tracks.chapters.choices]]
+key = "talk_him_down"
+text = "跟他讲船规：上了跳板的货归船长管，要验去港务处验。"
+next = "passage"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "ines_costa", value = 3 }]
+fail = { next = "passage", effects = [{ kind = "affinity", person = "ines_costa", value = -2 }, { kind = "flag", flag = "c13_request_ines_costa_opened" }], news = "里斯本码头上，一个戴黑帽的人掀开寡妇的箱盖看了一眼，只见一摞账本，悻悻走了。孩子吓哭了。" }
+reply = "他盯着你看了半晌，把手从搭扣上拿开，说：“那就去港务处见。”他走远了，寡妇才把箱子换到另一只手上，那只手一直在抖。伊内丝没有上前，只在跳板脚下轻轻吐出一口气。"
+
+[[tracks.chapters.choices]]
+key = "pay_custom"
+text = "塞给他一点“码头的规矩”，请他去别处问。"
+next = "passage"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "身上的钱不够这份“码头的规矩”。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "ines_costa", value = 3 }]
+news = "里斯本码头上，天没亮，有人往戴黑帽的人手里塞了一袋钱，那人就下了跳板。"
+reply = "他把钱袋收进袖子，说这条船他今天没看见。孩子从母亲身后探出头，问那个人是不是走了。你说走了，上船吧。"
+
+# 海上第七天：孩子不晕了，纸从箱缝里出来。
+[[tracks.chapters]]
+key = "passage"
+title = "箱缝里的半行"
+text = "出海第七天，孩子不晕了，趴在船舷上数海鸟。寡妇把小箱子抱在膝上，第一次跟你说起丈夫：他记账记到最后一天，账上还有安特卫普的人欠他们的钱。她记得伊内丝在码头上说过两句话：“到了海上再看。”“别在港口拆。”说完，寡妇把手指伸进箱缝里，抽出一张纸递过来，纸角已经被手心焐软了。纸上只有半行字，是伊内丝的笔迹，另半行空着。"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "wait", days = 7, text = "出海第七天" }]
+when = [{ kind = "alive", person = "ines_costa", value = true }, { kind = "date", from = [1569, 1, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "read_note"
+text = "展开伊内丝的半张字条。"
+next = "arrive"
+requires = [{ kind = "affinity", person = "ines_costa", ge = 30 }]
+hint = "寡妇把纸攥在手心，犹豫了一下又收了回去。伊内丝交代过，这张纸要交给跟她够熟的人。"
+effects = [{ kind = "affinity", person = "ines_costa", value = 3 }, { kind = "flag", flag = "c13_request_ines_costa_halfline" }]
+reply = "字条上写：“那种书有多重，我知道——我家里也有一本。”后面跟着一句：“剩下半行，归你。”你没有念出声，把纸折好收进怀里。寡妇什么也没问。"
+
+[[tracks.chapters.choices]]
+key = "teach_boy"
+text = "教孩子认船上的绳结，让他别老盯着那只箱子。"
+next = "arrive"
+effects = [{ kind = "affinity", person = "ines_costa", value = 2 }]
+reply = "孩子学会了两个结，第三个怎么也打不上，急得直咬嘴唇。他母亲在旁边看着，第一次笑了，说他父亲打结也是这么笨。"
+
+# 安特卫普码头：舅舅不在。账房压着伊内丝写好的汇票。
+[[tracks.chapters]]
+key = "arrive"
+title = "舅舅不在码头"
+text = "安特卫普码头上没有人来接。葡萄牙商人团体的账房说，那位舅舅半年前搬去了城北，地址只有一个说荷兰话的箍桶匠知道。寡妇抱着箱子站在雨里，儿子拽着她的袖子问，舅舅是不是不要他们了。账房的书记把伊内丝早写好的一张汇票压在桌上，念着她的字：“人送到了，再兑。”又念，“箱子别在门口开。”书记念完，把汇票推到寡妇面前，没有去碰那只箱子。孩子的鞋湿透了，站在台阶上一步也不肯挪。"
+at = "antwerp"
+speaker = "captain"
+mood = "tender"
+news = "安特卫普码头上，一个从里斯本来的寡妇带着儿子，在雨里站了半天，后来有人领着他们去了城北。"
+objectives = [{ kind = "at", at = "antwerp", text = "在安特卫普的码头上" }]
+deadline_days = 150
+when = [{ kind = "alive", person = "ines_costa", value = true }, { kind = "date", from = [1569, 1, 1], to = [1590, 12, 31] }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "ines_costa", text = "母子俩在海上耽搁太久，在拉罗谢尔下了船，自己雇车北上，听说已经到了。" }, { kind = "affinity", person = "ines_costa", value = -3 }, { kind = "flag", flag = "c13_request_ines_costa_late" }]
+news = "安特卫普码头上等了许久，一个里斯本来的寡妇后来听说在拉罗谢尔下了船。"
+
+[[tracks.chapters.choices]]
+key = "find_uncle"
+text = "用荷兰话去码头上问那个箍桶匠，把人一直送到舅舅门口。"
+next = "done"
+requires = [{ kind = "skill", skill = "lang_dutch", ge = 60 }]
+hint = "码头上的人说的是荷兰话，你只听得懂“城北”两个字。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "ines_costa", value = 8 }, { kind = "flag", flag = "c13_request_ines_costa_done" }, { kind = "memory", memory = "mem-request_ines_costa-arrive", title = "雨里的小箱子" }, { kind = "letter", person = "ines_costa", text = "船票钱我收回来了，剩下的面包钱，就算我欠你半行诗。" }]
+reply = "箍桶匠领着你们穿过三条窄街，一路不说话，最后停在一扇漆成绿色的门前。舅舅开门时手里还拿着账本，看见箱子先愣住，看见孩子才哭出来。寡妇把箱子交到他手里，没有打开。"
+
+[[tracks.chapters.choices]]
+key = "ask_around"
+text = "挨家去问葡萄牙商人，总有人认得他。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "ines_costa", value = 8 }, { kind = "flag", flag = "c13_request_ines_costa_done" }, { kind = "memory", memory = "mem-request_ines_costa-arrive", title = "雨里的小箱子" }, { kind = "letter", person = "ines_costa", text = "船票钱我收回来了。面包钱还欠着，拿半行诗抵给你。" }]
+news = "安特卫普城北有人替一个里斯本寡妇找到了舅舅的门，码头上的账房也听说了。"
+fail = { next = "done", effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "ines_costa", value = 4 }, { kind = "flag", flag = "c13_request_ines_costa_partial" }], news = "安特卫普的账房里，一个里斯本寡妇只问到了街名，孩子被交给账房安顿，汇票只兑了一半。" }
+reply = "第四家的女主人认得那位舅舅，说他每个礼拜天都在码头上张望一回。你们在他家门口等到天黑，他回来时，寡妇先叫出了他的名字。"
+
+[[tracks.chapters.choices]]
+key = "leave_with_clerk"
+text = "把母子和箱子交给账房，请他代为找人。"
+next = "done"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "ines_costa", value = 4 }, { kind = "flag", flag = "c13_request_ines_costa_partial" }]
+news = "安特卫普的葡萄牙商人账房里，一个里斯本寡妇的汇票只兑了一半，另一半等舅舅来签收。"
+reply = "账房答应替他们找人，汇票只兑了一半，说另一半要等舅舅本人来签。孩子在门口回头看了你一眼，没有说话。"

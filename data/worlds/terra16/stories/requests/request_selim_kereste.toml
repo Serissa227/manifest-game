@@ -1,0 +1,160 @@
+# 请托：第二条小艇的料（request_selim_kereste）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：塞利姆·凯雷斯特（selim_kereste，1540-03-16 生，男），金角湾兵工厂木料场的学徒；势力 ottoman，身份档 1。cast：cast/classmates_custom_istanbul_shipyard.toml。
+# 类型：送货（deliver）。章节：offer（报价）、deliver（交货）、settle（结账，料足）、settle_short（结账，被征走五车）。
+#       brief 的 settle 在“少五车”时要改现金与终局旗标，而变体只能改文字，所以把它拆成 settle_short 一章；
+#       deliver 的 show_paper 失败与 give_some 两个选项都用 next 路由到它，不靠旗标分流。
+# 报价：T（当面）。塞利姆按日程就在伊斯坦布尔兵工厂外的木料场，玩家用 ask:request_selim_kereste 启动；auto=false；offer 不写 at，objectives 为 person。
+#       窗口 1564-01-01 至 1572-06-30；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=150，超时走 failed，来信一封，好感 -3，旗标 _late；settle 与 settle_short 是普通章，没有 default，可以一直等。
+# 依据·史实背景：金角湾兵工厂对黑海木料有优先征用；1571 年勒班陀之后，兵工厂一个冬天重造舰队（deliver 的 v1_lepanto 只写背景，不写海战）。
+# 依据·原创：塞利姆、第二条救生艇、三十车橡木、私人船台、龙骨底下烙记号的那块料；师傅哈桑只在 settle 被转述一句。
+# 秘密：锯末堆底下省下的好料一概不写，见闻也不写；正文只写“这回是正经买的料”。
+# 读的旗标：bond selim_kereste ≥ C（offer 的 v1_old_classmate，只读 C7 的重逢结果）。不读任何 c7_ 旗标。
+# 设的旗标：c13_request_selim_kereste_accepted（offer 接下，两条接法）、_declined（offer 回绝）、_short（deliver 的 give_some，或 show_paper 失败）、_late（deliver 超时）、_done（settle 收尾，料足）、_partial（settle_short 收尾，工钱减半）。
+# 不用 relation / tie / bond / heart 效果；不设任何 c7_ 旗标。
+# 报酬：现金最多 1250 + 货款 750（settle 给一次）；被征五车时工钱 600 + 货款 750（settle_short 给一次）；好感最多 +13（折中结局 +4）；名声 +1（只在 settle）；不发物品（carved_boat 已由 C7 的 bond_hamid A2 发放，按总决定去掉重复，不换成别的）；回忆 mem-request_selim_kereste-settle（只在 settle）。
+# 依赖：港口 istanbul（ports_east_med.toml）；货物 timber（goods/01_staples_raw.toml）；技能 shipbuilding（skills.toml）；人物 selim_kereste。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_selim_kereste-settle「船台上的龙骨」：私人船台的一角，新龙骨架在木墩上，塞利姆蹲在旁边用指甲顺着年轮划。
+
+[[tracks]]
+key = "request_selim_kereste"
+name = "第二条小艇的料"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["selim_kereste"]
+
+# 一、一船橡木：木料场的弯木堆里，塞利姆蹲在木头上。
+[[tracks.chapters]]
+key = "offer"
+title = "一船橡木"
+text = "木料场的弯木堆里，塞利姆蹲在一根木头上，拿指甲顺着年轮划。见你走过来，他喊了一声“兄弟”，把手往裤子上一抹。“第一条救生艇下了水，第二条的料还差一船。这回是正经买的料。”三十车黑海的橡木，要卸在兵工厂外头那处私人船台。他压低了声音：“书记管着金角湾所有进港的木料。他要是问起这料是谁的，你得说得清。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1564, 1, 1], to = [1572, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "selim_kereste", ge = 18 }]
+objectives = [{ kind = "person", person = "selim_kereste", text = "在木料场找到他" }]
+deadline = [1572, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_old_classmate"
+when = [{ kind = "bond", person = "selim_kereste", level = "C" }]
+text = "木料场的弯木堆里，塞利姆蹲在一根木头上。见你走过来，他先扔给你一块木片。“看纹。”他拿指甲顺着年轮划了一道，“还记得往哪边下刀吗，兄弟？”第二条救生艇的料还差一船，这回是正经买的料。三十车黑海的橡木，要卸在兵工厂外头那处私人船台。“书记管着金角湾所有进港的木料。他要是问起这料是谁的，你得说得清。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，三十车黑海橡木，卸到私人船台。"
+next = "deliver"
+reply = "他在一块木片上烙了个记号，是一只缺了角的圆。说卸货的时候把它钉在最上面那根料上，钉的人要站在船台边上，让书记一眼看见。“书记认这个。”"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "flag", flag = "c13_request_selim_kereste_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why_boat"
+text = "接下，问他：一条救生艇，要这么好的料？"
+next = "deliver"
+reply = "“救命的船，你给它次料？”他瞪了我一眼，又笑。上回那条救生艇的料是别人替他挑的，这回他想自己挑一回。"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "flag", flag = "c13_request_selim_kereste_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "黑海的木料我运不了。"
+next = "failed"
+reply = "他拍拍我的肩，说那就等哪个兄弟顺路。转身去敲木头，一根一根敲过去，敲到最后一根才回头看我一眼。"
+effects = [{ kind = "flag", flag = "c13_request_selim_kereste_declined" }]
+
+# 二、书记的手指：私人船台边卸了一地橡木，兵工厂的书记来数。
+[[tracks.chapters]]
+key = "deliver"
+title = "书记的手指"
+text = "三十车橡木在私人船台边卸了一地，塞利姆一根根敲过去，敲得眉开眼笑：“一根不少。”兵工厂的书记来了，手指头点着木料数，数到第七根停下：“黑海的橡木先归兵工厂。私人船台要用，就得有文书。”塞利姆脸涨红了，斧柄往木墩上一磕，就要顶回去。你拦住他，他小声说：“顺着纹下刀，别硬劈。”"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+when = [{ kind = "alive", person = "selim_kereste", value = true }]
+objectives = [{ kind = "goods", good = "timber", qty = 30, at = "istanbul", text = "三十车橡木" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "selim_kereste", value = -3 }, { kind = "flag", flag = "c13_request_selim_kereste_late" }, { kind = "letter", person = "selim_kereste", text = "兄弟，料没等到，小艇先用手上现有的木头造了半条。你那三十车，下回再说。——塞利姆" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_lepanto"
+when = [{ kind = "date", from = [1571, 10, 7] }]
+text = "三十车橡木在私人船台边卸了一地，塞利姆一根根敲过去，敲得眉开眼笑：“一根不少。”兵工厂的书记身后跟着两个兵。海上刚打了一场大仗，这个冬天兵工厂要重造整支舰队。书记说：“今年的橡木都要先进兵工厂。私人船台要用，就得有文书。”塞利姆脸涨红了，斧柄往木墩上一磕，就要顶回去。你拦住他，他小声说：“顺着纹下刀，别硬劈。”"
+
+[[tracks.chapters.choices]]
+key = "show_paper"
+text = "拿出买料的票据，讲这是私人买卖，不占兵工厂的份。"
+next = "settle"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我把票据一张张摊在书记面前：哪天进的港，哪条船，钱哪天付的。书记看得很慢，看完了，手指头还停在本子上，没有收回去。"
+news = "金角湾兵工厂外的私人船台卸了一地黑海橡木，兵工厂的书记看了票据，说下不为例。"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+fail = { next = "settle_short", effects = [{ kind = "affinity", person = "selim_kereste", value = -2 }, { kind = "flag", flag = "c13_request_selim_kereste_short" }], news = "金角湾兵工厂外的私人船台，书记从一船黑海橡木里征走了五车，说是兵工厂先用。" }
+
+[[tracks.chapters.choices]]
+key = "grade_wood"
+text = "指给书记看：这批料有弯，造不了大船的龙骨，正合小艇。"
+next = "settle"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "你看不出这几根料哪里不合大船用"
+reply = "我挑了三根最弯的给他看。书记不懂木头，可他听懂了“造不了龙骨”几个字，挥挥手走了。塞利姆在背后冲我竖起大拇指。"
+news = "金角湾兵工厂外的私人船台卸了一地黑海橡木，书记听说这批料造不了大船的龙骨，挥挥手走了。"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "give_some"
+text = "主动让兵工厂挑五车走，换剩下的安稳。"
+next = "settle_short"
+reply = "书记挑走了五车最直的。塞利姆心疼得直咂嘴，又说算了，直的本来也不合小艇用。"
+news = "金角湾兵工厂外的私人船台，兵工厂的书记挑走了五车最直的橡木，剩下的放行。"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "flag", flag = "c13_request_selim_kereste_short" }]
+
+# 三、龙骨底下的记号：龙骨架起来了，塞利姆算清货款与工钱，蹲下去指给你看烙着记号的那块料。
+[[tracks.chapters]]
+key = "settle"
+title = "龙骨底下的记号"
+text = "第二条小艇的龙骨架起来了，一整根橡木压在木墩上，两头削成斜口。塞利姆天天泡在船台上，满身木屑，手指头裂了好几道口子。他把货款和工钱一起算给你，数得很认真，一笔一笔念出来。又蹲下去，拿指甲顺着龙骨底下那块料的年轮划了一道，那里烙着这批料的记号。“我师傅路过船台，看了一眼料，什么也没说。”他仰头冲你咧嘴笑，“没说，就是好料。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "selim_kereste", value = true }]
+objectives = [{ kind = "person", person = "selim_kereste", text = "在船台上找到他" }]
+news = "金角湾兵工厂外的私人船台上，一条小救生艇的龙骨架起来了，兵工厂的书记再没来数过木料。"
+
+[[tracks.chapters.choices]]
+key = "take_pay"
+text = "收下钱，蹲到他旁边看那块烙了记号的料。"
+next = "done"
+reply = "他拿指甲点着那个缺了角的圆，说龙骨一下水，这块料就压在最底下，谁也看不见。“可你运来的料，它在。”他蹲着没起来，又用手掌把那道年轮抹了一遍。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = 750 }, { kind = "affinity", person = "selim_kereste", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_selim_kereste-settle", title = "船台上的龙骨" }, { kind = "flag", flag = "c13_request_selim_kereste_done" }]
+
+[[tracks.chapters.choices]]
+key = "ask_name"
+text = "问他：小艇起名字了吗？"
+next = "done"
+reply = "“救生艇不起名字，起了名字就舍不得用。”他拿指甲在龙骨上划了一道，说下水那天，这批料的年份会刻在这里，不刻名字。“你路过就来看，兄弟。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = 750 }, { kind = "affinity", person = "selim_kereste", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_selim_kereste-settle", title = "船台上的龙骨" }, { kind = "flag", flag = "c13_request_selim_kereste_done" }]
+
+# 三之二、短了一截的龙骨：橡木被征走五车，工钱只付一半，货款照付。
+[[tracks.chapters]]
+key = "settle_short"
+title = "短了一截的龙骨"
+text = "兵工厂拿走的五车橡木已经搬走了，剩下的料在船台上垛成两排。龙骨架起来了，比图上短了一截，接口处垫着一根旧木头。塞利姆把工钱数给你，只有原先的一半。他数到一半，停了停，才往下数。货款却一文不少。“短就短吧。”他说，蹲下去拿指甲在垫着的旧木头上划了一道，“下水以前，我自己把这一截补上。”"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "selim_kereste", value = true }]
+objectives = [{ kind = "person", person = "selim_kereste", text = "在船台上找到他" }]
+news = "金角湾兵工厂外的船台上，救生艇的龙骨架起来了，比图上短了一截，兵工厂的书记征走了五车橡木。"
+
+[[tracks.chapters.choices]]
+key = "take_short"
+text = "工钱照他数的收，货款一文不少。"
+next = "done"
+reply = "他把钱按在我手心里，指尖上起着泡，是这几夜削木头磨的。“这船不短。”他说，“短的是兵工厂的料，不是船。”"
+effects = [{ kind = "cash", value = 600 }, { kind = "cash", value = 750 }, { kind = "affinity", person = "selim_kereste", value = 4 }, { kind = "flag", flag = "c13_request_selim_kereste_partial" }]
+
+[[tracks.chapters.choices]]
+key = "ask_short"
+text = "问他：短的这一截，拿什么补？"
+next = "done"
+reply = "“明年的料。”他看了看船台上短了的那一截，咧嘴笑，“补上以前，这一条就先叫少五车。”"
+effects = [{ kind = "cash", value = 600 }, { kind = "cash", value = 750 }, { kind = "affinity", person = "selim_kereste", value = 4 }, { kind = "flag", flag = "c13_request_selim_kereste_partial" }]

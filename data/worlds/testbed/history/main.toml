@@ -1,0 +1,69 @@
+# 时间线引擎的占位样例；正式世界的内容另写。
+# 故意将同日后继写在前面，验证按依赖而不是文件顺序结算。
+[[events]]
+key = "sample_treaty"
+campaign = "sample_chain"
+title = "测试条约"
+summary = "同日依赖测试。"
+date = [1558, 1, 2]
+requires = [{ event = "sample_opening", outcome = "opens" }]
+history = { date = [1558, 1, 2], outcome = "signed" }
+basis = "original"
+sources = ["引擎测试夹具"]
+sides = [{ key = "west", name = "西方", faction = "cuilan" }, { key = "east", name = "东方", faction = "cuilan" }]
+outcomes = [{ key = "signed", when = ">= 0", default = true, news = "测试条约已签。", chronicle = "测试条约结果。", effects = [{ kind = "flag", flag = "history_treaty" }] }, { key = "failed", when = "< 0" }]
+
+[[events]]
+key = "sample_opening"
+campaign = "sample_chain"
+title = "测试开放"
+base = 8
+base_vars = [{ var = "reserve", weight = 1 }]
+need = { kinds = 3 }
+diminish = 50
+counter = { side = "west", pct = 40, max = 4 }
+court = { var = "council", min = 40, fail = "downgrade" }
+summary = "日期结算测试。"
+date = [1558, 1, 2]
+window = [[1558, 1, 1], [1558, 1, 2]]
+history = { date = [1558, 1, 2], outcome = "opens" }
+basis = "original"
+sources = ["引擎测试夹具"]
+sides = [{ key = "west", name = "西方", faction = "cuilan", port = "test_west" }, { key = "east", name = "东方", faction = "cuilan", port = "test_east" }]
+# 简短占位杠杆；货物从真实货舱扣除。
+levers = [
+  { key = "supply", side = "east", kind = "deliver", label = "测试交货", port = "test_west", goods = ["grain"], value_per_point = 100, max_points = 8 },
+  { key = "fund", side = "east", kind = "money", label = "测试出资", port = "test_west", value_per_point = 100, max_points = 8 },
+  { key = "weapons", side = "east", kind = "arms", label = "测试军火", port = "test_west", goods = ["timber"], value_per_point = 100, max_points = 9, train = "drill" },
+  { key = "drill", side = "east", kind = "train", label = "测试训练", port = "test_west", trainer = "mentor", days = 2, cost = 20, points = 3, max_points = 3 },
+  { key = "terms", side = "east", kind = "negotiate", label = "测试谈判", port = "test_west", with = "mentor", terms = ["test_terms"], language = "lang_test", points = 4, max_points = 4, leak = 25 },
+  { key = "letter", side = "east", kind = "intel", label = "测试书信", from = "test_west", port = "test_east", item = "sealed_letter", deadline = [1558, 1, 2], points = 4, max_points = 4 },
+  { key = "favor", var = "reserve", var_per_point = -1, court_bonus = 10, side = "east", kind = "bribe", label = "测试打点", port = "test_west", with = "mentor", cost = 100, points = 2, max_points = 2 },
+  { key = "relief", var = "reserve", var_per_point = -1, side = "east", kind = "relief", label = "测试赈济", port = "test_west", goods = ["grain"], value_per_point = 100, max_points = 8 },
+]
+outcomes = [{ key = "opens", when = ">= 0", default = true, news = "测试开放已完成。", chronicle = "测试开放结果。", effects = [{ kind = "flag", flag = "history_opening" }] }, { key = "closed", when = "< 0", vars = [{ var = "council", add = -5 }], backfire = [{ from_side = "west", lever = "arms", var = "reserve", pct = 50 }] }]
+
+[[events]]
+key = "sample_signal"
+campaign = "sample_chain"
+title = "测试信号"
+summary = "触发和最晚日期测试。"
+latest = [1558, 1, 4]
+window = [[1558, 1, 1], [1558, 1, 4]]
+trigger = [{ kind = "flag", flag = "history_signal" }]
+history = { date = [1558, 1, 4], outcome = "received" }
+basis = "original"
+sources = ["引擎测试夹具"]
+sides = [{ key = "west", name = "西方", faction = "cuilan" }, { key = "east", name = "东方", faction = "cuilan" }]
+outcomes = [{ key = "received", when = ">= 0", default = true, news = "测试信号已收到。", chronicle = "测试信号结果。" }, { key = "lost", when = "< 0" }]
+
+# 一条两变量的占位战役链；drift 已含默认结果的历史影响。
+[[campaigns]]
+key = "sample_chain"
+name = "测试战役链"
+summary = "战役变量测试。"
+inertia = 25
+vars = [
+  { key = "reserve", name = "测试储备", start = 50, drift = [[1553, 50], [1560, 40], [1600, 20]] },
+  { key = "council", name = "测试朝议", start = 60, drift = [[1553, 60], [1600, 40]] },
+]

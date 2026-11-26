@@ -1,0 +1,147 @@
+# 请托：到底在不在（request_pedro_ocampo）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：佩德罗·德·奥坎波 pedro_ocampo（1537-07-13 生，男；马尼拉城里的西班牙书记）；势力 spain；身份档 1（小户出身的书记）。cast：cast/story_southeast_asia.toml。
+# 类型：去某处（go）。三章加一章分支：offer（书记房里的报价）、arrive（汤都的河边，一户五口只剩一个老太太）、report（带回名单，册子上该怎么写）、report_partial（检定失败那一支）。
+#   简报是三章。简报里 report 的“写随船去，未归”要求旗标 c13_request_pedro_ocampo_clear，而 clear 由 arrive 的两条路设；
+#   引擎在“同一轨道别的路径上设的旗标”上设 requires，故事机器人会报“准备后条件仍不满足”，所以改成按 next 分路：
+#   arrive 办成（闽南话、问邻居成功）都进 report，那里两个选项都不设 requires；邻居检定失败进 report_partial（只能凭残缺的名单回话）。clear 旗标照简报设在两条成功路上，不被任何 requires 读取。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_pedro_ocampo）启动；offer 不写 at，objective 为 person（在书记房里找到他）。他的日程 1571—1590 在 manila（venue library）。
+# 窗口：报价 1576-01-01 至 1580-12-31（deadline，超时直接 failed，不写见闻）；arrive 进章后 60 天（deadline_days），超时 failed、好感 -3、一封来信；report 与 report_partial 不设期限（可以一直等）。
+# 地点：manila（书记房）、tondo（河对岸的唐人与他加禄人聚落）。简报里的“八连”只出现在老太太的话里（孙子在八连的铺子学徒），玩家不必去。
+# 依据·史实背景：马尼拉的唐人人口登记与按人头收的税（1571 年建城后）；1574 年林凤来袭以后城内外失散的人。正文只用“那年的船”一笔带过，不写林凤，不写战事。
+# 依据·原创：吴阿寿这个抄了三任的名字；名单上每个名字旁边的一格；五只碗只有一只是湿的；册子上三个名字后面写什么字；邻居摊的税。
+# 秘密：cast 没写秘密。他签过错名单的往事（persona 里的秘密）一字不碰，见闻也不写。不写林蕙，不写八连门口的桌子（归 C7 pair_lin_hui_pedro_ocampo），不写恋爱。
+# 招呼语：全文件只用一次，放在 report 章他抬手拦住玩家报名字的地方；report_partial 那一支没有这句，另用别的话。
+# 读的旗标：无。不读 c7_*，不设 c7_*。非主线人物，没有 c13_main 门禁。
+# 设的旗标：c13_request_pedro_ocampo_accepted（接下，两条路都设）、_declined（回绝）、_clear（汤都的名字问清楚了，办成的两条路都设；不被 requires 读）、
+#   _late（arrive 超时）、_done（册子写定；唯一终局旗标）。
+# 报酬：现金 900（report 两个选项，report_partial 两个选项，各只有一个会发生）、好感最多 +13（2+3+8）、名声 +2、回忆 mem-request_pedro_ocampo-report（只有“随船去，未归”那一条路）；无物品、无技能、无声望。
+# 依赖：港口 manila、tondo（ports_southeast_asia.toml）；技能 lang_chinese（门槛 60）；属性 eloquence；人物 pedro_ocampo。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_pedro_ocampo-report「随船去，未归」：书记房的桌上，新册子翻到汤都那一页，三个名字后面是同一行端正的小字，窗外是河。
+
+[[tracks]]
+key = "request_pedro_ocampo"
+name = "到底在不在"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["pedro_ocampo"]
+
+# 一、报价：书记房里两本册子，旧册上一个抄了三任的名字没人听过。
+[[tracks.chapters]]
+key = "offer"
+title = "写进册子的那个人"
+text = "书记房里摆着两本册子，一本发黄起毛，一本的纸还白着。佩德罗用铜尺压住旧册的一页，指头点在一行字上：“吴阿寿，汤都，匠人。三任书记抄过他，每回都写‘在’。我问遍了码头，没有人听说过这个人。”他一页页翻过去，这样的名字占了半本。“上头要我重造一本人口册。照抄最快。”他把铜尺挪开，“我想请你到汤都挨家问一问：这些名字，到底在不在。不在的，问去了哪里。写进册子的那个人，得在场。”"
+speaker = "pedro_ocampo"
+mood = "tense"
+objectives = [{ kind = "person", person = "pedro_ocampo", text = "在书记房里找到他" }]
+when = [{ kind = "date", from = [1576, 1, 1], to = [1580, 12, 31] }, { kind = "age", ge = 17 }, { kind = "alive", person = "pedro_ocampo", value = true }]
+deadline = [1580, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：拿名单去汤都问"
+next = "arrive"
+reply = "他从桌角抽出一沓抄好的名单，每个名字旁边都留了一格，格线是用尺子打的。“在，就打勾。不在，写去了哪里。不知道，就写不知道。别空着。”他把名单卷起来，用麻绳扎了两道才递给你。"
+effects = [{ kind = "affinity", person = "pedro_ocampo", value = 2 }, { kind = "flag", flag = "c13_request_pedro_ocampo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问他：照抄旧册不是更省事吗？"
+next = "arrive"
+reply = "“省事。”他停了笔，“去年码头边有一户，册上五口，实有三口，多出来两口的税，是邻居摊的。邻居认了，一个字没吭。”他把名单推到你面前，格线打得整整齐齐，“照抄的册子，会把不在的人也算进去收税。”"
+effects = [{ kind = "affinity", person = "pedro_ocampo", value = 2 }, { kind = "flag", flag = "c13_request_pedro_ocampo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "挨家问名字，我没这工夫"
+next = "failed"
+reply = "他点点头，把那沓抄好的名单压回桌角，转身接着誊旧册。“那就照抄。”他说得很轻，像是说给册子听。"
+effects = [{ kind = "flag", flag = "c13_request_pedro_ocampo_declined" }]
+
+# 二、汤都的河边：一户五口人，门口只坐着一个老太太。
+[[tracks.chapters]]
+key = "arrive"
+title = "五口人，一个老太太"
+text = "汤都的河边，屋子低矮，一户挨着一户。名单上的格子你已经填了一小半：有人在，有人搬去了城里，有几个几年前跟着船走，再没回来。轮到这一户，名单上写着五口人，门口只坐着一个老太太，脚边摆着一排碗，五只，只有最边上那只是湿的。你报了名字，她抬头听着，回了你一串又快又碎的闽南话。"
+speaker = "captain"
+mood = "sad"
+at = "tondo"
+objectives = [{ kind = "at", at = "tondo", text = "到汤都的河边挨家问" }]
+when = [{ kind = "alive", person = "pedro_ocampo", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "pedro_ocampo", value = -3 }, { kind = "flag", flag = "c13_request_pedro_ocampo_late" }, { kind = "letter", person = "pedro_ocampo", text = "汤都那一沓，我自己去问了一半，渡河的船钱衙门是不报的。剩下的一半，我写了“不知道”，没有空着。册子照常交了。你路过时，可以来书记房看看那几页。佩德罗·德·奥坎波。" }] }
+news = "汤都的河边，有个外乡船长拿着一沓名单挨家问人在不在，问到一户只剩一个老太太。"
+
+[[tracks.chapters.choices]]
+key = "chinese"
+text = "用闽南话，慢慢问她"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "老太太的闽南话又快又碎，你只抓得住几个字。"
+reply = "老太太见你听得懂，话反而慢了下来，像怕你记漏。她用指头点过那排碗：大儿子、二儿子、儿媳，那年一起上了船，没回来。孙子十四岁，在八连的铺子里学徒，过年才回来吃一顿饭。最边上湿的那只，是她自己的。你把五个名字一个一个写清楚，写满了半页。"
+effects = [{ kind = "affinity", person = "pedro_ocampo", value = 3 }, { kind = "flag", flag = "c13_request_pedro_ocampo_clear" }]
+
+[[tracks.chapters.choices]]
+key = "ask_neighbors"
+text = "挨门问左邻右舍"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "补网的男人和对门卖咸鱼的妇人，起先说得对不上。你把一家人的名字一个一个念，让他们一个一个数，数到第三个，两人同时点了头：三个上了船，一个去了河那边的城里，一个就是门口的老太太。你记下了。老太太没出声，只在你写到第三个名字时，把最边上那只湿碗翻过来，扣在架上。"
+effects = [{ kind = "affinity", person = "pedro_ocampo", value = 3 }, { kind = "flag", flag = "c13_request_pedro_ocampo_clear" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "pedro_ocampo", value = -2 }], news = "汤都河边，有个外乡船长挨门问一户人家，邻居三个人三种说法，名单上那几格只好写“不知道”。" }
+
+# 三a、回书记房（问清楚的一支）：他一格一格抄进新册，抄到那一户，停了笔。
+[[tracks.chapters]]
+key = "report"
+title = "册子上该怎么写"
+text = "新册子的格线是佩德罗自己用尺子打的。你把名单摊在桌上，他对着它一格一格往新册里抄，抄完一个名字，用吸墨纸轻轻压一下。你怕他慢，开口就把后面的名字连着报了。他抬手拦住你：“阁下请慢些说。名字我要一笔一画写对——错一个字，人就没了。”抄到汤都河边那一户，他的笔悬住了。五行里，两行写好了，三行还白着。“这三个，上了船，没回来。”他看着你，“写‘死’，我没见过尸首。写‘逃’，家里剩下的两口得替他们补税。写别的，阁下说。”"
+speaker = "captain"
+mood = "tender"
+at = "manila"
+objectives = [{ kind = "person", person = "pedro_ocampo", text = "回书记房，把名单交给他" }]
+when = [{ kind = "alive", person = "pedro_ocampo", value = true }]
+
+[[tracks.chapters.choices]]
+key = "gone"
+text = "说：写“随船去，未归”"
+next = "done"
+reply = "他把“随船去，未归”写在三个名字后面，一笔一画，写完把册子转过来给你看。“这几个字不算罪名，也不算没这个人。”他在页边添了一行小字，注明那两口如今住在哪里。新册子交上去那天，他把酬金给你，说他今年头一回睡得着。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "pedro_ocampo", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_pedro_ocampo-report", title = "随船去，未归" }, { kind = "flag", flag = "c13_request_pedro_ocampo_done" }]
+news = "马尼拉的书记房里，新造的唐人册上有三个名字后面写着“随船去，未归”，页边还添了一行小字。"
+
+[[tracks.chapters.choices]]
+key = "unknown"
+text = "说：写“不知道”"
+next = "done"
+reply = "他想了想，在三个名字后面写了“不知道”，写得和别的字一样端正。“不知道，税先不收，等有人回来说清楚。”他吸干墨，“比照抄强。”酬金他照付，没再说别的。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "pedro_ocampo", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pedro_ocampo_done" }]
+news = "马尼拉城里新造的唐人人口册，有几行名字后面写着“不知道”，书记说这比照抄旧册强。"
+
+# 三b、回书记房（邻居说法不一的一支）：名单上那一户的五格是三种笔迹。
+[[tracks.chapters]]
+key = "report_partial"
+title = "三种笔迹"
+text = "你的名单上，汤都河边那一户的五格，是三种笔迹：“三个”，“两个”，“不知道”。佩德罗把它举到窗边，对着光看了半天，才拿起笔去抄别的户。抄到这一行，他把笔放回笔架。“邻居的话，我信一半。”他说，“可册子上一个名字只能落一个字。老太太脚边那排碗，几只干，几只湿，你还记得吗？”"
+speaker = "captain"
+mood = "tense"
+at = "manila"
+objectives = [{ kind = "person", person = "pedro_ocampo", text = "回书记房，把三种说法的名单交给他" }]
+when = [{ kind = "alive", person = "pedro_ocampo", value = true }]
+
+[[tracks.chapters.choices]]
+key = "margin"
+text = "把记得的和邻居的话都说给他"
+next = "done"
+reply = "你说了：五只碗，只有最边上一只是湿的；邻居三个说法，没有一个说得过另一个。他没有划掉任何一句，在页边写了一行小字：“邻人三说；门前五碗，一碗湿。”那几个名字后面他还是写了“不知道”，只是页边多了这一行。他数出酬金，推过桌面。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "pedro_ocampo", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pedro_ocampo_done" }]
+news = "马尼拉书记房里新造的唐人册，汤都河边那一户的页边多了一行小字，写着邻居的三种说法，书记没有划掉。"
+
+[[tracks.chapters.choices]]
+key = "unknown"
+text = "说：就写“不知道”，别的不用记"
+next = "done"
+reply = "他应了一声，在那几个名字后面都写下“不知道”，一个字也没多。“碗的事，不写。”他吹干墨，把酬金放在桌角，再没抬头。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "pedro_ocampo", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pedro_ocampo_done" }]
+news = "马尼拉书记房里新造的唐人册，汤都河边有一户的几个名字后面只写着“不知道”，书记没有多添一个字。"

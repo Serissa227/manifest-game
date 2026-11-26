@@ -1,0 +1,235 @@
+# C13d 人物的请托（2026-10-25，Claude 写）：故事 2.0 轨道格式，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 人物：让·德·拉瓦莱特（jean_de_valette），1495 年生、1568 年卒；圣约翰医院骑士团的大团长，坐镇马耳他比尔古。
+#       话少，命令只说一遍；问事情要落到路程、人数与粮食，只信验过印信的书信。
+# 类型：复合（mixed）。5 章：offer（报价）→ deliver（交货）→ siege（墨西拿的回信，stage involve）→ fight（拦路的巡船）或直接 arrive（送信到比尔古）。
+# 报价：T 当面，马耳他比尔古（malta）。玩家“问请托”（ask:request_jean_de_valette）启动。求见门槛（fame 40 或 hospital 声望 20）由 cast 的 audience 管，本文件不另写。
+# 窗口：报价 1564-06-01..1565-03-31（offer 的 when 与 deadline）；交货期限 1565-05-17（围城前一天）；墨西拿的 involve 章 1565-06-01..08-31；进行中的章节以期限天数计。
+# 依据·史实：1565-05-18 至 09-08 马耳他之围。西西里副王加西亚·德·托莱多在墨西拿集结援军，6 月底有一小股援兵进城，9 月 7 日大援军登陆。请托只写围城前的补给与围城中的一次送信，不决定守城结果。
+# 依据·原创：火药桶上的木塞、单子上只有数、骑士手上的血泡、圣劳伦斯教堂边的屋子（地点为史实，场面原创）。
+# 待核：involve 章的窗口按任务单到 08-31，而圣埃尔莫堡的陷落在 6 月下旬；正文只写“还在打”，窗口的收窄留给整合时定。
+# 旗标：读的旗标：c13_main_noel（offer 的 variant，只换文字）。设的旗标：c13_request_jean_de_valette_accepted / declined / late / partial / done。
+# 依赖：malta、messina 是现有港口，大团长的日程在 cast 里已写到 1567 年，不需要 B10b 改名；c13_main_noel 由诺埃尔主线设置（尚未写）。
+# 不写：奴隶市场的场面；守城结果与圣埃尔莫堡陷落的过程；屠杀与报复；诺埃尔主线 5 的名册与人。
+# 回忆插画清单：
+#   mem-request_jean_de_valette-arrive：烟雾里的比尔古大港，城墙上一排凹陷的脸，一封信压在火药桶上。
+
+[[tracks]]
+key = "request_jean_de_valette"
+name = "比尔古的火药与消息"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["jean_de_valette"]
+
+# 一、报价：1564 年夏到 1565 年春，比尔古的城墙下。他要火药与粮食，还要一个敢穿封锁线的船长。
+[[tracks.chapters]]
+key = "offer"
+title = "圣安杰洛堡下的单子"
+text = "圣安杰洛堡下的工地上，几百个人在挖蓄水池，往城墙上搬石头。大团长站在一堆火药桶边，一桶一桶地数，数完了才回头看你。你刚张口想许个诺，他抬手止住：“我不要你的誓言，我要你的船期。”他递过来一张单子，纸上只有数。“十五份火药，五十份谷物，要在奥斯曼人的帆出现以前运进比尔古。”他顿了顿，“要是围城真的来了，我还需要一个敢穿过封锁线的船长。”"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1564, 6, 1], to = [1565, 3, 31] },
+  { kind = "alive", person = "jean_de_valette", value = true },
+]
+objectives = [{ kind = "person", person = "jean_de_valette", text = "在比尔古的城墙下找到他" }]
+speaker = "jean_de_valette"
+mood = "tense"
+deadline = [1565, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下这单，按他的船期运。"
+next = "deliver"
+reply = "他把盖了骑士团印的单子折好，塞进你手里。单子上只有数，没有一个多余的字。“运到就行。运不到，就不用再来了。”说完他已经转身，靴底踩在碎石上，一步一响。"
+effects = [
+  { kind = "affinity", person = "jean_de_valette", value = 2 },
+  { kind = "flag", flag = "c13_request_jean_de_valette_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这单我接不了。"
+next = "failed"
+reply = "他没有劝，也没有骂，只把单子夹回夹板里，走向墙根下的下一车石头。背后的工地上，锤子声一下也没停。"
+effects = [{ kind = "flag", flag = "c13_request_jean_de_valette_declined" }]
+
+[[tracks.chapters.variants]]
+key = "noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "圣安杰洛堡下的工地上，几百个人在挖蓄水池，往城墙上搬石头。大团长站在一堆火药桶边，一桶一桶地数。数到一半，他的目光落在你衣上的星徽上，停了停，只说了一句：“海峡分团，我听说过。”你刚张口想许个诺，他抬手止住：“誓言不用说，船期说。”他递过来一张单子，纸上只有数。“十五份火药，五十份谷物，要在奥斯曼人的帆出现以前运进比尔古。”他顿了顿，“要是围城真的来了，我还需要一个敢穿过封锁线的船长。”"
+
+# 二、交货：货在比尔古的码头上点数。每个选项都交货，货款在这一章付。
+[[tracks.chapters]]
+key = "deliver"
+title = "码头上的点数"
+text = "货卸在比尔古的码头上，骑士团的仓官拿着单子，一桶一袋地点。火药桶要一个个敲过，听声音是不是实的；谷袋过秤，秤杆一翘，就叫脚夫拆开重称。点到一半，地下的弹药库还空着，码头上的火药堆得越来越高，仓官的人手却不够。他抬头看了你一眼，没有开口求人，只把单子往你这边推了推。"
+when = [{ kind = "alive", person = "jean_de_valette", value = true }]
+at = "malta"
+speaker = "captain"
+mood = "tense"
+objectives = [
+  { kind = "goods", good = "gunpowder", qty = 15, at = "malta", text = "十五份火药运进比尔古" },
+  { kind = "goods", good = "grain", qty = 50, at = "malta", text = "五十份谷物运进比尔古" },
+]
+deadline = [1565, 5, 17]
+
+[tracks.chapters.timeout]
+next = "failed"
+news = "比尔古的码头上说，骑士团等不到那船火药，仓官只好把空出来的弹药库锁上了。"
+effects = [
+  { kind = "affinity", person = "jean_de_valette", value = -5 },
+  { kind = "flag", flag = "c13_request_jean_de_valette_late" },
+  { kind = "letter", person = "jean_de_valette", text = "拉瓦莱特：西西里的粮船到了，火药还缺。单子作废，不必再来。" },
+]
+
+[[tracks.chapters.choices]]
+key = "store"
+text = "帮仓官把火药搬进地下的弹药库"
+next = "siege"
+reply = "你挽起袖子，跟着仓官的人把桶一个个滚进地下的弹药库，木塞朝上，一排排摆齐。台阶窄，你和脚夫在拐角处挤了一回，谁也没有松手。"
+news = "比尔古的码头上说，有个外来的船长帮骑士团码火药，码得比仓官的人还齐。"
+effects = [
+  { kind = "cash", value = 4350 },
+  { kind = "affinity", person = "jean_de_valette", value = 3 },
+]
+check = { attr = "stewardship", base = 35, per = 6 }
+fail = { next = "siege", news = "比尔古的码头上说，骑士团新进的一桶火药受了潮，仓官当众把它挑了出来。", effects = [{ kind = "cash", value = 4350 }, { kind = "affinity", person = "jean_de_valette", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "交割完就走"
+next = "siege"
+reply = "仓官在单子上盖了印，递回给你。你的船当天就出了港，码头上的火药还堆着，出港时港口的钟正敲第三下，没人回头看你一眼。"
+effects = [{ kind = "cash", value = 4350 }]
+
+# 三、墨西拿的回信（involve）：围城开始后，副王的回信在墨西拿。你不在墨西拿时，信由别的船送进了比尔古。
+[[tracks.chapters]]
+key = "siege"
+title = "墨西拿的一封回信"
+text = "墨西拿的码头上传着比尔古的消息：奥斯曼人已经上了岛，圣埃尔莫堡那边还在打。一个从马耳他偷渡出来的骑士找到你，怀里揣着副王给大团长的回信。回信很短，只说援军在集结，日子还定不下来。骑士把信往你手里一按，手上全是缆绳磨出来的血泡。“大团长记得你的船。”他说。"
+stage = "involve"
+window = [[1565, 6, 1], [1565, 8, 31]]
+at = "messina"
+cast = ["jean_de_valette"]
+speaker = "captain"
+mood = "tense"
+news = "墨西拿的码头上说，一条西西里的小船趁夜绕过封锁，把副王的回信送进了比尔古。"
+when = [{ kind = "alive", person = "jean_de_valette", value = true }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_jean_de_valette_partial" }]
+
+[[tracks.chapters.choices]]
+key = "run"
+text = "趁夜穿过封锁线，把信送进比尔古"
+next = "arrive"
+reply = "你熄了灯，贴着戈佐岛的背风面往北摸。桨上裹着布，船舷上的水珠一滴也不敢溅出去。岸上的灯一盏一盏地灭，只剩巡船的桅灯还亮着。"
+news = "墨西拿的船夫说，有个船长替围城里的骑士团带信，夜里从戈佐岛那边摸了进去。"
+effects = [{ kind = "affinity", person = "jean_de_valette", value = 3 }]
+check = { attr = "seamanship", base = 5, per = 8 }
+fail = { next = "fight", news = "墨西拿的船夫说，天亮前有一条船被守岛的巡船咬住，桅杆断了一根，只能硬闯。" }
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "等不得夜里，找一条小船结伴，两条船一起硬闯。"
+next = "fight"
+reply = "骑士在船头画了个十字，把信往胸口又按了按。“走吧。”他说，声音很低，却没有一丝犹豫。船身一歪，两条小船顺着浪头，往巡船的反方向冲了出去。"
+news = "墨西拿码头上有人看见两条小船一前一后出了港，船头挂着骑士团的十字旗，往比尔古去了。"
+effects = [{ kind = "affinity", person = "jean_de_valette", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "把信交还骑士，让他另找人"
+next = "done"
+reply = "骑士没说什么。他把信收回怀里，手在口袋上按了两下，转身去找下一条船。你看着他的背影，直到小船被浪挡住。"
+effects = [{ kind = "flag", flag = "c13_request_jean_de_valette_partial" }]
+
+# 四、硬闯（progress）：只有 run 失败或结伴硬闯才到这里。拦路的巡船要你打退。
+[[tracks.chapters]]
+key = "fight"
+title = "硬闯之后"
+text = "硬闯出来以后，你的船帆上多了几个洞，水手们一瓢一瓢地往外舀水，舀得手心都磨破了。信还在骑士怀里。他靠着桅杆坐着，手一直按在胸口的口袋上，衣襟上渗出一片暗色。舵手嘴里数着桨，数到一半又从头数起。拦路的巡船灯火已经亮起来了，正从外海压过来。骑士只说了一个字：“快。”"
+when = [{ kind = "alive", person = "jean_de_valette", value = true }]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "battle", wins = 1, text = "打退拦路的巡船" }]
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [
+  { kind = "flag", flag = "c13_request_jean_de_valette_partial" },
+  { kind = "letter", person = "jean_de_valette", text = "拉瓦莱特：西西里的信已由别的船送进比尔古。你的船不必再赶，回去修帆吧。" },
+]
+
+[[tracks.chapters.choices]]
+key = "on"
+text = "继续往比尔古去"
+next = "arrive"
+reply = "骑士说这一下他会记在大团长面前。他看了一眼你船帆上的洞，只把信往怀里又收紧了一点，然后低头去看舵手的脸色。"
+effects = [
+  { kind = "affinity", person = "jean_de_valette", value = 3 },
+  { kind = "reputation", faction = "ottoman", value = -2 },
+]
+
+[[tracks.chapters.choices]]
+key = "back"
+text = "调头回墨西拿，把信交给别的船"
+next = "done"
+reply = "骑士没有争，只把信交给了那条一直跟在你船尾的小船。他站在船头，回头望了一眼比尔古的方向，才让人把桨划起来。"
+effects = [
+  { kind = "affinity", person = "jean_de_valette", value = -2 },
+  { kind = "flag", flag = "c13_request_jean_de_valette_partial" },
+]
+
+# 五、送信到比尔古（resolution）：大团长读信，问你看见了什么。
+[[tracks.chapters]]
+key = "arrive"
+title = "圣劳伦斯教堂边"
+text = "比尔古的大港里到处是烟，城墙上的人瘦得脸都凹了，站岗的骑士靠着垛口，谁也不说话。大团长在圣劳伦斯教堂边的屋子里，先把副王的信对着窗光看了印，印是真的，字也是真的，这才慢慢读下去。桌上两盏油灯，灯芯剪得很短，谁也没有去拨一拨。读完他抬起头，只问了一句：“船几条？人多少？每条船上装的什么？”他问得很慢，像是怕漏掉哪一个数。"
+when = [{ kind = "alive", person = "jean_de_valette", value = true }]
+at = "malta"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "at", at = "malta", text = "把信带到比尔古" }]
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "done"
+news = "比尔古的码头上说，西西里副王的回信早已由别的船送进了大港，骑士团的人都在等它。"
+effects = [{ kind = "flag", flag = "c13_request_jean_de_valette_partial" }]
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "照你看见的报：船数、人数、装了多少粮"
+next = "done"
+reply = "你从墨西拿的码头报起：船几条，桨手多少，粮袋装到哪一层，一样一样说。大团长把信翻过来，在背面一格一格地记。"
+news = "比尔古的人说，从墨西拿来的一个船长把船数、人数报得清清楚楚，大团长说这比信有用。"
+effects = [
+  { kind = "cash", value = 3700 },
+  { kind = "fame", value = 7 },
+  { kind = "reputation", faction = "hospital", value = 3 },
+  { kind = "reputation", faction = "ottoman", value = -1 },
+  { kind = "affinity", person = "jean_de_valette", value = 8 },
+  { kind = "memory", memory = "mem-request_jean_de_valette-arrive", title = "烟里的比尔古" },
+  { kind = "flag", flag = "c13_request_jean_de_valette_done" },
+]
+check = { attr = "stewardship", base = 35, per = 6 }
+fail = { next = "done", news = "比尔古的人说，从墨西拿来的船长只记得船数，人数却说不准，大团长点了点头，没多问。", effects = [{ kind = "cash", value = 3700 }, { kind = "fame", value = 7 }, { kind = "reputation", faction = "hospital", value = 3 }, { kind = "affinity", person = "jean_de_valette", value = 4 }, { kind = "flag", flag = "c13_request_jean_de_valette_done" }] }
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "只把信交给他"
+next = "done"
+reply = "他读完把信折好，放进胸前的口袋，手在口袋上按了一下。然后他叫人给你的船装淡水，装满，一桶也不许少。"
+effects = [
+  { kind = "cash", value = 3700 },
+  { kind = "fame", value = 7 },
+  { kind = "reputation", faction = "hospital", value = 3 },
+  { kind = "affinity", person = "jean_de_valette", value = 4 },
+  { kind = "flag", flag = "c13_request_jean_de_valette_done" },
+]

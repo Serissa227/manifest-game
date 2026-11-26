@@ -1,0 +1,178 @@
+# 请托：圣维森特角的日高（request_alonso_de_chaves）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：阿隆索·德·查韦斯 alonso_de_chaves（1492 生，男；塞维利亚贸易总署的领航总长，1552—86 在任，1586 卒）；势力 spain；身份档 2（官员）。cast：cast/historical_01_europe.toml。
+# 类型：找东西（fd）。五章：offer（报价）、handin（交象限仪）、measure（在圣维森特角下量日高，记录在里斯本摊开）、report（照实记的那条线，回塞维利亚当面盘问）、report_rounded（凑过数的那条线，同一个老人，另一种盘问）。
+#   任务单原表是三章。把“交仪器”和“量日高”拆开，量完要回塞维利亚当面盘问；凑过数的一支另起一章，不用 requires 读“raw”旗标（那个旗标在 measure 的两条路上都会设，会被当成准备后仍不满足的门禁）。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_alonso_de_chaves）启动；offer 章不写 at，objective 为 person（在贸易总署找到他）。
+#   求见门槛 fame 10，与 cast 里的 audience 一致（brief 写的是 fame 10，没有再加 reputation 门槛）。
+#   offer 的 deadline 为窗口止日 1585-03-31，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 窗口：报价 1574-03-01 至 1585-03-31；交仪器不设期限；量日高 deadline_days=120，超时 failed、好感 -3、一封来信；回报两章都是 deadline 1585-12-31，超时 failed、一封来信。
+#   1585 年底以后 person 目标到期即止；窗口止日之后的请托不开。
+# 依据·史实：查韦斯 1552—86 任塞维利亚贸易总署的领航总长，著《宇宙志四部》（Quatri partitu en cosmographia）；王家总图（padrón real）按领航员的航海日志修订；象限仪在伊比利亚的港口有卖。
+#   正文只写他的口吻与日常，不写他的著作内容，不写 1586 年的事。
+# 依据·原创：三个领航员的三个数；象限仪的刻线被学徒磨平；线坠晃那一次的“船摇”；总图南边那一角上的小圈；回角下再量的那一天；凑成整数的那一行。
+# 待核：生年月日。cast 注明“月日不详”，这里的 1492-01-01 只用于日程；正文不写生日。
+# 读的旗标：无。不读 c7_*，不设 c7_*。不写萨莫拉诺 1586 年的重核（归 C7 伊莎贝尔×莱昂诺尔），不让两位同学出场。非主线人物，没有 c13_main 门禁。
+# 设的旗标：c13_request_alonso_de_chaves_accepted / declined（报价）；_lent（交仪器时借出）；_raw（量完原样记下，两条路都设）、_triple（回角下再量，三次取中，只设在 triple 上）、_rounded（凑数）；
+#   _late（超时）；_done / _partial / _failed（回报终局，_failed 为辩论没有说服他）。
+#   旗标只被 report 的变体（读 _triple）读取；没有任何 requires 读本轨道在别的分支上设的旗标。
+# 依赖：港口 seville、lisbon（ports_iberia.toml）；物品 quadrant（items/items_instrument_01.toml，有 shop，只在伊比利亚港口买得到）；技能 astral_navigation（门槛 60）、cartography（skills.toml）；势力 spain；人物 alonso_de_chaves。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_alonso_de_chaves-report「四行纬度」：铺开的总图一角，四行纬度用不同墨色写在页边，最底下一行旁边添了一个小问号。
+
+[[tracks]]
+key = "request_alonso_de_chaves"
+name = "圣维森特角的日高"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["alonso_de_chaves"]
+
+# 一、报价：塞维利亚的贸易总署，老人只掀开总图的一角，要你去角下量一次日高。
+[[tracks.chapters]]
+key = "offer"
+title = "总图的一角"
+text = "贸易总署楼上的屋子里，一张大图用布盖着，老人只掀开南边的一角。“坐。”他先问你记时辰的法子，然后才说事。“圣维森特角的纬度，我手里有三个领航员的三个数，三个都是老手，三个数互相差着。”他的手指压在布边上，“我要改图上那个圈，改之前得先知道是谁错了。”他要一件刻度清楚的象限仪。库房里那几件，学徒们用得刻线都磨平了。然后，进里斯本之前，你在角下亲手量一次正午的日高。"
+speaker = "alonso_de_chaves"
+mood = "tense"
+objectives = [{ kind = "person", person = "alonso_de_chaves", text = "在贸易总署找到他" }]
+when = [{ kind = "date", from = [1574, 3, 1], to = [1585, 3, 31] }, { kind = "age", ge = 17 }, { kind = "alive", person = "alonso_de_chaves", value = true }, { kind = "fame", ge = 10 }]
+deadline = [1585, 3, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：先找象限仪，再去角下量"
+next = "handin"
+reply = "他把三个数抄在一张纸条上递给你，看你读完，又收了回去。“你量完再看。”"
+effects = [{ kind = "affinity", person = "alonso_de_chaves", value = 2 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这件差事我不接"
+next = "failed"
+reply = "他已经低头去翻下一本日志，纸页翻得很响。"
+effects = [{ kind = "flag", flag = "c13_request_alonso_de_chaves_declined" }]
+
+# 二、交仪器：象限仪放到窗台上，他一格一格地验刻线。交出去还是借出去，由你定。
+[[tracks.chapters]]
+key = "handin"
+title = "窗台上的象限仪"
+text = "象限仪放到窗台上，正对着太阳。老人用指甲一格一格刮过刻线，又拿铅锤吊了三次，每次都等线停稳了才读数。“谁刻的？哪家铺子卖的？”他一口气问完。你答得上的，他记在纸角上；答不上的，他就不再问，把仪器转过来，对着光再看一遍刻线。窗外，学徒们抬着木箱从廊下过去，没有一个人敢抬头。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "item", item = "quadrant", qty = 1, text = "带一件象限仪来" }, { kind = "person", person = "alonso_de_chaves", text = "去贸易总署见他" }]
+when = [{ kind = "alive", person = "alonso_de_chaves", value = true }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "留下象限仪，交给总署"
+next = "measure"
+requires = [{ kind = "item", item = "quadrant", qty = 1 }]
+reply = "他把它锁进柜子，钥匙挂回腰上。“去量吧，用你自己的眼睛。”"
+effects = [{ kind = "item", item = "quadrant", qty = -1 }, { kind = "affinity", person = "alonso_de_chaves", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借给他，照着刻一套，用完还你"
+next = "measure"
+requires = [{ kind = "item", item = "quadrant", qty = 1 }]
+reply = "他叫来一个学徒，照着刻度抄了一套新刻线。抄完，仪器原样还到你手里，一根线也没动。"
+effects = [{ kind = "affinity", person = "alonso_de_chaves", value = 1 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_lent" }]
+
+# 三、角下的日高：船过圣维森特角，在甲板上量一次正午的日高，进了里斯本才把记录摊开。转折在这里。
+[[tracks.chapters]]
+key = "measure"
+title = "正午的日高"
+text = "船过圣维森特角，崖顶的小修道院在正午的光里发白。你在甲板上架起量具，等线坠停住，读出日高，记下时辰。船身一晃，线坠荡开，你趁它停住的那一刹又读了一个数。进了里斯本，你把记录摊在桌上，三个领航员的数压在旁边。你量出的数，跟他们的都不一样，差得不多，可差了。"
+speaker = "captain"
+mood = "mystic"
+at = "lisbon"
+objectives = [{ kind = "at", at = "lisbon", text = "在里斯本" }]
+when = [{ kind = "alive", person = "alonso_de_chaves", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "alonso_de_chaves", value = -3 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_late" }, { kind = "letter", person = "alonso_de_chaves", text = "总图那一角先照旧，等下一个领航员。查韦斯总长口述，书记代笔。" }] }
+news = "里斯本的码头酒馆里，有人说塞维利亚的老领航总长托船长去圣维森特角下量日高，量完要回去跟三个领航员对数。"
+
+[[tracks.chapters.choices]]
+key = "raw"
+text = "原样记下，连船晃的那一次也写上"
+next = "report"
+reply = "你在那一次旁边注了“船摇”，正午的时辰一个字不改地抄上。"
+effects = [{ kind = "affinity", person = "alonso_de_chaves", value = 3 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_raw" }]
+
+[[tracks.chapters.choices]]
+key = "triple"
+text = "调头回角下，再量两次，三次取中"
+next = "report"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "三次日高的差，你还摊不平。"
+reply = "你让船调回角下，在海上又待了一天，两次都在正午前后量准了。三个数挨得很近，你把它们并排写下，中间那个划了一道线。"
+effects = [{ kind = "affinity", person = "alonso_de_chaves", value = 3 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_raw" }, { kind = "flag", flag = "c13_request_alonso_de_chaves_triple" }]
+
+[[tracks.chapters.choices]]
+key = "round"
+text = "把数往总图上那个圈凑一凑"
+next = "report_rounded"
+reply = "数字好看了许多。你自己知道，它已经不是量出来的了。"
+effects = [{ kind = "flag", flag = "c13_request_alonso_de_chaves_rounded" }]
+
+# 四a、回塞维利亚（照实记的一支）：老人把记录和三个数排成四行，问到底。
+[[tracks.chapters]]
+key = "report"
+title = "四行纬度"
+text = "老人把你的记录和三个领航员的数排成四行，用一把薄尺压着，一行一行往下问。总图的边角被他掀起来一点，底下压着一张旧图，南边那一角的圈画了几十年，墨色已经发棕。问到你那一笔的时辰，他停住了，换个说法问了三遍。“你量的，还是你听说的？”他的指甲点在那一行上，“哪一次是你亲眼看着线坠停的？”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "alonso_de_chaves", text = "回塞维利亚，把记录交给他" }]
+when = [{ kind = "alive", person = "alonso_de_chaves", value = true }]
+deadline = [1585, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_alonso_de_chaves_late" }, { kind = "letter", person = "alonso_de_chaves", text = "圣维森特角那一角先照旧，图上的圈不擦。老总长说，等下一个领航员来量，再来问。查韦斯口述，书记代笔。" }] }
+
+[[tracks.chapters.variants]]
+key = "triple"
+when = [{ kind = "flag", flag = "c13_request_alonso_de_chaves_triple" }]
+text = "老人把你的记录和三个领航员的数排成四行。你那一行的三个数挨得很近，他用指甲在中间那个数上点了点，问你第二次是哪一天量的，风从哪边来。你一一答了，他在纸角上记下日子，又把总图的边角掀起来看了一眼那个圈。"
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "照实答：哪一次是船摇，哪一次是稳的"
+next = "done"
+reply = "他在总图边上用极细的笔添了一个数，没有擦掉旧的。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "cartography", value = 30 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "affinity", person = "alonso_de_chaves", value = 8 }, { kind = "memory", memory = "mem-request_alonso_de_chaves-report", title = "四行纬度" }, { kind = "flag", flag = "c13_request_alonso_de_chaves_done" }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "坚持你的数就是这样"
+next = "done"
+check = { attr = "eloquence", base = 5, per = 8 }
+reply = "他想了很久，在图边添了一个问号。"
+effects = [{ kind = "cash", value = 1200 }, { kind = "skill", skill = "cartography", value = 30 }, { kind = "affinity", person = "alonso_de_chaves", value = 4 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_partial" }]
+fail = { next = "failed", effects = [{ kind = "affinity", person = "alonso_de_chaves", value = -2 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_failed" }] }
+
+# 四b、回塞维利亚（凑过数的一支）：同一个老人，问的是那一行整齐的数。
+[[tracks.chapters]]
+key = "report_rounded"
+title = "凑出来的数"
+text = "老人没先问你，先把你那一行的数单独抽出来，压在总图的边角上。每一位都整整齐齐，落在整分上，像是照着总图上那个圈描出来的。他看了很久。“这个整数，是量出来的，还是照着图凑的？”他的指头压在那一格上，没有抬起来。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "alonso_de_chaves", text = "回塞维利亚，当面把数对给他" }]
+when = [{ kind = "alive", person = "alonso_de_chaves", value = true }]
+deadline = [1585, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_alonso_de_chaves_late" }, { kind = "letter", person = "alonso_de_chaves", text = "圣维森特角那一角先照旧。那一行的数老总长没再提，只说等下一个领航员来量。查韦斯口述，书记代笔。" }] }
+
+[[tracks.chapters.choices]]
+key = "admit"
+text = "承认你凑过数"
+next = "done"
+reply = "他把那张纸推回来：“凑出来的，我这里有的是。”钱照付一半，图没改。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "alonso_de_chaves", value = 2 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_partial" }]
+
+[[tracks.chapters.choices]]
+key = "argue_rounded"
+text = "坚持，这个数就是量出来的"
+next = "done"
+check = { attr = "eloquence", base = 5, per = 8 }
+reply = "他看了你很久，才在那一格旁边点了一个问号，没再往下问。"
+effects = [{ kind = "cash", value = 1200 }, { kind = "skill", skill = "cartography", value = 30 }, { kind = "affinity", person = "alonso_de_chaves", value = 4 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_partial" }]
+fail = { next = "failed", effects = [{ kind = "affinity", person = "alonso_de_chaves", value = -2 }, { kind = "flag", flag = "c13_request_alonso_de_chaves_failed" }] }

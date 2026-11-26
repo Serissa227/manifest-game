@@ -1,0 +1,129 @@
+# 请托：回去的路（request_drifter_lisbon）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：里斯本冒险者的后代（drifter_lisbon，1511-09-02 生，女），势力 free_port；cast：cast/story_atlantic.toml。
+# 类型：押运／带人（es）。三章：offer（报价）、passage（海上六天）、arrive（到里斯本河岸区的码头，三种收尾）。
+#       没有 stage 章，因此没有 window 与 default；时间条件写在 when 里。passage 的“六天”用 wait 目标。
+# 报价：T（当面）。auto=false，玩家在亚特兰蒂斯外港找到她，用“问请托”（ask:request_drifter_lisbon）启动。offer 不写 at，objectives 为 person drifter_lisbon。
+#       窗口 1584-01-15 至 1590-06-30：offer 的 when 写日期，deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：arrive 写 deadline_days=120（到岸以后 120 天内要做决定）；超时 failed，来信一封，好感 -3，旗标 _late，不写见闻。
+# 依据·史实背景：伊德里西书中“里斯本的冒险者”西去出海的传说（史上的传说）；1580 年以后里斯本在菲利普二世治下，河岸区新修的码头，河口的贝伦塔，城外的七座山。
+# 依据·原创：老妇人的海图与红绳、发白的水与第三道弯、“四百年”的说法、仁慈堂收留、丰沙尔的山与画图的人。
+# 秘密：cast 没写秘密，本请托不触碰；C7 的线为无，不写 c7_ 旗标；gate_main 与 variant_main 为空，不读 c13_main_ 旗标。
+# 读的旗标：无（arrive 的变体读本轨道自己的 redrawn 旗标）。
+# 设的旗标：c13_request_drifter_lisbon_accepted（offer 两条接法）、_declined（offer 回绝）、_redrawn（passage 重画）、_stayed（arrive 留下）、_late（超时）、_done（arrive 三种收尾）。
+# 报酬：现金 550（arrive 收尾一次；stay 检定失败折成 300）；好感最多 +13；名声 +1（stay 检定失败不加名声）；回忆 mem-request_drifter_lisbon-arrive（留下或回去的分支）。无唯一奖励物品，不发物品。
+# 检定：passage 的 sit_with（stewardship 容易 35/6）与 arrive 的 stay（eloquence 容易 35/6）；失败好感 −2，照样往下走。引擎里失败分支没有回复，结果文字取自分支的 news，所以两个失败分支各写一条 news。
+# 见闻：arrive 的章节 news 只在留下（成功）、回去、去丰沙尔三条上发出；留下失败与超时各自带一条 news（超时的 kind 是 Heard，到里斯本的酒馆才听得到），免得沿用章节那句“看完才开口说话”。
+# 依赖：港口 atlantis_port（ports_realm.toml，B10b 改名已落实）、lisbon（ports_iberia.toml）、funchal（ports_atlantic_islands_west_africa.toml）；技能 cartography（skills.toml）；属性 stewardship、eloquence；人物 drifter_lisbon。
+#       日程：cast 登记到 1590-12-31 为 atlantis_port；留下的分支把她改到 lisbon（dock），去丰沙尔的分支改到 funchal（dock），两者都到 1590-12-31。
+# 回忆插画清单：
+#   mem-request_drifter_lisbon-arrive「河岸区码头上的老妇人」：里斯本河岸区的新码头，墙上挂着西班牙的纹章，一位老妇人背对人群，数着远处的七座山。
+
+[[tracks]]
+key = "request_drifter_lisbon"
+name = "回去的路"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["drifter_lisbon"]
+
+# 一、拐三道弯的线：码头上，她把海图卷起来，要你的船载她回里斯本。
+[[tracks.chapters]]
+key = "offer"
+title = "拐三道弯的线"
+text = "老妇人在码头上画海图，画了一辈子，画的都是回去的路。从亚特兰蒂斯往东，一条线拐了三道弯，末了画一座有七座山的城。你走近，她没抬头，笔尖还在纸上走。“别挡我的光，我在描海岸线。……好了。你的船从哪边来？回去打算走哪边？”她把图卷起来，用红绳系上，才开口：“载我回里斯本。四百年了，我站在码头上看一眼，再决定留不留。”"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1584, 1, 15], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "drifter_lisbon", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应载她去里斯本。"
+next = "passage"
+reply = "她把那张海图塞进你手里：“照这个走，错了算我的。”说完转身去收笔墨，一支一支插回笔筒里。她没问船的名字，只问了一句：“路上要几天？”你说了，她在图上那条线旁边写下一个数，划掉，又改写了一个。"
+effects = [{ kind = "affinity", person = "drifter_lisbon", value = 2 }, { kind = "flag", flag = "c13_request_drifter_lisbon_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "own_chart"
+text = "你说有自己的海图，用你的走。"
+next = "passage"
+reply = "她不生气，把两张图叠在一起对着光看，手指沿着第二道弯滑过去。“差得不多，”她说，“差的那一点，是四百年。”你的图上也拐了一个弯，她没说是哪里。"
+effects = [{ kind = "affinity", person = "drifter_lisbon", value = 2 }, { kind = "flag", flag = "c13_request_drifter_lisbon_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "里斯本太远，这趟我不去。"
+next = "failed"
+reply = "她把海图卷好，搁在膝上，又铺开一张新纸，笔尖落下去的时候没有抬头。码头上的风把纸角掀起来，她按住了，嘴里念着：“三道弯，一道都不能少。”"
+effects = [{ kind = "flag", flag = "c13_request_drifter_lisbon_declined" }]
+
+# 二、发白的水：海上第六天，图上第三道弯的地方只有一片白水。
+[[tracks.chapters]]
+key = "passage"
+title = "发白的水"
+text = "海上第六天。她的图上三道弯，你已经过了两道，每一道都对上了一座岛或一处浅滩，她拿笔一个个打了钩。第三道弯的地方只有一片发白的水，平得像磨过的铁。她趴在船舷上看了半天，说：“我祖上在这里见过一座城。”说完就不吭声，手指在图上那一段来回磨。你问那座城叫什么，她想了想，说想不起来了，只记得城里的钟声很慢。"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "alive", person = "drifter_lisbon", value = true }]
+objectives = [{ kind = "wait", days = 6, text = "沿图上的三道弯走满六天" }]
+
+[[tracks.chapters.choices]]
+key = "redraw"
+text = "替她把这一段重画，标上“发白的水”。"
+next = "arrive"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你的制图手艺还不到家，画不出那片水的深浅。"
+reply = "你画得很仔细，线条一根不抖，连那片水的边界也一笔一笔压出来了。她对着看了很久，在城的位置上画了一个小圈。“城不在了，”她说，“圈留着。”"
+effects = [{ kind = "affinity", person = "drifter_lisbon", value = 3 }, { kind = "flag", flag = "c13_request_drifter_lisbon_redrawn" }]
+
+[[tracks.chapters.choices]]
+key = "sit_with"
+text = "停船半天，陪她看那片水。"
+next = "arrive"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "你们就这么停着，水面静得能照见云。你回头看了一眼那片水，还是发白的。太阳偏西，她才抬起头，把图卷进怀里。“好了，”她说，“走吧，城的事我不急。”"
+effects = [{ kind = "affinity", person = "drifter_lisbon", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "drifter_lisbon", value = 1 }, { kind = "cash", value = -50 }], news = "船停在图上第三道弯的发白的水上半天，水手们嘀咕误了工，酒钱一笔笔记在了船长账上。" }
+
+# 三、站在码头上看一眼：里斯本河岸区的新码头，她决定了。
+[[tracks.chapters]]
+key = "arrive"
+title = "站在码头上看一眼"
+text = "里斯本的河岸区新修了码头，墙上挂着西班牙国王的纹章，鱼市吵得人说不成话。她站在码头上看了很久，先看河口的贝伦塔，再看七座山，一座一座数过去。石缝里长着一丛野薄荷，她蹲下去闻了闻，又站起来。码头边的鱼贩子把鲭鱼摔上木板，咣咣地响，她一下也没回头。怀里那张图被风掀开一角，她也不去按。数到最后一座，她转过身，看着你，说：“我决定了。”"
+speaker = "captain"
+mood = "tender"
+at = "lisbon"
+when = [{ kind = "alive", person = "drifter_lisbon", value = true }]
+deadline_days = 120
+news = "里斯本河岸区的新码头上，一个从西边来的老妇人看了半天七座山，看完才开口说话。"
+timeout = { next = "failed", effects = [{ kind = "letter", person = "drifter_lisbon", text = "等不到船，我又画了一张。回去的路，越画越短了。" }, { kind = "affinity", person = "drifter_lisbon", value = -3 }, { kind = "flag", flag = "c13_request_drifter_lisbon_late" }], news = "里斯本河岸区的新码头上，一个画海图的老妇人等了好几个月，等一条肯载她的船。" }
+
+[[tracks.chapters.variants]]
+key = "v1_redrawn"
+when = [{ kind = "flag", flag = "c13_request_drifter_lisbon_redrawn" }]
+text = "里斯本的河岸区新修了码头，墙上挂着西班牙国王的纹章，鱼市吵得人说不成话。她站在码头上，怀里那张图被风掀开一角，露出你替她描过的那片发白的水。她先看河口的贝伦塔，再看七座山，一座一座数过去。石缝里长着一丛野薄荷，她蹲下去闻了闻，又站起来。码头边的鱼贩子把鲭鱼摔上木板，咣咣地响，她一下也没回头。数到最后一座，她转过身，看着你，说：“我决定了。”"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "替她在城里找个落脚处。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "仁慈堂的修女收留了她，给她留了一间朝河的小屋，窗下正好能看见河口。她送你到码头，说下回你来，她画一张从里斯本出去的路。修女替她把行李一件件搬上楼，她在门口站了一会儿，才进去。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_lisbon", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_drifter_lisbon_done" }, { kind = "flag", flag = "c13_request_drifter_lisbon_stayed" }, { kind = "schedule", person = "drifter_lisbon", at = "lisbon", venue = "dock", until = [1590, 12, 31] }, { kind = "memory", memory = "mem-request_drifter_lisbon-arrive", title = "河岸区码头上的老妇人" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "drifter_lisbon", value = 6 }, { kind = "flag", flag = "c13_request_drifter_lisbon_done" }, { kind = "flag", flag = "c13_request_drifter_lisbon_stayed" }, { kind = "schedule", person = "drifter_lisbon", at = "lisbon", venue = "dock", until = [1590, 12, 31] }, { kind = "memory", memory = "mem-request_drifter_lisbon-arrive", title = "河岸区码头上的老妇人" }], news = "里斯本码头边，一间漏雨的屋子租给了一个西边来的老妇人，她说漏雨也是里斯本的雨。" }
+
+[[tracks.chapters.choices]]
+key = "go_back"
+text = "载她回亚特兰蒂斯，原路返回。"
+next = "done"
+reply = "回程她一张图也没画，只是靠着船舷睡，睡得很沉。到了亚特兰蒂斯，她醒来看了一眼港口的灯，说：“看过了，就够了。这回不用画了。”"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_lisbon", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_drifter_lisbon_done" }, { kind = "memory", memory = "mem-request_drifter_lisbon-arrive", title = "河岸区码头上的老妇人" }]
+
+[[tracks.chapters.choices]]
+key = "elsewhere"
+text = "顺路把她送到丰沙尔。"
+next = "done"
+reply = "她说里斯本太吵，丰沙尔有山有海，也有画图的人。你在丰沙尔放她下船，她把那张“回去的路”塞给了你，又把笔也塞了一支，说山上的风干，纸不会潮。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_lisbon", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_drifter_lisbon_done" }, { kind = "schedule", person = "drifter_lisbon", at = "funchal", venue = "dock", until = [1590, 12, 31] }]

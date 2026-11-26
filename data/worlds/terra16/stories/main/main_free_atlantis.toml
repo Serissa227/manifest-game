@@ -1,0 +1,253 @@
+# 自由船长·亚特兰蒂斯补章（暂存，故事 2.0，A5 / E37 契约，C13 第九批）
+# 2026-11-01 接回登记（C13 收尾）：A8 E63 的帷幕（realms.toml 的 atlantis：钥匙 tabula_smaragdina，另要 c11_atlantis_key_ready、判词不是“合上”）与 C11 的十王会议
+#   （stories/c11_realms.toml 的 atlantis_council，设 atlantis_council_met 与判决旗标）都已在世界里，本文件登记进 world.toml；下文写“暂存 / 不登记”的注释是当时的情形。
+#   接线：每个通向 done / failed 的分支（含 at1 超时）设 c13_main_free_atlantis_over，主线“那以后”章 c04_after 的 when 读它；at1 期限由 1584-12-31 收到 1583-12-31（黑暗之海窗口止于 9-30，没进外港的局早点放行主线）。
+# 标签：自由船长补章；主角是玩家自创的船长（speaker = captain）。“我”不写性别、外貌与名字，别人称呼“船长”或“外面来的人”。
+# 轨道：main_free_atlantis（kind = main，auto = true，start = at1_outer_harbor），三章：at1 外港的女祭司 → at2 熄了火的黑暗里 → at3 各说各话的小镇。
+# 依据：
+#   史实与古典——柏拉图《克里提亚斯篇》的环城、山铜柱上刻的律法、熄了火的夜里十王在柱前审判；只从人物嘴里、柱子与码头的告示上透出来，不开历史课。
+#   原创——伊斯梅妮（cast/story_atlantic.toml，1564 年生，最年轻的“克莱托”）；外港的小镇与三位漂流者（七城主教的后人、圣布伦丹的修士、里斯本冒险者的后代）；“回去的路”这个母题。
+#   待核：无。
+# 暂存：A8 的 E63（atlantis_port 帷幕与可达）与 C11 第二轮（atlantis_council 轨道、atlantis_council_met、atlantis_verdict_*）合进来以前，整合方不登记本文件。
+#       不登记时主线照样完整；at1 的期限 1584-12-31 到了，轨道静默失败，不写见闻。
+# 读的旗标：
+#   c13_main_free（门槛，main_free a00 的 default 设）；c13_main_free_crossed（main_free c03 的穿过分支设，at1 的 when）；
+#   c13_main_free_keepsake（main_free c02 设，at1 的交出选项门槛）；c13_main_free_new_star（main_free b01 设，at2 的星位选项门槛）；
+#   c12_voyage_custom_*（12 个模板，at1 的模板变体）；c13_free_seville_pilot_quadrant_given、c13_free_basque_whaling_knife_left、c13_free_istanbul_shipyard_receipt_given（at1 的先交出变体）；
+#   atlantis_council_met、atlantis_verdict_close、atlantis_verdict_open（C11，at2 的变体）。
+# 设的旗标：c13_main_free_atlantis_asked / _named / _offered（at1）；c13_main_free_atlantis_spoke / _star（at2）。
+# 禁区：不写精灵的来历；不写判决内容；不写龙骑士团与长生。
+# HIST 占位：无。
+# 回忆插画清单（mem-* 与画面）：
+#   mem-main_free_atlantis-at1 交到她手里的那样东西：烫脚的石码头上，年轻的女祭司双手接过船长递来的一样旧物，身后是铜色的环墙。
+#   mem-main_free_atlantis-at2 黑暗里的外圈：熄了火的神庙里，十个模糊的身影围着发微光的铜柱，船长站在靠门的外圈。
+#   mem-main_free_atlantis-at3 各说各话的小镇：山铜城墙下的小镇，几个穿旧式衣服的漂流者围着船长，一个老妇人在膝上铺开海图。
+
+[[tracks]]
+key = "main_free_atlantis"
+name = "柱外的港"
+kind = "main"
+start = "at1_outer_harbor"
+auto = true
+
+# at1：外港的女祭司。普通章，at = atlantis_port，期限 1584-12-31，超时静默失败（不写见闻）。
+[[tracks.chapters]]
+key = "at1_outer_harbor"
+title = "外港的女祭司"
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”我想：她问的是家里的东西，不是船上的货。"
+at = "atlantis_port"
+cast = ["ismene"]
+speaker = "captain"
+mood = "mystic"
+night = false
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "flag", flag = "c13_main_free_crossed" }]
+deadline = [1583, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "offer"
+text = "把从家里带出来的那样东西交到她手里"
+next = "at2_council"
+requires = [{ kind = "flag", flag = "c13_main_free_keepsake" }]
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_offered" }, { kind = "memory", memory = "mem-main_free_atlantis-at1", title = "交到她手里的那样东西" }]
+hint = "你把家里的那样东西留在了岸上，手伸进箱子，摸到的只有海图。"
+news = "外港的石码头上，外来的船长把一样旧东西交给女祭司，她看过，又还了回来。"
+reply = "伊斯梅妮看过以后，把它还给“我”：“它认得你，就够了。”她领“我”走上台阶。"
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "只报上自己的名字和出海的港口"
+next = "at2_council"
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_named" }]
+news = "外港的码头上，一个外来的船长报了出海的港口，女祭司把那个名字念得走了样，漂流者在旁边笑。"
+reply = "她把那个港口的名字念了两遍，念得走了样，旁边一个漂流者替她纠正。她笑了一下，侧身让开台阶：“进来吧。”"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "先问她神庙里刻着的是哪一条律法"
+next = "at2_council"
+check = { attr = "learning", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_asked" }]
+news = "外港的女祭司背出一条律文，说外来的船不许带铁进内港，有个船长回头看了看停在外海的船。"
+reply = "她背了一句律文：外来的船不许带铁进内港。“我”回头看了一眼自己船上的锚，没有说话。"
+fail = { next = "at2_council", effects = [{ kind = "flag", flag = "c13_main_free_atlantis_named" }], news = "外港的女祭司不爱答问，外来的船长问起神庙里的律法，她只回了一句：等见到柱子再问。" }
+
+[[tracks.chapters.variants]]
+key = "v00a_seville_given"
+when = [{ kind = "flag", flag = "c13_free_seville_pilot_quadrant_given" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”行囊里压着一张拆了蜡的考题纸。伊斯梅妮读了题，轻声说：这道题在这里也没人答得出。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v00c_istanbul_given"
+when = [{ kind = "flag", flag = "c13_free_istanbul_shipyard_receipt_given" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”腰间系着一根打了结的量船绳。伊斯梅妮的目光落在结上，一个一个地数，问每个结量的是哪一条船。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v00d_basque_knife"
+when = [{ kind = "flag", flag = "c13_free_basque_whaling_knife_left" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”“我”带来的是船头刻痕的拓片，纸边卷着。伊斯梅妮数着上头的刻痕，问最后一道是谁刻的。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v01_seville_pilot"
+when = [{ kind = "flag", flag = "c12_voyage_custom_seville_pilot" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”行囊里那只象限仪，铜环磨得发亮。伊斯梅妮的目光停在上头，没有问它是什么。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v02_murano_glass"
+when = [{ kind = "flag", flag = "c12_voyage_custom_murano_glass" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”包袱里裹着一只穆拉诺的玻璃杯，杯底有一个气泡。伊斯梅妮的目光落到杯子上，停了一停。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v03_lisbon_medicine"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lisbon_medicine" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”贴身带着祖母配的那瓶药剂，蜡封还完好。伊斯梅妮只看了一眼瓶口，没有去碰。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v04_lubeck_accounts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lubeck_accounts" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”衣袋里揣着一枚账房印记，印面刻着一只鹰。伊斯梅妮的目光在它上头多停了一下。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v05_basque_whaling"
+when = [{ kind = "flag", flag = "c12_voyage_custom_basque_whaling" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”腰上挂着一把解缆小刀，刀柄上一道一道全是刻痕。伊斯梅妮的目光落在刀柄上，数了起来。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v06_istanbul_shipyard"
+when = [{ kind = "flag", flag = "c12_voyage_custom_istanbul_shipyard" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”包袱里有一块船匠的交接木牌，边上有烧痕。伊斯梅妮问它认的是哪一座船台。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v07_fez_scholar"
+when = [{ kind = "flag", flag = "c12_voyage_custom_fez_scholar" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”箱子里有一本手订的簿子，封面上写着先生的名字。伊斯梅妮的目光落在簿子上，停了很久。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v08_cambay_broker"
+when = [{ kind = "flag", flag = "c12_voyage_custom_cambay_broker" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”随身一袋算筹，竹签有的断了，有的还带着红绳。伊斯梅妮的目光落在袋口上。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v09_busan_interpreter"
+when = [{ kind = "flag", flag = "c12_voyage_custom_busan_interpreter" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”行囊里有一本手订的簿子，第一页写着十个字，一半是假名。伊斯梅妮请“我”把那十个字念给她听。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v10_naha_envoy"
+when = [{ kind = "flag", flag = "c12_voyage_custom_naha_envoy" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”贴身的口袋里有一块岛间通行凭记，木札上刻着几道线。伊斯梅妮摸着那些刻痕，没有说话。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v11_tondo_datu"
+when = [{ kind = "flag", flag = "c12_voyage_custom_tondo_datu" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”随身带着一袋算账筹，袋口缝着一道纹样。伊斯梅妮的目光落在那道纹样上。我想：她问的是家里的东西，不是船上的货。"
+
+[[tracks.chapters.variants]]
+key = "v12_chincha_rafts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_chincha_rafts" }]
+text = "外港的石码头晒得发烫，远处三道环墙闪着铜色的光。守庙里最年轻的伊斯梅妮带着两个持杖的人走下台阶，先问来意，不问王名。码头上的小镇各说各话，古葡萄牙语、拉丁语，还夹着一种“我”听不出来的调子。一个小贩在台阶下卖晒干的鱼，没人买；台阶上的盐花被太阳晒得发白。她没有去看货箱，只看“我”的手。“外面的人上岸，先说来意，再说名字。王的名字，留到后头。”她停了停，又问：“身上有没有从家里带来的东西？”手腕上绕着一根结绳，一个结记着一季。伊斯梅妮的目光落在那根绳上，问结是怎么打的。我想：她问的是家里的东西，不是船上的货。"
+
+# at2：熄了火的黑暗里。普通章，at = atlantis_port，期限 1585-06-30，超时进入 at3（静默，不写见闻）。
+# 这一章不写 when：at1 结算后立即进入，玩家在外港就弹出。
+[[tracks.chapters]]
+key = "at2_council"
+title = "熄了火的黑暗里"
+text = "夜里，神庙里的火一盏盏熄了。十个穿深蓝长袍的人围着刻律法的山铜柱坐下，外面来的人站在外圈。柱脚边有一只金杯，杯里的牛血黑得映不出一点光。山铜柱上的字被手摸得发亮，靠门的那一段最旧，刻痕里积着灰，指甲划过去是钝的。黑暗里一阵一阵地呼吸，没有人出声。伊斯梅妮把“我”领到靠门的位置，低声说：“把誓词读完，再碰那根柱子。”黑暗里有一个王问：“你没有国王。那你替谁说话？外面的海，是谁的？”我想：替船上那几十个人说，也替这些年见过的港口说。"
+at = "atlantis_port"
+cast = ["ismene"]
+speaker = "captain"
+mood = "mystic"
+night = false
+deadline = [1585, 6, 30]
+
+[tracks.chapters.timeout]
+next = "at3_drifters"
+
+[[tracks.chapters.choices]]
+key = "speak"
+text = "开口：外面的海是走它的人的"
+next = "at3_drifters"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_spoke" }]
+news = "神庙里熄了火，外来的船长说外面的海是走它的人的，黑暗里有人把这句话换成别的语言又说了一遍。"
+reply = "黑暗里安静了一会儿。有人把“我”的话重复了一遍，换成了“我”听不懂的那种语言。"
+fail = { next = "at3_drifters", effects = [{ kind = "memory", memory = "mem-main_free_atlantis-at2", title = "黑暗里的外圈" }], news = "外港的神庙里，外来船长的话说到一半卡住了，黑暗里有人轻笑一声，女祭司替那句话补完了后半句。" }
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "不开口，先听十个人轮流说话"
+next = "at3_drifters"
+effects = [{ kind = "memory", memory = "mem-main_free_atlantis-at2", title = "黑暗里的外圈" }]
+news = "外港的神庙里，十个声音轮流响了一夜，外来的船长站在靠门的外圈，一句话也没说。"
+reply = "“我”听见十个人轮流开口，有的急，有的停下来等别人接。只听懂了几个外面港口的名字。"
+
+[[tracks.chapters.choices]]
+key = "star"
+text = "说出新星那一年你量下的位置"
+next = "at3_drifters"
+requires = [{ kind = "flag", flag = "c13_main_free_new_star" }]
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_star" }]
+hint = "那一年你没有量那颗星，说不出它在哪里。"
+news = "神庙里有个外来的船长报出一个星位，黑暗里的王让人把数字又念了一遍。"
+reply = "一个王让“我”把数字再说一遍，然后在金板上记了下来。"
+
+[[tracks.chapters.variants]]
+key = "v1_close"
+when = [{ kind = "flag", flag = "atlantis_verdict_close" }]
+text = "夜里，神庙里的火一盏盏熄了。十个穿深蓝长袍的人围着刻律法的山铜柱坐下，外面来的人站在外圈。柱脚边有一只金杯，杯里的牛血黑得映不出一点光。山铜柱上的字被手摸得发亮，靠门的那一段最旧，刻痕里积着灰，指甲划过去是钝的。黑暗里一阵一阵地呼吸，没有人出声。伊斯梅妮把“我”领到靠门的位置，低声说：“把誓词读完，再碰那根柱子。”黑暗里有一个王问：“你没有国王。那你替谁说话？外面的海，是谁的？”我想：替船上那几十个人说，也替这些年见过的港口说。天亮前，“我”听见了“合上”这个词。"
+
+[[tracks.chapters.variants]]
+key = "v2_open"
+when = [{ kind = "flag", flag = "atlantis_verdict_open" }]
+text = "夜里，神庙里的火一盏盏熄了。十个穿深蓝长袍的人围着刻律法的山铜柱坐下，外面来的人站在外圈。柱脚边有一只金杯，杯里的牛血黑得映不出一点光。山铜柱上的字被手摸得发亮，靠门的那一段最旧，刻痕里积着灰，指甲划过去是钝的。黑暗里一阵一阵地呼吸，没有人出声。伊斯梅妮把“我”领到靠门的位置，低声说：“把誓词读完，再碰那根柱子。”黑暗里有一个王问：“你没有国王。那你替谁说话？外面的海，是谁的？”我想：替船上那几十个人说，也替这些年见过的港口说。天亮前，“我”听见了“打开”这个词。"
+
+[[tracks.chapters.variants]]
+key = "v3_met"
+when = [{ kind = "flag", flag = "atlantis_council_met" }]
+text = "会议已经进入第二夜，外面来的人来得晚。神庙里的火早就熄了，十个穿深蓝长袍的人围着山铜柱，只赶上判词写上金板之前的那一段。柱脚边有一只金杯，山铜柱上的字被手摸得发亮。黑暗里一阵一阵地呼吸，没有人出声。伊斯梅妮把“我”领到靠门的位置，低声说：“把誓词读完，再碰那根柱子。”黑暗里有一个王问：“你没有国王。那你替谁说话？外面的海，是谁的？”我想：替船上那几十个人说，也替这些年见过的港口说。"
+
+# at3：各说各话的小镇。个人终章，at = atlantis_port，期限 1586-12-31，超时直接结束（静默，不写见闻）。
+# 三个选项都走 done；没有变体。小镇的人都用“你”称呼“我”。
+[[tracks.chapters]]
+key = "at3_drifters"
+title = "各说各话的小镇"
+text = "山铜城墙外的小镇，是几百年里漂进来的人搭的。石头小教堂里有人唱古老的礼拜歌。酒馆门口，一个腰上挂着七把旧钥匙的老人正在试门。码头边，一个老妇人在膝上铺开海图。绳子上晾着几张旧图，被风吹得啪啪响。老修士坐在她旁边，本子摊在腿上，左页写见闻，右页留疑问。他抬头问：“外面的人，现在还相信世界是圆的吗？我这一页记的是疑问。”老妇人头也不抬，手指点在图上：“别人画来路，我画回去的路。你要哪一张？”图的尽头画着一个小港，那是“我”出海的港口。她听“我”说过一次，就记住了它的样子。我想：这一季，我还没想好走不走。"
+at = "atlantis_port"
+cast = ["drifter_lisbon", "drifter_seven_cities", "drifter_brendan"]
+speaker = "captain"
+mood = "tender"
+night = false
+deadline = [1586, 12, 31]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_free_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "在小镇住一季，把外面的事讲给他们听"
+next = "done"
+effects = [{ kind = "memory", memory = "mem-main_free_atlantis-at3", title = "各说各话的小镇" }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+news = "山铜城墙下的小镇上，一个外来的船长在酒馆里讲了一季外面的港口，老修士的本子记满了疑问。"
+reply = "一季里“我”讲了三十个港口，老修士记了三十页疑问。临走时他把其中一页撕下来，塞进“我”手里。"
+
+[[tracks.chapters.choices]]
+key = "map"
+text = "请老妇人画一张回家的路"
+next = "done"
+effects = [{ kind = "skill", skill = "cartography", value = 30 }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+news = "外港的码头边，画海图的老妇人替一个外来的船长画了三天回程，图上没有经纬，只有海草的边。"
+reply = "她画了三天。图上没有经纬，只有风向与海草的边。“我”后来照着它，回到了出海的那个港口。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "什么也不带，记住来时的路就走"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "skill", skill = "astral_navigation", value = 30 }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+news = "外港的人说，一个外来的船长什么也没带，凭记忆就出了雾，三道环墙很快看不见了。"
+reply = "“我”凭记忆出了雾，回头再也看不见那三道环墙。"
+fail = { next = "done", effects = [{ kind = "memory", memory = "mem-main_free_atlantis-at3", title = "各说各话的小镇" }, { kind = "flag", flag = "c13_main_free_atlantis_over" }], news = "外港的人说，一个外来的船长出港第二天就认不出星了，又折回来请画海图的老妇人指路。" }

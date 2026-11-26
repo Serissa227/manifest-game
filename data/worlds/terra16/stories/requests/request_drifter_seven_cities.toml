@@ -1,0 +1,122 @@
+# 请托：七把钥匙（request_drifter_seven_cities）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude 执笔。
+# 人物：七城主教的后人 drifter_seven_cities（1509-07-19 生，男；cast/story_atlantic.toml），外港的老人，腰上挂七把旧钥匙。
+# 类型：押运／带人（escort）。章节：offer 未结 → passage 脱手的第三把 → arrive 不是给他开的门 → done / failed。
+# 报价：当面（T）。auto=false，玩家在亚特兰蒂斯外港找到他（ask:request_drifter_seven_cities）；offer 章不写 at，objectives 为在港里找到他。
+# 窗口：1584-01-15 至 1590-06-30 开放报价（offer 的 when 与 deadline）；passage、arrive 不写窗口，只写 alive；passage 没有期限，arrive 的进行中期限为 deadline_days 90。
+# 身份档 0（平民、水手）：现金基数 400，中档 ×1.4 = 550；cash_total 550，每份奖励只给一次。
+# 依据（史实）：八世纪七位主教渡海、在西方的岛上建七座城的传说（史上的传说，正文不判定真假）；1583 年亚速尔归顺菲利普二世治下；安格拉城里的主教座堂（传闻口吻）。
+# 依据（原创）：腰上的七把钥匙、老人的葡萄牙话、第三把钥匙落海的那场浪、座堂侧门前的一扇门。家史的细节只借他自己的嘴说。
+# 依赖：B10b 改名 atlantis→atlantis_port（ports_realm.toml 与本人的日程已用新 key）；本请托无主线门禁（gate_main、variant_main 均为空）。
+# 读写的旗标：只设 c13_request_drifter_seven_cities_*（accepted、declined、kept、lost、left、done、late）；arrive 的两个变体读本轨道的 kept 与 lost 改正文；不读、不设任何 c7_ 旗标。
+# 秘密：cast 没写秘密。本请托不碰，正文不判定七城岛的传说真假，见闻不写他的家史。
+# 回忆插画清单：
+#   mem-request_drifter_seven_cities-arrive「座堂侧门前的老人」：安格拉主教座堂的侧门前，石阶上落着雨后的灰，老人站在门环前，腰上的七把钥匙一把也没有拿出来。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；arrive 到期，他搭渔船去了一趟，来信说明，好感 -3。passage 没有期限，可以一直等。
+# 结构说明：grab 的检定失败不另开章，走 arrive 并设 lost，arrive 的 lost 变体把“少试一扇”写进正文；talk_down 设 kept，arrive 的 kept 变体改写钥匙在谁手里。两个变体只读旗标改写正文，不用 requires 门禁，也没有互斥门禁。
+# 旗标：终局 done（两条结局都设）、declined、late（超时）；分支 accepted、kept、lost、left。lost 是为检定失败另加的第三面分支旗标，整合时须一并登记。
+
+[[tracks]]
+key = "request_drifter_seven_cities"
+name = "七把钥匙"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["drifter_seven_cities"]
+
+# offer · 1584—1590 · 外港的酒馆：老人一边试钥匙，一边招呼你坐下
+[[tracks.chapters]]
+key = "offer"
+title = "腰上的七把钥匙"
+text = "外港的酒馆里，一个老人拿腰上的钥匙往门框上比，走一步，七把钥匙就响一下。他回头招呼你：“等等，先别关门——让我试一把钥匙。……又不是这扇。坐吧，酒我请。”他说祖上是从亚速尔那边的七座城出来的，城里的门都还在，钥匙也都在他腰上。他想去安格拉，“一扇一扇地试”。“试完了，我就死心。”他顿了顿，又笑，“或者不死心。”"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "drifter_seven_cities", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1584, 1, 15], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应载他去安格拉。"
+next = "passage"
+effects = [{ kind = "affinity", person = "drifter_seven_cities", value = 2 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_accepted" }]
+reply = "他把七把钥匙从腰上解下来，一把一把擦，擦得袖口都黑了。擦到第七把，他停住，说这把最老，门大概也最老，最不肯开。"
+
+[[tracks.chapters.choices]]
+key = "ask_names"
+text = "问他：七座城，叫什么名字？"
+next = "passage"
+effects = [{ kind = "affinity", person = "drifter_seven_cities", value = 2 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_accepted" }]
+reply = "他念了七个名字，念得很慢，像在一扇扇门上敲过去。念到第五个，他停下来想了一会儿，说那是主教的姐姐，每回讲的都不太一样，又往下念。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟不载人去找传说里的城。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_drifter_seven_cities_declined" }]
+reply = "老人点点头，没有生气，把腰上的钥匙理了理。“钥匙等得起。”他说，“我这把老骨头，也还等得起下一艘船。”"
+
+# passage · 出海之后 · 甲板：大浪里第三把钥匙脱了手
+[[tracks.chapters]]
+key = "passage"
+title = "脱手的第三把"
+text = "出海第四天起了大浪，船一夜没有平过。老人坐在甲板上的缆桩边，把钥匙攥在手里。你劝他下舱，他说：“舱里的门都是新刷的，钥匙进不去。”甲板湿得站不住人，船舷外的浪一个接一个。一个浪打过来，船身往一边倾，他的手一松，第三把钥匙脱了手，在甲板上滑向船舷。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 4, text = "出海四天" }]
+when = [{ kind = "alive", person = "drifter_seven_cities", value = true }]
+
+[[tracks.chapters.choices]]
+key = "grab"
+text = "扑过去抓住那把钥匙。"
+next = "arrive"
+check = { attr = "seamanship", base = 35, per = 6 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "drifter_seven_cities", value = -2 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_lost" }], news = "亚特兰蒂斯往安格拉的航路上，大浪卷走了一个老人的第三把钥匙。他望着海说，第三扇门本来就不好开。" }
+effects = [{ kind = "affinity", person = "drifter_seven_cities", value = 3 }]
+reply = "钥匙卡在你的手指和船板之间，划了一道口子，血珠子滚到了钥匙上。老人把它接过去，在衣角上擦干净，系回腰上，系了个死结。“这把不许再掉。”"
+
+[[tracks.chapters.choices]]
+key = "talk_down"
+text = "用他的话劝他下舱，钥匙交给你保管。"
+next = "arrive"
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60 }]
+hint = "你的葡萄牙话只够问路，他那几句老词，你接不上。"
+effects = [{ kind = "affinity", person = "drifter_seven_cities", value = 3 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_kept" }]
+reply = "他听懂了你那几句老话，笑了一声，说你的葡萄牙话，比他的钥匙还老。他把七把钥匙串在一起交给你，下了舱。浪过去以后，他在舱里躺下，嘴里还在数。"
+
+# arrive · 安格拉 · 街上与主教座堂的侧门：门都在，只是不是给他开的
+[[tracks.chapters]]
+key = "arrive"
+title = "不是给他开的门"
+text = "安格拉的街上，老人一扇门一扇门地试。钥匙插进去，转不动，他就向门里的人道个歉，再去试下一扇。门里有人问他找谁，他说找谁都行，门开着就好。试到主教座堂的侧门，石阶上还落着雨后的灰，他站了很久，没有把钥匙拿出来。他的手指在门环上摸了一遍，又收回来。回头看你的时候，他说：“门都在，只是不是给他开的。”"
+speaker = "captain"
+mood = "tender"
+at = "angra"
+when = [{ kind = "alive", person = "drifter_seven_cities", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "letter", person = "drifter_seven_cities", text = "船没来，我搭了一条打鱼的船去了一趟。门我试过了。" }, { kind = "affinity", person = "drifter_seven_cities", value = -3 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_late" }] }
+news = "安格拉的街上，一个腰挂七把钥匙的老人挨家试门，试不开就向门里的人道歉，道完歉再去试下一扇。"
+
+[[tracks.chapters.variants]]
+key = "kept"
+when = [{ kind = "flag", flag = "c13_request_drifter_seven_cities_kept" }]
+text = "安格拉的街上，老人一扇门一扇门地试。七把钥匙都在你手里，他每试一扇，就伸手跟你要一把，插进去，转不动，便向门里的人道个歉，再把钥匙还给你。试到主教座堂的侧门，石阶上还落着雨后的灰，他站了很久，没有伸手。回头看你的时候，他说：“门都在，只是不是给他开的。”"
+
+[[tracks.chapters.variants]]
+key = "lost"
+when = [{ kind = "flag", flag = "c13_request_drifter_seven_cities_lost" }]
+text = "安格拉的街上，老人一扇门一扇门地试，腰上少了一把，走一步响得轻些。第三扇门他没有去试，说本来就不好开。试到主教座堂的侧门，石阶上还落着雨后的灰，他站了很久，没有把钥匙拿出来。他的手指在门环上摸了一遍，又收回来。回头看你的时候，他说：“门都在，只是不是给他开的。”"
+
+[[tracks.chapters.choices]]
+key = "stay_with"
+text = "陪他把剩下的门试完。"
+next = "done"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_seven_cities", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_done" }, { kind = "memory", memory = "mem-request_drifter_seven_cities-arrive", title = "座堂侧门前的老人" }]
+reply = "试完最后一扇，太阳落了。老人在码头边坐下，把七把钥匙挨个数了一遍，说回去吧，回亚特兰蒂斯。那边的门，他都试过，都开。"
+
+[[tracks.chapters.choices]]
+key = "leave_key"
+text = "劝他把最老的那把钥匙留在座堂的侧门下。"
+next = "done"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_seven_cities", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_drifter_seven_cities_done" }, { kind = "flag", flag = "c13_request_drifter_seven_cities_left" }]
+reply = "他想了一夜。第二天一早，第七把钥匙压着一块石头，留在侧门的石阶上。钥匙串上少了一把，走路响得轻了。他没有回头看那扇门。"

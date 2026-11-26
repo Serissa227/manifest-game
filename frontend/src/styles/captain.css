@@ -1,0 +1,1135 @@
+/* 开局向导（剧本 → 外貌 → 生日 → 姓名 → 身世 → 属性 → 启航）、船长卡与补建身世的样式。
+   沿用标题画面窗口的羊皮纸与木框（start.css）：颜色取自 art/palette.ts 的共享调色板，注释里标出对应的色阶。
+   像素风的要点：硬边、实色、2px 描边与 3px 厚度阴影，不用圆角与柔和阴影。 */
+
+/* ───────────── 步骤条：编号牌 + 虚线相连；当前步金色，走过的步木色，没到的步淡 ───────────── */
+.cw-stepper {
+  flex: none;
+  padding: 0 16px 6px;
+}
+.cw-stepper ol {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cw-stepper li {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+/* 两步之间的虚线 */
+.cw-stepper li + li::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: -8px;
+  width: 12px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #7d5f36 0 3px, transparent 3px 5px);
+}
+.cw-stepper-btn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 4px;
+  font: inherit;
+  font-size: 12.5px;
+  color: #8a5a32;
+  background: none;
+  border: 0;
+  /* 不要全局按钮的立体阴影：步骤条是一行编号牌，不是一排按钮 */
+  box-shadow: none;
+  text-shadow: none;
+  cursor: pointer;
+}
+.cw-stepper-btn:disabled {
+  cursor: default;
+  color: #b8955f; /* parchment 的暗阶 */
+}
+.cw-stepper-btn:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 1px;
+}
+.cw-stepper-n {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #b8955f;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+}
+.cw-stepper-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+.cw-stepper li.is-past .cw-stepper-n {
+  color: #fffaf0;
+  background: #8a5a32; /* wood[2] */
+  border-color: #2b1b17;
+  box-shadow: inset 1px 1px 0 #b8804a;
+}
+.cw-stepper li.is-past .cw-stepper-btn:not(:disabled):hover .cw-stepper-label {
+  color: #2b1b17;
+  text-decoration: underline;
+}
+.cw-stepper li.is-current .cw-stepper-n {
+  color: #3b2416;
+  background: #dca434; /* gold[2] */
+  border-color: #2b1b17;
+  box-shadow:
+    inset 1px 1px 0 #fff3b0,
+    0 2px 0 #2b1b17;
+}
+.cw-stepper li.is-current .cw-stepper-label {
+  color: #2b1b17;
+  font-weight: 700;
+}
+
+/* ───────────── 两栏：左边是这一步的内容，右边是船长卡 ───────────── */
+.cw-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 188px;
+  gap: 16px;
+  align-items: start;
+}
+.cw-main {
+  min-width: 0;
+}
+.cw-main > .ts-heading {
+  margin-top: 4px;
+}
+
+/* ───────────── 船长卡 ───────────── */
+.cw-card {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  padding: 10px 10px 12px;
+  background: #f3e3c3; /* paper */
+  border: 2px solid #7d5f36; /* parchmentDeep */
+  box-shadow:
+    inset 0 0 0 2px #fffaf0,
+    0 3px 0 #7d5f36;
+  font-size: 12.5px;
+  color: #2b1b17;
+}
+.cw-card-portrait {
+  align-self: center;
+  line-height: 0;
+  border: 10px solid #5c3a21;
+  border-image: var(--ts-frame, none) 8 / 10px stretch;
+  background: #23305e;
+}
+.cw-card-name.ts-nameplate {
+  min-width: 0;
+  max-width: none;
+  font-size: 13px;
+}
+.cw-card-born {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 6px;
+  margin: 0;
+  color: #5c3a21;
+  font-variant-numeric: tabular-nums;
+}
+.cw-card-sign {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff3b0;
+  background: #23305e; /* night */
+  border: 2px solid #151c3d;
+  letter-spacing: 0.05em;
+}
+.cw-summary .cw-card-sign {
+  margin-left: 8px;
+}
+.cw-card-bg {
+  margin: 0;
+  padding: 6px 0 0;
+  list-style: none;
+  border-top: 2px dotted #b8955f;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cw-card-bg li {
+  padding-left: 12px;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #3b2416;
+}
+.cw-card-bg li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  background: #a86b1c;
+}
+.cw-card-bg li.is-empty {
+  color: #b8955f;
+}
+.cw-card-attrs {
+  margin: 0;
+  padding: 6px 0 0;
+  list-style: none;
+  border-top: 2px dotted #b8955f;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cw-card-attrs li {
+  display: grid;
+  grid-template-columns: 3.2em minmax(0, 1fr) 1.4em;
+  align-items: center;
+  gap: 6px;
+}
+.cw-attr-name {
+  color: #5c3a21;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cw-attr-value {
+  text-align: right;
+  font-weight: 700;
+}
+.cw-card-methods {
+  margin: 0;
+  padding: 5px 7px;
+  font-size: 12px;
+  color: #3b2416;
+  background: #fff3b0;
+  border: 2px solid #a86b1c;
+}
+
+/* 属性格子：身世与星座的点（墨色）、自由分配的点（金色）、上限内的空格、开局上限以外（以后成长）的格子 */
+.cw-pips {
+  display: inline-flex;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+.cw-pips i {
+  flex: none;
+  width: 8px;
+  height: 11px;
+  border: 1px solid #7d5f36;
+  background: #fffaf0;
+}
+.cw-pips i.is-bg {
+  background: #5c3a21;
+  border-color: #2b1b17;
+}
+.cw-pips i.is-alloc {
+  background: #dca434;
+  border-color: #a86b1c;
+  box-shadow: inset 1px 1px 0 #fff3b0;
+}
+.cw-pips i.is-later {
+  background: repeating-linear-gradient(135deg, #e2c796 0 2px, #f3e3c3 2px 4px);
+  border-style: dotted;
+}
+
+/* ───────────── 外貌 ───────────── */
+.cw-look-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cw-looks .ts-looks-head,
+.cw-looks .ts-looks {
+  max-width: none;
+}
+
+/* ───────────── 生日、星座与年龄 ───────────── */
+.cw-signs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 6px;
+  margin: 4px 0 10px;
+}
+.cw-sign {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px 7px 6px;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+  cursor: pointer;
+  line-height: 1.3;
+}
+.cw-sign:hover {
+  border-color: #2b1b17;
+}
+.cw-sign.is-selected {
+  background: #fffaf0;
+  border-color: #2b1b17;
+  box-shadow:
+    0 0 0 3px #dca434,
+    0 3px 0 3px #a86b1c;
+}
+.cw-sign:has(input:focus-visible) {
+  outline: 3px solid #239a9a;
+  outline-offset: 4px;
+}
+.cw-sign-name {
+  font-weight: 700;
+  color: #2b1b17;
+}
+.cw-sign-dates {
+  font-size: 11.5px;
+  color: #8a5a32; /* wood[2] */
+  font-variant-numeric: tabular-nums;
+}
+.cw-sign-bonus {
+  font-size: 11.5px;
+  color: #239a9a; /* teal[2] */
+  font-weight: 700;
+}
+.cw-bd-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-bottom: 10px;
+}
+/* 生日：月与日两个下拉 */
+.cw-bd-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cw-bd-date .ts-input {
+  flex: none;
+  min-width: 4.5em;
+  padding: 4px 6px;
+  font-size: 14px;
+}
+/* 年龄：− 滑块 + 与数值一行，常用年龄的快捷按钮与出生年份一行 */
+.cw-age {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+}
+.cw-age-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.cw-age-slider {
+  flex: 1 1 140px;
+  min-width: 120px;
+  margin: 0;
+  accent-color: #8a5a32; /* wood[2] */
+  cursor: pointer;
+}
+.cw-age-slider:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 3px;
+}
+.cw-bd-age-value {
+  min-width: 3.4em;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+.cw-age-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cw-age-chip {
+  min-width: 2.8em;
+  padding: 2px 6px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.cw-age-chip[aria-pressed="true"] {
+  color: #3b2416;
+  background: #dca434; /* gold[2] */
+  box-shadow:
+    inset 2px 2px 0 #fff3b0,
+    inset -2px -2px 0 #a86b1c,
+    0 3px 0 #2b1b17;
+  text-shadow: none;
+}
+.cw-age-chip[aria-pressed="true"]:hover:not(:disabled) {
+  background: #f5d66b;
+}
+.cw-age-born {
+  margin-left: auto;
+  font-size: 13px;
+  color: #5c3a21;
+}
+.cw-random {
+  margin-left: auto;
+}
+.cw-sign-card {
+  padding: 10px 12px;
+  background: #23305e; /* night[2] */
+  color: #f3e3c3;
+  border: 2px solid #151c3d;
+  box-shadow:
+    inset 0 0 0 2px #3a4a8a,
+    0 3px 0 #151c3d;
+}
+.cw-sign-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+}
+.cw-sign-card-name {
+  display: block;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 19px;
+  letter-spacing: 0.15em;
+  color: #f5d66b; /* gold[3] */
+  text-shadow: 2px 2px 0 #151c3d;
+}
+.cw-sign-card-dates {
+  font-size: 12.5px;
+  color: #ffd79a; /* dusk[4] */
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.cw-sign-card-desc {
+  margin: 4px 0 6px;
+  font-style: italic;
+  color: #e2c796;
+}
+.cw-sign-card-perks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cw-sign-card-perks li::before {
+  content: "✦ ";
+  color: #dca434;
+}
+.cw-born {
+  margin: 8px 0 0;
+  padding-top: 6px;
+  border-top: 2px dotted #3a4a8a;
+  color: #ffd79a; /* dusk[4] */
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────────── 身世问答：进度点、选项卡片、所选项的叙述 ───────────── */
+.cw-q-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.cw-q-dots {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cw-q-dots li {
+  width: 10px;
+  height: 10px;
+  background: #fffaf0;
+  border: 2px solid #b8955f;
+}
+.cw-q-dots li.is-done {
+  background: #8a5a32;
+  border-color: #2b1b17;
+}
+.cw-q-dots li.is-current {
+  background: #dca434;
+  border-color: #2b1b17;
+}
+.cw-q-count {
+  font-size: 12px;
+  color: #8a5a32;
+}
+.cw-q-prompt {
+  margin: 4px 0 8px;
+  font-style: italic;
+}
+.cw-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cw-option {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 9px 7px;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+  box-shadow: 0 2px 0 #b8955f;
+  cursor: pointer;
+}
+.cw-option:hover {
+  border-color: #2b1b17;
+}
+.cw-option.is-selected {
+  background: #fffaf0;
+  border-color: #2b1b17;
+  box-shadow:
+    0 0 0 3px #dca434,
+    0 3px 0 3px #a86b1c;
+}
+.cw-option:has(input:focus-visible) {
+  outline: 3px solid #239a9a;
+  outline-offset: 4px;
+}
+.cw-opt-name {
+  font-weight: 700;
+  color: #2b1b17;
+}
+.cw-opt-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cw-tag {
+  padding: 0 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #145e5e;
+  background: #d8efe9;
+  border: 1px solid #239a9a;
+}
+.cw-tag.is-effect {
+  color: #6b3d0f;
+  background: #fff3b0;
+  border-color: #a86b1c;
+}
+.cw-opt-text {
+  margin: 10px 0 0;
+  padding: 8px 12px;
+  font-style: italic;
+  line-height: 1.6;
+  color: #3b2416;
+  background: #fffaf0;
+  border-left: 4px solid #a86b1c;
+}
+
+/* ───────────── 属性 ───────────── */
+.cw-at-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.cw-left {
+  padding: 2px 10px;
+  font-size: 14px;
+  color: #fff3b0;
+  background: #8c1f28; /* red[1] */
+  border: 2px solid #4a1018;
+  letter-spacing: 0.05em;
+}
+.cw-left.is-done {
+  color: #3b2416;
+  background: #dca434;
+  border-color: #a86b1c;
+}
+.cw-at-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+.cw-attr-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cw-attr {
+  padding: 6px 8px;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+}
+.cw-attr-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.cw-attr-head strong {
+  flex: none;
+  color: #2b1b17;
+  letter-spacing: 0.1em;
+}
+.cw-attr-desc {
+  min-width: 0;
+  font-size: 11.5px;
+  color: #8a5a32;
+}
+.cw-attr-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+}
+.cw-attr-ctrl .cw-pips i {
+  width: 12px;
+  height: 14px;
+}
+.cw-step-btn {
+  width: 26px;
+  height: 24px;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+}
+.cw-attr-num {
+  min-width: 1.6em;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+.cw-attr-fx {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #145e5e;
+}
+.cw-numeracy-tip {
+  margin-top: 8px;
+}
+.cw-genius {
+  margin: 10px 0 0;
+  padding: 8px 10px 10px;
+  background: #23305e;
+  color: #f3e3c3;
+  border: 2px solid #151c3d;
+  box-shadow: inset 0 0 0 2px #3a4a8a;
+}
+.cw-genius legend {
+  padding: 1px 8px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #3b2416;
+  background: #f5d66b;
+  border: 2px solid #151c3d;
+}
+.cw-genius-lead {
+  margin: 4px 0 8px;
+  color: #ffd79a;
+}
+.cw-genius-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cw-genius-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 8px;
+  padding: 5px 8px;
+  border: 2px solid #3a4a8a;
+  cursor: pointer;
+}
+.cw-genius-item small {
+  align-self: center;
+  color: #9fb4e8;
+}
+.cw-genius-item span {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: #d6cbb8;
+}
+.cw-genius-item.is-selected {
+  border-color: #f5d66b;
+  background: #2e3d78;
+}
+.cw-genius-item:has(input:focus-visible) {
+  outline: 3px solid #4fd0c4;
+  outline-offset: 2px;
+}
+
+/* ───────────── 启航前的汇总 ───────────── */
+.cw-summary {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 2px solid #b8955f;
+  background: #f3e3c3;
+}
+.cw-summary-row {
+  display: grid;
+  grid-template-columns: 5.2em minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px;
+}
+.cw-summary-row + .cw-summary-row {
+  border-top: 2px dotted #b8955f;
+}
+.cw-summary dt {
+  font-weight: 700;
+  color: #8a5a32;
+  letter-spacing: 0.1em;
+}
+.cw-summary dd {
+  margin: 0;
+  color: #2b1b17;
+  line-height: 1.5;
+}
+.cw-edit {
+  font: inherit;
+  font-size: 12px;
+  color: #239a9a;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+.cw-edit:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 2px;
+}
+
+/* ───────────── 底栏：上一步 / 下一步（最后一步是种子与开始新游戏） ───────────── */
+.cw-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.ts-btn-next {
+  min-width: 6.5em;
+  color: #3b2416;
+  background: #e2c796;
+  box-shadow:
+    inset 2px 2px 0 #fffaf0,
+    inset -2px -2px 0 #b8955f,
+    0 3px 0 #2b1b17;
+  text-shadow: none;
+}
+.ts-btn-next:hover:not(:disabled) {
+  background: #f3e3c3;
+}
+
+/* ───────────── 较窄：船长卡放到上面，横排（头像在左） ───────────── */
+@media (max-width: 1000px) {
+  .cw-card {
+    position: static;
+  }
+}
+@media (max-width: 640px) {
+  .cw-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* 船长卡横排：头像在左，名牌、生辰与星座在右；属性条占满整行 */
+  .cw-card {
+    order: -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 10px;
+    align-items: start;
+  }
+  .cw-card-portrait {
+    grid-row: 1 / span 3;
+  }
+  .cw-card-portrait img,
+  .cw-card-portrait canvas {
+    width: 96px !important;
+    height: 96px !important;
+  }
+  .cw-card-name.ts-nameplate {
+    white-space: normal;
+  }
+  .cw-card-bg {
+    display: none;
+  }
+  .cw-card-attrs,
+  .cw-card-methods {
+    grid-column: 1 / -1;
+  }
+  /* 步骤条只写编号，当前步另写步骤名 */
+  .cw-stepper-label {
+    display: none;
+  }
+  .cw-stepper li.is-current {
+    flex: 3 1 auto;
+  }
+  .cw-stepper li.is-current .cw-stepper-label {
+    display: inline;
+  }
+  .cw-summary-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .cw-summary dt {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ───────────── 游戏里：顶栏头像的船长卡（悬停或点头像） ───────────── */
+.hud-captain {
+  position: relative;
+}
+.hud-portrait-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.hud-portrait-btn:focus-visible {
+  outline: 3px solid #4fd0c4;
+  outline-offset: 2px;
+}
+.hud-card-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 40;
+  width: 220px;
+  color: #2b1b17;
+}
+.hud-card-pop .cw-card {
+  position: static;
+  box-shadow:
+    inset 0 0 0 2px #fffaf0,
+    0 4px 0 #2b1b17,
+    0 8px 18px #0b0f2466;
+}
+.hud-card-pop .cw-card-none {
+  margin: 0;
+  color: #5c3a21;
+}
+.hud-card-retro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+/* ───────────── 补建身世（旧存档）：沿用标题画面的窗口 ───────────── */
+.cw-retro-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #0b0f24b3;
+}
+.cw-retro.ts-window {
+  width: min(760px, 100%);
+  margin: 0;
+  max-height: calc(100vh - 32px);
+  min-height: 0;
+}
+.cw-retro .ts-launch {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* ───────────── 第九批（UI-CONTRACT I2）：属性分组的世界 ───────────── */
+/* 开局向导：每组一段，标题可以折叠（组名、规则、本组剩余点数）；手机上组多时一组一页 */
+.cw-attrs-grouped .cw-group {
+  margin-top: 8px;
+}
+.cw-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 2px 10px;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 5px 8px;
+  text-align: left;
+  font: inherit;
+  color: #2b1b17;
+  background: #e2c796;
+  border: 2px solid #7d5f36;
+  box-shadow: inset 0 0 0 1px #fffaf0;
+  /* 浅底深字（可点开的组标题是按钮）：不要外壳按钮的深色字影（docs/UI-REDESIGN.md 1.2 第 1 条） */
+  text-shadow: none;
+}
+.cw-group-toggle {
+  cursor: pointer;
+}
+.cw-group-toggle:hover {
+  background: #ead3a6;
+}
+.cw-group-toggle:focus-visible {
+  outline: 3px solid #4fd0c4;
+  outline-offset: 1px;
+}
+.cw-group.is-folded .cw-group-head {
+  margin-bottom: 0;
+}
+.cw-group-caret {
+  flex: none;
+  width: 1em;
+  color: #7d5f36;
+}
+.cw-group-name {
+  flex: none;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+.cw-group-rule {
+  min-width: 0;
+  font-size: 11.5px;
+  color: #6b4a2a;
+}
+.cw-group-left {
+  margin-left: auto;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff3b0;
+  background: #8c1f28;
+  border: 2px solid #4a1018;
+  white-space: nowrap;
+}
+.cw-group-left.is-done {
+  color: #3b2416;
+  background: #dca434;
+  border-color: #a86b1c;
+}
+.cw-group-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 2px 0 4px;
+}
+.cw-group-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 2px 10px;
+  font: inherit;
+  font-weight: 700;
+  color: #5c3a21;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+  cursor: pointer;
+}
+.cw-group-tab.is-on {
+  color: #fff3b0;
+  background: #23305e;
+  border-color: #151c3d;
+}
+.cw-group-badge {
+  min-width: 1.4em;
+  padding: 0 4px;
+  font-size: 11px;
+  text-align: center;
+  color: #fff3b0;
+  background: #8c1f28;
+  border: 1px solid #4a1018;
+}
+.cw-attr.is-fixed {
+  background: #efe2c6;
+}
+/* 取值范围宽的组（如 0–100 的品行）：横条代替格子 */
+.cw-attr-meter {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 60px;
+  max-width: 220px;
+  height: 12px;
+  background: #fffaf0;
+  border: 1px solid #7d5f36;
+}
+.cw-attr-meter i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: #5c3a21;
+}
+.cw-summary-groups .cw-summary-group {
+  display: block;
+}
+
+/* 船长卡：按组的雷达图（组多时一排组名切换）、不足三项的横条、评价读数 */
+.cw-card-groups {
+  padding-top: 6px;
+  border-top: 2px dotted #b8955f;
+}
+.cw-card-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+.cw-card-tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1px 4px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #5c3a21;
+  background: #efe2c6;
+  border: 1px solid #b8955f;
+  cursor: pointer;
+}
+.cw-card-tab.is-on {
+  color: #fff3b0;
+  background: #23305e;
+  border-color: #151c3d;
+}
+.cw-radar {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 220px;
+  margin: 0 auto;
+  overflow: visible;
+}
+.cw-radar-ring {
+  fill: none;
+  stroke: #d6bb87;
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.cw-radar-rim {
+  fill: #fffaf0;
+  stroke: #b8955f;
+  stroke-width: 1.5;
+}
+.cw-radar-axis {
+  stroke: #d6bb87;
+  stroke-width: 1;
+}
+.cw-radar-base {
+  fill: #5c3a2155;
+  stroke: #5c3a21;
+  stroke-width: 1;
+}
+.cw-radar-value {
+  fill: #dca43480;
+  stroke: #a86b1c;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.cw-radar-dot {
+  fill: #a86b1c;
+  stroke: #2b1b17;
+  stroke-width: 0.5;
+}
+.cw-radar-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  fill: #5c3a21;
+}
+.cw-radar-num {
+  fill: #2b1b17;
+  font-variant-numeric: tabular-nums;
+}
+.cw-card-bars {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cw-card-bars li {
+  display: grid;
+  grid-template-columns: 3.2em minmax(0, 1fr) 2em;
+  align-items: center;
+  gap: 6px;
+}
+.cw-card-bar {
+  position: relative;
+  height: 10px;
+  background: #fffaf0;
+  border: 1px solid #7d5f36;
+}
+.cw-card-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: #5c3a21;
+}
+.cw-card-ratings {
+  margin: 0;
+  padding: 6px 0 0;
+  list-style: none;
+  border-top: 2px dotted #b8955f;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cw-card-ratings li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 1px 6px;
+  background: #fff3b0;
+  border: 1px solid #a86b1c;
+}
+.cw-rating-name {
+  color: #5c3a21;
+  font-weight: 700;
+}
+.cw-rating-value {
+  font-weight: 700;
+  color: #2b1b17;
+}
+@media (max-width: 640px) {
+  .cw-card-groups,
+  .cw-card-ratings {
+    grid-column: 1 / -1;
+  }
+  .cw-group-left {
+    margin-left: 0;
+  }
+}
+
+/* 航海士：世界定义的岗位的徽记；世界追加的能力名放不下时省略（悬停提示有全名） */
+.pn .pn-role-assigned {
+  background: #d9c6ea;
+}
+.pn .pn-ability.is-extra .pn-ability-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

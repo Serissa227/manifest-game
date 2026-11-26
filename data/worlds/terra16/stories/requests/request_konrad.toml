@@ -1,0 +1,154 @@
+# 请托：金子一块没到（request_konrad）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：康拉德（konrad，1533-07-10 生，男），韦尔泽商行的旧代理人，1562 年夏起在塞图巴尔替盐田记账（cast 日程，塞图巴尔为场外地点）；势力 holy_roman_empire，身份档 2。cast：cast/story_europe.toml。
+# 类型：说服（persuade）。任务单写三章（offer、persuade、result）；文件里是四章：多出 result_partial。
+#   原因：说服成功的三条路设旗标 c13_request_konrad_deal，结算章的“烧”要读它；requires 不能卡在同一轨道另一条路径设的旗标（bot 会报“准备后条件仍不满足”）。
+#   所以说服失败的分支（检定失败）改走 result_partial：那里没有“烧”，只有“留着”与“这趟不收”两条。
+# 报价：L（来信），auto=true，报价港 seville。任务单写的是 T（当面，报价港 seville，“在港里找到他”）。改成来信的理由：cast 日程把康拉德定在 setubal，而 setubal 在 offstage.toml 里，玩家去不了，当面的请托永远启动不了。
+#   于是 offer 章由一箱欠条与一封信送到塞维利亚的码头出面，speaker 省略，康拉德只在信里说话。persuade 章里他已从塞图巴尔坐船赶来（叙事上的一次出行，不改 cast 日程）。
+#   family=c13_offer_seville，冷却 20 天；窗口 1563-01-01..1590-06-30；名声门槛 24（V/L 公式：窗口起年 1563 减 1557，乘 4，取 24）。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：persuade 章 deadline_days=60（同一海区的时限）。超时走 failed，康拉德来信一封，好感 -3，旗标 _late；超时不写见闻。
+# 依据·史实：韦尔泽家（奥格斯堡）1528 年起承租委内瑞拉，1556 年租约被收回，留下烂账与“黄金国”的传说；前几任总督深入内陆找金子，没有找到，欠条却留了下来。
+# 依据·原创：康拉德与他的旧账、那箱欠条、债主（一个在塞维利亚放贷的热那亚人，不具名）、河边的那一幕。
+# 读的旗标：无 c7_ 旗标（罗塞拉不出现）。设的旗标：c13_request_konrad_accepted（offer 两种接法）、_declined（offer 回绝）、_deal（说服成功，三条接法）、_late（说服超时）；终局旗标 _done（result 烧）、_partial（result 留着，或 result_partial 两条）。每条路径只设一面终局旗标。
+# 读的技能与属性：negotiation（skills.toml）；属性 commerce、eloquence（captain.toml）。
+# 报酬：现金最多 1600（烧，done），折中 1000（留着，partial；result_partial 的“留着”同此数）；“这趟不收”不给现金；好感最多 +15；名声 +3（烧）/ +2（留着）；回忆 mem-request_konrad-result。无物品奖励。
+# 依赖：无改名依赖；无主线门禁（不读 c13_main_*）。
+# 回忆插画清单：
+#   mem-request_konrad-result「河边烧掉的那张欠条」：河边的石阶上，纸在火里卷起来，康拉德站在岸上，袖口的墨迹被火光照得发红。
+
+[[tracks]]
+key = "request_konrad"
+name = "金子一块没到"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["konrad"]
+
+# 一、一箱欠条：塞维利亚的码头，一箱从塞图巴尔来的欠条，附一封信。
+[[tracks.chapters]]
+key = "offer"
+title = "一箱欠条"
+text = "塞维利亚的码头上，一条从塞图巴尔来的小船卸下一只木箱。箱盖钉得很紧，箱角压着一封信，字写得比账本还整齐。信是韦尔泽商行的旧代理人康拉德写的：“箱里是韦尔泽在委内瑞拉那些年的账。金子一块没到，欠条倒有一箱。清账的人要我回塞维利亚，因为好几张欠条上签的是我的名字。”信的后半截才说正事：“最大的那位债主还在等黄金国的消息。我不想再拿传闻去换下一笔钱。我要把实话说完。可我一个人去，他会以为我是来求情的。”"
+at = "seville"
+mood = "tense"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 24 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_seville"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "回信：陪他去见那位债主。"
+next = "persuade"
+reply = "下一班船回塞图巴尔，我托船带去了一封回信。他的回信只有一行：“船到了就见。”信纸底下压着一张欠条，是这一箱里数字最大的一张。"
+effects = [{ kind = "affinity", person = "konrad", value = 2 }, { kind = "flag", flag = "c13_request_konrad_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_truth"
+text = "回信问他：那句“实话”是什么？"
+next = "persuade"
+reply = "回信来得很快：“没有黄金国。有的是一片很大的林子，很多人死在里面。”末了又添一句：“这句话我练了一年。”"
+effects = [{ kind = "affinity", person = "konrad", value = 2 }, { kind = "flag", flag = "c13_request_konrad_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回信：别人的债，我不掺和。"
+next = "failed"
+reply = "没有再来信。第二天一早，那条小船把木箱原样运走了，箱盖还是钉得很紧。"
+effects = [{ kind = "flag", flag = "c13_request_konrad_declined" }]
+
+# 二、我的钱呢：塞维利亚的放贷行后堂，康拉德把实话说完，债主只问钱的事。
+[[tracks.chapters]]
+key = "persuade"
+title = "我的钱呢"
+text = "塞维利亚，热那亚人的放贷行后堂。康拉德从塞图巴尔坐船赶来，呢子外套的扣子扣到了最上头。他一见你就说：“今天金价又跌了。您是来兑钱，还是来卖地图的？黄金国的那种，我不收。”然后他把最大的那张欠条摊在桌上，开始说实话。债主坐在一张大桌后头，听完没有发火，拨了一下算盘，只问：“那么，我的钱呢。”债主说，黄金国有没有他不在乎，他在乎的是这箱欠条能换回几成。"
+news = "塞维利亚一个热那亚放贷人家里，韦尔泽商行的旧代理人讲了一下午委内瑞拉的林子。"
+speaker = "captain"
+mood = "tense"
+at = "seville"
+objectives = [{ kind = "at", at = "seville", text = "去塞维利亚，见那位债主" }]
+when = [{ kind = "alive", person = "konrad", value = true }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "konrad", text = "我一个人去了。实话说完了，他说我是来求情的。" }, { kind = "affinity", person = "konrad", value = -3 }, { kind = "flag", flag = "c13_request_konrad_late" }]
+
+[[tracks.chapters.choices]]
+key = "schedule"
+text = "提一个法子：分十年还，用韦尔泽货栈的租金抵。"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "result"
+reply = "债主拨了半天算盘，把十年拆成一笔一笔的租金，划进货栈的租契里。说实话比传闻便宜，他认了。"
+effects = [{ kind = "affinity", person = "konrad", value = 3 }, { kind = "flag", flag = "c13_request_konrad_deal" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "konrad", value = -2 }], news = "塞维利亚的放贷行里，债主只肯把还款拖到五年，利钱一分没让，热那亚人的算盘打了一下午。" }
+
+[[tracks.chapters.choices]]
+key = "negotiate"
+text = "跟他谈：欠条上的利钱，有一半是按黄金国算的，那一半该免。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "利钱是怎么按出来的，你还说不清楚。"
+next = "result"
+reply = "债主盯着你看了很久，笑了，说这话没人敢跟他说过。他免了三成的利钱。"
+effects = [{ kind = "affinity", person = "konrad", value = 5 }, { kind = "flag", flag = "c13_request_konrad_deal" }]
+
+[[tracks.chapters.choices]]
+key = "plead"
+text = "让他自己把那句练了一年的话说完，你在旁边帮腔。"
+check = { attr = "eloquence", base = 5, per = 8 }
+next = "result"
+reply = "康拉德说完那句话，屋里静了很久。债主说，他这辈子听过很多人讲黄金国，头一回听人讲那片林子。"
+effects = [{ kind = "affinity", person = "konrad", value = 3 }, { kind = "flag", flag = "c13_request_konrad_deal" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "konrad", value = -2 }], news = "塞维利亚的热那亚人家里，债主听完实话，钱一分不让。韦尔泽的旧代理人站在街上，很久没有说话。" }
+
+# 三、最重的那一张：说服成功，债主改了签，他想烧掉旧的那张。
+[[tracks.chapters]]
+key = "result"
+title = "最重的那一张"
+text = "从债主家出来，康拉德在街上站了很久，两手插在外套口袋里，一句话也不说。走到河边，他才开口：“箱子里最重的那一张，签的是我的名字。债主刚刚已经给我改签了新的。这张旧的，我想烧掉。”他问你：“陪我去河边，行吗？”"
+news = "塞维利亚的河边，有人烧了一张韦尔泽商行的旧欠条，说新的已经签好了。"
+speaker = "captain"
+mood = "tender"
+at = "seville"
+when = [{ kind = "alive", person = "konrad", value = true }]
+
+[[tracks.chapters.choices]]
+key = "burn"
+text = "陪他到河边，看他烧。"
+next = "done"
+reply = "纸烧得很快。他说箱子里还有很多张，可这一张最重。他把酬金交给你，说他要回塞图巴尔了，那边有一本账等着他记。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "konrad", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_konrad_done" }, { kind = "memory", memory = "mem-request_konrad-result", title = "河边烧掉的那张欠条" }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "劝他留着，烧了就没凭据了。"
+next = "done"
+reply = "他想了想，把欠条折好放回箱子，说你说得对，账是要留着的。他付了钱，可那一天没再说话。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "konrad", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_konrad_partial" }]
+news = "塞维利亚的客店里，韦尔泽商行的旧代理人把一箱欠条重新捆好，没有烧。"
+
+# 三′、没烧成的那一张：说服没谈下来（检定失败），债主只肯拖开还款，那张欠条烧不成。
+[[tracks.chapters]]
+key = "result_partial"
+title = "没烧成的那一张"
+text = "从债主家出来，债主没让，只肯把还款拖开，利钱一分没少。康拉德在街上站了很久，帽檐压得很低。他说：“箱子里最重的那一张，债主刚刚改签了。新的期限已经签下，烧不烧都一样了。”他没说烧，也没说不烧，手一直按在箱盖上。"
+news = "塞维利亚的河边，韦尔泽商行的旧代理人站了很久，没烧那张最重的欠条。"
+speaker = "captain"
+mood = "tender"
+at = "seville"
+when = [{ kind = "alive", person = "konrad", value = true }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "劝他留着，账还在，烧了也没用。"
+next = "done"
+reply = "他把欠条折好放回箱子，说这回连烧的理由都没有了。钱他照付，一张一张点给你，点完才说了一句：“辛苦。”"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "konrad", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_konrad_partial" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_pay"
+text = "这趟的钱我不收，你留着还账。"
+next = "done"
+reply = "他没争，只说这笔账他记在另一本上，不记在箱子里。钱他没再推，只把它压进箱底，压在最重的那一张下面。"
+effects = [{ kind = "affinity", person = "konrad", value = 6 }, { kind = "flag", flag = "c13_request_konrad_partial" }]

@@ -1,0 +1,163 @@
+# 请托：安土城的地球仪（request_oda_nobunaga）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude 执笔。仅中文。
+# 人物：织田信长 oda_nobunaga（1534-06-23 生，男），1577—82 年是安土城的主人。cast：cast/historical_07_japan.toml。
+#       本人始终不出场：他的话只经堺的代官转述（offer 那一句原话），或写在安土送来的纸上（use 的问题与两种回话）。
+#       堺的代官、屏风后面的两个书记、脚夫与快马都是叙事人物，不起名、不建 cast。代官史实上是松井友闲（1575 年起任堺代官），正文只称“堺的代官”。
+# 类型：找东西（find）。报价：来信／代理人（L），auto=true，报价港堺（sakai），family=c13_offer_sakai，冷却 20 天。
+# 窗口：offer 1577-03-01 起（名声 25），deadline 1582-01-31，timeout 直接 failed、不写见闻。
+#       handin（交球）与 use（答话）都在堺，deadline 都卡在 1582-05-31（本能寺之前）；两章 when 写 alive oda_nobunaga。
+# 章节：offer 代官的传话（堺）→ handin 球上的日本（堺，带着 behaim_globe）→ use 往西要走几个月（堺，交球后等 40 天）→ done / failed。
+# 结构：
+#   - brief 三章照写，没有拆章。handin 的 redraw 用技能门槛（cartography ≥ 60），use 的 route 用技能门槛（astral_navigation ≥ 60），
+#     两章各留一个无门槛的选项（give / unknown），不会堵住堺的请托队列。
+#   - 检定失败不显示选项的回复（引擎在失败时改显示分支的见闻），所以 numbers 的失败经过（“说得太长，代官删了一半”）写在 fail 的见闻里。
+#   - use 有一个变体 v1_redrawn，读本轨道 handin 设的 _redrawn 旗标，只改正文（代官说上头问过补画的人是谁）；选项不按旗标拆。
+#   - item 目标只查持有、不扣：give 与 redraw 自己写 item behaim_globe −1；keep 不扣。
+#   - 来信：handin 与 use 的 timeout 各写一封宗易（千利休，sen_rikyu，1577—82 在堺）的短信，两章互斥，任何一条路至多收到一封。
+#     来信不用信长署名（超时时他可能已不在世），也不写原因、不写“本能寺”。
+#     两个 timeout 各写自己的见闻：分支没写见闻时引擎会退用章节的见闻，那会把“球交上去了”“问过了”记成发生过。
+# 好感：接下 +2；交球 +3（照原样）或 +5（补画）；最好结局 +8；折中 +4（照实说不知道）或 +2（检定失败）；扣下不交 −2。
+#       brief 的 rewards 行写“好感至多 +13”，按选项逐条照写时补画那一路合计 +15（仍在 +25 的上限内），以选项为准。
+# 依据（史实）：耶稣会士曾把地球仪带到信长面前，信长看懂了大地是圆的，并问过从日本往西航行要走多久（弗洛伊斯等人的书简与《日本史》）；
+#       1492 年纽伦堡的贝海姆地球仪上还没有美洲，“齐潘古”（马可·波罗书里的日本）画成大洋当中离大陆很远的一个大岛，往东隔一片海就是欧洲；
+#       葡萄牙船从日本回里斯本经澳门、马六甲、果阿、好望角，要等几回季风，顺利也要一年半以上。安土城 1576 年起筑。
+# 依据（原创）：会所里间与屏风后的两个书记（记下名字、划掉名字）、代官那把合着的扇子、去年拿染石充琥珀被烧了船的唐人、
+#       油布与杉木箱、补画海岸用的掺胶墨、安土送来的厚纸与浓墨、球上往东近而船往西走的那一问、回话里的“好”字。
+# 不写：名物狩、矢钱、伊贺（C7 tie_naya_kaede 已写）；本能寺与信长的死；不设召见的旗标、不开新轨道（route 的回话只是一句话）。
+#       cast 无 secret；有 fate（honnoji），只用 alive 条件与 deadline 避开，正文一字不提。不写恋爱；不用 relation / tie / bond / heart。
+# 读写的旗标：读 c13_request_oda_nobunaga_redrawn（use 的变体，本轨道设）。不读、不设任何 c7_ 旗标；无主线门禁。
+#       设 c13_request_oda_nobunaga_accepted / declined（offer）；分支 _gave（give、redraw）、_redrawn（redraw）；
+#       终局 _done（numbers 成功、route）、_partial（numbers 失败、unknown）、_failed（keep）、_late（handin、use 的 timeout）、_declined（offer）。
+# 报酬：现金最好 2600、折中 1300（只在 use 付一次）；声望 oda +3、名声 +5、回忆一张，只在最好结局。无唯一奖励物品、无技能奖励。
+# 依赖：港口 sakai（ports_east_asia.toml）；物品 behaim_globe（items/items_instrument_01.toml）；势力 oda（factions/10_japan.toml）；
+#       技能 cartography、astral_navigation（skills.toml）；人物 sen_rikyu（来信）。属性 eloquence。
+#       整合问题：behaim_globe 的 shop.cultures 是 ["northern"]，寰宇没有 northern 文化的港口，商店里买不到；
+#       眼下只有安特卫普星期五市场的拍卖（auctions.toml antwerp_vrijdagmarkt，七月）会出这一件。需要整合方给它配上 lowland / nordic 的商店，或另定来源。
+# 回忆插画清单：
+#   mem-request_oda_nobunaga-use「安土城里转动的球」：安土城的灯下，木架上的地球仪慢慢转着，一只手按在大洋当中那个叫齐潘古的岛上，看不见手的主人。
+
+[[tracks]]
+key = "request_oda_nobunaga"
+name = "安土城的地球仪"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["oda_nobunaga"]
+
+# offer · 1577 起 · 堺的会所：代官转述安土的一句话
+[[tracks.chapters]]
+key = "offer"
+title = "代官的传话"
+text = "堺的代官派人到码头来请你，说会所里有话。里间点着两盏灯，一扇屏风后面坐着两个书记，你一进门就听见那边研墨。代官手里攥一把合着的扇子，先问你的名字和船名，屏风后面的笔跟着动了。然后才说正事：安土的上头前些日子看过伴天连带来的一只地球仪，海和地都画在一个球上，看了一下午，问了许多话。“南蛮人那只，他们拿回去了。我要一只不用还的。”代官说这是上头的原话。伴天连讲过，那只球是照北方一座城里的老样子做的，上头要的就是那种。代官把扇子在膝上点了点：“上头最恨拿假东西糊弄他的人。去年有个唐人拿染过的石头充琥珀，上头叫人把他的船烧了。人倒是放了。”他看着你，等你开口。"
+mood = "tense"
+at = "sakai"
+when = [{ kind = "date", from = [1577, 3, 1], to = [1582, 1, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 25 }]
+deadline = [1582, 1, 31]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应下来：去北边的港口找一只那样的球"
+next = "handin"
+effects = [{ kind = "flag", flag = "c13_request_oda_nobunaga_accepted" }, { kind = "affinity", person = "oda_nobunaga", value = 2 }]
+reply = "代官点了一下头，屏风后面又写了一行。他起身送你到里间门口，扇子挡住半边嘴，声音压得很低：“东西到了，先给我看。我看不出真假——但上头看得出。”说完他退回灯下，你出门时，那边研墨的声音还没停。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这种东西，你弄不来"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_oda_nobunaga_declined" }]
+reply = "代官没说话，扇子在膝上停住了。屏风后面轻轻一响，是笔在纸上拉过去的声音，书记把你的名字划掉了。代官朝门口抬了抬下巴，叫下一位进来。"
+
+# handin · 堺的会所：地球仪摆上桌，球上找不到日本
+[[tracks.chapters]]
+key = "handin"
+title = "球上的日本"
+text = "我叫人把地球仪从船上抬进会所，木架子上蒙着油布，一掀开，代官先退了半步。他没叫书记过来，自己伸手一拨，球慢慢转起来：海是青的，地是褐的，满球弯弯曲曲的南蛮字。转了一圈，他按住球问我：“日本在哪里？”我找了一会儿才指给他：大洋当中孤零零一个大岛，旁边写着“齐潘古”，离唐土远得很，形状像一只竖着放的靴底。代官凑过去，手指在那个岛上来回摸。“九州呢？奥州呢？”他抬起头，“这是谁的日本？”"
+speaker = "captain"
+mood = "tense"
+at = "sakai"
+when = [{ kind = "alive", person = "oda_nobunaga", value = true }]
+objectives = [{ kind = "item", item = "behaim_globe", qty = 1, text = "带来一只北方做的地球仪" }, { kind = "at", at = "sakai", text = "把球抬进堺的会所" }]
+deadline = [1582, 5, 31]
+news = "堺的会所里，代官把一只外国来的地球仪转了一圈也找不到日本，还是船主指给他：大洋当中一个写着“齐潘古”的岛。"
+
+[tracks.chapters.timeout]
+next = "failed"
+news = "堺的人说，代官托人去找的那只外国地球仪，等到最后也没送进会所，屏风后面的书记再没记过这件事。"
+effects = [{ kind = "flag", flag = "c13_request_oda_nobunaga_late" }, { kind = "letter", person = "sen_rikyu", text = "船主足下：代官那边，已不再问起地球仪的事了。是另托了人，还是上头不要了，我没有问。您若真找着那样一只球，来堺时抬到茶室，让我也看一眼。——宗易" }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "照原样呈上，岛画成什么样就是什么样"
+next = "use"
+effects = [{ kind = "item", item = "behaim_globe", qty = -1 }, { kind = "affinity", person = "oda_nobunaga", value = 3 }, { kind = "flag", flag = "c13_request_oda_nobunaga_gave" }]
+reply = "代官没说那个岛画得对不对。他叫人用油布把球裹回去，装进一只杉木箱，箱角塞满稻草，绑在一匹快马的鞍后。马出了会所的门，他才转过身来：“上头若问起那个岛，我就说，南蛮人只见过这么一个日本。”"
+
+[[tracks.chapters.choices]]
+key = "redraw"
+text = "要一支细笔，在球上把日本的海岸补画对"
+next = "use"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你画不出从九州到奥州那一长条海岸，落笔只会多画错一个日本。"
+news = "堺的会所里，有个船主拿细笔在一只外国地球仪上补画了日本的海岸，代官盯着看了半天，说安土那边一定要问。"
+effects = [{ kind = "item", item = "behaim_globe", qty = -1 }, { kind = "affinity", person = "oda_nobunaga", value = 5 }, { kind = "flag", flag = "c13_request_oda_nobunaga_gave" }, { kind = "flag", flag = "c13_request_oda_nobunaga_redrawn" }]
+reply = "我要来最细的笔，蘸了掺胶的墨，在“齐潘古”旁边的空海里，从九州南端起笔，往东北一路画到奥州，濑户内海留了一道细缝，四国和九州隔开。代官一声不出，盯着那条新画的海岸看了很久，久到屏风后面的书记咳了一声。“上头一定会问，这是谁画的。”他把我的名字又念了一遍，念得很慢，屏风后面一笔一画地记了下来。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把油布盖回去：这只球不交了"
+next = "failed"
+news = "堺的人说，有个船主把一只外国地球仪抬进代官的会所，又原样抬回了船上，代官的脸色到天黑都没缓过来。"
+effects = [{ kind = "affinity", person = "oda_nobunaga", value = -2 }, { kind = "flag", flag = "c13_request_oda_nobunaga_failed" }]
+reply = "我把油布盖回去，叫人抬起木架。代官的脸冷了下来，扇子在膝上合得啪的一响。“你最好别在安土附近停船。”屏风后面，书记的笔停了很久，才又写起来。"
+
+# use · 交球四十天后 · 堺的会所：安土送来一行字
+[[tracks.chapters]]
+key = "use"
+title = "往西要走几个月"
+text = "四十天后，代官又派人来请。还是那间里间，还是屏风后面两个书记。代官面前摊着一张安土来的纸，纸很厚，只写了一行，墨浓得发亮：从这里一直往西，要走几个月？代官把纸转过来给你看，又转回去，用扇骨压住纸角。“上头拿着那只球转了半晚。球上往东，齐潘古隔一片海就是南蛮人的国；南蛮的船为什么偏偏往西绕？”他停了一下。“上头要的是数，不是故事。你想好了再说，后面有人记着。”"
+mood = "tense"
+at = "sakai"
+when = [{ kind = "alive", person = "oda_nobunaga", value = true }]
+objectives = [{ kind = "wait", days = 40, text = "等安土的回音" }, { kind = "at", at = "sakai", text = "回到堺" }]
+deadline = [1582, 5, 31]
+news = "堺的人说，安土那边要了一只外国来的地球仪，转了半晚，又托代官问一个船主：从这里往西，要走几个月。"
+
+[tracks.chapters.timeout]
+next = "failed"
+news = "堺的人说，安土问往西要走几个月的那张厚纸，在代官的会所里压了些日子，到底没等来回话，收进了箱子。"
+effects = [{ kind = "flag", flag = "c13_request_oda_nobunaga_late" }, { kind = "letter", person = "sen_rikyu", text = "船主足下：安土来的那张纸，代官在会所里压了些日子，前几天收起来了，说不必再答。那只球，听说还摆在城里。您下回到堺，来茶室坐坐。——宗易" }]
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "用数回答：换几回船、等几回季风、拢共几个月"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "oda_nobunaga", value = 8 }, { kind = "reputation", faction = "oda", value = 3 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_oda_nobunaga_done" }, { kind = "memory", memory = "mem-request_oda_nobunaga-use", title = "安土城里转动的球" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "oda_nobunaga", value = 2 }, { kind = "flag", flag = "c13_request_oda_nobunaga_partial" }], news = "堺的会所里，一个船主替安土答“往西要走几个月”，一开口说了半个时辰，代官叫书记删掉一半才封好送走。" }
+reply = "你不提港名，只掰着指头数：前后要坐四条船，等四回季风，中间有两处一等就是半年；顺的话一年半，不顺就两年开外。代官叫书记照你的话一字不改抄了一遍，拿过来自己从头看到尾，难得点了点头。“上头会喜欢这种回答。”他把纸折成三折，交给门外候着的人。"
+
+[[tracks.chapters.choices]]
+key = "route"
+text = "照航路一段段写：澳门、马六甲、果阿、好望角"
+next = "done"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "港名你说得出，可每一段看哪颗星、走多少天，你写不上来。"
+news = "堺的会所里，有个船主把往西的航路一段一段写给了安土，十天后安土回话，说这个人可以去见。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "oda_nobunaga", value = 8 }, { kind = "reputation", faction = "oda", value = 3 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_oda_nobunaga_done" }, { kind = "memory", memory = "mem-request_oda_nobunaga-use", title = "安土城里转动的球" }]
+reply = "你要来纸笔，一段一段写：堺到澳门，澳门到马六甲，马六甲到果阿，果阿绕过好望角。每一段写上夜里看哪颗星、走多少天、在哪里等风。代官看了半天，看不懂，照样封好。十天后安土回了话，还是那样浓的墨，只一行：“这个人可以来见我。”代官把纸给你看过，又收了回去。哪一天召见，他说他也不知道，要等上头想起来。"
+
+[[tracks.chapters.choices]]
+key = "unknown"
+text = "照实说：没有人一口气走过去，你不知道"
+next = "done"
+news = "堺的人说，安土问一个船主往西要走几个月，那船主说不知道，安土回了一个字：“好。”"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "oda_nobunaga", value = 4 }, { kind = "flag", flag = "c13_request_oda_nobunaga_partial" }]
+reply = "代官的扇子停在半空。他犹豫了一下，还是叫书记照抄，一个字也没添，抄完自己看了一遍，封好。半个月后安土回了话，纸还是那样厚，只有一个字：“好。”代官把那张纸翻过来看了看背面，什么也没有。这是夸还是骂，他也说不上。"
+
+[[tracks.chapters.variants]]
+key = "v1_redrawn"
+when = [{ kind = "flag", flag = "c13_request_oda_nobunaga_redrawn" }]
+text = "四十天后，代官又派人来请。还是那间里间，还是屏风后面两个书记。代官面前摊着一张安土来的纸，纸很厚，只写了一行，墨浓得发亮：从这里一直往西，要走几个月？代官用扇骨压住纸角，先说了另一件事：“你补画的那条海岸，上头看过了，问是谁的手，我报了你的名字。”然后才接着说：“上头拿着那只球转了半晚。球上往东，齐潘古隔一片海就是南蛮人的国；南蛮的船为什么偏偏往西绕？上头要的是数，不是故事。你想好了再说，后面有人记着。”"

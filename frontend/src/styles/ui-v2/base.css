@@ -1,0 +1,496 @@
+/* 新界面（试用）——基础：设计令牌与通用元素（docs/UI-REDESIGN.md 第 3、4 节）。
+ *
+ * 只在 <html data-ui="v2"> 下生效：每一条规则都以 :root[data-ui="v2"] 开头，动画名以 v2- 开头（ui-v2.test.tsx 逐条检查）。
+ * - 令牌：颜色（深色的“夜航”外壳、浅色的“纸面”内容、语义色）、字体、字号、间距、圆角、阴影、动效；
+ *   同时把 v1 的语义变量（--text、--muted、--line……）改指向新令牌，各模块的样式跟着变。
+ * - 通用元素（按钮、输入框、标签页、表格、分节标题、卡片、小标签、空状态、对话框）写在层 ui-v2-base 里：
+ *   比 v1 的 shell-theme 层优先，但仍低于不在层里的模块样式——模块自己画的东西（像素按钮、图标）照旧。
+ * - 共用的动效（v2-rise：窗口与对话框浮起；v2-sheet-up：手机上从底部升起）也在这里，各画面直接用。
+ * 各画面自己的样式写在同目录下自己的文件里（见 index.css 的说明），不要改这里的令牌来迁就某一个画面。
+ */
+
+/* ═════════════════════════ 1. 令牌 ═════════════════════════ */
+:root[data-ui="v2"] {
+  /* —— 深色：夜航（顶栏、命令栏、舞台上的浮层、提示） —— */
+  --v2-night-0: #0b1522;
+  --v2-night-1: #111f31;
+  --v2-night-2: #19293f;
+  --v2-night-3: #23385a;
+  --v2-on-night: #f2e9d8;
+  --v2-on-night-2: #c4b597;
+  --v2-on-night-3: #a3967c;
+  --v2-night-line: rgba(226, 190, 120, 0.18);
+  --v2-night-line-strong: rgba(226, 190, 120, 0.38);
+
+  /* —— 浅色：纸面（功能窗口、对话框、抽屉） —— */
+  --v2-paper-0: #f1e9d8;
+  --v2-paper-1: #f8f3e9;
+  --v2-paper-2: #fffdf8;
+  --v2-paper-sunk: #e7dcc6;
+  --v2-ink: #241c15;
+  --v2-ink-2: #594938;
+  --v2-ink-3: #6f5d48;
+  --v2-line: #d9cbb0;
+  --v2-line-strong: #b39b72;
+  /* 输入框、数量加减等控件的边：与纸面的对比不低于 3:1（WCAG 1.4.11） */
+  --v2-line-control: #8f7a56;
+
+  /* —— 强调与语义色 —— */
+  --v2-brass: #c8922e; /* 黄铜：细线、图标、深色底上的选中 */
+  --v2-brass-hi: #e3b056; /* 主按钮的底 */
+  --v2-brass-ink: #7a5210; /* 纸面上的黄铜色文字与选中下划线 */
+  --v2-seal: #a3302a; /* 印章红：危险、未读、错误 */
+  --v2-seal-hi: #c2453a;
+  --v2-sea: #1f5a8a; /* 海蓝：链接、地点、信息 */
+  --v2-up: #2b6a3b; /* 涨 / 赚 / 便宜（纸面上） */
+  --v2-down: #a3302a;
+  --v2-up-night: #86d39c;
+  --v2-down-night: #f2917f;
+  --v2-focus: #1f6fb2; /* 纸面上的焦点环 */
+  --v2-focus-night: #f0c46a;
+
+  /* —— 字体：只用系统字体，不下载网页字体 —— */
+  --v2-font-ui: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --v2-font-display: "Songti SC", "STSong", "Source Han Serif SC", "Noto Serif CJK SC", "Noto Serif SC", "SimSun", serif;
+
+  /* —— 字号阶梯与行高 —— */
+  --v2-fs-xs: 12px;
+  --v2-fs-sm: 13px;
+  --v2-fs-md: 14px;
+  --v2-fs-lg: 16px;
+  --v2-fs-xl: 18px;
+  --v2-fs-2xl: 22px;
+  --v2-fs-3xl: 28px;
+  --v2-lh-tight: 1.25;
+  --v2-lh: 1.5;
+  --v2-lh-read: 1.85;
+
+  /* —— 间距（4 的倍数）、圆角、控件高度 —— */
+  --v2-s1: 4px;
+  --v2-s2: 8px;
+  --v2-s3: 12px;
+  --v2-s4: 16px;
+  --v2-s5: 20px;
+  --v2-s6: 24px;
+  --v2-s8: 32px;
+  /* 圆角收小：方角为主、只留 2–6 像素的倒角，胶囊形改成小圆角的方块 */
+  --v2-r-xs: 2px;
+  --v2-r-sm: 3px;
+  --v2-r-md: 4px;
+  --v2-r-lg: 6px;
+  --v2-r-pill: 4px;
+  --v2-h-sm: 28px;
+  --v2-h-md: 34px;
+  --v2-h-lg: 42px;
+  --v2-h-touch: 44px;
+
+  /* —— 阴影与描边 —— */
+  /* 阴影改成不虚化的硬投影（像素画的落影），浮得越高、错开越远；不加颗粒、不改配色 */
+  --v2-shadow-1: 0 2px 0 rgba(36, 28, 21, 0.16);
+  --v2-shadow-2: 4px 4px 0 rgba(5, 11, 20, 0.34);
+  --v2-shadow-3: 6px 6px 0 rgba(5, 11, 20, 0.42), 0 0 0 1px rgba(5, 11, 20, 0.25);
+  --v2-hairline: 1px solid var(--v2-line);
+
+  /* —— 动效 —— */
+  --v2-dur-1: 120ms;
+  --v2-dur-2: 180ms;
+  --v2-dur-3: 260ms;
+  --v2-ease: cubic-bezier(0.2, 0, 0, 1);
+  --v2-ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  /* —— v1 的语义变量改指向新令牌（深色底上） —— */
+  --bg: var(--v2-night-0);
+  --panel: rgba(17, 31, 49, 0.9);
+  --line: var(--v2-night-line);
+  --line-strong: var(--v2-night-line-strong);
+  --text: var(--v2-on-night);
+  --muted: var(--v2-on-night-2);
+  --accent: var(--v2-brass-hi);
+  --heading: var(--v2-on-night);
+  --up: var(--v2-up-night);
+  --down: var(--v2-down-night);
+  --accent-bg: var(--v2-brass-hi);
+  --accent-fg: var(--v2-ink);
+  --font-ui: var(--v2-font-ui);
+  --font-title: var(--v2-font-display);
+  /* 纸色的基础色调：去掉一点黄，更像本子的纸 */
+  --paper: var(--v2-paper-1);
+  --paper-mid: var(--v2-paper-0);
+  --parchment: var(--v2-paper-sunk);
+  --parchment-dark: #c6b08a;
+  --white: var(--v2-paper-2);
+
+  font-family: var(--v2-font-ui);
+  background: var(--v2-night-0);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 纸面上的语义变量：窗口内容区、对话框、抽屉、提示里 */
+:root[data-ui="v2"] .parchment,
+:root[data-ui="v2"] .modal-body,
+:root[data-ui="v2"] .outcome-card,
+:root[data-ui="v2"] .sheet,
+:root[data-ui="v2"] .sd-modal {
+  --text: var(--v2-ink);
+  --muted: var(--v2-ink-2);
+  --accent: var(--v2-seal);
+  --heading: var(--v2-ink);
+  --line: var(--v2-line);
+  --line-strong: var(--v2-line-strong);
+  --panel: var(--v2-paper-1);
+  --up: var(--v2-up);
+  --down: var(--v2-down);
+  --accent-bg: var(--v2-brass-hi);
+  --accent-fg: var(--v2-ink);
+}
+
+/* ═════════════════════════ 2. 通用元素（层 ui-v2-base） ═════════════════════════ */
+@layer ui-v2-base {
+  :root[data-ui="v2"] body {
+    background: var(--v2-night-0);
+  }
+  :root[data-ui="v2"] ::selection {
+    background: var(--v2-brass-hi);
+    color: var(--v2-ink);
+  }
+  :root[data-ui="v2"] h1,
+  :root[data-ui="v2"] h2,
+  :root[data-ui="v2"] h3 {
+    color: var(--heading);
+    letter-spacing: 0.02em;
+  }
+  :root[data-ui="v2"] h2 {
+    font-size: var(--v2-fs-2xl);
+    line-height: var(--v2-lh-tight);
+  }
+  :root[data-ui="v2"] h3 {
+    font-family: var(--v2-font-ui);
+    font-size: var(--v2-fs-lg);
+    font-weight: 600;
+  }
+  :root[data-ui="v2"] .parchment h2 {
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--v2-line);
+  }
+
+  /* 分节标题：黄铜小菱形 + 文字 + 一条细线（替代罗盘星与麻绳） */
+  :root[data-ui="v2"] .section {
+    margin: 4px 0 18px;
+  }
+  :root[data-ui="v2"] .section > h3 {
+    gap: 8px;
+    margin: 14px 0 8px;
+  }
+  :root[data-ui="v2"] .section > h3:not(:has(canvas))::before {
+    width: 7px;
+    height: 7px;
+    background: var(--v2-brass);
+    background-image: none;
+    transform: rotate(45deg);
+  }
+  :root[data-ui="v2"] .section > h3::after {
+    height: 1px;
+    background: var(--v2-line);
+    background-image: none;
+    opacity: 1;
+  }
+
+  /* 按钮：缺省是次要按钮（纸底描边）；主按钮黄铜底、危险印章红 */
+  :root[data-ui="v2"] button,
+  :root[data-ui="v2"] .btn {
+    min-height: var(--v2-h-md);
+    padding: 0 14px;
+    font-family: var(--v2-font-ui);
+    font-size: var(--v2-fs-md);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--v2-ink);
+    background: var(--v2-paper-2);
+    border: 1px solid var(--v2-line-strong);
+    border-radius: var(--v2-r-sm);
+    box-shadow: var(--v2-shadow-1);
+    text-shadow: none;
+    transition:
+      background-color var(--v2-dur-1) var(--v2-ease),
+      border-color var(--v2-dur-1) var(--v2-ease),
+      box-shadow var(--v2-dur-1) var(--v2-ease);
+  }
+  :root[data-ui="v2"] button:hover:not(:disabled),
+  :root[data-ui="v2"] .btn:hover:not(:disabled) {
+    background: #fff;
+    border-color: var(--v2-ink-3);
+    box-shadow: var(--v2-shadow-1);
+  }
+  :root[data-ui="v2"] button:active:not(:disabled),
+  :root[data-ui="v2"] .btn:active:not(:disabled) {
+    transform: none;
+    background: var(--v2-paper-sunk);
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] button:disabled,
+  :root[data-ui="v2"] .btn:disabled {
+    color: #8e8170;
+    background: var(--v2-paper-0);
+    border-color: var(--v2-line);
+    box-shadow: none;
+    text-shadow: none;
+  }
+  :root[data-ui="v2"] button:focus-visible,
+  :root[data-ui="v2"] .btn:focus-visible,
+  :root[data-ui="v2"] input:focus-visible,
+  :root[data-ui="v2"] select:focus-visible,
+  :root[data-ui="v2"] textarea:focus-visible,
+  :root[data-ui="v2"] [tabindex]:focus-visible {
+    outline: 2px solid var(--v2-focus);
+    outline-offset: 2px;
+  }
+  :root[data-ui="v2"] .btn.primary,
+  :root[data-ui="v2"] button.primary {
+    color: var(--v2-ink);
+    font-weight: 600;
+    background: var(--v2-brass-hi);
+    border-color: #a87a24;
+    text-shadow: none;
+    box-shadow: var(--v2-shadow-1);
+  }
+  :root[data-ui="v2"] .btn.primary:hover:not(:disabled),
+  :root[data-ui="v2"] button.primary:hover:not(:disabled) {
+    background: #eabd68;
+    border-color: #8f6418;
+    box-shadow: var(--v2-shadow-1);
+  }
+  :root[data-ui="v2"] .btn.danger,
+  :root[data-ui="v2"] button.danger {
+    color: #fff8ee;
+    background: var(--v2-seal);
+    border-color: #7e2018;
+    box-shadow: var(--v2-shadow-1);
+  }
+  :root[data-ui="v2"] .btn.danger:hover:not(:disabled),
+  :root[data-ui="v2"] button.danger:hover:not(:disabled) {
+    background: var(--v2-seal-hi);
+    box-shadow: var(--v2-shadow-1);
+  }
+  :root[data-ui="v2"] .btn.small {
+    min-height: var(--v2-h-sm);
+    padding: 0 10px;
+    font-size: var(--v2-fs-sm);
+  }
+
+  /* 输入框与下拉 */
+  :root[data-ui="v2"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  :root[data-ui="v2"] select,
+  :root[data-ui="v2"] textarea {
+    min-height: var(--v2-h-md);
+    padding: 0 10px;
+    font-family: var(--v2-font-ui);
+    font-size: var(--v2-fs-md);
+    color: var(--v2-ink);
+    background: var(--v2-paper-2);
+    border: 1px solid var(--v2-line-control);
+    border-radius: var(--v2-r-sm);
+    box-shadow: inset 0 1px 1px rgba(36, 28, 21, 0.06);
+  }
+  :root[data-ui="v2"] textarea {
+    padding: 8px 10px;
+  }
+  :root[data-ui="v2"] input:disabled,
+  :root[data-ui="v2"] select:disabled,
+  :root[data-ui="v2"] textarea:disabled {
+    color: #8e8170;
+    background: var(--v2-paper-0);
+  }
+  :root[data-ui="v2"] input::placeholder,
+  :root[data-ui="v2"] textarea::placeholder {
+    color: var(--v2-ink-3);
+  }
+  :root[data-ui="v2"] input[type="checkbox"],
+  :root[data-ui="v2"] input[type="radio"],
+  :root[data-ui="v2"] input[type="range"] {
+    accent-color: var(--v2-brass-ink);
+  }
+  :root[data-ui="v2"] .field span {
+    color: var(--muted);
+  }
+
+  /* 标签页：文字 + 下划线（选中的一页黄铜色下划线、字加粗），不再是书签形 */
+  :root[data-ui="v2"] .tabbar {
+    gap: 2px;
+    padding: 0;
+    margin: 8px 0 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  :root[data-ui="v2"] .tab {
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: var(--v2-fs-md);
+    color: var(--v2-ink-2);
+    background: transparent;
+    border: 0;
+    border-radius: var(--v2-r-sm) var(--v2-r-sm) 0 0;
+    box-shadow: none;
+    clip-path: none;
+  }
+  :root[data-ui="v2"] .tab:hover:not(:disabled) {
+    color: var(--v2-ink);
+    background: rgba(255, 253, 248, 0.7);
+    border: 0;
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] .tab:active:not(:disabled) {
+    background: var(--v2-paper-sunk);
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] .tab.active,
+  :root[data-ui="v2"] .tab.active:hover:not(:disabled) {
+    color: var(--v2-ink);
+    font-weight: 600;
+    background: transparent;
+    margin-bottom: -1px;
+    padding-bottom: 0;
+    box-shadow: inset 0 -3px 0 var(--v2-brass-ink);
+  }
+  :root[data-ui="v2"] .tab:focus-visible {
+    outline-offset: -2px;
+  }
+
+  /* 表格：账簿——表头浅灰底、细线分隔、悬停高亮 */
+  :root[data-ui="v2"] .grid {
+    font-size: var(--v2-fs-sm);
+    background: var(--v2-paper-1);
+    border: 1px solid var(--v2-line);
+    border-radius: var(--v2-r-md);
+    overflow: hidden;
+  }
+  :root[data-ui="v2"] .grid th,
+  :root[data-ui="v2"] .grid td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--v2-line);
+  }
+  :root[data-ui="v2"] .grid th {
+    font-size: var(--v2-fs-xs);
+    font-weight: 600;
+    color: var(--v2-ink-2);
+    background: var(--v2-paper-sunk);
+    text-shadow: none;
+    border-bottom: 1px solid var(--v2-line-strong);
+  }
+  :root[data-ui="v2"] .grid tbody tr:nth-child(even) > td {
+    background-color: transparent;
+  }
+  :root[data-ui="v2"] .grid tbody tr:hover > td {
+    background-color: var(--v2-paper-2);
+  }
+  :root[data-ui="v2"] .grid tr.selected > td {
+    background-color: #f6e6c2;
+  }
+  :root[data-ui="v2"] .grid tr.selected > td:first-child {
+    box-shadow: inset 3px 0 0 var(--v2-brass-ink);
+  }
+
+  /* 小标签、说明、空状态、卡片 */
+  :root[data-ui="v2"] .tag {
+    margin-left: 6px;
+    padding: 1px 6px;
+    font-size: var(--v2-fs-xs);
+    line-height: 1.4;
+    color: var(--v2-ink-2);
+    background: var(--v2-paper-sunk);
+    border: 0;
+    border-radius: var(--v2-r-xs);
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] .tag.hot {
+    color: #fff8ee;
+    background: var(--v2-seal);
+  }
+  :root[data-ui="v2"] .empty {
+    font-style: normal;
+    font-size: var(--v2-fs-md);
+    color: var(--muted);
+    padding: 20px 16px;
+    margin: 8px 0;
+    background: rgba(255, 253, 248, 0.5);
+    border: 1px dashed var(--v2-line-strong);
+    border-radius: var(--v2-r-md);
+  }
+  :root[data-ui="v2"] .card {
+    padding: 12px 14px;
+    background: var(--v2-paper-1);
+    border: 1px solid var(--v2-line);
+    border-radius: var(--v2-r-md);
+    box-shadow: var(--v2-shadow-1);
+  }
+
+  /* 滚动条：细、圆、随底色 */
+  :root[data-ui="v2"] ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  :root[data-ui="v2"] ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  :root[data-ui="v2"] ::-webkit-scrollbar-thumb {
+    background: rgba(120, 100, 70, 0.45);
+    border: 2px solid transparent;
+    border-radius: var(--v2-r-pill);
+    background-clip: padding-box;
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(120, 100, 70, 0.7);
+  }
+  :root[data-ui="v2"] ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  :root[data-ui="v2"] .parchment::-webkit-scrollbar-track,
+  :root[data-ui="v2"] .parchment ::-webkit-scrollbar-track,
+  :root[data-ui="v2"] .modal-body::-webkit-scrollbar-track {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* 模态框：纸面、圆角、深阴影，去掉黄铜像素框 */
+  :root[data-ui="v2"] .modal {
+    background: rgba(6, 11, 20, 0.6);
+  }
+  :root[data-ui="v2"] .modal-body {
+    padding: 20px 24px;
+    border: 1px solid rgba(36, 28, 21, 0.35);
+    border-image: none;
+    border-radius: var(--v2-r-lg);
+    background: var(--v2-paper-0);
+    background-image: none;
+    box-shadow: var(--v2-shadow-3);
+  }
+}
+
+/* ═════════════════════════ 共用的动效 ═════════════════════════ */
+@keyframes v2-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes v2-sheet-up {
+  from {
+    opacity: 0.4;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ═════════════════════════ 触屏 ═════════════════════════ */
+/* 触屏上标签页 44 px 高（人物页的分页 .ub-tab 见 people.css） */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .tab {
+    min-height: var(--v2-h-touch);
+  }
+}

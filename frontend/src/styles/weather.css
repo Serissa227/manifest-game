@@ -1,0 +1,51 @@
+/* 全画面天气（components/WeatherScreen.tsx）：盖在海图画布（世界图或航行视图的局部海图）之上，左侧栏、仪表、按钮与对话框之下；
+   不接收指针事件（点海面设航向、点港口照旧）。两张低分辨率画布按整像素放大，像素块分明；淡入淡出按台阶走（像素风）。 */
+.wx-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  animation: wx-screen-in 0.9s steps(6, end) both;
+}
+.wx-screen[data-state="out"] {
+  animation: wx-screen-out 0.9s steps(6, end) both;
+}
+.wx-screen-box {
+  position: absolute;
+  inset: 0;
+}
+.wx-screen-box canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  image-rendering: pixelated;
+}
+.wx-screen-flash {
+  position: absolute;
+  inset: 0;
+}
+@keyframes wx-screen-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes wx-screen-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+/* 减少动态效果：不淡入淡出（画面本身也只画一帧、不闪电） */
+@media (prefers-reduced-motion: reduce) {
+  .wx-screen,
+  .wx-screen[data-state="out"] {
+    animation: none;
+  }
+}

@@ -1,0 +1,137 @@
+# 红湾的桶板（request_martin_itsas）——请托线，类型：送货（kind=deliver）。
+# 报价模式 T 当面：auto=false，玩家在毕尔巴鄂用“问请托”（ask:request_martin_itsas）启动；马丁日程 1557—1590 年一直在 bilbao（market）。
+# 人物：马丁·伊萨斯（martin_itsas，1540-01-10 生），毕尔巴鄂制桶匠的儿子。cast 见 cast/classmates_custom_basque_whaling.toml。
+# 时间：offer 1568-01-01—1590-06-30，到期走 timeout，不写见闻；deliver 在红湾（red_bay）交货，300 天期限，超时走 timeout；settle 回毕尔巴鄂的桶匠铺结账，1590 年底以前可以回。
+#       三章都不写 window（非 stage 章节）：日期门禁写在 when 里；只有 offer 设期限。
+# 货：木材 timber ×30（goods/01_staples_raw.toml）。正文写“从岸上带过去的橡木”，不写在红湾本地买。
+# 依据（史实）：十六世纪中叶，巴斯克捕鲸船每年初夏去拉布拉多的红湾一带，船上带拆散的桶板，到了再箍成鲸油桶，入冬带油回欧洲；桶板与木料多从欧洲带去（参见 bond_martin_itsas 的依据）。
+# 原创：马丁的桶匠铺与样板、红湾的桶匠头（缺两根手指）、“声音对了，就对了”的敲桶法、路上漏掉的那只桶、墙上的炭条画。
+# 待核：红湾捕鲸站的桶匠头是否有名字（正文只称“桶匠头”）；木料究竟从哪里带去（正文只写“从岸上带过去”）。
+# 缺省走向：玩家不接，马丁去不了红湾，offer 到期 failed，不写见闻。接了不送：deliver 到期走 timeout，红湾拆两条旧船的板子凑合，马丁来信认账，好感 -3。
+# 读的旗标：无。不读任何 c7_ 旗标，不读 c13_main_*（马丁不是主线人物，不设门禁）。
+# 写的旗标：c13_request_martin_itsas_accepted / _declined / _sorted / _done / _late。
+# 秘密：马丁夜里梦见的冰不写，见闻与回忆标题也不写。
+# 回忆插画清单：
+#   mem-request_martin_itsas-settle：毕尔巴鄂桶匠铺的墙上，炭条画的一只桶，第三道箍画得特别重。
+
+[[tracks]]
+key = "request_martin_itsas"
+name = "红湾的桶板"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["martin_itsas"]
+
+# 报价：毕尔巴鄂的桶匠铺，刨花没过脚面。马丁接了红湾的活，板子却不够。
+[[tracks.chapters]]
+key = "offer"
+title = "不够的桶板"
+text = "马丁的铺子里刨花没过脚面。他接了红湾捕鲸站一整季的鲸油桶，可那边的板子去年就用光了，今年的船又没装够木料。“桶匠和工具都在红湾等着，我这里的活走不开。”他把刨子往台子上一放，拿起一块样板递到你手里，“敲一敲。”你敲了一下，声音又实又脆，像敲在晒透了的橡木上。“就是这种声音的木头，三十车从岸上带过去的橡木。船到了那边，桶匠头一敲就知道。”"
+cast = ["martin_itsas"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "martin_itsas", text = "在毕尔巴鄂他的桶匠铺找到他" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "martin_itsas", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+# 老同学的口气：读 bond_martin_itsas 的 C 级，他把样板扔过来，话也更直。
+[[tracks.chapters.variants]]
+key = "v1_bond_old_hand"
+when = [{ kind = "bond", person = "martin_itsas", level = "C" }]
+text = "马丁的铺子里刨花没过脚面，他连头也没抬。红湾捕鲸站的一整季鲸油桶他接了，板子却不够，今年的船又没装够木料。他把一块样板扔过来，你接住了。“你敲，我听。”你敲了一下。他听完，把刨子搁下，手指在台面上敲了两下：“就是这种声音的木头，三十车从岸上带过去的橡木。桶匠和工具都在红湾等着，我这里的活走不开，你替我跑这一趟。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，运三十车木材去红湾。"
+next = "deliver"
+reply = "他把样板塞进我的货单夹子里，用指节在上面敲了一下。到了红湾，让桶匠头也敲一下，“声音对了，就对了”。说完他才把手收回去，像是怕我忘了这句话。"
+effects = [{ kind = "affinity", person = "martin_itsas", value = 2 }, { kind = "flag", flag = "c13_request_martin_itsas_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_staves"
+text = "接下，再问他要不要顺便带一批刨好的桶板。"
+next = "deliver"
+reply = "他摇了摇头，说刨好的板在海上会走形，一路潮进潮出，到了那边已经不是那个尺寸。“木头要到了那边再刨，”他说，“那边有刨子，也有人等着用。”"
+effects = [{ kind = "affinity", person = "martin_itsas", value = 2 }, { kind = "flag", flag = "c13_request_martin_itsas_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "新地太远，这一季去不了。"
+next = "failed"
+reply = "他把样板从我手里拿回去，又敲了一下，声音很轻。他说那就只好跟船东讲，今年少装几桶油。船东会骂人，骂完还是得照付他的工钱。"
+effects = [{ kind = "flag", flag = "c13_request_martin_itsas_declined" }]
+
+# 交货：红湾的岸上，炉子冒着黑烟。桶匠头侧着头听木头的声音，一半发闷。
+[[tracks.chapters]]
+key = "deliver"
+title = "桶匠头的耳朵"
+text = "红湾的岸上，熬油的炉子冒着黑烟，鲸油的腥味压过了海风。桶匠头是个缺了两根手指的老人，站在木料堆前头，身上的皮围裙烧出了一排洞。他拿马丁的样板敲了一下，又拿你运来的木头敲了一下，侧着头听。“马丁说，声音对了，就对了。”他把一根木头举起来，又放下，“可这一半，声音是闷的，受了潮。”"
+cast = ["martin_itsas"]
+at = "red_bay"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "goods", good = "timber", qty = 30, at = "red_bay", text = "把三十车木材运到红湾，交给桶匠头" }]
+when = [
+  { kind = "alive", person = "martin_itsas", value = true },
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+]
+deadline_days = 300
+timeout = { next = "failed", effects = [{ kind = "letter", person = "martin_itsas", text = "红湾的人等不到木头，拆了两条旧船的板子凑合。桶漏了几只，账我替你认了。" }, { kind = "affinity", person = "martin_itsas", value = -3 }, { kind = "flag", flag = "c13_request_martin_itsas_late" }] }
+
+[[tracks.chapters.choices]]
+key = "sort_wood"
+text = "跟他一起挑：发闷的晾干了做桶底，好的做桶身。"
+next = "settle"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "这些板子你敲不出闷和实的分别，挑不了。"
+reply = "我们在木料堆边挑了一下午，每根都敲一遍，闷的单放一边。老人看了一眼挑出来的那堆，没夸，只说你的耳朵还行，然后把货款照数付了。"
+news = "红湾的捕鲸站来了一船木头，缺手指的桶匠头一根一根敲过去，挑出一半拿去晾。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "martin_itsas", value = 3 }, { kind = "flag", flag = "c13_request_martin_itsas_sorted" }]
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "照数交货，受潮的让他们自己晾。"
+next = "settle"
+reply = "老人没挑，付了货款，还摊开手掌把钱数了一遍，嘟囔说晾干要半个月。他说鲸不等人，说完便叫人把湿木头往岸上拖，拖的人一路骂着湿木头，声音隔着炉子的烟传过来。"
+news = "红湾的捕鲸站来了一船木头，桶匠头没挑，半船受了潮的板子摊在岸上晾着。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "martin_itsas", value = 2 }]
+
+# 收尾：回毕尔巴鄂的桶匠铺。马丁先听红湾的事，第一句却问船上的水。
+[[tracks.chapters]]
+key = "settle"
+title = "数三遍"
+text = "刨子在他手里一直没停，木屑落在脚面上。你把红湾的炉子、熬油的黑烟，还有桶匠头那两根缺了的手指，一样一样讲给他听。他听得很专心，只在敲木头那段停了一下。讲完，他却不问木头。“船上的水，先数三遍。”他说，“路上漏没漏？”你说路上漏了一只桶，水少了一截。他放下刨子，刨子的铁口朝着墙：“那只桶什么样子？说给我听。”"
+cast = ["martin_itsas"]
+at = "bilbao"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "martin_itsas", text = "回毕尔巴鄂，到他的桶匠铺找他" }]
+when = [
+  { kind = "alive", person = "martin_itsas", value = true },
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+]
+news = "毕尔巴鄂河边的桶匠铺墙上，多了一只炭条画的桶，第三道箍描得特别黑。"
+
+[[tracks.chapters.variants]]
+key = "v1_sorted_compliment"
+when = [{ kind = "flag", flag = "c13_request_martin_itsas_sorted" }]
+text = "刨子在他手里一直没停。他先说一句：“老头子信里夸你耳朵好。”然后才说：“船上的水，先数三遍。”你把红湾的炉子、熬油的黑烟，还有桶匠头那两根缺了的手指，一样一样讲给他听。路上还漏了一只桶，水少了一截，这些你也一并说了。他放下刨子，刨子的铁口朝着墙：“那只桶什么样子？说给我听。”"
+
+[[tracks.chapters.choices]]
+key = "describe"
+text = "把那只漏桶的样子一五一十讲给他。"
+next = "done"
+reply = "他听完说是第三道箍松了。拿炭条在墙上画了一只桶，画到第三道箍时手重了些，线描得特别黑。他付了钱，又送了我一只他亲手箍的小水桶，说拿去数水。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "martin_itsas", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_martin_itsas_done" }, { kind = "memory", memory = "mem-request_martin_itsas-settle", title = "墙上的第三道箍" }]
+
+[[tracks.chapters.choices]]
+key = "joke"
+text = "说：这回我数了四遍。"
+next = "done"
+reply = "他笑出声，说只数一遍的人，桶才会漏，“心里不踏实”。他付了钱，照样问那只桶。问完，才拿炭条在墙上画了一只桶，第三道箍画得特别重。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "martin_itsas", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_martin_itsas_done" }, { kind = "memory", memory = "mem-request_martin_itsas-settle", title = "墙上的第三道箍" }]

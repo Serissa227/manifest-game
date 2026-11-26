@@ -1,0 +1,146 @@
+# 请托：补上的工钱（request_wati）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：瓦蒂（wati，1540-04-25 生，女），班达奈拉长老的女儿；势力 banda；身份档 1（匠人、小商一档）。cast：cast/classmates_giri.toml。
+# 类型：送货（deliver）。任务单三章：offer（报价）、deliver（当着全村交货、补工钱）、settle（收尾）。另加 settle_partial 一章，见下“结构调整”。
+# 报价：T（当面）。auto=false，start=offer，玩家在班达奈拉的议事棚找到她后，用 ask:request_wati 启动。offer 不写 at，只写 person 目标。
+#   窗口 1563-01-01..1590-06-30：普通章不写 window（校验要求 window 必须带 default），改用 when 的日期范围；offer 的 deadline=1590-06-30，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 at=banda_neira，deadline_days=120，超时 next=failed，一封来信（布不够，先补了三户），好感 -3，旗标 c13_request_wati_late；见闻改写为“棉布迟迟没到”。
+# 依据·史实背景：班达群岛的肉豆蔻、肉豆蔻衣与丁香转运；班达人的长老议事（orang kaya）；棉布是岛上最通行的交换物。待核：无（不写具体年份的史实事件）。
+# 依据·原创：皮影戏与白布、戏箱里的旧账与炭笔圈、当年少给工钱的几户人家（老人与他的儿子）、特尔纳特买来的棉布。
+# 秘密（cast）：头一回跑货算错丁香斤两，少给了工钱，编进皮影戏里道歉。offer 章由她当面说出（notes 规定）；之后的请托是明面；见闻只写补工钱，不写当年的来龙去脉。
+# 结构调整（写手决定）：
+#   1. 任务单给 offer / settle 写了 window，但普通章不能写 window（校验要求带 default）。改用 when 的日期范围，结束日仍由 deadline 或 timeout 承担。
+#   2. 任务单的 settle 变体（只补了一半 → 工钱 500、终局旗标 partial）不能改效果，变体只换文字。因此检定失败的分支 next=settle_partial，单独写一章：效果与 settle 相同，只把工钱改为 500、终局旗标改为 partial。
+# 设的旗标：c13_request_wati_accepted（offer 接下的两种接法）；c13_request_wati_declined（offer 回绝）；c13_request_wati_half（deliver 检定失败的分支旗标）；终局 c13_request_wati_done（settle）、c13_request_wati_partial（settle_partial）、c13_request_wati_late（deliver 超时）。每条路只设一面终局旗标。
+# 读的旗标：无。不设任何 c7_ 旗标。变体 v1_bond 读 bond wati ≥ C（凯奇利线的 C7 情谊，只读不设）。
+# 依赖：港口 banda_neira（ports_southeast_asia.toml）；货物 cloth（goods/02_manufactures.toml）；属性 eloquence（captain.toml）；人物 wati。无主线门禁（gate_main 与 variant_main 都为空）。
+# 回忆插画清单：
+#   mem-request_wati-settle「不再鞠躬的商人」：挂着白布的议事棚，木偶商人被从戏箱底拿出，门口的台阶上堆着叠好的棉布。
+
+[[tracks]]
+key = "request_wati"
+name = "补上的工钱"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["wati"]
+
+# 一、皮影戏里的道歉：议事棚下演完一场戏，她才过来说话。
+[[tracks.chapters]]
+key = "offer"
+title = "皮影戏里的道歉"
+text = "班达奈拉，长老家的议事棚下挂起一块白布，油灯照着，孩子们坐了一地。皮影戏里有个商人，一直在给人鞠躬，鞠到戏台都快站不稳。戏演完，瓦蒂才收起影人走过来。“那个商人是我。”她说得很平，“头一回跑货，丁香的斤两算错了，少给了几户人家的工钱。我没当面认，就编进了戏里，让戏里的人替我去道歉。”她把白布叠起一角，“不能再这样了。你替我运十五匹棉布来，按当年的数，一户一户补上，当着全村的面。”"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "person", person = "wati", text = "在班达奈拉长老家的议事棚找到她" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "wati", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "wati", level = "C" }]
+text = "班达奈拉，长老家的议事棚下挂起一块白布，油灯照着，孩子们坐了一地。皮影戏里有个商人，一直在给人鞠躬，鞠到戏台都快站不稳。戏演完，瓦蒂把白布的一角递给你拉着，“你替我扯着，我来认。”她说得很平，“那个商人是我。头一回跑货，丁香的斤两算错了，少给了几户人家的工钱。我没当面认，就编进了戏里，让戏里的人替我去道歉。”她又叠起白布，“不能再这样了。你替我运十五匹棉布来，按当年的数，一户一户补上，当着全村的面。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，十五匹棉布，运到班达奈拉。"
+next = "deliver"
+reply = "她从戏箱底翻出一张旧账，账上那一笔丁香的斤两被炭笔圈了好几圈，纸都圈破了。“照这个数补。”"
+effects = [{ kind = "affinity", person = "wati", value = 2 }, { kind = "flag", flag = "c13_request_wati_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_play"
+text = "接下。先问一句：戏里的商人，往后还演吗？"
+next = "deliver"
+reply = "“演。”她说，“往后那商人不鞠躬了，挨家挨户去送布。孩子们总问他为什么鞠躬，这回让他们看个明白。”"
+effects = [{ kind = "affinity", person = "wati", value = 2 }, { kind = "flag", flag = "c13_request_wati_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这么多年了，那几户人家也许早忘了。"
+next = "failed"
+reply = "“他们没忘，是我一直装忘了。”她把白布收进戏箱，说那就再等一条船。"
+effects = [{ kind = "flag", flag = "c13_request_wati_declined" }]
+
+# 二、当着全村：棉布抬进议事棚，第一户的老人摆手，他的儿子却站出来。
+[[tracks.chapters]]
+key = "deliver"
+title = "当着全村"
+text = "十五匹棉布抬进议事棚，村里的人都来了，那几户人家站在最前头。瓦蒂捧着旧账，念到第一户的名字，声音有点抖：“这一户，照旧账上的数补。”老人摆手，说那点钱早就不算什么，不要了。他身后的儿子却往前站了一步：“要。我爹那一季饿过肚子，这笔账我们记了很多年。”瓦蒂看了你一眼，嘴唇动了动，没出声。"
+speaker = "captain"
+mood = "tense"
+at = "banda_neira"
+objectives = [{ kind = "goods", good = "cloth", qty = 15, at = "banda_neira", text = "十五匹棉布，运到班达奈拉" }]
+when = [{ kind = "alive", person = "wati", value = true }, { kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 120
+news = "班达奈拉长老家的议事棚下，一户一户补发了多年前的工钱，全村的人都站在棚外看。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "wati", text = "布我从特尔纳特买了一些，不够，先补了三户。剩下的，我记着。——瓦蒂" }, { kind = "affinity", person = "wati", value = -3 }, { kind = "flag", flag = "c13_request_wati_late" }]
+news = "班达奈拉的棉布迟迟没到，议事棚下的白布挂了几个月，有人说瓦蒂先补了三户人家。"
+
+[[tracks.chapters.choices]]
+key = "help_speak"
+text = "站到她身边，替她把当年的数一笔笔念清楚。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "settle"
+reply = "我念一户，她补一户。补到那个儿子，她多给了一匹布，说是那一季的饭钱。老人没再摆手，只把布接过去，抱在怀里。"
+effects = [{ kind = "affinity", person = "wati", value = 3 }]
+fail = { next = "settle_partial", effects = [{ kind = "affinity", person = "wati", value = -2 }, { kind = "flag", flag = "c13_request_wati_half" }], news = "班达奈拉长老家的议事棚下，念到一半有人嚷起来，补工钱的事只做了一半。" }
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "退到一边，让她自己念完。"
+next = "settle"
+reply = "她念完了，声音一直在抖，可一户也没漏。那个儿子接过布，对她点了点头，什么也没说。"
+effects = [{ kind = "affinity", person = "wati", value = 3 }]
+
+# 三、鞠躬的影子：补完的那天晚上，皮影戏里的商人不再鞠躬了。
+[[tracks.chapters]]
+key = "settle"
+title = "鞠躬的影子"
+text = "补完的那天晚上，瓦蒂又挂起白布演皮影戏。戏里的商人送完最后一户，直起了身子，不再鞠躬。戏散了，她把货款和工钱数清楚，推到你面前。“先让种树的人说价。”说完，她从箱底拿出那个一直鞠躬的商人皮影，放在你手边。“这个用不着了。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "wati", text = "回到班达奈拉，找瓦蒂" }]
+when = [{ kind = "alive", person = "wati", value = true }, { kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }]
+news = "班达奈拉长老家的白布又挂起来了，戏里那个总弯腰的商人，这回是挨家挨户去送布的。"
+
+[[tracks.chapters.choices]]
+key = "keep_puppet"
+text = "收下那个皮影。"
+next = "done"
+reply = "她把皮影包进一块布里交给我，说要是哪天我也算错了账，就拿出来看看。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 1500 }, { kind = "affinity", person = "wati", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_wati_done" }, { kind = "memory", memory = "mem-request_wati-settle", title = "不再鞠躬的商人" }]
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "说皮影该留给戏班，往后还要演。"
+next = "done"
+reply = "她想了想，把皮影收回戏箱，说那就让它往后演送布的那一场。钱一分没少付。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 1500 }, { kind = "affinity", person = "wati", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_wati_done" }, { kind = "memory", memory = "mem-request_wati-settle", title = "不再鞠躬的商人" }]
+
+# 三之二、只补了一半：检定失败的那天，议事棚里念到一半，剩下的几户改日再说。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "只补了一半"
+text = "那天议事棚里念到一半，有人嚷起来，她就停了。补完的只有一半人家。晚上，瓦蒂还是挂起白布演皮影戏，戏里的商人只送到一半，剩下的布压在戏箱底下。她把货款和工钱数清楚，放在你手边。“布不够，先补到这里。剩下的，我自己一家一家去说。”说完，她又把那个一直鞠躬的商人皮影拿出来，看了很久。"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "person", person = "wati", text = "回班达奈拉，去见瓦蒂" }]
+when = [{ kind = "alive", person = "wati", value = true }, { kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "keep_puppet_half"
+text = "收下那个皮影。"
+next = "done"
+reply = "她把皮影包进布里交给我，说剩下的布她自己送去，不让戏替她去。"
+effects = [{ kind = "cash", value = 500 }, { kind = "cash", value = 1500 }, { kind = "affinity", person = "wati", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_wati_partial" }, { kind = "memory", memory = "mem-request_wati-settle", title = "不再鞠躬的商人" }]
+
+[[tracks.chapters.choices]]
+key = "give_back_half"
+text = "说皮影该留给戏班，等布都送到了再演。"
+next = "done"
+reply = "她把皮影收回戏箱，说那就留到剩下的布送到那天，再让它演一回送布的那一场。付钱的时候，她的手停了停，还是付了。"
+effects = [{ kind = "cash", value = 500 }, { kind = "cash", value = 1500 }, { kind = "affinity", person = "wati", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_wati_partial" }, { kind = "memory", memory = "mem-request_wati-settle", title = "不再鞠躬的商人" }]

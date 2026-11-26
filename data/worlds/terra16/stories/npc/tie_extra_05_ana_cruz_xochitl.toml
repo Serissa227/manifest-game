@@ -1,0 +1,150 @@
+# C7：故事 2.0，遵循 A5 / E37“故事 2.0 TOML 契约”。
+# 标签：GL（非恋爱）·师徒兼表姐妹。替代旧线 tie_extra_05_ana_cruz_maria_da_luz（改名，旧文件连同英文覆盖一并删除）。
+# 人物：安娜·德·拉·克鲁斯（ana_cruz，1536-03-26，纯 GL，恋人线归 pair_ana_cruz_lucia，本线不写）；
+#       霍奇特尔（xochitl，1540-09-07，纯 GL，恋人线归 pair_xochitl_ines_solis，本线不写）。1563 年霍奇特尔已满 22，全线只写师徒与亲情，没有任何恋爱效果。
+# 依据：
+#   史实——墨西加的羽毛镶嵌（amanteca）：棉纸或龙舌兰纸作底，刷兰根熬的胶，蜂鸟、格查尔鸟、鹦鹉的羽毛逐片叠贴，换个角度颜色就变；
+#         老人们的训诫辞里把孩子叫作“我的玉、我的格查尔羽毛”（huehuetlatolli 的常见譬喻）；
+#         1566 年阿维拉—科尔特斯密谋案：阿隆索·德·阿维拉兄弟据说要拥第二代谷地侯爵马丁·科尔特斯为王，8 月 3 日在主广场被斩首，宅子拆平撒盐，城里搜捕同党。
+#   原创——师徒二人、画坊的印章与落款之争、三种光下看格查尔羽毛、两幅小像。
+#   待核——1563 年主广场一带的建筑（旧大教堂、1562 年起改作总督府的科尔特斯新宅）只作背景一笔带过；“宅子撒盐”在 turning 里只用传闻口吻。
+# 秘密：霍奇特尔从没去过墨西哥城——meeting 只写她在广场上站了半天不说话、口头禅说到一半咽回去，不点破；
+#       安娜记得祖辈说的每种羽毛的意思——closer 只写她掩上门低声讲给表妹，内容只漏出一句。两件事都不进见闻。
+# 缺省走向：玩家什么也不做，故事照样走完——1563 相识（tie mentor）→ 1564 三种光 → 1566 密谋案传闻 → 1566 冬落款之争（小像盖画坊的印，表妹在背面用炭条写名字）
+#           → 1567 安娜第一次没撕她的画（tie mentor，设 c7_tie_extra_05_ana_cruz_xochitl_landing）。
+# 玩家能做的：choice 章运来羽毛（_helped）或替霍奇特尔说话（_signed），只改变落款与回应，不改变师徒的结局。
+# 共享旗标：设 c7_tie_extra_05_ana_cruz_xochitl_landing / _helped / _signed；
+#           读 c7_pair_xochitl_ines_solis_together（meeting、landing 的 variants：伊内斯在画坊门口）。
+# 变体：together 路径下两人 1562 年秋就从梅里达出走、1563 年初已在画坊（pair_xochitl_ines_solis 的 together 章），
+#       meeting 的窗口整合时从 1563-04-01 起（together 窗口止于 1563-03-31，保证读得到）；所以 meeting 的 ines 变体写霍奇特尔头一回被叫到表姐正桌前，不写初到广场；landing 另加 both（两个旗标都在时）。
+#       内核在满足条件的变体里取 key 字典序最小的一个（story2_variant 的 min_by_key），所以合写的变体用排在 ines、signed 之前的 key：both。
+# 日程：霍奇特尔 1563 起在 mexico_city（人设卡已有），章节地点用 tenochtitlan；本线不改日程。
+
+[[tracks]]
+key = "tie_extra_05_ana_cruz_xochitl"
+name = "三种光下的绿"
+kind = "request"
+start = "tie_extra_05_ana_cruz_xochitl_meeting"
+auto = true
+cast = ["ana_cruz", "xochitl"]
+
+# 1563 春夏 · 相识：第一次站在主广场上；第一片羽毛被撕掉
+[[tracks.chapters]]
+key = "tie_extra_05_ana_cruz_xochitl_meeting"
+title = "别站在那儿挡光"
+text = "霍奇特尔在主广场上站了快一个时辰。大教堂、总督府的拱廊、东南天边那两座雪山，她一样一样看过去，一句话也没说，脚边的羽毛匣子一直没拎起来。到了表姐的画坊，她总算缓过劲，把匣子往桌上一搁：“这算什么？墨西……”后半句咽了回去。安娜头也不抬：“别站在那儿挡光。换到这边——好，现在看。”窗下摊着一幅圣像的底子，棉纸上刷了兰根熬的胶。霍奇特尔拈起一片蜂鸟羽毛按上去，歪了半分。安娜伸手把整块撕了下来：“重来。”那天她一共重贴了十一回。第十一回，安娜没伸手。"
+stage = "witness"
+window = [[1563, 4, 1], [1563, 7, 31]]
+at = "tenochtitlan"
+cast = ["ana_cruz", "xochitl"]
+speaker = "ana_cruz"
+mood = "cheerful"
+news = "墨西哥城羽毛画坊来了个梅里达的表妹，头一天就被女画师撕掉了十一块羽毛，听说眼睛都没红。"
+
+[tracks.chapters.default]
+next = "tie_extra_05_ana_cruz_xochitl_closer"
+effects = [{ kind = "tie", a = "ana_cruz", b = "xochitl", relation = "mentor" }]
+
+[[tracks.chapters.variants]]
+key = "ines"
+when = [{ kind = "flag", flag = "c7_pair_xochitl_ines_solis_together" }]
+text = "伊内斯抱着霍奇特尔的羽毛匣子站在画坊门槛外，怎么叫也不进来——安娜门口那块亮地方站不得人，她早记住了。霍奇特尔这天头一回被叫到表姐的正桌前，站定了就开口：“这算什么？墨西……”门外的伊内斯先笑出了声。安娜头也不抬：“别站在那儿挡光。换到这边——好，现在看。”棉纸上刷着兰根熬的胶。霍奇特尔按上去的第一片蜂鸟羽毛歪了半分，安娜伸手把整块撕了下来：“重来。”那天她一共重贴了十一回，伊内斯在门外一回一回替她数着。"
+
+# 1564 春夏 · 靠近：清晨、正午、烛火下的同一根格查尔尾羽；外婆说过的羽毛
+[[tracks.chapters]]
+key = "tie_extra_05_ana_cruz_xochitl_closer"
+title = "外婆说过的羽毛"
+text = "安娜把一根格查尔鸟的尾羽插在窗框的缝里，叫霍奇特尔从天亮看起。清晨那绿像湖水，到了正午硬得像玉。“客人只认得一种绿，”安娜说，“你得三种都认得。”霍奇特尔盯着羽毛，忽然问：“外婆说过的那几种羽毛，到底都是什么意思？”安娜看了一眼门口，起身把门掩上，凑到她耳边一种一种讲。讲到格查尔，霍奇特尔没忍住出了声：“外婆叫我们‘我的绿羽毛’，原来是这个意思？”安娜在她胳膊上拧了一把，讲完才坐直：“这些不许写下来。”霍奇特尔半天没吭声。晚上点起蜡烛，那根尾羽黑得几乎看不见了，她才开口：“诺克纽。”"
+stage = "witness"
+window = [[1564, 3, 1], [1564, 7, 31]]
+at = "tenochtitlan"
+cast = ["ana_cruz", "xochitl"]
+speaker = "xochitl"
+mood = "tender"
+news = "墨西哥城羽毛画坊的窗框上插着一根格查尔尾羽，女画师叫表妹从天亮看到点蜡烛，说一根羽毛有三种绿。"
+
+[tracks.chapters.default]
+next = "tie_extra_05_ana_cruz_xochitl_turning"
+effects = [{ kind = "memory", memory = "mem-tie_extra_05_ana_cruz_xochitl-closer", title = "三种光下的绿" }]
+
+# 1566 夏秋 · 转折（传闻）：阿维拉兄弟在主广场被斩，订单退了，脚夫不来了
+[[tracks.chapters]]
+key = "tie_extra_05_ana_cruz_xochitl_turning"
+title = "广场上的刑台"
+text = "八月里，阿维拉家的两兄弟在主广场上被砍了头，说是要拥那位侯爵做新西班牙的王。他们家的宅子听说要拆平了撒盐。城里天天有人被带走，订了羽毛圣像的几家老爷都关了大门，管家上门退订，羽毛画坊一连退了三份。南边背羽毛的脚夫也不来了，说路上查得紧，背篓都要倒出来翻。街坊问女画师还开不开门，她说：“照开。羽毛不够，就先做小的。”她那个梅里达来的表妹在后头嘀咕：“小的才费眼睛。”"
+stage = "rumor"
+window = [[1566, 7, 15], [1566, 10, 31]]
+at = "tenochtitlan"
+cast = ["ana_cruz", "xochitl"]
+mood = "tense"
+news = "墨西哥城主广场斩了阿维拉家的兄弟，城里天天抓人。羽毛画坊一连退了三份圣像的订单，女画师说门照开。"
+
+[tracks.chapters.default]
+next = "tie_extra_05_ana_cruz_xochitl_choice"
+effects = []
+
+# 1566 冬—1567 初 · 抉择：画坊只有一个名字；玩家可以运羽毛，或替表妹说话
+[[tracks.chapters]]
+key = "tie_extra_05_ana_cruz_xochitl_choice"
+title = "画坊只有一个名字"
+text = "入了冬，南边的羽毛还是没来。安娜那幅圣像停在圣徒的袍子上，一半贴好了，另一半还露着刷过胶的棉纸。霍奇特尔倒是做完了自己的第一幅小像：巴掌大的圣方济各，脚边停着一只蜂鸟。她拿炭条在角上比划：“这边写那瓦特字，这边写卡斯蒂利亚字。”安娜把画坊的印章往她面前一推：“画坊只有一个名字。”“那是你的名字。”“对。”霍奇特尔放下炭条，不说话了。表姐妹隔着一张桌子坐了一下午。我推门进来的时候，屋里只听得见安娜刮胶的声音。"
+stage = "involve"
+window = [[1566, 11, 1], [1567, 2, 28]]
+at = "tenochtitlan"
+cast = ["ana_cruz", "xochitl"]
+speaker = "ana_cruz"
+mood = "tense"
+news = "墨西哥城羽毛画坊缺羽毛缺了一个冬天，表姐妹又为一个落款僵着，街坊说那屋里一下午只有刮胶的声音。"
+
+[tracks.chapters.default]
+next = "tie_extra_05_ana_cruz_xochitl_landing"
+effects = []
+news = "墨西哥城羽毛画坊那个梅里达表妹的头一幅小像，到底盖了画坊的印；听说她拿炭条在背面偷偷写了自己的名字。"
+
+[[tracks.chapters.choices]]
+key = "deliver_feathers"
+text = "替画坊从南边运一批格查尔和蜂鸟的羽毛来。"
+reply = "半个月后，两只裹着油布的背篓卸在画坊门口。安娜对着窗口一根一根挑了一整天，圣徒的袍子补齐那晚，她把剩下最亮的一把推到桌子对面：“你那幅，用这个重贴眼睛。”霍奇特尔拿起一根，在烛火底下转了转，没再提落款的事，拖过凳子坐回了桌边。"
+next = "tie_extra_05_ana_cruz_xochitl_landing"
+effects = [{ kind = "flag", flag = "c7_tie_extra_05_ana_cruz_xochitl_helped" }, { kind = "affinity", person = "ana_cruz", value = 5 }]
+news = "墨西哥城羽毛画坊总算等来了南边的羽毛，两篓格查尔和蜂鸟，女画师那幅停了一冬的圣像做完了。"
+
+[[tracks.chapters.choices]]
+key = "back_signature"
+text = "替霍奇特尔说一句：两种字都落上，两边看画的人才认得出是谁做的。"
+reply = "安娜冷笑一声：“你倒比我懂画坊的规矩。”她没再理我，低头刮她的胶。第二天一早，霍奇特尔跑来找我，说印章被推到了桌角，她那幅小像摆在窗下最亮的地方，旁边搁着一支削好的芦管笔。角上那两行小字，是安娜站在身后盯着她写的——写歪一笔，就叫她刮掉重来。"
+next = "tie_extra_05_ana_cruz_xochitl_landing"
+effects = [{ kind = "flag", flag = "c7_tie_extra_05_ana_cruz_xochitl_signed" }, { kind = "affinity", person = "xochitl", value = 5 }]
+news = "墨西哥城羽毛画坊破了一回规矩：梅里达表妹那幅小像的角上落了两行字，一行那瓦特话，一行卡斯蒂利亚话。"
+
+# 1567 春夏 · 落点：清晨、正午、烛火下各看一遍，没撕
+[[tracks.chapters]]
+key = "tie_extra_05_ana_cruz_xochitl_landing"
+title = "没撕的那一幅"
+text = "开春以后，霍奇特尔交上一幅圣母小像，袍子是格查尔的绿，底下压着一层蜂鸟的紫。安娜拿到窗边，清晨看一遍，正午看一遍，晚上点了蜡烛，举着烛台又看一遍，一句话也没说。霍奇特尔在桌子那头站了一整天，手边一碗新熬的兰根胶，等着撕了重贴。安娜把画放下：“挂到门口去。”霍奇特尔张了张嘴，这回连前半句也没有。她抱起画往门口走，走到门槛又回过头：“钉子呢？”安娜头也不抬：“左手第二个抽屉。”"
+stage = "witness"
+window = [[1567, 4, 1], [1567, 8, 31]]
+at = "tenochtitlan"
+cast = ["ana_cruz", "xochitl"]
+speaker = "ana_cruz"
+mood = "tender"
+news = "墨西哥城羽毛画坊门口新挂了一幅圣母小像，是那个梅里达表妹做的。女画师看了一整天，居然没撕。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "tie", a = "ana_cruz", b = "xochitl", relation = "mentor" }, { kind = "flag", flag = "c7_tie_extra_05_ana_cruz_xochitl_landing" }, { kind = "memory", memory = "mem-tie_extra_05_ana_cruz_xochitl-landing", title = "没撕的那一幅" }]
+
+[[tracks.chapters.variants]]
+key = "v1_both"
+when = [{ kind = "flag", flag = "c7_tie_extra_05_ana_cruz_xochitl_signed" }, { kind = "flag", flag = "c7_pair_xochitl_ines_solis_together" }]
+text = "开春以后，霍奇特尔交上一幅圣母小像，袍子是格查尔的绿，右下角两行小字，一行那瓦特字，一行卡斯蒂利亚字。安娜拿到窗边，清晨看一遍，正午看一遍，晚上举着烛台又看一遍，看得最久的是角上那两行。霍奇特尔守着一碗新熬的兰根胶，等着撕了重贴。安娜把画放下：“挂到门口去。”霍奇特尔张了张嘴，这回连前半句也没有。她抱着画出了门，门外的伊内斯第一个看见，凑近了把那两行字一行一行念出来，那瓦特那一行念错了一个音。霍奇特尔一把把她拉开：“胶还没干！”"
+
+[[tracks.chapters.variants]]
+key = "v2_signed"
+when = [{ kind = "flag", flag = "c7_tie_extra_05_ana_cruz_xochitl_signed" }]
+text = "开春以后，霍奇特尔交上一幅圣母小像，袍子是格查尔的绿，右下角两行小字，一行那瓦特字，一行卡斯蒂利亚字。安娜拿到窗边，清晨看一遍，正午看一遍，晚上点了蜡烛，举着烛台又看一遍，看得最久的是角上那两行。霍奇特尔在桌子那头站了一整天，手边一碗新熬的兰根胶，等着撕了重贴。安娜把画放下：“挂到门口去。”霍奇特尔张了张嘴，这回连前半句也没有。她抱起画往门口走，走到门槛又回过头：“钉子呢？”安娜头也不抬：“左手第二个抽屉。”"
+
+[[tracks.chapters.variants]]
+key = "v3_ines"
+when = [{ kind = "flag", flag = "c7_pair_xochitl_ines_solis_together" }]
+text = "开春以后，霍奇特尔交上一幅圣母小像，袍子是格查尔的绿，底下压着一层蜂鸟的紫。安娜拿到窗边，清晨看一遍，正午看一遍，晚上点了蜡烛，举着烛台又看一遍，一句话也没说。霍奇特尔守着一碗新熬的兰根胶，等着撕了重贴。安娜把画放下：“挂到门口去。”霍奇特尔张了张嘴，这回连前半句也没有。她抱着画出了门，在门框上比了三回高低。门外的伊内斯第一个看见，伸手就要摸，被她一把拍开：“胶还没干！”"

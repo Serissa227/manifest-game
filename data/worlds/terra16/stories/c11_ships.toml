@@ -1,0 +1,404 @@
+# C11：取得图纸、见闻与借乘；不可得船永远没有Done取得轨道。
+# 正文仅为中文占位；完整出处要点见独立 target 的 copy-needed.json。
+
+[[tracks]]
+key = "c11_ship_flying_dutchman"
+name = "飞翔的荷兰人"
+kind = "request"
+start = "letters"
+auto = true
+
+[[tracks.chapters]]
+key = "letters"
+art = "ship_flying_dutchman"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "亡者的信"
+text = "荷兰人的小艇靠上里斯本的码头，艇上的人没有下来，只把一叠泡软的信递给你。信封上的字已经褪色，收信的人，多半早已不在了。"
+choices = [{ key = "accept", text = "接下这叠信", reply = "信一封封分开，按地址记进账本。有几封被海水泡得粘在一起，你拿小刀一点点挑开，还是挑破了一封的角。", next = "deliver", effects = [], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "lisbon"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks.chapters]]
+key = "deliver"
+art = "ship_flying_dutchman"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "送达"
+text = "信要送到岸上去。岛上的老妇人认出了信封，接过去没有哭，只把最上面那封贴在胸口，问船上的人从哪里来。"
+choices = [{ key = "deliver", text = "替荷兰人把信送上岸", reply = "老妇人把信一封封念出声，念到第三封，声音停了一下。小艇在岸边等着，你们没有多留，天黑前就回了船。", next = "ship", effects = [], requires = [] }]
+at = "persephone_isle_1"
+
+[[tracks.chapters]]
+key = "ship"
+art = "ship_flying_dutchman"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "解咒"
+text = "诅咒松开了。荷兰人最后看了一眼桅杆，把一卷修船图交到你手里。纸边焦黑，图上的龙骨线却清清楚楚，他说船从此归送信的人。"
+choices = [{ key = "receive", text = "收下这卷船图", reply = "修船图折好收进怀里，焦痕蹭在指尖上。里斯本的船匠听说了，连夜把龙骨的尺寸量了一遍。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_flying_dutchman_known", value = true }, { kind = "item", item = "c11_plan_flying_dutchman", qty = 1 }], requires = [] }]
+at = "lisbon"
+
+[[tracks]]
+key = "c11_ship_solomon_ship"
+name = "所罗门之船"
+kind = "request"
+start = "borrow"
+auto = true
+
+[[tracks.chapters]]
+key = "borrow"
+art = "ship_solomon_ship"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "借乘"
+text = "巴勒莫外海的雾里浮出一条船，船身白得像骨头，甲板上不见一个人。书上说，它只载配得上的人。你踏上跳板时，木板是温的。"
+choices = [{ key = "borrow", text = "登上这条船", reply = "船开了七天，每天傍晚雾都会合上，早晨又散开。船上没有别的活人，夜里只听见舵柄自己转动。", next = "return", effects = [], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "attr", attr = "honor", ge = 60 }, { kind = "attr", attr = "morality", ge = 60 }] }]
+at = "palermo"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks.chapters]]
+key = "return"
+art = "ship_solomon_ship"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "归还"
+text = "七日期满，船在巴勒莫外海慢慢停住，雾从四面退开。舵柄上倒扣着一只杯子，杯底还留着一点红色。你没去碰它，那颜色是酒还是别的，谁也说不清。"
+choices = [{ key = "return", text = "把缆绳交还", reply = "你解下缆绳，船身慢慢退进雾里。你带回的只有见过它的样子，船图没有到手。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_solomon_ship_known", value = true }], requires = [] }]
+at = "palermo"
+objectives = [{ kind = "wait", days = 7 }]
+
+[[tracks]]
+key = "c11_ship_skidbladnir"
+name = "斯基德布拉德尼尔"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_skidbladnir"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "顺风图"
+text = "银枝的事办完，船匠在工坊里摊开一卷羊皮图。图上只画了帆、舵和一个折起来的样子，没有写它该靠哪一片海岸。"
+choices = [{ key = "record", text = "带走这卷图", reply = "羊皮边上有一排精灵的字，你念不出，船匠替你念了一遍。之后你的船簿上多了一行：斯基德布拉德尼尔，图纸一张。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_skidbladnir_known", value = true }, { kind = "item", item = "c11_plan_skidbladnir", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "flag", flag = "c11_silver_branch_complete", value = true }] }]
+at = "atlantis_port"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_treasure_ship"
+name = "四十四丈宝船"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_treasure_ship"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "石桌上的原记"
+text = "月港船坞的石桌上，温星槎一页页翻开你带来的过洋牵星图原记，纸边朱笔的改痕被海风吹得发颤。她嘴里念着祖父提过的那条大船，又说龙江厂的老匠手里还留着半张样子。她要先掂一掂你的分量，再谈图。"
+choices = [{ key = "record", text = "请她校图，领走船图", reply = "温星槎一页页校过，在末页按下指印，把原记还到你手里，另推来一张折得发软的船图。“后生，图归你，船得自己造。木头和铁，月港的船厂不赊账。”", next = "done", effects = [{ kind = "flag", flag = "c11_ship_treasure_ship_known", value = true }, { kind = "item", item = "c11_plan_treasure_ship", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "item", item = "star_crossing_original", qty = 1 }, { kind = "affinity", person = "wen_xingcha", ge = 8 }] }]
+at = "yuegang"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_pati_unus"
+name = "帕蒂·乌努斯的巨舰"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_pati_unus"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "扎巴拉的船图"
+text = "扎巴拉的老木匠说，淡目岸上搁着一条爪哇大船，船壳一层压一层，中间抹着石灰调的胶泥。1513 年它随帕蒂·乌努斯去攻马六甲，葡萄牙人最大的炮也只在船舷上留下白印子。战败后船被拖上岸，至今派人看守。图纸收在卡林亚玛特女王的账房里，她要先看你的为人。"
+choices = [{ key = "record", text = "把图纸收进袖里。", reply = "女王翻过账簿，合上，把一卷图纸推到你面前。木匠们在图纸边上画了三遍线，才肯相信你不是来抢船的。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_pati_unus_known", value = true }, { kind = "item", item = "c11_plan_pati_unus", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "affinity", person = "kalinyamat", ge = 8 }, { kind = "alive", person = "kalinyamat", value = true }] }]
+at = "jepara"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_santa_anna"
+name = "圣安娜号"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_santa_anna"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "骑士团的老船"
+text = "马耳他的港里停着一条老大卡拉克，船身上的漆早掉光了。骑士团的书记官带你下到舱底，指给你看水线以下包着的铅皮：那是为了水密，不是为了挡炮。舱里还有一间小礼拜堂，烛台上积着灰。"
+choices = [{ key = "record", text = "请书记官取出图纸。", reply = "书记官从柜里取出一卷发黄的图纸，说骑士团的老船该换个人照看了。你签下收据，船还停在港里，等着你去修。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_santa_anna_known", value = true }, { kind = "item", item = "c11_plan_santa_anna", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "society", society = "hospital", ge = 1 }] }]
+at = "malta"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_botafogo"
+name = "博塔福戈号"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_botafogo"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "河口的大船"
+text = "码头上的人指给你看河口里那条大盖伦，船尾的纹章在日头下晃眼。船身比别的船宽出半截，甲板上的炮口一个挨一个，数都数不清。门房说，要上船得先找船长，可船长这几天不见人影，只让水手在缆绳上晾衣裳。"
+choices = [{ key = "record", text = "记下船名与吃水。", reply = "你在小册子上记下船名、船尾的纹章和吃水线的高度。傍晚时它解缆出港，码头上只剩几道缆绳的压痕。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_botafogo_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "lisbon"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_henry_grace"
+name = "亨利神恩号"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_henry_grace"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "伍利奇的烟"
+text = "你赶到泰晤士河边的时候，伍利奇方向还在冒烟。驳船上的人说，那是亨利八世时造的旗舰，船身高得能压住码头，如今烧成了一截桅杆和几根黑木头。八月的热风把灰吹进了每个人的衣领里。"
+choices = [{ key = "record", text = "走近河岸看一看。", reply = "烧焦的木板泡在水里，黑得发亮。驳船的水手捞出一枚大铜钉给你看，说是从甲板的缝里翻出来的。你回头把船的轮廓画在随身的纸上。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_henry_grace_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "london"
+when = [{ kind = "age", ge = 16 }, { kind = "date", from = [1553, 8, 1] }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_lepanto_galleass"
+name = "勒班陀加莱赛战船"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_lepanto_galleass"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "兵工厂的弹痕"
+text = "兵工厂的船坞里，几艘加莱赛还带着弹痕。威尼斯人把它们排在阵前，炮位一层压一层，底舱里的人全靠鼓声划桨。老水手摸着船舷上的一个窟窿说，那天风向变了，烟把人眼都糊住了。"
+choices = [{ key = "record", text = "问船上的老水手。", reply = "老水手讲了很多。你记下的那几句是：加莱赛在阵前像一排会喷火的墙，底舱里的桨手都是锁着的囚犯。他们的船长已经出港，你没能再问。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_lepanto_galleass_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }, { kind = "date", from = [1571, 10, 7] }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_san_martin"
+name = "圣马丁号"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_san_martin"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "里斯本的旗舰"
+text = "五月的里斯本，码头上堆着饼干桶和火药箱，装船的人一天到晚不歇。西班牙的旗舰圣马丁号停在最里边的泊位，船身高，炮窗密密排着。水手们不让人靠近，只说这船要往北开，去海峡那边打仗。"
+choices = [{ key = "record", text = "托人递话给舰上的官员。", reply = "管事的人把你的名帖扔回来，上面只写了一句：这条船的事，不是商人该问的。你的名字被记在了门房的簿子上。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_san_martin_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "lisbon"
+when = [{ kind = "age", ge = 16 }, { kind = "date", from = [1588, 5, 1] }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_ark_royal"
+name = "皇家方舟号"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_ark_royal"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "伦敦的船坞"
+text = "1588 年的春天，伦敦的船坞里，皇家方舟号的船身刷了新漆。船匠说，这船要去迎西班牙人，英格兰的水手都想上它。枢密院的一个文书把你拦在栏杆外，问你有没有印信。"
+choices = [{ key = "record", text = "求见管船坞的文书。", reply = "文书翻了翻名册，说皇家方舟号要等女王的旨意才能让外人看。你留下了名帖，他收下了，却没有答应。石阶上的人来来去去，没人多看你一眼。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_ark_royal_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "london"
+when = [{ kind = "age", ge = 16 }, { kind = "date", from = [1588, 5, 1] }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_fausto_quinquereme"
+name = "福斯托的五列桨船"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_fausto_quinquereme"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "福斯托的图样"
+text = "这条五列桨船停在兵工厂最里边的船台上，是福斯托照古书复原的。管事的人说，它的桨孔排了五层，谁也不敢照着改。若你在威尼斯的名声够硬，管事的人肯让你看一看图样。"
+choices = [{ key = "record", text = "让管事翻出图样来。", reply = "管事把图样从柜底抽出来，手上全是灰。纸角上写着福斯托的名字，桨孔的角度一个个标得清楚。兵工厂的人从此可以照着这张纸动手，木料和钱得你自己去凑。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_fausto_quinquereme_known", value = true }, { kind = "item", item = "c11_plan_fausto_quinquereme", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "reputation", faction = "venice", ge = 20 }] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+window = [[1557, 1, 1], [1569, 12, 31]]
+default = { next = "failed", effects = [], news = "威尼斯的酒馆里都在说，福斯托的图样不知落到了谁的手里，那条五列桨船怕是再也造不成了。" }
+
+[[tracks]]
+key = "c11_ship_garay_paddle"
+name = "加雷的明轮船"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_garay_paddle"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "明轮的试验"
+text = "巴塞罗那港里的人说，加雷的明轮船下过一次水，靠五十个人摇轮，回转比桨帆船快。官府的禁令还压在案上，没人敢公开谈它。加雷还缺木料和铁器，他要十批木料、五批铁器，都得在巴塞罗那的船厂交清。"
+choices = [{ key = "record", text = "替加雷出钱做试验。", reply = "你把两千枚金币压在加雷的桌上。他数了两遍，说够了。明轮的轴今晚就换，木料和铁器的清单交进了船厂，剩下的木料和铁器你得自己凑齐，运到船台边上。图样夹在试验记录里，他把它递给你时，手还在抖。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_garay_paddle_known", value = true }, { kind = "item", item = "c11_plan_garay_paddle", qty = 1 }, { kind = "cash", value = -2000 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "cash", ge = 2000 }] }]
+at = "barcelona"
+when = [{ kind = "age", ge = 16 }]
+objectives = [{ kind = "goods", good = "timber", qty = 10, at = "barcelona" }, { kind = "goods", good = "ironware", qty = 5, at = "barcelona" }]
+
+[[tracks]]
+key = "c11_ship_leonardo_double_hull"
+name = "达·芬奇的双层船壳"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_leonardo_double_hull"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "散落的笔记"
+text = "热那亚的旧书摊上，一叠散页被当作废纸卖。拼在一起，是双层船壳的图：外壳与内壳之间留着一道空隙，旁边标着尺寸。书摊老板说，手里有残页的人拿去船厂比对，就能看出哪一张接哪一张。"
+choices = [{ key = "record", text = "拿残页去船厂比对。", reply = "残页在台上摊开，老匠人对着光看纸背的墨迹，把双层的船壳一块块拼了出来。他在空白处写下一行小字，说造船的钱得另外算。图样交到你手里。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_leonardo_double_hull_known", value = true }, { kind = "item", item = "c11_plan_leonardo_double_hull", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "item", item = "leonardo_note", qty = 1 }] }]
+at = "genoa"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_syracusia"
+name = "叙拉古西亚号"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_syracusia"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "书铺里的希腊文"
+text = "亚特兰蒂斯外港的书铺里，有人把一册希腊文的书摊在柜台上，书页边上写满了细密的数字。书铺老板指着其中一行说，这是阿基米德的巨船，读得懂希腊文的人才看得出尺寸。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+choices = [{ key = "record", text = "照着希腊文读下去。", reply = "你把那几段慢慢译完，书里的数字一个个对上：铅板的厚度，花园的位置，投石机的臂长。译到末尾，巨船下了水，后来被送给了埃及的国王。书铺老板把图样包进油纸里。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_syracusia_known", value = true }, { kind = "item", item = "c11_plan_syracusia", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "read", work = "athenaeus" }, { kind = "skill", skill = "lang_greek", ge = 2, hard = true }] }]
+at = "atlantis_port"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_elven_clipper"
+name = "精灵的飞剪"
+kind = "request"
+start = "acquire"
+auto = true
+
+[[tracks.chapters]]
+key = "acquire"
+art = "ship_elven_clipper"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "船坞的图纸"
+text = "银枝的事了结以后，亚特兰蒂斯外港的船坞才肯开门。坞里的老精灵把一卷图纸摊在石台上，线条一笔不抖，船身长宽之比画成六比一。他们说这船顺风时跑起来像飞一样，只是造它的木料、铁料和工钱，都得你自己出。"
+choices = [{ key = "record", text = "收下船坞的图纸", reply = "图纸用银线缝了封口，交到你手里。精灵没有道谢，只说船坞的门随时开着，尺寸可以来量。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_elven_clipper_known", value = true }, { kind = "item", item = "c11_plan_elven_clipper", qty = 1 }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "flag", flag = "c11_silver_branch_complete", value = true }] }]
+at = "atlantis_port"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_jackdaw"
+name = "寒鸦号"
+kind = "request"
+start = "family"
+auto = true
+
+[[tracks.chapters]]
+key = "family"
+art = "ship_jackdaw"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "里贝拉的船坞"
+text = "里斯本的码头上，一只寒鸦叼走了你的金币，一路飞进里贝拉的旧船坞。你追进去，老船匠正把一艘扎布拉的骨架拆成木料。他从木料堆里掏出金币还给你，说这是寒鸦欠你的。他的妻子和两个女儿要从门德斯网络走出里斯本，他身边没有别的人可托。"
+choices = [{ key = "help", text = "答应替他送人", reply = "老船匠点点头，把一张写着暗号的纸片塞进你袖口。门德斯的人会在约定的夜里来接，你只需把人送到安特卫普。", next = "shelter", effects = [], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }, { kind = "society", society = "mendes_network", ge = 1 }] }]
+at = "lisbon"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks.chapters]]
+key = "shelter"
+art = "ship_jackdaw"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "安特卫普仓库"
+text = "安特卫普的接应处是一间堆满布匹的仓库。门德斯的人要五匹呢绒做掩护，货栈的账上得对得上，这一家人才算真的到了。你得把布搬进仓库，过秤、点数，一匹也不能少。"
+choices = [{ key = "arrive", text = "把布交给接应人", reply = "布匹点齐，接应的人在账上记了一笔，把一家人的行李搬进仓库里间。你什么也没问，只记住了码头上那只寒鸦的叫声。", next = "handover", effects = [], requires = [] }]
+at = "antwerp"
+objectives = [{ kind = "goods", good = "cloth", qty = 5, at = "antwerp" }]
+
+[[tracks.chapters]]
+key = "handover"
+art = "ship_jackdaw"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "改装图"
+text = "回到里斯本，老船匠把一卷改装图摊开：船首加一座吊桥，船尾加桨座，帆装重新配过，铜皮要自己打。船尾那行刻字他照样描下来给你看，说是原来的主人刻的，他没舍得磨掉。"
+choices = [{ key = "receive", text = "接过改装图", reply = "图纸卷进油布套，船匠用力按了一下你的手背。图样归你了，他说，坞里的工还得等几个月。", next = "done", effects = [{ kind = "flag", flag = "c11_ship_jackdaw_known", value = true }, { kind = "item", item = "legend_ship_plan", qty = 1 }], requires = [] }]
+at = "lisbon"
+
+[[tracks]]
+key = "c11_ship_falkenberg"
+name = "法尔肯贝格的船"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_falkenberg"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "北雾里的船"
+text = "卑尔根的码头上，一个老水手喝得半醉，说北边的雾里有条船。船帆是黑的，船尾坐着两个影子，在甲板上掷一副骨骰子。赌注是船长的灵魂。老水手说，你若想追过去，雾会先散，船也跟着没了。"
+choices = [{ key = "record", text = "记下老水手的话", reply = "你把这段话记进小册。老水手喝干了杯底，说那条船什么时候再来，谁也说不准。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_falkenberg_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "bergen"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_draug_boat"
+name = "德劳格的半条船"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_draug_boat"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "礁石旁的半条船"
+text = "卑尔根的渔妇说，夜里礁石那边有半截船，船头坐着一团海藻，远看像一颗乱发的脑袋。那团东西会动，只在大雾天靠近岸边。她的表哥见过一回，醒来时手里攥着一把湿海藻。"
+choices = [{ key = "record", text = "问她半条船的事", reply = "你记下了渔妇的话，她把头巾系紧，说那团海藻只有在夏天的大雾里才会坐起来。你没有去礁石那边找。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_draug_boat_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "bergen"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_naglfar"
+name = "纳吉尔法"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_naglfar"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "冬天的漂船"
+text = "哈夫纳夫约杜尔的渡口上，有人压低嗓音说：冬天的海面上会漂来一条船，船板的缝是用死人的指甲填的。船工们在它附近总把指甲剪得干干净净，说落下的一片会被它拾走。渡口的老板把这话当笑话讲，却没有一个人笑。"
+choices = [{ key = "record", text = "听完便不再问", reply = "你没有去找那条船，只把这话记在心里。渡口的人见你不再问，便转去说鳕鱼又涨了价。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_naglfar_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "hafnarfjordur"
+when = [{ kind = "age", ge = 16 }]
+objectives = []
+
+[[tracks]]
+key = "c11_ship_ghost_junk"
+name = "鬼舶"
+kind = "request"
+start = "sighting"
+auto = true
+
+[[tracks.chapters]]
+key = "sighting"
+art = "ship_ghost_junk"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "外海的残船"
+text = "入夜前，外海漂来一队船影，帆只剩半幅，舵楼塌了一角，斜斜冲着外锚地来。港里有人说是遭难的同行，催着举火相认；老水手却按着火把不撒手，说头一回见的东西，先别急着认亲。"
+choices = [{ key = "record", text = "举火，看它应不应", reply = "火光在桅顶晃了三晃，对面黑沉沉的，没有半点回应。船影擦着外锚地漂过去，老水手啐了一口，说它不要人，也不要货。天亮时海上空空的，只剩水面浮着一层灰白的泡沫。", next = "failed", effects = [{ kind = "flag", flag = "c11_ship_ghost_junk_known", value = true }], requires = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 15 }] }]
+at = "yuegang"
+when = [{ kind = "age", ge = 16 }]
+objectives = []

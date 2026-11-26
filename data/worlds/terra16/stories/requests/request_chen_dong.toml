@@ -1,0 +1,197 @@
+# 请托：先过三棍（request_chen_dong）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：陈栋（chen_dong，1540-05-22 生，男），镇海卫千户之子，龙溪社学同窗；势力 ming，身份档 1。cast：classmates_zhangzhou.toml。
+# 类型：打一仗（fight）。三章：offer（报价）、battle（打退劫船）、after（比三棍）；没有 stage 章。
+#       offer 有一条不打的路：扮商船把劫船的引到卫所炮口下（seamanship 检定），成功直接进 after，失败被识破、迎战进 battle。
+# 报价：V（到访）。人物从镇海卫下到月港（yuegang），auto=true；窗口 1564-01-01 至 1590-06-30（同学重逢 1563 之后开放）。
+#       offer 写 family=c13_offer_yuegang、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：battle 章 deadline_days=90，超时走 failed，来信一封（好感 -3，旗标 _late）。after 章是普通章，可以一直等。
+# 依据·史实背景：1560 年代戚继光入闽平倭之后，福建沿海仍有零散海盗劫船；镇海卫的巡船少而慢；1567 年月港开海后商船更多。
+#       劫船的是叙事人物，不对应任何史上的海盗。
+# 依据·原创：陈栋的巡船与船底的藤壶、借给你的旗、码头东头晒网的空地、白蜡杆的棍、第三棍故意露出的破绽、三招闽南棍法。
+#       “先过三棍，再讲道理。”是他的口头禅，全轨道只在 after 章的比棍前用一次（offer 的结尾只说“比三棍”）。
+#       比三棍是切磋，不写成真打。“只教过两个人”不说是谁（C7 里的事不在这里讲）。
+# 秘密：他早就看穿“林兄”的底细而一个字没漏。只在 offer 的 variants 里读 c7_wandeng_unmasked_known 写一句“你的事，我从来没说过”；
+#       kept 时不写，见闻一律不写。
+# 读写的旗标：只读 c7_wandeng_unmasked_known（offer 的 variants）；不设任何 c7_ 旗标。
+#       写 c13_request_chen_dong_accepted（offer 两条接法，引诱失败也设）、_declined、_lured（引诱成功）、_fought（battle）、
+#       _fled（有一条船逃了，after 读它换一句话）、_late（battle 超时）、_done（after 全奖励）、_partial（after 比棍输了半招，奖励打折）。
+# 报酬：现金最多 1600（只在 after 给一次）、好感最多 +13、名声 +1、技能 staff_fujian +20（只一次）、回忆 mem-request_chen_dong-after。
+#       after 检定失败走折中：现金 1000、好感 +4、技能 +10，不加名声、不给回忆。
+# 依赖：港口 yuegang；人物 chen_dong（cast/classmates_zhangzhou.toml）；技能 staff_fujian（skills.toml）。无需 B10b 改名。
+# 回忆插画：mem-request_chen_dong-after：月港码头东头的空地，潮退后晒网的木架边，两个人各执一根白蜡棍对着，船户围成半圈。
+# 窗口（2026-11-01 close-places）：报价由 1564-01-01 起改为 1567-01-01 起——月港 1567 年才开港，1564—1566 三年走不到；正文不写年份，不动。
+
+[[tracks]]
+key = "request_chen_dong"
+name = "先过三棍"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["chen_dong"]
+
+# 一、追不上的船：月港码头，他拿棍尾磕着船帮上的蚝壳。
+[[tracks.chapters]]
+key = "offer"
+title = "追不上的船"
+text = "月港码头的石阶旁泊着镇海卫的巡船，船底的藤壶厚得像一层铜钱。陈栋提着一根齐眉棍站在船边，用棍尾一下一下磕船帮，磕下来的是干掉的蚝壳。“追了三回。”他说，“三回都在浯屿外头丢的。”外海有一伙劫船的，船小，吃水浅，专截从漳州出来的小商船，拿了货就放人，连船都不烧。他又磕了一下：“我这条船，爬得动，追不上。”然后看你：“你的船快。打一仗，或者把他们引到卫所的炮口底下，随你。”顿了顿，棍子往地上一顿：“打完了，跟我比三棍。”"
+speaker = "captain"
+mood = "tense"
+at = "yuegang"
+when = [
+  { kind = "date", from = [1567, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "chen_dong", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_yuegang"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_old_friend_known"
+when = [
+  { kind = "bond", person = "chen_dong", level = "C" },
+  { kind = "flag", flag = "c7_wandeng_unmasked_known" },
+]
+text = "月港码头的石阶旁泊着镇海卫的巡船，船底的藤壶厚得像一层铜钱。陈栋提着一根齐眉棍站在船边，用棍尾一下一下磕船帮，磕下来的是干掉的蚝壳。你走近，他没回头：“追了三回，三回都在浯屿外头丢的。”外海有一伙劫船的，船小，吃水浅，专截从漳州出来的小商船，拿了货就放人，连船都不烧。“你的船快。打一仗，或者把他们引到卫所的炮口底下，随你。”他把棍子倒过来，棍头递到你面前，眼睛看着船底的藤壶：“你的事，我从来没说过。你那一棍还没还我，打完了，比三棍。”"
+
+[[tracks.chapters.variants]]
+key = "v2_old_friend"
+when = [{ kind = "bond", person = "chen_dong", level = "C" }]
+text = "月港码头的石阶旁泊着镇海卫的巡船，船底的藤壶厚得像一层铜钱。陈栋提着一根齐眉棍站在船边，用棍尾一下一下磕船帮，磕下来的是干掉的蚝壳。你走近，他没回头：“追了三回，三回都在浯屿外头丢的。”外海有一伙劫船的，船小，吃水浅，专截从漳州出来的小商船，拿了货就放人，连船都不烧。“你的船快。打一仗，或者把他们引到卫所的炮口底下，随你。”他把棍子倒过来，棍头递到你面前：“你那一棍还没还我。打完了，比三棍。”"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "接下：出海跟那伙劫船的打一仗。"
+next = "battle"
+reply = "他点点头，转身从船舱里拎出一面旗，叠得方方正正，边角被烟熏得发黄。“挂上。”他说，“劫船的认得这面旗，一见就跑，一跑，船就散了，你才追得上。”他把旗塞进你手里，拇指在旗角按了一下，那里缝着一块补丁，是上回挨炮留下的。"
+effects = [
+  { kind = "affinity", person = "chen_dong", value = 2 },
+  { kind = "flag", flag = "c13_request_chen_dong_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "lure"
+text = "接下：扮成小商船，把他们引到卫所炮口下。"
+next = "after"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "你把商船的旗升上桅顶，船舷挂几只空篓子，在外海慢悠悠地晃。第二天晌午，两条快船从岛后头追上来，一路追到镇海卫的炮台底下。炮响了两声，水柱立在他们船头前面，那两条船调转了舵，散进了礁石里。陈栋站在炮台墙头，等你靠岸才冲你船舷上那几只空篓子抬了抬下巴：“空篓子，他们也追。”"
+news = "月港外海，有条商船一路把劫船的引到镇海卫炮台底下，炮响两声，那伙人就散了。"
+fail = { next = "battle", effects = [
+  { kind = "affinity", person = "chen_dong", value = 2 },
+  { kind = "flag", flag = "c13_request_chen_dong_accepted" },
+], news = "月港外海，劫船的追到半路，看出那条商船的吃水不对，掉头就扑了上来，两边在小岛边顶上了。" }
+effects = [
+  { kind = "affinity", person = "chen_dong", value = 3 },
+  { kind = "flag", flag = "c13_request_chen_dong_accepted" },
+  { kind = "flag", flag = "c13_request_chen_dong_lured" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "海防是卫所的事，我不插手。"
+next = "failed"
+reply = "他没说话，提着棍子上了巡船。缆绳解开，船慢吞吞地出了港，船尾拖着一道泥黄的水。"
+effects = [{ kind = "flag", flag = "c13_request_chen_dong_declined" }]
+
+# 二、藤壶底的船：打退一条之后，另一条被他的巡船堵在岛边。
+[[tracks.chapters]]
+key = "battle"
+title = "藤壶底的船"
+text = "两条快船从小岛后头钻出来的时候，陈栋的巡船还落在三里外，船底的藤壶拖得它直不起速。你的炮响过三轮，打退的那条船掉头往外海逃了；另一条没来得及转舵，被巡船从岛的另一侧堵在了礁边。陈栋站在船头，棍子横在身前，一声没喊。他朝逃的那条抬了抬下巴，又朝堵住的那条抬了抬下巴：“哪条？”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "chen_dong", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在外海打退劫船的快船" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "chen_dong", value = -3 },
+  { kind = "flag", flag = "c13_request_chen_dong_late" },
+  { kind = "letter", person = "chen_dong", text = "那伙人我自己守了一个月，守到一条。剩下的跑了。——陈栋" },
+] }
+
+[[tracks.chapters.choices]]
+key = "leave_to_him"
+text = "让他收拾堵住的那条，我去追逃的。"
+next = "after"
+check = { attr = "arms", base = 20, per = 7 }
+reply = "你追了大半个下午，把逃的那条挤在礁石和浅滩之间，它的舵手终于收了帆。回到岛边，陈栋已经把另一条船上的人一个个绑好，坐成一排。他看看你拖回来的那条，又看看你，把棍子冲你扬了扬：“两条，够交差了。”"
+news = "月港外海，一伙劫船的被人打散，镇海卫的巡船一口气押回来两条，码头上看热闹的挤了三层。"
+fail = { next = "after", effects = [
+  { kind = "affinity", person = "chen_dong", value = 2 },
+  { kind = "flag", flag = "c13_request_chen_dong_fought" },
+  { kind = "flag", flag = "c13_request_chen_dong_fled" },
+], news = "月港外海，逃的那条船钻进浯屿的礁石缝没了影，镇海卫的巡船只押回来一条。陈栋把绑好的人一个个点了数。" }
+effects = [
+  { kind = "affinity", person = "chen_dong", value = 3 },
+  { kind = "flag", flag = "c13_request_chen_dong_fought" },
+]
+
+[[tracks.chapters.choices]]
+key = "back_him"
+text = "掉头帮他围住堵住的那条，逃的就让它逃。"
+next = "after"
+reply = "你调转船头，和他的巡船一左一右夹住礁边的那条。船上的人看看两边的炮口，把刀扔进了水里。陈栋踩着船帮跳过去，一棍一个，把带头的敲趴下，别的人自己蹲下了。逃走的那条已经看不见了，他连头都没回。"
+news = "月港外海，一伙劫船的被人打散了，镇海卫的巡船押回来一条，另一条逃得不见影。"
+effects = [
+  { kind = "affinity", person = "chen_dong", value = 3 },
+  { kind = "flag", flag = "c13_request_chen_dong_fought" },
+  { kind = "flag", flag = "c13_request_chen_dong_fled" },
+]
+
+# 三、三棍：码头东头晒网的空地，第三棍他故意露一个破绽。
+[[tracks.chapters]]
+key = "after"
+title = "空地上的三棍"
+text = "回到月港，潮正退，码头东头的空地上还留着晒网的木架。陈栋把一根棍从肩上卸下来，扔过来，你伸手接住，是巡船上的白蜡杆，一头被灶火熏黑了。“先过三棍，再讲道理。”他说。船户们放下手里的活围成半圈，卖鱼丸的把担子也歇在了边上。头两棍他压着打，没留力，你接得手腕发麻。第三棍起手时，他的左肘抬高了半寸，肋下整个空了出来。他的眼睛没动，看的是你的眼睛。"
+speaker = "captain"
+mood = "cheerful"
+at = "yuegang"
+when = [{ kind = "alive", person = "chen_dong", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_lured"
+when = [{ kind = "flag", flag = "c13_request_chen_dong_lured" }]
+text = "回到月港，镇海卫炮台底下那两声炮还在码头上被人传来传去。陈栋把一根棍从肩上卸下来，扔过来，你伸手接住，是巡船上的白蜡杆，一头被灶火熏黑了。“先过三棍，再讲道理。”他说。你说人是炮打散的，他摇头：“炮打的不算，棍子打的才算。”船户们放下手里的活围成半圈。头两棍他压着打，没留力。第三棍起手时，他的左肘抬高了半寸，肋下整个空了出来。他的眼睛没动，看的是你的眼睛。"
+
+[[tracks.chapters.variants]]
+key = "v2_fled"
+when = [{ kind = "flag", flag = "c13_request_chen_dong_fled" }]
+text = "回到月港，潮正退，码头东头的空地上还留着晒网的木架。陈栋把一根棍从肩上卸下来，扔过来，你伸手接住，是巡船上的白蜡杆，一头被灶火熏黑了。“先过三棍，再讲道理。”他说。船户们放下手里的活围成半圈。头两棍他压着打，打一下问一句：“跑的那条，往哪边去的？”你答一句，他再压一棍。第三棍起手时，他的左肘抬高了半寸，肋下整个空了出来。他的眼睛没动，看的是你的眼睛。"
+
+[[tracks.chapters.choices]]
+key = "take_opening"
+text = "接他的破绽，一棍打过去。"
+next = "done"
+check = { attr = "arms", base = 20, per = 7 }
+reply = "棍梢点在他肋下，不重。他哼了一声，退了半步，然后笑了，露出一口白牙。围着的船户里有人说，没见过千户家的少爷这么笑。他把卫所发下的赏钱扔过来，又教了你三招闽南的棍法：劈，挑，回扫。教一招，打一遍给你看。“这三招，我只教过两个人。”他说完收了棍，没说另一个是谁。"
+news = "月港码头的空地上，千户家的陈栋跟一个船长比了三棍，比完了笑出声来，船户们说头一回见他这样，围着叫好。"
+fail = { next = "done", effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "affinity", person = "chen_dong", value = 4 },
+  { kind = "skill", skill = "staff_fujian", value = 10 },
+  { kind = "flag", flag = "c13_request_chen_dong_partial" },
+], news = "月港码头空地上，陈栋闪身一棍点在船长肩头：“破绽是给你看的，不是给你打的。”赏钱和三招棍法照给，船户们笑成一片。" }
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "chen_dong", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "staff_fujian", value = 20 },
+  { kind = "memory", memory = "mem-request_chen_dong-after", title = "码头空地上的三棍" },
+  { kind = "flag", flag = "c13_request_chen_dong_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "pass_opening"
+text = "不接，收棍，说这一棍算他赢。"
+next = "done"
+reply = "他愣了一下，把棍子往地上一扔：“讲道理了。”他从腰里摸出一只钱袋，是卫所发下的赏钱，抛给你。又当着船户的面教了你三招闽南的棍法：劈，挑，回扫。“不接破绽的人，才学得会。”他说，“这三招，我只教过两个人。”另一个是谁，他没说。"
+news = "月港码头的空地上，千户家的陈栋跟一个船长比棍，末了船长收棍认输，他反倒把棍扔了，围着的船户都愣住了。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "chen_dong", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "staff_fujian", value = 20 },
+  { kind = "memory", memory = "mem-request_chen_dong-after", title = "码头空地上的三棍" },
+  { kind = "flag", flag = "c13_request_chen_dong_done" },
+]

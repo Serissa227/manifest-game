@@ -1,0 +1,262 @@
+# C13d 人物的请托：借来的修院（2026-10-25，Claude 写）。
+# 标签：mixed（复合，5 章）：报价 → 送货（棉布进门）→ 房东的门槛 → 码头接人 → 收尾。T 当面（塞维利亚，auto=false，玩家“问请托”或 ask:request_teresa_of_avila 启动）。
+# 人物：阿维拉的特蕾莎（teresa_of_avila，1515-01-01 生，1582 卒），加尔默罗会修女。1575 年在塞维利亚借房立院；cast 日程 1575 全年在塞维利亚（church），求见门槛低，offer 不写 at，用 person 目标。
+# 窗口：报价 1575-06-01 至 1575-10-31（offer 的 deadline 为窗口止日，timeout 只 next=failed，不写见闻）。普通章不写 window；兄弟一章的 when 从 1575-08-01 起。
+# 依据·史实：1575-05-26 特蕾莎到塞维利亚，在租来的房子里立院，房东与邻里麻烦不断；同年 8 月她的兄弟洛伦索从秘鲁回到塞维利亚，1576 年出钱替修院买了房（洛伦索只在码头上出现，不建 cast，孩子也只在码头上）。棉布塞维利亚不产，文中只写“从南边的港口买”。
+# 依据·原创：房东与公证人、码头上自称远亲的人、贸易总署登记处的书记、旧床单剪成的绷带、一笔讲到认输的价钱。
+# 待核：修院借房的房租数额不写。宗教裁判所只作背景一句（告状、审她的书），不写审查细节，不进见闻。
+# 秘密：祖父是改宗的犹太人，本请托完全不碰；见闻一律不写。
+# C7：无。不读也不设任何 c7_ 旗标；不读主线旗标（c13_main_<主角> 不设门禁，对所有主角一样）。
+# 设的旗标：c13_request_teresa_of_avila_accepted / declined / gift / late / short / papers / late_brother / rent / done / partial。
+# 依赖：无 B10b 改名（seville 为现有港口，teresa_of_avila 的日程 key 已有）；skill negotiation 在 skills.toml 中已有。
+# 回忆插画清单：
+#   mem-request_teresa_of_avila-settle（栅栏后的笑声）：修院的木栅栏，栅栏后一张笑着的脸，栅栏外一碗清汤。
+
+[[tracks]]
+key = "request_teresa_of_avila"
+name = "借来的修院"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["teresa_of_avila"]
+
+# 报价：借来的房子里，一张算过三遍的单子。
+[[tracks.chapters]]
+key = "offer"
+title = "借来的房子"
+text = "塞维利亚的一座旧宅里，几个修女正把旧床单剪成绷带，屋子里满是醋和热气。特蕾莎站在门廊下，手里拿着一张单子，上面是她算过三遍的数：三十匹棉布，做被褥，做绷带，余下的给隔壁的病人。“房子是租的，热得受不了，我写的书还压在宗教裁判所的案卷里。”她笑了一下，“我付不起全价，可我会跟你讲价，一直讲到你认输。”单子递到你面前，她的手指还压在最后一行上。"
+mood = "cheerful"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1575, 6, 1], to = [1575, 10, 31] },
+  { kind = "alive", person = "teresa_of_avila", value = true },
+]
+objectives = [{ kind = "person", person = "teresa_of_avila", text = "在借来的修院门口找到她" }]
+deadline = [1575, 10, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去南边的港口买布"
+next = "deliver"
+effects = [
+  { kind = "affinity", person = "teresa_of_avila", value = 2 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_accepted" },
+]
+reply = "她把单子塞进你手里，又抽回去，在背面添了一行“要厚的”。“病人那边的床垫薄得能数草秆，”她说，“你买的时候，就照这个数想。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟买卖不接"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_teresa_of_avila_declined" }]
+reply = "她没有生气，说那就请你喝一碗汤再走。汤是修院里煮的，锅底没有一块肉，她说喝完再走，路上不容易饿。门口的修女把碗递过来时，还多给了一小块面包。"
+
+# 送货：棉布进门。每个选项都交货；口头禅只在这一章用一次。
+[[tracks.chapters]]
+key = "deliver"
+title = "棉布进门"
+text = "三十匹棉布卸在修院门口，修女们一匹匹抱进去，抱不动的就拖。特蕾莎摸了摸布边，说厚，又把一匹翻过来看背面。背面有一小块水渍，她用指甲刮了刮，说洗得掉，然后问价。你报了价，她的手指一行行按下账本，按到一半停住，抬起头看你：“天主也在锅碗瓢盆中间走。”她说，所以账也得算清楚。"
+mood = "cheerful"
+speaker = "captain"
+at = "seville"
+when = [{ kind = "alive", person = "teresa_of_avila", value = true }]
+objectives = [{ kind = "goods", good = "cloth", qty = 30, at = "seville", text = "把三十匹棉布运到塞维利亚" }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "teresa_of_avila", value = -3 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_late" },
+  { kind = "letter", person = "teresa_of_avila", text = "布已经有人送来了，是城里一位不肯留名的商人。谢谢你记着这件事，下一回来塞维利亚，门还开着。" },
+]
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "照本价收一半，另一半不提了"
+next = "landlord"
+effects = [
+  { kind = "cash", value = 1500 },
+  { kind = "affinity", person = "teresa_of_avila", value = 3 },
+]
+reply = "她当场数钱，数到一半停下来，说你吃亏了，又数了下去。数完她把账本合上，说这一笔她记在心里，不记在账上。"
+news = "塞维利亚一座借来的修院门口卸下三十匹棉布，付钱的是个刚靠岸的船长，修女数到一半停下来，说人家吃亏了。"
+
+[[tracks.chapters.choices]]
+key = "gift"
+text = "全部捐出，一文不收"
+next = "landlord"
+effects = [
+  { kind = "affinity", person = "teresa_of_avila", value = 5 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_gift" },
+]
+reply = "她看了你一会儿，说她会记着，用她的办法还。修女们把布一匹匹抱进库房，她最后一个进门，回头又看了一眼你站的地方。"
+news = "塞维利亚的修院门口，有人把三十匹棉布白白送了进去。修女们抱着布进门，门口的老修女只说了一句：布是厚的。"
+
+# 门槛：房东反悔，要她们月底搬走。你去谈，三条路。
+[[tracks.chapters]]
+key = "landlord"
+title = "门槛上的公证人"
+text = "第二天，房东带着公证人来了。房东说：“修女住进来，街上的人家都要说闲话。”公证人把契约摊在门槛外的石阶上，一条一条念，念到要她们月底搬走，又停下来翻回第一页，说是漏了一条。特蕾莎站在门槛里面，不让开，手里还攥着那张单子，回头看了你一眼。"
+mood = "tense"
+speaker = "captain"
+at = "seville"
+when = [{ kind = "alive", person = "teresa_of_avila", value = true }]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "替她跟房东谈：修女按时付租，闲话碍不着房价"
+next = "brother"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "brother", effects = [{ kind = "affinity", person = "teresa_of_avila", value = -2 }, { kind = "flag", flag = "c13_request_teresa_of_avila_short" }], news = "塞维利亚的房东只肯宽限半个月。特蕾莎听了，说半个月也够天主做很多事。" }
+effects = [{ kind = "affinity", person = "teresa_of_avila", value = 3 }]
+reply = "房东嘟囔了几句，把契约收回袖子里，临走还回头说，要是再有闲话，月底就来收房。公证人站在石阶上，还想再念一条，被房东一把拉走了。"
+news = "塞维利亚有个外地船长替修女们说话，房东把契约收回袖子里，公证人只好空手回去。"
+
+[[tracks.chapters.choices]]
+key = "deal"
+text = "跟公证人逐条讲契约的期限"
+next = "brother"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "你听不懂公证人念的那几条。"
+effects = [{ kind = "affinity", person = "teresa_of_avila", value = 3 }]
+reply = "你一条条问回去，问到第三条，公证人自己先找出了漏洞，脸色变了。房东把契约折起来，说改日再议，先走了。"
+news = "塞维利亚的公证人把一张修院的租约念了一个下午，念到第三条，房东先站了起来。"
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "替她预付三个月的房租"
+next = "brother"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你的钱袋不够付三个月的房租。"
+effects = [
+  { kind = "cash", value = -500 },
+  { kind = "affinity", person = "teresa_of_avila", value = 3 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_rent" },
+]
+reply = "房东收了钱，就不说闲话了，公证人的契约也一并收走。特蕾莎瞪了你一眼，说这钱她要还，记在账上，利钱照算。“你要是不信，下回来翻账本。”"
+news = "塞维利亚的房东收了一个外乡人预付的房租，把公证人打发回了家，修女们在门口笑了一整天。"
+
+# 码头：兄弟从秘鲁回来，她托你去接。远亲与账单都在码头上等着。
+[[tracks.chapters]]
+key = "brother"
+title = "阿雷纳尔码头"
+text = "从秘鲁来的船队上了瓜达尔基维尔河。特蕾莎托你去阿雷纳尔码头接她的兄弟洛伦索：“别让他先去见别人。”船是傍晚靠的岸，码头上的灯一盏盏点起来，几个自称远亲的人已经等在那里，还有拿着账单的。洛伦索晒得黝黑，牵着几个孩子，行李里有一只沉甸甸的箱子，一路都没松手。"
+mood = "tense"
+speaker = "captain"
+at = "seville"
+when = [
+  { kind = "alive", person = "teresa_of_avila", value = true },
+  { kind = "date", from = [1575, 8, 1] },
+]
+objectives = [{ kind = "at", at = "seville", text = "去阿雷纳尔码头接人" }]
+deadline = [1575, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "teresa_of_avila", value = -3 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_late" },
+  { kind = "letter", person = "teresa_of_avila", text = "兄弟自己找来了，箱子少了一样东西，不要紧。你不用再跑这一趟，修院的事我们自己办。" },
+]
+
+[[tracks.chapters.variants]]
+key = "short"
+when = [{ kind = "flag", flag = "c13_request_teresa_of_avila_short" }]
+text = "从秘鲁来的船队上了瓜达尔基维尔河。房东只宽限了半个月，修院的箱子已经堆在门廊下。特蕾莎托你去阿雷纳尔码头接她的兄弟洛伦索：“别让他先去见别人。”船是傍晚靠的岸，码头上的灯一盏盏点起来，几个自称远亲的人已经等在那里，还有拿着账单的。洛伦索晒得黝黑，牵着几个孩子，行李里有一只沉甸甸的箱子，一路都没松手。"
+
+[[tracks.chapters.choices]]
+key = "escort"
+text = "挡开那些远亲，直接把他领到修院"
+next = "settle"
+check = { attr = "eloquence", base = 35, per = 6 }
+fail = { next = "settle", effects = [{ kind = "affinity", person = "teresa_of_avila", value = -2 }], news = "一个远亲在阿雷纳尔码头硬拉着洛伦索进了酒馆，等他出来，天已经快黑了。" }
+effects = [{ kind = "affinity", person = "teresa_of_avila", value = 3 }]
+reply = "他进门就跪下来，被特蕾莎一把拉起来。她没骂人，只叫人端来热水，让他先洗一洗码头上的灰。他眼圈红红的，嘴里说的全是路上的事，说船上的水喝起来像铁锈，她听着，一句也不打断。"
+news = "阿雷纳尔码头上，一个晒黑的人被领出远亲的人群，进了修院的门。"
+
+[[tracks.chapters.choices]]
+key = "papers"
+text = "帮他把行李从贸易总署的登记处快些领出来"
+next = "settle"
+check = { attr = "stewardship", base = 20, per = 7 }
+fail = { next = "settle", effects = [{ kind = "affinity", person = "teresa_of_avila", value = -1 }], news = "塞维利亚的贸易总署登记处，书记把那只箱子压到了明天，秘鲁来的洛伦索只好空着手先去修院。" }
+effects = [
+  { kind = "affinity", person = "teresa_of_avila", value = 3 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_papers" },
+]
+reply = "书记翻了三遍登记簿，最后在箱子上盖了章，还嫌你来得太晚。箱子当天就领出来了，洛伦索抱着它，在码头上站了半天没动。"
+news = "塞维利亚的登记处当天就放了一只箱子出来，一个从秘鲁来的人抱着它在码头上站了半天。"
+
+[[tracks.chapters.choices]]
+key = "let"
+text = "让他先跟远亲们说几句"
+next = "settle"
+effects = [{ kind = "flag", flag = "c13_request_teresa_of_avila_late_brother" }]
+reply = "他被拉去喝了一下午，有人替他付了酒钱，傍晚才到修院，进门先赔罪。特蕾莎没说什么，只把门口的灯挪近了一点。"
+news = "阿雷纳尔码头上，几个远亲请一个晒黑的秘鲁来客喝酒，喝到天黑，有人替他付了账。"
+
+# 收尾：栅栏后面。兄弟到了，房子的事他会办；她问你要什么。
+[[tracks.chapters]]
+key = "settle"
+title = "栅栏后的笑声"
+text = "修院的会客栅栏是旧木头的，缝里塞着一张写了一半的单子，风一吹就晃。特蕾莎和兄弟在栅栏后面说了半天话。兄弟走了，她的眼睛有点红，嘴上还在开玩笑，说这个人在船上吐了一路，下了船还要跟脚夫讲价。房子的事，兄弟说会想办法。她隔着栅栏问你要什么：“说快些，厨房里的豆子还在火上。”"
+mood = "tender"
+at = "seville"
+when = [{ kind = "alive", person = "teresa_of_avila", value = true }]
+objectives = [{ kind = "person", person = "teresa_of_avila", text = "在修院的栅栏前找到她" }]
+deadline = [1575, 12, 31]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [
+  { kind = "flag", flag = "c13_request_teresa_of_avila_partial" },
+  { kind = "letter", person = "teresa_of_avila", text = "她已经去了别处。房子的事兄弟办妥了，谢谢你跑的这几趟。" },
+]
+
+[[tracks.chapters.variants]]
+key = "gift"
+when = [{ kind = "flag", flag = "c13_request_teresa_of_avila_gift" }]
+text = "修院的会客栅栏是旧木头的，缝里塞着一张写了一半的单子，风一吹就晃。特蕾莎和兄弟在栅栏后面说了半天话。兄弟走了，她的眼睛有点红，嘴上还在开玩笑，说这个人在船上吐了一路，下了船还要跟脚夫讲价。布的事她先提了：兄弟回来了，这下她付得起，这笔人情她记着。她隔着栅栏问你要什么：“说快些，厨房里的豆子还在火上。”"
+
+[[tracks.chapters.variants]]
+key = "rent"
+when = [{ kind = "flag", flag = "c13_request_teresa_of_avila_rent" }]
+text = "修院的会客栅栏是旧木头的，缝里塞着一张写了一半的单子，风一吹就晃。特蕾莎和兄弟在栅栏后面说了半天话。兄弟走了，她的眼睛有点红，嘴上还在开玩笑，说这个人在船上吐了一路，下了船还要跟脚夫讲价。房租的事，她说那笔钱她要还，一个子儿也不会少。她隔着栅栏问你要什么：“说快些，厨房里的豆子还在火上。”"
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [
+  { kind = "flag", flag = "c13_request_teresa_of_avila_gift" },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_rent" },
+]
+text = "修院的会客栅栏是旧木头的，缝里塞着一张写了一半的单子，风一吹就晃。特蕾莎和兄弟在栅栏后面说了半天话。兄弟走了，她的眼睛有点红，嘴上还在开玩笑，说这个人在船上吐了一路，下了船还要跟脚夫讲价。布的事她先提了：兄弟回来了，这下她付得起。房租的事她也提了，说那笔钱她要还，一个子儿也不会少。她隔着栅栏问你要什么：“说快些，厨房里的豆子还在火上。”"
+
+[[tracks.chapters.choices]]
+key = "letter"
+text = "请她写一封信：日后在别的港口，可以拿给修院和医院看"
+next = "done"
+effects = [
+  { kind = "letter", person = "teresa_of_avila", text = "船长：这封信请留着，到哪个港口，就拿给哪里的修院和医院看。你替我们跑了布，替我兄弟跑了码头，还肯跟房东的公证人讲道理。账算得清楚，我替你担保。见信的人若是修女，请给一碗热汤、一张干净的床，再让她把账本拿来，我们一起看。阿维拉的特蕾莎" },
+  { kind = "affinity", person = "teresa_of_avila", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "spain", value = 2 },
+  { kind = "memory", memory = "mem-request_teresa_of_avila-settle", title = "栅栏后的笑声" },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_done" },
+]
+reply = "她当场写，写得飞快，一张纸写满了还往边上接。她把笔尖在墨水瓶口敲了两下，说这一笔要写得让人信。末尾的签名有一个大圈，她说别人学不来，你要是学，就学这个圈。"
+news = "塞维利亚的修院里，阿维拉的特蕾莎替一个船上的人写了一封信，末尾的签名画着一个大圈。"
+
+[[tracks.chapters.choices]]
+key = "soup"
+text = "只要一碗修院里的汤"
+next = "done"
+effects = [
+  { kind = "affinity", person = "teresa_of_avila", value = 5 },
+  { kind = "flag", flag = "c13_request_teresa_of_avila_done" },
+]
+reply = "汤还是没有肉，颜色比井水还淡。门口的石阶被太阳晒得发烫，她先用袖子拂了一下才坐下。她陪你喝完，碗底见了底，才说下回来锅里要是有肉，算你赶得巧。"
+news = "塞维利亚的修院门口，有个路过的船长蹲在台阶上喝一碗没有肉的汤，修女陪着坐到天黑。"

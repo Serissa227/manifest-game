@@ -1,0 +1,127 @@
+# C13d 请托：一炉烧，一炉留着对照（request_magdalena）。中文，Claude 写。
+# 人物：玛格达莱娜 magdalena（1529-10-25 生，女；布拉格旧城酒馆地窖里的炼金术士，势力 holy_roman_empire，basis original），cast/story_europe.toml 里 tracks = ["request_magdalena"]。
+# 类型：送货（deliver）。offer → deliver → settle，终点 done / failed。共 3 章，没有 stage 章。
+# 报价：来信／代理人（L）。track auto=true；offer 章 at=hamburg，speaker 省略。玛格达莱娜只在信里说话，出面的是她在布拉格替药铺进货的伙计（写身份，不新建 cast）。
+#   offer 窗口 1557-06-01..1576-06-30，deadline=1576-06-30，timeout next=failed，不写见闻。family=c13_offer_hamburg，冷却 20 天。
+# 地点：汉堡 hamburg（报价、交货、结账）。布拉格只在信与见闻里出现，不上地图。
+# 依据（史实）：冰岛火山口的硫磺经汉堡商人收购、运往欧洲，属史实贸易。待核：具体年份、哈夫纳夫约杜尔的装船季节。正文只写“冰岛火山口”，不写山名。
+#   鲁道夫二世 1583 年把宫廷迁到布拉格——只在信中提“布拉格”，不写宫廷人物。
+# 依据（原创）：玛格达莱娜、伙计、布拉格药铺、红绳白绳两份硫磺、“三炉”的账页、天上落下的玻璃的传闻。
+#   伏尔塔瓦河谷的绿玻璃（今称 moldavite，陨石玻璃）在 16 世纪的记载待核，正文只写“天上落下的玻璃”这一句传闻。
+# 依赖：B10b 日程与港口 hamburg 现成；货物 sulfur（硫磺）、物品 sky_stone_charm（天降石护符，items/items_focus_01.toml）现成。
+#   主线门禁：无（gate_main 为空）。C7 的 tie_extra_06_magdalena_ilona 只读不写，本请托不写伊洛娜、不写恋情，窗口止于 1576 年。
+# 读的旗标（只读）：无。不设任何 c7_* 旗标。
+# 设的旗标：c13_request_magdalena_accepted（offer 接下，两个接法都设）；终局只设一面：declined（回绝，failed）、late（交货超时，failed）、done（结账，done）；
+#   分支旗标 c13_request_magdalena_source（交货时说出了火山口的名字，结账章换文字）。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻，没人知道这件事没成）。交货章 180 天内没到，她自己烧了意大利的硫磺，来一封信，好感 -3。
+#   结账章没有期限，可以一直等（窗口止 1576-12-30）。
+# 玩法结构：交货章 goods 目标在任何选项回应时扣货（十担硫磺），两个选项都交货；检定 numeracy 容易（35/6），失败走 fail 分支，只记得是“东边的山”。
+#   结账章 requires 天降石护符 1（只查持有，不扣）；没有护符的玩家只看到被挡住的选项。
+# 报酬：现金 900（结账）+ 400（硫磺货款，交货章付）；好感最多 +13；名声 +2；回忆 mem-request_magdalena-settle。不给秘术加成，不给物品。
+# 回忆插画清单：
+#   mem-request_magdalena-settle：一页账纸，三炉都画着小圈，最后一行写着“天降石，未烧”，纸角有一圈烧焦的痕。
+
+[[tracks]]
+key = "request_magdalena"
+name = "一炉烧，一炉留着对照"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["magdalena"]
+
+# 一、汉堡码头，伙计递来一封信：要十担冰岛硫磺，分两份
+[[tracks.chapters]]
+key = "offer"
+title = "红绳与白绳"
+text = "汉堡码头的风里带着一股硫磺味。布拉格药铺替玛格达莱娜进货的伙计，把一封信塞到你手里。信纸边上烧过一圈焦痕，字迹细得像针尖。信里写着：“冰岛火山口的硫磺，听说是地里烧出来的，比意大利的干净。要十担。分两份装，一份拿来烧，一份留着对照。烧坏了，我照样记账。”伙计站在货垛边等回话，两只手一直在搓，身上的硫磺味比码头上的还重。"
+mood = "mystic"
+at = "hamburg"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1576, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1576, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_hamburg"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去冰岛运十担硫磺。"
+next = "deliver"
+effects = [{ kind = "affinity", person = "magdalena", value = 2 }, { kind = "flag", flag = "c13_request_magdalena_accepted" }]
+reply = "伙计说她交代过，两份要分开装，一份的袋口系红绳，一份系白绳。"
+
+[[tracks.chapters.choices]]
+key = "ask_stone"
+text = "问伙计：信里那“天上落下的玻璃”，也要吗？"
+next = "deliver"
+effects = [{ kind = "affinity", person = "magdalena", value = 2 }, { kind = "flag", flag = "c13_request_magdalena_accepted" }]
+reply = "伙计翻过信纸的背面，那里有一行小字：那个是传说，先别管。可要是真有，看一眼也好。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "冰岛太远，不跑了。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_magdalena_declined" }]
+reply = "伙计把信收回去，说她会记一笔：问过，没成。"
+
+# 二、汉堡码头卸货：十担硫磺，两份绳，然后是那句要问的话
+[[tracks.chapters]]
+key = "deliver"
+title = "从哪个火山口挖的"
+text = "十担硫磺卸在汉堡码头，黄得发亮，味道冲得码头上的人直捂鼻子。伙计一袋一袋系绳，红绳系一份，白绳系一份，手上的结打得又紧又快。系到最后一袋，他停下来，说玛格达莱娜交代过，要我答一句：这批硫磺，是从哪个火山口挖的。风从海上来，他把帽子压了压，等我开口。"
+speaker = "captain"
+mood = "cheerful"
+at = "hamburg"
+objectives = [{ kind = "goods", good = "sulfur", qty = 10, at = "hamburg", text = "在汉堡码头交十担硫磺" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1576, 12, 30] }, { kind = "alive", person = "magdalena", value = true }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "letter", person = "magdalena", text = "硫磺没等到，我用意大利的烧了一炉，又坏了。账照记。" }, { kind = "affinity", person = "magdalena", value = -3 }, { kind = "flag", flag = "c13_request_magdalena_late" }] }
+news = "汉堡码头的酒馆里有人说，冰岛来的一船硫磺卸了一整天，布拉格药铺的伙计守着那几袋红绳白绳，谁碰都不让。"
+
+[[tracks.chapters.choices]]
+key = "tell_place"
+text = "说出在哈夫纳夫约杜尔从谁手里买的，那人说是哪座山。"
+next = "settle"
+check = { attr = "numeracy", base = 35, per = 6 }
+fail = { next = "settle", effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "magdalena", value = -2 }, { kind = "letter", person = "magdalena", text = "东边的山？我的账上不写“东边”。下一船，把山的名字带清楚。" }] }
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "magdalena", value = 3 }, { kind = "flag", flag = "c13_request_magdalena_source" }]
+reply = "伙计记下了，说她最在乎这个：知道从哪来，烧坏了才知道是哪里坏了。"
+
+[[tracks.chapters.choices]]
+key = "just_hand"
+text = "只说是冰岛的，别的不知道。"
+next = "settle"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "magdalena", value = 2 }]
+reply = "伙计点点头，在红绳那几袋上写了“冰岛”，白绳的也写了。"
+
+# 三、几个月后，账页与信：三炉都坏了，白绳的那份还在
+[[tracks.chapters]]
+key = "settle"
+title = "坏了三炉"
+text = "几个月后，伙计带来玛格达莱娜的信和一页账。红绳的那份烧了三炉，三炉都坏了，每一炉坏在哪里，账上都写得清清楚楚；白绳的那份原封不动，还装在袋子里。信末她写：坏了三炉，每一炉都比成功的那一炉写得长。她问我，在海上有没有见过什么奇怪的石头。伙计把账页翻过来给我看，最底下一行是她的字：“少一分就写少一分，别拿愿望凑。”"
+speaker = "captain"
+mood = "mystic"
+at = "hamburg"
+objectives = [{ kind = "wait", days = 90, text = "等三个月，账页从布拉格寄来" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1576, 12, 30] }, { kind = "alive", person = "magdalena", value = true }]
+news = "汉堡码头的酒馆里，有人说布拉格地窖那个炼金的女人，拿冰岛的硫磺烧坏了三炉，账记得比成功的还细。"
+
+[[tracks.chapters.choices]]
+key = "stone"
+text = "回信说：见过一块天降石做的护符，可以给她看一眼，不能给她烧。"
+next = "done"
+requires = [{ kind = "item", item = "sky_stone_charm", qty = 1 }]
+hint = "你身上没有天降石做的东西。这话说出口，她只会问你拿来看看。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "magdalena", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_magdalena_done" }, { kind = "memory", memory = "mem-request_magdalena-settle", title = "坏了三炉的账页" }]
+reply = "她回信说，看一眼就够了。下回来布拉格的人，替她描一个样子。信里夹着报酬，账页最后一行添了一笔：天降石，未烧。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "回信说：没见过，硫磺的钱收到了。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "magdalena", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_magdalena_done" }]
+reply = "她回了一行：没见过也是一种见过。钱照付。"
+
+[[tracks.chapters.variants]]
+key = "source_named"
+when = [{ kind = "flag", flag = "c13_request_magdalena_source" }]
+text = "几个月后，伙计带来玛格达莱娜的信和一页账。红绳的那份烧了三炉，三炉都坏了。账页上多了一行字，是她写下的火山口的名字，旁边批着：下一回要另一座山的，对照着烧。白绳的那份原封不动。信末她问我，在海上有没有见过什么奇怪的石头。"

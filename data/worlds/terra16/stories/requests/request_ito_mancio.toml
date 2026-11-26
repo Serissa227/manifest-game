@@ -1,0 +1,175 @@
+# C13d 人物的请托：印书机缺的纸（2026-10-25，Claude 写）。
+# 标签：deliver（送货）；T 当面（长崎教会，auto=false，玩家“问请托”或 ask:request_ito_mancio 启动；求见门槛按 cast 的 audience）。
+# 人物：伊东满所（ito_mancio，1569 年生，1612 年卒），天正遣欧使节的正使；cast 日程 1590-07-22 至 1590-12-31 在长崎 church。
+# 窗口：报价 1590-07-25 至 1590-10-31（offer 的 deadline 为窗口止日，到期走 timeout，无见闻）；交货章限 150 天；收尾章先等 30 天、再限 150 天。
+#   他的日程只到 1590 年底：交货与收尾两章用 at = "nagasaki"，不用 person 目标；正文写成他从山上的教会下到码头，1591 年也说得通。
+# 依据·史实：使节团 1590 年 7 月随范礼安回到长崎，带回一台西式活字印刷机；耶稣会随后在加津佐、天草印行罗马字与假名的书（研究笔记）。
+# 依据·原创：货量（纸 30 令）、货款（30 × 32 × 1.25 = 1200）、裂开的试压纸、管账修士的算盘、本子上写名字的一页、错了两个字母的第一张样页。
+#   “宁波的竹纸合用”只写成澳门来的商人这样说；吉利支丹版的具体书名不写，只说罗马字拼的祈祷文。
+# 秘密：欧洲人把使节当王子款待而他没有纠正；沿途见过被转卖的日本人——本请托都不碰。rome 选项里他讲到一半把话头拉回纸上，就是全部；见闻不写。
+# 主线：澪主线 c04 写使节出发（1582），offer 的 when 用 c13_main_mio = false 对澪关闭；其余主角都没见过他，正文按初见写。
+# 读的旗标：c13_main_mio（澪主线设置；尚未写时门禁等于不存在）。
+# 设的旗标：c13_request_ito_mancio_accepted / declined / paid / donated / late / done。
+# 依赖：无 B10b 改名；nagasaki、paper、lang_portuguese 都已存在。
+# 缺省走向：offer 不回应就挂到 1590-10-31，走 timeout（无见闻）；交货章 150 天内不交，走 timeout，他来信说纸向澳门的大船买到了（不扣钱不扣货）；
+#   收尾章 150 天内不回长崎，走 timeout，样页钉在印书房的柱子上（见闻挂在长崎，路过可知）。
+# 回忆插画清单：
+#   mem-request_ito_mancio-settle（墨还没干的第一页）：长崎栈桥上，年轻的使节两手捧着一张罗马字的样页，墨迹未干，第三行倒了一个字母。
+
+[[tracks]]
+key = "request_ito_mancio"
+name = "印书机缺的纸"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ito_mancio"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "没装纸的印刷机"
+text = "长崎教会的院子里，一台刚从船上卸下的印刷机立在檐下，铁螺杆上还缠着防潮的油布。几个修士蹲在地上，把铅字一个一个拣进小木格。伊东满所站在一旁，手里的本子写满了字。见你进来，他先合上本子，想了一想才开口：“机器有了，字也有了，缺的是纸。”他从袖里抽出一张日本纸，是修士刚拿去试压的，正中裂了一道口子。“修士说这里的纸太软，吃了墨就洇，一压就破。澳门来的商人说，宁波的竹纸硬些，要三十令。”他把破纸叠好，收回袖里，“第一本印出来的书，我想先给您看——在罗马，他们先给我们看的，也是书。”"
+speaker = "ito_mancio"
+mood = "cheerful"
+when = [
+  { kind = "date", from = [1590, 7, 25] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "ito_mancio", ge = 18 },
+  { kind = "flag", flag = "c13_main_mio", value = false },
+]
+objectives = [{ kind = "person", person = "ito_mancio", text = "在长崎找到伊东满所" }]
+deadline = [1590, 10, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去宁波运三十令竹纸来"
+next = "deliver"
+effects = [
+  { kind = "flag", flag = "c13_request_ito_mancio_accepted" },
+  { kind = "affinity", person = "ito_mancio", value = 2 },
+]
+reply = "他把本子翻到新的一页，问了你的名字，照着你念的一个音一个音写下来，写完把本子转过来给你看：“这样写，对吗？”有一处写得不对，你指给他看。他划掉重写，又在旁边注了读法，凑近看了半天才放心。“记下了，”他说，“纸运到的那天，我在这一页后面接着写。”"
+
+[[tracks.chapters.choices]]
+key = "rome"
+text = "答应下来，先问问他罗马是什么样子"
+next = "deliver"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [
+  { kind = "flag", flag = "c13_request_ito_mancio_accepted" },
+  { kind = "affinity", person = "ito_mancio", value = 3 },
+]
+reply = "他想了一会儿，说那里的教堂是石头砌的，屋顶高得要仰着头看，看久了脖子酸。有一间屋子，四面墙从地上到顶全是书，梯子靠在书架上，神父爬上去取。“我们站在底下，一本也够不着。”说到这里他停住了，回头看了看檐下那台印刷机，“所以要纸。三十令，一令也少不得。”"
+
+[tracks.chapters.choices.fail]
+next = "deliver"
+effects = [{ kind = "flag", flag = "c13_request_ito_mancio_accepted" }]
+news = "长崎教会的院子里，有个船长向从罗马回来的使节打听罗马，使节想了半天，只说了两个字：“很远。”说完就问起了纸。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "去宁波的船期排不开，这一趟接不了"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ito_mancio_declined" }]
+reply = "他鞠了一躬，鞠得很深，说不要紧，澳门每年都有大船来，他去求船上的人试试。你走到院门口回头，他已经蹲在修士们旁边，帮着拣铅字，本子夹在腋下。"
+
+[[tracks.chapters]]
+key = "deliver"
+title = "三十令竹纸"
+text = "竹纸一捆一捆卸进教会的仓房，带着船舱的潮气和竹浆的酸味。管账的修士拎着算盘迎上来，一令一令地摸，一令一令地压价：这一令边上起了毛，那一令受了潮，这一令颜色发黄。算盘珠子拨得噼啪响。满所站在仓房门口，脸涨得通红，几次张了嘴，又把话咽回去，只把本子攥在手里。里屋印书的修士在试机器，铁螺杆吱地响了一声，又停了。"
+at = "nagasaki"
+speaker = "captain"
+mood = "tender"
+news = "长崎教会的仓房里卸下几十捆竹纸，管账的修士拨了一下午算盘，一令一令地挑毛病，从罗马回来的使节在门口红着脸。"
+when = [{ kind = "alive", person = "ito_mancio", value = true }]
+objectives = [{ kind = "goods", good = "paper", qty = 30, at = "nagasaki", text = "三十令竹纸运到长崎" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_ito_mancio_late" },
+  { kind = "letter", person = "ito_mancio", text = "纸已经向澳门的大船买到了，比宁波的贵一些，够印一阵子。您的名字还在我本子里那一页，后面几行我没有写别的。——伊东满所" },
+]
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "按进价结账，一文也不多要"
+next = "settle"
+effects = [
+  { kind = "cash", value = 1200 },
+  { kind = "flag", flag = "c13_request_ito_mancio_paid" },
+]
+reply = "修士的算盘停了。他抬头看你，又低头把账从头拨了一遍，说他管了十年账，船上下来的人没有不多报三成的。“商人里难得有不讨价的。”他在账簿边上记了一笔，“下回教会买东西，先问您。”门口的满所松了一口气，脸上的红慢慢退了。"
+
+[[tracks.chapters.choices]]
+key = "donate"
+text = "纸送给印书房，不收钱"
+next = "settle"
+effects = [
+  { kind = "affinity", person = "ito_mancio", value = 5 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_ito_mancio_donated" },
+]
+news = "长崎有个船长运来几十捆竹纸，一文钱没收，说是送给教会印书的。管账的修士拨了一上午算盘，最后愣愣地收进了袖子。"
+reply = "修士愣住了，算盘停在半空，好一会儿才收进袖子里。满所走过来，蹲在纸捆旁边，翻开本子写了很久，写完一页又翻一页。你凑过去看，他把本子侧过来给你：写的是今天的日子、你的船名，还有每一捆纸的成色，连那一令起毛的也记上了。"
+
+[[tracks.chapters.choices]]
+key = "type"
+text = "用葡萄牙话跟印书的修士谈日文该怎么排字"
+next = "settle"
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60 }]
+hint = "里屋的修士们说的是印书的行话，你的葡萄牙话跟不上。"
+effects = [
+  { kind = "cash", value = 1200 },
+  { kind = "affinity", person = "ito_mancio", value = 3 },
+  { kind = "flag", flag = "c13_request_ito_mancio_paid" },
+]
+reply = "你进了里屋，跟印书的修士说起罗马字拼日文时，长音要不要另铸一个带横的字母，句尾的小字怎么排才不挤。修士放下手里的铅字，又叫来两个人。管账的修士在外头等得不耐烦，最后照原价结了账。满所站在你们中间，把你说的排法一条一条记下来，记了满满两页。"
+
+[[tracks.chapters]]
+key = "settle"
+title = "印出来的第一页"
+text = "一个多月后，满所从山上的教会一路跑到栈桥上来找你的船，两手捧着一张纸，跑得不快，怕风把它吹折。纸上是罗马字拼的日文祈祷文，一行一行排得很齐，墨还没干透，按一下就留个指印。“这是第一张，”他喘着气说，“印出来的头一张，说好了先给您看。”他指给你看：第三行倒了一个字母，第七行又少了一个。“修士说这一张不能用。我想把它留给您。”"
+at = "nagasaki"
+speaker = "ito_mancio"
+mood = "tender"
+news = "长崎教会的印刷机印出了第一页，从罗马回来的年轻使节捧着它在码头上跑，墨都没干。"
+when = [{ kind = "alive", person = "ito_mancio", value = true }]
+objectives = [
+  { kind = "wait", days = 30, text = "等印书房印出第一张" },
+  { kind = "at", at = "nagasaki", text = "回到长崎" },
+]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ito_mancio_late" }]
+news = "长崎教会印书房的柱子上钉着一张印坏的样页，从罗马回来的使节说，那是给一位运纸来、后来再没回长崎的船长留的。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "收下这张样页"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ito_mancio", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_ito_mancio_done" },
+  { kind = "memory", memory = "mem-request_ito_mancio-settle", title = "墨还没干的第一页" },
+]
+reply = "他把纸递过来，又叮嘱你先晾一晾再卷，别让墨蹭花了。“下一张会印得更好，”他说，“这一张错了两个字母——所以它才是第一张。”说完他自己先笑了，翻开本子，在写着你名字的那一页后面，添上今天的日子。"
+
+[[tracks.chapters.choices]]
+key = "return"
+text = "请他把样页钉在印刷机旁边"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ito_mancio", value = 10 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_ito_mancio_done" },
+]
+reply = "他愣了一下，随即高兴得又鞠了一躬，鞠完才想起手里还捧着纸，赶紧举高了些。当天下午，那张错了两个字母的样页就钉在了印刷机旁边的柱子上，底下用小字写着送纸的船名。几天后你再去，柱子上又多了两张，一张比一张齐。"

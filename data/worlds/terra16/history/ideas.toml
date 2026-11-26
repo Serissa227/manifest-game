@@ -1,0 +1,646 @@
+# C10：结构、引用、史实与玩法参数；显示正文均为待Claude替换的短占位。
+# 仅知年份／月份的条目在窗口末结算；不得把结算末日写成考证日期。
+
+# R01；事实上下文：徐阶与罗汝芳等在北京讲学；发生地是北京，天津仅为印书物资交付港。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r01_lingjigong_lectures"
+ripple_budget = 1500  # 涟漪预算（万分点）：结局出来后 30 日内，模型可据此写至多两条余波事件，倍率按 |倍率−1| 计费；离线不触发。
+title = "灵济宫讲会"
+summary = "嘉靖三十三年前后，徐阶、欧阳德、聂豹、程文德几位显宦在北京灵济宫大开讲会，同讲王守仁的良知之学，各省士子赶来，号称五千。相传是罗汝芳劝徐阶办的。天津只是纸与书册上岸的口岸，你可以在这里送纸送书、周济听讲的人，让讲会的余波传向各郡。"
+region = "天津"
+date = [1554, 12, 31]
+history = { date = [1554, 12, 31], outcome = "lectures_held" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银资助灵济宫讲会", port = "tianjin", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "交纸与书册供讲会", port = "tianjin", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给听讲贫户送粮送药", port = "tianjin", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "会外设粥棚，邀人听讲", port = "tianjin", max_points = 12, idea = "open_learning", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "助乡塾开讲良知", port = "tianjin", max_points = 12, idea = "open_learning", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "lectures_held", when = "<= 0", default = true, news = "天津卫的脚夫挑着书箱往京里去，回来说灵济宫开了大讲会，徐阁老和几位老大人轮着上堂讲良知，听的人据说有五千。", chronicle = "嘉靖三十三年，徐阶、欧阳德等集四方名士于京师灵济宫讲良知之学，赴者数千。", effects = [{ kind = "flag", flag = "r01_lingjigong_lectures_lectures_held" }] },
+  { key = "lectures_supported", when = "> 0", news = "天津卫运去的纸箱书担都卸在灵济宫外，散会后士子各带一册回乡，听说连河间府的社学也有人开了讲席。", chronicle = "嘉靖三十三年，灵济宫讲会散后，书册流入近畿各郡，良知之学自京师传向州县社学。", effects = [{ kind = "flag", flag = "r01_lingjigong_lectures_lectures_supported" }], vars = [{ var = "ming_open", add = 3 }] },
+]
+window = [[1553, 1, 1], [1554, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["朝廷禁过私创书院，聚众数千的讲会言官盯得紧"]
+campaign = "liaodong"
+
+# R02；事实上下文：梅尔希奥·努内斯·巴雷托到广州赎买被囚同胞；不要与另一位弗朗西斯科混同。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r02_barreto_guangzhou"
+ripple_budget = 1500
+title = "巴雷托访广州"
+summary = "耶稣会士梅尔希奥·努内斯·巴雷托来到珠江口，求官府放他进广州城，为被囚的葡萄牙人赎身。夷人入城要海道衙门点头，赎人要通事、船和打点，你可以在这里添一把力，让他多留些日子。"
+region = "广州"
+date = [1555, 12, 31]
+history = { date = [1555, 12, 31], outcome = "barreto_departs" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "葡萄牙王国", faction = "portugal", port = "guangzhou" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "筹银替被囚葡人赎身", port = "guangzhou", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸与书册给耶稣会士", port = "guangzhou", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "向广州贫户散粮送药", port = "guangzhou", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "在城外设施药所", port = "guangzhou", max_points = 12, idea = "catholic", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "请通事先生教葡人学汉话", port = "guangzhou", max_points = 12, idea = "catholic", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "barreto_departs", when = "<= 0", default = true, news = "广州城里传，一个佛郎机的黑衣神父进了城，替几个囚徒赎了身，没住几天又出城上了船，衙门里的人说，夷人不许久留。", chronicle = "嘉靖三十四年，耶稣会士巴雷托入广州城，赎回被囚的葡萄牙人，仍不得留居。", effects = [{ kind = "flag", flag = "r02_barreto_guangzhou_barreto_departs" }] },
+  { key = "missionary_allowed_to_remain", when = "> 0", news = "广州城外传开了，海道衙门竟许那黑衣神父留下，在城边赁了间屋，白天替葡人写信，傍晚教几个通事的孩子念经文。", chronicle = "嘉靖三十四年，海道许巴雷托留居广州城外，海外教士自此有了落脚处。", effects = [{ kind = "flag", flag = "r02_barreto_guangzhou_missionary_allowed_to_remain" }], vars = [{ var = "ming_catholic", add = 3 }] },
+]
+window = [[1555, 1, 1], [1555, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["按律夷人不得入城，连赎自家俘虏也要海道衙门点头"]
+campaign = "liaodong"
+
+# R03；事实上下文：兰达在马尼的宗教迫害；不让玩家执行迫害，救人和保留抄本属于有限改写。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r03_mani_codices"
+ripple_budget = 1500
+title = "马尼焚书"
+summary = "1562年夏天，方济各会修士兰达在尤卡坦的马尼审问玛雅人，要把抄本与神像搜个干净。藏书的人家把书塞进墙缝，修院的人一户户地拆墙。科苏梅尔的船能把纸、书与人送走，只看有没有人肯冒险。"
+region = "科苏梅尔"
+date = [1562, 7, 12]
+history = { date = [1562, 7, 12], outcome = "mani_books_burned" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "伊察", faction = "itza", port = "cozumel" },
+  { key = "opposition", name = "新西班牙副王辖区", faction = "new_spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱赎回被搜走的抄本", port = "cozumel", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸与书去马尼誊抄", port = "cozumel", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给被审的玛雅家户送粮药", port = "cozumel", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "mani_books_burned", when = "<= 0", default = true, news = "马尼修院前烧起大火，玛雅的抄本与神像一并投了进去。科苏梅尔的水手说，那股烟在海上都看得见。", chronicle = "1562年7月12日，方济各会修士兰达在马尼焚毁玛雅抄本与神像。", effects = [{ kind = "flag", flag = "r03_mani_codices_mani_books_burned" }] },
+  { key = "people_and_codices_sheltered", when = "> 0", news = "马尼有一户玛雅人家把抄本埋进地窖，修院的人搜了两日也没搜全。科苏梅尔的商人说，有几部书被雇来的船运去了岛上。", chronicle = "1562年，马尼的几部抄本经船送往科苏梅尔，躲过了焚毁。", effects = [{ kind = "flag", flag = "r03_mani_codices_people_and_codices_sheltered" }] },
+]
+window = [[1561, 1, 1], [1562, 7, 12]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["抄本一旦搜出，藏的人家跟着受罚，连替他们送书的船也要查。"]
+
+# R04；事实上下文：1560年设立；庇护新基督徒与印度教徒，制度存在与个人逃离不是同一结果。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r04_goa_inquisition"
+ripple_budget = 1500
+title = "果阿宗教裁判所"
+summary = "1560年，葡萄牙人在果阿设立宗教裁判所，此前已拆了不少印度教的神庙。新基督徒与印度教家族都在找出路，卡利卡特的船是最近的去处，能不能搭上要看港口里有没有熟人。"
+region = "果阿"
+date = [1560, 12, 31]
+history = { date = [1560, 12, 31], outcome = "inquisition_established" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "葡萄牙王国", faction = "portugal", port = "goa" },
+  { key = "opposition", name = "维查耶纳伽尔", faction = "vijayanagara" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱替被控的家族打点", port = "goa", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "把纸与书运进果阿的书铺", port = "goa", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给逃亡在外的家族送粮药", port = "goa", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "资助印度教的施粥", port = "goa", max_points = 12, idea = "hindu_traditions", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "开一处梵文学塾", port = "goa", max_points = 12, idea = "hindu_traditions", mode = "school", points = 8 },
+  { key = "protect_orta_passage", side = "support", kind = "propagate", label = "护送新基督徒去卡利卡特", port = "calicut_port", max_points = 12, idea = "catholic", mode = "protect", points = 10 },
+]
+outcomes = [
+  { key = "inquisition_established", when = "<= 0", default = true, news = "果阿的教堂门口贴出了告示，名单上的几户人家一夜之间没了踪影，街坊只敢在门后议论。", chronicle = "1560年，果阿设立宗教裁判所，裁判官开始传唤被告到堂上问话。", effects = [{ kind = "flag", flag = "r04_goa_inquisition_inquisition_established" }] },
+  { key = "families_find_refuge", when = "> 0", news = "卡利卡特的船上来了几家果阿人，说是躲过了门口的告示，箱子里还裹着神像。", chronicle = "1560年，果阿的几户新基督徒与印度教家族经卡利卡特的船离开葡萄牙辖区。", effects = [{ kind = "flag", flag = "r04_goa_inquisition_families_find_refuge" }] },
+]
+window = [[1559, 1, 1], [1560, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["嫌疑的名单一旦立起，逃走的人也还挂在上面。"]
+
+# R05；事实上下文：1559禁书目录、1563闭幕、1564目录；不把所有目录混为1563同一版。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r05_trent_council"
+ripple_budget = 1500
+title = "特伦托会议闭幕"
+summary = "1563年12月，特伦托大会闭幕。会上定下圣像、圣物与新奇迹都须经主教认可，禁书的事也被提到了桌上。威尼斯是印书的中心，书商与使节都在等消息，先知道的人能先把书运出去。"
+region = "威尼斯"
+date = [1563, 12, 4]
+history = { date = [1563, 12, 4], outcome = "trent_closes" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "教宗国", faction = "papal_states", port = "venice" },
+  { key = "opposition", name = "神圣罗马帝国", faction = "holy_roman_empire" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助威尼斯的使节与神学家", port = "venice", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸与书到威尼斯印行", port = "venice", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给威尼斯的印工家送粮药", port = "venice", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "trent_closes", when = "<= 0", default = true, news = "特伦托的会议散了，威尼斯的书商还在照着旧的禁书单子点书架，新书的价钱先涨了。", chronicle = "1563年12月4日，特伦托大会闭幕，圣像与圣物的法令定了下来。", effects = [{ kind = "flag", flag = "r05_trent_council_trent_closes" }] },
+  { key = "scholarly_books_preserved", when = "> 0", news = "威尼斯的书坊里，有人把要禁的书悄悄收进木箱，说是给城里的学者留几部。", chronicle = "1563年，威尼斯有几部学术书籍在禁书的事定下来之前被运走，得以留存。", effects = [{ kind = "flag", flag = "r05_trent_council_scholarly_books_preserved" }] },
+]
+window = [[1559, 1, 1], [1563, 12, 4]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["法令要一条条地落到各教区，书坊的存书却早就印好了。"]
+
+# R06；事实上下文：1566年八月爆发，安特卫普8月20日；可保护不同信仰的人，阿尔瓦1567到来。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r06_netherlands_iconoclasm"
+ripple_budget = 1500
+title = "尼德兰圣像破坏"
+summary = "1566年8月，安特卫普的教堂被冲进去，圣像、祭坛画与彩窗接连被砸。城里的新教徒与天主教徒都怕被追查，两边都有人要找地方躲。码头的船东把船钱翻了一倍，躲避的人挤满了码头。"
+region = "安特卫普"
+date = [1566, 8, 20]
+history = { date = [1566, 8, 20], outcome = "iconoclasm_spreads" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "哈布斯堡尼德兰", faction = "netherlands", port = "antwerp" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助安特卫普的讲道所", port = "antwerp", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运书和纸到安特卫普印小册", port = "antwerp", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给被追赶的工匠送粮药", port = "antwerp", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "资助新教徒的施粥所", port = "antwerp", max_points = 12, idea = "reformed", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "开一所新教学塾", port = "antwerp", max_points = 12, idea = "reformed", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "iconoclasm_spreads", when = "<= 0", default = true, news = "安特卫普的教堂一座接一座被砸，城外的村镇也有人跟着动手，修道院的钟声哑了，修士们提着包袱往城外走。", chronicle = "1566年8月20日，安特卫普的教堂遭冲击，圣像与祭坛画大量被毁。", effects = [{ kind = "flag", flag = "r06_netherlands_iconoclasm_iconoclasm_spreads" }] },
+  { key = "neighbors_sheltered", when = "> 0", news = "安特卫普的邻居互相藏人，有人家把对头的孩子也接进了门，门口的火把没有烧进来。", chronicle = "1566年，安特卫普有几户邻里互相庇护，没有被冲进门去。", effects = [{ kind = "flag", flag = "r06_netherlands_iconoclasm_neighbors_sheltered" }] },
+]
+window = [[1566, 1, 1], [1566, 8, 20]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["砸毁的圣像不会再回来，城里的人家连搬走的车马都要凑。"]
+
+# R07；事实上下文：阿维拉特蕾莎创办圣若瑟修院；她的著作并非这年已经全部出版。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r07_teresa_san_jose"
+ripple_budget = 1500
+title = "圣若瑟修院"
+summary = "1562年8月，阿维拉的特蕾莎建起圣若瑟修院，赤足、守静，每院只收十几个人。修院缺纸少书，塞维利亚的商船能把她要的东西运上来，修会的长上却不太高兴。"
+region = "塞维利亚"
+date = [1562, 8, 24]
+history = { date = [1562, 8, 24], outcome = "san_jose_founded" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "西班牙诸王国", faction = "spain", port = "seville" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱买下修院的房子", port = "seville", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸与书去修院抄写", port = "seville", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给修院的修女送粮药", port = "seville", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "替修院门口分发汤饭", port = "seville", max_points = 12, idea = "catholic", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "在修院里开女童读经班", port = "seville", max_points = 12, idea = "catholic", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "san_jose_founded", when = "<= 0", default = true, news = "塞维利亚的商人说，阿维拉有间修院挂起了新招牌，修女们都赤着脚走路，街上的人都来看。", chronicle = "1562年8月24日，阿维拉的圣若瑟修院开院，特蕾莎带着几名修女入住。", effects = [{ kind = "flag", flag = "r07_teresa_san_jose_san_jose_founded" }] },
+  { key = "women_house_supported", when = "> 0", news = "塞维利亚的女商人捐了一笔钱，阿维拉的修院这才买下了隔壁的屋子。", chronicle = "1562年，塞维利亚的捐款到了阿维拉，修院添了隔壁的屋子。", effects = [{ kind = "flag", flag = "r07_teresa_san_jose_women_house_supported" }] },
+]
+window = [[1561, 1, 1], [1562, 8, 24]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["修会的长上与城里的神父都在盯着这间修院，一有风声就要来查问。"]
+
+# R08；事实上下文：信长焚比叡山；本愿寺只作为可交付的救援网络，不说二者属于同一寺派。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r08_hiei_refugees"
+ripple_budget = 1500
+title = "比叡山之火"
+summary = "元龟二年，近江坂本的人都说织田信长迟早要上比叡山来，可延历寺的僧俗、佛像与经卷都还留在山上。石山本愿寺正与信长交战，宗门虽不同，堺的门徒商人有船有路，能接应下山的人，缺的是银子、粮药和抄经的纸。"
+region = "堺"
+date = [1571, 9, 30]
+history = { date = [1571, 9, 30], outcome = "enryakuji_burned" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "石山本愿寺", faction = "hongwanji", port = "sakai" },
+  { key = "opposition", name = "织田氏", faction = "oda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银雇淀川船往上游接人", port = "sakai", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "把纸和经本运到堺", port = "sakai", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给逃下山的僧俗备下米粮汤药", port = "sakai", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "请堺的寺院收容山上僧众", port = "sakai", max_points = 12, idea = "buddhist_traditions", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "供逃来的学僧在堺续讲经论", port = "sakai", max_points = 12, idea = "buddhist_traditions", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "enryakuji_burned", when = "<= 0", default = true, news = "从近江逃到堺的挑夫说，坂本一夜之间烧成了白地，山上的钟再没响过；问他山上的人呢，他只是摇头。", chronicle = "元龟二年九月，织田信长焚比叡山延历寺与日吉社，山上僧俗多被杀。", effects = [{ kind = "flag", flag = "r08_hiei_refugees_enryakuji_burned" }] },
+  { key = "people_and_records_sheltered", when = "> 0", news = "堺的几座寺院这几天住进了好些山上下来的僧人，背上是油纸裹好的经卷，说是门徒商人的人马连夜从坂本把他们接了出来。山上的火还是烧了。", chronicle = "元龟二年九月，比叡山遭焚；火起前已有一批僧俗与经卷由本愿寺门徒护送到堺。", effects = [{ kind = "flag", flag = "r08_hiei_refugees_people_and_records_sheltered" }] },
+]
+window = [[1571, 1, 1], [1571, 9, 30]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["前一年志贺之阵，浅井、朝仓的兵屯在山上，信长要寺里中立，寺里没有答应。"]
+
+# R09；事实上下文：8月24日巴黎屠杀并蔓延；救助个人不等于逆转法国全部战争。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r09_bartholomew_refugees"
+ripple_budget = 1500
+title = "圣巴托洛缪之夜"
+summary = "1572年8月24日凌晨，巴黎的天主教徒对胡格诺派动手，屠杀很快烧到了外省。拉罗谢尔是新教徒的堡垒，船与粮都能从这里运出去。"
+region = "拉罗谢尔"
+date = [1572, 8, 24]
+history = { date = [1572, 8, 24], outcome = "massacre_spreads" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "法兰西王国", faction = "france", port = "la_rochelle" },
+  { key = "opposition", name = "法兰西王国", faction = "france" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银养拉罗谢尔的难民", port = "la_rochelle", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸与书进拉罗谢尔", port = "la_rochelle", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "发粮药给逃来的家户", port = "la_rochelle", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "施粥时请归正派牧师讲道", port = "la_rochelle", max_points = 12, idea = "reformed", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "在城里办归正派学堂", port = "la_rochelle", max_points = 12, idea = "reformed", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "massacre_spreads", when = "<= 0", default = true, news = "拉罗谢尔的船长听说，巴黎的刀还没入鞘，外省的城镇已经照着做了；逃出来的人说，路上到处都是尸首。", chronicle = "1572年8月24日，巴黎屠杀胡格诺派，外省随即效仿。", effects = [{ kind = "flag", flag = "r09_bartholomew_refugees_massacre_spreads" }] },
+  { key = "huguenots_sheltered", when = "> 0", news = "拉罗谢尔的码头上不收船钱，从外省逃来的新教徒一船接一船靠了岸，城门也开着。", chronicle = "1572年8月，拉罗谢尔的港口收留了一批逃出外省的新教徒。", effects = [{ kind = "flag", flag = "r09_bartholomew_refugees_huguenots_sheltered" }] },
+]
+window = [[1572, 1, 1], [1572, 8, 24]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["命令出自王宫，拉罗谢尔的船和粮够不着巴黎，只能等人逃到港口再接。"]
+
+# R10；事实上下文：1575法泰赫普尔西克里论辩，1580首批耶稣会使团；不把论辩设计成宗教胜负竞赛。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r10_ibadat_khana"
+ripple_budget = 1500
+title = "礼拜堂论辩"
+summary = "1575年起，阿克巴在法塔赫布尔·西克里的礼拜堂里请各派学者谈经。1580年，耶稣会的使团从果阿到了宫里。苏拉特的商人想知道，宫里留下的是哪些学者，哪些书能送进去。"
+region = "苏拉特"
+date = [1582, 12, 31]
+history = { date = [1582, 12, 31], outcome = "discussions_continue" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "莫卧儿王朝", faction = "mughal", port = "surat" },
+  { key = "opposition", name = "莫卧儿王朝", faction = "mughal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银资助苏拉特的学者", port = "surat", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸和书去苏拉特", port = "surat", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给苏拉特的穷人送米药", port = "surat", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "在清真寺施饭时讲经", port = "surat", max_points = 12, idea = "sunni", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "请逊尼学者在城里开班", port = "surat", max_points = 12, idea = "sunni", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "discussions_continue", when = "<= 0", default = true, news = "苏拉特的商人说，法塔赫布尔·西克里的礼拜堂里还在吵，学者们谁也没有散去。", chronicle = "1582年，阿克巴仍在礼拜堂里请各派学者辩论。", effects = [{ kind = "flag", flag = "r10_ibadat_khana_discussions_continue" }] },
+  { key = "scholars_supported", when = "> 0", news = "苏拉特的船老大讲，宫里厚待了几位学者，耶稣会的神父也能在礼拜堂里坐下了。", chronicle = "1582年，宫里厚待学者，各派的论辩才没有断。", effects = [{ kind = "flag", flag = "r10_ibadat_khana_scholars_supported" }] },
+]
+window = [[1575, 1, 1], [1582, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["宫里的乌理玛不肯与外教的学者同席，地方的教法官也跟着反对。"]
+
+# R11；事实上下文：1580长崎交耶稣会管理、1582年2月20日出发、1590年7月21日返长崎；返程带印刷机。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r11_tensho_embassy"
+ripple_budget = 1500
+title = "长崎与天正使节"
+summary = "天正八年，大村纯忠把长崎与茂木交给耶稣会。两年后正月，范礼安从有马神学校挑出四个十三四岁的少年，从长崎上船去罗马拜见教宗。船位、通事、护送与一路的盘缠都要有人出；回程能捎回什么，也看这几年的门路。"
+region = "长崎"
+date = [1590, 7, 21]
+history = { date = [1590, 7, 21], outcome = "embassy_returns" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大村氏", faction = "omura", port = "nagasaki" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "为少年使节筹措船资", port = "nagasaki", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "替长崎教会运来纸张与书册", port = "nagasaki", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "接济长崎町里的穷户", port = "nagasaki", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "资助长崎仁慈堂的施药所", port = "nagasaki", max_points = 12, idea = "catholic", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "供长崎少年随神父习拉丁文", port = "nagasaki", max_points = 12, idea = "catholic", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "embassy_returns", when = "<= 0", default = true, news = "长崎码头挤满了人：八年前出海的四个少年回来了，个子都高过了神父的肩。范礼安这回打着印度副王使节的旗号，随船的箱子里是一台印刷机。", chronicle = "天正十八年，往罗马的四少年随范礼安归抵长崎，携西洋活字印刷机以还。", effects = [{ kind = "flag", flag = "r11_tensho_embassy_embassy_returns" }] },
+  { key = "embassy_and_press_supported", when = "> 0", news = "长崎的船上卸下来的不止一台印刷机：成箱的铅字、纸张与西洋书一直搬到天黑，跟船回来的排字匠当晚就去看了铺面。", chronicle = "天正十八年，四少年一行归长崎，印刷机外另运回大批铅字与书籍，刊印得以早开。", effects = [{ kind = "flag", flag = "r11_tensho_embassy_embassy_and_press_supported" }] },
+]
+window = [[1580, 1, 1], [1590, 7, 21]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["去与回都只能搭葡萄牙人的季风船，在澳门、果阿一等风就是大半年。"]
+
+# R12；事实上下文：1587追放令，执行有留余地；不把1597二十六人殉教提前。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r12_missionary_expulsion"
+ripple_budget = 1500
+title = "伴天连追放令"
+summary = "天正十四年，关白秀吉还在大坂城给了耶稣会传教的许可状。第二年夏天他平定九州、驻在筑前筥崎，却忽然下令伴天连二十日内离开日本，南蛮船的买卖照旧。长崎满是教堂与教民，神父和书是藏进大村领的山村，还是送上葡萄牙船，得赶在期限前办妥。"
+region = "长崎"
+date = [1587, 7, 24]
+history = { date = [1587, 7, 24], outcome = "expulsion_edict" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大村氏", faction = "omura", port = "nagasaki" },
+  { key = "opposition", name = "丰臣氏", faction = "toyotomi" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "替神父们打点藏身之处", port = "nagasaki", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给长崎送纸，抄下要藏的书", port = "nagasaki", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给躲进村里的教民送粮", port = "nagasaki", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "照看长崎教会收养的孤儿病人", port = "nagasaki", max_points = 12, idea = "catholic", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "让长崎的教会学舍照常开课", port = "nagasaki", max_points = 12, idea = "catholic", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "expulsion_edict", when = "<= 0", default = true, news = "筥崎那边的五条定书传到了长崎：伴天连二十日内回国。神父们收拾了箱子，却大多往平户去了，没听说谁真上了船。", chronicle = "天正十五年六月，丰臣秀吉于筑前筥崎颁伴天连追放令，限二十日出境。", effects = [{ kind = "flag", flag = "r12_missionary_expulsion_expulsion_edict" }] },
+  { key = "missionaries_evacuated", when = "> 0", news = "长崎有人说，追放令下来那几夜，大村领的山村里多了些借宿的远客，教会的书一箱箱藏进农家的米仓；也有神父搭葡萄牙船去了澳门。", chronicle = "天正十五年，追放令下，长崎一带的神父与教会书籍多得藏匿、转送，留存者较他处为多。", effects = [{ kind = "flag", flag = "r12_missionary_expulsion_missionaries_evacuated" }] },
+]
+window = [[1586, 1, 1], [1587, 7, 24]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["大村纯忠这年四月刚病死，嗣子喜前年纪尚轻，不敢违抗关白的命令。"]
+
+# R13；事实上下文：利马第三次会议1582—83，1584西班牙语、克丘亚语、艾马拉语教理；提供纸张、铅字与译者，不买卖经文作秘术。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "r13_lima_printing"
+ripple_budget = 1500
+title = "利马的三语印本"
+summary = "1582至1583年，利马的第三次公会议决定，教理问答要用克丘亚语与艾马拉语写，不能只用西班牙语。1584年的印本要从卡亚俄运纸、运活字进城。"
+region = "卡亚俄"
+date = [1584, 12, 31]
+history = { date = [1584, 12, 31], outcome = "trilingual_book_printed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "秘鲁副王辖区", faction = "peru", port = "callao" },
+  { key = "opposition", name = "秘鲁副王辖区", faction = "peru" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银给利马的印刷房", port = "callao", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸和书进利马", port = "callao", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给卡亚俄的码头工送粮药", port = "callao", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "施药时顺带讲教理", port = "callao", max_points = 12, idea = "catholic", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "办一间克丘亚语学堂", port = "callao", max_points = 12, idea = "catholic", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "trilingual_book_printed", when = "<= 0", default = true, news = "卡亚俄的码头上有人喊：利马的印刷房里印出了西班牙语、克丘亚语和艾马拉语的教理问答。", chronicle = "1584年，利马印出三种语言的教理问答。", effects = [{ kind = "flag", flag = "r13_lima_printing_trilingual_book_printed" }] },
+  { key = "translation_work_supported", when = "> 0", news = "卡亚俄的译员压低声音讲，城里多了几位懂克丘亚语的译者，译稿也有人肯掏钱付印了，校样的人手忙不过来。", chronicle = "1584年，利马的译者得到支持，克丘亚语与艾马拉语的译稿陆续付印。", effects = [{ kind = "flag", flag = "r13_lima_printing_translation_work_supported" }] },
+]
+window = [[1582, 1, 1], [1584, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["利马的印刷房少，纸与活字都得从西班牙船上来，船期一误，书就印不出。"]
+
+# n_1555；事实上下文：格拉沃德沃斯对葡萄牙传教士的答辩；1557年耶稣会使团另日，不把正统教会写成新传入宗教。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1555_ethiopian_confession"
+ripple_budget = 1500
+title = "埃塞俄比亚的信仰答辩"
+summary = "1555年，格拉沃德沃斯写下《信仰告白》，答复葡萄牙传教士的质问，替本国的教会传统辩护。消息沿红海的商路走，马萨瓦的商人是最早听见的人。"
+region = "马萨瓦"
+date = [1555, 12, 31]
+history = { date = [1555, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md"]
+sides = [
+  { key = "support", name = "埃塞俄比亚帝国", faction = "ethiopia", port = "massawa" },
+  { key = "opposition", name = "埃塞俄比亚帝国", faction = "ethiopia" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "马萨瓦的骆驼队带回话来：埃塞俄比亚的教士写成一篇长文，答复了葡萄牙人的非难，文中还引了老经上的句子。", chronicle = "1555年，埃塞俄比亚的《信仰告白》写成，答复葡萄牙人的非难。", effects = [{ kind = "flag", flag = "n_1555_ethiopian_confession_news_received" }] },
+]
+window = [[1555, 1, 1], [1555, 12, 31]]
+
+# n_1556；事实上下文：1556年墨西哥城关于崇敬实践的争论；显现传说与后见材料须区分。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1556_guadalupe_debate"
+ripple_budget = 1500
+title = "瓜达卢佩争论"
+summary = "1556年，墨西哥城的大主教与方济各会士为瓜达卢佩的礼拜争执，争的是信众该怎样崇敬，哪些做法算正统。韦拉克鲁斯的船把这件事带向海外。"
+region = "韦拉克鲁斯"
+date = [1556, 12, 31]
+history = { date = [1556, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md"]
+sides = [
+  { key = "support", name = "新西班牙副王辖区", faction = "new_spain", port = "veracruz" },
+  { key = "opposition", name = "新西班牙副王辖区", faction = "new_spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "韦拉克鲁斯的码头上都在传，墨西哥城的大主教与方济各会士为瓜达卢佩的礼拜吵得厉害。", chronicle = "1556年，墨西哥城为瓜达卢佩的礼拜起了争执。", effects = [{ kind = "flag", flag = "n_1556_guadalupe_debate_news_received" }] },
+]
+window = [[1556, 1, 1], [1556, 12, 31]]
+
+# n_1572；事实上下文：卢里亚1569—72年在萨法德活动；不把卡巴拉当作玩家魔法。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1572_safed_learning"
+ripple_budget = 1500
+title = "萨法德的学术"
+summary = "1569至1572年，卢里亚在萨法德讲卡巴拉，城里的犹太学者与门徒围坐在他身边，听他讲神如何退让，又如何修补世界。贝鲁特的商人把抄本带出去卖。"
+region = "贝鲁特"
+date = [1572, 12, 31]
+history = { date = [1572, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md"]
+sides = [
+  { key = "support", name = "奥斯曼帝国", faction = "ottoman", port = "beirut" },
+  { key = "opposition", name = "奥斯曼帝国", faction = "ottoman" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "贝鲁特的书贩指着抄本说，萨法德有位老师讲卡巴拉，门徒多得屋里坐不下，连山脚的驴夫都听说了。", chronicle = "1572年，卢里亚在萨法德染疫去世，弟子开始整理他的讲论。", effects = [{ kind = "flag", flag = "n_1572_safed_learning_news_received" }] },
+]
+window = [[1572, 1, 1], [1572, 12, 31]]
+
+# n_1577；事实上下文：阿姆利则圣池与城镇营建；古鲁只在背景中提及，不制作对话人物。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1577_amritsar_construction"
+ripple_budget = 1500
+title = "阿姆利则的营建"
+summary = "1577年，阿姆利则的圣池与围着它的城镇动工。信众挖池、搬石，工地上常念起古鲁的名字。消息沿商路传到苏拉特，商人们都在打听圣池的事。"
+region = "苏拉特"
+date = [1577, 12, 31]
+history = { date = [1577, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md"]
+sides = [
+  { key = "support", name = "莫卧儿王朝", faction = "mughal", port = "surat" },
+  { key = "opposition", name = "莫卧儿王朝", faction = "mughal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "苏拉特的布行里传开了：阿姆利则在动工，圣池的石头从各处运去，工钱照付，谁来干活都行。", chronicle = "1577年，阿姆利则的圣池破土。", effects = [{ kind = "flag", flag = "n_1577_amritsar_construction_news_received" }] },
+]
+window = [[1577, 1, 1], [1577, 12, 31]]
+
+# n_1578；事实上下文：大友宗麟1578年受洗；不把整个领地人口等同统治者信仰。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1578_otomo_baptism"
+ripple_budget = 1500
+title = "大友宗麟受洗"
+summary = "天正六年，丰后的大友宗麟由卡布拉尔施洗，取名堂·弗朗西斯科。早在天文年间他就在府内以礼接待沙勿略，后来又任阿尔梅达开病院、收弃婴。老臣与诸寺冷眼看着，也有人说主公要的是南蛮船上的硝石；城下的百姓照旧去寺里上香。"
+region = "府内"
+date = [1578, 12, 31]
+history = { date = [1578, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md"]
+sides = [
+  { key = "support", name = "大友氏", faction = "otomo", port = "funai" },
+  { key = "opposition", name = "大友氏", faction = "otomo" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "从丰后回来的船工说，宗麟公在臼杵请黑袍神父施了洗。府内的寺僧一个也没露面，几位老臣也推说身子不爽，不肯去道贺。", chronicle = "天正六年，大友宗麟受洗，教名堂·弗朗西斯科。", effects = [{ kind = "flag", flag = "n_1578_otomo_baptism_news_received" }] },
+]
+window = [[1578, 1, 1], [1578, 12, 31]]
+
+# n_1582；事实上下文：部分天主教地区1582年10月改历；世界运行仍365日，不声称所有国家同日采用。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1582_gregorian_calendar"
+ripple_budget = 1500
+title = "新历颁行"
+summary = "1582年10月，部分天主教地区改用新历：十月四日过完，直接是十月十五日。威尼斯的历书商人连夜改印，新旧两种历书并排摆在摊子上。"
+region = "威尼斯"
+date = [1582, 10, 15]
+history = { date = [1582, 10, 15], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §9.5、§10.6", "docs/research/terra16/I_religion_missions.md"]
+sides = [
+  { key = "support", name = "教宗国", faction = "papal_states", port = "venice" },
+  { key = "opposition", name = "教宗国", faction = "papal_states" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "威尼斯的船长咂着嘴说，教宗那边改了历，日子一下子少了十天，船期得重新算。", chronicle = "1582年10月，天主教的历书跳过十天，十五日接在四日之后。", effects = [{ kind = "flag", flag = "n_1582_gregorian_calendar_news_received" }] },
+]
+window = [[1582, 10, 15], [1582, 10, 15]]
+
+
+# 补充新闻；事实上下文：1557年耶稣会使团抵达；与1555年的信仰告白分开，埃塞俄比亚本已有教会传统。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1557_ethiopian_jesuit_mission"
+ripple_budget = 1500
+title = "耶稣会使团抵达埃塞俄比亚"
+summary = "1557年，耶稣会的使团抵达埃塞俄比亚。当地的教会早有自己的经卷与节期，葡萄牙人带来的是另一套礼仪，宫里的人一边设宴接待，一边掂量这些客人。"
+region = "马萨瓦"
+date = [1557, 12, 31]
+window = [[1557, 1, 1], [1557, 12, 31]]
+history = { date = [1557, 12, 31], outcome = "mission_arrives" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.6（其他宗教的时刻）", "docs/research/terra16/I_religion_missions.md"]
+sides = [{ key = "support", name = "埃塞俄比亚帝国", faction = "ethiopia", port = "massawa" }, { key = "opposition", name = "葡萄牙王国", faction = "portugal" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "mission_arrives", when = ">= -9223372036854775808", default = true, news = "马萨瓦的商人传来话：葡萄牙的耶稣会神父到了，宫里设席接待，言语间却留着三分防备。", chronicle = "1557年，耶稣会士的船靠上了马萨瓦港。", effects = [{ kind = "flag", flag = "n_1557_ethiopian_jesuit_mission_mission_arrives" }] }]
+
+# 补充新闻；事实上下文：1570—1580年战争按真实年代；只在信长入京的世界线记录此条史实结束新闻，木津川口两次海战仍用H46/H50。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1580_ishiyama_settlement"
+ripple_budget = 1500
+title = "石山本愿寺战争的终结"
+summary = "元龟元年起，石山本愿寺的显如号召各国门徒与织田信长相抗，大坂湾上运粮的船与封港的船来回较量。十年后天皇出面劝和，显如退往纪伊鹭森；他的儿子教如又守了几个月，等他也出了城，寺就烧了。堺离战场不过半日路，铁炮作坊这十年没歇过火。"
+region = "堺"
+date = [1580, 12, 31]
+window = [[1570, 1, 1], [1580, 12, 31]]
+history = { date = [1580, 12, 31], outcome = "ishiyama_settlement" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.6（其他宗教的时刻）", "docs/research/terra16/I_religion_missions.md", "docs/research/terra16/P_eastasia_1540.md §3"]
+sides = [{ key = "support", name = "石山本愿寺", faction = "hongwanji", port = "sakai" }, { key = "opposition", name = "织田氏", faction = "oda" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "ishiyama_settlement", when = ">= -9223372036854775808", default = true, news = "堺的码头上都在说：大坂的本愿寺开了城门，门徒们挑着锅灶铺盖往南走。人才走空，寺里就起了火，听说烟一直飘到住吉的海面上。", chronicle = "天正八年，本愿寺奉敕与织田氏讲和，退出石山，寺院焚毁。", effects = [{ kind = "flag", flag = "n_1580_ishiyama_settlement_ishiyama_settlement" }] }]
+requires = [{ event = "h30_nobunaga_kyoto", outcome = "nobunaga_enters_kyoto" }]

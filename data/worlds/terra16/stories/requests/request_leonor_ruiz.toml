@@ -1,0 +1,236 @@
+# C13d 请托：进港的三处水深（request_leonor_ruiz）。中文，Claude 写。
+# 人物：莱昂诺尔·鲁伊斯 leonor_ruiz（1540-06-16 生，女；塞维利亚码头地图铺的帮工，旁听过领航课，自己划小船去瓜达尔基维尔河量过水深；势力 spain，身份档 1）。
+# 类型：去某处（go）；3 章 offer → arrive → report。arrive 的一般检定成功走 report（设 outline 旗标）；检定失败只量到一角，走 report_partial（没有 outline 旗标，报酬 800）。两条收尾互斥，终局 done。没有 stage 章。
+# 报价：当面（T）。人物按日程在塞维利亚（seville），auto=false，玩家“问请托”（ask:request_leonor_ruiz）启动；offer 章不写 at，objectives 为找人。
+# 窗口：报价 1576-01-01 至 1585-06-30，到期 timeout 直接 failed，不写见闻。进港之后 120 天内要去拉斯帕尔马斯量，到期 timeout 走 failed 并留一封信。
+# 依据·史实背景：塞维利亚的海图买卖（替船长画港口图，领航员的图靠实测）；加那利群岛是去西印度船队的头一站，拉斯帕尔马斯的进港水道上有浅滩。
+# 依据·原创：莱昂诺尔的图铺与旧港图的错处、叠成小方块的旧纸、去西印度的船长的订单、引水人的话、大潮低潮的量法。
+# 待核：无（正文只写传闻口吻的浅滩与潮）。
+# 读的旗标（只读，不设）：bond leonor_ruiz ≥ C（offer 的 variants）；c7_tie_new_margarita_leonor_ruiz_together（offer 的 variants，只写“楼上有人喊她吃饭”，不提名）。
+# 设的旗标：c13_request_leonor_ruiz_accepted / declined / outline / late / done / partial。
+# 秘密：她的第一张图把一处浅滩画偏了，那张图叠成小方块一直揣在怀里。report 与 report_partial 只写看见“叠成小方块的旧纸”，只在 old_map 选项（情谊 ≥ 30）里由她自己说出那是什么；见闻不写。
+# 缺省走向：offer 到 1585-06-30 不接则 failed；arrive 到期 timeout，failed 并留一封信（timeout 不挂见闻，不让酒馆说一个没有发生的量测）；report 没有期限，等玩家回塞维利亚。
+# 依赖：无 B10b 改名；不挂主线旗标。
+# 回忆插画清单：
+#   mem-request_leonor_ruiz-report（新图上的那一截）：一张新的港口图摊在桌上，第三处浅滩往东挪了一截，描得很深，角上署着她自己的名字；一张叠成小方块的旧纸压在图边。
+# 注：memory 挂在两个 done 选项上（brief 如此），同一个 key，同一局只会拿到一次。
+
+[[tracks]]
+key = "request_leonor_ruiz"
+name = "进港的三处水深"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["leonor_ruiz"]
+
+# 一、一单港口图：塞维利亚的图铺，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "一单港口图"
+text = "莱昂诺尔把一张拉斯帕尔马斯的旧港图拍在桌上。图上的水深是十几年前抄来的，进港水道中间画着一处浅滩，墨一团一团的，连它朝哪边伸都看不清。“一个去西印度的船长订了一张新图，要准的。”她拿指甲敲着那团墨，“三处水深，还有这处浅滩，你去量。量出来的数，我自己对。”窗边晾着一排量尺，刻度是她自己用小刀划的，有几根划歪了，她也没改。"
+speaker = "captain"
+mood = "tense"
+cast = ["leonor_ruiz"]
+when = [
+  { kind = "date", from = [1576, 1, 1], to = [1585, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "leonor_ruiz", ge = 18 },
+]
+objectives = [{ kind = "person", person = "leonor_ruiz", text = "在塞维利亚的码头图铺找到她" }]
+deadline = [1585, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "v1_old_margarita"
+when = [
+  { kind = "bond", person = "leonor_ruiz", level = "C" },
+  { kind = "flag", flag = "c7_tie_new_margarita_leonor_ruiz_together" },
+]
+text = "图铺还是老样子，门口堆着没干透的图纸。我一进门，她就把一截炭笔塞进我手里：“你小时候划船比我慢，量水不许比我慢。”楼上有人扯着嗓子喊她吃饭，她应了一声，人没动。桌上拍着一张拉斯帕尔马斯的旧港图，水深是十几年前抄来的，进港水道中间那处浅滩墨团糊成一片。“一个去西印度的船长订了一张新图，要准的。三处水深，还有这处浅滩，你去量。量出来的数，我自己对。”"
+
+[[tracks.chapters.variants]]
+key = "v2_old_friend"
+when = [{ kind = "bond", person = "leonor_ruiz", level = "C" }]
+text = "图铺还是老样子，门口堆着没干透的图纸。我一进门，她就把一截炭笔塞进我手里：“你小时候划船比我慢，量水不许比我慢。”桌上拍着一张拉斯帕尔马斯的旧港图，水深是十几年前抄来的，进港水道中间那处浅滩墨团糊成一片。“一个去西印度的船长订了一张新图，要准的。三处水深，还有这处浅滩，你去量。量出来的数，我自己对。”"
+
+[[tracks.chapters.variants]]
+key = "v3_margarita"
+when = [{ kind = "flag", flag = "c7_tie_new_margarita_leonor_ruiz_together" }]
+text = "图铺的门开着，门口堆着没干透的图纸。楼上有人扯着嗓子喊她吃饭，莱昂诺尔应了一声，人没动。桌上拍着一张拉斯帕尔马斯的旧港图，水深是十几年前抄来的，进港水道中间那处浅滩墨团糊成一片。“一个去西印度的船长订了一张新图，要准的。三处水深，还有这处浅滩，你去量。量出来的数，我自己对。”"
+
+[[tracks.chapters.choices]]
+key = "take_order"
+text = "接下，去拉斯帕尔马斯量三处水深。"
+next = "arrive"
+reply = "她在旧图上用炭笔圈了三个点，又在浅滩旁画了个问号。“问号给你，答案带回来。”她把炭笔往桌上一拍，又补了一句，“量完不许跟我说大概。”"
+effects = [
+  { kind = "affinity", person = "leonor_ruiz", value = 2 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_old"
+text = "接下，先问：旧图上那处浅滩，差得多吗？"
+next = "arrive"
+reply = "“不知道，所以才要量。”她说完把旧图翻过去，背面全是她自己的算式。有一行算到一半划掉了，划得很狠，纸都戳破了一个小洞。"
+effects = [
+  { kind = "affinity", person = "leonor_ruiz", value = 2 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这种活，找个领航去量就是。"
+next = "failed"
+reply = "她哼了一声，把旧图卷起来夹到腋下。领航量的数她不信，他们抄的数整齐得像印出来的。这回她只好再等一个人，等到有人肯蹲在浪里打铅锤。"
+effects = [{ kind = "flag", flag = "c13_request_leonor_ruiz_declined" }]
+
+# 二、浅滩挪了：拉斯帕尔马斯的进港水道，玩家下小船打铅锤。
+[[tracks.chapters]]
+key = "arrive"
+title = "浅滩挪了"
+text = "拉斯帕尔马斯的进港水道风大浪急，我放小船下去，一处一处打铅锤。前两处跟旧图差不多，铅锤下去，数跟旧图上的对得上。第三处不一样：浅滩不在旧图画的地方，往东挪了一截，挪进了大船进港时最爱走的那条线。我一锤一锤打着，脑子里是她的两句话：“问号给你，答案带回来。”“量出来的数，我自己对。”港口的引水人站在码头上看我收锤，说这几年确实有船在那里擦过底，可没人把它画下来。"
+speaker = "captain"
+mood = "tense"
+at = "las_palmas"
+cast = ["leonor_ruiz"]
+when = [{ kind = "alive", person = "leonor_ruiz", value = true }]
+objectives = [{ kind = "at", at = "las_palmas", text = "到拉斯帕尔马斯的进港水道上量水" }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "leonor_ruiz", value = -3 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_late" },
+  { kind = "letter", person = "leonor_ruiz", text = "船长等不及，拿旧图走了。我在他的图角上写了一句：第三处小心。——莱昂诺尔" },
+]
+
+[[tracks.chapters.choices]]
+key = "chart_it"
+text = "照着方位把浅滩的边一点点打出来，画成图。"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "铅锤的数你记下了，可画到纸上，方位总对不齐"
+next = "report"
+reply = "我在浅滩四周又打了二十多锤，把边连成一圈，标上方位与水深。引水人凑过来，蹲下去用手指沿着那圈边走了一遍，说这张比他心里那张还清楚。"
+news = "拉斯帕尔马斯的进港水道上，有人顶着浪打了一下午铅锤，把浅滩的边连成了一圈。"
+effects = [
+  { kind = "affinity", person = "leonor_ruiz", value = 3 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_outline" },
+]
+
+[[tracks.chapters.choices]]
+key = "read_tide"
+text = "等到大潮低潮再量，把最浅的那个数量出来。"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "你算不准这里的潮几时最低"
+next = "report"
+reply = "大潮低潮那天，浅滩只剩一人深。我在水边等到潮水退尽，把那个数写在图上，旁边注明“大潮低潮”，又添了一条小潮的线作对照。"
+news = "拉斯帕尔马斯的进港水道上，有人等到大潮低潮，在浅滩上量出了最浅的一个数。"
+effects = [
+  { kind = "affinity", person = "leonor_ruiz", value = 3 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_outline" },
+]
+
+[[tracks.chapters.choices]]
+key = "sound_hard"
+text = "顶着浪多打几锤，能量多少量多少。"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "report"
+reply = "浪把小船推来推去，船头几次压进水里。我还是量了一圈，数有的准有的不准，我一一注明；不准的那几个，旁边写上当时浪有多大。"
+news = "拉斯帕尔马斯的进港水道上，小船逆着浪在浅滩四周量了一下午，收锤时船底都磨出了白印。"
+effects = [
+  { kind = "affinity", person = "leonor_ruiz", value = 3 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_outline" },
+]
+
+[tracks.chapters.choices.fail]
+next = "report_partial"
+news = "拉斯帕尔马斯的进港水道上，小船顶着浪打了半下午铅锤，只量到浅滩的一角，就收锤回了港。"
+effects = [{ kind = "affinity", person = "leonor_ruiz", value = -2 }]
+
+# 三、叠成小方块的纸：纸和数都到了，她问你图角上署谁的名。
+[[tracks.chapters]]
+key = "report"
+title = "叠成小方块的纸"
+text = "莱昂诺尔把我量回来的数一个个誊上新图，桌上摊着她昨夜算废的一沓草稿。前两处她只点头，誊到第三处，笔停住了。她从怀里摸出一张叠成小方块的旧纸，展开对了一眼，又叠好收回去，动作快得像怕人看见。“画出来，再争。”她说。这回她没跟我争，只把那处浅滩往东挪了一截，描得比别处都稳。新图的角上还空着，她的笔尖悬在纸上：“图角上，署谁的名？”"
+speaker = "captain"
+mood = "tender"
+cast = ["leonor_ruiz"]
+when = [{ kind = "alive", person = "leonor_ruiz", value = true }]
+objectives = [{ kind = "person", person = "leonor_ruiz", text = "回塞维利亚，把量来的数交给她" }]
+news = "塞维利亚码头的图铺画了一张新的拉斯帕尔马斯港图，第三处浅滩往东挪了一截。"
+
+[[tracks.chapters.choices]]
+key = "old_map"
+text = "不答署名的事，问她：怀里那张是什么？"
+requires = [{ kind = "affinity", person = "leonor_ruiz", ge = 30 }]
+hint = "她把纸收得太快，你们还没熟到能问"
+next = "done"
+reply = "她说那是她画的第一张图，一处浅滩画偏了，一直揣着，“提醒自己别太得意”。她把新图上的浅滩又描了一遍，描得很深，署了她自己的名，旁边加一行“实测：某船长”。她付了钱。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "leonor_ruiz", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_done" },
+  { kind = "memory", memory = "mem-request_leonor_ruiz-report", title = "新图上的那一截" },
+]
+
+[[tracks.chapters.choices]]
+key = "her_name"
+text = "说图是她的，署她的名。"
+next = "done"
+reply = "她署了名，又在角上加了一行小字“实测：某船长”，说这是规矩，“量的人也得写上”。她数了钱放在桌角，一个铜子都没多给。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "leonor_ruiz", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_done" },
+  { kind = "memory", memory = "mem-request_leonor_ruiz-report", title = "新图上的那一截" },
+]
+
+# 三·二、没量全的浅滩（只由一般检定失败走到这里）：同一张图，浅滩的边只有一角是实的。
+[[tracks.chapters]]
+key = "report_partial"
+title = "没量全的浅滩"
+text = "莱昂诺尔把我量回来的数誊上新图。浅滩的边只有一角是实的，其余几处只剩零星的点，有的数跳得厉害。她看了很久，没有骂我。誊到第三处，笔停住了。她从怀里摸出那张叠成小方块的旧纸，只看了一眼，又塞回去。“没量到的，画成虚线。”她说，手里一点没停。那一圈她描得很轻，一段接一段，没有一段是实的。新图的角上还空着，“署谁的名？”她问，语气一点没软。"
+speaker = "captain"
+mood = "tender"
+cast = ["leonor_ruiz"]
+when = [{ kind = "alive", person = "leonor_ruiz", value = true }]
+objectives = [{ kind = "person", person = "leonor_ruiz", text = "回塞维利亚，把量来的数交给她" }]
+news = "塞维利亚码头的图铺画了一张新的拉斯帕尔马斯港图，浅滩的一圈画成了虚线。"
+
+[[tracks.chapters.choices]]
+key = "old_map"
+text = "先不谈署名，问她：怀里叠着的那张旧纸是什么？"
+requires = [{ kind = "affinity", person = "leonor_ruiz", ge = 30 }]
+hint = "她塞回那张纸的手太快，你们还没熟到能开这个口"
+next = "done"
+reply = "她说那是她画的第一张图，浅滩画偏了一截，叠起来揣到现在，“提醒自己别太得意”。她把没量到的那一圈留成虚线，署了她自己的名，旁边又注了一句“来年再量”。她付了钱。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "leonor_ruiz", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_partial" },
+  { kind = "memory", memory = "mem-request_leonor_ruiz-report", title = "新图上的那一截" },
+]
+
+[[tracks.chapters.choices]]
+key = "her_name"
+text = "说虚线也是她的图，署她的名。"
+next = "done"
+reply = "她署了名，角上加一行小字“实测：某船长”，又在虚线旁注了“未量”两个字，说这是规矩，“量不到的也得写上”。她付了钱。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "leonor_ruiz", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_leonor_ruiz_partial" },
+  { kind = "memory", memory = "mem-request_leonor_ruiz-report", title = "新图上的那一截" },
+]

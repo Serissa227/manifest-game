@@ -1,0 +1,203 @@
+# 请托：先看画，不先看名字（request_yasmin）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：亚斯明（yasmin，1530-01-19 生，女），奥斯曼宫廷画坊里的波斯女画师；cast 在 cast/story_islamic.toml。
+# 类型：说服（persuade）。四章：offer（报价）、persuade（廊下见总管）、result（廊下的画，最好与折中的收尾）、result_partial（规矩是规矩，画不挂，只能收钱或收画）。终点 done / failed。
+# 报价：T 当面（auto=false，界面用 ask:request_yasmin 启动）。offer 不写 at，目标是在港里找到她；窗口 1557-06-01..1565-12-31，deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 与 persuade 都在 1557-06-01..1565-12-31；persuade 进入后 60 天期限；result 的 wait 30 指画在廊下挂满一个月。
+# 依据·史实背景：奥斯曼宫廷画坊（nakkaşhane）里有波斯画师，据说一手细密画画得极好，画坊却不许她署名（传闻口吻，待核）。画坊的总管是叙事人物，不进 cast，正文不写名字。
+# 依据·原创：亚斯明、她画的窗下调颜料的女画师与窗外的海、廊下那幅画、画里的小人望着画外、三层颜料盖出来的蓝。
+# 依赖：港口 istanbul（ports_east_med.toml）；技能 painting（skills.toml）；人物 yasmin（cast/story_islamic.toml）。B10b：无需改名。主线门禁：无（亚斯明不是主线人物）。
+# C7：本轨道只到 1565 年。C7 的 pair_yasmin_miriam 从 1566 起，本文件不写米丽娅姆、不写诗集末页、不写藏名字；本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_yasmin_name_asked（result 的 v1_asked 变体）。
+# 设的旗标：c13_request_yasmin_accepted（offer 两条接法）；c13_request_yasmin_name_asked（offer 的 ask_name，只读作 result 的一句变体）；c13_request_yasmin_hung（persuade 三条成功路，中间旗标，不读）。终局各一面：_declined（offer 回绝）、_done（result 的 tell）、_partial（result 与 result_partial 的 let_her）、_failed（result_partial 收回画卷）、_late（persuade 超时）。
+# 秘密：无（cast 没写秘密，本请托不触及）。
+# 口头禅：“这一碟青，是不是绿了半分？你来看——远来的人，眼睛还没被画坊熏坏。”整段只在 offer 说一次，放在她第一次开口的地方。
+# 报酬：现金最多 900（折中 600，收回画卷与超时为 0）；好感最多 +15（画技一路 +2、+5、+8）；名声 +2（折中 +1）；回忆 mem-request_yasmin-result。小幅画只写在正文，不发物品。
+# 回忆插画 mem-request_yasmin-result：廊下挂着一幅画，窗下一个女画师调颜料，窗外是海，画里的小人望着画外。
+
+[[tracks]]
+key = "request_yasmin"
+name = "先看画，不先看名字"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["yasmin"]
+
+# 一、望着画外的小人：亚斯明在画坊后门外调颜料，把一幅自己的画交给你。
+[[tracks.chapters]]
+key = "offer"
+title = "望着画外的小人"
+text = "伊斯坦布尔的画坊后门外，亚斯明蹲在石阶上调颜料，手上沾着青。她看见你，没先问好，把碟子举到你眼前：“这一碟青，是不是绿了半分？你来看——远来的人，眼睛还没被画坊熏坏。”她画里的小人总望着画外。这回她给自己画了一幅：一个女画师坐在窗下调颜料，窗外是海。画坊不许她署名，画只能压在别人的画底下。她想把它挂到总管每天经过的廊下。“让他先看画，不先看名字。看完了，再问是谁画的。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "yasmin", text = "在港里找到她" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1565, 12, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应替她去说动总管。"
+next = "persuade"
+reply = "她把画卷起来，用绳子扎好交到你手里，又展开一角，指着画里那个望着画外的小人：“他在看你。去廊下的路上，别让他压皱了。”"
+effects = [
+  { kind = "affinity", person = "yasmin", value = 2 },
+  { kind = "flag", flag = "c13_request_yasmin_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_name"
+text = "问她：总管要是问是谁画的，我怎么说？"
+next = "persuade"
+reply = "“照实说。”她想了想，把画角卷回去，又摊开，“可要等他先看完画。画看完了，他问谁画的，你再说，我不拦着。”"
+effects = [
+  { kind = "affinity", person = "yasmin", value = 2 },
+  { kind = "flag", flag = "c13_request_yasmin_accepted" },
+  { kind = "flag", flag = "c13_request_yasmin_name_asked" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宫里的画坊，外人进不去。"
+next = "failed"
+reply = "她点点头，没有多劝，把画收回去，压在一摞别人的画底下。碟子里的青已经凉了，她也没再搅，就那么搁在石阶上。"
+effects = [{ kind = "flag", flag = "c13_request_yasmin_declined" }]
+
+# 二、外人的画：廊下的总管不许外人的画挂上来。一次检定，一条专业的路，一笔钱。
+[[tracks.chapters]]
+key = "persuade"
+title = "外人的画"
+text = "廊下的总管在画坊门口拦住你，一眼扫过你手里的画卷，没有伸手。“外人的画挂不进来。”他说，“规矩是画坊里的人画，画坊里的人看。”亚斯明站在他身后，没有出声，手指却把袖口的青绞成了一团。总管说完要走，又停了半步，目光落在你手里那截卷起的画纸上。"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+objectives = [{ kind = "at", at = "istanbul", text = "到伊斯坦布尔去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1565, 12, 31] },
+  { kind = "alive", person = "yasmin", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "yasmin", value = -3 }, { kind = "flag", flag = "c13_request_yasmin_late" }, { kind = "letter", person = "yasmin", text = "画还压在那一摞底下。画里的小人，大概也看累了。" }] }
+
+[[tracks.chapters.choices]]
+key = "show"
+text = "把画展开，请他只看一眼。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "总管看了很久，看到窗外那片海，说这海的颜色，画坊里没人调得出来。他让人把画挂在了廊下。"
+news = "伊斯坦布尔宫廷画坊的廊下挂了一幅新画，一个女画师坐在窗下调颜料，窗外是海。"
+effects = [
+  { kind = "affinity", person = "yasmin", value = 3 },
+  { kind = "flag", flag = "c13_request_yasmin_hung" },
+]
+fail = { next = "result_partial", news = "伊斯坦布尔有人说，画坊的总管只瞥了一眼外人的画，说画得不错，规矩还是规矩。", effects = [{ kind = "affinity", person = "yasmin", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "painting"
+text = "跟他讲画：窗外那片海的蓝，是三层颜料盖出来的。"
+next = "result"
+requires = [{ kind = "skill", skill = "painting", ge = 60 }]
+hint = "那片蓝是怎么一层层盖上去的，你说不清楚。"
+reply = "总管听你说完，弯下腰去看那片蓝，看出了三层。他说懂这种画法的人，画坊里只有一个。他让人把画挂上了廊下。"
+news = "伊斯坦布尔宫廷画坊的总管听一个外乡人讲蓝，弯腰看了三层，把一幅外人的画挂上了廊下。"
+effects = [
+  { kind = "affinity", person = "yasmin", value = 5 },
+  { kind = "flag", flag = "c13_request_yasmin_hung" },
+]
+
+[[tracks.chapters.choices]]
+key = "gold"
+text = "送画坊一副上好的金箔，请总管让画在廊下挂一个月。"
+next = "result"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "一副上好的金箔，你身上还凑不齐。"
+reply = "总管收了金箔，掂了掂分量，说：“挂一个月。画要是没人看，这金箔也白送了。”他让账房记了一笔，又让人在廊柱上钉了一根铜钩，没说谢。"
+news = "伊斯坦布尔宫廷画坊的总管收了一副金箔，廊下让一幅外人的画挂了一个月。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "yasmin", value = 2 },
+  { kind = "flag", flag = "c13_request_yasmin_hung" },
+]
+
+# 三、下一部画册的海：画在廊下挂满一个月，总管终于问了画是谁画的。
+[[tracks.chapters]]
+key = "result"
+title = "下一部画册的海"
+text = "画在廊下挂了一个月，路过的画师都停下来看：窗下的女画师，窗外的海，还有一笔笔盖出来的蓝。廊下的风把画角吹得一翻一翻，画里的小人还望着画外。有个学徒踮着脚数过，那片蓝上一共盖了三层，嘴里念叨：“这蓝是谁调的？”一个老画师隔着廊柱看了半天，什么也没说，只把自己的笔洗搬到了窗边。那天总管终于站住了，指着廊下那幅画问：“这是谁画的？”亚斯明站在画坊的门口，看着你。"
+speaker = "captain"
+mood = "tender"
+at = "istanbul"
+objectives = [{ kind = "wait", days = 30, text = "让画在廊下挂满一个月" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1565, 12, 31] },
+  { kind = "alive", person = "yasmin", value = true },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_yasmin_name_asked" }]
+text = "画在廊下挂了一个月，路过的画师都停下来看：窗下的女画师，窗外的海，还有一笔笔盖出来的蓝。廊下的风把画角吹得一翻一翻，画里的小人还望着画外。那天总管终于站住了，指着廊下那幅画问：“这是谁画的？”亚斯明站在画坊的门口，看着你。她先前说过，要等他先看完画。这会儿她没有上前。"
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "照实说：是她画的。"
+next = "done"
+reply = "总管看着亚斯明，看了很久，说名字还是不许署——可下一部画册的海，归她画。亚斯明谢了他，回头冲你笑了一下，那是你头一回见她笑。她把酬金交给你，又给了你一小幅画：画里的小人在船上，望着画外。"
+news = "伊斯坦布尔宫廷画坊的总管问了廊下那幅画是谁画的，听说下一部画册的海交给了一个波斯女画师。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "yasmin", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_yasmin_done" },
+  { kind = "memory", memory = "mem-request_yasmin-result", title = "廊下那幅画里的海" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "不说，让她自己上前说。"
+next = "done"
+reply = "她走上前，说是她画的。总管点点头，说画是好画，只是名字不记在廊下。她回来时说，这样也好，至少他先看了画。钱她照付。"
+news = "伊斯坦布尔宫廷画坊的总管问了廊下那幅画是谁画的，一个波斯女画师站到门口，说是她画的。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "yasmin", value = 5 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_yasmin_partial" },
+]
+
+# 三之二、规矩是规矩：总管看了画，说画得不错，可外人的画不挂廊下。画没有挂上去。
+[[tracks.chapters]]
+key = "result_partial"
+title = "规矩是规矩"
+text = "总管把画卷推了回来。“画得不错。”他说，“可规矩是规矩：外人的画不挂廊下。”他说完，目光落到门口的亚斯明身上，又收了回来，问你：“这是谁画的？”廊下的学徒都停了手，等你开口。画卷还在你手里，颜料没干透，蹭在了他的袖子上。亚斯明没有动，她也在等。"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+objectives = [{ kind = "at", at = "istanbul", text = "到伊斯坦布尔去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1565, 12, 31] },
+  { kind = "alive", person = "yasmin", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "不说，等她自己上前认。"
+next = "done"
+reply = "亚斯明走上前，说是她画的。总管看了她很久，说这一回，画不挂，名字也不记。她回来时把画卷抱在怀里，一句话没说，数钱的时候，一枚一枚排在柜台上，排成一行。"
+news = "伊斯坦布尔画坊的总管不肯挂外人的画，那幅画的主人却站到门口认了，说画是她自己的。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "yasmin", value = 5 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_yasmin_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "take_back"
+text = "收回画卷，说这桩事不做了。"
+next = "failed"
+reply = "你把画卷收回来，她没有拦，只说：“那就算了。”她把碟子里的青倒掉，又调了一碟新的，颜色比刚才的更绿。你抱着画卷穿过巷子，卷角还在滴青。"
+news = "伊斯坦布尔画坊的后门外，那个波斯女画师把一碟青倒了，又调了一碟更绿的，外人的画她不要了。"
+effects = [{ kind = "flag", flag = "c13_request_yasmin_failed" }]

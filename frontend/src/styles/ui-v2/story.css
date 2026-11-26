@@ -1,0 +1,350 @@
+/* 新界面（试用）——剧情对话框：插图式的头像、宋体标题、整行可点的选项卡，手机上从底部升起（docs/UI-REDESIGN.md 第 4 节）。 */
+
+/* ═════════════════════════ 6. 剧情对话框 ═════════════════════════ */
+:root[data-ui="v2"] .sd-backdrop {
+  padding: 24px;
+  background: rgba(6, 11, 20, 0.66);
+}
+:root[data-ui="v2"] .sd-modal {
+  gap: 28px;
+  width: min(880px, 100%);
+  padding: 28px 32px 22px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  border: 1px solid rgba(12, 18, 28, 0.5);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+/* 头像像书里的插图：细框 + 一圈纸色的衬边 */
+:root[data-ui="v2"] .sd-speaker {
+  gap: 10px;
+  padding-top: 4px;
+}
+:root[data-ui="v2"] .sd-portrait {
+  background: var(--v2-paper-sunk);
+  border: 1px solid rgba(36, 28, 21, 0.4);
+  border-radius: var(--v2-r-md);
+  box-shadow: 0 0 0 4px var(--v2-paper-1), 0 0 0 5px var(--v2-line-strong);
+}
+:root[data-ui="v2"] .sd-speaker-name {
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--v2-ink);
+  background: none;
+  border: 0;
+}
+:root[data-ui="v2"] .sd-body {
+  gap: 12px;
+}
+:root[data-ui="v2"] .sd-art {
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sd-kicker {
+  align-items: center;
+  gap: 10px;
+  font-size: var(--v2-fs-sm);
+  letter-spacing: 0.06em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .sd-story-name {
+  padding: 2px 10px;
+  font-family: var(--v2-font-display);
+  font-weight: 700;
+  color: var(--v2-seal);
+  border: 1px solid currentColor;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .sd-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-3xl);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sd-text {
+  max-width: 40em;
+  font-size: var(--v2-fs-lg);
+  line-height: var(--v2-lh-read);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sd-choices {
+  gap: 8px;
+  margin-top: 8px;
+}
+/* 选项：整行可点的白卡；悬停描黄铜边、微微浮起；不可选的虚线框、灰字，原因写在印章红的小标签上 */
+:root[data-ui="v2"] .sd-choice {
+  gap: 6px;
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+  transition:
+    border-color var(--v2-dur-1) var(--v2-ease),
+    box-shadow var(--v2-dur-1) var(--v2-ease),
+    transform var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .sd-choice:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-brass);
+  box-shadow: 0 0 0 1px var(--v2-brass), 0 4px 12px rgba(36, 28, 21, 0.12);
+  transform: translateY(-1px);
+}
+:root[data-ui="v2"] .sd-choice:active:not(:disabled) {
+  background: #fbf0d6;
+  transform: none;
+  box-shadow: 0 0 0 1px var(--v2-brass);
+}
+:root[data-ui="v2"] .sd-choice:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .sd-choice:disabled {
+  opacity: 1;
+  color: var(--v2-ink-3);
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sd-choice-text::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 12px 0 2px;
+  vertical-align: 0.15em;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .sd-choice:disabled .sd-choice-text::before {
+  background: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .sd-choice-tags {
+  gap: 6px;
+  padding-left: 21px;
+}
+:root[data-ui="v2"] .sd-tag {
+  padding: 2px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sd-tag.is-blocked {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border: 0;
+}
+:root[data-ui="v2"] .sd-foot {
+  gap: 12px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sd-later {
+  min-height: var(--v2-h-md);
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sd-later:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sd-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* 最后一天的提醒（P11）：印章红，比平常的脚注醒目一点 */
+:root[data-ui="v2"] .sd-note.sd-note-last {
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+/* 回应之后：所选、检定、回音与效果 */
+:root[data-ui="v2"] .sd-chose {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sd-check {
+  padding: 2px 10px;
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+/* 检定成败：纸面上的涨 / 跌色（--v2-up / --v2-down）配各自的浅底，不再用 v1 的写死色 */
+:root[data-ui="v2"] .sd-check.is-pass {
+  color: var(--v2-up);
+  background: #e3efe2;
+}
+:root[data-ui="v2"] .sd-check.is-fail {
+  color: var(--v2-down);
+  background: #f8e3dc;
+}
+:root[data-ui="v2"] .sd-reply {
+  padding: 12px 16px;
+  font-size: var(--v2-fs-lg);
+  line-height: 1.8;
+  background: var(--v2-paper-1);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: 0 var(--v2-r-sm) var(--v2-r-sm) 0;
+}
+:root[data-ui="v2"] .sd-out {
+  padding: 2px 10px;
+  font-size: var(--v2-fs-sm);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sd-out.is-up {
+  color: var(--v2-up);
+  background: #eef5ec;
+  border-color: rgba(43, 106, 59, 0.35);
+}
+:root[data-ui="v2"] .sd-out.is-down {
+  color: var(--v2-down);
+  background: #fbefea;
+  border-color: rgba(163, 48, 42, 0.32);
+}
+/* 一条见闻、一封来信（整行、几行字）：一段引文——小圆角、左边一道黄铜线，字回到正文的行高 */
+:root[data-ui="v2"] .sd-out[data-kind="news"],
+:root[data-ui="v2"] .sd-out[data-kind="letter"] {
+  padding: 8px 12px;
+  line-height: 1.7;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .sd-ended {
+  font-family: var(--v2-font-display);
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .sd-cast {
+  background: none;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sd-cast-one.is-speaking .sd-portrait {
+  box-shadow: 0 0 0 4px var(--v2-paper-1), 0 0 0 6px var(--v2-brass);
+}
+:root[data-ui="v2"] .sd-cast-one.is-speaking .sd-speaker-name {
+  color: var(--v2-seal);
+  background: none;
+}
+:root[data-ui="v2"] .sd-side-badge {
+  padding: 1px 8px;
+  font-family: var(--v2-font-display);
+  color: #fff8ee;
+  background: var(--v2-ink-2);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+/* 第九批 I5：种类、“之后还有 N 件”、门槛小签、后果提示与夜里的事件 */
+:root[data-ui="v2"] .sd-kind {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sd-queue {
+  padding: 1px 10px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sd-tag.is-req {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--v2-line-strong);
+}
+:root[data-ui="v2"] .sd-choice-hint {
+  padding-left: 21px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 400;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .sd-backdrop.is-night {
+  background: rgba(3, 6, 12, 0.82);
+}
+:root[data-ui="v2"] .sd-modal.is-night {
+  background: var(--v2-paper-sunk);
+}
+
+/* ═════════════════════════ 手机 ═════════════════════════ */
+/* 剧情对话框（窄屏）：从底部升起的整宽卡片；头像缩到 88 px，与名字并排 */
+@media (max-width: 640px) {
+  :root[data-ui="v2"] .sd-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .sd-modal {
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-height: calc(var(--vh100, 100vh) - 24px - var(--safe-top, 0px));
+    padding: 18px 18px calc(16px + var(--safe-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+  }
+  :root[data-ui="v2"] .sd-speaker {
+    flex-direction: row;
+    align-self: flex-start;
+    gap: 14px;
+    padding-top: 0;
+  }
+  :root[data-ui="v2"] .sd-portrait {
+    width: 88px !important;
+    height: 88px !important;
+  }
+  :root[data-ui="v2"] .sd-title {
+    font-size: var(--v2-fs-2xl);
+  }
+  :root[data-ui="v2"] .sd-text {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  :root[data-ui="v2"] .sd-choice {
+    font-size: 15px;
+  }
+}
+
+/* 触屏：“稍后再说”至少 44 px 高（与选项一样好按） */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .sd-later {
+    min-height: var(--v2-h-touch);
+    padding: 0 16px;
+  }
+}
+
+/* ═════════════════════════ 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .sd-modal,
+  :root[data-ui="v2"] .sd-choice {
+    animation: none;
+    transition: none;
+  }
+  :root[data-ui="v2"] .sd-choice:hover:not(:disabled) {
+    transform: none;
+  }
+}

@@ -1,0 +1,166 @@
+# C7 故事线重写（2026-10-11，Claude 写）：故事 2.0 轨道格式，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 标签：GL（知己线，不写恋爱；两人都是纯 GL，各有恋人）。
+# 人物：塞西莉亚·达尔·波佐（cecilia，1528-01-01 生，1582 年起住在拉古萨的面具师，恋人是阿玛娅，见 tie_cecilia_amaia）；
+#       芙拉娜·卢基奇（frana，1534-12-02 生，拉古萨共和国的女使者，恋人是埃莱妮，见 tie_frana_eleni）。
+#       同桌的还有阿玛娅（amaia）与埃莱妮（eleni，只在 c7_tie_frana_eleni_ragusa 的变体里亲自到场），不进本轨道 cast。
+# 依据·史实：拉古萨共和国向奥斯曼纳贡、也和威尼斯通商；城里设卫生官管检疫与外来的人；大议会只有贵族男子能坐；
+#       2 月 3 日圣布莱斯节是城市主保的节日，游行抬着圣徒的银圣髑匣从总督府（即 Rector's Palace）门前经过。
+# 依据·原创：“外乡行医须两位本城人作保”的告示、医生行会退保人、共和国为圣布莱斯节订面具、游行队伍戴面具、四个女人的冬至夜饭。
+# 待核：拉古萨当时管行医的是城邦雇的公医还是另有行会（正文只写“医生行会”）；圣布莱斯节游行里有没有戴面具的队伍（本世界线这样写）。
+# 年龄：两人之间只有 friends → confidants，不涉恋爱门禁；1583 年塞西莉亚 55 岁、芙拉娜 48 岁。
+# 与旁线一致：缺省路径她们住港边箍桶匠楼上的两间房（前窗晒药、后屋归塞西莉亚的面具）；ragusa 路径是芙拉娜写的许可钉在门框上的铺子（左窗晒药、右窗晾面具）——见 tie_cecilia_amaia 落点。
+# 缺省走向：meeting（1583，朋友）→ closer（1583 冬至，知己）→ turning（1584 卫生署告示，传闻）→ choice（缺省：芙拉娜拿薪俸作押，面具单子晚发一个月）→ landing（1585 圣布莱斯节，知己）。
+# 玩家能做的：stand_surety 替阿玛娅做第二个保人（helped）；festival_masks 从威尼斯运金箔与纸胎（masks，落点的面具就是那张没上色的）。
+# 第一章 when：塞西莉亚与阿玛娅是恋人（tie 条件；不满足时本线在窗口末日静默失败）。简报原定读 c7_tie_cecilia_amaia_together，
+#       但 story_audit 按轨道单独走、不替跨轨道的旗标作弊，写旗标就永远走不到 done；改用关系条件。两人自 1557 年起是恋人（ties.toml），
+#       所以这一条实际上很少挡住什么；塞西莉亚 1583 年人在拉古萨靠整合方改的日程保证。审计工具支持跨轨道旗标后应改回旗标。
+# 读的共享旗标：c7_tie_cecilia_amaia_ragusa、c7_tie_frana_eleni_ragusa（变体；两个都有时用 both 变体）。
+# 设的旗标：c7_tie_extra_01_cecilia_frana_helped、c7_tie_extra_01_cecilia_frana_masks、c7_tie_extra_01_cecilia_frana_landing。
+# 日程：本文件不改日程；塞西莉亚与阿玛娅 1582 年起在 ragusa_port 由 tie_cecilia_amaia 的整合项负责。cast/ties.toml 的 cecilia–frana：since 改到 1583，friends → 落点后 confidants。
+
+[[tracks]]
+key = "tie_extra_01_cecilia_frana"
+name = "别把我的脸画年轻"
+kind = "request"
+start = "tie_extra_01_cecilia_frana_meeting"
+auto = true
+cast = ["cecilia", "frana"]
+
+[[tracks.chapters]]
+key = "tie_extra_01_cecilia_frana_meeting"
+title = "使者不笑"
+text = "芙拉娜·卢基奇是来核外乡人居留文书的。在箍桶匠楼上这两间赁房里，她一页一页对着印看，眉头从进门起就没松过。对完了，她顺口说要订一张面具。“墙上这些，哭的笑的，挑一张？”塞西莉亚问。“随你。”使者已经在翻下一份了。十天后她来取。盒子里是一张皱眉的脸，眉心一道竖纹，刻得很深。芙拉娜气笑了：“我在你眼里就长这样？”“这张是你来的时候的。”塞西莉亚说，“走的时候那张，我还没见过。”芙拉娜合上盒盖，夹在胳膊底下走了。那张脸后来挂在她书房里，正对着书案。"
+stage = "witness"
+window = [[1583, 2, 1], [1583, 6, 30]]
+at = "ragusa_port"
+cast = ["cecilia", "frana"]
+speaker = "cecilia"
+mood = "cheerful"
+news = "拉古萨港边新来的面具师给使者做了一张皱眉的面具，使者没退，拿回去挂在了自己书房里。"
+when = [{ kind = "tie", a = "cecilia", b = "amaia", relation = "lovers" }]
+
+[tracks.chapters.default]
+next = "tie_extra_01_cecilia_frana_closer"
+effects = [{ kind = "tie", a = "cecilia", b = "frana", relation = "friends" }]
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [
+  { kind = "flag", flag = "c7_tie_cecilia_amaia_ragusa" },
+  { kind = "flag", flag = "c7_tie_frana_eleni_ragusa" },
+]
+text = "芙拉娜·卢基奇是来核外乡人居留文书的。港边这间铺子左窗晒药、右窗晾面具，门框上钉着一张许可，纸边黄了。她认出那是自己的字：“这张我八年前就写好了，你们倒真让我等。”对完了文书，她顺口说要订一张面具。“墙上这些，哭的笑的，挑一张？”塞西莉亚问。“随你。价钱先说定——隔两家有间卖玛蒂克的铺子，老板娘讲起价来跟人吵架一样，你别学她。”十天后她来取。盒子里是一张皱眉的脸，眉心一道竖纹。芙拉娜气笑了：“我在你眼里就长这样？”“这张是你来的时候的。走的时候那张，我还没见过。”芙拉娜合上盒盖，夹在胳膊底下走了。那张脸后来挂在她书房里，正对着书案。"
+
+[[tracks.chapters.variants]]
+key = "eleni"
+when = [{ kind = "flag", flag = "c7_tie_frana_eleni_ragusa" }]
+text = "芙拉娜·卢基奇是来核外乡人居留文书的。在箍桶匠楼上这两间赁房里，她一页一页对着印看，眉头从进门起就没松过。对完了，她顺口说要订一张面具。“墙上这些，哭的笑的，挑一张？”塞西莉亚问。“随你。价钱先说定——隔两家有间卖玛蒂克的铺子，老板娘讲起价来跟人吵架一样，你别学她。”十天后她来取。盒子里是一张皱眉的脸，眉心一道竖纹，刻得很深。芙拉娜气笑了：“我在你眼里就长这样？”“这张是你来的时候的。”塞西莉亚说，“走的时候那张，我还没见过。”芙拉娜合上盒盖，夹在胳膊底下走了。那张脸后来挂在她书房里，正对着书案。"
+
+[[tracks.chapters.variants]]
+key = "ragusa"
+when = [{ kind = "flag", flag = "c7_tie_cecilia_amaia_ragusa" }]
+text = "芙拉娜·卢基奇是来核外乡人居留文书的。港边这间铺子左窗晒药、右窗晾面具，门框上钉着一张许可，纸边黄了。她认出那是自己的字：“这张我八年前就写好了，你们倒真让我等。”对完了文书，她顺口说要订一张面具。“墙上这些，哭的笑的，挑一张？”塞西莉亚问。“随你。”使者的眉头一直没松。十天后她来取。盒子里是一张皱眉的脸，眉心一道竖纹，刻得很深。芙拉娜气笑了：“我在你眼里就长这样？”“这张是你来的时候的。”塞西莉亚说，“走的时候那张，我还没见过。”芙拉娜合上盒盖，夹在胳膊底下走了。那张脸后来挂在她书房里，正对着书案。"
+
+[[tracks.chapters]]
+key = "tie_extra_01_cecilia_frana_closer"
+title = "四个女人的桌子"
+text = "冬至夜，后屋的墙上挂满了塞西莉亚的纸面具，炉火一照，哭的笑的都红了脸。阿玛娅的草药汤在炉上滚着。桌边第四个位子空着，前面摆一小包玛蒂克树脂，是希俄斯每年托船捎来的，捆包的绳子底下别着一封信。芙拉娜拆开信念给她们听：“今年割口子早，眼泪少，最好的都在这包里。别拿去送人。”“她每年都这么写，”芙拉娜说，“我每年都拿去送人。”她把树脂掰成三块，推到每人面前。两杯下去，使者靠着墙睡着了，眉心那道竖纹松开了。阿玛娅伸手要推她，塞西莉亚拦住：“别叫。这张脸难得见。”她摸出炭条，在一张包药的纸上照着画。"
+stage = "witness"
+window = [[1583, 9, 1], [1583, 12, 31]]
+at = "ragusa_port"
+cast = ["cecilia", "frana"]
+speaker = "frana"
+mood = "tender"
+night = true
+news = "冬至夜里，拉古萨港边那间药铺的后屋亮到半夜，几个女人围着一锅汤说说笑笑，使者喝了两杯就靠着墙睡着了。"
+
+[tracks.chapters.default]
+next = "tie_extra_01_cecilia_frana_turning"
+effects = [
+  { kind = "tie", a = "cecilia", b = "frana", relation = "confidants" },
+  { kind = "memory", memory = "mem-tie_extra_01_cecilia_frana-closer", title = "四个女人的桌子" },
+]
+
+[[tracks.chapters.variants]]
+key = "eleni"
+when = [{ kind = "flag", flag = "c7_tie_frana_eleni_ragusa" }]
+text = "冬至夜，后屋的墙上挂满了塞西莉亚的纸面具，炉火一照，哭的笑的都红了脸。埃莱妮从隔两家的铺子端着一罐树脂过来，一坐下就跟阿玛娅争汤里该放几片姜，像在集市上讲价：“三片！多一片我就不喝。”“七片。”阿玛娅头也不抬，“你不喝，有人喝。”芙拉娜在中间劝：“五片，两边各让一步。”两边都不理她，她就自己倒酒。两杯下去，使者靠着墙睡着了，眉心那道竖纹松开了。埃莱妮要去推她，塞西莉亚拦住：“别叫。这张脸难得见。”她摸出炭条，在一张包药的纸上照着画。"
+
+[[tracks.chapters]]
+key = "tie_extra_01_cecilia_frana_turning"
+title = "卫生署的告示"
+text = "港门边的柱子上贴出了卫生署的告示，墨还没干，就围了一圈水手。认字的念给不认字的听：凡外乡来的行医人，须有两位本城人作保，不然一律不许开药。念完了，好几个人回头去看港边那间铺子。比斯开草药女晒药的那扇窗这几天关着，只有晾面具的那扇开着。有人去讨退烧的药，面具师递给他一张笑脸：“药的钥匙在行会手里。脸倒是现成的。”鱼市上的人说，使者在总督府里跟医生行会吵了一个上午，出来时还笑着，见人就问好。箍桶匠的老婆听见她傍晚进门说的头一句：“行会要第二个保人。”"
+stage = "rumor"
+window = [[1584, 1, 15], [1584, 3, 31]]
+at = "ragusa_port"
+cast = ["cecilia", "frana"]
+mood = "tense"
+news = "拉古萨卫生署贴出告示，外乡行医的人要有两位本城人作保；港边那间药铺这几天只卖面具，不卖药。"
+
+[tracks.chapters.default]
+next = "tie_extra_01_cecilia_frana_choice"
+effects = []
+
+[[tracks.chapters]]
+key = "tie_extra_01_cecilia_frana_choice"
+title = "替外乡人作保"
+text = "芙拉娜的书案上压着两张纸。一张是阿玛娅的保书，头一行是使者自己的名字；第二行的保人递上去，被行会退了回来，说那人欠着使者的人情，不作数。另一张是共和国的单子：明年圣布莱斯节要用的一批面具，等着发给塞西莉亚。她把面具的单子往底下一压，先抽出保书。塞西莉亚靠在门框上：“使者也会把公事往后放？”“你别告诉大议会。”芙拉娜这才看见我，起身让座：“阁下的船一进港我就看见了，满港数它的桅杆站得最直。……客套话说完了。你要什么？”塞西莉亚笑出了声：“她缺一个保人，又不肯先开口。”"
+stage = "involve"
+window = [[1584, 4, 1], [1584, 7, 31]]
+at = "ragusa_port"
+cast = ["cecilia", "frana"]
+speaker = "frana"
+mood = "tense"
+news = "拉古萨的使者拿自己的薪俸替一个比斯开草药女作了押，圣布莱斯节的面具单子因此晚发了一个月。"
+
+[tracks.chapters.default]
+next = "tie_extra_01_cecilia_frana_landing"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "stand_surety"
+text = "到卫生署去，替阿玛娅做第二个保人。"
+reply = "我在保书第二行签了名。行会的老医生瞥了一眼：“外乡人保外乡人？”他把我的文书翻了两遍，叫人去港边找来三个水手——都是阿玛娅治过的：一个退了烧，一个保住了腿，还有一个只是来讨酒喝。老医生听完，盖了行会的印。当晚阿玛娅塞给我一包晕船药，一个子儿不收：“收了钱，就不算还人情了。”"
+next = "tie_extra_01_cecilia_frana_landing"
+news = "拉古萨卫生署的保书上多了一个外乡船长的名字，港边那个比斯开草药女晒药的窗子又开了。"
+effects = [
+  { kind = "flag", flag = "c7_tie_extra_01_cecilia_frana_helped" },
+  { kind = "affinity", person = "cecilia", value = 3 },
+  { kind = "affinity", person = "frana", value = 3 },
+]
+
+[[tracks.chapters.choices]]
+key = "festival_masks"
+text = "替塞西莉亚从威尼斯运来金箔和纸胎，赶上圣布莱斯节的单子。"
+reply = "纸胎在舱底压坏了一箱，剩下的刚够。塞西莉亚赶了一个月，共和国的单子一张不少交了上去；保书那边，芙拉娜到底拿自己的薪俸作了押。我临走前看见塞西莉亚又做了一张，没上色，拿布包好，压在模子箱的最底下。“给使者留着。”她说，“上什么色，等我见过她另一张脸再说。”"
+next = "tie_extra_01_cecilia_frana_landing"
+news = "一条从威尼斯来的船给拉古萨港边的面具铺运来几箱金箔和纸胎，共和国订的节日面具一张不少。"
+effects = [
+  { kind = "flag", flag = "c7_tie_extra_01_cecilia_frana_masks" },
+  { kind = "affinity", person = "cecilia", value = 5 },
+]
+
+[[tracks.chapters]]
+key = "tie_extra_01_cecilia_frana_landing"
+title = "老友的脸"
+text = "圣布莱斯节，游行从总督府门前过。圣徒的银匣抬在最前头，后面是旗和鼓，再后面是戴面具的队伍。塞西莉亚解开布包，取出一张新面具，举到芙拉娜脸旁边比了比。面具照的是使者现在的样子：眉心那道纹浅了，眼角添了几道细的。“像不像？”芙拉娜看了很久。“像。别把我的脸画年轻。”她戴上面具，走进队伍。走了几步又回过头，把面具摘下来，冲塞西莉亚笑了一下。那是塞西莉亚没见过的一张脸。她伸手去摸腰间的炭条。"
+stage = "witness"
+window = [[1585, 1, 15], [1585, 3, 31]]
+at = "ragusa_port"
+cast = ["cecilia", "frana"]
+speaker = "cecilia"
+mood = "cheerful"
+news = "拉古萨圣布莱斯节的游行里，使者戴着一张眼角有细纹的面具，走到一半摘下来，回头冲人群边上的面具师笑了。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [
+  { kind = "tie", a = "cecilia", b = "frana", relation = "confidants" },
+  { kind = "flag", flag = "c7_tie_extra_01_cecilia_frana_landing" },
+  { kind = "memory", memory = "mem-tie_extra_01_cecilia_frana-landing", title = "老友的脸" },
+]
+
+[[tracks.chapters.variants]]
+key = "masks"
+when = [{ kind = "flag", flag = "c7_tie_extra_01_cecilia_frana_masks" }]
+text = "圣布莱斯节，游行从总督府门前过。圣徒的银匣抬在最前头，后面是旗和鼓，再后面是戴面具的队伍。塞西莉亚解开布包，是去年那张没上色的面具。她一直搁到节前才动笔，照的是芙拉娜现在的样子：眉心那道纹浅了，眼角添了几道细的。她把面具举到芙拉娜脸旁边比了比：“像不像？”芙拉娜看了很久。“像。别把我的脸画年轻。”她戴上面具，走进队伍。走了几步又回过头，把面具摘下来，冲塞西莉亚笑了一下。那是塞西莉亚没见过的一张脸。她伸手去摸腰间的炭条。"

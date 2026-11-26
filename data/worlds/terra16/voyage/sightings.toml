@@ -1,0 +1,428 @@
+# H04 海上所见（docs/VOYAGE-PLAN.md §5）：航行视图里远远看得见的小目标，开不开过去由玩家自己定。
+# 生成与触发的规则在 rules.toml 的 [sightings]；这里只写每一种“所见”的样子、条件与靠过去以后的结果。文案原创。
+#
+# 每条：
+#   key     唯一的键（英文小写）
+#   kind    种类：flotsam 漂流货 / wreck 残骸 / castaway 落难的人 / birds 鸟群 / shoal 鱼群或鲸 / fishing 渔船 /
+#           weed 海藻带 / ice 浮冰 / reef 暗礁。前六种靠过去有好处，后三种是要绕开的（碰上了当场吃亏）。
+#   weight  在合条件的所见里抽中的权重
+#   title   航行视图上、小卡片上的名字
+#   text    靠近以后看到的样子（小卡片的正文）
+#   when    出场条件（都可以不写）：
+#             climates = ["temperate", "cold", "arid", "tropical"]（所在海区的气候）
+#             seasons  = ["spring", "summer", "autumn", "winter"]（所在海区的季节，南半球已经倒过来）
+#             shore    = "near"（离岸 4 格以内）/ "far"（离岸 8 格以外）
+#   options 一两个按钮。每个按钮：
+#             label   按钮上的字
+#             result  按下以后卡片上换成的这句话
+#             effects 结果（都可以不写）：
+#               cash = 金币增减      morale = 士气增减     crew = [少, 多]（救起的水手数）
+#               supplies = 粮水天数增减（鲜鱼、清淡水都折成天数）    goods = [少, 多]（当地常见货的件数）
+#               fresh = 天数（吃到鲜鱼：断鲜天数回退这么多天，0–30；H02 船况开着时才有用）
+#               item = "物品键"（给一件物品，要过内核校验：键必须存在）   damage = 每艘船损失最大耐久的百分比
+#               damage_full_sail = 满帆时才受的损伤百分比（半帆、收帆安全）   rumor = true（一条发现物的传闻）
+#               chart = true（揭开所在海区的海图）   land = 格数（朝最近的未探明陆地揭开这么大的一片迷雾）
+#               port = true（在海图上标出最近的、还没望见过的港口）
+#             safe    暗礁：半帆、收帆时卡片上换成这句（没有满帆时的损伤）
+#             lucky   可选的小概率另得：{ chance = 0.15, result = "……", effects = { ... } }
+#   要绕开的三种（weed / ice / reef）碰上就当场结算第一个按钮，卡片上只有一个“知道了”。
+
+# ───────────── 漂流货 ─────────────
+
+[[sightings]]
+key = "flotsam_casks"
+kind = "flotsam"
+weight = 10
+title = "几只漂流的木桶"
+text = "几只木桶在浪里一沉一浮，箍铁还亮，桶塞也都塞得好好的——像是哪条船遇了风，把甲板上的货解开扔了。"
+[[sightings.options]]
+label = "放小艇去捞"
+result = "水手们拿钩篙把木桶一只只拖上来，撬开一看，货都还干着。"
+effects = { goods = [2, 5] }
+[[sightings.options]]
+label = "不去管它"
+result = "木桶慢慢漂远，转眼就看不见了。"
+
+[[sightings]]
+key = "flotsam_bales"
+kind = "flotsam"
+weight = 8
+title = "漂着的包裹"
+text = "一堆用油布裹着、麻绳捆紧的包裹挤在一块破舱板上，随着涌浪打转。油布外面已经长了一层滑腻的水苔。"
+when = { shore = "near" }
+[[sightings.options]]
+label = "捞上来看看"
+result = "外面几层湿透了，里头的还能用。"
+effects = { goods = [1, 3] }
+lucky = { chance = 0.12, result = "最里面的一包裹着个小木匣，匣里是一只没碰坏的瓷碗。", effects = { item = "zhangzhou_bowl" } }
+[[sightings.options]]
+label = "绕过去"
+result = "舵手让开了那块舱板。"
+
+[[sightings]]
+key = "flotsam_ambergris"
+kind = "flotsam"
+weight = 3
+title = "一块灰白的浮物"
+text = "一块灰白、蜡样的东西浮在水面上，比人头还大。离得近了，风里带来一股说不清的气味，像海，又像寺庙里的香。"
+when = { climates = ["tropical", "arid"], shore = "far" }
+[[sightings.options]]
+label = "捞起来"
+result = "老水手捏了一小块在手心里搓，眼睛都亮了：“是龙涎！别让它化了。”"
+effects = { item = "ambergris_lump", morale = 2 }
+[[sightings.options]]
+label = "别碰那怪东西"
+result = "那块浮物漂过船尾，气味很久才散。"
+
+# ───────────── 残骸 ─────────────
+
+[[sightings]]
+key = "wreck_mast"
+kind = "wreck"
+weight = 8
+title = "断桅与碎板"
+text = "一截断桅拖着半张烂帆，周围漂着碎木板和一只翻过来的小艇。没有人，也没有声音。"
+[[sightings.options]]
+label = "靠过去搜一搜"
+result = "能用的木料拆了几块，舱板缝里还夹着些散货。"
+effects = { goods = [1, 2] }
+lucky = { chance = 0.15, result = "翻过小艇，底下扣着一只锡盒，里面是几枚磨得发亮的旧钱。", effects = { item = "ancient_coin" } }
+[[sightings.options]]
+label = "记下位置，不停船"
+result = "领航员在海图上画了个小叉。"
+effects = { rumor = true }
+
+[[sightings]]
+key = "wreck_hull"
+kind = "wreck"
+weight = 6
+title = "半沉的船壳"
+text = "一条船的船壳斜插在水里，只露出船尾和半截舵。看样式不是这一带的船，船尾的雕花被海水泡得发白。"
+when = { shore = "near" }
+[[sightings.options]]
+label = "派人下去摸"
+result = "摸上来一些泡过水的货，还有一本字迹化开的航海日志。"
+effects = { goods = [1, 3], rumor = true }
+lucky = { chance = 0.1, result = "舱底的箱子里有一只扁壶，青花一点没掉。", effects = { item = "blue_white_flask" } }
+[[sightings.options]]
+label = "离远点，别被拖下去"
+result = "船壳在身后慢慢沉了下去。"
+
+[[sightings]]
+key = "wreck_burnt"
+kind = "wreck"
+weight = 4
+title = "焦黑的船骸"
+text = "一片焦黑的船板浮在海上，边缘还冒着细细的烟。不知道是失了火，还是被人放的火。"
+[[sightings.options]]
+label = "搜一搜幸存的东西"
+result = "大多烧光了，只抢出几样没烧着的。水手们一路都没怎么说话。"
+effects = { goods = [1, 2], morale = -1 }
+[[sightings.options]]
+label = "不靠近，加强瞭望"
+result = "瞭望手盯着四周看了一整个班次。"
+effects = { morale = 1 }
+
+# ───────────── 落难的人 ─────────────
+
+[[sightings]]
+key = "castaway_boat"
+kind = "castaway"
+weight = 8
+title = "一条小艇"
+text = "一条小艇在浪里漂，艇上的人用破衬衫绑在桨上摇着。离近了能看见他们嘴唇都裂了。"
+[[sightings.options]]
+label = "救上船"
+result = "几个人被扶上甲板，喝完水就睡死了过去。醒来以后，他们说愿意留下来干活。"
+effects = { crew = [3, 8], morale = 3 }
+[[sightings.options]]
+label = "扔给他们水和饼，指个方向"
+result = "小艇上的人朝这边磕了几个头，往岸的方向划去。"
+effects = { supplies = -1, morale = 1 }
+
+[[sightings]]
+key = "castaway_plank"
+kind = "castaway"
+weight = 6
+title = "抱着木板的人"
+text = "浪里有个人抱着一块木板，已经没力气喊了，只会举一举手。"
+[[sightings.options]]
+label = "放绳子下去"
+result = "拉上来的是个年轻水手。他缓过来以后，讲了一路他那条船在哪里出的事。"
+effects = { crew = [1, 2], morale = 2, rumor = true }
+[[sightings.options]]
+label = "风太大，救不了"
+result = "那块木板很快就看不见了。甲板上有好一阵没人说话。"
+effects = { morale = -3 }
+
+[[sightings]]
+key = "castaway_raft"
+kind = "castaway"
+weight = 4
+title = "一只筏子"
+text = "一只用桶和绳子扎成的筏子，上面坐着几个人，中间那个手里紧紧抱着一卷油布包好的东西。"
+when = { shore = "far" }
+[[sightings.options]]
+label = "救上船"
+result = "抱着油布卷的人是个领航员。他把油布打开——是一张画得很细的海图，说算是船费。"
+effects = { crew = [2, 4], morale = 2, chart = true }
+[[sightings.options]]
+label = "绕开"
+result = "筏子上的人一直望着这边，直到看不见。"
+effects = { morale = -2 }
+
+# ───────────── 鸟群 ─────────────
+
+[[sightings]]
+key = "birds_flock"
+kind = "birds"
+weight = 8
+title = "一群海鸟"
+text = "一大群海鸟在前方盘旋，傍晚的时候整整齐齐朝一个方向飞走了。老水手说，鸟晚上是要回岸上过夜的。"
+[[sightings.options]]
+label = "跟着鸟飞的方向看"
+result = "领航员顺着鸟去的方向量了方位，在海图上添了一片轮廓。"
+effects = { land = 3 }
+[[sightings.options]]
+label = "照原来的航向"
+result = "鸟群飞远了。"
+
+[[sightings]]
+key = "birds_frigate"
+kind = "birds"
+weight = 5
+title = "高处的大鸟"
+text = "几只叉尾的大鸟停在很高的地方不动，翅膀像两把弯刀。它们离岸不会太远。"
+when = { climates = ["tropical"] }
+[[sightings.options]]
+label = "记下方位"
+result = "大鸟慢慢滑向远处，领航员在海图边上记了一笔。"
+effects = { land = 4 }
+[[sightings.options]]
+label = "不理会"
+result = "大鸟一直挂在天上，像钉在那里。"
+
+[[sightings]]
+key = "birds_terns"
+kind = "birds"
+weight = 5
+title = "贴着水飞的燕鸥"
+text = "一群燕鸥贴着水面来回扎，扎一下叼起一条银亮的小鱼。水下面大概有鱼群，也大概有浅滩。"
+when = { shore = "near" }
+[[sightings.options]]
+label = "顺着看过去"
+result = "远处果然有一线浅色的水，再过去隐约是岸。"
+effects = { land = 2, supplies = 1 }
+[[sightings.options]]
+label = "不去管"
+result = "燕鸥的叫声被风吹散了。"
+
+# ───────────── 鱼群与鲸 ─────────────
+
+[[sightings]]
+key = "shoal_boil"
+kind = "shoal"
+weight = 8
+title = "水面翻花"
+text = "一大片水面像开了锅一样翻着白花，银色的鱼背一闪一闪，连海鸟都赶来了。"
+[[sightings.options]]
+label = "下网"
+result = "网拖上来沉甸甸的，伙房当天就换了新鲜的鱼汤。"
+effects = { supplies = 2, fresh = 10, morale = 3 }
+[[sightings.options]]
+label = "赶路要紧"
+result = "鱼群在船尾翻了一阵花，散了。"
+
+[[sightings]]
+key = "shoal_whales"
+kind = "shoal"
+weight = 4
+title = "喷着水柱的鲸"
+text = "远处几道水柱接连升起，接着是一道黑亮的脊背，慢慢沉下去，尾鳍在最后高高地扬了一下。"
+when = { shore = "far" }
+[[sightings.options]]
+label = "停下来看"
+result = "水手们挤在舷边看了很久。有人说，见了鲸，这一程会顺。"
+effects = { morale = 5 }
+lucky = { chance = 0.08, result = "鲸走以后，水面上浮起一块灰白的东西，捞上来竟是龙涎。", effects = { item = "ambergris_lump" } }
+[[sightings.options]]
+label = "离远点"
+result = "鲸群没有理会这条船，朝深海去了。"
+
+[[sightings]]
+key = "shoal_cod"
+kind = "shoal"
+weight = 6
+title = "密集的鱼群"
+text = "冷水里一层层的鱼群，密得连船底都能感觉到。这样的海，随手垂一根钓线都不会空。"
+when = { climates = ["cold", "temperate"] }
+[[sightings.options]]
+label = "停一阵钓鱼"
+result = "甲板上堆满了鱼，盐不够用，腌了一半、吃了一半。"
+effects = { supplies = 3, fresh = 10, morale = 2 }
+[[sightings.options]]
+label = "不耽误"
+result = "鱼群从船底下过去了。"
+
+# ───────────── 渔船 ─────────────
+
+[[sightings]]
+key = "fishing_skiff"
+kind = "fishing"
+weight = 8
+title = "一张小帆"
+text = "一条渔船正在收网，船上两三个人看见这边，先是警觉，看清不是海盗以后才挥了挥手。"
+when = { shore = "near" }
+[[sightings.options]]
+label = "买些鲜鱼"
+result = "渔夫把一筐还在跳的鱼递过来，收了钱，顺手指了指附近的港口。"
+effects = { cash = -15, supplies = 2, port = true }
+[[sightings.options]]
+label = "只问个路"
+result = "渔夫比画着说了港口的方向，领航员在海图上添了一个点。"
+effects = { port = true }
+
+[[sightings]]
+key = "fishing_pair"
+kind = "fishing"
+weight = 6
+title = "两条拖网的船"
+text = "两条渔船一左一右拖着一张大网，慢慢地走。船尾晾着鱼干，船头供着个小小的神龛。"
+[[sightings.options]]
+label = "拿银子换鱼干"
+result = "换来几大串鱼干，挂在帆桁下面，风一吹满船都是咸味。"
+effects = { cash = -20, supplies = 3 }
+[[sightings.options]]
+label = "打个招呼就走"
+result = "渔船上的人在网后面挥了挥手。"
+effects = { morale = 1 }
+
+[[sightings]]
+key = "fishing_pearl"
+kind = "fishing"
+weight = 4
+title = "停着的采珠船"
+text = "一条小船下了锚，船边不时冒出一个光着膀子的采珠人，喘口气又潜下去。"
+when = { climates = ["tropical", "arid"], shore = "near" }
+[[sightings.options]]
+label = "上去聊几句"
+result = "采珠人说起这一带的暗流与港口，还讲了一个关于沉船的老故事。"
+effects = { port = true, rumor = true }
+[[sightings.options]]
+label = "不打扰"
+result = "采珠船在身后越来越小。"
+
+# ───────────── 海藻带（要绕开） ─────────────
+
+[[sightings]]
+key = "weed_mat"
+kind = "weed"
+weight = 6
+title = "一片异色的海面"
+text = "前面的海面颜色发黄，一大片漂浮的海藻铺开去，看不到边。"
+when = { shore = "far" }
+[[sightings.options]]
+label = "知道了"
+result = "船头扎进了海藻里，舵被缠住，水手们砍了大半天才脱身，耽误了一天的粮水。"
+effects = { supplies = -1, morale = -1 }
+
+[[sightings]]
+key = "weed_kelp"
+kind = "weed"
+weight = 5
+title = "浮动的海草林"
+text = "长长的海草从水下漂上来，在浪里一起一伏，像一片没有根的森林。"
+when = { climates = ["cold", "temperate"] }
+[[sightings.options]]
+label = "知道了"
+result = "海草缠住了舵和缆，扯坏了几处索具。"
+effects = { damage = 2, supplies = -1 }
+
+[[sightings]]
+key = "weed_foam"
+kind = "weed"
+weight = 4
+title = "一条泡沫带"
+text = "一条长长的泡沫与碎藻排成线，横在航向前面——两股水在这里撞到一起。"
+[[sightings.options]]
+label = "知道了"
+result = "船在泡沫带里被横流推得直打转，多走了一大截冤枉路。"
+effects = { supplies = -1 }
+
+# ───────────── 浮冰（要绕开） ─────────────
+
+[[sightings]]
+key = "ice_floes"
+kind = "ice"
+weight = 6
+title = "零散的浮冰"
+text = "海面上漂着一块块灰白的浮冰，大的像屋顶，小的像磨盘，彼此碰得咔咔作响。"
+when = { climates = ["cold"] }
+[[sightings.options]]
+label = "知道了"
+result = "一块浮冰撞上船首，船身猛地一震，船壳裂了几道缝。"
+effects = { damage = 6, morale = -2 }
+
+[[sightings]]
+key = "ice_growler"
+kind = "ice"
+weight = 4
+title = "半沉的冰块"
+text = "一块冰几乎全没在水下，只露出一点发青的顶，浪一打就看不见了。"
+when = { climates = ["cold"], seasons = ["winter", "spring"] }
+[[sightings.options]]
+label = "知道了"
+result = "船底擦着冰过去，刺耳的一声响，木匠钻下舱去堵了半夜。"
+effects = { damage = 4 }
+
+[[sightings]]
+key = "ice_sheet"
+kind = "ice"
+weight = 3
+title = "一片薄冰"
+text = "海面结着一层薄薄的冰，船走过去像在碾碎一层琉璃。"
+when = { climates = ["cold"], seasons = ["winter"] }
+[[sightings.options]]
+label = "知道了"
+result = "薄冰一路刮着船壳，水线附近的漆和木皮都刮掉了一层。"
+effects = { damage = 3, supplies = -1 }
+
+# ───────────── 暗礁（要绕开；半帆、收帆安全） ─────────────
+
+[[sightings]]
+key = "reef_breakers"
+kind = "reef"
+weight = 7
+title = "浪花发白的地方"
+text = "前头的海面上，浪无缘无故地翻成白花，一阵一阵——下面是礁。"
+when = { shore = "near" }
+[[sightings.options]]
+label = "知道了"
+result = "满帆冲过白浪，船底重重刮了一下礁——领航员咬着牙把这处礁画进了海图。"
+safe = "半帆慢慢从白浪边上蹭过去，有惊无险。领航员把这处礁画进了海图。"
+effects = { damage_full_sail = 8 }
+
+[[sightings]]
+key = "reef_coral"
+kind = "reef"
+weight = 6
+title = "颜色发浅的水"
+text = "海水忽然变成了浅浅的青绿色，水下的珊瑚看得一清二楚，近得像伸手就能摸到。"
+when = { climates = ["tropical"] }
+[[sightings.options]]
+label = "知道了"
+result = "船速太快，龙骨犁过珊瑚，整条船都在呻吟。领航员把这片浅水画进了海图。"
+safe = "放慢了帆，水手在船头探着竿子，一点点挪过了浅水。领航员把它画进了海图。"
+effects = { damage_full_sail = 10 }
+
+[[sightings]]
+key = "reef_rocks"
+kind = "reef"
+weight = 4
+title = "露头的礁石"
+text = "退潮的时候，几块黑礁石露出水面，上面站满了鸬鹚。涨潮以后，它们就藏回水下。"
+[[sightings.options]]
+label = "知道了"
+result = "满帆擦过礁石，船舷被啃掉一块。领航员把这几块礁石画进了海图。"
+safe = "帆收得早，船稳稳地从礁石外侧绕了过去。领航员把它们画进了海图。"
+effects = { damage_full_sail = 6 }

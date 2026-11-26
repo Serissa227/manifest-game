@@ -1,0 +1,419 @@
+/* 新界面（试用）——人物：见过的人、关系图、见闻簿（docs/UI-REDESIGN.md 第 4 节）。 */
+
+/* ═════════════════════════ 5. 人物（见过的人、关系图、见闻） ═════════════════════════ */
+/* 分页：与别处的标签页同一种（文字 + 下划线），未读数是印章红的小圆标 */
+:root[data-ui="v2"] .ub-tabs {
+  gap: 2px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ub-tab {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-sm) var(--v2-r-sm) 0 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-tab:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: rgba(255, 253, 248, 0.7);
+  border: 0;
+}
+:root[data-ui="v2"] .ub-tab.is-on,
+:root[data-ui="v2"] .ub-tab.is-on:hover:not(:disabled) {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: transparent;
+  box-shadow: inset 0 -3px 0 var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pp-panel {
+  gap: 14px;
+}
+:root[data-ui="v2"] .pp-panel > .ub-tabs {
+  padding-bottom: 0;
+}
+:root[data-ui="v2"] .pp-panel > .ub-tabs select {
+  margin-left: auto;
+  margin-bottom: 4px;
+}
+:root[data-ui="v2"] .pp-here {
+  margin: 0 0 4px 12px;
+  gap: 6px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pp-tab-count {
+  min-width: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  line-height: 18px;
+  font-size: 11px;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+
+/* 名单：一行一位，头像圆角，选中的那位白底 + 左边一道黄铜线 */
+:root[data-ui="v2"] .pp-body {
+  gap: 18px;
+}
+:root[data-ui="v2"] .pp-list {
+  gap: 2px;
+  padding: 4px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pp-card {
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 0;
+  padding: 8px 10px;
+  color: var(--v2-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pp-card:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pp-card.is-on,
+:root[data-ui="v2"] .pp-card.is-on:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line);
+  box-shadow: inset 3px 0 0 var(--v2-brass), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pp-face,
+:root[data-ui="v2"] .pp-detail-face {
+  border: 1px solid rgba(36, 28, 21, 0.3);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pp-card-name {
+  gap: 6px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.35;
+}
+:root[data-ui="v2"] .pp-card-role {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pp-card-where,
+:root[data-ui="v2"] .pp-card-fleet {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-req {
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff8ee;
+  background: var(--v2-sea);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-rank {
+  padding: 1px 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-heart span.is-on {
+  color: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .ub-heart span {
+  color: #d6c6b4;
+}
+
+/* 详情：一张纸卡。头像大、名字用宋体；情谊是一条细细的黄铜进度 */
+:root[data-ui="v2"] .pp-detail {
+  gap: 12px;
+  padding: 18px 20px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pp-detail-head {
+  gap: 16px;
+  align-items: center;
+}
+:root[data-ui="v2"] .pp-detail-face {
+  border-radius: var(--v2-r-md);
+  box-shadow: 0 0 0 3px var(--v2-paper-2), 0 0 0 4px var(--v2-line);
+}
+:root[data-ui="v2"] .pp-name {
+  gap: 8px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pp-role {
+  margin: 4px 0 6px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pp-line,
+:root[data-ui="v2"] .pp-likes {
+  gap: 4px 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-aff {
+  height: 6px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .ub-aff span {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pp-bio h5,
+:root[data-ui="v2"] .pp-ties h5,
+:root[data-ui="v2"] .pp-recent h5,
+:root[data-ui="v2"] .pp-school h5 {
+  margin: 6px 0 6px;
+  padding-bottom: 0;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-ink);
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pp-bio p {
+  font-size: var(--v2-fs-md);
+  line-height: 1.8;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pp-memories {
+  padding-left: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  list-style: none;
+}
+:root[data-ui="v2"] .pp-memories li {
+  position: relative;
+  padding-left: 16px;
+  line-height: 1.7;
+}
+:root[data-ui="v2"] .pp-memories li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.7em;
+  width: 5px;
+  height: 5px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .pp-actions {
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pp-away {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-back {
+  min-height: 0;
+  padding: 2px 4px;
+  color: var(--v2-sea);
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+/* 人际：小卡片 */
+:root[data-ui="v2"] .pp-ties ul {
+  gap: 6px 8px;
+}
+:root[data-ui="v2"] .pp-tie {
+  min-height: 0;
+  padding: 6px 10px 6px 6px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pp-tie:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-line-strong);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pp-tie-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .pp-tie-label {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pp-tie-since {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-tie-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .pp-mini {
+  border: 1px solid rgba(36, 28, 21, 0.35);
+}
+:root[data-ui="v2"] .pp-mini-wrap {
+  min-height: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] button.pp-mini-wrap:hover:not(:disabled) {
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] button.pp-mini-wrap:hover .pp-mini {
+  border-color: var(--v2-sea);
+}
+
+/* 见闻：一条一张纸条；没读过的左边一道印章红、一个红点 */
+:root[data-ui="v2"] .pp-newsbook {
+  max-width: 820px;
+}
+:root[data-ui="v2"] .pp-news-list {
+  gap: 8px;
+}
+:root[data-ui="v2"] .pp-news {
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid transparent;
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pp-news.is-unread {
+  background: var(--v2-paper-2);
+  border-left-color: var(--v2-seal);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pp-news-kind {
+  width: 40px;
+  height: 40px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pp-news-meta {
+  gap: 2px 10px;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-news-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--v2-seal);
+  border: 0;
+}
+:root[data-ui="v2"] .pp-news-place {
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .pp-news-track {
+  padding: 0 7px;
+  color: var(--v2-seal);
+  background: #f8e6df;
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pp-news-text {
+  margin-top: 4px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.75;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pp-news-list.is-compact .pp-news {
+  padding: 8px 10px;
+}
+
+/* 人物页里的小按钮（话题、招募）与空状态：换成新按钮的样子 */
+:root[data-ui="v2"] .pp-panel .ts-btn,
+:root[data-ui="v2"] .pp-panel .ts-btn-small {
+  top: 0;
+  min-height: var(--v2-h-md);
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pp-panel .ts-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-panel .ts-btn:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-style: dashed;
+}
+:root[data-ui="v2"] .pp-panel .ts-empty {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--v2-ink-2);
+  background: rgba(255, 253, 248, 0.5);
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+}
+
+/* ═════════════════════════ 手机与触屏 ═════════════════════════ */
+/* 触屏上人物页的分页 44 px 高 */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .ub-tab {
+    min-height: var(--v2-h-touch);
+  }
+}
+
+/* 人物页（窄屏）：名单在上、详情在下 */
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .pp-detail {
+    padding: 14px;
+  }
+  :root[data-ui="v2"] .pp-detail-head {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .pp-detail-face {
+    width: 72px !important;
+    height: 72px !important;
+  }
+}
+
+/* A9 同窗 */
+:root[data-ui="v2"] .pp-school p {
+  gap: 4px 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pp-school .pp-school-after {
+  color: var(--v2-ink-3);
+}

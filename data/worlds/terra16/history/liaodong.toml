@@ -1,0 +1,1698 @@
+# C10：结构、引用、史实与玩法参数；显示正文均为待Claude替换的短占位。
+# 仅知年份／月份的条目在窗口末结算；不得把结算末日写成考证日期。
+
+[[ports]]
+port = "pidao"
+state = "dormant"
+
+[[campaigns]]
+key = "liaodong"
+name = "辽东战役链"
+summary = "建州吞了乌拉，努尔哈赤在赫图阿拉称汗；明廷守着辽东，叶赫、朝鲜、察哈尔各自掂量该靠哪边。从嘉靖三十七年到万历十七年，三十一年里，登州的粮船、牛庄的铳炮、宁波的通事、京里的打点，都能在某一年改写一场仗。可赢了今年的仗，明年的饷银、朝议与天时又把局面拉回去。"
+inertia = 25
+vars = [{ key = "ming_treasury", name = "明·国库", start = 40, drift = [[1553, 40], [1557, 40], [1566, 25], [1572, 20], [1580, 45], [1584, 30], [1589, 5]] }, { key = "ming_pay", name = "明·边饷", start = 50, drift = [[1553, 50], [1557, 50], [1570, 35], [1576, 20], [1589, 10]] }, { key = "ming_court", name = "明·朝议", start = 40, drift = [[1553, 40], [1557, 40], [1562, 45], [1572, 60], [1582, 35], [1586, 25], [1589, 15]] }, { key = "ming_guns", name = "明·火器", start = 35, drift = [[1553, 35], [1557, 35], [1568, 45], [1578, 30], [1589, 35]] }, { key = "jin_unity", name = "金·统合", start = 70, drift = [[1553, 70], [1557, 70], [1564, 85], [1581, 95]] }, { key = "jin_guns", name = "金·火器", start = 5, drift = [[1553, 5], [1557, 5], [1571, 10], [1576, 20], [1578, 45], [1589, 70]] }, { key = "jin_grain", name = "金·粮", start = 50, drift = [[1553, 50], [1557, 50], [1572, 20], [1580, 60]] }, { key = "famine", name = "灾荒", start = 20, drift = [[1553, 20], [1557, 20], [1573, 40], [1582, 70], [1586, 85]] }, { key = "rebellion", name = "流民", start = 5, drift = [[1553, 5], [1557, 5], [1574, 20], [1585, 60], [1589, 90]] }, { key = "korea", name = "朝鲜", start = 70, drift = [[1553, 70], [1557, 70], [1572, 50], [1582, 10]] }, { key = "chahar", name = "察哈尔", start = 60, drift = [[1553, 60], [1557, 60], [1574, 30], [1579, 0]] }, { key = "ming_catholic", name = "明·天主教", start = 3, drift = [[1553, 3], [1557, 3], [1583, 8], [1589, 5]], court = "ming", idea = "catholic", gates = [{ event = "l20_haicheng_open_seas", outcome = "broad_open_seas", cap = 15 }, { event = "l26_ricci_zhaoqing", outcome = "mission_reaches_capital", cap = 25 }] }, { key = "ming_hui", name = "明·回回", start = 12, drift = [[1553, 12], [1557, 12], [1589, 12]], court = "ming", idea = "hui_learning", gates = [{ event = "l22_rum_tianfang_exchange", outcome = "hui_learning_recognized", cap = 30 }] }, { key = "ming_open", name = "明·开明", start = 35, drift = [[1553, 35], [1557, 35], [1567, 40], [1577, 30], [1579, 15], [1584, 20], [1589, 20]], court = "ming", idea = "open_learning", gates = [{ event = "l20_haicheng_open_seas", outcome = "broad_open_seas", cap = 45 }, { event = "l21_mourning_flogging", outcome = "remonstrance_protected", cap = 35, from = [1577, 11, 30] }, { event = "l24_academy_suppression", outcome = "academies_protected", cap = 25, from = [1579, 9, 22] }] }, { key = "jin_catholic", name = "金·天主教", start = 0, drift = [[1553, 0], [1557, 0], [1589, 0]], court = "jin", idea = "catholic", gates = [{ event = "l25_jin_translation_bureau", outcome = "religious_patronage_edict", cap = 0 }] }, { key = "jin_hui", name = "金·回回", start = 0, drift = [[1553, 0], [1557, 0], [1589, 0]], court = "jin", idea = "hui_learning", gates = [{ event = "l25_jin_translation_bureau", outcome = "religious_patronage_edict", cap = 0 }] }, { key = "jin_open", name = "金·开明", start = 20, drift = [[1553, 20], [1557, 20], [1571, 25], [1574, 30], [1576, 33], [1581, 35], [1589, 35]], court = "jin", idea = "open_learning", gates = [{ event = "l25_jin_translation_bureau", outcome = "religious_patronage_edict", cap = 40 }] }]
+ending_event = "l19_beijing_shanhaiguan"
+outlooks = [{ key = "ming", name = "明廷", historical = "historical", threshold = 60, priority = ["ming_open", "ming_hui", "ming_catholic"], survives = ["frontier_stalemate", "trade_peace", "jurchen_fragmented"] }, { key = "jin", name = "清廷", historical = "historical", threshold = 60, priority = ["jin_open", "jin_hui", "jin_catholic"], survives = ["early_qing", "qing_enters_pass", "frontier_stalemate", "trade_peace", "dashun_faces_qing"] }]
+endings = [{ key = "frontier_stalemate_ming_historical", outcome = "frontier_stalemate", court = "ming", outlook = "historical", text = "宁远的城墙守住了，清军的旗号止步于辽河以东，山海关外的辽西走廊仍插着大明的旗。朝中依旧是深居的皇帝、收紧的言路，月港那道海禁的缝，开了，也只开了那么一道。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_ming_historical" }] }, { key = "frontier_stalemate_ming_catholic", outcome = "frontier_stalemate", court = "ming", outlook = "catholic", text = "关外两军隔河对峙，宁远与锦州的城头架着西洋大铳。京里的钦天监改用西法推历，城中起了天主堂，澳门和月港的洋船进出无碍；言官仍在奏，说夷人的钟声搅了皇城的清静。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_ming_catholic" }] }, { key = "frontier_stalemate_ming_hui_learning", outcome = "frontier_stalemate", court = "ming", outlook = "hui_learning", text = "清军困在辽河以东，辽西走廊的城池一座没丢。西北的贡道年年畅通，鲁迷与天方的使团住进会同馆不肯走，钦天监的回回科掌了历局；陕西的经堂里，学童一边诵经，一边打算盘。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_ming_hui_learning" }] }, { key = "frontier_stalemate_ming_open_learning", outcome = "frontier_stalemate", court = "ming", outlook = "open_learning", text = "清军退守辽河以东，山海关外的防线稳住了。长城以内倒松快了许多：月港之外，宁波、福州也挂起了市舶司的牌子，一条鞭法行到边远州县，书院的讲会重新热闹，言官上疏，不必再先备好棺材。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_ming_open_learning" }] }, { key = "trade_peace_ming_historical", outcome = "trade_peace", court = "ming", outlook = "historical", text = "辽河划成了界，开原、抚顺的马市重开：清国的使者驮来貂皮人参，大明的官员押去绢布铁锅，一如当年对俺答那样。边费省下十之七，只是朝上谁也不肯提那个款字。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_ming_historical" }] }, { key = "trade_peace_ming_catholic", outcome = "trade_peace", court = "ming", outlook = "catholic", text = "边市重开，两家使者往来如邻。京里的热闹在另一头：天主堂的钟声天天响，耶稣会与多明我会的教士为祭祖祀孔的规矩吵得面红耳赤，争执的信一封封漂洋过海，往罗马去。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_ming_catholic" }] }, { key = "trade_peace_ming_hui_learning", outcome = "trade_peace", court = "ming", outlook = "hui_learning", text = "清国的使者每隔几年便进一回京，边市年年开。西边的路也通了：肃州关外驼队不绝，大明与鲁迷国的国书一年一个来回，会同馆里为天方来的使者另辟了一间屋，窗下晾着刚抄好的星表。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_ming_hui_learning" }] }, { key = "trade_peace_ming_open_learning", outcome = "trade_peace", court = "ming", outlook = "open_learning", text = "辽河两岸按期开市，两边的使者互住对方的驿馆。内地的书坊忙起来了，王守仁的文集一版接一版地刻；言官在朝堂上直言，廷杖的架子被收进库房，落了灰。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_ming_open_learning" }] }, { key = "jurchen_fragmented_ming_historical", outcome = "jurchen_fragmented", court = "ming", outlook = "historical", text = "叶赫还在，建州没能把海西、东海诸部拢成一家；辽东的边将照旧扶一部、压一部，敕书照旧卖得出价。大明独存，朝廷里的老毛病也一样不少：天子深居，言路窄，书院在官府眼里总像个是非地。", effects = [{ kind = "flag", flag = "liaodong_ending_jurchen_fragmented_ming_historical" }] }, { key = "jurchen_fragmented_ming_catholic", outcome = "jurchen_fragmented", court = "ming", outlook = "catholic", text = "女真诸部守着自家的寨子，没有一面旗压得住另几面，叶赫的使者仍年年到开原领赏。边事少了，朝廷有闲心读新书：教士译的几何书与世界图，书坊里印了一版又一版，翰林院的老先生翻着，摇头又点头。", effects = [{ kind = "flag", flag = "liaodong_ending_jurchen_fragmented_ming_catholic" }] }, { key = "jurchen_fragmented_ming_hui_learning", outcome = "jurchen_fragmented", court = "ming", outlook = "hui_learning", text = "叶赫、哈达的旧部与建州互相提防，边墙外只有零星劫掠。京师里是另一番光景：回回的医官被请进太医院，西域来的乳香、没药在药铺里论斤卖，嘉峪关外，驼队的铃声日夜不断。", effects = [{ kind = "flag", flag = "liaodong_ending_jurchen_fragmented_ming_hui_learning" }] }, { key = "jurchen_fragmented_ming_open_learning", outcome = "jurchen_fragmented", court = "ming", outlook = "open_learning", text = "女真散在山林里各立寨子，边将不必年年上报军情。省下的边饷有了别的去处：沿海各港的商税入了太仓，书院的讲会开到了县里，言官骂首辅骂得再狠，换来的也只是一纸批答。", effects = [{ kind = "flag", flag = "liaodong_ending_jurchen_fragmented_ming_open_learning" }] }, { key = "early_qing_jin_historical", outcome = "early_qing", court = "jin", outlook = "historical", text = "万历十二年，清军的红衣炮轰开山海关，来得比谁预料的都早。辽东海口流出去的粮船与铳炮，全都进了沈阳的库房；北京城下，明军欠饷已三年，没有人肯替朝廷死守。", effects = [{ kind = "flag", flag = "liaodong_ending_early_qing_jin_historical" }] }, { key = "early_qing_jin_catholic", outcome = "early_qing", court = "jin", outlook = "catholic", text = "清军入关来得太快，随军的炮营里有西洋教士出身的铳师。沈阳的旗人管教士叫玛法，几位贝勒已受洗；进了北京，头一桩事便是划地建堂，钦天监的印也落到了教士手里。", effects = [{ kind = "flag", flag = "liaodong_ending_early_qing_jin_catholic" }] }, { key = "early_qing_jin_hui_learning", outcome = "early_qing", court = "jin", outlook = "hui_learning", text = "清军叩关那一年，明朝旧臣还在争守不守。嘉峪关外的驼队先到了京城：吐鲁番的使节递了贡册，哈密的阿訇受命在城南赁屋讲经，新朝的礼部照旧例拨了米与布。", effects = [{ kind = "flag", flag = "liaodong_ending_early_qing_jin_hui_learning" }] }, { key = "early_qing_jin_open_learning", outcome = "early_qing", court = "jin", outlook = "open_learning", text = "清军过关那年，辽饷还在加派，欠饷的明军开门迎降的不在少数。清廷顺势收了人心：降官留任，都察院、通政司当年便在北京开了衙，连皇帝的奢侈也有人敢当面谏。", effects = [{ kind = "flag", flag = "liaodong_ending_early_qing_jin_open_learning" }] }, { key = "qing_enters_pass_jin_historical", outcome = "qing_enters_pass", court = "jin", outlook = "historical", text = "李自成的人马攻破北京，吴三桂打开山海关，多尔衮的八旗涌进关内。新朝用满洲旧俗管自家，用汉制办六部；喇嘛与和尚的度牒，由皇帝批准，由贝勒登记。", effects = [{ kind = "flag", flag = "liaodong_ending_qing_enters_pass_jin_historical" }] }, { key = "qing_enters_pass_jin_catholic", outcome = "qing_enters_pass", court = "jin", outlook = "catholic", text = "北京城破，吴三桂开关，清军进京。教士跟着八旗的辎重入了城，在城东赁屋，门楣上钉起十字；新朝的国书用满汉两种文字写成，托商船寄往罗马，回信要等上好几年。", effects = [{ kind = "flag", flag = "liaodong_ending_qing_enters_pass_jin_catholic" }] }, { key = "qing_enters_pass_jin_hui_learning", outcome = "qing_enters_pass", court = "jin", outlook = "hui_learning", text = "大顺的人马占了北京，吴三桂放清军进了关。新朝的炮队里添了鲁迷的铳匠，回回商人带着西域的玉与药材进了京，礼部的朝贡册上，吐鲁番与哈密排在了朝鲜的前头。", effects = [{ kind = "flag", flag = "liaodong_ending_qing_enters_pass_jin_hui_learning" }] }, { key = "qing_enters_pass_jin_open_learning", outcome = "qing_enters_pass", court = "jin", outlook = "open_learning", text = "吴三桂开了山海关，清军进了北京。布告贴出来：三饷尽免，汉人衣冠不改，也没有剃发令；都察院的御史当朝参奏贝勒，被参的人竟不敢发作，吏部点名时，满汉的官员排在同一张榜上。", effects = [{ kind = "flag", flag = "liaodong_ending_qing_enters_pass_jin_open_learning" }] }, { key = "frontier_stalemate_jin_historical", outcome = "frontier_stalemate", court = "jin", outlook = "historical", text = "宁远与锦州始终没丢，清军的铁骑年年踏冰西来，年年退回辽东。沈阳的朝廷守着满洲旧俗，投降的汉官编入汉军旗，喇嘛的牒文照旧要先呈御前，再入贝勒的册。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_jin_historical" }] }, { key = "frontier_stalemate_jin_catholic", outcome = "frontier_stalemate", court = "jin", outlook = "catholic", text = "西进的路被堵死在锦州城下，沈阳却添了新鲜事：西洋教士在城南赁屋讲道，又替旗人子弟算天文、校铳尺，祭堂子的老人们路过，总要站住啐一口。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_jin_catholic" }] }, { key = "frontier_stalemate_jin_hui_learning", outcome = "frontier_stalemate", court = "jin", outlook = "hui_learning", text = "锦州的城墙挡着西进的路，沈阳城南的客店却日日住满：驼队卸下毡毯与葡萄干，阿訇在后院开了经堂，教回回的孩子认阿拉伯字。朝廷准他们只教自己人，满洲人里，一直没有人入教。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_jin_hui_learning" }] }, { key = "frontier_stalemate_jin_open_learning", outcome = "frontier_stalemate", court = "jin", outlook = "open_learning", text = "困在辽东，沈阳反倒认真学起了汉制：文馆里译起汉人的兵书与律令，六部开了衙，考场上满汉的子弟坐在同一排。锦州城头的明军望着这边，一时看不出对面算敌还是算邻。", effects = [{ kind = "flag", flag = "liaodong_ending_frontier_stalemate_jin_open_learning" }] }, { key = "trade_peace_jin_historical", outcome = "trade_peace", court = "jin", outlook = "historical", text = "沈阳与北京议定以辽河为界，马市重开，使者第一回住进会同馆，与蒙古人同一条胡同。换回来的缎布、铁锅和米粮，养活了八旗的人口；满洲的旧规矩，一条没改。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_jin_historical" }] }, { key = "trade_peace_jin_catholic", outcome = "trade_peace", court = "jin", outlook = "catholic", text = "边市一开，商队带回的货里多了成箱的西洋书。教士在沈阳的文馆教旗人子弟推算历法，教堂的钟与堂子的神杆在同一座城里并排立着。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_jin_catholic" }] }, { key = "trade_peace_jin_hui_learning", outcome = "trade_peace", court = "jin", outlook = "hui_learning", text = "互市的头一年，沈阳的驼队就比马队还多：吐鲁番、哈密的商人运来和田玉与乳香，鲁迷的铳匠受聘铸炮，文馆里添了一间专译回回历书的屋子。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_jin_hui_learning" }] }, { key = "trade_peace_jin_open_learning", outcome = "trade_peace", court = "jin", outlook = "open_learning", text = "界河两岸按期互市，两国使者往来不断。沈阳趁着太平把汉制办全了：六部、通政司一应俱备，贝勒的子弟入学读书，书坊里刻出了头一批满汉对照的书。", effects = [{ kind = "flag", flag = "liaodong_ending_trade_peace_jin_open_learning" }] }, { key = "dashun_faces_qing_jin_historical", outcome = "dashun_faces_qing", court = "jin", outlook = "historical", text = "北京落进了大顺手里，吴三桂守着山海关，既不降李自成，也不放清军进来。关内一座京城，关外一座沈阳，中间只隔着一道关墙，谁先动，谁就先挨炮。", effects = [{ kind = "flag", flag = "liaodong_ending_dashun_faces_qing_jin_historical" }] }, { key = "dashun_faces_qing_jin_catholic", outcome = "dashun_faces_qing", court = "jin", outlook = "catholic", text = "关内是大顺，关外是清，山海关的城门紧闭。沈阳趁这段空隙练兵，西洋教士教旗人铸出了新炮；有贝勒受了洗，也有贝勒握着弓箭去堂子发誓，说洋人迟早要毁了满洲的根本。", effects = [{ kind = "flag", flag = "liaodong_ending_dashun_faces_qing_jin_catholic" }] }, { key = "dashun_faces_qing_jin_hui_learning", outcome = "dashun_faces_qing", court = "jin", outlook = "hui_learning", text = "大顺占了关内，清守在关外，两边都在争西北。沈阳的使者绕道蒙古草原，去吐鲁番、哈密请回回的将领与鲁迷铳匠；西北的军帐里，有人开始传读沈阳寄来的书信。", effects = [{ kind = "flag", flag = "liaodong_ending_dashun_faces_qing_jin_hui_learning" }] }, { key = "dashun_faces_qing_jin_open_learning", outcome = "dashun_faces_qing", court = "jin", outlook = "open_learning", text = "山海关内外对峙，沈阳反倒腾出手来整顿内政：满汉一体写进诏书，从大顺治下逃出来的汉官在沈阳得了衙门与俸禄，读书人的船一船接一船地进牛庄。", effects = [{ kind = "flag", flag = "liaodong_ending_dashun_faces_qing_jin_open_learning" }] }]
+backlash = [{ when = [{ var = "ming_catholic", ge = 30 }, { var = "ming_court", lt = 40 }], event = "l24_ming_catholic_backlash" }, { when = [{ var = "ming_hui", ge = 30 }, { var = "ming_court", lt = 40 }], event = "l24_ming_hui_backlash" }, { when = [{ var = "ming_open", ge = 40 }, { var = "ming_court", lt = 40 }], event = "l24_ming_open_backlash" }, { when = [{ var = "jin_catholic", ge = 30 }, { var = "jin_unity", lt = 60 }], event = "l25_jin_catholic_backlash" }, { when = [{ var = "jin_hui", ge = 30 }, { var = "jin_unity", lt = 60 }], event = "l25_jin_hui_backlash" }, { when = [{ var = "jin_open", ge = 30 }, { var = "jin_unity", lt = 60 }], event = "l25_jin_open_backlash" }]
+
+# L01；事实上下文：布占泰所部被吞并；萨尔浒之前的女真统合。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l01_ula_annexation"
+ripple_budget = 3000  # 涟漪预算（万分点）：结局出来后 30 日内，模型可据此写至多两条余波事件，倍率按 |倍率−1| 计费；离线不触发。
+title = "乌拉覆亡"
+summary = "哈达、辉发已入建州之手，努尔哈赤的刀锋下一个指向松花江畔的乌拉。布占泰向辽东求粮求铳；牛庄码头上的货，加上登州的铳手，能让乌拉的城多撑几个月。"
+region = "牛庄"
+date = [1558, 12, 31]
+history = { date = [1558, 12, 31], outcome = "ula_annexed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "乌拉", faction = "ula", port = "niuzhuang" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "拨银接济乌拉", port = "niuzhuang", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮与木料往乌拉", port = "niuzhuang", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送铳药予乌拉守军", port = "niuzhuang", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈济乌拉饥户", port = "niuzhuang", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨练铳手", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "ula_annexed", when = "<= 0", default = true, news = "牛庄码头上都在传：乌拉城破了，布占泰带着几十骑逃去叶赫。建州人把乌拉的粮仓参场一并接了去，海西只剩叶赫还撑着。", chronicle = "嘉靖三十七年，建州兵破乌拉，布占泰奔叶赫，海西只余叶赫一部。", effects = [{ kind = "flag", flag = "l01_ula_annexation_ula_annexed" }], vars = [{ var = "jin_unity", add = 8 }] },
+  { key = "ula_survives", when = "> 0", news = "登州的水手带来消息：乌拉守住了城，建州的人马围了几个月，粮尽退去。据说牛庄运上去的铳药，派了大用场。", chronicle = "嘉靖三十七年，建州攻乌拉不下，布占泰据城而守，乌拉得存。", effects = [{ kind = "flag", flag = "l01_ula_annexation_ula_survives" }], vars = [{ var = "jin_unity", add = -5 }] },
+]
+window = [[1557, 1, 1], [1558, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["乌拉远在松花江边，粮铳要穿过建州的地界"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L02；事实上下文：1616→1561；提前约55年，延迟分支在1562建号。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l02_later_jin_proclamation"
+ripple_budget = 3000
+title = "后金建号"
+summary = "建州诸部奉努尔哈赤为主，赫图阿拉正备称汗建号的典礼。开原、抚顺的马市上，敕书与参貂照常易手；登州的粮船、铳手和宁波通事的一张嘴，都能让这一年多出些变数。"
+region = "登州"
+date = [1561, 12, 31]
+history = { date = [1561, 12, 31], outcome = "later_jin_proclaimed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银助登州备边", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮与木料入登州", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送铳炮火药去登州", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈济渡海辽民", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "托秦红缨操练登州营", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "请谢清晏议通行供粮", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话要过通事与驿递的手，漏给开原边将，货先被扣。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "later_jin_proclaimed", when = "<= 0", default = true, news = "登州渡口传来消息：努尔哈赤在赫图阿拉称汗，国号大金，改元天命。开原的边将说，不过又多了一个受封的酋长。", chronicle = "嘉靖四十年，努尔哈赤称汗于赫图阿拉，国号大金，改元天命。", effects = [{ kind = "flag", flag = "l02_later_jin_proclamation_later_jin_proclaimed" }], vars = [{ var = "jin_unity", add = 0 }] },
+  { key = "proclamation_delayed", when = "> 0", news = "宁波来的商人说，建州诸部为汗位的名分吵了一整年，努尔哈赤的称号迟迟定不下来。登州的备倭将官松了口气。", chronicle = "嘉靖四十年，建州诸部议立汗号不决，称号未定。", effects = [{ kind = "flag", flag = "l02_later_jin_proclamation_proclamation_delayed" }], vars = [{ var = "jin_unity", add = -10 }] },
+]
+window = [[1559, 1, 1], [1561, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["辽东边将靠养着建州谋利，朝廷的眼睛又被南方倭患牵走"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L03；事实上下文：火器北传按真实1568—1583年代；缺省明火器+10，改写+20；训练另行计时。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l03_northern_firearms"
+ripple_budget = 3000
+title = "火器北传"
+summary = "戚继光奉调北上，在蓟镇修敌台、练车营，佛郎机与鸟铳一箱箱发往边墙。铳发得下去，兵却未必练得出来；辽东那一头学到几成，要看有没有人肯送铳、送粮、送教头。"
+region = "登州"
+date = [1583, 12, 31]
+history = { date = [1583, 12, 31], outcome = "limited_firearms" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银助蓟镇修敌台", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料交蓟镇敌台", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "交鸟铳佛郎机火药", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粮药济边墙军户", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨在月港练铳手", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "escort_fujian_supply_convoy", side = "support", kind = "escort", label = "护福建商船队赴登州", port = "dengzhou", max_points = 16, from = "yuegang", company = "fujian_merchants", days = 2, cost = 500, points = 16 },
+]
+outcomes = [
+  { key = "limited_firearms", when = "<= 0", default = true, news = "登州码头上的脚夫传，北边蓟镇的敌台一座座立了起来，车营也练成了；可过了山海关，辽东边堡领到的铳多放不准，守的还是老法子。", chronicle = "万历十一年，蓟镇敌台、车营已成，辽东诸堡仅学得半套火器之法。", effects = [{ kind = "flag", flag = "l03_northern_firearms_limited_firearms" }], vars = [{ var = "ming_guns", add = 10 }] },
+  { key = "trained_firearms_network", when = "> 0", news = "登州的船家说，辽东各堡也立起了车营，铳手轮番去蓟镇受教，火药箱一路运进山海关，边将说如今骑兵冲阵也不怕了。", chronicle = "万历十一年，车营之制行于辽东诸堡，铳手分班赴蓟镇受教，边墙上的铳炮首尾相接。", effects = [{ kind = "flag", flag = "l03_northern_firearms_trained_firearms_network" }], vars = [{ var = "ming_guns", add = 20 }] },
+]
+window = [[1568, 1, 1], [1583, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["铳发到边堡，兵不会放，没练过的火器只是摆设"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L04；事实上下文：1618→1563；李永芳等降后金，不把沿海交付地点称作抚顺战场。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l04_fushun_defection"
+ripple_budget = 3000
+title = "七大恨与抚顺"
+summary = "努尔哈赤把七大恨誊成文书，七条里有四条是边市上的旧账：越界采参、立碑、婚约、田地。朝廷肯认几条错，仗尚可迟一年；不肯，抚顺开市那天，城门就是他的靶子。"
+region = "登州"
+date = [1563, 4, 30]
+history = { date = [1563, 4, 30], outcome = "fushun_falls" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银补抚顺守军欠饷", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料入登州海仓", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "军火入登州库备辽东", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "散粮药给渡海辽民", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨在登州练铳手", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与谢清晏商议边市旧账", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话传到抚顺商人耳中，建州便先知朝廷的底线", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "fushun_falls", when = "<= 0", default = true, news = "登州的酒客说，建州人先放话有三千人的商队要到抚顺开市，守军开了门，李永芳便降了；商人佟养性也跟着投了后金。", chronicle = "嘉靖四十二年四月，后金取抚顺，守将李永芳降，商人佟养性亦归之。", effects = [{ kind = "flag", flag = "l04_fushun_defection_fushun_falls" }], vars = [{ var = "jin_guns", add = 5 }] },
+  { key = "fushun_holds", when = "> 0", news = "登州的商人说，抚顺没丢：三千人商队的话被识破，李永芳闭了城，几桩越界采参的旧账也有人出面赔了，辽东又得一年安稳。", chronicle = "嘉靖四十二年四月，抚顺守住，李永芳仍据其城，后金兵退回建州。", effects = [{ kind = "flag", flag = "l04_fushun_defection_fushun_holds" }], vars = [{ var = "jin_guns", add = 0 }] },
+]
+window = [[1562, 1, 1], [1563, 4, 30]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["抚顺守将李永芳已有二心的风声，商人佟养性暗通建州"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+requires = [
+  { event = "l02_later_jin_proclamation" },
+]
+
+# L05；事实上下文：1619→1564；四路分进与补给失协；至少三类行动，反制40%，失陷军火反噬50%。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l05_sarhu"
+ripple_budget = 3000
+title = "萨尔浒"
+summary = "杨镐在沈阳把兵分作四路，约期会攻赫图阿拉。出师的日子早已走漏，路与路隔着山岭，谁先到，谁先挨打。密札要先送到登州，再赶在期限前转到杨镐手里；火药与粮车也得在四路动身前备齐。"
+region = "登州"
+date = [1564, 3, 31]
+history = { date = [1564, 3, 31], outcome = "ming_armies_routed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银添杨镐四路军饷", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料接应四路大军", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "交上好火药与铳炮", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈辽东出夫的饥户", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨练赴辽铳手", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏议粮道通行之约", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "议定的粮道与约期若走漏，后金便知四路各自几时到", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "deliver_liaodong_dispatch", side = "support", kind = "intel", label = "递送出师泄期密札", port = "dengzhou", max_points = 16, from = "fuzhou", item = "liaodong_dispatch", deadline = [1564, 3, 31], points = 16, cost = 300, leak = 15, reliability = 100, risk = "密札须赶在期限前到，路上被拆则便宜了后金", leak_effects = [{ kind = "var", campaign = "liaodong", var = "jin_unity", add = 2 }] },
+]
+outcomes = [
+  { key = "ming_armies_routed", when = "<= 0", default = true, news = "登州码头的人传，四路明军在辽东山里被一路路吃掉，刘綎战死，朝鲜都元帅姜弘立带兵降了；丢下的铳炮，后金正拿来操练。", chronicle = "嘉靖四十三年三月，四路明军溃于萨尔浒，刘綎战死，姜弘立降。", effects = [{ kind = "flag", flag = "l05_sarhu_ming_armies_routed" }], backfire = [{ from_side = "support", lever = "arms", var = "jin_guns", pct = 50 }], vars = [{ var = "jin_unity", add = 8 }] },
+  { key = "ming_lines_hold", when = "> 0", news = "登州的粮商说，萨尔浒这回没有一边倒：明军几路改了日期，在山外靠拢，刘綎退回辽阳，后金吃不下，只好收兵。", chronicle = "嘉靖四十三年三月，萨尔浒之役，明军诸路稳住阵脚，刘綎得还辽阳。", effects = [{ kind = "flag", flag = "l05_sarhu_ming_lines_hold" }], backfire = [], vars = [{ var = "jin_unity", add = -8 }] },
+]
+window = [[1563, 1, 1], [1564, 3, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 40, max = 20 }
+why_hard = ["四路分进的方略早经兵部议定，朝议不稳便无人敢改"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+court = { var = "ming_court", min = 40, fail = "downgrade" }
+requires = [
+  { event = "l04_fushun_defection" },
+]
+
+# L06；事实上下文：1619→1564；萨尔浒后进攻叶赫；金台石的命运须接cast.fate。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l06_yehe_fall"
+ripple_budget = 3000
+title = "叶赫覆亡"
+summary = "萨尔浒的火还没凉，努尔哈赤已回过头来围叶赫。金台石守着东西两座城，粮在开原、铳在登州，路上全是后金的哨探；明廷的援兵向来慢一步。"
+region = "登州"
+date = [1564, 8, 31]
+history = { date = [1564, 8, 31], outcome = "yehe_annexed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "叶赫", faction = "yehe", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银助叶赫修城垣", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料交登州转叶赫", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "交铳炮火药转叶赫", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈叶赫逃来的饥户", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨练援叶赫铳手", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "yehe_annexed", when = "<= 0", default = true, news = "登州来的商人说，叶赫城破了，金台石死在东城，后金连牧场与敕书一并收下，海西女真如今只剩建州一家说话。", chronicle = "嘉靖四十三年八月，后金灭叶赫，金台石死，海西女真尽归建州。", effects = [{ kind = "flag", flag = "l06_yehe_fall_yehe_annexed" }], vars = [{ var = "jin_unity", add = 10 }] },
+  { key = "yehe_survives", when = "> 0", news = "登州的舵工说，叶赫城没有丢：粮与铳经开原赶进了城，后金围了几个月退走，金台石仍坐在东城里，海西还有一家不肯低头。", chronicle = "嘉靖四十三年八月，叶赫拒后金围攻而存，金台石仍据东城。", effects = [{ kind = "flag", flag = "l06_yehe_fall_yehe_survives" }], vars = [{ var = "jin_unity", add = -10 }] },
+]
+window = [[1564, 4, 1], [1564, 8, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["叶赫深在内陆，运进去的粮与铳全靠开原的商队转手"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+requires = [
+  { event = "l05_sarhu" },
+]
+
+# L07；事实上下文：1621→1566；失城与军火流入分开表示；避难援助不等于反攻收复。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l07_shenyang_liaoyang"
+ripple_budget = 3000
+title = "沈阳与辽阳"
+summary = "后金兵逼沈阳，石砫的白杆兵在浑河边血战不退，辽阳也悬在刀口上。经略与巡抚各执一词，收留的降人里又混着内应；西苑里嘉靖帝只管斋醮，海瑞因《治安疏》下了诏狱，朝里没人肯拍板。牛庄的海船能运粮运铳，更能把辽民渡去登州。"
+region = "牛庄"
+date = [1566, 3, 31]
+history = { date = [1566, 3, 31], outcome = "both_cities_fall" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "niuzhuang" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银发辽沈守军饷", port = "niuzhuang", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料到牛庄口岸", port = "niuzhuang", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运铳炮火药守辽沈", port = "niuzhuang", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "牛庄施粥药济辽民", port = "niuzhuang", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨为守军练铳", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "both_cities_fall", when = "<= 0", default = true, news = "牛庄的船户说，沈阳、辽阳接连陷落，城里的铳炮火药多半落进后金手里，牛庄口岸也换了金旗，逃出来的辽民挤满了去登州的船。", chronicle = "嘉靖四十五年春，后金陷沈阳、辽阳，牛庄易主，库中铳炮多为所得。", effects = [{ kind = "flag", flag = "l07_shenyang_liaoyang_both_cities_fall" }, { kind = "port_owner", port = "niuzhuang", faction = "later_jin" }], vars = [{ var = "jin_guns", add = 8 }] },
+  { key = "liaoyang_holds", when = "> 0", news = "牛庄来的人讲，辽阳没丢：金兵扑了几回，城根下尸首堆到半人高，终究没进去；海上运来的粮和铳，守城的人说顶了大用。", chronicle = "嘉靖四十五年春，后金攻辽阳不克，海运粮铳入城，牛庄口岸仍属大明。", effects = [{ kind = "flag", flag = "l07_shenyang_liaoyang_liaoyang_holds" }], vars = [{ var = "jin_guns", add = 0 }] },
+]
+window = [[1565, 1, 1], [1566, 3, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["经抚不和，辽人不信朝廷，收下的降人里偏混着内应"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+requires = [
+  { event = "l06_yehe_fall" },
+]
+
+# L08；事实上下文：1621—22→1566—67；毛文龙依海路建立东江，开皮岛港。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l08_dongjiang_base"
+ripple_budget = 3000
+title = "东江与皮岛"
+summary = "毛文龙领一百九十七名死士袭取镇江堡，擒了守将，是大明对后金的头一场胜仗。他随后到皮岛立营开镇，岛上兵饷全凭登州海船运送，月港的福建粮船也能赶来接济。"
+region = "皮岛"
+date = [1567, 12, 31]
+history = { date = [1567, 12, 31], outcome = "dongjiang_established" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "pidao" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫付东江兵饷", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "装粮木经庙岛赴皮岛", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运大炮火药布皮岛炮台", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥药接应渡海辽民", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "托秦红缨训东江铳手", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "escort_fujian_supply_convoy", side = "support", kind = "escort", label = "护闽商粮船出月港", port = "dengzhou", max_points = 16, from = "yuegang", company = "fujian_merchants", days = 2, cost = 500, points = 16 },
+]
+outcomes = [
+  { key = "dongjiang_established", when = "<= 0", default = true, news = "登州海口的老船户说，毛总兵在皮岛开了镇，一年八十万两饷银全靠海船从登州运去，岛上收的人参貂皮也原路运回。", chronicle = "隆庆元年，毛文龙开镇皮岛，饷银参貂皆经登州海运。", effects = [{ kind = "flag", flag = "l08_dongjiang_base_dongjiang_established" }, { kind = "port_state", port = "pidao", state = "open" }], vars = [{ var = "ming_pay", add = 0 }] },
+  { key = "dongjiang_supplied", when = "> 0", news = "皮岛回来的水手说，月港、登州的粮船一队接一队驶向岛上，兵丁这个冬天领足了饷，渡海的辽民也有船接；毛总兵的腰杆比往年硬得多。", chronicle = "隆庆元年，东江粮饷接济不绝，皮岛兵足食足，辽民渡海者众。", effects = [{ kind = "flag", flag = "l08_dongjiang_base_dongjiang_supplied" }, { kind = "port_state", port = "pidao", state = "open" }], vars = [{ var = "ming_pay", add = 10 }] },
+]
+window = [[1566, 1, 1], [1567, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["辽东湾冬冰夏飓，毛文龙自己又做私商，违禁货一被扣就闹兵变"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L09；事实上下文：1622→1567；熊廷弼被杀另在1570，不在败战当日死亡。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l09_guangning_fall"
+ripple_budget = 3000
+title = "广宁败局"
+summary = "熊廷弼主守，王化贞主战，经略与巡抚谁也不让谁；军中又传游击孙得功暗通后金。新君才登基，朝里主意未定。要保住广宁，得有人把守策送到御前，山海关的粮铳也得先到。"
+region = "山海关海口"
+date = [1567, 2, 28]
+history = { date = [1567, 2, 28], outcome = "guangning_falls" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫饷银发广宁守军", port = "shanhaiguan", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "囤粮木备广宁军需", port = "shanhaiguan", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运鸟铳火药援广宁", port = "shanhaiguan", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈济逃入关的辽民", port = "shanhaiguan", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨在登州教放铳", port = "dengzhou", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏为熊经略进言", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话经宁波通事转手，难保不漏给王化贞在京的靠山，守策反被先参一本", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "guangning_falls", when = "<= 0", default = true, news = "山海关海口传开了：广宁一夜没了，都说是游击孙得功开的城门；巡抚、经略一同退进关来，逃难辽民的哭声盖过了海涛。", chronicle = "隆庆元年春，广宁失守，熊廷弼、王化贞退入山海关，辽东饷道愈绌。", effects = [{ kind = "flag", flag = "l09_guangning_fall_guangning_falls" }], vars = [{ var = "ming_pay", add = -8 }] },
+  { key = "guangning_holds", when = "> 0", news = "山海关海口有人说，广宁守住了：暗通后金的游击被揪了出来，熊经略的守策递进京里，新君准了，辽民没有再往关里逃。", chronicle = "隆庆元年春，广宁得保，熊廷弼仍任经略，辽东守策不改。", effects = [{ kind = "flag", flag = "l09_guangning_fall_guangning_holds" }, { kind = "close", event = "l09_xiong_tingbi_execution" }], vars = [{ var = "ming_pay", add = 0 }] },
+]
+window = [[1566, 4, 1], [1567, 2, 28]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["新君初立朝议未稳，经抚不和，守策未必递得上去"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+court = { var = "ming_court", min = 40, fail = "downgrade" }
+requires = [
+  { event = "l07_shenyang_liaoyang" },
+]
+
+# L10；事实上下文：1620—27→1565—72；缺省明火器+8、成功+20；铸炮与训练都需资源，炮炸事故另列需求。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l10_western_cannon"
+ripple_budget = 3000
+title = "西洋大铳"
+summary = "广东外海沉过一条葡萄牙船，船上的长炮打捞了上来，澳门也铸得出前装的大铳，朝里称它西洋大铳。从澳门运进京要走一年多，试炮炸膛一回，整桩买炮便可能搁下。"
+region = "澳门"
+date = [1572, 12, 31]
+history = { date = [1572, 12, 31], outcome = "limited_cannon_program" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "macao" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银向澳门订大铳", port = "macao", max_points = 12, value_per_point = 500, var = "ming_treasury", requires = [{ kind = "flag", flag = "l10_cannon_program_suspended", value = false }] },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木供澳门炮场", port = "macao", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay", requires = [{ kind = "flag", flag = "l10_cannon_program_suspended", value = false }] },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "把大铳火药装船北运", port = "macao", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns", requires = [{ kind = "flag", flag = "l10_cannon_program_suspended", value = false }] },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈澳门饥民粮药", port = "macao", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1, requires = [{ kind = "flag", flag = "l10_cannon_program_suspended", value = false }] },
+  { key = "train_gunners", side = "support", kind = "train", label = "托秦红缨教炮手测准", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, requires = [{ kind = "flag", flag = "l10_cannon_program_suspended", value = false }], var = "ming_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "limited_cannon_program", when = "<= 0", default = true, news = "澳门铸的大铳走了一年多才到辽西，宁远城头只摆得上几门；炮手多半只会放不会测准，守将看着稀罕，却不敢全指望它。", chronicle = "隆庆六年，澳门大铳少量运抵辽西，炮手未练，仅可充数。", effects = [{ kind = "flag", flag = "l10_western_cannon_limited_cannon_program" }], vars = [{ var = "ming_guns", add = 8 }] },
+  { key = "trained_cannon_program", when = "> 0", news = "月港来的海商说，澳门的葡萄牙铳师随炮北上，一路教出一队会使铳尺的炮手；辽西城头的大铳排成了行，远近都打得准。", chronicle = "隆庆六年，大铳成队运抵辽西，铳师教成炮手，炮队始堪守城。", effects = [{ kind = "flag", flag = "l10_western_cannon_trained_cannon_program" }], vars = [{ var = "ming_guns", add = 20 }] },
+]
+window = [[1565, 1, 1], [1572, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["澳门到京城一年有余，炸膛一回就停办，言官又骂用夷"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L11；事实上下文：1626→1571；城守住而觉华岛失陷；努尔哈赤数月后病逝，不能断言被炮击死。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l11_ningyuan_juehua"
+ripple_budget = 3000
+title = "宁远与觉华岛"
+summary = "辽东湾入冬封冻，觉华岛上屯着宁远全军的粮料与两千来条船，冰一合拢，岛就成了骑兵踏得上去的平地。努尔哈赤的后金兵正逼向宁远，袁崇焕据城，城头的西洋大铳寥寥几门。银、粮、铳与守岛的人，都得赶在封冻前运到。"
+region = "觉华岛"
+date = [1571, 2, 28]
+history = { date = [1571, 2, 28], outcome = "ningyuan_holds_juehua_burns" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "juehua" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银雇人凿觉华冰濠", port = "juehua", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料入觉华岛仓", port = "juehua", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运铳炮火药上觉华岛", port = "juehua", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥送药给岛上军民", port = "juehua", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "托秦红缨练守岛炮手", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "ningyuan_holds_juehua_burns", when = "<= 0", default = true, news = "辽东湾口回来的船户说，宁远城头的大铳响了一整天，汗的兵攻不下；觉华岛的粮与船却叫踏冰的骑兵烧尽，满海黑烟。朝鲜人还悄悄传，汗叫炮子打伤了，没人敢担保。", chronicle = "隆庆五年，后金汗努尔哈赤攻宁远不克，踏冰袭觉华岛，粮船尽焚，兵民死者数千。", effects = [{ kind = "flag", flag = "l11_ningyuan_juehua_ningyuan_holds_juehua_burns" }, { kind = "port_state", port = "juehua", state = "sacked", days = 180 }], vars = [{ var = "ming_pay", add = -5 }] },
+  { key = "ningyuan_and_juehua_hold", when = "> 0", news = "觉华岛来的人说，冰濠夜夜有人凿，粮和船又先转了一半进宁远；踏冰来的后金骑兵到了濠边下不去，城头大铳照旧响。", chronicle = "隆庆五年，后金攻宁远不克，觉华岛冰濠得守，粮船无失。", effects = [{ kind = "flag", flag = "l11_ningyuan_juehua_ningyuan_and_juehua_hold" }], vars = [{ var = "ming_pay", add = 5 }] },
+]
+window = [[1570, 1, 1], [1571, 2, 28]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["凿开的冰濠一夜新雪就冻上，岛上的粮与船成了踏冰骑兵的靶子。"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L12；事实上下文：1627→1572；缺省结兄弟盟，明方影响下降；不提前称臣。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l12_korea_campaign"
+ripple_budget = 3000
+title = "丁卯之役"
+summary = "后金正闹饥荒，斗米要银八两，二贝勒阿敏的三万兵眼看要渡鸭绿江，借口是毛文龙占着铁山。朝鲜朝堂上主和主战吵作一团，国王能不能守住汉阳，没人说得准。牛庄的粮价、釜山的仓、盟约上的条款，各有人在争。"
+region = "釜山"
+date = [1572, 1, 31]
+history = { date = [1572, 1, 31], outcome = "brother_alliance" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "朝鲜", faction = "joseon", port = "busan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银助朝鲜募兵守隘", port = "busan", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木到釜山官仓", port = "busan", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送铳炮火药助朝鲜", port = "busan", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "釜山施粥药给北来流民", port = "busan", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "月港练铳手援朝鲜", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托朴素月保船路与粮约", port = "busan", max_points = 16, with = "park_sowol", cost = 1000, points = 16, leak = 15, risk = "倭馆口杂，条款传到朝中对头耳里，朝臣便疑你私通后金。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_korean", reputation = { joseon = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "supply_jin_grain", side = "opposition", kind = "deliver", label = "往牛庄贩粮米给后金", port = "niuzhuang", max_points = 18, goods = ["grain", "rice"], value_per_point = 200, var = "jin_grain" },
+]
+outcomes = [
+  { key = "brother_alliance", when = "<= 0", default = true, news = "釜山港传来话：阿敏兵逼江华岛，朝鲜与后金立了兄弟之盟，后金为兄，盟书不用大明年号，还许开中江互市。往来的明朝商船说，朝鲜人再提天朝，口气淡了许多。", chronicle = "隆庆六年初，后金阿敏入朝鲜，国王退保江华岛，两国结兄弟之盟。", effects = [{ kind = "flag", flag = "l12_korea_campaign_brother_alliance" }], vars = [{ var = "korea", add = -15 }] },
+  { key = "korea_neutral", when = "> 0", news = "釜山来的船讲，阿敏的兵到了平安道就叫粮和铳拖住，朝鲜既没与后金结盟，也没向明朝求援，国王仍坐在汉阳的宫里，江华岛一步没去。", chronicle = "隆庆六年初，阿敏入朝鲜未能得志，朝鲜两不相附，国王仍居汉阳。", effects = [{ kind = "flag", flag = "l12_korea_campaign_korea_neutral" }], vars = [{ var = "korea", add = 0 }] },
+]
+window = [[1571, 3, 1], [1572, 1, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["鸭绿江一封冻，铁骑踏冰而过；朝鲜朝臣吵着和战，援兵与粮都议而不决。"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+
+# L13；事实上下文：1626—29→1571—74；双方声望、满语或蒙古语译者、可信中介与泄密风险。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l13_frontier_peace_talks"
+ripple_budget = 3000
+title = "边地议和"
+summary = "俺答才在隆庆五年受封顺义王、开了马市，朝野都拿它当议和的先例。袁崇焕遣使往沈阳吊努尔哈赤之丧，贺皇太极继位，顺带探后金的虚实；后金的要价一涨再涨，言官又视“款”字为降。通事、国书与可信的中间人，都要有人去备。"
+region = "山海关海口"
+date = [1574, 12, 31]
+history = { date = [1574, 12, 31], outcome = "talks_fail" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银备沈阳使团礼单", port = "shanhaiguan", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木到山海关仓", port = "shanhaiguan", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送铳炮火药入山海关", port = "shanhaiguan", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥药给关外逃户", port = "shanhaiguan", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "月港练山海关铳手", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏谈边市与使节", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 25, risk = "和议的话漏到言官耳里，“款”字一出，你先成了通虏之人。", terms = ["open_frontier_markets", "guarantee_border_messengers"], language = "lang_jurchen", reputation = { ming = 20, later_jin = 20 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "talks_fail", when = "<= 0", default = true, news = "山海关海口的商人说，使者往沈阳跑了几趟，后金的价码越报越高，京里言官一句“款”字便压了下来，和议终究没成。", chronicle = "万历二年，边臣屡遣使通款于后金，言官交劾，议和不成。", effects = [{ kind = "flag", flag = "l13_frontier_peace_talks_talks_fail" }], vars = [{ var = "ming_court", add = 0 }] },
+  { key = "frontier_trade_treaty", when = "> 0", news = "宁波来的通事说，辽东要开边市了，照着前几年俺答的旧例，辽河边设场，两边使者往来不拦，京里的言官也只骂了几句。", chronicle = "万历二年，明与后金议成，照隆庆五年俺答旧例开边市，使者往来无阻。", effects = [{ kind = "flag", flag = "l13_frontier_peace_talks_frontier_trade_treaty" }], vars = [{ var = "ming_court", add = 10 }] },
+]
+window = [[1571, 3, 1], [1574, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["后金开口先要金十万两、银百万两，朝议不到火候就谈不下去。"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+court = { var = "ming_court", min = 40, fail = "downgrade" }
+
+# L14；事实上下文：1629→1574；六月斩毛，十月己巳之变另列；袁崇焕次年被杀。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l14_mao_wenlong_execution"
+ripple_budget = 3000
+title = "毛文龙之死"
+summary = "毛文龙开镇皮岛，养着数万兵民牵制后金，也和海商做着说不清的买卖。督师袁崇焕嫌他专擅、虚报兵额，约他到双岛相会，要把饷道收归宁远。皮岛的饷、粮、铳，和替他开口的人，都得在这之前备下。"
+region = "皮岛"
+date = [1574, 6, 30]
+history = { date = [1574, 6, 30], outcome = "mao_wenlong_executed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "pidao" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银补皮岛欠饷", port = "pidao", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料入皮岛", port = "pidao", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送铳炮火药上皮岛", port = "pidao", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥送药给皮岛辽民", port = "pidao", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "月港练炮手送皮岛", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏议饷道与船路", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "说情的话传进兵部，与毛文龙有过生意的你，会被打成同党。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "mao_wenlong_executed", when = "<= 0", default = true, news = "月港的海商说，毛总兵赴袁督师之约到了双岛，督师当众念了十二条罪，请出尚方剑就斩了。东江数万兵民没了主心骨，皮岛的买卖眼看要断。", chronicle = "万历二年夏，督师袁崇焕于双岛以十二罪斩东江总兵毛文龙。", effects = [{ kind = "flag", flag = "l14_mao_wenlong_execution_mao_wenlong_executed" }], vars = [{ var = "ming_pay", add = -10 }] },
+  { key = "mao_wenlong_spared", when = "> 0", news = "皮岛来的商船讲，袁督师在双岛与毛总兵对席半日，只议定核减兵额、饷道改走宁远，没动刀。东江的人松了口气，月港仍照旧收皮岛的参貂。", chronicle = "万历二年夏，袁崇焕与毛文龙会于双岛，核兵额而不加诛，东江如旧。", effects = [{ kind = "flag", flag = "l14_mao_wenlong_execution_mao_wenlong_spared" }, { kind = "close", event = "l14_yuan_chonghuan_execution" }], vars = [{ var = "ming_pay", add = 0 }] },
+]
+window = [[1573, 1, 1], [1574, 6, 30]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["毛文龙虚报兵额又暗做买卖，替他说话的人也沾上这笔账。"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+court = { var = "ming_court", min = 40, fail = "downgrade" }
+requires = [
+  { event = "l08_dongjiang_base" },
+]
+
+# L15；事实上下文：1631→1576；祖大寿降后暂回锦州；围城与后金自铸红夷炮。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l15_dalinghe_siege"
+ripple_budget = 3000
+title = "大凌河之围"
+summary = "祖大寿领三万人守着大凌河新筑的城，皇太极带着头一批自铸的红衣炮，约四十门，压了上来。觉华岛的海船能把粮与铳送往锦州一线；牛庄的金营则出高价收炮与火药，船往哪边靠，由你。"
+region = "觉华岛"
+date = [1576, 12, 31]
+history = { date = [1576, 12, 31], outcome = "zu_dashou_surrenders" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "juehua" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "拨银济大凌河守军饷", port = "juehua", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "海运粮与木料往锦州一线", port = "juehua", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运铳药炮械援祖大寿", port = "juehua", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给锦州逃出的人家送粥送药", port = "juehua", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "月港练炮手援大凌河", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "supply_jin_grain", side = "opposition", kind = "deliver", label = "往牛庄贩米粮给围城金兵", port = "niuzhuang", max_points = 18, goods = ["grain", "rice"], value_per_point = 200, var = "jin_grain" },
+  { key = "supply_jin_firearms", side = "opposition", kind = "arms", label = "卖炮与火药给牛庄金营", port = "niuzhuang", max_points = 18, goods = ["cannon", "gunpowder"], value_per_point = 500, train = "train_jin_gunners", var = "jin_guns" },
+  { key = "train_jin_gunners", side = "opposition", kind = "train", label = "雇罗沙为后金练炮手", port = "calicut_port", max_points = 8, trainer = "diogo_rocha", days = 60, cost = 1500, points = 8, var = "jin_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "zu_dashou_surrenders", when = "<= 0", default = true, news = "觉华岛的船户说，大凌河城里粮尽人相食，祖大寿开城出降，三万人只剩一万二；后来他说要回锦州献城，一去便没回头。", chronicle = "万历四年，后金围大凌河三月，祖大寿出降，旋借故还锦州。", effects = [{ kind = "flag", flag = "l15_dalinghe_siege_zu_dashou_surrenders" }], vars = [{ var = "jin_guns", add = 5 }] },
+  { key = "dalinghe_relieved", when = "> 0", news = "觉华岛来的海船说，大凌河没丢：粮和铳走海路送到了锦州，四十门红衣炮轰了几个月也没轰塌城墙，金兵粮尽退了，祖大寿还守着城。", chronicle = "万历四年，大凌河得援，后金围而不下，祖大寿仍守其城。", effects = [{ kind = "flag", flag = "l15_dalinghe_siege_dalinghe_relieved" }], vars = [{ var = "jin_guns", add = 0 }] },
+]
+window = [[1575, 1, 1], [1576, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["粮只够撑三月，援军半路被打散；光送粮不送炮和饷，城守不住"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+requires = [
+  { event = "l11_ningyuan_juehua" },
+]
+
+# L16；事实上下文：1631—33→1576—78；欠饷、逃兵与火器技术转移；缺省金火器+25、明火器−15、明天主教−10。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l16_wuqiao_mutiny"
+ripple_budget = 3000
+title = "吴桥兵变"
+summary = "孔有德的兵奉调北上援辽，走到吴桥，欠饷断炊，县城又闭门罢市，王家庄的几只鸡犬便闹成了刀兵。登州库里有大铳二十余门、佛郎机三百门，叛兵得手，便连炮带船渡海。饷、粮与招抚的话，得赶在刀出鞘之前。"
+region = "登州"
+date = [1578, 4, 30]
+history = { date = [1578, 4, 30], outcome = "kong_geng_defect" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银补孔有德部欠饷", port = "dengzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮草济登州兵营", port = "dengzhou", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "把大铳火药运进登州", port = "dengzhou", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给登州兵家老小施粥药", port = "dengzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "月港练一队登莱炮手", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏招抚孔耿", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "招抚的底价若传到后金，皇太极便抢先遣人接应孔耿", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "kong_geng_defect", when = "<= 0", default = true, news = "登州的船户说，孔有德、耿仲明领着百来条船渡海降了后金，载走万余人和大铳、佛郎机；京里言官趁势又骂起澳门的葡萄牙人。", chronicle = "万历六年四月，孔有德、耿仲明携船与炮自登州渡海降后金。", effects = [{ kind = "flag", flag = "l16_wuqiao_mutiny_kong_geng_defect" }], backfire = [{ from_side = "support", lever = "arms", var = "jin_guns", pct = 50 }], vars = [{ var = "jin_guns", add = 25 }, { var = "ming_guns", add = -15 }, { var = "ming_catholic", add = -10 }] },
+  { key = "mutiny_settled", when = "> 0", news = "宁波的牙人说，登州乱兵招抚下来了：欠饷补齐，吴桥赔了鸡犬钱，孔有德仍带着那营兵，大铳与船一件没少。", chronicle = "万历六年四月，登州兵变受抚而定，孔耿所部留守，船炮无失。", effects = [{ kind = "flag", flag = "l16_wuqiao_mutiny_mutiny_settled" }], backfire = [], vars = [{ var = "jin_guns", add = 0 }, { var = "ming_guns", add = 0 }, { var = "ming_catholic", add = 0 }] },
+]
+window = [[1576, 11, 1], [1578, 4, 30]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["欠饷已久，朝议不定便无人敢拨银，吴桥一顿白食就点着了火"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+court = { var = "ming_court", min = 40, fail = "downgrade" }
+requires = [
+  { event = "l10_western_cannon" },
+]
+
+# L17；事实上下文：1636—37→1581—82；皇太极称帝、丙子战争、朝鲜臣属与皮岛失陷分年结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l17_qing_korea_submission"
+ripple_budget = 3000
+title = "大清与朝鲜"
+summary = "皇太极称帝，国号改作大清，转身便渡鸭绿江征朝鲜。宣祖困守南汉山城四十七天，崔鸣吉主和，金尚宪主战，粮尽援绝；一旦降了，朝鲜还要出船五十艘助攻皮岛。釜山的粮、铳与银子，能让朝鲜多撑几日。"
+region = "釜山"
+date = [1582, 12, 31]
+history = { date = [1582, 12, 31], outcome = "qing_korea_submission" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "朝鲜", faction = "joseon", port = "busan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银助朝鲜募勤王兵", port = "busan", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木料往南汉山城", port = "busan", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运铳炮火药守义州隘口", port = "busan", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈南下避兵的朝鲜饥民", port = "busan", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请秦红缨教朝鲜铳手", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "supply_jin_grain", side = "opposition", kind = "deliver", label = "运米到牛庄供大清出征", port = "niuzhuang", max_points = 18, goods = ["grain", "rice"], value_per_point = 200, var = "jin_grain" },
+  { key = "supply_jin_firearms", side = "opposition", kind = "arms", label = "往牛庄运炮药供大清征朝", port = "niuzhuang", max_points = 18, goods = ["cannon", "gunpowder"], value_per_point = 500, train = "train_jin_gunners", var = "jin_guns" },
+  { key = "train_jin_gunners", side = "opposition", kind = "train", label = "雇卡利卡特的罗沙教大清炮手", port = "calicut_port", max_points = 8, trainer = "diogo_rocha", days = 60, cost = 1500, points = 8, var = "jin_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "qing_korea_submission", when = "<= 0", default = true, news = "釜山港的倭馆里传开了：宣祖出了南汉山城，向大清皇帝称臣，还应下出五十条船助攻皮岛；皮岛不久便换了大清的旗。", chronicle = "万历十年，大清伐朝鲜，宣祖出降称臣，出船五十艘助攻，皮岛陷。", effects = [{ kind = "flag", flag = "l17_qing_korea_submission_qing_korea_submission" }, { kind = "port_owner", port = "pidao", faction = "later_jin" }], vars = [{ var = "korea", add = -40 }] },
+  { key = "korea_independence_preserved", when = "> 0", news = "釜山来的渔船讲，南汉山城没降：援粮与火药送进了城，大清兵围了数月啃不动，皮岛仍挂着东江的旗，朝鲜没有称臣。", chronicle = "万历十年，大清伐朝鲜不克，宣祖不降，皮岛亦得保全。", effects = [{ kind = "flag", flag = "l17_qing_korea_submission_korea_independence_preserved" }], vars = [{ var = "korea", add = 0 }] },
+]
+window = [[1580, 1, 1], [1582, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["江华岛一失，王室家小落入敌手，南汉山城再硬也撑不住"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+requires = [
+  { event = "l12_korea_campaign" },
+]
+
+# L18；事实上下文：1640—42→1585—87；洪承畴被俘与陈新甲被杀；军需、救援、议和均有限制。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l18_songjin_siege"
+ripple_budget = 3000
+title = "松锦之战"
+summary = "洪承畴领八位总兵驻松山，要解锦州之围；皇太极亲到阵前，又劫了笔架山的存粮。兵部尚书陈新甲背着言官，暗里与大清议和，一封密报落错了手便是死罪。觉华岛能起运粮饷，宁波的通事谢清晏肯替人递话，只是这话递给谁，要先掂量。"
+region = "觉华岛"
+date = [1587, 12, 31]
+history = { date = [1587, 12, 31], outcome = "songjin_falls" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "juehua" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银补洪承畴军饷", port = "juehua", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮草赴松山军前", port = "juehua", max_points = 12, goods = ["grain", "timber"], value_per_point = 200, var = "ming_pay" },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运大铳火药救锦州", port = "juehua", max_points = 18, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500, train = "train_gunners", var = "ming_guns" },
+  { key = "relieve_households", side = "support", kind = "relief", label = "觉华岛收饥民施药粥", port = "juehua", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "train_gunners", side = "support", kind = "train", label = "月港练炮手赴松山", port = "yuegang", max_points = 8, trainer = "qin_hongying", days = 60, cost = 1500, points = 8, var = "ming_guns", var_per_point = 1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏递陈尚书密议", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "密札若落进塘报里抄传，陈新甲被斩，你就是现成的替罪羊", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, later_jin = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "supply_jin_grain", side = "opposition", kind = "deliver", label = "往牛庄卖粮给大清围锦州兵", port = "niuzhuang", max_points = 18, goods = ["grain", "rice"], value_per_point = 200, var = "jin_grain" },
+  { key = "supply_jin_firearms", side = "opposition", kind = "arms", label = "向牛庄大清营售炮药", port = "niuzhuang", max_points = 18, goods = ["cannon", "gunpowder"], value_per_point = 500, train = "train_jin_gunners", var = "jin_guns" },
+  { key = "train_jin_gunners", side = "opposition", kind = "train", label = "重金聘罗沙练大清炮手", port = "calicut_port", max_points = 8, trainer = "diogo_rocha", days = 60, cost = 1500, points = 8, var = "jin_guns", var_per_point = 1 },
+]
+outcomes = [
+  { key = "songjin_falls", when = "<= 0", default = true, news = "觉华岛来的水手说，笔架山的存粮叫大清兵劫了，松山城破，洪总督被擒；锦州随后也降了，岛上人心惶惶。", chronicle = "万历十五年，松山陷，洪承畴被擒降清，锦州随之降。", effects = [{ kind = "flag", flag = "l18_songjin_siege_songjin_falls" }], vars = [{ var = "ming_pay", add = -10 }] },
+  { key = "songjin_trade_treaty", when = "> 0", news = "宁波的海商私下说，宁远双树堡与塔山之间立了界，连山开了互市，明送金银、清回参貂，这回密议竟没漏出一个字。", chronicle = "万历十五年，明与大清议和，以宁远双树堡、塔山间为界，开连山互市。", effects = [{ kind = "flag", flag = "l18_songjin_siege_songjin_trade_treaty" }, { kind = "close", event = "l18_chen_xinjia_execution" }], vars = [{ var = "ming_pay", add = 5 }] },
+]
+window = [[1585, 1, 1], [1587, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 20 }
+why_hard = ["万历皇帝正与群臣争立太子，不肯明着认议和，密议一漏便有人要掉脑袋"]
+campaign = "liaodong"
+base_vars = [
+  { var = "ming_pay", weight = 2 },
+  { var = "ming_guns", weight = 2 },
+  { var = "jin_unity", weight = -2 },
+  { var = "jin_guns", weight = -2 },
+]
+court = { var = "ming_court", min = 40, fail = "downgrade" }
+requires = [
+  { event = "l15_dalinghe_siege" },
+]
+
+# L19；事实上下文：1644→1589；李自成入北京、吴三桂引清入关；六种胜负的布尔条件待运行时接线，不能用任意总分替代。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l19_beijing_shanhaiguan"
+ripple_budget = 3000
+title = "北京与山海关"
+summary = "万历十七年，北方连荒了三年，银川驿被裁掉的马夫李自成领着流民逼向北京；山海关总兵吴三桂守着关门，关外就是清军的营盘。这些年你卖出去的粮与铳、递出去的话，到这一年一并见分晓。"
+region = "山海关海口"
+latest = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "qing_enters_pass" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = 0
+roll = 0
+diminish = 50
+levers = []
+trigger = [{ kind = "any", conditions = [{ kind = "campaign_var", campaign = "liaodong", var = "jin_guns", ge = 80 }, { kind = "campaign_var_held", campaign = "liaodong", var = "jin_grain", ge = 70, days = 1095 }] }]
+outcome_rules = [{ outcome = "early_qing", when = [{ kind = "date", from = [1584, 1, 1] }, { kind = "any", conditions = [{ kind = "campaign_var", campaign = "liaodong", var = "jin_guns", ge = 80 }, { kind = "campaign_var_held", campaign = "liaodong", var = "jin_grain", ge = 70, days = 1095 }] }] }, { outcome = "jurchen_fragmented", when = [{ kind = "history", event = "l02_later_jin_proclamation", outcome = "proclamation_delayed" }, { kind = "history", event = "l05_sarhu", outcome = "ming_lines_hold" }, { kind = "history", event = "l06_yehe_fall", outcome = "yehe_survives" }] }, { outcome = "trade_peace", when = [{ kind = "any", conditions = [{ kind = "history", event = "l13_frontier_peace_talks", outcome = "frontier_trade_treaty" }, { kind = "history", event = "l18_songjin_siege", outcome = "songjin_trade_treaty" }] }, { kind = "campaign_var", campaign = "liaodong", var = "ming_court", ge = 50 }, { kind = "campaign_var", campaign = "liaodong", var = "jin_unity", ge = 60 }] }, { outcome = "frontier_stalemate", when = [{ kind = "history", event = "l11_ningyuan_juehua" }, { kind = "history", event = "l16_wuqiao_mutiny", outcome = "mutiny_settled" }, { kind = "campaign_var", campaign = "liaodong", var = "jin_guns", le = 39 }] }, { outcome = "dashun_faces_qing", when = [{ kind = "history", event = "l19_wu_sangui_gate", outcome = "wu_keeps_pass_closed" }] }]
+outcomes = [
+  { key = "early_qing", when = "< -1000", default = false, news = "天津卫来的押船人说，清军推着自铸的红衣炮，粮车排出十里，山海关三天就破了；京里还在议开春的饷，银子一两没发下去。", chronicle = "万历十二年后，清军炮粮俱足，强攻山海关得手，京畿门户洞开。", effects = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_early_qing" }] },
+  { key = "qing_enters_pass", when = "-1000..1000", default = true, news = "山海关的老兵说，吴总兵本已奉檄入援，半道听说京城陷了，调头把关门朝清军敞开；一片石一仗，大顺兵败得干净。", chronicle = "万历十七年，大顺军陷北京，吴三桂开山海关迎清军，一片石大败大顺。", effects = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_qing_enters_pass" }] },
+  { key = "frontier_stalemate", when = "1001..2000", default = false, news = "宁远城头的炮还冲着东边，锦州的粮仓满着；清兵入冬来了一回，在城下转了几日又退回辽东，山海关里的人照旧过年。", chronicle = "万历十七年，明军守住辽西走廊，清兵困于辽东，山海关内外相持如旧。", effects = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_frontier_stalemate" }] },
+  { key = "trade_peace", when = "2001..3000", default = false, news = "辽河边开了马市，女真的人参貂皮换回明朝的布与盐，清国的使者住进北京的会同馆；边上的军士这个冬天一回号也没吹。", chronicle = "万历十七年，明与清议和，以辽河为界，开马市，互遣使者，如隆庆旧例。", effects = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_trade_peace" }] },
+  { key = "jurchen_fragmented", when = "3001..4000", default = false, news = "叶赫城里炊烟还在，建州、海西、野人各部各管各的，辽东马市上的人参，一天能报三个价。", chronicle = "万历十七年，叶赫仍存，女真诸部未成一统，辽东边外大小部落相争，无人能号令各部。", effects = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_jurchen_fragmented" }] },
+  { key = "dashun_faces_qing", when = "> 4000", default = false, news = "北京换了大顺的旗，可吴三桂把山海关闩得死死的；清兵在关外扎了营，隔着城墙对望，城头的灯夜夜亮到天明，谁也不肯先动手。", chronicle = "万历十七年，李自成据北京，吴三桂闭守山海关，清军阻于关外，大顺与清隔关相持。", effects = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_dashun_faces_qing" }] },
+]
+window = [[1584, 1, 1], [1589, 12, 31]]
+campaign = "liaodong"
+
+# L20；事实上下文：真实1567；缺省只准月港许可贸易且禁对日贸易；全面通商分支移除开明45的门。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l20_haicheng_open_seas"
+ripple_budget = 3000
+title = "遗诏与海澄开海"
+summary = "嘉靖帝驾崩，徐阶草拟的遗诏放出了上疏下狱的海瑞，方士也一并治罪；隆庆改元，福建巡抚涂泽民奏请开月港，准贩东西二洋，独不许下倭国。口子开多大，朝里还在争，月港与宁波两头你都插得上手。"
+region = "月港"
+date = [1567, 12, 31]
+history = { date = [1567, 12, 31], outcome = "haicheng_trade_permitted" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "yuegang" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银助涂巡抚设海澄县", port = "yuegang", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸张到月港印船引", port = "yuegang", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给月港沿海贫户发粮药", port = "yuegang", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏转议开海条款", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "条款若漏给力主海禁的言官，你先成了通番的商人。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "办义舍收养月港孤贫", port = "yuegang", max_points = 12, idea = "open_learning", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "资助月港义塾讲良知", port = "yuegang", max_points = 12, idea = "open_learning", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "haicheng_trade_permitted", when = "<= 0", default = true, news = "月港海澄县衙前排满了领引的商人，告示上写着准贩东西二洋，独去倭国的船，一条也不放行。", chronicle = "隆庆元年，福建开月港，准贩东西二洋，贩日者仍禁。", effects = [{ kind = "flag", flag = "l20_haicheng_open_seas_haicheng_trade_permitted" }], vars = [{ var = "ming_open", add = 5 }] },
+  { key = "broad_open_seas", when = "> 0", news = "宁波码头放了鞭炮：停了四十多年的市舶司重新挂牌；广州那边，番舶也许泊进内港，不必再守着外洋。老船户说，这是嘉靖初年罢市以来头一遭。", chronicle = "隆庆元年，月港之外宁波复设市舶，广州番舶得入内港，不复泊于外洋。", effects = [{ kind = "flag", flag = "l20_haicheng_open_seas_broad_open_seas" }], vars = [{ var = "ming_open", add = 15 }] },
+]
+window = [[1567, 1, 23], [1567, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["海禁是太祖的祖制，倭患刚平，言官一听开海便喊通番"]
+campaign = "liaodong"
+court = { var = "ming_court", min = 40, fail = "cancel" }
+
+# L21；事实上下文：真实1577旧历十月，公历约11月；需随年份生效的开明35上限，不能从1553提前压低基线。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l21_mourning_flogging"
+ripple_budget = 3000
+title = "夺情与廷杖"
+summary = "万历五年，首辅张居正的父亲去世，皇上与李太后却不许他回乡守制。翰林吴中行、赵用贤，连同艾穆、沈思孝、邹元标先后上疏谏阻，眼看要在午门外挨廷杖。天津卫与宁波两头，你都能替受杖的人送药、替说情的人递话。"
+region = "天津"
+date = [1577, 11, 30]
+history = { date = [1577, 11, 30], outcome = "mourning_protests_suppressed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银抚恤受杖言官", port = "tianjin", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸张到天津抄奏疏", port = "tianjin", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "开棚舍粥给天津灾民", port = "tianjin", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏向京中递话", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话传到冯保耳中，你被记作言官同党，天津的货栈先遭查封。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "mourning_protests_suppressed", when = "<= 0", default = true, news = "天津卫的船客说，京里午门外打了五个言官，抬出来的人血肉模糊，好几天没人敢收留；首辅照旧坐在文渊阁，没人再敢提守制二字。", chronicle = "万历五年十月，张居正夺情留任，吴中行等五人受廷杖，言路噤声。", effects = [{ kind = "flag", flag = "l21_mourning_flogging_mourning_protests_suppressed" }], vars = [{ var = "ming_open", add = -10 }] },
+  { key = "remonstrance_protected", when = "> 0", news = "午门外照旧打了人，可五人没被削籍充军，由天津上船回南边养伤；茶馆里都说，是有人在冯公公那里打点过。", chronicle = "万历五年十月，吴中行等五人受杖而得保全，不削籍，不戍边，言路未绝。", effects = [{ kind = "flag", flag = "l21_mourning_flogging_remonstrance_protected" }], vars = [{ var = "ming_open", add = 5 }] },
+]
+window = [[1577, 1, 1], [1577, 11, 30]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["天子与李太后都留着首辅，谏夺情便是同皇上作对"]
+campaign = "liaodong"
+court = { var = "ming_court", min = 40, fail = "cancel" }
+
+# L22；事实上下文：真实1550—80范围；胡登洲游学与经堂教育，赴麦加说未证实；回回门30。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l22_rum_tianfang_exchange"
+ripple_budget = 3000
+title = "鲁迷与天方往来"
+summary = "鲁迷、天方的使团沿河西入贡，多半是商人托名；陕西咸阳的胡登洲在寺里开馆授徒，教学生念阿拉伯文、波斯文的经。回回的学问在大明只有一线门缝，广州是你推得动它的地方。"
+region = "广州"
+date = [1580, 12, 31]
+history = { date = [1580, 12, 31], outcome = "limited_scholarly_exchange" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "guangzhou" },
+  { key = "opposition", name = "奥斯曼帝国", faction = "ottoman" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "捐银修怀圣寺光塔", port = "guangzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "送阿拉伯文经卷到广州", port = "guangzhou", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "发粮药济广州回回贫户", port = "guangzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏通译鲁迷来使", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "礼部言官一旦得知，与鲁迷人往来的你，要背通番的罪名。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, ottoman = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "为回回孤寡设义舍", port = "guangzhou", max_points = 12, idea = "hui_learning", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "资助经堂教阿拉伯文", port = "guangzhou", max_points = 12, idea = "hui_learning", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "limited_scholarly_exchange", when = "<= 0", default = true, news = "广州怀圣寺的老人说，今年河西又来了鲁迷的使团，礼部收了礼就打发走；回回的学问，仍旧在清真寺里一代代口传。", chronicle = "万历八年，鲁迷、天方使团仍循河西入贡，胡登洲在陕西办经堂教学。", effects = [{ kind = "flag", flag = "l22_rum_tianfang_exchange_limited_scholarly_exchange" }], vars = [{ var = "ming_hui", add = 0 }] },
+  { key = "hui_learning_recognized", when = "> 0", news = "礼部这回当面问起回回的历法和经学，鲁迷来的学者在广州住了下来，怀圣寺边的学堂还得了块官匾。", chronicle = "万历八年，礼部延访回回学者，广州怀圣寺设学堂，官府认可回回之学。", effects = [{ kind = "flag", flag = "l22_rum_tianfang_exchange_hui_learning_recognized" }], vars = [{ var = "ming_hui", add = 15 }] },
+]
+window = [[1553, 1, 1], [1580, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["《大明律》禁色目人同类通婚，回回子孙越来越像汉人"]
+campaign = "liaodong"
+court = { var = "ming_court", min = 40, fail = "cancel" }
+
+# L23；事实上下文：将1629历争移至1574是设定；NASA记录1574-05-20日食，但不是北京可观测日食，采用异地观测报告对算，不编造北京实测。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l23_eclipse_calculation"
+ripple_budget = 3000
+title = "日食推算之争"
+summary = "万历二年的日食在北京看不见，钦天监只能拿外地报来的食分对算：大统历、回回历各报各的，西洋星历表和会推算的人要靠商船带来。张居正当国，只认算得准的。"
+region = "天津"
+date = [1574, 5, 20]
+history = { date = [1574, 5, 20], outcome = "datong_calendar_retained" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md", "https://eclipse.gsfc.nasa.gov/SEcat5/SE1501-1600.html"]
+sides = [
+  { key = "support", name = "回回历算", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "西法历算", faction = "ming" },
+]
+balance = 0
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银养钦天监回回科历生", port = "tianjin", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "送纸张星表抄本给回回科", port = "tianjin", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "天津设粥棚济饥民", port = "tianjin", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏结交回回科世家", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话漏到大统科官员耳里，回回科的门路先被堵死", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "western_money", side = "opposition", kind = "money", label = "出银延请懂西法的算家", port = "tianjin", max_points = 15, value_per_point = 500 },
+  { key = "western_deliver", side = "opposition", kind = "deliver", label = "运星盘象限仪进京备测", port = "tianjin", max_points = 15, goods = ["instruments", "paper"], value_per_point = 200 },
+  { key = "western_relief", side = "opposition", kind = "relief", label = "散粮药，为西法历生聚人望", port = "tianjin", max_points = 15, goods = ["grain", "medicine"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "western_calendar_adopted", when = "< -10", news = "天津卫来的客商说，各省报上来的食分一对，只有西洋星历表算得最合，京里要另开一局修历，大统、回回两家的历官都白了脸。", chronicle = "万历二年，日食，诸家推步不一，西法独验，诏开历局修历。", vars = [{ var = "ming_catholic", add = 15 }, { var = "ming_guns", add = 5 }], effects = [{ kind = "flag", flag = "l23_eclipse_calculation_western_calendar_adopted" }] },
+  { key = "datong_calendar_retained", when = "-10..10", default = true, news = "天津卫的船户说，钦天监吵了几个月，外省的食分对来对去分不出高下，到头来还是奉大统历，回回科的星表和船上带来的西洋星历都落了空。", chronicle = "万历二年，日食之后诸家各执一说，朝廷仍用大统历。", effects = [{ kind = "flag", flag = "l23_eclipse_calculation_datong_calendar_retained" }], vars = [{ var = "ming_hui", add = 0 }] },
+  { key = "hui_calendar_adopted", when = "> 10", news = "天津卫的回回商人说，兀鲁伯星表算出的食分最贴外省的报告，钦天监回回科这回扬眉吐气，宫里的人也肯多问两句。", chronicle = "万历二年，日食回回科推算最密，朝廷许其参订历法。", effects = [{ kind = "flag", flag = "l23_eclipse_calculation_hui_calendar_adopted" }], vars = [{ var = "ming_hui", add = 15 }] },
+]
+window = [[1573, 1, 1], [1574, 5, 20]]
+need = { kinds = 3 }
+why_hard = ["历官世袭，各护祖传的法子；朝议一不稳，比试都开不成。"]
+campaign = "liaodong"
+court = { var = "ming_court", min = 40, fail = "cancel" }
+
+# L24；事实上下文：真实1579；何心隐被杀；开明25上限应自当年生效，不能重写1557开明35。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l24_academy_suppression"
+ripple_budget = 3000
+title = "毁书院与何心隐"
+summary = "万历七年，首辅张居正下令毁天下私创书院，聚徒讲学的人都在清查之列。泰州学派的何心隐一生办讲会、聚宗族，早被官府猜忌，这回被锁进武昌狱。书院改名、讲学人转移，都要有人暗中去办。"
+region = "天津"
+date = [1579, 9, 22]
+history = { date = [1579, 9, 22], outcome = "academies_suppressed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银助书院改名存续", port = "tianjin", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "送纸与阳明遗书给书院", port = "tianjin", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "发粮药济书院的寒士", port = "tianjin", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏为书院斡旋", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话漏进内阁耳目，书院与你的名字一并上了册", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "借施粥名义暗讲阳明学", port = "tianjin", max_points = 12, idea = "open_learning", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "资助私塾延请讲学先生", port = "tianjin", max_points = 12, idea = "open_learning", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "academies_suppressed", when = "<= 0", default = true, news = "天津卫传来话：各省书院奉旨拆的拆、改的改，讲会都散了，何心隐死在武昌狱里，读书人说起他都压低了嗓门。", chronicle = "万历七年，诏毁天下私创书院，何心隐死于武昌狱。", effects = [{ kind = "flag", flag = "l24_academy_suppression_academies_suppressed" }], vars = [{ var = "ming_open", add = -15 }] },
+  { key = "academies_protected", when = "> 0", news = "宁波的通事说，书院多换了匾额照旧开讲，何心隐叫人半夜接出武昌狱，如今躲在一家商馆后院，读书人悄悄传着。", chronicle = "万历七年，书院多改名得存，何心隐免死，避居武昌商馆。", effects = [{ kind = "flag", flag = "l24_academy_suppression_academies_protected" }], vars = [{ var = "ming_open", add = 10 }] },
+]
+window = [[1578, 1, 1], [1579, 9, 22]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["首辅亲自下的令，言官无人敢出声，沾上何心隐的人都有危险。"]
+campaign = "liaodong"
+court = { var = "ming_court", min = 40, fail = "cancel" }
+
+# L25；事实上下文：1629文馆、1631后续教令→1574、1576；汉制与宗教登记，开启后金天主教与回回的宫廷传播。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l25_jin_translation_bureau"
+ripple_budget = 3000
+title = "文馆与汗廷教令"
+summary = "汗廷设了文馆，译汉书、议汉制，又考出二百名儒生；过了两年，宗教令下，喇嘛、和尚由汗批准、贝勒登记，巫觋惑众者杀无赦。牛庄的商人能送书、送人，替汉官与译官牵线。"
+region = "牛庄"
+date = [1576, 12, 31]
+history = { date = [1576, 12, 31], outcome = "bureau_under_khan" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "后金", faction = "later_jin", port = "niuzhuang" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银养文馆里的儒生", port = "niuzhuang", max_points = 12, value_per_point = 500, var = "jin_grain" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "送汉文典籍给达海翻译", port = "niuzhuang", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥药给牛庄汉人包衣", port = "niuzhuang", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏结交范文程", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "守旧的贝勒若听到风声，文馆和你一同成了眼中钉", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { later_jin = 0, ming = 0 }, court_bonus = 10, var = "jin_unity", var_per_point = 1 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "设粥厂教牛庄孤儿识字", port = "niuzhuang", max_points = 12, idea = "open_learning", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "资助牛庄汉学塾延师", port = "niuzhuang", max_points = 12, idea = "open_learning", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "bureau_under_khan", when = "<= 0", default = true, news = "牛庄来的商人说，沈阳的文馆开着，儒生考出二百来人，教令也下来了：喇嘛、和尚由汗批准，巫觋术士一概不许惑众。", chronicle = "万历四年，后金定宗教令，喇嘛、和尚须经汗准、贝勒登记。", effects = [{ kind = "flag", flag = "l25_jin_translation_bureau_bureau_under_khan" }], vars = [{ var = "jin_open", add = 0 }] },
+  { key = "religious_patronage_edict", when = "> 0", news = "牛庄口岸的商人说，汗廷的教令改了口，喇嘛和尚之外，远来的教士和回回学者也能在城外落脚，由汗亲自批地。", chronicle = "万历四年，后金宗教令许远来教士、回回学者居城外，汗亲加庇护。", effects = [{ kind = "flag", flag = "l25_jin_translation_bureau_religious_patronage_edict" }], vars = [{ var = "jin_open", add = 10 }] },
+]
+window = [[1574, 1, 1], [1576, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["贝勒们对汉制心存戒备，汗也不敢拂了堂子萨满的旧俗。"]
+campaign = "liaodong"
+court = { var = "jin_unity", min = 60, fail = "cancel" }
+
+# L26；事实上下文：真实1583肇庆、1589迁韶州；缺省不是被逐出中国，抵京是提前的反事实分支。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l26_ricci_zhaoqing"
+ripple_budget = 3000
+title = "罗明坚与利玛窦入内地"
+summary = "罗明坚、利玛窦两位意大利僧人披着僧衣，自称来自天竺，蒙肇庆知府王泮许可，在西江边起了屋，厅里挂着世界图。新总督一到，居留就悬了；广州的官府和澳门的葡人，各打各的算盘。"
+region = "广州"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "mission_moves_to_shaoguan" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5、§11.9", "docs/research/terra16/D_mingqing.md", "docs/research/terra16/J_mingqing_ideas.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "guangzhou" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银助西僧在肇庆起屋", port = "guangzhou", max_points = 12, value_per_point = 500, var = "ming_treasury" },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运纸墨书册给两僧译书", port = "guangzhou", max_points = 20, goods = ["paper", "books"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "广州舍粥药济病贫", port = "guangzhou", max_points = 12, goods = ["grain", "medicine"], value_per_point = 200, var = "famine", var_per_point = -1 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏向总督衙门打点", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "此话若被言官听去，两僧便成了替澳门葡人探路的细作", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_chinese", reputation = { ming = 0, portugal = 0 }, court_bonus = 10, var = "ming_court", var_per_point = 1 },
+  { key = "support_community_charity", side = "support", kind = "propagate", label = "设施药所，附带讲教理", port = "guangzhou", max_points = 12, idea = "catholic", mode = "charity", points = 8 },
+  { key = "support_local_school", side = "support", kind = "propagate", label = "办学馆，教士子算学舆图", port = "guangzhou", max_points = 12, idea = "catholic", mode = "school", points = 8 },
+]
+outcomes = [
+  { key = "mission_moves_to_shaoguan", when = "<= 0", default = true, news = "广州的船客说，肇庆那位西僧利玛窦叫新来的总督撵出了城，仙花寺的门落了锁，他挑着箱笼上了韶州。", chronicle = "万历十七年，利玛窦被逐出肇庆，迁居韶州。", effects = [{ kind = "flag", flag = "l26_ricci_zhaoqing_mission_moves_to_shaoguan" }], vars = [{ var = "ming_catholic", add = -3 }] },
+  { key = "mission_reaches_capital", when = "> 0", news = "广州来的船客说，肇庆的西僧没叫撵去韶州，有人荐他们携自鸣钟和世界图北上，如今京里已有人传看那幅图。", chronicle = "万历十七年，西僧携自鸣钟、世界图北上入京，得留居京师。", effects = [{ kind = "flag", flag = "l26_ricci_zhaoqing_mission_reaches_capital" }], vars = [{ var = "ming_catholic", add = 15 }] },
+]
+window = [[1583, 1, 1], [1589, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["新总督一到，前任的许可便作废；礼部又认定夷人不得居内地。"]
+campaign = "liaodong"
+court = { var = "ming_court", min = 40, fail = "cancel" }
+
+# L09；事实上下文：1625→1570；广宁败局三年后处刑。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l09_xiong_tingbi_execution"
+ripple_budget = 3000
+title = "熊廷弼处决"
+summary = "广宁丢了三年，朝里总要有人担这个罪。当年主守的经略熊廷弼在狱里熬到这一年，等来的是死刑，首级还要传去九边示众。关外的守将都在看，败军之将在朝廷手里是什么下场。"
+region = "山海关海口"
+date = [1570, 12, 31]
+history = { date = [1570, 12, 31], outcome = "xiong_tingbi_executed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "xiong_tingbi_executed", when = ">= -9223372036854775808", default = true, news = "山海关海口的老兵传开了：熊经略在京师斩了，首级发往九边示众。广宁那一败，经抚两人互相推诿，如今杀的只有他一个。", chronicle = "隆庆四年，熊廷弼论死弃市，首级传九边。", effects = [{ kind = "flag", flag = "l09_xiong_tingbi_execution_xiong_tingbi_executed" }] },
+]
+window = [[1570, 1, 1], [1570, 12, 31]]
+campaign = "liaodong"
+
+# L11；事实上下文：1626→1571；病因有争议，不作炮伤致死定论。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l11_nurhaci_death"
+ripple_budget = 3000
+title = "努尔哈赤之死"
+summary = "宁远城下没占到便宜，努尔哈赤去清河汤泉养病，回沈阳的船行到半路就断了气，年近七旬。死因各有说法，是背上生疽还是宁远的炮伤，没人拿得出凭据。汗位空了，诸贝勒谁也不肯让谁。"
+region = "山海关海口"
+date = [1571, 9, 30]
+history = { date = [1571, 9, 30], outcome = "nurhaci_dies" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "nurhaci_dies", when = ">= -9223372036854775808", default = true, news = "往来山海关的客商都在传，关外那位汗在宁远吃了亏，回沈阳的船上咽了气；有人说中了炮，有人说生了背疽，没个准话。", chronicle = "隆庆五年秋，努尔哈赤病卒于回沈阳的舟中。", effects = [{ kind = "flag", flag = "l11_nurhaci_death_nurhaci_dies" }] },
+]
+window = [[1571, 9, 1], [1571, 9, 30]]
+campaign = "liaodong"
+
+# L14；事实上下文：1629→1574；绕道蒙古入塞，袁崇焕被逮。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l14_capital_raid"
+ripple_budget = 3000
+title = "己巳之变"
+summary = "后金不碰山海关，向喀喇沁借了道，从长城的别处钻进关内，一路打到京师城下。袁崇焕星夜赶来勤王，宫里却传出他与敌人暗通的话。十二岁的天子身边，谁的话先送到，谁就占了理。"
+region = "山海关海口"
+date = [1574, 10, 31]
+history = { date = [1574, 10, 31], outcome = "capital_raided" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "capital_raided", when = ">= -9223372036854775808", default = true, news = "戍守山海关的军士私下说，后金没碰关城，借喀喇沁的道从长城别处钻了进去，京师戒严；袁督师带兵赶到城下，听说反叫人拿了。", chronicle = "万历二年，后金绕道蒙古破边墙，兵临京师，袁崇焕勤王获罪下狱。", effects = [{ kind = "flag", flag = "l14_capital_raid_capital_raided" }] },
+]
+window = [[1574, 10, 1], [1574, 10, 31]]
+campaign = "liaodong"
+
+# L14；事实上下文：1630→1575；与毛文龙被杀及己巳之变分开。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l14_yuan_chonghuan_execution"
+ripple_budget = 3000
+title = "袁崇焕处决"
+summary = "毛文龙死在他刀下，京师被围又说他放敌入关，言官咬定他通敌。他在狱里熬了一阵，等来的是一道磔刑的旨意。辽西的将官们个个在掂量自己的脑袋。"
+region = "山海关海口"
+date = [1575, 12, 31]
+history = { date = [1575, 12, 31], outcome = "yuan_chonghuan_executed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "yuan_chonghuan_executed", when = ">= -9223372036854775808", default = true, news = "山海关外回来的塘马传话：袁督师在京师磔了。听说京里百姓不明就里，围上去争割他的肉，辽西的将官听了，半晌都不作声。", chronicle = "万历三年，袁崇焕以谋叛罪磔于京师，家产籍没。", effects = [{ kind = "flag", flag = "l14_yuan_chonghuan_execution_yuan_chonghuan_executed" }] },
+]
+window = [[1575, 1, 1], [1575, 12, 31]]
+campaign = "liaodong"
+
+# L16；事实上下文：1632→1577；孙元化、张焘被处死，人物fate待接。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l16_denglai_executions"
+ripple_budget = 3000
+title = "登莱问罪"
+summary = "吴桥、登州一场兵祸收了场，朝廷要有人抵罪。登莱巡抚孙元化跟葡萄牙铳师学过炮术，在登州筑炮台、练火器，如今与副将张焘一同论死。往后办海防炮务的人，都得先掂量这差事沾不沾得。"
+region = "山海关海口"
+date = [1577, 12, 31]
+history = { date = [1577, 12, 31], outcome = "denglai_officials_executed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "denglai_officials_executed", when = ">= -9223372036854775808", default = true, news = "登州海口的酒家里传开了：孙巡抚、张副将都在京师处了斩。孙元化是造炮台、练炮手的能人，如今还有谁肯来登州管炮？", chronicle = "万历五年，登莱巡抚孙元化、副将张焘以失陷登州罪斩于京师。", effects = [{ kind = "flag", flag = "l16_denglai_executions_denglai_officials_executed" }] },
+]
+window = [[1577, 1, 1], [1577, 12, 31]]
+campaign = "liaodong"
+
+# L17；事实上下文：1636→1581；皇太极建号，不推迟至朝鲜屈服的1582。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l17_qing_proclamation"
+ripple_budget = 3000
+title = "皇太极建清"
+summary = "皇太极在沈阳设坛祭告，满洲、蒙古、汉人诸臣联名劝进，他受尊号称帝，国号改为大清，改元崇德。朝鲜来的使臣站着不肯下拜，这笔账迟早要算。"
+region = "山海关海口"
+date = [1581, 12, 31]
+history = { date = [1581, 12, 31], outcome = "qing_proclaimed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "qing_proclaimed", when = ">= -9223372036854775808", default = true, news = "海口上跑辽东的商人说，皇太极在沈阳受了尊号，国号改叫大清，满汉蒙古诸臣齐上表劝进；只有朝鲜使臣挺着腰板，死活不下跪。", chronicle = "万历九年，皇太极称帝于沈阳，国号大清，改元崇德。", effects = [{ kind = "flag", flag = "l17_qing_proclamation_qing_proclaimed" }] },
+]
+window = [[1581, 1, 1], [1581, 12, 31]]
+campaign = "liaodong"
+
+# L18；事实上下文：1642→1587；议和泄密后被杀。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l18_chen_xinjia_execution"
+ripple_budget = 3000
+title = "陈新甲处决"
+summary = "陈新甲瞒着朝野，遣人去清营探议和的口风，本想悄悄办成。谁知密报摆在案头，被家童当作塘报递了出去，抄传得人人知晓。言官炸了窝，天子翻脸不认，兵部尚书成了替罪羊。"
+region = "山海关海口"
+date = [1587, 12, 31]
+history = { date = [1587, 12, 31], outcome = "chen_xinjia_executed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5、§11.9", "《明史》《清史稿》相关人物传记；年份按设计平移"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "chen_xinjia_executed", when = ">= -9223372036854775808", default = true, news = "山海关海口的驿卒说，兵部陈尚书在京师斩了，罪名是擅主和议；那份密报叫自家家童当塘报递了出去，谁想得到。", chronicle = "万历十五年，陈新甲因议和密报外泄，论斩。", effects = [{ kind = "flag", flag = "l18_chen_xinjia_execution_chen_xinjia_executed" }] },
+]
+window = [[1587, 1, 1], [1587, 12, 31]]
+campaign = "liaodong"
+
+# L24；事实上下文：条件触发、一次性；没有达到条件时不结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l24_ming_catholic_backlash"
+ripple_budget = 3000
+title = "朝议反弹"
+summary = "教士在内地的名声一响，礼部与言官便拿“夷人惑众”说事：上疏参教士聚众传教、私通澳门夷商，请旨押往广东遣返。朝议稳不稳，决定这道旨意下不下得来。"
+region = "天津"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "no_backlash" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5.8"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = 1
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "no_backlash", when = "<= 0", default = true, news = "天津卫客店里的伙计说，礼部那份参教士聚众的本子叫上头压下了，没人再提；澳门来的教士在广东的客栈里照旧走动。", chronicle = "当年礼部参劾教士之疏留中不发，传教者无事。", effects = [{ kind = "flag", flag = "l24_ming_catholic_backlash_no_backlash" }] },
+  { key = "backlash_applied", when = "> 0", news = "天津口岸的脚夫传来话：参教士的本子批下来了，一律押往广东遣返；可命下之后拖了又拖，换了名字的人，转头又回来了。", chronicle = "当年教案起，诏押教士往广东；命下久之，迁延不行。", effects = [{ kind = "flag", flag = "l24_ming_catholic_backlash_backlash_applied" }], vars = [{ var = "ming_catholic", add = -15 }] },
+]
+window = [[1553, 1, 1], [1589, 12, 31]]
+why_hard = ["葡萄牙人掠小儿为食的旧话一传开，谁也不肯替教士开口。"]
+locked = true
+campaign = "liaodong"
+
+# L24；事实上下文：条件触发、一次性；没有达到条件时不结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l24_ming_hui_backlash"
+ripple_budget = 3000
+title = "朝议反弹"
+summary = "回回的经堂和使团一兴旺，朝里的言官便翻出“通番”二字：吐鲁番、哈密的边患全记在回回头上，凡帮过回回学者的人，都要被查问往来。"
+region = "天津"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "no_backlash" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5.8"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = 1
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "no_backlash", when = "<= 0", default = true, news = "天津清真寺门口的回回商人说，有言官上本要查通番的人，本子递上去没了下文，清真寺里的经堂照旧开着。", chronicle = "当年有言官请查通番，疏入未报，回回诸事如旧。", effects = [{ kind = "flag", flag = "l24_ming_hui_backlash_no_backlash" }] },
+  { key = "backlash_applied", when = "> 0", news = "天津口岸的牙人悄悄说：通番的案子又翻出来了，凡与回回学者、鲁迷使团有过往来的商人，都叫衙门传去问话，账册也抄了去。", chronicle = "当年通番之狱兴，凡与回回往来者皆被究问。", effects = [{ kind = "flag", flag = "l24_ming_hui_backlash_backlash_applied" }], vars = [{ var = "ming_hui", add = -15 }] },
+]
+window = [[1553, 1, 1], [1589, 12, 31]]
+why_hard = ["朝里还记着吐鲁番、哈密的旧账，一听回回二字先防三分。"]
+locked = true
+campaign = "liaodong"
+
+# L24；事实上下文：条件触发、一次性；没有达到条件时不结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l24_ming_open_backlash"
+ripple_budget = 3000
+title = "朝议反弹"
+summary = "言路宽了、书院盛了、新法顺手了，当权的人反倒容易被盯上。朝议一乱，翻旧账的弹章接连递来：谁推过新法、谁护过讲学，都要被算上一笔。"
+region = "天津"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "no_backlash" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5.8"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = 1
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "no_backlash", when = "<= 0", default = true, news = "天津卫的渡口上有人说，京里有人想翻前几年改制的旧账，几份弹章递上去都没人接，新法照旧推着。", chronicle = "当年有人欲清算改制诸臣，弹章不行，新政如故。", effects = [{ kind = "flag", flag = "l24_ming_open_backlash_no_backlash" }] },
+  { key = "backlash_applied", when = "> 0", news = "天津卫的盐商说，京里旧账重翻了：当年推新法、护讲学的人，官的降、家的抄，茶馆里谈到此事，先要看一眼门口。", chronicle = "当年旧账重翻，改制诸臣遭劾，新政多废。", effects = [{ kind = "flag", flag = "l24_ming_open_backlash_backlash_applied" }], vars = [{ var = "ming_open", add = -10 }] },
+]
+window = [[1553, 1, 1], [1589, 12, 31]]
+why_hard = ["清算起于党争，靠新法起家的人，最先被人翻出旧账。"]
+locked = true
+campaign = "liaodong"
+
+# L25；事实上下文：条件触发、一次性；没有达到条件时不结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l25_jin_catholic_backlash"
+ripple_budget = 3000
+title = "朝议反弹"
+summary = "沈阳汗庭里教士的名头一响，老贝勒们便疑心起来：堂子祭天是满洲的根本，远来的神凭什么进城？汗庭不齐，旧俗派的话就压过了一切。"
+region = "牛庄"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "no_backlash" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5.8"]
+sides = [
+  { key = "support", name = "后金", faction = "later_jin", port = "niuzhuang" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = 1
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "no_backlash", when = "<= 0", default = true, news = "牛庄口岸的货栈伙计说，沈阳有贝勒嚷着要把教士赶出城，汗没有点头，堂子那边的人闹了几天，也就散了。", chronicle = "当年旧俗派劝汗逐教士，汗不允，教士留居如故。", effects = [{ kind = "flag", flag = "l25_jin_catholic_backlash_no_backlash" }] },
+  { key = "backlash_applied", when = "> 0", news = "牛庄口岸的脚夫说，沈阳的老贝勒们逼汗下了令：教士的住处封了，带来的书抬到堂子前烧了，人押出城外，限期离境。", chronicle = "当年旧俗派逼汗禁教，教士被逐出城，书籍被焚。", effects = [{ kind = "flag", flag = "l25_jin_catholic_backlash_backlash_applied" }], vars = [{ var = "jin_catholic", add = -10 }] },
+]
+window = [[1553, 1, 1], [1589, 12, 31]]
+why_hard = ["满洲出兵祭天都在堂子，新来的神先要过这一关；汗庭一散，贝勒们护的是旧俗。"]
+locked = true
+campaign = "liaodong"
+
+# L25；事实上下文：条件触发、一次性；没有达到条件时不结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l25_jin_hui_backlash"
+ripple_budget = 3000
+title = "朝议反弹"
+summary = "鲁迷来的铳匠、回回商人在沈阳站稳了脚，老贝勒们嘀咕起来：这些人不拜堂子，不吃猪肉，人一多，满洲的规矩还算不算数？"
+region = "牛庄"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "no_backlash" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5.8"]
+sides = [
+  { key = "support", name = "后金", faction = "later_jin", port = "niuzhuang" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = 1
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "no_backlash", when = "<= 0", default = true, news = "牛庄的回回商人说，沈阳有人嫌礼拜的人不吃猪肉、不拜堂子，闹到汗跟前，汗只说铳匠要紧，这事就压下了。", chronicle = "当年旧俗派攻回回铳匠不拜堂子，汗压之，诸匠仍留。", effects = [{ kind = "flag", flag = "l25_jin_hui_backlash_no_backlash" }] },
+  { key = "backlash_applied", when = "> 0", news = "牛庄口岸的船户说，沈阳的回回铳匠被撵出了城，礼拜的屋子封了门；汗说祭祀不能没有猪，贝勒们才算顺了气。", chronicle = "当年旧俗派得势，回回匠人被逐，礼拜之所遭封。", effects = [{ kind = "flag", flag = "l25_jin_hui_backlash_backlash_applied" }], vars = [{ var = "jin_hui", add = -10 }] },
+]
+window = [[1553, 1, 1], [1589, 12, 31]]
+why_hard = ["满洲祭祀少不了猪，回回却不沾猪肉，两边先在规矩上顶了牛。"]
+locked = true
+campaign = "liaodong"
+
+# L25；事实上下文：条件触发、一次性；没有达到条件时不结算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l25_jin_open_backlash"
+ripple_budget = 3000
+title = "朝议反弹"
+summary = "文馆里的汉儒越聚越多，汉官敢当面谏贝勒，老贝勒们坐不住了：满洲人靠骑射得的天下，穿汉衣、读汉书，弓还拉得开吗？"
+region = "牛庄"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "no_backlash" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.5.8"]
+sides = [
+  { key = "support", name = "后金", faction = "later_jin", port = "niuzhuang" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = 1
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "no_backlash", when = "<= 0", default = true, news = "牛庄口岸的通事说，沈阳有老贝勒当众拍了桌子，说读汉书的人拉不开弓；汗只笑了笑，文馆的灯照旧点到半夜。", chronicle = "当年旧俗派斥汉制废骑射，汗不为所动，文馆如旧。", effects = [{ kind = "flag", flag = "l25_jin_open_backlash_no_backlash" }] },
+  { key = "backlash_applied", when = "> 0", news = "牛庄的马贩子说，沈阳下了令：贝勒子弟停读汉书，改练骑射，文馆里的儒生散了大半，有人连夜往关内逃。", chronicle = "当年老贝勒当权，罢子弟习汉书，专令骑射，文馆儒生星散。", effects = [{ kind = "flag", flag = "l25_jin_open_backlash_backlash_applied" }], vars = [{ var = "jin_open", add = -10 }] },
+]
+window = [[1553, 1, 1], [1589, 12, 31]]
+why_hard = ["老贝勒念的是骑射旧规，不会满语的汉官又常遭人讪笑。"]
+locked = true
+campaign = "liaodong"
+
+# L05；事实上下文：原创交付节点：收到封缄军情，须先在月港交接，再限时送达登州。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l05_dispatch_released"
+ripple_budget = 3000
+title = "辽东军情密札"
+summary = "月港码头上有人递来一封蜡丸封口的密札，是辽东使者辗转托来的，封皮写着登州。里头说的是军机：出师的日子已走漏，几路兵约不到一处。要在明年三月底前送到登州官军手里。"
+region = "月港"
+date = [1563, 1, 1]
+history = { date = [1563, 1, 1], outcome = "dispatch_available" }
+basis = "original"
+sources = ["docs/TERRA16.md §10.5；密札为游戏补全"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "yuegang" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "dispatch_available", when = ">= -9223372036854775808", default = true, news = "月港码头上，一个辽东口音的人把蜡丸封口的密札塞给过往的船主，只说是急件，要赶在期限前送到登州，路上别拆，也别问是谁的信。", chronicle = "嘉靖四十二年正月，辽东军情密札封缄于月港，限期递登州。", effects = [{ kind = "flag", flag = "l05_dispatch_released_dispatch_available" }, { kind = "item", item = "liaodong_dispatch", qty = 1 }] },
+]
+window = [[1563, 1, 1], [1563, 1, 1]]
+
+# L02；事实上下文：L02改写时延迟一年建号；年份为设计分支。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l02_delayed_proclamation"
+ripple_budget = 3000
+title = "延后建号"
+summary = "建州的汗号拖过了一整年。诸部首领为座次、敕书与战利的分派吵个不停，赫图阿拉的称汗台筑筑停停。登州的守将趁这一年，多修了几处海口，也多囤了些粮。"
+region = "登州"
+date = [1562, 12, 31]
+history = { date = [1562, 12, 31], outcome = "later_jin_proclaimed_late" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "dengzhou" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "later_jin_proclaimed_late", when = ">= -9223372036854775808", default = true, news = "登州渡口传来话，赫图阿拉的称汗大典拖了一整年才办成，国号大金，改元天命；到场的各部首领少了几家，开原的边将照例备了礼。", chronicle = "嘉靖四十一年，建州诸部拖满一年，努尔哈赤始称汗，国号大金，改元天命。", effects = [{ kind = "flag", flag = "l02_delayed_proclamation_later_jin_proclaimed_late" }] },
+]
+window = [[1562, 1, 1], [1562, 12, 31]]
+requires = [
+  { event = "l02_later_jin_proclamation", outcome = "proclamation_delayed" },
+]
+
+# L10；事实上下文：史实1623年前后试炮事故按55年平移到1568；具体日不详，年末是游戏结算日。失败停线一年。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l10_cannon_trials"
+ripple_budget = 3000
+title = "试炮与验收"
+summary = "澳门炉里铸出的西洋大铳，起运之前要当着兵部差来的官员试放验收。铁料不纯、火药不匀、炮手手生，哪样出了岔都可能炸膛；一炸，买炮的事便要搁下一整年。"
+region = "澳门"
+date = [1568, 12, 31]
+history = { date = [1568, 12, 31], outcome = "cannon_trials_failed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5；docs/research/terra16/D_mingqing.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "macao" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银备澳门试炮开销", port = "macao", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运铁器火药到澳门试炮场", port = "macao", max_points = 20, goods = ["ironware", "gunpowder"], value_per_point = 200 },
+  { key = "train_gunners", side = "support", kind = "train", label = "请迪奥戈·罗沙练炮手", port = "calicut_port", max_points = 8, trainer = "diogo_rocha", days = 60, cost = 1500, points = 8 },
+]
+outcomes = [
+  { key = "cannon_trials_failed", when = "<= 0", default = true, news = "澳门的酒肆里传开了：试炮那天头一门大铳炸了膛，葡萄牙铳师当场没了命，兵部官员拂袖而去，买炮的事说停就停，一搁就是一整年。", chronicle = "隆庆二年，澳门试炮炸膛，铳师殒命，购炮之议停摆一年。", effects = [{ kind = "flag", flag = "l10_cannon_trials_cannon_trials_failed" }, { kind = "flag", flag = "l10_cannon_program_suspended", value = true }] },
+  { key = "cannon_trials_safe", when = "> 0", news = "澳门来的葡萄牙商人说，三门大铳连放三响，膛口一丝没裂，铳尺量出的准头也合验收的规矩，兵部官员点了头，下一批炮的订单也签了。", chronicle = "隆庆二年，澳门试炮无恙，铳尺验准，购炮之议照旧推行。", effects = [{ kind = "flag", flag = "l10_cannon_trials_cannon_trials_safe" }] },
+]
+window = [[1567, 1, 1], [1568, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["炉料稍有不匀，一发炸膛，言官便参到买炮停摆"]
+
+# L10；事实上下文：停线满一年后复开；属于事故分支的玩法日期。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l10_cannon_program_resumed"
+ripple_budget = 3000
+title = "铸炮复开"
+summary = "炸膛之后，买炮的事停了整整一年。年关又到，兵部终于松了口，澳门的炉子重新点火；炉料、火药与验炮的规矩都要从头立起，没人愿再担第二回炸膛的干系。"
+region = "澳门"
+date = [1569, 12, 31]
+history = { date = [1569, 12, 31], outcome = "cannon_program_resumed" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "macao" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "cannon_program_resumed", when = ">= -9223372036854775808", default = true, news = "澳门的炉子又冒烟了，停了一年的铸炮重新开工。葡萄牙匠人说这回验炮要多放五响才许装船，兵部也不再催得那样急。", chronicle = "隆庆三年岁末，兵部准澳门铸炮复开，停线一年。", effects = [{ kind = "flag", flag = "l10_cannon_program_resumed_cannon_program_resumed" }, { kind = "flag", flag = "l10_cannon_program_suspended", value = false }] },
+]
+window = [[1569, 12, 31], [1569, 12, 31]]
+requires = [
+  { event = "l10_cannon_trials", outcome = "cannon_trials_failed" },
+]
+
+# L17；事实上下文：1635→1580；皇太极获得所谓传国玺的政治宣称，真伪不作定论；不把印文复制品当真玺。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l17_imperial_seal"
+ripple_budget = 3000
+title = "察哈尔与传国玺"
+summary = "林丹汗去世后，遗孀苏泰太后带着幼子额哲守着察哈尔残部，手里有一方传说是元朝留下的“制诰之宝”，牧人讲它是山羊刨地刨出来的。皇太极想要它，好叫蒙古各部认他承了正统。"
+region = "牛庄"
+date = [1580, 12, 31]
+history = { date = [1580, 12, 31], outcome = "seal_claimed_by_jin" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5", "《清太宗实录》天聪九年；研究D"]
+sides = [
+  { key = "support", name = "察哈尔", faction = "chahar", port = "niuzhuang" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银接济额哲母子", port = "dengzhou", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木给察哈尔残部", port = "dengzhou", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥药给察哈尔牧户", port = "dengzhou", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托谢清晏劝诸部不认玺", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "话漏给后金，皇太极先知道有人在各部劝人不认玺", terms = ["withhold_seal_recognition"], language = "lang_mongolian", reputation = { chahar = 0, later_jin = 0 }, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "seal_claimed_by_jin", when = "<= 0", default = true, news = "牛庄的蒙古马贩子说，额哲母子出降，把那方“制诰之宝”献给了皇太极，沈阳摆了香案受玺，都在传汗承了元朝的正统。", chronicle = "万历八年，察哈尔额哲献所谓制诰之宝于皇太极，后金以承元统自称。", effects = [{ kind = "flag", flag = "l17_imperial_seal_seal_claimed_by_jin" }] },
+  { key = "seal_kept_from_jin", when = "> 0", news = "牛庄口岸传说，额哲母子没有献玺，印匣连夜叫人带往西边的草场，皇太极在沈阳发了一通火，诸贝勒背后都说汗的名分还差一块。", chronicle = "万历八年，额哲不献制诰之宝，后金称帝之议受阻，诸贝勒心不齐。", effects = [{ kind = "flag", flag = "l17_imperial_seal_seal_kept_from_jin" }, { kind = "close", event = "l17_qing_proclamation" }], vars = [{ var = "jin_unity", add = -10 }] },
+]
+window = [[1578, 1, 1], [1580, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["林丹汗一死，各部早往后金那边靠，孤儿寡母护不住一方印"]
+campaign = "liaodong"
+
+# L17；事实上下文：传国玺政治宣称受阻后的延迟一年建号分支。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l17_delayed_qing_proclamation"
+ripple_budget = 3000
+title = "延后建清"
+summary = "玺没到手，皇太极便不肯仓促称帝。他把大典压了一年，等诸贝勒松口，等蒙古各部首领来劝进，才议改国号。牛庄的商号天天打听沈阳的动静。"
+region = "牛庄"
+date = [1582, 12, 31]
+history = { date = [1582, 12, 31], outcome = "qing_proclaimed_late" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "niuzhuang" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "qing_proclaimed_late", when = ">= -9223372036854775808", default = true, news = "牛庄的商人说，沈阳这一年才办成称帝的大典，改国号大清；来劝进的蒙古首领不多，场面冷清，远不如人所料。", chronicle = "万历十年，皇太极因玺不至，迟一岁始称帝，改国号大清。", effects = [{ kind = "flag", flag = "l17_delayed_qing_proclamation_qing_proclaimed_late" }] },
+]
+window = [[1582, 1, 1], [1582, 12, 31]]
+requires = [
+  { event = "l17_imperial_seal", outcome = "seal_kept_from_jin" },
+]
+
+# L19；事实上下文：1644→1589；是否引清入关单独留结果，给L19终局的布尔前提引用。月内精确日期待核。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "l19_wu_sangui_gate"
+ripple_budget = 3000
+title = "山海关的抉择"
+summary = "北京失守的消息传到山海关，总兵吴三桂手握关门，老父还留在京里。大顺的劝降书与关外清营的使者，都在等他回话；海口的粮、药和银子，能让关里的人心稳上几日。"
+region = "山海关海口"
+date = [1589, 5, 31]
+history = { date = [1589, 5, 31], outcome = "wu_opens_pass" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5", "《明史·吴三桂传》；研究D"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫银发山海关守军饷", port = "shanhaiguan", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木进山海关仓", port = "shanhaiguan", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "施粥药济关内逃民", port = "shanhaiguan", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与吴三桂议闭关供饷", port = "shanhaiguan", max_points = 16, with = "wu_sangui", cost = 1000, points = 16, leak = 15, risk = "话漏到北京的大顺营里，吴总兵留在京里的老父先遭拷掠", terms = ["keep_pass_closed", "supply_pass_garrison"], language = "lang_chinese", reputation = { ming = 20, later_jin = 0 }, var = "ming_court", var_per_point = 1 },
+]
+outcomes = [
+  { key = "wu_opens_pass", when = "<= 0", default = true, news = "山海关海口的渔户说，吴总兵一早便开了关门，辫发的清兵一队队涌进来，一片石那边的厮杀声响了半日，大顺兵败走。", chronicle = "万历十七年五月，山海关总兵吴三桂开关纳清兵，一片石之战大顺军败。", effects = [{ kind = "flag", flag = "l19_wu_sangui_gate_wu_opens_pass" }] },
+  { key = "wu_keeps_pass_closed", when = "> 0", news = "山海关的城根下有人传，吴总兵把关门闩得死紧，北京来的大顺劝降书原样退了回去，关外清营叫了几日也没叫开；海船运来的粮车，一队队赶进了关。", chronicle = "万历十七年五月，吴三桂闭山海关，不降大顺，不纳清兵。", effects = [{ kind = "flag", flag = "l19_wu_sangui_gate_wu_keeps_pass_closed" }] },
+]
+window = [[1588, 1, 1], [1589, 5, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["北京已陷，吴三桂的老父在大顺手里，关外又是清营"]
+campaign = "liaodong"
+

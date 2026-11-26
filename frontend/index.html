@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 窗口自适应：铺满刘海屏（安全区在样式表里用 env(safe-area-inset-*) 让开），顶栏用木色 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#3b2416" />
+    <title>Manifest · 船货清单</title>
+    <style>
+      /* 载入画面：脚本载入之前先有东西可看；React 挂上之后整个换掉。只用样式，不用内联脚本 */
+      .boot-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: #0f1630;
+        color: #f3e3c3;
+        font-family: system-ui, "Microsoft YaHei", "PingFang SC", sans-serif;
+        text-align: center;
+      }
+      .boot-splash b {
+        font-size: 30px;
+        letter-spacing: 6px;
+        color: #e9b949;
+      }
+      .boot-splash small {
+        font-size: 12px;
+        opacity: 0.7;
+      }
+      .boot-splash i {
+        position: relative;
+        width: 160px;
+        height: 4px;
+        overflow: hidden;
+        background: rgba(243, 227, 195, 0.2);
+      }
+      .boot-splash i::after {
+        content: "";
+        position: absolute;
+        inset: 0 60% 0 0;
+        background: #e9b949;
+        animation: boot-sail 1.6s ease-in-out infinite;
+      }
+      @keyframes boot-sail {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(250%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot-splash i::after {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="boot-splash" role="status" data-boot="splash">
+        <b>MANIFEST</b>
+        <span>船货清单 · 正在载入……</span>
+        <i></i>
+        <small>Loading…</small>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

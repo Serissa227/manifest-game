@@ -1,0 +1,163 @@
+# 请托：烧掉的债据（request_lakan_pula）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：拉坎·普拉（lakan_pula，1540-01-19 生，男），汤都大督家旁支；势力 luzon，身份档 2。cast：cast/classmates_custom_tondo_datu.toml。
+# 类型：说服（persuade）。四章：offer（报价）、persuade（高脚屋里的账，转折）、result（河边的火，收尾）、result_half（半烧的收尾，由检定失败分支进入）。
+#       比任务单多一章：变体只能改正文，不能改选项的现金数，“只烧一半”只能另起一章，两个选项都按 900 结算。
+# 报价：T（当面）。人物按日程在汤都（tondo），auto=false，玩家用“问请托”（ask:request_lakan_pula）启动。offer 章不写 at，目标为在河边找到他；deadline=1590-06-30，timeout 直接 failed，不写见闻。
+# 窗口：1573-01-01 至 1590-12-31（offer 止于 1590-06-30）。非 stage 章节没有 window 与 default，窗口写在 when 的 date 条件里。
+# 进行中：persuade 章 deadline_days=60，超时走 failed，来信一封，好感 -3，旗标 _late；result 与 result_half 是普通章，条件满足即进入待决队列，可以一直等。
+# 依据·史实背景：吕宋的大督（datu）与依附者；债务依附（借了谷物或钱，就替人划船、种地抵债）；1571 年西班牙人在马尼拉立足，旧的大督家仍管着汤都的河口。叔父与船户都是叙事人物。
+# 依据·原创：拉坎家的债据、高脚屋、漆木匣、河边的火、老船夫、一成的分账。
+# 秘密：家里放出去的债压着邻人白划船，他一次也没开过口，家里至今不知道他不肯。只在 offer 正文里由他自己说出；见闻只写债据烧了，不写他多年没开口。
+# 读的旗标：bond lakan_pula ≥ C（offer 的 v1_bond_c 变体，只读 C7 的重逢结果）；c13_request_lakan_pula_heard（persuade 的 v1_heard 变体，只改正文，不改效果）。
+# 设的旗标：c13_request_lakan_pula_accepted（offer 两条接法）、_heard（offer 先问船户）、_declined（offer 回绝）、_terms（persuade 新分法）、_half（persuade 检定失败，只烧一半）、_late（persuade 超时）、_done（result 收尾）、_partial（result_half 收尾）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 1600（只烧一半 900）；好感最多 +13；名声 +2；回忆 mem-request_lakan_pula-result（只烧一半的收尾同一回忆）。不发物品。
+# 依赖：港口 tondo（ports_southeast_asia.toml）；技能 negotiation（门槛 60）；属性 eloquence；人物 lakan_pula。无需 B10b 改名。拉坎不在 TERRA16 §12 的主线名单里，没有 c13_main_ 门禁。
+# 回忆插画清单：
+#   mem-request_lakan_pula-result「河边的火」：傍晚的河边，一堆火烧着一卷卷债据，船户们站在岸边围着看，没有人说话。
+
+[[tracks]]
+key = "request_lakan_pula"
+name = "烧掉的债据"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["lakan_pula"]
+
+# 一、白划的桨：汤都河边，他蹲着看船户靠岸，把债的事说出口。
+[[tracks.chapters]]
+key = "offer"
+title = "白划的桨"
+text = "几条小船靠岸，船户把桨往船帮上一搁，光着脚跳上泥滩。拉坎蹲在河边看，脚边一支旧桨，他拿脚尖拨了拨，没有捡。“这几户人家替我家白划了半辈子船。”他说，“祖父那年借了米，利滚利，到今天还没还完。”停了停，他又说：“这件事我从来没开过口，家里没人知道我不肯。”他要叔父当着船户把债据烧掉。叔父不肯，说烧了债据，大督家就不像大督家了。“我开口，叔父只当我是孩子。你去说。”"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "person", person = "lakan_pula", text = "在汤都的河边找到他" }]
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "lakan_pula", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "lakan_pula", level = "C" }]
+text = "拉坎蹲在河边，见你走近，从袖里摸出一只木匙，放进你手心，又拿了回去。“你知道我家筵席上谈不成事。”几条小船靠岸，船户把桨往船帮上一搁，光着脚跳上泥滩。脚边一支旧桨，他拿脚尖拨了拨，没有捡。“这几户人家替我家白划了半辈子船。”他说，“祖父那年借了米，利滚利，到今天还没还完。”停了停，他又说：“这件事我从来没开过口，家里没人知道我不肯。”他要叔父当着船户把债据烧掉。叔父不肯，说烧了债据，大督家就不像大督家了。“我开口，叔父只当我是孩子。你去说。”"
+
+[[tracks.chapters.choices]]
+key = "talk_uncle"
+text = "接下，替他去跟叔父说。"
+next = "persuade"
+reply = "他把债据的数目背给我听，一户一户，连利息怎么滚的都清楚。背完了他说：“我每年都偷偷算一遍。”他说这话时没看我，看的是河对岸那几条空船。"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "flag", flag = "c13_request_lakan_pula_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_boatmen"
+text = "接下，先问：船户们自己怎么想？"
+next = "persuade"
+reply = "他没答，站起来招手，叫那几条小船的人上岸。船户们站在泥滩上，互相看了看，没人先开口。他说：“他们自己会说。”说完又蹲回河边，把那支旧桨拿起来看了看，放回原处。"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "flag", flag = "c13_request_lakan_pula_accepted" }, { kind = "flag", flag = "c13_request_lakan_pula_heard" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这是你们家里的事，我插不进去。"
+next = "failed"
+reply = "他点点头，说那他再算一年，“算到我当家那天”。走了两步，又回头看了你一眼，没有说别的，脚边那支旧桨他这回也没捡。"
+effects = [{ kind = "flag", flag = "c13_request_lakan_pula_declined" }]
+
+# 二、高脚屋里的账：叔父的楼梯下站着船户，漆木匣摆在中间。
+[[tracks.chapters]]
+key = "persuade"
+title = "高脚屋里的账"
+text = "叔父的高脚屋里摆着一只漆木匣，债据卷成一卷一卷，插在里面。船户们站在楼梯下，没人敢上来。拉坎坐在你身边，一句话不说，像真是来看的。叔父把话说得很慢：烧了也行，可大督家养着这些船。船户不划船，家里拿什么去马尼拉交新的贡？“马尼拉的新城墙一年比一年高，咱们的贡可不会轻。”他看了侄子一眼，又看你。拉坎只说了一句：“我只要债据烧了。”"
+speaker = "captain"
+mood = "tense"
+at = "tondo"
+objectives = [{ kind = "person", person = "lakan_pula", text = "拉坎跟你一起去高脚屋" }]
+when = [{ kind = "alive", person = "lakan_pula", value = true }, { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "lakan_pula", value = -3 }, { kind = "flag", flag = "c13_request_lakan_pula_late" }, { kind = "letter", person = "lakan_pula", text = "叔父把匣子锁起来了。我还在算，一年一遍。——拉坎" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_heard"
+when = [{ kind = "flag", flag = "c13_request_lakan_pula_heard" }]
+text = "叔父的高脚屋里摆着一只漆木匣，债据卷成一卷一卷，插在里面。船户们站在楼梯下，没人敢上来。泥滩上没先开口的那几个人里，有一个老船夫跟到了楼梯边，把桨靠在柱子上，一直站着。拉坎坐在你身边，一句话不说。叔父把话说得很慢：烧了也行，可大督家养着这些船。船户不划船，家里拿什么去马尼拉交新的贡？“马尼拉的新城墙一年比一年高，咱们的贡可不会轻。”他看了侄子一眼，又看那个老船夫。拉坎只说了一句：“我只要债据烧了。”"
+
+[[tracks.chapters.choices]]
+key = "reason"
+text = "跟叔父算账：白划的船划得慢，分账的船划得快。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_half", effects = [{ kind = "affinity", person = "lakan_pula", value = -2 }, { kind = "flag", flag = "c13_request_lakan_pula_half" }], news = "汤都河口大督家的高脚屋里，叔父只肯烧掉漆木匣里的一半，另一半留着看船户划得怎样。" }
+reply = "叔父听我把一年的船期一条条算完，沉默了半天，把漆木匣推到拉坎面前：“你当家的时候，自己烧。”拉坎说：“现在烧。”"
+news = "汤都河口大督家的高脚屋里，叔父把一只漆木匣推到侄子面前，允他当众烧掉。"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "pay_part"
+text = "替船户们还上一部分，换叔父当众烧掉。"
+next = "result"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你身上的钱凑不齐这一截账"
+reply = "叔父收了钱，脸上挂不住，可钱是真的。他说这算船户们自己还的，不算外人替还。他把漆木匣往拉坎那边一推：“那就当着人烧，别让我再听见这笔账。”"
+news = "汤都河口大督家的高脚屋里，有人替船户还了一截账，叔父收下了钱。"
+effects = [{ kind = "cash", value = -500 }, { kind = "affinity", person = "lakan_pula", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "new_terms"
+text = "提一个新办法：债据烧掉，船户往后照分账划船，给大督家一成。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "你想不出一个让叔父也有面子的分法"
+reply = "叔父算了算，一成比白划的那点米多。船户们在楼梯下听见，有人笑出了声。叔父把漆木匣交给拉坎，嘴里还念着那个“一成”。"
+news = "汤都河口大督家的高脚屋里，叔父听完分账的新法，把漆木匣交给了侄子。"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }, { kind = "flag", flag = "c13_request_lakan_pula_terms" }]
+
+# 三、河边的火：收尾，债据一卷一卷烧在河边。
+[[tracks.chapters]]
+key = "result"
+title = "河边的火"
+text = "傍晚，拉坎在河边生了一堆火，一卷一卷把债据扔进去。船户们围着看，没有人说话。一个光脚的孩子蹲在船帮上看，没人赶他走。纸角先卷黑了，火苗舔上来，烧成一把灰。火灭了，一个老船夫走过来，问他明天还划不划船，划的是哪一种账。拉坎把灰拨了拨，说：“先听船夫怎么说。”他看着老船夫，又说：“划，照分账划。”河面上的灰顺着水往河口走。"
+speaker = "captain"
+mood = "tender"
+at = "tondo"
+objectives = [{ kind = "at", at = "tondo" }]
+when = [{ kind = "alive", person = "lakan_pula", value = true }, { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }]
+news = "汤都河边大督家的侄子当众烧了一匣债据，河口的船户明天照分账划船。"
+
+[[tracks.chapters.choices]]
+key = "stay_watch"
+text = "陪他看到火灭。"
+next = "done"
+reply = "火灭了，他把灰拨进河里，付了钱，又说这件事别写在什么簿子上：“船户记得就行。”他数钱数得很慢，每数一个数，就看一眼河边那几户人家。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "lakan_pula", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_lakan_pula_done" }, { kind = "memory", memory = "mem-request_lakan_pula-result", title = "河边的火" }]
+
+[[tracks.chapters.choices]]
+key = "ask_uncle"
+text = "问他：叔父那边，往后怎么办？"
+next = "done"
+reply = "“叔父会骂我一年，然后就不骂了。”他付了钱，说骂完那一年，叔父会发现分账的船快。说完他从袖子里摸出一块干净的布，把手上的灰擦了擦。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "lakan_pula", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_lakan_pula_done" }, { kind = "memory", memory = "mem-request_lakan_pula-result", title = "河边的火" }]
+
+# 三之二、河边的半堆火：检定失败，只烧了一半，另一半留着看船户划得怎样。
+[[tracks.chapters]]
+key = "result_half"
+title = "河边的半堆火"
+text = "叔父只肯烧了一半。另一半他让拉坎先收着，说要“看他们划得怎样”。高脚屋的门关着，叔父没有露面。天擦黑的时候，拉坎在河边生了一堆小火，把叔父放出来的那几卷扔进去。船户们远远站着，没有人走近。他把剩下那一半的数目又背了一遍，背到一户就停一下。火快灭的时候，有个船夫走过来，问他明天还划不划船。拉坎说划，照老规矩划。剩下的，明年再烧。"
+speaker = "captain"
+mood = "sad"
+at = "tondo"
+objectives = [{ kind = "at", at = "tondo" }]
+when = [{ kind = "alive", person = "lakan_pula", value = true }, { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }]
+news = "汤都河边大督家的侄子烧了半匣债据，剩下的说明年再烧，河口的船户照旧划船。"
+
+[[tracks.chapters.choices]]
+key = "stay_half"
+text = "替他守到火灭。"
+next = "done"
+reply = "火不大，没多久就灭了。他用脚把灰踩进泥里，数完了钱，说：“明年还要烧，你再来。”他看着剩下那一半的纸卷，没有去动它，手指在卷边上停了一下。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "lakan_pula", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_lakan_pula_partial" }, { kind = "memory", memory = "mem-request_lakan_pula-result", title = "河边的火" }]
+
+[[tracks.chapters.choices]]
+key = "ask_half"
+text = "问他：剩下的那一半，明年真烧得掉吗？"
+next = "done"
+reply = "“烧得掉。”他付了钱，说叔父今年肯烧一半，已经是他头一回松口。“明年烧的那一半，我替他数，数到一户就划掉一户。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "lakan_pula", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_lakan_pula_partial" }, { kind = "memory", memory = "mem-request_lakan_pula-result", title = "河边的火" }]

@@ -1,0 +1,261 @@
+# 请托：三处没核完的地名（request_piri_reis）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：皮里·雷斯（piri_reis，1470 年生，1553 年在开罗被处死）。本条是遗事请托：他本人不说话，由兵工厂边上的老抄写员出面，只转述他的话。cast 在 cast/historical_02_islamic.toml。老抄写员、玛蒂克村的老渔夫、罗得的修士、坎迪亚的院长与书记都是叙事人物，不进 cast，正文也不写名字。
+# 类型：复合（mixed）。共 6 章：offer（报价）→ chios（希俄斯，玛蒂克村）→ rhodes（罗得旧港）→ candia 或 candia_letter（坎迪亚港务处）→ back（抄写员收尾）。终点 done / failed。
+#   结构说明：简报写的是 5 章。罗得的“捎信”要在坎迪亚的“送信进修道院”里用 requires flag monk_letter 门禁，而坎迪亚同时也是看旧图那条路的下一章，这个旗标只在捎信一路设，会判成准备后条件仍不满足。所以坎迪亚拆成两章：candia（没有信，只能付钱或讲理）与 candia_letter（带着信，多一个送信的选项，不加门禁），各自两到三个选项，都回到 back。
+# 报价：遗事，不写 alive。offer 章 at=istanbul，auto=true，family=c13_offer_istanbul、冷却 20 天；when 为 1557-03-01 至 1565-12-31 的日期窗口加玩家年满 17；deadline 为窗口止日 1565-12-31，timeout 直接 failed，不写见闻。
+# 期限：chios 120 天，rhodes 90 天，candia 与 candia_letter 各 90 天，back 120 天。每个 timeout 都是 failed，设 _late 旗标，并写一条见闻。
+# 依据·史实：《海事之书》1521、1526 两稿（史实）；皮里·雷斯 1553 年处死；希俄斯 1566 年才归奥斯曼，窗口止于 1565 年 12 月；罗得 1522 年归奥斯曼，城里仍有东正教修士；坎迪亚是威尼斯的港。
+# 依据·原创：老抄写员、增订稿、三张纸条、玛蒂克村的老渔夫、罗得的修士、坎迪亚的院长与书记、铅坠与玛蒂克树脂。
+# 依赖：港口 istanbul、chios、rhodes、candia（ports_east_med.toml）；技能 lang_greek、cartography（skills.toml）；属性 seamanship、eloquence；物品 piri_ms（items/books_04_navigation.toml）；势力 ottoman；人物 piri_reis。无需 B10b 改名。主线门禁：无（gate_main 为空），不写 c13_main。
+# C7：本人无 C7 线，本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_piri_reis_asked（chios 的 variant，只改正文）；c13_request_piri_reis_half_chios、c13_request_piri_reis_half_candia（back 的 variant，只改正文）。
+# 设的旗标：accepted（offer 接下）、declined（offer 回绝，终局）、asked（offer 接下并问了书的作者）、chios_ok、half_chios（chios 检定失败，只记了一半）、monk_letter（rhodes 捎信）、chart_read（rhodes 看旧图）、candia_ok、half_candia（candia 与 candia_letter 检定失败）、late（超时，终局）、done（终局）、left_in_arsenal（keep_arsenal，终局）。
+# 秘密：本人的秘密不写，见闻里也不写。
+# 报酬：现金 1600（accept 与 keep_arsenal 各给一次，只能拿一条）；奥斯曼声望 +2（accept）或 +3（keep_arsenal）；唯一物品 piri_ms 只在 accept 给；不加好感、不加名声（遗事）。回忆 mem-request_piri_reis-back 只给 accept 一路。
+# 回忆插画清单：
+#   mem-request_piri_reis-back「增订稿的最后一页」：一部包在旧布里的抄本，布角露出扉页，扉页上新写了一行字，窗外是兵工厂的墙。
+
+[[tracks]]
+key = "request_piri_reis"
+name = "三处没核完的地名"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["piri_reis"]
+
+# 一、增订稿：兵工厂边上的小屋，老抄写员学着老人的口气问你有没有海图。
+[[tracks.chapters]]
+key = "offer"
+title = "抄写员的增订稿"
+text = "兵工厂边上的小屋里，老抄写员还在誊皮里·雷斯《海事之书》的增订稿。窗下一张矮桌，桌上压着一枚老人生前用过的铅坠，铜皮磨得发亮，是用了很多年的。爱琴海上有三处地名，老人没核完就走了：希俄斯南边的一个小湾，罗得的旧港，坎迪亚港口的水深。抄写员学着老人的口气问你：“带了海图来？”说完自己先笑，笑完又不笑了，把笔搁回墨水瓶上，擦了擦手。墨水瓶边上落着一层灰，没人动过。"
+mood = "sad"
+at = "istanbul"
+objectives = [{ kind = "at", at = "istanbul", text = "到伊斯坦布尔兵工厂去" }]
+when = [
+  { kind = "date", from = [1557, 3, 1], to = [1565, 12, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_istanbul"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：三处地方，一处一处去看。"
+next = "chios"
+reply = "抄写员把三张小纸条交给你，每张写着一个地名，底下是老人留下的半句话。他念了一遍：“这三处不弄清，书就是骗人的。”念完，把纸条压回铅坠底下。"
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "why_continue"
+text = "接下，但问他：一个被处死的人的书，续它做什么？"
+next = "chios"
+reply = "“书没犯罪。”他把铅坠挪了个位置，“船长们照着它进港，没一个出过事。你去问问，有几个人知道写书的是谁？”他自己说完，又低头去誊那一行，笔尖很稳。"
+effects = [
+  { kind = "flag", flag = "c13_request_piri_reis_accepted" },
+  { kind = "flag", flag = "c13_request_piri_reis_asked" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟走不开。"
+next = "failed"
+reply = "抄写员点点头，把纸条一张一张抚平，放回桌角那叠旧纸上。“书等得起。”他说，声音平平的，听不出是说你，还是说他自己。他没再抬头，只把那枚铅坠往桌角挪了挪，压住了风吹进来的纸角。"
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_declined" }]
+
+# 二、希俄斯：老渔夫只在船上说话，小船上收网，指着海岸。
+[[tracks.chapters]]
+key = "chios"
+title = "只在船上说话的渔夫"
+text = "希俄斯南边的玛蒂克村，一个老渔夫知道那处小湾叫什么，可他只在船上说话。岸上热那亚人的税吏耳朵长，他说，岸上一句闲话，第二天税单上就多一行。天没亮，他光着脚站在码头上等你，手里拎着一只湿透的草篮。他把你领上他的小船，一边收网，一边用下巴指着海岸，一个字也不肯在岸上说。码头的木板被海水泡得发黑，踩上去咯吱响。"
+speaker = "captain"
+mood = "cheerful"
+at = "chios"
+objectives = [{ kind = "at", at = "chios", text = "到希俄斯去" }]
+news = "希俄斯的玛蒂克村，一个老渔夫天没亮带着外来的船长出海，回来时两人一句话也不说。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_piri_reis_late" }], news = "兵工厂边上的老抄写员等不到希俄斯的消息，把那一条照老人的原稿抄了上去。" }
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_piri_reis_asked" }]
+text = "希俄斯南边的玛蒂克村。你在伊斯坦布尔问过写书的是谁，这句话比你的船先到了希俄斯。一个老渔夫知道那处小湾叫什么，可他只在船上说话。天没亮，他光着脚站在码头上等你，手里拎着一只湿透的草篮。他把你领上小船，一边收网，一边用下巴指着海岸，没有多问你一句。"
+
+[[tracks.chapters.choices]]
+key = "go_out"
+text = "跟他出海，把他指的每一处都记下。"
+next = "rhodes"
+reply = "他指一处，说一个名字。有两个名字，老人的稿子里写反了，他拿手指在船板上画出正确的那一个。回到岸上，他塞给你一小块玛蒂克树脂：“嚼着，别说话。”"
+check = { attr = "seamanship", base = 35, per = 6 }
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_chios_ok" }]
+fail = { next = "rhodes", effects = [{ kind = "flag", flag = "c13_request_piri_reis_half_chios" }], news = "玛蒂克村的渔夫说，那个外来的船长在小船上忙着舀水，只记了一半就上了岸。" }
+
+[[tracks.chapters.choices]]
+key = "greek"
+text = "用希腊话，在岸上的小酒馆里慢慢问。"
+next = "rhodes"
+reply = "他听你说的是本地话，就不怕税吏了。名字一个一个写在你的纸上，写得歪歪扭扭，有两个写到一半又划掉，重写了一遍，还画了个鱼钩做记号。"
+requires = [{ kind = "skill", skill = "lang_greek", ge = 60 }]
+hint = "他说的希腊话，你只听懂“税吏”两个字。"
+news = "希俄斯的玛蒂克村，一个老渔夫在岸上的小酒馆里，用希腊话把几个地名写给外来的船长。"
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_chios_ok" }]
+
+# 三、罗得：修士守着骑士时代的港图，要你先替他捎信。
+[[tracks.chapters]]
+key = "rhodes"
+title = "修士的条件"
+text = "罗得的旧港叫什么，城里只有一个东正教修士说得清。骑士团时代的港图在他的小屋里，挂在窗口，图边被烟熏成了褐色。窗台上晾着一串干了的橄榄核，他一个一个数过去，数完才抬头看你。他说可以告诉你，但你得先替他捎一封信到坎迪亚的修道院，给他多年不见的师兄。他把信推过来，封口上只按了一个印，印是他自己刻的。"
+speaker = "captain"
+mood = "mystic"
+at = "rhodes"
+objectives = [{ kind = "at", at = "rhodes", text = "到罗得去" }]
+news = "罗得旧港边的修士，把一张骑士时代的港图给一个外来的船长看了一眼。"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_piri_reis_late" }], news = "罗得的修士说，那个答应替他捎信的船长，到现在也没露面，那张骑士时代的港图还挂在窗口上。" }
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "答应捎信。"
+next = "candia_letter"
+reply = "他把信用蜡封好，又在旧港图上指给你看：老人稿子里那座塔的名字，是骑士们叫的，本地人另有叫法。他说完，把封好的信压进你手里，“别让税吏看见。”"
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_monk_letter" }]
+
+[[tracks.chapters.choices]]
+key = "read_chart"
+text = "不捎信，请他让你看一眼旧港图。"
+next = "candia"
+reply = "他犹豫了一下，把图摊开。你一眼看出那座塔的方位标反了，指给他看，连旁边的罗盘线也歪了一根。他拿指甲刮了刮那处墨迹，愣住，又笑了：“那你也不必替我捎信了。”"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "那张旧图上的记号，你一个也认不得。"
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_chart_read" }]
+
+# 四之一、坎迪亚（没有信）：港务官不许外国船放铅坠，威尼斯人怕人知道港口的深浅。
+[[tracks.chapters]]
+key = "candia"
+title = "港务官要钱"
+text = "坎迪亚的港务官不许外国船在港里放铅坠测水深。威尼斯人怕奥斯曼人知道港口的深浅，连渔船的桨声都要记在账上。你说是替一本书测的，他问是哪本书，你说出《海事之书》，他的脸色就变了。他把账册翻到另一页，笔尖点了点一个数字，没说是多少，只抬眼看着你身后的水手。账房的墨水瓶盖没拧紧，屋里一股酸味。"
+speaker = "captain"
+mood = "tense"
+at = "candia"
+objectives = [{ kind = "at", at = "candia", text = "到坎迪亚去" }]
+news = "坎迪亚港里，一个外国船长放铅坠测水深，港务处的书记在旁边记数，灯笼挂得很低。"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_piri_reis_late" }], news = "坎迪亚港务处的人说，有个替一本奥斯曼书测水深的船长，后来没再来，铅坠还留在书记的抽屉里。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "付一笔“测量费”。"
+next = "back"
+reply = "他收了钱，让一个小吏陪着你。你放一次铅坠，他记一次，记完把那张纸收走了。你只好把数字背下来，一个一个在心里默念，念到第三遍才记住。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "港务官要的数，你的钱袋还凑不齐。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "flag", flag = "c13_request_piri_reis_candia_ok" },
+]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他讲：船长们进港出事，先倒霉的是港务官。"
+next = "back"
+reply = "他想了很久，说你这话有道理。他让你测，只测进港的那一段，别的地方不许碰，测完的数字要当面念给他听。他把账册翻到进港那一页，用红笔划了一道。"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_candia_ok" }]
+fail = { next = "back", effects = [{ kind = "flag", flag = "c13_request_piri_reis_half_candia" }], news = "坎迪亚港务处的人说，那个替奥斯曼书测水深的船长话太多，被请出了门。" }
+
+# 四之二、坎迪亚（带着信）：修士的信还在怀里，多一条送进修道院的路。
+[[tracks.chapters]]
+key = "candia_letter"
+title = "修道院的院长"
+text = "坎迪亚的港务官还是那一句：外国船不许在港里放铅坠。你怀里揣着罗得修士的信，蜡封还是完整的，信角被汗浸得发软。港务官问信是谁写的，你说是罗得的修士。他没有接话，手指在桌上敲了两下，又敲了两下，说这事要问修道院的院长。你听得出来，他是想把你推到修道院门口去。窗外的船一艘艘靠过来，缆绳在石头上磨出响。"
+speaker = "captain"
+mood = "tense"
+at = "candia"
+objectives = [{ kind = "at", at = "candia", text = "到坎迪亚去" }]
+news = "坎迪亚港务处里，一个外国船长揣着罗得修士的信，港务官说这事要问修道院的院长。"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_piri_reis_late" }], news = "坎迪亚的修道院门口，有人说罗得修士托带的那封信，蜡封还是完整的，一直没有送进门。" }
+
+[[tracks.chapters.choices]]
+key = "monk_route"
+text = "把信送到修道院，请院长出面。"
+next = "back"
+reply = "院长看完信，叹了口气，叫来他的外甥，港务处的书记。书记连夜带你在港里测了一圈，灯笼一盏接一盏，什么也没收，也没有记在那张纸上。"
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_candia_ok" }]
+
+[[tracks.chapters.choices]]
+key = "pay_letter"
+text = "付一笔“测量费”，信先不拿出来。"
+next = "back"
+reply = "他收了钱，把信推回你手边，看都没看一眼。小吏领你下到水边，每放一次铅坠，就在木牌上划一道。信还揣在你怀里，数字你自己记。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你的钱袋，够不上港务官开的价。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "flag", flag = "c13_request_piri_reis_candia_ok" },
+]
+
+[[tracks.chapters.choices]]
+key = "argue_letter"
+text = "不提信，只跟他讲：港里出了事，头一个被问罪的是港务官。"
+next = "back"
+reply = "他把账册合上，说你这话占了理。进港的那一段准你测，别处不许碰。信你收起来，他不想看。他说修道院的事归修道院管，港务处只管水深，话说得干脆。"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "flag", flag = "c13_request_piri_reis_candia_ok" }]
+fail = { next = "back", effects = [{ kind = "flag", flag = "c13_request_piri_reis_half_candia" }], news = "坎迪亚港务处里有人说，一个外国船长揣着修士的信来闹，话说到一半，被请了出去。" }
+
+# 五、誊到坎迪亚那一行：三处的名字交回去，老抄写员誊到坎迪亚那一行，手停了很久。
+[[tracks.chapters]]
+key = "back"
+title = "誊到坎迪亚那一行"
+text = "你把三处的名字和数字交给老抄写员，他一条一条誊上去。希俄斯的小湾，罗得的旧港，誊到坎迪亚那一行，他的笔停了停，手停了很久，才把数字写下去。墨还没干透，他拿袖口轻轻按了按。誊完，他从柜子底下抽出另一部抄本，推到你面前，纸角上还压着老人的那枚铅坠。抄本的封皮是旧布，布角磨出了毛边，里头的纸还是新的。老人的书一共抄了三部，这一部，给替它跑腿的人。"
+mood = "sad"
+at = "istanbul"
+objectives = [{ kind = "at", at = "istanbul", text = "回伊斯坦布尔去" }]
+news = "伊斯坦布尔兵工厂边上的老抄写员，续完了一部被处死的老船长的海书。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_piri_reis_late" }], news = "兵工厂边上的老抄写员，把《海事之书》的增订稿抄完了，有三处地名旁边画着小圈。" }
+
+[[tracks.chapters.variants]]
+key = "v1_both"
+when = [
+  { kind = "flag", flag = "c13_request_piri_reis_half_chios" },
+  { kind = "flag", flag = "c13_request_piri_reis_half_candia" },
+]
+text = "你把三处的名字和数字交给老抄写员，他一条一条誊上去。誊到希俄斯那一条，他只誊了半行，誊到坎迪亚那一行，又是半行。两处旁边都画着小圈，他说：“下一个船长再补。”他拿袖口按了按没干的墨。誊完，他从柜子底下抽出另一部抄本，推到你面前。抄本的布角磨出了毛边。老人的书一共抄了三部，这一部，给替它跑腿的人。"
+
+[[tracks.chapters.variants]]
+key = "v2_chios"
+when = [{ kind = "flag", flag = "c13_request_piri_reis_half_chios" }]
+text = "你把三处的名字和数字交给老抄写员，他一条一条誊上去。誊到希俄斯那一条，他只誊了半行，旁边画了个小圈，说“下一个船长再补”。罗得的旧港和坎迪亚的水深，他誊得又快又整齐，墨还没干，他就拿袖口去按。誊完，他从柜子底下抽出另一部抄本，推到你面前，纸角上还压着老人的那枚铅坠。抄本的布角磨出了毛边。老人的书一共抄了三部，这一部，给替它跑腿的人。"
+
+[[tracks.chapters.variants]]
+key = "v3_candia"
+when = [{ kind = "flag", flag = "c13_request_piri_reis_half_candia" }]
+text = "你把三处的名字和数字交给老抄写员，他一条一条誊上去。希俄斯的小湾、罗得的旧港都誊得整齐，誊到坎迪亚那一行，他只誊了半行，旁边画了个小圈，说“下一个船长再补”。他的手停了很久。墨还没干透，他拿袖口轻轻按了按。誊完，他从柜子底下抽出另一部抄本，推到你面前。抄本的布角磨出了毛边。老人的书一共抄了三部，这一部，给替它跑腿的人。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下抄本，带上船。"
+next = "done"
+reply = "他用布把抄本包好，嘴里念叨：“船上潮，别放在底舱。”又说：“他要是知道是谁跑的腿，会骂你多事。你把它揣在怀里，别让水手们瞧见封皮。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "reputation", faction = "ottoman", value = 2 },
+  { kind = "item", item = "piri_ms", qty = 1 },
+  { kind = "memory", memory = "mem-request_piri_reis-back", title = "增订稿的最后一页" },
+  { kind = "flag", flag = "c13_request_piri_reis_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "keep_arsenal"
+text = "请他把这部留在兵工厂的书库。"
+next = "done"
+reply = "他看着你，像在看一个傻子，又像在看老人年轻时。“好。书库的人不识货，我在扉页上写一行字，叫他们识。”他说完起身去开书库的门，门闩锈住了，他用肩膀顶了两下。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "reputation", faction = "ottoman", value = 3 },
+  { kind = "flag", flag = "c13_request_piri_reis_done" },
+  { kind = "flag", flag = "c13_request_piri_reis_left_in_arsenal" },
+]

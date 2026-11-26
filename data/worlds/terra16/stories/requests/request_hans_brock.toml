@@ -1,0 +1,137 @@
+# C13d 人物的请托：七户人家（request_hans_brock）。中文，Claude 写。
+# 人物：汉斯·布罗克 hans_brock（1492-07-04 生，男；吕贝克码头上最老的船长，势力 hanse，身份档 1）。cast 在 cast/story_europe.toml，日程 1553—1590 在吕贝克（lubeck）码头。
+# 类型：押运／带人（es）；3 章，offer → passage → arrive，终点 done / failed。
+# 报价：当面（T）。人物按日程在吕贝克，auto=false，玩家“问请托”（ask:request_hans_brock）启动；offer 章不写 at，objectives 为“在港里找到他”。
+# 窗口：报价与路上 1572-01-01 至 1585-06-30（offer 的 deadline 为窗口止日）；路上的 passage 章可以一直等；arrive 章在但泽（danzig）进行，deadline_days=90。
+# 依据·史实：北方七年战争（1563—70），吕贝克与丹麦一边打瑞典，汉萨商船被征去当战船；汉萨衰落，老船长们还守着汉萨的旗。但泽是汉萨城市，河边的大起重机是中世纪留下的（史实背景，不写具体年份的事件）。
+# 依据·原创：汉斯与七个水手、七个布袋与布袋上的名字、大副的家人、城外修院的洗衣女儿、旧油布外套都是原创。七个水手怎么死的只说“没回来”。
+# 待核：无（人物与事件均为原创；史实只到“北方战争”与“汉萨衰落”这一层）。
+# 秘密：cast 没写秘密，本请托无须处理。
+# 读的旗标：无。不读 c7_*；不写索尔维格，不写冰岛，不写格陵兰。C7 pair_hans_brock_solveig 的年份（1562—63、1570—71）都在本轨道开始之前。
+# 设的旗标：c13_request_hans_brock_accepted / declined / fifth（分支）/ lost（分支：路线排错，arrive 的变体读）/ done（终局）/ late（终局）。
+# 依赖：无 B10b 改名（lubeck、danzig 都是现有港口）；奖励物 oiled_sailor_coat（水手油布外套，items/items_outfit_02.toml）。
+# 缺省走向：offer 不在场就一直挂着，到 1585-06-30 走 failed，不写见闻（没人知道这件事没成）。passage 没有期限，玩家不去就停在那里。arrive 90 天内不到但泽，走 failed：他托人把六个袋子捎去，第五个自己揣着；好感 -3。
+# 回忆插画清单：
+#   mem-request_hans_brock-arrive（缝着名字的布袋）：一只旧布袋，袋口是新缝的线，绣着一个水手的名字，旁边搭着一件油布外套。
+
+[[tracks]]
+key = "request_hans_brock"
+name = "七户人家"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["hans_brock"]
+
+# 一、七个小布袋：1572 年起，人物在吕贝克码头，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "七个小布袋"
+text = "“把帽子摘了，这是汉萨的船。……好吧，坐。你打哪儿来？那边的人还认得我们的旗吗？”汉斯·布罗克坐在码头的小屋里，桅顶那面旗的旗角磨破了，他也没让人补。桌上摆着七个小布袋，每个袋口缝着一个名字，线是新的，布是旧的。“北方那几年，我的船被征去打瑞典人，七个人没回来。”他说话时不看你，手指一个一个摸过袋口。“汉萨没老，是别人的船太多了——可我老了。”他撑着桌子站起来，膝盖响了一声，“但泽有七户人家，我要一户一户当面交过去。你能载我去吗？”"
+speaker = "captain"
+mood = "sad"
+cast = ["hans_brock"]
+when = [{ kind = "date", from = [1572, 1, 1], to = [1585, 6, 30] }, { kind = "age", ge = 17 }, { kind = "alive", person = "hans_brock", value = true }]
+objectives = [{ kind = "person", person = "hans_brock", text = "在港里找到他" }]
+deadline = [1585, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应载他去但泽。"
+next = "passage"
+effects = [{ kind = "affinity", person = "hans_brock", value = 2 }, { kind = "flag", flag = "c13_request_hans_brock_accepted" }]
+reply = "他把七个布袋排成一排，一个一个念名字。念到第五个，他停了一下，把那个袋子往胸口揣了揣，才接着念下去。“明早的潮水你定。”"
+
+[[tracks.chapters.choices]]
+key = "ask_fifth"
+text = "问他：第五个是谁？"
+next = "passage"
+effects = [{ kind = "affinity", person = "hans_brock", value = 2 }, { kind = "flag", flag = "c13_request_hans_brock_accepted" }, { kind = "flag", flag = "c13_request_hans_brock_fifth" }]
+reply = "“我的大副。”他把那个袋子拿起来又放下，“他家里人搬走了，我不知道搬去了哪。”说完，他把七个袋子一起收拢，说明早在码头等你。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟你不往东。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_hans_brock_declined" }]
+reply = "他点点头，把布袋一个一个收进箱子，每收一个，先摸一下袋口的名字。箱盖合上时响得很重。“码头上还有别的船。”他说，语气像是在说给自己听。"
+
+# 二、谁在船上过了生日：去但泽的路上，他每晚讲一个水手。等三天以后才有话说。
+[[tracks.chapters]]
+key = "passage"
+title = "谁在船上过了生日"
+text = "去但泽的路上，汉斯每晚坐在舱口讲一个水手的事。谁会拉手风琴，一拉就停不下来；谁在船上过了二十岁生日，厨子给他烤了一块硬饼干，插了根蜡烛。“吹得最响的那个，就是不会唱。”他说完自己先笑，咳了半天才停。讲到第五个，他的声音低下去。大副怕猫，见了船上那只黄猫就绕着桅杆走。家里只剩一个女儿，战后搬走了，有人说去了但泽城外的修院，给人洗衣服。"
+speaker = "captain"
+mood = "sad"
+cast = ["hans_brock"]
+when = [{ kind = "alive", person = "hans_brock", value = true }, { kind = "date", from = [1572, 1, 1], to = [1585, 12, 30] }]
+objectives = [{ kind = "wait", days = 3, text = "航行三天" }]
+
+[[tracks.chapters.variants]]
+key = "fifth"
+when = [{ kind = "flag", flag = "c13_request_hans_brock_fifth" }]
+text = "去但泽的路上，汉斯每晚坐在舱口讲一个水手的事。谁会拉手风琴，一拉就停不下来；谁在船上过了二十岁生日，厨子给他烤了一块硬饼干，插了根蜡烛。讲到第五个，他先不开口，把舱口的油灯挑亮了一点。“我的大副，”他说，“怕猫。见了船上那只黄猫就绕着桅杆走。家里只剩一个女儿，战后搬走了，有人说去了但泽城外的修院，给人洗衣服。”"
+
+[[tracks.chapters.choices]]
+key = "plan"
+text = "跟他商量：先交另外六户，最后去修院打听。"
+next = "arrive"
+check = { attr = "stewardship", base = 35, per = 6 }
+effects = [{ kind = "affinity", person = "hans_brock", value = 3 }]
+reply = "他照你说的排好了顺序，把第五个袋子单独放进胸前的口袋，用手按了按，像是怕它飞了。“先六户，后修院。”他念叨了两遍，“这个顺序我记得住。”"
+
+[tracks.chapters.choices.fail]
+next = "arrive"
+effects = [{ kind = "affinity", person = "hans_brock", value = -2 }, { kind = "flag", flag = "c13_request_hans_brock_lost" }]
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "只听他讲，不插话。"
+next = "arrive"
+effects = [{ kind = "affinity", person = "hans_brock", value = 2 }]
+reply = "他讲完第七个，天已经亮了。他说讲了一遍，比交钱还累，然后把最后一个袋子压在枕头底下，倒头就睡。"
+
+# 三、缝在袋上的名字：到但泽，一户一户敲门；城外修院里，洗衣的女儿认出了父亲的名字。
+[[tracks.chapters]]
+key = "arrive"
+title = "缝在袋上的名字"
+text = "但泽城里，汉斯拄着拐，一户一户敲门，你跟在后面。头一户的寡妇已经改了嫁，接过袋子，说：“给孩子做件冬衣。”第二户的老父亲不肯收，说钱换不回儿子，把袋子推回汉斯怀里。汉斯没劝，只把袋口的线头理平，又放回老人手上：“拿着吧，名字是他自己的。”老人攥着，半天没松。城外的修院里，洗衣房的门开着，水汽一股一股往外冒。一个女人从晾衣绳后面走出来，看见袋口的名字，把手在围裙上擦了又擦，念出了她父亲的名字。"
+speaker = "captain"
+mood = "tender"
+cast = ["hans_brock"]
+when = [{ kind = "alive", person = "hans_brock", value = true }, { kind = "date", from = [1572, 1, 1], to = [1585, 12, 30] }]
+at = "danzig"
+deadline_days = 90
+
+[[tracks.chapters.variants]]
+key = "lost"
+when = [{ kind = "flag", flag = "c13_request_hans_brock_lost" }]
+text = "但泽城里，汉斯拄着拐，一户一户敲门，你跟在后面。路线是你排错的，城里多绕了一天，汉斯一句没怪你，只是每到一户门口，都先看一眼天色。头一户的寡妇已经改了嫁，接过袋子，说：“给孩子做件冬衣。”第二户的老父亲不肯收，说钱换不回儿子，把袋子推回汉斯怀里。汉斯没劝，只把袋口的线头理平，又放回老人手上：“拿着吧，名字是他自己的。”老人攥着，半天没松。城外的修院里，洗衣房的门开着，水汽一股一股往外冒。一个女人从晾衣绳后面走出来，看见袋口的名字，把手在围裙上擦了又擦，念出了她父亲的名字。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "hans_brock", value = -3 }, { kind = "flag", flag = "c13_request_hans_brock_late" }, { kind = "letter", person = "hans_brock", text = "我托人把六个袋子捎去了。第五个，我还揣着。" }]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "退到门外，让汉斯自己跟她说。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "hans_brock", value = 8 }, { kind = "fame", value = 2 }, { kind = "item", item = "oiled_sailor_coat", qty = 1 }, { kind = "flag", flag = "c13_request_hans_brock_done" }, { kind = "memory", memory = "mem-request_hans_brock-arrive", title = "缝着名字的布袋" }]
+news = "但泽城外的修院里，一个拄拐的吕贝克老船长把最后一个布袋交到洗衣女人手上，门外的人都听见了哭声。"
+reply = "过了很久，汉斯出来了，眼睛是红的。他说她问父亲最后在船上说了什么，他照实说了，连那句没人听懂的笑话也说了。回吕贝克的路上，他把身上那件旧油布外套脱下来给你，说他不出海了，这件你穿得上。"
+
+[[tracks.chapters.choices]]
+key = "go_in"
+text = "陪他一起进去，替他把话说完。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "hans_brock", value = 6 }, { kind = "fame", value = 2 }, { kind = "item", item = "oiled_sailor_coat", qty = 1 }, { kind = "flag", flag = "c13_request_hans_brock_done" }]
+news = "但泽城外的修院里，一个吕贝克老船长替水手把话说完，洗衣的女人收下了父亲的布袋。"
+reply = "你替他把话说完，说到大副怕猫的那一段，那女人先笑了一下，又哭了。她收下袋子，问汉斯还出不出海。汉斯说不出了。回去以后，他把旧油布外套给了你。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "hans_brock", value = 4 }, { kind = "fame", value = 2 }, { kind = "item", item = "oiled_sailor_coat", qty = 1 }, { kind = "flag", flag = "c13_request_hans_brock_done" }]
+news = "但泽城外的修院里，一个外乡船长替吕贝克老人说话，话说得颠三倒四，洗衣的女人先红了眼，反过来拍了拍老船长的手。"

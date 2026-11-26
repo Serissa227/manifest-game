@@ -1,0 +1,61 @@
+# 海峡上的两条船（tie_noel_tariq）——主角之间的关系轨道（NPC—NPC），标签：无恋爱（恋爱归 C7；NPC 主角之间不写恋情）。
+# 人物：诺埃尔·德·卡德纳（noel，塔里法骑士团的骑士；性别与来历本文件不写、不暗示，只叫“骑士”或名字）；
+#       塔里克·加尔纳蒂（tariq，阿尔及尔的海盗，规矩是只劫货、不劫人，不喝酒，爱用薄荷茶待客）。
+# 轨道：tie_noel_tariq（request，auto=true，start t1_malta_boat）。两章，都是见闻（rumor），没有选项，窗口一到走 default。
+#       门槛：两人的 c12_voyage_* 都为 false 且 upbringing_graduated（两人都不是玩家时才跑）。
+#       只写见闻：不用 heart、relation、tie、bond 效果，两人的关系与恋爱都归 C7。
+# 依据（史实）：1565 年马耳他之围（五月至九月，圣艾尔莫堡失守，比尔古一带守住，土耳其舰队退走）；
+#       1580 年九月塞万提斯在阿尔及尔被三一会赎回，十月前后乘船回西班牙；他在勒班陀失去了左手，正文只写“手残了的西班牙兵”，不点名。
+# 原创：两人在船上煮的薄荷茶与糖、渔夫与挑夫的转述、塔里克的乌德琴与码头上的争执、旧布包。
+# 待核：马耳他围城后期湾心的小船只用传闻口吻（没人能证实），不写具体的日子。
+# 共享旗标：读 c12_voyage_noel、c12_voyage_tariq（均为 false）、upbringing_graduated；变体读 h22_malta_siege_ottoman_takes_malta。写：无。
+# 等待的包：C10 给 h22_malta_siege_ottoman_takes_malta（马耳他失守）的 key；整合方把 cast/ties.toml 的 noel_tariq 关系的 story 指向本轨道（key 不变）。
+# HIST 占位清单：h22_malta_siege_ottoman_takes_malta（第一章的变体，缺省是守住）。
+# 回忆插画清单：无（本轨道不设回忆）。
+# 写法注意：变体只覆写 text，见闻 news 不随变体变化，所以 news 写成两种结果都说得通的话。
+
+[[tracks]]
+key = "tie_noel_tariq"
+name = "海峡上的两条船"
+kind = "request"
+start = "t1_malta_boat"
+auto = true
+cast = ["noel", "tariq"]
+
+# 第一幕（1565）：马耳他围城散了以后，湾心的一壶茶。门槛章，只有两人都不是玩家时才跑。
+[[tracks.chapters]]
+key = "t1_malta_boat"
+title = "湾心的一壶茶"
+text = "马耳他的围城散了。马尔萨姆谢特湾的渔夫看见，那夜无风，湾心停着一条小船，船上坐着两个仇人：一个系红缎带的骑士，一个系红腰带的阿尔及尔海盗。海盗不喝酒，煮的是薄荷茶，糖放得多，勺子都能立住。海盗盯着骑士的脸看，骑士的手就按上了剑柄。渔夫听见骑士说：“剑还行，就是脚太慢。”海盗推过茶杯：“先喝，骂完再说。”喝到天快亮，一人划一支桨，把船划回岸，各上各的船。"
+stage = "rumor"
+window = [[1565, 9, 15], [1565, 12, 31]]
+at = "malta"
+cast = ["noel", "tariq"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c12_voyage_noel", value = false }, { kind = "flag", flag = "c12_voyage_tariq", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "马耳他的仗打完以后，马尔萨姆谢特湾的渔夫说，湾心有两个仇人同坐一条小船，居然没打起来。"
+
+[tracks.chapters.default]
+next = "t2_algiers_ship"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "falls"
+when = [{ kind = "flag", flag = "h22_malta_siege_ottoman_takes_malta" }]
+text = "马耳他丢了以后，有人看见那个阿尔及尔海盗夜里划一条小船，从比尔古的废墟里把一个系红缎带的骑士接出来，送上去西西里的渔船。渔夫说，一路上两人一句话也没说，只有海盗的乌德琴在船尾响了一夜。"
+
+# 第二幕（1580）：赎俘之后，阿尔及尔码头上送走一个关了五年的人。见闻，无选项。
+[[tracks.chapters]]
+key = "t2_algiers_ship"
+title = "送上船的人"
+text = "阿尔及尔的码头上有人讲，那个赎俘的骑士和那个只劫货的海盗，一起把一个手残了的西班牙兵送上了回西班牙的船。那个兵抱着一只旧布包，在城里关了五年，跑了好几回都没跑成。船要开的时候，海盗在码头上弹了一段乌德琴，骑士站在旁边，一直等到看不见帆。挑夫说：“骑士嫌海盗弹得难听，海盗嫌骑士站得难看，吵着吵着，帆就没了。”"
+stage = "rumor"
+window = [[1580, 10, 1], [1580, 12, 31]]
+at = "algiers"
+cast = ["noel", "tariq", "miguel_de_cervantes"]
+mood = "tender"
+news = "阿尔及尔的挑夫说，那个赎俘的骑士和那个只劫货的海盗，一起把一个手残了的西班牙兵送上了船。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []

@@ -1,0 +1,201 @@
+# 请托：卖出去的旧注本（request_sanjonishi_kineda）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：三条西公条（sanjonishi_kineda，1487 年生，男），前右大臣，京里最有名的《源氏物语》讲师，年事已高。势力 imperial_court，身份档 2。cast：cast/historical_07_japan.toml。
+# 类型：说服（persuade）。任务单写三章（offer / persuade / result），文件里是五章：offer（学生带来的信）、persuade（茶会上的摆设）、
+#   result（朱笔的那几处，借到的一支）、result_bought（留在京里的五册，买回的一支）、result_refused（焦边的那一页，没借到的一支）；终点 done / failed。
+#   多出两章是因为任务单要 result 的 thanks 按 lent / bought / refused 拆开，decline_gift 又要 requires 读 _refused——
+#   这几面旗标都是本轨道在 persuade 的别的分支上设的，用 requires 读会让选项在另一条路上永远亮不起来。
+#   所以 persuade 按结果分路：说动借书与接连歌走 result，买下走 result_bought，说服失败走 result_refused；三章各两个选项，各有各的正文与回应。
+#   分支旗标 _lent / _refused / _bought 照任务单设，只作记录，不再拿来挡选项。
+# 报价：L（来信）。公条在京里，本人不下堺；出面的是他的学生，一个青侍（只写身份，不新建 cast）。auto=true，offer 写 at=sakai 与 at 目标，
+#   family=c13_offer_sakai、冷却 20 天；when 为日期起点 1557-03-01 与玩家满 17 岁；名声门槛 0。offer 的 deadline=1562-06-30，timeout 直接 failed，不写见闻。
+#   请托人只在信里说话：offer 里学生转交的信、persuade 超时的来信、result 三章里学生带回的信与 result_refused 的来信。
+# 进行中：persuade 写 at=sakai，目标“等三天、在堺”，deadline_days=90，超时 failed、旗标 _late、公条来信一封（≤120 字）。
+#   result 与 result_bought 目标“等三十天、在堺”（书送去京里再送回，或学生回京再下来），result_refused 只要在堺（学生就在书肆门口等）；
+#   三章 deadline_days=120，超时 failed、旗标 _late，不写来信与见闻（借去的书照样还回壁龛，买回的书照样留在京里）。
+#   普通章（无 stage）不写 window 与 default；任务单的 window 只是规划用的出现区间。offer 以后每章 when 写 alive。
+#   最晚的接下在 1562-06-30，persuade 最迟 1562-09 末，result 各章最迟落在 1563 年 1 月下旬（期限天数照任务单）；正文不写他 1563 年以后的事，
+#   result 各章的 when=alive 会在他去世后挡住正文，到期只走 timeout（不写来信）。
+#   任务单写 persuade 超时只给旗标与来信，这里照写，不另扣好感。
+# 检定：persuade 的 lend 为 eloquence 一般档（base 20 / per 7），失败走 result_refused；引擎在失败时显示 fail 分支的 news，所以 fail.news 写成带地名、说清结果的闲话。
+#   renga 是技能门槛（poetry ≥ 60），buy 先 requires 现钱 ≥ 1200。
+# 依据·史实（出处，正文只从物件与人物嘴里透出）：三条西实隆、公条父子的源氏学，《细流抄》出自他们父子之手（研究笔记）；实隆参与过宗祇《新撰菟玖波集》的编成；
+#   公条 1563 年卒。堺的唐物商在茶会上陈设名物；开口神社在堺的市中。
+# 依据·原创：一部带实隆朱笔的旧注本（五册、蓝封面、第三册书角烧焦）被穷亲戚卖给堺的唐物商；“京里那年起大火，先老爷抱着跑出来”的来历；
+#   瘦青侍与他在书肆屋檐下的等候、地上画的书、朝西的茶室与青瓷香炉、题签的条件、连歌的上下句、二十年的磨墨、写错的一个字、扉页上教读法的小字。
+#   不写《源氏》哪一帖的考据，只写“第三册烧焦的那一页”。
+# 秘密：父亲传下的“古今传授”——本请托一字不提，见闻也不写。C7 的小督、菖的歌道线不碰。
+# 设的旗标：c13_request_sanjonishi_kineda_accepted（offer 接下）、_declined（offer 回绝，终局 failed）；
+#   分支旗标 _lent（说动借书、接连歌）、_bought（买下）、_refused（说服失败），共三面；
+#   终局旗标 _done（result、result_bought 的全部结局）、_failed（result_refused 的两个结局）、_late（persuade 与三个 result 章的超时）。每条路只设一面终局旗标。
+# 读的旗标：无。不读也不设任何 c7_ 旗标；无主线门禁（gate_main / variant_main 为空）。
+# 报酬：现金 1600，只在 result 或 result_bought 的结局付一次；买回那一支先花 1200 买书，结局这一笔 1600 里含了买书钱的偿还，
+#   所以买回的玩家净得 400——这是有意的：钱是公条拿给武家讲书的谢礼凑的，他“慢慢还”，一次还清，不多给。
+#   唯一物品 tsukuba_ms（《新撰菟玖波集》抄本），只在“收下连歌集”的两个结局给；把连歌集让给学生的结局不给物品，好感多 2。
+#   好感至多 +15（接下 +2、说动或接连歌 +3、让出连歌集 +10）；没借到的结局 -2。imperial_court 声望 +2、名声 +3、回忆一张，只在借到书并收下连歌集的结局给。
+#   来信两封：persuade 超时一封（≤120 字）、result_refused 的 describe 一封（≤300 字）。
+# 依赖：港口 sakai（ports_east_asia.toml）；技能 poetry（skills.toml，门槛 60）；物品 tsukuba_ms（items/books_13_east_asia.toml）；势力 imperial_court；人物 sanjonishi_kineda。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_sanjonishi_kineda-result「先父写错的一个字」：京里昏暗的书斋，老公卿伏在案上，一册蓝封面、书角焦黑的注本旁摊着自己的本子，笔停在一处朱笔边上。
+
+[[tracks]]
+key = "request_sanjonishi_kineda"
+name = "卖出去的旧注本"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sanjonishi_kineda"]
+
+# 一、学生带来的信：堺的书肆屋檐下，公条的学生等了大半天，递来一封讲了两页读法的信。
+[[tracks.chapters]]
+key = "offer"
+title = "学生带来的信"
+text = "堺，开口神社前一家书肆的屋檐下，一个瘦瘦的青侍站了大半天，见我上岸，迎上来递过一封信。他是三条西公条的学生。信写得很长，前半封讲的是信里一个字的读法，怕我念错，写了满满两页；翻到后半封才说正事：家里一部旧注本，被一个穷亲戚拿去，卖给了堺的唐物商，如今摆在人家的茶室里。“想必是看中了封面那点蓝。”这是信里给唐物商的唯一一句话。“书在谁手里都无妨。只是有几处朱笔，是先父晚年的字——我想再看一眼那几处。”他不要人偷，只想借回来看一个月；商人若不肯借，就买回来，钱他慢慢还。青侍等我看完，把信接回去折好，补了一句：“先生已经很久不出门了。”"
+mood = "sad"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "在堺的港里" }]
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "age", ge = 17 }]
+deadline = [1562, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "去见那个唐物商"
+next = "persuade"
+reply = "青侍蹲下，捡一截树枝在地上画：五册叠成一摞，封面是蓝的；第三册的书角缺了一块，他拿枝子涂黑。“这一角是烧的。京里那年起大火，先老爷抱着这一摞跑出来，就烧了这一角。”画完，他又把涂黑的那块抹了一抹，像是怕画得太重。"
+effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_accepted" }, { kind = "affinity", person = "sanjonishi_kineda", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这种事我插不上手"
+next = "failed"
+reply = "青侍低头道了谢，把信照原来的折痕折回去，揣进怀里，又退回书肆的屋檐下站着。码头上又有一条船在落帆，他踮起脚，往那边看了一眼。"
+effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_declined" }]
+
+# 二、茶会上的摆设：唐物商朝西的茶室里，注本翻在烧焦的那一页，香炉的烟往书上飘。
+[[tracks.chapters]]
+key = "persuade"
+title = "茶会上的摆设"
+text = "唐物商的茶室朝西，席子是新换的。壁龛前摊着那部注本，翻在第三册烧焦的那一页，旁边摆一只青瓷香炉，烟一缕一缕往书页上飘。行间有几处朱笔，细得像头发。商人给我点了一碗茶，说来他家喝茶的武家老爷，最爱看这一页：字认不全，焦边配着红字，好看。“那位亲戚开的价，我一文没还。书是我花钱买的，”他把茶碗转了半圈推过来，“借出去一个月，茶会上就少一样东西。”"
+speaker = "captain"
+mood = "tense"
+at = "sakai"
+objectives = [{ kind = "wait", days = 3, text = "等商人得空" }, { kind = "at", at = "sakai", text = "在堺" }]
+when = [{ kind = "alive", person = "sanjonishi_kineda", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_late" }, { kind = "letter", person = "sanjonishi_kineda", text = "学生在堺等了三个月，回来说你没去。不必了，书在哪里都是书。只是那间茶室朝西，下午的日头一照，朱笔褪得快——这话不必转告那位商人，他听不懂。" }] }
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "说动他借出去一个月"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我说，书在壁龛里摆一年，客人看来看去总是这一页；送回京里，让写朱笔的那一家看一个月，回来时这一页就有了来历，客人能多问几句。商人拨着香炉里的灰，想了好一会儿：“借可以。还回来的时候，附一张公条先生的亲笔题签，我挂在旁边。客人看见那一张，能多坐半个时辰。”"
+effects = [{ kind = "affinity", person = "sanjonishi_kineda", value = 3 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_lent" }]
+news = "堺的一个唐物商答应把茶室壁龛前的旧注本借给京里的公卿看一个月，利钱只要一张题签。"
+fail = { next = "result_refused", effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_refused" }], news = "堺有个唐物商，一个船主上门借他壁龛前的旧注本，话说了三遍，他摇摇头，说再谈就伤了和气，起身送客。" }
+
+[[tracks.chapters.choices]]
+key = "renga"
+text = "在他的茶会上接一句连歌，换这一个月"
+next = "result"
+requires = [{ kind = "skill", skill = "poetry", ge = 60 }]
+hint = "满座的武家老爷等着下句，你肚子里没有一句接得上"
+reply = "隔天的茶会上，上座的一位武家老爷指着焦边出了上句，说的是火。我接的下句，说的是从火里抱出这一摞书的人。满座的客人安静了一会儿，香炉的烟直直往上走。散了席，商人当场把注本包了起来，只托我带一句话：“请先生把这一句写成题签。书还回来那天，题签就挂在壁龛边上。”"
+effects = [{ kind = "affinity", person = "sanjonishi_kineda", value = 3 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_lent" }]
+news = "堺一个唐物商的茶会上，有个船主接了一句连歌，满座都不出声，主人散了席就把壁龛前的旧书包了起来。"
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "把它买回来"
+next = "result_bought"
+requires = [{ kind = "cash", ge = 1200 }]
+hint = "钱袋里的钱，不够把它从壁龛前请下来"
+reply = "商人把钱一串一串摆在席上，数了两遍，笑着说书本来就该回到会读的人手里。他亲自把五册叠好，拿一块旧袱纱包上，递过来时又补一句：“下回有好东西，还卖给你。”壁龛空了，他把香炉往正中挪了挪。"
+effects = [{ kind = "cash", value = -1200 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_bought" }]
+news = "堺的一个唐物商把茶室里摆了大半年的旧注本卖给了一个船主，如今他家壁龛前只剩一只青瓷香炉。"
+
+# 三、朱笔的那几处（借到的一支）：书还回了壁龛，学生带回公条的信和一部连歌集。
+[[tracks.chapters]]
+key = "result"
+title = "朱笔的那几处"
+text = "一个月后，青侍抱着包袱回到堺，包袱皮上沾着京里的土。五册注本一册不少，还回了唐物商的壁龛，旁边多挂了一张题签，墨还发亮。学生另带了公条给我的信。信里先说，替唐物商写题签，他这辈子头一回，写了三张才挑出一张不丢人的。再说那几处朱笔：他一处一处抄进自己的本子，抄到第三处，停了笔——先父写错了一个字。“先父在世时，我替他磨了二十年墨，竟没看出来。七十多岁了，才看出来。”信末附着一部连歌集，说是先父当年参与编过的，给我。“海上的人读这个，不必读懂，读个声音就好。”"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "wait", days = 30, text = "等注本从京里送回来" }, { kind = "at", at = "sakai", text = "回堺见那个学生" }]
+when = [{ kind = "alive", person = "sanjonishi_kineda", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_late" }] }
+
+[[tracks.chapters.choices]]
+key = "thanks"
+text = "收下连歌集"
+next = "done"
+reply = "青侍看我把书收好，小声说：“先生讲了一辈子书，很少送人书。”我翻开扉页，有一行小字，是公条的笔迹，教我第一首开头那个字该怎么念，旁边还注着：“船上人多半念错。”青侍看了一眼，忍着没笑出来。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "tsukuba_ms", qty = 1 }, { kind = "affinity", person = "sanjonishi_kineda", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_done" }, { kind = "memory", memory = "mem-request_sanjonishi_kineda-result", title = "先父写错的一个字" }]
+news = "堺一个唐物商家里摆着的旧注本，借给京里的老公卿看了一个月，又摆回壁龛上了。"
+
+[[tracks.chapters.choices]]
+key = "decline_gift"
+text = "连歌集请他留给学生"
+next = "done"
+reply = "我没接那部连歌集，请青侍回京时替我问先生一句：这一部，能不能留给他读。他的脸一下涨得通红，嘴张了两回，没说出话，最后把书贴着胸口抱好，冲我深深弯下腰去，半天没直起来。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "sanjonishi_kineda", value = 10 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_done" }]
+news = "堺开口神社前的书肆门口，有个京里来的青侍抱着一部连歌集，脸红到了耳根，逢人就说是一个船主让给他的。"
+
+# 三之二、留在京里的五册（买回的一支）：书不回来了，学生带回一个布包、一部连歌集和公条的信。
+[[tracks.chapters]]
+key = "result_bought"
+title = "留在京里的五册"
+text = "一个月后，青侍又站回书肆的屋檐下，背上的包袱轻了——那五册留在京里了。他带回一部连歌集、一个沉甸甸的布包，还有公条的信。布包是先生让带的：“上个月给武家讲书的谢礼。武家的钱，拿来赎书，正合适。”信里说，朱笔那几处他都抄进了自己的本子，抄到烧焦的那一页，搁了半天笔：先父在那里写错了一个字，“我七十多岁才看出来”。连歌集是给我的，先父当年参与编过。信的末尾，他又讲了一遍那个字的读法，比上回多写了半页。"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "wait", days = 30, text = "等学生从京里回来" }, { kind = "at", at = "sakai", text = "回堺见那个学生" }]
+when = [{ kind = "alive", person = "sanjonishi_kineda", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_late" }] }
+
+[[tracks.chapters.choices]]
+key = "thanks_bought"
+text = "收下连歌集和那个布包"
+next = "done"
+reply = "青侍把布包放进我手里，说先生数了三遍，一文也不许少，免得叫堺的商人笑话京里。他又看了看那部连歌集，像是有点舍不得，赶紧把手缩回袖子里。“扉页上本该写读法，先生写了一半就搁了笔，”他小声说，“说剩下的，叫你自己猜。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "tsukuba_ms", qty = 1 }, { kind = "affinity", person = "sanjonishi_kineda", value = 8 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_done" }]
+news = "堺书肆门口等船的那个京里青侍又下来了一趟，这回背着空包袱，说那部旧注本留在京里，不会再来堺了。"
+
+[[tracks.chapters.choices]]
+key = "decline_gift_bought"
+text = "布包收下，连歌集请他留给学生"
+next = "done"
+reply = "我只收下布包，把连歌集推回青侍手里：这一部，你留着读。他捧着书站了半天，才说他跟先生学了四年，读的书都是借的，从来没有一本是自己的。说完他又补了一句：“先生会说我不配。我先读着。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "sanjonishi_kineda", value = 10 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_done" }]
+news = "堺书肆门口那个京里来的青侍，抱着一部连歌集上了回京的船，说是先生要送一个船主的，船主又推回给了他。"
+
+# 三之三、焦边的那一页（没借到的一支）：学生还在屋檐下等，问我那一页看见了没有。
+[[tracks.chapters]]
+key = "result_refused"
+title = "焦边的那一页"
+text = "从唐物商家出来，青侍还站在书肆的屋檐下。见我两手空空，他没再往前迎，只把那封信从怀里摸出来，又看了一遍，像要从里头再找出一句别的话。街那头，唐物商那间朝西的茶室正照着下午的日头，壁龛前那一页大概还摊着，香炉的烟往上飘。青侍脚边的地上，那天拿树枝画的五册书还在，涂黑的那一角让人踩掉了一半。“先生只说看一眼。”他抬头问我，“那一页，你看见了吗？”"
+mood = "sad"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "回书肆门口找那个学生" }]
+when = [{ kind = "alive", person = "sanjonishi_kineda", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_sanjonishi_kineda_late" }] }
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照实说：他不肯借"
+next = "failed"
+reply = "青侍听完，点点头，说明天一早就走陆路回京。“先生问起来，我就说堺的商人不借书。”他顿了一下，“先生大概会说，本来就不该去借。”他把信揣好，朝我弯了弯腰，往客栈那边去了。"
+effects = [{ kind = "affinity", person = "sanjonishi_kineda", value = -2 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_failed" }]
+news = "堺开口神社前那个等船的京里青侍空着手回去了，唐物商壁龛前的旧书，还翻在烧焦的那一页。"
+
+[[tracks.chapters.choices]]
+key = "describe"
+text = "把那一页上的朱笔，照我看见的说给他听"
+next = "failed"
+reply = "我把那一页说给他听：朱笔有四处，都在行间，末一处挨着焦边，笔画往右斜；认得的几个字，我念给他听。青侍从怀里摸出纸笔，蹲在屋檐下一处一处记，记完念一遍给我听，又改了两个字。他说回京就念给先生。后来，京里来了一封信。"
+effects = [{ kind = "affinity", person = "sanjonishi_kineda", value = -2 }, { kind = "flag", flag = "c13_request_sanjonishi_kineda_failed" }, { kind = "letter", person = "sanjonishi_kineda", text = "学生把你说的那一页念给我听了。末一处朱笔往右斜——先父晚年手抖，写到行末，笔总往右走。是他的字。你念的读法错了两处，学生替你改了，我又改回一处，他也错了。书就留在堺罢。堺的人喝茶的时候，总得有点东西看。" }]
+news = "堺开口神社前的书肆门口，一个京里的青侍蹲在屋檐下，听一个船主讲一页书，一边听一边记了满满一张纸。"

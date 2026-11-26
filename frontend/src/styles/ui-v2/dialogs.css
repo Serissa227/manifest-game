@@ -1,0 +1,1696 @@
+/* 新界面（试用）——遭遇：海战（六角格与结算）、遭遇海盗、结局横幅。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ *
+ * 这一组实际铺开的画面（docs/UI-REDESIGN.md 第 8 节第 7 行，另加三处同样是“浮在舞台上的对话框”的画面）：
+ * 1. 遭遇海盗（BattleDialog，.pn-battle-modal）       5. 比赛对话框（contests/ContestDialog，.ct-）
+ * 2. 战术海战（panels/TacticalPanel，.pn-tactical）     6. 顶栏的故事面板（story/StoryPanel，.sp-）
+ * 3. 船名旁的“传说之船”小签（.legend-ship-tag）      7. 新手教程的说明框与圈出（tutorial/Tutorial，.tut-）
+ *    与传说之船的 CG 画廊（history/LoreGallery，.lg-modal）
+ * 共同的样子：纸面的对话框（16 px 圆角、深阴影、遮罩 66%），标题宋体、下面一道双细线；主按钮黄铜、危险操作印章红；
+ * 立绘与像素图是“书里的插图”（细框 + 一圈纸色衬边）；手机上（宽 < 720）对话框从底部升起、整宽，主要按钮贴在下沿（拇指够得到）。
+ * 令牌表里没有的颜色、以及令牌色加透明度（遮罩、外框、光晕），一律收在下面的“本组的局部颜色”（--dlg- 开头）；
+ * 其余规则（含动画帧）里只引用变量，不写 #rrggbb，也不写 rgb() / rgba() / hsl() / hsla()（dialogs-v2.test.tsx 检查）。
+ */
+
+/* ═════════════════════════ 本组的局部颜色 ═════════════════════════
+ * base.css 的令牌表（docs/UI-REDESIGN.md 第 3 节）之外、本组有意用到的颜色都在这一处定义并注明来历：
+ * - “传说之船”小签的灰紫；传说之船 CG 画廊的灰紫夜色底；
+ * - 战术海战棋盘的颜色：与棋盘本身的画法同色（styles/panels.css 的 .pn-hexmap，取自 art/palette.ts 的 sea / gold / white），
+ *   图例照着棋盘画，棋盘改色时这里一起改；
+ * - 与地基、交易所同一组的写死值（base.css 的主按钮悬停、印章红按钮、不可用的字色；market.css 一键操作 .mk-quick 的浅黄铜），
+ *   在这里集中引用一次，免得各条规则各写一遍、改的时候漏掉；
+ * - 半透明的颜色（遮罩、外框与插图的细框、印章红的描边、光晕、比赛卡背的斜纹）：多数是令牌色加一个透明度，
+ *   写成 rgba 字面量（不用 color-mix），计算样式与改版前逐字相同；各条后面注明取自哪个令牌。
+ */
+:root[data-ui="v2"] {
+  /* “传说之船”小签的灰紫 */
+  --dlg-violet: #5a4a78;
+  /* 传说之船 CG 画廊的底：夜色里带一点灰紫（灰紫 rgb(46, 38, 70) 60% → 遮罩的夜色 84%） */
+  --dlg-gallery-mist: rgba(46, 38, 70, 0.6);
+  --dlg-gallery-scrim: rgba(6, 11, 20, 0.84);
+  /* 战术海战的棋盘：框底（palette sea[1]，与 v1 的棋盘框同色）、格子（sea[2]）、可移动的格与我方的船（gold[3] #f5d66b 半透明）、
+     敌船（#c8373a 半透明）、射程内的敌船的虚线圈（gold[4]）、正在指挥的船的虚线圈（white） */
+  --dlg-board-frame: #123a66;
+  --dlg-board-hex: #1d5b92;
+  --dlg-board-reach: rgba(245, 214, 107, 0.55);
+  --dlg-board-mine: rgba(245, 214, 107, 0.3);
+  --dlg-board-enemy: rgba(200, 55, 58, 0.45);
+  --dlg-board-target: #fff3b0;
+  --dlg-board-selected: #fffaf0;
+  /* 浅黄铜：选中的底、一键操作（开火、接舷）——与交易所的“买满 / 全卖”同一组值 */
+  --dlg-wash: #f6e6c2;
+  --dlg-wash-hover: #f1d99f;
+  --dlg-wash-ink: #4d3407;
+  --dlg-wash-edge-hover: #8f6418;
+  /* 主按钮的边、悬停的底与边（与 base.css 的 .btn.primary 相同） */
+  --dlg-primary-edge: #a87a24;
+  --dlg-primary-hover: #eabd68;
+  --dlg-primary-edge-hover: #8f6418;
+  /* 印章红按钮的边、深色底上的字、印章红的浅底（与 base.css、feedback.css 相同） */
+  --dlg-seal-edge: #7e2018;
+  --dlg-on-deep: #fff8ee;
+  --dlg-seal-wash: #f8e3dc;
+  /* 次要按钮悬停时的纸、不可用按钮的字（与 base.css 的 button:hover、button:disabled 相同） */
+  --dlg-paper-hover: #fff;
+  --dlg-off-ink: #8e8170;
+
+  /* 遮罩：近黑的夜色 rgb(6, 11, 20)（与 --v2-shadow-* 的 rgb(5, 11, 20) 几乎相同）——对话框后面 66%、教程整屏 50%、教程圈出的外面 55% */
+  --dlg-scrim: rgba(6, 11, 20, 0.66);
+  --dlg-scrim-soft: rgba(6, 11, 20, 0.5);
+  --dlg-scrim-spot: rgba(6, 11, 20, 0.55);
+  /* 浮在舞台上的纸卡的外框（深色舞台上一道近黑的细线）：对话框 50%、棋盘框 60%、故事面板与教程说明框 55% */
+  --dlg-frame-edge: rgba(12, 18, 28, 0.5);
+  --dlg-board-edge: rgba(12, 18, 28, 0.6);
+  --dlg-popover-edge: rgba(12, 18, 28, 0.55);
+  /* 墨色（--v2-ink #241c15）加透明度：插图的细框（头目、海盗船 45%；比赛对手的小头像 40%）、
+     船况条的内线 8%、命令台上沿的投影 10% */
+  --dlg-art-edge: rgba(36, 28, 21, 0.45);
+  --dlg-art-edge-soft: rgba(36, 28, 21, 0.4);
+  --dlg-bar-inset: rgba(36, 28, 21, 0.08);
+  --dlg-dock-shadow: rgba(36, 28, 21, 0.1);
+  /* 印章红（--v2-seal #a3302a）加透明度：印章红描边按钮（战术海战的撤退）的边 60% */
+  --dlg-seal-outline: rgba(163, 48, 42, 0.6);
+  /* 亮黄铜（--v2-brass-hi #e3b056）加透明度：教程圈出外的一圈光（28%，呼吸到 16%） */
+  --dlg-brass-ring: rgba(227, 176, 86, 0.28);
+  --dlg-brass-ring-soft: rgba(227, 176, 86, 0.16);
+  /* 比赛卡背的斜纹：与深色底上的细线（--v2-night-line 的 rgb(226, 190, 120)）同色，平时 14%、悬停 20% */
+  --dlg-card-stripe: rgba(226, 190, 120, 0.14);
+  --dlg-card-stripe-hover: rgba(226, 190, 120, 0.2);
+}
+
+/* ═════════════════════════ 0. 对话框共用：遮罩与纸卡 ═════════════════════════ */
+:root[data-ui="v2"] .pn-battle-modal,
+:root[data-ui="v2"] .ct-backdrop {
+  background: var(--dlg-scrim);
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-battle-body,
+:root[data-ui="v2"] .ct-dialog {
+  color: var(--v2-ink);
+  background-color: var(--v2-paper-0);
+  background-image: none;
+  border: 1px solid var(--dlg-frame-edge);
+  border-image: none;
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  /* 不改 image-rendering：v1 的 .modal-body 为像素木框设了 pixelated，里面的 Q 版小人、立绘与像素图都继承它；
+     纸面没有木框了，但插图要与 v1 一像素不差（docs/UI-REDESIGN.md 第 0 节），所以照旧继承 */
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+
+/* ═════════════════════════ 1. 遭遇海盗 ═════════════════════════ */
+:root[data-ui="v2"] .pn-battle-modal .pn-battle-body {
+  --pn-ink: var(--v2-ink);
+  --pn-muted: var(--v2-ink-3);
+  width: min(600px, 100%);
+  max-width: min(600px, calc(100vw - 32px));
+  padding: 24px 28px 20px;
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-battle-title {
+  margin: 0 0 4px;
+  padding: 0 0 12px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.12em;
+  text-align: left;
+  color: var(--v2-seal);
+  text-shadow: none;
+  border-bottom: 3px double var(--v2-line-strong);
+}
+/* 每一次遭遇不是卡片套卡片：平铺在对话框里，几次遭遇之间一道细线 */
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter.card {
+  margin: 16px 0 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter + .pn-encounter {
+  padding-top: 16px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter-art {
+  align-items: flex-end;
+  gap: 20px;
+}
+/* 头目与海盗船是插图：细框 + 一圈纸色衬边 */
+:root[data-ui="v2"] .pn-battle-modal .pn-portrait.iron,
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter-ship {
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 1px solid var(--dlg-art-edge);
+  border-radius: var(--v2-r-md);
+  box-shadow:
+    0 0 0 4px var(--v2-paper-1),
+    0 0 0 5px var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter-leader {
+  gap: 10px;
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter-leader figcaption {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--v2-seal);
+}
+/* 人名下面的原文小行（BiName 的 .bi-name-sub）：i18n.css 给的是 0.65em、不透明度 0.72——在 13 px 的名字下只有 8.5 px、
+   对比不到 AA。本组的对话框里一律 12 px（字号下限）、不透明、ink-3（纸面上 5.2 : 1） */
+:root[data-ui="v2"] .pn-battle-modal .bi-name-sub,
+:root[data-ui="v2"] .pn-tactical .bi-name-sub,
+:root[data-ui="v2"] .ct-dialog .bi-name-sub,
+:root[data-ui="v2"] .sp-panel .bi-name-sub {
+  margin-top: 2px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.3;
+  color: var(--v2-ink-3);
+  opacity: 1;
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-encounter-line {
+  margin: 16px 0 14px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+/* 两个选择：等宽两栏，按钮下面一句“会发生什么” */
+:root[data-ui="v2"] .bt-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+:root[data-ui="v2"] .bt-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+:root[data-ui="v2"] .bt-choice > .btn {
+  width: 100%;
+  min-height: var(--v2-h-lg);
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+:root[data-ui="v2"] .bt-choice-hint {
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-battle-modal .pn-battle-body > .sub {
+  margin: 18px 0 0;
+  padding-top: 12px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  border-top: 1px solid var(--v2-line);
+}
+
+/* ═════════════════════════ 2. 战术海战 ═════════════════════════ */
+:root[data-ui="v2"] .pn-tactical .pn-battle-head {
+  gap: 6px;
+  margin: 0 0 4px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .pn-tactical > .sub {
+  margin: 0 0 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+}
+/* 棋盘：深海色的底、圆角细框（不再是木框） */
+:root[data-ui="v2"] .pn-tactical .pn-hexframe {
+  overflow: hidden;
+  background: var(--dlg-board-frame);
+  border: 1px solid var(--dlg-board-edge);
+  border-radius: var(--v2-r-lg);
+  box-shadow:
+    inset 0 0 0 1px var(--v2-night-line),
+    var(--v2-shadow-1);
+}
+/* 图例：三种记号，与棋盘上的画法一样 */
+:root[data-ui="v2"] .bt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .bt-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+:root[data-ui="v2"] .bt-swatch {
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: var(--dlg-board-hex);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .bt-swatch::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+}
+:root[data-ui="v2"] .bt-swatch.is-move::before {
+  background: var(--dlg-board-reach);
+  clip-path: polygon(25% 2%, 75% 2%, 100% 50%, 75% 98%, 25% 98%, 0 50%);
+}
+:root[data-ui="v2"] .bt-swatch.is-target::before {
+  background: var(--dlg-board-enemy);
+  border: 2px dashed var(--dlg-board-target);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .bt-swatch.is-selected::before {
+  background: var(--dlg-board-mine);
+  border: 2px dashed var(--dlg-board-selected);
+  border-radius: 50%;
+}
+/* 双方船只：一船一行；我方左边一道黄铜线、海盗一道印章红；沉没 / 被俘的划掉、变淡 */
+:root[data-ui="v2"] .pn-tactical .pn-units {
+  margin: 12px 0 0;
+  padding: 0;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row {
+  grid-template-columns: 28px minmax(0, 1fr) 112px;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.45;
+  border-bottom: 1px solid var(--v2-line);
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row.mine {
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row.enemy {
+  color: var(--v2-seal);
+  box-shadow: inset 3px 0 0 var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row.gone {
+  opacity: 1;
+  color: var(--v2-ink-3);
+  background: var(--v2-paper-1);
+  box-shadow: inset 3px 0 0 var(--v2-line);
+}
+/* 耐久：6 px 的圆头细条（不再是像素分段条） */
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-bar {
+  height: 8px;
+  min-width: 0;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: inset 0 0 0 1px var(--dlg-bar-inset);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-bar > i {
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-bar::after {
+  display: none;
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-tone-hp.ok {
+  --bar: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-tone-hp.warn {
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-tactical .pn-units .pn-tone-hp.bad {
+  --bar: var(--v2-seal);
+}
+/* 命令台：贴在窗口下沿（窗口滚动时也一直在），第一排转向，第二排开火 / 接舷、撤退、结束回合 */
+:root[data-ui="v2"] .pn-tactical .bt-dock {
+  position: sticky;
+  bottom: -24px; /* 滚动区（窗口内容区）的下内边距：Chromium 的 sticky 以内容框为界，要抵消它才能贴住下沿 */
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto repeat(6, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+  margin: 12px -20px 0;
+  padding: 12px 20px 16px;
+  background: var(--v2-paper-1);
+  border-top: 1px solid var(--v2-line-strong);
+  box-shadow: 0 -8px 18px var(--dlg-dock-shadow);
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock > .pn-orders,
+:root[data-ui="v2"] .pn-tactical .bt-dock > .row {
+  display: contents;
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock .pn-orders-label {
+  grid-column: 1;
+  padding-right: 4px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock .btn {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock .pn-facing {
+  gap: 4px;
+  padding: 0 6px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock .pn-glyph {
+  margin-right: 0;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-brass-ink);
+}
+/* 开火、接舷：行内的一键操作（浅黄铜底 + 黄铜描边），占三格 */
+:root[data-ui="v2"] .pn-tactical .bt-dock .pn-orders > .btn:not(.pn-facing) {
+  grid-column: span 3;
+  font-weight: 600;
+  color: var(--dlg-wash-ink);
+  background: var(--dlg-wash);
+  border-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock .pn-orders > .btn:not(.pn-facing):hover:not(:disabled) {
+  background: var(--dlg-wash-hover);
+  border-color: var(--dlg-wash-edge-hover);
+}
+/* 撤退：印章红的描边按钮（不与“结束回合”抢眼）；结束回合：本窗口唯一的主按钮 */
+:root[data-ui="v2"] .pn-tactical .bt-dock > .row > .btn.danger {
+  grid-column: 4 / 6;
+  color: var(--v2-seal);
+  background: var(--v2-paper-2);
+  border-color: var(--dlg-seal-outline);
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock > .row > .btn.danger:hover:not(:disabled) {
+  color: var(--dlg-on-deep);
+  background: var(--v2-seal);
+  border-color: var(--dlg-seal-edge);
+}
+:root[data-ui="v2"] .pn-tactical .bt-dock > .row > .btn.primary {
+  grid-column: 6 / 8;
+  font-size: var(--v2-fs-lg);
+}
+/* 战报：一条一行，新的在上；回合数是小标签 */
+:root[data-ui="v2"] .pn-tactical .pn-battle-log {
+  max-height: 220px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--v2-fs-md);
+  line-height: 1.5;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-tactical .pn-battle-log li {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-tactical .pn-battle-log li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn-tactical .pn-battle-log small {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 宽窗口（桌面的大窗口）：棋盘在左，双方船只与战报在右，命令台横贯在下——一屏里同时看得到棋盘、船况与命令 */
+:root[data-ui="v2"] .gw-body:has(> .pn-tactical) {
+  container-type: inline-size;
+}
+@container (min-width: 880px) {
+  :root[data-ui="v2"] .pn-tactical {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    column-gap: 20px;
+    align-items: start;
+  }
+  :root[data-ui="v2"] .pn-tactical > .pn-battle-head,
+  :root[data-ui="v2"] .pn-tactical > .sub {
+    grid-column: 1 / -1;
+  }
+  :root[data-ui="v2"] .pn-tactical > .pn-hexframe {
+    grid-column: 1;
+    grid-row: 3 / 5;
+  }
+  :root[data-ui="v2"] .pn-tactical > .bt-legend {
+    grid-column: 1;
+    grid-row: 5;
+  }
+  :root[data-ui="v2"] .pn-tactical > .pn-units {
+    grid-column: 2;
+    grid-row: 3;
+    margin-top: 0;
+  }
+  :root[data-ui="v2"] .pn-tactical > .pn-battle-log {
+    grid-column: 2;
+    grid-row: 4 / 6;
+    margin-top: 12px;
+    max-height: 300px;
+    overflow: auto;
+  }
+  :root[data-ui="v2"] .pn-tactical > .bt-dock {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+  /* 右栏窄：船名与数字一行，耐久条在下一行 */
+  :root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row {
+    grid-template-columns: 24px minmax(0, 1fr);
+    row-gap: 4px;
+    padding: 8px 12px;
+  }
+  :root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row .pn-bar {
+    grid-column: 2;
+  }
+}
+
+/* ═════════════════════════ 3. 船名旁的“传说之船”小签 ═════════════════════════ */
+:root[data-ui="v2"] .legend-ship-tag {
+  padding: 0 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.08em;
+  color: var(--dlg-on-deep);
+  background: var(--dlg-violet);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+}
+
+/* 传说之船的 CG 画廊（history/LoreGallery）：画廊原来与一个已经删掉的对话框共用 .lg-modal、.lg-head、.lg-main，
+   那边的新界面规则一直作用在画廊上——灰紫夜色的底、标题靠左且下面一道双细线、大图与说明两栏之间 24 px。
+   那个对话框删掉以后，把实际生效的这几条原样补在这里，画廊的样子不变（旧界面的那几条在 styles/lore.css） */
+:root[data-ui="v2"] .lg-modal {
+  background: radial-gradient(ellipse at 50% 42%, var(--dlg-gallery-mist), var(--dlg-gallery-scrim));
+}
+:root[data-ui="v2"] .lg-modal .lg-head {
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 0;
+  margin: 0 0 16px;
+  padding: 0 0 12px;
+  border-bottom: 3px double var(--v2-line-strong);
+}
+:root[data-ui="v2"] .lg-modal .lg-main {
+  gap: 24px;
+}
+
+/* ═════════════════════════ 4. 顶栏的故事面板 ═════════════════════════ */
+/* 顶栏的故事面板不是 .modal-body：在这里把语义变量指向纸面（否则表单的小字取到深色底上的浅色） */
+:root[data-ui="v2"] .sp-panel {
+  --text: var(--v2-ink);
+  --muted: var(--v2-ink-2);
+  --heading: var(--v2-ink);
+  --accent: var(--v2-seal);
+  --line: var(--v2-line);
+  --line-strong: var(--v2-line-strong);
+  --panel: var(--v2-paper-1);
+  --up: var(--v2-up);
+  --down: var(--v2-down);
+  --accent-bg: var(--v2-brass-hi);
+  --accent-fg: var(--v2-ink);
+}
+
+/* ═════════════════════════ 5. 比赛对话框 ═════════════════════════ */
+:root[data-ui="v2"] .ct-dialog {
+  width: min(720px, calc(100vw - 32px));
+  max-height: calc(var(--vh100, 100vh) - 48px);
+  padding: 22px 26px 18px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-head {
+  align-items: baseline;
+  gap: 6px 12px;
+  margin: 0 0 12px;
+  padding-bottom: 12px;
+  border-bottom: 3px double var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ct-dialog .ct-head h3 {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-kindname {
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ct-dialog .ct-auto {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+/* 对手：小头像 + 名字 */
+:root[data-ui="v2"] .ct-dialog .ct-rivals {
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0 0 12px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ct-dialog .ct-rivals li {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-rivals .portrait-art,
+:root[data-ui="v2"] .ct-dialog .ct-rivals .portrait-fallback {
+  overflow: hidden;
+  border: 1px solid var(--dlg-art-edge-soft);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ct-dialog .ct-body {
+  margin: 0;
+}
+:root[data-ui="v2"] .ct-dialog .ct-status,
+:root[data-ui="v2"] .ct-dialog .ct-theme,
+:root[data-ui="v2"] .ct-dialog .ct-hints,
+:root[data-ui="v2"] .ct-dialog .ct-clues {
+  margin: 4px 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+}
+:root[data-ui="v2"] .ct-dialog .ct-theme {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-hints {
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .ct-dialog .ct-status {
+  color: var(--v2-ink-2);
+}
+/* 作诗、辩论、竞渡、辨识：一题一行，行间一道细线；题目的序号用计数器写在前面 */
+:root[data-ui="v2"] .ct-dialog .ct-lines,
+:root[data-ui="v2"] .ct-dialog .ct-rounds,
+:root[data-ui="v2"] .ct-dialog .ct-legs,
+:root[data-ui="v2"] .ct-dialog .ct-samples {
+  gap: 0;
+  margin: 10px 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: v2-ct;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ct-dialog .ct-lines > li,
+:root[data-ui="v2"] .ct-dialog .ct-rounds > li,
+:root[data-ui="v2"] .ct-dialog .ct-legs > li,
+:root[data-ui="v2"] .ct-dialog .ct-samples > li {
+  position: relative;
+  padding: 10px 0 10px 32px;
+  border-bottom: 1px solid var(--v2-line);
+  counter-increment: v2-ct;
+}
+:root[data-ui="v2"] .ct-dialog .ct-lines > li::before,
+:root[data-ui="v2"] .ct-dialog .ct-rounds > li::before,
+:root[data-ui="v2"] .ct-dialog .ct-legs > li::before,
+:root[data-ui="v2"] .ct-dialog .ct-samples > li::before {
+  content: counter(v2-ct);
+  position: absolute;
+  top: 12px;
+  left: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: 50%;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ct-dialog .ct-prompt {
+  margin-bottom: 8px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-options,
+:root[data-ui="v2"] .ct-dialog .ct-hand {
+  gap: 8px;
+  margin: 6px 0 0;
+}
+/* 选项：平面的小签，选中的浅黄铜底 + 描边 */
+:root[data-ui="v2"] .ct-dialog .ct-opt {
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.4;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-dialog .ct-lines .ct-opt {
+  min-width: 48px;
+  justify-content: center;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .ct-dialog .ct-opt:hover:not(:disabled) {
+  background: var(--dlg-paper-hover);
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ct-dialog .ct-opt.is-on,
+:root[data-ui="v2"] .ct-dialog .ct-opt.is-on:hover:not(:disabled) {
+  font-weight: 600;
+  background: var(--dlg-wash);
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-hand .ct-opt {
+  text-align: left;
+  padding: 6px 14px 6px 8px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-preview {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: 0 var(--v2-r-sm) var(--v2-r-sm) 0;
+}
+/* 辩论：对方的论点与我出的牌；论点的种类是小签 */
+:root[data-ui="v2"] .ct-dialog .ct-kind {
+  flex: none;
+  align-self: flex-start;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-dialog .ct-opp,
+:root[data-ui="v2"] .ct-dialog .ct-mine {
+  gap: 8px;
+  margin: 2px 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+}
+:root[data-ui="v2"] .ct-dialog .ct-mine {
+  padding-left: 12px;
+  border-left: 2px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ct-dialog .ct-mine.ct-edge1 {
+  color: var(--v2-up);
+  border-left-color: var(--v2-up);
+}
+:root[data-ui="v2"] .ct-dialog .ct-mine.ct-edge-1 {
+  color: var(--v2-down);
+  border-left-color: var(--v2-down);
+}
+/* 竞渡：已走过的一程变淡，正在走的这一程加粗 */
+:root[data-ui="v2"] .ct-dialog .ct-legs li.is-done {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ct-dialog .ct-legs li.is-now > p {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ct-dialog .ct-legs p {
+  margin: 0;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .ct-dialog .ct-picked {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-opt .is-cost {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ct-dialog .ct-samples select {
+  min-width: 160px;
+}
+/* 配对：牌背是深海蓝上的黄铜细格，翻开的是纸，配上的是浅黄铜 */
+/* 牌桌最宽 560 px、居中：720 px 的对话框里四列牌原来各 157 px 宽、210 px 高，三排就把“按实力结算”挤出了 1000 px 高的窗口
+   （交卷按钮上方多了一行原因后更明显）；手机上本来就不到 560 px，不受影响 */
+:root[data-ui="v2"] .ct-dialog .ct-cards {
+  gap: 8px;
+  max-width: 560px;
+  margin: 10px auto;
+}
+:root[data-ui="v2"] .ct-dialog .ct-card {
+  min-height: 0;
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  color: var(--v2-on-night-2);
+  background:
+    repeating-linear-gradient(45deg, transparent 0 7px, var(--dlg-card-stripe) 7px 8px),
+    repeating-linear-gradient(-45deg, transparent 0 7px, var(--dlg-card-stripe) 7px 8px),
+    var(--v2-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-dialog .ct-card:hover:not(:disabled) {
+  background:
+    repeating-linear-gradient(45deg, transparent 0 7px, var(--dlg-card-stripe-hover) 7px 8px),
+    repeating-linear-gradient(-45deg, transparent 0 7px, var(--dlg-card-stripe-hover) 7px 8px),
+    var(--v2-night-3);
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ct-dialog .ct-card.is-up,
+:root[data-ui="v2"] .ct-dialog .ct-card.is-up:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ct-dialog .ct-card.is-matched,
+:root[data-ui="v2"] .ct-dialog .ct-card.is-matched:disabled {
+  color: var(--v2-brass-ink);
+  background: var(--dlg-wash);
+  border-color: var(--v2-brass-ink);
+  box-shadow: none;
+}
+/* 节奏：夜色的轨道，判定线黄铜 */
+:root[data-ui="v2"] .ct-dialog .ct-rhythm:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 4px;
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ct-dialog .ct-track {
+  height: 72px;
+  margin: 10px 0;
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ct-dialog .ct-line {
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ct-dialog .ct-beat {
+  top: 22px;
+  background: var(--v2-paper-2);
+  border: 3px solid var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ct-dialog .ct-grade {
+  top: 24px;
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ct-dialog .ct-grade--miss {
+  color: var(--v2-down-night);
+}
+/* 交卷（每个小游戏的主按钮）：靠右；“按实力结算”在下面一排，次要按钮 */
+:root[data-ui="v2"] .ct-dialog .ts-btn {
+  min-height: var(--v2-h-md);
+  padding: 0 16px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-image: none;
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+  image-rendering: auto;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn:hover:not(:disabled) {
+  background: var(--dlg-paper-hover);
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn.ts-btn-go {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  min-height: var(--v2-h-lg);
+  margin: 14px 0 0 auto;
+  padding: 0 24px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  background: var(--v2-brass-hi);
+  border-color: var(--dlg-primary-edge);
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn.ts-btn-go:hover:not(:disabled) {
+  background: var(--dlg-primary-hover);
+  border-color: var(--dlg-primary-edge-hover);
+}
+/* 不可用：与本组其他不可用的按钮同一个样子（纸底、灰字、细线）。v1 的 .ts-btn:disabled（styles/start.css）另有
+   opacity 0.65 + grayscale，叠上去字只剩 2:1、像坏了，这里重置掉；为什么不能按由旁边的 .ct-why 写出 */
+:root[data-ui="v2"] .ct-dialog .ts-btn:disabled {
+  color: var(--dlg-off-ink);
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+  opacity: 1;
+  filter: none;
+}
+/* 交卷做不了的原因（InlineError tone="blocked"）：桌面上靠右、紧贴在交卷按钮的上面；手机上整宽 */
+:root[data-ui="v2"] .ct-dialog .v2-inline-error.ct-why {
+  width: fit-content;
+  max-width: 100%;
+  margin: 14px 0 0 auto;
+}
+:root[data-ui="v2"] .ct-dialog .ct-why + .ts-btn.ts-btn-go {
+  margin-top: 6px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-foot {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+/* 11-03 手感：规则一行、就地的加分、胜算一栏、快捷键、交卷后的名次讲解 */
+:root[data-ui="v2"] .ct-dialog:focus {
+  outline: none;
+}
+:root[data-ui="v2"] .ct-dialog .ct-rule {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: 0 var(--v2-r-sm) var(--v2-r-sm) 0;
+}
+:root[data-ui="v2"] .ct-dialog .ct-beats {
+  margin: 4px 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ct-dialog .ct-beats-label {
+  margin-right: 8px;
+  padding: 1px 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--dlg-wash-ink);
+  background: var(--dlg-wash);
+  border-radius: var(--v2-r-xs);
+}
+/* 选项前的数字键小标（触屏上不显示） */
+:root[data-ui="v2"] .ct-dialog .ct-num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  font-family: var(--v2-font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--v2-ink-3);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-xs);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ct-dialog .ct-opt.is-on .ct-num {
+  color: var(--v2-brass-ink);
+  border-color: var(--v2-brass-ink);
+}
+/* 一步拿了几分：拿满绿、没拿满黄铜、没拿到印章红 */
+:root[data-ui="v2"] .ct-dialog .ct-pick {
+  gap: 6px 12px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-pick .ct-options {
+  margin: 0;
+}
+:root[data-ui="v2"] .ct-dialog .ct-step {
+  display: inline-flex;
+  box-shadow: none;
+  align-items: center;
+  margin: 8px 0 0;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--v2-brass-ink);
+  background: var(--dlg-wash);
+  border-radius: var(--v2-r-xs);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ct-dialog .ct-step.is-full {
+  color: var(--v2-up);
+  background: var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .ct-dialog .ct-step.is-zero {
+  color: var(--v2-seal);
+  background: var(--dlg-seal-wash);
+}
+:root[data-ui="v2"] .ct-dialog .ct-pick .ct-step {
+  margin: 0;
+}
+/* 正在选的这一步：左边一道黄铜 */
+:root[data-ui="v2"] .ct-dialog .ct-lines > li.is-now,
+:root[data-ui="v2"] .ct-dialog .ct-samples > li.is-now,
+:root[data-ui="v2"] .ct-dialog .ct-rounds > li.is-now,
+:root[data-ui="v2"] .ct-dialog .ct-legs > li.is-now {
+  margin-left: 0;
+  border-left: 0;
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .ct-dialog .ct-flash {
+  margin: 4px 0;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ct-dialog .ct-flash.is-hit {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .ct-dialog .ct-flash.is-miss {
+  color: var(--v2-ink-3);
+}
+/* 辩论：手牌一张一行；右边写它对上这一回合的对手是压过、平手还是被压过 */
+:root[data-ui="v2"] .ct-dialog .ct-hand {
+  display: grid;
+}
+:root[data-ui="v2"] .ct-dialog .ct-hand .ct-opt {
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+:root[data-ui="v2"] .ct-dialog .ct-opt-text {
+  flex: 1 1 12em;
+  min-width: 0;
+}
+:root[data-ui="v2"] .ct-dialog .ct-vs {
+  flex: none;
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-dialog .ct-vs1 {
+  color: var(--v2-up);
+  background: var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .ct-dialog .ct-vs-1 {
+  color: var(--v2-seal);
+  background: var(--dlg-seal-wash);
+}
+:root[data-ui="v2"] .ct-dialog .ct-mine {
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+:root[data-ui="v2"] .ct-dialog .ct-mine-text {
+  flex: 1 1 12em;
+  min-width: 0;
+}
+:root[data-ui="v2"] .ct-dialog .ct-mine .ct-step {
+  margin: 0;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn.ct-undo {
+  margin: 10px 0 0;
+  font-size: var(--v2-fs-sm);
+}
+/* 竞渡：每种走法顺利 / 失手各几分 */
+:root[data-ui="v2"] .ct-dialog .ct-legs .ct-opt {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 6px 14px 6px 10px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-worth {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-up);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ct-dialog .ct-picked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-picked .ct-step {
+  margin: 0;
+}
+/* 交卷以后：辨识每份对不对、竞渡每一程失没失手 */
+:root[data-ui="v2"] .ct-dialog .ct-verdict {
+  display: inline-block;
+  margin: 6px 0 0;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-dialog .ct-verdict.is-good {
+  color: var(--v2-up);
+  background: var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .ct-dialog .ct-verdict.is-bad {
+  color: var(--v2-seal);
+  background: var(--dlg-seal-wash);
+}
+:root[data-ui="v2"] .ct-dialog .ct-answers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+/* 胜算：大字是照现在；条的底色是拿满时、实色是照现在、竖线是不玩时 */
+:root[data-ui="v2"] .ct-dialog .ct-odds {
+  display: grid;
+  grid-template-columns: auto minmax(80px, 1fr) auto;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds.is-stale {
+  opacity: 0.6;
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-label {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-bar {
+  position: relative;
+  height: 8px;
+  border: 0;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-best,
+:root[data-ui="v2"] .ct-dialog .ct-odds-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-best {
+  background: var(--dlg-wash);
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-fill {
+  background: var(--v2-brass);
+  transition: width var(--v2-dur-2) var(--v2-ease);
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-base {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-now {
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  color: var(--v2-ink);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ct-dialog .ct-odds-meta {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+/* 底栏：左边快捷键，右边“按实力结算” */
+:root[data-ui="v2"] .ct-dialog .ct-foot {
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+:root[data-ui="v2"] .ct-dialog .ct-keys {
+  flex: 1 1 18em;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 交卷以后：名次、各人的分、你的分怎么来的 */
+:root[data-ui="v2"] .ct-dialog .ct-result {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-dialog .ct-result.is-win {
+  border-color: var(--v2-brass);
+  box-shadow: inset 0 0 0 1px var(--v2-brass), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-dialog .ct-result-rank {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-result-rank b {
+  color: var(--v2-brass-ink);
+  font-size: var(--v2-fs-2xl);
+}
+:root[data-ui="v2"] .ct-dialog .ct-result-why {
+  margin: 8px 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-dialog .ct-field {
+  display: grid;
+  gap: 0;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ct-dialog .ct-field li {
+  display: flex;
+  gap: 12px;
+  padding: 6px 8px;
+  font-size: var(--v2-fs-md);
+  border-bottom: 1px solid var(--v2-line);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ct-dialog .ct-field li.is-you {
+  font-weight: 600;
+  background: var(--dlg-wash);
+}
+:root[data-ui="v2"] .ct-dialog .ct-field-rank {
+  min-width: 1.5em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ct-dialog .ct-field-name {
+  flex: 1;
+  min-width: 0;
+}
+:root[data-ui="v2"] .ct-dialog .ct-result-sum {
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .ct-dialog .ct-odds {
+    grid-template-columns: auto minmax(60px, 1fr);
+  }
+  :root[data-ui="v2"] .ct-dialog .ct-odds-now {
+    grid-column: 1 / -1;
+  }
+  :root[data-ui="v2"] .ct-dialog .ts-btn.ct-undo {
+    width: 100%;
+  }
+  /* 竞渡的走法一行一个（整宽，拇指好点） */
+  :root[data-ui="v2"] .ct-dialog .ct-legs .ct-opt {
+    width: 100%;
+  }
+  :root[data-ui="v2"] .ct-dialog .ct-result .ts-btn.ts-btn-go {
+    width: 100%;
+  }
+}
+/* 触屏：点按区不小于 44 px；数字键小标不显示（快捷键提示由 feedback.css 藏起来） */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .ct-dialog .ct-num {
+    display: none;
+  }
+  :root[data-ui="v2"] .ct-dialog .ts-btn.ct-undo {
+    min-height: var(--v2-h-touch);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .ct-dialog .ct-odds-fill {
+    transition: none;
+  }
+}
+
+/* ═════════════════════════ 6. 顶栏的故事面板 ═════════════════════════ */
+/* 桌面：顶栏“故事”下面弹出的纸卡；手机：排在菜单抽屉里（is-inline，不再加框） */
+:root[data-ui="v2"] .sp-panel {
+  top: calc(100% + 8px);
+  width: min(380px, calc(100vw - 24px));
+  padding: 16px 16px 14px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  border: 1px solid var(--dlg-popover-edge);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .sp-panel.is-inline {
+  width: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+}
+:root[data-ui="v2"] .sp-panel h3 {
+  margin: 0 0 8px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sp-bar {
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sp-bar-fill {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sp-hint {
+  margin: 10px 0 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+}
+:root[data-ui="v2"] .sp-hint strong {
+  margin-right: 8px;
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+/* “继续这一章”：面板里唯一的主按钮。面板挂在顶栏里，要压过顶栏按钮的“幽灵”样式（shell.css 的 .hud button） */
+:root[data-ui="v2"] .sp-panel .btn.primary.sp-open,
+:root[data-ui="v2"] .hud .sp-panel .btn.primary.sp-open {
+  min-height: var(--v2-h-lg);
+  margin-top: 12px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 1px solid var(--dlg-primary-edge);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .hud .sp-panel .btn.primary.sp-open:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--dlg-primary-hover);
+  border-color: var(--dlg-primary-edge-hover);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .hud .sp-panel .btn.primary.sp-open:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+/* 经历：一条一行，行间细线；日期、类别小签、标题，下面一行是当时的选择 */
+:root[data-ui="v2"] .sp-panel h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 4px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sp-panel h4::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--v2-line);
+}
+:root[data-ui="v2"] .sp-journal ol {
+  gap: 0;
+}
+:root[data-ui="v2"] .sp-entry {
+  align-items: baseline;
+  gap: 2px 8px;
+  padding: 10px 0;
+  font-size: var(--v2-fs-sm);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sp-entry:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .sp-day {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .sp-tag {
+  padding: 0 7px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sp-entry.is-chapter .sp-tag {
+  color: var(--v2-seal);
+  background: var(--dlg-seal-wash);
+}
+:root[data-ui="v2"] .sp-title {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sp-choice {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sp-empty {
+  padding: 12px 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .sp-panel.is-inline .sp-hint,
+:root[data-ui="v2"] .sp-panel.is-inline .sp-title {
+  font-size: 15px;
+}
+:root[data-ui="v2"] .sp-panel.is-inline .sp-choice,
+:root[data-ui="v2"] .sp-panel.is-inline .sp-empty {
+  font-size: var(--v2-fs-md);
+}
+
+/* ═════════════════════════ 7. 新手教程 ═════════════════════════ */
+:root[data-ui="v2"] .tut-dim {
+  background: var(--dlg-scrim-soft);
+}
+/* 圈出：一道亮黄铜的圆角框，外面压暗；框外一圈淡淡的光慢慢呼吸（减少动效时不动） */
+:root[data-ui="v2"] .tut-spot {
+  border: 2px solid var(--v2-brass-hi);
+  border-radius: var(--v2-r-md);
+  box-shadow:
+    0 0 0 4px var(--dlg-brass-ring),
+    0 0 0 200vmax var(--dlg-scrim-spot);
+  transition:
+    left var(--v2-dur-3) var(--v2-ease),
+    top var(--v2-dur-3) var(--v2-ease),
+    width var(--v2-dur-3) var(--v2-ease),
+    height var(--v2-dur-3) var(--v2-ease);
+  animation: v2-tut-glow 1.8s ease-in-out infinite;
+}
+/* 说明框：纸卡（标题宋体、第几步的小签），“下一步”是主按钮，“跳过”是安静的文字按钮 */
+:root[data-ui="v2"] .tut-bubble {
+  padding: 16px 18px 14px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  background-image: none;
+  border: 1px solid var(--dlg-popover-edge);
+  border-image: none;
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  image-rendering: auto;
+  transition:
+    left var(--v2-dur-3) var(--v2-ease),
+    top var(--v2-dur-3) var(--v2-ease);
+}
+:root[data-ui="v2"] .tut-head-text {
+  align-items: center;
+}
+:root[data-ui="v2"] .tut-bubble h2.tut-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .tut-count {
+  flex: none;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .tut-text {
+  margin: 10px 0 8px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .tut-bubble .tut-try {
+  margin: 0 0 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .tut-actions {
+  gap: 8px;
+}
+:root[data-ui="v2"] .tut-bubble .tut-skip {
+  min-height: var(--v2-h-sm);
+  padding: 0 6px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--v2-line-strong);
+  text-underline-offset: 3px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .tut-bubble .tut-skip:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-sunk);
+  border-color: transparent;
+}
+:root[data-ui="v2"] .tut-keys {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--v2-line);
+}
+
+/* ═════════════════════════ 8. 按钮的状态（本组各对话框共用） ═════════════════════════ */
+/* 不可用：base.css 里 .btn.primary 与 .btn:disabled 特异度相同、写在后面，不可用的主按钮仍是黄铜底、墨色字，看上去能按；
+   本组自己画的一键操作（浅黄铜）、撤退（印章红描边）、确认开火（印章红底）也一样。这里一律画回“不可用”：纸底、灰字、细线、无阴影。
+   做不了的原因由 InlineError / 预估行就地写出，按钮 aria-describedby 指过去 */
+:root[data-ui="v2"] .pn-battle-modal .btn.primary:disabled,
+:root[data-ui="v2"] .pn-tactical .btn.primary:disabled,
+:root[data-ui="v2"] .pn-tactical .bt-dock .pn-orders > .btn:not(.pn-facing):disabled,
+:root[data-ui="v2"] .pn-tactical .bt-dock > .row > .btn.danger:disabled,
+:root[data-ui="v2"] .tut-bubble .btn.primary:disabled,
+:root[data-ui="v2"] .sp-panel .btn.primary.sp-open:disabled,
+:root[data-ui="v2"] .hud .sp-panel .btn.primary.sp-open:disabled {
+  color: var(--dlg-off-ink);
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* ═════════════════════════ 动效 ═════════════════════════ */
+@keyframes v2-tut-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 4px var(--dlg-brass-ring),
+      0 0 0 200vmax var(--dlg-scrim-spot);
+  }
+  50% {
+    box-shadow:
+      0 0 0 7px var(--dlg-brass-ring-soft),
+      0 0 0 200vmax var(--dlg-scrim-spot);
+  }
+}
+
+/* ═════════════════════════ 触屏：点按区 ≥ 44 px ═════════════════════════ */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .bt-choice > .btn,
+  :root[data-ui="v2"] .pn-tactical .bt-dock .btn,
+  :root[data-ui="v2"] .ct-dialog .ct-opt,
+  :root[data-ui="v2"] .ct-dialog .ts-btn,
+  /* 下面三条的原规则特异度更高（.ts-btn.ts-btn-go、.hud 下的 .btn.primary.sp-open），要写成同样的选择器才压得过 */
+  :root[data-ui="v2"] .ct-dialog .ts-btn.ts-btn-go,
+  :root[data-ui="v2"] .sp-panel .btn.primary.sp-open,
+  :root[data-ui="v2"] .hud .sp-panel .btn.primary.sp-open,
+  :root[data-ui="v2"] .tut-actions .btn {
+    min-height: var(--v2-h-touch);
+  }
+  /* 数量与下拉：44 px 高；字号 16 px——iOS Safari 聚焦字号小于 16 px 的输入框会把整页放大 */
+  :root[data-ui="v2"] .ct-dialog .ct-samples select {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+}
+
+/* ═════════════════════════ 手机（宽 < 720）：对话框从底部升起，主要按钮贴在下沿 ═════════════════════════ */
+@media (max-width: 719px) {
+  :root[data-ui="v2"] .pn-battle-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .ct-backdrop {
+    place-items: end stretch;
+  }
+  :root[data-ui="v2"] .pn-battle-modal .pn-battle-body,
+  :root[data-ui="v2"] .ct-dialog {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(var(--vh100, 100vh) - 24px - var(--safe-top, 0px));
+    padding: 20px 16px calc(16px + var(--safe-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+  }
+
+  /* 遭遇海盗：头目与船居中；两个选择仍并排（都在拇指区） */
+  :root[data-ui="v2"] .pn-battle-modal .pn-battle-title {
+    font-size: var(--v2-fs-xl);
+  }
+  :root[data-ui="v2"] .pn-battle-modal .pn-encounter-art {
+    justify-content: center;
+    gap: 16px;
+  }
+  :root[data-ui="v2"] .pn-battle-modal .pn-encounter-line {
+    margin: 14px 0 12px;
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .bt-choices {
+    gap: 10px;
+  }
+
+  /* 战术海战：说明、船只与战报 15 px；船只一行两层（耐久条在第二层）；命令台的转向键竖排箭头与方位 */
+  :root[data-ui="v2"] .pn-tactical > .sub,
+  :root[data-ui="v2"] .pn-tactical .pn-battle-log {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row {
+    grid-template-columns: 24px minmax(0, 1fr);
+    row-gap: 4px;
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .pn-tactical .pn-units .pn-unit-row .pn-bar {
+    grid-column: 2;
+  }
+  :root[data-ui="v2"] .pn-tactical .bt-dock {
+    bottom: -20px;
+    gap: 6px;
+    margin: 12px -14px 0;
+    padding: 10px 14px 12px;
+  }
+  :root[data-ui="v2"] .pn-tactical .bt-dock .pn-orders-label {
+    padding-right: 0;
+    font-size: var(--v2-fs-xs);
+    writing-mode: vertical-rl;
+    letter-spacing: 0.2em;
+  }
+  :root[data-ui="v2"] .pn-tactical .bt-dock .pn-facing {
+    flex-direction: column;
+    gap: 0;
+    padding: 2px 0;
+    font-size: var(--v2-fs-xs);
+    line-height: 1.2;
+  }
+  :root[data-ui="v2"] .pn-tactical .bt-dock .pn-glyph {
+    font-size: var(--v2-fs-lg);
+    line-height: 1;
+  }
+  :root[data-ui="v2"] .pn-tactical .bt-dock .pn-orders > .btn:not(.pn-facing) {
+    font-size: 15px;
+  }
+
+  /* 比赛：选项与按钮放大；交卷整宽 */
+  :root[data-ui="v2"] .ct-dialog .ct-head h3 {
+    font-size: var(--v2-fs-xl);
+  }
+  :root[data-ui="v2"] .ct-dialog .ct-status,
+  :root[data-ui="v2"] .ct-dialog .ct-theme,
+  :root[data-ui="v2"] .ct-dialog .ct-hints,
+  :root[data-ui="v2"] .ct-dialog .ct-clues,
+  :root[data-ui="v2"] .ct-dialog .ct-opp,
+  :root[data-ui="v2"] .ct-dialog .ct-mine,
+  :root[data-ui="v2"] .ct-dialog .ct-legs p,
+  :root[data-ui="v2"] .ct-dialog .ct-opt {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ct-dialog .ct-hand {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  :root[data-ui="v2"] .ct-dialog .ct-hand .ct-opt {
+    width: 100%;
+  }
+  :root[data-ui="v2"] .ct-dialog .ts-btn.ts-btn-go,
+  :root[data-ui="v2"] .ct-dialog .ct-foot .ts-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+  :root[data-ui="v2"] .ct-dialog .v2-inline-error.ct-why {
+    width: auto;
+    margin-left: 0;
+  }
+
+  /* 新手教程：正文 15 px（与桌面相同）、按钮在触屏下 44 px（见上） */
+  :root[data-ui="v2"] .tut-bubble {
+    padding: 14px 16px 12px;
+  }
+
+  /* 传说之船的 CG 画廊（原样保留，见上面第 3 节）：标题一行、大图与说明一栏 */
+  :root[data-ui="v2"] .lg-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .lg-modal .lg-head {
+    flex-direction: row;
+    margin-bottom: 14px;
+  }
+  :root[data-ui="v2"] .lg-modal .lg-main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ═════════════════════════ 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .pn-battle-modal .pn-battle-body,
+  :root[data-ui="v2"] .ct-dialog,
+  :root[data-ui="v2"] .sp-panel,
+  :root[data-ui="v2"] .tut-spot {
+    animation: none;
+  }
+  :root[data-ui="v2"] .tut-spot,
+  :root[data-ui="v2"] .tut-bubble {
+    transition: none;
+  }
+}

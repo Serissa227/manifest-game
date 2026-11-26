@@ -1,0 +1,1466 @@
+/* 新界面（试用）——历史与秘闻：时间线、战役链、编年史、结社 / 秘术 / 信仰（components/history/；docs/UI-REDESIGN.md 第 8 节第 9 组）。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ *
+ * 版式：一件事一张纸卡（白底、细边、8 px 圆角），状态靠左边一道色线（进行中印章红、将来黄铜、揭晓过的淡）；
+ * 杠杆、传播方式这类“一行一件事”的放进一个细线分隔的列表，操作在行内最右（手机上在下面、整宽）；
+ * 卡片的操作（入会、施放、开工）在卡底一行，做不了的原因写在按钮左边。
+ * 一键操作（去做、出钱、交货、施放……）用交易所“买满 / 全卖”同一种浅黄铜底按钮（.hs-act）；快捷数量是圆头小签（.hs-chip）。
+ * 卡里只有一层“块”：天平、杠杆列表、送货表单、“为什么难”都不另画框，靠细线与小标题分开；左边的色线只留给卡片表示状态，
+ * 其余的提示（改写的结果、走向、试炼、当地的敌意、只读的说明）用浅底、不加色线。
+ * 颜色：只用 base.css 的令牌；这一组要的浅底与描边集中在下面的 --hs-* 里（见那里的说明）。
+ * 对比度（WCAG AA，正文 ≥ 4.5）：浅黄铜底上的深棕字 #4d3407 / #f6e6c2 9.40、小标题 brass-ink / paper-2 6.79、改写的结果 brass-ink / #fbf0d6 6.09、
+ * 绿色小签 up / --hs-tint-up 5.37、海蓝小签 sea / --hs-tint-sea 5.94、说明字 ink-3 / paper-1 5.69（/ #fbf0d6 5.56）、印章红小签 seal / #f8e3dc 5.65、
+ * 等级签 #fff8ee / brass-ink 6.55、只读的说明 ink / --hs-tint-sea 13.6。
+ * v1 的 styles/history.css 照旧；这里的规则只在 v2 下覆盖它。
+ */
+
+/* ═════════════════════════ 两个窗口共用 ═════════════════════════ */
+/* 这一组用到的浅底与描边，集中在这里，不在规则里写字面的颜色：
+ * - 与交易所（market.css）、反馈组件（feedback.css）共用的几种照抄原值：一键按钮的浅黄铜（--hs-act-*）、浅黄铜底、印章红浅底、印章红上的字；
+ * - 只有这一组用的（绿色、海蓝的浅底，黄铜的描边与条纹，半透明的色带）都由 base.css 的令牌调出来（color-mix），不另发明颜色。
+ * 地基以后补上同义的语义令牌（如 --v2-brass-tint、--v2-seal-tint、--v2-up-tint、--v2-sea-tint）时，只改这一处。 */
+:root[data-ui="v2"] .hs-panel,
+:root[data-ui="v2"] .sc-panel {
+  --hs-act-ink: #4d3407;
+  --hs-act-bg: #f6e6c2;
+  --hs-act-bg-hover: #f1d99f;
+  --hs-act-edge: #b3852f;
+  --hs-act-edge-hover: #8f6418;
+  --hs-act-off: #8e8170;
+  --hs-on-seal: #fff8ee;
+  --hs-tint-brass: #fbf0d6;
+  --hs-tint-seal: #f8e3dc;
+  --hs-tint-up: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  --hs-tint-sea: color-mix(in srgb, var(--v2-sea) 12%, var(--v2-paper-2));
+  --hs-edge-brass: color-mix(in srgb, var(--v2-brass) 50%, var(--v2-paper-2));
+  --hs-stripe-brass: color-mix(in srgb, var(--v2-brass-hi) 50%, var(--v2-paper-2));
+  --hs-band-brass: color-mix(in srgb, var(--v2-brass-hi) 45%, transparent);
+  --hs-glow-seal: color-mix(in srgb, var(--v2-seal) 16%, transparent);
+  gap: 14px;
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hs-panel > .ub-tabs,
+:root[data-ui="v2"] .sc-panel > .ub-tabs {
+  align-items: flex-end;
+}
+
+/* 小标题：12 px 黄铜色、字距拉开（与人物详情的小节标题同一种） */
+:root[data-ui="v2"] .hs-mini-head {
+  margin: 4px 0 -4px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-ink);
+}
+
+/* 载入中：安静的一行 */
+:root[data-ui="v2"] .hs-panel .ts-empty,
+:root[data-ui="v2"] .sc-panel .ts-empty {
+  margin: 4px 0;
+  padding: 20px 16px;
+  font-size: var(--v2-fs-md);
+  text-align: center;
+  color: var(--v2-ink-2);
+  background: color-mix(in srgb, var(--v2-paper-2) 50%, transparent);
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+}
+
+/* 出处：小签 + 一行说明字 */
+:root[data-ui="v2"] .hs-panel .it-source,
+:root[data-ui="v2"] .sc-panel .it-source {
+  margin: 0;
+  font-size: var(--v2-fs-xs);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-panel .it-basis,
+:root[data-ui="v2"] .sc-panel .it-basis {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--hs-act-ink);
+  background: var(--hs-act-bg);
+  border-radius: var(--v2-r-xs);
+}
+
+/* 一键操作：浅黄铜底、黄铜描边（同交易所的“买满 / 全卖”），比主按钮安静、比普通按钮醒目 */
+:root[data-ui="v2"] .hs-panel .btn.small.hs-act,
+:root[data-ui="v2"] .sc-panel .btn.small.hs-act {
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--hs-act-ink);
+  background: var(--hs-act-bg);
+  border: 1px solid var(--hs-act-edge);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .hs-panel .btn.small.hs-act:hover:not(:disabled),
+:root[data-ui="v2"] .sc-panel .btn.small.hs-act:hover:not(:disabled) {
+  background: var(--hs-act-bg-hover);
+  border-color: var(--hs-act-edge-hover);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hs-panel .btn.small.hs-act:disabled,
+:root[data-ui="v2"] .sc-panel .btn.small.hs-act:disabled {
+  color: var(--hs-act-off);
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+
+/* 快捷数量：圆头小签（选中的浅黄铜底） */
+:root[data-ui="v2"] .hs-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+:root[data-ui="v2"] .hs-panel .hs-chip {
+  min-height: 30px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hs-panel .hs-chip:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border-color: var(--v2-ink-3);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hs-panel .hs-chip.is-on,
+:root[data-ui="v2"] .hs-panel .hs-chip.is-on:hover:not(:disabled) {
+  color: var(--hs-act-ink);
+  font-weight: 600;
+  background: var(--hs-act-bg);
+  border-color: var(--hs-act-edge);
+}
+
+/* 卡片的操作行：卡底一道细线，按钮靠右，做不了的原因在按钮左边 */
+:root[data-ui="v2"] .sc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px 12px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sc-actions .v2-inline-error {
+  flex: 1 1 220px;
+  margin: 0;
+}
+/* 原因里带一键补救（选舰队、选港口）时占满一行：先补救，按钮在下面一行靠右 */
+:root[data-ui="v2"] .sc-actions .v2-inline-error:has(.v2-inline-error-action) {
+  flex-basis: 100%;
+}
+
+/* ═════════════════════════ 时间线 ═════════════════════════ */
+/* 世界线偏离：右上角一枚黄铜色的小签 */
+:root[data-ui="v2"] .hs-deviation {
+  margin: 0 0 6px auto;
+  padding: 2px 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--hs-act-ink);
+  background: var(--hs-act-bg);
+  border: 1px solid var(--hs-edge-brass);
+  border-radius: var(--v2-r-pill);
+}
+/* 顶上的一句引导 */
+:root[data-ui="v2"] .hs-lead {
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink-2);
+}
+/* 只读（开局关掉了历史事件）：海蓝浅底的一条说明（不加色线） */
+:root[data-ui="v2"] .hs-panel > .it-lead {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+  background: var(--hs-tint-sea);
+  border: 0;
+  border-radius: var(--v2-r-sm);
+}
+
+/* 分组：进行中 / 将要发生 / 已揭晓，标题后一条细线，件数是小圆标（进行中是印章红） */
+:root[data-ui="v2"] .hs-group {
+  display: grid;
+  gap: 10px;
+}
+:root[data-ui="v2"] .hs-group + .hs-group {
+  margin-top: 8px;
+}
+:root[data-ui="v2"] .hs-panel .hs-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hs-panel .hs-group-head::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--v2-line);
+}
+:root[data-ui="v2"] .hs-group-n {
+  min-width: 20px;
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-group--active .hs-group-n {
+  color: var(--hs-on-seal);
+  background: var(--v2-seal);
+}
+
+/* 事件卡：白底纸卡，左边一道状态色线 */
+:root[data-ui="v2"] .hs-events {
+  gap: 12px;
+}
+:root[data-ui="v2"] .hs-event {
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .hs-event--active {
+  border-left-color: var(--v2-seal);
+}
+:root[data-ui="v2"] .hs-event--resolved {
+  gap: 8px;
+  padding: 12px 16px;
+  opacity: 1;
+  background: var(--v2-paper-1);
+  border-left-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hs-event-head {
+  gap: 4px 12px;
+}
+:root[data-ui="v2"] .hs-event-head h4 {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hs-when {
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+/* 还剩几天：将来的是黄铜小签，进行中的是印章红 */
+:root[data-ui="v2"] .hs-when b {
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--hs-act-ink);
+  background: var(--hs-act-bg);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-event--active .hs-when b {
+  color: var(--hs-on-seal);
+  background: var(--v2-seal);
+}
+:root[data-ui="v2"] .hs-region {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .hs-summary {
+  max-width: 46em;
+  font-size: var(--v2-fs-md);
+  line-height: 1.7;
+  color: var(--v2-ink);
+}
+
+/* 天平：两方在两头（名字旁一道各自的颜色），中间一根圆头的槽；色带是按情报估的区间，下面一行写偏向哪一方。
+ * 直接放在卡上，不另画框（卡里不套卡） */
+:root[data-ui="v2"] .hs-balance {
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 2.2fr) minmax(0, 1fr);
+  gap: 6px 12px;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+:root[data-ui="v2"] .hs-side {
+  padding: 2px 0;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--v2-ink);
+  border: 0;
+}
+:root[data-ui="v2"] .hs-side-a {
+  padding-right: 10px;
+  border-right: 4px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .hs-side-b {
+  padding-left: 10px;
+  border-left: 4px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .hs-scale {
+  height: 16px;
+  background: var(--v2-paper-sunk);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-scale-mid {
+  top: -5px;
+  bottom: -5px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--v2-ink-2);
+  border-radius: 1px;
+}
+:root[data-ui="v2"] .hs-scale-range {
+  top: 1px;
+  bottom: 1px;
+  background: var(--v2-brass-hi);
+  border: 1px solid var(--v2-brass-ink);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-known-rough {
+  background: repeating-linear-gradient(45deg, var(--v2-brass-hi) 0 4px, var(--hs-stripe-brass) 4px 8px);
+}
+:root[data-ui="v2"] .hs-scale-fog {
+  font-size: var(--v2-fs-xs);
+  line-height: 1;
+  color: var(--v2-ink-2);
+}
+/* 情报不足时没有区间，中线也不画（不压在“情报不足”几个字上） */
+:root[data-ui="v2"] .hs-scale:has(.hs-scale-fog) .hs-scale-mid {
+  display: none;
+}
+:root[data-ui="v2"] .hs-lean {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-lean b {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+
+/* 揭晓以后：本世界线（改写了历史，浅黄铜底）/ 如史实（不另加底，就是卡上的一段话）；都不加色线 */
+:root[data-ui="v2"] .hs-outcome {
+  padding: 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink);
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+:root[data-ui="v2"] .hs-outcome.is-changed {
+  padding: 8px 12px;
+  background: var(--hs-tint-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .hs-outcome.is-changed b {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .hs-history {
+  margin-top: 4px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* AI 写的叙事：一道细线引出，不用斜体（中文斜体发虚） */
+:root[data-ui="v2"] .hs-narration {
+  margin: 0;
+  padding: 2px 0 2px 12px;
+  font-size: var(--v2-fs-md);
+  font-style: normal;
+  line-height: 1.85;
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-line-strong);
+}
+
+/* 杠杆：细线分隔的列表，一行一个；左边名目、进度与说明，右边是这一行的操作。
+ * 列表直接放在卡上：上下各一道细线、行与行之间一道细线，不另画框（卡里不套卡） */
+:root[data-ui="v2"] .hs-levers {
+  gap: 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+  border-bottom: 1px solid var(--v2-line);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .hs-lever {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .hs-lever:first-child {
+  border-top: 0;
+}
+/* 做不了的那一行：不整行变淡（字照样读得清），原因写在行里 */
+:root[data-ui="v2"] .hs-lever.is-blocked {
+  opacity: 1;
+}
+:root[data-ui="v2"] .hs-lever.is-wide {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .hs-lever-main {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .hs-lever-head {
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .hs-lever-side {
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-left: 3px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .hs-lever-label {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hs-lever-where {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .hs-lever-prog {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hs-lever-bar {
+  flex: 1 1 160px;
+  max-width: 320px;
+  height: 6px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .hs-lever-all {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-lever-yours {
+  background: var(--v2-up);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-lever-mine {
+  font-weight: 600;
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .hs-lever-meta {
+  gap: 2px 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hs-lever-meta .is-cost {
+  color: var(--v2-seal);
+}
+/* 去某处（goto）：一句“要亲自去办”的说明；地名对得上地点时右边是“在航海图上看某地”，对不上时右边不放东西
+ * （原来放一个“到某地去办”的虚线小签：不能点，却落在按钮列、像个按钮，字又与说明重复） */
+:root[data-ui="v2"] .hs-lever-goto {
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hs-lever-do {
+  justify-content: flex-end;
+  gap: 6px 8px;
+}
+/* 送货：表单摊开在名目下面，就是这一行里的一排控件（不另画框） */
+:root[data-ui="v2"] .hs-lever.is-wide .hs-lever-do {
+  justify-content: flex-start;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+:root[data-ui="v2"] .hs-lever-do input[type="number"] {
+  width: 6em;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .hs-lever-do input.hs-amount {
+  width: 7.5em;
+}
+:root[data-ui="v2"] .hs-lever-do select {
+  max-width: 14em;
+}
+:root[data-ui="v2"] .hs-good {
+  padding: 0 4px;
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hs-nocargo {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-donate {
+  gap: 6px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hs-donate input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+/* 送货的“交货”推到这一行的最右 */
+:root[data-ui="v2"] .hs-lever.is-wide .hs-lever-do > .hs-act {
+  margin-left: auto;
+}
+:root[data-ui="v2"] .hs-lever-why {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+/* 为什么难：小标题下面一条一行，印章红的圆点（不另画框、不加色线） */
+:root[data-ui="v2"] .hs-why {
+  margin: 0;
+  padding: 0 0 0 20px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink);
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+:root[data-ui="v2"] .hs-why li::marker {
+  color: var(--v2-seal);
+}
+
+/* ═════════════════════════ 战役链 ═════════════════════════ */
+:root[data-ui="v2"] .hs-panel > select {
+  align-self: flex-start;
+}
+:root[data-ui="v2"] .hs-campaign {
+  gap: 12px;
+}
+:root[data-ui="v2"] .hs-inertia {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* 照现在的样子：一眼看到的结论（浅黄铜底，不加色线） */
+:root[data-ui="v2"] .hs-outlook {
+  padding: 10px 14px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--v2-ink);
+  background: var(--hs-tint-brass);
+  border: 0;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .hs-vars-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: 4px;
+}
+:root[data-ui="v2"] .hs-vars-head .hs-mini-head {
+  margin: 0;
+}
+/* 图例：虚线（史实轨迹）、色带（现在的估计）、红点（与史实不同） */
+:root[data-ui="v2"] .hs-legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-legend-drift::before,
+:root[data-ui="v2"] .hs-legend-now::before,
+:root[data-ui="v2"] .hs-legend-dev::before {
+  content: "";
+  display: inline-block;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+:root[data-ui="v2"] .hs-legend-drift::before {
+  width: 18px;
+  border-top: 2px dashed var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-legend-now::before {
+  width: 18px;
+  height: 8px;
+  background: var(--hs-band-brass);
+  border: 1px solid var(--v2-brass-ink);
+  border-radius: 2px;
+}
+:root[data-ui="v2"] .hs-legend-dev::before {
+  width: 8px;
+  height: 8px;
+  background: var(--v2-seal);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .hs-vars {
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+  gap: 10px;
+}
+/* 变量卡不画顶上的色线（v1 的红 / 蓝顶线是分类记号）：印章红只表示危险与“没过”，海蓝是链接与地点，色线只留给卡片表示状态；
+ * 是哪一方的什么，变量名已经写了 */
+:root[data-ui="v2"] .hs-var {
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .hs-var-head {
+  gap: 2px 10px;
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hs-var-head b {
+  flex-basis: 100%;
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hs-var-head .is-cost {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .hs-spark {
+  height: 56px;
+  background: var(--v2-paper-1);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .hs-drift {
+  stroke: var(--v2-ink-3);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+:root[data-ui="v2"] .hs-now {
+  fill: var(--hs-band-brass);
+  stroke: var(--v2-brass-ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+/* 门槛：过了的绿签、没过的红签、还没到的灰签 */
+:root[data-ui="v2"] .hs-gates {
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .hs-gates span {
+  padding: 0 8px;
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .hs-gates .is-good {
+  color: var(--v2-up);
+  background: var(--hs-tint-up);
+}
+:root[data-ui="v2"] .hs-gates .is-cost {
+  color: var(--v2-seal);
+  background: var(--hs-tint-seal);
+}
+/* 事件链：竖着的一条线，圆点按状态（揭晓过的实心墨色、进行中的印章红、将来的空心） */
+:root[data-ui="v2"] .hs-chain {
+  gap: 0;
+  padding: 0;
+  font-size: var(--v2-fs-md);
+  list-style: none;
+}
+:root[data-ui="v2"] .hs-chain li {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  padding: 6px 0 6px 26px;
+}
+:root[data-ui="v2"] .hs-chain li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  background: var(--v2-paper-2);
+  border: 2px solid var(--v2-line-strong);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .hs-chain li::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 24px;
+  bottom: -10px;
+  width: 2px;
+  background: var(--v2-line);
+}
+:root[data-ui="v2"] .hs-chain li:last-child::after {
+  display: none;
+}
+:root[data-ui="v2"] .hs-chain li.hs-chain-resolved::before {
+  background: var(--v2-ink-3);
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-chain li.hs-chain-active::before {
+  background: var(--v2-seal);
+  border-color: var(--v2-seal);
+  box-shadow: 0 0 0 3px var(--hs-glow-seal);
+}
+:root[data-ui="v2"] .hs-chain li.hs-chain-active > span {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .hs-chain small {
+  margin-left: 0;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hs-chain small.hs-chain-out {
+  font-weight: 600;
+  color: var(--v2-brass-ink) !important;
+}
+
+/* ═════════════════════════ 编年史 ═════════════════════════ */
+:root[data-ui="v2"] .hs-chronicle {
+  gap: 0;
+  padding: 2px 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .hs-chronicle li {
+  grid-template-columns: 10em minmax(0, 1fr);
+  gap: 2px 16px;
+  padding: 10px 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .hs-chronicle li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .hs-chronicle li small {
+  position: relative;
+  padding-left: 16px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+/* 与史实不同：日期前一个印章红的圆点 */
+:root[data-ui="v2"] .hs-chronicle li.is-changed small::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  background: var(--v2-seal);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .hs-chronicle li .hs-history {
+  margin-top: 0;
+}
+/* 年度回顾：浅一层的底，标题用印泥色 */
+:root[data-ui="v2"] .hs-chronicle li.hs-annual {
+  margin: 0 -16px;
+  padding: 12px 16px;
+  background: var(--v2-paper-1);
+  border-top: 0;
+}
+:root[data-ui="v2"] .hs-chronicle li.hs-annual small {
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+
+/* ═════════════════════════ 秘闻 ═════════════════════════ */
+/* 各势力的嫌疑：一块浅底，每个势力一格：名字、等级小签、一条印章红的细条 */
+:root[data-ui="v2"] .sc-societies,
+:root[data-ui="v2"] .sc-arcana {
+  display: grid;
+  gap: 12px;
+}
+:root[data-ui="v2"] .sc-suspicion {
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+  gap: 10px 20px;
+  padding: 12px 14px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .sc-suspicion li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px 8px;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-suspicion li b {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--v2-seal);
+  background: var(--hs-tint-seal);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .sc-suspicion .sc-meter {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .sc-meter {
+  height: 6px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .sc-meter span {
+  background: var(--v2-seal);
+  border-radius: var(--v2-r-pill);
+}
+
+/* 卡片：结社、法术、传说之船、秘境 */
+:root[data-ui="v2"] .sc-list,
+:root[data-ui="v2"] .sc-spells,
+:root[data-ui="v2"] .sc-ships,
+:root[data-ui="v2"] .sc-realms {
+  gap: 12px;
+}
+:root[data-ui="v2"] .sc-spells,
+:root[data-ui="v2"] .sc-ships,
+:root[data-ui="v2"] .sc-realms {
+  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+}
+/* 秘境的卡各自多高就多高（没名字的那张不撑成一个空的大框） */
+:root[data-ui="v2"] .sc-realms {
+  align-items: start;
+}
+/* 卡片竖着排，操作行推到卡底：同一排的“施放”“开工”对齐在一条线上 */
+:root[data-ui="v2"] .sc-card,
+:root[data-ui="v2"] .sc-spell,
+:root[data-ui="v2"] .sc-ship,
+:root[data-ui="v2"] .sc-realm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+/* 只听说过的：虚线框、纸底，不再整张变淡（字照样读得清）；结社的“听说过”、传说之船的“传闻”、秘境的“听说过”与“不知道”画法一样 */
+:root[data-ui="v2"] .sc-card--rumor,
+:root[data-ui="v2"] .sc-ship--rumor,
+:root[data-ui="v2"] .sc-realm--heard,
+:root[data-ui="v2"] .sc-realm--unknown {
+  opacity: 1;
+  background: var(--v2-paper-1);
+  border-style: dashed;
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+/* 题图贴着卡片的上沿与两侧，下面一道细线和正文隔开 */
+:root[data-ui="v2"] .sc-art {
+  width: calc(100% + 32px);
+  max-width: none;
+  margin: -14px -16px 0;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md) var(--v2-r-md) 0 0;
+}
+:root[data-ui="v2"] .sc-spell.is-blocked {
+  background: var(--v2-paper-1);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sc-head {
+  gap: 4px 10px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-head b {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-seat,
+:root[data-ui="v2"] .sc-active,
+:root[data-ui="v2"] .sc-cost {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-seat {
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .sc-head .is-cost {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-seal);
+}
+/* 认识的程度、船与秘境的状态：圆头小签（成员 / 在你船队里 / 帷幕已散是黄铜色，有图纸 / 找到帷幕是海蓝） */
+:root[data-ui="v2"] .sc-known {
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sc-card--member .sc-known,
+:root[data-ui="v2"] .sc-ship--owned .sc-known,
+:root[data-ui="v2"] .sc-realm--open .sc-known,
+:root[data-ui="v2"] .sc-realm--entered .sc-known {
+  color: var(--hs-act-ink);
+  background: var(--hs-act-bg);
+}
+:root[data-ui="v2"] .sc-ship--blueprint .sc-known,
+:root[data-ui="v2"] .sc-realm--veil_found .sc-known {
+  color: var(--v2-sea);
+  background: var(--hs-tint-sea);
+}
+:root[data-ui="v2"] .sc-panel .ub-rank {
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.7;
+  color: var(--hs-on-seal);
+  background: var(--v2-brass-ink);
+  border-radius: var(--v2-r-xs);
+}
+
+/* 结社的等级：竖着的阶梯，圆点按状态（达成绿、当前黄铜、之后空心）；名字一列，条件后面紧跟着“→ 奖励”
+ * （条件那一列按字数多宽就多宽，奖励不再被推到卡片最右、离它的条件老远） */
+:root[data-ui="v2"] .sc-ranks {
+  gap: 0;
+  margin: 2px 0 0 6px;
+  padding: 0;
+  font-size: var(--v2-fs-md);
+  list-style: none;
+  border-left: 2px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sc-ranks li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6em auto minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 5px 0 5px 16px;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-ranks li::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 11px;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  background: var(--v2-paper-2);
+  border: 2px solid var(--v2-line-strong);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .sc-ranks li.is-done {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-ranks li.is-done::before {
+  background: var(--v2-up);
+  border-color: var(--v2-up);
+}
+:root[data-ui="v2"] .sc-ranks li.is-current {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .sc-ranks li.is-current::before {
+  background: var(--v2-brass-hi);
+  border-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .sc-rank-name {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .sc-rank-req {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-rank-reward {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .sc-rank-reward::before {
+  content: "→";
+  margin-right: 6px;
+  color: var(--v2-ink-3);
+}
+/* 试炼、怎么得到：浅黄铜底的一条（不加色线：左边的色线只留给卡片表示状态） */
+:root[data-ui="v2"] .sc-trial {
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+  background: var(--hs-tint-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .sc-rel,
+:root[data-ui="v2"] .sc-keys {
+  gap: 4px 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-rel .is-cost {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .sc-desc {
+  font-size: var(--v2-fs-md);
+  line-height: 1.75;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-ship .sc-desc {
+  color: var(--v2-ink-2);
+}
+
+/* 会的流派：一排小卡 */
+:root[data-ui="v2"] .sc-schools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .sc-schools li {
+  padding: 8px 12px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .sc-schools li b {
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-schools .it-source {
+  margin-top: 2px;
+}
+
+/* 信仰与思想：港口名做标题；构成是一组横条（海蓝），一年里的变化写在后面 */
+:root[data-ui="v2"] .sc-ideas {
+  display: grid;
+  gap: 12px;
+}
+:root[data-ui="v2"] .sc-ideas > .it-lead {
+  margin: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-shares {
+  gap: 8px;
+  padding: 12px 14px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .sc-shares li {
+  grid-template-columns: 7em minmax(0, 1fr) 3.5em 6em;
+  gap: 4px 12px;
+}
+:root[data-ui="v2"] .sc-share-name {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .sc-shares .sc-meter {
+  height: 10px;
+}
+:root[data-ui="v2"] .sc-shares .sc-meter span {
+  background: var(--v2-sea);
+}
+:root[data-ui="v2"] .sc-share-n {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+:root[data-ui="v2"] .sc-share-n::after {
+  content: "%";
+  margin-left: 1px;
+  font-weight: 400;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .sc-delta {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .sc-delta.is-good {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .sc-delta.is-cost {
+  color: var(--v2-seal);
+}
+/* 当地的敌意：印章红的浅底一条（不加色线） */
+:root[data-ui="v2"] .sc-ideas > .is-cost {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-seal);
+  background: var(--hs-tint-seal);
+  border-radius: var(--v2-r-sm);
+}
+/* 传播方式：细线分隔的列表；名目与所需在左、点数居中、按钮在行内最右 */
+:root[data-ui="v2"] .sc-modes {
+  gap: 0;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .sc-modes li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5.5em 10em;
+  align-items: center;
+  gap: 2px 16px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sc-modes li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .sc-modes li.is-blocked {
+  opacity: 1;
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .sc-modes li > .sc-mode-label {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-modes li > .sc-mode-needs {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .sc-modes li > span:nth-child(3) {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-modes li > span:nth-child(3) {
+  text-align: right;
+}
+/* 按钮一样宽，一列对齐 */
+:root[data-ui="v2"] .sc-modes li > button {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  width: 100%;
+}
+:root[data-ui="v2"] .sc-modes li > .v2-inline-error {
+  grid-column: 1 / -1;
+  margin: 6px 0 0;
+}
+
+/* 传说之船的特性：一条一行，名字黄铜色 */
+:root[data-ui="v2"] .sc-traits {
+  gap: 4px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .sc-traits li {
+  padding: 4px 10px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .sc-traits li b {
+  margin-right: 4px;
+  color: var(--v2-brass-ink);
+}
+
+/* 秘境：钥匙物品（有的绿、没有的灰）、彼界的规矩 */
+:root[data-ui="v2"] .sc-keys span {
+  padding: 0 8px;
+  line-height: 1.8;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .sc-keys .is-good {
+  color: var(--v2-up);
+  background: var(--hs-tint-up);
+}
+:root[data-ui="v2"] .sc-keys-any {
+  align-self: center;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .sc-rules {
+  padding-left: 20px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sc-rules li::marker {
+  color: var(--v2-seal);
+}
+
+/* 没有选中港口：空状态下面一个选港口的下拉 */
+:root[data-ui="v2"] .sc-noport {
+  display: grid;
+  gap: 4px;
+}
+:root[data-ui="v2"] .sc-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 10px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sc-pick select {
+  min-width: 12em;
+}
+/* 占卜：法术卡里选一件事（靠左，跟着说明往下排） */
+:root[data-ui="v2"] .sc-event-pick {
+  justify-content: flex-start;
+  margin: 4px 0;
+}
+:root[data-ui="v2"] .sc-event-pick select {
+  max-width: 100%;
+}
+
+/* ═════════════════════════ 手机与触屏 ═════════════════════════ */
+/* 触屏：这两个窗口里的按钮、小签、输入框都不低于 44 px */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .hs-panel .btn.small.hs-act,
+  :root[data-ui="v2"] .sc-panel .btn.small.hs-act,
+  :root[data-ui="v2"] .hs-panel .hs-chip,
+  :root[data-ui="v2"] .hs-lever-do input,
+  :root[data-ui="v2"] .hs-lever-do select,
+  :root[data-ui="v2"] .hs-panel > select,
+  :root[data-ui="v2"] .sc-pick select {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .hs-donate {
+    min-height: var(--v2-h-touch);
+  }
+  /* 空状态的“下一步”、原因里的补救按钮（共用组件）在这两个窗口里也够拇指点 */
+  :root[data-ui="v2"] .hs-panel .v2-empty-action,
+  :root[data-ui="v2"] .sc-panel .v2-empty-action,
+  :root[data-ui="v2"] .sc-panel .v2-inline-error-action {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .hs-donate input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* 手机（整页窗口）：正文 15 px；卡片的内边距小一点；行内的操作挪到下面、按钮整宽（拇指够得着） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-summary,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lead,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-panel > .it-lead,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-outcome,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-narration,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-why,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-chronicle li,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-chain,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-desc,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-trial,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-ranks,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-rules,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-traits,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-shares,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-suspicion,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-ideas > .is-cost {
+  font-size: 15px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-event {
+  padding: 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-event--resolved {
+  padding: 12px 14px;
+}
+/* 秘闻的五个分页签不折行（折行后看不出哪一行是当前页）：放不下时左右滑，右端一道渐隐提示还有 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-panel > .ub-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-panel > .ub-tabs::-webkit-scrollbar {
+  display: none;
+}
+/* 渐隐：排在最后、贴着右边（sticky）——放得下时落在最后一个签后面的空白里，看不出来 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-panel > .ub-tabs::after {
+  content: "";
+  position: sticky;
+  right: 0;
+  flex: none;
+  align-self: stretch;
+  width: 24px;
+  background: linear-gradient(90deg, transparent, var(--v2-paper-0));
+  pointer-events: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-panel > .ub-tabs .ub-tab {
+  flex: none;
+  padding: 0 11px;
+  white-space: nowrap;
+}
+/* 天平：两方在两头（第一方靠左、第二方靠右，正对着槽的两端），槽在下面整宽，再下面一行写偏向 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-balance {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  padding: 4px 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-side-a {
+  padding: 2px 0 2px 8px;
+  text-align: left;
+  border-right: 0;
+  border-left: 4px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-side-b {
+  padding: 2px 8px 2px 0;
+  text-align: right;
+  border-left: 0;
+  border-right: 4px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-scale {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lean {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lever {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 12px 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lever-do {
+  justify-content: flex-start;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lever-do input.hs-amount,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lever-do select {
+  flex: 1 1 8em;
+  width: auto;
+  max-width: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-lever-do > .hs-act,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-actions > .hs-act {
+  flex: 1 1 100%;
+  margin-left: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-chronicle {
+  padding: 2px 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-chronicle li {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-chronicle li .hs-history {
+  grid-column: 1;
+}
+/* 年度回顾的底色贴着卡片内沿：手机上卡片内边距是 12px */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hs-chronicle li.hs-annual {
+  margin: 0 -12px;
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-card,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-spell,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-ship,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-realm {
+  padding: 12px 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-art {
+  width: calc(100% + 28px);
+  margin: -12px -14px 0;
+}
+/* 等级：名字一列，条件与奖励叠在第二列 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-ranks li {
+  grid-template-columns: 5em minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-rank-reward {
+  grid-column: 2;
+}
+/* 构成：名字、条、百分比一行，一年里的变化在条下面 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-shares li {
+  grid-template-columns: 5em minmax(0, 1fr) 3.2em;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-delta {
+  grid-column: 2 / -1;
+}
+/* 传播方式：名目、所需各一行，点数与按钮在最下面一行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-modes li {
+  grid-template-columns: minmax(0, 1fr) minmax(9em, auto);
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-modes li > span:nth-child(3) {
+  text-align: left;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-modes li > .sc-mode-label,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-modes li > .sc-mode-needs {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-modes li > span:nth-child(3) {
+  grid-column: 1;
+  grid-row: 3;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sc-modes li > button {
+  grid-column: 2;
+  grid-row: 3;
+}

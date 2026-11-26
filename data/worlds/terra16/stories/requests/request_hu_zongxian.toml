@@ -1,0 +1,250 @@
+# 请托：双屿的水道（request_hu_zongxian）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：胡宗宪（hu_zongxian，1512 生，1565 卒），总督浙直、福建军务，驻节杭州。本人不出场，话由宁波行署的幕僚转述（绍兴口音，不起名）。
+# 类型：去某处（go）。四章：offer（报价）→ survey（到双屿废港量水道）→ report（回宁波交图）→ book（印成的书）；
+#       比常规三章多一章 book，理由：唯一奖励《筹海图编》1562 年才刊行，报告章在 1562-03-31 前，书必须隔一年多才到。
+# 报价：L（代理人出面）。宁波（ningbo）总督行署的偏厅，auto=true；窗口 1559-06-01 至 1561-12-31，名声门槛 5；
+#       family=c13_offer_ningbo，冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实：1548 年朱纨捣毁双屿、填塞港口（正文只用“朱都堂当年填了港”）；胡宗宪幕府中有人编海防图籍，其中的郑若曾所编《筹海图编》1562 年刊行；
+#       双屿废港的妈祖庙与石线是传闻口吻的补笔。请托只决定“图上画不画渔民的水道”，不决定任何战事。
+# 依据·原创：幕僚与袖口沾墨的瘦老头（不点名，是谁由读者自己认）、补网的老渔夫、东中西三条水道、标杆与刻痕、书童。
+# 秘密：胡宗宪的秘密（招抚的真意、与京里的往来）本请托一字不提；也不写王直、徐海与招抚；不写下狱与死；book 章只写书。
+# 读的旗标：c13_main_lin_wandeng（offer 的 variant wandeng，林晚灯玩家被问一句“月港来的？”，由林晚灯主线设）。
+# 设的旗标：c13_request_hu_zongxian_accepted / declined（offer）、_precise（survey 读潮与绘图）、_partial_map（survey 驾船失败）、
+#       _late（survey 与 report 超时）、_reported（report 三个选项都设，供 book 的 when 读）、_done（report 照实交）、_partial（report 略去与只交数字）。
+#       终局旗标只设 done / partial / declined / late 之一的一面；不设 c7_ 旗标；不写 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 依赖：ningbo、shuangyu 都是现有港口，不需要 B10b 改名；技能 tide_reading、cartography 都在 skills.toml；势力 ming 已有；
+#       物品 chouhai_print 有 shop；胡宗宪的 cast 注释仍写着“核验王直招抚”的旧请托梗概，与本请托无关，整合时可改。
+# 缺省走向（玩家什么也不做）：offer 到 1561-12-31 超时，走 failed，无见闻、不扣钱；survey 90 天不去，走 failed 并来一封行署的信。
+# 回忆插画清单：
+#   mem-request_hu_zongxian-report：宁波行署的案边，袖口沾墨的瘦老头俯在图上，三条水道的墨线穿过一道填港的石线。
+
+[[tracks]]
+key = "request_hu_zongxian"
+name = "双屿的水道"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["hu_zongxian"]
+
+# 一、报价：1559—1561 年间，宁波总督行署偏厅，幕僚转述总督的话。
+[[tracks.chapters]]
+key = "offer"
+title = "旧图上的岛"
+text = "宁波总督行署的偏厅里，一个绍兴口音的幕僚把一张旧图铺在案上，舟山一带的岛画得像撒了一把豆子。他没让座，先压住图角：“总督说，军粮还差三千石，船还差二十条。你来得正好，咱们算算账。”可他要算的不是粮。昆山的郑先生在编一部讲海防的书，双屿那一带用的全是十几年前的旧图，朱都堂当年把港口填了，填完哪条水道还能进船，如今谁也说不清。“总督的意思，请老弟去双屿废港看一圈，行署出路费。”"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1559, 6, 1], to = [1561, 12, 31] },
+  { kind = "fame", ge = 5 },
+]
+at = "ningbo"
+mood = "cheerful"
+deadline = [1561, 12, 31]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "wandeng"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng", value = true }]
+text = "宁波总督行署的偏厅里，一个绍兴口音的幕僚把一张旧图铺在案上，舟山一带的岛画得像撒了一把豆子。他先多看了你两眼：“你是月港来的？那边的水，你比我熟。”这才压住图角：“总督说，军粮还差三千石，船还差二十条。你来得正好，咱们算算账。”可他要算的不是粮。昆山的郑先生在编一部讲海防的书，双屿那一带用的全是十几年前的旧图，朱都堂当年把港口填了，填完哪条水道还能进船，如今谁也说不清。“请老弟去双屿废港看一圈，行署出路费。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去双屿看一圈"
+next = "survey"
+reply = "幕僚把旧图卷起来塞进你手里：“哪条能走，哪条不能走，几时涨几时落，都记上。总督那头我替你说，他向来大方。”"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = 2 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "who"
+text = "接下，先问这图是谁要的"
+next = "survey"
+reply = "“郑先生要，总督也要。”幕僚笑了笑，把图在你手里按了按，“图一画出来，谁都能照着走，看在谁手里罢了。老弟只管量，别的不用你操心。”"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = 2 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这趟不接"
+next = "failed"
+reply = "幕僚把旧图收回去，卷好，拿绳子绕了两圈。“总督府不缺船，缺的是肯去的人。”他说，“不勉强，慢走。”"
+effects = [{ kind = "flag", flag = "c13_request_hu_zongxian_declined" }]
+
+# 二、量水道：双屿废港。三种量法：读潮（技能）、驾船（检定）、画图（技能）。
+[[tracks.chapters]]
+key = "survey"
+title = "填港的石头"
+text = "双屿废港只剩几根烧黑的桩子和半截妈祖庙的墙，墙根下晒着渔网。落潮时水底露出一道石线，爬着青苔，是当年官兵沉下去堵港的船和石头。水道有三条：东边最宽，中间那条渔民常走，西边被石头卡死了一半。补网的老渔夫头也不抬：“要量你就量，没人拦你。可中间那条要是画进官府的图，我们这些人，就没处躲风了。”"
+when = [{ kind = "alive", person = "hu_zongxian", value = true }]
+objectives = [{ kind = "at", at = "shuangyu", text = "到双屿废港去" }]
+at = "shuangyu"
+speaker = "captain"
+mood = "sad"
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = -3 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_late" },
+  { kind = "letter", person = "hu_zongxian", text = "图等不及了。郑先生照着旧图把双屿那一页刻了，哪条水道能走，还是十几年前的说法。总督说，船不急，下回有事再来行署喝茶。（幕僚代笔）" },
+]
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "守着潮水，一刻一刻量水深"
+next = "report"
+reply = "你在妈祖庙的残墙边插了根标杆，每过一刻就刻一道。到第二个潮头，三条水道几时能过、过得了几尺吃水的船，都记在了本子上，连西边那条只容舢板的缝也量到了。"
+news = "双屿废港的落潮线上，有个船长守着一根标杆站了两个潮头，一刻一刻往本子上记水深，补网的老渔夫看了半天没吭声。"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "你对着水面看了半天，只看出潮在涨，说不出几时过得了什么船。"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = 3 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_precise" },
+]
+
+[[tracks.chapters.choices]]
+key = "sail"
+text = "亲自驾船，试一遍东水道"
+next = "report"
+reply = "你让舵手压住速度，船贴着石线往里探，船底沙沙地响了一路。每进一段，吃水几尺，你就在本子上添一笔。"
+news = "双屿废港东边的水道里，有条船贴着水底的石线开了个来回，补网的老渔夫在岸上直咂嘴。"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "hu_zongxian", value = 3 }]
+
+[tracks.chapters.choices.fail]
+next = "report"
+news = "双屿废港东水道的石线刮坏了一条船的底，船长退回滩头，落潮太急，只量成了两条。"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = -2 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_partial_map" },
+]
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "画成图，把礁石一块块标上"
+next = "report"
+reply = "你借妈祖庙残墙下一块平地当画板，画了一整天。老渔夫凑过来看了半晌，伸出指头点了点：“这儿漏了一块，涨潮时它就在水皮底下。”你添上去，那是整张图里最小的一笔。"
+news = "双屿废港的滩头，有个船长趴在一块旧船板上画了一整天的图，补网的老渔夫凑过去指给他一块暗礁。"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你手里的笔画得出岸线，画不出水底下的东西。"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = 3 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_precise" },
+]
+
+# 三、交图：回宁波行署，瘦老头在案边等着记。
+[[tracks.chapters]]
+key = "report"
+title = "哪条能进船"
+text = "行署偏厅里，幕僚已经在等。案边多了个瘦老头，袖口沾着墨，不报姓名，只握着一支笔等你开口。“总督有话，”幕僚说，“水道的事，老弟怎么讲，图上就怎么画。”瘦老头把笔尖悬在一页白纸上。西边那条堵了，东边那条宽，都没什么可犹豫的。只有渔民常走的中间那条，写还是不写，你得现在定。"
+when = [{ kind = "alive", person = "hu_zongxian", value = true }]
+at = "ningbo"
+speaker = "captain"
+mood = "tense"
+deadline = [1562, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "hu_zongxian", value = -3 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_late" },
+  { kind = "letter", person = "hu_zongxian", text = "你没来交图，郑先生那一页只好先空着，另派了人去补。总督说，不碍事，行署的门没锁。（幕僚代笔）" },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_precise"
+when = [{ kind = "flag", flag = "c13_request_hu_zongxian_precise", value = true }]
+text = "行署偏厅里，幕僚已经在等。案边多了个瘦老头，袖口沾着墨，不报姓名。你把本子和图摊在案上，三条水道的涨落、吃水和暗礁一行行标得齐整，他凑近看了一眼，眉毛抬了抬，把笔尖悬在一页白纸上。“总督有话，”幕僚说，“水道的事，老弟怎么讲，图上就怎么画。”西边那条堵了，东边那条宽，都没什么可犹豫的。只有渔民常走的中间那条，写还是不写，你得现在定。"
+
+[[tracks.chapters.variants]]
+key = "v2_partial_map"
+when = [{ kind = "flag", flag = "c13_request_hu_zongxian_partial_map", value = true }]
+text = "行署偏厅里，幕僚已经在等。案边多了个瘦老头，袖口沾着墨，不报姓名。你把本子摊在案上：东、中两条记了数，西边那条只有潦草的一行——船底刮了，退回。瘦老头看了一眼，什么也没说，把笔尖悬在白纸上。“总督有话，”幕僚说，“水道的事，老弟怎么讲，图上就怎么画。”渔民常走的中间那条，写还是不写，你得现在定。"
+
+[[tracks.chapters.choices]]
+key = "all"
+text = "照实交：哪条能进船，哪条已经堵死"
+next = "book"
+reply = "瘦老头一条一条记，记到中间那条，笔尖停了一下，还是落了下去。记完，他把纸吹干，朝幕僚点点头。幕僚转述总督的话：“图画得好，人也要记着。老弟的名字，我们收下了。”"
+news = "宁波总督行署里有人把双屿废港的三条水道都画上了新图，补网的渔夫说，往后得换个地方躲风了。"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "hu_zongxian", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "ming", value = 3 },
+  { kind = "memory", memory = "mem-request_hu_zongxian-report", title = "填港石线上的三条水道" },
+  { kind = "flag", flag = "c13_request_hu_zongxian_reported" },
+  { kind = "flag", flag = "c13_request_hu_zongxian_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "spare"
+text = "把中间那条渔民的水道略去不报"
+next = "book"
+reply = "瘦老头抬眼看了你一下，什么也没问，笔绕开那片海，另起了一行。图上中间那一带，只画了浪纹，没标一个字。幕僚没看出来，只夸你办事利落。"
+news = "宁波总督行署新画的双屿图上，中间那一片海一个字也没标，只画了浪，行署里没人问为什么。"
+effects = [
+  { kind = "cash", value = 2550 },
+  { kind = "affinity", person = "hu_zongxian", value = 4 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "ming", value = 2 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_reported" },
+  { kind = "flag", flag = "c13_request_hu_zongxian_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "不下结论，只交水深的数"
+next = "book"
+reply = "你把本子上的数一行行念出来，不说哪条能走、哪条不能。幕僚有点不耐烦，嘟囔了一句“数谁不会报”。瘦老头倒高兴起来，笔走得飞快：“数比话好，话是人说的。能走不能走，我自己去判。”"
+news = "宁波总督行署里来过一个只交水深、不下结论的船长，幕僚嫌他啰嗦，在旁边记图的瘦老头却满意。"
+effects = [
+  { kind = "cash", value = 2550 },
+  { kind = "affinity", person = "hu_zongxian", value = 4 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "ming", value = 2 },
+  { kind = "flag", flag = "c13_request_hu_zongxian_reported" },
+  { kind = "flag", flag = "c13_request_hu_zongxian_partial" },
+]
+
+# 四、印成的书：1562 年秋以后，昆山郑先生家的书童送书。不写胡宗宪，只写书。
+[[tracks.chapters]]
+key = "book"
+title = "印成的书"
+text = "隔了一年多，一个书童在宁波码头的缆桩边找到你，背上驮着一函新印的书，蓝布套上还带着浆糊味。“昆山郑先生让送来的，”他把函套解下来，“先生说，当年宁波那一页，用这个还。”你抽出一册，翻到舟山那一页，双屿的三条水道印在上面，墨线比你画的还细。"
+when = [
+  { kind = "date", from = [1562, 9, 1] },
+  { kind = "flag", flag = "c13_request_hu_zongxian_reported", value = true },
+]
+at = "ningbo"
+speaker = "captain"
+mood = "cheerful"
+
+[[tracks.chapters.variants]]
+key = "partial"
+when = [{ kind = "flag", flag = "c13_request_hu_zongxian_partial", value = true }]
+text = "隔了一年多，一个书童在宁波码头的缆桩边找到你，背上驮着一函新印的书，蓝布套上还带着浆糊味。“昆山郑先生让送来的，”他把函套解下来，“先生说，当年宁波那一页，用这个还。”你抽出一册，翻到舟山那一页，双屿的水道印在上面，墨线细得像头发。只是中间那一带，印的还是你交上去的样子。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下，道声谢"
+next = "done"
+reply = "书童鞠了一躬就走，没回头。你拎着函套回船，书页上新墨的味道，一路没散。"
+news = "宁波码头上，昆山郑先生家的书童背着一函新印的海防书，挨个找当年替行署量过海的人。"
+effects = [{ kind = "item", item = "chouhai_print", qty = 1 }]
+
+[[tracks.chapters.choices]]
+key = "look"
+text = "当场翻到双屿那一页仔细看"
+next = "done"
+reply = "你找到自己量的那几个数，排在页脚的小字里，一个不差。数字旁边多了几行小注，字比你的小，也比你的细。书童站在一旁等你看完，才把函套重新系好递过来。"
+news = "宁波码头上，有个船长当街翻开一册新印的海防书，对着双屿那一页看了半天。"
+effects = [{ kind = "item", item = "chouhai_print", qty = 1 }]

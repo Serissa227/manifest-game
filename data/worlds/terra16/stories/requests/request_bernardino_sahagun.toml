@@ -1,0 +1,194 @@
+# C13d 人物的请托：萨阿贡——纸与十二卷（复合，4 章：报价、交货、国王的命令、塞维利亚；故事 2.0，A5 / E37 契约）
+# 人物：贝尔纳迪诺·德·萨阿贡（1499 年生，方济各会士，新西班牙特拉特洛尔科圣十字学院）。
+#   与纳瓦书手、画师和口述的老人一起编两种文字的百科，纸用完了。
+# 类型：复合（送货 → 转折 → 押运）。报价模式 L（代理人与信）：offer 在韦拉克鲁斯，auto=true，family=c13_offer_veracruz，冷却 20 天。
+#   出面的是一位纳瓦书手（不新建 cast、不写 speaker）；萨阿贡本人只在信里说话。
+# 窗口：offer 1575-01-15..1577-06-30（deadline 为窗口止日，timeout 直接 failed，不写见闻）；
+#   deliver 进章后 400 天（超时走 failed）；order 1577-10-01 起，止日 1579-06-30（超时走 done）；seville 进章后 300 天（超时走 failed）。
+#   普通章没有 stage，window 只是规划用的出现区间，不写进 TOML。
+# 依据——史实：萨阿贡在特拉特洛尔科与纳瓦书手、画师、口述的老人合作，纸张紧缺；1577 年 4 月腓力二世下令收缴全部手稿，送回西班牙。
+#   原创：书手本人、韦拉克鲁斯的书记与三层油布、方济各会的管事、塞维利亚修院的老修士。
+#   正文只写“送回西班牙”，不写书的后世去处；旧神与仪式不写细节。
+#   纸从威尼斯与宁波来（goods paper），不从奥恰尔特印书坊买，不提 C7 的任何人。
+# 旗标：读——无（c7 为 none，不读 c7_* 与 c13_main_*）。
+#   写——accepted / declined（报价）；nahuatl、steward、carried（分支，至多三面）；done / partial / failed / late（终局，每条路径只设一面）。
+# 依赖：veracruz、seville 为现有港口；goods paper、skill lang_nahuatl 为现有内容；无 B10b 改名；萨阿贡的日程在墨西哥城，本轨道不用 person 目标。
+# 英文覆盖：不写（本批仅中文）。
+# 回忆插画清单：
+#   mem-request_bernardino_sahagun-order（画面：韦拉克鲁斯码头，几只钉死的木箱，箱边一卷摊开的纸，左栏纳瓦特文，右栏集市）
+#   mem-request_bernardino_sahagun-seville（画面：修院的桌上，油布一层层揭开，第一页的小画是集市的摊子）
+
+[[tracks]]
+key = "request_bernardino_sahagun"
+name = "纸与十二卷"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["bernardino_sahagun"]
+
+# 报价：韦拉克鲁斯码头，一个纳瓦书手带来萨阿贡的信。
+[[tracks.chapters]]
+key = "offer"
+title = "等纸的书手"
+text = "韦拉克鲁斯的码头上，一个纳瓦书手等在仓库的阴影里，袖口沾着两种颜色的墨。他把一卷画纸摊开：左栏是纳瓦特文，右栏是卡斯蒂利亚文，中间是画师照着三个老人的口述画的特拉特洛尔科集市，卖辣椒的、卖羽毛的，讨价还价的手势都在里头。右栏只写到一半，纸用完了。书手从怀里抽出一张薄纸，说：“修士的信。”信上只有几行，字很小：“要二十令欧洲的白纸，威尼斯来的那种。”下一行压得更低：“医生不认得病，就治不了病。”"
+mood = "mystic"
+at = "veracruz"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1575, 1, 15], to = [1577, 6, 30] }, { kind = "fame", ge = 5 }]
+deadline = [1577, 6, 30]
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，替他们把这二十令纸运来"
+reply = "书手把那卷画小心卷好，用油布裹了三层，又把信折成四折塞进去。他站起来，腰骨响了一声：“修士说，纸来了，我们就把集市写完。你的船几时开？”"
+next = "deliver"
+effects = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_accepted" }, { kind = "affinity", person = "bernardino_sahagun", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "接下，先问这部书是写给谁看的"
+reply = "他想了想，手指在右栏的字上划过去，划到一个卖羽毛的摊子停下：“修士说是给神父看的，好认出旧神。我写的时候，想的是我外婆，她就在这样的摊子上卖过羽毛。”"
+next = "deliver"
+effects = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_accepted" }, { kind = "affinity", person = "bernardino_sahagun", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这趟不接"
+reply = "书手点点头，说那就先用树皮纸写，只是墨会洇。他把画纸卷起来塞回怀里，又朝码头上的船看了一眼，像是在算它开走要多久。起身时，那张薄信留在了桌上。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_declined" }]
+
+# 交货：白纸卸下船，管事来登账。三种交法，报酬相同，账与人情不同。
+[[tracks.chapters]]
+key = "deliver"
+title = "二十令白纸"
+text = "白纸一令一令搬下船，码头的脚夫用麻绳捆着，码在仓库门口。书手蹲下去，用指甲刮纸面，又拿一小片吸墨纸压上去，看墨洇不洇。他数得很慢：“一令，两令……这一批够写完第十卷。”数到一半，他停住，抽出一沓对着天光看：“这一沓太薄，字会透过去。”管事就是这时候走过来的，灰袍上挂着钥匙串，手里夹着账本，说纸要登进会里的账。会里有人一直嫌这部书花钱。"
+speaker = "captain"
+mood = "tense"
+at = "veracruz"
+when = [{ kind = "alive", person = "bernardino_sahagun", value = true }]
+objectives = [{ kind = "goods", good = "paper", qty = 20, at = "veracruz", text = "在韦拉克鲁斯卸下二十令白纸" }]
+deadline_days = 400
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_late" }, { kind = "affinity", person = "bernardino_sahagun", value = -3 }, { kind = "letter", person = "bernardino_sahagun", text = "纸没有等到。我们改用树皮纸写第十卷，墨一渗就洇开，有几页要整张重描。你若还记得这件事，就来看一眼。" }]
+news = "韦拉克鲁斯的码头上，二十令白纸迟迟没有来，一个纳瓦书手在仓库后头改用树皮纸，熬夜描字。"
+
+[[tracks.chapters.choices]]
+key = "to_scribe"
+text = "直接交给书手，账记在你自己名下"
+reply = "管事皱着眉，把账本往你面前一推，让你自己签了名，嘟囔一句“又是那部书”，转身走了。书手把纸一捆一捆系上骡背，系完回头冲你举了举手，骡子打了个响鼻，铃铛响了一路。"
+next = "order"
+effects = [{ kind = "cash", value = 800 }, { kind = "cash", value = 400 }, { kind = "affinity", person = "bernardino_sahagun", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "to_steward"
+text = "交给管事，让他照章登账"
+reply = "管事一令一令点清，每点一令在账上划一道，最后写下“学院用纸”，墨迹还没干就合上了账本。书手站在旁边，一句话没说，只把袖口的墨渍蹭得更深了。"
+next = "order"
+effects = [{ kind = "cash", value = 800 }, { kind = "cash", value = 400 }, { kind = "flag", flag = "c13_request_bernardino_sahagun_steward" }]
+
+[[tracks.chapters.choices]]
+key = "nahuatl"
+text = "用纳瓦特话问他：集市那一卷写到哪了"
+hint = "他念的吆喝你只懂一半，这句问不出口。"
+reply = "他眼睛一亮，当场念了两行卖羽毛的吆喝，一句比一句快。念完他问你听不听得出是哪个镇的口音：“前一句是特拉特洛尔科的，后一句是北边山里来的。”"
+requires = [{ kind = "skill", skill = "lang_nahuatl", ge = 60 }]
+next = "order"
+effects = [{ kind = "cash", value = 800 }, { kind = "cash", value = 400 }, { kind = "affinity", person = "bernardino_sahagun", value = 3 }, { kind = "flag", flag = "c13_request_bernardino_sahagun_nahuatl" }]
+
+# 转折：国王的命令。书记来收箱子，书手说出夜里偷抄的事。
+[[tracks.chapters]]
+key = "order"
+title = "国王的命令"
+text = "再到韦拉克鲁斯时，码头上停着要回西班牙的船队。市长的书记带着两个兵，站在仓库门口，等几只钉死的木箱。箱子是新刨的松木，封条压着御印。书记一只只验过，念着令文：修士的手稿，一份不留，全数送回西班牙。萨阿贡的信是前几天托人带到的，只有一句：“照令交，一页不少；那一卷，不要拿来给我看。”书手也来了，眼圈发黑，站在箱子边上不肯走。他压着嗓子说，夜里他们用你运来的纸，偷偷抄了一份纳瓦特文的，然后问你：“这一份，能不能不进箱子？”"
+speaker = "captain"
+mood = "sad"
+at = "veracruz"
+when = [{ kind = "alive", person = "bernardino_sahagun", value = true }, { kind = "date", from = [1577, 10, 1] }]
+deadline = [1579, 6, 30]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_partial" }]
+news = "韦拉克鲁斯码头，木箱没等到人就上了船，书手在仓库后头坐了一夜。"
+
+[[tracks.chapters.choices]]
+key = "comply"
+text = "照令，把箱子全交给书记"
+reply = "书记一只只验了封条，签了收讫，把单子递给你。箱子一只只吊上船舷，书手站在码头边看着，看了很久，然后转身就走，没有回头，码头上只剩书记念令文的声音。"
+next = "done"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "bernardino_sahagun", value = 4 }, { kind = "reputation", faction = "new_spain", value = 2 }, { kind = "flag", flag = "c13_request_bernardino_sahagun_partial" }]
+news = "韦拉克鲁斯码头，书记验过封条，几只钉死的木箱上了船，说是方济各会修士写了二十年的书。"
+
+[[tracks.chapters.choices]]
+key = "keep_copy"
+text = "用纳瓦特话跟书手对账，拖住书记"
+hint = "书手那句纳瓦特话，你接不住，这一招使不上。"
+reply = "你们用纳瓦特话一句一句对着箱子上的编号念，念得又慢又响。书记听不懂，只能站在一边等，等得不耐烦，把单子拍在箱盖上。等他回过神，书手已经出了城门。"
+requires = [{ kind = "skill", skill = "lang_nahuatl", ge = 60 }]
+next = "done"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "bernardino_sahagun", value = 8 }, { kind = "skill", skill = "lang_nahuatl", value = 20 }, { kind = "fame", value = 4 }, { kind = "memory", memory = "mem-request_bernardino_sahagun-order", title = "钉死的木箱与偷抄的一卷" }, { kind = "flag", flag = "c13_request_bernardino_sahagun_done" }]
+news = "韦拉克鲁斯码头，一个船长和一个书手用纳瓦特话对着箱子编号念，书记听不懂，把单子拍在箱盖上。"
+
+[[tracks.chapters.choices]]
+key = "keep_talk"
+text = "拉着书记数箱子上的钉子，拖住他"
+reply = "你拉着书记数箱子上的钉子，一颗一颗指给他看，数错了就从头数。数到第三遍，他嫌烦，挥手叫人去点名，这才想起回头去看门口，门口已经空了。"
+check = { attr = "eloquence", base = 5, per = 8 }
+next = "done"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "bernardino_sahagun", value = 8 }, { kind = "skill", skill = "lang_nahuatl", value = 20 }, { kind = "fame", value = 4 }, { kind = "memory", memory = "mem-request_bernardino_sahagun-order", title = "钉死的木箱与偷抄的一卷" }, { kind = "flag", flag = "c13_request_bernardino_sahagun_done" }]
+news = "韦拉克鲁斯码头上，有人拉着书记数箱子的钉子，数到第三遍，仓库门口的书手早已不见了。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "bernardino_sahagun", value = -2 }, { kind = "flag", flag = "c13_request_bernardino_sahagun_failed" }], news = "韦拉克鲁斯码头，书记数到一半忽然发了火，几只木箱当场重新钉死，书手在仓库门口站了很久。" }
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "替他们带一份去塞维利亚，交给会里信得过的人"
+reply = "书手把抄本包了三层油布，塞给你时手指还在抖：“修士不肯看，我看。书到了西班牙，总有一个人肯读。你别拆，路上潮气重。”说完他转身回了仓库，没再来送。"
+next = "seville"
+effects = [{ kind = "affinity", person = "bernardino_sahagun", value = 3 }, { kind = "flag", flag = "c13_request_bernardino_sahagun_carried" }]
+
+# 码头上的账单若写着“学院用纸”，书记会多看一眼账目。
+[[tracks.chapters.variants]]
+key = "steward"
+when = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_steward" }]
+text = "再到韦拉克鲁斯时，码头上停着要回西班牙的船队。市长的书记带着两个兵，手里压着一张账单，抬头写着“学院用纸”，他看了两遍，才想起去数箱子的数目。箱子是新刨的松木，封条压着御印，书记念着令文：修士的手稿，一份不留，全数送回西班牙。萨阿贡的信是前几天托人带到的，只有一句：“照令交，一页不少；那一卷，不要拿来给我看。”书手也来了，眼圈发黑，站在箱子边上不肯走。他压着嗓子说，夜里他们用你运来的纸，偷偷抄了一份纳瓦特文的，然后问你：“这一份，能不能不进箱子？”"
+
+# 塞维利亚：修院的老修士看见了抄本。
+[[tracks.chapters]]
+key = "seville"
+title = "三层油布"
+text = "塞维利亚的方济各会修院门口，看门的修士听说是从新西班牙来的书，去叫了一位管图书的老修士。老修士没戴眼镜，把书凑到窗口的亮光下，一页一页地翻。翻到第一页，他停住了：左栏是没人认得的字，右栏画着一个集市，摊子上堆着羽毛和辣椒。门外的街上有卖橄榄的吆喝，修院的钟敲过一下，他一点也没听见。他的手指在那张小画的边上慢慢摩挲，摩挲了很久。"
+speaker = "captain"
+mood = "tender"
+at = "seville"
+when = [{ kind = "alive", person = "bernardino_sahagun", value = true }]
+objectives = [{ kind = "at", at = "seville", text = "到塞维利亚的方济各会修院门口" }]
+deadline_days = 300
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_bernardino_sahagun_late" }, { kind = "affinity", person = "bernardino_sahagun", value = -3 }, { kind = "letter", person = "bernardino_sahagun", text = "那份抄本到了没有？这边的人又开始抄第二份，纸不够，就先用树皮纸将就。你若见到塞维利亚的修士，替我问一句：这一份有没有人读。" }]
+news = "塞维利亚的修院门口，看门的修士等了几个月，没等来一卷新西班牙的书。"
+
+[[tracks.chapters.choices]]
+key = "friar"
+text = "交给他，请他别让书进库房最底下"
+reply = "老修士把抄本抱在胸前，抱了一会儿才松手：“库房最底下是给异端的。这一本，放在我的桌上，让进来的人都看得见。”他又翻了一页，翻得很轻。"
+next = "done"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "bernardino_sahagun", value = 8 }, { kind = "skill", skill = "lang_nahuatl", value = 20 }, { kind = "fame", value = 4 }, { kind = "memory", memory = "mem-request_bernardino_sahagun-seville", title = "三层油布里的纳瓦特文" }, { kind = "flag", flag = "c13_request_bernardino_sahagun_done" }]
+news = "塞维利亚的方济各会修院收到一份新西班牙来的抄本，左栏是没人认得的文字，右栏画着集市。"
+
+[[tracks.chapters.choices]]
+key = "casa"
+text = "交给贸易总署登记，留个凭据"
+reply = "总署的书记先查了船单，又查了你的名字，盖了章，把抄本放进一只写着编号的箱子。你拿到一张收条，收条上的字比抄本上的还潦草，像是赶着下班写的。"
+next = "done"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "bernardino_sahagun", value = 4 }, { kind = "flag", flag = "c13_request_bernardino_sahagun_partial" }]
+news = "塞维利亚的贸易总署登记了一只从新西班牙来的箱子，收条交到了船长手里。"

@@ -1,0 +1,1942 @@
+/* 新界面（试用）——数字类：行情（推算、预测图的配色）、期货、报表（三大表与图表）、情报与编年史。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ *
+ * 这一组的思路（docs/UI-REDESIGN.md 第 2、4 节）：
+ * - 数字是主角：一律等宽数字、右对齐；表格是一张账页（白纸、细线、浅色表头），合计行加粗、上面一道墨色细线（描边一律 1 px，双细线只在窗口标题栏下）。
+ * - 图表画在白纸上（配色见 components/chartTheme.ts 的 V2_CHART），外面只有一道细框。
+ * - 主要操作一眼找到：推算页的“记下这个预测”贴在窗口下沿（滚到哪儿都在，手机上在拇指区）；
+ *   期货的开多 / 开空 / 平仓放在合约那一行（不用先选中一行）；试算表的“用这个”、复盘的“试试”是行内的一键按钮。
+ * - 期货的行情板沿用“夜航”的深色（像交易所里挂的报价牌），涨跌用深色底上的绿与红。
+ * - 手机（竖屏 phone、横屏 short）上，多列的表格变成一行一张小卡，每个数前写着它是什么（格子的 data-label，只在 v2 里加）；
+ *   期货行情板按自己的宽度（容器查询，窄于 860 px）变卡片，竖放的平板也一样；页面与行情板都不横向滚动。
+ */
+
+/* ═════════════════════════ 0. 这一组共用 ═════════════════════════ */
+:root[data-ui="v2"] .pn-analysis,
+:root[data-ui="v2"] .pn-futures,
+:root[data-ui="v2"] div.pn-reports,
+:root[data-ui="v2"] .pn-intel {
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+}
+:root[data-ui="v2"] .pn-analysis .num,
+:root[data-ui="v2"] .pn-futures .num,
+:root[data-ui="v2"] div.pn-reports .num {
+  font-variant-numeric: tabular-nums;
+}
+/* 说明与小字：不低于 12 px，用说明色 */
+:root[data-ui="v2"] .pn-analysis small,
+:root[data-ui="v2"] .pn-futures small,
+:root[data-ui="v2"] div.pn-reports small,
+:root[data-ui="v2"] .pn-intel small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-analysis .hint,
+:root[data-ui="v2"] .pn-analysis .sub,
+:root[data-ui="v2"] div.pn-reports .sub {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+/* 带下拉、数字框的字段：字在上、框在下（并排时对齐框的底边） */
+:root[data-ui="v2"] .pn-analysis .field:has(select),
+:root[data-ui="v2"] .pn-analysis .field:has(input[type="number"]),
+:root[data-ui="v2"] .pn-analysis .fc-draft .field,
+:root[data-ui="v2"] .pn-futures .fu-toolbar .field {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-analysis .field > span,
+:root[data-ui="v2"] .pn-futures .fu-toolbar .field > span {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink-2);
+}
+/* 图表：白纸 + 一道细框（ECharts 按元素的内框尺寸画，所以框上不加内边距） */
+:root[data-ui="v2"] .pn-analysis .fc-chart,
+:root[data-ui="v2"] .mk-forecast .fc-chart {
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+}
+/* 一键按钮（试算的“用这个”、复盘的“试试”、按抵达时预测）：同交易所的“买满 / 全卖”——黄铜描边的浅底 */
+:root[data-ui="v2"] .pn-analysis .btn.small,
+:root[data-ui="v2"] .pn-analysis .fc-stale .btn.small {
+  min-height: 30px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-analysis .btn.small:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-analysis .btn.small:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+
+/* ═════════════════════════ 1. 行情：顶部（港口、商品、奇才）与分页 ═════════════════════════ */
+:root[data-ui="v2"] .pn-analysis .fc-pick {
+  gap: 10px 16px;
+  align-items: flex-end;
+  margin: 0 0 8px;
+}
+:root[data-ui="v2"] .pn-analysis .fc-pick select {
+  min-width: 11em;
+}
+:root[data-ui="v2"] .pn-analysis .fc-geniuses {
+  margin: 4px 0 4px;
+  padding-left: 10px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-brass);
+}
+
+/* ═════════════════════════ 2. 推算 ═════════════════════════ */
+:root[data-ui="v2"] .fc-work {
+  display: flex;
+  flex-direction: column;
+}
+:root[data-ui="v2"] .fc-work-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  gap: 20px;
+}
+/* 左栏：图、结论、过时说明、本地生产者与商人 */
+:root[data-ui="v2"] .fc-work-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+/* 结论：第一句（期末的价与区间）是标题，其余是小一号的补充；左边一道黄铜线 */
+:root[data-ui="v2"] .pn-analysis .fc-summary {
+  margin: 0;
+  padding: 2px 0 2px 12px;
+  list-style: none;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+  border-left: 3px solid var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-analysis .fc-summary li:first-child {
+  margin-bottom: 2px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--v2-ink);
+}
+/* 过时的行情：海蓝色的说明条，“按抵达时预测”在行尾 */
+:root[data-ui="v2"] .pn-analysis .fc-stale {
+  justify-content: space-between;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-sea);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-analysis .fc-stale > span {
+  flex: 1 1 18em;
+}
+/* 本地生产者、本地商人：图下的两段参考，细线隔开 */
+:root[data-ui="v2"] .pn-analysis .fc-producer {
+  margin: 0;
+  padding-top: 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-analysis .fc-merchants {
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-analysis .fc-merchants h4 {
+  margin: 0 0 8px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-analysis .fc-merchants li {
+  grid-template-columns: 6.5em minmax(60px, 1fr) 3.2em 4.6em;
+  gap: 10px;
+  min-height: 26px;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-analysis .fc-mer-name {
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-analysis .fc-mer-bar {
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-analysis .fc-mer-bar > span {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-analysis .fc-merchants .num {
+  text-align: right;
+}
+:root[data-ui="v2"] .pn-analysis .fc-mer-fc {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-analysis .fc-merchants .sub {
+  margin: 8px 0 0;
+  line-height: 1.6;
+}
+
+/* 右栏：一块控制板（纸色底、细框），里面的几组用细线隔开，不套卡片 */
+:root[data-ui="v2"] .fc-work-side {
+  gap: 0;
+  padding: 4px 16px 12px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+}
+:root[data-ui="v2"] .fc-work-side > * {
+  margin: 0;
+  padding: 12px 0;
+}
+:root[data-ui="v2"] .fc-work-side > * + * {
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .fc-work-side fieldset {
+  min-width: 0;
+  border: 0;
+  border-top: 0;
+  background: transparent;
+}
+:root[data-ui="v2"] .fc-work-side > fieldset + *,
+:root[data-ui="v2"] .fc-work-side > * + fieldset {
+  border-top: 1px solid var(--v2-line);
+}
+/* 分组的小标题（legend）：浮动后成为普通的一行，才能和内容一起排 */
+:root[data-ui="v2"] .fc-work-side legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 0;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .fc-work-side legend + * {
+  clear: both;
+}
+
+/* 看哪条线：日线 / 月线，两段的切换（单选框藏起来、整段可点） */
+:root[data-ui="v2"] .fc-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+:root[data-ui="v2"] .fc-mode legend {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .fc-mode > label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--v2-h-md);
+  padding: 0 12px;
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  cursor: pointer;
+}
+:root[data-ui="v2"] .fc-mode > label:nth-of-type(1) {
+  border-radius: var(--v2-r-sm) 0 0 var(--v2-r-sm);
+}
+:root[data-ui="v2"] .fc-mode > label:nth-of-type(2) {
+  border-left: 0;
+  border-radius: 0 var(--v2-r-sm) var(--v2-r-sm) 0;
+}
+:root[data-ui="v2"] .fc-mode > label input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+:root[data-ui="v2"] .fc-mode > label:has(input:checked) {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 -2px 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .fc-mode > label:nth-of-type(2):has(input:checked) {
+  box-shadow: inset 1px 0 0 var(--v2-brass-ink), inset 0 -2px 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .fc-mode > label:has(input:disabled) {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  cursor: not-allowed;
+}
+:root[data-ui="v2"] .fc-mode > label:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+  z-index: 1;
+}
+:root[data-ui="v2"] .fc-mode-need {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+}
+
+/* 方法：一行一个，整行可点；选中的浅黄铜底、黄铜描边；没掌握的灰字，原因是行尾的小签。
+   行商的老法子（右栏的第二组，名字都短）排成两列；奇才的法子名字长，一列 */
+:root[data-ui="v2"] .fc-work-side > fieldset.fc-methods:nth-of-type(2) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 6px;
+}
+:root[data-ui="v2"] .fc-work-side > fieldset.fc-methods:nth-of-type(2) legend {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .fc-method {
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  margin: 1px 0;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .fc-method:hover {
+  background: var(--v2-paper-2);
+}
+:root[data-ui="v2"] .fc-method:has(input:checked) {
+  background: #f6e6c2;
+  border-color: #b3852f;
+}
+:root[data-ui="v2"] .fc-method:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .fc-method-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .fc-method:has(input:checked) .fc-method-name {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .fc-method.locked {
+  opacity: 1;
+}
+:root[data-ui="v2"] .fc-method.locked:hover {
+  background: transparent;
+}
+:root[data-ui="v2"] .fc-method.locked .fc-method-name {
+  font-weight: 400;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .fc-method-lock {
+  flex: none;
+  margin-left: auto;
+  padding: 1px 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.4;
+  color: var(--v2-ink-3);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+/* 方法的说明：选中的那个法子叫什么、怎么算 */
+:root[data-ui="v2"] .fc-work-side .fc-method-card {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .fc-method-card strong {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+/* 期限、窗口：两个下拉并排 */
+:root[data-ui="v2"] .fc-work-side .fc-knobs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px 12px;
+}
+:root[data-ui="v2"] .fc-work-side .fc-knobs select {
+  width: 100%;
+}
+/* 参数：名字、数字框、“自动”并排 */
+:root[data-ui="v2"] .fc-params {
+  padding: 12px 0;
+}
+:root[data-ui="v2"] .fc-param {
+  gap: 12px;
+  margin: 0 0 8px;
+}
+:root[data-ui="v2"] .fc-param:last-child {
+  margin-bottom: 0;
+}
+:root[data-ui="v2"] .fc-param input[type="number"] {
+  width: 7.5em;
+}
+:root[data-ui="v2"] .fc-auto {
+  min-height: var(--v2-h-md);
+  padding-bottom: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .fc-options {
+  gap: 2px;
+}
+:root[data-ui="v2"] .fc-options label {
+  min-height: 30px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .fc-options .field {
+  margin: 6px 0 0;
+}
+:root[data-ui="v2"] .pn-analysis .fc-note {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+
+/* 贴底的“记下预测”条：整页宽、贴着窗口下沿；记下的是什么在左，主按钮在右 */
+:root[data-ui="v2"] .fc-pin-bar {
+  position: sticky;
+  bottom: -24px;
+  z-index: 2;
+  margin: 20px -20px -24px;
+  padding: 12px 20px 14px;
+  background: var(--v2-paper-1);
+  border-top: 1px solid var(--v2-line-strong);
+  box-shadow: 0 -8px 20px color-mix(in srgb, var(--v2-ink) 8%, transparent);
+}
+:root[data-ui="v2"] .fc-pin-bar .fc-pin {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+}
+:root[data-ui="v2"] .fc-pin-what {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .fc-pin-bar .fc-pin small {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .fc-pin-bar .fc-pin small[role="status"] {
+  color: var(--v2-up);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .fc-pin-bar .fc-pin .btn.primary {
+  order: 5;
+  margin-left: auto;
+  min-height: var(--v2-h-lg);
+  padding: 0 22px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .fc-pin-bar .fc-pin .btn.primary:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .fc-pin-bar > .fc-note {
+  margin: 0;
+}
+
+/* 修订草稿：一条黄铜描边的横幅（依据、备注、放弃） */
+:root[data-ui="v2"] .fc-draft {
+  gap: 10px 14px;
+  align-items: flex-end;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: #fbf0d6;
+  border: 1px solid #b3852f;
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .fc-draft > strong {
+  flex: 1 1 100%;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+
+/* ═════════════════════════ 3. 对照旧账试算 ═════════════════════════ */
+:root[data-ui="v2"] .fc-backtest > .hint {
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+:root[data-ui="v2"] .fc-backtest .grid {
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+}
+:root[data-ui="v2"] .fc-backtest .grid tbody tr {
+  cursor: default;
+}
+:root[data-ui="v2"] .fc-backtest .grid td {
+  padding: 9px 12px;
+  vertical-align: middle;
+}
+:root[data-ui="v2"] .fc-backtest .grid th:not(:first-child):not(:last-child),
+:root[data-ui="v2"] .fc-backtest .grid td:not(:first-child):not(:last-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .fc-backtest .grid td:first-child {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .fc-backtest .grid td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .fc-backtest .grid td[colspan]:not(:first-child) {
+  font-weight: 400;
+  text-align: left;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .fc-backtest .tag {
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+}
+
+/* ═════════════════════════ 4. 预测簿 ═════════════════════════ */
+:root[data-ui="v2"] .fc-book {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  margin: 4px 0 0;
+}
+:root[data-ui="v2"] .fc-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px 10px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .fc-entry.fc-v-accurate {
+  border-left-color: var(--v2-up);
+}
+:root[data-ui="v2"] .fc-entry.fc-v-biased {
+  border-left-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .fc-entry.fc-v-failed {
+  border-left-color: var(--v2-seal);
+}
+:root[data-ui="v2"] .fc-entry-head {
+  align-items: flex-start;
+}
+:root[data-ui="v2"] .fc-entry-head strong {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .fc-entry > small {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+}
+:root[data-ui="v2"] .fc-entry > .row {
+  justify-content: flex-end;
+  gap: 8px;
+  margin: auto 0 0;
+  padding-top: 2px;
+}
+/* 删除：安静的印章红字按钮（真的删之前会问一句） */
+:root[data-ui="v2"] .fc-entry > .row .btn.danger {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-seal);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .fc-entry > .row .btn.danger:hover:not(:disabled) {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: color-mix(in srgb, var(--v2-seal) 35%, transparent);
+}
+/* 成绩的小签：准（绿）、偏（黄铜）、失败（印章红）、还在追踪（灰） */
+:root[data-ui="v2"] .pn-analysis .tag.fc-verdict {
+  flex: none;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-analysis .fc-verdict-accurate {
+  color: var(--v2-up);
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  border-color: color-mix(in srgb, var(--v2-up) 35%, transparent);
+}
+:root[data-ui="v2"] .pn-analysis .fc-verdict-biased {
+  color: #4d3407;
+  background: #f6e6c2;
+  border-color: #b3852f;
+}
+:root[data-ui="v2"] .pn-analysis .fc-verdict-failed {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: color-mix(in srgb, var(--v2-seal) 35%, transparent);
+}
+:root[data-ui="v2"] .pn-analysis .fc-verdict-pending {
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+}
+
+/* ═════════════════════════ 5. 复盘 ═════════════════════════ */
+/* 桌面上：图下“成绩”与“原因”并排，点评与调整建议整行 */
+:root[data-ui="v2"] .fc-review {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
+}
+:root[data-ui="v2"] .fc-review > * {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .fc-review > .fc-score {
+  grid-column: 1;
+}
+:root[data-ui="v2"] .fc-review > .fc-causes {
+  grid-column: 2;
+}
+/* 返回：安静的文字按钮，前面一个细箭头 */
+:root[data-ui="v2"] .fc-review > .btn.small:first-child {
+  justify-self: start;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 12px 0 10px;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .fc-review > .btn.small:first-child::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .fc-review > .btn.small:first-child:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .fc-review > h4 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 2px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .fc-review > h4 .tag {
+  font-family: var(--v2-font-ui);
+}
+:root[data-ui="v2"] .fc-review > .sub {
+  margin: 0 0 10px;
+}
+:root[data-ui="v2"] .fc-review > .fc-note {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  background: var(--v2-paper-2);
+  border-left: 3px solid var(--v2-sea);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .fc-review h5 {
+  margin: 18px 0 6px;
+  padding-bottom: 4px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .fc-review .fc-score ul,
+:root[data-ui="v2"] .fc-review .fc-causes ul,
+:root[data-ui="v2"] .fc-review .fc-adjust ul {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+}
+:root[data-ui="v2"] .fc-review li::marker {
+  color: var(--v2-brass);
+}
+:root[data-ui="v2"] .fc-review .fc-causes > p {
+  margin: 0 0 4px;
+}
+:root[data-ui="v2"] .fc-drivers li.up::marker {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .fc-drivers li.down::marker {
+  color: var(--v2-sea);
+}
+/* 账房的点评：一段读的字 */
+:root[data-ui="v2"] .fc-comment {
+  margin: 16px 0 0;
+}
+:root[data-ui="v2"] .fc-comment blockquote {
+  padding: 10px 14px;
+  font-size: var(--v2-fs-lg);
+  line-height: 1.8;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: 0 var(--v2-r-md) var(--v2-r-md) 0;
+}
+/* 调整建议：一条一行，“试试”在行尾 */
+:root[data-ui="v2"] .fc-review .fc-adjust ul {
+  padding: 0;
+  list-style: none;
+}
+:root[data-ui="v2"] .fc-review .fc-adjust li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .fc-review .fc-adjust li .btn {
+  flex: none;
+}
+
+/* ═════════════════════════ 6. 期货 ═════════════════════════ */
+/* 金额、手数：账户与行情板上方的一条工具栏 */
+:root[data-ui="v2"] .fu-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px 16px;
+  margin: 0 0 12px;
+}
+:root[data-ui="v2"] .fu-toolbar input[type="number"] {
+  width: 9em;
+}
+:root[data-ui="v2"] .fu-toolbar-hint {
+  flex: 1 1 16em;
+  padding-bottom: 8px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+}
+/* 保证金账户：一块一张白卡，并排 */
+:root[data-ui="v2"] .pn-futures .pn-accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 12px;
+}
+:root[data-ui="v2"] .pn-futures .pn-account {
+  margin: 0;
+  padding: 12px 16px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-futures .pn-account.pn-call {
+  background: var(--v2-paper-2);
+  border-color: color-mix(in srgb, var(--v2-seal) 35%, transparent);
+  box-shadow: inset 3px 0 0 var(--v2-seal), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-futures .pn-account-head strong:not(.pn-call-flag) {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+/* 追保：印章红的小签，不再闪 */
+:root[data-ui="v2"] .pn-futures .pn-call-flag {
+  margin: 0 0 0 auto;
+  padding: 2px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  animation: none;
+}
+:root[data-ui="v2"] .pn-futures .fu-call-note {
+  margin: 6px 0 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-seal);
+  /* 两三行的短句：各行折得一样长，末行不留孤字（竖放平板上原来把“仓。”单独折到下一行） */
+  text-wrap: balance;
+}
+/* 追保的一键补救“存入差额 n 金币”：紧跟在说明下面，同交易所“买满 / 全卖”的一键样式（黄铜描边的浅底） */
+:root[data-ui="v2"] .pn-futures .fu-call-fix {
+  margin: 8px 0 0;
+}
+:root[data-ui="v2"] .pn-futures .fu-topup {
+  min-height: 30px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-futures .fu-topup:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-futures .fu-topup:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .pn-futures .pn-account-kv {
+  gap: 8px;
+  margin: 10px 0 8px;
+}
+:root[data-ui="v2"] .pn-futures .pn-account-kv > div {
+  padding: 6px 10px;
+  background: var(--v2-paper-1);
+  border: 0;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-futures .pn-account-kv dt {
+  font-size: var(--v2-fs-xs);
+  line-height: 1.4;
+  color: var(--v2-ink-3);
+  text-wrap: pretty;
+}
+:root[data-ui="v2"] .pn-futures .pn-account-kv dd {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--v2-ink);
+}
+/* 保证金水位：6 px 圆头细条（黄铜；低于初始保证金时印章红），维持保证金是一道墨色刻度 */
+:root[data-ui="v2"] .pn-futures .pn-account .pn-bar {
+  height: 6px;
+  margin: 4px 0 12px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-futures .pn-account .pn-bar.pn-tone-combat {
+  --bar: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .pn-futures .pn-account .pn-bar::after {
+  content: none;
+}
+:root[data-ui="v2"] .pn-futures .pn-account .pn-bar > i {
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-futures .pn-account .pn-bar > b {
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--v2-ink-2);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn-futures .pn-account > .row {
+  gap: 8px;
+  margin: 0;
+}
+
+/* 行情板：深色的报价牌（夜航色），标题是一行黄铜小字；买价绿、卖价红、盯市价亮黄铜 */
+:root[data-ui="v2"] .pn-futures .pn-board {
+  overflow-x: auto;
+  padding: 10px 6px 4px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .pn-futures .pn-board-title {
+  width: auto;
+  margin: 0 10px 6px;
+  padding: 0;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--v2-brass-hi);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes {
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes th {
+  padding: 6px 10px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border-bottom: 1px solid var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes th:nth-child(n + 2):nth-child(-n + 5) {
+  text-align: right;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td {
+  padding: 10px;
+  color: var(--v2-on-night);
+  vertical-align: middle;
+  background-color: transparent;
+  border-bottom: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes tbody tr {
+  cursor: default;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes tbody tr:hover > td {
+  background-color: var(--v2-night-2);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes tbody tr:last-child > td {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes .pn-quote-text b {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes .pn-quote-text small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.num {
+  font-size: var(--v2-fs-lg);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-bid {
+  color: var(--v2-up-night);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-ask {
+  color: var(--v2-down-night);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-mark {
+  font-weight: 700;
+  color: var(--v2-brass-hi);
+}
+/* 合约格：v1 的 panels.css 把它设成 display: flex，它就不再是表格的格子——持仓格多了一行交割开关以后，
+ * 这一格比同行的别的格矮，底线错开一截。v2 改回表格的格子，商品小图标绝对定位在左边、竖直居中 */
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-quote-name {
+  display: table-cell;
+  position: relative;
+  padding-left: 32px;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-quote-name > .pn-good-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  margin-top: -8px;
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-pos {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-pos.up {
+  color: var(--v2-up-night);
+}
+:root[data-ui="v2"] .pn-futures .pn-board .pn-quotes td.pn-pos.down {
+  color: var(--v2-down-night);
+}
+/* 交割方式：持仓那一格里“到期 [现金结算 | 实物交割]”两段的切换（单选框藏起来、整段可点）；
+ * 字固定不随状态变，选中的那段深一层底、黄铜描边加一道黄铜下划线（同推算页“日线 / 月线”，换成深色底） */
+:root[data-ui="v2"] .pn-futures .fu-settle {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  min-width: 0;
+  margin: 6px 0 0;
+  padding: 0;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+  border: 0;
+}
+:root[data-ui="v2"] .pn-futures .fu-settle-label {
+  margin-right: 8px;
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--v2-h-sm);
+  padding: 0 10px;
+  color: var(--v2-on-night-2);
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid var(--v2-night-line-strong);
+  cursor: pointer;
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:first-of-type {
+  border-radius: var(--v2-r-sm) 0 0 var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:last-of-type {
+  border-left: 0;
+  border-radius: 0 var(--v2-r-sm) var(--v2-r-sm) 0;
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:hover:not(:has(input:checked)):not(:has(input:disabled)) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:has(input:checked) {
+  font-weight: 600;
+  color: var(--v2-on-night);
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass);
+  box-shadow: inset 0 -2px 0 var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:last-of-type:has(input:checked) {
+  box-shadow: inset 1px 0 0 var(--v2-brass), inset 0 -2px 0 var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:has(input:disabled) {
+  cursor: progress;
+  opacity: 0.6;
+}
+:root[data-ui="v2"] .pn-futures .fu-settle > label:has(input:focus-visible) {
+  z-index: 1;
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+/* 行内下单：深色底上的三个小按钮——开多（绿边）、开空（红边）、平仓（黄铜边） */
+:root[data-ui="v2"] .pn-futures .pn-quotes .fu-act-head {
+  text-align: right;
+}
+:root[data-ui="v2"] .pn-futures .pn-quotes td.fu-act {
+  text-align: right;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small {
+  min-height: 30px;
+  margin-left: 6px;
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-on-night);
+  background: transparent;
+  border: 1px solid var(--v2-night-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small:first-child {
+  margin-left: 0;
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small:hover:not(:disabled) {
+  background: var(--v2-night-3);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small:active:not(:disabled) {
+  background: var(--v2-night-0);
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small:focus-visible {
+  outline-color: var(--v2-focus-night);
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small.fu-long {
+  color: var(--v2-up-night);
+  border-color: color-mix(in srgb, var(--v2-up-night) 55%, transparent);
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small.fu-short {
+  color: var(--v2-down-night);
+  border-color: color-mix(in srgb, var(--v2-down-night) 55%, transparent);
+}
+:root[data-ui="v2"] .pn-futures .fu-act .btn.small.fu-close {
+  color: var(--v2-brass-hi);
+  border-color: color-mix(in srgb, var(--v2-brass-hi) 60%, transparent);
+}
+
+/* ═════════════════════════ 7. 报表 ═════════════════════════ */
+:root[data-ui="v2"] div.pn-reports {
+  gap: 4px;
+}
+/* 图：白纸 + 细框 */
+:root[data-ui="v2"] .pn .pn-chart-frame {
+  padding: 10px 8px 4px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+/* 月报 / 年报：两段的切换（同交易所的卖出 / 买入） */
+:root[data-ui="v2"] div.pn-reports > .tabbar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 3px;
+  max-width: 320px;
+  margin: 12px 0 4px;
+  padding: 3px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: calc(var(--v2-r-md) + 3px);
+}
+:root[data-ui="v2"] div.pn-reports > .tabbar .tab {
+  justify-content: center;
+  min-height: var(--v2-h-md);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink-2);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] div.pn-reports > .tabbar .tab.active,
+:root[data-ui="v2"] div.pn-reports > .tabbar .tab.active:hover:not(:disabled) {
+  margin: 0;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  box-shadow: var(--v2-shadow-1), inset 0 -2px 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .pn .pn-period {
+  align-self: flex-start;
+  min-width: 14em;
+  margin: 8px 0;
+}
+/* 一期的三张表：桌面上并排（损益、资产负债、现金流），期间那一行在上面 */
+:root[data-ui="v2"] .pn-report {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  column-gap: 20px;
+  align-items: start;
+}
+:root[data-ui="v2"] .pn-report > .sub {
+  display: none;
+}
+:root[data-ui="v2"] .pn-report > .section {
+  margin-bottom: 8px;
+}
+/* 账页：白纸、细线；分组的小标题是浅灰底的小字；合计行加粗、上面一道墨色细线；数字右对齐、等宽 */
+:root[data-ui="v2"] .pn .pn-ledger .statement {
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement td,
+:root[data-ui="v2"] .pn .pn-ledger .statement th {
+  padding: 7px 12px;
+  color: var(--v2-ink);
+  border-bottom: 1px solid var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement .head th {
+  padding: 6px 12px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-bottom: 1px solid var(--v2-line-strong);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement thead .head th:not(:first-child) {
+  text-align: right;
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement .total td {
+  font-weight: 600;
+  border-top: 1px solid var(--v2-ink-3);
+  border-bottom: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement .num {
+  font-family: var(--v2-font-ui);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement .num.up {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement .num.down {
+  color: var(--v2-down);
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement tbody tr:hover > td {
+  background-color: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .pn .pn-ledger .statement tbody tr:last-child > td {
+  border-bottom: 0;
+}
+/* 经济月报：各项统计两列一行，细线隔开 */
+:root[data-ui="v2"] .pn .pn-economy .econ-stats {
+  grid-template-columns: repeat(auto-fill, minmax(19em, 1fr));
+  gap: 0 24px;
+  margin: 12px 0;
+}
+:root[data-ui="v2"] .pn .pn-economy .econ-stats div {
+  padding: 6px 2px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-economy .econ-stats dt {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn .pn-economy .econ-stats dd {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn .pn-economy .statement + .statement {
+  margin-top: 12px;
+}
+:root[data-ui="v2"] .pn .pn-economy .statement td.sub {
+  color: var(--v2-ink-3);
+}
+
+/* ═════════════════════════ 8. 情报 ═════════════════════════ */
+/* 新闻：一张白纸上一条一条（不再是钉在木板上的告示）；官方公告左边一道黄铜线；可信度的印章留着 */
+:root[data-ui="v2"] .pn .pn-board-notes {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn .pn-notice {
+  gap: 4px 14px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn .pn-notice:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn .pn-notice.pn-src-official {
+  background: var(--v2-paper-1);
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .pn .pn-notice.pn-src-tavern {
+  background: transparent;
+}
+:root[data-ui="v2"] .pn .pn-tack {
+  display: none;
+}
+:root[data-ui="v2"] .pn .pn-notice-head {
+  gap: 2px;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn .pn-notice-text {
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+/* 进行中的事件：一条一行，细线隔开 */
+:root[data-ui="v2"] .pn .pn-event {
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 4px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-events {
+  border-top: 1px solid var(--v2-line);
+}
+/* 大事记：一件事一张白卡；进行中的左边一道印章红，已结束的灰一些 */
+:root[data-ui="v2"] .pn .pn-ce-list {
+  gap: 12px;
+}
+:root[data-ui="v2"] .pn .pn-ce {
+  padding: 12px 16px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-seal);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn .pn-ce.is-ended {
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border-left-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn .pn-ce-head {
+  gap: 6px 8px;
+}
+:root[data-ui="v2"] .pn .pn-ce-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn .pn-ce-tag {
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pn .pn-ce-src-ai,
+:root[data-ui="v2"] .pn .pn-ce-src-template,
+:root[data-ui="v2"] .pn .pn-ce-src-rule {
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .pn .pn-ce-live {
+  color: var(--v2-up);
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  border-color: color-mix(in srgb, var(--v2-up) 35%, transparent);
+}
+:root[data-ui="v2"] .pn .pn-ce-over {
+  color: var(--v2-ink-3);
+  background: transparent;
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-ce-span {
+  margin: 4px 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn .pn-ce-narrative {
+  margin: 0 0 10px;
+  padding: 2px 0 2px 14px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  font-style: normal;
+  line-height: 1.8;
+  color: var(--v2-ink);
+  background: transparent;
+  border-left: 3px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn .pn-ce.is-ended .pn-ce-narrative {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn .pn-ce-effects {
+  gap: 0;
+  font-size: var(--v2-fs-sm);
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-ce-effect {
+  grid-template-columns: minmax(8em, auto) minmax(0, 1fr);
+  gap: 12px;
+  padding: 6px 2px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-ce-label {
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn .pn-ce-text {
+  color: var(--v2-ink);
+}
+/* 空着的几节：一句话靠左、左边一道细线，不画虚线框（开局时这一页好几节同时是空的） */
+:root[data-ui="v2"] .pn-intel .v2-empty.an-quiet {
+  align-items: flex-start;
+  gap: 2px;
+  margin: 4px 0 8px;
+  padding: 4px 0 4px 12px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-left: 2px solid var(--v2-line-strong);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .pn-intel .v2-empty.an-quiet .v2-empty-text,
+:root[data-ui="v2"] .pn-intel .v2-empty.an-quiet .v2-empty-hint {
+  max-width: none;
+}
+/* 安静的空状态里的“下一步”（日志筛完为空时的“看全部”）：次要的小按钮，不用黄铜主按钮——
+ * 上面的复选框就能做同一件事，这里只是顺手一点 */
+:root[data-ui="v2"] .pn-intel .v2-empty.an-quiet .v2-empty-action {
+  min-height: var(--v2-h-sm);
+  margin-top: 6px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-control);
+}
+:root[data-ui="v2"] .pn-intel .v2-empty.an-quiet .v2-empty-action:hover:not(:disabled) {
+  background: var(--v2-paper-1);
+  border-color: var(--v2-ink-3);
+}
+/* 人物志：头像是带衬边的插图（同交易所的掌柜），名字宋体 */
+:root[data-ui="v2"] .pn-intel .cast-frame {
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 1px solid color-mix(in srgb, var(--v2-ink) 35%, transparent);
+  border-radius: var(--v2-r-sm);
+  box-shadow: 0 0 0 2px var(--v2-paper-2), 0 0 0 3px var(--v2-line);
+}
+:root[data-ui="v2"] .pn-intel .cast-row {
+  gap: 12px;
+}
+:root[data-ui="v2"] .pn-intel .cast-text strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-intel .cast-text .bi-name-sub {
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  font-weight: 400;
+  color: var(--v2-ink-3);
+  opacity: 1;
+}
+/* 事件日志：日期一列、事一列；与我有关的左边一道黄铜线 */
+:root[data-ui="v2"] .pn-intel .field:has(input[type="checkbox"]) {
+  min-height: 32px;
+  margin: 0 0 6px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn .pn-logbook {
+  max-height: 320px;
+  margin: 0;
+  padding: 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn .pn-logbook li {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr);
+  gap: 10px;
+  padding: 7px 12px;
+  color: var(--v2-ink);
+  border-bottom: 1px solid var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .pn .pn-logbook li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn .pn-logbook li small {
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .pn .pn-logbook li.mine {
+  font-weight: 500;
+  color: var(--v2-ink);
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+/* 人物志：小标题 */
+:root[data-ui="v2"] .pn-intel .cast-subhead {
+  margin: 8px 0 6px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+/* 市场月报：标题 + 一段字 */
+:root[data-ui="v2"] .pn-intel ul.pn-reports li {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-intel ul.pn-reports h4 {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-intel ul.pn-reports p {
+  font-size: var(--v2-fs-md);
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+}
+/* 编年史与序章：一页书——上下各一道黄铜细线，标题宋体居中，正文读的字 */
+:root[data-ui="v2"] .pn .pn-scroll {
+  margin: 12px 0;
+  padding: 14px 20px 16px;
+  background: var(--v2-paper-2);
+  border: 0;
+  border-top: 1px solid var(--v2-line-strong);
+  border-bottom: 1px solid var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn .pn-scroll h4 {
+  margin: 0 0 8px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn .pn-scroll p {
+  max-width: 40em;
+  margin: 0 auto;
+  font-size: var(--v2-fs-lg);
+  line-height: var(--v2-lh-read);
+  color: var(--v2-ink);
+}
+
+/* ═════════════════════════ 9. 交易所里的小预测图 ═════════════════════════ */
+:root[data-ui="v2"] .mk-forecast .hint {
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+/* 还没有收盘价：与行情窗口同一个空状态（抽屉里不带“下一天”：那里已有成交的主按钮），抽屉窄，排得紧一些 */
+:root[data-ui="v2"] .v2-empty.mk-forecast-empty {
+  margin: 8px 0 0;
+  padding: 14px 12px 12px;
+}
+
+/* ═════════════════════════ 10. 平板与手机 ═════════════════════════ */
+/* 推算：一列（图与结论在上，控制板在下）；贴底条按手机窗口的内边距对齐 */
+@media (max-width: 720px) {
+  :root[data-ui="v2"] .fc-work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-work-grid,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-work-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-work-side,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-work-side {
+  padding: 2px 14px 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-pin-bar,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-pin-bar {
+  bottom: -20px;
+  margin: 16px -14px -20px;
+  padding: 10px 14px calc(12px + var(--safe-bottom, 0px));
+}
+/* 竖屏手机：主按钮另起一行、撑满（拇指区）；横屏手机（short）窗口只有约 375 px 高，贴底条不能占太多——
+ * 法子 · 期限与按钮同一行（按钮靠右），内边距收紧，按钮仍不矮于 44 px */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-pin-bar .fc-pin .btn.primary {
+  flex: 1 1 100%;
+  order: 5;
+  margin: 6px 0 0;
+  min-height: var(--v2-h-touch);
+  font-size: 15px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-pin-bar {
+  padding: 6px 14px calc(6px + var(--safe-bottom, 0px));
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-pin-bar .fc-pin .btn.primary {
+  min-height: var(--v2-h-touch);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-analysis .fc-pick,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-analysis .fc-pick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-analysis .fc-pick select,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-analysis .fc-pick select {
+  min-width: 0;
+  width: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-analysis .fc-merchants li,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-analysis .fc-merchants li {
+  grid-template-columns: 5.5em minmax(40px, 1fr) 3em 4.4em;
+  gap: 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-review,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-review {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-review > .fc-score,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-review > .fc-causes,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-review > .fc-score,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-review > .fc-causes {
+  grid-column: 1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-book,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-book {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* 多列的表格在手机上（竖屏 phone 与横屏 short）：一行一张小卡（试算、经济月报的部门与国库），每个数前写着它是什么 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tbody,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tbody,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]),
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]),
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) tbody,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) tbody {
+  display: block;
+  width: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid thead,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid thead,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) thead,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) thead {
+  display: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tr,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tr,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) tr,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) tr {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) tr,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) tr {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tr:last-child,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tr:last-child,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement tr:last-child,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement tr:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) td,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) td {
+  display: block;
+  padding: 0;
+  text-align: left;
+  border: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td:not(:first-child):not(:last-child),
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td:not(:first-child):not(:last-child) {
+  text-align: left;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td:first-child,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td:first-child,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td[colspan],
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td[colspan],
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) td:first-child,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) td:first-child {
+  grid-column: 1 / -1;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td:first-child,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td:first-child {
+  grid-column: 1 / 3;
+  grid-row: 1;
+  align-self: center;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td.fc-bt-act,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td.fc-bt-act {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: right;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td[colspan]:not(:first-child),
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td[colspan]:not(:first-child) {
+  font-size: var(--v2-fs-sm);
+  font-weight: 400;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tr.selected,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tr.selected {
+  background: #f6e6c2;
+  box-shadow: inset 3px 0 0 var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tr > td,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tr > td,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tr.selected > td,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tr.selected > td,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid tbody tr:hover > td,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid tbody tr:hover > td {
+  background-color: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td.fc-bt-act .btn,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td.fc-bt-act .btn {
+  min-height: var(--v2-h-touch);
+  padding: 0 18px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid td[data-label]::before,
+:root[data-ui="v2"] .app.game[data-layout="short"] .fc-backtest .grid td[data-label]::before,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement td[data-label]::before,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement td[data-label]::before {
+  content: attr(data-label);
+  display: block;
+  font-size: var(--v2-fs-xs);
+  font-weight: 400;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-economy .statement:has(td[data-label]) td.num,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-economy .statement:has(td[data-label]) td.num {
+  text-align: left;
+}
+/* 期货：行情板窄于 860 px（手机竖屏、横屏，竖放的平板）时一张合约一张卡（名字一行、四个价一行、持仓一行、下单一行）。
+ * 按行情板自己的宽度（容器查询）而不是按布局：行内的开多 / 开空 / 平仓是这一页主要的操作，
+ * 不能落在横向滚动区的右边、要先把行情板往左拖才看得见（横屏手机与 768 px 的平板上原来就是这样）。 */
+:root[data-ui="v2"] .pn-futures .pn-board {
+  container: v2-fu-board / inline-size;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures .pn-board,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .pn-board {
+  overflow: visible;
+  padding: 8px 0 0;
+}
+@container v2-fu-board (max-width: 860px) {
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes,
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes tbody {
+    display: block;
+    width: 100%;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes thead {
+    display: none;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes tr {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--v2-night-line-strong);
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes tr:last-child {
+    border-bottom: 0;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td {
+    display: block;
+    padding: 0;
+    text-align: left;
+    border: 0;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.pn-quote-name,
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.pn-pos,
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.fu-act {
+    grid-column: 1 / -1;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.pn-quote-name {
+    display: flex;
+    position: static;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.pn-quote-name > .pn-good-icon {
+    position: static;
+    margin-top: 0;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: var(--v2-fs-xs);
+    font-weight: 400;
+    color: var(--v2-on-night-3);
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.pn-pos {
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .pn-quotes td.fu-act {
+    display: flex;
+    gap: 8px;
+  }
+  :root[data-ui="v2"] .pn-futures .pn-board-section .pn-board .fu-act .btn.small {
+    flex: 1 1 0;
+    justify-content: center;
+    min-height: var(--v2-h-touch);
+    margin: 0;
+    font-size: var(--v2-fs-md);
+  }
+}
+/* 期货的保证金账户：账户卡窄于 420 px（手机竖屏、竖放的平板）时余额独占一行、两项保证金要求并排——
+ * 三格并排时“初始保证金要求”折成两行、第二行只剩一个“求”字。按卡片自己的宽度（容器查询），不按布局 */
+:root[data-ui="v2"] .pn-futures .pn-account {
+  container: v2-fu-account / inline-size;
+}
+@container v2-fu-account (max-width: 420px) {
+  :root[data-ui="v2"] .pn-futures .pn-account .pn-account-kv {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :root[data-ui="v2"] .pn-futures .pn-account .pn-account-kv > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+/* 手机竖屏与横屏：账户一列，存取按钮平分一行、拇指够得着 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures .pn-account-kv dd,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .pn-account-kv dd {
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures .pn-accounts,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .pn-accounts {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures .pn-account > .row .btn,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .pn-account > .row .btn {
+  flex: 1 1 0;
+  min-height: var(--v2-h-touch);
+}
+/* 手机上合约排在账户前面（FuturesPanel 按布局换了 DOM 顺序）；追保时最上面一条：哪个交易所、后果与差额、一键“存入差额”。
+ * 样子同追保的账户卡（左边一道印章红），只在手机两种布局里出现（桌面上账户本来就在最上面，说明与按钮留在卡里） */
+:root[data-ui="v2"] .pn-futures .fu-call-strip {
+  margin: 4px 0 14px;
+  padding: 10px 14px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid color-mix(in srgb, var(--v2-seal) 35%, transparent);
+  border-radius: var(--v2-r-md);
+  box-shadow: inset 3px 0 0 var(--v2-seal), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-futures .fu-call-strip-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-futures .fu-call-strip-head strong {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-futures .fu-call-flag {
+  margin-left: auto;
+  padding: 2px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border-radius: var(--v2-r-pill);
+}
+/* 竖屏：“存入差额”撑满一行（拇指区）；横屏（窗口只有约 375 px 高）：说明与按钮同一行，内边距收紧 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures .fu-call-strip .fu-topup {
+  width: 100%;
+  justify-content: center;
+  min-height: var(--v2-h-touch);
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .fu-call-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 14px;
+  padding: 8px 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .fu-call-strip-head {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .fu-call-strip .fu-call-fix {
+  margin: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures .fu-call-strip .fu-topup {
+  min-height: var(--v2-h-touch);
+  font-size: var(--v2-fs-md);
+}
+/* 手机上的输入框与下拉框 16 px（docs/UI-REDESIGN.md 第 5 节：小于 16 px 时 iOS 一点进去就把页面放大）：
+ * 期货的金额、手数，行情的港口、商品与推算的参数，报表的期间（情报里只有复选框，没有要放大的）。
+ * 逐条写开、不用 :is(…)：ui-v2.test.tsx 按逗号拆选择器检查每一条都以 :root[data-ui="v2"] 开头 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-analysis input:not([type="checkbox"]):not([type="radio"]),
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-analysis select,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures input:not([type="checkbox"]):not([type="radio"]),
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-futures select,
+:root[data-ui="v2"] .app.game[data-layout="phone"] div.pn-reports input:not([type="checkbox"]):not([type="radio"]),
+:root[data-ui="v2"] .app.game[data-layout="phone"] div.pn-reports select,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-analysis input:not([type="checkbox"]):not([type="radio"]),
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-analysis select,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures input:not([type="checkbox"]):not([type="radio"]),
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-futures select,
+:root[data-ui="v2"] .app.game[data-layout="short"] div.pn-reports input:not([type="checkbox"]):not([type="radio"]),
+:root[data-ui="v2"] .app.game[data-layout="short"] div.pn-reports select {
+  font-size: var(--v2-fs-lg);
+}
+/* 情报：日志的日期放到字上面一行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn .pn-logbook li {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn .pn-scroll {
+  padding: 12px 14px 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn .pn-ce {
+  padding: 12px 14px 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn .pn-ce-effect {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+/* 手机上正文 15 px（窗口里已是 15 px）：表格与列表跟着放大一号 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn .pn-ledger .statement,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-backtest .grid,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn .pn-notice-text,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .fc-method-name {
+  font-size: 15px;
+}
+
+/* 触屏：点按区不小于 44 px */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .fc-method,
+  :root[data-ui="v2"] .fc-mode > label,
+  :root[data-ui="v2"] .fc-options label {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .pn-analysis .btn.small,
+  :root[data-ui="v2"] .pn-analysis .fc-stale .btn.small,
+  :root[data-ui="v2"] .fc-review > .btn.small:first-child,
+  :root[data-ui="v2"] .fc-entry > .row .btn,
+  :root[data-ui="v2"] .fc-entry > .row .btn.danger,
+  :root[data-ui="v2"] .pn-futures .fu-act .btn.small,
+  :root[data-ui="v2"] .pn-futures .pn-account > .row .btn,
+  :root[data-ui="v2"] .pn-futures .fu-topup {
+    min-height: var(--v2-h-touch);
+  }
+  /* 两段的切换：月报 / 年报（原规则带 div 与 > .tabbar，比地基 base.css 的触屏 .tab 规则更具体，所以这里照原选择器再写一遍） */
+  :root[data-ui="v2"] div.pn-reports > .tabbar .tab {
+    min-height: var(--v2-h-touch);
+  }
+  /* 交易所抽屉里本组的入口：小预测图的开关、“详细分析”（原来 40 px 与 28 px） */
+  :root[data-ui="v2"] .mk-chart-tools .mk-forecast-toggle,
+  :root[data-ui="v2"] .mk-chart-tools > .btn.small {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .pn-futures .fu-settle > label,
+  :root[data-ui="v2"] .pn-intel .field:has(input[type="checkbox"]) {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .pn-analysis .v2-empty-action,
+  :root[data-ui="v2"] .pn-intel .v2-empty.an-quiet .v2-empty-action,
+  :root[data-ui="v2"] .fc-pin-bar .fc-pin .btn.primary,
+  :root[data-ui="v2"] .fc-param input[type="number"],
+  :root[data-ui="v2"] .fc-auto,
+  :root[data-ui="v2"] .pn-futures .fu-toolbar input,
+  :root[data-ui="v2"] .pn-analysis select,
+  :root[data-ui="v2"] div.pn-reports select {
+    min-height: var(--v2-h-touch);
+  }
+}

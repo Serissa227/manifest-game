@@ -1,0 +1,171 @@
+# 请托：一句话过海峡（request_kaicili_gujirati）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：凯奇利·古吉拉提（kaicili_gujirati，男；生卒不详，按 0 占位），特尔纳特苏丹海伦之弟。cast 在 cast/historical_03_indian_ocean.toml。
+# 类型：送信（letter）。三章：offer（随从传话，报价）、handover（蒂多雷宫的老大臣，玩家在场）、reply（回特尔纳特，听回话）；终点 done / failed。
+# 报价：L 来信／代理人（auto=true）。offer 章 at=ternate_port，出面的是苏丹之弟的随从（不建 cast、不写 speaker）；family=c13_offer_ternate_port，冷却 20 天；deadline 为窗口止日 1557-12-31，timeout 直接 failed，不写见闻。
+# 窗口：普通章不写 window，以 when 的 date 条件表达。offer 1557-04-01 至 1557-12-31；handover 起于 1557-04-01、止于 1558-03-31，reply 止于 1558-06-30（按接下的最晚日 1557-12-31 算，handover 的 60 天期限最迟 1558-03-01 到、reply 最迟 1558-04-30 到，都在窗口之内，不会先被条件切掉）。
+# 依据·史实：1557 年葡萄牙堡主杜阿尔特·德·埃萨扣押海伦与凯奇利，特尔纳特首领与蒂多雷一起围堡。本条只写一句话的传递，不写围堡与放人的经过（那是凯奇利主线 1 的事，本条以 c13_main_kaicili 对这位主角关闭）。蒂多雷与特尔纳特隔海相望、两岛宫廷互有防备，是史实背景。
+# 依据·原创：随从、那句话本身、老大臣的问题、回廊里的对话、回廊外停着的科拉科拉。
+# 依赖：港口 ternate_port、tidore_port（ports_southeast_asia.toml）；技能 court_etiquette（skills.toml）；人物 kaicili_gujirati。B10b：无需改名。
+# 主线门禁：offer 的 when 读 c13_main_kaicili=false。
+# 读的旗标：c13_main_kaicili（offer）。
+# 设的旗标：c13_request_kaicili_gujirati_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_answered_well（handover 的两条好的接法）、_cold（handover 的冷法，检定失败与“不知道”）、_done、_partial（reply 终局）、_late（超时，终局）。
+# 报酬：现金 2250（reply 的两条终局各给一次）；好感最多 2+3+8=13；名声 +3；特尔纳特声望 +2（只在 exact）；回忆 mem-request_kaicili_gujirati-reply。
+# 回忆插画 mem-request_kaicili_gujirati-reply：回廊的柱影里，一个人扶着柱子站着，手里是一张折过的回话，柱子外是特尔纳特的港，桨都收着。
+# 秘密：无（cast 无 secret）。C7：无 C7 线，本文件不读也不设任何 c7_ 旗标。
+# 口头禅：“谁亲眼看见的？”，只在 reply 章的正文里用一次（base 与 v1_cold、v2_well 各一次，同时只显示一个）。
+
+[[tracks]]
+key = "request_kaicili_gujirati"
+name = "一句话过海峡"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kaicili_gujirati"]
+
+# 一、传话的人：苏丹之弟的随从拦在回廊里，要托一条外人的船送一句话。
+[[tracks.chapters]]
+key = "offer"
+title = "传话的人"
+text = "王宫的回廊里，一个穿旧布衫的随从拦住你。他的主人刚从堡里出来，还不能离开特尔纳特，想托一条外人的船，把一句话送过海峡，交给蒂多雷。“主人说，他还活着。”随从逐字教你念了三遍，一个字也不许你改。旁边有个小孩在扫石阶，扫帚停了一下，又接着扫。“扣押的事，算是过去了。可账还没算。”念完，他把手按在胸口，又看了看你的手和腰间，像在数你身上带没带笔。"
+at = "ternate_port"
+mood = "tense"
+when = [
+  { kind = "date", from = [1557, 4, 1], to = [1557, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "flag", flag = "c13_main_kaicili", value = false },
+]
+deadline = [1557, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_ternate_port"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：把这句话原样带过海峡。"
+next = "handover"
+reply = "随从松了口气，又压低声音：“主人说，这句话不能写下来。写下来的东西，会被人拿去堡里。”"
+effects = [
+  { kind = "affinity", person = "kaicili_gujirati", value = 2 },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_whom"
+text = "接下，但问：这句话说给谁听？"
+next = "handover"
+reply = "随从想了想：“主人说，你到了就知道。”他又补一句，“主人自己也还在想。”"
+effects = [
+  { kind = "affinity", person = "kaicili_gujirati", value = 2 },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "两个王宫之间的话，我不传。"
+next = "failed"
+reply = "随从点点头，转身去找下一条船。"
+effects = [{ kind = "flag", flag = "c13_request_kaicili_gujirati_declined" }]
+
+# 二、说给谁听：蒂多雷宫的老大臣听完那句话，问的是这话对谁说。
+[[tracks.chapters]]
+key = "handover"
+title = "说给谁听"
+text = "蒂多雷宫的廊下，老大臣听你把那句话念完，一个字没改。他沉默了一会儿，手里的念珠拨过一颗，又停住。“这句话是对谁说的？是对我们的苏丹，还是对住在我们岛上的西班牙人？”廊柱后面有人咳了一声，没有出来。你站在日头底下，手心出了汗。"
+speaker = "captain"
+at = "tidore_port"
+mood = "tense"
+objectives = [{ kind = "at", at = "tidore_port", text = "到蒂多雷去" }]
+when = [
+  { kind = "date", from = [1557, 4, 1], to = [1558, 3, 31] },
+  { kind = "alive", person = "kaicili_gujirati", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kaicili_gujirati", value = -3 }, { kind = "flag", flag = "c13_request_kaicili_gujirati_late" }, { kind = "letter", person = "kaicili_gujirati", text = "那句话主人托别人带过去了。船来得太慢，等不起。他说不怪你，只请你下次先到回廊里来坐一坐。——苏丹之弟的随从" }] }
+news = "蒂多雷宫的廊下有人说，一个特尔纳特来的船长替人念了一句话，老大臣问了一句：这话是对谁说的。"
+
+[[tracks.chapters.choices]]
+key = "proper"
+text = "照宫廷的规矩，请他转呈苏丹的议事会。"
+next = "reply"
+reply = "你按两国宫廷的礼数回话，老大臣的脸色松下来，把你领进议事的厅。议事会听完，回了一句话让你带回去。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "你不知道该向谁行礼、站在哪里说话。"
+effects = [
+  { kind = "affinity", person = "kaicili_gujirati", value = 3 },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_answered_well" },
+]
+
+[[tracks.chapters.choices]]
+key = "all"
+text = "回答：说给所有听得懂的人。"
+next = "reply"
+reply = "老大臣听完，看了你一眼：“话说得漂亮。”他回了一句，叫你带回去，别在路上添字。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "affinity", person = "kaicili_gujirati", value = 3 },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_answered_well" },
+]
+fail = { next = "reply", effects = [{ kind = "affinity", person = "kaicili_gujirati", value = -2 }, { kind = "flag", flag = "c13_request_kaicili_gujirati_cold" }] }
+
+[[tracks.chapters.choices]]
+key = "dunno"
+text = "老实说：我不知道。"
+next = "reply"
+reply = "老大臣看了你很久，说不知道也好，这句话他们收下了，只回了一句，让你带回去。"
+effects = [
+  { kind = "affinity", person = "kaicili_gujirati", value = 2 },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_cold" },
+]
+
+# 三、谁亲眼看见的：回到特尔纳特，苏丹之弟听回话。变体按旗标选：v1_cold 是冷话，v2_well 是好话。
+[[tracks.chapters]]
+key = "reply"
+title = "谁亲眼看见的"
+text = "你回到特尔纳特，苏丹之弟亲自在回廊里等你。你把蒂多雷的回话念给他听。他听完问：“老大臣说这句话的时候，脸朝哪边？谁亲眼看见的？”回廊外是港里的科拉科拉，桨都收着，一条挨着一条。他没有坐下，手扶着柱子，等你往下说。柱子外的水声很响，有人在船上换帆，喊声一阵一阵地传过来。"
+speaker = "kaicili_gujirati"
+at = "ternate_port"
+mood = "tense"
+objectives = [{ kind = "at", at = "ternate_port", text = "回特尔纳特去" }]
+when = [
+  { kind = "date", from = [1557, 4, 1], to = [1558, 6, 30] },
+  { kind = "alive", person = "kaicili_gujirati", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kaicili_gujirati", value = -3 }, { kind = "flag", flag = "c13_request_kaicili_gujirati_late" }, { kind = "letter", person = "kaicili_gujirati", text = "回话主人已经从别人那里听到了，不用再等你的船。主人说，你下次路过，先来回廊里坐一坐。——苏丹之弟的随从" }] }
+news = "特尔纳特王宫的回廊里，苏丹之弟听一个外来船长念完蒂多雷的回话，只笑了一下。"
+
+[[tracks.chapters.variants]]
+key = "v1_cold"
+when = [{ kind = "flag", flag = "c13_request_kaicili_gujirati_cold", value = true }]
+text = "你回到特尔纳特，苏丹之弟亲自在回廊里等你。蒂多雷的回话只有一句：“账，各算各的。”你念完，他没有笑，只把手扶在柱子上。“老大臣说这句话的时候，脸朝哪边？谁亲眼看见的？”回廊外是港里的科拉科拉，桨都收着，一条挨着一条。柱子外的水声很响，有人在船上换帆，喊声一阵一阵地传过来。"
+
+[[tracks.chapters.variants]]
+key = "v2_well"
+when = [{ kind = "flag", flag = "c13_request_kaicili_gujirati_answered_well", value = true }]
+text = "你回到特尔纳特，苏丹之弟亲自在回廊里等你。蒂多雷的回话只有一句：“账，一起算。”你念完，他把这句话在心里过了两遍，才抬起头。“老大臣说这句话的时候，脸朝哪边？谁亲眼看见的？”回廊外是港里的科拉科拉，桨都收着，一条挨着一条。柱子外的水声很响，有人在船上换帆，喊声一阵一阵地传过来。"
+
+[[tracks.chapters.choices]]
+key = "exact"
+text = "只说你亲眼看见、亲耳听见的：回话一字一句，脸朝哪边。"
+next = "done"
+reply = "他点点头，第一次在你面前笑了一下：“好。你看见的，我信。”他叫人付钱，说海峡两边的事，往后还要找你。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "kaicili_gujirati", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "ternate", value = 2 },
+  { kind = "memory", memory = "mem-request_kaicili_gujirati-reply", title = "回廊里的一句话" },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "guess"
+text = "再加上你的猜测：蒂多雷宫里的人心思不一。"
+next = "done"
+reply = "他听完你的猜测，眉头皱起来：“这是你看见的，还是你想的？”你说是想的。他付了钱，没有再问别的。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "kaicili_gujirati", value = 3 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_kaicili_gujirati_partial" },
+]

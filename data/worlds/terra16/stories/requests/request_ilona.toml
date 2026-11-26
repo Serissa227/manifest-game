@@ -1,0 +1,118 @@
+# 请托：跟到瓦尔纳的船（request_ilona）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：伊洛娜（ilona，1531-11-24 生，女），cast：cast/story_europe.toml；势力 ottoman；身份档 1（匠人、小商）。不写恋爱、不写心动，不读任何 c7_ 旗标。
+# 类型：打一仗（fight）。三章：offer（酒馆里报价）、battle（港外的一仗）、after（瓦尔纳码头上的收尾）；done / failed 为终点。
+# 报价：T（当面）。人物按日程 1557—1559 在瓦尔纳码头（venue = dock）；auto=false，玩家用 ask:request_ilona 启动；offer 不写 at，目标为在港里找到她。
+#   窗口 1557-06-01 至 1559-10-31；offer 到期走 failed，不写见闻。
+# 进行中：battle 章 deadline_days=60，到期走 failed，她留下一封信，好感 -3，旗标 _late；after 是普通章，可以一直等。
+# 依据·史实背景：1557—59 年瓦尔纳在奥斯曼治下，黑海西岸；多瑙河口到瓦尔纳的航路。正文只写港外的一仗，不写战役。待核：无。
+# 依据·原创：伊洛娜与她的来历；追兵只写“那条船上的人”；“织工”是她对你撒的谎，正文不戳破。
+# 秘密：来历与身份一概不写正文；被问来历她就说织工。battle 与 after 不写见闻，offer 没有 at 也不写见闻。
+# 读的旗标：无（不读 c13_main_* 与 c7_*）。
+# 设的旗标：c13_request_ilona_accepted（接下，两种接法与检定失败都设）、_declined（回绝，终局）、_hid（夜里藏在货舱，分支旗标）、_seen（换船时被望见，只在检定失败的分支设，分支旗标）、_done（收尾，终局）、_late（超时，终局）。不用 relation / tie / bond / heart 效果。
+# 报酬：现金 1600（只在 after 的“往西北走”一句付一次；不收钱也可以）；好感最多 +15；不加名声（隐秘的请托）；回忆 mem-request_ilona-after。
+# 依赖：港口 varna；人物 ilona；属性 seamanship。无需 B10b 改名，无主线门禁。
+# 回忆插画清单：
+#   mem-request_ilona-after「背靠墙的座位」：瓦尔纳码头的夜里，一个女人背靠着仓库的墙坐在阴影里，正对码头的门，手里一枚银币。
+
+[[tracks]]
+key = "request_ilona"
+name = "跟到瓦尔纳的船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ilona"]
+
+# 一、先数门窗：酒馆里的女人数完门窗才看你，港外有一条船跟了她一路。
+[[tracks.chapters]]
+key = "offer"
+title = "先数门窗"
+text = "你推门进屋，顺手要带上门。屋里的女人先数门窗，再数屋里的人，最后才肯坐下，背靠墙，正对着门。她抬眼看你：“别关门。……行，你就站那儿。说吧，谁让你来找我的？”你说是港口的人指的路。她手指在桌面上敲了两下：“有一条船，从多瑙河口一路跟着我到了瓦尔纳，现在就泊在港外。”她要你替她挡一回，“打一仗，或者趁夜把我送上另一条船。哪样都行，我付钱。”你问她是什么人。她说，是从多瑙河上游来的织工。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "ilona", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1559, 10, 31] }, { kind = "age", ge = 17 }]
+deadline = [1559, 10, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "答应：那条船要是进港，我挡。"
+next = "battle"
+reply = "她点点头，把一枚银币放在桌上，又收回去：“办完再付。”她起身时，又数了一遍门窗。"
+effects = [{ kind = "affinity", person = "ilona", value = 2 }, { kind = "flag", flag = "c13_request_ilona_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "swap"
+text = "答应夜里把她换到你的船上藏一天，让那条船的人扑空。"
+next = "after"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "她跟着你从码头另一头上了船，在货舱里坐了一天一夜，一眼也没合。第二天那条船的人上岸找了一圈，傍晚起锚走了。"
+effects = [{ kind = "affinity", person = "ilona", value = 3 }, { kind = "flag", flag = "c13_request_ilona_accepted" }, { kind = "flag", flag = "c13_request_ilona_hid" }]
+fail = { next = "battle", effects = [{ kind = "affinity", person = "ilona", value = -2 }, { kind = "flag", flag = "c13_request_ilona_accepted" }, { kind = "flag", flag = "c13_request_ilona_seen" }] }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "来路不明的事，你不接。"
+next = "failed"
+reply = "她没说什么，起身走了，出门前又看了一眼门窗。"
+effects = [{ kind = "flag", flag = "c13_request_ilona_declined" }]
+
+# 二、港外的一仗：那条船在黄昏压进港来，你打退了它。
+[[tracks.chapters]]
+key = "battle"
+title = "刀尖朝下"
+text = "那条船在黄昏起锚，帆只升了一半，往港里压过来。你迎上去，你打退的那条船拖着断了的帆桁退回了外海，船上没有一个人喊话。你的船头撞进浪里，溅了一身咸水，舵手骂了一路。堤上有人点起了灯，灯影落在水面上，一晃一晃的。伊洛娜一直站在你的船尾，手里握着一把短刀，刀尖朝下，指节发白。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "battle", wins = 1, text = "在港外打退那条船" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1559, 12, 31] }, { kind = "alive", person = "ilona", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "ilona", value = -3 }, { kind = "flag", flag = "c13_request_ilona_late" }, { kind = "letter", person = "ilona", text = "我自己走了，换了三条船。别找我。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_seen"
+when = [{ kind = "flag", flag = "c13_request_ilona_seen" }]
+text = "换人的时候，那条船上有人望见了你的船。它起锚追来，一路压进港里，船头有人扯着嗓子喊你的船名。你迎上去，你打退的那条船拖着断了的帆桁退回了外海。堤上有人点起了灯。伊洛娜站在你的船尾，手里握着一把短刀，刀尖朝下，指节发白。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问她：那条船上的人，到底要什么？"
+next = "after"
+reply = "她看了你很久，说：“要我回去。”别的她不肯说，你也没再问。"
+effects = [{ kind = "affinity", person = "ilona", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "not_ask"
+text = "什么也不问，让她把刀收起来。"
+next = "after"
+reply = "她把刀插回靴子里，说你是她遇到的第一个不问的人。"
+effects = [{ kind = "affinity", person = "ilona", value = 5 }]
+
+# 三、哪个港口没人认识她：码头上，她把钱袋递给你，问你哪里能躲。
+[[tracks.chapters]]
+key = "after"
+title = "哪个港口没人认识她"
+text = "码头上，伊洛娜把钱袋递给你。钱袋不沉，里头是她在瓦尔纳攒下的全部的钱，银币缺了边的也都在里头。她脚边那只小包系得很紧，披风的袖口缝过三回，线是黑的。码头上的货箱堆得比桅杆还高，脚夫吆喝着从她身边过，她一次也没回头。她的眼睛从码头的人群上一个个数过去，数完了，才说她要离开瓦尔纳了，问你哪个港口没人认识她。"
+at = "varna"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1559, 12, 31] }, { kind = "alive", person = "ilona", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_hid"
+when = [{ kind = "flag", flag = "c13_request_ilona_hid" }]
+text = "码头上，伊洛娜把钱袋递给你。钱袋不沉，里头是她全部的钱。她说在货舱里那一天一夜，是她这几年头一回没听见脚步声。码头上的货箱堆得比桅杆还高，她一次也没回头。说完，她的眼睛从码头的人群上一个个数过去，数完了，问你哪个港口没人认识她。"
+
+[[tracks.chapters.choices]]
+key = "advise"
+text = "告诉她：往西北走，去汉堡，那边的人只认货不认人。"
+next = "done"
+reply = "她把“汉堡”念了两遍，记住了。她把钱袋塞给你，说这一回，她先问了一句才动手——“我在学。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "ilona", value = 8 }, { kind = "flag", flag = "c13_request_ilona_done" }, { kind = "memory", memory = "mem-request_ilona-after", title = "背靠墙的座位" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_pay"
+text = "钱袋不收，她路上用得着。"
+next = "done"
+reply = "她愣住了，把钱袋攥了很久，最后塞回怀里：“那我欠你。我不喜欢欠人。”她走的时候没回头。"
+effects = [{ kind = "affinity", person = "ilona", value = 8 }, { kind = "flag", flag = "c13_request_ilona_done" }]

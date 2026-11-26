@@ -1,0 +1,440 @@
+# 全局规则参数。金额为整数，单位见 [world] currency（默认“金币”）；比例写小数（0.05 表示 5%）；概率为每日概率。
+
+[world]
+currency = "金币"            # 货币名称（最小货币单位即 1 金币）
+era = "航海历"               # 纪年名称
+start_year = 1502            # 游戏第 1 年对应的纪年年份（界面与摘要显示为 1502年1月1日）
+legacy_map_size = [240, 120] # v3 及更早的存档没有记录迷雾位图的尺寸，读档时按此尺寸解释（扩图前的旧地图）
+
+[market]
+# 参考价格曲线：[库存 / 目标库存, 价格系数]，库存越多越便宜（必须单调递减）
+price_curve = [
+  [0.0, 5.0], [0.1, 4.0], [0.25, 2.8], [0.5, 1.75], [0.75, 1.3], [1.0, 1.0],
+  [1.25, 0.82], [1.5, 0.7], [2.0, 0.52], [3.0, 0.36], [4.0, 0.28], [6.0, 0.2],
+]
+price_floor = 0.2            # 价格下限（相对基准价）
+price_cap = 5.0              # 价格上限（相对基准价）
+target_stock_days = 30       # 目标库存 = 日消耗 × 该天数
+production_noise = 0.10      # 每日产量随机波动 ±10%
+popular_bonus = 0.5          # 流行商品需求 +50%
+popular_days = 30            # 流行持续天数
+seasonal_popular_chance = 0.004  # 每个地点每天因季节触发流行的概率
+price_history_days = 120     # 保留的本地价格走势（日线）天数：行情分析的拟合与回测用
+price_history_months = 36    # 保留的月线（每月月末记当月平均收盘价）个数：季节修正与长期趋势用
+
+[market.open]
+# 开放市场。
+# 打开后每个港口与内陆城市都收购全部商品：清单（world/*.toml 的 market）以外的商品补上“只收不卖”的进口条目——
+#   日消耗 = 这种商品在各地清单里进口条目的日消耗中位数 × demand_scale（至少 min_demand）；
+#   产量 = 日消耗 × ratio_curve（离最近的特产地的贸易距离，格）：离产地越远，均衡库存越少、收购价越高。
+#   贸易距离：港口之间取四季航线里最短的长度；内陆城市经道路相连，一格陆路折合 road_factor 格海路（再除以道路地形的速度系数）。
+#   这些条目不参与城镇的满足度、替代、季节流行与主食禁运，也不发委托。
+# 各地出售的（玩家与商会只能在这里买到的）只是清单里的特产、产量 / 消耗不低于 sell_min_ratio 的商品，以及地点自己写明也出售的商品
+#   （world/*.toml 的 sells：新大陆的殖民港出售殖民地的建材与口粮）；不够 sell_min_goods 种时按产量 / 消耗从高到低补足；
+#   没有任何地方以它为特产的商品（如金锭），列出它的地方照旧出售。
+# 均衡价格对照（上面的价格曲线）：产量 / 消耗 0.85 → 约 1.18 倍基准价，0.75 → 1.3 倍，0.55 → 约 1.66 倍，0.36 → 约 2.34 倍。
+# enabled 关掉后同旧版：清单以外的商品不能买卖，清单里的商品都能买。
+enabled = true
+sell_min_ratio = 0.75        # 清单里产量 / 消耗 ≥ 0.75 的也出售（现有数据里特产以外的条目都在 0.67 以下，等于只卖特产）
+sell_min_goods = 6           # 每处至少出售 6 种（特产不够时按产量 / 消耗从高到低补足）
+ratio_curve = [[0, 0.85], [60, 0.75], [150, 0.55], [300, 0.36]]  # [贸易距离（格）, 产量 / 消耗]，之间线性插值，超出取端点
+demand_scale = 1.0
+min_demand = 3
+road_factor = 2.0
+
+[producers]
+# 本地生产者与供给响应（docs/ECONOMY.md 6.3）。每个有产出的市场有一个本地生产者：
+# 他对价格的预期每月向当月均价移动 expect_lambda；月末产能 ← 产能 × (1 + kappa × (预期 / 参照价 − 1))，
+# 偏离截断在 ±gap_cap 以内，产能夹在开局产能的 [min_ratio, max_ratio] 倍之间；参照价 = 头一年记下的各月影子均价（头一年只看不动）。
+# 作物（goods.toml 里 crop = true）的调整到下一季开始才生效。价格涨了会扩产、跌了会减产，冲击之后是几年的“猪周期”（阻尼振荡）。
+# enabled 关掉后产量回到固定的均衡产量；fractional 让小量商品的产销按万分之一件累计余数（没有取整死区）。两者都关时与旧版逐日一致。
+enabled = true
+fractional = true
+expect_lambda = 0.3
+kappa = 0.2
+gap_cap = 0.5
+min_ratio = 0.3
+max_ratio = 2.5
+
+[population]
+# 人口、繁荣度与需求层级（docs/ECONOMY.md 6.4）。港口与内陆城市有人口（开局 = 发展度 × per_development）与繁荣度（0–100，初值 50）：
+# 需求规模（目标库存）乘“人口 / 开局人口”、需求层级系数与替代系数；产量乘劳动力（人口比例，最多 1），本地生产者与工坊的产能上限乘人口比例。
+# 满足度：每天按层（goods.toml 的 need）取各商品“库存 / 目标库存”截断到 1 的均值（同一替代组合成一项），月末按 weights 合成指数；
+# 头一年记下各月的指数作参照，此后繁荣度的目标 = 50 × (1 + sensitivity × (当月指数 / 当月参照 − 1))，繁荣度每天向目标移动 prosperity_daily。
+# 人口每月按繁荣度增减 growth × (繁荣度 − 50) / 50，夹在开局人口的 [min_ratio, max_ratio] 倍；雇船员从当地人口里招、遣散的船员留在当地。
+# 市况（港口与海图上显示）：饥荒 > 萧条 > 繁荣 > 过剩 > 平稳，每月末按下面的门槛判定，进入与解除用不同的门槛（不会来回跳）。
+# enabled 关掉后没有人口与繁荣度，需求与产量同旧版。
+enabled = true
+per_development = 500        # 开局人口 = 发展度 × 该值
+min_ratio = 0.5              # 人口下限（开局人口的倍数）
+max_ratio = 3.0              # 人口上限
+growth = 0.0025              # 繁荣度 100（或 0）时人口每月的增（减）幅：±0.25%
+prosperity_daily = 0.01      # 繁荣度每天向目标移动 1%（约合每月 26%）
+sensitivity = 6.0            # 满足度指数比往常高（低）1%，繁荣度的目标高（低）3 点
+weights = [0.5, 0.3, 0.2]    # 必需、舒适、奢侈三层满足度的权重（和为 1）
+elasticity = [0.0, 0.5, 1.0] # 三层需求对繁荣度的弹性：需求 × (1 + 弹性 × (繁荣度 − 50) / 50)
+tier_min = 0.25              # 需求层级系数的下限
+tier_max = 2.0               # 需求层级系数的上限
+substitution_rate = 0.1      # 替代：同组商品的需求每天向按价格分摊的份额（∝ 基础需求 / (价格 / 正常价)²，只看相对往常的涨跌）移动 10%
+substitution_cap = 0.8       # 单一商品最多满足同一需求的 80%（基础份额本来就更高的不再增加）
+# 市况的门槛按平常年景定：真实数据里 30 年约 97% 的港口月是平稳，繁荣与过剩各约 1.3%，饥荒与萧条要有冲击（灾害、封锁、断供）才会出现。
+famine = [0.75, 0.85]        # 饥荒：必需品满足度低于当月参照的 75% 进入，回到 85% 以上解除
+depression = [38, 42]        # 萧条：繁荣度低于 38 进入，高于 42 解除
+boom = [62, 58]              # 繁荣：繁荣度高于 62 进入，低于 58 解除
+glut = [1.1, 1.05]           # 过剩：库存指数（各商品库存 / 目标库存，截断到 4 的均值）高于当月参照的 1.1 倍进入，低于 1.05 倍解除
+
+[workshops]
+# 城镇工坊（docs/ECONOMY.md 6.5；各地的工坊在 data/workshops.toml）：按配方从本地市场取原料、把产出放回本地市场，
+# 接手当地这种加工品均衡产量的一部分（其余仍是凭空的家庭手工）；原料不够时按最缺的一种少做。
+# 每月按“产出价值 / 原料价值”（影子价格）相对头一年各月参照的预期伸缩产能（速度同 [producers]），夹在开局产能的 [min_ratio, max_ratio] 倍；
+# 当月价值比低于 stop_below（亏本）停工，回到 restart_above 以上复工。enabled 关掉后这些加工品回到凭空产出。
+enabled = true
+min_ratio = 0.2
+max_ratio = 2.5
+stop_below = 1.0
+restart_above = 1.05
+
+[provisions]
+# 舰队补给的口粮从当地市场买（docs/ECONOMY.md 6.4）：在 goods 里挑当前价最低、库存够的一种，一件折合 rations 份口粮，
+# 按市价（沿库存走价、不含税）买够件数；都买不到时按 [voyage] 的 food_price 固定价。local 关掉后一律按固定价（同旧版）。
+local = true
+goods = ["grain", "maize", "potato", "fish"]
+rations = 4
+
+[merchants]
+# 本地商人的预期与囤货（docs/ECONOMY.md 6.6、8.3）。每个市场有一群本地商人，按四条启发式规则预测明天的价格
+# （Anufriev & Hommes 2012 实验里验证过的规则与系数）：适应（0.65 × 今天 + 0.35 × 上次的预测）、弱趋势（今天 + 0.4 × 今天的涨跌）、
+# 强趋势（今天 + 1.3 × 涨跌）、锚定调整（(长期均价 + 今天) / 2 + 涨跌）。每天按预测的准头给各派记分，
+# 绩效 = −误差² + memory × 上次的绩效（误差按“长期均价 = scale”折算）；占比 = inertia × 上次的占比 + (1 − inertia) × softmax(intensity × 绩效)，每派至少 min_share。
+# 各派按占比加权得到主流预期；商人按“预期涨幅 − 持有成本”增减存货：想要的存货 = hoard_base + hoard_speed × (预期涨幅 − holding_cost)（都是目标库存的倍数），
+# 夹在 [0, hoard_max]，每天向它移动 hoard_adjust。囤入从市场库存划出、抛售划回（不涉及资金）。
+# 趋势派当道时涨价引来囤积（超调），锚定派当道时高价抛售（回归更快）；默认参数下现货以回归为主。
+# 传闻与新闻（无论真假）让涉及的市场的预期偏移 可信度 × rumor_amplitude，每天剩下 rumor_decay。enabled 关掉后没有本地商人（同旧版）。
+enabled = true
+memory = 0.7                 # 绩效的记忆
+inertia = 0.9                # 占比的惯性
+intensity = 0.4              # 选择强度
+min_share = 0.05             # 每派至少 5%
+scale = 50                   # 误差的刻度（实验里的价格在 50 上下）
+anchor_days = 360            # 长期均价的平滑天数（锚定派的锚）
+hoard_base = 0.1             # 平常的存货：目标库存的 10%（开张时自带）
+hoard_max = 0.2              # 存货上限：目标库存的 20%
+hoard_speed = 3.0            # 预期每天多涨 1%，想要的存货多 3% 的目标库存
+hoard_adjust = 0.25          # 每天向想要的存货移动 25%
+holding_cost = 0.0005        # 每天的持有成本（相对价格，约合每年 18%）
+rumor_amplitude = 0.15       # 可信度 100 的传闻让预期偏移 15%（也是上限）
+rumor_decay = 0.85           # 传闻的偏移每天剩下 85%（约半个月后只剩一成）
+
+[voyage]
+crew_wage = 2                # 每名船员每日工资
+crew_hire_cost = 30          # 招募一名船员的费用
+food_price = 3               # 一单位粮
+water_price = 1              # 一单位水
+crew_per_supply_unit = 20    # 一单位粮或水可供多少船员一天
+repair_cost_per_point = 20   # 修复一点耐久的费用
+ship_resale = 0.5            # 卖船回收比例（再乘耐久比例）
+disease_chance_per_30_days = 0.002  # 海上每满 30 天的每日疾病概率
+starvation_loss = 0.03       # 缺粮缺水时每日船员损失比例
+starvation_morale = 5        # 缺粮缺水时每日士气下降
+morale_decay_after = 25      # 航行超过该天数后士气每日下降 1
+mutiny_morale = 15           # 士气低于该值时可能哗变
+
+[npc]
+min_margin = 0.08            # 期望收益率低于此值不出航
+max_fleets = 4               # 每家商会最多舰队数
+expand_cash_multiple = 3.0   # 现金达到船价的该倍数才买新船
+supply_margin_days = 5       # 补给多备的天数
+repair_below = 0.7           # 耐久低于该比例时修理
+max_stock_share = 0.4        # 一次最多买走当地库存的比例
+invest_above = 400000        # 现金超过该值时每年投资本据港
+invest_share = 0.05          # 每次投资占现金的比例
+industry_above = 250000      # 现金超过该值且没有产业时，在本据港建设采集类产业
+futures_momentum = 0.08      # 期货投机：交割港现货 30 日涨跌超过该比例才建仓
+
+[npc.v2]
+# 商会 2.0（docs/ECONOMY.md 6.7）：选货选线看“预测价差”——用商会偏好的方法（companies.toml 的 forecast）预测抵达时目的港的价格，
+# 每次卖出时核对三种方法（照旧、顺势、回归）的误差，某种方法比正在用的准一成以上时换过去；主货之外同一目的地还有利可图的货一并装上；
+# 装着期货品种驶往它的交割港时开空头套保、卖货后平仓；现金宽裕时买本国的许可证。现金不再无限堆积：
+# 舰队上限 = max_fleets + 净资产 / fleets_per_worth（不超过 max_fleets_cap），船龄超过 retire_years 年的船在有船厂的港口换新，
+# 年末把超出储备（本据港船厂最贵的船价 × reserve_ships）的现金按 dividend_share 分红（流出；E8 起流回本据港的城镇钱袋）。
+# 玩家近期交易量大的市场：跟进型商会（companies.toml 的 reaction = "follow"）加分、回避型（"avoid"）减分，最多 player_reaction。
+# enabled 关掉后商会照旧版的规则（看当前价差、一船一货、不套保、不分红）。
+enabled = true
+fleets_per_worth = 1000000
+max_fleets_cap = 8
+retire_years = 20
+dividend_share = 0.3
+reserve_ships = 3
+hedge = true
+player_reaction = 0.3
+license_multiple = 10
+
+[info]
+# 信息时效（docs/ECONOMY.md 第 7 节）。开局时选“行情情报”：随船传递（推荐）或实时（经典；旧存档照旧）。
+# 随船传递时，远方港口的行情是最近一次得到的快照（日期、各商品的价格与库存、市况），界面写明“x 天前 · 来源”：
+# 自己的舰队或商队在那里时是实时的；任何舰队（包括商会的）出航时带上出发港的行情，抵达时贴到目的港的告示板上，
+# 玩家那时有舰队或商队在目的港就顺便读到；也可以在港口的交易所花钱买下告示板上所有比手上新的行情（行情通报）。
+# 商会只知道自己的船队带回来的行情（开局时记着第 0 天各地的行情），不读告示板。
+board_days = 180             # 告示板上的消息保留的天数，更旧的撕掉
+report_base = 100            # 行情通报的价格 = report_base + report_per_port × 买到的港口数
+report_per_port = 40
+
+[policies]
+# 势力的经济政策（docs/ECONOMY.md 6.10、8.4）。出口禁令、进口关税、出口税与产量补贴是组合事件的效果（data/effects.toml），
+# 模型可以在边界内提议；另有两条规则触发（离线也会发生），每月末检查：
+#   本国港口的主食这个月的均价 ≥ 往常价格 × staple_ratio → 该势力禁止运出这种主食 ban_days 天
+#   （往常价格 = 之前至多 12 个月的月均价的平均，至少要有 6 个月；物价普遍在基准价的 1.7 倍上下，和基准价比会月月禁运）；
+#   本国特产这个月被买走的数量 ≥ 当地一个月正常产量 × export_share → 该势力把它的出口税加到 export_tax 倍，export_tax_days 天。
+# 同一势力同一商品已有同类政策时不重复。enabled 关掉后没有规则触发（同旧版）。
+enabled = true
+staples = ["grain", "maize", "potato", "fish"]  # 主食
+staple_ratio = 1.8          # 全海域每年约七次禁运
+ban_days = 30
+export_share = 1.0          # 真实数据两个种子四年共约 17 次（0.8 时 108 次、1.2 时 1 次）
+export_tax = 2.0
+export_tax_days = 60
+
+[money]
+# 货币流通（docs/ECONOMY.md 6.9）：每一笔钱都有来源和去向，部门之间只有转账。
+# 部门：城镇钱袋（每个港口与内陆城市一个）、势力国库、银行、腹地（外部世界：远方的市场、海盗、储蓄；钱袋付不出时的缺口也记在这里）。
+# 玩家与商会卖货给市场时由当地钱袋付钱、买货时钱进钱袋；工资、补给、修船、船厂、仓租、分红与维护费花在哪里就进哪里的钱袋；
+# 交易税、关税、通行税、许可费进国库，委托报酬与发现赏金由国库付；存取款、放贷还贷与利息经过银行。
+# 守恒：玩家、商会、交易所、城镇、国库、银行与腹地的余额之和始终等于开局的总额。enabled 关掉后同旧版（市场凭空造钱与销毁钱）。
+enabled = true
+# 腹地收入（龙头）：每天 = 人口 × 人均日收入 × 繁荣度系数（0.5 + 繁荣度 / 100，繁荣度 50 时为 1；没有人口规则时人口按发展度折算）
+income_per_capita = 0.2
+# 漏出（下水道）：钱袋每天按该比例流回腹地。开局钱袋 = 参照钱袋 = 开局的腹地收入 / 漏出（收支平衡的水平）
+leak = 0.0167
+# 流动性系数 ℓ = (钱袋 / 参照钱袋)^(1 / liquidity_root)，夹在上下限之间；当地全部商品的报价乘 ℓ（富港贵一点、穷港便宜一点）
+liquidity_root = 5
+liquidity_floor = 0.8
+liquidity_cap = 1.25
+# 银行开局的准备金（金币）：放贷从这里出、还款与利息回到这里；可以为负（放贷创造存款）
+bank_reserve = 2000000
+# 势力国库开局 = 本国城镇开局的腹地收入之和 × 该天数
+treasury_days = 3
+# 财政（每月末）：储备 = 平均月收入 × reserve_months；
+# 每月支出 = 平均月收入 × spend_rate + (余额 − 储备) / catch_up_months（不少于 0、不多于余额），works_share 是公共工程、其余是海军
+reserve_months = 6
+spend_rate = 0.8
+catch_up_months = 12
+works_share = 0.5
+# 公共工程：投在本国发展度相对开局最落后的港口，钱进那里的钱袋，发展度按港口投资的价钱上涨，最多比开局高 works_cap 点
+works_cap = 5
+# 海军：钱进本国港口的钱袋（按参照钱袋分），巡逻度 = 海军开支 / (patrol_cost × 本国港口数)，最多 1；
+# 海区的海盗出现概率 × (1 − navy_cut × 在该海区有港口的势力的巡逻度按港口数的平均)
+patrol_cost = 3000
+navy_cut = 0.3
+# 战争：交战中的势力每月另花 平均月收入 × war_share（钱进腹地）
+war_share = 0.5
+# 殖民竞赛：每季度占领一处殖民点要从国库付这笔钱（钱进腹地），付不起就不占
+claim_cost = 20000
+# 税：余额低于 −deficit_months 个月收入时加税一步（“国库亏空 → 加税”），高于 surplus_months 个月时减税一步，
+# 之间时向 1 回一步；税率系数夹在 tax_min 与 tax_max 之间
+deficit_months = 0
+surplus_months = 12
+tax_step = 0.05
+tax_min = 0.8
+tax_max = 1.25
+# 商会的维护费：每月按超出储备的现金的该比例付给本据港的钱袋（与年末分红一起，让囤积的现金流回城镇）
+company_overhead = 0.01
+
+[credit]
+insolvency_days = 30         # 现金持续为负超过该天数即判定资不抵债
+
+[warehouse]
+rent_per_100 = 5             # 租用：每 100 单位容量每日租金
+price_per_unit = 40          # 购买：每单位容量价格
+demurrage_per_100 = 20       # 超出容量部分：每 100 单位每日滞仓费
+ally_free_capacity = 300     # 同盟港商馆提供的免费容量
+
+[caravan]
+guard_wage = 3               # 护卫每日工资
+guard_hire_cost = 40         # 雇佣一名护卫的费用
+robbery_chance = 0.008       # 治安为 0、无护卫时的每日劫掠概率
+resale = 0.5                 # 解散时驮畜回收比例
+
+[contracts]
+per_faction_per_month = 2    # 每个势力每月发布的委托数量
+reward_factor = 0.4          # 报酬 = 货值 × 该系数 × (1 + 期限天数 / 30)
+penalty_share = 0.5          # 违约罚金占报酬的比例
+reputation_gain = 5          # 完成委托的声望增加
+reputation_loss = 10         # 违约的声望减少
+deliver_to_market = true     # 交付的货物进入目的港市场，真的能缓解短缺（关掉则交付后直接消失，同旧版）
+
+[invest]
+cost_per_point = 5000        # 发展度每点的基础投资额（发展度越高越贵）
+min_amount = 1000            # 最小投资额
+ally_share = 0.4             # 成为同盟港所需的最低投资占有率
+ally_tax = 0.5               # 同盟港交易税乘数
+ally_specialty_discount = 0.05  # 同盟港特产商品的买入折扣
+
+[bank]
+deposit_rate = 0.03          # 存款年利率
+loan_base_rate = 0.08        # 贷款基础年利率
+loan_risk_premium = 0.12     # 信用最差时额外的年利率
+max_term_months = 24         # 最长贷款期限（月）
+overdue_penalty = 0.5        # 逾期后利率上浮比例
+
+[diplomacy]
+incident_chance = 0.005      # 每对势力每日发生摩擦或示好的概率
+tension_below = -30          # 关系低于该值：和平 → 紧张
+peace_above = -10            # 关系高于该值：紧张 → 和平
+war_below = -70              # 关系低于该值且紧张已持续足够久：紧张 → 战争
+war_min_tension_days = 60    # 紧张至少持续多少天才可能开战
+war_min_days = 180           # 战争至少持续多少天
+truce_days = 180             # 停战持续多少天后恢复和平
+war_tax = 1.5                # 战时交易税乘数（持有该势力私掠许可者免除）
+license_reputation = 10      # 购买许可证所需的最低声望
+
+[mates]
+xp_per_level = 90            # 升到下一级所需经验 = 当前等级 × 该值（在岗每天 1 点经验）
+level_gain = 2               # 升级时四项能力各加多少（上限 100）
+salary_growth = 0.1          # 升级时加薪比例
+max_level = 10               # 最高等级
+loyalty_paid = 2             # 按时发薪时每月忠诚增加
+loyalty_unpaid = 10          # 月末现金为负（欠薪）时忠诚减少
+leave_below = 20             # 忠诚低于该值时离开
+
+[pirates]
+ships = ["swallow", "silvergull", "tradewind"]  # 海盗使用的船型（ships.toml 中的 key）
+spawn_scale = 8              # 每个海区每天出现一支海盗的概率 = 海区海盗活跃度 × 该系数
+max_per_region = 2           # 每个海区同时存在的海盗舰队上限
+lifetime = [30, 90]          # 海盗舰队存在的天数范围
+fleet_size = [1, 3]          # 每支海盗舰队的船只数范围
+sight = 6                    # 发现商船的距离（格）
+speed = 2                    # 每天移动的格数
+crew_ratio = 0.8             # 海盗船员 = 船型最多船员 × 该比例
+
+[battle]
+evade_max = 0.3              # 自动结算时商船凭航速脱离的最大概率
+cargo_loss_pct = [20, 50]    # 战败时每种货物损失的百分比范围
+tribute_pct = [2, 6]         # 战败且船上无货时被勒索现金的百分比范围
+tactical_radius = 6          # 战术海战六角格地图半径
+gun_range = 3                # 侧舷炮射程（格）
+max_turns = 30               # 战术海战最多回合数，到达后海盗撤离
+reputation_win = 2           # 击退海盗时对当地势力的声望奖励
+
+[explore]
+sight = 6                    # 舰队每天揭开周围多少格的海图迷雾
+chart_base = 500             # 海图价格 = chart_base + chart_per_100_cells × 海区面积 / 100
+chart_per_100_cells = 60
+
+[colony]
+# ── 建立殖民地 ──
+min_settlers = 20            # 建立殖民地至少需要的殖民者（从锚泊舰队的船员中转出，舰队须保留最低船员）
+found_cost = 6000            # 建立费（金币）
+found_materials = [          # 建立时须从舰队卸下的物资（卸入殖民地仓库）
+  { good = "timber", qty = 40 },
+  { good = "grain", qty = 60 },
+]
+found_consume = 0.5          # 建立物资中作为建设消耗的比例（其余留在殖民地仓库）
+found_fame = 10              # 建立殖民地获得的名声
+base_capacity = 400          # 殖民地仓库的基础容量（仓棚另加），免租金
+base_housing = 150           # 基础人口上限（住宅区另加）
+
+# ── 人口与粮食 ──
+food_category = "粮食"       # 殖民者吃的粮食：goods.toml 中 category 为此值的商品
+food_per_100 = 3             # 每百人每天消耗的粮食件数
+growth_bp = 60               # 有粮、士气 ≥ 50、住房有余时每月自然增长（万分比，60 = 0.6%）；殖民地主要靠移民壮大
+immigration_per_morale = 2   # 士气每高于 50 十点，每月的移民人数（再按建筑总等级放大）
+starve_loss_bp = 70          # 断粮时每日人口损失（万分比，70 = 0.7%：断粮一个月约损失两成人口）
+
+# ── 税收与士气 ──
+tax_per_100 = 120            # 每百人每月的税收基数（金币）
+tax_levels = [               # 税率档位：[收入占税收基数的百分比, 士气目标的增减]
+  [0, 10],                   #   0 免税
+  [50, 5],                   #   1 轻税（新殖民地默认）
+  [100, 0],                  #   2 常税
+  [150, -10],                #   3 重税
+  [200, -20],                #   4 苛税
+]
+default_tax = 1              # 新殖民地的税率档位
+morale_goods = [             # 提升士气的消费品：每百人每月需求（月末从殖民地仓库消耗）
+  { good = "wine", per_100 = 4 },
+  { good = "tea", per_100 = 2 },
+  { good = "tobacco", per_100 = 2 },
+  { good = "cloth", per_100 = 3 },
+]
+morale_goods_bonus = 15      # 消费品全部满足时的士气目标加成（按满足比例折算）
+morale_base = 45             # 基础士气目标（礼拜堂、酒馆等建筑另加）
+start_morale = 60            # 新殖民地的士气
+starve_morale = 25           # 断粮时士气目标的惩罚
+raid_morale = 15             # 近 30 天遭袭时士气目标的惩罚
+
+# ── 袭击与疫病 ──
+raid_scale = 0.3             # 每日袭击概率 = 海区海盗活跃度 × raid_scale × 危险度 / 50 × (1 − 防御)；没有堡垒的殖民地约三年遭袭一次
+raid_cooldown_days = 60      # 两次袭击之间至少间隔的天数
+raid_loss_pct = [10, 30]     # 遭袭时库存损失的百分比范围（再乘 1 − 防御）
+raid_death_pct = [2, 8]      # 遭袭时人口损失的百分比范围（再乘 1 − 防御）
+disease_bp_per_hazard = 8    # 每月疫病概率 = 危险度 × 该值（万分比；危险度 30 即 2.4%）
+disease_death_pct = [2, 6]   # 疫病的人口损失百分比范围
+max_defense_pct = 80         # 防御值上限（百分比）
+
+# ── 殖民竞赛（组合事件的“占领殖民点”遵守同样的限制）──
+claim_chance_bp = 1500       # 每个势力每季度占领一处无主殖民点的基础概率（万分比，1500 = 15%）
+max_claims_per_faction = 3   # 每个势力最多占领的殖民点数
+claim_start_day = 360        # 开局第一年各国忙于经营既有的殖民港，第二年起才开始抢占殖民点
+claim_reach = 40             # 只占领离本国某个港口不超过 40 格（直线）的殖民点；远北与外海的荒岛留给冒险者
+claim_slot_years = 6         # 占领上限随年代放开：头 6 年每国至多 1 处，6–11 年 2 处，12 年起 3 处
+claim_decay_pct = 50         # 已占得越多越谨慎：概率 = 基础概率 × 100 / (100 + 已占数量 × 50)
+claim_cooldown_days = 360    # 同一势力两次占领之间至少间隔一年
+max_colonies_per_owner = 5   # 每个商号最多经营的殖民地数
+
+[discovery]
+mate_fame_from_level = 4     # 招募等级 ≥ 4 的航海士需要名声
+mate_fame_per_level = 20     # 所需名声 = (等级 − 3) × 20：4 级 20、5 级 40……
+report_reputation = 3        # 在港口报告发现时，对该港所属势力的声望增加
+fame_per_immigrant = 25      # 每 25 点名声使每个殖民地每月多 1 名移民
+rumor_min_fame = 10          # 发现物传闻（组合事件）只会传到名声 ≥ 该值的玩家耳中：先报告一处发现或建立殖民地
+
+[weather]
+# ── 每日天气（EXPANSION §9.1）──
+# 天气由世界种子、日期与海区算出，不写进存档。各海区的气候见 world/regions.toml 的 climate 字段。
+# 天况以“天气系统”成段出现：每 system_days 天恰好换一次天气系统，所以每段长 1 到 2 × system_days − 1 天。
+# 暴风雨系统：前 1–3 天暴风雨，随后一天下雨，其余多云（连续的暴风雨最多 3 天）。寒冷海区冬季的雨改为雪。
+system_days = 4
+# 海区没写 climate 时按纬度推断：海区中心的行号 < 40 为寒冷，< 80 为温和，< 120 为干燥，其余为热带
+# （有 world/seas.txt 时取该海区实际海面的外接矩形的中心，否则取 regions.toml 里 rect 的中心）
+latitude_bands = [40, 80, 120]
+# 风向每 3 天取一个锚点，锚点相对季节盛行风偏移 −2..+2 格（每格 45°），锚点之间逐日过渡、一天最多转 1 格。
+# 下面是偏移 −2、−1、0、+1、+2 的权重：必须左右对称，偏移 0 最常见
+wind_dir_weights = [1, 2, 4, 2, 1]
+# 风力锚点相对季节风力偏移 −3..+3 级的权重（夹在 0–10 级之间，逐日过渡）；必须左右对称，长期平均才等于季节风力
+wind_strength_weights = [1, 2, 3, 4, 3, 2, 1]
+# 暴风雨当天，海上每支舰队受损的基准概率（10%）。
+# 暴风雨天数占比 ≈ regions.toml 的 storm × 事件修正 × 下面的气候系数 ÷ 该值；实际受损概率再按暴风雨天数折算，
+# 所以长期平均的“每舰队每天受损概率”仍等于 storm × 事件修正。调小它，暴风雨更常见但单次更温和。
+storm_hit = 0.10
+# 暴风雨天数占比的上限（多个风暴事件叠加时封顶；超过后改为提高暴风雨当天的受损概率）
+storm_max = 0.30
+
+# 各气候四季的天气系统权重 [晴, 多云, 雨, 雾]（只看相对大小）；
+# storm 为四季（春、夏、秋、冬）的暴风雨频率系数，只改变暴风雨的多少，不改变长期的受损概率。
+[weather.temperate]          # 温和：四季分明，秋冬多雨
+spring = [45, 30, 17, 8]
+summer = [55, 25, 12, 8]
+autumn = [40, 30, 20, 10]
+winter = [35, 35, 20, 10]
+storm = [1.0, 1.0, 1.0, 1.0]
+
+[weather.cold]               # 寒冷：阴天多，冬季的雨都变成雪
+spring = [35, 35, 20, 10]
+summer = [45, 30, 15, 10]
+autumn = [30, 35, 25, 10]
+winter = [25, 35, 30, 10]
+storm = [1.0, 1.0, 1.0, 1.0]
+
+[weather.arid]               # 干燥：晴天为主，少雨少雾，暴风雨也少见
+spring = [70, 20, 5, 5]
+summer = [80, 15, 2, 3]
+autumn = [70, 20, 6, 4]
+winter = [60, 25, 10, 5]
+storm = [0.7, 0.7, 0.7, 0.7]
+
+[weather.tropical]           # 热带：雨季在夏秋，夏秋的暴风雨（飓风、台风）也更多
+spring = [50, 25, 20, 5]
+summer = [40, 25, 30, 5]
+autumn = [40, 25, 30, 5]
+winter = [55, 25, 15, 5]
+storm = [1.0, 1.5, 1.5, 1.0]

@@ -1,0 +1,148 @@
+# 原创同伴、历史类别校验夹具与条件关系。
+[[persons]]
+key = "classmate_a"
+name = "小岚"
+kind = "story"
+gender = "f"
+born = [1540, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+romance = { with = ["f"] }
+tags = ["pure_gl"]
+loves = ["ring"]
+likes = ["book"]
+dislikes = ["weapon"]
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "classmate_b"
+name = "小汐"
+kind = "story"
+gender = "f"
+born = [1540, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+romance = { with = ["f"] }
+tags = ["pure_gl"]
+loves = ["ring"]
+likes = ["book"]
+dislikes = ["weapon"]
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "mentor"
+tracks = ["request_letters"]
+name = "陈先生"
+kind = "story"
+gender = "m"
+born = [1520, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+tags = ["mentor"]
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "historian"
+name = "史官"
+kind = "historical"
+gender = "m"
+born = [1500, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+audience = { fame = 10, introducer = "mentor" }
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "sailor"
+tracks = ["request_charts"]
+name = "航海者"
+kind = "story"
+gender = "f"
+born = [1530, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+mate = { navigation = 60, trade = 50, combat = 30, management = 40, salary = 10, joinable = true, affinity = 20 }
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "merchant"
+name = "货主"
+kind = "story"
+gender = "m"
+born = [1530, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+fate = [{ event = "port_fire", outcome = "lost", then = "dies" }, { event = "port_fire", outcome = "rescued", then = "lives", schedule = { from = [1553, 1, 1], at = "test_east", venue = "market" } }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "visitor"
+name = "旅人"
+kind = "story"
+gender = "m"
+born = [1535, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern", seasons = [0, 1] }, { from = [1553, 1, 1], at = "test_east", venue = "tavern", seasons = [2, 3] }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "legend_guest"
+name = "旧港来客"
+kind = "legend"
+gender = "f"
+born = [1500, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+schedule = [{ from = [1553, 1, 1], at = "test_west", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+[[persons]]
+key = "distant"
+name = "远航者"
+kind = "story"
+gender = "f"
+born = [1538, 1, 1]
+basis = "original"
+sources = ["引擎测试夹具"]
+role = "测试港的居民"
+schedule = [{ from = [1553, 1, 1], at = "test_east", venue = "tavern" }]
+portraits = [{ from_age = 0, asset = "test_child" }, { from_age = 18, asset = "test_adult" }]
+
+# 同学各有自己的生活；约定会改变这条有条件的配角关系。
+[[ties]]
+a = "classmate_a"
+b = "classmate_b"
+kind = "friends"
+story = "side_letters"
+since = [1553, 1, 1]
+to = [1558, 5, 31]
+when = [{ kind = "not_bond_s", person = "classmate_a" }, { kind = "not_bond_s", person = "classmate_b" }]
+open = true
+[[ties]]
+a = "classmate_a"
+b = "classmate_b"
+kind = "lovers"
+since = [1558, 6, 1]
+when = [{ kind = "not_bond_s", person = "classmate_a" }, { kind = "not_bond_s", person = "classmate_b" }]
+tags = ["GL"]
+[[ties]]
+a = "mentor"
+b = "classmate_a"
+kind = "mentor"
+since = [1553, 1, 1]
+open = true

@@ -1,0 +1,153 @@
+# 请托：西角少了的石头（request_murad）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：穆拉德（murad，1532-03-02 生，男）；盖特贝伊城堡的年轻守兵。cast：cast/story_islamic.toml（日程 1553—1590 在亚历山大港 dock）。
+# 类型：去某处（go）。四章：offer（报价，当面）、arrive（三更，西角的墙根下）、report（天亮交差，照实或遮一点）、report_partial（没看清的那个早上）。
+#       路由：arrive 的检定成功（老兵说了实话，设 _why）进 report；检定失败进 report_partial，两章各有自己的选项。report 的“照实报”不写 requires，靠 next 保证只有知道实情的人走到那里。
+# 报价：T 当面。auto=false，玩家在港里问 ask:request_murad 启动；offer 章不写 at，目标是在港里找到穆拉德；窗口 1558-01-01 至 1590-06-30，止日 timeout 直接 failed，不写见闻。
+# 进行中：arrive、report、report_partial 都是普通章，没有期限，没有 default；玩家不来就停在待决队列里。
+# 依据·史实：盖特贝伊城堡用法罗斯灯塔的残石筑成（正文只在石匠的抱怨里点到一句，不写“史实”二字）；守城的奥斯曼士兵，夜里巡更。
+# 依据·原创：西角的凿痕、穆拉德的灯与守夜习惯、欧麦尔（带他入伍的老兵，不立 cast）、石匠与小车、清真寺的门槛、一块饼、两个人的账。
+# 秘密：cast 没写 secret。persona 里的希腊人那件事本条不写：不提尼科斯，不写他夜里下水的地方。C7 的 pair_nikos_murad 只读不写，本条不设任何 c7_ 旗标。
+# 读的旗标：无（c13_main_* 与 c7_* 都不读）。
+# 设的旗标：c13_request_murad_accepted（offer 的两条接法）、_declined（offer 回绝）、_why（arrive 的检定成功，老兵说了实话）、
+#           _bruised（arrive 的 confront 失败，胳膊挨了一棍；report_partial 的变体读它）、_done（终局，report 两条或 report_partial 的两条收尾）。
+# 报酬：现金最多 550（中风险 0 档的 cash_total）：report 两条各 550；report_partial 的遮与照实分别 300 / 400；失败不付钱。
+#       好感最多 +13（接下 2、arrive 检定成功 3、照实报 8）；名声 +1；回忆 mem-request_murad-report。不发物品。
+# 依赖：港口 alexandria；人物 murad（已在 story_islamic.toml）；无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_murad-report「西角墙根的凿痕」：灯笼的光照在断口上，凿痕一道一道，都是从墙里往外撬的。
+
+[[tracks]]
+key = "request_murad"
+name = "西角少了的石头"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["murad"]
+
+# 一、从里往外撬的：西角的墙根，穆拉德拦下你，托你守一夜。
+[[tracks.chapters]]
+key = "offer"
+title = "从里往外撬的"
+text = "西角的墙根下，灯笼的光打在一截新白的断口上。巡更的守兵从阴影里转出来，手按着刀柄，看清只有一个人，才把手从刀柄上拿开。“站住——哦，是船上来的。巡更到这里，我还没走，有话快说。”他蹲下去，用手指量墙基的缺口。少了好几块，数不清。断口边上有凿痕，一道一道，都是从里往外撬的。“风浪啃不出这样的口子，是拿撬棍的人。有人在挖城堡自己的墙。”他站起来，拍掉手上的灰。“我一个守兵管不了。报上去，守备官只会派一队人来，挖墙的人闻见火把味就不来了。今晚陪我守一夜，你看清是谁，我再去报。”"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "date", from = [1558, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "murad", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应陪他守一夜。"
+next = "arrive"
+reply = "他从怀里摸出一盏遮了罩的灯，塞到你手里：“灯别亮。我认得港内每一盏归航的灯，今晚我们不点。”"
+effects = [{ kind = "affinity", person = "murad", value = 2 }, { kind = "flag", flag = "c13_request_murad_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_commander"
+text = "问他：为什么不报守备官？"
+next = "arrive"
+reply = "“报上去，守备官先问的是我夜里为什么在墙根站着。”他看着西角，“我想先知道是谁。”"
+effects = [{ kind = "affinity", person = "murad", value = 2 }, { kind = "flag", flag = "c13_request_murad_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "城堡的事你不掺和。"
+next = "failed"
+reply = "他点点头，没有再求你，自己走回西角，又站了一会儿。"
+effects = [{ kind = "flag", flag = "c13_request_murad_declined" }]
+
+# 二、带他入伍的人：三更，西角的墙根下来了几个人，撬下石头要抬走。
+[[tracks.chapters]]
+key = "arrive"
+title = "带他入伍的人"
+text = "三更过后，西角的墙根下来了几个人，裹着旧披风，拿着撬棍。是城堡里的几个老兵，还有一个石匠。他们撬下两块石头，抬上一辆轮子裹了布的小车，石匠一边喘一边骂，说法罗斯的老石头比新砌的墙还难撬，老兵压低声音催他快些。穆拉德没点灯，从暗处站起来。最前头那个老兵回过头，穆拉德低声叫了一声：“欧麦尔。”那人没应。穆拉德入伍那年，就是这个人带他的。"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+when = [{ kind = "date", from = [1558, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "murad", value = true }]
+objectives = [{ kind = "wait", days = 1 }]
+news = "亚历山大港盖特贝伊城堡的西角，夜里有人撬墙根的石头，被巡更的年轻守兵撞见了。"
+
+[[tracks.chapters.choices]]
+key = "confront"
+text = "跟穆拉德一起走出去，拦住他们。"
+next = "report"
+check = { attr = "arms", base = 35, per = 6 }
+reply = "老兵们没跑。带穆拉德的那个老兵说，石头是卖给城里修清真寺的，钱分给守兵里家里揭不开锅的。"
+effects = [{ kind = "affinity", person = "murad", value = 3 }, { kind = "flag", flag = "c13_request_murad_why" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "murad", value = -2 }, { kind = "flag", flag = "c13_request_murad_bruised" }], news = "亚历山大港城堡西角夜里有人慌了挥撬棍，巡更的守兵挡了一下，胳膊青了一块。" }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "让穆拉德一个人出去，你在暗处帮腔。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "老兵听见自己的名字，又听见暗处有人替穆拉德说话，愣了一下，叹了口气，把撬棍放下，说了实话：石头卖去了城里修清真寺，钱分给了家里揭不开锅的守兵。"
+effects = [{ kind = "affinity", person = "murad", value = 3 }, { kind = "flag", flag = "c13_request_murad_why" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "murad", value = -2 }], news = "亚历山大港城堡西角夜里几个人扔下撬棍跑散了，只剩一个老兵站在墙根，一句话也不说。" }
+
+# 三、怎么报：天亮了，穆拉德要去守备官那里交差。这一章只有 arrive 的检定成功才会到。
+[[tracks.chapters]]
+key = "report"
+title = "怎么报"
+text = "天亮了，穆拉德的夜班结束，他要去守备官那里交差。撬下来的两块石头堆在城墙根，他蹲在旁边，一下一下地用指头刮掉上面的灰。城门那边已经有人来催，火把快烧完了。“守备官要问。我可以只说墙少了石头，也可以说石头卖去了哪里，卖给了谁。”他抬起头看你，眼睛里有血丝，嗓子哑着。“你说，我怎么报。”"
+speaker = "captain"
+mood = "sad"
+at = "alexandria"
+when = [{ kind = "date", from = [1558, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "murad", value = true }]
+objectives = [{ kind = "person", person = "murad", text = "在港里找到他" }]
+news = "亚历山大港城堡西角少了的石头没追回来，听说城里一座清真寺用它砌了门槛。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实报：谁撬的、卖给谁、钱给了谁。"
+next = "done"
+reply = "守备官罚了那几个老兵，也让人把守兵里揭不开锅的名单拿来看了。卖出去的石头没追回来，清真寺用它们砌了门槛。穆拉德付你钱时说，他照实说了，心里还是难受。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "murad", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_murad-report", title = "西角墙根的凿痕" }, { kind = "flag", flag = "c13_request_murad_done" }]
+
+[[tracks.chapters.choices]]
+key = "cover"
+text = "说：只报墙少了石头，人没看清。"
+next = "done"
+reply = "守备官派人把西角补上了。那个老兵后来找到穆拉德，什么也没说，塞给他一块饼。穆拉德付了你钱，说他欠了两个人。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "murad", value = 5 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_murad_done" }]
+
+# 三之二、只看见石头：检定失败的那个早上。没有人说出是谁，只有石头和麻绳。
+[[tracks.chapters]]
+key = "report_partial"
+title = "只看见石头"
+text = "天亮了，穆拉德要去守备官那里交差。港里的归航灯一盏一盏灭下去，天亮得慢。那夜撬墙的人散得快，有的翻墙走了，有的绊倒在碎石堆里，爬起来就跑。最后走的那个老兵，一句话也没说。穆拉德手里只有两块石头，和一截沾了土的麻绳。他把东西摊在城墙根，看了很久。“我没看清是谁。”他转过头，“守备官要是问起来，你说，我该怎么报？”"
+speaker = "captain"
+mood = "sad"
+at = "alexandria"
+when = [{ kind = "date", from = [1558, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "murad", value = true }]
+objectives = [{ kind = "person", person = "murad", text = "在港里找到他" }]
+news = "亚历山大港城堡西角的墙根被人撬过，守备官圈了墙，撬石头的人一个也没抓到。"
+
+[[tracks.chapters.choices]]
+key = "cover_partial"
+text = "只报墙少了石头，人没看清。"
+next = "done"
+reply = "守备官派人把西角补上了，没有再往下查。穆拉德付你钱时数了两遍，数目不多。“是我没看住墙，不怪你。”"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "murad", value = 3 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_murad_done" }]
+
+[[tracks.chapters.choices]]
+key = "honest_partial"
+text = "照实报：夜里有人撬墙，石头只追回两块。"
+next = "done"
+reply = "守备官把那段墙圈了起来，派人夜里守着。穆拉德说，石头要是还在港里，总有人会在哪道门槛上见到它，他会记着。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "murad", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_murad_done" }]
+
+[[tracks.chapters.choices]]
+key = "leave_him"
+text = "让他自己去报，这一夜你陪到这里就够了。"
+next = "failed"
+reply = "他点点头，没有求你，把两块石头抱进怀里，自己往守备官的屋子走。"
+effects = [{ kind = "affinity", person = "murad", value = -2 }]
+
+# 变体：arrive 的 confront 检定失败（胳膊挨了一棍）时读取，只换正文，选项沿用本章。
+[[tracks.chapters.variants]]
+key = "v1_bruised"
+when = [{ kind = "flag", flag = "c13_request_murad_bruised" }]
+text = "天亮了，穆拉德要去守备官那里交差。港里的归航灯一盏一盏灭下去，天亮得慢。那夜有人慌了挥撬棍，你挡了一下，胳膊上的青痕还在。穆拉德看了一眼，没说什么，把自己的披风披到你肩上。撬墙的人散得快，最后走的那个老兵，一句话也没说。穆拉德手里只剩两块石头和一截沾了土的麻绳。“我没看清是谁。”他低声说，“守备官要是问起来，你说，我该怎么报？”"

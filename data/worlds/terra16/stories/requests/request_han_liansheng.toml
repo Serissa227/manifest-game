@@ -1,0 +1,219 @@
+# 请托：这话是谁说的（request_han_liansheng）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：韩莲生（han_liansheng，1534-01-04 生，女），江南教门里被奉作“圣女”的人，住南京（不上地图），说话像村里的姑娘。cast：cast/story_eastasia.toml。身份档 1。
+# 类型：复合（mixed）。五章：offer（宁波，老信女送来册子与信）、press（福州，书坊街找刻版的坊子）、turn（宁波，她认得这笔字）、
+#   escort（广州，把三户人家送到）、confront（宁波，当众问传话的人）。
+# 报价：L（来信／代理人）。出面的是宁波码头卖香烛的老信女（只写身份，不新建 cast），韩莲生只在信里说话；auto=true；
+#   窗口 1557-06-01 至 1590-06-30，玩家满 17 岁；offer 写 family=c13_offer_ningbo，冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：press 120 天、escort 60 天、confront 90 天，各有 timeout（failed）、一封来信、一条超时见闻（不写的话会套用本章的见闻）；
+#   超时扣好感（-5／-5／-3）并设 _late，不罚钱、不扣物品。turn 没有期限，可以一直等。
+# 依据·史实背景：白莲教的预言与起事（只借背景，正文不出现这两个字）；明代福建的坊刻（建阳、福州一带书坊林立，刻工各有刀路）；民间教门以“预言”和“日子”聚人，官府查得严。
+#   这里只写“教门”“乡里”“那些人家”，不写仪轨与经文，也不写起事本身，更不写官府抓人的场面；“交官”不作为选项。
+# 依据·原创：韩莲生的请托、宁波卖香烛的老信女、“圣女新示”小册子、福州书坊街第七家坊子与掌柜、手写的底稿、蓝布包着的十一只饭碗、
+#   宁波城外的香堂与传话的人、点了一半的蜡烛。香堂、书坊都不写真名。
+# 秘密：cast 没写 secret，但 persona 里有一条：预言册子的底稿笔迹像她认识的人，她不敢认。本请托只碰到这里——turn 章她认出了字，
+#   信里只写“我认得这笔字”，不写是谁，也不写她敢不敢认；ask_who 那条路她不回答。见闻一律不写。她从不当着生人说教门的事，所以信里只说“乡里”“那些人家”。
+# 口头禅（“这话是谁说的”）全轨道只在 confront 当众念一次；offer 里用叙述带过，不加引号。招呼语（“吃碗饭再说”）不照搬，
+#   只让“饭碗”成为 escort 章的物件。
+# 读的旗标：c13_request_han_liansheng_draft（turn 的变体，press 设，只改文字）、c13_request_han_liansheng_sat（confront 的变体，escort 检定失败时设，只改文字）。
+#   不设任何 c7_ 旗标；没有主线门禁（gate_main 为空）。
+# 设的旗标：_accepted（offer 两种接法）、_declined（offer 回绝）、分支旗标 _draft（press 拿到底稿：看刀法、当面逼问成功、出钱买）、
+#   _sat（escort 劝说失败，老汉在码头坐了一夜），共两面；终局旗标 _done（confront 当众问）、_partial（confront 私下劝）、_late（任何一章超时），每条路只设一面。
+# 没有给 ask_aloud 加“必须有底稿”的 requires：_draft 由本轨道 press 的三条路设、第四条路（逼问失败）不设，门禁会让准备后条件仍不满足；
+#   改用 turn、confront 的变体写“手里有没有那页底稿”，两条路都走得通。
+# 不用 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth / schedule 效果。
+# 报酬：现金最多 1250（私下劝折中 750），不加名声（隐秘的请托）；好感最多 +19（接下 +2、press +3、turn +3、escort +3、最好的结局 +8）；检定失败 -2；超时 -5／-5／-3；
+#   回忆 mem-request_han_liansheng-confront。买底稿另花 200（先查现钱）。无物品奖励，无技能奖励。
+# 依赖：港口 ningbo、fuzhou、yuegang（ports_east_asia.toml）；技能 calligraphy（skills.toml）；属性 eloquence；人物 han_liansheng。无需 B10b 改名。
+# 与 C7 的交叉：无。
+# 回忆插画清单：
+#   mem-request_han_liansheng-confront（点了一半的蜡烛）：宁波城外的香堂，供桌上一排蜡烛烧着，人影一个个往门外走，门边的老信女手里捏着一根掐灭的、只烧了一半的蜡烛。
+# 地点（2026-11-01 close-places）：escort 由 yuegang 改 guangzhou——月港 1567 年以前休眠，1557—1566 接下的请托走到这一章必然超时；正文与见闻里的“月港”换成“广州”，其余不动。
+
+[[tracks]]
+key = "request_han_liansheng"
+name = "这话是谁说的"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["han_liansheng"]
+
+# 一、圣女新示：宁波码头上，老信女递来一本册子和一封信。
+[[tracks.chapters]]
+key = "offer"
+title = "圣女新示"
+text = "宁波江厦码头上，卖香烛的老信女守着一只竹篮，篮底压着一本薄薄的刻本，封面三个字：“圣女新示”。她把册子连同一封信递给你。册子上说，某月某日乡里起事，跟着走的得福，不跟的有难。信是韩莲生写的，字一笔一笔，像描红：“这上头的话，我一句也没说过。路远，您先吃饱饭再动身。”她要你去福州，把刻这本册子的书坊找出来——她得先知道，这话是从谁手里出来的。老信女等你看完，低头去理篮子里的蜡烛，一根一根摆齐。"
+mood = "mystic"
+at = "ningbo"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去福州找书坊。"
+next = "press"
+reply = "老信女从篮里挑出最粗的一根蜡烛，塞进你手里。“圣女交代，夜里看刻本，灯要点亮一点。字刻得小，看花了眼，会冤枉人。”她把册子仍旧压回篮底，拿一把香盖住。"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 2 }, { kind = "flag", flag = "c13_request_han_liansheng_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_date"
+text = "先问：册子上说的日子，还有多久？"
+next = "press"
+reply = "老信女掐着手指头算了算：“三个月出头。”她把信折好，按在你手心里。“她说，日子是假的，可信它的人是真的。日子过了没动静，他们还要等下一个日子。”"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 2 }, { kind = "flag", flag = "c13_request_han_liansheng_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这种事，我不碰。"
+next = "failed"
+reply = "老信女点点头，没劝。她把册子从你手边收回去，重新压在篮底，跟那一堆蜡烛放在一起，转头招呼下一个来买香的人。"
+effects = [{ kind = "flag", flag = "c13_request_han_liansheng_declined" }]
+
+# 二、第七家书坊：福州书坊街，几十家坊子刻的都是一样的字，要靠刀路认。
+[[tracks.chapters]]
+key = "press"
+title = "第七家书坊"
+text = "福州书坊街的巷子里排着几十家坊子，案头摆的都是同一副方方正正的匠体字，哪一家刻的都像。我揣着那本册子，一家一家问，一家一家比。前六家的掌柜翻两页，摇头，递还给我。第七家在巷子最里头，门口堆着刻废的梨木板，地上落了一层白屑。掌柜指头上缠着布条，只翻开第一页就合上，推回我面前：“不认得，没见过。”他嘴上说着，那只手却在围裙上擦了又擦。"
+speaker = "captain"
+mood = "tense"
+at = "fuzhou"
+when = [{ kind = "alive", person = "han_liansheng", value = true }]
+deadline_days = 120
+news = "福州书坊街上，有个外乡船长拿着一本薄册子挨家比字，比到第七家，掌柜关了门。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "han_liansheng", value = -5 }, { kind = "flag", flag = "c13_request_han_liansheng_late" }, { kind = "letter", person = "han_liansheng", text = "日子到了，乡里没起事，有几户人家被官府带走了。册子是谁刻的，我还是不知道。您路上辛苦，别往心里去。——莲生" }]
+news = "福州书坊街最里头那家坊子，门口堆的梨木废板落了一层灰，邻铺的人说，掌柜一家回乡下去了。"
+
+[[tracks.chapters.choices]]
+key = "calligraphy"
+text = "看刻工的刀路：这一家的“新”字，木字那一捺收得一样短。"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "你认得字，却看不出刀路——这一家的捺脚跟别家有什么不同，你说不上来。"
+next = "turn"
+reply = "我把册子翻到“新”字，摆在墙上挂的样张底下。“新”字左半个木字的捺，两边都是刀走到一半就收，尾上留个小钩。掌柜的脸一点一点白了。他说版是一个外乡人出钱刻的，只来过一回，底稿是手写的，他留着，没敢烧。"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 3 }, { kind = "flag", flag = "c13_request_han_liansheng_draft" }]
+
+[[tracks.chapters.choices]]
+key = "press_him"
+text = "当面问掌柜：刻这种东西，你知道要掉脑袋吗？"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "turn"
+reply = "掌柜走过去把门板合上，屋里一下暗了。他承认版是他坊里刻的，出钱的人给了定金，没留名字。底稿从版架后头抽出来，在我眼前翻开一页，又立刻收回去：“看一眼，够了。”"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 3 }, { kind = "flag", flag = "c13_request_han_liansheng_draft" }]
+fail = { next = "turn", effects = [{ kind = "affinity", person = "han_liansheng", value = -2 }], news = "福州书坊街最里头那家坊子，早上有个外乡船长拿册子逼问掌柜，被两个刻工推出了门，门板在他背后拍上了。" }
+
+[[tracks.chapters.choices]]
+key = "buy_draft"
+text = "出钱，把底稿买下来。"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "掌柜的眼睛在你的钱袋上停了一下，又转到别处去了。"
+next = "turn"
+reply = "掌柜收了钱，数一遍，又数一遍，才从版架后头摸出一沓手写的底稿，拿旧账纸包好递过来。纸边沾着刻刀磨出来的木屑。他从头到尾没看我的脸。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "han_liansheng", value = 3 }, { kind = "flag", flag = "c13_request_han_liansheng_draft" }]
+
+# 三、她认得这笔字：回信很短，只说了两件事。
+[[tracks.chapters]]
+key = "turn"
+title = "她认得这笔字"
+text = "我给韩莲生写信，把底稿的样子一点一点写给她：横画起笔重，竖钩收得往上带。回信来得比我想的快。老信女在码头上等我，篮子里压着一页折成四折的纸。信很短，字还是一笔一笔，像描红：她认得这笔字。哪里认得，认得谁，一个字也没写。后头是另一件事：“日子等不得了。乡里有几户人家，不想跟着走，又不敢不走。您先把他们悄悄送出去，别声张。”老信女说，信看完要烧，她带了火镰。"
+speaker = "captain"
+mood = "mystic"
+at = "ningbo"
+objectives = [{ kind = "wait", days = 20, text = "等她的回信" }]
+when = [{ kind = "alive", person = "han_liansheng", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_nodraft"
+when = [{ kind = "flag", flag = "c13_request_han_liansheng_draft", value = false }]
+text = "我被轰出坊子的时候，从门缝里瞥见刻案上钉着一页底稿，只来得及记下几个字的样子：横画起笔重，竖钩收得往上带。我把这些连同坊子的巷名写成信，托人带去南京。回信来得比我想的快。老信女在码头上等我，篮子里压着一页折成四折的纸。信很短，字还是一笔一笔，像描红：她认得这笔字。哪里认得，认得谁，一个字也没写。后头是另一件事：“日子等不得了。乡里有几户人家，不想跟着走，又不敢不走。您先把他们悄悄送出去，别声张。”老信女说，信看完要烧，她带了火镰。"
+
+[[tracks.chapters.choices]]
+key = "agree"
+text = "答应：先送人，字的事以后再说。"
+next = "escort"
+reply = "老信女把几户人家的名字念给我听，一户一户，没写在纸上，念完又念了一遍。她说圣女的意思是送到广州就行，那边船多人杂，不显眼。信纸在她的火镰上烧完了，灰她拿鞋底碾进石缝。"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "ask_who"
+text = "回信问：那笔字是谁的？"
+next = "escort"
+reply = "她没回这一句。第二封信是老信女第三天带来的，里头只有三户人家的叫法——东头摆渡的、坡下磨豆腐的、河湾那户——和一句：先送人。老信女让我把三个叫法背下来，我背不全，她又念了一遍。"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 1 }]
+
+# 四、是不是不要我们了：三户人家夜里上船，到广州天亮，老汉抱着一包饭碗。
+[[tracks.chapters]]
+key = "escort"
+title = "是不是不要我们了"
+text = "三户人家，十一口，夜里在宁波三江口上了船，一路没人说话，连小孩都被捂着嘴。船没点灯，是我吩咐的。天亮前靠上广州城外的泊地，一个老汉蹲在船头，怀里抱着个蓝布包，里头是十一只饭碗，一人一只，拿稻草隔着，一路没碰响过一回。他问我：“册子上说，不跟着走的没有福。我们走了。圣女是不是……不要我们了？”"
+speaker = "captain"
+mood = "tense"
+at = "guangzhou"
+when = [{ kind = "alive", person = "han_liansheng", value = true }]
+deadline_days = 60
+news = "广州码头上半夜靠了一条宁波来的船，下来三户人家，天亮就散进了街里。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "han_liansheng", value = -5 }, { kind = "flag", flag = "c13_request_han_liansheng_late" }, { kind = "letter", person = "han_liansheng", text = "那几户人家没等到船，自己走了陆路，半路被拦下一户。拦下的是哪一户，我还不敢问。——莲生" }]
+news = "往广州去的陆路上有人说，浙江来的几户人家走到半道，被拦下了一户，剩下的不知去了哪里。"
+
+[[tracks.chapters.choices]]
+key = "say_no"
+text = "说：她要你们活着，比跟着走强。"
+check = { attr = "eloquence", base = 35, per = 6 }
+next = "confront"
+reply = "老汉想了很久，把蓝布包放到膝盖上，一层一层打开，数了一遍碗，十一只，一只没裂。他又包上，站起来，领着一家人进了广州的街。"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 3 }]
+fail = { next = "confront", effects = [{ kind = "affinity", person = "han_liansheng", value = -2 }, { kind = "flag", flag = "c13_request_han_liansheng_sat" }], news = "广州码头的石阶上，有个老汉抱着个蓝布包坐了一天一夜，不肯进城，第二天才被人劝了走。" }
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "什么也不说，只把他们托给码头上的熟人。"
+next = "confront"
+reply = "码头上管挑夫的熟人把三户人家分到了三处：一家去船厂劈柴，一家去鱼栏洗盆，一家进了米行。老汉走出几步，回头看了我一眼，抱紧蓝布包，没再问。"
+effects = [{ kind = "affinity", person = "han_liansheng", value = 1 }]
+
+# 五、当众问一句：香堂里，传话的人认出了信封。
+[[tracks.chapters]]
+key = "confront"
+title = "当众问一句"
+text = "传话的人在宁波城外的一处香堂里说新示，底下坐了几十个人，供桌上蜡烛点了一排。老信女领我坐到最后一排，把韩莲生的信塞进我手里，信封角上沾着蜡油。她要我在人散之前站起来，替她问一句话。传话的是个四十来岁的瘦子，嗓子很亮，说到某月某日，他停了停，往后看。我刚站起身，他的眼睛落在我手里的信封上，认出来了。"
+speaker = "captain"
+mood = "tense"
+at = "ningbo"
+when = [{ kind = "alive", person = "han_liansheng", value = true }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "han_liansheng", value = -3 }, { kind = "flag", flag = "c13_request_han_liansheng_late" }, { kind = "letter", person = "han_liansheng", text = "那个传话的人自己走了。我还是想当面问他一句，可是问不到了。——莲生" }]
+news = "宁波城外那处香堂这几天没点灯，守门的说，在里头传话的瘦子前几日就收了行李走了。"
+
+[[tracks.chapters.variants]]
+key = "v1_nodraft"
+when = [{ kind = "flag", flag = "c13_request_han_liansheng_draft", value = false }]
+text = "传话的人在宁波城外的一处香堂里说新示，底下坐了几十个人，供桌上蜡烛点了一排。老信女领我坐到最后一排，把韩莲生的信塞进我手里，信封角上沾着蜡油。我手里只有这封信，没有那页底稿，他若咬死不认，我拿不出东西给他看。她要我在人散之前站起来，替她问一句话。传话的是个四十来岁的瘦子，嗓子很亮，说到某月某日，他停了停，往后看。我刚站起身，他的眼睛落在我手里的信封上，认出来了。"
+
+[[tracks.chapters.variants]]
+key = "v2_sat"
+when = [{ kind = "flag", flag = "c13_request_han_liansheng_sat", value = true }]
+text = "传话的人在宁波城外的一处香堂里说新示，底下坐了几十个人，供桌上蜡烛点了一排。老信女领我坐到最后一排，路上告诉我，广州那个老汉第二天才肯进城，到现在还抱着那包碗。她把韩莲生的信塞进我手里，信封角上沾着蜡油，要我在人散之前站起来，替她问一句话。传话的是个四十来岁的瘦子，嗓子很亮，说到某月某日，他停了停，往后看。我刚站起身，他的眼睛落在我手里的信封上，认出来了。"
+
+[[tracks.chapters.choices]]
+key = "ask_aloud"
+text = "站起来，当众念出信里那句问话。"
+next = "done"
+reply = "我拆开信封，里头只有一句，我念了出来：“这话是谁说的？”香堂里静了。传话的人张了几回嘴：先说是梦里得的，再说是别人念给他的，最后说是有人给了他一卷手抄的本子，他没见过圣女。最前排的老妇人先拿起自己的蒲团，走了；后头的人一个跟一个，蜡烛没人吹，一排烧着。回船的路上老信女追上来，把酬金交给我，还有一根点了一半的蜡烛，是她从供桌上掐下来的：“圣女交代，问完了，掐一根给你，别让它烧到底。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "han_liansheng", value = 8 }, { kind = "flag", flag = "c13_request_han_liansheng_done" }, { kind = "memory", memory = "mem-request_han_liansheng-confront", title = "点了一半的蜡烛" }]
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "散场以后私下找他，给他一条退路：别再传了。"
+next = "done"
+reply = "我在香堂后门的灶间找到他。他蹲着就冷饭，听我说完，没抬头，把碗里的饭吃干净才开口。我说后门外有条去台州的盐船，船家不问人。“船钱我自己出。”他说。第二天一早，宁波就没人再见过他。可那本册子还在乡里传。老信女把酬金交给我，说圣女听了，只讲这样也好，少一个人被抓。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "han_liansheng", value = 4 }, { kind = "flag", flag = "c13_request_han_liansheng_partial" }]

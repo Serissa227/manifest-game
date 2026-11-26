@@ -1,0 +1,121 @@
+# 请托：刻着字的石头（request_nikos）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：尼科斯（nikos，1531-01-13 生，男），亚历山大港的希腊潜水人；cast：cast/story_islamic.toml。
+# 类型：押运／带人（escort）。任务单三章（offer、passage、arrive），文件里也是三章，没有分支章。
+# 报价：T（当面），报价港 alexandria；auto=false，玩家“问请托”（ask:request_nikos）启动。offer 章不写 at，objectives 要求在港里找到他。
+# 窗口：1558-01-01 至 1590-06-30 可以接。接下后 passage 不限期；arrive 限期 120 天（从进入 arrive 起计），超时走 failed，寄一封来信。
+#   普通章不用 window，起止日写在 when 里。
+# 依据·史实：法罗斯灯塔的残石在 1477 年被盖特贝伊用来筑堡（cast 来源）；灯塔的水下遗址里有人潜水捞石，行里这么讲（传闻口吻）。
+# 依据·原创：石头上那一行希腊字（不解读，不写成线索；铅板与《造化之秘》归世界的背面 C11）；威尼斯的收藏家（不取名）；湿布与那张写来历的纸。
+# 依赖：港口 alexandria（ports_north_africa.toml）、venice（ports_east_med.toml）；技能 lang_greek（skills.toml）；人物 nikos。
+#   无 B10b 改名；无主线门禁（不写 c13_main_ 门禁）。
+# 与 C7 的交叉：pair_nikos_murad（C7，1553—57 年，亚历山大港）。本轨道从 1558 年起，不写穆拉德；不读、不设任何 c7_ 旗标。
+# 设的旗标：c13_request_nikos_accepted（offer 接下）、_declined（offer 回绝）、_kept（passage 把布裹回去，没让人念）；
+#   终局旗标 _done（卖掉）、_partial（不卖，还给尼科斯）、_late（超时）。每条路只设一面终局旗标。
+# 报酬：现金最多 550（不卖还回 300）；好感最多 +13；名声 +1；回忆 mem-request_nikos-arrive。无物品、无技能、无海图。
+# 回忆插画清单：
+#   mem-request_nikos-arrive「揭开湿布的那一刻」：威尼斯收藏家的院子里，湿布揭开，阳光底下一行老字，收藏家与你都低下头去看。
+
+[[tracks]]
+key = "request_nikos"
+name = "刻着字的石头"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["nikos"]
+
+# 一、一行认不全的字：傍晚的码头，尼科斯把石头拿给你看，要你运去威尼斯悄悄卖掉。
+[[tracks.chapters]]
+key = "offer"
+title = "一行认不全的字"
+text = "他昨夜潜进法罗斯灯塔的乱石堆，捞上来一块石头。傍晚，他蹲在码头石阶上，先擦净石面，再把它举到你眼前。“刚上岸，耳朵里还有水。”他说，“上面刻着一行字，我认不全。威尼斯有个收藏家肯出好价。”他把石头往你手里一放，又收回去。“你替我运去威尼斯，悄悄卖掉。石头上写的是什么，我自己也不知道。卖掉以前，别让人念它。”"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "nikos", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1558, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应把石头运去威尼斯。"
+next = "passage"
+reply = "他用一块湿布把石头裹好，裹了两层：“它在水里待了很久，一下子干了，会裂。”"
+effects = [{ kind = "affinity", person = "nikos", value = 2 }, { kind = "flag", flag = "c13_request_nikos_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_read"
+text = "问他：为什么不让人念？"
+next = "passage"
+reply = "“念出来，就有人说它值更多钱。”他想了想，“也有人说它不该卖。我不想听。”"
+effects = [{ kind = "affinity", person = "nikos", value = 2 }, { kind = "flag", flag = "c13_request_nikos_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "来路不明的古物，我不运。"
+next = "failed"
+reply = "他耸耸肩，把石头抱回怀里，说那就再泡回水里。"
+effects = [{ kind = "flag", flag = "c13_request_nikos_declined" }]
+
+# 二、太阳底下的那行字：海上第五天，湿布干了，一个水手要念给大家听。
+[[tracks.chapters]]
+key = "passage"
+title = "太阳底下的那行字"
+text = "海上第五天，裹石头的湿布干了。你去舱底换水，回到舱口，石头摆在木箱上，那行字在太阳底下看得清清楚楚。石面比昨天白了一圈，刻痕里还嵌着一点海泥。一个水手凑过来，说他认得几个希腊字母，要念给大家听。“就念两个，”他说，“不念全的。”他的嘴已经张开了。"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "wait", days = 5, text = "海上走满五天" }]
+when = [{ kind = "alive", person = "nikos", value = true }, { kind = "date", from = [1558, 1, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "stop"
+text = "不让他念，把布重新浸湿裹上。"
+next = "arrive"
+reply = "布裹好了，石头又是湿的，那行字看不见了。那个水手被你拦住，嘟囔着走开，嘴里还在念念有词。"
+effects = [{ kind = "affinity", person = "nikos", value = 3 }, { kind = "flag", flag = "c13_request_nikos_kept" }]
+check = { attr = "stewardship", base = 35, per = 6 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "nikos", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "look"
+text = "你自己看一眼，认得出几个字母。"
+next = "arrive"
+reply = "你认出了几个字母，可连不成一个词，像是很老很老的写法。你把布裹回去，什么也没跟人说。"
+effects = [{ kind = "affinity", person = "nikos", value = 3 }, { kind = "flag", flag = "c13_request_nikos_kept" }]
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_greek", ge = 60, hard = true }]
+hint = "你的希腊字还认不出这样老的写法，这一行只能看个形状。"
+
+# 三、没有来历的石头：威尼斯的收藏家要一张写明来历的纸，才肯收。
+[[tracks.chapters]]
+key = "arrive"
+title = "没有来历的石头"
+text = "威尼斯的收藏家在自家的院子里接过石头。院子中间一张长桌，桌上摆着放大镜和一卷白纸。他揭开湿布，俯身看了很久，手指沿着刻痕走了一遍。“这是从哪里来的？”他问，“我要写明白。”你还没答，他又说：“没有来历的石头，挂不进书房。”他出了一个好价，可要一张纸，纸上写清是哪片海、哪座港、哪一年捞上来的。"
+speaker = "captain"
+mood = "tense"
+at = "venice"
+when = [{ kind = "alive", person = "nikos", value = true }, { kind = "date", from = [1558, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 120
+news = "威尼斯一个收藏家的院子里多了一块从亚历山大港来的刻字石头，来历只写了“海边捡的”。"
+
+[[tracks.chapters.choices]]
+key = "sell_quiet"
+text = "只说：亚历山大港的海边捡的。别的不写。"
+next = "done"
+reply = "收藏家想了想，收了，说那他就自己编一个来历。你把钱带回亚历山大港，尼科斯数了一遍，又数了一遍，分了一份给你。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "nikos", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_nikos_done" }, { kind = "memory", memory = "mem-request_nikos-arrive", title = "揭开湿布的那一刻" }]
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "nikos", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_nikos_done" }] }
+
+[[tracks.chapters.choices]]
+key = "no_sell"
+text = "说不卖了，石头运回去还给尼科斯。"
+next = "done"
+reply = "收藏家很遗憾。回到亚历山大港，尼科斯看见石头，愣了一下，然后笑了，说那就把它泡回原来的地方。船钱他照付了一半。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "nikos", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_nikos_partial" }]
+news = "威尼斯一个收藏家看过一块刻字石头，没有收，石头又被原样运回了亚历山大港。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "nikos", value = -3 }, { kind = "flag", flag = "c13_request_nikos_late" }, { kind = "letter", person = "nikos", text = "石头我托别人运去了，到了那边裂成了两半。卖了一半的价。" }]
+# 超时时石头没有到过威尼斯，不能沿用章节的见闻（那条写的是石头已经到了）；这里另写一条。
+news = "威尼斯的收藏家等了很久，亚历山大港的石头一直没有来，书房那面墙只好空着。"

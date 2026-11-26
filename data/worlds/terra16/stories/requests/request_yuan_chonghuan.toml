@@ -1,0 +1,159 @@
+# 请托：觉华岛的难民米（request_yuan_chonghuan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：袁崇焕（yuan_chonghuan，1529 生，男），宁前兵备，在宁远督修城墙（本世界线提前约 55 年，TERRA16 §10.5、§11）；势力 ming，身份档 3；有 fate（1575 年被处死的可能）。cast：cast/historical_09_liaodong.toml。
+# 类型：送货（deliver）。任务单写的是三章，实际是四章：offer（报价）、deliver（交货）、settle（结账，米走得干净）、settle_partial（结账，米折了损耗）。
+#   多出的一章是引擎的限制：交货的结果不同，谢礼不同，而选项的 requires 不能读本轨道在别的分支上设的旗标，所以走岔了的分支转到 settle_partial，那里有自己的选项与效果。
+# 报价：V（到访）。袁崇焕下到觉华岛的粮仓，auto=true；offer 写 family=c13_offer_juehua、冷却 20 天；窗口 1568-03-01 至 1570-06-30，玩家名声 >= 20、满 17 岁。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：deliver 章 deadline=1570-10-31，超时走 failed，来信一封（<=120 字），好感 -3，旗标 _late，另有一条见闻；settle 与 settle_partial 是普通章，deadline=1570-11-30，超时 failed。
+#   所有期限都在 1570 年冬封冻、1571-02 宁远与觉华岛之战（L11）以前。每一章都读 alive：袁崇焕有 fate，人没了就走 timeout。
+# 依据·史实背景：宁远、觉华岛的粮仓与难民；袁崇焕分粮于民的作风，以及他“话说得比做得快”的性子（许出去的常比做得到的多一步，刚愎，军法从事）。
+# 依据·原创：三十袋米与八匹棉布；难民推出来的老先生与他的户册；书办“凡上岛的粮先入仓”的令；功劳簿与谢帖。
+#   辽东战役链：只写人、书、粮与家信。不运兵器、火药、火炮、铁料，不传军情，不改任何战役变量，不给 jianzhou 加声望。
+#   不写毛文龙、不写“款”、不写他私通关外、不写西洋大铳。
+# 待核：无。正文只写传闻与人物口吻，不写具体年份的史实事件。
+# 秘密：私下派人去关外通书信、对毛文龙的看法——本请托不碰，见闻一律不写。
+# 读的旗标：只读本轨道自己的旗标（settle_partial 的变体读 _grabbed）。不设任何 c7_ 旗标；此人没有 C7 线。
+# 设的旗标：c13_request_yuan_chonghuan_accepted（offer 接下）、_declined（offer 回绝）、_clean（米走得干净）、_lost（米折了损耗）、_grabbed（当场被兵抢了几袋，_lost 的子情形，只用于变体）、
+#   _late（deliver 或 settle 超时）、_done（settle 终局）、_partial（settle_partial 终局）。
+# 不用 relation / tie / bond / heart 效果。
+# 报酬：货款 1250（交货时付，三个选项都付）；谢礼 3650（走得干净时；折了损耗时 1800）；好感 接下 +2、交货 +3、结账 +8（折成米 +10）；声望 ming +2；名声 +5；回忆 mem-request_yuan_chonghuan-settle。
+#   雇小船的选项自付 200，所以那一支净得货款 1050。
+# 依赖：港口 juehua（ports_east_asia.toml）；货物 rice、cloth（goods）；属性 stewardship；人物 yuan_chonghuan。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_yuan_chonghuan-settle「沙滩上画满圈的户册」：觉华岛北边的沙滩，黄昏，一个瘸腿的老先生坐在空米袋上，膝头摊着一本册子，每一行户名后面都有一个炭笔画的圈；远处，一个穿青袍的官员在数泊岸的船。
+
+[[tracks]]
+key = "request_yuan_chonghuan"
+name = "觉华岛的难民米"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["yuan_chonghuan"]
+
+# 一、数船的人：觉华岛的粮仓前，袁崇焕数到我的船，走过来先问三个数。
+[[tracks.chapters]]
+key = "offer"
+title = "数船的人"
+text = "觉华岛的粮囤一座挨着一座，仓门口站着个穿青袍的人，手里没拿笔，嘴唇在动——他在数泊在滩边的船。我的船刚抛锚，他数到这一条，大步走过来，连招呼也省了：“几天到的？几条船？带了多少粮？”我答完，他点点头，像把数字一个个塞进肚子里。他是宁前兵备袁崇焕，对岸宁远的城墙是他在督修。城外这半年挤满了逃进关的人家，草棚搭到了海边，晾着的棉衣补丁摞补丁。“军粮之外的米，我都拨出去了，还是不够。”他用手指点着数，“要三十袋米，八匹棉布，从南边来，交到这片滩上。米熬粥，够三百口喝半个月；布絮上棉，一匹四件。”他回头看了一眼仓门，“不进仓。军粮是军粮，难民的米是难民的米。账一混，难民就成了兵，兵就成了难民。交给他们自己推出来的人。”"
+speaker = "yuan_chonghuan"
+mood = "tense"
+at = "juehua"
+when = [{ kind = "date", from = [1568, 3, 1], to = [1570, 6, 30] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 20 }, { kind = "alive", person = "yuan_chonghuan", value = true }]
+deadline = [1570, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_juehua"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：三十袋米、八匹棉布，交到这片滩上。"
+next = "deliver"
+reply = "他点头：“好。账上我记你一笔。”说着在本子上写了一行，我伸头看，是我的船名、日子，和“米三十，布八”，旁边还空着一格，没填。"
+effects = [{ kind = "affinity", person = "yuan_chonghuan", value = 2 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这趟不顺路。"
+next = "failed"
+reply = "他“嗯”了一声，已经转身去数下一条船了。我的缆绳还没系稳，他嘴里的数字又从一开始数起。"
+effects = [{ kind = "flag", flag = "c13_request_yuan_chonghuan_declined" }]
+
+# 二、难民推出来的人：米和布卸在沙滩上，书办来了。每个选项都会把货交出去。
+[[tracks.chapters]]
+key = "deliver"
+title = "难民推出来的人"
+text = "米袋和布匹卸在觉华岛北边的沙滩上，潮线以上，堆得比人高。逃难的人家每户派一个人坐渔船过来，蹲在滩那头，没有一个往前挤。他们推出来说话的是个教过几年书的瘸腿老先生，拄着半截船桨，怀里抱一本册子，纸页被海风吹得卷了边。册子上一户一行：户主，口数，有没有孩子。老先生刚翻开第二页，仓里的书办带着两个人走过来，竹筹敲着掌心：“上头有令，凡是上岛的粮，一律先入仓，再按册发。”老先生没跟他争，把册子合上，抱得紧了一点。“入了仓，发下来的就是仓里的数了。”他对我说，眼睛看着那些米袋。"
+speaker = "captain"
+mood = "sad"
+at = "juehua"
+objectives = [{ kind = "goods", good = "rice", qty = 30, at = "juehua", text = "三十袋米运到觉华岛" }, { kind = "goods", good = "cloth", qty = 8, at = "juehua", text = "八匹棉布运到觉华岛" }]
+when = [{ kind = "alive", person = "yuan_chonghuan", value = true }]
+deadline = [1570, 10, 31]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "yuan_chonghuan", value = -3 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_late" }, { kind = "letter", person = "yuan_chonghuan", text = "登州的米先到了，岛上用不着你的了。我说过账上记你一笔，这一笔划掉。你答应得比船快。——袁崇焕" }], news = "觉华岛的粮仓前，登州调来的米船比南边答应的那条先到了，袁兵备账本上有一行被划掉了。" }
+news = "觉华岛北边的沙滩上卸下了几十袋米和一堆棉布，仓里的书办和一个拄桨的老先生，为谁先点数站着争了半天。"
+
+[[tracks.chapters.choices]]
+key = "list"
+text = "照老先生的户册，当场一户户分。"
+next = "settle"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "我把米袋一袋袋拆开，老先生念一户，我量一户，他用炭条在那户后面画一个圈。书办站着看了一会儿，起先跺脚，后来蹲了下来。分到天黑，册子上每一户后面都有了圈，最后一个画得很大，炭条断了。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "yuan_chonghuan", value = 3 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_clean" }]
+fail = { next = "settle_partial", effects = [{ kind = "cash", value = 1250 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_lost" }, { kind = "flag", flag = "c13_request_yuan_chonghuan_grabbed" }], news = "觉华岛北边的沙滩上分米，分到一半有几个兵挤进来扯开袋口，四五袋米转眼没了，拄桨的老先生被推倒在沙里。" }
+
+[[tracks.chapters.choices]]
+key = "boats"
+text = "雇渔船把米直接送到对岸难民的滩头，不经岛上。"
+next = "settle"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你付不起三趟渔船的脚钱。"
+reply = "渔家的小船一条装十来袋，来回跑了三趟。书办在岛上跺脚，喊这不合规矩，船已经划出去了。老先生跟着头一趟过了海，坐在船头抱着册子，到了对岸，念一个名字，就有一个人从草棚里出来领。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = -200 }, { kind = "affinity", person = "yuan_chonghuan", value = 3 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_clean" }]
+
+[[tracks.chapters.choices]]
+key = "granary"
+text = "交给仓里的书办，照上头的令办。"
+next = "settle_partial"
+reply = "书办写了收条，墨迹未干就递了过来。两个兵把米袋扛进仓，仓门在身后合上。老先生拄着桨，抱着他的册子，在沙滩上站了很久。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "yuan_chonghuan", value = -2 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_lost" }]
+
+# 三a、功劳簿：米走得干净，半个月后袁崇焕翻着账来结。
+[[tracks.chapters]]
+key = "settle"
+title = "功劳簿"
+text = "半个月后，袁崇焕又上了岛，腋下夹着账本，一边走一边翻，翻到哪页就用手指戳着念数。“米三十袋，对得上；布八匹，裁了三十二件，对得上。”他在我面前停下，从账本里抽出一张纸，纸角还留着海水的潮印。“难民里推出来的那个老先生，给我写了封谢帖。”他举着纸抖了抖，“字比我手下的书办写得好——这话别让书办听见。”他把账本翻到新的一页，笔悬着。“功劳簿上，我给你记一笔。你要什么，现在说。”"
+speaker = "yuan_chonghuan"
+mood = "tense"
+at = "juehua"
+objectives = [{ kind = "wait", days = 15 }, { kind = "at", at = "juehua", text = "回到觉华岛" }]
+when = [{ kind = "alive", person = "yuan_chonghuan", value = true }]
+deadline = [1570, 11, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yuan_chonghuan_late" }], news = "觉华岛上，袁兵备把功劳簿翻了两遍，南边来的那位船主始终没再靠岸，那一页就这么留着。" }
+news = "觉华岛上，南边来的米没进仓，直接交到了难民推出来的老先生手里；宁远城外的草棚里，这几天头一回有人说粥稠。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下谢礼。"
+next = "done"
+reply = "他数钱数得很快，一文不差，数完才抬头：“功劳的事，兵部那边我去说。”他说这话的声音，比数钱的声音还大。我没问他打算怎么去说，他也没往下讲，翻回前一页，又对了一遍数。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "yuan_chonghuan", value = 8 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_yuan_chonghuan-settle", title = "沙滩上画满圈的户册" }, { kind = "flag", flag = "c13_request_yuan_chonghuan_done" }]
+
+[[tracks.chapters.choices]]
+key = "refugees"
+text = "谢礼请他折成米，再给难民。"
+next = "done"
+reply = "他愣了一下，笔悬在半空，说了一声“好”，然后把刚写好的那个数划掉，在旁边改了一个。落笔比平时慢。"
+effects = [{ kind = "affinity", person = "yuan_chonghuan", value = 10 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_yuan_chonghuan-settle", title = "沙滩上画满圈的户册" }, { kind = "flag", flag = "c13_request_yuan_chonghuan_done" }]
+
+# 三b、减了一半的谢礼：米折了损耗，袁崇焕带着老先生上岛来认账。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "三层损耗"
+text = "半个月后，袁崇焕上岛，没带账本，带了老先生。老先生拄着桨，把册子翻开给我看：二十几户的名字后面是空的，没有圈。“仓里的收条上写三十袋，”袁崇焕说得很快，“发到难民手里的是十九袋。入仓的损耗，搬运的损耗，点数的损耗——三层，我一层层查了。”他把收条拍在手心上。“米是你送到的，这笔账不赖你。可难民没吃到，这笔账我认。”他从袖里摸出一袋钱，数出一半。“谢礼只能给一半。另一半，记在管仓的人名下，叫他自己还。”"
+speaker = "yuan_chonghuan"
+mood = "tense"
+at = "juehua"
+objectives = [{ kind = "wait", days = 15 }, { kind = "at", at = "juehua", text = "回到觉华岛" }]
+when = [{ kind = "alive", person = "yuan_chonghuan", value = true }]
+deadline = [1570, 11, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yuan_chonghuan_late" }], news = "觉华岛上，袁兵备留着减半的谢礼等了一个月，南边来的那位船主没再靠岸，老先生册子上的几户，只好等下一条船。" }
+news = "觉华岛上，袁兵备为一批少了数的难民米发了火，有人被叫去问话；宁远城外有几户人家，还在等米。"
+
+[[tracks.chapters.variants]]
+key = "grabbed"
+when = [{ kind = "flag", flag = "c13_request_yuan_chonghuan_grabbed", value = true }]
+text = "半个月后，袁崇焕上岛，身后跟着两个兵，手被反绑着，脸朝下跪在滩上。老先生拄着桨站在一边，把册子翻开给我看：二十几户的名字后面是空的，没有圈。“抢米的是城上轮值的人，”袁崇焕说得很快，“军法，每人二十棍。四五袋米，追回来两袋，另外三袋，他们说，进了肚子。”他看了一眼跪着的人。“米是你送到的，这笔账不赖你。可难民没吃到，这笔账我认。”他从袖里摸出一袋钱，数出一半。“谢礼只能给一半。另一半，我拿去补米。”"
+
+[[tracks.chapters.choices]]
+key = "take_partial"
+text = "收下减半的谢礼。"
+next = "done"
+reply = "他把钱推过来，没再多说，转身朝仓门口走，一边走一边喊人把账拿来。老先生看看钱，又看看册子，把册子塞回怀里，什么也没说。空着的那几户，他没画圈，也没画点。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "yuan_chonghuan", value = 4 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_partial" }]
+
+[[tracks.chapters.choices]]
+key = "refugees_partial"
+text = "谢礼不要了，折成米，补给册上没分到的几户。"
+next = "done"
+reply = "他看了我一眼，没推辞，转头对老先生说：“册子上空着的那几户，先领。米我从别处调，账记在我名下，不进仓。”老先生拿炭条，在那几户后面各点了一个点，点得很重。"
+effects = [{ kind = "affinity", person = "yuan_chonghuan", value = 6 }, { kind = "flag", flag = "c13_request_yuan_chonghuan_partial" }]

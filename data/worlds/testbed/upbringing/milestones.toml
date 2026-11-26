@@ -1,0 +1,70 @@
+[completions.test_family]
+choose_age = 14
+paths = ["test_path_navigation", "test_path_trade", "test_path_learning", "test_path_hidden"]
+promise_at = "school_garden"
+capital = { at = "test_west", cash = 100, ships = ["swallow"], crew = 6 }
+defaults = { growth = { navigation = 400, wit = 300 }, skills = { lang_test = 20 }, path = "test_path_navigation", exams = ["test_exam_navigation"], flags = ["test_default_growth"] }
+
+# E49 的考试、志向与结局样例；显示文案由内容方替换。
+[[exams]]
+key = "test_exam_navigation"
+name = "占位考试"
+description = "占位。"
+requirements = { rating = { key = "mariner", min = 0 } }
+check = { base = 60, attrs = { navigation = 2 }, min = 5, max = 95 }
+retake = { cooldown_days = 2, max_attempts = 3, fee = 5, remediation = ["rest"] }
+# 隐藏志向的揭晓条件由合格考试提供来源，仍保留考试通过的要求。
+award = { titles = ["占位称号"], skills = { lang_test = 20 }, flags = ["test_exam_passed", "test_hidden_revealed"] }
+
+[[exams]]
+key = "test_exam_academy"
+name = "占位考试"
+description = "占位。"
+academy = "test_academy"
+check = { base = 60, attrs = { wit = 2 }, min = 5, max = 95 }
+retake = { cooldown_days = 2, max_attempts = 3, remediation = ["lesson"] }
+award = { flags = ["test_academy_exam_passed"] }
+
+[[paths]]
+key = "test_path_navigation"
+name = "占位志向"
+description = "占位。"
+capital = { at = "test_west", cash = 300, ships = ["swallow"], crew = 6, food = 2, water = 2, items = { ribbon = 1 } }
+award = { flags = ["test_path_kept"] }
+
+[[paths]]
+key = "test_path_trade"
+name = "占位志向"
+description = "占位。"
+capital = { at = "test_west", cash = 400, ships = ["swallow"], crew = 6 }
+
+[[paths]]
+key = "test_path_learning"
+name = "占位志向"
+description = "占位。"
+capital = { at = "test_west", cash = 200, ships = ["swallow"], crew = 6 }
+
+[[paths]]
+key = "test_path_hidden"
+name = "占位志向"
+description = "占位。"
+hidden = true
+reveal = { flag = "test_hidden_revealed" }
+requirements = { exam_passed = "test_exam_navigation" }
+capital = { at = "test_west", cash = 500, ships = ["swallow"], crew = 6 }
+
+[[endings]]
+key = "test_ending_navigation"
+title = "占位结局"
+text = "占位。"
+family = "test_family"
+priority = 10
+requirements = { aspiration = "test_path_navigation" }
+award = { flags = ["test_ending_kept"] }
+
+[[endings]]
+key = "test_ending_default"
+title = "占位结局"
+text = "占位。"
+family = "test_family"
+priority = 0

@@ -1,0 +1,127 @@
+# 白海里没出来的船（request_juhani）——人物的请托，类型：去某处（go），3 章。
+# 人物：尤哈尼（juhani，1530-11-03 生，男），托尔尼奥冬市上卖风的萨米人，夏天从北边下到斯德哥尔摩的鱼市卖风。
+# 报价：到访（V），报价港 stockholm，auto=true。offer 章 when 写日期（1574-01-01..1590-06-30）与主角年龄 ≥ 17；
+#       止日 1590-06-30 仍未回应走 timeout（next=failed，不写见闻，没人知道这件事没成）。
+# 进行中：arrive 章在圣尼古拉锚地（st_nicholas）触发，期限 240 天，超时发来信、好感 −3；
+#         arrive 的检定失败走 failed（好感 −2、来信一封，不罚钱）；report 章回斯德哥尔摩（stockholm）收尾，没有期限。
+# 依据（史实）：萨米人卖风、一条绳打三个结的民俗（奥劳斯·马格努斯《北方民族史》1555，只当传说写，不给加成）；
+#       英格兰的莫斯科公司船队经白海，在圣尼古拉锚地装货、过冬；沿岸的波莫尔渔民以捕鱼与收留为生。
+# 原创：这一条船与船上的水手；“半个船壳”的消息；岸上的刀与刀柄上的名字；十一件皮袄；
+#       尤哈尼“先看你的脸”与第三个结没有解开的规矩。船名不写，只写一个念得很怪的英格兰名字。
+# 不写：艾希林（C7 tie_extra_11_aisling_juhani 线只到 1573 年，本线从 1574 年起，不解开第三个结）。
+# 读写的旗标：写 c13_request_juhani_accepted（接下）、_brow（问出船名与水手的眉毛）、_found（找到人的去向）、
+#       _done（报酬结清）、_late（超时）、_declined（回绝）。终局旗标只有 done / late / declined 三面，各条路径至多设一面。
+#       检定失败与 offer 超时不设旗标。读的旗标：_brow（report 的变体）。
+# 依赖：cast 中 juhani（cast/story_europe.toml）；地点 stockholm、st_nicholas（ports_north.toml）；技能 lang_german（skills.toml）。
+#       没有主线门禁（gate_main 为空），也不读 c7_* 旗标。
+# 回忆插画：mem-request_juhani-report（没解的第三个结）——尤哈尼把皮绳递回来，第三个结还打着，他的拇指压在结上。
+
+[[tracks]]
+key = "request_juhani"
+name = "白海里没出来的船"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["juhani"]
+
+# 报价：斯德哥尔摩的鱼市边，尤哈尼在木板上摆着打了结的皮绳。
+[[tracks.chapters]]
+key = "offer"
+title = "前两个结随便解"
+text = "斯德哥尔摩鱼市的边上，一个萨米人在木板上摆着几根皮绳，每根都打着三个结。他抬头看了看你的帆，慢慢开口：“要风？先让我看看你的帆补过几回。”说完，他的手指把前两个结捻松了，第三个压在掌心底下，没动。去年冬天，一条英格兰船进了白海，就再没出来。船上有个水手跟他买过一根风。他要你去圣尼古拉锚地打听那条船：“回来告诉我。风是我卖的，我得知道它把人吹到哪里去了。”"
+when = [{ kind = "date", from = [1574, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+at = "stockholm"
+speaker = "juhani"
+mood = "mystic"
+deadline = [1590, 6, 30]
+family = "c13_offer_stockholm"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去白海打听。"
+reply = "他把一根皮绳塞进你手里，前两个结松着。“这两个你随便解。第三个，等你回来。”说完，他的拇指在第三个结上压了一下。"
+next = "arrive"
+effects = [{ kind = "affinity", person = "juhani", value = 2 }, { kind = "flag", flag = "c13_request_juhani_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_ship"
+text = "问他：那条船叫什么？"
+reply = "他说了一个英格兰名字，念得很怪，你只听清了中间那个音。那个水手的脸他还记得，用手指在自己左眉上一划：“左边眉毛断了一截。”"
+next = "arrive"
+effects = [{ kind = "affinity", person = "juhani", value = 2 }, { kind = "flag", flag = "c13_request_juhani_accepted" }, { kind = "flag", flag = "c13_request_juhani_brow" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "白海你不去。"
+reply = "他点点头，把皮绳收回袖子里，接着跟旁边一个买鳕鱼干的人讲价。对方要他减两成，他摇头，没减。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_juhani_declined" }]
+
+# 打听：圣尼古拉锚地。英格兰人的货栈冒着烟，老代理人先说了船的下落，另一半的去向要自己去问。
+[[tracks.chapters]]
+key = "arrive"
+title = "半个船壳"
+text = "圣尼古拉锚地，英格兰人的货栈冒着烟，角落里一个汉萨商人正对着一摞皮袄的账皱眉。管货栈的老代理人一听那条船，先叹了口气：“去年冬天，船被冰困在外海，冰化以后只漂回来半个船壳。”船上的人有一半走冰上了岸，被沿海的波莫尔渔民收留，在岸边过了一冬。另一半的下落，他一句也不猜。你再问，他把账本翻到别的页上：“货栈只管货，船上的事不归我管。”"
+when = [{ kind = "alive", person = "juhani", value = true }]
+at = "st_nicholas"
+speaker = "captain"
+mood = "tense"
+news = "圣尼古拉锚地的货栈里，有个外乡船长在打听去年冬天被冰困住的英格兰船，托人问了一圈。"
+deadline_days = 240
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "juhani", value = -3 }, { kind = "flag", flag = "c13_request_juhani_late" }, { kind = "letter", person = "juhani", text = "（托人代笔）你没去白海。我自己打听到了一半。那根绳，你留着吧。" }]
+news = "白海的圣尼古拉锚地，有个萨米人托代理人打听去年冬天被冰困住的英格兰船，问到了一半。"
+
+[[tracks.chapters.choices]]
+key = "german"
+text = "用德语问角落里的那个汉萨商人，那些人后来去了哪。"
+reply = "那个汉萨商人说，春天那些人搭上了一条回英格兰的船，一共十一个。他记得这个数，因为那年冬天，他卖给他们十一件皮袄。"
+hint = "你的德语只够问价钱，问不出“那些人去了哪”。"
+requires = [{ kind = "skill", skill = "lang_german", ge = 60 }]
+next = "report"
+effects = [{ kind = "affinity", person = "juhani", value = 3 }, { kind = "flag", flag = "c13_request_juhani_found" }]
+
+[[tracks.chapters.choices]]
+key = "ask_pomors"
+text = "雇小船沿岸去渔村，找收留他们的渔民。"
+reply = "渔民留着一把刀，说是那些人走的时候落下的，刀柄上刻着名字。你看了，有一个名字，跟尤哈尼说的对得上。你抄下来，带回去。"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "failed", effects = [{ kind = "affinity", person = "juhani", value = -2 }, { kind = "letter", person = "juhani", text = "（托人代笔）渔村那边的事我听说了。人已经走远，找不回来，你也不必再跑。" }], news = "圣尼古拉锚地的人说，有个外乡船长雇小船去北边渔村，空手回来。村里只剩一个老人记得那些英格兰人，只说了一句：“走了，都走了。”" }
+next = "report"
+effects = [{ kind = "affinity", person = "juhani", value = 3 }, { kind = "flag", flag = "c13_request_juhani_found" }]
+
+# 收尾：斯德哥尔摩。尤哈尼听你说完，第三个结还系着。
+[[tracks.chapters]]
+key = "report"
+title = "风没把他们吹死"
+text = "尤哈尼听你说完。冰，半个船壳，那些人在岸上靠渔民的口粮熬过一冬，开春就走了。他没马上说话，手指在木板上的皮绳间慢慢摸过去，一根一根，停在最后那根上。他把那根拿起来对着光看了看结，又放回去。隔壁摊子的鳕鱼干被风吹得翻了面，没人去翻。他抬起头，看了你的脸很久。皮绳还在他手里，第三个结没有解。"
+when = [{ kind = "alive", person = "juhani", value = true }]
+at = "stockholm"
+speaker = "captain"
+mood = "tender"
+news = "斯德哥尔摩鱼市边那个卖风的萨米人，听一个船长讲完白海的事，那天没卖风，收了摊。"
+
+[[tracks.chapters.variants]]
+key = "brow"
+when = [{ kind = "flag", flag = "c13_request_juhani_brow" }]
+text = "尤哈尼听你说完。冰，半个船壳，那些人在岸上靠渔民的口粮熬过一冬，开春就走了。你又把那个左边眉毛断了一截的水手说给他听，他点点头，说那就对了。他手指慢慢摸过皮绳，一根一根，停在最后那根上。他把那根拿起来对着光看了看结，又放回去。隔壁摊子的鳕鱼干被风吹得翻了面，没人去翻。他抬起头，看了你的脸很久。皮绳还在他手里，第三个结没有解。"
+
+[[tracks.chapters.choices]]
+key = "ask_knot"
+text = "问他：第三个结，不解了？"
+reply = "“不用解了。”他说，“你的脸告诉我，风没把他们吹死。”卖风的钱他分了一半给你，那根皮绳又塞回你手里，第三个结朝上。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "juhani", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_juhani_done" }, { kind = "memory", memory = "mem-request_juhani-report", title = "没解的第三个结" }]
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "什么也不问，等他开口。"
+reply = "他等了半天，见你不问，把第三个结在指间转了一圈，还是没解。钱照数付了，他数得很慢，每数完一叠就抬头看一眼你的脸。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "juhani", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_juhani_done" }]

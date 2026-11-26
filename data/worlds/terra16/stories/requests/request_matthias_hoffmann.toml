@@ -1,0 +1,253 @@
+# C13d 请托：到了海上也不乱走的钟（request_matthias_hoffmann）。中文，Claude 写。
+# 人物：马蒂亚斯·霍夫曼 matthias_hoffmann（1534-02-06 生，男；纽伦堡钟表匠，1557 年起在安特卫普开作坊；势力 holy_roman_empire，身份档 1 匠人）。
+# 类型：mixed（复合）。5 章：offer → spring → build 或 build_paid → sea → report；终点 done / failed。
+# 报价：当面（T），人物日程在安特卫普 antwerp；auto=false，玩家“问请托”（ask:request_matthias_hoffmann）启动。
+# 窗口：报价 1561-01-01 至 1590-06-30（offer 的期限即窗口止日）；spring 的进行中期限 120 天；build、sea、report 不设期限。
+# 依据：史实背景，彼得·亨莱因（纽伦堡钟表匠，“纽伦堡蛋”怀表）的传说，以及 16 世纪海上求经度的难题；本世界线不让任何人提前做成航海钟。
+#   汉堡商栈扣货、纽伦堡代理人、账上的差额、二十天以后的误差表都是原创；史实只作为钟表匠的口头禅与行当的背景。
+# 不用纽伦堡怀表（nuremberg_watch 已是查理五世请托的目标物品），改为去汉堡取扣着的发条（不用物品，只作地点与人物的交涉）。
+# 与 C7：读 c7_pair_griet_vanbeek_matthias_hoffmann_together（report 变体：招牌上两个名字的先后，不写赫丽特说话）；不设任何 c7_ 旗标。
+# 读的旗标（只读）：c13_request_matthias_hoffmann_warm（sea 变体），c13_request_matthias_hoffmann_paid（build 与 build_paid 的分流）。
+# 真话选项的门禁用旗标 honest：只有“照实写”的一路走到 report（那里才有真话选项）；写“好听的”的一路走 report_kind（只剩一句“它很好”）。
+# German 一路（lang_german ≥ 60）与 argue 一路（numeracy 检定）结果不同：German 付掉自己那一半（cash -150），argue 不花钱但失败会 -2 好感。
+# 设的旗标：c13_request_matthias_hoffmann_accepted / declined / paid / warm / honest / late / done / partial。
+# 秘密：cast 没写秘密；本请托无须处理，见闻与正文都不涉及。
+# 报酬：报价见 offer 与 report；垫过的三十个银币在 build_paid 里还给玩家（另计，不占 cash_total）。
+# 结构说明：引擎的效果不能按旗标分支，所以“垫过差额”单独走 build_paid 一章，由它还钱；build 与 build_paid 的选项一一对应。
+# 回忆插画：mem-request_matthias_hoffmann-report，墙上一页误差表钉在旧图纸旁边，表格第二十天那一行被红笔圈了两道。
+
+[[tracks]]
+key = "request_matthias_hoffmann"
+name = "到了海上也不乱走的钟"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["matthias_hoffmann"]
+
+# 一、亨莱因的传人：1561 年起，人物在安特卫普的作坊里，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "亨莱因的传人"
+text = "马蒂亚斯的钟拆了一半，零件摊满整张工作台。他说自己是彼得·亨莱因的传人，这句话一连说了三遍。钟缺一枚好发条，纽伦堡来的货又贵又慢，这一批已经到了汉堡，被纽伦堡商人的代理人扣着，等他把去年的账结清。“别碰那个！发条还没上紧。”他头也不抬，镊子指着你的袖口。“先去汉堡，把发条拿回来。钟装好了，还有一件事——到时候再说。”"
+speaker = "captain"
+mood = "cheerful"
+cast = ["matthias_hoffmann"]
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "matthias_hoffmann", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，这就去汉堡。"
+next = "spring"
+reply = "他把一张欠条的抄本塞进你手里，上面的数字他用红笔圈了一遍。“这是他们说的数。我说的数，是旁边那个。”"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 2 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_later"
+text = "问他：装好以后，还有什么事？"
+next = "spring"
+reply = "“带它出海。”他说得很快，像是怕自己改口。“一个月，每天正午对一次太阳。走快走慢都记下来，别替它说好话。”"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 2 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "钟表的事我不懂，帮不上你。"
+next = "failed"
+reply = "他耸耸肩，把镊子插回工具卷里，接着拆他的钟。"
+effects = [{ kind = "flag", flag = "c13_request_matthias_hoffmann_declined" }]
+
+# 二、差了三十个银币：汉堡的商栈，发条在纽伦堡代理人手里。
+[[tracks.chapters]]
+key = "spring"
+title = "差了三十个银币"
+text = "汉堡的商栈里，潮湿的木头味混着鱼油。纽伦堡商人的代理人把一只小木盒放在桌上，发条就在里面，盘得紧紧的。他又把两张账推过来，一张写纽伦堡的数，一张写他的数。两个数之间差了三十个银币。“差额不结清，盒子不出这扇门。”他说完把手按在盒盖上，不再看你。"
+news = "汉堡的商栈里，纽伦堡商人扣了一年的一盒发条，被一个外乡船长取走了，带回安特卫普。"
+speaker = "captain"
+mood = "tense"
+cast = ["matthias_hoffmann"]
+at = "hamburg"
+when = [{ kind = "alive", person = "matthias_hoffmann", value = true }]
+objectives = [{ kind = "at", at = "hamburg", text = "去汉堡的商栈" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "matthias_hoffmann", text = "发条被别人买走了。我的钟，又等一年。" }, { kind = "affinity", person = "matthias_hoffmann", value = -3 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_late" }] }
+
+[[tracks.chapters.choices]]
+key = "german"
+text = "用纽伦堡口音的德语跟他算：去年那批货晚到了两个月，误工的钱该扣。"
+next = "build"
+requires = [{ kind = "skill", skill = "lang_german", ge = 60 }, { kind = "cash", ge = 150 }]
+hint = "纽伦堡那条街的土话你说不利索，身上的现钱也不够出你那一半。"
+reply = "代理人听你报出纽伦堡那条街的名字，愣了一下，随即笑了。“同乡人好说话。”差额他划掉一半，剩下的一半你数出来，放在桌上。"
+effects = [{ kind = "cash", value = -150 }, { kind = "affinity", person = "matthias_hoffmann", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "当面把两张账对一遍，看差在哪一笔。"
+next = "build"
+check = { attr = "numeracy", base = 20, per = 7 }
+reply = "两张账摊在桌上，你从头对起。代理人的手指压着一行数字，不肯挪开。"
+news = "汉堡的商栈里，一个船长当面对账，查出纽伦堡那边多算了一笔运费，代理人脸红着把盒子推了过来。"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 3 }]
+fail = { next = "build", effects = [{ kind = "affinity", person = "matthias_hoffmann", value = -2 }], news = "汉堡的商栈里，有个外乡船长对账对到天黑也没对出差在哪，代理人把一盒发条推过来，说账记在纽伦堡人头上。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "先把差额垫上，回去再跟马蒂亚斯算。"
+next = "build_paid"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上的现钱不够垫这一笔，代理人当面就看出来了。"
+reply = "代理人数了两遍，收下钱，把盒子交给你，又叮嘱一句：“发条怕潮。”"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "matthias_hoffmann", value = 2 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_paid" }]
+
+# 三、快了一刻：钟装好了，他先把钟放在工作台上看了三天。没有垫过的玩家走这一章。
+[[tracks.chapters]]
+key = "build"
+title = "快了一刻"
+text = "钟装好了，嘀嗒声比原来匀。马蒂亚斯把它放在工作台上看了三天。第三天夜里铺子没生火，早上一看，钟快了一刻。他的脸色很难看，可还是把钟装进一只垫着羊毛的箱子，递到你手上。“海上更冷。带它去，记下来。”"
+speaker = "captain"
+mood = "tense"
+cast = ["matthias_hoffmann"]
+at = "antwerp"
+when = [{ kind = "alive", person = "matthias_hoffmann", value = true }, { kind = "flag", flag = "c13_request_matthias_hoffmann_paid", value = false }]
+objectives = [{ kind = "wait", days = 20, text = "等钟在作坊里试走满二十天" }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下箱子，答应每天正午对一次太阳。"
+next = "sea"
+reply = "他把一本新订的小册子塞进箱子。每一页都画好了格子：日期、正午、钟上的时刻，还有差了多少。"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "suggest"
+text = "提议在箱子里加一个小炉，给钟保暖。"
+next = "sea"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "你说完，他皱着眉听，手里的螺丝刀停了一下。"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 3 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_warm" }]
+fail = { next = "sea", effects = [], news = "安特卫普的钟表铺里，有个船长想在箱子里生炉子，羊毛差点烧着，最后只好撤了，钟照样带走。" }
+
+# 三之二、钟装好了，先还账：垫过差额的玩家走这一章，三十个银币先还给你。
+[[tracks.chapters]]
+key = "build_paid"
+title = "钟装好了，先还账"
+text = "钟装好了，嘀嗒声比原来匀。马蒂亚斯先从抽屉里数出三十个银币，推到你面前。“账要分开算。”然后他把钟放在工作台上看了三天。第三天夜里铺子没生火，早上一看，钟快了一刻。他脸色很难看，还是把钟装进垫着羊毛的箱子，递给你。“海上更冷。带它去，记下来。”"
+speaker = "captain"
+mood = "tense"
+cast = ["matthias_hoffmann"]
+at = "antwerp"
+when = [{ kind = "alive", person = "matthias_hoffmann", value = true }, { kind = "flag", flag = "c13_request_matthias_hoffmann_paid" }]
+objectives = [{ kind = "wait", days = 20, text = "等钟在作坊里试走满二十天" }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下箱子，答应每天正午对一次太阳。"
+next = "sea"
+reply = "他把一本新订的小册子塞进箱子。每一页都画好了格子：日期、正午、钟上的时刻，还有差了多少。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "matthias_hoffmann", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "suggest"
+text = "提议在箱子里加一个小炉，给钟保暖。"
+next = "sea"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "你说完，他皱着眉听，手里的螺丝刀停了一下。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "matthias_hoffmann", value = 3 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_warm" }]
+fail = { next = "sea", effects = [{ kind = "cash", value = 300 }], news = "安特卫普的钟表铺里，有个船长想在箱子里生炉子，羊毛差点烧着，最后只好撤了，钟照样带走。" }
+
+# 四、一次比一次乱：出海一个月，每天正午量一次太阳，再看一眼钟。
+[[tracks.chapters]]
+key = "sea"
+title = "一次比一次乱"
+text = "出海一个月，每天正午你都量一次太阳，再看一眼钟。前十天钟只慢一点，第二十天起，一次比一次乱，有一天快，有一天慢。册子的最后一页还空着，要你写一句总的话。"
+speaker = "captain"
+mood = "tense"
+cast = ["matthias_hoffmann"]
+when = [{ kind = "alive", person = "matthias_hoffmann", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "在海上走满一个月" }]
+
+[[tracks.chapters.variants]]
+key = "warm"
+when = [{ kind = "flag", flag = "c13_request_matthias_hoffmann_warm" }]
+text = "出海一个月，每天正午你都量一次太阳，再看一眼钟。箱底的铜盘一直是温的，前十天钟只慢一点。第二十天起，一次比一次乱，有一天快，有一天慢。册子的最后一页还空着，要你写一句总的话。"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实写：前十天可用，二十天以后不能信。"
+next = "report"
+reply = "你写完，把册子合上。箱子里的钟还在走，走得很认真。"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 3 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_honest" }]
+
+[[tracks.chapters.choices]]
+key = "star_check"
+text = "夜里再用星量一次，把钟的误差折成海里写上。"
+next = "report"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "夜里量星的仪器你还不会读，算出来的数只能是猜的。"
+reply = "你算出二十天后的误差，在赤道上差不多有一百海里。你把这个数写在最后一页，写得很小。"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 3 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_honest" }]
+
+[[tracks.chapters.choices]]
+key = "kind"
+text = "写一句好听的：大体可用，略有误差。"
+next = "report_kind"
+reply = "你写完，心里有点不舒服。"
+effects = [{ kind = "affinity", person = "matthias_hoffmann", value = 1 }]
+
+# 五、是不是没用：册子交回安特卫普，他翻到最后一页。
+[[tracks.chapters]]
+key = "report"
+title = "是不是没用"
+text = "马蒂亚斯一页一页翻那本册子，翻到最后一页，看了很久。“这只钟，是不是没用。”他问得很轻，手指压着那一页的边角。"
+speaker = "captain"
+mood = "tender"
+cast = ["matthias_hoffmann"]
+at = "antwerp"
+when = [{ kind = "alive", person = "matthias_hoffmann", value = true }]
+
+[[tracks.chapters.variants]]
+key = "together"
+when = [{ kind = "flag", flag = "c7_pair_griet_vanbeek_matthias_hoffmann_together" }]
+text = "马蒂亚斯一页一页翻那本册子，翻到最后一页，看了很久。铺子的招牌上是两个名字，他的在后头。“这只钟，是不是没用。”他问得很轻，手指压着那一页的边角。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "说：前十天它比我的眼睛准，二十天以后它比我的眼睛差。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_request_matthias_hoffmann_honest" }]
+hint = "册子上你没写实话，这句话你说不出口。"
+reply = "他笑了，笑得有点苦。“十天也比没有强。”他把那一页撕下来钉在墙上，说下一只钟，要走二十天。付钱的时候，他的手很稳。"
+news = "安特卫普一家钟表铺的墙上钉了一页误差表，老板说下一只钟要在海上走二十天。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "matthias_hoffmann", value = 8 }, { kind = "fame", value = 4 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_done" }, { kind = "memory", memory = "mem-request_matthias_hoffmann-report", title = "墙上那页误差" }]
+
+[[tracks.chapters.choices]]
+key = "soft"
+text = "说：它很好，只是海上太冷。"
+next = "done"
+reply = "他看了你一眼，说你替它说好话了。他付了钱，把册子收进抽屉，没钉上墙。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "matthias_hoffmann", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_partial" }]
+
+# 五之二、是不是没用（写了好听的那一支）：册子上那句话是他先看见的，实话那一选项不在这里。
+[[tracks.chapters]]
+key = "report_kind"
+title = "是不是没用"
+text = "马蒂亚斯没有一页一页翻，他直接翻到最后一页。那一页写的全是好听的话，他一眼就看出来了。“这只钟，是不是没用。”他问得很轻，两根手指捏着纸角。"
+speaker = "captain"
+mood = "tender"
+cast = ["matthias_hoffmann"]
+at = "antwerp"
+when = [{ kind = "alive", person = "matthias_hoffmann", value = true }]
+
+[[tracks.chapters.variants]]
+key = "together"
+when = [{ kind = "flag", flag = "c7_pair_griet_vanbeek_matthias_hoffmann_together" }]
+text = "马蒂亚斯没有一页一页翻，他直接翻到最后一页。那一页写的全是好听的话，他一眼就看出来了。铺子的招牌上是两个名字，他的在后头。“这只钟，是不是没用。”他问得很轻，两根手指捏着纸角。"
+
+[[tracks.chapters.choices]]
+key = "soft"
+text = "说：它很好，只是海上太冷。"
+next = "done"
+reply = "他合上册子，说你写的和你说的一样，都是替它说好话。付钱的时候他数得很慢，册子压进了抽屉最底下，墙上什么也没钉。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "matthias_hoffmann", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_matthias_hoffmann_partial" }]

@@ -1,0 +1,2354 @@
+/* 新界面（试用）——舰队与人：舰队、航海士、行囊 / 装备、图鉴、人物关系图、任务日志、自由对话、海图上别家船队的信息卡。
+ * 第二阶段这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ * 令牌表里没有的浅底由令牌调出来（color-mix：某个语义色 12–18% 混进 paper-2），不另写色值；
+ * 与第一阶段共用的几种派生色（一键操作的 #f6e6c2 / #4d3407、不可选小签底 #f8e3dc、不可用的灰字 #8e8170 等，见 UI-REDESIGN.md 第 6 节）照用；
+ * 只有两种色相令牌里没有、调不出来：神器的品红 #8a3263 / #9a3a6e（调出的暗紫和“普通”的 ink-3 分不开）与恋人线的玫红 #c2456a（seal-hi 和“对手”的红线分不开）。
+ *
+ * 作用范围：舰队（.pn-fleet）、航海士（.pn-mates）、行囊（.it-panel，及物品的公共小件 .it-icon / .it-detail——道具店、拍卖会也用它们）、
+ * 图鉴（.cx-panel）、任务日志（.qs-panel）、人物页的关系图（.pp-graph*）与自由对话（.pp-chat*）、海图上的船队信息卡（.chart-fleet-card）。
+ * 别的面板也用的 .pn-bar、.pn-portrait 等只在 .pn-fleet / .pn-mates 里改，不影响商队、产业、海战。
+ *
+ * 对比度（WCAG AA，见 docs/UI-REDESIGN.md 第 6 节）：正文 ink / 次要 ink-2 / 说明 ink-3 在纸面上 ≥ 5.2；
+ * 一键操作 #4d3407 / #f6e6c2 9.40；岗位小签 sea / 海蓝浅底 5.9、up / 绿浅底 5.4、brass-ink / #f6e6c2 5.6；稀有度小签见 4 节；
+ * 双行名字的英文小行不再用 v1 的 0.72 透明度（ink-2 在 paper-1 上只剩 3.8），改成实色 ink-3（在 paper-1 上 5.7）。
+ */
+
+/* ═════════════════════════ 1. 本组共用：状态条、等级与岗位的小签、头像的插图框 ═════════════════════════ */
+/* 状态条：6 px 圆头细条（去掉像素分段、描边与高光）；颜色按含义（耐久按好坏，补给、装载是黄铜，淡水海蓝） */
+:root[data-ui="v2"] .pn-fleet .pn-bar,
+:root[data-ui="v2"] .pn-mates .pn-bar {
+  height: 6px;
+  min-width: 40px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-fleet .pn-bar > i,
+:root[data-ui="v2"] .pn-mates .pn-bar > i {
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-fleet .pn-bar::after,
+:root[data-ui="v2"] .pn-mates .pn-bar::after {
+  display: none;
+}
+/* 最低船员数的刻度 */
+:root[data-ui="v2"] .pn-fleet .pn-bar > b {
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--v2-seal);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-fleet .pn-tone-hp.ok {
+  --bar: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-fleet .pn-tone-hp.warn {
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-fleet .pn-tone-hp.bad {
+  --bar: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .pn-fleet .pn-tone-cargo,
+:root[data-ui="v2"] .pn-fleet .pn-tone-food,
+:root[data-ui="v2"] .pn-fleet .pn-tone-crew,
+:root[data-ui="v2"] .pn-mates .pn-tone-trade,
+:root[data-ui="v2"] .pn-mates .pn-tone-loyal {
+  --bar: var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-fleet .pn-tone-water,
+:root[data-ui="v2"] .pn-mates .pn-tone-nav {
+  --bar: var(--v2-sea);
+}
+:root[data-ui="v2"] .pn-fleet .pn-tone-morale,
+:root[data-ui="v2"] .pn-mates .pn-tone-mgmt {
+  --bar: var(--v2-up);
+}
+:root[data-ui="v2"] .pn-mates .pn-tone-combat {
+  --bar: var(--v2-seal-hi);
+}
+
+/* 头像：书页插图——细框 + 一圈纸色衬边 + 一道细线；旗舰的船长与麾下航海士用黄铜色的外线 */
+:root[data-ui="v2"] .pn-fleet .pn-portrait,
+:root[data-ui="v2"] .pn-mates .pn-portrait {
+  padding: 0;
+  background: var(--v2-paper-1);
+  border: 1px solid color-mix(in srgb, var(--v2-ink) 35%, transparent);
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 3px var(--v2-paper-2),
+    0 0 0 4px var(--v2-line);
+}
+:root[data-ui="v2"] .pn-fleet .pn-portrait.gold,
+:root[data-ui="v2"] .pn-mates .pn-portrait.gold {
+  background: var(--v2-paper-1);
+  box-shadow:
+    0 0 0 3px var(--v2-paper-2),
+    0 0 0 4px var(--v2-brass);
+}
+
+/* 等级：黄铜色的小方签（不再是蓝底像素牌） */
+:root[data-ui="v2"] .pn-fleet .pn-level,
+:root[data-ui="v2"] .pn-mates .pn-level,
+:root[data-ui="v2"] .pn-mates .pn-level.small {
+  padding: 1px 6px;
+  font: 600 var(--v2-fs-xs) / 1.4 var(--v2-font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+  border: 1px solid color-mix(in srgb, var(--v2-brass-ink) 35%, transparent);
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* 不可用的主按钮与危险按钮：灰字淡底（通用的 .btn.primary 比 :disabled 更具体，不写这一条时看起来和能点的一样） */
+:root[data-ui="v2"] .pn-fleet .btn.primary:disabled,
+:root[data-ui="v2"] .pn-mates .btn.primary:disabled,
+:root[data-ui="v2"] .it-panel .btn.primary:disabled,
+:root[data-ui="v2"] .pn-fleet .btn.danger:disabled,
+:root[data-ui="v2"] .pn-mates .btn.danger:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* 双行名字的英文小行：不小于 12 px；实色 ink-3（v1 的 0.72 透明度在纸面上只有 3.8 : 1），深色小卡上是 on-night-2 */
+:root[data-ui="v2"] .pn-fleet .bi-name-sub,
+:root[data-ui="v2"] .pn-mates .bi-name-sub,
+:root[data-ui="v2"] .chart-fleet-card .bi-name-sub {
+  font-size: max(0.65em, var(--v2-fs-xs));
+  color: var(--v2-ink-3);
+  opacity: 1;
+}
+:root[data-ui="v2"] .chart-fleet-card .bi-name-sub {
+  color: var(--v2-on-night-2);
+}
+
+/* ═════════════════════════ 2. 舰队 ═════════════════════════ */
+/* 选舰队：舰队不多时是一组分段按钮（一次点击），选中的一段白底浮起（FleetPanel 只在 v2 下画这一组） */
+:root[data-ui="v2"] .pn-fleet-pick {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 0 0 12px;
+  padding: 3px;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-lg);
+}
+:root[data-ui="v2"] .pn-fleet-pick-btn {
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-fleet-pick-btn:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: color-mix(in srgb, var(--v2-paper-2) 60%, transparent);
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-fleet-pick-btn[aria-pressed="true"],
+:root[data-ui="v2"] .pn-fleet-pick-btn[aria-pressed="true"]:hover:not(:disabled) {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: var(--v2-paper-2);
+  box-shadow: var(--v2-shadow-1), inset 0 -2px 0 var(--v2-brass);
+}
+
+/* 舰队卡：一张白纸卡，船长的抬头通栏（纸色，不再是木板） */
+:root[data-ui="v2"] .pn-fleet .pn-fleet-card {
+  margin: 0 0 18px;
+  padding: 0 16px 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn-fleet .pn-fleet-card:not(.flagship) {
+  padding-top: 14px;
+}
+:root[data-ui="v2"] .pn-fleet .pn-captain {
+  gap: 16px;
+  margin: 0 -16px 12px;
+  padding: 14px 16px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-bottom: 1px solid var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-fleet .pn-captain .pn-portrait > * {
+  width: 72px !important;
+  height: 72px !important;
+}
+:root[data-ui="v2"] .pn-fleet .pn-captain-text {
+  gap: 4px;
+}
+:root[data-ui="v2"] .pn-fleet .pn-captain-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-fleet .pn-captain-sub {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+/* “旗舰队”：印章红的小签 */
+:root[data-ui="v2"] .pn-fleet .pn-ribbon {
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border-radius: var(--v2-r-xs);
+  clip-path: none;
+  text-shadow: none;
+}
+/* 舰长与岗位：带小头像的签（纸色衬底，不描边——卡里不再套框） */
+:root[data-ui="v2"] .pn-fleet .pn-skippers {
+  gap: 8px;
+  margin: 0 0 10px;
+}
+:root[data-ui="v2"] .pn-fleet .pn-skipper {
+  gap: 10px;
+  padding: 4px 12px 4px 4px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  background: var(--v2-paper-1);
+  border: 0;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-fleet .pn-skipper .pn-portrait {
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-fleet .pn-skipper .pn-portrait > * {
+  width: 36px !important;
+  height: 36px !important;
+}
+:root[data-ui="v2"] .pn-fleet .pn-fleet-where {
+  gap: 2px;
+  margin: 0 0 10px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+/* 舰队画面：书页插图（细框 + 纸色衬边），像素画本身不动 */
+:root[data-ui="v2"] .pn-fleet .pn-fleet-view {
+  margin: 4px 4px 16px;
+  border: 1px solid color-mix(in srgb, var(--v2-ink) 45%, transparent);
+  border-radius: var(--v2-r-sm);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 3px var(--v2-paper-2),
+    0 0 0 4px var(--v2-line);
+}
+
+/* 船只：账页式的列表，一行一艘——舰队卡里只用细线分行，不再套一个圆角框（docs/UI-REDESIGN.md 第 4 节“不要卡片套卡片”）；
+ * 船只、仪表、货舱三块之间是上下两条细线围出的一段 */
+:root[data-ui="v2"] .pn-fleet .pn-ships {
+  gap: 0;
+  margin: 0 0 14px;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--v2-line-strong);
+  border-bottom: 1px solid var(--v2-line-strong);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .pn-fleet .pn-ship {
+  grid-template-columns: 56px minmax(7em, auto) minmax(80px, 1fr);
+  column-gap: 12px;
+  row-gap: 4px;
+  padding: 10px 2px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-fleet .pn-ship:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn-fleet .pn-ship-name {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-fleet .pn-ship-stats {
+  gap: 2px 16px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-fleet .pn-chip {
+  margin-left: 8px;
+  padding: 1px 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  vertical-align: 2px;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-fleet .pn-chip.bad {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+
+/* 装载、粮、水、士气、船员：一组小仪表（文字在上、细条在下），两三列；不描边，下面一条细线与货舱隔开 */
+:root[data-ui="v2"] .pn-fleet .pn-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px 20px;
+  margin: 0 0 16px;
+  padding: 2px 2px 16px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line-strong);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .pn-fleet .pn-stat {
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 6px 8px;
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-fleet .pn-stat .pn-bar {
+  grid-column: 2;
+}
+:root[data-ui="v2"] .pn-fleet .pn-stats .pn-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+
+/* 货舱清单：一行一种货，均价靠右；同样只用细线分行 */
+:root[data-ui="v2"] .pn-fleet .pn-h4 {
+  gap: 4px;
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-fleet .pn-goods {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--v2-line);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .pn-fleet .pn-goods li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-fleet .pn-goods li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn-fleet .pn-good-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-fleet .pn-goods small {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+
+/* 船员一节：说明与缺员（缺员是印章红的就地说明，不再只是一行红字） */
+:root[data-ui="v2"] .pn-fleet .pn-crew > .sub {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn-fleet .crew-short {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-left: 3px solid var(--v2-seal);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .pn-fleet .crew-hire-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+
+/* 航行：目的地、预计天数与“出航”贴在窗口下沿（滚到哪里都看得到、拇指够得着）；滚到它本来的位置时就停在那里。
+ * 它是窗口的最后一节（v2 下“购买补给”排在它前面），所以停在原位时也还是最下面的一条 */
+:root[data-ui="v2"] .pn-fleet > .pn-sail {
+  position: sticky;
+  /* 粘性定位算到滚动区的内边距为止：负的下内边距（.gw-body 是 24 px）让它贴住窗口的下沿 */
+  bottom: -24px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "dest act"
+    "info act"
+    "warn warn";
+  align-items: center;
+  gap: 4px 16px;
+  margin: 16px -20px 0;
+  padding: 12px 20px 14px;
+  background: var(--v2-paper-1);
+  border-top: 1px solid var(--v2-line-strong);
+  box-shadow: 0 -8px 20px color-mix(in srgb, var(--v2-ink) 8%, transparent);
+}
+/* 小标题与目的地的标签重复：只给读屏 */
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .pn-h {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .field {
+  grid-area: dest;
+  margin: 0;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .field select {
+  min-width: 10em;
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .pn-sail-preview {
+  grid-area: info;
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .row {
+  grid-area: act;
+  justify-content: flex-end;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .row .btn.primary {
+  min-height: var(--v2-h-lg);
+  padding: 0 22px;
+  font-size: var(--v2-fs-lg);
+  letter-spacing: 0.12em;
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .pn-sail-warn {
+  grid-area: warn;
+  min-width: 0;
+}
+:root[data-ui="v2"] .pn-sail-warn > .v2-inline-error {
+  margin: 6px 0 0;
+}
+/* V01：粮水撑不到这趟走完——缺口那一条另占一行（排在缺员的原因后面；只有它出现时才多这一行，平时的版式不变） */
+:root[data-ui="v2"] .pn-fleet > .pn-sail:has(> .pn-sail-risk) {
+  grid-template-areas:
+    "dest act"
+    "info act"
+    "warn warn"
+    "risk risk";
+}
+:root[data-ui="v2"] .pn-fleet > .pn-sail > .pn-sail-warn.pn-sail-risk {
+  grid-area: risk;
+}
+/* 是风险、照样能走（同出航确认框里的那一条）：黄铜细线、空心的黄铜“!”、黄铜色的字；就地补足是浅黄铜底的按钮 */
+:root[data-ui="v2"] .pn-sail-risk > .v2-inline-error.v2-supply-risk {
+  border-left: 3px solid var(--v2-brass);
+}
+:root[data-ui="v2"] .pn-sail-risk .v2-supply-risk .v2-inline-error-mark {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-sail-risk .v2-supply-risk .v2-inline-error-reason {
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-sail-risk .v2-supply-risk .v2-inline-error-action {
+  color: #4d3407;
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: #b3852f;
+}
+:root[data-ui="v2"] .pn-sail-risk .v2-supply-risk .v2-inline-error-action:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .pn-sail-risk .v2-supply-risk .v2-inline-error-action:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+/* 太高了不贴底（FleetPanel 量到它高过滚动区的四成时加 .is-loose：横屏手机、矮的竖屏手机、缺员时多一段说明）：
+ * 排在原位、不浮起来（没有上方的阴影），上面一道细线照旧与“购买补给”隔开 */
+:root[data-ui="v2"] .pn-fleet > .pn-sail.is-loose {
+  position: relative;
+  bottom: auto;
+  box-shadow: none;
+}
+/* 贴底的那一条不挡住键盘焦点：留出它的实际高度（FleetPanel 量好写在 .gw-body 的 --fleet-sail-h 上；量到之前按 150 px）；不贴底时不用留 */
+:root[data-ui="v2"] .gw-body:has(> .pn-fleet > .pn-sail:not(.is-loose)) {
+  scroll-padding-bottom: calc(var(--fleet-sail-h, 150px) + var(--v2-s3));
+}
+
+/* 购买补给 */
+:root[data-ui="v2"] .pn-fleet .sp-desk {
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn-fleet .sp-label {
+  min-width: 2em;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .pn-fleet .sp-note {
+  margin: 8px 0;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-fleet .sp-note.sub {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-fleet .sp-note.warn {
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+
+/* ═════════════════════════ 3. 航海士 ═════════════════════════ */
+:root[data-ui="v2"] .pn-mates .pn-help {
+  max-width: 46em;
+  margin: 0 0 4px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.65;
+  color: var(--v2-ink-3);
+}
+/* 麾下航海士：一位一张纸卡，头像是插图；能力两列细条；任命与解雇在卡片下沿 */
+:root[data-ui="v2"] .pn-mates .pn-mate {
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 16px;
+  margin: 0 0 12px;
+  padding: 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn-mates .pn-mate-side {
+  gap: 10px;
+  padding-top: 4px;
+}
+:root[data-ui="v2"] .pn-mates .pn-mate-side .pn-portrait > * {
+  width: 88px !important;
+  height: 88px !important;
+}
+:root[data-ui="v2"] .pn-mates .pn-mate-head {
+  gap: 6px 8px;
+}
+:root[data-ui="v2"] .pn-mates .pn-mate-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-mate-main > .sub {
+  margin: 2px 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* 岗位：带图标的小签，按岗位分色（都很淡） */
+:root[data-ui="v2"] .pn-mates .pn-role {
+  gap: 2px;
+  padding: 1px 8px 1px 4px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-role-captain {
+  color: var(--v2-sea);
+  background: color-mix(in srgb, var(--v2-sea) 12%, var(--v2-paper-2));
+}
+:root[data-ui="v2"] .pn-mates .pn-role-accountant,
+:root[data-ui="v2"] .pn-mates .pn-role-trader {
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+}
+:root[data-ui="v2"] .pn-mates .pn-role-caravan,
+:root[data-ui="v2"] .pn-mates .pn-role-industry,
+:root[data-ui="v2"] .pn-mates .pn-role-assigned {
+  color: var(--v2-up);
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+}
+/* 能力：名字、细条、数字三列；两列排开 */
+:root[data-ui="v2"] .pn-mates .pn-abilities {
+  gap: 6px 20px;
+  margin: 0 0 10px;
+}
+:root[data-ui="v2"] .pn-mates .pn-ability {
+  grid-template-columns: 3em minmax(40px, 1fr) 2.2em;
+  gap: 8px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .pn-mates .pn-ability-label {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-mates .pn-ability-v {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-mates .pn-mate-pay {
+  gap: 12px;
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-mates .pn-bio {
+  margin: 8px 0;
+  padding: 2px 0 2px 12px;
+  font-size: var(--v2-fs-md);
+  font-style: normal;
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  background: none;
+  border-left: 2px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn-mates .pn-genius {
+  margin: 4px 0;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-mates .pn-mate .row {
+  gap: 8px 12px;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn-mates .pn-mate .row .field {
+  margin: 0;
+}
+/* 解雇：安静的次要按钮（印章红的字）；真要解雇时确认框里才是红底的主按钮 */
+:root[data-ui="v2"] .pn-mates .pn-mate .row .btn.danger {
+  margin-left: auto;
+  color: var(--v2-seal);
+  background: transparent;
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-mate .row .btn.danger:hover:not(:disabled) {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: color-mix(in srgb, var(--v2-seal) 45%, transparent);
+}
+
+/* 各港酒馆的航海士：账页式的列表，一行一位；招募按钮在行的右边（一次点击），名声不够、人在别处时就地写原因 */
+:root[data-ui="v2"] .pn-mates .pn-recruits {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit > .pn-portrait {
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit > .pn-portrait > * {
+  width: 56px !important;
+  height: 56px !important;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit .pn-mate-name {
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+  margin: 2px 0 8px;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-at,
+:root[data-ui="v2"] .pn-mates .pn-recruit-cost {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-cost {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-fame {
+  margin: 0;
+  padding: 1px 6px 1px 2px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-fame.short {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit .pn-abilities {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 20px;
+  max-width: 320px;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit .v2-inline-error {
+  margin: 8px 0 0;
+}
+/* 人在别的港口：一句安静的说明（不是出错） */
+:root[data-ui="v2"] .pn-mates .pn-recruit-hint {
+  margin: 8px 0 0;
+  padding-left: 10px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-side {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  padding-top: 2px;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-side .btn {
+  white-space: nowrap;
+}
+/* 行内的“招募”是一键操作：浅黄铜底 + 黄铜描边（与行囊的“装上”、交易所的“买满 / 全卖”同一种），不是整块黄铜的主按钮——
+ * 酒馆里几个人就几行，主按钮一处最多一个（docs/UI-REDESIGN.md 第 4 节）；没有航海士时的主按钮只剩空状态的“去酒馆” */
+:root[data-ui="v2"] .pn-mates .pn-recruit-side .btn.primary {
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-side .btn.primary:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-mates .pn-recruit-side .btn.primary:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+
+/* ═════════════════════════ 4. 物品的公共小件：图标格与物品详情（行囊、道具店、拍卖会共用） ═════════════════════════ */
+/* 图标格：纸色衬底、1 px 稀有度色的边（不再是 3 px 木框 + 深色底）；像素图本身不缩放 */
+:root[data-ui="v2"] .it-icon {
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: inset 0 0 0 2px var(--v2-paper-2);
+}
+:root[data-ui="v2"] .it-icon--art {
+  background: radial-gradient(circle at 50% 45%, var(--v2-paper-1), var(--v2-paper-sunk));
+}
+:root[data-ui="v2"] .it-icon--empty {
+  background: transparent;
+  border: 1px dashed var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-rarity-2.it-icon,
+:root[data-ui="v2"] .it-rarity-2 .it-icon {
+  border-color: var(--v2-up);
+}
+:root[data-ui="v2"] .it-rarity-3.it-icon,
+:root[data-ui="v2"] .it-rarity-3 .it-icon {
+  border-color: var(--v2-sea);
+}
+:root[data-ui="v2"] .it-rarity-4.it-icon,
+:root[data-ui="v2"] .it-rarity-4 .it-icon {
+  border-color: var(--v2-brass);
+  box-shadow:
+    inset 0 0 0 2px var(--v2-paper-2),
+    0 0 0 2px color-mix(in srgb, var(--v2-brass) 25%, transparent);
+}
+:root[data-ui="v2"] .it-rarity-5.it-icon,
+:root[data-ui="v2"] .it-rarity-5 .it-icon {
+  border-color: #9a3a6e;
+  box-shadow:
+    inset 0 0 0 2px var(--v2-paper-2),
+    0 0 0 2px rgba(154, 58, 110, 0.22);
+}
+:root[data-ui="v2"] .it-icon.is-selected {
+  outline: 2px solid var(--v2-brass-ink);
+  outline-offset: 2px;
+}
+/* 数量角标与“已装备”的小点 */
+:root[data-ui="v2"] .it-qty {
+  right: -4px;
+  bottom: -5px;
+  min-width: 18px;
+  padding: 0 4px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: #fff8ee;
+  background: var(--v2-ink);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .it-worn {
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  background: var(--v2-up);
+  border: 2px solid var(--v2-paper-2);
+  border-radius: 50%;
+}
+
+/* 物品详情：一张纸卡，左边一道稀有度色；名字用宋体 */
+:root[data-ui="v2"] .it-detail {
+  padding: 14px 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .it-detail.it-rarity-2 {
+  border-left-color: var(--v2-up);
+}
+:root[data-ui="v2"] .it-detail.it-rarity-3 {
+  border-left-color: var(--v2-sea);
+}
+:root[data-ui="v2"] .it-detail.it-rarity-4 {
+  border-left-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .it-detail.it-rarity-5 {
+  border-left-color: #9a3a6e;
+}
+:root[data-ui="v2"] .it-detail-head {
+  gap: 12px;
+}
+:root[data-ui="v2"] .it-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .it-kind {
+  gap: 6px 8px;
+  margin-top: 4px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+/* 稀有度小签：白字在稀有度色上（≥ 4.5 : 1）。稀有度色：精良 up（6.2）、稀有 sea（6.9）、传说 brass-hi（墨色字 8.5）、普通 ink-3（6.0）、
+ * 神器 #8a3263（7.3；令牌里没有品红，用 seal 与 sea 调出来的暗紫和“普通”的 ink-3 分不开，所以留一个固定色） */
+:root[data-ui="v2"] .it-rarity-tag {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 18px;
+  color: #fff8ee;
+  background: var(--v2-ink-3);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .it-rarity-tag.it-rarity-2 {
+  background: var(--v2-up);
+}
+:root[data-ui="v2"] .it-rarity-tag.it-rarity-3 {
+  background: var(--v2-sea);
+}
+:root[data-ui="v2"] .it-rarity-tag.it-rarity-4 {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .it-rarity-tag.it-rarity-5 {
+  background: #8a3263;
+}
+:root[data-ui="v2"] .it-key {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .it-desc,
+:root[data-ui="v2"] .it-book {
+  margin: 10px 0 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.7;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .it-lore {
+  margin: 10px 0 0;
+  padding-left: 12px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-style: normal;
+  line-height: 1.75;
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .it-effects {
+  gap: 4px 8px;
+  margin: 10px 0 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .it-effects li {
+  padding: 1px 8px;
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .it-tags,
+:root[data-ui="v2"] .it-source,
+:root[data-ui="v2"] .it-price {
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .it-price {
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .it-basis {
+  margin-right: 8px;
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 18px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .it-actions {
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+
+/* ═════════════════════════ 5. 行囊 ═════════════════════════ */
+:root[data-ui="v2"] .it-panel {
+  gap: 14px;
+}
+:root[data-ui="v2"] .it-summary {
+  margin-bottom: 4px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+/* 物品与行囊里的按钮：换成新按钮的样子（原来是开局页的 .ts-btn）；手机上物品详情的抽屉（.it-sheet，挂在 body 上）里也一样 */
+:root[data-ui="v2"] .it-panel .ts-btn,
+:root[data-ui="v2"] .it-sheet .ts-btn {
+  top: 0;
+  min-height: var(--v2-h-sm);
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .it-panel .ts-btn:hover:not(:disabled),
+:root[data-ui="v2"] .it-sheet .ts-btn:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .it-panel .ts-btn:disabled,
+:root[data-ui="v2"] .it-sheet .ts-btn:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .it-panel .ts-empty {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--v2-ink-2);
+}
+
+/* 纸娃娃：左边一栏纸卡——头像（插图框）、谁的装备、七个槽（一行一个，卸下在行内）、装备前后的属性。
+ * .it-bag 是容器（it-bag）：放不放得下三栏按它实际的宽判断（见本节末尾的容器查询），不按视口——平板、横屏手机与窄窗口都一样 */
+:root[data-ui="v2"] .it-bag {
+  container: it-bag / inline-size;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+:root[data-ui="v2"] .it-doll {
+  gap: 12px;
+  padding: 16px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+}
+:root[data-ui="v2"] .it-doll-face {
+  border: 1px solid color-mix(in srgb, var(--v2-ink) 35%, transparent);
+  border-radius: var(--v2-r-md);
+  box-shadow:
+    0 0 0 3px var(--v2-paper-2),
+    0 0 0 4px var(--v2-line);
+}
+/* 七个槽：纸卡里一张有细线的清单（每个槽上面一条细线），不再是卡里再套一个圆角框（docs/UI-REDESIGN.md 第 4 节“不要卡片套卡片”） */
+:root[data-ui="v2"] .it-slots {
+  gap: 0;
+}
+:root[data-ui="v2"] .it-slot {
+  gap: 6px;
+  padding-right: 4px;
+  border-top: 1px solid var(--v2-line);
+}
+/* 槽：图标在左，槽名（小字）在上、装着的东西在下——名字有整行的宽，不再被截成“油布…” */
+:root[data-ui="v2"] .it-slot-btn {
+  grid-template-columns: 36px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 0;
+  min-height: 48px;
+  padding: 5px 8px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-slot-btn:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-slot-btn > .it-icon {
+  grid-row: 1 / span 2;
+}
+:root[data-ui="v2"] .it-slot-name {
+  align-self: end;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.3;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .it-slot-item {
+  align-self: start;
+  font-weight: 600;
+  line-height: 1.4;
+}
+:root[data-ui="v2"] .it-attrs {
+  gap: 6px;
+  align-self: stretch;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .it-attrs li {
+  padding: 2px 8px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .it-attrs b {
+  color: var(--v2-ink);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .it-attrs .is-good {
+  font-weight: 600;
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .it-attrs .is-cost {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+
+/* 物品的分类：七个圆角小签一排（多于七八个、会折行的分页用小签，docs/UI-REDESIGN.md 第 4 节） */
+:root[data-ui="v2"] .it-list-main > .ub-tabs {
+  gap: 6px;
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab {
+  min-height: 30px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab.is-on,
+:root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab.is-on:hover:not(:disabled) {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: none;
+}
+
+/* 物品栏：一张账页，一行一件——图标、名字、稀有度与种类；常用的一键（装上 / 读 / 使用）在行的右边。
+ * 选中一件时详情在右边一栏（跟着滚动停在顶上）；v2 下 InventoryPanel 把分类、列表与“正在读”包在 .it-list-main 里，详情包在 .it-detail-wrap 里 */
+:root[data-ui="v2"] .it-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+:root[data-ui="v2"] .it-list:has(> .it-detail-wrap) {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+}
+:root[data-ui="v2"] .it-list-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .it-detail-wrap {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+}
+/* 还没选的时候：右边一栏留着，一句淡淡的提示（虚线框），点第一下时列表的宽不变 */
+:root[data-ui="v2"] .it-detail-hint,
+:root[data-ui="v2"] .cx-hint {
+  margin: 0;
+  padding: 28px 18px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  text-align: center;
+  color: var(--v2-ink-3);
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+}
+/* 放不下三栏时（纸娃娃 280 + 物品栏至少 360 + 详情 320，加上间距约 1000 px）：纸娃娃挪到上面、占满整宽，物品栏与详情占满下面一行；
+ * 物品栏这一行再窄于 700 px（列表放不下 360 + 详情 320）时，详情排到列表下面（选中时滚进视野）。
+ * 按 .it-bag 实际的宽（容器查询）判断：平板竖放（768–834）、横屏手机（约 844）、桌面上的窄窗口都不会再把列表挤成一个字一行 */
+@container it-bag (max-width: 999px) {
+  :root[data-ui="v2"] .it-bag > .it-doll,
+  :root[data-ui="v2"] .it-bag > .it-list {
+    grid-column: 1 / -1;
+  }
+}
+@container it-bag (max-width: 699px) {
+  :root[data-ui="v2"] .it-list:has(> .it-detail-wrap) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .it-detail-wrap {
+    position: static;
+  }
+  /* 详情排在列表下面时，“点一件看详情”的提示没有意义 */
+  :root[data-ui="v2"] .it-detail-wrap.is-hint {
+    display: none;
+  }
+}
+/* 纸娃娃在上面整宽时排成一行：头像 | 装备前后的属性（竖排）| 七个槽（每格至少 220 px，放得下就两列）。
+ * 手机布局另有一套（头像在左、属性在右、槽在下，见文件末尾），这里不管 */
+@container it-bag (min-width: 560px) and (max-width: 999px) {
+  :root[data-ui="v2"] .app.game:not([data-layout="phone"]) .it-doll {
+    display: grid;
+    grid-template-columns: 112px auto minmax(0, 1fr);
+    align-items: start;
+    gap: 12px 20px;
+  }
+  :root[data-ui="v2"] .app.game:not([data-layout="phone"]) .it-doll > select {
+    grid-column: 1 / -1;
+    justify-self: start;
+    min-width: 200px;
+  }
+  :root[data-ui="v2"] .app.game:not([data-layout="phone"]) .it-doll > .it-attrs {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    align-self: start;
+  }
+  :root[data-ui="v2"] .app.game:not([data-layout="phone"]) .it-doll > .it-slots {
+    grid-column: 3;
+    grid-row: 1;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    column-gap: 16px;
+  }
+  :root[data-ui="v2"] .app.game:not([data-layout="phone"]) .it-doll:has(> select) > .it-slots {
+    grid-row: 2;
+  }
+}
+:root[data-ui="v2"] .it-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .it-grid > li.it-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .it-grid > li.it-row:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .it-grid-btn {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 2px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  text-align: left;
+  color: var(--v2-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-grid-btn > .it-icon {
+  grid-row: 1 / span 2;
+}
+:root[data-ui="v2"] .it-grid-btn:hover:not(:disabled),
+:root[data-ui="v2"] .it-grid-btn[aria-pressed="true"] {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-grid > li.it-row:hover {
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .it-grid > li.it-row:has(> .it-grid-btn[aria-pressed="true"]) {
+  background: color-mix(in srgb, var(--v2-brass) 18%, var(--v2-paper-2));
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .it-grid-btn:focus-visible {
+  outline-offset: -2px;
+}
+:root[data-ui="v2"] .it-grid-name {
+  align-self: end;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  white-space: normal;
+}
+:root[data-ui="v2"] .it-grid-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: start;
+  gap: 2px 8px;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 一键操作：浅黄铜底 + 黄铜描边（与交易所的“买满 / 全卖”同一种） */
+:root[data-ui="v2"] .it-panel .btn.small.it-quick {
+  flex: none;
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-panel .btn.small.it-quick:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .it-panel .btn.small.it-quick:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .it-worn-tag {
+  flex: none;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-up);
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  border-radius: var(--v2-r-xs);
+}
+/* 这本正在读：黄铜色的同一种小签（与上面“正在读”的进度条同色） */
+:root[data-ui="v2"] .it-worn-tag.it-reading-tag {
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+}
+/* 行内一键做不了的原因（在读别的书）：名字下面单独一行，印章红的说明字（与右边灰掉的“读”用 aria-describedby 关联） */
+:root[data-ui="v2"] .it-quick-why {
+  flex-basis: 100%;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--v2-seal);
+}
+/* 正在读的书：一条黄铜细条 */
+:root[data-ui="v2"] .it-reading {
+  gap: 6px;
+  padding: 10px 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .it-reading-bar,
+:root[data-ui="v2"] .it-set-bar,
+:root[data-ui="v2"] .cx-bar {
+  height: 6px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .it-reading-bar span,
+:root[data-ui="v2"] .it-set-bar span,
+:root[data-ui="v2"] .cx-bar span {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+
+/* 书目：按类别的计数小格，读过的类别白底、没读过的虚线；最近读完的是一列账 */
+:root[data-ui="v2"] .it-lead {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .it-cats {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+:root[data-ui="v2"] .it-cats li {
+  align-items: center;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-3);
+  background: transparent;
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .it-cats li.has {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .it-cats b {
+  font-size: var(--v2-fs-lg);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .it-cats li.has b {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .it-recent {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .it-recent li {
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .it-recent li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .it-recent small {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+
+/* 套装：一套一张纸卡，集齐的黄铜色左边线 */
+:root[data-ui="v2"] .it-sets {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+:root[data-ui="v2"] .it-set {
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .it-set.is-done {
+  background: color-mix(in srgb, var(--v2-brass) 12%, var(--v2-paper-2));
+  border-color: color-mix(in srgb, var(--v2-brass-ink) 35%, transparent);
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .it-set-head {
+  align-items: baseline;
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .it-set-head span {
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .it-set-bonus {
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .it-set.is-done .it-set-bonus {
+  color: var(--v2-brass-ink);
+  font-weight: 600;
+}
+
+/* ═════════════════════════ 6. 图鉴 ═════════════════════════ */
+:root[data-ui="v2"] .cx-panel {
+  gap: 14px;
+}
+/* 类别：一格一类，名字、完成数与一条细条；选中的浅黄铜底 + 深黄铜边 */
+:root[data-ui="v2"] .cx-cats {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+:root[data-ui="v2"] .cx-cat {
+  gap: 4px;
+  min-height: 0;
+  padding: 8px 12px 10px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cx-cat:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cx-cat.is-on,
+:root[data-ui="v2"] .cx-cat.is-on:hover:not(:disabled) {
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cx-cat small {
+  font-size: var(--v2-fs-xs);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+/* 条目：一格一个名字；没见过的是虚线的问号 */
+:root[data-ui="v2"] .cx-grid {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+}
+:root[data-ui="v2"] .cx-entry button {
+  min-height: 40px;
+  padding: 6px 12px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cx-entry button:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cx-entry--got button {
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .cx-entry--seen button {
+  font-style: normal;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .cx-entry--unknown button,
+:root[data-ui="v2"] .cx-entry--unknown button:disabled {
+  color: var(--v2-ink-3);
+  background: transparent;
+  border: 1px dashed var(--v2-line-strong);
+}
+:root[data-ui="v2"] .cx-entry button[aria-pressed="true"],
+:root[data-ui="v2"] .cx-entry button[aria-pressed="true"]:hover:not(:disabled) {
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+}
+/* 详情：纸卡，名字宋体；“本世界线的改动”是一段带黄铜线的说明 */
+:root[data-ui="v2"] .cx-detail {
+  padding: 16px 18px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .cx-detail h4 {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cx-state {
+  display: inline-block;
+  margin: 6px 0 10px;
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 18px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .cx-detail > p:not([class]) {
+  font-size: var(--v2-fs-md);
+  line-height: 1.75;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cx-changed {
+  padding: 6px 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--v2-brass-ink);
+  background: color-mix(in srgb, var(--v2-brass) 12%, var(--v2-paper-2));
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-xs);
+}
+/* 桌面：条目在左、详情在右（详情跟着滚动停在顶上）；还没打开时右边一栏也留着（.cx-hint，一句提示），点第一下时格子不重排 */
+:root[data-ui="v2"] .cx-panel:has(> .cx-detail),
+:root[data-ui="v2"] .cx-panel:has(> .cx-hint) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  align-items: start;
+  gap: 14px 18px;
+}
+:root[data-ui="v2"] .cx-panel:has(> .cx-detail) > .cx-cats,
+:root[data-ui="v2"] .cx-panel:has(> .cx-hint) > .cx-cats {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .cx-panel:has(> .cx-detail) > .cx-detail {
+  position: sticky;
+  top: 0;
+}
+
+/* ═════════════════════════ 7. 任务日志 ═════════════════════════ */
+:root[data-ui="v2"] .qs-panel {
+  gap: 12px;
+}
+:root[data-ui="v2"] .qs-panel > .pp-here {
+  align-self: flex-end;
+  margin: 0;
+}
+:root[data-ui="v2"] .qs-list {
+  gap: 10px;
+}
+/* 一条故事一张纸卡：左边一道颜色说明状态（进行中黄铜、等待灰、完成绿、失败红） */
+:root[data-ui="v2"] .qs-track {
+  padding: 14px 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .qs-track--waiting {
+  border-left-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .qs-track--done {
+  border-left-color: var(--v2-up);
+  box-shadow: none;
+  opacity: 1;
+}
+:root[data-ui="v2"] .qs-track--failed {
+  border-left-color: var(--v2-seal);
+  box-shadow: none;
+  opacity: 1;
+}
+:root[data-ui="v2"] .qs-head {
+  gap: 6px 8px;
+}
+:root[data-ui="v2"] .qs-name {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .qs-kind,
+:root[data-ui="v2"] .qs-status {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 18px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .qs-status {
+  margin-left: auto;
+}
+:root[data-ui="v2"] .qs-track--active .qs-status {
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+}
+:root[data-ui="v2"] .qs-track--done .qs-status {
+  color: var(--v2-up);
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+}
+:root[data-ui="v2"] .qs-track--failed .qs-status {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+:root[data-ui="v2"] .qs-chapter {
+  margin: 6px 0 10px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+}
+/* 跨洋那几章的沿途补给（V01）：章节名下面一行小字，左边一道黄铜细线 */
+:root[data-ui="v2"] .qs-stopover {
+  margin: -4px 0 10px;
+  padding: 2px 0 2px 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  border-left: 3px solid var(--v2-brass);
+}
+/* 目标：一行一条，勾选框、文字、地点（海蓝）、剩余天数（快到期时印章红） */
+:root[data-ui="v2"] .qs-objs {
+  gap: 0;
+  font-size: var(--v2-fs-md);
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .qs-objs li {
+  align-items: baseline;
+  gap: 4px 10px;
+  padding: 8px 0 7px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .qs-objs li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+:root[data-ui="v2"] .qs-check {
+  flex: none;
+  font-size: var(--v2-fs-lg);
+  line-height: 1;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .qs-objs li.is-done {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .qs-objs li.is-done .qs-check {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .qs-place {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .qs-left {
+  margin-left: auto;
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .qs-left.is-urgent {
+  font-weight: 600;
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+
+/* ═════════════════════════ 8. 人物页：关系图 ═════════════════════════ */
+/* 关系图：纸面上的一张图，四周一圈细线。svg 按宽度缩放（桌面画到 640 宽，手机约 360 宽），字号由 PeoplePanel 按实际的缩放
+ * 写在每个 text 的 style 上（people/graphLabels.ts：显示出来线上标签不小于 12.5 px、名字不小于 14 px），这里不写字号 */
+:root[data-ui="v2"] .pp-graph-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+:root[data-ui="v2"] .pp-graph-hint {
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-graph {
+  max-width: 640px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pp-edge line {
+  stroke: var(--v2-line-strong);
+  stroke-width: 2;
+}
+:root[data-ui="v2"] .pp-edge text {
+  fill: var(--v2-ink-2);
+  stroke: var(--v2-paper-2);
+  stroke-width: 4px;
+}
+:root[data-ui="v2"] .pp-edge--lovers line,
+:root[data-ui="v2"] .pp-edge--partners line,
+:root[data-ui="v2"] .pp-edge--crush line {
+  stroke: #c2456a;
+}
+:root[data-ui="v2"] .pp-edge--rivals line,
+:root[data-ui="v2"] .pp-edge--enemies line {
+  stroke: var(--v2-seal);
+  stroke-dasharray: 6 4;
+}
+:root[data-ui="v2"] .pp-edge--sisters line,
+:root[data-ui="v2"] .pp-edge--sworn line,
+:root[data-ui="v2"] .pp-edge--friends line {
+  stroke: var(--v2-sea);
+}
+:root[data-ui="v2"] .pp-edge--mentor line {
+  stroke: var(--v2-up);
+}
+:root[data-ui="v2"] .pp-node circle {
+  fill: var(--v2-paper-1);
+  stroke: var(--v2-ink-3);
+  stroke-width: 1.5;
+}
+:root[data-ui="v2"] .pp-node--protagonist circle {
+  fill: var(--v2-brass-hi);
+  stroke: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pp-node text {
+  font-family: var(--v2-font-ui);
+  font-weight: 600;
+  fill: var(--v2-ink);
+  stroke: var(--v2-paper-2);
+  stroke-width: 4px;
+}
+:root[data-ui="v2"] .pp-node--person:hover circle,
+:root[data-ui="v2"] .pp-node--person:focus-visible circle {
+  fill: #f6e6c2;
+  stroke: var(--v2-brass-ink);
+  stroke-width: 2;
+}
+:root[data-ui="v2"] .pp-node--person:focus-visible {
+  outline: none;
+}
+:root[data-ui="v2"] .pp-node--person:focus-visible circle {
+  stroke: var(--v2-focus);
+  stroke-width: 3;
+}
+/* 圆点外一圈透明的点击区（显示约 44 px，触屏好点）：看不见，悬停、焦点时也不画 */
+:root[data-ui="v2"] .pp-node .pp-node-hit,
+:root[data-ui="v2"] .pp-node--person:hover .pp-node-hit,
+:root[data-ui="v2"] .pp-node--person:focus-visible .pp-node-hit {
+  fill: transparent;
+  stroke: none;
+  pointer-events: all;
+}
+:root[data-ui="v2"] .pp-node--person {
+  cursor: pointer;
+}
+/* 图例：线的颜色说明是什么关系 */
+:root[data-ui="v2"] .pp-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pp-graph-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+:root[data-ui="v2"] .pp-graph-swatch {
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  border-top: 2px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .pp-graph-swatch.is-love {
+  border-top-color: #c2456a;
+}
+:root[data-ui="v2"] .pp-graph-swatch.is-bond {
+  border-top-color: var(--v2-sea);
+}
+:root[data-ui="v2"] .pp-graph-swatch.is-rival {
+  border-top: 2px dashed var(--v2-seal);
+}
+:root[data-ui="v2"] .pp-graph-swatch.is-mentor {
+  border-top-color: var(--v2-up);
+}
+
+/* ═════════════════════════ 9. 人物详情：自由对话 ═════════════════════════ */
+/* 对话像一页信笺：对方的话在左（白底），你的话在右（浅黄铜底）；裁决的结果是小签 */
+:root[data-ui="v2"] .pp-chat {
+  margin-top: 4px;
+  padding: 12px 14px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pp-chat-title {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pp-chat-turns {
+  gap: 8px;
+  max-height: 260px;
+  margin: 0 0 12px;
+}
+:root[data-ui="v2"] .pp-chat-turn {
+  max-width: 86%;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-xs) var(--v2-r-lg) var(--v2-r-lg) var(--v2-r-lg);
+}
+:root[data-ui="v2"] .pp-chat-turn--you {
+  background: #f6e6c2;
+  border-color: color-mix(in srgb, var(--v2-brass-ink) 25%, transparent);
+  border-radius: var(--v2-r-lg) var(--v2-r-xs) var(--v2-r-lg) var(--v2-r-lg);
+}
+:root[data-ui="v2"] .pp-chat-turn[data-status="pending"] p {
+  opacity: 1;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-chat-fallback,
+:root[data-ui="v2"] .pp-chat-left {
+  opacity: 1;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pp-chat-effects {
+  gap: 4px;
+  margin-top: 6px;
+}
+:root[data-ui="v2"] .pp-chat-effects li {
+  padding: 0 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--v2-up);
+  background: color-mix(in srgb, var(--v2-up) 12%, var(--v2-paper-2));
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .pp-chat-form {
+  gap: 8px;
+}
+/* “说”是这一处唯一的主按钮 */
+:root[data-ui="v2"] .pp-panel .pp-chat-form .ts-btn {
+  min-width: 64px;
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+}
+:root[data-ui="v2"] .pp-panel .pp-chat-form .ts-btn:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .pp-panel .pp-chat-form .ts-btn:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-style: solid;
+  border-color: var(--v2-line);
+}
+/* 今天聊不了：输入框灰掉。base.css 里启用的输入框那条（在层 ui-v2-base 里，带三个 :not()）特异度比层里的 input:disabled 高，
+ * 灰掉的输入框在 v2 下看起来和能打字的一样；这里只给本组的输入框补上（base 的这处留给集成时统一修，见 DECISIONS） */
+:root[data-ui="v2"] .pp-chat-form input:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pp-chat .v2-inline-error {
+  margin: 8px 0 0;
+}
+:root[data-ui="v2"] .pp-chat-left {
+  display: block;
+  margin-top: 6px;
+}
+/* 手机上字数上限写在“今天还能聊 n 句”后面（占位字换成短的，见 PersonChat.tsx） */
+:root[data-ui="v2"] .pp-chat-limit::before {
+  content: "·";
+  margin: 0 6px;
+}
+
+/* 人物名单与详情（第一阶段的 people.css 之外、本组画面里看得到的几处，补在这里，只限人物页 .pp-panel）：
+ * 名单上“请托 n”小签不小于 12 px；没点亮的心形画成空心的描边（形状上就是“空”，不只靠颜色），描边至少 3:1
+ * （原来 #d6c6b4 的实心在白纸上只有 1.6:1，跟没画一样） */
+:root[data-ui="v2"] .pp-panel .pp-req {
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .pp-panel .ub-heart span:not(.is-on) {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--v2-line-control);
+}
+
+/* ═════════════════════════ 10. 海图上别家船队的信息卡 ═════════════════════════ */
+/* 深色的小提示卡（舞台上的浮层一律深色）：商会名黄铜色，船长的头像是带细框的插图 */
+:root[data-ui="v2"] .chart-view .chart-fleet-card {
+  max-width: 260px;
+  padding: 10px 12px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  --muted: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .chart-view .chart-fleet-card-head {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-row {
+  gap: 10px;
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-frame {
+  padding: 0;
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  overflow: hidden;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-text strong {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-text small {
+  margin-top: 2px;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+}
+
+/* ═════════════════════════ 手机与触屏 ═════════════════════════ */
+/* 触屏：本组画面里能点的东西都不小于 44 px（第 3.4 节）——选舰队、舰队与航海士页的全部按钮（补员、补给、出航、招募、解雇、
+ * 空状态的“下一步”、就地说明里的补救按钮）与下拉框、行囊与任务日志的按钮（含空状态的“下一步”）、物品的分类与行内一键（也不窄于 44）、图鉴的格子、自由对话的输入框与“说”、任务日志的“也看完成的”（整行标签可点）。
+ * 关系图的人物圆点外另有透明的点击区（PeoplePanel 画的 .pp-node-hit） */
+@media (pointer: coarse) {
+  /* 人物页：名单上方的“只看这里的”（整行标签可点）与排序、详情里的话题按钮与送礼下拉也到 44 px */
+  :root[data-ui="v2"] .pp-panel > .ub-tabs .pp-here,
+  :root[data-ui="v2"] .pp-panel > .ub-tabs select,
+  :root[data-ui="v2"] .pp-panel .pp-actions .ts-btn,
+  :root[data-ui="v2"] .pp-panel .pp-actions select,
+  :root[data-ui="v2"] .pn-fleet-pick-btn,
+  :root[data-ui="v2"] .pn-fleet .btn,
+  :root[data-ui="v2"] .pn-mates .btn,
+  :root[data-ui="v2"] .it-panel .btn,
+  :root[data-ui="v2"] .qs-panel .btn,
+  :root[data-ui="v2"] .pn-fleet select,
+  :root[data-ui="v2"] .pn-mates select,
+  :root[data-ui="v2"] .it-panel select,
+  :root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab,
+  :root[data-ui="v2"] .it-panel .btn.small.it-quick,
+  :root[data-ui="v2"] .it-panel .ts-btn,
+  :root[data-ui="v2"] .cx-entry button,
+  :root[data-ui="v2"] .pp-chat-form input,
+  :root[data-ui="v2"] .pp-panel .pp-chat-form .ts-btn,
+  :root[data-ui="v2"] .qs-panel > .pp-here {
+    min-height: var(--v2-h-touch);
+  }
+  /* “出航”在桌面上是 42 px 的大按钮；触屏下也到 44 */
+  :root[data-ui="v2"] .pn-fleet > .pn-sail > .row .btn.primary {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab,
+  :root[data-ui="v2"] .it-panel .btn.small.it-quick {
+    min-width: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .it-slot-btn {
+    min-height: 52px;
+  }
+}
+
+/* 手机（整页窗口）：航行条贴底整宽，按钮在拇指区。竖屏一列；横屏（矮窗口，约 770 px 宽、滚动区只有约 260 px 高）一行排开，
+ * 见下面 data-layout="short" 的那几条 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "dest"
+    "info"
+    "warn"
+    "act";
+  gap: 6px;
+  bottom: -20px;
+  margin: 16px -14px 0;
+  padding: 10px 14px 12px;
+}
+/* 手机竖屏：粮水缺口那一条在缺员的原因下面、“出航”上面 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail:has(> .pn-sail-risk) {
+  grid-template-areas:
+    "dest"
+    "info"
+    "warn"
+    "risk"
+    "act";
+}
+/* 横屏手机：目的地 | 预计天数 | 补给与出航 一行；缺员的说明在下面一整行（原因、怎么办与补员按钮也是一行，按钮在右） */
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail {
+  grid-template-columns: minmax(11em, auto) minmax(0, 1fr) auto;
+  grid-template-areas:
+    "dest info act"
+    "warn warn warn";
+  gap: 4px 14px;
+  padding: 8px 14px 10px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail:has(> .pn-sail-risk) {
+  grid-template-areas:
+    "dest info act"
+    "warn warn warn"
+    "risk risk risk";
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .row {
+  margin-top: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .pn-sail-preview {
+  line-height: 1.4;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .field,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .field {
+  display: flex;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .field select,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .field select {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .row,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .row {
+  flex-wrap: nowrap;
+  margin-top: 4px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .row .btn,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .row .btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: var(--v2-h-touch);
+  padding: 0 12px;
+  white-space: nowrap;
+}
+/* 次要的“补给到建议量”只占自己的宽，余下的都给主按钮“出航” */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .row .btn:not(.primary),
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-fleet > .pn-sail > .row .btn:not(.primary) {
+  flex: 0 1 auto;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-fleet-card {
+  padding: 0 12px 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-fleet-card:not(.flagship) {
+  padding-top: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-captain {
+  gap: 12px;
+  margin: 0 -12px 12px;
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-captain .pn-portrait > * {
+  width: 56px !important;
+  height: 56px !important;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-captain-title {
+  font-size: var(--v2-fs-xl);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-ship {
+  grid-template-columns: 48px minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-ship > .pn-bar {
+  grid-column: 2;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-ship-stats {
+  grid-column: 2;
+}
+/* 手机上的小仪表：一行一项（图标、文字、细条并排），两列会把“粮 10（约 10 天）”折成两行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-stats {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 2px 2px 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-stat {
+  grid-template-columns: 16px minmax(9.5em, auto) minmax(48px, 1fr);
+  gap: 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-stat .pn-bar {
+  grid-column: 3;
+}
+/* 贴底的航行条里，缺员的原因占一整行、补员按钮在下面（并排时原因要折成三行） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-sail-warn > .v2-inline-error {
+  flex-wrap: wrap;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-sail-warn .v2-inline-error-text {
+  flex-basis: calc(100% - 28px);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-sail-warn .v2-inline-error-action {
+  margin-left: 28px;
+}
+
+/* 航海士（手机）：头像小一点；招募按钮整宽放在行的下面 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-mate {
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-mate-side .pn-portrait > * {
+  width: 60px !important;
+  height: 60px !important;
+}
+/* 能力在手机上仍是两列（一列要占四行）：名字、细条、数字收紧一点 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-abilities,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-recruit .pn-abilities {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-ability {
+  grid-template-columns: 2.4em minmax(20px, 1fr) 1.8em;
+  gap: 6px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-mate .row .field {
+  flex: 1 1 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-mate .row .field select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-recruit {
+  grid-template-columns: 48px minmax(0, 1fr);
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-recruit > .pn-portrait > * {
+  width: 48px !important;
+  height: 48px !important;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-recruit-side {
+  grid-column: 1 / -1;
+  padding-top: 6px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-recruit-side .btn {
+  flex: 1 1 auto;
+  min-height: var(--v2-h-touch);
+}
+
+/* 行囊（手机）：纸娃娃在上（头像小一点、槽两列）；分类一行左右滑，右边渐隐提示还有 */
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .it-bag {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .it-list:has(> .it-detail-wrap) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .it-detail-wrap {
+    position: static;
+  }
+  :root[data-ui="v2"] .it-list-main > .ub-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -14px;
+    padding: 2px 14px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  :root[data-ui="v2"] .it-list-main > .ub-tabs .ub-tab {
+    flex: none;
+  }
+  :root[data-ui="v2"] .cx-panel:has(> .cx-detail),
+  :root[data-ui="v2"] .cx-panel:has(> .cx-hint) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .cx-panel:has(> .cx-detail) > .cx-detail {
+    position: static;
+  }
+  /* 窄到一列（手机布局用抽屉，这里只剩 720–760 px 宽的平板）：详情排在条目下面，提示不显示 */
+  :root[data-ui="v2"] .cx-hint,
+  :root[data-ui="v2"] .it-detail-wrap.is-hint {
+    display: none;
+  }
+  :root[data-ui="v2"] .cx-cats {
+    display: flex;
+    overflow-x: auto;
+    margin: 0 -14px;
+    padding: 2px 14px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  :root[data-ui="v2"] .cx-cats > li {
+    flex: 0 0 132px;
+  }
+  :root[data-ui="v2"] .cx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* 手机（竖屏、横屏）：物品与图鉴条目的详情在底部升起的抽屉里（components/shell/Sheet.tsx：抓手、×、遮罩由外壳的样式给；挂在 body 上）。
+ * 抽屉本身就是一张纸：里面的详情不再是一张卡（不套卡片）；名字已经在抽屉的标题上（宋体），详情里不再重复；
+ * 操作按钮整宽、44 px，在抽屉的下沿（拇指区）；正文 15 px */
+:root[data-ui="v2"] .it-sheet .it-detail,
+:root[data-ui="v2"] .cx-sheet .cx-detail {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-sheet .it-name,
+:root[data-ui="v2"] .cx-sheet .cx-detail > h4 {
+  display: none;
+}
+:root[data-ui="v2"] .cx-sheet .cx-state {
+  margin-top: 0;
+}
+:root[data-ui="v2"] .it-sheet .it-desc,
+:root[data-ui="v2"] .it-sheet .it-book,
+:root[data-ui="v2"] .it-sheet .it-lore,
+:root[data-ui="v2"] .cx-sheet .cx-detail > p:not([class]) {
+  font-size: 15px;
+}
+:root[data-ui="v2"] .it-sheet .it-actions:empty {
+  display: none;
+}
+:root[data-ui="v2"] .it-sheet .it-actions .ts-btn {
+  flex: 1 1 auto;
+  min-height: var(--v2-h-touch);
+  font-size: 15px;
+}
+
+/* 手机上的纸娃娃：头像在左、装备前后的属性在右（dense 让属性补到头像旁边的空格），七个槽整宽在下 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-doll {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  grid-auto-flow: row dense;
+  align-items: start;
+  gap: 12px;
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-doll > select,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-doll > .it-slots {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-doll-face {
+  grid-column: 1;
+  width: 88px !important;
+  height: 88px !important;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-doll > .it-attrs {
+  grid-column: 2;
+  align-self: center;
+}
+/* 手机上正文 15 px（次要文字与说明照旧 13 / 12 px）；舰队与航海士页的按钮（小按钮除外）也是 15 px */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .btn:not(.small),
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .btn:not(.small),
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .pn-sail-preview,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-stat,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-good-name,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet .pn-fleet-where,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-mates .pn-bio,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-desc,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-book,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-lore,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-slot-btn,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-cats li,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-recent li,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-lead,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .cx-entry button,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .cx-detail > p:not([class]),
+:root[data-ui="v2"] .app.game[data-layout="phone"] .qs-objs,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pp-chat-turn {
+  font-size: 15px;
+}
+/* “出航”照旧 16 px（上面那条把按钮统一成 15 px） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-fleet > .pn-sail > .row .btn.primary {
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pp-chat-form input {
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-pages {
+  row-gap: 6px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-summary {
+  flex-basis: 100%;
+  margin: 0 0 6px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .it-grid-btn {
+  padding: 8px 10px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .qs-objs li {
+  flex-wrap: wrap;
+}

@@ -1,0 +1,131 @@
+# 请托：五彩的绿料（request_shen_zhiwei）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：沈知微（shen_zhiwei，1533-09-11 生，女），景德镇督陶官的女儿，势力 ming，身份档 2。cast：cast/story_eastasia.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（交铜）、settle（结账与一只碗）；没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信／代理人）。沈家的管事在广州（guangzhou）码头出面，沈知微只在信里说话；auto=true；窗口 1569-01-01 至 1590-06-30，名声门槛 0。
+#       offer 写 family=c13_offer_guangzhou、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=150，超时走 failed，来信一封，好感 -3，旗标 _late；settle 是普通章，可以一直等（先等 120 天）。
+# 依据·史实背景：五彩瓷的绿釉靠铜上色；景德镇有御器厂（官窑）与民窑，官窑先挑料；漳州窑的外销粗瓷胎粗、釉不匀、圈足粘砂，卖得比景德镇的远。
+#       开海（1567）以后日本铜由澳门的商船转进广州的交易会（这一条在 ask_where 的回复里用管事的口吻带过）。
+# 依据·原创：沈知微的试烧新样、上一窑的三十一个抬箱人、水手阿禄（抬了半担就扭了脚）、小七、管事（不起名）、“半个人还是一个”的问话。
+# 秘密：cast 里沈知微的真账、走私与劫镖一概不写；“有几笔账从不给别人看”只在人设里，正文不提。
+#       C7 秦红缨 × 沈知微（1565—68）不碰：本轨道从 1569 年起，不写秦红缨，不写镖局，不写恋爱，不写假账。
+# 读的旗标：_named、_unnamed（settle 的 variants，读 deliver 的结果换一句信里的话）。
+# 设的旗标：c13_request_shen_zhiwei_accepted（offer 两条接法）、_declined（offer 回绝）、_named（deliver 报全了名字）、
+#       _unnamed（deliver 报名检定失败，比简报多设的一面分支旗标，只供 settle 读）、_late（deliver 超时）、_done（settle 两条收尾）。
+#       不设任何 c7_ 旗标；不用 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth 效果。
+# 报酬：现金最多 1600（settle）+ 货款 900（deliver 交铜时付，两条路都付）；唯一奖励漳州外销碗 zhangzhou_bowl（settle 一次）；
+#       好感最多 +13；名声 +3；回忆 mem-request_shen_zhiwei-settle。
+# 口头禅：“请稍候，这一箱还没点完。”全轨道只用一次，放在 settle 的 keep_bowl 回复里，由管事转述。
+# 依赖：港口 guangzhou；货物 copper（goods/05_terra_trade.toml）；物品 zhangzhou_bowl（items/items_curio_02.toml）；属性 stewardship；人物 shen_zhiwei。
+#       C13a—c 的主线旗标不读（门禁表为空）。无需 B10b 改名。
+# 缺省走向（玩家什么也不做）：offer 到 1590-06-30 超时，走 failed，无见闻、不扣钱；deliver 150 天不交，走 failed 并来一封信。
+# 回忆插画清单：
+#   mem-request_shen_zhiwei-settle「浅了一点的绿」：广州码头的栈桥上，管事怀里抱着稻草裹着的粗碗，碗底粘着一圈砂；桥板上摊着一页写满抬箱人名字的信纸。
+
+[[tracks]]
+key = "request_shen_zhiwei"
+name = "五彩的绿料"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["shen_zhiwei"]
+
+# 一、抬箱人的名字：广州码头，管事递来一封信和一页名单。
+[[tracks.chapters]]
+key = "offer"
+title = "抬箱人的名字"
+text = "广州码头的栈桥边，景德镇来的管事等了三条船，才等到你这一条。他递上一封信，信封里夹着一页抄得工工整整的单子：上一窑的抬箱人，三十一个名字，谁左脚有旧伤、谁只肯扛左肩，都注在名字后面。信是沈知微写的。五彩的绿烧不出来，御器厂先挑料，能用的铜都进了官库，轮到她要试烧的外销新样，一斤也剩不下。“请船长运十担精铜到广州，要堺或博多出的日本铜，成色匀。铜到了，我会记下是谁抬上岸的。”管事收起单子，补了一句：“小姐验货，一向这样。”"
+mood = "tender"
+at = "guangzhou"
+when = [{ kind = "date", from = [1569, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_guangzhou"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应运十担日本铜来"
+next = "deliver"
+reply = "管事把单子递近些，让你从头看到尾。三十一行，名字后面都有小注：谁挑担，谁扶箱，谁在雨里多走了一程。“小姐交代过，接货的船长要先看一眼，好知道她记的是什么。”你看完，他把单子对折两下，收回袖中。"
+effects = [{ kind = "affinity", person = "shen_zhiwei", value = 2 }, { kind = "flag", flag = "c13_request_shen_zhiwei_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_where"
+text = "问管事：日本铜进不了广州，她知道吗？"
+next = "deliver"
+reply = "管事说知道。“所以才找外乡船。”堺和博多的铜，澳门的葡萄牙商船转得到；广州的交易会上，那几条船什么货都带。船长自己跑一趟日本，也行。“小姐不问铜走哪条路，”他说，“只问它上岸那天，一担一担，肩上有没有名字。”"
+effects = [{ kind = "affinity", person = "shen_zhiwei", value = 2 }, { kind = "flag", flag = "c13_request_shen_zhiwei_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "铜料的买卖，你不做"
+next = "failed"
+reply = "管事作了个揖，把信收回去。折单子的时候他在背面添了一行，你瞥见开头两个字：“问过”。“小姐会记下这一笔。”他说，“问过，没成。”"
+effects = [{ kind = "flag", flag = "c13_request_shen_zhiwei_declined" }]
+
+# 二、一个也不能少：十担铜卸在码头，管事一担一担过秤，然后翻开另一本。
+[[tracks.chapters]]
+key = "deliver"
+title = "另一本账"
+text = "十担铜卸在广州码头，红亮的铜饼码在草席上。管事一担一担过秤，报一个数，写一个数，秤完了，把笔往耳后一夹，翻开另一页。“铜是铜的账。”他说，“抬铜上岸的人，是另一本。船长，船上抬铜的人一个一个报出来，漏一个都不行。”跳板上有个水手踩空了，抬了半担就被换下来，这会儿坐在缆桩边揉脚踝，还不知道自己要被写进一个陌生人的本子。"
+speaker = "captain"
+mood = "cheerful"
+at = "guangzhou"
+when = [{ kind = "alive", person = "shen_zhiwei", value = true }]
+objectives = [{ kind = "goods", good = "copper", qty = 10, at = "guangzhou", text = "十担精铜" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "shen_zhiwei", value = -3 }, { kind = "flag", flag = "c13_request_shen_zhiwei_late" }, { kind = "letter", person = "shen_zhiwei", text = "绿料没等到，这一窑烧成了青花。抬箱人的名字，我照样记了。——沈知微" }] }
+news = "广州码头上，景德镇来的管事收一船铜，连抬铜的水手叫什么都记进了本子。"
+
+[[tracks.chapters.choices]]
+key = "names"
+text = "把抬铜的水手叫到跟前，一个一个报名字"
+next = "settle"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "我把人叫到栈桥上排成一行，从大副到火房的小七，十一个，一个一个往下报。轮到阿禄，我说他踩空了跳板，只抬了半担。管事的笔没停，问：“半个人，还是一个？”我说一个。他便写了一个，合上本子以前，又从头把行数点了一遍。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "shen_zhiwei", value = 3 }, { kind = "flag", flag = "c13_request_shen_zhiwei_named" }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "shen_zhiwei", value = -2 }, { kind = "flag", flag = "c13_request_shen_zhiwei_unnamed" }], news = "广州码头上，景德镇的管事收了一船铜，记抬铜水手的名字，有一个只记成了“名未详”。" }
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "把你船上的货账抄一份给他，名字都在上面"
+next = "settle"
+reply = "我把货账抄了一份递过去，抬铜那天的十一个人，名字一个挨一个排在上面。管事翻了两页，嘴角动了动：“船长的账比我家小姐的松。她的账连晴雨都记。”他顿了顿，“不过名字，一个不缺。”他把那几行誊进自己的本子，没有再问。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "shen_zhiwei", value = 2 }]
+
+# 三、浅了一点的绿：半年后，管事带回信和一只漳州来的粗碗。
+[[tracks.chapters]]
+key = "settle"
+title = "远方的人爱它什么"
+text = "半年后，景德镇的管事又到了广州，胳膊底下夹着一只稻草包，怀里揣着沈知微的信。我在栈桥上拆开读。新样烧成了，绿是绿的，只是比她想的浅，像隔了一层水。稻草包里是一只碗，出自漳州的外销窑，不是她的：胎粗，釉色不匀，圈足上还粘着一圈砂。“这只碗卖得比景德镇的瓷远。”信上写，“我烧了这些年，不知道远方的人爱它什么。船长走的海比我远，下回来，请告诉我。”"
+speaker = "captain"
+mood = "tender"
+at = "guangzhou"
+when = [{ kind = "alive", person = "shen_zhiwei", value = true }]
+objectives = [{ kind = "wait", days = 120, text = "等管事带来新样的消息" }]
+news = "广州码头上都在传，景德镇试烧了一窑外销的五彩，管事说绿料用的是一条外乡船运来的铜。"
+
+[[tracks.chapters.variants]]
+key = "v1_named"
+when = [{ kind = "flag", flag = "c13_request_shen_zhiwei_named" }]
+text = "半年后，景德镇的管事又到了广州，胳膊底下夹着一只稻草包，怀里揣着沈知微的信。我在栈桥上拆开读。新样烧成了，绿是绿的，只是比她想的浅，像隔了一层水。信里另起一行，点了阿禄的名字，问他的脚好了没有。稻草包里是一只碗，出自漳州的外销窑，不是她的：胎粗，釉色不匀，圈足上还粘着一圈砂。“这只碗卖得比景德镇的瓷远。”信上写，“我烧了这些年，不知道远方的人爱它什么。船长走的海比我远，下回来，请告诉我。”"
+
+[[tracks.chapters.variants]]
+key = "v2_unnamed"
+when = [{ kind = "flag", flag = "c13_request_shen_zhiwei_unnamed" }]
+text = "半年后，景德镇的管事又到了广州，胳膊底下夹着一只稻草包，怀里揣着沈知微的信。我在栈桥上拆开读。新样烧成了，绿是绿的，只是比她想的浅，像隔了一层水。信里有一行：“那一页上，有一人名未详。下回请补上。”稻草包里是一只碗，出自漳州的外销窑，不是她的：胎粗，釉色不匀，圈足上还粘着一圈砂。“这只碗卖得比景德镇的瓷远。”信上写，“我烧了这些年，不知道远方的人爱它什么。船长走的海比我远，下回来，请告诉我。”"
+
+[[tracks.chapters.choices]]
+key = "keep_bowl"
+text = "收下漳州碗，答应替她留意"
+next = "done"
+reply = "管事把碗用稻草裹了三道，才交到我手里。“小姐让我带一句话：请稍候，这一箱还没点完。”他说完，把信翻到背面，末尾一行是：“这一窑的抬箱人里，有你的十一个。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "shen_zhiwei", value = 8 }, { kind = "fame", value = 3 }, { kind = "item", item = "zhangzhou_bowl", qty = 1 }, { kind = "memory", memory = "mem-request_shen_zhiwei-settle", title = "浅了一点的绿" }, { kind = "flag", flag = "c13_request_shen_zhiwei_done" }]
+
+[[tracks.chapters.choices]]
+key = "cash_only"
+text = "碗留给她自己比，钱收下就好"
+next = "done"
+reply = "管事一点也不意外，把稻草重新缠上。“小姐料到了。”信的最后果然还有一行：“那我自己比。”他抱着碗下栈桥，脚下放得很慢，怕那圈砂磕掉了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "shen_zhiwei", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_shen_zhiwei_done" }]

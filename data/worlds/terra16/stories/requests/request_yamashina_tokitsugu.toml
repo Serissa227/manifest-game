@@ -1,0 +1,183 @@
+# C13d 请托：日记里的那个价（request_yamashina_tokitsugu）。Claude 写（2026-10-25），仅中文，不配英文覆盖。
+# 人物：山科言继 yamashina_tokitsugu（1507 年生，1579 年卒，无 fate；男）。京里的公卿，会配药、吹笙，几十年天天写日记；cast：cast/historical_07_japan.toml（势力 imperial_court）。
+#   1558—1578 年日程在京都，不下堺；全轨道只在信里和抄来的日记里说话，出面的是他家的一个年轻小者（无名，不进 cast）。
+# 类型：送货（deliver）。brief 三章 offer → deliver → settle；settle 按交货时座里有没有记下船名拆成 settle / settle_noted 两章（见“结构说明”），文件里共四章。终点 done / failed。
+# 报价：L（来信）。auto=true，offer 章 at=sakai，speaker 省略；family="c13_offer_sakai"、family_cooldown_days=20。
+#   规划窗口（不进 TOML，普通章没有 window）：offer 1558-03-01 至 1578-06-30；deliver 1558-04-01 至 1578-10-31；settle 1558-05-01 至 1578-12-31。
+#   offer 的 deadline 为 1578-06-30，timeout 直接 failed，不写见闻；deliver 的 deadline_days=180（釜山到堺，跨一片海）；settle 的 deadline_days=120。
+# 依据·史实背景：《言继卿记》里大量记着言继给人配药、买卖药材；朝鲜人参经对马流入日本（docs/research/terra16 的研究笔记）；
+#   堺的药种商结成座，外来药材要过座、交座钱，是行规（正文不把药种座写成坏人）。十德是医者、商人常穿的短外衣。
+#   “左前”（先掩左襟、右襟压在上面）是给死人穿的掩法，言继的笑话拿这个说事。“天文十年”是 1541 年，在请托窗口之前。
+# 依据·原创：小者与他总跑丢的草鞋；日记里“天文十年四月七日，于堺买人参一两，百二十文”那一行（编的，不是《言继卿记》原文）；
+#   药种座的两个人、秤杆上烙的座印、账簿；檐下竹匾晒参、拿笙赶猫；宫里咳了一冬的老女房；两句写“我”的笑话。
+# 不写的事：即位礼的筹款（澪主线 4），不写言继替朝廷募捐。人物无 secret；按 brief，回信里可以记“我”的笑话。
+# 货款：人参 4 斤 × 基准价 230 × 1.25 = 1150，交货那一章三个选项都付（goods 目标在回应时扣货）。
+# 报酬：最好的结局（settle 两个选项，检定成败都算）付 1600、技能 herbal_medicine +20、好感 +8（改笑话成功再 +2）、imperial_court 声望 +2、名声 +3、回忆一张；
+#   折中（settle_noted）付 900、好感 +4（改笑话成功再 +2）。好感正向合计至多 2+3+8+2=15。唯一奖励物品：无。
+# 来信：交货超时一封（≤120 字）；最好的结局里“笑着收下”与“改笑话失败”各一封（互斥），一次游戏至多一封。
+# 结构说明：brief 的 settle 要按 clean / noted 拆选项。按本批约定，不用 requires 读本轨道自己设的旗标，改按 next 分章：
+#   deliver 的“讲规矩”成功与“分等”去 settle（设 clean），“讲规矩”失败与“交给小者”去 settle_noted（设 noted），两章各两个选项，都没有 requires。
+#   检定失败的分支没有回复：“讲规矩”失败（座里记下船名、说下回再算）写进 settle_noted 的正文；settle“改笑话”失败（日记不改）写进那封来信；
+#   settle_noted“改笑话”失败写进分支的见闻。
+# 超时：deliver 与 settle 超时按总决定 §二各扣好感 3，设 _late；deliver 超时来一封短信，settle 超时不来信。
+# 招牌话：信里那一句“价钱我记着，药商也记着——……”全轨道只在 offer 正文出现（mio 变体是同一章的替换文字）。
+# 读的旗标：c13_main_mio（offer 的变体 v1_mio，由澪的主线设，尚未写）。不读也不设 c7_ 旗标。
+# 设的旗标（c13_request_yamashina_tokitsugu_<事件>）：accepted；终局 declined / done / partial / late；分支 clean、noted。
+# 依赖：港口 sakai；商品 ginseng（只有 busan 卖）；技能 herbal_medicine；势力 imperial_court；属性 commerce、eloquence。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_yamashina_tokitsugu-settle「言继卿记里的一行」：京里公家宅子的檐下，竹匾里摊着切片的人参，一只猫蹲在旁边，廊上搁着一支笙和摊开的日记。
+
+[[tracks]]
+key = "request_yamashina_tokitsugu"
+name = "日记里的那个价"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["yamashina_tokitsugu"]
+
+# 一、报价：堺的码头，小者跑丢了一只草鞋，递上一封厚得像账本的信，和一页抄来的日记。
+[[tracks.chapters]]
+key = "offer"
+title = "抄来的一页日记"
+text = "堺的码头上，一个年轻的小者从人堆里钻出来，一只草鞋跑丢了也不回头捡。他递上的信厚得像一本账：头一张写京里这几天的雨，第二张写昨夜跟谁下双六输了两局，到第三张才说正事，还夹着一页从日记里抄出来的纸：“天文十年四月七日，雨。于堺买人参一两，百二十文。”“我配一味药，缺的就是这个。托人到堺问价，药商开口便是这一行的三倍。价钱我记着，药商也记着——只是他记的那个数，年年往上涨。”往下整整半页，他替我算什么叫合理：参从釜山来，过对马要交几成，受了潮折几成，船家该赚几分，一笔一笔都算到了。“照这个价结账，你不亏，我也不亏。”末了一行：要朝鲜参，四斤，根须要全。小者在一旁喘着气，光着的那只脚踩在另一只的脚背上。"
+mood = "cheerful"
+at = "sakai"
+when = [{ kind = "date", from = [1558, 3, 1] }, { kind = "age", ge = 17 }]
+deadline = [1578, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "堺的码头上，一个年轻的小者从人堆里钻出来，一只草鞋跑丢了也不回头捡。他递上的信厚得像一本账：头一张写京里这几天的雨，第二张写昨夜跟谁下双六输了两局，到第三张才说正事，还夹着一页从日记里抄出来的纸：“天文十年四月七日，雨。于堺买人参一两，百二十文。”“我配一味药，缺的就是这个。托人到堺问价，药商开口便是这一行的三倍。价钱我记着，药商也记着——只是他记的那个数，年年往上涨。”往下整整半页，他替我算什么叫合理：参从釜山来，过对马要交几成，受了潮折几成，船家该赚几分，一笔一笔都算到了。“照这个价结账，你不亏，我也不亏。”末了一行：要朝鲜参，四斤，根须要全。旁边又挤进一句小字：“姬君小时候的脉，我还记得——偏急。”小者在一旁喘着气，光着的那只脚踩在另一只的脚背上。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "替他从朝鲜带四斤人参来。"
+next = "deliver"
+reply = "小者把信折好塞回我手里，又从怀里摸出一截炭笔：“老爷让我问您叫什么，晚上要记进日记。”我报了名字，他问是哪几个字，在掌心比画了两遍；又问船叫什么、船上几个人、今天吃过饭没有，说老爷交代过，问得越细越好。问完他才想起那只草鞋，一瘸一拐地回去找。"
+effects = [{ kind = "flag", flag = "c13_request_yamashina_tokitsugu_accepted" }, { kind = "affinity", person = "yamashina_tokitsugu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "人参的买卖，我不碰。"
+next = "failed"
+reply = "小者也不多劝，把那页日记抚平，连信一起揣回怀里：“老爷也会记上一笔的。”他朝我鞠了一躬，转身走了几步，又回头看了看我，大概是在记我的长相，好回去一样一样说给老爷听。"
+effects = [{ kind = "flag", flag = "c13_request_yamashina_tokitsugu_declined" }]
+
+# 二、交货：人参卸上码头，药种座的两个人提着秤、夹着账簿等在那里。三个选项都交货、都付货款。
+[[tracks.chapters]]
+key = "deliver"
+title = "药种座的秤"
+text = "桐木匣从舱里抬上码头，盖子一揭，四斤人参卧在青苔里，根须一根没断，芦头上还带着釜山的土。言继的小者伸手要接，旁边已经过来两个人，一个提秤，一个夹着账簿，都穿素净的十德，先客客气气行了礼。“堺的规矩：外来的药材，先过药种座的秤，交了座里的钱，才进得了町。”提秤的那个把秤杆横过来给我看，杆上烙着座里的印。小者往我身后缩了缩，小声说老爷的信里没写这个。夹账簿的人已经舔湿了笔尖，等我报船名。"
+speaker = "captain"
+mood = "tense"
+at = "sakai"
+when = [{ kind = "alive", person = "yamashina_tokitsugu", value = true }]
+objectives = [{ kind = "goods", good = "ginseng", qty = 4, at = "sakai", text = "四斤人参运到堺" }]
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yamashina_tokitsugu_late" }, { kind = "affinity", person = "yamashina_tokitsugu", value = -3 }, { kind = "letter", person = "yamashina_tokitsugu", text = "参已经有了：宫里一位女房的兄弟从对马捎来两斤，价比堺的低，比我日记里的高。四斤等不到，两斤也够配。你那一行我没划掉，还在“托海上的人带参”底下，后头没写下文。" }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他们说明：这是公卿家自己配药用的，不进市面。"
+next = "settle"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "我说这四斤参从码头直进山科家的药箱，一两也不上堺的柜台；座里的规矩管的是买卖，管不到一位公卿的药罐。提秤的那个把秤杆收了回去，跟同伴对了个眼色：“山科家的药，京里谁没吃过一两剂。”夹账簿的人把笔尖在袖口上擦干，账簿合上了。小者抱起匣子，走出老远还回头看了一眼那杆秤。"
+effects = [{ kind = "cash", value = 1150 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 3 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_clean" }]
+
+[tracks.chapters.choices.fail]
+next = "settle_noted"
+effects = [{ kind = "cash", value = 1150 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_noted" }]
+
+[[tracks.chapters.choices]]
+key = "sort"
+text = "当场把四斤参分等，写明哪根配哪味药。"
+next = "settle"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "四斤参看着都好，哪根年份足、哪根只配煎汤，一时说不上来。"
+reply = "我在匣盖上铺开一张纸，把参一根一根拣出来：纹路密、芦头长的三根年份足，单包；须子掐下来另包，只配煎汤；芦头掐净，那东西吃了要吐。提秤的人起先抱着胳膊看，后来蹲了下来，再后来指着一根问我该归哪一包。我说归第二包，他点点头，再没提座里的钱。小者把纸包一包一包记在小本子上，连我掐芦头的手势也画了个样子。"
+effects = [{ kind = "cash", value = 1150 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 3 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_clean" }]
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "把匣子交给小者，座里的事让言继自己去应付。"
+next = "settle_noted"
+reply = "我把匣子塞进小者怀里，说座里的钱，请他家老爷自己跟座里讲。小者抱着匣子一路小跑，一只草鞋又跑松了。提秤的人没拦，只朝他的背影看了看；夹账簿的那个抬头瞧了一眼我船尾的字，低头记了上去。"
+effects = [{ kind = "cash", value = 1150 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_noted" }]
+
+# 三、结账（座里没记船名）：二十天后小者带来回信，和一页写着“我”的笑话的新日记。
+[[tracks.chapters]]
+key = "settle"
+title = "日记里的一行"
+text = "二十天后，那个小者又到了码头，这一回两只草鞋都好好穿在脚上。他带来言继的回信，比头一封还厚，夹着一页新抄的日记，墨迹还亮：“十二日，晴。海上的人送来人参四斤，一根一根都好。”底下另起一行：“又，小者回来说，此人一听我什么都记，慌忙把敞着的衣襟掩上，掩反了，左前——活人穿成了死人的样子。可笑可笑。”回信里说，四斤参已经切了片，摊在檐下的竹匾里晒，邻家的猫来过两回，都被他拿笙赶走了。“你那边怎么说，叫小者原样带回来。我晚上还要记。”"
+mood = "cheerful"
+at = "sakai"
+when = [{ kind = "alive", person = "yamashina_tokitsugu", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "等那个小者从京里跑回来" }, { kind = "at", at = "sakai", text = "回到堺" }]
+news = "堺的药种座跟一条外来船为四斤朝鲜人参较了半天劲，人参最后一根不少，送进了京里一位公卿家。"
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yamashina_tokitsugu_late" }, { kind = "affinity", person = "yamashina_tokitsugu", value = -3 }]
+
+[[tracks.chapters.choices]]
+key = "laugh"
+text = "笑着收下这页日记。"
+next = "done"
+reply = "小者松了口气，说老爷还交代了一句：下回来京里，先伸手让他把把脉。“老爷说，衣襟都能掩反的人，脉多半也是乱的。”他把我笑的样子学了一遍，说回去要照样学给老爷看。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "herbal_medicine", value = 20 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_done" }, { kind = "memory", memory = "mem-request_yamashina_tokitsugu-settle", title = "言继卿记里的一行" }, { kind = "letter", person = "yamashina_tokitsugu", text = "参的事，再给你记一笔。四斤里，一斤配给了宫里一位老女房，她咳了一整冬，这几夜睡得着了；一斤配了我自己的药；一斤送了坊里一个刚生产的媳妇；剩下一斤收在药箱最底下，不到要紧时不动。你的名字记在那一页最前头。往后谁来问我堺的人参该什么价，我就翻到这一页给他看：天文十年一个价，堺的药商一个价，海上的人送来又是一个价。哪个合理，叫他自己看。下回你自己在堺抓药，别报我的名字，报了，那家的价又要往上记一笔。" }]
+
+[[tracks.chapters.choices]]
+key = "correct"
+text = "请他把衣襟那一句改一改。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "小者把话带了回去。回信说改了，改得更好笑：“又，此人掩衣襟掩得极快，快得小者没看清是左是右。小者说是左。我信小者。”附笔说原先那一行也没涂，挪到了页边；宫里来看病的女房翻到这一页，笑得把药碗都端歪了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "herbal_medicine", value = 20 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 10 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_done" }, { kind = "memory", memory = "mem-request_yamashina_tokitsugu-settle", title = "言继卿记里的一行" }]
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "herbal_medicine", value = 20 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_done" }, { kind = "memory", memory = "mem-request_yamashina_tokitsugu-settle", title = "言继卿记里的一行" }, { kind = "letter", person = "yamashina_tokitsugu", text = "那一行不改。日记里的字，写了就不改：今天替你改一句衣襟，明天就有人来求我改一句人参的价，后天连天文十年那场雨也要改成晴。我这几十年记下的东西，值钱就值在一个字没动过。你放心，那一行底下我又添了一句：此人后来托小者来求情，求得很恳切。这一句也不改。参已经配进了药。宫里那位咳了一冬的老女房喝了头一剂，嫌苦，喝完倒一觉睡到了天亮。" }]
+
+# 三′、结账（座里记了船名）：药种座追到京里讨座钱，言继付了，也还了半天价。
+[[tracks.chapters]]
+key = "settle_noted"
+title = "座里的账簿"
+text = "过了二十来天，小者又跑来码头，没开口先叹了口气。言继的回信照旧厚，头一张就数落药种座：座里的人追到京里，把座钱的单子递到了山科家门上。“我跟他还了半天价，还到后来，照座里的规矩付了。规矩是规矩，价是价，我只还价，不还规矩。”夹着的那页日记写：“十二日，阴。海上的人送来人参四斤，根须俱全。药种座来讨钱，付讫。”底下另起一行：“又，小者说，座里的人一翻账簿，此人的脸就跟着往下掉，掉到账簿合上才停。”信末一句：“你的船名，座里的账簿上也有了。下回进堺，怕是要先过一回他们的秤。”"
+mood = "cheerful"
+at = "sakai"
+when = [{ kind = "alive", person = "yamashina_tokitsugu", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "等京里那笔座钱的下文" }, { kind = "at", at = "sakai", text = "回到堺" }]
+news = "堺的药种座追到京里，向一位公卿家讨四斤朝鲜人参的座钱；听说那位公卿一边掏钱，一边还了半天的价。"
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yamashina_tokitsugu_late" }, { kind = "affinity", person = "yamashina_tokitsugu", value = -3 }]
+
+[[tracks.chapters.choices]]
+key = "laugh"
+text = "笑着收下，座里那一笔认了。"
+next = "done"
+reply = "小者这才把那口气叹完，说老爷交代：座里收去的那一份，是从谢仪里匀出来的，请您别嫌薄。下回来京里，先把堺的规矩跟他讲讲清楚，再伸手让他把脉。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 4 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_partial" }]
+
+[[tracks.chapters.choices]]
+key = "correct"
+text = "请他把账簿那一句改改，给我留点脸。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "回信来得快，说改了：“又，小者说，座里的人一翻账簿，此人的脸往下掉了一寸，掉到一半，想起这是公卿家的参，又自己提了回去。”小者念完，说厨下的人已经笑过一轮了，谢仪也照座里收走的那一份匀过，薄是薄了些。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 6 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_partial" }]
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "yamashina_tokitsugu", value = 4 }, { kind = "flag", flag = "c13_request_yamashina_tokitsugu_partial" }]
+news = "堺的码头上有人说，京里那位爱记日记的公卿，字写了就不改；送参来的船主托人求了一回，那一行还是原样。"

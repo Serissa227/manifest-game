@@ -1,0 +1,245 @@
+# C13d 请托：户岛的茶与樟脑（request_ichijo_kanesada）。Claude 写（2026-10-25），仅中文。
+# 人物：一条兼定 ichijo_kanesada（1543 生，男；土佐一条家的前当主，1576 年起寄居伊予宇和海的户岛，已受洗，教名唐·保罗；1577 年遭近臣行刺，伤后多病）。
+#   势力 ichijo。cast：cast/historical_07_japan.toml。cast 没有 secret 字段；行刺是史实，只写伤，不写刺客是谁。
+# 类型：送货（deliver）。四章：offer（报价）→ deliver（交货）→ settle（见过面或留了用法：回信）／settle_partial（只交了货：回信）。
+#   brief 原为三章，settle 的 take 要按“见过面或留了用法／只交了货”拆开；照任务单的做法改成按 next 分流到两章，不在选项上用本轨道自设的旗标作 requires。
+# 报价：L（代理人）。兼定住在户岛（cast 日程 togashima，不是港口），出面的是跟去户岛的老武士（不入 cast）；auto=true，at=funai（府内，大友家的港）。
+#   offer：family=c13_offer_funai、冷却 20 天；名声门槛 25；窗口 1577-06-01 至 1584-06-30（deadline 为窗口止日，timeout 直接 failed，不写见闻）。
+# 进行中：deliver 限 150 天，超时走 failed（好感 -3、旗标 _late、一封 ≤120 字的来信）；settle 与 settle_partial 先等 30 天，之后 120 天内回府内，超时走 failed（好感 -3、旗标 _late、见闻，不再写来信）。
+# 依据·史实：1575 年渡川（四万十川）之战败走，1576 年住伊予户岛，受洗教名唐·保罗，1577 年在户岛遇刺重伤，1585 年卒于户岛（TERRA16 §12.1 主线 9、13；弗洛伊斯《日本史》）。
+#   渡川之战本身、刺客的名字、他的死（1585 在窗口外）一概不写。
+# 依据·原创：缠在老武士手腕上的木念珠、油纸裹的木箱、封绳上那个“主上认得”的结、宇和海夜里的暗礁与雾、一张樟脑的用法、兼定回信末尾那一句问话、廊下那声“哪国人”、蓝布钱包、退回去的钱买了盐。
+# 货：茶 6 箱（月港 / 福州 / 澳门有）、樟脑 3 箱（鹿儿岛 / 长崎 / 博多有），府内都不产。brief 把原表的米 ×20、药剂 ×3 换掉：米是府内本地货，药剂东亚无港可买。
+#   “米”只在老武士转述的那句话里出现（他的骄傲），玩家不送米。
+# 货款：(6 × 60 + 3 × 100) × 1.25 = 825，按 50 取整 800，deliver 三个选项都付（goods 目标回应时扣货）。
+# 报酬：货款 800；报酬至多 2250（settle 的 take）、只交了货 1250（settle_partial 的 take）；兼定好感至多 +15；声望 ichijo +2；名声 +3；回忆一张。
+# 门禁：offer 写 c13_main_mio=false（澪的弟弟，对澪关闭；正文不提澪）；之后每章 alive ichijo_kanesada。
+# 读的旗标：c13_main_mio（offer，由主线设，尚未写成）；c13_request_ichijo_kanesada_want_see（deliver、settle_partial 的变体）；_met（settle 的变体）。
+# 设的旗标：c13_request_ichijo_kanesada_accepted（offer 两条接法）；终局 _declined（offer 回绝）/ _late（deliver、settle、settle_partial 超时）/ _done（settle）/ _partial（settle_partial）；
+#   分支三面：_want_see（offer 要见他）、_met（deliver 跟船上岛成功）、_dose（deliver 留了樟脑的用法）。
+#   brief 里的 _handed 不设：只交了货的两条路（跟船折回、原样封箱）直接 next 到 settle_partial，分支旗标控制在三面以内。brief 推荐的 _good 也不需要，同理靠 next 分流。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。来信全轨道两封：deliver 超时一封、settle 的 take 回信一封；settle 的 return 不写来信，改写一条盐商的见闻。
+# 依赖：港口 funai（ports_east_asia.toml）；商品 tea（goods/01_staples_raw.toml）、camphor（goods/05_terra_trade.toml）；技能 herbal_medicine；属性 seamanship；势力 ichijo；人物 ichijo_kanesada。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_ichijo_kanesada-settle「户岛廊下的唐·保罗」：雨后的户岛，廊下坐着一个脸色发灰的男人，腿上搭一条旧褥子，捧着一把茶叶凑到鼻子底下，脚边一只撬开的油纸木箱。
+
+[[tracks]]
+key = "request_ichijo_kanesada"
+name = "户岛的茶与樟脑"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ichijo_kanesada"]
+
+# 一、旧臣的念珠：府内的码头，跟去户岛的老武士拦住“我”。
+[[tracks.chapters]]
+key = "offer"
+title = "旧臣的念珠"
+text = "府内的栈桥上，一个老武士拦住了我。腰里别着刀，左手腕缠着一串木念珠，珠子磨得发黑。他说他是跟着一条家的前当主去了伊予户岛的人，隔些日子就划小船过丰后水道，来府内买盐买针。“主上的伤，一到阴雨天就流脓，夜里睡不着。”他把念珠往上捋了捋，“神父说樟脑压得住那股味。主上自己呢，只要京里那样的好茶。”他顿了顿，像在学谁的口气：“‘别送米来。岛上的人看见米，会说我只剩一张嘴。’”茶和樟脑府内都买不到。他问我的船往不往唐土、往不往南边的萨摩走。“货到了，我们的小船来接。”"
+mood = "sad"
+at = "funai"
+when = [
+  { kind = "date", from = [1577, 6, 1], to = [1584, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "fame", ge = 25 },
+  { kind = "age", person = "ichijo_kanesada", ge = 18 },
+  { kind = "flag", flag = "c13_main_mio", value = false },
+]
+deadline = [1584, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_funai"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去外头带茶和樟脑来。"
+next = "deliver"
+reply = "老武士松了口气，把念珠绕回手腕上。“主上问起，我就说是从唐土来的。他只信远处来的东西。”他想了想又说，樟脑从哪里买的就不必提了，那是神父要的，主上只问茶。"
+effects = [
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_accepted" },
+  { kind = "affinity", person = "ichijo_kanesada", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "see"
+text = "接下，但要上岛去，当面见一见他。"
+next = "deliver"
+reply = "老武士犹豫了一下，手指在念珠上停了好一会儿。“主上不爱见生人——带着好茶的生人，他会见。”他说回岛上先替我问一声，问不问得下来，等货到了府内再说。"
+effects = [
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_accepted" },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_want_see" },
+  { kind = "affinity", person = "ichijo_kanesada", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "往唐土和萨摩的货，我这一程顾不上。"
+next = "failed"
+reply = "老武士把念珠在手上绕了一圈，没再说话。他朝我点点头，转身下了栈桥。那条小船上的渔夫已经在解缆，船头堆着几袋盐，盐袋上压着一捆针线。他跳上船，没回头。"
+effects = [{ kind = "flag", flag = "c13_request_ichijo_kanesada_declined" }]
+
+# 二、过丰后水道的小船：户岛的小船在府内等货，老武士说主上会问是谁开过箱子。
+[[tracks.chapters]]
+key = "deliver"
+title = "过丰后水道的小船"
+text = "户岛的小船泊在府内栈桥的最外头，船身窄，桨柄上缠着新草绳。船上两个渔夫，一个老武士。茶叶和樟脑一箱箱搬下来，老武士叫渔夫先拿油纸裹严，再装进木箱，怕的是水道上的浪。他按着箱盖，压低了嗓子：“主上会问，是谁开过箱子。上一个替他办事的人，他到现在还疑心。”两个渔夫低头搓绳子，谁也不接这句话。老武士抬头问我，跟不跟船过去。"
+speaker = "captain"
+mood = "tense"
+at = "funai"
+when = [{ kind = "alive", person = "ichijo_kanesada", value = true }]
+objectives = [
+  { kind = "goods", good = "tea", qty = 6, at = "funai", text = "茶叶六箱运到府内" },
+  { kind = "goods", good = "camphor", qty = 3, at = "funai", text = "樟脑三箱运到府内" },
+]
+deadline_days = 150
+news = "府内的栈桥上，户岛来的小船装了几只油纸裹的木箱，船上的老武士守着箱子，渔夫碰一下都要挨骂。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "ichijo_kanesada", value = -3 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_late" },
+  { kind = "letter", person = "ichijo_kanesada", text = "东西不必送了。户岛什么都不缺，茶有，药也有。你的船若路过宇和海，不必靠岸。——唐·保罗 一条兼定" },
+]
+news = "府内栈桥外头那条户岛的小船，等了一季没等到货，前几天空着舱回了宇和海。"
+
+[[tracks.chapters.variants]]
+key = "want_see"
+when = [{ kind = "flag", flag = "c13_request_ichijo_kanesada_want_see" }]
+text = "户岛的小船泊在府内栈桥的最外头，船身窄，桨柄上缠着新草绳。茶叶和樟脑一箱箱搬下来，老武士叫渔夫先拿油纸裹严，再装进木箱。“主上答应了，带茶的人可以上岛。”他按着箱盖，压低了嗓子，“可他会问，是谁开过箱子。上一个替他办事的人，他到现在还疑心。”两个渔夫低头搓绳子，谁也不接这句话。老武士抬头问我，今夜就走，跟不跟船。"
+
+[[tracks.chapters.choices]]
+key = "ride"
+text = "跟小船过水道，把箱子当面交到他手里。"
+next = "settle"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "老武士没劝，只叫渔夫多带一盏灯。小船天黑出了府内，横过丰后水道，宇和海的礁石一块块从浪底下露出头来。渔夫一个看水，一个摇橹，我蹲在船头替他们认白浪。快到户岛时起了雾，灯照不出一丈远。老武士攥着念珠，说过不过得去，就看天亮前这一阵。"
+news = "府内的渔夫说，户岛那条小船夜里穿过宇和海的暗礁，船头多站了一个外来的船长，天亮就靠了岛。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "ichijo_kanesada", value = 3 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_met" },
+]
+
+[tracks.chapters.choices.fail]
+next = "settle_partial"
+effects = [{ kind = "cash", value = 800 }]
+news = "府内的渔夫说，户岛那条小船前些天夜里在宇和海的礁石间打转，橹碰了两回石头，只好退到外海，等岛上的船来搬货。"
+
+[[tracks.chapters.choices]]
+key = "dose"
+text = "写一张樟脑的用法，随箱交给老武士。"
+next = "settle"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "樟脑该怎么研、一回用多少，你说不上来。"
+reply = "我借了船上的笔，写明一回用多少、怎样研碎、包在布里搁在枕边，别碰眼睛，别拿去煎水喝。老武士把纸折成四折，塞进最上头那只箱子。“主上最信写下来的东西。”他说，“说出来的话，他转身就疑心。”"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "ichijo_kanesada", value = 3 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_dose" },
+]
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "交给老武士，看着他把箱子原样封好。"
+next = "settle_partial"
+reply = "老武士当着我的面缠上封绳，绕三道，打了个扁扁的结，结头塞进绳底下。“这个结主上认得。”他拍了拍箱盖，“到了岛上，结还是这个样子，他就不问了。”渔夫把箱子抬上船，船压低了一截。"
+effects = [{ kind = "cash", value = 800 }]
+
+# 三（甲）、唐·保罗的回信：见过面或留了用法。一个月后老武士带着回信回到府内。
+[[tracks.chapters]]
+key = "settle"
+title = "唐·保罗的回信"
+text = "一个月后，户岛的小船又靠上府内的栈桥。老武士从怀里摸出一封信，信封上署的是“唐·保罗”，底下又添了小小的“一条”两个字。信写得又硬又客气：茶是好茶，离了京城以后没喝过这样的；樟脑照那张纸上写的研了，屋里的味淡了；岛上的雨下个没完，下得骨头缝里发霉。末尾另起一行，只有一句：“大友家的人提起我，是怎么说的？”老武士把一小包钱搁在我面前的箱盖上，等我开口。"
+mood = "sad"
+at = "funai"
+when = [{ kind = "alive", person = "ichijo_kanesada", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等户岛的小船再来府内" }]
+deadline_days = 120
+news = "户岛来的小船又到了府内，船上的老武士说，岛上那位前当主今年冬天咳得轻些了。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "ichijo_kanesada", value = -3 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_late" },
+]
+news = "户岛来的老武士在府内栈桥上等了好些日子，怀里揣着一封信，等不到要等的船长，又揣回了岛上。"
+
+[[tracks.chapters.variants]]
+key = "met"
+when = [{ kind = "flag", flag = "c13_request_ichijo_kanesada_met" }]
+text = "那天早上船靠上户岛，兼定坐在廊下，脸色发灰，腿上搭着一条旧褥子。他自己撬开箱子，先捧起一把茶闻了很久，才抬眼看我：“哪国人？”老武士替我答了，他哼了一声：“远是够远。”又低头去闻。一个月后，户岛的小船又靠上府内的栈桥，老武士带来他的信，信封上署的是“唐·保罗”。信写得又硬又客气：茶是好茶，离了京城以后没喝过这样的；岛上的雨下个没完，下得骨头缝里发霉。末尾另起一行，只有一句：“大友家的人提起我，是怎么说的？”老武士把一小包钱搁在箱盖上，等我开口。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下钱，照实说府内的人是怎么提他的。"
+next = "done"
+reply = "我说，府内的人提起他，多半只叫“户岛那位”，说完就换了话头。老武士听完，半天没动，后来点了点头：“主上会骂两句，然后把信收起来。”他把我的话一个字一个字念了一遍，像是怕回岛上记错。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "ichijo_kanesada", value = 8 },
+  { kind = "reputation", faction = "ichijo", value = 2 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_done" },
+  { kind = "memory", memory = "mem-request_ichijo_kanesada-settle", title = "户岛廊下的唐·保罗" },
+  { kind = "letter", person = "ichijo_kanesada", text = "“户岛那位”——好。总比他们背地里叫的别的强。你这人说话不拐弯，京里的公卿学一辈子也学不会，丰后的更不必提。茶还剩两箱，留着过冬，雨天拿出来闻一闻，算是回了一趟京。樟脑省着用。下回你的船过宇和海，挂一面白布，岛上的人会划船出来。来的时候带茶就够了，别的我这里都有。——唐·保罗 一条兼定" },
+]
+
+[[tracks.chapters.choices]]
+key = "return"
+text = "钱不收，留给岛上的人。"
+next = "done"
+news = "府内的盐商说，户岛的老武士来买走了一船盐，钱是一个外国船长不肯收的，岛上那位前当主骂了半天，还是叫人分给了渔家。"
+reply = "老武士愣了很久，才把那包钱收回怀里，收得很慢。“我会告诉主上。”他说，又低头看了看念珠，“主上大概会生气。”他上了船，走出老远还回头看栈桥。"
+effects = [
+  { kind = "affinity", person = "ichijo_kanesada", value = 10 },
+  { kind = "reputation", faction = "ichijo", value = 2 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_done" },
+]
+
+# 三（乙）、结没动过：只交了货（跟船折回，或原样封箱）。一个月后老武士带着一封短信回到府内。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "结没动过"
+text = "一个月后，户岛的小船又到了府内。那几只木箱是渔夫的船运上岛的，我没有上岛。老武士带回一封信，信封上署着“唐·保罗”。信很短：茶收到了，樟脑收到了，箱子上的结没人动过；岛上的雨照旧下。别的一个字也没有。老武士说，主上拆箱以前，先把绳结翻来覆去看了半天，才叫人拿刀。他从怀里掏出一个蓝布小包，搁在船舷上，推到我这边。"
+mood = "sad"
+at = "funai"
+when = [{ kind = "alive", person = "ichijo_kanesada", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等老武士从户岛带回音来" }]
+deadline_days = 120
+news = "户岛来的小船又到了府内，老武士说，岛上那位前当主拆箱以前，先把封绳上的结看了半天。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "ichijo_kanesada", value = -3 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_late" },
+]
+news = "府内栈桥上那个手缠念珠的老武士又来过两回，打听一个外来的船长回没回港，问不到，就回了户岛。"
+
+[[tracks.chapters.variants]]
+key = "want_see"
+when = [{ kind = "flag", flag = "c13_request_ichijo_kanesada_want_see" }]
+text = "一个月后，户岛的小船又到了府内。那几只木箱是渔夫的船运上岛的，我没有上岛。老武士带回一封信，信封上署着“唐·保罗”。信很短：茶收到了，樟脑收到了，箱子上的结没人动过；岛上的雨照旧下。末了添了半句：“说要来见我的人，怎么没来？”老武士说，他替我答了一句“宇和海的雾大”，主上没再问，只把绳结翻来覆去看了半天。他从怀里掏出一个蓝布小包，搁在船舷上，推到我这边。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下钱，托他回去道一声谢。"
+next = "done"
+reply = "老武士点点头，把空了的布包叠成小方块塞回怀里。“主上说了，结没人动过，钱就该给。”他说谢字他会带到，主上听了多半只“嗯”一声。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "ichijo_kanesada", value = 4 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "return"
+text = "钱推回去，给岛上的人买些东西。"
+next = "done"
+reply = "老武士看了我一会儿，把钱收回去，压在念珠底下。“岛上缺盐。我替主上收着，买盐。”他想了想又说，主上问起，他就说是船长落在船上忘了拿的，“这么说，他不骂人。”"
+effects = [
+  { kind = "affinity", person = "ichijo_kanesada", value = 6 },
+  { kind = "flag", flag = "c13_request_ichijo_kanesada_partial" },
+]

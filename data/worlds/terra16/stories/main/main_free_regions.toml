@@ -1,0 +1,2001 @@
+# 自由船长·地区章（故事 2.0，A5 / E37 契约，C13 第九批）
+# 标签：自由船长·地区章。主角是玩家自创的船长：“我”不写性别、外貌、肤色、身高；别人叫“船长”“某家的孩子”。
+# 结构：18 条 [[tracks]]，每条 kind = "main"、auto = true，start = 首章 key。第一章是 at 在该海区枢纽港的普通章，
+#   when = c13_main_free（主干门槛章设）+ 日期起点，期限到下一章窗口之前，timeout 静默失败（不写见闻、不写来信）。
+#   第二章是挂在真实事件上的 involve（default = 历史照常），或限期交货章；第三章（有的轨道）是目击 witness，变体读 HIST 与本线旗标。
+# 一览（海区；幕；史实代码）：
+#   第一幕 a：桶狭间的雨（东亚；H17，热田）、往东回去的路（东南亚；H24，宿务与阿卡普尔科）、巴特卡尔的马（印度洋；H23，巴特卡尔）、
+#     玛蒂克之岛（地中海；H26，希俄斯）、迪耶普的两边（大西洋与欧洲；H21，迪耶普与勒阿弗尔）、卡罗琳堡（美洲；H25，圣奥古斯丁）。
+#   第二幕 b：堺的铅（东亚；H43，堺）、湄南河的水门（东南亚；H34，大城）、辩论之屋的书（印度洋；R10，苏拉特）、
+#     冲过封锁（地中海；H35，坎迪亚与法马古斯塔）、刚果王的信（大西洋与欧洲；H45，罗安达与里斯本）、最后的印加（美洲；H41，卡亚俄）。
+#   第三幕 c：伊贺来的纸（东亚；H54，堺）、金瓶里的水（东南亚；H58，大城）、两份效忠书（印度洋；H52，果阿）、
+#     丹吉尔的名单（地中海；H49，丹吉尔）、普利茅斯的火船（大西洋与欧洲；H60，普利茅斯）、南边的第一本书（美洲；R13，卡亚俄）。
+# 依据（史实，只从人物嘴里、物件上、告示里透出来）：热田与桶狭间（1560，织田的人踩着雨翻过丘陵，信长在神宫前祈祷，热田神宫本殿外后来砌了土墙）；
+#   堺的宗易称暹罗铅、甲斐的商人找铅（1575，长篠前的铅弹）；伊贺人与本能寺（1582，伊贺被织田平定后的残党、德川殿在堺、回三河走伊贺山路）；
+#   宿务的老修士乌尔达内塔北上找回美洲的路（1565，圣佩德罗号离宿务、阿卡普尔科开港）；大城的围城与纳黎萱（1569 与 1584—87）；
+#   塔利科塔之战与维查耶纳伽尔的马（1565）；希俄斯的玛蒂克与皮雅利的舰队（1566，复活节，加莱船、卡法）；
+#   勒泰斯蒂的地图与鲁昂之围、勒阿弗尔的英军投降（1562—63）；罗安达与刚果王阿尔瓦罗一世的信（1576）；普利茅斯的火船（1588）；
+#   卡罗琳堡与梅嫩德斯建圣奥古斯丁（1565，河口的屠杀）；比尔卡班巴的副王战书与请愿书（1572）；利马三种话的教理问答（1583—84）。
+# 原创：每章的具体人物（胡拉姆、伊贺来的男人、埃莱妮、印书匠、里卡多、搬运工等）、对白、选项与物件。
+# 读的共享旗标：c13_main_free（每条首章的门槛，主干 a00 default 设）；c12_* 不读。
+# 设的本线旗标：c13_free_<轨道短名>_<选项>（各轨道的分支）、c13_free_lever_<代码>（C10 杠杆钥匙，可选）、
+#   c13_free_course_*（主干方向，只读）、c13_free_southeast_asia_a_kuroshio（只在本线，宿务与北上的分支）。
+# HIST 占位（整合方按 C10 公布的代码 → key 表替换）：h17_okehazama_imagawa_survives（a3_wall）、h23_talikota_vijayanagara_survives（a3_after）、
+#   h25_fort_caroline_french_settlement_survives（a3_inlet）、h35_cyprus_siege_famagusta_holds（b2_blockade）、h41_vilcabamba_vilcabamba_survives（b2_vilcabamba）、
+#   h49_three_kings_sebastian_returns（c2_lists）、h52_iberian_union_antonio_rules_portugal（c2_oath）、h54_honnoji_nobunaga_survives（c3_after）、h60_armada_spanish_landing（c3_wind）。
+# C10 杠杆钥匙（可选，不用就删读它的 requires）：c13_free_lever_H17（a2）、H23（a2_talikota）、H25（a2_hurricane）、H34（b2_fall）、H35（b2_blockade）、
+#   H41（b2_vilcabamba）、H43（b2_lead）、H52（c2_oath）、H54（c2_honnoji）、H60（c2_fireships）。
+# 等待的包：A9（a1 的身份门槛可改成 protagonist 条件）；C10（上面的 HIST 与杠杆）；C12/主干 main_free 的门槛章设 c13_main_free。
+# 回忆插画清单（mem-<轨道>-<章>，画面各不超过 60 字）：
+#   mem-main_free_east_asia_a-a2_okehazama（雨云下的神宫）：热田神宫门前，几匹马喷着白气，远处海上的云堆成一堵黄灰色的墙。
+#   mem-main_free_east_asia_b-b2_lead（宗易的秤）：堺的码头上，一杆长秤吊着一锭铅，茶人模样的人眯眼看秤星。
+#   mem-main_free_southeast_asia_b-b2_fall（水门里递出来的孩子）：夜雨里的城墙水门，人们把孩子一个个递到船上。
+#   mem-main_free_mediterranean_a-a2_piyale（复活节夜里的账册）：夜色里的希俄斯港，一条小船载着一箱账册，从八十条加莱船之间溜出去。
+#   mem-main_free_mediterranean_b-b2_blockade（法马古斯塔的孩子们）：一月的港口，城墙上举着火把，几个裹着毯子的孩子被抱上一条商船。
+#   mem-main_free_atlantic_europe_a-a2_rouen（勒泰斯蒂的图稿）：迪耶普码头的雨里，一个领航员把一卷卷画着海岸与怪兽的图稿递上船。
+#   mem-main_free_americas_a-a2_hurricane（风暴前的河口）：圣约翰河口，乌云压着棕榈林，几个法国妇人抱着孩子蹚水上船。
+#   mem-main_free_americas_b（无回忆）；mem-main_free_americas_c（无回忆）。
+# 禁区：不写战场、屠杀、处决与尸体的细节；不写同学（C7 的重逢）；不写恋爱；见闻不泄露秘密；不写报酬数字。
+
+[[tracks]]
+key = "main_free_east_asia_a"
+name = "桶狭间的雨"
+kind = "main"
+start = "a1_offer"
+auto = true
+cast = ["oda_nobunaga", "imagawa_yoshimoto"]
+
+# 热田的木札：今川与织田都要人运东西，选哪边决定这个夏天这条船怎么走。
+[[tracks.chapters]]
+key = "a1_offer"
+title = "热田的木札"
+text = "早春的热田，神宫门前的商人町，屋檐下挂着写满货名的木札。热田的商人一向替织田家筹粮运货，这回要人把一船火药送到鸣海湾边的砦子。同一家客栈里，一个从骏河来的商人摸出成色好的银子，请人替今川家把军粮运过尾张的丘陵。两边都说对方撑不过这个夏天。热田的商人把算盘拍在桌上：“火药要在梅雨前到。到晚了，砦子里的人只能拿石头守。”骏河的商人笑了一声：“今川殿下四万人，织田那边连四千都凑不齐。你算算账。”骏河人的银子上压着今川家的印，他毫不避讳，觉得今川已经赢了。我（心里）：这两笔账，哪一笔是真的？"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1560, 1, 10] }]
+at = "atsuta"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1560, 5, 25]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "oda"
+text = "替热田的商人把火药运到鸣海湾的砦子"
+next = "a2_okehazama"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "你连预先垫付的火药钱都拿不出来。"
+effects = [{ kind = "cash", value = -600 }, { kind = "flag", flag = "c13_free_east_asia_a_oda" }, { kind = "reputation", faction = "oda", value = 2 }]
+reply = "砦子里的足轻把火药桶一个个滚进土仓。领头的那个说：“回来结账。”顿了顿，又补一句：“要是还有人在的话。”"
+
+[[tracks.chapters.choices]]
+key = "imagawa"
+text = "收下骏河人的银子，替今川家运军粮"
+next = "a2_okehazama"
+effects = [{ kind = "cash", value = 800 }, { kind = "flag", flag = "c13_free_east_asia_a_imagawa" }, { kind = "reputation", faction = "imagawa", value = 2 }]
+reply = "军粮卸在沓挂附近的河滩上。今川家的侍大将连看都没看，叫人记下了“我”的旗号。"
+
+[[tracks.chapters.choices]]
+key = "none"
+text = "两边的生意都不接，只在热田补水"
+next = "a2_okehazama"
+reply = "热田的商人冷笑一声：“外头来的船都一样，只看天，不看人。”"
+
+# 神宫前的马：信长的人马踩着雨来了。船长报的时辰是唯一能改动的东西。
+[[tracks.chapters]]
+key = "a2_okehazama"
+title = "神宫前的马"
+text = "梅雨季的清早，一小队骑马的人冲进热田，领头的年轻武士在神宫前下马祈祷——热田人认得，那是织田上总介。马喷着白气，马夫拿袖子去擦它们的嘴，没有人敢出声。天色发黄，海那边的云堆得像墙。神宫的老神官抬头看云，嘟囔说午后要变天：“这云是从伊势那边推过来的，午后才落。外乡人，别乱报时辰。”“我”的水手们在码头上也在看同一片云，有人把缆绳解开又系上，手一直在抖。织田家的足轻隔着人群喊：“船上的！你们看海的，说说，雨什么时候到？”没人应，码头上的人都看着“我”。我（心里）：老神官看的是风向，我看的是海上的涌。两样东西算出来的时辰，差着一个时辰。"
+window = [[1560, 6, 1], [1560, 6, 20]]
+at = "atsuta"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["oda_nobunaga", "imagawa_yoshimoto"]
+news = "热田的人说，那天午时的雨大得像海倒过来，织田的人马就是踩着那场雨翻过丘陵的。"
+
+[tracks.chapters.default]
+next = "a3_wall"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "rain"
+text = "看风估时辰，告诉织田的人：午时前后有急雨"
+next = "a3_wall"
+check = { attr = "astronomy", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_free_east_asia_a_rain" }, { kind = "flag", flag = "c13_free_lever_H17" }, { kind = "fame", value = 1 }]
+reply = "足轻把“我”的话原样喊给骑马的人。那人没回头，只抬了一下手。一个时辰后，雨像倒下来一样。"
+
+[tracks.chapters.choices.fail]
+next = "a3_wall"
+effects = [{ kind = "memory", memory = "mem-main_free_east_asia_a-a2_okehazama", title = "雨云下的神宫" }]
+news = "热田的足轻说，船上那个外乡人报的时辰晚了一个时辰，骂了一句就走了。雨后来还是落了。"
+
+[[tracks.chapters.choices]]
+key = "warn"
+text = "骑马去沓挂，把织田家出兵的事告诉今川的营地"
+next = "a3_wall"
+requires = [{ kind = "flag", flag = "c13_free_east_asia_a_imagawa" }]
+hint = "你和今川家素无往来，营门不会为一个外乡船长打开。"
+effects = [{ kind = "flag", flag = "c13_free_east_asia_a_warned" }, { kind = "reputation", faction = "imagawa", value = 2 }]
+reply = "今川营里的人听完笑了：“织田的人能有几个？”把“我”打发到营外喝水。"
+
+[[tracks.chapters.choices]]
+key = "away"
+text = "趁雨没落，把船开出热田湾"
+next = "a3_wall"
+effects = [{ kind = "memory", memory = "mem-main_free_east_asia_a-a2_okehazama", title = "雨云下的神宫" }]
+reply = "船出湾时，岸上传来海螺声。“我”没回头，雨在船尾追了半个时辰。"
+
+# 信长塀：目击。墙是夯出来的，夯进去的东西没人去挖。
+[[tracks.chapters]]
+key = "a3_wall"
+title = "信长塀"
+text = "夏末，热田神宫的工匠在本殿外面砌一道土墙，土里掺了油和石灰，一层一层夯，顶上盖瓦。神官说这是织田家打赢以后献给神宫的。热田的商人们站在墙边算账，算谁家的木札还作数。墙夯到一半，一个老工匠从墙土里拣出一枚生锈的箭镞，看了看，又顺手夯了回去。夯墙的工匠对旁人说：“这墙要站三百年。三百年后有人问起，就说是那年的雨砌的。”"
+window = [[1560, 7, 1], [1560, 9, 30]]
+at = "atsuta"
+stage = "witness"
+speaker = "captain"
+mood = "cheerful"
+cast = ["oda_nobunaga"]
+news = "热田神宫在本殿外砌了一道掺油的土墙，商人们说那是织田家打赢以后还的愿。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_imagawa"
+when = [{ kind = "flag", flag = "h17_okehazama_imagawa_survives" }]
+text = "夏末，热田神宫里没有人砌墙。今川的大军照常西去，热田的商人连夜把写着织田家的木札烧了，神宫外只剩烧木札的灰，被风吹得满街都是。一个老工匠在灰堆旁边蹲着，把一枚生锈的箭镞翻来覆去地看，最后揣进了怀里。神官扫灰的时候，扫帚一下一下，扫得很慢。热田的神官在门口念着祭文，一句也没有提织田的名字。"
+
+[[tracks.chapters.variants]]
+key = "v2_rain"
+when = [{ kind = "flag", flag = "c13_free_east_asia_a_rain" }]
+text = "夏末，热田神宫的工匠在本殿外面砌一道土墙，土里掺了油和石灰，一层一层夯，顶上盖瓦。神官说这是织田家打赢以后献给神宫的。热田的商人们站在墙边算账，算谁家的木札还作数。墙夯到一半，一个老工匠从墙土里拣出一枚生锈的箭镞，看了看，又顺手夯了回去。老神官在祭文的边上记了一笔：那天报雨的，是一条外乡船的船长。夯墙的工匠对旁人说：“这墙要站三百年。三百年后有人问起，就说是那年的雨砌的。”"
+
+[[tracks.chapters.variants]]
+key = "v3_oda"
+when = [{ kind = "flag", flag = "c13_free_east_asia_a_oda" }]
+text = "夏末，热田神宫的工匠在本殿外面砌一道土墙，土里掺了油和石灰，一层一层夯，顶上盖瓦。神官说这是织田家打赢以后献给神宫的。热田的商人们站在墙边算账，算谁家的木札还作数。那个在砦子里领头的足轻来热田结账，账结清了，他带来的人少了一半。墙夯到一半，一个老工匠从墙土里拣出一枚生锈的箭镞，看了看，又顺手夯了回去。夯墙的工匠对旁人说：“这墙要站三百年。三百年后有人问起，就说是那年的雨砌的。”"
+
+[[tracks.chapters.variants]]
+key = "v4_warned"
+when = [{ kind = "flag", flag = "c13_free_east_asia_a_warned" }]
+text = "夏末，热田神宫的工匠在本殿外面砌一道土墙，土里掺了油和石灰，一层一层夯，顶上盖瓦。神官说这是织田家打赢以后献给神宫的。热田的商人们站在墙边算账，算谁家的木札还作数。那天在今川营外笑话“我”的侍大将，没有回骏河。墙夯到一半，一个老工匠从墙土里拣出一枚生锈的箭镞，看了看，又顺手夯了回去。夯墙的工匠对旁人说：“这墙要站三百年。三百年后有人问起，就说是那年的雨砌的。”"
+
+[[tracks]]
+key = "main_free_southeast_asia_a"
+name = "往东回去的路"
+kind = "main"
+start = "a1_offer"
+auto = true
+cast = ["andres_urdaneta", "miguel_lopez_legazpi"]
+
+# 修士的海图：宿务的老修士要找一条回美洲的路，他要的是北边那股黑水。
+[[tracks.chapters]]
+key = "a1_offer"
+title = "修士的海图"
+text = "宿务的海滩上刚插上西班牙人的十字架，没有人肯去看它。岸上的村子前几天被烧过，还冒着烟。黎牙实比的船停在湾里；一个穿奥斯定会黑袍的老修士——乌尔达内塔，从前是领航员——在船舱里摊开一张太平洋的图，图的北半边几乎什么也没画。他听说“我”从北边的海来，想知道日本以东那股黑色的海流往哪里走。“从这里往东，四十年没有一条船回得去。我要的不是风，是那股往北的黑水。”老修士的手指在图上敲了敲：“我年轻时在这片海上困过八年。我要找的是回去的路。”我（心里）：他图上北边那一半，跟我的一样，是没画的。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1565, 4, 28] }]
+at = "cebu"
+speaker = "captain"
+mood = "mystic"
+cast = ["andres_urdaneta", "miguel_lopez_legazpi"]
+deadline = [1565, 5, 20]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "kuroshio"
+text = "把你知道的黑潮讲给他听"
+next = "a2_sailing"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "你没在北边的海上认过潮，讲不出黑潮往哪里拐。"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_a_kuroshio" }, { kind = "affinity", person = "andres_urdaneta", value = 5 }]
+reply = "老修士一边听一边在图的北边画了一道弯线。画完他说：“那就往北再走十度。”"
+
+[[tracks.chapters.choices]]
+key = "winds"
+text = "凭这些年的航海日志，描述北边海上的风"
+next = "a2_sailing"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_a_kuroshio" }]
+reply = "他把“我”日志里的三页抄进了自己的本子，抄到第三页时手在抖。"
+
+[tracks.chapters.choices.fail]
+next = "a2_sailing"
+effects = []
+news = "宿务的人说，一个外乡船长记的风向跟老修士听来的对不上，老修士客气地谢了，把图卷了起来。"
+
+[[tracks.chapters.choices]]
+key = "water"
+text = "卖给他们淡水和咸鱼，别的不管"
+next = "a2_sailing"
+effects = [{ kind = "cash", value = 600 }]
+reply = "西班牙人的书记数桶数了两遍。临走时老修士问“我”的船吃水多深，“我”照实说了。"
+
+# 圣佩德罗号起锚：限期的出发。只有北边那张草图能送出去。
+[[tracks.chapters]]
+key = "a2_sailing"
+title = "圣佩德罗号起锚"
+text = "六月初，圣佩德罗号装满淡水和米，船员两百人，大半在发抖——他们知道往东意味着什么。码头上一个年轻水手在绳梯上回头喊：“老爷，这船要是回不来，宿务的酒钱归谁？”没人笑。一个管账的书记站在跳板边，数着人头，数到第三遍才放下笔。乌尔达内塔站在船尾，手里是那张北边画了几道弯线的图。黎牙实比留在岸上，没有来送。起锚前，老修士把一本只写了一行的航簿递过来：“北纬三十九度，往东。”他说：“你跟一段也好。到了三十九度，你要回头，我不怪你。”我（心里）：他要的是一个认得北边海的人。船上两百个人，他肯看的只有我一个。"
+window = [[1565, 5, 21], [1565, 6, 5]]
+at = "cebu"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["andres_urdaneta", "miguel_lopez_legazpi"]
+news = "宿务的人说，西班牙人的一条大船往东北去了，船上那个老修士说要找一条四十年没人找到的路回美洲。"
+
+[tracks.chapters.default]
+next = "a3_acapulco"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "把你画的北方海流草图送给他"
+next = "a3_acapulco"
+requires = [{ kind = "flag", flag = "c13_free_southeast_asia_a_kuroshio" }]
+hint = "你没跟他讲过北边的海，现在送图，他看不懂你的线。"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_a_chart_given" }, { kind = "fame", value = 2 }]
+reply = "老修士把草图夹进他那本航簿，夹在只写了一行的那一页。"
+
+[[tracks.chapters.choices]]
+key = "follow"
+text = "让自己的船跟着圣佩德罗号往东走"
+next = "a3_acapulco"
+requires = [{ kind = "flag", flag = "c13_free_course_explore" }]
+hint = "这不是做买卖或挣名声的人会冒的险，水手们不会答应。"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_a_sailed" }, { kind = "chart", region = "northeast_pacific" }]
+reply = "两条船前后脚出了海峡，往北走了二十天，水开始变冷，变黑。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "留在宿务，看拉惹的人怎样跟西班牙人打交道"
+next = "a3_acapulco"
+effects = [{ kind = "reputation", faction = "cebu_rajahnate", value = 2 }]
+reply = "圣佩德罗号的帆消失在海峡口。岸上拉惹家的人问“我”：那条船还会回来吗？"
+
+# 爬下船的人：目击。老修士在沙上画的那道弯线。
+[[tracks.chapters]]
+key = "a3_acapulco"
+title = "爬下船的人"
+text = "十月的阿卡普尔科，湾里还没有像样的码头。一条破船进了湾，帆补了又补；船上的人站不起来，是爬下跳板的。最后下船的是那个穿黑袍的老修士，他跪在沙滩上，没有祈祷，在沙上画了一道弯线。浪过来，把线推散了，他又跪下去，重画了一道。岸上的士兵对着船上喊：“从马尼拉……不，从宿务来的？往东？不可能。”"
+window = [[1565, 10, 1], [1566, 1, 31]]
+at = "acapulco"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["andres_urdaneta"]
+news = "阿卡普尔科的人说，一条从西边来的破船进了湾，船上的人是爬下来的，老修士在沙上画了一道弯。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_sailed"
+when = [{ kind = "flag", flag = "c13_free_southeast_asia_a_sailed" }]
+text = "十月的阿卡普尔科，湾里还没有像样的码头。“我”的船比圣佩德罗号晚到三天，船上的人也是爬下跳板的，帆上的盐结得像一层壳。最后下船的是那个穿黑袍的老修士，他跪在沙滩上，没有祈祷。老修士在沙滩上认出了“我”的旗，没说话，只点了点头。浪过来，把他画的那道弯线推散了，他又跪下去，重画了一道。"
+
+[[tracks.chapters.variants]]
+key = "v2_chart"
+when = [{ kind = "flag", flag = "c13_free_southeast_asia_a_chart_given" }]
+text = "十月的阿卡普尔科，湾里还没有像样的码头。一条破船进了湾，帆补了又补；船上的人站不起来，是爬下跳板的。最后下船的是那个穿黑袍的老修士，他跪在沙滩上，没有祈祷，在沙上画了一道弯线。浪过来，把线推散了，他又跪下去，重画了一道。老修士画的那道弯线里，有一段是“我”当初画给他的。岸上的士兵对着船上喊：“从马尼拉……不，从宿务来的？往东？不可能。”"
+
+[[tracks]]
+key = "main_free_indian_ocean_a"
+name = "巴特卡尔的马"
+kind = "main"
+start = "a1_offer"
+auto = true
+cast = ["khurram", "vikram", "rama_raya"]
+
+# 喝够了水的马：马贩子先看马喝水，王都的经纪人催的是钱。
+[[tracks.chapters]]
+key = "a1_offer"
+title = "喝够了水的马"
+text = "季风刚过的巴特卡尔，马厩里一排阿拉伯马。马贩子胡拉姆一匹一匹摸它们的腿，先去看它们喝没喝够水，才肯谈价。维克拉姆是维查耶纳伽尔的马匹经纪人，来了三趟，每趟都带着王都的急信：德干的几个苏丹结了盟，罗摩·罗阇要马，要很多马，钱却要等秋天的税。胡拉姆：“马喝够了水，才谈价。你急，马不急。”维克拉姆：“钱一定会有。只是……要等打完。”他说话时一直看着马槽，像在数马。胡拉姆一句话也没接，只把一匹马牵到水边。我（心里）：这一仗，谁替它付钱？"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1564, 6, 1] }]
+at = "bhatkal"
+speaker = "captain"
+mood = "tense"
+cast = ["khurram", "vikram"]
+deadline = [1564, 11, 25]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "替维克拉姆先把马钱垫上"
+next = "a2_talikota"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "你的钱袋垫不起这么多马。"
+effects = [{ kind = "cash", value = -1500 }, { kind = "flag", flag = "c13_free_indian_ocean_a_paid" }]
+reply = "胡拉姆收了钱，还是先去看马喝水。维克拉姆握着“我”的手，说不出话。"
+
+[[tracks.chapters.choices]]
+key = "credit"
+text = "劝胡拉姆把马先赊给维查耶纳伽尔"
+next = "a2_talikota"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_free_indian_ocean_a_paid" }]
+reply = "胡拉姆说他从没赊过马给打仗的人，这是头一回。“要是收不回来，我记你一辈子。”"
+
+[tracks.chapters.choices.fail]
+next = "a2_talikota"
+effects = []
+news = "巴特卡尔的市场上说，胡拉姆客客气气让了一步，又客客气气退了两步，最后一匹马也没赊。"
+
+[[tracks.chapters.choices]]
+key = "doubt"
+text = "劝维克拉姆今年别买马了"
+next = "a2_talikota"
+effects = [{ kind = "affinity", person = "vikram", value = 3 }]
+reply = "维克拉姆苦笑：“你说得对。可王不听对的话。”"
+
+# 上山的马队：马夫们要走三个星期才到王的营。维克拉姆自己没有上马。
+[[tracks.chapters]]
+key = "a2_talikota"
+title = "上山的马队"
+text = "冬天，马队从巴特卡尔出发上西高止山，走三个星期才到王都的边境。马夫们裹着羊毛毯子，在港口的火堆边抽签，抽到的先上山。胡拉姆一大早站在山路口，数着马蹄印，一个也不肯数错。他一边数一边念，数到第三十匹，嘴唇不动了。比贾布尔的探子也在港里，打听马的数目和上山的日子，不时拿眼睛去量马背。一个探子笑着问“我”：“这一队有多少匹？我好替我的主人记账。”维克拉姆把马匹清单折了又折，折痕都起了毛。出发那天，维克拉姆自己没有上马，他说要留在港里等下一批。他把清单递给“我”：“我给每个人都铺好了退路……轮到自己，脚迈不开。”“我”接过清单，纸角被手心捂得发软。"
+window = [[1564, 12, 1], [1565, 2, 10]]
+at = "bhatkal"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["vikram", "khurram", "rama_raya"]
+news = "巴特卡尔的马贩子说，北边的苏丹们在塔利科塔打赢了，维查耶纳伽尔的王死在战场上，马价一夜跌了一半。"
+
+[tracks.chapters.default]
+next = "a3_after"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "escort"
+text = "押着马队上山，送到王的营里"
+next = "a3_after"
+requires = [{ kind = "flag", flag = "c13_free_indian_ocean_a_paid" }]
+check = { attr = "command", base = 20, per = 7 }
+hint = "这一队马不是你的生意，马夫们不会听你的。"
+effects = [{ kind = "flag", flag = "c13_free_indian_ocean_a_delivered" }, { kind = "flag", flag = "c13_free_lever_H23" }, { kind = "reputation", faction = "vijayanagara", value = 3 }]
+reply = "王的营盘大得望不到边。马夫们把马交出去就往回走，“我”在营外看见了一面绣着野猪的旗。"
+
+[tracks.chapters.choices.fail]
+next = "a3_after"
+effects = [{ kind = "reputation", faction = "vijayanagara", value = 1 }]
+news = "巴特卡尔的马夫说，马队在山里走散了三分之一，剩下的马按时到了营里，鞍上的账却对不上了。"
+
+[[tracks.chapters.choices]]
+key = "sell"
+text = "把马匹的数目卖给比贾布尔的探子"
+next = "a3_after"
+effects = [{ kind = "cash", value = 2000 }, { kind = "reputation", faction = "bijapur", value = 2 }, { kind = "reputation", faction = "vijayanagara", value = -3 }]
+reply = "探子付钱很爽快。“我”后来再也没在巴特卡尔见过维克拉姆的笑脸。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "留在港里，陪维克拉姆等消息"
+next = "a3_after"
+effects = [{ kind = "affinity", person = "vikram", value = 3 }]
+reply = "两个人在马厩边坐了一个月，每天问一遍从山上下来的人。"
+
+# 空马厩：目击。买马的王不在了，马还在喝水。
+[[tracks.chapters]]
+key = "a3_after"
+title = "空马厩"
+text = "季风前的巴特卡尔，马厩空了一半：卖不出去的马被拉去别的港口，卖出去的再也收不到钱。胡拉姆照旧每天去看马喝水，看的是空槽。墙角的草料堆发了霉，没人去翻。账房里点着一盏油灯，他把账本摊开，一笔一笔地对。最后一笔，他没写钱数，只写了一个字：王。胡拉姆（转述）：“马还在喝水，买马的人不在了。”"
+window = [[1565, 3, 1], [1565, 6, 30]]
+at = "bhatkal"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["khurram", "vikram"]
+news = "巴特卡尔的马厩一半是空的，波斯马贩子胡拉姆照旧每天去看马槽，可买马的王已经不在了。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_survives"
+when = [{ kind = "flag", flag = "h23_talikota_vijayanagara_survives" }]
+text = "季风前的巴特卡尔，马厩里又满了一半。王都派人下山结马钱，银子用红布包着，一包一包过秤。胡拉姆在账上写了一句“好年”，写完又划掉，怕隔壁的人笑他。他照旧每天去看马槽，槽里的水是新换的，马低头喝得很响。港口上的马贩子们都在打听，今年的马价能不能回到从前。“我”的船还停在岸边，听他们吵了一早上。"
+
+[[tracks.chapters.variants]]
+key = "v2_delivered"
+when = [{ kind = "flag", flag = "c13_free_indian_ocean_a_delivered" }]
+text = "季风前的巴特卡尔，马厩空了一半：卖不出去的马被拉去别的港口，卖出去的再也收不到钱。胡拉姆照旧每天去看马喝水，看的是空槽。墙角的草料堆发了霉，没人去翻。“我”押上山的那一队马，有几匹后来自己走回了海边，鞍还没卸。胡拉姆在账上记下最后一笔，没写钱数，只写了一个字：王。胡拉姆（转述）：“马还在喝水，买马的人不在了。”"
+
+[[tracks]]
+key = "main_free_mediterranean_a"
+name = "玛蒂克之岛"
+kind = "main"
+start = "a1_offer"
+auto = true
+cast = ["eleni", "piyale_pasha"]
+
+# 欠了的贡金：热那亚商团要跑，树园的埃莱妮只问工钱。
+[[tracks.chapters]]
+key = "a1_offer"
+title = "欠了的贡金"
+text = "秋天割完了玛蒂克，希俄斯南边的树园里只剩树干上一道道刀口。商馆门口那块热那亚的盾徽，漆皮已经裂了一半。热那亚马奥纳商团的代理人在港口的商馆里来回踱步：今年给苏丹的贡金没凑齐，马耳他那一仗以后伊斯坦布尔正在找出气的地方。他想先把家族的账册、圣像和库里的玛蒂克运回热那亚。种树园的埃莱妮从商馆门口过，看都不看他一眼。代理人：“账册先走，圣像第二，玛蒂克第三。人？人留得下。”埃莱妮：“哪棵树流的泪最多，热那亚人从来不知道。”"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1565, 10, 1] }]
+at = "chios"
+speaker = "captain"
+mood = "tense"
+cast = ["eleni"]
+deadline = [1566, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "mahona"
+text = "接马奥纳的活，替他们备一条船"
+next = "a2_piyale"
+effects = [{ kind = "flag", flag = "c13_free_mediterranean_a_hired" }]
+reply = "代理人预付了一半船钱，叮嘱夜里装船，别挂热那亚的旗。"
+
+[[tracks.chapters.choices]]
+key = "mastic"
+text = "买下他们来不及运走的玛蒂克"
+next = "a2_piyale"
+requires = [{ kind = "cash", ge = 1000 }]
+hint = "你的钱袋装不下这一库房的树脂。"
+effects = [{ kind = "cash", value = -1000 }, { kind = "flag", flag = "c13_free_mediterranean_a_mastic" }]
+reply = "库房里的玛蒂克一块块像冻住的眼泪。代理人卖得很便宜，像怕“我”反悔。"
+
+[[tracks.chapters.choices]]
+key = "eleni"
+text = "先去南边的树园，问问割树脂的人怎么想"
+next = "a2_piyale"
+effects = [{ kind = "affinity", person = "eleni", value = 3 }]
+reply = "埃莱妮说树园换了主人，树还是那些树。她只想知道新主人认不认旧的工钱账。"
+
+# 复活节的舰队：八十条加莱船进港，没有开炮。
+[[tracks.chapters]]
+key = "a2_piyale"
+title = "复活节的舰队"
+text = "复活节那天，八十条加莱船进了希俄斯的港口。皮雅利帕夏没有开炮，派人上岸收钥匙。桨手的歌声顺着水面一阵一阵传过来，码头上的人听不清词，只看见船头的旗。马奥纳的老爷们被请上船，说是去伊斯坦布尔面见苏丹，后来才知道是去卡法。树园里的人照常割树皮，树干上的刀口一道一道，没有停。一个通事站在船舷下喊：“皮雅利帕夏只要钥匙，不要人命。谁还留在岛上，自己说。”“我”的船停在港里最外的一排，所有人都看得见。奥斯曼的书记第一件事，是去抄玛蒂克树园的名册。书记对码头上的“我”说：“树还是这些树，税换个人收。船长，你船上装的什么？”"
+window = [[1566, 4, 1], [1566, 5, 31]]
+at = "chios"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["piyale_pasha", "eleni"]
+news = "希俄斯的人说，复活节那天来了八十条加莱船，热那亚的老爷们被请上船去了卡法，树园里照样割树皮。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_mastic"
+when = [{ kind = "flag", flag = "c13_free_mediterranean_a_mastic" }]
+text = "复活节那天，八十条加莱船进了希俄斯的港口。皮雅利帕夏没有开炮，派人上岸收钥匙。桨手的歌声顺着水面一阵一阵传过来，码头上的人听不清词，只看见船头的旗。马奥纳的老爷们被请上船，说是去伊斯坦布尔面见苏丹，后来才知道是去卡法。树园里的人照常割树皮，树干上的刀口一道一道，没有停。一个通事站在船舷下喊：“皮雅利帕夏只要钥匙，不要人命。谁还留在岛上，自己说。”“我”的船停在港里最外的一排，所有人都看得见。奥斯曼的书记第一件事，是去抄玛蒂克树园的名册。“我”舱里那一库玛蒂克，突然成了全岛最后一批热那亚货。书记对码头上的“我”说：“树还是这些树，税换个人收。船长，你船上装的什么？”"
+
+[[tracks.chapters.choices]]
+key = "smuggle"
+text = "趁夜把马奥纳的账册和一家人送出港"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_mediterranean_a_hired" }]
+check = { attr = "seamanship", base = 20, per = 7 }
+hint = "你没接马奥纳的活，他们的人不会上你的船。"
+effects = [{ kind = "flag", flag = "c13_free_mediterranean_a_mahona" }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-main_free_mediterranean_a-a2_piyale", title = "复活节夜里的账册" }]
+reply = "一家人在船舱里一直握着那箱账册。到希俄斯看不见了，才哭出来。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "ottoman", value = -2 }]
+news = "希俄斯港的人说，一条小船刚出防波堤就被巡船叫住，账册收走了，人没事。书记说，账比人有用。"
+
+[[tracks.chapters.choices]]
+key = "trade"
+text = "上皮雅利的船，把玛蒂克的买卖接过来谈"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "reputation", faction = "ottoman", value = 2 }, { kind = "cash", value = 1500 }]
+reply = "书记把“我”的船名记进新的名册，说明年割树脂时再来。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "ottoman", value = 1 }]
+news = "希俄斯的商馆里说，苏丹的书记客客气气听完，摇头说玛蒂克归厨房与后宫，外人只能在港口买零碎。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "待在港里，看这座岛换主人"
+next = "done"
+effects = []
+reply = "一天之内，商馆的门牌换了，钟楼的钟没换。"
+
+# 迪耶普的两边：胡格诺派要人去英格兰，天主教商人要粮去鲁昂。
+[[tracks]]
+key = "main_free_atlantic_europe_a"
+name = "迪耶普的两边"
+kind = "main"
+start = "a1_offer"
+auto = true
+cast = ["guillaume_le_testu", "pierre_cardon"]
+
+[[tracks.chapters]]
+key = "a1_offer"
+title = "勒泰斯蒂的地图集"
+text = "春天的迪耶普，胡格诺派占了城，教堂里的圣像被搬走了一半。勒阿弗尔来的领航员勒泰斯蒂在一家客栈里摊开他的地图集——一页一页画着南方的海岸、长着怪兽的大陆。他是新教徒，也是国王的领航员。城里的胡格诺派要船去英格兰接援兵，门口一个青年说：“英格兰的船，给了钱就来。”城外，替王军运粮去鲁昂的天主教商人也在找船，粮商把算盘一拍：“鲁昂的粮，一袋也不能烂在船上。”勒泰斯蒂用指甲在图上划了一道线：“我画的海，天主教徒和胡格诺派都要走。海不信教。”他说两边找的其实是同一条航道，只是方向相反。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1562, 4, 1] }]
+at = "dieppe"
+speaker = "captain"
+mood = "tense"
+cast = ["guillaume_le_testu"]
+deadline = [1562, 8, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "huguenot"
+text = "替胡格诺派去英格兰接人"
+next = "a2_rouen"
+effects = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_huguenot" }, { kind = "reputation", faction = "england", value = 2 }]
+reply = "他们给了“我”一封给伊丽莎白大臣的信，信封上的火漆还是热的。"
+
+[[tracks.chapters.choices]]
+key = "catholic"
+text = "替王军运粮到鲁昂城外"
+next = "a2_rouen"
+effects = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_catholic" }, { kind = "reputation", faction = "france", value = 2 }]
+reply = "粮商在“我”的船帆上缝了一个小小的百合花，说过塞纳河口时用得上。"
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "谁的船都不开，只买勒泰斯蒂一张海图的副本"
+next = "a2_rouen"
+requires = [{ kind = "cash", ge = 800 }]
+hint = "你付不起一本地图集里的一张图。"
+effects = [{ kind = "cash", value = -800 }, { kind = "chart", region = "english_channel" }, { kind = "skill", skill = "cartography", value = 20 }]
+reply = "他画副本画了三天，把怪兽都省掉了。他说：“你用不着它们。”"
+
+# 鲁昂城下：王军攻城，逃难的人挤在码头上，一个印书匠背着一块木版。
+[[tracks.chapters]]
+key = "a2_rouen"
+title = "鲁昂城下"
+text = "秋天，王军围了鲁昂，炮声顺着塞纳河传到海边，一下一下，像有人在远处敲鼓。迪耶普的码头上挤满了从鲁昂逃出来的人，抱着包袱，有的还穿着睡衣。英格兰的援兵到了勒阿弗尔，没到鲁昂。英格兰的水手站在船头喊：“只收带得动的！”一个老妇人把铺盖扔在码头上，回头去抱孙子。一个孩子坐在包袱上，怎么哄也不肯起来。逃难的人里有一个印书匠，背上背着的是一块刻好的木版，衣服早丢在了路上。他冲船上的人喊：“衣服丢了不要紧，这块版丢了，那本书就没有了。”勒泰斯蒂站在他身后，把一卷图稿塞进“我”的手里，图稿外面包着油布。“我”没问他要去哪里。"
+window = [[1562, 9, 15], [1562, 11, 15]]
+at = "dieppe"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["guillaume_le_testu"]
+news = "迪耶普的人说，鲁昂城破以后，码头上全是逃难的人，有个印书匠背着一块木版就上了去英格兰的船。"
+
+[tracks.chapters.default]
+next = "a3_havre"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "refugees"
+text = "把逃出鲁昂的一家人送到英格兰"
+next = "a3_havre"
+requires = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_huguenot" }]
+check = { attr = "seamanship", base = 35, per = 6 }
+hint = "胡格诺派不认识你，他们不敢上你的船。"
+effects = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_refugees" }, { kind = "reputation", faction = "england", value = 2 }]
+reply = "印书匠在多佛上岸时，先把木版放在沙滩上，再回头扶他的妻子。"
+
+[tracks.chapters.choices.fail]
+next = "a3_havre"
+effects = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_refugees" }]
+news = "迪耶普的人说，海峡里起了雾，载难民的船晚到了两天，一家人在甲板上冻了两夜，好在都活着。"
+
+[[tracks.chapters.choices]]
+key = "grain"
+text = "押最后一船粮去王军的营"
+next = "a3_havre"
+requires = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_catholic" }]
+hint = "王军的粮官不认识你。"
+effects = [{ kind = "reputation", faction = "france", value = 2 }, { kind = "cash", value = 1200 }]
+reply = "粮官说这一船到得正好，城破那天营里没断粮。“我”在营外看见了从城里抬出来的伤兵。"
+
+[[tracks.chapters.choices]]
+key = "charts"
+text = "帮勒泰斯蒂把图稿藏到你的船上"
+next = "a3_havre"
+effects = [{ kind = "skill", skill = "cartography", value = 20 }, { kind = "memory", memory = "mem-main_free_atlantic_europe_a-a2_rouen", title = "勒泰斯蒂的图稿" }]
+reply = "他把图稿用油布包了三层，说等仗打完再来取。“我”等了一年，他才来。"
+
+# 勒阿弗尔的夏天：目击。英格兰守军染疫投降，修门的木匠只说先把门装上。
+[[tracks.chapters]]
+key = "a3_havre"
+title = "勒阿弗尔的夏天"
+text = "勒阿弗尔的城墙上换了旗：英格兰的守军染了疫，七月底开城投降，法国的天主教徒和胡格诺派一起把英格兰人赶走了。码头上，从瓜纳巴拉湾回来的木匠皮埃尔在修一扇被炮打坏的门。门框上还留着两种颜色的漆，一种是天主教徒刷的，一种是胡格诺派刷的。木匠皮埃尔（转述）：“先把门装上。谁砸的，以后再说。”"
+window = [[1563, 7, 1], [1563, 9, 30]]
+at = "le_havre"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["pierre_cardon", "guillaume_le_testu"]
+news = "勒阿弗尔的人说，英格兰守军染了疫投降了，一年前还互相打的两边一起把他们送上了船。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_refugees"
+when = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_refugees" }]
+text = "勒阿弗尔的城墙上换了旗：英格兰的守军染了疫，七月底开城投降，法国的天主教徒和胡格诺派一起把英格兰人赶走了。码头上，从瓜纳巴拉湾回来的木匠皮埃尔在修一扇被炮打坏的门。门框上还留着两种颜色的漆。那个背木版的印书匠从英格兰寄来一张印好的纸，是那本书的第一页。木匠皮埃尔（转述）：“先把门装上。谁砸的，以后再说。”"
+
+# 卡罗琳堡 (美洲 a)
+[[tracks]]
+key = "main_free_americas_a"
+name = "卡罗琳堡"
+kind = "main"
+start = "a1_offer"
+auto = true
+cast = ["pedro_menendez_aviles", "jean_ribault"]
+
+[[tracks.chapters]]
+key = "a1_offer"
+title = "饿肚子的法国人"
+text = "佛罗里达的海岸，提姆夸人的村子，棕榈叶的屋顶。北边圣约翰河上的卡罗琳堡里，法国胡格诺派殖民者饿了一个冬天，派人来村里换玉米。提姆夸的老妇人一边磨玉米一边说：“白人一来，玉米就贵。”石磨的声音和海浪搅在一起。一条狗躺在门口，尾巴拍着地。哈瓦那那边的西班牙人在传：今年夏天要派一支大舰队来“清理”佛罗里达。法国使者搓着手，眼睛盯着“我”的船：“玉米，什么价都行。还有……你从哈瓦那来，听说了什么？”他说援军也在海上，两支舰队，谁先到，谁活。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1565, 5, 1] }]
+at = "st_augustine"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1565, 8, 25]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "feed"
+text = "把船上的玉米和咸鱼卖给卡罗琳堡"
+next = "a2_hurricane"
+effects = [{ kind = "cash", value = 600 }, { kind = "reputation", faction = "france", value = 2 }]
+reply = "法国人连夜把粮食搬上小艇。有个孩子抱着一条咸鱼，不肯撒手。"
+
+[[tracks.chapters.choices]]
+key = "warn"
+text = "把西班牙舰队要来的消息告诉法国人"
+next = "a2_hurricane"
+effects = [{ kind = "flag", flag = "c13_free_americas_a_warned" }, { kind = "reputation", faction = "france", value = 2 }]
+reply = "使者听完脸色发白，问“我”有多少条船、什么时候到。“我”只知道“今年夏天”。"
+
+[[tracks.chapters.choices]]
+key = "trade"
+text = "只跟提姆夸人换东西，不管两边的白人"
+next = "a2_hurricane"
+effects = [{ kind = "cash", value = 400 }]
+reply = "提姆夸的头人用玉米换了“我”的铁锅，又问“我”：法国人和西班牙人，哪个会留下？"
+
+# 风暴与河口：梅嫩德斯建城，里博的船被风推上沙洲。
+[[tracks.chapters]]
+key = "a2_hurricane"
+title = "风暴与河口"
+text = "九月初，梅嫩德斯在提姆夸人的村子旁上岸，插旗，建城，取名圣奥古斯丁。法国人的里博带着舰队南下要打他，偏偏遇上风暴，船都冲上了沙洲。梅嫩德斯冒雨从陆路北上，打下了卡罗琳堡。风暴过后，沙洲上爬满了从船上下来的法国人。河对岸，一个妇人抱着孩子蹚水过来，水没过了膝盖。她的鞋早丢了，光着脚踩在沙子上。“我”的小艇在河口等着。梅嫩德斯站在新城的木桩前，书记问他：“沙洲上那些人怎么办？”梅嫩德斯只说：“先让他们把船拖上岸。”他又对着旗杆说：“插旗。这一片海岸，从今天起有名字了。”风把里博的船推上沙洲，同一场风，替梅嫩德斯开了路。"
+window = [[1565, 9, 1], [1565, 10, 15]]
+at = "st_augustine"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["pedro_menendez_aviles", "jean_ribault"]
+news = "哈瓦那的人说，佛罗里达起了一座叫圣奥古斯丁的新城，北边法国人的堡没了，南边有个河口从此叫“屠杀”。"
+
+[tracks.chapters.default]
+next = "a3_inlet"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "evacuate"
+text = "风暴前把卡罗琳堡的妇孺接上船"
+next = "a3_inlet"
+requires = [{ kind = "flag", flag = "c13_free_americas_a_warned" }]
+check = { attr = "seamanship", base = 20, per = 7 }
+hint = "法国人不知道你会来，堡里的人不会把孩子交给一条陌生的船。"
+effects = [{ kind = "flag", flag = "c13_free_americas_a_evacuated" }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-main_free_americas_a-a2_hurricane", title = "风暴前的河口" }]
+reply = "船出河口时，堡里的钟在响。孩子们一直数着岸上的棕榈树，数到看不见。"
+
+[tracks.chapters.choices.fail]
+next = "a3_inlet"
+effects = [{ kind = "flag", flag = "c13_free_americas_a_evacuated" }]
+news = "圣约翰河口的人说，风来得比预料的早，一条船只接上了一船人，差点在河口翻掉。"
+
+[[tracks.chapters.choices]]
+key = "rescue"
+text = "风暴后去南边的沙洲，救起里博的落水者"
+next = "a3_inlet"
+check = { attr = "seamanship", base = 5, per = 8 }
+effects = [{ kind = "flag", flag = "c13_free_americas_a_rescued" }, { kind = "flag", flag = "c13_free_lever_H25" }, { kind = "reputation", faction = "spain", value = -2 }]
+reply = "小艇上救起了十几个人。有一个手里还攥着一本湿透的赞美诗集。"
+
+[tracks.chapters.choices.fail]
+next = "a3_inlet"
+effects = []
+news = "圣约翰河口的人说，沙洲边的浪太大，小艇靠不上去，西班牙人的队伍从北边走过来了，救人的船只好掉头。"
+
+[[tracks.chapters.choices]]
+key = "spain"
+text = "向梅嫩德斯报到，替新城运补给"
+next = "a3_inlet"
+effects = [{ kind = "reputation", faction = "spain", value = 3 }]
+reply = "梅嫩德斯的书记把“我”记进新城的第一本账，“我”的船名排在第三行。"
+
+# 叫“屠杀”的河口：目击。
+[[tracks.chapters]]
+key = "a3_inlet"
+title = "叫“屠杀”的河口"
+text = "冬天，圣奥古斯丁的木头城墙立起来了，教堂是一座茅草顶的小屋。南边那个河口，西班牙人自己管它叫“马坦萨斯”，屠杀。提姆夸的孩子们在海滩上捡法国人的扣子。一个提姆夸孩子把捡来的扣子串成了项链，戴在脖子上，谁的扣子，他自己也不知道。提姆夸的老人对着海滩摆手：“先来的穿蓝衣服，后来的穿红衣服。都说会留下。”"
+window = [[1565, 10, 16], [1566, 1, 31]]
+at = "st_augustine"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["pedro_menendez_aviles"]
+news = "圣奥古斯丁的人说，南边那个河口他们自己都叫它“屠杀”，提姆夸的孩子在海滩上捡法国人的扣子。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_hold"
+when = [{ kind = "flag", flag = "h25_fort_caroline_french_settlement_survives" }]
+text = "冬天，圣奥古斯丁没有立起来。法国人守住了卡罗琳堡，梅嫩德斯退回了哈瓦那。河口边只剩一座烧了一半的茅草教堂，门框上挂着一串提姆夸人编的草绳。海滩上的贝壳堆得比人还高，孩子们在上面跑来跑去。风从海上吹来，把贝壳吹得叮当响。提姆夸的老人对着北边摆手：“先来的穿蓝衣服，后来的穿红衣服。这一回，先来的还在。”"
+
+[[tracks.chapters.variants]]
+key = "v2_evacuated"
+when = [{ kind = "flag", flag = "c13_free_americas_a_evacuated" }]
+text = "冬天，圣奥古斯丁的木头城墙立起来了，教堂是一座茅草顶的小屋。南边那个河口，西班牙人自己管它叫“马坦萨斯”，屠杀。提姆夸的孩子们在海滩上捡法国人的扣子。“我”接走的那一船人里，有个孩子后来在哈瓦那当了领航。提姆夸的老人对着海滩摆手：“先来的穿蓝衣服，后来的穿红衣服。都说会留下。”"
+
+[[tracks.chapters.variants]]
+key = "v3_rescued"
+when = [{ kind = "flag", flag = "c13_free_americas_a_rescued" }]
+text = "冬天，圣奥古斯丁的木头城墙立起来了，教堂是一座茅草顶的小屋。南边那个河口，西班牙人自己管它叫“马坦萨斯”，屠杀。提姆夸的孩子们在海滩上捡法国人的扣子。沙洲上救起的人里，有一个托“我”把那本湿透的赞美诗集带回迪耶普。提姆夸的老人对着海滩摆手：“先来的穿蓝衣服，后来的穿红衣服。都说会留下。”"
+
+[[tracks]]
+key = "main_free_east_asia_b"
+name = "堺的铅"
+kind = "main"
+start = "b1_offer"
+auto = true
+cast = ["sen_rikyu"]
+
+# 宗易的秤：堺的茶人要铅，甲斐的商人也要铅。铅锭里夹着石头。
+[[tracks.chapters]]
+key = "b1_offer"
+title = "宗易的秤"
+text = "堺的鱼仓后头有一间小茶室，主人宗易，后来的千利休，一边烧水一边称一块铅。炭炉边的小童扇着火，火星子跳到了席子上，他忙着去拍。铅锭上有外国的戳记，是暹罗来的。宗易说织田家要的铳弹以千计，堺的铅不够。同一天，一个甲斐口音的商人在码头上打听谁能运铅，出价高得离谱。甲斐人的随从站在门外，一步也不进来。宗易：“铅和茶，我用一杆秤。称不准的东西，我不买。”甲斐的商人：“价钱你说。船，别挂堺的旗。”宗易称完铅，又称了一撮茶叶，两样东西都按同一杆秤称。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1575, 1, 15] }]
+at = "sakai"
+speaker = "captain"
+mood = "tense"
+cast = ["sen_rikyu"]
+deadline = [1575, 4, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "rikyu"
+text = "答应宗易：从外面运铅来，照他的秤"
+next = "b2_lead"
+effects = [{ kind = "flag", flag = "c13_free_east_asia_b_rikyu" }]
+reply = "宗易给“我”倒了一碗茶。茶碗是修补过的，金缮的纹像一条河。"
+
+[[tracks.chapters.choices]]
+key = "kai"
+text = "答应甲斐人：铅照他出的价"
+next = "b2_lead"
+effects = [{ kind = "flag", flag = "c13_free_east_asia_b_kai" }]
+reply = "甲斐人留下一枚武田家的通行木札，说到了骏河的清水港，有人认这块牌子。"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不做铅的生意"
+next = "done"
+effects = []
+reply = "宗易点点头，把那块暹罗铅收进柜子：“那就喝完这碗。”"
+
+# 一船暹罗的铅：限期交货。铅都要在这一章卸下，选的是卖给谁。
+[[tracks.chapters]]
+key = "b2_lead"
+title = "一船暹罗的铅"
+text = "入梅前的堺，码头上铁炮的试射声一阵一阵。“我”的船卸下铅锭，宗易的伙计和甲斐人的手下都在码头上等。秤杆是宗易那一杆，秤盘一锭一锭压下去，翘得很慢。甲斐人的手下在旁边数车，嘴里嘀咕：“快点，天黑前要上路。”宗易的伙计不理他，只说：“秤准了，才好交货。”过秤的时候，一锭铅轻了些，伙计捏起来一掂：“这一锭轻了，里头有东西。”两边都不先开口。秤上的星子一颗颗停住了。我（心里）：这一锭要是到了战场上，就是一颗哑弹。"
+at = "sakai"
+speaker = "captain"
+mood = "tense"
+cast = []
+objectives = [{ kind = "goods", good = "lead", qty = 10, at = "sakai", text = "把铅运到堺" }]
+deadline = [1575, 6, 25]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "sen_rikyu", text = "铅另找了一条唐人船运来。宗易在信末只写了一句：秤还给你留着。" }]
+
+[[tracks.chapters.choices]]
+key = "to_oda"
+text = "把铅交给宗易，剔掉那一锭"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_east_asia_b_rikyu" }]
+hint = "你答应的不是宗易。"
+effects = [{ kind = "cash", value = 500 }, { kind = "reputation", faction = "oda", value = 2 }, { kind = "reputation", faction = "sakai", value = 2 }, { kind = "memory", memory = "mem-main_free_east_asia_b-b2_lead", title = "宗易的秤" }]
+reply = "宗易把那锭掺石头的铅留下，说要拿它压茶室的门。"
+
+[[tracks.chapters.choices]]
+key = "to_kai"
+text = "把铅交给甲斐人，连那一锭一起"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_east_asia_b_kai" }]
+hint = "你答应的不是甲斐人。"
+effects = [{ kind = "cash", value = 1400 }, { kind = "reputation", faction = "takeda", value = 2 }, { kind = "flag", flag = "c13_free_lever_H43" }]
+reply = "甲斐人连秤都没过，叫人直接抬上马。“我”看着那锭掺石头的铅也被抬走了。"
+
+[[tracks.chapters.choices]]
+key = "foundry"
+text = "两边都不给，按市价卖给堺的铸物师打锅"
+next = "done"
+effects = [{ kind = "cash", value = 500 }]
+reply = "铸物师说这铅好，打锅不漏。第二年“我”在一个渔村里看见了那口锅。"
+
+[[tracks]]
+key = "main_free_southeast_asia_b"
+name = "湄南河的水门"
+kind = "main"
+start = "b1_offer"
+auto = true
+cast = ["bayinnaung"]
+
+# 围城的米价：王宫要米，雇佣兵要人，缅甸营里也有人问价。
+[[tracks.chapters]]
+key = "b1_offer"
+title = "围城的米价"
+text = "旱季的大城，城外是莽应龙的营盘，河上漂着烧过的船板。城里一斗米的价一天一变。葡萄牙雇佣兵的头目来码头找船——他们替暹罗王守城，家眷挤在外国人的街区里。码头的石板上蹲着一个孩子，看着河水发呆。王宫的人也来，要米，要火绳枪。头目：“我们守墙，家里人不能跟着守。船长，你的船能装几个孩子？”王宫的官员：“米，枪，什么都要。价钱你开。水门要是开了，城里不会说是谁开的。”围城那头的缅甸营里，也有人借着河上的雾来问价，开的价比王宫高出一截。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1568, 11, 1] }]
+at = "ayutthaya_port"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1569, 4, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "grain"
+text = "答应王宫：装米和枪，从水门送进城"
+next = "b2_fall"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_b_grain" }]
+reply = "官员给了一块王宫的通行牌，说夜里水门开一刻钟。"
+
+[[tracks.chapters.choices]]
+key = "families"
+text = "答应雇佣兵：先把家眷接出去"
+next = "b2_fall"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_b_families" }]
+reply = "头目把一张名单塞给“我”，四十多个名字，一半是孩子。"
+
+[[tracks.chapters.choices]]
+key = "burmese"
+text = "把火绳枪卖给缅甸营里来的人"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_course_trade" }]
+hint = "你不是只认价钱的买卖人，这笔生意你开不了口。"
+effects = [{ kind = "cash", value = 2000 }, { kind = "reputation", faction = "taungoo", value = 2 }]
+reply = "枪在夜里交割，缅甸人付的是银锭。第二天“我”就离开了湄南河口。"
+
+# 水门开一刻钟：雨季的大城，城门要从里面打开。
+[[tracks.chapters]]
+key = "b2_fall"
+title = "水门开一刻钟"
+text = "雨季来了，河水涨到城墙脚下，围城的人和守城的人都泡在水里。莽应龙的营盘往高处挪了，炮还在打。夜里，水门开一刻钟。守水门的老兵身上披着湿透的蓑衣，手里的灯笼只剩一小截火苗，隔着栅门喊：“一刻钟。船进来，或者船出去，别两样都想。别回头看对岸的火把，看了，门就关得快。”水门那一刻钟里，“我”看见城里有人在往外递信，递给缅甸营的方向。纸条裹在一根木签上，被人从墙头的缝里塞了出来。“我”把船往水门边靠了靠，船帮擦着石墙，发出一阵闷响。守门的人伸手接过木签，连看都没看就塞进了袖子里。墙头上一个压着嗓子的声音说：“替我的孩子留一口米。”"
+window = [[1569, 6, 1], [1569, 8, 31]]
+at = "ayutthaya_port"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["bayinnaung"]
+news = "从湄南河口出来的船说，大城撑到雨季末，还是开了城门，暹罗王被带去了勃固。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "feed"
+text = "趁水门开的那一刻钟，把米送进城"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_southeast_asia_b_grain" }]
+check = { attr = "command", base = 20, per = 7 }
+hint = "你答应的不是王宫，水门不会为你开。"
+effects = [{ kind = "flag", flag = "c13_free_lever_H34" }, { kind = "reputation", faction = "ayutthaya", value = 3 }]
+reply = "米袋一袋袋传进水门。守城的人没说谢，只说“明晚还开”。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "ayutthaya", value = 1 }]
+news = "大城水门边的人说，米只送进去一半，另一半连船一起被炮打沉了，守城的人没再问是谁送的。"
+
+[[tracks.chapters.choices]]
+key = "evacuate"
+text = "趁夜把雇佣兵的家眷接上船"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_southeast_asia_b_families" }]
+check = { attr = "seamanship", base = 20, per = 7 }
+hint = "你手里没有那张名单，水门边的人不认你。"
+effects = [{ kind = "fame", value = 1 }, { kind = "memory", memory = "mem-main_free_southeast_asia_b-b2_fall", title = "水门里递出来的孩子" }]
+reply = "四十多个人挤在舱里，孩子们一声不吭。船出河口时，天刚亮。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = []
+news = "湄南河口的人说，一条船只接上了二十几个人，名单上剩下的名字，后来再也没人找到。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "不等了，离开湄南河口"
+next = "done"
+effects = []
+reply = "船出河口时，身后的城里有一处火光，不知道是做饭还是失火。"
+
+[[tracks]]
+key = "main_free_indian_ocean_b"
+name = "辩论之屋的书"
+kind = "main"
+start = "b1_offer"
+auto = true
+cast = []
+
+# 皇帝想听所有人说话：苏拉特的书吏要书，也要人。
+[[tracks.chapters]]
+key = "b1_offer"
+title = "皇帝想听所有人说话"
+text = "雨季前的苏拉特，港口上挤满了阿拉伯船和中国的帆。海关的台阶上坐着一个从法塔赫布尔·西克里来的书吏，拿着阿布勒·法兹勒的信：皇帝在新城里盖了一座“礼拜之屋”，每个星期四晚上请各教的学者来辩，要书，要会说话的人，什么教都行。书吏说皇帝自己不识字，可听得比谁都认真，信纸被风吹得翻页，他用一块石头压住。书吏：“皇帝不识字，可他记得每一个人说过的话。你带来的书，有人会念给他听。”他又说，上个星期四，两个毛拉在皇帝面前吵到动手，皇帝笑了一整夜。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1575, 6, 1] }]
+at = "surat"
+speaker = "captain"
+mood = "cheerful"
+cast = []
+deadline = [1576, 5, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去找书，也找愿意去辩的人"
+next = "b2_books"
+effects = [{ kind = "flag", flag = "c13_free_indian_ocean_b_people" }]
+reply = "书吏给了“我”一张盖着御印的路条，说到了西克里，凭这个进城。"
+
+[[tracks.chapters.choices]]
+key = "books"
+text = "只运书，不带人"
+next = "b2_books"
+effects = []
+reply = "书吏有点失望，还是给了路条：“书也会说话。”"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不接这桩生意"
+next = "done"
+effects = []
+reply = "书吏把信收好，说下一条船会答应的。"
+
+# 一箱各种各样的书：限期交货，书要在这一章交出。
+[[tracks.chapters]]
+key = "b2_books"
+title = "一箱各种各样的书"
+text = "苏拉特的海关，书箱一只只抬上岸，书吏一本本翻：波斯文的诗、拉丁文的福音、梵文的抄本，还有“我”从各港口收来的杂书。一只木箱撬开，里面是一本被虫蛀过的梵文抄本，纸页薄得像蝉翼，书吏捏着角，生怕它碎。附近纳夫萨里的一位祆教老祭司也来了，他听说皇帝要听拜火的人怎么说。老祭司：“火不说话，可它听得见。皇帝要是肯听，我就去。”书吏翻到一本“我”自己也看不懂的书，指着问：“它说的是什么？”“我”答不上来。"
+at = "surat"
+speaker = "captain"
+mood = "cheerful"
+cast = []
+objectives = [{ kind = "goods", good = "books", qty = 10, at = "surat", text = "把书运到苏拉特" }]
+deadline = [1579, 6, 30]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "abul_fazl", text = "皇帝的书已经由别人送到。信末说，礼拜之屋的星期四照旧，还给你留着一把椅子。" }]
+
+[[tracks.chapters.choices]]
+key = "priest"
+text = "连书带人：请纳夫萨里的老祭司同去"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_indian_ocean_b_people" }]
+hint = "你只答应了运书，路条上没写人。"
+effects = [{ kind = "cash", value = 3200 }, { kind = "reputation", faction = "mughal", value = 3 }]
+reply = "老祭司上车前把一小撮圣火的灰包进布里，说进宫要带着家里的火。"
+
+[[tracks.chapters.choices]]
+key = "latin"
+text = "把从果阿收来的拉丁书放在最上面"
+next = "done"
+requires = [{ kind = "reputation", faction = "portugal", ge = 10 }]
+hint = "果阿的神父们不认得你，拉丁书收不到手。"
+effects = [{ kind = "cash", value = 3200 }, { kind = "reputation", faction = "mughal", value = 2 }, { kind = "reputation", faction = "portugal", value = 1 }]
+reply = "书吏说皇帝早想听基督徒怎么说。这箱书会让果阿的人坐不住。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "只交书，按书吏开的价结账"
+next = "done"
+effects = [{ kind = "cash", value = 4000 }]
+reply = "书吏付钱很痛快，临走问“我”：你自己信什么？“我”没答。"
+
+[[tracks]]
+key = "main_free_mediterranean_b"
+name = "冲过封锁"
+kind = "main"
+start = "b1_offer"
+auto = true
+cast = ["piyale_pasha"]
+
+# 坎迪亚的粮船：冬天的海，只为一船小麦。
+[[tracks.chapters]]
+key = "b1_offer"
+title = "坎迪亚的粮船"
+text = "秋天的坎迪亚，威尼斯的兵工厂日夜敲打。尼科西亚陷落的消息刚到，城里人压低了声音，说那边的事只能在酒馆里讲。克里特的威尼斯官员在召集船：冬天风大，奥斯曼的舰队多半回港过冬，正是把粮和兵运进法马古斯塔的时候。官员把一只铜墨水瓶往桌上一放：“冬天奥斯曼人回港。我们不回。”带船的是一个叫奎里尼的人。官员：“要的是不怕冬天的船长，不要不怕死的。”码头的石阶上结着一层盐霜，海浪一下一下拍上来。码头上的渔夫收起网，说今年冬天的鱼跑得早。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1570, 8, 1] }]
+at = "candia"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1570, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "convoy"
+text = "加入奎里尼的船队，冬天去法马古斯塔"
+next = "b2_blockade"
+effects = [{ kind = "flag", flag = "c13_free_mediterranean_b_convoy" }]
+reply = "官员在名单上添了“我”的船，叮嘱水手多备一身毛衣。"
+
+[[tracks.chapters.choices]]
+key = "grain"
+text = "出钱买下一船小麦交给他们，自己不去"
+next = "done"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "你凑不出一船小麦的钱。"
+effects = [{ kind = "cash", value = -1500 }, { kind = "reputation", faction = "venice", value = 3 }]
+reply = "小麦装上了别人的船。官员给了“我”一张收据，上面盖着圣马可的狮子。"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不去，冬天的海太冷"
+next = "done"
+effects = []
+reply = "官员耸耸肩，说春天还有别的仗可打。"
+
+# 一月的港口：奎里尼的船队冲进法马古斯塔，守将要把最小的孩子交给船长。
+[[tracks.chapters]]
+key = "b2_blockade"
+title = "一月的港口"
+text = "一月的海浪打在法马古斯塔的城墙上，港口外只剩几条奥斯曼的巡船，灯火一闪一闪，像在数奎里尼的船。奎里尼的船队趁风冲过去，城墙上的人举着火把，火光照得水面一片红。奎里尼在船头喊：“快卸，天亮前必须出去！”守将布拉加丁亲自到码头上接粮，披着一件旧斗篷，手一直在抖，他把手藏进斗篷底下。卸完粮，布拉加丁请船长们带走城里最小的孩子。他说：“粮够吃到夏天。夏天以后的事，交给天主。孩子们，交给你们。”一个裹着毯子的孩子仰头问：“船上有没有饼？”布拉加丁说春天奥斯曼人会带着更多的炮回来。水手们把最后一袋饼扔上了岸。城墙上没有人欢呼，只有人低头去接。"
+window = [[1571, 1, 15], [1571, 3, 15]]
+at = "famagusta"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["piyale_pasha"]
+news = "坎迪亚的人说，冬天有一支船队冲进了法马古斯塔，可城还是在八月开了门，守将的下场没人敢讲。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_holds"
+when = [{ kind = "flag", flag = "h35_cyprus_siege_famagusta_holds" }]
+text = "一月的海浪打在法马古斯塔的城墙上，港口外只剩几条奥斯曼的巡船，灯火一闪一闪，像在数奎里尼的船。奎里尼的船队趁风冲过去，城墙上的人举着火把，火光照得水面一片红。奎里尼在船头喊：“快卸，天亮前必须出去！”守将布拉加丁亲自到码头上接粮，披着一件旧斗篷，手一直在抖，他把手藏进斗篷底下。卸完粮，布拉加丁请船长们带走城里最小的孩子。他说：“粮够吃到夏天。夏天以后的事，交给天主。孩子们，交给你们。”一个裹着毯子的孩子仰头问：“船上有没有饼？”布拉加丁说春天奥斯曼人会带着更多的炮回来。水手们把最后一袋饼扔上了岸。城墙上没有人欢呼，只有人低头去接。城墙上的人说，今年夏天他们能守住。别人都不信，他们信。"
+
+[[tracks.chapters.choices]]
+key = "run"
+text = "跟着奎里尼冲进港口"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_mediterranean_b_convoy" }]
+check = { attr = "command", base = 5, per = 8 }
+hint = "你不在奎里尼的名单上，船队不会等你。"
+effects = [{ kind = "flag", flag = "c13_free_lever_H35" }, { kind = "reputation", faction = "venice", value = 3 }, { kind = "fame", value = 2 }]
+reply = "船擦着巡船的桨冲进港，城墙上的人在喊“我”听不懂的威尼斯土话。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "venice", value = 1 }]
+news = "坎迪亚的港口上说，冲到一半舵被打坏了，一条船被拖回了城里，粮是别的船卸进去的。"
+
+[[tracks.chapters.choices]]
+key = "children"
+text = "卸完粮，把城里最小的孩子带出去"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_mediterranean_b_convoy" }]
+hint = "船队的名单上没有你的船，卸粮的泊位不会留给你。"
+effects = [{ kind = "reputation", faction = "venice", value = 2 }, { kind = "memory", memory = "mem-main_free_mediterranean_b-b2_blockade", title = "法马古斯塔的孩子们" }]
+reply = "孩子们在船上不哭，只问哪天回家。到了坎迪亚，有个修女一个一个记下他们的名字。"
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "在外海等，看船队进得去进不去"
+next = "done"
+effects = []
+reply = "天亮时港口那边升起一道烟。过了半天，船队回来了，少了两条。"
+
+[[tracks]]
+key = "main_free_atlantic_europe_b"
+name = "刚果王的信"
+kind = "main"
+start = "b1_offer"
+auto = true
+cast = ["paulo_dias_novais", "alvaro_i_kongo", "sebastian_i"]
+
+# 罗安达的新墙：刚果王的使者在沙滩上等了一个月。
+[[tracks.chapters]]
+key = "b1_offer"
+title = "罗安达的新墙"
+text = "罗安达的海湾里，诺瓦伊斯的人在砌一座新堡，一边砌墙一边往船上装人——用链子拴着的人。总督的书记在台阶上登记人数，笔尖上的墨一滴一滴落在纸上。沙滩上的脚印一排排往船边去。一个刚果王阿尔瓦罗一世派来的使者在沙滩上等了一个月，手里一封用葡萄牙文写、封蜡压着十字的信，要送给里斯本的国王；他不肯把信交给总督的人。刚果使者：“国王的信，要国王的手拆。总督的手，会把它放进火里。”他把信的内容念了一句：“别再让商人把我的子民装上船。”"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1576, 2, 1] }]
+at = "luanda"
+speaker = "captain"
+mood = "tense"
+cast = ["paulo_dias_novais", "alvaro_i_kongo"]
+deadline = [1576, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "接下刚果王的信，答应送到里斯本"
+next = "b2_lisbon"
+effects = [{ kind = "item", item = "kongo_royal_letter", qty = 1 }]
+reply = "使者用三层树皮布把信包好，又在外面缠了一圈铜丝。他说铜丝是刚果王的手。"
+
+[[tracks.chapters.choices]]
+key = "governor"
+text = "先把信给诺瓦伊斯看"
+next = "done"
+effects = [{ kind = "reputation", faction = "portugal", value = 2 }]
+reply = "诺瓦伊斯看完信，把它锁进自己的箱子，说他会“转呈”。刚果使者第二天就走了。"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不卷进去，装完水就走"
+next = "done"
+effects = []
+reply = "使者没再说话，一直站在沙滩上，看着装人的船出港。"
+
+# 交到国王手里：限期送信，书记说国王只读跟打仗有关的信。
+[[tracks.chapters]]
+key = "b2_lisbon"
+title = "交到国王手里"
+text = "里斯本的王宫在河边，国王塞巴斯蒂安满脑子是摩洛哥的十字军，书记们忙着替他征兵、征船。“我”带着刚果王的信在宫门外等，铜丝已经锈了。卖橄榄的老头问：“那封信是给谁的？”“我”没答。远处的台阶上，年轻的国王骑马经过，没有回头。国王的书记从台阶上下来，手里夹着一摞文书：“刚果？国王这个月只听摩洛哥。你等明年吧。”书记说国王只读跟打仗有关的信。这封信里一个字也没提打仗。信纸的边角已经被雨水泡软了。"
+at = "lisbon"
+speaker = "captain"
+mood = "tense"
+cast = ["sebastian_i"]
+objectives = [{ kind = "item", item = "kongo_royal_letter", qty = 1, text = "带着刚果王的信到里斯本" }]
+deadline = [1578, 6, 20]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "item", item = "kongo_royal_letter", qty = -1 }]
+news = "里斯本的人说，有一封刚果王的信在路上走了两年，送到时国王已经去了摩洛哥。"
+
+[[tracks.chapters.choices]]
+key = "clerk"
+text = "把信交给国王的书记，看着他登记"
+next = "done"
+effects = [{ kind = "item", item = "kongo_royal_letter", qty = -1 }, { kind = "reputation", faction = "kongo", value = 3 }, { kind = "fame", value = 1 }]
+reply = "书记在登记簿上写下“刚果，信一封”，把它放在一摞信的最底下。"
+
+[[tracks.chapters.choices]]
+key = "jesuits"
+text = "交给耶稣会的神父，托他们在宫里说"
+next = "done"
+effects = [{ kind = "item", item = "kongo_royal_letter", qty = -1 }, { kind = "reputation", faction = "kongo", value = 2 }]
+reply = "神父读完信，在胸前画了十字，说他会在国王出征前找个机会。他没说找不找得到。"
+
+[[tracks.chapters.choices]]
+key = "read"
+text = "在码头上把信念给来往的人听"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "item", item = "kongo_royal_letter", qty = -1 }, { kind = "fame", value = 2 }, { kind = "reputation", faction = "portugal", value = -2 }]
+reply = "码头上的人越聚越多，有人骂，有人沉默。第二天港务官来找“我”，说国王的信不能在码头上念。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "item", item = "kongo_royal_letter", qty = -1 }, { kind = "reputation", faction = "portugal", value = -1 }]
+news = "里斯本码头上有人念刚果王的信，念到一半港务官就来赶人，信被收走了。"
+
+[[tracks]]
+key = "main_free_americas_b"
+name = "最后的印加"
+kind = "main"
+start = "b1_offer"
+auto = true
+cast = ["francisco_de_toledo", "tupac_amaru_i"]
+
+# 副王的战书：征兵的鼓，修士的请愿书。
+[[tracks.chapters]]
+key = "b1_offer"
+title = "副王的战书"
+text = "卡亚俄的码头上贴着副王的告示：比尔卡班巴的印加杀了副王的使者，从今天起是叛逆。征兵的鼓一天敲三遍，火药商人在港里抢船。军需官的账本摊在桌上，一排排的火药桶画得整整齐齐。一个多明我会的修士在码头边拦住“我”，手里一卷请愿书：他要有人把它送到库斯科去，求副王先谈，再打。他的鞋底磨穿了一半，走路一瘸一拐。修士说，请愿书上签名的人里，有一半是在比尔卡班巴有亲戚的混血儿。修士：“打下比尔卡班巴，不过是多一座空城。谈下来，是多几千个活人。”"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1572, 4, 1] }]
+at = "callao"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1572, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "powder"
+text = "把船上的火药卖给远征军"
+next = "b2_vilcabamba"
+effects = [{ kind = "cash", value = 1500 }, { kind = "reputation", faction = "peru", value = 2 }]
+reply = "军需官验货验得很仔细，付钱付得很慢。"
+
+[[tracks.chapters.choices]]
+key = "petition"
+text = "接下修士的请愿书"
+next = "b2_vilcabamba"
+effects = [{ kind = "flag", flag = "c13_free_americas_b_petition" }]
+reply = "修士把请愿书交过来时手在抖。他说从卡亚俄到库斯科，骑马要走半个月。"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不蹚这摊浑水"
+next = "b2_vilcabamba"
+effects = []
+reply = "征兵的鼓又敲了三遍，“我”在船舱里也听得见。"
+
+# 山那边的消息：比尔卡班巴空了。一个骡夫从山里下来。
+[[tracks.chapters]]
+key = "b2_vilcabamba"
+title = "山那边的消息"
+text = "卡亚俄的雾很浓，正是南半球的冬天。山那边的消息一阵一阵传下来：比尔卡班巴已经空了，印加王往森林里逃，追兵在后面。码头上的人说：“副王的人已经在库斯科的广场上搭好了台子。”雾里传来骡队的铃声，一串接一串，往海边的小港去了。一个修士坐在石墩旁边，把请愿书摊在膝盖上，一个字一个字地数，数到最后一页，又从头数。风一吹，纸页翻过去，他又用手压住。一个从山里下来的骡夫坐在石墩上，抽着烟，不肯往人堆里走。他抽完一根，又点上一根，说：“他们抓到他了。在河边，跟他怀孕的妻子一起。”"
+window = [[1572, 7, 1], [1572, 9, 20]]
+at = "callao"
+stage = "involve"
+speaker = "captain"
+mood = "sad"
+cast = ["francisco_de_toledo", "tupac_amaru_i"]
+news = "卡亚俄的人说，比尔卡班巴的最后一个印加王被押去了库斯科，副王的人在广场上搭好了台子，全城的人都被叫去看。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_survives"
+when = [{ kind = "flag", flag = "h41_vilcabamba_vilcabamba_survives" }]
+text = "卡亚俄的雾很浓，正是南半球的冬天。谈判的使者已经进了山，码头上的人说：“今年的征兵鼓敲得没那么凶了。”山那边的消息一阵一阵传下来：比尔卡班巴那边还在打，印加王的人守着山口，副王的书记每天在库斯科数人头。雾里传来骡队的铃声，一串接一串，往海边的小港去了。一个修士坐在石墩旁边，把请愿书摊在膝盖上，一个字一个字地数。一个从山里下来的骡夫坐在码头的石墩上，抽着烟，他说：“山口的人在等一封信。”他抽完最后一口，把烟头按在石墩上。“我”的船在港里等了两天，没有人来买火药。"
+
+[[tracks.chapters.choices]]
+key = "plead"
+text = "骑马把请愿书送去库斯科"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_americas_b_petition" }]
+check = { attr = "eloquence", base = 5, per = 8 }
+hint = "你手里没有那卷请愿书。"
+effects = [{ kind = "flag", flag = "c13_free_lever_H41" }, { kind = "reputation", faction = "vilcabamba", value = 3 }]
+reply = "书记收下了请愿书，说副王会看。“我”在库斯科的广场边等了三天。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "vilcabamba", value = 1 }]
+news = "请愿书送到时，副王的书记说，副王不收没有王室印章的东西，那卷纸又被退回了卡亚俄。"
+
+[[tracks.chapters.choices]]
+key = "supply"
+text = "替远征军运最后一批补给上岸"
+next = "done"
+effects = [{ kind = "reputation", faction = "peru", value = 2 }, { kind = "cash", value = 800 }]
+reply = "补给卸在海边的小港，骡队接过去就走了，没人告诉“我”是送到哪里。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "离开卡亚俄，不等结果"
+next = "done"
+effects = []
+reply = "船出港时，雾里传来教堂的钟声，敲的是什么，“我”听不出来。"
+
+[[tracks]]
+key = "main_free_east_asia_c"
+name = "伊贺来的纸"
+kind = "main"
+start = "c1_offer"
+auto = true
+cast = ["tokugawa_ieyasu"]
+
+# 折了三折的纸：伊贺的逃兵要卖一条消息，也要一条船。
+[[tracks.chapters]]
+key = "c1_offer"
+title = "折了三折的纸"
+text = "入梅前的堺，雨下得黏。一个自称从伊贺逃出来的男人，前一年织田家平了伊贺，他在码头的酒屋里找到“我”，手里一张折了三折的纸，画着京都一座寺的院墙。茶碗里的茶早凉了，他也没碰。他的手指头上有烧伤的疤。他说明智日向守的兵月初要“往西”，可不一定往西。“我”问：“你要的是银子，还是船？”他回了一句：“要银子的人，等得起。要船的人，等不起。”伊贺人：“信长烧了我们的山。这张纸能救他，也能不救他——看你出多少。”我（心里）：他卖的哪是消息，分明是一条船。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1582, 3, 1] }]
+at = "sakai"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1582, 6, 14]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "买下那张纸，再给他一个船位"
+next = "c2_honnoji"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "你身上的银子买不下这张纸。"
+effects = [{ kind = "cash", value = -1500 }, { kind = "flag", flag = "c13_free_east_asia_c_paper" }]
+reply = "他拿了银子就上了“我”的船，躲在货舱里两天不出声。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "陪他喝酒，套出纸上画的是什么"
+next = "c2_honnoji"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_free_east_asia_c_paper" }]
+reply = "他醉了以后说出寺名，又哭又笑。“我”没给钱，给了他一个船位。"
+
+[tracks.chapters.choices.fail]
+next = "c2_honnoji"
+effects = []
+news = "堺的码头上说，伊贺来的男人喝到一半起了疑心，把纸揣回怀里，第二天再也没见过他。"
+
+[[tracks.chapters.choices]]
+key = "report"
+text = "把他交给堺的代官所"
+next = "c2_honnoji"
+effects = [{ kind = "reputation", faction = "oda", value = 2 }]
+reply = "代官所的人把他带走。那张纸被当成伊贺余党的乱画，扔进了火盆。"
+
+# 德川殿在堺：快马带来本能寺的火。德川的随从要走伊贺的山路。
+[[tracks.chapters]]
+key = "c2_honnoji"
+title = "德川殿在堺"
+text = "堺的会合众在宴请一位来游览的客人——三河的德川家康，带着几十个随从看南蛮船、喝茶。初二的早上（公历六月二十一日），京都方向来的快马带来消息：本能寺起了火。德川的随从们脸色变了，有人说要走伊贺的山路回去。随从里有人压低了声音：“快马是半夜到的，京都要是真的，三河也要变天。”堺的会所里挂着南蛮的地图，德川的人对着地图指来指去，茶碗还在手边，有人的茶已经凉了。随从：“山路有伊贺的残党，海路有九鬼的船。船长，你走过哪条？”“我”没有答，只看着桌上那只没人动过的茶碗。德川殿一句话也没说，只让人去备马。我（心里）：那张纸要是早送十天……"
+window = [[1582, 6, 15], [1582, 6, 25]]
+at = "sakai"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["tokugawa_ieyasu"]
+news = "堺的人说，本能寺烧起来那天早上，来游览的德川殿脸都白了，带着随从从伊贺的山里绕回了三河。"
+
+[tracks.chapters.default]
+next = "c3_after"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "warn"
+text = "（若来得及）派快马把那张纸送去京都"
+next = "c3_after"
+requires = [{ kind = "flag", flag = "c13_free_east_asia_c_paper" }]
+hint = "你手里没有那张纸，京都那边你一个人也不认识。"
+effects = [{ kind = "flag", flag = "c13_free_lever_H54" }, { kind = "flag", flag = "c13_free_east_asia_c_warned" }]
+reply = "快马出城时天还没亮。“我”在码头上等了一整天，等的是京都来的消息。"
+
+[[tracks.chapters.choices]]
+key = "sea"
+text = "用你的船把德川的人从海路送走"
+next = "c3_after"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_free_east_asia_c_ieyasu_sea" }, { kind = "reputation", faction = "matsudaira", value = 3 }]
+reply = "船过纪伊水道时，有个随从一直盯着岸上的烟。到伊势的海边，他们下船时一句话也没说，只留下一把扇子。"
+
+[tracks.chapters.choices.fail]
+next = "c3_after"
+effects = [{ kind = "reputation", faction = "matsudaira", value = 1 }]
+news = "堺的人说，风向不对，船出不了港。德川的人还是选了伊贺的山路，临走时有人朝船上拱了拱手。"
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "关上船舱，等京都的消息落定"
+next = "c3_after"
+effects = []
+reply = "三天里堺的码头上换了三种说法。第四天，有人说羽柴的兵已经在回来的路上了。"
+
+# 换了旗的会合众：目击。收矢钱的名单上，有几家前年还在给织田家运货。
+[[tracks.chapters]]
+key = "c3_after"
+title = "换了旗的会合众"
+text = "秋天的堺，会合众的屋檐下换了新的灯笼。山崎一战以后，羽柴家的使者来堺收矢钱，商人们一边骂一边交。码头上没人再提那天早上的事，只有茶室里还有人小声说起德川殿走的那条路。收钱的人拿着名单一家一家念。念到有几家，商人们互相看了一眼：前年还在给织田家运货的，就是这几家。会合众的老人（转述）：“谁坐天下，堺都要交钱。交给谁，这才要紧。”"
+window = [[1582, 7, 1], [1582, 10, 31]]
+at = "sakai"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["tokugawa_ieyasu"]
+news = "堺的会合众又换了灯笼，羽柴家的使者来收矢钱，码头上没人再提本能寺那天早上的事。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_lives"
+when = [{ kind = "flag", flag = "h54_honnoji_nobunaga_survives" }]
+text = "秋天的堺，会合众的屋檐下还挂着织田家的木瓜纹灯笼。信长活了下来，明智的人败走了。堺的会合众忙着往安土送贺礼，送礼的人在码头上排成一队，说起本能寺那天早上的事，都压低了声音。茶室里的茶碗还摆着，没有人去收。码头上的小孩拿着木瓜纹的小旗跑来跑去。会合众的老人（转述）：“谁坐天下，堺都要交钱。交给谁，这才要紧。”"
+
+[[tracks.chapters.variants]]
+key = "v2_sea"
+when = [{ kind = "flag", flag = "c13_free_east_asia_c_ieyasu_sea" }]
+text = "秋天的堺，会合众的屋檐下换了新的灯笼。山崎一战以后，羽柴家的使者来堺收矢钱，商人们一边骂一边交。码头上没人再提那天早上的事，只有茶室里还有人小声说起德川殿走的那条路。茶室里有人说，德川殿其实是坐一条外乡船从海上回去的。这话没人信，“我”也没说。收钱的人拿着名单一家一家念。会合众的老人（转述）：“谁坐天下，堺都要交钱。交给谁，这才要紧。”"
+
+[[tracks.chapters.variants]]
+key = "v3_warned"
+when = [{ kind = "flag", flag = "c13_free_east_asia_c_warned" }]
+text = "秋天的堺，会合众的屋檐下换了新的灯笼。山崎一战以后，羽柴家的使者来堺收矢钱，商人们一边骂一边交。“我”派出去的那匹快马，回来时马鞍上沾着京都的灰。码头上没人再提那天早上的事，只有茶室里还有人小声说起德川殿走的那条路。收钱的人拿着名单一家一家念。会合众的老人（转述）：“谁坐天下，堺都要交钱。交给谁，这才要紧。”"
+
+[[tracks]]
+key = "main_free_southeast_asia_c"
+name = "金瓶里的水"
+kind = "main"
+start = "c1_offer"
+auto = true
+cast = ["naresuan"]
+
+# 彭世洛来的人：王子要枪、要甘蔗。大城的商人问，船停在这里是走还是留。
+[[tracks.chapters]]
+key = "c1_offer"
+title = "彭世洛来的人"
+text = "大城已经当了十几年缅甸的属国。一个从北边彭世洛来的官员找到“我”，不肯在码头上谈，约在一处卖甘蔗的棚子里。棚顶是椰子叶，风一吹，叶子哗哗地响。他手里捏着一根甘蔗，咬一口，又放下。他说他的主人，年轻的王子纳黎萱，需要火绳枪，也需要喂战象的甘蔗与稻草，越多越好，越快越好，不能让勃固的人知道。官员：“战象吃得比兵多。枪我们能想办法，甘蔗只能靠船。”他说这话时，声音压得比甘蔗棚的叶子还轻。他说的没有“打仗”两个字，说的是“把从前的东西拿回来”。"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1583, 10, 1] }]
+at = "ayutthaya_port"
+speaker = "captain"
+mood = "tense"
+cast = []
+deadline = [1584, 4, 25]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "guns"
+text = "答应运一船火绳枪"
+next = "c2_independence"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "你连买枪的本钱都凑不齐。"
+effects = [{ kind = "cash", value = -1500 }, { kind = "flag", flag = "c13_free_southeast_asia_c_guns" }]
+reply = "官员说枪到了不用进城，在河口的一座寺后头卸。"
+
+[[tracks.chapters.choices]]
+key = "fodder"
+text = "答应运甘蔗和稻草喂象"
+next = "c2_independence"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_c_fodder" }]
+reply = "官员笑了，说外国船长头一回有人肯运这种不值钱的东西。"
+
+[[tracks.chapters.choices]]
+key = "rice"
+text = "只做米的生意，不碰王子的事"
+next = "c2_independence"
+effects = [{ kind = "cash", value = 400 }]
+reply = "官员点点头，把甘蔗棚的钱付了就走。"
+
+# 倒在地上的水：北边的王子在孟坑把金瓶里的水倒在地上。
+[[tracks.chapters]]
+key = "c2_independence"
+title = "倒在地上的水"
+text = "五月，消息从北边传来：纳黎萱在孟坑当着众人把金瓶里的水倒在地上，说暹罗从此不再是勃固的属国。大城里的人一半欢喜一半害怕；勃固的军队已经在路上。河边的寺庙在敲钟，钟声被风吹散了，一半到了城里，一半到了河对岸。王子的人在寺后头搬枪箱，箱子上的漆还是新的。城墙根下卖粥的老头说：“王子倒水，是要人记住。谁记住了，谁就得站队。”倒在地上的水收不回来，城里的人都这么说，说的时候压低了声音。河上有一只船靠了岸，船夫把一箱箱东西往下搬，谁也不问是什么。大城的商人又问了一遍：“金瓶里的水倒了，就收不回来了。船长，你的船停在这里，是要走还是要留？”"
+window = [[1584, 5, 1], [1584, 8, 31]]
+at = "ayutthaya_port"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["naresuan"]
+news = "大城的人说，北边的王子把金瓶里的水倒在了地上，暹罗不再给勃固进贡了。"
+
+[tracks.chapters.default]
+next = "c3_siege"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "arm"
+text = "把火绳枪交到王子的人手里"
+next = "c3_siege"
+requires = [{ kind = "flag", flag = "c13_free_southeast_asia_c_guns" }]
+hint = "你答应的不是枪。"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_c_armed" }, { kind = "reputation", faction = "ayutthaya", value = 3 }]
+reply = "枪在寺后头卸下，王子的人一支一支数。数完给了“我”一枚刻着象的铜牌。"
+
+[[tracks.chapters.choices]]
+key = "feed"
+text = "领船把甘蔗与稻草运上河，送到象营"
+next = "c3_siege"
+requires = [{ kind = "flag", flag = "c13_free_southeast_asia_c_fodder" }]
+check = { attr = "stewardship", base = 35, per = 6 }
+hint = "你的船上没有象吃的东西。"
+effects = [{ kind = "flag", flag = "c13_free_southeast_asia_c_fed" }, { kind = "reputation", faction = "ayutthaya", value = 2 }]
+reply = "象群闻到甘蔗的味道，一齐抬起了鼻子。象夫们笑得直不起腰。"
+
+[tracks.chapters.choices.fail]
+next = "c3_siege"
+effects = [{ kind = "reputation", faction = "ayutthaya", value = 1 }]
+news = "大城的象营里说，草料在河上捂坏了一半，象营的人还是收下了，一边收一边骂船上的人慢。"
+
+[[tracks.chapters.choices]]
+key = "pegu"
+text = "把消息带去勃固，换一份通行证"
+next = "c3_siege"
+effects = [{ kind = "reputation", faction = "taungoo", value = 2 }]
+reply = "勃固的官员早就知道了，给了“我”通行证，也记下了“我”的船名。"
+
+# 退走的围城军：目击。城墙上的人敲着锣，象营里的象在河边洗澡。
+[[tracks.chapters]]
+key = "c3_siege"
+title = "退走的围城军"
+text = "旱季，勃固的大军又围了大城，这一回城没有开。四月，围城的营盘拔了，河上漂着缅甸人扔下的竹筏。城墙上的人敲着锣，象营里的象在河边洗澡。一个象夫坐在岸上，用竹竿敲着河水，把象往岸上赶。退走的营盘里留下了一头走不动的老象，大城的人把它牵回了城。城墙上的守军（转述）：“十七年前开的门，今年没开。”"
+window = [[1586, 11, 1], [1587, 4, 30]]
+at = "ayutthaya_port"
+stage = "witness"
+speaker = "captain"
+mood = "cheerful"
+cast = ["naresuan"]
+news = "大城的人说，勃固的大军围了一个旱季又退走了，城里人把一头被丢下的老象牵进了象营。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_armed"
+when = [{ kind = "flag", flag = "c13_free_southeast_asia_c_armed" }]
+text = "旱季，勃固的大军又围了大城，这一回城没有开。四月，围城的营盘拔了，河上漂着缅甸人扔下的竹筏。城墙上的人敲着锣，象营里的象在河边洗澡。一个象夫坐在岸上，用竹竿敲着河水，把象往岸上赶。城墙上放枪的人里，有人认出了“我”的船，冲河口挥了挥枪。退走的营盘里留下了一头走不动的老象，大城的人把它牵回了城。城墙上的守军（转述）：“十七年前开的门，今年没开。”"
+
+[[tracks.chapters.variants]]
+key = "v2_fed"
+when = [{ kind = "flag", flag = "c13_free_southeast_asia_c_fed" }]
+text = "旱季，勃固的大军又围了大城，这一回城没有开。四月，围城的营盘拔了，河上漂着缅甸人扔下的竹筏。城墙上的人敲着锣，象营里的象在河边洗澡。一个象夫坐在岸上，用竹竿敲着河水，把象往岸上赶。象夫说那头老象最爱吃的，是外国船运来的甘蔗。退走的营盘里留下了一头走不动的老象，大城的人把它牵回了城。城墙上的守军（转述）：“十七年前开的门，今年没开。”"
+
+[[tracks]]
+key = "main_free_indian_ocean_c"
+name = "两份效忠书"
+kind = "main"
+start = "c1_offer"
+auto = true
+cast = ["maria_da_luz"]
+
+# 仓库里的两张纸：一张效忠腓力，一张效忠安东尼奥。玛丽亚只认船期。
+[[tracks.chapters]]
+key = "c1_offer"
+title = "仓库里的两张纸"
+text = "果阿的雨季刚过，玛丽亚·达·卢斯的仓库里摊着两张纸。仓库的墙上挂着一排铜秤，秤盘里还积着胡椒粒，账房先生在后头打算盘，珠子响得很快。一张是效忠腓力的，总督府的书记要城里的商人联名；一张是效忠克拉图院长唐·安东尼奥的，几个老贵族夜里送来。书记在门口催：“今天就要名字，明天就不收了。”玛丽亚说她只认识船期，不认识国王；可两张纸都要她的名字，也都要一条船。玛丽亚：“我仓库里住的人，一半是腓力的，一半是安东尼奥的，还有几个谁的都不是。”她把两张纸叠在一起：“签哪张，看风往哪边吹。可季风只往一边吹。”"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1580, 11, 1] }]
+at = "goa"
+speaker = "captain"
+mood = "tense"
+cast = ["maria_da_luz"]
+deadline = [1581, 2, 28]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "philip"
+text = "替总督府那张纸作证，签上你的船名"
+next = "c2_oath"
+effects = [{ kind = "flag", flag = "c13_free_indian_ocean_c_philip" }, { kind = "reputation", faction = "spain", value = 2 }]
+reply = "书记把“我”的船名写在名单最后一行，墨还没干就被收走了。"
+
+[[tracks.chapters.choices]]
+key = "antonio"
+text = "接下安东尼奥那些人的信"
+next = "c2_oath"
+effects = [{ kind = "flag", flag = "c13_free_indian_ocean_c_antonio" }, { kind = "reputation", faction = "portugal", value = 2 }]
+reply = "老贵族把信缝进一块帆布，说到了霍尔木兹，有人会来拆线。"
+
+[[tracks.chapters.choices]]
+key = "neither"
+text = "两张都不签，只做玛丽亚的生意"
+next = "c2_oath"
+effects = [{ kind = "affinity", person = "maria_da_luz", value = 3 }]
+reply = "玛丽亚笑了，说她就喜欢不签字的人。仓库的账倒是要签。"
+
+# 主教座堂的誓词：总督在台阶上念效忠腓力的誓词，钟楼上的钟敲错了一下。
+[[tracks.chapters]]
+key = "c2_oath"
+title = "主教座堂的誓词"
+text = "主教座堂前挤满了人，总督要当众宣读效忠新王的誓词。台阶下的人群挤成一团，有人踮着脚，有人把孩子举过头顶。安东尼奥的人混在人群里，帆布缝着的信还没送出去，他把帆布攥在手里，指节发白。玛丽亚站在台阶下，手里拿着仓库的钥匙。她的指尖把钥匙上的齿痕摸了一遍又一遍。总督的声音很大，念到“腓力”的时候，人群里有人低低地咳了一声。誓词读到一半，钟楼上的钟敲错了一下。台阶边的书记催道：“快，念完就散。”安东尼奥的人凑过来，压低声音：“读完这一页，港口就要封了。船长，你的船还走得了吗？”"
+window = [[1581, 3, 1], [1581, 9, 30]]
+at = "goa"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["maria_da_luz"]
+news = "果阿的人说，总督在主教座堂前念了效忠腓力的誓词，钟楼上的钟敲错了一下，没人敢笑。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_antonio"
+when = [{ kind = "flag", flag = "h52_iberian_union_antonio_rules_portugal" }]
+text = "主教座堂前挤满了人。里斯本那边的消息是安东尼奥守住了王位，果阿的总督宣读的是效忠安东尼奥的誓词。台阶下的人群挤成一团，有人踮着脚，有人把孩子举过头顶。腓力那张纸被人悄悄烧了，灰从台阶边上的排水沟里流了过去。玛丽亚站在台阶下，手里拿着仓库的钥匙，没有说话。誓词的纸张被风吹起一角，书记用石镇压住。总督的声音很大，念到“安东尼奥”的时候，人群里有人低低地叫了一声好。钟楼上的钟敲错了一下。台阶边的书记小声说：“快，念完就散。”“我”站在船边，看着台阶上的人群。"
+
+[[tracks.chapters.choices]]
+key = "ship"
+text = "把安东尼奥派的人和信送上去霍尔木兹的船"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_indian_ocean_c_antonio" }]
+check = { attr = "intrigue", base = 20, per = 7 }
+hint = "那封缝在帆布里的信不在你手里。"
+effects = [{ kind = "flag", flag = "c13_free_lever_H52" }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "reputation", faction = "spain", value = -2 }]
+reply = "船出港时，主教座堂的钟正好敲完。那块帆布在“我”的舱底躺了九天。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "spain", value = -1 }]
+news = "果阿的港务官多看了那条船两眼，信还是出去了，船长被留在港里问了一整天话。"
+
+[[tracks.chapters.choices]]
+key = "witness"
+text = "站到台阶上，在誓词上作证人"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_free_indian_ocean_c_philip" }]
+hint = "名单上没有你的船名，你上不了台阶。"
+effects = [{ kind = "reputation", faction = "spain", value = 3 }]
+reply = "总督念到“我”的船名时念错了一个字母，没人纠正。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "离港，让果阿的人自己去吵"
+next = "done"
+effects = []
+reply = "船出河口时，岸上还在敲钟。“我”数了数，敲了十一下。"
+
+[[tracks]]
+key = "main_free_mediterranean_c"
+name = "丹吉尔的名单"
+kind = "main"
+start = "c1_offer"
+auto = true
+cast = ["fray_juan"]
+
+# 一张写着儿子的纸：家属把名字递给船长，要一个肯记名字的人。
+[[tracks.chapters]]
+key = "c1_offer"
+title = "一张写着儿子的纸"
+text = "初夏的丹吉尔，葡萄牙的大军一船船经过，年轻的国王塞巴斯蒂安要去摩洛哥打一场“十字军”。码头的石板上，有人用粉笔写下了名字，雨一下就化开了。跟着来的父母、妻子拿着纸找船长：纸上是儿子、丈夫的名字，“要是被俘了，你帮我们找一找”。一个三一会的赎俘修士已经在城里租了屋子。一个老人拄着拐杖站在队伍最后，不说话，只把手里的名字又念了一遍。一个母亲递来一张纸，上面写的是一个十五岁孩子的名字。母亲：“他说他是去看国王打仗的。船长，你替我记着他的名字。”"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1578, 5, 1] }]
+at = "tangier"
+speaker = "captain"
+mood = "sad"
+cast = []
+deadline = [1578, 7, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "list"
+text = "收下那些纸，把名字抄进你的簿子"
+next = "c2_lists"
+effects = [{ kind = "flag", flag = "c13_free_mediterranean_c_list" }]
+reply = "“我”抄到天黑，抄了一百多个名字。修士说他也会抄一份，两份对着看。"
+
+[[tracks.chapters.choices]]
+key = "ransom"
+text = "把一笔赎金押在修士那里，先预备着"
+next = "c2_lists"
+requires = [{ kind = "cash", ge = 1000 }]
+hint = "你拿不出一笔像样的赎金。"
+effects = [{ kind = "cash", value = -1000 }, { kind = "flag", flag = "c13_free_mediterranean_c_list" }, { kind = "reputation", faction = "portugal", value = 2 }]
+reply = "修士给了“我”一张收条，说赎不回人，钱会原样退回，要是他还在城里的话。"
+
+[[tracks.chapters.choices]]
+key = "boy"
+text = "劝那个十五岁的孩子别上岸随军"
+next = "c2_lists"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_free_mediterranean_c_boy" }]
+reply = "孩子最后留在了码头上，帮修士记名字。他母亲给“我”磕了一个头，“我”没受。"
+
+[tracks.chapters.choices.fail]
+next = "c2_lists"
+effects = []
+news = "丹吉尔的码头上说，那个十五岁的孩子红着脸，说国王都去了，他怎么能不去。第二天他跟着队伍出了城门。"
+
+# 念名字的修士：目击。修士念到最后，翻过那张纸，国王的名字没有念。
+[[tracks.chapters]]
+key = "c2_lists"
+title = "念名字的修士"
+text = "八月以后，逃回来的人一个个进了丹吉尔，衣服是破的，脚是烂的。三一会的胡安修士站在城门口的石阶上念名字：念到的，家属哭着上前；念不到的，家属等着下一批。国王的名字，没人敢念。念到最后，修士停下来，把一张纸翻过去。背面写的是国王，他没念。胡安修士（转述）：“活着的念名字，死了的念祷文，不知道的……先不念。”"
+window = [[1578, 8, 10], [1578, 10, 31]]
+at = "tangier"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["fray_juan"]
+news = "丹吉尔的人说，三一会的修士每天在城门口念俘虏的名字，国王的名字一次也没念过。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_lives"
+when = [{ kind = "flag", flag = "h49_three_kings_sebastian_returns" }]
+text = "八月以后，逃回来的人一个个进了丹吉尔，衣服是破的，脚是烂的。三一会的胡安修士站在城门口的石阶上念名字：念到的，家属哭着上前；念不到的，家属等着下一批。国王被人救回来了，伤得很重，从丹吉尔上船回里斯本。修士念完了名单，最后一个念的是他。胡安修士（转述）：“活着的念名字，死了的念祷文，不知道的……先不念。”"
+
+[[tracks.chapters.variants]]
+key = "v2_boy"
+when = [{ kind = "flag", flag = "c13_free_mediterranean_c_boy" }]
+text = "八月以后，逃回来的人一个个进了丹吉尔，衣服是破的，脚是烂的。三一会的胡安修士站在城门口的石阶上念名字。站在他旁边替他念名字的，是那个留在码头上的孩子。念到的，家属哭着上前；念不到的，家属等着下一批。国王的名字，没人敢念。念到最后，修士停下来，把一张纸翻过去。背面写的是国王，他没念。胡安修士（转述）：“活着的念名字，死了的念祷文，不知道的……先不念。”"
+
+[[tracks.chapters.variants]]
+key = "v3_list"
+when = [{ kind = "flag", flag = "c13_free_mediterranean_c_list" }]
+text = "八月以后，逃回来的人一个个进了丹吉尔，衣服是破的，脚是烂的。三一会的胡安修士站在城门口的石阶上念名字。“我”簿子上的一百多个名字，修士念到了三十几个。念到的，家属哭着上前；念不到的，家属等着下一批。国王的名字，没人敢念。念到最后，修士停下来，把一张纸翻过去。背面写的是国王，他没念。胡安修士（转述）：“活着的念名字，死了的念祷文，不知道的……先不念。”"
+
+[[tracks]]
+key = "main_free_atlantic_europe_c"
+name = "普利茅斯的火船"
+kind = "main"
+start = "c1_offer"
+auto = true
+cast = ["francis_drake", "john_hawkins"]
+
+# 沥青与旧帆：德雷克要能打的船，霍金斯要过秤。霍金斯问“我”的船烧不烧得着。
+[[tracks.chapters]]
+key = "c1_offer"
+title = "沥青与旧帆"
+text = "春天的普利茅斯，霍伊高地上有人在打木球，港里的船在上沥青，黑烟一股一股升起，呛得人直咳嗽。德雷克在码头上吼：“缆绳！再拿一卷来！”他骂承包商的缆绳不经拉，霍金斯拿着账本跟在后头。西班牙的大舰队要来的消息传了一年，英格兰人缺沥青、缺旧帆、缺肯烧掉的船。港口的木板上贴着一张征用的告示，墨迹被雨水晕开了。德雷克：“西班牙人的船高，我们的船快。剩下的，交给风。”霍金斯：“船长，你那批沥青掺沙了没有？我要过秤。”霍金斯问“我”：你的船，烧不烧得着？"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1588, 3, 1] }]
+at = "plymouth"
+speaker = "captain"
+mood = "tense"
+cast = ["francis_drake", "john_hawkins"]
+deadline = [1588, 7, 15]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "supply"
+text = "把船上的沥青和旧帆卖给他们，当着霍金斯过秤"
+next = "c2_fireships"
+effects = [{ kind = "flag", flag = "c13_free_atlantic_europe_c_supply" }, { kind = "cash", value = 800 }, { kind = "reputation", faction = "england", value = 2 }]
+reply = "霍金斯称了三遍，没挑出毛病，第一次对“我”点了点头。"
+
+[[tracks.chapters.choices]]
+key = "spain"
+text = "把普利茅斯的船数记下来，卖给西班牙那边的人"
+next = "c2_fireships"
+requires = [{ kind = "flag", flag = "c13_free_course_trade" }]
+hint = "你这些年没走买卖的路子，西班牙人的人不会找你。"
+effects = [{ kind = "cash", value = 2000 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "reputation", faction = "england", value = -3 }]
+reply = "来买消息的人是个说佛兰德口音的商人，付钱以后就上了一条去敦刻尔克的船。"
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "不卷进去，只在港里补给"
+next = "c2_fireships"
+effects = []
+reply = "德雷克的人用怀疑的眼光看了“我”的船好几天。"
+
+# 烽火一路点到伦敦：逆风里拖船出港。拖出去的那几条，后来在加来点成了火。
+[[tracks.chapters]]
+key = "c2_fireships"
+title = "烽火一路点到伦敦"
+text = "七月底，有人看见西班牙的舰队出现在利泽德角外，山头的烽火一个接一个点着，一路点到伦敦。普利茅斯港里的船顶着逆风往外拖，水手们在小艇上拼命划。港口的钟楼上，有人一下一下地敲着警钟。“我”的船在港里，桅杆上挂着一块湿帆，怕火星子落上来。风是逆的，船要人拖出港。拖船的水手：“风不帮我们，那就用手！船长，借你的小艇！”德雷克站在码头上吼：“别管缆绳，先出港！”拖船的人一排站在岸边，喊声压过了海浪。一个老水手把缆绳往肩上一扛，闷声不响地往前走。烽火从山头一路点下去，最后一把火在伦敦的方向亮了。岸上没有人说话，只有烽火在山头噼啪作响。"
+window = [[1588, 7, 20], [1588, 8, 15]]
+at = "plymouth"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["francis_drake"]
+news = "普利茅斯的人说，西班牙人的舰队来的那天，山头的烽火一个接一个点到了伦敦，港里的船是用小艇拖出去的。"
+
+[tracks.chapters.default]
+next = "c3_wind"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "sail"
+text = "随德雷克的分队出海"
+next = "c3_wind"
+requires = [{ kind = "flag", flag = "c13_free_atlantic_europe_c_supply" }]
+check = { attr = "command", base = 20, per = 7 }
+hint = "德雷克的人不信你，不让你的船进他的分队。"
+effects = [{ kind = "flag", flag = "c13_free_atlantic_europe_c_sailed" }, { kind = "flag", flag = "c13_free_lever_H60" }, { kind = "reputation", faction = "england", value = 3 }]
+reply = "“我”跟着队伍一路往东，夜里看见加来那边火光冲天。"
+
+[tracks.chapters.choices.fail]
+next = "c3_wind"
+effects = [{ kind = "reputation", faction = "england", value = 1 }]
+news = "普利茅斯的人说，一条船出港慢了半天，跟上时，两边已经在海峡里对射了。"
+
+[[tracks.chapters.choices]]
+key = "tow"
+text = "留在港里，帮着把船一条条拖出去"
+next = "c3_wind"
+check = { attr = "stewardship", base = 35, per = 6 }
+effects = [{ kind = "fame", value = 1 }]
+reply = "拖到天亮，手上全是缆绳勒出的血泡。最后一条船出港时，岸上有人唱起了赞美诗。"
+
+[tracks.chapters.choices.fail]
+next = "c3_wind"
+effects = []
+news = "普利茅斯港外的小艇上说，拖船的缆断了一次，一个水手掉进海里，捞上来时还在骂，骂得比浪还响。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "关上舱门，等风向变"
+next = "c3_wind"
+effects = []
+reply = "三天后港里只剩“我”和几条渔船，镇上的人都上了山去看海。"
+
+# 上帝吹了一口气：目击。西班牙的船绕过北边回家，撞在礁石上。
+[[tracks.chapters]]
+key = "c3_wind"
+title = "上帝吹了一口气"
+text = "秋天，消息从苏格兰和爱尔兰的海岸一条条传来：西班牙的船绕过北边回家，撞在礁石上，一条接一条。普利茅斯的酒馆里人人举杯。码头上，一个爱尔兰渔夫在卖从沉船上捞来的银盘子。“海把他们送来，我把盘子捡起来。谁的，我不认得。”银盘子背面刻着一个西班牙人家的姓，那家人的儿子，大概再也回不了家了。"
+window = [[1588, 9, 15], [1588, 12, 15]]
+at = "plymouth"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["francis_drake"]
+news = "普利茅斯的酒馆里人人举杯，码头上有个爱尔兰渔夫在卖沉船上捞来的银盘子，背面刻着西班牙人家的姓。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_lands"
+when = [{ kind = "flag", flag = "h60_armada_spanish_landing" }]
+text = "秋天，消息从肯特传来：西班牙人在肯特上了岸。普利茅斯的酒馆没人举杯，人人在往西边搬家，车子排到了镇口。码头上，一个爱尔兰渔夫在卖从沉船上捞来的银盘子，他说海没有把人送来，人是自己走来的。银盘子背面刻着一个西班牙人家的姓。酒馆的老板把门板钉死了，说等局势稳了再开门。街角有个老妇人在哭，没人去劝。"
+
+[[tracks.chapters.variants]]
+key = "v2_sailed"
+when = [{ kind = "flag", flag = "c13_free_atlantic_europe_c_sailed" }]
+text = "秋天，消息从苏格兰和爱尔兰的海岸一条条传来：西班牙的船绕过北边回家，撞在礁石上，一条接一条。普利茅斯的酒馆里人人举杯。酒馆里有人认出了“我”，说加来那夜“我”的船就在火船后面。码头上，一个爱尔兰渔夫在卖从沉船上捞来的银盘子。“海把他们送来，我把盘子捡起来。谁的，我不认得。”银盘子背面刻着一个西班牙人家的姓，那家人的儿子，大概再也回不了家了。"
+
+[[tracks]]
+key = "main_free_americas_c"
+name = "南边的第一本书"
+kind = "main"
+start = "c1_offer"
+auto = true
+cast = ["jose_de_acosta"]
+
+# 三种话的教理问答：利马要把书印成三种话，每句话要三个通事分别译。
+[[tracks.chapters]]
+key = "c1_offer"
+title = "三种话的教理问答"
+text = "利马在开公会议，主教们决定把教理问答译成克丘亚语和艾马拉语，印出来发到每个教区。耶稣会的阿科斯塔神父负责起草，他在卡亚俄的码头上等一条船：从墨西哥来的印书匠带了一台印机，印机在码头上盖着麻布，一个搬运工伸手去摸，被人拍开了。可是纸不够，懂两种印第安话的通事也不够。阿科斯塔的书桌上堆着一摞草稿，有的页边上写满了小字。阿科斯塔：“一句话译错，就是一个村子信错。所以我要三个人，三遍。”书里每一句话，都要请三个通事分别译一遍：“三个都对上了，才印。”"
+when = [{ kind = "flag", flag = "c13_main_free" }, { kind = "date", from = [1582, 10, 1] }]
+at = "callao"
+speaker = "captain"
+mood = "cheerful"
+cast = ["jose_de_acosta"]
+deadline = [1583, 9, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "paper"
+text = "答应从外面运纸来"
+next = "c2_paper"
+reply = "神父在一张旧纸的背面写下要的数。他说正面是公会议的草稿，“纸太金贵了，两面都得用”。"
+
+[[tracks.chapters.choices]]
+key = "interpreter"
+text = "替他找一个懂克丘亚话的通事"
+next = "c2_paper"
+requires = [{ kind = "skill", skill = "lang_quechua", ge = 60 }]
+hint = "你自己的克丘亚话还不够用，认不出谁译得好。"
+effects = [{ kind = "flag", flag = "c13_free_americas_c_interpreter" }]
+reply = "“我”带来的通事是个在卡亚俄码头上长大的混血青年。神父考了他一下午，留下了。"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不接这桩事"
+next = "done"
+effects = []
+reply = "神父点点头，回到他的草稿堆里。"
+
+# 一船纸：限期交货。纸要在这一章交出，选的是印书匠怎样记账。
+[[tracks.chapters]]
+key = "c2_paper"
+title = "一船纸"
+text = "利马的一间小作坊里，印机刚组装好，铅字摊在木盘里，一半是西班牙字母，一半是为克丘亚语新刻的。作坊的窗上糊着旧纸，光线从纸缝里透进来，把铅字照得发亮。“我”的纸一刀一刀搬进来，印书匠里卡多用手指捻纸边，听它的声音。神父在门口催：“今天印得出第一张，我就信你们。”印书匠：“纸会说话。厚的说慢话，薄的说快话。这一批，说的是稳话。”试印的第一张纸上，克丘亚语的一个字母印反了。印书匠笑了，说这是好兆头：错在第一张，总比错在第一千张好。"
+at = "callao"
+speaker = "captain"
+mood = "cheerful"
+cast = ["jose_de_acosta"]
+objectives = [{ kind = "goods", good = "paper", qty = 20, at = "callao", text = "把纸运到卡亚俄" }]
+deadline = [1584, 6, 30]
+
+[tracks.chapters.timeout]
+next = "c3_first_book"
+effects = [{ kind = "letter", person = "jose_de_acosta", text = "纸从墨西哥另一条船来了。神父说书会照样印，只是比预计晚了半年。" }]
+
+[[tracks.chapters.choices]]
+key = "deliver"
+text = "把纸交给印书匠，按价结账"
+next = "c3_first_book"
+effects = [{ kind = "cash", value = 800 }, { kind = "reputation", faction = "peru", value = 2 }]
+reply = "印书匠付钱时多给了一张试印的纸，上面那个反了的字母被他用笔圈了出来。"
+
+[[tracks.chapters.choices]]
+key = "names"
+text = "交纸，并请他们把通事的名字印在书后"
+next = "c3_first_book"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 800 }, { kind = "flag", flag = "c13_free_americas_c_names" }]
+reply = "神父想了很久，最后在书后的许可文下面加了一行小字。"
+
+[tracks.chapters.choices.fail]
+next = "c3_first_book"
+effects = [{ kind = "cash", value = 800 }]
+news = "利马的神父说，书后只印主教们的名字，通事的名字他会记在自己的本子上。"
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "交纸，只要一本印好的样书"
+next = "c3_first_book"
+effects = [{ kind = "cash", value = 400 }, { kind = "fame", value = 1 }]
+reply = "印书匠答应了，说第一本给主教，第二本给“我”。"
+
+# 三种话的第一页：目击。码头上一个不识字的搬运工对着中间那一栏念出了声。
+[[tracks.chapters]]
+key = "c3_first_book"
+title = "三种话的第一页"
+text = "年底，第一批书从利马运到卡亚俄，要装船发往各教区。书不厚，每一页分三栏：西班牙语、克丘亚语、艾马拉语。书的封面是粗布的，摸上去像一块旧帆。码头上一个不识字的搬运工翻开一本，指着中间那一栏，念出了声。他认得那是他母亲说的话的样子。他念对了一句，周围的人都愣住了。搬运工（转述）：“这是我们的话。写成字，原来是这样的。”"
+window = [[1584, 7, 1], [1584, 12, 31]]
+at = "callao"
+stage = "witness"
+speaker = "captain"
+mood = "cheerful"
+cast = ["jose_de_acosta"]
+news = "卡亚俄的人说，利马印出了一本三种话的书，码头上一个不识字的搬运工对着中间那一栏念出了声。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_names"
+when = [{ kind = "flag", flag = "c13_free_americas_c_names" }]
+text = "年底，第一批书从利马运到卡亚俄，要装船发往各教区。书不厚，每一页分三栏：西班牙语、克丘亚语、艾马拉语。书的封面是粗布的，摸上去像一块旧帆。书后许可文下面那一行小字里，有一个通事的名字，是“我”托人问来的。码头上一个不识字的搬运工翻开一本，指着中间那一栏，念出了声。他认得那是他母亲说的话的样子。他念对了一句，周围的人都愣住了。搬运工（转述）：“这是我们的话。写成字，原来是这样的。”"
+
+[[tracks.chapters.variants]]
+key = "v2_interpreter"
+when = [{ kind = "flag", flag = "c13_free_americas_c_interpreter" }]
+text = "年底，第一批书从利马运到卡亚俄，要装船发往各教区。书不厚，每一页分三栏：西班牙语、克丘亚语、艾马拉语。书的封面是粗布的，摸上去像一块旧帆。那个码头上长大的通事也在送书的队伍里，他说要把书送回他母亲的村子。码头上一个不识字的搬运工翻开一本，指着中间那一栏，念出了声。他认得那是他母亲说的话的样子。他念对了一句，周围的人都愣住了。搬运工（转述）：“这是我们的话。写成字，原来是这样的。”"

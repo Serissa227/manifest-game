@@ -1,0 +1,188 @@
+# C13d 人物的请托：拉丁文的《医典》（找东西，3 章主线 + 2 个收尾章；故事 2.0，A5 / E37 契约）
+# 人物：艾哈迈德·曼朱尔（ahmad_al_manjur，1520 生，1587 卒；非斯卡拉维因清真寺的讲师）。本条他不出场，只在信里说话；出面的是得土安港口客栈里的非斯学生（叙事人物，不入 cast）。
+# 类型：找东西（fd）。找到一部拉丁文《医典》，交给学生带回非斯；或者借出去看一个月；或者留在手里，跟学生一起念。
+# 报价模式 L（来信／代理人）：offer 章 at=tetouan，auto=true，family=c13_offer_tetouan（冷却 20 天）；窗口 1557-06-01..1586-06-30，deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 章节：offer → handin（三条路）→ 整部留下走 use，念或借走 use_lent；两个收尾章各给一个拿报酬的选项和一个不拿报酬的选项。
+#   handin 的 give 写 flag given，只进 use；read_aloud、lend（含 lend 失败）只进 use_lent。这样 use_lent 的选项不挂任何旗标门禁。
+#   offer 的 why_latin 另设分支旗标 asked，只读于 handin 的变体（学生记着你问的那句话）。
+# 报酬：现金 1600（use 收下抄本、use_lent 收下阿拉伯语法课）各一次；唯一奖励 ajurrumiyya_ms《阿吉鲁米耶》（只在 use 收下）；
+#   lang_arabic +20（只在 use_lent 收下）；好感正向合计 ≤ 13（接下 +2，交付 +3，最好结局 +8 或 +6）；名声 +3；摩洛哥声望 +2（只在 use 收下）；回忆 mem-request_ahmad_al_manjur-use。
+#   不拿报酬的选项（use 的 decline、use_lent 的 decline）各给好感 +4，不给钱、不给物。
+# 依据——史实：伊本·西那《医典》拉丁文本 1473 年在米兰刊印，之后欧洲多次重印；伊本·阿吉鲁姆《阿吉鲁米耶》是非斯人写的阿拉伯语语法，流行于马格里布（约 14 世纪初）；
+#   曼朱尔在非斯卡拉维因讲学（生平细节待核，正文一律用传闻口吻，不写确切年月）。
+#   原创：得土安客栈里的非斯学生、先生改过的信、学生的头巾与灯油钱、那本先生年轻时抄的旧抄本、页边的批注。
+# 不写：1549 年万沙里西之子被拖出卡拉维因的事（塔里克养成支线 ⑧ 用过）；1578 年的非斯与三王之战（C7）；伊德里斯（C7 同学）。cast 无 secret，本条不替他说任何秘密。
+# 旗标：写 c13_request_ahmad_al_manjur_accepted / declined（报价）；given / read / lent / lent_short（交书的三条路，lent_short 是借出去后只抄了目录）；asked（报价时问了“译坏了的书做什么”，分支旗标）；
+#   done / partial / late（终局；done 由收尾章的收下或不收下设置，partial 由两个收尾章的超时设置，late 由 handin 的超时设置）。
+# 读：lent_short（use_lent 的变体，改写一段信的内容）；asked（handin 的变体，改写学生的一句话）。
+# 依赖：tetouan 是现有港口，无 B10b 改名；cast 的 ahmad_al_manjur 在 fez 有日程，本条不用 person 目标。gate_main 为空，不读任何 c13_main_ 旗标。
+# 英文覆盖：不写（本批仅中文）。
+# 回忆插画清单：
+#   mem-request_ahmad_al_manjur-use「一夜的批注」：灯下摊开一部拉丁文医书，页边满是阿拉伯字，一部旧抄本压在上面。
+
+[[tracks]]
+key = "request_ahmad_al_manjur"
+name = "拉丁文的《医典》"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ahmad_al_manjur"]
+
+# 报价：得土安港口的客栈里，学生把信摊在桌上。
+[[tracks.chapters]]
+key = "offer"
+title = "非斯来的学生"
+text = "得土安港口的客栈里，一个非斯来的学生把一封信摊在桌上。信纸边上有先生顺手改过的一个词，墨还是新的。学生说，先生看见他抄错一个字，连夜把整页重抄了一遍。信上只有几行：“听说基督徒把伊本·西那的《医典》印成了拉丁文。我想看看，他们怎么译，错在哪里。”听说先生在卡拉维因讲了多年的书，学生们自己也数不清讲过多少届。他把手按在信上：“先生已经把我们的灯油钱省下一半，就为这本书。”"
+mood = "cheerful"
+at = "tetouan"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 6, 1], to = [1586, 6, 30] }]
+deadline = [1586, 6, 30]
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去西边的书商那里找一部拉丁文《医典》"
+reply = "学生把信叠好，郑重地交给你：“先生说，书到了，他请你喝最好的薄荷茶。他说这话的时候，自己也不太信。”"
+next = "handin"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = 2 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "why_latin"
+text = "接下，但问：译坏了的书，先生要它做什么？"
+reply = "“先生说，看错在哪儿，比看对在哪儿学得多。”学生把这句话重复了两遍，像是怕自己漏记了一个字。他把信的边角折起来，折痕压得很平。"
+next = "handin"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = 2 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_accepted" }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "基督徒的书铺我不熟，劝他另托人。"
+reply = "学生道了谢，把信重新叠好收进怀里。他说先生每年都要问一次，明年他还会来港口等，等到有船带书来为止。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_declined" }]
+
+# 交书：整部留下、用拉丁话念、借出去一个月。三条路各自的结果。
+[[tracks.chapters]]
+key = "handin"
+title = "页边的批注"
+text = "学生捧着那部拉丁文《医典》，翻得很慢，生怕弄折一页。卷首印着米兰两个字，他认得几个拉丁字母，词一个也看不懂，只好拿手指一行一行地比。他把书合上又打开，合页响得很轻。翻到一处，他停下来，问你：“这书是留下，还是借给先生看完再还？”他问得很小心，像是怕问错了要挨骂。"
+mood = "cheerful"
+at = "tetouan"
+speaker = "captain"
+when = [{ kind = "alive", person = "ahmad_al_manjur", value = true }]
+objectives = [{ kind = "item", item = "avicenna_milan", qty = 1, text = "带上伊本·西那《医典》（拉丁文本）" }]
+deadline = [1586, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = -3 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_late" }, { kind = "letter", person = "ahmad_al_manjur", text = "书不必找了。我老了，眼睛看不清拉丁字。谢谢你记得。" }]
+news = "得土安港口上，一个非斯学生等了好些日子，没等到船，只好托驼队捎话回非斯。"
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "整部留下，送给先生。"
+reply = "学生连鞠了三个躬，用自己的头巾把书包了两层。他说先生今晚不会睡了，要从头到尾对一遍，对完还要再对一遍。"
+next = "use"
+effects = [{ kind = "item", item = "avicenna_milan", qty = -1 }, { kind = "affinity", person = "ahmad_al_manjur", value = 3 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_given" }]
+news = "得土安港口上，一个非斯的学生揣着一部拉丁文医书往回走了，书是一个外乡人送的。"
+
+[[tracks.chapters.choices]]
+key = "read_aloud"
+text = "用拉丁话一段一段念出来，他记阿拉伯文的对照。"
+reply = "你们在客栈的灯下念了三个晚上。他一边记一边摇头，又一边点头。最后他说：“先生要的就是这个，错在哪一句，你都念出来了。”"
+next = "use_lent"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = 3 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_read" }]
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "书上的拉丁文，你只认得书名。"
+news = "得土安的客栈里，一个非斯的穷学生捧着一部基督徒印的医书，一连三晚没熄灯。"
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借给先生看一个月，再托人带回来。"
+reply = "学生拍胸脯担保，一个月后在这里等你。他把书包好，说先生看完，会在页边写满小纸条，一张也不会少。"
+next = "use_lent"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = 3 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_lent" }]
+check = { attr = "eloquence", base = 35, per = 6 }
+news = "得土安港口上，一个非斯的学生拍着胸脯担保，说一个月后把一部拉丁文医书还回来。"
+fail = { next = "use_lent", effects = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_lent_short" }], news = "得土安港口上，那个非斯学生不敢替先生担保，只抄了目录，把书原样还给了你。" }
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_asked" }]
+text = "学生捧着那部拉丁文《医典》，翻得很慢，生怕弄折一页。他一路记着你问过的那句话：译坏了的书，先生要它做什么。卷首印着米兰两个字，他停在那一页上，问你：“这书是留下，还是借给先生看完再还？”"
+
+# 收尾一：整部留下的一路。先生收到书，托学生带回一部旧抄本。
+[[tracks.chapters]]
+key = "use"
+title = "一夜的批注"
+text = "一个多月后，学生又在港口等你，带来先生的信，还有一只裹着布的包袱。信纸的一角有一圈灯油的印子。学生解包袱的时候，手指有些抖。信上写：“远方来的朋友，书里把一味药的名字译成了一座城，我笑了一夜。另有三处，人家译得比我们的抄本还准，我也认了。”末了一句：“远路带来的书，照的地方比近处的灯还远。”"
+mood = "cheerful"
+at = "tetouan"
+when = [{ kind = "alive", person = "ahmad_al_manjur", value = true }]
+objectives = [{ kind = "wait", days = 40, text = "等一个多月，学生带信来" }]
+deadline_days = 200
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_partial" }, { kind = "letter", person = "ahmad_al_manjur", text = "你的船来得少，我不等了，信托港口的人转了。书的事，多谢。" }]
+news = "得土安港口上有人说，非斯的学生等了半年没等到船，只好托人把先生的信转去非斯。"
+
+[[tracks.chapters.choices]]
+key = "take_ms"
+text = "收下先生托学生带来的一部旧抄本。"
+reply = "学生打开包袱：是一部《阿吉鲁米耶》，先生自己年轻时抄的，页边密密的都是他的字。“先生说，换一本书，才算公道。”"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "ahmad_al_manjur", value = 8 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "morocco", value = 2 }, { kind = "item", item = "ajurrumiyya_ms", qty = 1 }, { kind = "memory", memory = "mem-request_ahmad_al_manjur-use", title = "一夜的批注" }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_done" }]
+requires = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_given", value = true }]
+news = "得土安港口上，非斯来的学生打开包袱，给一个外乡人看一部先生年轻时抄的旧书。"
+hint = "书没有留在先生手里，他拿不出东西来换。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不收回礼，只问先生读到了哪一卷。"
+reply = "学生想了想，把包袱重新包好，说先生读到的是讲热病的那一卷。“你问的是书，不是礼。他记得住。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = 4 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_done" }]
+news = "得土安港口上，非斯来的学生说，有个外乡人没收那部旧抄本，只问先生读到了哪一卷。"
+
+# 收尾二：念过或借出去的一路。报酬是拉丁语法课，借出去又只抄了目录的，信里只说到目录。
+[[tracks.chapters]]
+key = "use_lent"
+title = "灯下的批注"
+text = "过了一个多月，学生才又在港口露面，手里拿着先生的一张纸条。纸上只有几行小字：“书里有一味药的名字被译成了一座城，我看了半夜，才笑出来。另有两处，人家译得比我们的抄本还准，我都画了圈。”学生说，先生在纸角又添了一个小圈，不知道是哪一处。这一个月先生夜里总让人把灯挑亮些，学生自己也跟着熬了几夜。"
+mood = "cheerful"
+at = "tetouan"
+when = [{ kind = "alive", person = "ahmad_al_manjur", value = true }]
+objectives = [{ kind = "wait", days = 40, text = "等学生带先生的回信来" }]
+deadline_days = 200
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_partial" }, { kind = "letter", person = "ahmad_al_manjur", text = "你的船来得少，我不等了。书你先留着，看过了就行。多谢。" }]
+news = "得土安码头上，非斯来的学生等了半年，没见到要找的那个外乡人，只好空手回去。"
+
+[[tracks.chapters.choices]]
+key = "take_lessons"
+text = "请学生教你几晚阿拉伯语法，当作谢礼。"
+reply = "学生在客栈里给你讲了七个晚上的词尾变化，讲到第五晚你终于不再把主格念成宾格。他说先生要是知道，又要笑一夜。"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "ahmad_al_manjur", value = 6 }, { kind = "fame", value = 3 }, { kind = "skill", skill = "lang_arabic", value = 20 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_done" }]
+news = "得土安的客栈里，一个非斯来的学生给一个外乡人讲了七晚的词尾变化，讲到第五晚，那人才不再把主格念成宾格。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不收谢礼，请他把先生的批注抄一页给你。"
+reply = "学生抄得很慢，末了把纸递给你：“先生说，这一页你拿去，别拿它换钱。”纸角上有一行小字，是先生在页边写的一句诗。"
+next = "done"
+effects = [{ kind = "affinity", person = "ahmad_al_manjur", value = 4 }, { kind = "flag", flag = "c13_request_ahmad_al_manjur_done" }]
+news = "得土安港口上，非斯来的学生抄了一页先生的批注，送给一个不肯收谢礼的外乡人。"
+
+[[tracks.chapters.variants]]
+key = "v1_short"
+when = [{ kind = "flag", flag = "c13_request_ahmad_al_manjur_lent_short" }]
+text = "过了一个多月，学生又来港口，带来先生的信。信上说，书没有在他那里留住，学生只替他抄下了目录，就把书原样带了回来。目录里有一个药名，他一眼就看出译错了，可译文他想亲眼看。他问你肯不肯下次来，把书里那一页念给他听，念慢一点，他要一个字一个字地记。"

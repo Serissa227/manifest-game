@@ -1,0 +1,326 @@
+# 巴兰：买不走的船（bond_balam / reunion_balam）——C7 重写，2026-10-11，Claude（Opus）；旧 GPT 稿作废，只沿用章节 key、地点与年份。
+# 标签：GB（羁绊线，可恋爱；由伊希先开口）。适用主角：伊希·妮克特（ix_nikte）。
+# 人物：巴兰 balam（1540-11-13，男，romance.with = f）；伊希·妮克特 ix_nikte（1540-03-21，女，主角，“我”；学校名册上叫“玛丽亚”）。
+#       学院期 1554—1556：伊希 13—16 岁、巴兰 13—16 岁；A1（1556-03-18..24）伊希在春分这几天满 16、巴兰 15，心动只写牵手；
+#       A2（1556-06..11）巴兰 11 月满 16；S（1556-12）两人都是 16，心动选项只到握手与 crush，告白只是“等他十八岁再来问”。
+#       重逢 1563：伊希 22—23、巴兰 22，双方成年，伴侣落点合法；生年相差不足一年。
+# 依据：
+#   史实——尤卡坦沿岸的玛雅贸易独木舟贩可可、盐、蜂蜜与棉布，可可豆当钱使；北部海岸有盐滩；
+#         西班牙人禁止去科苏梅尔伊希切尔圣所朝拜，沿岸有巡查；伊希切尔与接生、草药相连；尤卡坦内陆的塞诺特（天然井）；
+#         1562 年马尼的焚书之后尤卡坦人人噤声（只在重逢里作一句阴影，不写现场——现场归 bond_kan_pech 的重逢）。
+#   原创——巴兰其人、那把汗湿的可可豆、换下一筐可可的淡水罐、他父亲的许可纸、攥皱的帽檐、春分退潮的礁石、
+#         刻了记号的可可葫芦（赠礼 cacao_gift）、压在船舱里的旧帽子、船头刻的“不卖”、按字收钱的书记。
+#   待核——坎佩切近岸“河口”的回流与北行途中“海口”的急流按常理拟写，不指具体地名；
+#         1554 年西班牙巡查在科苏梅尔岸外用小船盘问独木舟的做法按常理拟写；盐滩换可可的比价不写数。
+# 缺省走向：玩家不回应时故事照走（C1—A2 的 default 无收获）；S 的 default 开启重逢并设 c7_bond_balam_parted；
+#           重逢的 default 是巴兰托梅里达广场上的书记代写的一封信（letter），设 c7_bond_balam_missed。
+# 羁绊阶梯：C2 sit_on_load（bond C）→ B2 teach_float（bond B）→ A2 accept_cacao 或 half_back（bond A，赠礼与回忆）→ S promise / heart（bond S）。
+# 心动：A1 reach_first +6 → A2 half_back +6（要求 ≥ 6）→ S heart +12（要求 ≥ 12）= 24，正好是重逢伴侣落点的门槛。
+# 旗标：写 c7_bond_balam_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed；
+#       重逢的 variants 读本文件的 _promise、_romance。不读外部旗标；本线不设共享 _taken 旗标（JSON 未指定）。
+# 日程：cast 里巴兰 1557—1590 在 merida_city；重逢在 1563 年的科苏梅尔，需整合方让他 1563 年在 cozumel（或在那一年加一段）。
+#       学院期各章 at = campeche（放假回家的海滩），巴兰的学院日程在梅里达，若在场判定要求人物到场，需整合方补坎佩切的假期日程。
+# 口头禅：“说个价。”只在 C1 正文末尾用一次；B1、A2、重逢里换说法呼应（“开个数”“讨价”）。
+# 秘密：巴兰怕急流——B2 由“我”看出来；不进任何见闻。草药是给圣所旁的人——也不进见闻。
+# 地点（2026-11-01 close-places）：学院章正文都写放假时坎佩切的海滩，养成期伊希只在梅里达，七章都去掉 at（不限地点），正文不动；
+#   玩家回应时见闻照常记下，跳过养成时缺省的见闻没有地点、听不到。重逢 1563 仍在科苏梅尔。
+
+[[tracks]]
+key = "bond_balam"
+name = "巴兰：买不走的船"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["balam"]
+
+# C1：1554 年初，坎佩切海滩。他要买船，我要他跟船三个月；那把汗湿的可可豆。
+[[tracks.chapters]]
+key = "c1"
+title = "买不走的船"
+text = "放假回到坎佩切，家里的独木舟搁在海滩上等货。我正蹲着刮船底的藤壶，一片影子罩过来。是巴兰，梅里达学校里坐我后排的可可商儿子，头上一顶簇新的西班牙毡帽，帽檐宽得能给半条船遮阴。“玛丽亚，这船我要了。”他摊开手，掌心一把可可豆，“你开多少，我爹都付得起。”“不卖。想坐它，先跟船三个月。搬货、舀水、守夜，一样不少。”“三个月算什么？”当天下午我们出河口试船，正撞上退潮的回流，船身猛地一侧。我回头，看见他的脸刷地白了，两只手死死抠住船舷。我什么也没说，把桨换到另一边，船正了。他也装作没事，靠岸时第一个跳下水，帽子落在了船里。他站在浅水里，把那把可可豆又摊开，豆子被手心的汗泡得发亮：“说个价。”"
+window = [[1554, 1, 1], [1554, 4, 30]]
+cast = ["balam"]
+speaker = "captain"
+mood = "cheerful"
+news = "坎佩切的海滩上，梅里达可可商家的儿子捧着一把可可豆要买一条独木舟，船家的姑娘不卖，倒把他雇去跟船三个月。"
+when = [{ kind = "flag", flag = "family_access_merida_franciscan" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "counter_offer"
+text = "开价：跟船三个月，管饭，不给工钱。"
+reply = "他把可可豆一颗颗收回钱袋，系紧了绳：“成交。我爹知道了，牙都要笑掉。”“那你就别告诉他。”他想了想，弯腰从船里捞出那顶帽子，扣回头上，往城里走了。后来我才知道，他真的一个字也没跟他爹提。"
+next = "c2"
+effects = [{ kind = "affinity", person = "balam", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "silly_price"
+text = "开价：一千颗可可，外加你头上那顶帽子。"
+reply = "他真蹲到沙滩上数起豆子来，数到第三百颗，一抬头才发现我在笑。他也不恼，从船里捞出那顶帽子，扣到我头上，帽檐一直盖到我鼻尖：“帽子借你。船，我早晚要买下来。”他手里还差七百颗可可，三个月倒是从第二天就算起了。"
+next = "c2"
+effects = [{ kind = "affinity", person = "balam", value = 3 }, { kind = "skill", skill = "negotiation", value = 6 }]
+
+# C2：1554 年夏，北行装货。他只挑贵的筐往船尾摞；换下一筐可可的那罐淡水。
+[[tracks.chapters]]
+key = "c2"
+title = "少装一筐"
+text = "往北的这一趟装可可和棉布。巴兰挽起袖子，专挑豆子最饱满的那几筐往船尾摞，摞到第五筐，船头翘了起来，船尾的水线快漫到舷边。“这几筐到了北边的盐滩，能换两倍的盐。”他拍着筐沿，“少装一筐，就少一笔。”我把最沉的那一筐从船尾掀下来，拍拍船头空着的横板：“这一筐的分量，你来顶。”他不情不愿地爬过去坐下，船头一沉，整条船一下子平了。他低头看看脚边的水线，又看看沙滩上那筐可可，嘴里念念有词，一颗一颗地算亏了多少。我去搬水罐。等我回来，他已经把另一筐可可也搬回了岸上，空处换上一罐淡水，罐口用芭蕉叶扎得紧紧的。“这罐水也得算价。”他抹了把汗，“我少挣的那一筐，你给我记在账上。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+cast = ["balam"]
+speaker = "captain"
+mood = "tense"
+news = "坎佩切的脚夫说，可可商家的儿子跟独木舟装货，把一筐上好的可可搬回岸上，换了一罐淡水，都说这孩子把账算糊涂了。"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "sit_on_load"
+text = "这一路就让他坐在船头，看船怎么随货的轻重起伏。"
+requires = [{ kind = "affinity", person = "balam", ge = 20 }]
+hint = "他还嘴硬，说可可比命值钱——再熟一点，他才肯听你的。"
+reply = "他在船头坐了大半天，起先还嘟囔，后来不出声了，盯着水线一会儿高、一会儿低。傍晚他说：“船跟我爹的账一个样，一头压重了就要翻。”回程起了风，船一次也没吃水。我看见他趁我转身，拿炭条在帽子的衬里上画了我摞货的样子。"
+next = "b1"
+effects = [{ kind = "affinity", person = "balam", value = 4 }, { kind = "skill", skill = "rigging", value = 4 }, { kind = "bond", person = "balam", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "let_him_load"
+text = "回程装盐的时候，随他摞，等风来了再说。"
+reply = "他把盐袋全堆在船头，说盐比可可沉，越沉越稳。半路起了东风，船头一下一下扎进浪里，他舀水舀到两只手都抽了筋。上岸后他一句话没说，把帽子往沙上一扔就走了。第二天装货，他先蹲在船边问我：哪一筐放哪儿？"
+next = "b1"
+effects = [{ kind = "affinity", person = "balam", value = 3 }]
+
+# B1：1554 年秋，坎佩切海滩的火堆边，回述科苏梅尔岸外的巡查。他父亲的许可纸。
+[[tracks.chapters]]
+key = "b1"
+title = "巡逻的问话"
+text = "从科苏梅尔回来的第三个晚上，我们在坎佩切的海滩上生了一堆火，烤巴兰从市场换来的鱼。那一趟是在岛上的圣所附近被拦下的。两个西班牙兵划着小船贴过来，问我们装的什么、去哪儿、见谁。船底压着母亲托我带的一包草药，是给圣所旁边的人的——那地方，西班牙人不许去。我刚要开口，巴兰抢了先：“我爹的盐，送镇上的。”他的声音比平时低，还从怀里掏出他父亲的许可纸，展开递过去，手稳得像在铺子里收钱。兵看了看纸上的印，挥手放了船。这会儿他把鱼翻了个面，才说：“那时候，我腿一直在抖。”“我看见了。”“你看见个鬼，你在看那包药。”他把树枝戳进火里，“那包草药，到底是给谁的？”火光里，那张许可纸还从他衣襟里露出一角，被海水洇湿了一块。药的事我没先答，先告诉了他另一件：“我不叫玛丽亚。我叫伊希·妮克特。”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+cast = ["balam"]
+speaker = "captain"
+mood = "tense"
+news = "坎佩切的船家说，西班牙人在科苏梅尔岸外拦了一条独木舟，梅里达可可商的儿子掏出他爹的许可纸，兵看了看印，就放过去了。"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "tell_name"
+text = "认真谢他，再告诉他：药是给替我起这个名字的人。"
+reply = "我说那位老婆婆接生过我，名字是她起的，意思是花。巴兰把这个名字念了三遍，第二遍舌头打了结，第三遍念对了。“以后在学校我也这么叫你。”“在学校不行，修士要罚。”他想了想：“那就在船上叫。”第二天搬货，他隔着半条船喊了一声，喊得全海滩的人都回过头来。"
+next = "b2"
+effects = [{ kind = "affinity", person = "balam", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "no_lies"
+text = "告诉他：下回别替我撒谎，我自己答得上来。"
+reply = "他咧嘴一笑：“开个数吧——下回我一个字也不说。”我说一颗可可都不值。他笑着认了，把烤好的鱼递给我，再没问那包药的事。第二天我收拾船舱，在桨架底下摸到那张许可纸，折成了四折，塞得严严实实。"
+next = "b2"
+effects = [{ kind = "affinity", person = "balam", value = 3 }]
+
+# B2：1555 年，北行过海口的前一晚。他怕水，怕了一整年；攥皱的帽檐。
+[[tracks.chapters]]
+key = "b2"
+title = "腿软的人"
+text = "三个月早就过了，巴兰还在船上。我问他什么时候回去跟他爹交账，他说再跟一趟，北边那一趟。往北要过一段海口，潮水从窄处挤出来，浪是竖着的。出发前一晚，他摸黑来到海滩，帽子攥在手里：“明天让我坐船尾。”“船尾要掌绳，你又不会。”“我学。”月光底下，我看见他攥着帽檐的那只手在抖，抖得帽子都跟着颤。我想起第一次出河口时他抠船舷的样子，想起这一年里每次过浪，他都抢着去舀水，背对着海。他怕水。怕了一整年，每一趟都来了。他看出我看出来了，脸先是涨红，接着发白：“别告诉别人。尤其别告诉我爹——我在铺子里跟他夸过，说那个海口我闭着眼都能过。”帽檐在他手里攥成了一团，那是他最心疼的一顶帽子。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+cast = ["balam"]
+speaker = "captain"
+mood = "tense"
+news = "坎佩切海边的人说，可可商的儿子跟着独木舟跑了一整年还不肯回铺子，他爹托人捎了三回口信，他回回都说再跑一趟。"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "teach_float"
+text = "天亮前带他去城外的塞诺特，教他在水里浮起来，不让人看见。"
+requires = [{ kind = "affinity", person = "balam", ge = 50 }, { kind = "bond", person = "balam", level = "C" }]
+hint = "他还在装没事——这时候说破，他会掉头就走。"
+reply = "塞诺特的水又凉又清，看得见底下的石头。我托着他的背让他躺平，他浑身绷得像根桨。我一松手，他沉下去半截，又自己浮了上来，大叫一声，把洞顶的燕子全惊飞了。“它托着我！”他躺在水面上不敢动，只有嘴在动。那天过海口，他坐在船中间，两手搁在膝上，一次也没去抠船舷。"
+next = "a1"
+effects = [{ kind = "affinity", person = "balam", value = 4 }, { kind = "skill", skill = "diving", value = 4 }, { kind = "bond", person = "balam", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "seat_stern"
+text = "装作不知道，让他坐船尾掌绳，背对着浪。"
+reply = "他在船尾掌了一路的绳，过海口的时候，眼睛一刻不离手里的绳结，脸白得像盐。船过了窄处，他才松开咬紧的牙。上岸后他凑过来，小声说了句谢谢，马上又补一句：“我可什么都没怕。”“我也什么都没看见。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "balam", value = 3 }]
+
+# A1：1556 年春分，坎佩切退潮的礁石。这回我先伸手；那块湿滑的礁石。
+[[tracks.chapters]]
+key = "a1"
+title = "春分的岸"
+text = "春分前后，坎佩切的潮退得特别远。船搁在浅水里，船底下露出一大片礁石，长满了滑溜溜的绿苔。我生在春分，母亲托人从岛上捎来一串贝壳，我挂在了船头。要上那片礁石，得跨过一道积水的石缝。我先伸出手：“扶我一把。”巴兰愣了一下，看看我的光脚板：“你？你在这片礁石上跑得比螃蟹还快。”嘴上这么说，他还是把手递过来，握稳了，等我两只脚都踩实，才松开。他没像平时那样说一句“这一扶也得算钱”，只把手在衣服上蹭了蹭。我们坐在礁石上看浪。近处的浪是黄绿的，远一点变成蓝，再远就看不清了。“你说，”他捡起一块小石子，在手里翻来翻去，“这么多片海，你最想在哪儿靠岸？”往常他问的，是哪片海最值钱。"
+window = [[1556, 3, 18], [1556, 5, 17]]
+cast = ["balam"]
+speaker = "captain"
+mood = "tender"
+news = "坎佩切的人说，春分那几天潮退得老远，海边的礁石全露了出来，有两个梅里达学校的孩子在上头坐了一下午。"
+when = [{ kind = "date", from = [1556, 3, 18], to = [1556, 5, 17] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "race_rocks"
+text = "不回答，跟他比谁先跑到最远那块礁石。"
+reply = "我先跳了出去。他在后头追，追到一半踩上青苔，摔了个四脚朝天，帽子掉进水里漂走了。我在最远那块礁石上等他捞回帽子、湿淋淋地爬上来。“这回不算，下回再比。”他把帽子拧干扣回头上。我们就在那块石头上坐着，坐到潮水一点点涨回脚边，我才告诉他那座岛的名字。"
+next = "a2"
+effects = [{ kind = "affinity", person = "balam", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "reach_first"
+text = "回去时换我先伸手，拉他跨过湿石，拉住了就不急着松开。"
+requires = [{ kind = "age", le = 17 }, { kind = "age", person = "balam", le = 17 }, { kind = "romance_open", romance_open = "balam" }]
+hint = "这时候伸手，他只会以为你要他帮着扛东西。"
+reply = "回去又要跨那道石缝。这回我先过去，回身把手伸给他。他看了看我的手，没说话，握住了。过了石缝，他没松，我也没松。我们就那样站在湿漉漉的礁石上，说哪道浪是黄的、哪道是蓝的，一直说到潮水漫上来打湿了脚背。“科苏梅尔，”我说，“我最想在那儿靠岸。”他点点头，好像那也是他的答案。"
+next = "a2"
+effects = [{ kind = "affinity", person = "balam", value = 3 }, { kind = "heart", person = "balam", value = 6 }]
+
+# A2：1556 年秋，他头一桩自己的买卖。那只刻了记号的可可葫芦。
+[[tracks.chapters]]
+key = "a2"
+title = "自己换来的可可"
+text = "秋天巴兰从北边回来，晒黑了一圈，帽子也旧了。他跟我的船跑了两年多，攒下的工钱一直缝在钱袋的夹层里。这回他没去他爹的铺子，拿工钱在盐滩换了两袋盐，又背着盐走了三个村子，换回一只葫芦。他在海滩上拔开葫芦塞给我看。里面是满满的可可豆，颗颗饱满，油亮，敲开一颗，香得人鼻子发酸。“上好的。”他说，“没照我爹的价目表换。一颗一颗，都是我自己讲下来的价。”他把塞子塞好，抱在怀里，抱了好一会儿，才问：“这一葫芦，能不能算我在你船上的一份？”葫芦肚上刻着一道歪歪扭扭的记号，是他自己刻的，说怕跟他爹的货混了。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+cast = ["balam"]
+speaker = "captain"
+mood = "tender"
+news = "坎佩切的盐贩说，梅里达可可商的儿子背着两袋盐走了三个村子，换回一葫芦好可可，连他爹的铺子都没进。"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept_cacao"
+text = "收下葫芦，告诉他：这是我收过最贵的东西。"
+requires = [{ kind = "affinity", person = "balam", ge = 80 }, { kind = "bond", person = "balam", level = "B" }]
+hint = "他把葫芦抱得紧紧的——你们还没熟到他肯整只交到你手里。"
+reply = "他嘴一咧，张口就要报这葫芦值多少，话到嘴边又咽了回去。那天晚上我煮了一锅可可，放了辣椒，打出厚厚的沫。我们捧着碗蹲在火边，喝得太急，两个人都烫了舌头，咝咝地吸气。他舔着嘴唇说：“下一桩买卖，我要做得比这个大。”葫芦洗干净了，挂在我的船舱里。"
+next = "s"
+effects = [{ kind = "affinity", person = "balam", value = 4 }, { kind = "bond", person = "balam", level = "A" }, { kind = "item", item = "cacao_gift", qty = 1 }, { kind = "memory", memory = "mem-bond_balam-a2", title = "自己换来的可可" }]
+
+[[tracks.chapters.choices]]
+key = "half_back"
+text = "倒出一半还给他：这一半，算你入股我的船。"
+requires = [{ kind = "affinity", person = "balam", ge = 80 }, { kind = "bond", person = "balam", level = "B" }, { kind = "heart", person = "balam", ge = 6 }, { kind = "age", le = 17 }, { kind = "age", person = "balam", le = 17 }, { kind = "romance_open", romance_open = "balam" }]
+hint = "这话现在说还太早——他也还没打定主意，把葫芦交到你手里。"
+reply = "我把可可倒在帆布上，一颗一颗分成两堆，一堆装回葫芦，推回他怀里。他愣住了，接着笑起来，又照老习惯张嘴要讨价，我抢在前头：“不用开价了，就这么定。”他把那一半郑重地倒进钱袋，系了两道绳。“那以后船上的账，”他说，“我要记一半。”说这话时他没看我，看的是那只葫芦。"
+next = "s"
+effects = [{ kind = "affinity", person = "balam", value = 3 }, { kind = "heart", person = "balam", value = 6 }, { kind = "bond", person = "balam", level = "A" }, { kind = "item", item = "cacao_gift", qty = 1 }, { kind = "memory", memory = "mem-bond_balam-a2", title = "自己换来的可可" }]
+
+[[tracks.chapters.choices]]
+key = "ask_profit"
+text = "先问他：这一趟里外里，净赚了多少？"
+reply = "他张口就报了个数，报得飞快。我拿树枝在沙上算了一遍，告诉他多算了路上喝的水、少算了换盐那天的脚钱。他不服，蹲下来又算一遍，算完挠着头认了。葫芦还抱在他怀里。“等我算清了再给你。”他说，“账不清的东西，不能送人。”"
+next = "s"
+effects = [{ kind = "affinity", person = "balam", value = 2 }]
+
+# S：1556 年 12 月，坎佩切海滩。我回科苏梅尔，他回梅里达的铺子；这句话由我来说。
+[[tracks.chapters]]
+key = "s"
+title = "跟我的船"
+text = "十二月的风从海上来，岛上的父亲派了两条独木舟到坎佩切接我。学校散了，名册上那个“玛丽亚”留在了梅里达，我要回科苏梅尔，往后的盐路、可可路，都得我自己去跑。巴兰也要回去了。他爹捎了话：梅里达的铺子开春交给他，账本都备好了，他只管坐在柜台后头收豆子。船装满了，我站在船头，他站在岸上的湿沙里。那顶西班牙帽子已经旧得软塌塌的，帽檐上还留着那年被他攥出来的褶子。“你呢？”我先问他。“铺子挺好。”他答得飞快，“不用过海口，不用舀水。我爹说，一年挣的能抵你两条船。”他像在念一张价目表，眼睛却一直盯着我船舱里那几筐可可。浪一下一下舔着船底，桨手们都在等我发话。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+cast = ["balam"]
+speaker = "captain"
+mood = "tender"
+news = "科苏梅尔来的两条独木舟在坎佩切接上船家的女儿往东去了，梅里达可可商的儿子站在岸边的湿沙里，送了好一阵。"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_balam" }, { kind = "flag", flag = "c7_bond_balam_parted" }]
+news = "科苏梅尔来的两条独木舟在坎佩切装满了货往东去了；梅里达可可商的儿子被他爹叫回去看铺子，没赶上送行。"
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好：等你自己的船造好那天，两条船结成一支商队。"
+requires = [{ kind = "bond", person = "balam", level = "A" }]
+hint = "这样的约一辈子只许一回——要么你已经许给了别人，要么你们还没走到能许的那一步。"
+reply = "“那得攒好多可可。”他说。“你会攒。你在我船上攒了三年。”他低头看着沙子，脚尖在湿沙上画了两道并排的线，又画一道把它们连起来。然后他摘下那顶旧帽子，蹚着水走过来，把帽子放进我的船舱，压在可可筐上。“先压在这儿，当定金。”他说，“船造好了，我来赎。”桨手开始往外撑。我回头的时候，他还站在水里，没戴帽子，头发被风吹得乱七八糟，冲我比了个数豆子的手势，意思是：这笔账记着。我在船舱里把帽子翻过来，衬里缝了个小兜，兜里塞着一颗可可豆。"
+next = "done"
+effects = [{ kind = "affinity", person = "balam", value = 5 }, { kind = "bond", person = "balam", level = "S" }, { kind = "relation", person = "balam", relation = "friends" }, { kind = "flag", flag = "c7_bond_balam_promise" }, { kind = "memory", memory = "mem-bond_balam-s", title = "跟我的船" }, { kind = "start_track", track = "reunion_balam" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "对他说：跟我的船，别跟你父亲的。"
+requires = [{ kind = "bond", person = "balam", level = "A" }, { kind = "heart", person = "balam", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "balam", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "balam" }]
+hint = "这句话还说不出口——你们还没走到那一步，或是这辈子唯一的约，你已经许给了别人。"
+reply = "他看着我，看了很久，久到桨手咳了一声。“那得先问问你的船，”他说，“要不要我。”“我的船听我的。”他笑了，笑得跟那年站在浅水里摊开一把可可豆时一个样。他蹚着水过来，握住我搭在船舷上的手，握得很紧，手心是热的，没有出汗。“我爹的铺子，我先去坐两年。”他说，“把跟西班牙人讲价的本事学会，把本钱攒够。等我十八岁，我就去科苏梅尔，到时候你再告诉我，你的船要不要我。”他松开手，退回岸上。船撑出去好远，我还看得见他站在那里，一只手按着胸口，好像那儿揣着一葫芦可可。"
+next = "done"
+effects = [{ kind = "heart", person = "balam", value = 12 }, { kind = "relation", person = "balam", relation = "crush" }, { kind = "bond", person = "balam", level = "S" }, { kind = "flag", flag = "c7_bond_balam_romance" }, { kind = "memory", memory = "mem-bond_balam-s", title = "跟我的船" }, { kind = "start_track", track = "reunion_balam" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "各走各路：他回铺子，我回海上，谁也不欠谁。"
+reply = "“也好。”他点点头，点得很用力，“我先学会自己挑航路。铺子是我爹的，往后走哪条路，得我自己挑。”我把他用了三年的那支桨从船里拿出来，递给他。桨柄上有他磨出来的两个凹，正好是他手指的位置。他接过去掂了掂：“这算送我的？”“不算送。这支桨认了你的手，别人握着不顺。”“那我可不付钱。”他把桨扛上肩膀，往后退了两步，又站住，“往后在哪片海碰上了，我还要跟你讲价，你别想占我便宜。”船撑出去了。他扛着桨站在岸上，像扛着一面旗。"
+next = "done"
+effects = [{ kind = "affinity", person = "balam", value = 2 }, { kind = "relation", person = "balam", relation = "friends" }, { kind = "flag", flag = "c7_bond_balam_own" }, { kind = "memory", memory = "mem-bond_balam-s", title = "跟我的船" }, { kind = "start_track", track = "reunion_balam" }]
+
+[[tracks]]
+key = "reunion_balam"
+name = "巴兰：两条独木舟"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["balam"]
+
+# 重逢：1563 年，科苏梅尔的货岸。他有了自己的船，船头刻着“不卖”。
+[[tracks.chapters]]
+key = "reunion"
+title = "两条独木舟"
+text = "科苏梅尔的货岸边泊着一条新独木舟，船身刷了红土，船头刻着两个字，刻得很深：不卖。船主正蹲在船边往上搬盐袋，听见脚步声，抬起头来——是巴兰。他比当年黑了，肩膀也宽了，头上没戴帽子。“我就知道你得来看。”他站起来，拍掉手上的盐。去年马尼那件事以后，整个尤卡坦的人说话都压低了嗓子，好些人家的船搁在岸上不敢出。他照样跑他的盐路，从北边盐滩跑到这里，一个月一趟。“两条船结成一队。”他指指我的船，又指指他的，“遇上风，就把绳子系在一起，谁也翻不了。分利的事，坐下来慢慢讲。”他把桨往我手里一塞：“不过你先试试我的船。北边那个海口，我现在坐在船头过。我还会浮水了，浮得比你稳。”"
+window = [[1563, 1, 1], [1563, 12, 31]]
+at = "cozumel"
+cast = ["balam"]
+speaker = "captain"
+mood = "cheerful"
+news = "科苏梅尔的货岸边来了一条新独木舟，船头刻着“不卖”两个字。船主是梅里达可可商的儿子，从北边盐滩一个月跑一趟。"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1563, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "promise"
+when = [{ kind = "flag", flag = "c7_bond_balam_promise" }]
+text = "科苏梅尔的货岸边泊着一条新独木舟，船身刷了红土，船头刻着两个字，刻得很深：不卖。船主正蹲在船边往上搬盐袋，听见脚步声，抬起头来——是巴兰。他比当年黑了，肩膀也宽了，头上没戴帽子。“船造好了。”他站起来，拍掉手上的盐，“我来赎我的帽子。”去年马尼那件事以后，整个尤卡坦的人说话都压低了嗓子，好些人家的船搁在岸上不敢出。他照样跑他的盐路，从北边盐滩跑到这里，一个月一趟。“两条船结成一队。”他指指我的船，又指指他的，“遇上风，就把绳子系在一起，谁也翻不了。分利的事，坐下来慢慢讲。”他把桨往我手里一塞：“不过你先试试我的船。北边那个海口，我现在坐在船头过。我还会浮水了，浮得比你稳。”"
+
+[[tracks.chapters.variants]]
+key = "romance"
+when = [{ kind = "flag", flag = "c7_bond_balam_romance" }]
+text = "科苏梅尔的货岸边泊着一条新独木舟，船身刷了红土，船头刻着两个字，刻得很深：不卖。船主正蹲在船边往上搬盐袋，听见脚步声，抬起头来——是巴兰。他比当年黑了，肩膀也宽了，头上没戴帽子。“说好十八岁就来，晚了四年。”他站起来，拍掉手上的盐，“攒本钱攒的。”去年马尼那件事以后，整个尤卡坦的人说话都压低了嗓子，好些人家的船搁在岸上不敢出。他照样跑他的盐路，从北边盐滩跑到这里，一个月一趟。“两条船结成一队。”他指指我的船，又指指他的，“遇上风，就把绳子系在一起，谁也翻不了。分利的事，坐下来慢慢讲。”他把桨往我手里一塞：“不过你先试试我的船。北边那个海口，我现在坐在船头过。我还会浮水了，浮得比你稳。”"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "balam", text = "伊希·妮克特：这封信是我说、梅里达广场上的书记替我写的。他按行收钱，一行两颗可可，所以我说短一点。我有自己的船了。船头刻了名字，不告诉你，你自己来科苏梅尔看，看了就知道。北边那个海口，我现在坐在船头过。别的不多说，再说要加钱。等你回岛，货岸上第三根船桩，系红绳的那条就是我的。——巴兰（书记补一句：此信共计十四颗可可，已付清。）" }, { kind = "flag", flag = "c7_bond_balam_missed" }]
+news = "梅里达可可商的儿子托广场上的书记写了封信寄去科苏梅尔，书记逢人就说，那是他写过最抠门的一封信。"
+
+[[tracks.chapters.choices]]
+key = "convoy"
+text = "跟他结成两条船的商队，回程走哪条路，轮流定。"
+reply = "我先试了他的船。船底刮得干净，压舱石摆得正，盐袋摞得船头船尾一样沉——跟我当年摞的一模一样。他坐在船头，回过头冲我挑了挑眉毛。回到岸上，我们蹲在沙地上画账。他一颗可可都不让，我也一颗不让，从中午吵到太阳偏西，桨手们在旁边睡了一觉。最后拿树枝在沙上写定了：赚的对半，赔的对半；回程这一趟我定，下一趟他定；遇上风，先救人，后救货。他盯着沙上那几行字看了很久，伸出手来跟我一拍：“这是我做过最好的一桩买卖。”第二天一早，两条船一前一后出了港。“不卖”在前头，绳子盘在两条船中间，随时能系上。"
+next = "done"
+effects = [{ kind = "affinity", person = "balam", value = 5 }, { kind = "relation", person = "balam", relation = "friends" }, { kind = "flag", flag = "c7_bond_balam_landing_friend" }, { kind = "memory", memory = "mem-bond_balam-reunion", title = "两条独木舟" }]
+
+[[tracks.chapters.choices]]
+key = "one_boat"
+text = "把两条船的绳子系在一起，对他说：以后同一条路，同一本账。"
+requires = [{ kind = "flag", flag = "c7_bond_balam_romance" }, { kind = "heart", person = "balam", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "balam", ge = 18 }, { kind = "romance_open", romance_open = "balam" }]
+hint = "当年那句话没说到这一步，今天他不会先开口。"
+reply = "我没去试他的船。我把两条船的缆绳拉过来，在两根船桩之间打了个结，打的是过海口时用的死结。“以后同一条路，”我说，“同一本账。”他看看那个结，又看看我，嘴唇动了动，大概又是那句讨价的老话。我先摇了头：“不用讲价了。”他笑了一声，低头吻了吻我的手背，吻完又慌了，耳朵通红：“这是西班牙人的规矩，我在梅里达学的，你别嫌——”“那就照玛雅人的规矩，再来一次。”他愣了一下，真的再来了一次，这回没吻手背。货岸上搬盐的人吹起了口哨，他也不管。后来他在船头那两个字底下补刻了一行小字：她除外。刻得歪歪扭扭，跟当年葫芦上的记号一个样。"
+next = "done"
+effects = [{ kind = "affinity", person = "balam", value = 5 }, { kind = "relation", person = "balam", relation = "partners" }, { kind = "flag", flag = "c7_bond_balam_landing_love" }, { kind = "memory", memory = "mem-bond_balam-reunion", title = "两条独木舟" }]

@@ -1,0 +1,139 @@
+# C13d 人物的请托：把舵交出去（request_karim）。中文，Claude 写。
+# 人物：卡里姆 karim（1535-02-03 生，男；索马里船主家的长子，霍尔木兹的船东账房；cast 没写秘密，本请托不碰秘密）。
+# 类型：打一仗（ft）；4 章 offer → battle；battle 的两条路分别进 after（自己扳舵）与 after_taken（别人替他开船），终点 done / failed。
+# 报价：当面（T）。人物按日程在霍尔木兹（hormuz_port，船东账房边上的码头），auto=false，玩家“问请托”（ask:request_karim）启动。
+# 窗口：报价 1566-01-01 至 1590-06-30（offer 的 deadline 即窗口止日，到期走 failed，不写见闻）；海战的章 120 天期限（deadline_days，超时走 failed 并寄一封信）；收尾的两章在亚丁，窗口 1566-01-01 至 1590-12-31，不设期限。普通章不写 window，窗口以 when 的日期条件表示。
+# 依据·史实：索科特拉附近的季风航路与劫船（史实背景；正文只写码头上的传闻，不写年份）。
+# 依据·原创：卡里姆与新舵手、手画的水道图与两笔新墨、旗语、“我上了船，舵就又是我的了”、“那句话怎么说”。
+# 结构说明：battle 的 signal 无论检定成败都设 own 并进 after；擦礁的一次另设 scraped 分支旗标，由 after 的变体读取。after 不再用 requires 门禁。别人替他开船的一路单独进 after_taken，不设 own。
+# 设的旗标：c13_request_karim_accepted（offer 接下）/ declined（回绝，终局 failed）/ own（海战里是他自己扳的舵，只设不读）/ scraped（擦了礁，分支旗标，after 的变体读）/ late（海战超时，终局 failed）/ done（收尾，终局 done）。
+# 读的旗标：无。不读 c7_* 与 c13_main_*。
+# 依赖：B10b 改名 hormuz→hormuz_port（当面模式）；港口 aden（亚丁）；属性 seamanship（captain.toml）；不用技能门槛。
+# 避开 C7：pair_karim_mansur 线（1555—58、1565）的事一概不写，本轨道从 1566 年起；不写曼苏尔、不写哈米德；不写恋爱与心动，效果里不用 relation / tie / bond / heart。
+# 回忆插画：mem-request_karim-after，画面：一张手画的水道图摊在船舱的桌上，礁石的地方多了两笔新墨，墨边被海水洇开一点。
+
+[[tracks]]
+key = "request_karim"
+name = "把舵交出去"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["karim"]
+
+# 一、他说什么也不上船：在霍尔木兹找到他，他把一趟护航托给你。
+[[tracks.chapters]]
+key = "offer"
+title = "他说什么也不上船"
+text = "霍尔木兹的码头上，挑夫的号子压着海风。卡里姆站在一摞麻袋上朝人群喊：“码头上人多，别挡着挑夫。是来搭船的，还是来跟我抢客的？”你还没开口，他已经跳下来，指着码头边上那条船。船尾绑缆绳的是他的新舵手，一个瘦高的年轻人，手抖得打不上结。卡里姆说，那道水道要过索科特拉，最近劫船的多。他要你的船跟在后头，“遇上了，你挡。我在岸上等。”“你不上船？”他把手背到身后：“我上了船，舵就又是我的了。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "karim", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应陪新舵手走一趟。"
+next = "battle"
+reply = "他从怀里抽出一张手画的水道图递给你，纸角磨得发软，字写得很细。刚松手，又抽回去，在礁石的地方添了两笔，再交到你手里。“别告诉他是我添的。”"
+effects = [{ kind = "affinity", person = "karim", value = 2 }, { kind = "flag", flag = "c13_request_karim_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_young"
+text = "问他：这个舵手，你信得过吗？"
+next = "battle"
+reply = "“信不过。”他笑了一声，“所以我才不上船。信得过的时候，我就不用学了。”他把水道图卷起来塞进你的袖口，“你替我看着他。”"
+effects = [{ kind = "affinity", person = "karim", value = 2 }, { kind = "flag", flag = "c13_request_karim_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟护航，你不接。"
+next = "failed"
+reply = "他没有劝，也没有骂。点点头，隔着衣服按了按怀里的水道图，说那他再找。转身跟挑夫讲价，声音一下子压低了，像是说给自己听的。"
+effects = [{ kind = "flag", flag = "c13_request_karim_declined" }]
+
+# 二、差点撞礁：过了索科特拉，两条劫船的快船从礁后头冲出来，新舵手慌了。
+[[tracks.chapters]]
+key = "battle"
+title = "差点撞礁"
+text = "过了索科特拉，海面忽然起了一层白沫。两条小快船从礁后头冲出来，船身低，桨多，直奔新舵手的船。你转舵迎上去，炮响过两轮，打退的那条挂着破帆往岸边逃了，另一条还在缠。新舵手在船上喊，嗓子都劈了。他把船往回转，转得太急，转错了方向，船头直对着一片暗礁。礁石上的白浪看得清清楚楚，离船头只有几个船身的距离。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "karim", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在索科特拉外打退劫船的快船" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "karim", value = -3 }, { kind = "flag", flag = "c13_request_karim_late" }, { kind = "letter", person = "karim", text = "那一季没走成，舵手跟着别人的船去了亚丁。我还在岸上等。" }] }
+
+[[tracks.chapters.choices]]
+key = "signal"
+text = "打旗语告诉他往哪转，让他自己把舵扳回来。"
+next = "after"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "他把舵扳回来了。扳得很慢，手上的劲使不匀，船身晃了两下才稳住。可那是他自己扳的。你打的旗语，他一面一面看清了，才肯动手。"
+news = "索科特拉外的水道上，两条劫船的小快船被一条外乡船挡了回去，被护的那条船是个年轻舵手头一回带。"
+effects = [{ kind = "affinity", person = "karim", value = 5 }, { kind = "flag", flag = "c13_request_karim_own" }]
+fail = { next = "after", effects = [{ kind = "affinity", person = "karim", value = -2 }, { kind = "flag", flag = "c13_request_karim_own" }, { kind = "flag", flag = "c13_request_karim_scraped" }], news = "索科特拉外的水道上，一条外乡船把劫船挡了回去，护着的那条船擦了礁，好在没破，是个年轻舵手头一回带。" }
+
+[[tracks.chapters.choices]]
+key = "take_over"
+text = "靠过去，派你的人上他的船掌舵。"
+next = "after_taken"
+reply = "你的人把船开出了礁区，帆一收一放，干脆得很。新舵手站在一边，脸红到耳根，一句话也没说，只把手里那张水道图攥皱了。"
+news = "索科特拉外的水道上，两条劫船的快船被一条外乡船挡下，船上的人替年轻舵手把船开出了礁区。"
+effects = [{ kind = "affinity", person = "karim", value = 2 }]
+
+# 三a、那句话怎么说：新舵手自己扳过舵，问你该怎么带话。
+[[tracks.chapters]]
+key = "after"
+title = "那句话怎么说"
+text = "亚丁的码头上，新舵手把船靠稳，下船时腿还在抖。他从怀里掏出那张水道图，边角卷了，礁石的地方多了两笔新墨。那张图是你出港前交给他的，他没问是谁添的。他把两手在裤子上擦了又擦，才把卡里姆给的钱袋交到你手里，钱袋不重，他递得很小心。他又托你带一句话回霍尔木兹，然后问你：那句话该怎么说——说自己差点撞礁，还是不说。"
+speaker = "captain"
+mood = "tender"
+at = "aden"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "karim", value = true }]
+news = "亚丁码头上，一个年轻舵手头一回自己把船带到了，靠岸时手上全是汗，码头上的人都看见了。"
+
+[[tracks.chapters.variants]]
+key = "scraped"
+when = [{ kind = "flag", flag = "c13_request_karim_scraped" }]
+text = "亚丁的码头上，新舵手站稳了才敢回头看船。他说船底擦礁那一下，到现在耳朵里还响，说完才把头抬起来。那张水道图被他攥了一路，礁石那里的两笔新墨被海水洇开了一点。钱袋他递得很小心。他问你：那句话该怎么说——说擦了礁，还是不说。"
+
+[[tracks.chapters.choices]]
+key = "say_true"
+text = "说：照实说，他会想听的。"
+next = "done"
+reply = "回到霍尔木兹，你把话带到。卡里姆听完，笑了很久，说碰没碰上礁不要紧，自己扳回来，这才叫把舵交出去。他说那张水道图就留给新舵手，添的那两笔别擦。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "karim", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_karim-after", title = "添了两笔的水道图" }, { kind = "flag", flag = "c13_request_karim_done" }]
+
+[[tracks.chapters.choices]]
+key = "say_safe"
+text = "说：只说到了，平安。"
+next = "done"
+reply = "卡里姆听了点点头，没有追问，只把钱袋的绳子又系紧了一圈。过了几天他自己打听到了，托人来跟你说：下回，让他自己说。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "karim", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_karim_done" }]
+
+# 三b、那一下是谁扳的：别人替他开出了礁区，新舵手心里清楚。
+[[tracks.chapters]]
+key = "after_taken"
+title = "那一下是谁扳的"
+text = "缆桩边上，新舵手接绳子接了两次才接住，手还在抖。卡里姆给的钱袋他递到你手里，却不肯抬头。那天把船开出礁区的是你的人，他心里清楚，码头上的人却只看见一条靠稳的船。他托你带一句话回霍尔木兹，话到嘴边又停住，问你：该说差点撞礁，还是不说。"
+speaker = "captain"
+mood = "tender"
+at = "aden"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "karim", value = true }]
+news = "亚丁码头上，一个年轻舵手头一回带船进港，船却是外人的水手替他开出礁区的，他自己一句话没说。"
+
+[[tracks.chapters.choices]]
+key = "say_taken"
+text = "说：船是我的人替他开出礁区的。"
+next = "done"
+reply = "卡里姆没有笑。他把钱袋的绳子解开，又一圈一圈系回去，才说：“船是进港了，舵可不是他扳的。下回，你的人先别上我的船。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "karim", value = 3 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_karim_done" }]
+
+[[tracks.chapters.choices]]
+key = "say_safe"
+text = "说：到港了，人没事。"
+next = "done"
+reply = "卡里姆听了，没说好，也没说不好，只把钱袋收进了柜子。过了几天，他托人捎话来：进港是进港，下回别再替他开船。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "karim", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_karim_done" }]

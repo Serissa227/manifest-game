@@ -1,0 +1,187 @@
+# 同一张面具（request_cecilia）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：塞西莉亚·达尔·波佐 cecilia（1528-01-01 生，女），威尼斯码头后头的面具铺老板娘（cast/story_europe.toml，势力 venice）。
+# 类型：复合（mixed），5 章：offer（报价）→ rialto（里亚尔托的药摊）→ ragusa（拉古萨的老药铺）→ ledger（半个名字）→ carnival（午夜的面具铺）。
+# 报价：T（当面）。auto=false，start=offer；玩家在威尼斯的港里找到她，用 ask:request_cecilia 启动。offer 不写 at，只写 person 目标。
+# 窗口：报价 1558-03-01..1574-06-30；offer 的 deadline 即窗口止日，超时 next=failed，不写见闻。其余各章的窗口写在 when 的日期条件里（普通章不用 window）；carnival 止于 1575-03-31。
+# 依据·史实背景：威尼斯狂欢节的面具与码头（冬末到大斋期前）；拉古萨老药铺的底账与寄药单子的传统（1317 年起有记录的药房）。正文只写店里的规矩与口头的说法。
+# 依据·原创：面具内衬的小记号、死者与凶手各戴一张同样的面具、里亚尔托的安神药油、拉古萨掌柜的底账、收货人的手套、塞西莉亚的账本与那封信。
+# 任务单的修正：不写阿玛娅（C7 线），不让阿玛娅帮忙；不写拉古萨那间药铺兼面具铺（C7 线的后半段）；本南丹蒂与魂魄的事一字不写；命案只写桥下、刀与药油，动机只写“一笔账”。
+# 读写的旗标：设 c13_request_cecilia_accepted（offer 两种接法）、_recipe（药单，里亚尔托三条路）、_gloves（拉古萨两条路）、_letter（ledger 的 tell_police，分支旗标）；终局旗标 _declined（回绝）、_late（里亚尔托与拉古萨超时）、_done（carnival 亲自问出来）、_partial（carnival 折中）。
+# 读：c13_request_cecilia_gloves（ledger 的变体，只改文字）、c13_request_cecilia_letter（carnival 的变体，只改文字）。不设任何 c7_ 旗标，不读 c13_main_*（无主线门禁）。
+# 依赖：港口 venice、ragusa_port（现有港口）；技能 herbal_medicine（skills.toml）；属性 eloquence（captain）；人物 cecilia。
+# 回忆插画清单：
+#   mem-request_cecilia-carnival「午夜的面具铺」：夜里的面具铺，柜台上一盏灯，门口站着戴手套的客人，塞西莉亚的手搁在针线上。
+
+[[tracks]]
+key = "request_cecilia"
+name = "同一张面具"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["cecilia"]
+
+# 一、洇了的那一行：面具铺的灯一夜没灭，她把两张面具的账摆出来。
+[[tracks.chapters]]
+key = "offer"
+title = "洇了的那一行"
+text = "威尼斯码头后头的面具铺，夜里的灯一直亮着。塞西莉亚把一张白底金边的半脸面具放在柜台上，先不说话，把你从头到脚看了一遍。“要张什么脸？哭的、笑的，柜里都有。名字留着自己用——你从哪条船下来的，我已经知道了。”她说，去年狂欢节的最后一夜，戴着这张脸的客人死在一座小桥底下。捞上来的人说，他身上那把小刀有一股草药味。这张面具是她做的，一共做了两张。第一张卖给了死者，第二张呢？她翻开账本，找到那一行，墨迹被水洇成了一团。"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "cecilia", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1558, 3, 1], to = [1574, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1574, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "替她查下去，从里亚尔托的药摊查起。"
+next = "rialto"
+effects = [{ kind = "affinity", person = "cecilia", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_accepted" }]
+reply = "她把面具翻过来，内衬上绣着一个小小的记号，针脚比头发丝还细。“两张都有这个。看见它，就是我的手艺。”"
+
+[[tracks.chapters.choices]]
+key = "ask_dead"
+text = "先问死者是谁，跟谁结过怨。"
+next = "rialto"
+effects = [{ kind = "affinity", person = "cecilia", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_accepted" }]
+reply = "“一个做香料买卖的，欠了几个人的钱，也借给过几个人钱。”她把账本合上，“戴面具的人，谁都可能结怨。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "桥下的命案，我不碰。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_cecilia_declined" }]
+reply = "她没有劝你，也没有骂你。她点点头，把面具收进柜台底下，拿布盖上，又去剪灯芯。灯还亮着。"
+
+# 二、安神的药油：里亚尔托桥边的药摊，摊主闻了闻布，认出是拉古萨来的配方。
+[[tracks.chapters]]
+key = "rialto"
+title = "安神的药油"
+text = "里亚尔托桥边的药摊，摊主是个缺了门牙的老头。塞西莉亚塞给你的那一小块布，是从小刀的刀鞘上剪下来的。老头凑到鼻子底下闻了又闻，没等你问，就说：“这不是毒。是安神的药油，拉古萨的配方，抹在枕头边上，夜里睡得沉。”刀鞘的皮子已经被药油浸得发黑。老头把布还给你，又说：“这东西拿来睡觉，不拿来捅人。”"
+at = "venice"
+speaker = "captain"
+mood = "mystic"
+news = "里亚尔托桥边的药摊上，有人拿着一小块布来闻，问的是一种拉古萨来的安神药油。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "cecilia", text = "药摊换了人，那张单子找不到了。面具我还收着。" }, { kind = "affinity", person = "cecilia", value = -3 }, { kind = "flag", flag = "c13_request_cecilia_late" }], news = "里亚尔托桥边的药摊换了人，原先摊主那一摞旧药单，不知被谁收走了。" }
+when = [{ kind = "alive", person = "cecilia", value = true }, { kind = "date", from = [1558, 3, 1], to = [1575, 3, 31] }]
+
+[[tracks.chapters.choices]]
+key = "herbs"
+text = "自己闻一遍，说出里面几味药的名字。"
+next = "ragusa"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "这几味药的名字，你一个也叫不上来。"
+effects = [{ kind = "affinity", person = "cecilia", value = 3 }, { kind = "flag", flag = "c13_request_cecilia_recipe" }]
+reply = "你说出了缬草和罂粟壳。摊主惊讶地看你一眼，从一摞纸里抽出那张药单的抄本递给你，一个子儿也没收。“吃这行饭的人，难得碰见认得药的。”"
+
+[[tracks.chapters.choices]]
+key = "ask_seller"
+text = "问摊主，最近谁来配过这种药油。"
+next = "ragusa"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "cecilia", value = 3 }, { kind = "flag", flag = "c13_request_cecilia_recipe" }]
+fail = { next = "ragusa", effects = [{ kind = "cash", value = -200 }, { kind = "flag", flag = "c13_request_cecilia_recipe" }], news = "里亚尔托桥边的药摊上，摊主只说得出一个外乡人，药单的抄本是花钱买下的。" }
+reply = "摊主想了想，说每月只有一个人来配，替贵人家管账，戴着手套，从不还价。他把称好的几味药包进纸里，手指一直没露出来。"
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "花钱买下那张药单的抄本。"
+next = "ragusa"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "身上的钱不够买这张抄本。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "cecilia", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_recipe" }]
+reply = "摊主收了钱，从一摞纸里抽出那张单子。上面盖着拉古萨一家药铺的印，印边已经磨得模糊。他把单子对折了一下，又展开，像是怕折坏了。"
+
+# 三、寄到她铺子的药：拉古萨的老药铺，掌柜认得自己的印，翻出底账。
+[[tracks.chapters]]
+key = "ragusa"
+title = "寄到她铺子的药"
+text = "拉古萨的老药铺，掌柜认得自己铺子的印，戴着老花镜，从柜子底下翻出一本底账。那种安神药油，每年冬天往威尼斯寄一瓶，收货的人每回都在单子上画一个小记号。掌柜把账页转过来给你看：圈里一道斜线，跟塞西莉亚面具内衬上绣的那个一模一样。“寄药的单子上写的，是她铺子的地址。”他把手指按在那一行上，按了很久。"
+at = "ragusa_port"
+speaker = "captain"
+mood = "mystic"
+news = "拉古萨的一家老药铺翻了几年的底账，查的是每年冬天寄往威尼斯的一瓶药油。"
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "cecilia", text = "拉古萨那边没人去问。狂欢节又要到了，我又做了一张同样的面具，挂在门口。" }, { kind = "affinity", person = "cecilia", value = -3 }, { kind = "flag", flag = "c13_request_cecilia_late" }], news = "拉古萨的老药铺里，那一摞寄往威尼斯的药单，压了好几个月，始终没有人来翻。" }
+when = [{ kind = "alive", person = "cecilia", value = true }, { kind = "date", from = [1558, 3, 1], to = [1575, 3, 31] }]
+
+[[tracks.chapters.choices]]
+key = "show_mark"
+text = "把面具内衬的记号描给掌柜看，问收货的人长什么样。"
+next = "ledger"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "cecilia", value = 3 }, { kind = "flag", flag = "c13_request_cecilia_gloves" }]
+fail = { next = "ledger", news = "拉古萨的老药铺里，掌柜只说收货的人从不露脸，信都是托人送来的。" }
+reply = "掌柜说那人戴手套，说话带热那亚口音，每回都要求把药油装进不透光的瓶子里。“他从不露脸，”掌柜说，“只露他的手。”"
+
+[[tracks.chapters.choices]]
+key = "copy_ledger"
+text = "出钱，请掌柜把这几年的底账抄一份。"
+next = "ledger"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "身上的钱不够付这笔抄账的钱。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "cecilia", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_gloves" }]
+reply = "掌柜抄了三页，字小得几乎挤在一起，每一页最后都画着那个小圈加斜线。他把纸叠好递给你，一句话也没多说。"
+
+# 四、半个名字：回威尼斯，把账页拿到灯下看。她认出那是替贵人家管账的人。
+[[tracks.chapters]]
+key = "ledger"
+title = "半个名字"
+text = "你把拉古萨的事一件一件讲给塞西莉亚听。她先是不信，等听到单子上写的是她铺子的地址，才把手里的针线放下。她说有人借她的地址收药，这些年她一瓶也没收到过。她把那张洇了的账页拿到灯下，斜着照，墨影里露出半个名字的笔画，是个替贵人家管账的人。“他得让人以为死的那个还活着。”她说，“下一个狂欢节，他一定还会戴第二张面具来。”"
+at = "venice"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 15, text = "等上半个月" }]
+when = [{ kind = "alive", person = "cecilia", value = true }, { kind = "date", from = [1558, 3, 1], to = [1575, 3, 31] }]
+
+[[tracks.chapters.choices]]
+key = "wait_carnival"
+text = "答应狂欢节那夜，陪你守在铺子里。"
+next = "carnival"
+effects = [{ kind = "affinity", person = "cecilia", value = 3 }]
+reply = "她把第二张面具的样子画在纸上给你看：白底，金边，内衬一个小记号。“进门的人，先看他的手套。”她把纸折起来塞进你的袖口，说：“别弄丢。”"
+
+[[tracks.chapters.choices]]
+key = "tell_police"
+text = "劝她先把这些告诉夜巡官。"
+next = "carnival"
+effects = [{ kind = "affinity", person = "cecilia", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_letter" }]
+reply = "她摇头：“夜巡官要的是一个能挂上绞架的名字，我要的是一句真话。”可她还是写了一封信，压在柜台底下，说要是她出了事，就交上去。"
+
+[[tracks.chapters.variants]]
+key = "v1_gloves"
+when = [{ kind = "flag", flag = "c13_request_cecilia_gloves" }]
+text = "你把拉古萨的事一件一件讲给塞西莉亚听。她先是不信，等听到单子上写的是她铺子的地址，才把手里的针线放下。那人戴手套，说话带热那亚口音，她听完，把针一根一根插回针包。她说有人借她的地址收药，这些年她一瓶也没收到过。她把那张洇了的账页拿到灯下，斜着照，墨影里露出半个名字的笔画，是个替贵人家管账的人。“他得让人以为死的那个还活着。”她说，“下一个狂欢节，他一定还会戴第二张面具来。”"
+
+# 五、午夜的面具铺：狂欢节最后一夜，戴手套的客人进门，她看着你。
+[[tracks.chapters]]
+key = "carnival"
+title = "午夜的面具铺"
+text = "狂欢节的夜里，面具铺里挤满了戴面具的人，外头的鼓声一阵阵传进来，柜台上那盏灯被人挤得晃个不停。快到午夜时，门帘掀开，进来一个戴手套的客人，白底金边的半脸面具戴在他脸上，边缘翻起一角，露出内衬上那个小记号。他站在门口，没有取下面具，也没有往里走，右手一直缩在袖子里。塞西莉亚放下手里的针线，看着你。"
+at = "venice"
+speaker = "captain"
+mood = "tense"
+news = "威尼斯狂欢节的夜里，码头后头的面具铺里，一个戴手套的客人被夜巡官带走了。"
+when = [{ kind = "alive", person = "cecilia", value = true }, { kind = "date", from = [1558, 3, 1], to = [1575, 3, 31] }, { kind = "season", season = 3 }]
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "你站到门口挡住人群，让她自己开口问。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "cecilia", value = 8 }, { kind = "fame", value = 4 }, { kind = "flag", flag = "c13_request_cecilia_done" }, { kind = "memory", memory = "mem-request_cecilia-carnival", title = "午夜的面具铺" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "cecilia", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_partial" }], news = "威尼斯狂欢节的夜里，码头后头的面具铺门口，一个戴手套的客人推开人群跑了，第二天夜巡官在码头上把他抓住了。" }
+reply = "她只问了一句：药油是寄给谁的。那人沉默了很久，才慢慢摘下面具。他说那一夜两个人都戴着同一张脸，为了一笔账吵到了桥底下。刀是他的，药油是给自己睡觉用的。塞西莉亚听完，把夜巡官叫了进来。"
+
+[[tracks.chapters.choices]]
+key = "block_door"
+text = "你先堵住门口，不让他走，再叫夜巡官。"
+next = "done"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "cecilia", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_cecilia_partial" }]
+reply = "夜巡官把那人带走了，面具也被收走当了证物。塞西莉亚站在柜台后头，说她到最后也没听到一句真话，然后把灯吹灭了。"
+
+[[tracks.chapters.variants]]
+key = "v1_letter"
+when = [{ kind = "flag", flag = "c13_request_cecilia_letter" }]
+text = "狂欢节的夜里，面具铺里挤满了戴面具的人。快到午夜时，塞西莉亚先把柜台底下压着的那封信抽出来，就着烛火烧了，烧得只剩半张纸的边。“用不着了。”她说。门帘掀开，进来一个戴手套的客人，白底金边的半脸面具戴在他脸上，边缘翻起一角，露出内衬上那个小记号。他站在门口，没有取下面具，也没有往里走，右手一直缩在袖子里。塞西莉亚放下手里的针线，看着你。"

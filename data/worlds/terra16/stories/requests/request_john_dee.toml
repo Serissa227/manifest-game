@@ -1,0 +1,181 @@
+# C13d 人物的请托：约翰·迪伊——北方的偏差（故事 2.0，A5 / E37 契约）
+# 人物：约翰·迪伊（john_dee，1527 年生，1609 年卒；数学家、占星家，1565 年起住泰晤士河边的莫特莱克，替莫斯科公司算东北航路）。
+# 类型：找东西（fd）·每条路 4 章：offer（报价）→ handin（交图）→ north（卑尔根记偏差）→ report（收尾）或 copied（抄汉萨人的表，收尾）；两条收尾只走其一，文件里共 5 个章节。
+# 窗口：报价 1565-01-15..1581-12-31（到期走 timeout，无见闻）；交图 1565-02..1582-09；卑尔根 1565-03..1582-12（进章后 180 天）；收尾 1565-04..1582-12-31。
+# 报价：T 当面（伦敦／莫特莱克）。auto=false，玩家“问请托”（ask:request_john_dee）启动；求见门槛低，报价章不写 at，目标为“在莫特莱克的书房找到他”。
+# 报酬：现金最多 1600（身份档 2，低风险）；唯一奖励 dee_antwerp（迪伊《象形单子》，他题字送出，只当一本书，不讲内容）；好感正向合计 ≤ 16；名声 +3；声望 england +2。
+# 回忆插画：mem-request_john_dee-report（画面：莫特莱克书房的墙上钉着一张北方海图，下面一本小册子写满了一天一行的数）。
+# 依据——史实：迪伊 1565 年起住莫特莱克，替莫斯科公司谋划东北航路，1577 年著《完美航海术》主张英格兰的海上帝国；奥劳斯·马格努斯《海图》（1539 年威尼斯，九块木版）在书市上有卖但稀少。
+#   原创：请托本身、卑尔根德意志商站的老领航员与他的表、一天一行的小册子、“每一度偏差都是一个字母”的口头禅、墙上的并排海图。
+#   待核的只写在这里，正文一律不提：迪伊的日程以 cast 为准（1565—1582 伦敦）；卑尔根商站的仓库布置只作背景。
+# 不写：《翠玉录》、与凯利的天使、黑曜石镜、1564 年安特卫普的十二天、1584 年布拉格、《象形单子》的内容。1582 年以前不写通灵之事。
+# 旗标：读取——本轨道的 gaps（report 的风浪变体）。设置——c13_request_john_dee_accepted / declined（报价）；own / gaps / copied / lent（分支）；done / partial（终局，报价与收尾的两条路互斥）；late（超时，终局）。
+# 依赖：B10b 不涉及（人物日程只用 london、bergen 与现有港口）；主线旗标不读；C7 旗标不设不读。
+# 英文覆盖：不写（本批仅中文）。
+
+[[tracks]]
+key = "request_john_dee"
+name = "北方的偏差"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["john_dee"]
+
+# 报价：书房里的问号。迪伊的口头禅只在这里用一次。
+[[tracks.chapters]]
+key = "offer"
+title = "莫特莱克的问号"
+text = "泰晤士河边的莫特莱克，书房从地板一直堆到房梁。门一开，一摞星表从椅子上滑下来，迪伊头也不回地伸手接住，顺手塞回原处。桌上摊着一张画了一半的北方海岸，岬角一个接一个，边上写满了问号。“来得正好，”他把眼镜推上额头，“我要一部奥劳斯·马格努斯的《海图》，对着它才对得上北方的岬角。还有，你下一回去北海，每天正午把罗盘偏了多少度记给我。”他停了一下，又补了一句：“每一度偏差都是一个字母，攒够了，海会自己念出来。”"
+mood = "cheerful"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1565, 1, 15], to = [1581, 12, 31] }, { kind = "alive", person = "john_dee", value = true }]
+objectives = [{ kind = "person", person = "john_dee", text = "在莫特莱克的书房找到他" }]
+deadline = [1581, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：先找那部海图"
+reply = "他从抽屉里翻出一本薄薄的小册子，封面上已经写好了你的船名，字比船名本身还端正。“每天一行，别跳。跳了的数，我一眼就看得出来。”"
+next = "handin"
+effects = [{ kind = "affinity", person = "john_dee", value = 2 }, { kind = "flag", flag = "c13_request_john_dee_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这回不接，船要开了"
+reply = "他已经转身去跟门口的一个客人讲星盘了，手指在空中画着圆。你走到门边，他也没回头，只顺口嘀咕了一句：“北方的岬角，只好等别人来画。”"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_john_dee_declined" }]
+
+# 交图：海图摊满一张桌子。迪伊的第二句直接引语在这里。
+[[tracks.chapters]]
+key = "handin"
+title = "海图摊满一张桌子"
+text = "我把那部《海图》从包袱里抽出来，书脊的皮已经磨白了。迪伊接过去，连谢字都没说，直接把它摊满了整张桌子。他的手指沿着挪威的海岸一路往北，嘴里念着那些怪兽的名字：岛一样大的鲸，缠住船身的海蛇，罗弗敦外头打着圈的漩涡。“多半是水手吹的，”他说，“可水手吹的牛，有时候比学者的数还准。”说完他就去找尺子，像是忘了我还站在门口。"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "alive", person = "john_dee", value = true }]
+objectives = [{ kind = "item", item = "carta_marina_venice", qty = 1, text = "带一部奥劳斯·马格努斯的《海图》" }, { kind = "person", person = "john_dee", text = "在莫特莱克找到迪伊" }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把海图留给他"
+reply = "他把它钉在书房的墙上，正对着窗。午后的光照在木版上，北方的海岸一下子亮了起来，他站在对面看了很久，嘴里还在念那些怪兽的名字。"
+next = "north"
+effects = [{ kind = "item", item = "carta_marina_venice", qty = -1 }, { kind = "affinity", person = "john_dee", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借他抄一个月，抄完还你"
+reply = "他叫来两个抄写员，自己在旁边一边看一边讲。我坐在窗边的椅子上，看那两人把每一条海岸线都抄成两份。抄完那天，他把抄本钉在墙上正对着窗的地方，原图连同一杯热麦酒一起还了回来。"
+next = "north"
+effects = [{ kind = "affinity", person = "john_dee", value = 1 }, { kind = "flag", flag = "c13_request_john_dee_lent" }]
+
+# 卑尔根：偏差的记录与老领航员的表。转折在这里：他愿意把表给我抄。
+[[tracks.chapters]]
+key = "north"
+title = "卑尔根的德意志商站"
+text = "从英格兰到卑尔根，我每天正午对着太阳量罗盘偏了多少，记一行。小册子记到第六十页，在德意志商站的仓库里，一个汉萨的老领航员接过去翻了几页，指着其中一行：“你这个数，跟我们几十年记的对不上。”他那卷牛皮的表边角卷得发黑，刻线却一条一条细得像头发。他把表往桌上一放：“我可以给你抄。不信的话，你就自己去量。”"
+at = "bergen"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "john_dee", value = true }]
+objectives = [{ kind = "at", at = "bergen", text = "到卑尔根的德意志商站" }]
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "john_dee", value = -3 }, { kind = "flag", flag = "c13_request_john_dee_late" }, { kind = "letter", person = "john_dee", text = "莫斯科公司的人从卑尔根带回了那位老领航员的表，我看过了。可我还是想要你的小册子，你是自己量的，这一点旁人替代不了。约翰·迪伊" }]
+
+[[tracks.chapters.choices]]
+key = "sun"
+text = "照自己量的记，不抄他的"
+hint = "你量的数还不够稳，自己都不敢信。"
+reply = "小册子上一天一行，工工整整。老领航员看了两页，没说话，把他的表卷起来收进袖子里。我把册子合上。"
+news = "卑尔根的德意志商站里，老领航员的表收进了袖子，有人说那个英格兰人连一个数都不肯抄。"
+next = "report"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+effects = [{ kind = "affinity", person = "john_dee", value = 3 }, { kind = "flag", flag = "c13_request_john_dee_own" }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "让最稳的水手每天看罗盘，你来记"
+reply = "最稳的那个水手每天正午站到船尾，罗盘一稳就报数，我一行行记下来。风一大，他的声音就被吹散，我只好凑到他旁边去记。"
+news = "卑尔根的水手都在说：英格兰船的船尾，每天正午有人站着报罗盘的数，风再大也没停过。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "john_dee", value = 3 }, { kind = "flag", flag = "c13_request_john_dee_own" }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "john_dee", value = -2 }, { kind = "flag", flag = "c13_request_john_dee_gaps" }], news = "卑尔根商站的人都在传：那个英格兰船的小册子空了好几天，风浪太大，罗盘读不稳。" }
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "抄他的表，注明是谁的"
+reply = "老领航员很得意，让我把他的名字写大一点。他一边看我抄，一边讲每道刻线的来历，讲到要紧处就拍一下桌子，说这是他父亲那一代人留下的规矩。"
+news = "卑尔根商站的人都在笑：汉萨的老领航员让英格兰人抄去了表，得意得很，非要人家把他的名字写大一点。"
+next = "copied"
+effects = [{ kind = "flag", flag = "c13_request_john_dee_copied" }]
+
+# 收尾（不抄表）：两张图并排。迪伊的第三句直接引语在这里，他说要把它写进书里。
+[[tracks.chapters]]
+key = "report"
+title = "两张图并排"
+text = "我把小册子摊在迪伊的桌上，他把它和墙上的北方海图并排对着看。他一边念一边在旧图的边上画线，越画越快，线条歪到了纸外头也不管。朝廷那边只来信催稿，他说，连一张北方的图都拿不出来，还好意思催。忽然他停下笔，指着那一排一天一行的数：“这些能证明，女王该有一支自己的远洋船队，不必再求汉堡的船和荷兰人的船。”声音一下子高了起来，“我要把它写进书里。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "john_dee", value = true }]
+objectives = [{ kind = "person", person = "john_dee", text = "回莫特莱克，把册子交到迪伊手里" }]
+deadline = [1582, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_john_dee_late" }, { kind = "letter", person = "john_dee", text = "我要动身去一阵子，书房里的墙先留着。你的小册子若方便，就寄到莫特莱克，路上易潮，裹厚些。约翰·迪伊" }]
+
+[[tracks.chapters.choices]]
+key = "yes"
+text = "说数就是数，他爱怎么写是他的事"
+reply = "他大笑，说我说话像个领航员。笑够了，他从架子上抽出一本自己的书，在扉页上题了字。字写得又快又斜，末尾拖出一道长线，落款下面还添了一颗小星。"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "dee_antwerp", qty = 1 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "england", value = 2 }, { kind = "affinity", person = "john_dee", value = 8 }, { kind = "memory", memory = "mem-request_john_dee-report", title = "墙上的北方" }, { kind = "flag", flag = "c13_request_john_dee_done" }]
+
+[[tracks.chapters.choices]]
+key = "credit"
+text = "请他在书上注明，这些数是我自己量的"
+reply = "他停下笔，想了想，在扉页下面添了一行小字，比题字还小：据船长每日量记。书商嫌这样的书卖不上价，付你的那笔钱因此少了几成，他说这事他自己去跟书商算。"
+next = "done"
+effects = [{ kind = "cash", value = 1200 }, { kind = "item", item = "dee_antwerp", qty = 1 }, { kind = "affinity", person = "john_dee", value = 5 }, { kind = "flag", flag = "c13_request_john_dee_partial" }]
+
+[[tracks.chapters.variants]]
+key = "gaps"
+when = [{ kind = "flag", flag = "c13_request_john_dee_gaps" }]
+text = "小册子里有几天是空的。迪伊一页页翻过去，翻到那几处停了停，我在旁边写了个“风”字，他看见了，没说什么。他拿笔尖点着别的数，一边念一边在旧图的边上画线。朝廷那些人只会催稿，他骂了一句，又回到图上。忽然他停下笔：“空着的那几天不碍事，风里的罗盘本来就不肯老实。其余的数能证明，女王该有一支自己的远洋船队。”他说要把它写进书里。"
+
+# 收尾（抄了汉萨人的表）：只在 north 选了“抄他的表”时走到这里。
+[[tracks.chapters]]
+key = "copied"
+title = "汉萨人的那几行"
+text = "小册子递到迪伊手里，他先没看字，只把手指顺着墙上的北方海岸一路摸过去，才翻开册子。翻到中间那几页，他的手停了一下：那几行是汉萨人的表，刻线细得像头发。页边我记了老领航员的名字，迪伊还没翻到那一页。他没有问我是怎么来的，只把那几行拿到窗边，对着光念了一遍。他骂朝廷只会催稿，骂完又低头去描那几条线。“女王该有一支自己的远洋船队。”他顿了一下，又说，“这几行，算我的。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "john_dee", value = true }]
+objectives = [{ kind = "person", person = "john_dee", text = "回莫特莱克，当面向迪伊交差" }]
+deadline = [1582, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_john_dee_late" }, { kind = "letter", person = "john_dee", text = "书稿我先压下了。那几行是谁的，你要是还记得，就来莫特莱克说一声。约翰·迪伊" }]
+
+[[tracks.chapters.choices]]
+key = "yes_copied"
+text = "那几行就算你的，你写吧"
+reply = "他大笑着点头，把题了字的书递过来。汉萨人那几行数，被他原样用进了书里，旁边一个名字也没有。我翻到那几页，看了很久，最后还是把书合上了。"
+next = "done"
+effects = [{ kind = "cash", value = 1200 }, { kind = "item", item = "dee_antwerp", qty = 1 }, { kind = "affinity", person = "john_dee", value = 2 }, { kind = "flag", flag = "c13_request_john_dee_partial" }]
+
+[[tracks.chapters.choices]]
+key = "caution"
+text = "提醒他：我抄来的那几行，是别人的数"
+reply = "他愣了一下，笔尖停在那几行上。片刻之后，他在旁边写下了老领航员的名字，字写得很大，名字后面还画了一个圈。“记上名字，那几行就不是我的了。”他嘟囔着，像是说给自己听。"
+next = "done"
+effects = [{ kind = "cash", value = 1200 }, { kind = "item", item = "dee_antwerp", qty = 1 }, { kind = "affinity", person = "john_dee", value = 5 }, { kind = "flag", flag = "c13_request_john_dee_partial" }]

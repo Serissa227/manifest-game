@@ -1,0 +1,347 @@
+# 塞利姆·凯雷斯特：弯木的来处（bond_selim_kereste / reunion_selim_kereste）——C7 重写，2026-10-12，Claude（Opus）；旧 GPT 稿作废，只沿用轨道与章节 key、地点与年份、C1 标题。
+# 标签：BL（羁绊线，可恋爱）。塞利姆 romance.with = any；主角性别由玩家定，男主角时为 BL、女主角时为 BG。适用主角：自创主角（金角湾兵工厂的孩子 custom_istanbul_shipyard）。
+# 人物：塞利姆·凯雷斯特 selim_kereste（1540-03-16，男）；自创主角（模板生年 1540-01-01，“我”，不写性别、外貌与家族专名；懂船上的叫法、爱抬杠、字写得丑）。
+#       学院期 1554—1556：主角 14—16 岁，塞利姆 13—16 岁（1556-03-16 满 16）。A1（1556-01..05）塞利姆 15—16 岁，A1 的心动只写扶龙骨、待到天黑。
+#       S 章（1556-12）双方都是 16 岁，心动选项只到牵手与 crush；重逢 1562：主角 22、塞利姆 21—22，双方成年，恋人落点合法。生年相差两个半月。
+# 依据：
+#   史实——金角湾的奥斯曼兵工厂（船台、锯木坑、木料场）；造船的橡木多从黑海南岸锡诺普、卡斯塔莫努一带的山林运来；
+#         肘材要用天然弯木顺纹取料；帆桨船的桨手多是用链子锁在桨凳上的苦役与俘虏；帆桨船多在开春下水。
+#   原创——塞利姆其人；木料场的烙印牌（写产地与砍伐的月份）；锯木坑后面草席盖着的省下来的好料；船底的补丁与重上的整块板；
+#         戴戒指的验料官与烙印的抄单；废弃工棚里的救生艇、墙上木板画的小艇图；弯木边角刻的木勺；船舷上的座位槽与槽边的两个记号；船尾烙的下水日子。
+#   待核——十六世纪帆桨船是否配专门的救生小艇（大船拖带小艇是常例，“救生艇”的用法是本线与 tie_extra_07 共用的原创设定）；
+#         木料场是否给每根料挂产地牌，按常理拟写。
+# 缺省走向：C1—A2 的 default 无收获（弯木第二天上了船台；那堆木料挪了地方，再没找着；船下水时接缝还渗水，监工骂了两人一顿；他到底没签，那批料换没换成也不知道；工棚一直锁着；木勺挂在墙上）；
+#           S 的 default 开启重逢并设 c7_bond_selim_kereste_parted（他在工棚钉最后一块板，没来码头）；
+#           重逢的 default 是塞利姆寄来的信与一块烙着下水日子的小木牌（letter），设 c7_bond_selim_kereste_missed。
+# 旗标：写 c7_bond_selim_kereste_promise / _romance / _own / _parted / _landing_friend / _landing_rival / _landing_love / _missed；
+#       S 的 promise 与 heart 另设共享旗标 c7_tie_new_piero_vetro_selim_kereste_taken（配角线 tie_new_piero_vetro_selim_kereste 读，据此改走“并肩的朋友”）。
+#       重逢的三个 variant 读本文件的 _own / _romance / _parted。
+# 羁绊阶梯：C2 cover_and_log 给 C、B1 redo_your_half 补签 C；B2 copy_brands 给 B、A1 keep_it_secret 补签 B；A2 take_spoon / trace_the_grain 给 A + 木勺 carved_spoon + 回忆。
+# 心动：A1 hold_the_keel +6；A2 trace_the_grain +6（要求已有 6）；S heart +12（要求已有 12）→ 全选心动正好 24，重逢 love 落点要 24（简报把决定表的 S +10 改为 +12）。
+#       心动只能由故事效果产生，本文件以外没有给塞利姆加心动的来源；不走 S 的 heart 选项，心动至多 12，所以“心动 ≥ 24”已经蕴含 c7_bond_selim_kereste_romance。
+#       重逢 love 的 requires 因此只写心动与双方年龄，不再重复写 romance 旗标（审计机器人单独跑重逢轨道时不能伪造本文件的分支旗标，写了会报分支错误）。
+# 口头禅：“顺着纹下刀，别硬劈。”只在 C1 原样出现一次；B2 的 sign_now_check_later 里他只说了半句就停住。
+# 秘密：省下的好木料留给一条救生艇——C2 撞见、A1 他说出缘故；本文件的羁绊章没有 stage，不写见闻。
+# 与 tie_extra_07_hasan_selim_kereste 的衔接：学院里这条小艇造好后一直搁在船台尽头的滚木上没下水（等主角回来坐第一个座位）；
+#       extra_07 里 1562 年哈桑掀开帆布看见的，是塞利姆 1559 年起另攒的一条，1563 年作为兵工厂的“第一条救生艇”下水。重逢里哈桑只作“他跟着学看图纸的船匠”提一句，不出场。
+# 日程：重逢在 1562 年的伊斯坦布尔，塞利姆按 cast 留在伊斯坦布尔，无需改日程。莱拉、皮耶罗不在本文件出场。
+
+[[tracks]]
+key = "bond_selim_kereste"
+name = "塞利姆·凯雷斯特：弯木的来处"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["selim_kereste"]
+
+# C1：1554 年初，兵工厂的木料场。一根挂着烙印牌的弯木。
+[[tracks.chapters]]
+key = "c1"
+title = "弯木的来处"
+text = "开春要下水的帆桨船还缺几根肘材，监工打发我去木料场挑弯木。料垛边上蹲着塞利姆，学院里跟我坐一张长凳的那个木料场学徒，正拿一块破布擦一根弯木上的泥。我拍了拍那根木头：“擦什么，不就是一根橡木。”他没抬头，把手掌贴上去，从粗的一头慢慢摸到细的一头，摸得跟裁缝量布似的。“锡诺普来的，”他说，“冬天砍的。砍的人下手急，头一斧落偏了——第三圈年轮上有道伤。”我不信。哪有摸一摸就知道是哪座山的。垛子上钉着一块烙印牌，被烟熏得发黑，我一把翻过来：上头烙着两个记号，锡诺普，腊月。塞利姆把牌子从我手里拿回去，挂回钉子上，挂正了，才抬眼看我。“顺着纹下刀，别硬劈。”"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_golden_horn_yard" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "bet_a_mark"
+text = "不服，跟他赌：下一根木头，我先找出砍伐的记号。"
+reply = "他说行，往垛底一指。我把那根木头从头翻到尾，翻了一下午，最后在树皮缝里翻出一窝蚂蚁，喊他来看。塞利姆笑得一屁股坐到木堆上，半天直不起腰。笑够了，他拉过我的手，按在木头根部一处平平的地方：斧口是斜的，砍的人站在坡下头。“下回，”他说，“先摸，再翻。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "learn_rings"
+text = "请他教我怎么看年轮。"
+reply = "他找来一截锯下来的木墩，拿指甲一圈一圈点给我看：宽的是雨水足的年头，窄的是旱年。他讲得慢，一圈能讲半天，讲到日头落到兵工厂的院墙后面，我才把十几圈认全。最里头有一圈细得几乎看不见，挤得发黑。“旱年。”他拿指甲在那一圈上按了按，“人也是这样，旱年的那一圈最紧。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }, { kind = "skill", skill = "shipbuilding", value = 8 }]
+
+# C2：1554 年夏，锯木坑后面的荒地。一堆用草席盖着的好木料；他的秘密从这里开始。
+[[tracks.chapters]]
+key = "c2"
+title = "锯木坑后面"
+text = "傍晚收了工，我回锯木坑找丢了的刨子。坑里只剩锯末，刨子没找着，坑后面那片荒地上倒多了一堆东西，拿草席盖着，席角压着砖。我掀开一角。底下码得整整齐齐，全是好料：纹路一指宽，没有节疤，没有虫眼。每一块都不大，看得出是从别的料上省下来的——这儿一截肘材的头，那儿一段船板的尾，锯口还是新的。照规矩，这些边角是要送去灶房烧火的。“别动。”塞利姆站在我身后，脸色难看得吓人。他一把把草席拉回去，盖严，又把砖一块一块压回席角。“你攒这些做什么？”他不说。压好最后一块砖，他才开口，声音比平时还慢：“没偷。省下来的。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "cover_and_log"
+text = "帮他把草席压严实，再去木料账上记一笔“废料”，记在我名下。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 20 }]
+hint = "他挡在草席前面，眼睛盯着你。他还不信你不会转身去告诉监工——这堆木料，他不会让你碰。"
+reply = "我的字写得歪，趴在账簿上画了半天，才把“废料若干”几个字画清楚，底下签了我的名字。塞利姆站在旁边看我写，一直看到最后一笔：“你不怕挨罚？”“废料谁要？”我把账簿合上，“监工自己都懒得翻这一页。”他盯着我看了半晌，终于笑了，过去把草席掀开一个角，又盖上：“那这堆废料，往后也有你一份。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "bond", person = "selim_kereste", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "ask_purpose"
+text = "再问他一遍攒这些做什么；他不说，也就算了。"
+reply = "他还是不说，只把我往坑外头推。第二天一早，我的刨子摆在我那张长凳上，刃口磨得雪亮，照得见人影。刨子底下压着一小片刨花，薄得透光。我对着窗看了半天，才认出那片刨花的纹——锡诺普的橡木。"
+next = "b1"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+
+# B1：1554 年秋冬，船台上一条赶着开春下水的帆桨船。船底一块漏水的板。
+[[tracks.chapters]]
+key = "b1"
+title = "重上一整块板"
+text = "一条帆桨船要赶在开春下水，往船底灌水试漏，有一道接缝渗水。监工把我和塞利姆一起赶到船底下：“明天以前给我堵上。”塞利姆拿指节敲了敲那块板，侧着耳朵听：“整块拆下来，重上。”“拆什么，”我说，“抠掉那一截，嵌一块新的就行。拆一块板要拆半天，钉子还得重打。”“补过的地方，水记得。”“水记得个什么？”我们在船底下吵了一下午，吵得船匠们都探头下来看笑话。最后各干各的：他把他那半边的板拆了，从头刨、从头上；我把我这半边的烂处抠掉，嵌进一块新木头，敲得严严实实。第二天再灌水，船底下站了一圈人。他那一半一滴不漏。我这一半，补丁四周慢慢洇出一圈水印，像有人拿湿手指在木头上画了个圈。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "redo_your_half"
+text = "认了，请他教我把我那一半也重上一遍。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 20 }]
+hint = "他刚赢了你，船底下还围着一圈看热闹的人。你这时候去求他，他只当你在讽刺。"
+reply = "他没笑，脸上也没有一点得意，蹲下去把我那块补丁撬了下来，翻过来给我看：新木头的纹是横的，老木头的纹是竖的，两道纹在那儿撞了个对头。“补的地方，木纹是断的，水就从断的地方走。”我们拆板、刨板、上板，一直干到天黑，他举着灯，我抡锤打钉。第三天再灌水，船底两半都是干的。"
+next = "b2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "bond", person = "selim_kereste", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "defend_patch"
+text = "不认：补得快也是本事，明年再比。"
+reply = "“明年你补的那一块还会漏。”塞利姆把刨子收进袋子，“到时候你就记住了。”我说那就等明年。第二年开春那条船下了水，跑了一趟回来进坞，船底别处都好好的，只有我补的那一块四周长了一圈绿苔。塞利姆没吭声，拿指节在那一圈上敲了两下，咚，咚。我记住了。"
+next = "b2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+
+# B2：1555 年，木料场。戴戒指的验料官要换军船用料；烙印账簿上那一行他不肯签。
+[[tracks.chapters]]
+key = "b2"
+title = "不肯签的名字"
+text = "木料场来了个新验料官，右手戴着三个戒指。他在料垛中间转了一圈，挑出一批给军船用的上等橡木，叫人运进后面的库房；又拉来一批又湿又带节疤的，记在账上，说就是那一批。差价进了谁的口袋，场子里人人心里有数。烙印账簿摊在一只木桶上，验料官叫木料场的学徒一个一个签字作证。前头几个都签了，签完低着头走开。轮到塞利姆，他拿起笔，看了一眼那一页，又看了一眼料垛，把笔放下了。“这批料我认得，”他说，“卡斯塔莫努的山阴面，去年腊月进的场。不是这个数。”验料官笑了一声：“一个学徒，认得几根木头？”塞利姆没接话。他的手攥着账簿的边，指节攥得发白，那一页纸被他攥出了一道折痕。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "copy_brands"
+text = "陪他把那批料的烙印一根根抄下来，连夜交给总管。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 50 }, { kind = "bond", person = "selim_kereste", level = "C" }]
+hint = "他把账簿往自己这边拉了拉，没看你。这摊浑水，他还不想把你也拖进来。"
+reply = "天黑以后，我们提着灯摸进后面的库房。他念，我抄：卡斯塔莫努，山阴，腊月；卡斯塔莫努，山阴，腊月……我的字丑，抄错了三回，他就等我划掉重抄，一个字也不催。抄到鸡叫，四十一根，一根不少。总管天一亮就来了，拿着单子在库房里点了一遍，那个戴戒指的验料官当天就被调走了。中午塞利姆请我喝了一碗豆子汤。他捧着碗，喝一口，停一下：“今天这汤，比哪天的都好喝。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "bond", person = "selim_kereste", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "sign_now_check_later"
+text = "劝他先签了，回头再慢慢查。"
+reply = "他看了我一眼，没签，转身走了。验料官骂了一声，喊下一个。半个月后，拿那批湿料造的一条船还没下水，龙骨就在船台上裂了。总管一路查下来，查到验料官头上，人当天就被带走了。那天傍晚塞利姆从料垛那头走过来，在我旁边站定：“你看，顺着纹——”说了半句，他自己停住，笑了。"
+next = "a1"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+
+# A1：1556 年春，锯木坑后头的废弃工棚。一根龙骨，墙上木板画的小艇图；他说出缘故。
+[[tracks.chapters]]
+key = "a1"
+title = "救生艇"
+text = "开春以后，塞利姆终于带我去看那堆木料的新去处。是锯木坑后头一间没人要的工棚，门上的锁比工棚还新。他开了锁，侧身让我先进。木料一块也没少，码在墙根。地当中架着一根龙骨，两头拿木楔顶着；墙上靠着一块刨平的木板，炭条画了一条小艇，船身胖胖的，旁边写着一串数目。“我八岁那年，”他说，“在马尔马拉海边看过一条帆桨船沉下去。船上只有一条小艇，军官先上，满了就划走。桨手锁在桨凳上，一个也没上去。”他拿手掌抹掉龙骨上的一层木屑，“兵工厂一年造一百条大船，不肯多造一条小艇。我就自己造。”工棚的顶漏了一块，傍晚的日头从那个窟窿里照下来，正好落在龙骨中段，把木纹照得一道一道的。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_the_keel"
+text = "走过去扶住龙骨，说往后每天收了工都来帮他。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 20 }, { kind = "romance_open", romance_open = "selim_kereste" }]
+hint = "你的手伸出去一半，又收了回来。这根龙骨是他一个人的事，还轮不到你伸手。"
+reply = "我扶住龙骨的一头，他在另一头拉开墨线，弹了一道。线弹得笔直，龙骨一动没动。塞利姆看着我扶龙骨的手，看了好一会儿：“你的手比木头还稳。”那天我们没再说别的。他刨，我扶，日头从窟窿里挪到墙上，又挪没了，工棚里黑得只看得见刨花是白的。我说该回去了，说完也没动。"
+next = "a2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "heart", person = "selim_kereste", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "keep_it_secret"
+text = "答应替他守着这间工棚：谁问起，就说是堆废料的。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 50 }, { kind = "bond", person = "selim_kereste", level = "C" }]
+hint = "他把锁攥在手心里，没递过来。这间工棚，他还没打算托给你。"
+reply = "第二天就有人问了。监工路过，踢了踢工棚的门，问里头锁的什么。我说烂木头，等着劈了烧火，谁去开谁一手的虫。监工嫌晦气，走了。晚上塞利姆把一把钥匙放进我手里，是他拿铁丝自己弯的：“等它下水那天，你第一个上去。”“那我得先学会游水。”他笑出了声，笑得龙骨上的灰都震了下来。"
+next = "a2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "bond", person = "selim_kereste", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "how_many_seats"
+text = "问他这条小艇能坐几个人。"
+reply = "“十二个，”他说，“挤一挤，十五个。”他说的时候没看我，看着那根龙骨，嘴唇动了几下，像在数什么。我没问他数的是什么。过了一会儿，他从墙角捡起炭条，在木板上那条小艇的旁边，又添了三道短杠。"
+next = "a2"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+
+# A2：1556 年夏秋，工棚里。救生艇第一根肘木的边角刻的木勺（赠礼 carved_spoon + 回忆）。
+[[tracks.chapters]]
+key = "a2"
+title = "弯木刻的勺"
+text = "救生艇的第一根肘木装上去那天，塞利姆比我先到工棚。那根肘木是从一根弯木上锯出来的，弯得正好贴住龙骨，锯下来的边角他一块也没扔。傍晚他从怀里掏出一把木勺，塞到我手里。勺子不大，勺柄带一点弯，木纹从柄头顺下来，一路弯进勺底，中间没有一处断。“前头刻了三把，”他说，“都裂了。没顺着纹刻，刻到勺底一使劲，啪。”他拿手比画了一下，又把手收回去，“这一把，是顺着纹的。”我拿勺子在半空里舀了一下。他站在旁边看着，两只手在围裙上擦了又擦，好像勺子还在他手里，还没刻完。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_spoon"
+text = "收下勺子，说这是救生艇的第一份船饭。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 80 }, { kind = "bond", person = "selim_kereste", level = "B" }]
+hint = "他递勺子的手停在半空，又慢慢缩了回去。这把勺子太沉，眼下还轮不到你来接。"
+reply = "“第一份船饭，”我说，“救生艇开伙了。”“那你得吃十二份。”他说，“一个座位一份。”“那你得刻十二把。”“刻多少都行，”他把刻刀收进袋子，“只要你吃。”那天我们拿这把勺子分了一碗凉豆子，我一口，他一口，最后一勺他推给了我。"
+next = "s"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "bond", person = "selim_kereste", level = "A" }, { kind = "item", item = "carved_spoon", qty = 1 }, { kind = "memory", memory = "mem-bond_selim_kereste-a2", title = "弯木刻的勺" }]
+
+[[tracks.chapters.choices]]
+key = "trace_the_grain"
+text = "收下勺子，用手指顺着那道木纹，从勺柄一路摸到勺底。"
+requires = [{ kind = "affinity", person = "selim_kereste", ge = 80 }, { kind = "bond", person = "selim_kereste", level = "B" }, { kind = "heart", person = "selim_kereste", ge = 6 }, { kind = "romance_open", romance_open = "selim_kereste" }]
+hint = "你想顺着那道纹摸下去，手指却停在了勺柄上。你们还没近到这个地步。"
+reply = "我的手指从勺柄头起，顺着那道纹往下走，走到弯的地方慢一点，走进勺底，停住。塞利姆一直看着我的手指，看到停下来，才出声：“你摸得比我还准。”我抬头看他，他已经转过身去，在刨花堆里翻来翻去，说要找刨子。刨子就挂在他身后的墙上。"
+next = "s"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "bond", person = "selim_kereste", level = "A" }, { kind = "item", item = "carved_spoon", qty = 1 }, { kind = "memory", memory = "mem-bond_selim_kereste-a2", title = "弯木刻的勺" }, { kind = "heart", person = "selim_kereste", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "ask_broken_ones"
+text = "问他刻裂的那三把在哪儿。"
+reply = "“烧了。”他说得理直气壮，“上个月工棚里煮的那锅豆子汤，就是拿它们烧开的。你还多喝了一碗。”我笑得手一抖，勺子差点掉进锯木坑。他伸手捞住，没还给我，挂到了墙上的钉子上：“这一把，等救生艇下水那天再给你。省得你也拿去烧火。”"
+next = "s"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }]
+
+# S：1556 年 12 月，工棚里快要完工的救生艇。船舷靠尾的一道座位槽。
+[[tracks.chapters]]
+key = "s"
+title = "先造完一条船"
+text = "我在码头上找好了一条商船，开春去亚历山大港，跟着船学跑海。塞利姆不走。他要留在兵工厂，从龙骨到桅杆，把一条大船的活从头到尾学一遍。救生艇只差船舷上最后几块板了。工棚里冷，他呵着手刨一块舷板，刨花一卷一卷落到我脚边。“你回来的时候，”他说，“它就该下水了。”他把刨好的舷板钉上去，又拿刨子在船舷靠尾的地方推了几下，推出一道浅浅的槽。槽不长，刚够一个人坐进去，背靠着船舷。他拿手掌抹掉槽里的木屑，拍了拍。“这是你的座位。”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_selim_kereste" }, { kind = "flag", flag = "c7_bond_selim_kereste_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好它下水那天我回来，第一个坐上去。"
+requires = [{ kind = "bond", person = "selim_kereste", level = "A" }]
+hint = "你看着那道槽，嘴张开又合上——要许这么长的约，你们之间还差一截木头；要么就是，同样的约你早已许给了别人，这道槽只坐得下一个人。"
+reply = "“下水那天，”我说，“我回来，第一个坐上去。”塞利姆没马上答。他把刨子又放进那道槽里，推了一下，再推一下，刨花细得像头发。槽深了一指。“刨深了，”他说，“你就得回来。不然它空着，难看。”“要是我回来晚了呢？”“那就晚着。”他吹掉槽里的刨花，“锡诺普的橡树，长一百年才砍下来，它还在乎你多走几年？”我坐进槽里试了试，背正好靠住船舷，腿却伸不直，得蜷着。我说他量错了。他说没量错，是照我在学院长凳上蜷着打瞌睡的样子刨的。开春我走那天，他到码头来送，手里还拎着那把刨子，好像一转身就要回工棚接着刨。"
+next = "done"
+effects = [{ kind = "bond", person = "selim_kereste", level = "S" }, { kind = "relation", person = "selim_kereste", relation = "friends" }, { kind = "memory", memory = "mem-bond_selim_kereste-s", title = "先造完一条船" }, { kind = "flag", flag = "c7_bond_selim_kereste_promise" }, { kind = "flag", flag = "c7_tie_new_piero_vetro_selim_kereste_taken" }, { kind = "start_track", track = "reunion_selim_kereste" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "在座位槽边刻一个只有我们认得的记号，说成年回来再告诉他意思。"
+requires = [{ kind = "bond", person = "selim_kereste", level = "A" }, { kind = "heart", person = "selim_kereste", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "selim_kereste", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "selim_kereste" }]
+hint = "刻刀已经拿在手里，你却下不去手。也许你们还没走到这一步；也许这样的记号，你已经在别人那里刻过了。"
+reply = "我借了他的刻刀，在那道槽的边上刻了一个记号，小小的，歪歪扭扭，我自己也说不好它像什么。“这是什么？”“等我成年回来，再告诉你。”塞利姆拿拇指去摸那个记号，顺着刻痕摸过去，又摸回来，摸了很久。工棚里只听得见金角湾的浪一下一下拍着船台。“那我在旁边也刻一个。”他把刻刀要回去，背过身，不让我看，刻得很快，刻完拿袖子一挡：“你回来再看。”开春上船那天，他来码头送我，一句话也没说。收跳板以前，他忽然抓住我的手，攥得死紧，又松开了。船出了金角湾，我才摊开手，掌心里还沾着几粒木屑，我没舍得拍掉。"
+next = "done"
+effects = [{ kind = "bond", person = "selim_kereste", level = "S" }, { kind = "heart", person = "selim_kereste", value = 12 }, { kind = "relation", person = "selim_kereste", relation = "crush" }, { kind = "flag", flag = "c7_bond_selim_kereste_romance" }, { kind = "memory", memory = "mem-bond_selim_kereste-s", title = "先造完一条船" }, { kind = "flag", flag = "c7_tie_new_piero_vetro_selim_kereste_taken" }, { kind = "start_track", track = "reunion_selim_kereste" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "跟他赌：重逢的时候，看谁先当上船台的头。"
+reply = "“你在海上，当不了船台的头。”塞利姆把刨子往船舷上一搁。“那我当一条船的头。”“船头不算，船台是船台。”“船长呢？船长算不算？”他想了想，觉得不能吃这个亏，又想不出驳我的话，只好说：“那就比一比。你当上船长，我当上船台的头，谁先谁赢。”“输的呢？”“输的给赢的造一条船。”“一条小艇也算船。”“一条小艇也算。”他把手掌摊开，我狠狠拍了上去，啪的一声，房梁上积了一冬的木屑哗地落了我们一头一脸。他也不擦，抄起那块还没钉的舷板接着刨，刨得比刚才快了一倍。"
+next = "done"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 2 }, { kind = "relation", person = "selim_kereste", relation = "rivals" }, { kind = "flag", flag = "c7_bond_selim_kereste_own" }, { kind = "start_track", track = "reunion_selim_kereste" }]
+
+[[tracks]]
+key = "reunion_selim_kereste"
+name = "塞利姆·凯雷斯特：下了水的救生艇"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["selim_kereste"]
+
+# 重逢：1562 年，金角湾兵工厂的船台尽头。搁在滚木上五年没下水的救生艇，船舷上那道座位槽。
+[[tracks.chapters]]
+key = "reunion"
+title = "下了水的救生艇"
+text = "五年以后我回到金角湾。兵工厂的船台又接长了一截，帆桨船一排排架着，锯木坑还在老地方。船台尽头的水边，一条小艇搁在两根滚木上，船头拿缆绳拴在桩子上，船身上过好几遍油，黑得发亮。船舷靠尾的地方，那道座位槽还在。塞利姆就在小艇旁边。他如今是船台上带人的匠头，跟着船匠哈桑学看图纸，腰上插着一卷图。他正抓着一个新学徒的手往一根弯木上按：“摸。从粗的那头摸起。锡诺普来的，腊月砍的——”还是当年那一套，一个字没改。“——砍的人下手急，第三圈年轮上有道伤。”我站在他身后，替他说完了。他按在弯木上的手停住了，过了好一会儿才回过头。他没说话，走到桩子边上，把小艇的缆绳一圈一圈解下来，递到我手里。“你的座位，”他说，“空了五年了。”"
+window = [[1562, 1, 1], [1562, 12, 31]]
+at = "istanbul"
+cast = ["selim_kereste"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1562, 12, 31] }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "selim_kereste", text = "你的船一直没来。从亚历山大港来的、从罗得岛来的船，我在码头上问了好几回，都说没见过你。那条小艇，今年开春我推下水了。本来想再等一年，可总管要拿船台尽头那块地方架新船的龙骨，木头等得起，船台等不起。下水那天是我一个人推的，滚木太滑，推到一半它自己溜了下去，船头扎进水里，吓了我一跳，又浮起来了，一滴水也没进。我在你那个座位上坐了一会儿，腿伸不直，才想起来那是照你的样子刨的，我坐着不合适，就起来了。信里夹着一块小木牌，是拿小艇剩下的料头锯的，锡诺普的橡木，你摸摸看，第三圈年轮上没有伤。木料场的牌子烙的是砍下来的日子，这一块，我烙的是它下水的日子。往后它就有两个日子了。我现在在船台上带人，跟着哈桑师傅学看图纸。图纸上的线全是直的，看得我头疼。座位还空着，没让别人坐过。你哪年回来，它就哪年有人坐。——塞利姆，于金角湾" }, { kind = "flag", flag = "c7_bond_selim_kereste_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "跟他一起把小艇推下水，划出金角湾，再划回来。"
+reply = "我们一人一边，把小艇从滚木上推下去。它进水的时候哗的一声，船头扎下去，又浮起来，摇了两摇，稳住了。新学徒在岸上拍巴掌。我坐进那道槽，背靠着船舷，腿伸不直，只好蜷着。塞利姆坐在前头划桨。我们从船台边划出去，绕过一排排停着的帆桨船，顺着金角湾一直划到博斯普鲁斯的海峡口。水从绿变成蓝，浪大了，小艇一抬一落，舱里一滴水也没进。“它比我想的还稳。”他停了桨，拿手掌拍拍船舷，像拍一匹马的脖子。天擦黑才划回来。上了岸，他从工棚里拿出一根烧红的烙铁，在小艇的船尾烙下一行字，是今天的日子。烙完他退后两步看了看，又在旁边添了一个小记号，跟当年木料场烙印牌上的一模一样。“往后，”他说，“它也有来处了。”"
+next = "done"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 5 }, { kind = "relation", person = "selim_kereste", relation = "friends" }, { kind = "flag", flag = "c7_bond_selim_kereste_landing_friend" }, { kind = "memory", memory = "mem-reunion_selim_kereste", title = "下了水的救生艇" }]
+
+[[tracks.chapters.choices]]
+key = "rival"
+text = "跟他比一比：我当上了船长，他当上船台的头没有？"
+reply = "“船长，”我把两手一摊，“当上了。你呢？”塞利姆把腰上的图纸卷抽出来，又插回去：“差一点。”“差多少？”“明年。总管说了，明年开春，船台上那个位子是我的。”“那就是还没当上，”我说，“你输了。”“输一半。”“输就是输，哪有输一半的。”“你当上船长才几年？我在船台上一干五年，带出来的学徒比你船上的水手还多。”他跟我掰着指头算，算到后来自己也算糊涂了，一挥手：“那一半，用一条小艇抵。”他说的就是滚木上那条。我说那条本来就有我的座位。他说座位是你的，船是我的，一码归一码。两个人在船台边吵到日头偏西，新学徒蹲在旁边听得直打哈欠。最后他把缆绳往我手里一塞：“先推下水，再接着吵。”"
+next = "done"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 3 }, { kind = "relation", person = "selim_kereste", relation = "rivals" }, { kind = "flag", flag = "c7_bond_selim_kereste_landing_rival" }, { kind = "memory", memory = "mem-reunion_selim_kereste", title = "下了水的救生艇" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "问他船舷上那个记号，他想好是什么意思了没有。"
+requires = [{ kind = "heart", person = "selim_kereste", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "selim_kereste", ge = 18 }, { kind = "romance_open", romance_open = "selim_kereste" }]
+hint = "你看了一眼那道槽。那句话在嘴里转了五年，到这会儿还是没能出口。"
+reply = "他没答，拉着我走到船尾，拿刀尖去撬槽边那块皮子，一颗铜钉一颗铜钉地撬。皮子掀开，底下是我当年刻的那个歪记号，旁边是他的，刻得深，五年了，刀口的边都磨圆了。“我的意思，”他说，“是‘你回来’。”“那我的呢？你不问？”“你回来了，”他说，“就不用问了。”我们把小艇推下水，他先跳上去，伸手拉我。我坐进那道槽，他没去前头拿桨，在我面前蹲下来，一只手撑着船舷。他吻了我。船在水里晃，晃得我往后一靠，背正好贴住那道槽，严丝合缝，五年前他就量好了。岸上的新学徒捂着眼睛跑开了。那天小艇哪儿也没去，就拴在船台边，在水里漂了一下午。"
+next = "done"
+effects = [{ kind = "affinity", person = "selim_kereste", value = 5 }, { kind = "relation", person = "selim_kereste", relation = "lovers" }, { kind = "flag", flag = "c7_bond_selim_kereste_landing_love" }, { kind = "memory", memory = "mem-reunion_selim_kereste", title = "下了水的救生艇" }]
+
+[[tracks.chapters.variants]]
+key = "v1_bet_kept"
+when = [{ kind = "flag", flag = "c7_bond_selim_kereste_own" }]
+text = "五年以后我回到金角湾。兵工厂的船台又接长了一截，帆桨船一排排架着，锯木坑还在老地方。船台尽头的水边，一条小艇搁在两根滚木上，船头拿缆绳拴在桩子上，船身上过好几遍油，黑得发亮。船舷靠尾的地方，那道座位槽还在。塞利姆就在小艇旁边，腰上插着一卷图，正抓着一个新学徒的手往弯木上按，教的还是锡诺普、腊月那一套。我在他身后接了一句：“第三圈年轮上有道伤。”他头都没回：“船长当上了没有？”我还没开口，他已经走到桩子边上，把缆绳解下来，往我手里一递：“先别说。座位空了五年，你先坐，坐完再算账。”"
+
+[[tracks.chapters.variants]]
+key = "v2_mark_covered"
+when = [{ kind = "flag", flag = "c7_bond_selim_kereste_romance" }]
+text = "五年以后我回到金角湾。兵工厂的船台又接长了一截，帆桨船一排排架着，锯木坑还在老地方。船台尽头的水边，一条小艇搁在两根滚木上，船头拿缆绳拴在桩子上，船身上过好几遍油，黑得发亮。船舷靠尾的地方，那道座位槽还在；槽边钉着一小块皮子，四个角打着铜钉，把底下的什么盖得严严实实。塞利姆就在小艇旁边，腰上插着一卷图，正教一个新学徒摸木纹，教的还是锡诺普、腊月那一套。我在他身后替他说出了下半句。他回过头，眼睛先往那块皮子上飞快地瞟了一眼，才看向我，耳朵根一点一点红了。他走到桩子边上，把缆绳解下来，递给我。“你的座位，”他说，“空了五年了。”"
+
+[[tracks.chapters.variants]]
+key = "v3_last_plank"
+when = [{ kind = "flag", flag = "c7_bond_selim_kereste_parted" }]
+text = "五年以后我回到金角湾。兵工厂的船台又接长了一截，帆桨船一排排架着，锯木坑还在老地方。船台尽头的水边，一条小艇搁在两根滚木上，船头拿缆绳拴在桩子上，船身上过好几遍油，黑得发亮。船舷靠尾的地方，那道座位槽还在，最后一块舷板的钉帽比别处的都新。塞利姆就在小艇旁边，腰上插着一卷图，正教一个新学徒摸木纹，教的还是锡诺普、腊月那一套。我在他身后替他说出了下半句。他回过头，半天才开口：“你走那天，我在钉这一块。”他拿指节敲了敲那块舷板，“钉完跑到码头，船已经出了金角湾。”他把缆绳从桩子上解下来，递给我：“你的座位，空了五年了。”"

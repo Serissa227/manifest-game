@@ -1,0 +1,197 @@
+# 坏银币的好去处（pair_musa_yaqub）——配角线，标签 BL；同学线，恋爱线（纯 BL 两人）。
+# 人物：穆萨（musa，1540-05-04 生），非斯寻宝行会“领事”的儿子，笑话总比绳梯先下地窖；成年后继续寻宝。
+#       雅库布（yaqub，1540-07-10 生），非斯犹太区金匠的儿子，先听银币落桌的声音；成年后守着金匠铺。
+#       学院期（1554—1556）只写到心照不宣（closer 章：借口、记钟点、秤砝差了半钱，不写任何 relation）。
+#       恋人效果只在 together 章（窗口 1559-03-01—05-31）：窗口起日穆萨 18 岁、雅库布 18 岁（1558-07-10 满），生年差 0，
+#       都满 18 且不早于 1557-01-01；写到一个吻为止。meeting 章的 friends 发生在 1554 年（两人 13—14 岁，只是朋友）。
+# 依据（史实）：萨阿德王朝初年（1554 年前后）市场上流通掺了铅的银币；市场督察（muhtasib）管市场秤尺与钱色，衙门里设锁房；
+#       非斯犹太区（梅拉）是金匠聚居的地方；1578 年 8 月 4 日三王之战（马哈赞河、凯比尔堡，今称阿尔卡萨尔凯比尔）：
+#       葡萄牙国王塞巴斯蒂昂、摩洛哥苏丹阿卜杜勒·马利克战死，被赶下台的旧苏丹穆罕默德·穆塔瓦基勒淹死在河里；俘虏与赎俘持续数月。
+# 原创：两人的故事、锁房里扔银钱猜真假、挂在灯上的穿孔银币、一袋沙土里的两枚锈铜钱、画满圈的名单、刻字的银扣、敲三下门的敲法。
+# 待核：锁房设在督察衙门后院，史料没有细节，正文只称“锁房”；1578 年战后非斯寻找失散者的做法，正文一律用传闻与动作，不写具体官方程序。
+# 去重：古罗马地窖困一夜归 bond_musa；验出假银币出自哪一炉归 bond_yaqub；1578 年替赎俘的钱过秤的场面归 bond_yaqub 的重逢，
+#       本线 turning 里只一笔带过金匠们在过秤，不写雅库布与主角过秤。
+# 缺省走向：meeting（锁房一夜，设 friends）→ closer（学院期，挂灯的银币、记关门的钟点，心照不宣）
+#       → together（1559 年成为恋人，设 c7_pair_musa_yaqub_together；主角若与二人之一立过 S 约定、c7_pair_musa_yaqub_taken=true，此章 when 不满足、整条轨道静默结束，改走 _side）
+#       → turning（1578 年三王之战，传闻）→ choice（战后的名单；缺省：一个出城找人、一个留城认遗物，关系不变）
+#       → epilogue（1579 年，穆萨远行归来先敲金匠铺的门）。没有坏结局。
+#   帮助（lists）：设 c7_pair_musa_yaqub_helped，epilogue 的 variants 写名单钉在柜台后；撮合（relay）：设 c7_pair_musa_yaqub_matched，variants 写银扣的拓样；
+#   旁观（watch）：只加一点好感。三者都走向 epilogue，关系仍是恋人。
+# 并肩：taken=true 时第二条轨道 pair_musa_yaqub_side 一章 witness（1559 年春），写穆萨第一次远行归来先去金匠铺报平安，两人是借灯的朋友，
+#       设 friends 与 c7_pair_musa_yaqub_side；不写嫉妒、不提主角。
+# 共享旗标：读 c7_pair_musa_yaqub_taken（bond_musa、bond_yaqub 的 S 章设）；写 c7_pair_musa_yaqub_together（bond_musa 1561 重逢、bond_yaqub 1578 重逢读）、
+#       _helped、_matched、_side。
+# 口头禅各用一次：雅库布“银会响，账不能哑”在 meeting；穆萨“这回真有宝，至少有我”在 together（side 章只换说法）。
+# 日程（整合方改 cast，可选）：两人的日程地点是 fez_city，章节的 at 用 fez；cast/ties.toml 里 adult_musa_yaqub 的 since 现为 1558-12-31，
+#       应改到 1559-03-01 以后（与 together 章对齐）；两条 ties 的 note 里“地窖”应改为“市场督察的锁房”（地窖归 bond_musa）。
+# 秘密：穆萨怕黑（meeting 里只写他笑话越讲越快，不写他承认）；雅库布替穆萨藏了一枚牵涉假币案的银钱（closer 里只写他挂上去，不写来历）。两者都不进见闻。
+
+[[tracks]]
+key = "pair_musa_yaqub"
+name = "坏银币的好去处"
+kind = "request"
+start = "pair_musa_yaqub_meeting"
+auto = true
+cast = ["musa", "yaqub"]
+
+# 相识：1554 年春，市场督察衙门的锁房。一枚掺铅的银币转到两个少年手里，一起被关一夜；穆萨越黑越爱讲，雅库布扔银钱给他猜。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_meeting"
+title = "锁房里的一夜"
+text = "一枚掺了铅的银币，从布市转到鞋匠手里，又转到两个少年手里。市场督察不问来路，一手拎一个，丢进衙门后院的锁房，门闩落下。没有窗。穆萨先开口：“这屋比我爹的行会还安静。”接着是第二个笑话，第三个，一个比一个快，门缝里最后一线光灭掉以后，他连气都不换。雅库布靠墙坐着，听了好一阵，没拆穿。他从怀里摸出几枚银钱，在掌心掂了掂：“银会响，账不能哑。我扔，你听，猜真假。”银钱落在石板上，叮的一声。穆萨的嘴停了：“真的。”“对。再来。”后来换成穆萨扔，雅库布猜。天亮开门，督察的火把照进来，雅库布说：“我猜错了三回。”穆萨揉着眼睛：“你一回也没错。”"
+stage = "witness"
+window = [[1554, 3, 1], [1554, 5, 31]]
+at = "fez"
+cast = ["musa", "yaqub"]
+speaker = "yaqub"
+mood = "tense"
+news = "非斯市场督察为一枚假银币关了两个少年一夜，听说锁房里叮叮当当响了一宿。"
+
+[tracks.chapters.default]
+next = "pair_musa_yaqub_closer"
+effects = [{ kind = "tie", a = "musa", b = "yaqub", relation = "friends" }]
+
+# 靠近：1556 年春，学院期。金匠铺的灯上多了一枚穿孔的银币；穆萨记下关门的钟点，雅库布的砝码差了半钱。到心照不宣为止，不写 relation。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_closer"
+title = "挂在灯上的银币"
+text = "金匠铺的小油灯下头，多吊了一枚打了孔的银币，细麻线一转，闪一下，又闪一下。穆萨伸手拨了拨：“值多少？”“什么也换不来。”雅库布头也不抬，往秤盘里添砝码，“只换一样东西：按时回来。”“哪来的？”“问价钱，别问来历。”穆萨笑起来，说那他每回出门，都得先来看一眼这盏灯。雅库布没接话，把灯芯剪短了一截。穆萨走到门口，又回头：“你家几时上门板？”“日落后一个钟点。”他念了两遍，摸出一块炭，在手背上划了一道。身后的秤盘晃了一下：雅库布称错了半钱，他从来没称错过。"
+stage = "witness"
+window = [[1556, 3, 1], [1556, 5, 31]]
+at = "fez"
+cast = ["musa", "yaqub"]
+speaker = "musa"
+mood = "tender"
+news = "非斯犹太区一家金匠铺的油灯上，挂着一枚打了孔的银币，铺里的少东家说多少钱也不换。"
+
+[tracks.chapters.default]
+next = "pair_musa_yaqub_together"
+effects = []
+
+# 恋人：1559 年春，穆萨第一次随行会远行三个月归来，先去金匠铺。两人都满十八。主角与二人之一立过 S 约定时此章静默失败，改走 _side。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_together"
+title = "先去金匠铺"
+text = "穆萨跟着行会出了三个月的远门，回来那天没回家。离关门的钟点还差一刻，金匠铺的门板才上了一半，他侧着身子挤进来，把一只布袋倒扣在柜台上，沙土哗地铺开。“这回真有宝，至少有我。”沙土里滚出两枚铜钱，锈得认不出面额。雅库布没笑，一枚一枚放上秤盘，砝码加了又减，减了又加。“值多少？”穆萨问。“我见过最贵的两枚。”穆萨想接一个笑话，没接出来。油灯上那枚穿孔的银币转了半圈。雅库布绕过柜台，把剩下的门板推回去闩好，回过身，穆萨的手还悬在半空，不知道往哪儿放。他一把握住，吻了他，短短一下，身后的秤盘还在晃。"
+stage = "witness"
+window = [[1559, 3, 1], [1559, 5, 31]]
+at = "fez"
+cast = ["musa", "yaqub"]
+speaker = "musa"
+mood = "tender"
+when = [{ kind = "flag", flag = "c7_pair_musa_yaqub_taken", value = false }]
+news = "非斯寻宝行会领事家的儿子出远门三个月，回来没回家，先去了犹太区的金匠铺。"
+
+[tracks.chapters.default]
+next = "pair_musa_yaqub_turning"
+effects = [{ kind = "tie", a = "musa", b = "yaqub", relation = "lovers" }, { kind = "flag", flag = "c7_pair_musa_yaqub_together" }]
+
+# 转折（传闻）：1578 年 8 月三王之战。马哈赞河边三个君主战死；非斯城里多了俘虏，也多了找人的人家；金匠铺夜里过秤。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_turning"
+title = "三王之战"
+text = "街上都在传：马哈赞河边那一仗打完，三个君主一个也没回来。葡萄牙的年轻国王没回来，摩洛哥的苏丹没回来，那个被赶下台、跟着葡萄牙人打回来的旧苏丹，也淹死在河里了。后来又说，俘虏一队一队押进非斯，多了上千张要喂的嘴，也多了上千户挨个城门问人的人家。犹太区的金匠铺夜里不熄灯，赎身的银子一袋一袋抬进去，秤杆压下去，抬起来，路过的人说，里头砝码的响声比唤礼还勤。"
+stage = "rumor"
+window = [[1578, 8, 10], [1578, 9, 30]]
+at = "fez"
+cast = ["musa", "yaqub"]
+mood = "tense"
+news = "马哈赞河那一仗死了三个君主，非斯城里多了上千个俘虏，也多了上千户找人的人家。"
+
+[tracks.chapters.default]
+next = "pair_musa_yaqub_choice"
+effects = []
+
+# 抉择：1578 年秋，战后的名单。穆萨出城找失散的人，雅库布留在金匠铺认遗物；缺省两人各做各的，关系不变。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_choice"
+title = "战后的名单"
+text = "金匠铺的柜台上摆满了别人的东西：戒指、银扣、刻着名字的护身符，每样底下压着半张写了字的纸条。穆萨靠着柜台，行囊已经捆好。“行会里有四家的儿子没回来。”他说，“我去阿尔卡萨尔那边，一个村子一个村子问。”“野地里没有灯油铺子。”雅库布没抬头，一枚一枚擦着银扣，“该我去。”“你走了，谁替人认东西？”两人争到后半夜，灯油见了底。穆萨撕了一张纸，雅库布也撕了一张，各写一份名单，末尾各留下回信的地方，换着收好。然后他们一起转过来看我。"
+stage = "involve"
+window = [[1578, 10, 1], [1578, 12, 15]]
+at = "fez"
+cast = ["musa", "yaqub"]
+speaker = "yaqub"
+mood = "tense"
+news = "三王之战以后，非斯寻宝行会那个爱讲笑话的出城找人去了，犹太区的金匠铺天天替人认遗物。"
+
+[tracks.chapters.default]
+next = "pair_musa_yaqub_epilogue"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "lists"
+text = "跟穆萨出城，照名单一个个找人"
+reply = "我们在阿尔卡萨尔一带的村子里走了二十天。进村先把名单递给最年长的人，找到一个，穆萨就在名字上画一个圈，当晚写给雅库布的信里添一行。他一路没讲过一个笑话，宿在打谷场上，灯留到天亮，我只当没看见。"
+next = "pair_musa_yaqub_epilogue"
+effects = [{ kind = "flag", flag = "c7_pair_musa_yaqub_helped" }, { kind = "affinity", person = "musa", value = 4 }, { kind = "affinity", person = "yaqub", value = 2 }, { kind = "memory", memory = "mem-pair_musa_yaqub-list", title = "画满圈的名单" }]
+news = "非斯寻宝行会那个爱讲笑话的出城找人，听说这回一路上一个笑话也没讲，名单上的名字圈了一大半。"
+
+[[tracks.chapters.choices]]
+key = "relay"
+text = "在城里替两人来回送信，对上名单和遗物"
+reply = "雅库布认出一枚银扣，扣背刻着一行小字，是萨累那边的写法。我连夜骑驴出城，把它送到穆萨手里，他凑在火边辨了半天，第二天一早，照着刻字敲开了那户人家的门。回城前他托我带话：“你先替我去看一眼，那盏灯还亮不亮。”"
+next = "pair_musa_yaqub_epilogue"
+effects = [{ kind = "flag", flag = "c7_pair_musa_yaqub_matched" }, { kind = "affinity", person = "yaqub", value = 4 }, { kind = "affinity", person = "musa", value = 3 }, { kind = "memory", memory = "mem-pair_musa_yaqub-buckle", title = "刻字的银扣" }]
+news = "非斯金匠铺里认出的一枚银扣，连夜被人送出城，听说真找到了刻着名字的那户人家。"
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "不插手，在金匠铺等消息"
+reply = "我在金匠铺里等。雅库布每天清早先把那盏挂银币的灯擦一遍，擦完才卸门板，认一整天的遗物。第十九天傍晚，门口有人敲了三下，是穆萨的敲法。雅库布手里还攥着擦灯的布，走过去开了门。"
+next = "pair_musa_yaqub_epilogue"
+effects = [{ kind = "affinity", person = "musa", value = 1 }, { kind = "affinity", person = "yaqub", value = 1 }]
+news = "非斯犹太区金匠铺的少东家天天擦灯、认遗物，等了十九天，才等回出城找人的那位。"
+
+# 尾声：1579 年春，穆萨又出一趟远门，回来照旧先去金匠铺，敲门三下。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_epilogue"
+title = "回来先敲哪扇门"
+text = "穆萨又出了一趟远门。回来那天，金匠铺刚点灯，三下敲门声，不轻不重。灯上那枚穿孔的银币被擦得发亮，雅库布开了门，袖口沾着灯油：“晚了两天。”“路上遇到一场沙暴。”穆萨掸着肩上的沙，“我和骆驼抢一张毯子，它赢了。”“灯油我添了四回。”雅库布侧身让开门。穆萨张了张嘴，把后头的笑话咽了回去，先跨过门槛。"
+stage = "witness"
+window = [[1579, 3, 1], [1579, 5, 31]]
+at = "fez"
+cast = ["musa", "yaqub"]
+speaker = "yaqub"
+mood = "cheerful"
+news = "非斯寻宝行会那个爱讲笑话的，每回出远门回来都先去犹太区金匠铺敲三下门，街坊都认得那个敲法。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "helped"
+when = [{ kind = "flag", flag = "c7_pair_musa_yaqub_helped" }]
+text = "穆萨又出了一趟远门。回来那天，金匠铺刚点灯，三下敲门声，不轻不重。柜台后头的墙上钉着一张纸，名字被圈得密密麻麻，雅库布每天开门板，先看它一眼。他开了门，袖口沾着灯油：“晚了两天。”“路上遇到一场沙暴。”穆萨掸着肩上的沙，“我和骆驼抢一张毯子，它赢了。”“灯油我添了四回。”雅库布侧身让开门。穆萨张了张嘴，把后头的笑话咽了回去，先跨过门槛。"
+
+[[tracks.chapters.variants]]
+key = "matched"
+when = [{ kind = "flag", flag = "c7_pair_musa_yaqub_matched" }]
+text = "穆萨又出了一趟远门。回来那天，金匠铺刚点灯，三下敲门声，不轻不重。柜台后头的墙上钉着一张拓样，是那枚刻字银扣的背面，雅库布认出来的第一件遗物。他开了门，袖口沾着灯油：“晚了两天。”“路上遇到一场沙暴。”穆萨掸着肩上的沙，“我和骆驼抢一张毯子，它赢了。”“灯油我添了四回。”雅库布侧身让开门。穆萨张了张嘴，把后头的笑话咽了回去，先跨过门槛。"
+
+[[tracks]]
+key = "pair_musa_yaqub_side"
+name = "借灯的朋友"
+kind = "request"
+start = "pair_musa_yaqub_side_landing"
+auto = true
+cast = ["musa", "yaqub"]
+
+# 并肩：主角与二人之一立过 S 约定时，1559 年春穆萨第一次远行归来照样先去金匠铺；两人是借灯的朋友，不写嫉妒、不写惩罚、不提主角。
+[[tracks.chapters]]
+key = "pair_musa_yaqub_side_landing"
+title = "借灯的朋友"
+text = "穆萨第一次跟着行会出远门，三个月后回来，没回家，先去金匠铺报平安。他把一袋沙土倒在柜台上，里头只有两枚锈铜钱。“宝是没找着。”他拍拍手，“人倒是囫囵回来了。”雅库布把铜钱放上秤盘，看了一眼：“不值钱。”他没把钱还回去，却把那盏挂着银币的灯往柜台那头推了推，推到穆萨伸手够得着的地方。“下回出门，记得回来借灯。”穆萨笑起来，说一言为定，推门出去时，又回头看了一眼那盏灯。"
+stage = "witness"
+window = [[1559, 3, 1], [1559, 5, 31]]
+at = "fez"
+cast = ["musa", "yaqub"]
+speaker = "yaqub"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c7_pair_musa_yaqub_taken", value = true }]
+news = "非斯寻宝行会那个爱讲笑话的出远门回来，先去犹太区金匠铺报平安，带回来的宝只有两枚锈铜钱。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "tie", a = "musa", b = "yaqub", relation = "friends" }, { kind = "flag", flag = "c7_pair_musa_yaqub_side" }]

@@ -1,0 +1,152 @@
+# 十项属性、三组与两项评价；专供引擎与视图契约测试。
+signs = [] # 不继承经典星座的六属性引用。
+[[groups]]
+key = "aptitude"
+name = "资质"
+range = [1, 10]
+start = 1
+free = 3
+creation_cap = 7
+
+[[groups]]
+key = "craft"
+name = "本领"
+range = [1, 10]
+start = 1
+free = 5
+creation_cap = 7
+
+[[groups]]
+key = "conduct"
+name = "品行"
+range = [0, 100]
+start = 50
+free = 0
+creation_cap = 100
+
+[[attributes]]
+key = "wit"
+name = "悟性"
+group = "aptitude"
+desc = "测试悟性的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "study_xp", per_point = 100 }]
+
+[[attributes]]
+key = "endurance"
+name = "耐力"
+group = "aptitude"
+desc = "测试耐力的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "fatigue", per_point = 1 }]
+
+[[attributes]]
+key = "charm"
+name = "口才"
+group = "aptitude"
+desc = "测试口才的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "bargain_discount", per_point = 30 }, { hook = "recruit_discount", per_point = 200 }]
+
+[[attributes]]
+key = "navigation"
+name = "领航"
+group = "craft"
+desc = "测试领航的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "flagship_speed", per_point = 100 }, { hook = "position_fix", per_point = 10 }, { hook = "fog_reveal", per_point = 1, max = 6 }]
+
+[[attributes]]
+key = "commerce"
+name = "交易"
+group = "craft"
+desc = "测试交易的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "tax_discount", per_point = 100 }]
+
+[[attributes]]
+key = "tactics"
+name = "战术"
+group = "craft"
+desc = "测试战术的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "naval_combat", per_point = 500 }]
+
+[[attributes]]
+key = "stewardship"
+name = "管理"
+group = "craft"
+desc = "测试管理的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "wage_discount", per_point = 100 }]
+
+[[attributes]]
+key = "numeracy"
+name = "算学"
+group = "craft"
+desc = "测试算学的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "market_window", per_point = 1 }]
+
+[[attributes]]
+key = "honor"
+name = "守约"
+group = "conduct"
+desc = "测试守约的分组、检定与钩子。"
+hidden = false
+hooks = [{ hook = "honor", per_point = 1 }]
+
+[[attributes]]
+key = "piety"
+name = "虔敬"
+group = "conduct"
+desc = "测试虔敬的分组、检定与钩子。"
+hidden = true
+hooks = [{ hook = "religion", per_point = 1 }]
+
+[[ratings]]
+key = "mariner"
+name = "航海评价"
+weights = { navigation = 4, tactics = 3, numeracy = 3 }
+
+[[ratings]]
+key = "society"
+name = "社交评价"
+weights = { charm = 6, honor = 1 }
+
+[[abilities]]
+key = "astronomy"
+name = "观星"
+
+[[roles]]
+key = "navigator"
+name = "领航员"
+ability = "navigation"
+scope = "fleet"
+hooks = [{ hook = "flagship_speed", per_point = 10 }, { hook = "position_fix", ability = "astronomy", per_point = 1 }]
+
+[[roles]]
+key = "quartermaster"
+name = "军需官"
+ability = "management"
+scope = "owner"
+hooks = [{ hook = "wage_discount", per_point = 10 }]
+
+[[questions]]
+key = "school"
+title = "求学"
+prompt = "曾经怎样学习？"
+
+[[options]]
+key = "library"
+question = "school"
+name = "读书"
+text = "在书库里学习。"
+attrs = { wit = 1, numeracy = 1 }
+
+[[options]]
+key = "practice"
+question = "school"
+name = "实习"
+text = "随船观察航道。"
+attrs = { endurance = 1, navigation = 1 }

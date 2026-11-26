@@ -1,0 +1,885 @@
+/* 新界面（试用）——系统：设置、结局横幅、等候回音与出错、抽屉、调试面板。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ *
+ * 只在 v2 下出现的类（组件里用 useIsV2 判断才加）：.v2-settings、.v2-st-*（设置的“立即生效”小签、底边的保存条、收起的说明）、
+ * .v2-seg*（分段控件，components/panels/Segmented.tsx）、.v2-panel-error（功能窗口的内容出错，
+ * shell/ErrorBoundary.tsx 的 PanelError）。其余选择器都是组件原有的类，v1 照旧由 styles/ 下的旧样式画。
+ *
+ * 对比度（WCAG AA，docs/UI-REDESIGN.md 第 6 节）：正文 ink / paper-0 13.9、说明 ink-3 / paper-0 5.2、链接 sea / paper-0 6.0、
+ * 分段选中 ink / paper-2 16.5、开关开 brass-ink / paper-0 5.7（非文字 ≥ 3）、开关关的边 line-control / paper-0 3.4、
+ * 建议小签 sea / 海蓝调和底 5.9。
+ *
+ * 手机：与 hooks/useViewport.ts 一致，竖屏（宽 < 720）与横屏（高 < 500）都按触屏的尺寸、对话框从底部升起；只有竖屏改成单栏（见文件末尾）。
+ */
+
+/* ═════════════════════════ 1. 设置 ═════════════════════════ */
+/* 一张表单：每一节是“标题 + 一行一项”。标签在左边一栏（固定宽），控件、说明、按钮都对齐在右边一栏；
+ * 不再一节一张卡片（纸面上只靠分节标题的细线分开）。手机上标签在上、控件在下，开关靠右。 */
+:root[data-ui="v2"] .pn-settings {
+  --st-label: 184px;
+  --st-gap: 16px;
+  --st-indent: calc(var(--st-label) + var(--st-gap));
+  /* 窗口内容区的左右、下内边距（保存条靠它伸到窗口两边与底边）：与 shell.css 的 .gw-body 一致——
+   * 桌面、平板 16 / 20 / 24；手机竖屏与横屏（data-layout 为 phone、short）12 / 14 / 20。选择器照外壳写，外壳换内边距时这里一起换 */
+  --st-pad-x: 20px;
+  --st-pad-b: 24px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-settings,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-settings {
+  --st-pad-x: 14px;
+  --st-pad-b: 20px;
+}
+:root[data-ui="v2"] .pn-settings > .pn-section.pn-form {
+  position: relative;
+  margin: 0 0 6px;
+  padding: 0 0 10px var(--st-indent);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .pn-settings > .pn-section > .pn-h {
+  margin: 18px 0 8px calc(-1 * var(--st-indent));
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .pn-settings > .pn-section:first-child > .pn-h {
+  margin-top: 2px;
+}
+/* 一行一项：标签 | 控件 */
+:root[data-ui="v2"] .pn-settings .field {
+  display: grid;
+  grid-template-columns: var(--st-label) minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--st-gap);
+  min-height: 40px;
+  margin: 0 0 0 calc(-1 * var(--st-indent));
+  padding: 3px 0;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .pn-settings .field > span {
+  color: var(--v2-ink-2);
+  line-height: 1.4;
+}
+:root[data-ui="v2"] .pn-settings .field > select,
+:root[data-ui="v2"] .pn-settings .field > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
+  justify-self: start;
+  width: min(100%, 360px);
+}
+:root[data-ui="v2"] .pn-settings .field > input[type="number"] {
+  width: min(100%, 160px);
+  font-variant-numeric: tabular-nums;
+}
+/* 勾选的一项：名字在左栏、开关在右栏（DOM 里开关在前，靠网格换位置） */
+:root[data-ui="v2"] .pn-settings .field:has(> input[type="checkbox"]) > span {
+  grid-column: 1;
+  grid-row: 1;
+}
+:root[data-ui="v2"] .pn-settings .field:has(> input[type="checkbox"]) > input {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+}
+/* 开关：设置里的勾选都画成开关（仍是原生的复选框，读屏、键盘都照旧） */
+:root[data-ui="v2"] .pn-settings input[type="checkbox"] {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 22px;
+  margin: 0;
+  cursor: pointer;
+  background: var(--v2-paper-sunk);
+  border: 1px solid var(--v2-line-control);
+  border-radius: var(--v2-r-pill);
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    background-color var(--v2-dur-1) var(--v2-ease),
+    border-color var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .pn-settings input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--v2-paper-2);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(36, 28, 21, 0.35);
+  transition: transform var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .pn-settings input[type="checkbox"]:checked {
+  background: var(--v2-brass-ink);
+  border-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .pn-settings input[type="checkbox"]:checked::before {
+  transform: translateX(18px);
+}
+:root[data-ui="v2"] .pn-settings input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+/* 说明：对齐控件一栏，13 px，行宽不超过 60 个字 */
+:root[data-ui="v2"] .pn-settings .pn-st-help,
+:root[data-ui="v2"] .pn-settings .pn-section > .sub {
+  max-width: 60em;
+  margin: 0 0 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.65;
+  color: var(--v2-ink-3);
+}
+/* “新手教程”一节里的“全部快捷键”（11-03 操作手感）：一句说明 + 一个键；触屏上没有键盘，不显示 */
+:root[data-ui="v2"] .pn-settings .pn-st-keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 14px 0 0;
+}
+:root[data-ui="v2"] .pn-settings .pn-st-keys > .sub {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .pn-settings .pn-st-keys {
+    display: none;
+  }
+}
+:root[data-ui="v2"] .pn-settings .pn-st-intro {
+  max-width: 46em;
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-settings .pn-st-steps,
+:root[data-ui="v2"] .pn-settings .pn-st-vocab {
+  max-width: 56em;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-settings .pn-h4 {
+  margin: 12px 0 4px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+/* 几项排一行的（静音 / 后台播放）：在新的排法里一项一行 */
+:root[data-ui="v2"] .pn-settings .row:has(> .field) {
+  display: block;
+  margin: 0;
+}
+/* 只有按钮的一行（如密钥的“保存 / 删除”）：对齐控件一栏 */
+:root[data-ui="v2"] .pn-settings .row {
+  gap: 8px;
+  margin: 4px 0 8px;
+}
+/* 各档位模型名：去掉虚线框，小标题对齐控件一栏 */
+:root[data-ui="v2"] .pn-settings .pn-fieldset {
+  margin: 4px 0;
+  padding: 0;
+  border: 0;
+}
+:root[data-ui="v2"] .pn-settings .pn-fieldset legend {
+  padding: 6px 0 2px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+/* API 密钥：标签 | 输入框，两个按钮跟在输入框下面 */
+:root[data-ui="v2"] .pn-settings .pn-keyrow {
+  margin: 4px 0;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+:root[data-ui="v2"] .pn-settings .pn-keyrow > .btn {
+  margin: 2px 8px 6px 0;
+}
+:root[data-ui="v2"] .pn-settings .pn-structured {
+  margin: 4px 0 0;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+/* 音量：标签 | 滑条 | 数字 */
+:root[data-ui="v2"] .pn-settings .field.pn-st-volume {
+  grid-template-columns: var(--st-label) minmax(0, 320px) 3em;
+  width: auto;
+}
+:root[data-ui="v2"] .pn-settings .pn-st-volume > span {
+  width: auto;
+}
+:root[data-ui="v2"] .pn-settings .pn-st-volume input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+:root[data-ui="v2"] .pn-settings .pn-st-volume output {
+  font-weight: 600;
+  color: var(--v2-ink);
+  text-align: right;
+}
+/* 新手教程的“从头再看”、说明里的按钮：对齐控件一栏 */
+:root[data-ui="v2"] .pn-settings .pn-section > .btn {
+  margin: 0 0 6px;
+}
+
+/* “立即生效”的小签：贴在分节标题那一行的右端，盖住标题的细线
+ * （分节没有上内边距，标题的上外边距穿出分节——分节的顶边就是标题那一行的顶边） */
+:root[data-ui="v2"] .v2-st-instant {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0 0 0 10px;
+  font-size: var(--v2-fs-xs);
+  line-height: 24px;
+  color: var(--v2-sea);
+  background: var(--v2-paper-0);
+}
+
+/* AI 组合事件：引言之后收起来，点“展开说明”再看 */
+:root[data-ui="v2"] .v2-st-more {
+  margin: 0 0 8px;
+}
+:root[data-ui="v2"] .v2-st-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--v2-h-md);
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  color: var(--v2-sea);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .v2-st-more > summary::-webkit-details-marker {
+  display: none;
+}
+:root[data-ui="v2"] .v2-st-more > summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .v2-st-more[open] > summary::before {
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .v2-st-more > summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-ui="v2"] .v2-st-more > summary:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+
+/* 保存条：贴在窗口底边（滚到哪儿都看得见，手机上就在拇指下面）；左边说有没有没保存的修改，右边是全窗口唯一的主按钮 */
+/* （负外边距取窗口内边距 --st-pad-x / --st-pad-b，正好伸到窗口两边与底边，不多出一像素、不出横向滚动） */
+:root[data-ui="v2"] .pn-settings .pn-savebar.v2-st-savebar {
+  position: sticky;
+  bottom: calc(-1 * var(--st-pad-b));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin: 18px calc(-1 * var(--st-pad-x)) calc(-1 * var(--st-pad-b));
+  padding: 12px var(--st-pad-x) 14px;
+  background: var(--v2-paper-1);
+  border-top: 1px solid var(--v2-line-strong);
+  box-shadow: 0 -8px 18px rgba(36, 28, 21, 0.08);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .pn-settings .pn-savebar.v2-st-savebar,
+:root[data-ui="v2"] .app.game[data-layout="short"] .pn-settings .pn-savebar.v2-st-savebar {
+  gap: 12px;
+  margin-top: 16px;
+  padding-bottom: calc(12px + var(--safe-bottom, 0px));
+}
+/* 不可用的主按钮与危险按钮：与次要按钮一样是灰字淡底（base.css 里 .btn.primary / .btn.danger 写在 .btn:disabled 之后、特异度相同，
+ * 满色的黄铜、印章红会盖掉不可用的样子——没有密钥时的“删除密钥”看起来仍能点）。只管这一组的画面：设置、调试 */
+:root[data-ui="v2"] .pn-settings .btn.primary:disabled,
+:root[data-ui="v2"] .pn-settings .btn.danger:disabled,
+:root[data-ui="v2"] .pn-debug .btn.primary:disabled,
+:root[data-ui="v2"] .pn-debug .btn.danger:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .v2-st-savestate {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.45;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .v2-st-savestate.is-dirty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .v2-st-savestate.is-dirty::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--v2-brass);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .v2-st-savebar .btn.primary {
+  flex: none;
+  min-height: var(--v2-h-lg);
+  padding: 0 22px;
+  font-size: var(--v2-fs-lg);
+}
+
+/* 分段控件（昼夜光影、配乐风格、语言）：浅灰的槽里等宽几段，选中段白底浮起。
+ * 槽 2 px 内边距 + 1 px 边，每段 28 px：整条 34 px（缺省控件高）；圆角 8 = 段的 5 + 3 */
+:root[data-ui="v2"] .v2-seg {
+  display: inline-flex;
+  justify-self: start;
+  max-width: 100%;
+  padding: 2px;
+  gap: 2px;
+  background: var(--v2-paper-sunk);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .v2-seg-opt {
+  position: relative;
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: var(--v2-h-sm);
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.25;
+  color: var(--v2-ink-2);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: var(--v2-r-sm);
+  transition:
+    background-color var(--v2-dur-1) var(--v2-ease),
+    color var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .v2-seg-opt input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+:root[data-ui="v2"] .v2-seg-opt:hover {
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .v2-seg-opt.on {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  box-shadow:
+    var(--v2-shadow-1),
+    inset 0 0 0 1px var(--v2-line-strong);
+}
+:root[data-ui="v2"] .v2-seg-opt:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .pn-settings .field.v2-seg-field > span {
+  align-self: center;
+}
+
+:root[data-ui="v2"] .pn-settings .pn-section > .v2-inline-error {
+  max-width: 560px;
+}
+/* ═════════════════════════ 4. 结局横幅 ═════════════════════════ */
+/* 一张纸卡：上面是深色的题头（宋体大字、黄铜色；失败时是暖红），下面一道双细线，再是原因与“继续经营” */
+:root[data-ui="v2"] .outcome-overlay {
+  background: rgba(6, 11, 20, 0.66);
+}
+:root[data-ui="v2"] .outcome {
+  width: min(480px, 100%);
+  overflow: hidden;
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .outcome-ribbon,
+:root[data-ui="v2"] .outcome.lost .outcome-ribbon {
+  align-self: stretch;
+  min-width: 0;
+  height: auto;
+  padding: 20px 16px 16px;
+  background: var(--v2-night-1);
+  border: 0;
+  border-bottom: 3px double var(--v2-brass);
+  border-image: none;
+  image-rendering: auto;
+}
+:root[data-ui="v2"] .outcome.lost .outcome-ribbon {
+  border-bottom-color: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .outcome-ribbon strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-3xl);
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.3em;
+  color: var(--v2-brass-hi);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .outcome.lost .outcome-ribbon strong {
+  color: var(--v2-down-night);
+}
+:root[data-ui="v2"] .outcome-card {
+  margin-top: 0;
+  padding: 20px 24px 22px;
+  background: var(--v2-paper-0);
+  background-image: none;
+  border: 0;
+  border-image: none;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .outcome-card p {
+  margin: 0 0 16px;
+  font-size: var(--v2-fs-lg);
+  line-height: 1.7;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .outcome-card .btn.primary {
+  min-height: var(--v2-h-lg);
+  padding: 0 24px;
+  font-size: var(--v2-fs-lg);
+}
+/* 收起后舞台左上的小缎带：深色小签 */
+:root[data-ui="v2"] .outcome-chip-btn,
+:root[data-ui="v2"] .outcome-chip.lost .outcome-chip-btn {
+  gap: 6px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  letter-spacing: 0.1em;
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .outcome-chip.lost .outcome-chip-btn {
+  color: var(--v2-down-night);
+}
+:root[data-ui="v2"] .outcome-chip-btn:hover:not(:disabled) {
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .outcome-chip-btn:focus-visible {
+  outline-color: var(--v2-focus-night);
+}
+
+/* ═════════════════════════ 5. 等候回音、出错 ═════════════════════════ */
+/* “正在等候回音”：不再是斜体小字，前面一个缓缓明灭的黄铜小点（减少动效时不动） */
+:root[data-ui="v2"] .wait-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  font-size: var(--v2-fs-sm);
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--muted);
+}
+:root[data-ui="v2"] .wait-note::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--v2-brass);
+  border-radius: 50%;
+  animation: v2-wait-pulse 1.2s ease-in-out infinite;
+}
+@keyframes v2-wait-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* 舞台（航海图、街景）画不出来时错误边界给的一块：深色底上的就地错误 */
+:root[data-ui="v2"] .stage-error {
+  padding: 12px 16px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: #ffd9d2;
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 3px solid var(--v2-seal-hi);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+
+/* ═════════════════════════ 6. 抽屉 ═════════════════════════ */
+/* 外观在 shell.css（第一阶段）；这里只补：遮罩与对话框一致（66%）、内容不被底部横条挡住 */
+:root[data-ui="v2"] .sheet-backdrop {
+  background: rgba(6, 11, 20, 0.66);
+}
+:root[data-ui="v2"] .sheet-at-bottom .sheet-body {
+  padding-bottom: calc(18px + var(--safe-bottom, 0px));
+}
+
+/* ═════════════════════════ 8. 调试面板（开发模式） ═════════════════════════ */
+/* “刷新”与“截至第几天”在同一行；状态哈希是深色的等宽小条；审计日志一条一行 */
+:root[data-ui="v2"] .pn-debug {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: start;
+}
+:root[data-ui="v2"] .pn-debug > * {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .pn-debug > .btn:first-child {
+  grid-column: 2;
+  grid-row: 1;
+  gap: 6px;
+}
+:root[data-ui="v2"] .pn-debug > [data-testid="debug-asof"] {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .pn-debug .warn {
+  margin-left: 6px;
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .pn-debug .pn-debug-kv {
+  grid-template-columns: 9em minmax(0, 1fr);
+  margin: 14px 0 6px;
+}
+:root[data-ui="v2"] .pn .pn-debug-kv code {
+  padding: 3px 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-up-night);
+  background: var(--v2-night-1);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .pn-debug > p {
+  margin: 4px 0;
+}
+:root[data-ui="v2"] .pn .pn-audit {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-audit li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .pn .pn-audit small {
+  font-size: var(--v2-fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .pn .pn-audit pre {
+  margin: 4px 0 0;
+  padding: 6px 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--v2-paper-2);
+  border: 0;
+  border-left: 3px solid var(--v2-line-strong);
+  border-radius: 0 var(--v2-r-xs) var(--v2-r-xs) 0;
+}
+
+/* ═════════════════════════ 9. 提示条与航海日志（shell/Feedback.tsx） ═════════════════════════ */
+/* 提示条不再盖住航海日志与靠右的功能窗口：
+ * - 航海日志是锚点（anchor-name）：有日志时，提示条叠在日志的上面（手机、平板与窄一些的桌面）；
+ * - 桌面、平板：提示条在舞台露出来的那一块里居中（让开靠右的功能窗口，--stage-cover-right）；
+ * - 宽 ≥ 1480 的桌面：日志与窗口之间放得下，提示条照旧贴在舞台下沿，在两者之间居中；
+ * - 不支持锚点定位的浏览器：提示条出现时先把日志藏起来，提示条收起后日志回来。 */
+:root[data-ui="v2"] .shell-main > .gamelog {
+  anchor-name: --v2-gamelog;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .shell-main > .toast,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .shell-main > .toast {
+  left: calc((100% - var(--stage-cover-right, 0px)) / 2);
+  max-width: min(560px, calc(100% - var(--stage-cover-right, 0px) - 24px));
+}
+:root[data-ui="v2"] .shell-main:has(> .gamelog) > .toast {
+  bottom: calc(anchor(--v2-gamelog top, 6px) + 8px);
+}
+@media (min-width: 1480px) {
+  /* 日志占去左边 12 + 420 + 12 px（大屏 480 宽，见下） */
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .shell-main:has(> .gamelog) > .toast {
+    --v2-toast-left: 444px;
+    bottom: 14px;
+    left: calc(var(--v2-toast-left) + (100% - var(--v2-toast-left) - var(--stage-cover-right, 0px)) / 2);
+    max-width: min(560px, calc(100% - var(--v2-toast-left) - var(--stage-cover-right, 0px) - 24px));
+  }
+}
+@media (min-width: 1800px) and (min-height: 1000px) {
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .shell-main:has(> .gamelog) > .toast {
+    --v2-toast-left: 504px;
+  }
+}
+@supports not (anchor-name: --v2-probe) {
+  :root[data-ui="v2"] .shell-main:has(> .toast) > .gamelog {
+    visibility: hidden;
+  }
+  @media (min-width: 1480px) {
+    :root[data-ui="v2"] .app.game[data-layout="desktop"] .shell-main:has(> .toast) > .gamelog {
+      visibility: visible;
+    }
+  }
+}
+
+/* ═════════════════════════ 10. 功能窗口的内容出错（Window 的错误边界） ═════════════════════════ */
+/* 印章红的就地错误（共用的 .v2-inline-error）：为什么、怎么办、“重试”；整窗只有这一块，字比列表里的大一号 */
+:root[data-ui="v2"] .gw-body > .v2-panel-error {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .gw-body > .v2-panel-error .v2-inline-error-mark {
+  margin-top: 2px;
+}
+
+/* ═════════════════════════ 手机：竖屏与横屏（宽 < 720 或高 < 500，与 hooks/useViewport.ts 的 phone、short 一致） ═════════════════════════ */
+/* 触屏的尺寸（控件 ≥ 44 px、输入框 16 px——iOS 聚焦不放大）、正文 15 px、对话框从底部升起；
+ * 单栏的排法只在竖屏（宽 < 720），见下一节——横屏 844 × 390 这样宽而矮的窗口仍是“标签 | 控件”两栏，省下高度 */
+@media (max-width: 719px), (max-height: 499px) {
+  :root[data-ui="v2"] .pn-settings {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .pn-settings .field {
+    min-height: var(--v2-h-touch);
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .pn-settings .field > select,
+  :root[data-ui="v2"] .pn-settings .field > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
+    min-height: var(--v2-h-touch);
+    font-size: 16px;
+  }
+  :root[data-ui="v2"] .pn-settings input[type="checkbox"] {
+    width: 48px;
+    height: 28px;
+  }
+  :root[data-ui="v2"] .pn-settings input[type="checkbox"]::before {
+    width: 22px;
+    height: 22px;
+  }
+  :root[data-ui="v2"] .pn-settings input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+  }
+  :root[data-ui="v2"] .pn-settings .pn-st-help,
+  :root[data-ui="v2"] .pn-settings .pn-section > .sub {
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .pn-settings .pn-st-intro,
+  :root[data-ui="v2"] .pn-settings .pn-st-steps,
+  :root[data-ui="v2"] .pn-settings .pn-st-vocab {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .pn-settings .pn-st-volume input[type="range"] {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .pn-settings .row .btn,
+  :root[data-ui="v2"] .pn-settings .pn-keyrow > .btn,
+  :root[data-ui="v2"] .pn-settings .pn-section > .btn,
+  :root[data-ui="v2"] .v2-st-more > summary {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .v2-seg-opt {
+    min-height: var(--v2-h-touch);
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .v2-st-savebar .btn.primary {
+    min-height: var(--v2-h-touch);
+    padding: 0 18px;
+  }
+
+  /* 结局横幅：从舞台底部升起（“继续经营”在拇指下面），题头上一条可抓的短横 */
+  :root[data-ui="v2"] .outcome-overlay {
+    align-items: end;
+    justify-items: center;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .outcome {
+    width: 100%;
+    border-width: 1px 0 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+  }
+  :root[data-ui="v2"] .outcome-ribbon::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    background: var(--v2-night-line-strong);
+    border-radius: var(--v2-r-pill);
+  }
+  :root[data-ui="v2"] .outcome-ribbon,
+  :root[data-ui="v2"] .outcome.lost .outcome-ribbon {
+    padding-top: 24px;
+  }
+  :root[data-ui="v2"] .outcome-ribbon strong {
+    font-size: var(--v2-fs-2xl);
+  }
+  :root[data-ui="v2"] .outcome-card {
+    padding: 18px 18px 20px;
+  }
+  :root[data-ui="v2"] .outcome-card .btn.primary {
+    width: 100%;
+    min-height: var(--v2-h-touch);
+  }
+
+  /* 就地错误的“重试”：窗口出错、设置里出错 */
+  :root[data-ui="v2"] .gw-body > .v2-panel-error .v2-inline-error-action,
+  :root[data-ui="v2"] .pn-settings .v2-inline-error-action {
+    min-height: var(--v2-h-touch);
+    padding: 0 14px;
+    font-size: var(--v2-fs-md);
+  }
+  /* 提示条的“知道了”：触屏 44 px */
+  :root[data-ui="v2"] .shell-main > .toast {
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+  }
+  :root[data-ui="v2"] .shell-main > .toast button {
+    min-height: var(--v2-h-touch);
+    padding: 0 14px;
+    font-size: var(--v2-fs-md);
+  }
+  /* 调试面板 */
+  :root[data-ui="v2"] .pn-debug > .btn:first-child {
+    min-height: var(--v2-h-touch);
+  }
+}
+
+/* ═════════════════════════ 手机竖屏（宽 < 720）：单栏 ═════════════════════════ */
+@media (max-width: 719px) {
+  /* 设置：标签在上、控件在下（整宽）；开关一行里靠右 */
+  :root[data-ui="v2"] .pn-settings {
+    --st-indent: 0px;
+  }
+  :root[data-ui="v2"] .pn-settings > .pn-section.pn-form {
+    padding: 0 0 8px;
+  }
+  :root[data-ui="v2"] .pn-settings > .pn-section > .pn-h {
+    margin-left: 0;
+  }
+  :root[data-ui="v2"] .pn-settings .field {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 6px;
+    margin-left: 0;
+    padding: 6px 0;
+  }
+  :root[data-ui="v2"] .pn-settings .field > select,
+  :root[data-ui="v2"] .pn-settings .field > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
+    width: 100%;
+  }
+  :root[data-ui="v2"] .pn-settings .field:has(> input[type="checkbox"]) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  :root[data-ui="v2"] .pn-settings .field:has(> input[type="checkbox"]) > input {
+    justify-self: end;
+  }
+  :root[data-ui="v2"] .pn-settings .field.pn-st-volume {
+    grid-template-columns: minmax(0, 1fr) 3em;
+  }
+  :root[data-ui="v2"] .pn-settings .pn-st-volume > span {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  :root[data-ui="v2"] .pn-settings .pn-st-volume output {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  :root[data-ui="v2"] .pn-settings .pn-st-volume input[type="range"] {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  :root[data-ui="v2"] .v2-seg {
+    display: flex;
+    width: 100%;
+  }
+  :root[data-ui="v2"] .v2-seg-opt {
+    flex: 1 1 0;
+    padding: 0 8px;
+    white-space: normal;
+  }
+
+  /* 调试面板 */
+  :root[data-ui="v2"] .pn-debug .pn-debug-kv {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 手机横屏（高 < 500）：抽屉贴在底边、居中，不铺满整个宽屏（读起来行太长）；舞台底下没有命令栏，让开底部的横条 */
+@media (max-height: 499px) and (min-width: 720px) {
+  :root[data-ui="v2"] .outcome {
+    width: min(480px, 100%);
+    border-width: 1px 1px 0;
+  }
+}
+@media (max-height: 499px) {
+  :root[data-ui="v2"] .outcome-card {
+    padding-bottom: calc(20px + var(--safe-bottom, 0px));
+  }
+}
+
+/* 触屏：抽屉的关闭键 44 px */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .sheet-close {
+    top: 4px;
+    right: 4px;
+    width: var(--v2-h-touch);
+    height: var(--v2-h-touch);
+  }
+}
+
+/* ═════════════════════════ 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .outcome {
+    animation: none;
+  }
+  :root[data-ui="v2"] .wait-note::before {
+    animation: none;
+    opacity: 0.8;
+  }
+  :root[data-ui="v2"] .pn-settings input[type="checkbox"],
+  :root[data-ui="v2"] .pn-settings input[type="checkbox"]::before,
+  :root[data-ui="v2"] .v2-seg-opt {
+    transition: none;
+  }
+}

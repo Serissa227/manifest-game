@@ -1,0 +1,169 @@
+# C13d 请托：一部《广舆图》（request_martin_de_rada）。中文，Claude 写。
+# 人物：马丁·德·拉达 martin_de_rada（1533 年生，男；奥斯定会修士，潘普洛纳人，精数学与天文；势力 new_spain，身份档 P 清贫，报酬按任务单走）。
+#       cast 在 cast/historical_06_ming.toml，日程 1576-01-01 至 1577-12-31 在马尼拉（church）。
+# 类型：找东西（fd）；3 章：offer →（接下）handin → use；（借书）offer 直接到 use；终点 done / failed。没有 stage 章，因此没有 window 与 default。
+# 报价：当面（T）。auto=false，玩家“问请托”（ask:request_martin_de_rada）启动；offer 章不写 at，目标是在马尼拉找到他。
+# 规划窗口（不进 TOML）：offer 1576-01-15 至 1577-12-31；handin 期限 1578-02-28；use 期限 1578-02-28（到期不付不罚，按折中收尾）。
+# 解法：offer 三条路——买一部来（接下／接下并问缘由）、花钱借一部（八连的唐人书商，押金 400）；handin 两条路——留下（扣书）、借他描（不扣）；
+#       use 三条路——自己念（lang_chinese 60，最好）、请八连的通事（雄辩检定 35/6，失败折中）、让他自己认（折中）。
+# 结构说明：choice 的 fail 分支引擎不带 reply，所以 interpreter 的回复只写到通事进屋、开口念为止，成败的差别由报酬和见闻承担，不在回复里先说结果。
+# 依据：
+#   史实——拉达生于潘普洛纳，奥斯定会修士，精数学与天文；1575 年随明朝军官出使福建，带回一百多种中文书，回马尼拉后请通事一本本译读；
+#         罗洪先《广舆图》约 1555 年刊，每幅画方格，一格百里（计里画方）；他相信中国就是马可·波罗的契丹。
+#   原创——修院那间堆满书的屋子、闽南老通事只认账本上的字、拉丁数字编号的书脊、自编的汉拉字典、八连的老闽商与押金、总督府批给译书的钱。
+# 不碰：林晚灯主线 8 写的使团那一路（只写使团回来以后的修院）；他写给新西班牙的信里的话（秘密，不写、不暗示、见闻不写）；他 1578 年的死（timeout 的信只说“往南边去了”）。
+# 读的旗标（只读）：c13_main_lin_wandeng（offer 的 variant wandeng，林晚灯玩家被他认出福建见过；由林晚灯主线设）。
+# 设的旗标（全部为 c13_request_martin_de_rada_<事件>）：accepted / declined（offer）；borrowed（offer 借书）；lent（handin 借他描）；late（handin 超时）；done / partial（use 收尾）。
+# 依赖：guangyutu_print（items/books_03_geography_02.toml，有 shop）；技能 lang_chinese；检定属性 eloquence；日程港口 manila 已存在。
+# 英文：不写（terra16 先只做中文，英文以后补）。
+# 回忆插画清单：
+#   mem-request_martin_de_rada-use「修院灯下的方格图」：马尼拉修院的灯下，一部方格地图摊在拉丁文经纬格旁边，两个人一个念一个算。
+
+[[tracks]]
+key = "request_martin_de_rada"
+name = "一部《广舆图》"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["martin_de_rada"]
+
+# 一、一百多种书：修院里的一间屋子，他缺一部图。
+[[tracks.chapters]]
+key = "offer"
+title = "一百多种书"
+text = "马尼拉奥斯定会修院的一间屋子，中文书从地上堆到窗台：历书、律例、医书，最下面压着几册兵书，每册的书脊上都用墨水写着拉丁数字。窗边的通事是个闽南出身的老水手，两种话都会说，字只认得账本上那一类，正把一册医书的目录念给修士听。拉达盘腿坐在书堆中间，膝上一张纸，左边列着汉字地名，右边列着经纬度，两列对不上。他抬头看见你，笔尖还停在纸上。“你的船是从哪个港来的？你们量过那儿的纬度没有？量过的数报给我，没量过就报个大概，回头我拿星盘自己校。”你报了，他低头写下，写完摇头。“福建那几个港，我在海上量的数，跟书里差了将近一度。书错，还是我的星盘错，得有一部像样的图才知道。罗洪先的《广舆图》，一格一百里的那种。福建一带的港口有卖，你去买一部来。”"
+speaker = "martin_de_rada"
+mood = "cheerful"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1576, 1, 15], to = [1577, 12, 31] }]
+objectives = [{ kind = "person", person = "martin_de_rada", text = "在港里找到他" }]
+deadline = [1577, 12, 31]
+cast = ["martin_de_rada"]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "wandeng"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng", value = true }]
+text = "马尼拉奥斯定会修院的一间屋子，中文书从地上堆到窗台，每册的书脊上都用墨水写着拉丁数字。拉达盘腿坐在书堆中间，一抬头就认出了你，笔都忘了放下。“福建见过的那位会算账的船主！”他把膝上的纸往你这边转，“你们那儿一里路到底多长？我拿星盘量了，跟书里的数对不上，通事又只会说‘一里就是一里’。”窗边的老通事耸了耸肩，拉达已经把纸转回自己面前，在上面写下一行书名。“罗洪先的《广舆图》，一格一百里的那种，有了它才算得清。福建一带的港口有卖，你去买一部来。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去福建一带的港口买一部。"
+next = "handin"
+reply = "他在一张纸上写下书名的拉丁转写，又叫通事在下面写了四个汉字，字大得像刻碑。“书商要是拿别的地图糊弄你，翻开看格子。没有格子的，一律不要。”他把纸折成四折递过来，折痕压得很重。"
+effects = [{ kind = "flag", flag = "c13_request_martin_de_rada_accepted" }, { kind = "affinity", person = "martin_de_rada", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，问他要这图做什么。"
+next = "handin"
+reply = "“量出契丹到底有多大。”他说得很快，然后低头去翻书，不再往下说。通事在窗边咳了一声，把目录的下一行念了出来。"
+effects = [{ kind = "flag", flag = "c13_request_martin_de_rada_accepted" }, { kind = "affinity", person = "martin_de_rada", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "borrow"
+text = "不必买，我去八连跟唐人书商借一部来。"
+next = "use"
+requires = [{ kind = "cash", ge = 480 }]
+hint = "八连的书商要押金，你身上现在凑不齐。"
+reply = "八连的老书商收了押金，把书借给修院三个月，临走用袖子擦了擦封套上的灰。拉达听你说完经过，说押金他会想办法还你。后来也没还。"
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "martin_de_rada", value = 2 }, { kind = "flag", flag = "c13_request_martin_de_rada_accepted" }, { kind = "flag", flag = "c13_request_martin_de_rada_borrowed" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟我不往福建去。"
+next = "failed"
+reply = "他耸耸肩，说下一条唐人船来，他自己去八连问。纸上的两列数字，他又对了一遍。"
+effects = [{ kind = "flag", flag = "c13_request_martin_de_rada_declined" }]
+
+# 二、一格一百里：书放到了他桌上，他想留一阵。
+[[tracks.chapters]]
+key = "handin"
+title = "一格一百里"
+text = "你把《广舆图》放在他桌上。他没看字，先翻开第一页，笑出了声：满页都是方格，每一格注着“百里”。他用食指一格一格数过去，数到纸边才抬头：“等距的。画这图的人想得周到，读的人不用问路，数格子就行。”笔放下了，他才说到正事：修院里的抄写员描图最稳，他想让抄写员把全书一页页描下来，描完一页，他对一页。“书得在我手边放一阵。”他看着你，“留给修院，还是借我描完了还你？”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "martin_de_rada", value = true }]
+objectives = [{ kind = "item", item = "guangyutu_print", qty = 1, text = "带上那部《广舆图》" }, { kind = "person", person = "martin_de_rada", text = "在修院找到他" }]
+deadline = [1578, 2, 28]
+cast = ["martin_de_rada"]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_martin_de_rada_late" }, { kind = "affinity", person = "martin_de_rada", value = -3 }, { kind = "letter", person = "martin_de_rada", text = "马丁修士随船往南边去了，临走嘱咐我给你捎一句话：书的事，等他回来再说。你的名字，他记在了那本小账上。——修院抄写员代笔" }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "留给修院。"
+next = "use"
+reply = "他把书抱在怀里，像抱一个刚受洗的孩子，又觉得不妥，放回桌上，用手掌把书角压平。“我记账：修院欠你一部书。”他真的在小本子上写了下来。"
+effects = [{ kind = "item", item = "guangyutu_print", qty = -1 }, { kind = "affinity", person = "martin_de_rada", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借给他描，描完还我。"
+next = "use"
+reply = "他有点失望，可还是答应了：“三个月。一天也不多借。”他在书里夹了一张纸条，写着还书的日子，用的是拉丁数字。"
+effects = [{ kind = "affinity", person = "martin_de_rada", value = 1 }, { kind = "flag", flag = "c13_request_martin_de_rada_lent" }]
+
+# 三、读第一页：灯下，念给他听，他来算。
+[[tracks.chapters]]
+key = "use"
+title = "读第一页"
+text = "修院的灯下，《广舆图》摊在桌上，旁边是一张他自己画的经纬格，比书上的方格密得多。拉达要有人把第一页的字念出来，他好对着算。第一幅画的是京师。老通事念出“京师”两个字，往下是图例的小注，他认得一半，用手指点了点，摇头。拉达的笔停在半空。“这一格的里数，得有人念给我听。”他从抽屉里抽出一本小册，翻到福建那几页，那是他自己量的数。“对不上，我听这个‘百里’，就知道对不上。”他说得很轻，眼睛却亮了，“要么书上的一里比我的一里长，要么我的星盘错了。我要一个数一个数地听。”"
+speaker = "martin_de_rada"
+mood = "mystic"
+night = true
+when = [{ kind = "alive", person = "martin_de_rada", value = true }]
+objectives = [{ kind = "person", person = "martin_de_rada", text = "在修院找到他" }]
+deadline = [1578, 2, 28]
+cast = ["martin_de_rada"]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_martin_de_rada_partial" }]
+
+[[tracks.chapters.variants]]
+key = "v1_lent"
+when = [{ kind = "flag", flag = "c13_request_martin_de_rada_lent", value = true }]
+text = "修院的灯下，《广舆图》摊在桌上，夹着还书日期的那张纸条压在镇纸下面。旁边是一张他自己画的经纬格，比书上的方格密得多。拉达要有人把第一页的字念出来，他好对着算。第一幅画的是京师。老通事念出“京师”两个字，往下是图例的小注，他认得一半，用手指点了点，摇头。拉达的笔停在半空。“这一格的里数，得有人念给我听。”他从抽屉里抽出一本小册，翻到福建那几页，那是他自己量的数。“对不上，我听这个‘百里’，就知道对不上。”他说得很轻，眼睛却亮了，“要么书上的一里比我的一里长，要么我的星盘错了。我要一个数一个数地听。”"
+
+[[tracks.chapters.variants]]
+key = "v2_borrowed"
+when = [{ kind = "flag", flag = "c13_request_martin_de_rada_borrowed", value = true }]
+text = "修院的灯下，八连书商借来的《广舆图》摊在桌上，封底盖着书商的朱印，拉达翻页翻得很轻。旁边是一张他自己画的经纬格，比书上的方格密得多。他要有人把第一页的字念出来，他好对着算。第一幅画的是京师。老通事念出“京师”两个字，往下是图例的小注，他认得一半，用手指点了点，摇头。拉达的笔停在半空。“这一格的里数，得有人念给我听。”他从抽屉里抽出一本小册，翻到福建那几页，那是他自己量的数。“对不上，我听这个‘百里’，就知道对不上。”他说得很轻，眼睛却亮了，“要么书上的一里比我的一里长，要么我的星盘错了。我要一个数一个数地听。”"
+
+[[tracks.chapters.choices]]
+key = "read"
+text = "我自己念给他听。"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "地图上的小注你认不全，念出来他也没法算。"
+reply = "你一个字一个字念，他一个数一个数算，烛台上的蜡烛换了三根。你念得含糊的字，他就让你重念。他把你念过的字抄在左边，把算出的里数写在右边，算到半夜，在纸边写下一行拉丁文，推到你面前：“这是中国人的一里。”第二天，修院账房拿着总督府批给译书的钱来找你。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "martin_de_rada", value = 8 }, { kind = "skill", skill = "lang_chinese", value = 20 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "new_spain", value = 2 }, { kind = "memory", memory = "mem-request_martin_de_rada-use", title = "修院灯下的方格图" }, { kind = "flag", flag = "c13_request_martin_de_rada_done" }]
+news = "马尼拉奥斯定会修院的灯一夜没灭，那个爱算数的修士在对一部中国地图，据说有位船长在旁边一个字一个字地念。"
+
+[[tracks.chapters.choices]]
+key = "interpreter"
+text = "去八连请一个通事来。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "你在八连问了三家铺子，第四家的老闽商肯来，条件是修院管一顿饭。他进屋就把算盘拎在手里，在拉达对面坐下，开口前先问：“修士要听字，还是要听数？”拉达说都要。老人叹了口气，翻开第一页，念一句，解释三句。拉达听得入了迷，把自己的算盘忘在了一边。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "martin_de_rada", value = 8 }, { kind = "skill", skill = "lang_chinese", value = 20 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "new_spain", value = 2 }, { kind = "memory", memory = "mem-request_martin_de_rada-use", title = "修院灯下的方格图" }, { kind = "flag", flag = "c13_request_martin_de_rada_done" }]
+news = "马尼拉奥斯定会修院的灯一夜没灭，那个爱算数的修士在对一部中国地图，八连的一位老闽商被请去念了一夜。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "martin_de_rada", value = 4 }, { kind = "flag", flag = "c13_request_martin_de_rada_partial" }]
+news = "八连的一位老闽商被请进马尼拉的奥斯定会修院，对着一部中国地图念了一夜，修士听得入神，数目却没对出几行。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "让他自己对着字典慢慢认。"
+next = "done"
+reply = "他点点头，说修士有的是耐心。字典是他自己编的，红墨水写拉丁字母，黑墨水写汉字，已经有半本厚。你走的时候，账房照数付了书钱，他还在认第一行。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "martin_de_rada", value = 4 }, { kind = "flag", flag = "c13_request_martin_de_rada_partial" }]
+news = "马尼拉奥斯定会修院里，那个爱算数的修士一个人对着自编的字典认一部中国地图，红黑两色墨水写满了半本。"

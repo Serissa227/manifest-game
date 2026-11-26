@@ -1,0 +1,184 @@
+# 请托：一箱不能留的书（request_kiyohara_ito）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude 执笔。仅中文。
+# 人物：清原伊都（玛利亚）kiyohara_ito（生年不详，女），公家清原家的女儿，大坂玉造细川宅里侍奉夫人玉的侍女；1587 年受洗、剃发立愿。
+#       cast 见 cast/historical_07_japan.toml（cast 的 name 写作“清原いと”，正文按简报称“伊都”）。
+#       堺的小旅店店家、博多的役人与领头的、长崎的老神父都是叙事人物，不起名、不建 cast。
+# 类型：押运／带人（escort，托运物是叙事里的书箱，不发物品）。报价：到访（V），auto=true，报价港堺（sakai），
+#       family=c13_offer_sakai，冷却 20 天；名声门槛 25。她的日程在大坂（osaka 不是港口），正文写她“出宅来堺”。
+# 窗口：offer 1587-08-01 至 1590-06-30（when 与 deadline）。passage（博多）期限 90 天；arrive / arrive_lost（长崎）期限 90 天。
+#       offer 以后各章 when 写 alive。
+# 章节：offer 剃了发的侍女（堺）→ passage 博多的盘查（博多）
+#       → arrive 还没走的神父（长崎；口才成功、塞钱、米包成功）
+#       → arrive_lost 少了的一册（长崎；口才或米包的检定失败）
+# 结构：简报写的是三章，arrive 的 hand 按 lost_one 拆选项、copy 要 requires lost_one——这面旗标由本轨道的 passage 设，
+#       照整合方的要求不用 requires 读本轨道自己设的旗标，改成按 next 分路：passage 的两个 fail 分支走 arrive_lost，
+#       其余走 arrive。arrive 的 hand（done）之外补一个 no_receipt（不写收条、带回钥匙；同一份最好结局，另设分支旗标），
+#       arrive_lost 有 hand_short（partial，1300、+4）与 copy（partial，1800、+6），两个都不设 requires。共四章。
+#       检定失败时选项的回复不显示，所以失败的经过写在 fail 分支的见闻与 arrive_lost 的正文里。
+#       简报的 passage 超时来信写“箱子里的书，她自己烧了一半，另一半托人走了陆路”——箱子那时在玩家船上，
+#       改成“宅里没装进箱子的那几册”烧了一半、另一半走陆路，船上那只请玩家沉掉。
+#       按总决定 §二：检定失败好感 −2、超时 −3（简报没列，照通则补上）。arrive / arrive_lost 的超时不再写来信（全轨道来信两封已用完），
+#       改用长崎的见闻交代。完成来信（“夫人问起，我说书走了海路”）只放在 done 的两个选项里（每条路径只收到一封）：开头一句按收条或钥匙不同，其余相同。
+# 依据（史实）：1587-07-24（天正十五年六月十九日）秀吉在筥崎发伴天连追放令；同年清原伊都受洗、剃发立愿（耶稣会日本年报）；
+#       清原家世代讲授明经，家学是《论语》《孝经》；《和剂局方》是宋代官修的方书，在日本流传很广；
+#       1587 年以后博多与长崎的盘查、长崎岬上的教会、留在九州没走的神父。
+# 依据（原创）：小旅店二楼、新剃的头与素色头巾、杉木箱与《和剂局方》的幌子、拿《论语》注本填库里的空位、
+#       茶色线拴在手腕上的铜钥匙、博多的竹签与米包、领头役人的袖子、老神父的收条与“缺一册”、抄本、托店家转交。
+# 秘密：她为夫人施洗、夫人受洗瞒着丈夫——永远不写进见闻，正文也不点破，只写“宅子里的书”。她对家里男人说的谎不写具体内容。
+#       与细川玉的请托（request_hosokawa_tama，1584—87 的十三个问题）不共用事件：本轨道只写追放令以后的书箱。
+# 读写的旗标：不读任何旗标；不读、不设任何 c7_ 旗标。
+#       设 c13_request_kiyohara_ito_accepted / declined / done / partial / late；
+#       分支旗标两面：lost_one（博多被抽走一册，只作记录，分路靠 next）、no_receipt（不写收条、带回钥匙）。
+#       终局旗标每条路径只设一面：done（hand、no_receipt）、partial（hand_short、copy）、late（passage、arrive、arrive_lost 超时）、
+#       declined（回绝）；offer 超时不设旗标、不写见闻。
+# 报酬：现金至多 2250；好感至多 +13（接下 +2、博多办成 +3、最好结局 +8）；无名声（隐秘请托）、无声望（细川家不是已登记的势力）；
+#       无物品、无技能；回忆一张。
+# 依赖：港口 sakai、hakata、nagasaki（ports_east_asia.toml）现成；无改名依赖；无主线门禁。
+# 回忆插画清单：
+#   mem-request_kiyohara_ito-arrive「手腕上的钥匙」：长崎教会后门的门槛上一只打开的杉木箱，一把小铜钥匙用茶色线拴在船长的手腕上。
+
+[[tracks]]
+key = "request_kiyohara_ito"
+name = "一箱不能留的书"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kiyohara_ito"]
+
+# offer · 1587-08 起 · 堺的小旅店：剃了发的侍女与一只上锁的杉木箱
+[[tracks.chapters]]
+key = "offer"
+title = "剃了发的侍女"
+text = "堺的一间小旅店，二楼临街。等你的女人包着素色头巾，跪坐得笔直，见你进门先行了礼；头巾边上露出一圈青白的头皮，是新剃的。她说她叫伊都，在大坂玉造的细川宅里侍奉夫人，今天出宅来堺办事。她身边放着一只杉木箱，一个人抱得动。她开锁掀盖让你看了一眼：最上面压着一册《和剂局方》，底下是教理问答、一本拉丁文的日课经、几册手抄的日文小书。看完又把锁扣上。“筥崎那道告示下来以后，宅里随时会来人搜。搜宅的人认得十字，认不得罗马字。可他们会数箱子——箱子少一只，夫人就要多答一句话。库里那个空位，我已经拿家父的《论语》注本填上了。”她把箱子往你这边推了一寸：“请您把它送到长崎，交给还没走的神父。”"
+speaker = "kiyohara_ito"
+mood = "tense"
+at = "sakai"
+when = [{ kind = "date", from = [1587, 8, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 25 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "箱子留下吧，我送到长崎。"
+next = "passage"
+effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_accepted" }, { kind = "affinity", person = "kiyohara_ito", value = 2 }]
+reply = "她从袖子里取出一把小铜钥匙，穿上一根茶色的线，在你手腕上绕了三圈，打了个结。“到了长崎再解开。路上谁问，您就说是药书。”结打紧了，她又拿指甲把线头掐齐，这才把箱子推过来，“教会走后门，敲三下。它在宅里没出过门，劳您了。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这时候运这个，太险了。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_declined" }]
+reply = "她点了点头：“您说得是，我懂。”没再多说一句，把头巾重新系紧，弯腰抱起箱子，下楼的脚步很稳。店家后来说，那位客人的茶钱是进门时就先付了的。"
+
+# passage · 博多：码头上新来的役人挨船翻货，见了十字就砸
+[[tracks.chapters]]
+key = "passage"
+title = "博多的盘查"
+text = "船进博多，码头上多了一排新来的役人，挨条船翻货。前头那条平户来的船上搜出一只铜十字，当场扔在石板上，叫人用锤子砸扁了，船主跪在一边，一声不敢出。我的船排在后面。一个年轻役人手里攥着一根竹签，从前头那条船的船舷探过身来，指了指我甲板上那只上锁的杉木箱：“那个，等着，一会儿开。”说完又回头去戳前头的货包。我手腕上那根线还缠着，铜钥匙贴着脉门，凉得发紧。"
+speaker = "captain"
+mood = "tense"
+at = "hakata"
+news = "博多码头新来了一排役人，挨条船翻货，见了十字就砸。平户来的一条船上搜出一只铜十字，当场叫锤子砸扁了。"
+objectives = [{ kind = "at", at = "hakata", text = "船过博多" }]
+deadline_days = 90
+when = [{ kind = "alive", person = "kiyohara_ito", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_late" }, { kind = "affinity", person = "kiyohara_ito", value = -3 }, { kind = "letter", person = "kiyohara_ito", text = "长崎来信说，您的船一直没到。宅里没装进箱子的那几册，我烧了一半，另一半托人走了陆路。您船上那只，请找个深些的地方沉下去，钥匙不必还我。——伊都" }]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "说是药书，开锁给他看最上面那册医方。"
+next = "arrive"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "affinity", person = "kiyohara_ito", value = 3 }]
+news = "博多码头上有条从堺来的船，船主开箱给役人念了一页医方，那年轻役人听得直皱眉，挥手放了。"
+fail = { next = "arrive_lost", effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_lost_one" }, { kind = "affinity", person = "kiyohara_ito", value = -2 }], news = "博多码头上，一个年轻役人把一只说是药书的木箱翻到了底，抽走一本薄册子揣进怀里，箱子倒是放过去了。" }
+reply = "我没解线，把手腕凑到锁眼上开了锁，捧出那册《和剂局方》，翻到一页治伤寒的方子，一味一味念给他听。他凑过来看了两页密密的汉字，眉头越皱越紧，大概一个字也没认全，竹签往箱沿上一敲：“药书就药书，下一条。”锁重新扣上的时候，我的手心全是汗。"
+
+[[tracks.chapters.choices]]
+key = "fee"
+text = "给领头的塞一笔“过船钱”。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋里凑不出一笔塞得进袖子的钱。"
+effects = [{ kind = "cash", value = -200 }]
+news = "博多码头役人头儿的袖子越来越沉，有条从堺来的船一只箱子也没开，就放出了港。"
+reply = "我趁年轻役人还在前头那条船上，下了跳板，把一包钱从领头那位的袖口塞了进去。他掂了掂，眼睛都没往下看，冲着年轻役人喊：“后面那条船我看过了。”年轻的还想说什么，被他瞪了回去。箱子没开，钥匙一直贴在我腕子上。"
+
+[[tracks.chapters.choices]]
+key = "rice"
+text = "趁他还在前头那条船上，把箱子埋进米包底下。"
+next = "arrive"
+check = { attr = "stewardship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "kiyohara_ito", value = 3 }]
+news = "有条从堺来的船在博多靠岸，甲板上堆成一座米包垛，役人的竹签戳了几下，戳出一地白米就放了。"
+fail = { next = "arrive_lost", effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_lost_one" }, { kind = "affinity", person = "kiyohara_ito", value = -2 }], news = "博多码头上，役人的竹签戳进一堆米包，戳到了木头，挖出一只说是压舱的箱子，抽走一本册子才放行。" }
+reply = "水手们一声不吭，把十几袋米倒腾了一遍，箱子沉到了米堆最底下。年轻役人跳上甲板时，原先放箱子的地方只剩一座米包垛。他四下看了看，后头还排着七八条船等他，没工夫细找，竹签在米包上戳了几下，戳出一把白米，撒了一甲板，骂了句什么，下船去了。"
+
+# arrive · 长崎：岬上教会的后门，箱子一本没少
+[[tracks.chapters]]
+key = "arrive"
+title = "还没走的神父"
+text = "长崎岬上的教会，正门前站着两个役人。我照伊都说的，绕到后门敲了三下。来开门的是个老神父，胡子白了一半，日语说得很慢，每个字都像先在嘴里掂过分量。我解开手腕上的线，钥匙在锁里转了两圈。他跪在门槛里，把书一本本拿出来，摊在膝上数：那册《和剂局方》他看了一眼，笑了笑，放到一边；然后是教理问答、日课经、几册手抄的日文小书。数完，他用拉丁话低声念了一句什么，又用日语对我说：“都在。”"
+speaker = "captain"
+mood = "tender"
+at = "nagasaki"
+news = "长崎岬上教会的后门收了一只从堺来的杉木箱，搬箱的水手说是药书，老神父却跪在门槛里数了半天。"
+objectives = [{ kind = "at", at = "nagasaki", text = "把箱子送到长崎" }]
+deadline_days = 90
+when = [{ kind = "alive", person = "kiyohara_ito", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_late" }, { kind = "affinity", person = "kiyohara_ito", value = -3 }]
+news = "长崎岬上教会的老神父托人到码头问过几回，说约好从堺来的一只木箱，过了日子也没见着。"
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "交给神父，请他写张收条带回堺。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "kiyohara_ito", value = 8 }, { kind = "flag", flag = "c13_request_kiyohara_ito_done" }, { kind = "memory", memory = "mem-request_kiyohara_ito-arrive", title = "手腕上的钥匙" }, { kind = "letter", person = "kiyohara_ito", text = "收条我收到了，看过就烧了。前些日子宅里果然来了人，进库里把箱子数了一遍，数目对得上，一句话也没多问。夫人问起，我说书走了海路。她听了，把手里的针线放下，好一会儿才又拿起来。宅里不便多写，这封信您读过，就请烧了。——伊都" }]
+reply = "神父找来一张纸，用日文写了收条，字很笨，“书”字的一撇拖得老长。他吹干墨，折成小方块交给我：“请告诉她，长崎这边还有人。”回到堺，我把收条托那间小旅店的店家转交。第二天再去，店家说已经有人取走了，是个包头巾的女人，连茶也没喝。"
+
+[[tracks.chapters.choices]]
+key = "no_receipt"
+text = "什么也别写，我把钥匙带回去，她就明白。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "kiyohara_ito", value = 8 }, { kind = "flag", flag = "c13_request_kiyohara_ito_done" }, { kind = "flag", flag = "c13_request_kiyohara_ito_no_receipt" }, { kind = "memory", memory = "mem-request_kiyohara_ito-arrive", title = "手腕上的钥匙" }, { kind = "letter", person = "kiyohara_ito", text = "钥匙回到我手里了，线头还是我掐的那样。前些日子宅里果然来了人，进库里把箱子数了一遍，数目对得上，一句话也没多问。夫人问起，我说书走了海路。她听了，把手里的针线放下，好一会儿才又拿起来。宅里不便多写，这封信您读过，就请烧了。——伊都" }]
+reply = "神父想了想，点头：“纸会叫人搜出来。”他把书收进屋里，空箱子留下，钥匙连着那根茶色的线还给了我。回到堺，我把钥匙托小旅店的店家转交。过了几天，店家说，一个包头巾的女人来过，接过钥匙，捏着线头看了看，什么也没问，揣进袖子里走了。"
+
+# arrive_lost · 长崎：博多被抽走了一册，神父数了两遍
+[[tracks.chapters]]
+key = "arrive_lost"
+title = "少了的一册"
+text = "长崎岬上的教会，役人守着正门，后门开在一条晒渔网的窄巷里。敲过三下，开门的老神父先往巷口望了望，才放我进去。线一解开，锁簧应声弹起。他把书一册一册码在门槛边上：《和剂局方》、教理问答、日课经，手抄的日文小书——码到最后，他停了一下，又从头数了一遍。博多码头上被役人揣走的那一册，原先就夹在这几册中间。他没问，我也没说。他只用手掌在箱底空出来的那一块抹了抹，像抹掉一层灰，然后说：“那一册，我屋里还有一本旧的。”"
+speaker = "captain"
+mood = "tender"
+at = "nagasaki"
+news = "长崎晒渔网的那条窄巷里，教会后门收下一只从堺来的木箱，说是药书。老神父数了两遍，嘴里念叨少了一册。"
+objectives = [{ kind = "at", at = "nagasaki", text = "把箱子送到长崎" }]
+deadline_days = 90
+when = [{ kind = "alive", person = "kiyohara_ito", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kiyohara_ito_late" }, { kind = "affinity", person = "kiyohara_ito", value = -3 }]
+news = "长崎教会后门那条窄巷，老神父隔几天就出来朝码头望一望，说有只从堺来的箱子，到了日子还没进门。"
+
+[[tracks.chapters.choices]]
+key = "hand_short"
+text = "把剩下的交给神父，收条带回堺。"
+next = "done"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "kiyohara_ito", value = 4 }, { kind = "flag", flag = "c13_request_kiyohara_ito_partial" }]
+reply = "神父写的收条是日文，字很笨，末尾多了一行小字：“缺一册。”神父提着笔想了一会儿，没有划掉。回到堺，我把收条压在小旅店的柜台底下，托店家收着。店家说，来取的那位客人在店门口把收条看了两遍，折起来，站了好一会儿才走。"
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "请神父把少的那本重抄一份，一起捎回大坂。"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "kiyohara_ito", value = 6 }, { kind = "flag", flag = "c13_request_kiyohara_ito_partial" }]
+reply = "神父说照着抄要一个月。我在长崎等了一个月，抄本到手，比原先那册厚，字写得大，行距也宽，像是怕念的人眼睛不好。封面上，他照样题了“和剂局方”四个字。我把它和收条包在一起带回了堺，托店家转交。店家说，取走的那位客人把抄本贴着胸口揣好，才系上头巾出门。"

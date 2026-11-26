@@ -1,0 +1,342 @@
+# 西萨·穆柳：先看采集人的手（bond_sisa_mullu / reunion_sisa_mullu）——C7 重写，2026-10-12，Claude（Opus）；旧 GPT 稿作废，只沿用轨道 key、章节 key、地点与年份。
+# 标签：GL（羁绊线，可恋爱）。西萨 romance.with = any；主角性别由玩家定：女主角时为 GL，男主角时为 BG。适用主角：custom_chincha_rafts（钦查筏商家学的学生，“我”不写性别、外貌、家族专名）。
+# 人物：西萨·穆柳 sisa_mullu（1540-04-01，女）；主角模板生年 1540-01-01，两人相差三个月。
+#       学院期 1554—1556：主角 14—16 岁、西萨 13—16 岁；A1（1556-01..05）的心动选项双方未成年，只写手覆在手上；
+#       A2（1556-06..11）双方 16 岁；S（1556-12）双方 16 岁，心动选项只到牵手与 crush，“第二个人”约在成年回来时再画。
+#       重逢 1563：双方 23 岁，恋人落点合法。本文件不让迈塔出场，也不写阿米汉（她们的线 1581 年才开始）。
+# 依据：
+#   史实——海菊蛤（Spondylus，红色的刺牡蛎）长在北边厄瓜多尔一带的暖海里，靠潜水的人撬采，安第斯人拿它敬神，钦查人曾以筏子做这门沿海生意；
+#         钦查外海的鸟粪岛（今钦查群岛）海鸟成群；西班牙人在卡亚俄设秤收税。
+#   原创——北边来的潜水人与他的手、黑木提秤与葫芦秤盘、官秤称第三遍、灰扑扑的小贝壳、画着价码与点子的旧船板、
+#         外婆的旧海菊蛤与壳底的刻痕、画着钦查海岸的彩绘贝壳（painted_shell）、价目板上那一格“不卖”。
+#   待核——征服以后海菊蛤的沿海买卖在 1550 年代还剩多大（正文只写零星的筏子与几个西班牙商人）；卡亚俄码头的官秤由谁掌管（正文只写“税吏”）。
+# 缺省走向（default 不显示文字，只在这里记下故事照走的样子）：
+#           C1 没人插话，那一篮壳照西萨报的价卖了，潜水人走前冲她弯了弯腰；C2 西萨没卖，提着那三篮壳回了家；
+#           B1 只摸上来一只灰贝壳，西萨揣回去了；B2 木板没挂出去，靠在她家墙角；A1 她一个人在海边坐到天黑，手里攥着旧贝壳；
+#           A2 画好的贝壳她自己留着，放在外婆那枚旧贝壳旁边。
+#           S 的 default：开春“我”北上那天，西萨在集上替采壳人称壳，没来海边；开启重逢，设 c7_bond_sisa_mullu_parted，不改关系。
+#           重逢的 default：西萨托往北的筏队捎来一只画着海岸的小贝壳，筏上两个人，附一封信（letter），设 c7_bond_sisa_mullu_missed。
+# 羁绊阶梯：C2 argue_for_her 给 C；B1 dive_again 补签 C；B2 paint_with_her 给 B；A1 never_sell 补签 B；
+#           A2 take_shell / who_on_raft 给 A + painted_shell + 回忆“画在壳里的海岸”。心动：A1 hold_it_with_her +6，A2 who_on_raft +6（要 ≥ 6），
+#           S heart +12（要 ≥ 12），全选心动正好 24，够重逢的 love 落点（决定表原写 S +10，只能到 22，按简报改为 +12）。
+# 旗标：写 c7_bond_sisa_mullu_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed；本线没有 rival 落点。
+#       S 的 promise 与 heart 另设共享旗标 c7_tie_new_amihan_dagat_sisa_mullu_taken（tie_new_amihan_dagat_sisa_mullu 读，改走“并肩的朋友”）。
+#       重逢的 variants 读本文件的 _promise / _romance / _own；不读外部旗标。
+# 日程：西萨学院期的日程在钦查（chincha），各章 at 沿用旧稿的卡亚俄（钦查筏户的出海口），由整合方确认在场判定；重逢 1563 在卡亚俄。
+# 口头禅：用 cast 里现行的“壳再好看，也得算上人家潜了几回。”（简报写的是改写前的旧句“漂亮的壳，也得算人家的辛苦”，意思相同），只在 C1 用一次。
+# 秘密：外婆的旧海菊蛤（红只剩边上一圈、出过三倍的价也不卖），A1 才说出来历；本文件的羁绊章没有 stage，不写 news，秘密不进任何见闻。
+# 地点（2026-11-01 close-places）：学院章 at 由 callao 改 chincha；B1“跟着家里的筏子南下”改“出海”，B2“卡亚俄集口”改“钦查集口”，上面“日程”一条作废。重逢 1563 仍在卡亚俄。
+
+[[tracks]]
+key = "bond_sisa_mullu"
+name = "西萨·穆柳：先看采集人的手"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["sisa_mullu"]
+
+# C1：1554 年初，钦查海滩。北边来的潜水人倒出一篮海菊蛤；西萨先看他的手。
+[[tracks.chapters]]
+key = "c1"
+title = "先看采集人的手"
+text = "北边来的筏子靠岸时已经过了晌午。筏上下来一个潜水的人，把一篮海菊蛤倒在沙滩上，壳上的刺还挂着海草，一滩红摊开来，红得像傍晚的天。两个西班牙商人抢着蹲下去，拿指头拨拉，专挑个大的往自己脚边扒。西萨·穆柳没有蹲。她走到那个潜水人跟前，把他垂着的右手拉起来，翻过来看：手指泡得发白，皮一层层起皱，指甲缝里全是细细的血口子，有几道还没长上。她看了很久，才放下那只手，从沙上拣起一只壳，托在掌心转给商人看。“壳再好看，也得算上人家潜了几回。”她声音不大，脸上带着笑。一个商人哈哈大笑：“印第安姑娘心这么软，还做什么买卖？”西萨也笑，报了一个价。商人往下压，她摇头；商人再压，她把那只壳轻轻放回篮里，笑着把原价又报了一遍，一个子儿也没让。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "flag", flag = "family_access_chincha_raft_house" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "look_at_hands"
+text = "也蹲到潜水人跟前，先看他的手，再看壳。"
+reply = "我蹲下去，想看看他的另一只手。他慌忙把手缩到背后，在裤腿上蹭了两下，像怕弄脏了什么。我只好去看壳，这才看出那些刺是一根根掰过的，掰断的地方还是白的。收工以后，西萨在集口的棚子底下等我，推过来一碗奇恰酒。“你蹲下去那一下，他记住你了。”她自己那碗端在手里，一口没喝，“我也记住了。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "pick_best_shell"
+text = "只看壳，指着最红最大的那一只，说这只成色最好。"
+reply = "西萨顺着我的指头看过去，点点头：“成色是好。”她把那只壳拿起来翻过去，给我看壳底一道新撬的白痕，“这一只长在最深的那块礁上，他下去三回才撬下来。”我再看那只壳，红得有点吓人。后来商人出最高的价买走了它。西萨收钱的时候，把多出来的那几个子儿另外数了一遍，塞进潜水人手里。"
+next = "c2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }]
+
+# C2：1554 年夏，钦查集口。西班牙商人的铜秤总称轻；西萨拿出自己的黑木提秤。
+[[tracks.chapters]]
+key = "c2"
+title = "自己的秤"
+text = "集上来了个新面孔的西班牙商人，带着一杆铜秤，秤杆擦得锃亮。他称海菊蛤，一篮称完报一个数，每一篮都比西萨估的轻。西萨蹲在旁边不吭声，一篮一篮地听。听完第三篮，她从腰间的布包旁边抽出一杆木秤：秤杆是黑木的，一头吊着磨圆的石砣，秤盘是半只葫芦。她当着围过来的人，把那三篮又称了一遍，每称一篮，在沙上划一道。三道划完，她抬起头，还是笑着：“少了两成。”商人的脸一下涨红了，说印第安人的秤不作数，谁知道那块石头有多重。围着的潜水人听不懂他的话，只看见他嗓门越来越大。西萨站起来，把木秤塞进我手里，秤杆上还留着她手心的热。“你会说他们的话，”她说，“你替我跟他说。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "argue_for_her"
+text = "接过木秤，用西班牙话把两杆秤差在哪里，一句句讲给众人听。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 20 }]
+hint = "她还拿不准你肯不肯为一杆印第安人的秤，当众得罪一个西班牙商人。"
+reply = "我先把那块石砣搁上他的铜秤，让他自己念出是几两；再拿两杆秤轮流称同一篮。差的那两成，我说一句卡斯蒂利亚话，再说一句克丘亚话，讲到一半，看热闹的西班牙水手先笑出了声：“老兄，你这秤是饿过的。”商人只好照西萨的数付钱。收摊以后，西萨坐在棚子底下，拿袖口把秤杆擦了一遍又一遍，擦到第三遍才停手：“今天它也立了功。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "bond", person = "sisa_mullu", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "find_third_scale"
+text = "提议去码头税吏那里，借官秤来称第三遍。"
+reply = "税吏正要吃饭，嫌我们耽误工夫。我说称完了这几篮，税照样交给他，他才叫人把官秤抬出来。官秤称出来的数，跟西萨的木秤只差一钱。商人没话说了，照数付钱，走的时候踢翻了一只空篮子。西萨把篮子扶起来，冲我笑得很甜：“原来官秤也有不偏的时候。”她把木秤收回腰间，又补了一句，“下回还得劳你去借。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }]
+
+# B1：1554 年秋冬，钦查外海的鸟粪岛。她教我憋气；我摸上来一只灰扑扑的小贝壳。
+[[tracks.chapters]]
+key = "b1"
+title = "鸟粪岛边的浅水"
+text = "“想知道采壳的人有多辛苦，”西萨说，“就得自己下一回水。”我们跟着家里的筏子出海，又借了一只小筏，划到钦查外海的鸟粪岛。岛还没靠近，先闻到了味儿，熏得我眼泪直流；海鸟多得遮住半边天，吵得人说话要喊。西萨把头发拧成一股塞进领口，先下了水。浅处的水也冷得刺骨。她教我憋气：吸三口，第三口吸满，闭嘴，往下沉，别慌着往上蹿。第一回我刚沉下去就呛了上来；第二回摸到一手滑腻腻的石头；第三回，指头在石缝里碰到一个硬东西，攥住了往上蹬。是一只小贝壳，灰扑扑的，比指甲盖大不了多少，一点也不红。我举着它直喘气。西萨接过去，对着太阳翻看两眼：“不值钱。”说完拿衣角把它擦干净，揣进了自己腰间的小布包。那只布包她平时谁也不让碰。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "dive_again"
+text = "再下去一回，非要摸一只红的上来给她。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 20 }]
+hint = "这片水冷得刺骨。她还不放心让你在水里多待，一伸手就把你拽上了筏。"
+reply = "“红的长在北边的暖水里，这儿没有。”她说。我不听，又下去了五回，五回都两手空空，最后一回上来，嘴唇发紫，牙关磕得咯咯响。西萨一把把我拽上筏子，解下自己的披风裹住我，裹得只露出一张脸，一边裹一边数落，声音还是软的：“红的不用你摸。你摸上来的这只灰的，就够了。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "bond", person = "sisa_mullu", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why_keep"
+text = "问她：不值钱的壳，为什么还要揣起来？"
+reply = "“因为是你摸的。”她答得太快，说完自己先怔住，耳朵红了。她低头去解筏绳，过了一会儿才改口：“因为是头一回。头一回摸上来的东西，扔了犯冲。”回程她让我掌桨，一路教我看水色找礁石：哪种颜色的水底下有壳，哪种底下只有沙，哪里的浪一打就翻，千万别下。"
+next = "b2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }, { kind = "skill", skill = "diving", value = 8 }]
+
+# B2：1555 年，钦查集口。画着贝壳与价码的旧船板；她父亲说“我们也是商人”。
+[[tracks.chapters]]
+key = "b2"
+title = "市场上的价目板"
+text = "西萨找木匠讨来一块旧船板，刨平了，用炭条打好格子：海菊蛤按大小分三行，按颜色分三列，深红的、橙红的、带白斑的，每一格画一只壳，壳旁边写价码。价码用西班牙数字写，底下再点上点子，不识字的人数点子也看得懂。她要把它挂到钦查集口那根柱子上，北边来的采壳人一下筏就能看见，用不着再听商人报价。她父亲看见了，没骂，只把木板翻过去扣在地上。“价一挂出来，谁还压得了价？我们也是商人，西萨。”那天他们吵了一架。她的声音一句也没抬高，说的话一句也没让。天黑以后，她抱着那块画了一半的木板来找我，板子上还沾着她父亲扣下去时蹭上的土。她把它靠在墙上，拍掉手上的炭灰：“还差六格。”"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "paint_with_her"
+text = "陪她把剩下的六格画完，连夜挂到集口去。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 50 }, { kind = "bond", person = "sisa_mullu", level = "C" }]
+hint = "这是她和父亲之间的事。她还不想把你卷进来，这块木板不会让你碰。"
+reply = "我们点着一盏油灯画到后半夜。她画壳，我写数，我写错一个，她拿指头蘸了口水抹掉，让我重写。天亮以前，我们把木板钉上了集口的柱子，钉子是我从家里的筏上拔下来的。早上北边的采壳人围在木板前，一格一格地数点子，有人伸手去摸画上的红壳。她父亲也来了，抱着胳膊看了半天，没摘，只说了一句：“这一格画低了。”西萨站在他背后，冲我眨了眨眼。"
+next = "a1"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "bond", person = "sisa_mullu", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "talk_to_father"
+text = "劝她先别挂，陪她再去跟她父亲谈一回。"
+reply = "她父亲坐在灯下补渔网，听我们讲了一晚上，一直没抬头。讲到后来，西萨不讲价码了，讲那个潜水人的手。网补完了，她父亲才开口：先在自家摊子前挂一块小的，挂一季看看。回来的路上，西萨拿锯子把那块大木板锯下一角，只留三格，抱在怀里：“小的也行。先挂起来。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }]
+
+# A1：1556 年初，海边的平礁。小布包里的旧海菊蛤：外婆自己潜下去采的，出三倍的价也不卖。
+[[tracks.chapters]]
+key = "a1"
+title = "不卖的旧贝"
+text = "西萨约我到海边那块平礁上，从腰间解下那只小布包。布包她从不离身，我一直当里头装的是钱。她解开系绳，倒出来的是一只旧海菊蛤：颜色早褪成了淡粉，红只在边上留着窄窄一圈，壳刺磨得光溜溜的，像被人握了很多年。跟着滚出来的，是那只灰扑扑的小贝壳。“这只是我外婆的，”她说，“她年轻的时候，自己潜到北边的海里采上来的。那时候我们家还没当商人。”前年有个从利马来的商人出过三倍的价，她父亲都点了头，她不肯。“不卖就是不卖。”她把旧壳放进我手心，捏着我的手腕，让我把它举起来对着太阳。“看里面。”壳里贴着一道细细的光，细得像一根头发，顺着纹路慢慢走，走到边上那一圈红里就不见了。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_it_with_her"
+text = "把旧贝壳放回她手心，再把手轻轻覆在上面。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 20 }, { kind = "romance_open", romance_open = "sisa_mullu" }]
+hint = "这是她外婆的壳。你们还没近到能把手覆在她手上，你只好把壳递还给她。"
+reply = "她的手比贝壳还凉。她没有抽回去，我也就没有拿开。我们就那样坐着，看太阳一点一点沉进海里，壳里那道光也跟着暗下去。天快黑透的时候，她才开口，声音低得要被浪盖住：“外婆说，这一道光，只给要紧的人看。”说完，她把布包的系绳慢慢系上，系了两遍。"
+next = "a2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "heart", person = "sisa_mullu", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "never_sell"
+text = "答应她：往后不管谁出多高的价，我都替她回绝。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 50 }, { kind = "bond", person = "sisa_mullu", level = "C" }]
+hint = "这句话分量太重。她还没信你到能把外婆的壳托给你，听了只会笑一笑。"
+reply = "“那你可得记住它长什么样，”她说，“不然人家拿只假的来，你也认不出。”我说闭着眼都认得。她笑了一声，叫我把眼闭上。过了一会儿，脸颊上贴过来一片凉凉的、光溜溜的东西，停了一下，又拿开了。“是这只吗？”“是。”“那就记住了。”她把壳收回布包，“往后再有人来问价，我就叫他去找你。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "bond", person = "sisa_mullu", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "grandmother"
+text = "问她：外婆是个什么样的人？"
+reply = "“憋气比男人长，”西萨说，“讲价比男人狠。”她外婆潜一口气，能在水底下从一数到六十；上了岸，能跟通贝斯的商人为一篮壳磨上一整天，磨到人家先饿了。“我只学会了后一半。”她把旧壳翻过来，给我看壳底一排浅浅的刻痕，“这是她自己刻的，下去一回，刻一道。”我数了数，二十七道。"
+next = "a2"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }]
+
+# A2：1556 年下半年，海边。她在一只贝壳里面画了钦查的海岸；筏上一个人在撑篙。
+[[tracks.chapters]]
+key = "a2"
+title = "画在壳里的海岸"
+text = "西萨拿给我一只扇贝壳，比巴掌还大，里面那一面已经画满了。用的是染布的颜料，赭红、靛蓝、炭黑，一层压一层：最底下是钦查的沙滩，弯成一道浅浅的弧；远处一团灰白，是鸟粪岛，岛上点着几只鸟；海上漂着两只巴尔萨木筏，前头那只筏上站着一个人，撑着一根长篙，身子往前倾。颜料干透了，摸上去有点涩。“你年底就要跟筏队北上了。”她没看我，看着那只壳，“以后走远了，就把它贴在耳边，能听见这里退潮的声音。”我把壳贴上去。里头真有声音，一阵一阵的，像潮水退下去，又涌上来。也许是我自己的心跳。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_shell"
+text = "收下贝壳，贴在耳边听了很久。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 80 }, { kind = "bond", person = "sisa_mullu", level = "B" }]
+hint = "这只壳她画了好些日子，分量太重。你们还没熟到这一步，她递不出手，你也接不下。"
+reply = "我贴着听了很久，久到她伸手来扯我的袖子：“听见什么了？”“听见你在笑。”“胡说，”她说，“壳里只有潮水。”可她真的在笑，笑得肩膀直抖，抖得手边的颜料碟子差点翻了。她把碟子放稳，又把壳从我耳边拿下来，用袖口把我蹭花的一角擦干净，才放回我手里。"
+next = "s"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "bond", person = "sisa_mullu", level = "A" }, { kind = "item", item = "painted_shell", qty = 1 }, { kind = "memory", memory = "mem-bond_sisa_mullu-a2", title = "画在壳里的海岸" }]
+
+[[tracks.chapters.choices]]
+key = "who_on_raft"
+text = "收下贝壳，问她筏上撑篙的那个人是谁。"
+requires = [{ kind = "affinity", person = "sisa_mullu", ge = 80 }, { kind = "bond", person = "sisa_mullu", level = "B" }, { kind = "heart", person = "sisa_mullu", ge = 6 }, { kind = "romance_open", romance_open = "sisa_mullu" }]
+hint = "撑篙的人是谁，这话一问出口就收不回来。你们还没近到能问的地步。"
+reply = "她看着我，没有回答，把脸转向海。浪退下去又涌上来，来回了好几趟，她才开口：“还没画完。”“那个人画完了。”“筏子没画完，”她说，“筏上才一个人。”她把颜料碟子一只一只收进篮子，摆整齐了，也没有回头。“等你回来那天，我再画一个人上去。”"
+next = "s"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "bond", person = "sisa_mullu", level = "A" }, { kind = "item", item = "painted_shell", qty = 1 }, { kind = "memory", memory = "mem-bond_sisa_mullu-a2", title = "画在壳里的海岸" }, { kind = "heart", person = "sisa_mullu", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "paint_one_back"
+text = "说我也要画一只回送她——先说好，肯定很丑。"
+reply = "我借了她的颜料，画了三个晚上。画出来的海像一锅汤，两只筏子像漂着的两块饼，撑篙的人谁也认不出是谁。西萨拿在手里翻来覆去地看，一声也没笑，揣进怀里带回了家。隔了几天，我去她家还颜料碟子，看见它立在她床头，靠着墙，正对着枕头。她顺着我的目光看过去，也不躲：“丑是丑，一眼就看得出是你画的。”"
+next = "s"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }]
+
+# S：1556 年 12 月，钦查集口。价目板终于挂在她家摊子正上方；“先报平安，再报壳价。”
+[[tracks.chapters]]
+key = "s"
+title = "一趟一趟回来"
+text = "年底我要跟着家里的筏队北上，先到派塔，再往北，不知道哪一年回来。走的前一天，我去集口找西萨。那块价目板终于挂起来了，挂在她家摊子的正上方，是她父亲叫人钉的，钉得端端正正。板上的壳比当初多了两行，最末一格画的是一只灰扑扑的小贝壳，价码那里写着“不卖”。北边来的采壳人一下筏，不先找商人，先站到板子底下仰着头看。西萨正替人称壳，称完一篮，把秤交给她父亲，朝我走过来。她今天没笑。“你每次回来，”她说，“先告诉我人都平安，再告诉我壳的价钱。”她停了停，又说，“北边的价，你替我记着。”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "chincha"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_sisa_mullu" }, { kind = "flag", flag = "c7_bond_sisa_mullu_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "跟她约好：每次回来，头一句先报平安。"
+requires = [{ kind = "bond", person = "sisa_mullu", level = "A" }]
+hint = "每次回来先报平安，这一报就是一辈子。你们的交情还没深到能潜那么久；又或者，平安先报给谁，你早已答应了另一个人。"
+reply = "“头一句报平安。”我说。“第二句才许说生意。”她竖起一根指头，“壳的价钱、秤的斤两、哪家商人又压了价，统统放到第二句。”“那第三句呢？”她张了张嘴，没说出来，脸先红了，一直红到耳根，跟板子上那一格深红的壳差不多。“第三句……第三句再说。”她从摊子底下翻出一只空的小布袋塞给我，叫我在北边每见到一种壳，就捡一只最小的放进去，回来一只一只告诉她是哪里的、什么价。筏队出了海，我才想起解开那只布袋。袋底已经躺着一只壳，比指甲盖还小，是钦查的，壳里用炭点了一个点子——价目板上的记法，一个点子，一个子儿。"
+next = "done"
+effects = [{ kind = "bond", person = "sisa_mullu", level = "S" }, { kind = "relation", person = "sisa_mullu", relation = "friends" }, { kind = "memory", memory = "mem-bond_sisa_mullu-s", title = "一趟一趟回来" }, { kind = "flag", flag = "c7_bond_sisa_mullu_promise" }, { kind = "flag", flag = "c7_tie_new_amihan_dagat_sisa_mullu_taken" }, { kind = "start_track", track = "reunion_sisa_mullu" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "说成年回来那天，想请她在那只贝壳里画上第二个人。"
+requires = [{ kind = "bond", person = "sisa_mullu", level = "A" }, { kind = "heart", person = "sisa_mullu", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "sisa_mullu", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "sisa_mullu" }]
+hint = "壳里的第二个人，得两个人心里都有数才说得出口。你们还差一步；又或者，那只壳里的位置，你已经许给了别人。"
+reply = "她没有马上答。她抬头看了看板子上那一格“不卖”，又看我，然后伸手握住了我的手，握得很紧，指腹上有秤杆磨出来的硬皮。“那我先把颜色调好，”她说，“要外婆那种红，难调。”“调多久？”“调到你回来。”她没松手，就那么牵着我，穿过集口，走过晒网的沙滩，一直走到海边。筏队在水里等着，有人在喊我的名字。她这才松开，把我的手指一根一根掰开，往我掌心里放了一样东西，是那回在鸟粪岛我摸上来的灰贝壳。“这个先给你揣着。等你回来，我再要回去。”筏子走远了，我回头看，她还站在退潮的沙上，一直站到筏子看不见。"
+next = "done"
+effects = [{ kind = "bond", person = "sisa_mullu", level = "S" }, { kind = "heart", person = "sisa_mullu", value = 12 }, { kind = "relation", person = "sisa_mullu", relation = "crush" }, { kind = "flag", flag = "c7_bond_sisa_mullu_romance" }, { kind = "memory", memory = "mem-bond_sisa_mullu-s", title = "一趟一趟回来" }, { kind = "flag", flag = "c7_tie_new_amihan_dagat_sisa_mullu_taken" }, { kind = "start_track", track = "reunion_sisa_mullu" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "跟她比一比：她守价目板，我跑筏队，看北边的采壳人先认得谁。"
+reply = "“我先，”西萨说，“他们天天来看板子。”“我的筏队一路往北，每个海湾都停。”“你停一回，人家记你一回；他们看一天板子，就记我一天。”她拿秤杆点了点板子，“你输定了。”我说板子上又没写你的名字，人家记住的是板子。她愣了一下，转身问她父亲要来炭条，踮起脚，在板子右下角写上“西萨”，写的是西班牙字母，又在旁边点了一串点子。写完，她把炭条递给我：“你的呢？”我说等我赢了再写。“那就先写上，”她说，“输了也好认。”我只写了头两个字母，她就把炭条抽了回去，说剩下的等我回来补。"
+next = "done"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "relation", person = "sisa_mullu", relation = "friends" }, { kind = "flag", flag = "c7_bond_sisa_mullu_own" }, { kind = "start_track", track = "reunion_sisa_mullu" }]
+
+[[tracks]]
+key = "reunion_sisa_mullu"
+name = "西萨·穆柳：放下货篮的人"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["sisa_mullu"]
+
+# 重逢：1563 年，卡亚俄集口。新的价目板大了一倍；采壳人先放下货篮喝水，再上秤。
+[[tracks.chapters]]
+key = "reunion"
+title = "放下货篮的人"
+text = "1563 年，家里的筏队从北边回来，在卡亚俄靠了岸。集口那块价目板换了新的，比原来大一倍，用的是整张的船板，画满了壳：深红的、橙红的、带白斑的，还有几种我在北边见过、这里从前没人画过的。板子底下排着一队采壳人，背上都压着货篮。西萨站在队伍最前头，手里提着那杆黑木秤，石砣换了一块更大的。新到的一个采壳人刚要把篮子往秤盘上搁，她摆摆手，叫他先把篮子放到地上，旁边一个小姑娘舀来一碗水递给他。他喝完了，喘匀了，她才叫他把篮子提过来。称到一半，她抬头看见了我。秤没放，她也没笑，只问了一句：“人都平安吗？”"
+window = [[1563, 1, 1], [1563, 12, 31]]
+at = "callao"
+cast = ["sisa_mullu"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1563, 12, 31] }, { kind = "age", ge = 18 }, { kind = "age", person = "sisa_mullu", ge = 18 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "sisa_mullu", text = "你没赶上。今年北边来的筏子，我一只一只问过，都说没见着你家的旗。这只小壳托往北去的筏队捎给你，叫他们见了你就给。壳里画的是钦查。鸟粪岛还是那么白，也还是那么臭，臭画不出来，你自己记着。筏上画了两个人，一个撑篙，一个提秤，提秤的是谁，你猜得着。价目板换了一块大的，是我父亲叫人做的。他现在逢人就说这板子是他的主意，我不跟他争，他肯认就行。如今北边的人一靠岸，先把货篮放下，喝一碗水，再来上秤。上个月来了个曼塔的老潜水人，手跟那年沙滩上那个一样，泡得发白，指甲缝里全是口子。我请他坐着把水喝完了才称，他说这辈子头一回在卡亚俄坐下来。外婆那只壳还在布包里。前些日子又有人来问价，比上回出得还高，我说不卖，他问凭什么，我说凭我。你在北边见到什么壳、什么价，都替我记着。人平安，就先写一句平安。第二句再写生意。第三句，等你回来当面说。西萨" }, { kind = "flag", flag = "c7_bond_sisa_mullu_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "先报平安，再把这几年北边的壳价一个一个说给她听。"
+reply = "“都平安，”我说，“筏队一个人也没少。”她点点头，把秤交给那个舀水的小姑娘，拉我绕到板子背后。板子的背面还光着，她把炭条递过来：“第二句。”我从通贝斯说起，说到瓜亚基尔，说到更北边一个连名字都念不顺的海湾：哪里的壳论个卖，哪里的论斤卖，哪里的商人拿一把小刀就换走一篮。我说一处，她写一处，写满了半面板子，写完又从头念一遍，念错一个数，我给她纠正，她划掉重写。最后她退后两步看了看，把炭条往耳朵上一夹：“有了这些，北边的人再也不会被压价了。”那天晚上，她在集口的棚子底下摆了两碗奇恰酒，一碗推到我面前。“这碗是你的，”她说，“从你北上那年就给你留着。”"
+next = "done"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 5 }, { kind = "relation", person = "sisa_mullu", relation = "friends" }, { kind = "flag", flag = "c7_bond_sisa_mullu_landing_friend" }, { kind = "memory", memory = "mem-reunion_sisa_mullu", title = "放下货篮的人" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "报完平安，说第三句：这回，我想留在钦查。"
+requires = [{ kind = "flag", flag = "c7_bond_sisa_mullu_romance" }, { kind = "heart", person = "sisa_mullu", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "sisa_mullu", ge = 18 }, { kind = "romance_open", romance_open = "sisa_mullu" }]
+hint = "当年那句话没有说出口，壳里的筏上就只有一个人。第三句话到了嘴边，还是说不出来。"
+reply = "第三句说出口的时候，声音比我想的还小。西萨没有答。她把秤放下了，当着一队采壳人放下了秤，叫那个小姑娘替她称。她拉着我穿过集口，一路没说话，一直走到她家。我从怀里掏出那只画着海岸的壳，颜色淡了些，筏上撑篙的人还在；又掏出那只灰贝壳，放回她手心。她攥了一下，转身从柜子里端出一只小碟，碟里的红调好了，干了又兑水，兑了又干，碟底结了厚厚一层。“外婆那种红，”她说，“调了七年。”她蘸着那点红，在撑篙的人身边画上第二个人，画得很慢，两个人肩挨着肩。画完了，她把壳放下，抬起头，吻了我。"
+next = "done"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 5 }, { kind = "relation", person = "sisa_mullu", relation = "lovers" }, { kind = "flag", flag = "c7_bond_sisa_mullu_landing_love" }, { kind = "memory", memory = "mem-reunion_sisa_mullu", title = "放下货篮的人" }]
+
+# 变体：按 S 章的结局换掉开头最后那几句；玩法不变。
+[[tracks.chapters.variants]]
+key = "own"
+when = [{ kind = "flag", flag = "c7_bond_sisa_mullu_own" }]
+text = "1563 年，家里的筏队从北边回来，在卡亚俄靠了岸。集口那块价目板换了新的，比原来大一倍，用的是整张的船板，画满了壳：深红的、橙红的、带白斑的，还有几种我在北边见过、这里从前没人画过的。板子底下排着一队采壳人，背上都压着货篮。西萨站在队伍最前头，手里提着那杆黑木秤。新到的一个采壳人刚要把篮子往秤盘上搁，她摆摆手，叫他先把篮子放到地上，旁边一个小姑娘舀来一碗水递给他。他喝完了，喘匀了，她才叫他把篮子提过来。板子右下角写着“西萨”，描过好几遍，旁边还是我那两个字母，后头空着。她抬头看见了我，拿秤杆朝那里点了点：“人都平安吗？平安的话，自己看是谁赢了。”"
+
+[[tracks.chapters.variants]]
+key = "promise"
+when = [{ kind = "flag", flag = "c7_bond_sisa_mullu_promise" }]
+text = "1563 年，家里的筏队从北边回来，在卡亚俄靠了岸。集口那块价目板换了新的，比原来大一倍，用的是整张的船板，画满了壳：深红的、橙红的、带白斑的，还有几种我在北边见过、这里从前没人画过的。板子底下排着一队采壳人，背上都压着货篮。西萨站在队伍最前头，手里提着那杆黑木秤。新到的一个采壳人刚要把篮子往秤盘上搁，她摆摆手，叫他先把篮子放到地上，旁边一个小姑娘舀来一碗水递给他。他喝完了，喘匀了，她才叫他把篮子提过来。称到一半，她抬头看见了我，看见我腰上那只鼓鼓的小布袋。秤没放，她也没笑，只问头一句：“人都平安吗？”"
+
+[[tracks.chapters.variants]]
+key = "romance"
+when = [{ kind = "flag", flag = "c7_bond_sisa_mullu_romance" }]
+text = "1563 年，家里的筏队从北边回来，在卡亚俄靠了岸。集口那块价目板换了新的，比原来大一倍，用的是整张的船板，画满了壳：深红的、橙红的、带白斑的，还有几种我在北边见过、这里从前没人画过的。板子底下排着一队采壳人，背上都压着货篮。西萨站在队伍最前头，手里提着那杆黑木秤。新到的一个采壳人刚要把篮子往秤盘上搁，她摆摆手，叫他先把篮子放到地上，旁边一个小姑娘舀来一碗水递给他。他喝完了，喘匀了，她才叫他把篮子提过来。称到一半，她抬头看见了我，目光先落在我攥着的那只手上，才落到我脸上。秤没放，她也没笑，只问：“人都平安吗？”"

@@ -1,0 +1,167 @@
+# 请托：拼不准的十个词（request_kan_pech）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：坎·佩奇（kan_pech，1539-12-16 生，男，romance 关闭），佩奇家的少年书记，梅里达方济各会学校出身，1562 年起在坎佩切码头边抄写家族的编年。cast：classmates_merida.toml（tracks 已含 request_kan_pech）。
+# 类型：找东西（find），三章：offer（报价）→ handin（交书，给或借）→ use（念词定写法，结账）。没有 stage 章。
+# 报价：V 到访，auto=true，报价港 campeche。窗口 1562-07-12 至 1590-06-30 写在 offer 的 when 里，offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+#       窗口在 handin 与 use 的 when 里也写了日期段，但这两章没有 default，不设 window。
+# 目标：nebrija_grammar（内夫里哈《卡斯蒂利亚语语法》，items/books_11_languages.toml，有 shop）。handin 的 objectives 只查持有；“把语法书送给他”的选项写 item -1，“借他抄”的选项不扣。
+# 报酬：现金最多 900（只定七个写法 600）；好感最多 +13；名声 +1；回忆 mem-request_kan_pech-use（只在完整定下的结局）。不给技能、海图与物品。
+# 依据·史实：殖民早期的尤卡坦，玛雅书记用拉丁字母写本族语，后来有《佩奇抄本》一类的家族编年（名字为后人所起，待核）；方济各会修士为玛雅语的塞音造了倒写的 c（ɔ）等记号。
+#       内夫里哈的《卡斯蒂利亚语语法》1492 年印于萨拉曼卡；正文只说伊比利亚与中美的书铺有卖，用传闻口吻，不写年份。
+# 依据·原创：坎的台词，十个词的具体写法，坎佩切码头边的那间屋，“定了就不改”这句话，七个写法与三个写法的分界。
+# 秘密：家里的历书。本请托不碰，正文与见闻一律不写旧历、历书、夹页；请托只写“用拉丁字母记家族的编年”。
+# 读写旗标：读 bond kan_pech ≥ C（offer 的 bond_c 变体，他先说一句提醒）；写 c13_request_kan_pech_accepted / _declined / _given / _done / _partial，分支旗标 _seven、_asked（_asked 由 offer 的 ask_friars 设，handin 的变体读）。不读不写任何 c7_ 旗标。
+# 依赖：item nebrija_grammar；skill lang_yucatec（requires ≥ 60）；检定属性 eloquence；port campeche。B10b 改名：无。主线门禁：无。
+# 日程：V 到访要求坎在报价期间能从近旁下到坎佩切港，整合方需查看 kan_pech 的 1562 年以后日程。
+# 回忆插画：mem-request_kan_pech-use：一页编年上被划掉重写的一行日子，旁边一盏灯，两人并排对着念。
+
+[[tracks]]
+key = "request_kan_pech"
+name = "拼不准的十个词"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kan_pech"]
+
+# 一、拼不出来的音：坎佩切码头边的一间屋里。坎请你替他找一部西班牙人自己的语法书。
+[[tracks.chapters]]
+key = "offer"
+title = "拼不出来的音"
+text = "坎佩切码头边的一间屋子，门关着，窗也关着，只从板缝里漏进一条光。坎·佩奇趴在桌上，纸上一行词划了又写，写了又划。“十种写法，”他头也不抬，“一种都不对。”梅里达的修士教他拉丁字母，他拿来记家族的编年。可玛雅话里有几个音，西班牙字母里没有对应的，修士给它添了一个倒过来的 c，他看着别扭。“你的船上有没有西班牙人的书？讲他们怎么拼自己话的那种。”他把纸往你这边推了推，“他们拼不出来的时候，是怎么办的，我想看看。”"
+speaker = "captain"
+mood = "tense"
+at = "campeche"
+objectives = [{ kind = "at", at = "campeche", text = "在坎佩切的码头边" }]
+when = [
+  { kind = "date", from = [1562, 7, 12], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "kan_pech", ge = 18 },
+]
+deadline = [1590, 6, 30]
+family = "c13_offer_campeche"
+family_cooldown_days = 20
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "find_book"
+text = "接下，替他找那部语法书。"
+reply = "他撕下半张纸，写下那十个词，每个词后面列着试过的写法，划掉的比留下的多。角上写了书名：内夫里哈的，《卡斯蒂利亚语语法》。“别买错了。”他说。"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "kan_pech", value = 2 },
+  { kind = "flag", flag = "c13_request_kan_pech_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_friars"
+text = "接下，先问：修士们没教过怎么拼吗？"
+reply = "“教过。修士拼的，玛雅人念不出来。”他把纸翻过去，“我不用别人造的字。我要看的是西班牙人自己怎么拼自己的话。”"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "kan_pech", value = 2 },
+  { kind = "flag", flag = "c13_request_kan_pech_accepted" },
+  { kind = "flag", flag = "c13_request_kan_pech_asked" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "一部语法书，帮不了玛雅话。"
+reply = "他点点头，没有再说什么，只把门又关严了一点。纸还摊在桌上，他把写满的那一张叠起来，压在编年底下。“那我再拼十种。”门里的笔尖声一直响到天黑。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kan_pech_declined" }]
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "kan_pech", level = "C" }]
+text = "“你知道我写的是什么，别说出来。”坎·佩奇先说了这一句，才把门闩拉开一条缝。屋里的光只从板缝漏进来。桌上一张纸，写满了十种拼法，划掉的比留下的多。“玛雅话里有几个音，西班牙字母里没有，”他说，“修士给它添了一个倒过来的 c，我看着别扭。”他停了停，把纸往你这边推了推，“你的船上有没有西班牙人的书？讲他们怎么拼自己话的那种。他们拼不出来的时候，是怎么办的，我想看看。”"
+
+# 二、西班牙人的办法：语法书交到他手里。他翻到讲字母的那一章，看见别人的难处。
+[[tracks.chapters]]
+key = "handin"
+title = "西班牙人的办法"
+text = "坎·佩奇接过语法书，没急着翻，先把封皮上的作者名念了一遍，一个字母一个字母地念。他翻到讲字母的那一章，指尖停在页边一行小字上。那里有人用细笔改过三次的写法，改掉的字母还看得清。“他也拼不出来。”他说，声音很低，“他是怎么办的？”你还没答，他已经读到了，嘴唇跟着动：“照着嘴里的音，定一个写法。定了，就不改。”他把书合上，手按在封面上，过了很久才抬起头。"
+speaker = "captain"
+mood = "tender"
+at = "campeche"
+objectives = [
+  { kind = "at", at = "campeche", text = "在坎佩切" },
+  { kind = "item", item = "nebrija_grammar", qty = 1, text = "带着那部语法书" },
+]
+when = [
+  { kind = "alive", person = "kan_pech", value = true },
+  { kind = "date", from = [1562, 7, 12], to = [1590, 12, 31] },
+]
+news = "坎佩切码头边一间关着窗的屋里，梅里达来的书记接过一部西班牙人的语法书，灯一直亮到天明。"
+
+[[tracks.chapters.choices]]
+key = "give_book"
+text = "把语法书送给他。"
+reply = "他把书压在那叠编年底下，说这本书他要留着。“定了就不改，这句话我抄在第一页。”他说这话的时候没看你，只看书脊。"
+next = "use"
+effects = [
+  { kind = "item", item = "nebrija_grammar", qty = -1 },
+  { kind = "affinity", person = "kan_pech", value = 3 },
+  { kind = "flag", flag = "c13_request_kan_pech_given" },
+]
+
+[[tracks.chapters.choices]]
+key = "lend_book"
+text = "借他抄字母那一章，抄完还我。"
+reply = "他抄了一夜，一个字母也没漏。天亮把书还给你，眼睛熬红了，手边的抄本摞得比书还厚。“够了。”他说，“拼法定下来，我再对。”"
+next = "use"
+effects = [{ kind = "affinity", person = "kan_pech", value = 2 }]
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_kan_pech_asked", value = true }]
+text = "坎·佩奇接过语法书，先看了一眼封面，没有急着翻开。“修士那一套，我不用。”他说，声音不高，却很硬。然后他才翻到讲字母的那一章，指尖停在页边一行小字上。那里有人用细笔改过三次的写法，改掉的字母还看得清。“他也拼不出来。”他说，声音很低，“他是怎么办的？”你还没答，他已经读到了，嘴唇跟着动：“照着嘴里的音，定一个写法。定了，就不改。”他把书合上，手按在封面上，过了很久才抬起头。"
+
+# 三、定了就不改：念那十个词，定下写法。第十个是一个日子的名字，他在编年里找到自己抄错的那一行。
+[[tracks.chapters]]
+key = "use"
+title = "定了就不改"
+text = "坎·佩奇请你坐下，把桌上那叠编年推到中间。“我念玛雅话，你照着我定的新写法念拉丁字母，念得对上了，就算定了。”纸上十个词，每个词后面是新写法。头几个还顺，念到第七个，他的嘴角抽了一下，你跟着念偏了一个元音，他摇头，在纸上改掉一个字母。念到第十个，是一个日子的名字，他停下来，把编年翻到一行，皱起眉。“日子说错了。”他的指头按在那一行上，“我自己抄错了一天。”"
+speaker = "captain"
+mood = "tender"
+at = "campeche"
+objectives = [{ kind = "at", at = "campeche", text = "在坎佩切的屋里" }]
+when = [
+  { kind = "alive", person = "kan_pech", value = true },
+  { kind = "date", from = [1562, 7, 12], to = [1590, 12, 31] },
+]
+news = "坎佩切码头边的一间屋里，梅里达来的书记把一本编年里的一天改了过来，改的是他自己抄错的那一天。"
+
+[[tracks.chapters.choices]]
+key = "read_yucatec"
+text = "用玛雅话把那十个词跟他对一遍，帮他定写法。"
+reply = "十个词，我念了三遍，他改了两处写法，最后一处是那个日子。他把错的那一天划掉，在旁边照新写法重写，说这一行，往后的人念得出来了。他付了钱。"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_yucatec", ge = 60, hard = true }]
+hint = "那几个音你学不出来，嘴型总差一点"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "kan_pech", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kan_pech_done" },
+  { kind = "memory", memory = "mem-request_kan_pech-use", title = "编年里改过的一天" },
+]
+
+[[tracks.chapters.choices]]
+key = "sound_out"
+text = "照他定的写法慢慢念，念不准的地方请他纠正。"
+reply = "我念得磕磕绊绊，他一个音一个音地纠正。念完，他把那个日子也改了，说外人念得出来，才算写对了。他付了钱。"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "kan_pech", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kan_pech_done" },
+  { kind = "memory", memory = "mem-request_kan_pech-use", title = "编年里改过的一天" },
+]
+fail = { next = "done", news = "坎佩切码头边的书记念了一下午玛雅话，只定下了七个写法，剩下三个他说再想。", effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "kan_pech", value = 4 },
+  { kind = "flag", flag = "c13_request_kan_pech_seven" },
+  { kind = "flag", flag = "c13_request_kan_pech_partial" },
+] }

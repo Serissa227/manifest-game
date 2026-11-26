@@ -1,0 +1,130 @@
+# C13d 请托：词典里的“家”（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：伊内斯·德·索利斯 ines_solis（1540-10-10 生，cast 在 classmates_merida.toml）。梅里达监护主家的小姐，随身一本小册子，专记各种话里的“家”怎么说；自己家里的事一个字也不记。
+# 类型与报价：找东西（fd），3 章。kind=request，auto=true（L 来信）：offer 章在韦拉克鲁斯（veracruz），出面的是一位下到港口的方济各会修士（叙事人物，不新建 cast，不写 speaker），信是伊内斯写的，请托人只在信里说话。
+# 窗口：报价 1572-01-01 至 1590-06-30；offer 的 deadline 即窗口止日，到期走 timeout（next=failed，不写见闻）。handin 与 use 的窗口同为 1572-01-01 至 1590-12-31，写在各章 when 的日期条件里（普通章没有 window）。
+# 依据：史实背景——莫利纳的那瓦特语与卡斯蒂利亚语词典，由墨西哥城的胡安·帕布洛斯印坊印行，是新大陆头一批印出的词典之一；梅里达一带的书铺买不到。
+#   原创——伊内斯的小册子与各种“家”的说法、修士送信、韦拉克鲁斯到坎佩切的一段路、那一行读不出的字、坎佩切码头上的货箱。
+#   待核：物品表 molina_mexico 记的刊行年为 1555 年（胡安·帕布洛斯版），设定摘要里写的是 1571 年（扩充重印本），两者不一致；正文一律不写年份，书名照物品表。那瓦特语“家”的词义只作人物口中的转述，不写成词条引文。
+# 读写的旗标：设 c13_request_ines_solis_accepted（offer 接下）、_declined（offer 回绝）、_given（handin 把词典交出，与借看分开）、_done（use 结局）。终局旗标每条只设一面：declined 与 done 是结局，accepted 与 given 是路上的分支。
+#   读 c7_pair_xochitl_ines_solis_together（handin 的变体，只读，只一句，不提人名）、bond ines_solis 的等级（offer 的变体，只读）、given（use 的变体，只读）。不设任何 c7_ 旗标。
+# 依赖：港口 veracruz、campeche 都是现有港口，无 B10b 改名；物品 molina_mexico（items/books_11_languages.toml）与技能 lang_nahuatl（skills.toml）都是现有的；无主线门禁（不读 c13_main_*）。
+#   family c13_offer_veracruz 为韦拉克鲁斯共用的报价冷却旗标，与同港的其他请托共用。
+# 缺省走向：回绝（declined）走 failed；1590 年 6 月 30 日以前没有在韦拉克鲁斯接下，报价到期走 timeout（failed，不写见闻，伊内斯不知道）。
+#   接下以后，词典没交到坎佩切之前，handin 章一直挂着，可以一直等；交了以后的 use 章同样没有期限。
+# 回忆插画清单：
+#   mem-request_ines_solis-use「小册子里新添的两行」：坎佩切的货箱旁，词典摊开在一只油布上，册子的空行里多了一个新写的词。
+
+[[tracks]]
+key = "request_ines_solis"
+name = "词典里的“家”"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ines_solis"]
+
+# 报价：韦拉克鲁斯的码头。修士递来一封信，请你替她买一部那瓦特语的词典。
+[[tracks.chapters]]
+key = "offer"
+title = "修士带来的信"
+text = "码头上，一个从尤卡坦来的方济各会修士找到你，把一封折了三折的信塞进你手里，说是伊内斯托他带的。信纸的边角被海风吹得发毛。信上写：“我的小册子记了二十年各种话里的‘家’。玛雅话的，卡斯蒂利亚话的，拉丁话的，独缺那瓦特话的。”墨西哥城的印坊印过一部那瓦特语词典，梅里达的书铺一本也没有。末了一行：“请你在韦拉克鲁斯替我买一部，带到坎佩切。我自己下来取，一刻也等不了。”"
+at = "veracruz"
+mood = "tense"
+objectives = [{ kind = "at", at = "veracruz", text = "在韦拉克鲁斯的码头上" }]
+deadline = [1590, 6, 30]
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+when = [{ kind = "date", from = [1572, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "ines_solis", ge = 18 }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "buy_it"
+text = "接下，买一部词典带去坎佩切。"
+next = "handin"
+effects = [{ kind = "affinity", person = "ines_solis", value = 2 }, { kind = "flag", flag = "c13_request_ines_solis_accepted" }]
+reply = "修士把信折好，塞回你手里。“她在梅里达等了一年，”他说，“问过每一个下港口的人。”说完他转身就走，走得很快，像是怕你再把信还给他。"
+
+[[tracks.chapters.choices]]
+key = "ask_friar"
+text = "接下，问修士：她要这部词典，就为了一个词？"
+next = "handin"
+effects = [{ kind = "affinity", person = "ines_solis", value = 2 }, { kind = "flag", flag = "c13_request_ines_solis_accepted" }]
+reply = "修士笑了，说他也问过。她答：“一个词就够了，一个词就是一扇门。”他把信角往你这边推了推，像是说，剩下的你自己去问她。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "书铺未必有，我不敢应。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ines_solis_declined" }]
+reply = "修士把信收回去，说那就回去告诉她，再等一年。他没有生气，只把信角抚平，重新折了一次，折得比来时还整齐。"
+
+# 变体：老朋友的口气（bond ≥ C）。信的开头只写了伊希的名字，后面一句是“这回你别教我，让词典教”。
+[[tracks.chapters.variants]]
+key = "old_friend"
+when = [{ kind = "bond", person = "ines_solis", level = "C" }]
+text = "码头上，一个从尤卡坦来的方济各会修士找到你，把一封折了三折的信塞进你手里，说是伊内斯托他带的。信纸的边角被海风吹得发毛。开头只有两个字：“伊希。”后面才是正文：“我的小册子记了二十年各种话里的‘家’。玛雅话的，卡斯蒂利亚话的，拉丁话的，独缺那瓦特话的。这回你别教我，让词典教。”墨西哥城的印坊印过一部那瓦特语词典，梅里达的书铺一本也没有。末了一行：“请你在韦拉克鲁斯替我买一部，带到坎佩切。我自己下来取，一刻也等不了。”"
+
+# 上船之后的港口：坎佩切的码头。伊内斯从梅里达下来，手里攥着那本小册子。
+[[tracks.chapters]]
+key = "handin"
+title = "坎佩切的码头"
+text = "伊内斯从梅里达下来，在坎佩切的码头上等你，手里攥着那本小册子，册子的边都磨毛了。你从包里取出那部词典，放到她面前。她没接，先问：“多重？”又问：“封面是皮的，还是布的？”你说是皮的。她点点头，把小册子往胸口按了按。“我怕一接过来，就会站在码头上翻到天黑。”"
+at = "campeche"
+speaker = "captain"
+mood = "cheerful"
+news = "坎佩切的码头上，一个梅里达来的姑娘守着一部刚从船上卸下的词典，问的头一句是这东西多重。"
+objectives = [{ kind = "at", at = "campeche", text = "在坎佩切的码头上" }, { kind = "item", item = "molina_mexico", qty = 1, text = "手里有那部词典" }]
+when = [{ kind = "alive", person = "ines_solis", value = true }, { kind = "date", from = [1572, 1, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "c7_visit"
+when = [{ kind = "flag", flag = "c7_pair_xochitl_ines_solis_together" }]
+text = "伊内斯从梅里达下来，在坎佩切的码头上等你。她说这回是回来探亲，过几天就要回墨西哥城去。她手里攥着那本小册子，册子的边都磨毛了。你从包里取出那部词典，放到她面前。她没接，先问：“多重？”又问：“封面是皮的，还是布的？”你说是皮的。她点点头，把小册子往胸口按了按。“我怕一接过来，就会站在码头上翻到天黑。”"
+
+[[tracks.chapters.choices]]
+key = "give_dict"
+text = "把词典送给她。"
+next = "use"
+effects = [{ kind = "item", item = "molina_mexico", qty = -1 }, { kind = "affinity", person = "ines_solis", value = 3 }, { kind = "flag", flag = "c13_request_ines_solis_given" }]
+reply = "她接过去，抱在怀里，没有马上翻。她说要回到屋里，坐下来，点上灯，再一页一页地翻：“这一页得好好看。”"
+
+[[tracks.chapters.choices]]
+key = "lend_dict"
+text = "借她看，等她抄完了再还我。"
+next = "use"
+effects = [{ kind = "affinity", person = "ines_solis", value = 2 }]
+reply = "她抱着词典找了个货箱坐下，当场就翻开了。翻了两页，她才想起抬头看你：“好，抄完就还你。”"
+
+# 最后一章：那一页。伊内斯在“家”的空行里写下新词，问你那边的话怎么说。
+[[tracks.chapters]]
+key = "use"
+title = "那一页"
+text = "她翻到“家”那一页，看了很久，手指在一行字上来回划。“等一下——这个词我还没有。”她把小册子摊开，就着“家”那一页空出来的一行，写下那个词，又在旁边写了词典里的另一个意思。写完她抬头问你：你那边的话，“家”怎么说？这个，她也还没有。"
+at = "campeche"
+speaker = "captain"
+mood = "tender"
+news = "坎佩切码头上，一个梅里达来的姑娘对着一部新印的词典，往自己的小册子里添了两行字。"
+objectives = [{ kind = "at", at = "campeche", text = "留在坎佩切，看她翻到那一页" }]
+when = [{ kind = "alive", person = "ines_solis", value = true }, { kind = "date", from = [1572, 1, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "lent"
+when = [{ kind = "flag", flag = "c13_request_ines_solis_given", value = false }]
+text = "她翻到“家”那一页，看了很久，手指在一行字上来回划。“等一下——这个词我还没有。”她没有急着合上词典，抄完那一页，才把书还给你。“抄下来的我才记得住。”她就着那一页空出来的一行写下那个词，又在旁边写了词典里的另一个意思。写完她抬头问你：你那边的话，“家”怎么说？这个，她也还没有。"
+
+[[tracks.chapters.choices]]
+key = "tell_word"
+text = "把我家乡话里的“家”告诉她。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "ines_solis", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "lang_nahuatl", value = 20 }, { kind = "flag", flag = "c13_request_ines_solis_done" }, { kind = "memory", memory = "mem-request_ines_solis-use", title = "小册子里新添的两行" }]
+reply = "她写下来，写得很慢，每一笔都要问一遍读音。写完她付了钱，把小册子合上，又打开，手指压着那一行。“这本小册子今天有了两样外人给的东西，一部词典，一个词。”"
+
+[[tracks.chapters.choices]]
+key = "ask_meaning"
+text = "问她词典里那另一个意思是什么。"
+next = "done"
+requires = [{ kind = "skill", skill = "lang_nahuatl", ge = 60 }]
+hint = "那一行你认得字，读不出意思。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "ines_solis", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "lang_nahuatl", value = 20 }, { kind = "flag", flag = "c13_request_ines_solis_done" }, { kind = "memory", memory = "mem-request_ines_solis-use", title = "小册子里新添的两行" }]
+reply = "她说那个词既是“家”，也是“有人等你的地方”。我们俩对着那一行看了半天，最后还是她先读出了声。她付了钱，又在那行字旁边画了一个小圈。"

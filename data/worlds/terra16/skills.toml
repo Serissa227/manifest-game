@@ -1,0 +1,1813 @@
+# C8：养成通用内容；玩法数值与具体排期为游戏设计，史料限于 sources 所述范围。
+# 不在本包登记 world.toml；A6 的接线与扩展字段约定见 docs/DECISIONS.md 的 C8 记录。
+# 等级经验为累计阈值 60 / 180 / 360；仅当前等级效果生效。lang_undeciphered 永不可习得。
+# K01：效果由 rules.toml [skill_effects] 打开，与物品、套装的同类效果并进同一个汇总、受同一套上限；
+# 效果种类同物品的封闭词表；疲劳减免（fatigue_pct）写正数（2 = 活动带来的疲劳少 2%）。chart_reveal 暂无读取点，只显示。
+
+[[skills]]
+key = "astral_navigation"
+name = "天文航法"
+kind = "navigation"
+description = "夜里对着星的高低定位，把量出的角度与航路手稿对一对。"
+max_level = 3
+effects = [
+  { kind = "find_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "find_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "find_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "find_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "tide_reading"
+name = "读潮"
+kind = "navigation"
+description = "看潮痕，听岸上的水声，靠岸时总要留出一段余量。"
+max_level = 3
+effects = [
+  { kind = "landing_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "landing_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "landing_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "landing_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "rigging"
+name = "操帆"
+kind = "navigation"
+description = "摸一摸绳索的紧松，按风向放帆或收帆，帆面不乱。"
+max_level = 3
+effects = [
+  { kind = "speed_pct", value = 2 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "speed_pct", value = 2 }] },
+  { level = 2, xp = 180, effects = [{ kind = "speed_pct", value = 4 }] },
+  { level = 3, xp = 360, effects = [{ kind = "speed_pct", value = 6 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "double_entry"
+name = "复式簿记"
+kind = "commerce"
+description = "每笔账借贷各记一遍，货与现钱各自对得上，账本才不说谎。"
+max_level = 3
+effects = [
+  { kind = "price_hint", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "price_hint", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "price_hint", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "price_hint", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "sword_iberian"
+name = "伊比利亚普通剑术"
+kind = "martial"
+# 不是尚未成书的“真正的技艺”（Destreza）。
+description = "步法稳，剑尖直，一刺就要中，不爱花样。"
+max_level = 3
+effects = [
+  { kind = "duel_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "duel_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "duel_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "duel_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "sword_italian"
+name = "意大利剑与小盾"
+kind = "martial"
+description = "一手持剑，一手持小盾，贴身近战，快得看不清。"
+max_level = 3
+effects = [
+  { kind = "boarding_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "boarding_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "boarding_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "boarding_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "sword_japanese"
+name = "日本太刀稽古"
+kind = "martial"
+description = "先练握法与拔刀，再练劈与收。师傅说，刀比人先学会。"
+max_level = 3
+effects = [
+  { kind = "duel_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "duel_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "duel_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "duel_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "staff_fujian"
+name = "闽南棍法"
+kind = "martial"
+description = "走桩、守门与结伴操练，腰马要稳，棍梢跟着身子走。"
+max_level = 3
+effects = [
+  { kind = "boarding_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "boarding_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "boarding_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "boarding_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "sword_ottoman"
+name = "奥斯曼刀盾术"
+kind = "martial"
+description = "左手持盾，右手持刀，盾缘压住对方，刀从盾后刺出，多在马上用。"
+max_level = 3
+effects = [
+  { kind = "duel_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "duel_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "duel_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "duel_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "firearms"
+name = "火器"
+kind = "martial"
+description = "装药、压弹、点火，三步做熟，到了开火时手要稳。"
+max_level = 3
+effects = [
+  { kind = "gunnery_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "gunnery_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "gunnery_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "gunnery_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "diving"
+name = "潜水"
+kind = "navigation"
+description = "憋一口气下潜，数着心跳，在散尽气前浮上来，捧一筐贝出水。"
+max_level = 3
+effects = [
+  { kind = "landing_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "landing_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "landing_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "landing_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "herbal_medicine"
+name = "草药医术"
+kind = "medicine"
+description = "认得叶、根与花的形状，知道哪些煎了能喝，哪些碰了要洗手。只能缓小病，治不了大病。"
+max_level = 3
+effects = [
+  { kind = "disease_guard_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "disease_guard_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "disease_guard_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "disease_guard_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "cartography"
+name = "绘图"
+kind = "navigation"
+description = "量距、定向、画岸线。画得准，别人才敢照着走。"
+max_level = 3
+effects = [
+  { kind = "chart_reveal", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "chart_reveal", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "chart_reveal", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "chart_reveal", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "shipbuilding"
+name = "造船"
+kind = "craft"
+description = "选木、开料、合龙骨，船身的弧线要在下第一颗钉子前想清楚。"
+max_level = 3
+effects = [
+  { kind = "storm_guard_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "storm_guard_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "storm_guard_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "storm_guard_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "court_etiquette"
+name = "礼仪"
+kind = "social"
+description = "进殿的步数，鞠躬的深浅，递礼的手势，差一分就要惹人笑。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 2 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 4 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 6 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "negotiation"
+name = "谈判"
+kind = "commerce"
+description = "先问清对方怕什么，再报价；让一分，要对方让两分。"
+max_level = 3
+effects = [
+  { kind = "bargain_pct", value = 2 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "bargain_pct", value = 2 }] },
+  { level = 2, xp = 180, effects = [{ kind = "bargain_pct", value = 4 }] },
+  { level = 3, xp = 360, effects = [{ kind = "bargain_pct", value = 6 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "poetry"
+name = "诗"
+kind = "arts"
+description = "押韵分行，句子要能在酒席上当场吟出来，不卡壳。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "music"
+name = "合奏与歌"
+kind = "arts"
+description = "合奏时跟着领奏的拍子走，唱歌时把气留到句末。"
+max_level = 3
+effects = [
+  { kind = "morale_daily", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "morale_daily", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "morale_daily", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "morale_daily", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "koto_playing"
+name = "筝艺"
+kind = "arts"
+description = "拨弦按柱，左手滑音，指甲要磨得整齐。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "oud_playing"
+name = "乌德琴"
+kind = "arts"
+description = "一枚鹰羽拨片夹在指间，琴身抱在怀里，低音先出来。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "calligraphy"
+name = "书法与誊抄"
+kind = "craft"
+description = "研墨运腕，抄一整卷书也不走样，每一笔都要立得住。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "embroidery"
+name = "刺绣"
+kind = "craft"
+description = "绷紧绸布，穿针走线；金线平铺在面上，用细丝线一针针压住，针脚要藏在金线底下。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "incense_blending"
+name = "调香"
+kind = "craft"
+# 不冒充治病术。
+description = "按季节配沉香、麝香与树脂，香气要在屋里停得住，又不呛人。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "knotwork"
+name = "编结"
+kind = "craft"
+description = "绳子成对编，绕出纹样，打结时手指要比眼睛快。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "woodcarving"
+name = "木雕"
+kind = "craft"
+description = "顺着木纹下刀，先定轮廓，再修细节，刀口一歪整块料就废了。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "painting"
+name = "绘画与上色"
+kind = "craft"
+description = "调色、打底、罩色，颜料干透再叠下一层，画面才不发脏。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "weaving"
+name = "织造"
+kind = "craft"
+description = "上机穿梭，经线要绷得一样紧，织出的布才平整。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "cooking"
+name = "点心与厨房"
+kind = "craft"
+description = "面团醒透，火候凭眼睛看，糖浆熬到挑起能拉丝才停。"
+max_level = 3
+effects = [
+  { kind = "fatigue_pct", value = 2 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "fatigue_pct", value = 2 }] },
+  { level = 2, xp = 180, effects = [{ kind = "fatigue_pct", value = 4 }] },
+  { level = 3, xp = 360, effects = [{ kind = "fatigue_pct", value = 6 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "tea_roasting"
+name = "焙茶"
+kind = "craft"
+description = "文火焙香，翻动要勤，焦了的茶叶就没法再救。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "waxwork"
+name = "蜡作"
+kind = "craft"
+description = "熔蜡调色，灌进模子成形，眉眼要趁蜡还软时定下。"
+max_level = 3
+effects = [
+  { kind = "activity_pct", value = 3 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "activity_pct", value = 3 }] },
+  { level = 2, xp = 180, effects = [{ kind = "activity_pct", value = 6 }] },
+  { level = 3, xp = 360, effects = [{ kind = "activity_pct", value = 9 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "riding"
+name = "骑术"
+kind = "martial"
+description = "坐稳马背，顺着马步起伏，收缰放缰都要轻。"
+max_level = 3
+effects = [
+  { kind = "fatigue_pct", value = 2 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "fatigue_pct", value = 2 }] },
+  { level = 2, xp = 180, effects = [{ kind = "fatigue_pct", value = 4 }] },
+  { level = 3, xp = 360, effects = [{ kind = "fatigue_pct", value = 6 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "quipu"
+name = "结绳记账"
+kind = "commerce"
+description = "结绳记数，一根绳记一笔账，绳子的颜色和结法各记一样东西。"
+max_level = 3
+effects = [
+  { kind = "price_hint", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "price_hint", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "price_hint", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "price_hint", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+
+[[skills]]
+key = "lang_arabic"
+name = "阿拉伯语"
+kind = "language"
+description = "阿拉伯文的契约、医书和星表，纸上的墨迹一笔笔都能念出声。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "arabic"
+
+[[skills]]
+key = "lang_aramaic"
+name = "亚兰语"
+kind = "language"
+description = "石板上刻的运粮账，亚兰文的数目一笔笔对得上，连驮队过了几道关都记着。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "aramaic"
+
+[[skills]]
+key = "lang_catalan"
+name = "加泰罗尼亚语"
+kind = "language"
+description = "海图边上的注记，加泰罗尼亚人写的小字，比图上的港名还细。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "catalan"
+
+[[skills]]
+key = "lang_chinese"
+name = "汉语"
+kind = "language"
+description = "汉文的典籍和公文，告示、批文与船牌上的字，一个都不用猜。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "chinese"
+
+[[skills]]
+key = "lang_dutch"
+name = "尼德兰语"
+kind = "language"
+description = "账房里潦草的字迹，尼德兰的契约与船单一笔笔认得，不必找人代看。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "dutch"
+
+[[skills]]
+key = "lang_english"
+name = "英语"
+kind = "language"
+description = "英文的航海日志，船员在舱里骂天气，骂的是哪一段风、哪一个港，都看得出来。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "english"
+
+[[skills]]
+key = "lang_french"
+name = "法语"
+kind = "language"
+description = "法文的诗卷在宫里传抄，诗句里藏的暗语，读的人一看便知。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "french"
+
+[[skills]]
+key = "lang_geez"
+name = "吉兹语"
+kind = "language"
+description = "吉兹文的经卷，经堂里齐声念的段落，念的人与听的人都知道每一句。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "geez"
+
+[[skills]]
+key = "lang_german"
+name = "德语"
+kind = "language"
+description = "德文的小册子在集市上叫卖，印刷清楚，价钱写得明明白白。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "german"
+
+[[skills]]
+key = "lang_greek"
+name = "希腊语"
+kind = "language"
+description = "希腊文的药方写着叶子与根的名字，抄在羊皮上，药铺的伙计照着配药。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "greek"
+
+[[skills]]
+key = "lang_hebrew"
+name = "希伯来语"
+kind = "language"
+description = "读懂希伯来文的经卷与祷书，还有各城商人之间往来的书信，方块字母一笔不乱。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "hebrew"
+
+[[skills]]
+key = "lang_italian"
+name = "意大利语"
+kind = "language"
+description = "威尼斯商人的汇票写在薄纸上，意大利文的字又快又狠，行家一眼辨得出真假。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "italian"
+
+[[skills]]
+key = "lang_japanese"
+name = "日语"
+kind = "language"
+description = "日文的歌集与文书，堺町的契约写得干净，僧人手札末尾的落款也认得出。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "japanese"
+
+[[skills]]
+key = "lang_kiche"
+name = "基切语"
+kind = "language"
+description = "基切文的历书把播种的日子排成一圈，山里的老人数着圈子，纸上也数得出来。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "kiche"
+
+[[skills]]
+key = "lang_korean"
+name = "朝鲜语"
+kind = "language"
+description = "驿站的马牌上，朝鲜文和汉字夹在一起，通关的路线一目了然。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "korean"
+
+[[skills]]
+key = "lang_latin"
+name = "拉丁语"
+kind = "language"
+description = "拉丁文的讲义边上满是注脚，先生逐行批改，学生照着念。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "latin"
+
+[[skills]]
+key = "lang_malay"
+name = "马来语"
+kind = "language"
+description = "马来文的海路记，每个港口的水深、风向与停泊处，都用短句记在纸角上。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "malay"
+
+[[skills]]
+key = "lang_mixtec"
+name = "米斯特克图画记述"
+kind = "language"
+description = "米斯特克人的画页把王族的世系画成一棵树，每一支的名字都画在枝上。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "mixtec"
+
+[[skills]]
+key = "lang_nahuatl"
+name = "纳瓦特语"
+kind = "language"
+description = "纳瓦特尔文的账上记着可可豆的数目，市场里讲价的人一开口，就知道谁在压价。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "nahuatl"
+
+[[skills]]
+key = "lang_old_javanese"
+name = "古爪哇语"
+kind = "language"
+description = "古爪哇文的碑铭刻在寺院的石阶上，诗行绕着浮雕走，绕寺一圈就读完一段。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "old_javanese"
+
+[[skills]]
+key = "lang_pali"
+name = "巴利语"
+kind = "language"
+description = "巴利文写在贝叶上，一层层叠起，僧人用指尖顺着字行念下去。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "pali"
+
+[[skills]]
+key = "lang_persian"
+name = "波斯语"
+kind = "language"
+description = "波斯文的诗刻在花园的墙砖上，宫里的诏书与商队的账也用同一种流畅的笔法。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "persian"
+
+[[skills]]
+key = "lang_portuguese"
+name = "葡萄牙语"
+kind = "language"
+description = "葡萄牙文的船单写着胡椒的重量，果阿来的信一到，码头上就知道行情。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "portuguese"
+
+[[skills]]
+key = "lang_sanskrit"
+name = "梵语"
+kind = "language"
+description = "梵文的律法刻在铜板上，学堂里背熟的一句，翻到铜板背面便是整章。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "sanskrit"
+
+[[skills]]
+key = "lang_spanish"
+name = "卡斯蒂利亚语"
+kind = "language"
+description = "卡斯蒂利亚文的粮单记着每船的饼与水，船队回港的报告，可以一条条对着核。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "spanish"
+
+[[skills]]
+key = "lang_turkish"
+name = "奥斯曼土耳其语"
+kind = "language"
+description = "奥斯曼土耳其文的税册按港口分卷，海关的印章压在每一页的边上。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "turkish"
+
+[[skills]]
+key = "lang_yucatec"
+name = "尤卡坦玛雅语"
+kind = "language"
+description = "尤卡坦玛雅文的碑文把日期刻成一圈圈，祭司报出的吉日，在石头上找得到同一圈。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "yucatec"
+
+[[skills]]
+key = "lang_swahili"
+name = "斯瓦希里语"
+kind = "language"
+description = "斯瓦希里文的海上口诀记着季风的时辰，船老大念一句，东非港口的船便知道该升帆。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "swahili"
+
+[[skills]]
+key = "lang_gujarati"
+name = "古吉拉特语"
+kind = "language"
+description = "读懂古吉拉特文的账册与信件，坎贝的汇票照格式写，错一个字就兑不了现。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "gujarati"
+
+[[skills]]
+key = "lang_quechua"
+name = "克丘亚语"
+kind = "language"
+description = "克丘亚文的告示钉在驿路的界碑上，几里到下一个山口，哪座桥断了，写得清清楚楚。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "quechua"
+
+[[skills]]
+key = "lang_mongolian"
+name = "蒙古语"
+kind = "language"
+description = "蒙古文的印文刻在铜印上，毡包里的文书盖着章，草原来的使者一到，便拿来核对。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "mongolian"
+
+[[skills]]
+key = "lang_jurchen"
+name = "女真语"
+kind = "language"
+description = "女真文的摩崖刻字沿山脊排开，刻的是路程与水源，走过的人一眼就知道哪里有泉。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "jurchen"
+
+[[skills]]
+key = "lang_ryukyuan"
+name = "琉球语"
+kind = "language"
+description = "琉球文的歌谣抄在薄纸上，那霸来的使者一唱，纸上的字便跟着调子走。"
+max_level = 3
+effects = [
+  { kind = "affinity_pct", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "affinity_pct", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "affinity_pct", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "affinity_pct", value = 3 }] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = true
+language = "ryukyuan"
+
+[[skills]]
+key = "lang_undeciphered"
+name = "未释读文字"
+kind = "language"
+description = "碑上的刻字断成一段一段，没有人能释读，也没有人能教。"
+max_level = 3
+effects = []
+levels = [
+  { level = 1, xp = 60, effects = [] },
+  { level = 2, xp = 180, effects = [] },
+  { level = 3, xp = 360, effects = [] },
+]
+basis = "historical"
+sources = ["docs/FRAMEWORK.md §7.4、§8.3；docs/TERRA16.md §17.3"]
+learnable = false
+unlock = { never = true }
+
+[[skills]]
+key = "arcana_natural_astrology"
+name = "自然魔法与占星"
+kind = "arcana"
+description = "草药、颂歌与刻像的银牌，照星辰走到的时辰用。须觉醒者才学得，由师傅口授星位；书院只讲原理，寻常祭星无力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "菲奇诺《论生命》卷三（1489）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_natural_astrology" }] }
+
+[[skills]]
+key = "arcana_alchemy"
+name = "炼金"
+kind = "arcana"
+description = "炉火不熄，师傅指着王与后的图讲火候。受教的人须先觉醒；书院只读字面，寻常炼丹不生一滴。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《翠玉录》；《哲人玫瑰园》（1550）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_alchemy" }] }
+
+[[skills]]
+key = "arcana_rosicrucian_healing"
+name = "玫瑰十字医术"
+kind = "arcana"
+description = "据说有一群无名兄弟，不收钱给人治病，穿本地衣裳，身上不留记号。须觉醒，由师承者当面教；书里有名目，寻常祷告给不了这双手。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《兄弟会传说》（1614，后世文本提前作为传说）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_rosicrucian_healing" }] }
+
+[[skills]]
+key = "arcana_steganography"
+name = "密写术"
+kind = "arcana"
+description = "特里特米乌斯的手稿写着召灵送信，行里人只读作字里藏字。要觉醒，师傅口授藏字的法；寻常写信，一丝术力也藏不进去。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "特里特米乌斯《隐写术》（约1499手稿）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_steganography" }] }
+
+[[skills]]
+key = "arcana_kabbalah"
+name = "字母与卡巴拉"
+kind = "arcana"
+description = "希伯来字母化作数字，神名拆开重排，罗伊希林的书只引人到门口。须觉醒，由师傅口授；礼拜里念神名的人很多，能应验的只有师傅点过的。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "罗伊希林《论卡巴拉的艺术》（1517）；非宗教典籍的魔法化"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_kabbalah" }] }
+
+[[skills]]
+key = "arcana_folk_warding"
+name = "民间护身"
+kind = "arcana"
+description = "弗留利人说，生来带胎膜的孩子夜里魂会离体，手持茴香杆，去和抢收成的巫女相斗。须觉醒，师傅一句句教；寻常烧纸念咒，护不了谁。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "本南丹蒂审判记录（晚出材料，传说补全）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_folk_warding" }] }
+
+[[skills]]
+key = "arcana_good_society"
+name = "东方夫人的好会"
+kind = "arcana"
+description = "米兰老妇人说，夜里去东方夫人的聚会，能让吃剩的牛骨重新站起。须觉醒，由会中前辈传授；宴席上学的只是规矩，寻常祭礼无力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "米兰1384、1390年审判记录"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_good_society" }] }
+
+[[skills]]
+key = "arcana_wind_knots"
+name = "卖风的结"
+kind = "arcana"
+description = "北方巫师把风系成三个结卖给水手：解开头一个顺风，第二个强风，第三个暴风。须觉醒，师傅一手一手教结法；书院能讲绕法，结绳起不了风。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "奥劳斯·马格努斯《北方民族史》（1555）卷三16–17章"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_wind_knots" }] }
+
+[[skills]]
+key = "arcana_letter_squares"
+name = "字母学与魔方阵"
+kind = "arcana"
+description = "字母化作数字，神名排进魔方阵，写在纸上，或刻在银片上贴身戴。须觉醒，由师傅口述排列；书院挂着方阵图样，数字念出来成不了术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "布尼短篇；比斯塔米著作"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_letter_squares" }] }
+
+[[skills]]
+key = "arcana_talismanic_shirt"
+name = "护符衬衫"
+kind = "arcana"
+description = "星辰定下的时辰开工，衬衫缝满经文与数字方阵，穿在甲下。须觉醒者来穿，师傅点明用法；书里有图，寻常缝出的只是布衫。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "托普卡帕宫藏杰姆苏丹护符衬衫，1477年开工"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_talismanic_shirt" }] }
+
+[[skills]]
+key = "arcana_geomancy"
+name = "沙占"
+kind = "arcana"
+description = "沙上点成行的点，按单双归成十六图形，由此断吉凶。须觉醒，师傅教认纹路；书里查得到占法，无人点拨，撒米抹沙成不了术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "docs/TERRA16.md §9.3；沙上点阵的占法"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_geomancy" }] }
+
+[[skills]]
+key = "arcana_daoist_talismans"
+name = "符箓斋醮"
+kind = "arcana"
+description = "只有龙虎山授过箓的道士才画符、上坛行事；朝中有人凭写青词升到阁老。须觉醒，道长传步罡与口诀；寻常斋醮，画符再像也无力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "龙虎山授箓与青词传统"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_daoist_talismans" }] }
+
+[[skills]]
+key = "arcana_spirit_writing"
+name = "扶乩"
+kind = "arcana"
+description = "两人扶住叉形木架，笔在沙盘上自己走，一人念字，一人抄下。须觉醒，由乩师一笔笔带；课堂只读记录，寻常扶架，笔不动。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "沈括《梦溪笔谈》；蓝道行（1562，后续线）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_spirit_writing" }] }
+
+[[skills]]
+key = "arcana_fangshi"
+name = "黄白术与预知"
+kind = "arcana"
+description = "方士自称能点铅汞成金银，陶仲文便靠这一套进出宫门。须觉醒，方士亲授；书上的火候，寻常炼丹照做也白费。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "陶仲文、段朝用事迹；成功效力为传说"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_fangshi" }] }
+
+[[skills]]
+key = "arcana_white_lotus"
+name = "白莲术"
+kind = "arcana"
+description = "白莲的信徒说，萧芹能念得城墙倒塌，塞外的阿勒坦汗也曾信他。须觉醒，师父当面传咒与手印；书院只讲经文，乡里法会换不来术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《明史·鞑靼传》萧芹堕城术"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_white_lotus" }] }
+
+[[skills]]
+key = "arcana_onmyodo"
+name = "阴阳道"
+kind = "arcana"
+description = "阴阳师看方位、择吉日，让出行避开凶神；土御门家世代替朝廷办这事。须觉醒，师传式盘与咒言；学堂讲历法，寻常祭礼无术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "土御门家；《簠簋内传》"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_onmyodo" }] }
+
+[[skills]]
+key = "arcana_waka_spirit"
+name = "和歌言灵"
+kind = "arcana"
+description = "假名序说，和歌不费力便能动天地，三十一音恰到好处。须觉醒，歌师口授读法；诗集能读，光念诗招不来力量。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《古今和歌集》假名序（905）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_waka_spirit" }] }
+
+[[skills]]
+key = "arcana_shugendo"
+name = "修验与祈风"
+kind = "arcana"
+description = "修验者入熊野、大峰的山修行，吹法螺替行船人祈风。须觉醒，随山伏入山，师傅传真言；课上讲得清山规，平日祈福给不了术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "熊野、大峰、羽黑及大山祇传统"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_shugendo" }] }
+
+[[skills]]
+key = "arcana_korean_rites"
+name = "巫堂与醮祭"
+kind = "arcana"
+description = "巫堂击鼓起舞，替病家驱灾，活人署和昭格署都有名册。须觉醒，巫堂亲口传授；学堂里读得到祭文，照书念的祭没有术力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "活人署与昭格署制度；法术效力为传说"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_korean_rites" }] }
+
+[[skills]]
+key = "arcana_ryukyu_blessing"
+name = "琉球神女的祝福"
+kind = "arcana"
+description = "祝女唱祝歌送船出海，人们说妹妹的守护神会坐在哥哥的帆上。须觉醒，由祝女本人授予；课上只能学祝词，寻常参拜接不住这份祝福。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《おもろさうし》（1531起）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_ryukyu_blessing" }] }
+
+[[skills]]
+key = "arcana_jurchen_shaman"
+name = "女真萨满"
+kind = "arcana"
+description = "萨满腰系铃，敲单面鼓入神，把病人的魂从阴间唤回。须觉醒，老萨满夜里传鼓点与唱词；课上只讲它从哪里来，寻常祈神无效。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《尼山萨满》；晚出记录作传说"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_jurchen_shaman" }] }
+
+[[skills]]
+key = "arcana_maya_calendar"
+name = "玛雅历法预言"
+kind = "arcana"
+description = "祭司以二十年为一卡吞，十三卡吞为一轮，旧事会在同名的卡吞里回来。须觉醒，历师一天天传授推算；课上能看到历书，随意占卜不灵。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "兰达《尤卡坦风物记》（约1566）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_maya_calendar" }] }
+
+[[skills]]
+key = "arcana_nahual"
+name = "纳瓦利与卜日"
+kind = "arcana"
+description = "卜师翻开二百六十天的历书，依出生日名为孩子选吉日，老人说纳瓦利能化作野兽。须觉醒，年长卜师传日名与吉凶；学堂有历日可读，施不了法。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《佛罗伦萨手抄本》"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_nahual" }] }
+
+[[skills]]
+key = "arcana_pochteca_disguise"
+name = "波奇特卡变装"
+kind = "arcana"
+description = "远行商人换上外族衣裳，学外族发式与口音，混进敌国市场打听消息。须觉醒，老族长亲手教；学堂只讲伪装的记录，披上衣裳谁也不会变。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "《佛罗伦萨手抄本》第九卷"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_pochteca_disguise" }] }
+
+[[skills]]
+key = "arcana_taino_behiques"
+name = "泰诺贝伊克"
+kind = "arcana"
+description = "贝伊克禁食催吐，吸科哈巴粉问神，再把病气吸出病人身体。须觉醒，老贝伊克传歌谣与草药；学堂只说得出名目，寻常歌舞给不了术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "帕内《印第安古事记》（1494–1498）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_taino_behiques" }] }
+
+[[skills]]
+key = "arcana_kongo_nkisi"
+name = "恩甘加与恩基西"
+kind = "arcana"
+description = "恩甘加把草药、泥土与骨屑包进布里，或塞进木雕的腹中，封住后自有力量。须觉醒，祭司口传咒语与封法；课上只看得到图样，挂个布偶没有用。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "阿方索一世书信与刚果传统"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_kongo_nkisi" }] }
+
+[[skills]]
+key = "arcana_benin_arts"
+name = "贝宁王太后之术"
+kind = "arcana"
+description = "王太后伊迪亚暗中施术，助儿子胜了伊达之战；此术也向海神奥洛昆求财求子。须觉醒，宫墙里的老妇人传授；课堂只教礼节，寻常祭拜无力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "伊迪亚与奥洛昆传统"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_benin_arts" }] }
+
+[[skills]]
+key = "arcana_shona_medium"
+name = "绍纳灵媒"
+kind = "arcana"
+description = "历代国王的姆洪多罗借灵媒开口，替穆塔帕的王与百姓求雨，也替人断是非。须觉醒，年长灵媒领入门；课上只听灵媒的故事，呼名引不来灵。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "穆塔帕的姆洪多罗传统"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_shona_medium" }] }
+
+[[skills]]
+key = "arcana_ethiopian_scroll"
+name = "护身经卷工艺"
+kind = "arcana"
+description = "抄经师傅按主人身高裁羊皮，写满祷文，画睁大眼的天使，卷起来贴身带。须觉醒，师傅亲手教；学堂教写字，没有口授，经卷无力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "埃塞俄比亚护身卷传统；宗教典籍本身不授术"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_ethiopian_scroll" }] }
+
+[[skills]]
+key = "arcana_sikidy"
+name = "种子占卜"
+kind = "arcana"
+description = "占师把法诺树的种子分堆，按单双排成格，从十六图形里读出吉日与祭品。须觉醒，占师一粒粒教；书院讲得清占图，撒种子成不了卦。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "弗拉古尔（1658，后世记录）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_sikidy" }] }
+
+[[skills]]
+key = "arcana_malay_sea"
+name = "马来海巫"
+kind = "arcana"
+description = "海巫念咒安抚海中神灵，把供物放上小船推进海里，求鱼获与平安。须觉醒，老水手上船传授；课堂教海上仪式，港口祭海换不来术力。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "斯基特《马来魔法》（1900，谨慎推演）"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_malay_sea" }] }
+
+[[skills]]
+key = "arcana_babaylan"
+name = "巴巴兰"
+kind = "arcana"
+description = "巴巴兰多是女子，吹角起舞，献上一头猪，借口说神。须觉醒，山村年长巫者传歌与草药；课上只讲来历，节日里也赐不下术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "皮加费塔1521年宿务记录"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_babaylan" }] }
+
+[[skills]]
+key = "arcana_siam_auspices"
+name = "暹罗宫廷择吉"
+kind = "arcana"
+description = "宫中婆罗门定吉时，春耕礼上圣牛在稻、豆、酒、草间挑食，断当年雨水。须觉醒，司天官当面口授；课上学得算吉日的法子，光选日子招不来术。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "宫廷春耕礼、择吉传统"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_siam_auspices" }] }
+
+[[skills]]
+key = "arcana_star_paths"
+name = "波利尼西亚星径"
+kind = "arcana"
+description = "老航海师傅夜里在独木舟上，指着升起的星口授星径。须觉醒才听得进；课堂能学星名，单靠夜航学不到星径。"
+max_level = 3
+effects = [
+  { kind = "arcana", value = 1 },
+]
+levels = [
+  { level = 1, xp = 60, effects = [{ kind = "arcana", value = 1 }] },
+  { level = 2, xp = 180, effects = [{ kind = "arcana", value = 2 }] },
+  { level = 3, xp = 360, effects = [{ kind = "arcana", value = 3 }] },
+]
+basis = "legendary"
+sources = ["docs/TERRA16.md §9.3", "口传星径；有界揭雾为游戏补全"]
+unlock = { all = [{ flag = "arcana_awakened" }, { flag = "transmission_star_paths" }] }
+
+# C2j 文案整理：以下保留原考证或接线说明，不进入玩家正文。
+# 走桩、守门与结伴操练，不提前写白鹤拳。
+# 仅保留 C3 的阅读门槛；没有课程、经验来源或通事代读。
+# 语言技能 description 原文另有“熟练度不替代读书条件”。
+# 秘术技能 description 原文：须经觉醒与传承事件，课堂只能识读出处，不能靠普通祭礼获得术力。

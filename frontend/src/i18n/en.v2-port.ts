@@ -1,0 +1,43 @@
+// UI strings (en): new UI phase 2 — the rest of the port (shipyard, tavern, guild, bank, warehouse, investment, nation office, shop, auction). Keys start with v2.port.
+// 与 zh-CN.v2-port.ts 一一对应。
+import type { Translation } from "./translation";
+import type { v2Port as zh } from "./zh-CN.v2-port";
+
+export const v2Port: Translation<typeof zh> = {
+  "v2.port.crewBy": "By headcount",
+  "v2.port.mtNoneHint": "Mates drift from tavern to tavern. The Mates window shows who is waiting in other ports.",
+  "v2.port.mtNoneGo": "See mates in other ports",
+  "v2.port.crewHire": "Hire ({v})",
+  "v2.port.bargainPh": "Say something to the keeper…",
+  "v2.port.bargainHint": "Try haggling, making friends, a bribe or a threat; any discount you win applies from tomorrow.",
+  "v2.port.gdNoneHint": "New contracts get posted over time — check back in a few days, or try the guild in another port.",
+  "v2.port.syNoneHint": "The nearest shipyard is in {port}.",
+  "v2.port.syNoneGo": "See the shipyard in {port}",
+  "v2.port.exNone": "This port has no futures exchange.",
+  "v2.port.exNoneHint": "Futures trade only in ports with an exchange; the Futures window lists every exchange and its prices.",
+  "v2.port.exGo": "Open Futures",
+  "v2.port.quick": "Quick amounts",
+  "v2.port.allDeposit": "All savings {v}",
+  "v2.port.bkDo": "Deposit {v}",
+  "v2.port.bkWithdraw": "Withdraw {v}",
+  "v2.port.bkBorrow": "Borrow {v} ({m} mo.)",
+  "v2.port.bkRepay": "Repay {v}",
+  "v2.port.bkRepayAll": "Pay off {v}",
+  "v2.port.ivInvest": "Invest {v}",
+  "v2.port.whCap": "Warehouse capacity",
+  "v2.port.trNeedTwo": "You need at least two places to keep goods here (a fleet, a caravan, a warehouse) to move goods between them: rent a warehouse below, or bring a caravan here.",
+  "v2.port.trRent": "Rent {n} units of storage ({v} a day)",
+  "v2.port.soldOut": "Sold out — restocks {y}/{m}/{d}",
+  "v2.port.auNoneHint": "Upcoming auctions are marked on the calendar; you can view the lots a few days before bidding opens.",
+  "v2.port.keyPick": "pick",
+  "v2.port.keyQty": "quantity",
+  "v2.port.keyTen": "10 at a time",
+  "v2.port.keySettle": "trade",
+  "v2.port.keyDetail": "details",
+  "v2.port.toChart": "Open the sea chart",
+  "v2.port.mk.unknownHint": "Once a ship docks here, or you buy a local market report, the goods traded here are listed.",
+  "v2.port.mk.noHolderHint": "You can trade here once a ship docks, a caravan arrives or you rent a warehouse here.",
+  "v2.port.mk.toWarehouse": "Rent a warehouse",
+  "v2.port.bk.noLoans": "No loans.",
+  "v2.port.bk.noLoansHint": "Borrow at the counter above when you need cash; how much depends on your fame and assets.",
+};

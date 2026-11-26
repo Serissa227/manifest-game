@@ -1,0 +1,146 @@
+# 请托：什么能抢，什么不能（request_oruc）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：奥鲁奇（oruc，1533-11-09 生，男），阿尔及尔船长圈里的年轻船长；势力 algiers；cast：cast/story_islamic.toml。身份档 1（年轻的船长），风险高，现金按 1600 计。
+# 类型：打一仗（fight）。报价：T（当面），报价港 algiers。auto=false，玩家在港里“问请托”（ask:request_oruc）启动；offer 没有 window，靠 when 的日期区间与 deadline 1590-06-30 限期，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 章节：任务单写三章（offer、battle、after），文件里是四章。多出的 after_lured 是引擎限制：lure 成功只设 c13_request_oruc_lured，after 的 lured_way 若用 requires 去读它，就是读另一条路径上才设的旗标，会被卡住；所以 lure 成功直接走 after_lured，两条终局各有两个选项。
+# 依据·史实背景：阿尔及尔的私掠船长圈，靠赎金与截船吃饭；西班牙的加莱船在北非外海巡弋，截过往的商船。老奥鲁奇、塔伊法、雷斯这些名字是史实，正文只借了“同名”一句。
+# 依据·原创：奥鲁奇本人、他的规矩（船上的货可以抢，人一个也不许带走）、艇上的两个西班牙水手、码头上的老船长们，以及“货单我看，人名你念”这句口头禅。
+#   不写掳人、不写贩卖俘虏；persona 里提到的身世与“赎金谈妥就放人”这一面不进正文。cast 没写秘密，本请托无须处理。
+# 口头禅：“货单我看，人名你念”全轨道只用一次，放在 offer 讲规矩的那一刻。
+# 读的旗标：c13_main_tariq（offer 的变体 v1_tariq，只改正文，塔里克主角到场时他笑一声，说“这回我们站一边”）。不读其他 c13_ 或 c7_ 旗标。
+# 设的旗标：c13_request_oruc_accepted（接下，检定失败也设）、c13_request_oruc_declined（回绝）、c13_request_oruc_lured（引诱成功）、c13_request_oruc_rule（外海放人，battle 两个选项都设）、c13_request_oruc_late（battle 超时）、c13_request_oruc_done（终局，只设这一面）。
+# 报酬：现金最多 1600，每条终局一次；好感最多 +15（接下 +2，引诱 +3，外海放人 +5，最好的结局 +8）；名声 +2；回忆 mem-request_oruc-after。无物品，无技能经验。
+# 失败与超时：引诱的检定失败走 fail，好感 -2，直接去外海打一仗；打一仗超时 next=failed，好感 -3，奥鲁奇来一封信，不扣钱、不扣物品。
+# 依赖：港口 algiers；属性 seamanship（captain.toml）；无 B10b 改名；无主线门禁（gate_main 为空）。
+# 回忆插画清单：
+#   mem-request_oruc-after「码头上那一阵安静」：阿尔及尔码头，老船长们都不说话，木桶边的奥鲁奇举着酒碗，咧嘴笑着。
+
+[[tracks]]
+key = "request_oruc"
+name = "什么能抢，什么不能"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["oruc"]
+
+# 一、他自己这么想：阿尔及尔码头，奥鲁奇坐在木桶上，说一条西班牙加莱船专截船，请你把它引开。
+[[tracks.chapters]]
+key = "offer"
+title = "他自己这么想"
+text = "阿尔及尔码头，年轻的奥鲁奇坐在一只倒扣的空桶上，脚边靠着一柄没出鞘的弯刀。他的名字跟当年的老奥鲁奇一样响，至少他自己这么想，见了谁都先报一遍。这两个月，一条西班牙加莱船专在外海截船，截了三条。他朝你抬了抬下巴：“你的船吃水挺深嘛。别紧张，我今天只是来喝酒的。”然后压低了嗓子：“我的规矩是：船上的货可以抢，人一个也不许带走。货单我看，人名你念。那条船不守规矩，我守。你替我把它引开。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "oruc", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_tariq"
+when = [{ kind = "flag", flag = "c13_main_tariq", value = true }]
+text = "阿尔及尔码头，年轻的奥鲁奇坐在一只倒扣的空桶上，脚边靠着一柄没出鞘的弯刀。他的名字跟当年的老奥鲁奇一样响，至少他自己这么想，见了谁都先报一遍。这两个月，一条西班牙加莱船专在外海截船，截了三条。他看见你，先笑了一声：“你也来了。这回我们站一边。”然后压低了嗓子：“我的规矩是：船上的货可以抢，人一个也不许带走。货单我看，人名你念。那条船不守规矩，我守。你替我把它引开。”"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "答应跟他一起出海。"
+next = "battle"
+reply = "他把自己的规矩大声念给手下听，念完回头看你：“你的人也听着。”水手们哄笑起来，有人朝你的船舷啐了一口，算是欢迎。一个缺了门牙的老水手拍了拍你的肩，说这条船来得正好，正缺个会数数的。"
+effects = [{ kind = "affinity", person = "oruc", value = 2 }, { kind = "flag", flag = "c13_request_oruc_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "lure"
+text = "提议：你的船当诱饵，把它引到礁多的地方。"
+check = { attr = "seamanship", base = 5, per = 8 }
+next = "after_lured"
+reply = "加莱船追着你的船跑了半天，一头划进了礁区，桨断了一排，只好掉头往回爬。奥鲁奇在远处看着，手里的酒碗忘了喝。“这一招，我要学。”"
+effects = [{ kind = "affinity", person = "oruc", value = 3 }, { kind = "flag", flag = "c13_request_oruc_accepted" }, { kind = "flag", flag = "c13_request_oruc_lured" }]
+fail = { next = "battle", effects = [{ kind = "affinity", person = "oruc", value = -2 }, { kind = "flag", flag = "c13_request_oruc_accepted" }], news = "阿尔及尔外海，一条西班牙加莱船没上当，直扑过来，奥鲁奇的船只好跟它打了一仗。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "私掠船的事，你不掺和。"
+next = "failed"
+reply = "他耸耸肩，把一袋货甩上肩头。“那我自己去，规矩照守。”走出几步又回过头来，“桶你坐着，酒我请。你要是改了主意，货单还在我这儿。”"
+effects = [{ kind = "flag", flag = "c13_request_oruc_declined" }]
+
+# 二、艇上的两个人：加莱船被你打退以后，它拖着的一条小艇落进了奥鲁奇手里。
+[[tracks.chapters]]
+key = "battle"
+title = "艇上的两个人"
+text = "加莱船在外海露了头，桨一起一落，像一只往前爬的虫。你打退的那条船伤了一侧的桨，掉头往北去了，没再回头。奥鲁奇的人却在后面截住了它拖着的一条小艇，艇上有两个西班牙水手，一个用布捂着手臂，一个一直望着大船的方向。奥鲁奇跳上你的甲板，朝小艇上一指：“按规矩办。”他没看你，只看着那条艇。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "battle", wins = 1, text = "在外海打退一条加莱船" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }, { kind = "alive", person = "oruc", value = true }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "oruc", value = -3 }, { kind = "flag", flag = "c13_request_oruc_late" }, { kind = "letter", person = "oruc", text = "加莱船走了，又截了一条。我的规矩还在，船没了一条。" }]
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "照他的规矩：货留下，人放走。"
+next = "after"
+reply = "奥鲁奇看了你一眼，点点头，叫人把小艇上的两袋货搬过来，两个水手连艇一起放了，划出去很远才敢回头看一眼。奥鲁奇说你记性好。"
+effects = [{ kind = "affinity", person = "oruc", value = 5 }, { kind = "flag", flag = "c13_request_oruc_rule" }]
+news = "阿尔及尔外海，一条西班牙加莱船被打伤了桨，船长圈里年轻的奥鲁奇放走了截到的两个水手。"
+
+[[tracks.chapters.choices]]
+key = "his_call"
+text = "看他怎么办。"
+next = "after"
+reply = "他的水手都看着他。他犹豫了一下，还是挥了挥手：“人放走。”水手们低下头去拉桨，没人再吭声。他转过身，又补了一句，说这条规矩是他自己定的，他得守。"
+effects = [{ kind = "affinity", person = "oruc", value = 3 }, { kind = "flag", flag = "c13_request_oruc_rule" }]
+news = "阿尔及尔外海，截来的两个西班牙水手被年轻的奥鲁奇当着手下人的面放了，据说船上没人敢吭声。"
+
+# 三、傻不傻：拿外海的事回到阿尔及尔码头，老船长们笑他，他当着人问你这条规矩傻不傻。
+[[tracks.chapters]]
+key = "after"
+title = "傻不傻"
+text = "阿尔及尔码头上，船长圈里的老船长们听说奥鲁奇放走了人，有人笑他，有人骂他，说这样的船长养不肥自己的船。风从港口吹进来，咸得发苦。有个老船长嚷：“人放了，货才几袋，你这是做的什么生意？”奥鲁奇把手一摊：“货还在船上，人可早就回西班牙去了。”他不辩，只把酒碗往木桶上一磕，当着他们的面转过头来问你：“你说，这条规矩，傻不傻？”"
+speaker = "captain"
+mood = "cheerful"
+at = "algiers"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }, { kind = "alive", person = "oruc", value = true }]
+
+[[tracks.chapters.choices]]
+key = "not_silly"
+text = "说：不傻。抢货的是船长，带人的是贩子。"
+next = "done"
+reply = "码头上静了一会儿。奥鲁奇大笑，说这句话他要刻在船头。他把分到的货卖了，钱分了你一大份，一边数一边念，念到一半又回头补了一句：“你的船，下回还来。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "oruc", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_oruc_done" }, { kind = "memory", memory = "mem-request_oruc-after", title = "码头上那一阵安静" }]
+news = "阿尔及尔船长圈里那个年轻的奥鲁奇，在码头上大声说他的规矩：抢货的是船长，带人的是贩子。"
+
+[[tracks.chapters.choices]]
+key = "keep_quiet"
+text = "不接他的话，把货单推回他手里。"
+next = "done"
+reply = "奥鲁奇愣了一下，接过货单看了半天，才笑出声：“你这人，话比货还少。”他把钱数出来放在你面前，一份不少，数着数着还在笑，末了把那张货单折成一只小船，丢进你的袖口。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "oruc", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_oruc_done" }]
+news = "阿尔及尔码头上，老船长们追着年轻的奥鲁奇问他的规矩，他没答，把货单推给了身边一个外乡船长。"
+
+# 三′、规矩还没验过：引诱成功，加莱船撞进礁区，人一个也没碰上，老船长们却还在笑他。
+[[tracks.chapters]]
+key = "after_lured"
+title = "规矩还没验过"
+text = "阿尔及尔码头上，老船长们听说那条加莱船一头撞进礁区，桨断了一排，都说奥鲁奇这回没被人笑。奥鲁奇没接这话，把你拽到一边，手里还拎着没喝完的酒碗，指着港口外的海：“人我一个也没碰上。这规矩，你看傻不傻？”他的眼睛里带着笑，又像是真在等你的回答。码头上有个卖橄榄的小贩正把篮子往肩上挑，听见这话，也停下来看着你们。"
+speaker = "captain"
+mood = "cheerful"
+at = "algiers"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }, { kind = "alive", person = "oruc", value = true }]
+
+[[tracks.chapters.choices]]
+key = "lured_way"
+text = "说：这回一个人也没碰上，规矩还没验过。"
+next = "done"
+reply = "他想了想，说也对，规矩要验过才算。他把碗里剩下的酒洒在木桶边，说：“这一笔，算在那条加莱船头上。”他付了你钱，说下回验的时候，还请你在。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "oruc", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_oruc_done" }]
+news = "阿尔及尔码头上，老船长们拿加莱船的事笑年轻的奥鲁奇，他却说规矩还没验过，要请外乡船长下回在场看着。"
+
+[[tracks.chapters.choices]]
+key = "not_yet"
+text = "说：人都还没碰上，先别问傻不傻。"
+next = "done"
+reply = "他哈哈笑起来，说你的嘴比船还利。“下回验的时候，你也站到船头上来。”他把钱数给你，话没说完，又把酒碗举了起来。旁边的老船长被他噎得直瞪眼，有人骂了一句，骂完自己也笑了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "oruc", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_oruc_done" }]
+news = "阿尔及尔码头上，年轻的奥鲁奇被一个外乡船长顶了一句，他不恼，反倒笑着请对方下回跟船出海。"

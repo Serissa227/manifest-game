@@ -1,0 +1,194 @@
+# 请托：未寄出的家书（request_ichijo_fusamichi）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：一条房通（ichijo_fusamichi，1509 年 1 月 1 日生——月日据 cast 占位，男），京都一条本家的前关白，土佐一条家出身，1556 年末卒于京都。cast：cast/historical_07_japan.toml。
+# 类型：送信（letter）。brief 三章（offer / handover / reply），按引擎的写法拆成五章：offer、handover、handover_note、reply、reply_karo（理由见下）。
+# 报价：L（遗事，legacy）。京都一条本家的老家司在堺的码头出面，offer 不写 speaker；任何章节都不写 alive 条件（请托人已故）。
+#       auto=true，报价港 sakai，offer 1557-01-15 起开放，deadline 1558-12-31，timeout 直接 failed、不写见闻；family=c13_offer_sakai，冷却 20 天。
+#       offer 对澪关闭（c13_main_mio=false：兼定是澪的弟弟，归她的主线）；正文对其他主角都说得通，不提澪。
+# 进行中：handover / handover_note 在 shimoda_tosa（下田，四万十川口，中村的外港），deadline_days=120；reply / reply_karo 回 sakai，deadline_days=150。超时都走 failed、设 _late，不写来信（请托人已故，老家司不是 cast）。
+# 结构的变通（引擎的 requires 是 AND，且同一轨道在别的路上设的旗标不拿来挡选项）：
+#   - brief 的 handover 里“拿出老家司那纸来历”要读 _note 旗标：改成 offer 的 note 选项直接去 handover_note 一章，那一章里出示纸条的选项不设门槛；技能那一条（court_etiquette ≥ 60）留在 handover。
+#   - brief 的 reply 按 _direct / _via_karo 拆选项：改成交信的结果直接分两章——当面交到的去 reply（两个选项都是最好结局），家老经手的去 reply_karo（照实说 / 略过家老，都是折中）。
+#   - 检定失败没有回应文字（引擎只在成功时显示 reply），insist 的失败由 fail 的见闻与 reply_karo 的正文交代。
+#   - 见闻与选项对不上的地方写在选项上（覆盖章节的见闻）：handover_note 的 show_note、reply 的 truth；章节的见闻对其余选项都说得通。
+# 依据·史实：一条房通弘治二年（1556）末卒于京都；一条兼定七岁丧父，被房通收作猶子，在京里长大，房通死后回土佐；1557—58 年兼定十四五岁，在中村，政务由家老与政所把持；四万十川口的下田是中村的外港。
+#   家老土居宗珊是真人，正文只称“家老”“家老的使者”，不写他后来的结局。
+# 依据·原创：老家司、黑漆文匣与封条上的字、砚台底下找到的经过、油纸包、三行字的来历、栈桥上的使者、少年当主写错又涂掉的一个字、右笔代笔的回信与花押下面多出的一行。
+# 房通本人：只在封条上的一行字与老家司转述的那一句里出现，不另给他新的话；老家司只说他生前做过的事（南边来船时叫人去问潮水）。
+# 秘密：cast 无 secret 字段；人设里“对分家心里算的是账”只作语气，本请托不碰。
+# 读的旗标：c13_main_mio（offer 的 when，由澪的主线设，尚未写）。
+# 设的旗标：c13_request_ichijo_fusamichi_accepted / _declined（offer）；分支 _note（offer）、_direct / _via_karo（handover、handover_note）；终局 _done / _partial（reply、reply_karo）、_late（四章的 timeout）。不设任何 c7_ 旗标；不用 relation / tie / bond / heart。
+# 报酬：现金最好 2600（reply 一次付清）、折中 1300（reply_karo）；兼定好感至多 +13（接下 +2、当面交到 +3、最好结局 +8；检定失败 −2；折中 +4）；声望 ichijo +2（只在最好结局）；回忆一张。无物品、无技能、无名声（遗事不加名声）。
+# 来信：兼定（活人）两封，分别在 reply 的两个选项里，任何一条路只收到一封；reply_karo 不写来信。
+# 依赖：港口 sakai、shimoda_tosa（ports_east_asia.toml）；人物 ichijo_kanesada（cast/historical_07_japan.toml）；势力 ichijo（factions/10_japan.toml）；技能 court_etiquette（skills.toml）；属性 eloquence。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_ichijo_fusamichi-reply「河口的少年当主」：四万十川口的栈桥，穿京里样式直垂的少年当着使者拆开黑漆文匣，信读到一半折起来塞进怀里，身后停着川船。
+
+[[tracks]]
+key = "request_ichijo_fusamichi"
+name = "未寄出的家书"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ichijo_fusamichi", "ichijo_kanesada"]
+
+# 一、堺的码头：老家司抱着房通临终前封好的文匣等船。
+[[tracks.chapters]]
+key = "offer"
+title = "漆匣里的最后一封"
+text = "堺的码头上，一个穿素服的老人抱着一只黑漆文匣，在船与船之间站了半天。他是京里一条本家的老家司。匣盖上描着金藤纹，封条压住盖缝，上面一行字抖得厉害：“交中村，本人开启。”他说这是老关白临终前一个月封的，丧事办完，收拾砚箱，才在砚台底下找着。他说一阵就要歇一口气，然后把老关白的话一字不改地说给你听：“信要交到孩子手里。家老看过的信，到孩子手里就只剩一半。”孩子，是土佐中村那位年轻的当主。老家司低头看自己的腿：海路他走不动，本家也雇不起像样的船。他问你的船走不走土佐。"
+mood = "sad"
+at = "sakai"
+when = [{ kind = "date", from = [1557, 1, 15] }, { kind = "age", ge = 17 }, { kind = "flag", flag = "c13_main_mio", value = false }]
+deadline = [1558, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下文匣，送去中村"
+next = "handover"
+reply = "老家司把匣子用油纸包了两层，四个角各打一个结，交给你之前又用拇指按了按封条。“封条别沾水。土佐那条河口，潮气重。”他退后一步，看你把油纸包抱稳了，才鞠下躬去。"
+effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_accepted" }, { kind = "affinity", person = "ichijo_kanesada", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "note"
+text = "接下，请他先写一纸来历，压在匣上"
+next = "handover_note"
+reply = "你在码头多等了半天。老家司借了茶屋的矮桌，磨墨磨了很久，写了三行：谁封的，谁找到的，托了谁。他的字比封条上的还抖，末尾押了自己的花押。纸折成窄条，塞进油纸包与漆匣之间。“到了河口，若有人伸手，就把这个给他看。”"
+effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_accepted" }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_note" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟船去不了土佐"
+next = "failed"
+reply = "老家司把匣子抱回怀里，鞠了一躬，鞠得很深。“那就再等下一条船。”他转身走向隔壁那条船的船头，问的还是同一句话。"
+effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_declined" }]
+
+# 二甲、下田河口：家老的使者在栈桥上等着接匣子（没拿那纸来历的路）。
+[[tracks.chapters]]
+key = "handover"
+title = "河口的家老使者"
+text = "四万十川在下田入海，河口的水分成两色，外头青，里头浑。栈桥上已经有人在等：一个穿肩衣的中年武士，身后系着去中村的川船。他先看你怀里的油纸包，再看你。“京里本家送来的吧。主上年少，信先给家老过目，这是一条家的规矩。”他伸出手，掌心朝上，并不催。油纸包里，漆匣的封条还是好好的。川船的篷底下探出半个身子，是个穿京里样式直垂的少年，衣料讲究得不像要走河路，正盯着你的船看。"
+speaker = "captain"
+mood = "tense"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "把文匣带到下田河口" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_late" }], news = "下田河口的人说，京里一条家的老家司等不到托付的船，又托了别的船来问；老关白那封信，到中村时已经晚了一季。" }
+news = "下田河口有条外来的船，把京里老关白留下的一只漆匣交到了一条家手上，川船当天就往中村去了。"
+
+[[tracks.chapters.choices]]
+key = "insist"
+text = "不松手：封条上写着谁，就交给谁"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "你把话说得不紧不慢：封条是老关白自己封的，写着“本人开启”，京里的规矩是封给谁、交给谁。使者还没开口，川船上的少年已经跳上栈桥，木板咚的一响。他当着使者撕开封条，读到一半，把信折起来塞进怀里，脸涨得通红，后面的谁也没看见。"
+effects = [{ kind = "affinity", person = "ichijo_kanesada", value = 3 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_direct" }]
+fail = { next = "reply_karo", effects = [{ kind = "affinity", person = "ichijo_kanesada", value = -2 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_via_karo" }], news = "下田的栈桥上，有条外来的船跟家老的使者争一只漆匣，争到最后，使者说“会原样转呈”，匣子还是上了川船。" }
+
+[[tracks.chapters.choices]]
+key = "precedent"
+text = "照京里本家的作法：遗书只交受书的人"
+next = "reply"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "你说不出京里交割遗书是哪几步，开了口也压不住他。"
+reply = "你把公家交割遗书的次第一样样说出来：谁捧匣，谁看封，谁跪受，家臣退在几步以外。使者的手慢慢缩了回去，退开两步。少年从川船上下来，双手接过漆匣，先问的却不是信：“义父最后几天，咳得厉害吗？”"
+effects = [{ kind = "affinity", person = "ichijo_kanesada", value = 3 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_direct" }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "交给使者，省得惹事"
+next = "reply_karo"
+reply = "使者双手接过，道了谢，当着你的面把油纸包放进川船上的木箱，系好绳子。川船撑离栈桥的时候，篷底下的少年看了你一眼，什么也没说。"
+effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_via_karo" }]
+
+# 二乙、下田河口：同一个使者，你袖里多了老家司那三行字。
+[[tracks.chapters]]
+key = "handover_note"
+title = "栈桥上的三行字"
+text = "下田的河口，海水青，河水浑，在栈桥底下搅成一条线。你一路上把老家司那张窄纸条读过好几遍，三行字，墨都快被油纸的潮气洇开了。栈桥上等着的是个穿肩衣的中年武士，川船系在他身后。“京里本家的东西吧。主上年少，信先给家老过目，一条家向来如此。”他把手伸过来，掌心朝上。漆匣的封条完好。川船的篷子底下，一个穿京里样式直垂的少年探出头来，看你的船，看得目不转睛。"
+speaker = "captain"
+mood = "tense"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "揣着老家司的纸条，把文匣送到下田" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_late" }], news = "下田河口有人说起，京里一条家的老家司等了一季也没等到回音，只好另托一条米船往中村带话。" }
+news = "下田的栈桥上靠了条外来的船，送来京里本家的一只黑漆匣，一条家的川船接了，篷子都没卸就往中村撑。"
+
+[[tracks.chapters.choices]]
+key = "insist"
+text = "先不拿纸条，只凭封条上的字要他让开"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "你没去摸袖子，只把漆匣转过来，让使者看封条上那行发抖的字。你说老关白封的是“本人开启”，换了谁的手都不算数。川船上的少年等不及使者回话，自己跳上栈桥，接过匣子就撕了封，读到一半把信折起，塞进怀里，耳根都红了。"
+effects = [{ kind = "affinity", person = "ichijo_kanesada", value = 3 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_direct" }]
+fail = { next = "reply_karo", effects = [{ kind = "affinity", person = "ichijo_kanesada", value = -2 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_via_karo" }], news = "下田的栈桥上，外来的船主跟家老的使者为一只漆匣说了半天，使者一句“会原样转呈”，匣子就上了川船。" }
+
+[[tracks.chapters.choices]]
+key = "show_note"
+text = "拿出老家司写的那纸来历"
+next = "reply"
+news = "下田的栈桥上，有个外来的船主拿出一张京里写的纸条，家老的使者看过便退开了，漆匣交到了一条家当主手上。"
+reply = "使者接过纸条，三行字看了两遍，看到“托了谁”那一行，又看末尾的花押，抬头看了你一眼。他认得这个花押。纸条还到你手里，他退开了。少年下了川船，先要过纸条去看：“是本家那位老家司的字。他还拄着杖么？”说完才接过漆匣，又问：“义父最后几天，咳得厉害吗？”"
+effects = [{ kind = "affinity", person = "ichijo_kanesada", value = 3 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_direct" }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "纸条也不拿了，把匣子交给使者"
+next = "reply_karo"
+reply = "使者道了谢，连匣子带油纸包一起收进川船的木箱。那张纸条还夹在油纸里，跟着去了中村。川船离岸时，篷底下的少年朝你这边看了很久，没有出声。"
+effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_via_karo" }]
+
+# 三甲、回到堺：信是当面交到的。当主的回信是他自己写的。
+[[tracks.chapters]]
+key = "reply"
+title = "少年当主的回信"
+text = "回到堺，老家司已经在码头上等着。中村那边托一条商船先你一步捎来了回信，他展开给你看：是当主自己的字，一笔一画带着京里先生教出来的拘谨，中间有个字写错了，涂成一个黑疙瘩，旁边重写。信里说，义父的信他读了三遍。最后一行问：义父可曾说过，土佐的潮水，他还记不记得。老家司把信按原来的折痕叠好，抬头问你：“匣子，是怎么交到当主手里的？”"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "回堺见老家司" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_late" }] }
+news = "堺的码头上，京里一条家的老家司收到土佐中村来的回信，站在栈桥边读了一遍又一遍，卸货的人从他身边绕着走。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：在栈桥上，当着使者交到了他手里"
+next = "done"
+news = "堺的码头上，京里一条家的老家司捧着土佐来的回信，贴在额头上哭了一场，旁边卸货的人都停了手。"
+reply = "你从河口的两色水说起，说到使者伸出的手，说到少年跳上栈桥的那一下。老家司一句也没插。听完，他把回信贴在额头上，半天没放下来，放下来的时候，纸边湿了一小块。他朝土佐的方向又鞠了一躬。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "ichijo_kanesada", value = 8 }, { kind = "reputation", faction = "ichijo", value = 2 }, { kind = "memory", memory = "mem-request_ichijo_fusamichi-reply", title = "河口的少年当主" }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_done" }, { kind = "letter", person = "ichijo_kanesada", text = "船主足下：河口一别，文匣已启。义父的信，兼定读了三遍，有几处至今不能尽解，意思却是明白的。那日家老的人伸手，足下没有把匣子递过去，兼定记得。日后若再过土佐，可在下田上岸，遣人到中村通报一声。另有一问，家里的人不好问：足下常年走海，土佐的潮水在海上看来，与京里人说的一样么？——一条兼定" }]
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "先问他：老关白可还记得土佐的潮水？"
+next = "done"
+reply = "老家司想了很久。“老爷是中村生的，小小年纪就过继进了京。”他说南边的船一进港，老爷总要打发人去码头问一声潮水，问回来也不说什么。他又把回信展开，看那个涂掉的字。“这一句我答不了。……我替老爷回一封，就写记得。”他说这话的时候，没有看你。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "ichijo_kanesada", value = 8 }, { kind = "reputation", faction = "ichijo", value = 2 }, { kind = "memory", memory = "mem-request_ichijo_fusamichi-reply", title = "河口的少年当主" }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_done" }, { kind = "letter", person = "ichijo_kanesada", text = "船主足下：本家的老家司来信，说义父记得土佐的潮水。兼定不知这话是真是假，也不打算再问。那日正赶上河口涨潮，我叫川船在下田多停了半刻，看海水一寸一寸漫进河里。在京里那些年，没人跟我说过潮水是这样来的。足下的船若再到下田，让人捎个话，兼定下河口来。——一条兼定" }]
+
+# 三乙、回到堺：匣子是家老经手的。回信是右笔代写，只有末尾一行是当主的字。
+[[tracks.chapters]]
+key = "reply_karo"
+title = "花押下面的一行"
+text = "回到堺，老家司已在码头上等着。中村那边托商船捎来了回信，他递给你看：整封是右笔的工楷，措辞周到，说本家的文匣已经收到，谢过京里多年的照拂，末尾是当主的名字与花押。只有花押底下多出一行小字，笔画歪斜，一看就不是右笔的手，有个字写错了，涂掉重写：义父可曾说过，土佐的潮水，他还记不记得。老家司用指甲点着那一行，问你：“匣子，是谁交到当主手里的？”"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "回堺见老家司" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_ichijo_fusamichi_late" }] }
+news = "堺的码头上，京里一条家的老家司拿着土佐中村来的回信，把花押底下歪歪扭扭的那一行看了好几遍。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：匣子在河口交给了家老的使者"
+next = "done"
+reply = "老家司只叹了一口气，把回信沿着原来的折痕折好。“封条还是好的吧？”你说是好的。他点点头，说那就好，过了一会儿，又说了一遍那就好。他把那行小字朝里折，揣进怀里，揣得很深。"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "ichijo_kanesada", value = 4 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_partial" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "只说信到了中村，略过家老那一段"
+next = "done"
+reply = "老家司没有追问。他把花押底下那行字又看了一遍，说老爷生前最怕的就是这件事，现在不知道也好。说完他跟你道了谢，谢得周周全全，像是在京里的殿上，然后拄着杖走了，背影比来时直了一点。"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "ichijo_kanesada", value = 4 }, { kind = "flag", flag = "c13_request_ichijo_fusamichi_partial" }]

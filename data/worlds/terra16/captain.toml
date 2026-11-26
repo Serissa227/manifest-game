@@ -1,0 +1,376 @@
+# B10b：TERRA16 §5.5，经典六 key 保留在前；参数均受引擎钩子上限约束。
+# 属性说明以各项实际挂的钩子为准；不带入经典身世问答。
+# U02：资质、本领两组的 start 由 1 改为 2——只用于不经养成直接出海的成年创建页（自由航海补建身世）：
+# 成年船长每项至少二档，自由点数与单项上限不变，避免出现一排 1；养成开局不用这个起点（见 upbringing/common.toml 的年龄基线）。
+
+[[groups]]
+key = "aptitude"
+name = "资质"
+range = [1, 10]
+start = 2
+free = 6
+creation_cap = 7
+
+[[groups]]
+key = "craft"
+name = "本领"
+range = [1, 10]
+start = 2
+free = 8
+creation_cap = 7
+
+[[groups]]
+key = "conduct"
+name = "品行"
+range = [0, 100]
+start = 50
+free = 0
+creation_cap = 100
+
+[[attributes]]
+key = "seamanship"
+name = "航海"
+group = "craft"
+desc = "旗舰的航速与手动操船的准头；与舰长取较高者。"
+hidden = false
+hooks = [{ hook = "flagship_speed", per_point = 100 }, { hook = "steering_precision", per_point = 10 }]
+
+[[attributes]]
+key = "commerce"
+name = "交易"
+group = "craft"
+desc = "买卖时交易税的折扣；与交易员取较高者。"
+hidden = false
+hooks = [{ hook = "tax_discount", per_point = 100 }]
+
+[[attributes]]
+key = "arms"
+name = "武艺"
+group = "craft"
+desc = "白刃战、接舷战与决斗的功夫；与水手长取较高者。"
+hidden = false
+hooks = [{ hook = "melee", per_point = 100 }, { hook = "duel", per_point = 100 }]
+
+[[attributes]]
+key = "stewardship"
+name = "管理"
+group = "craft"
+desc = "船员与工人的工资折扣；与会计取较高者。"
+hidden = false
+hooks = [{ hook = "wage_discount", per_point = 100 }]
+
+[[attributes]]
+key = "numeracy"
+name = "算学"
+group = "craft"
+desc = "行情窗口能同时追踪几条预测，高到一定程度才能手调参数。"
+hidden = false
+hooks = [{ hook = "market_window", per_point = 1 }]
+
+[[attributes]]
+key = "eloquence"
+name = "口才"
+group = "craft"
+desc = "议价时多争一点折扣，招募航海士更省钱，谈判也更有分量。"
+hidden = false
+hooks = [{ hook = "bargain_discount", per_point = 30 }, { hook = "recruit_discount", per_point = 200 }, { hook = "negotiate", per_point = 100 }]
+
+[[attributes]]
+key = "constitution"
+name = "体魄"
+group = "aptitude"
+desc = "疲劳的上限，以及抵挡疾病与坏血病的底子。"
+hidden = false
+hooks = [{ hook = "fatigue", per_point = 1 }, { hook = "disease_guard", per_point = 100 }]
+
+[[attributes]]
+key = "might"
+name = "膂力"
+group = "aptitude"
+desc = "白刃战与接舷战里劈出去的分量。"
+hidden = false
+hooks = [{ hook = "melee", per_point = 100 }]
+
+[[attributes]]
+key = "agility"
+name = "敏捷"
+group = "aptitude"
+desc = "决斗里抢先手、躲得开，手动操船也更利落。"
+hidden = false
+hooks = [{ hook = "duel", per_point = 100 }, { hook = "steering_precision", per_point = 10 }]
+
+[[attributes]]
+key = "intellect"
+name = "才智"
+group = "aptitude"
+desc = "读书与上课时的经验倍率，学得快慢全看它。"
+hidden = false
+hooks = [{ hook = "study_xp", per_point = 100 }]
+
+[[attributes]]
+key = "perception"
+name = "感知"
+group = "aptitude"
+desc = "揭开迷雾的半径、找到发现物的本事，还能识破假消息。"
+hidden = false
+hooks = [{ hook = "fog_reveal", per_point = 1 }, { hook = "find", per_point = 100 }, { hook = "intel_detection", per_point = 100 }]
+
+[[attributes]]
+key = "resolve"
+name = "意志"
+group = "aptitude"
+desc = "风暴与怪异事件里的检定，也撑着船员的士气。"
+hidden = false
+hooks = [{ hook = "storm_check", per_point = 100 }, { hook = "creature_check", per_point = 100 }, { hook = "morale", per_point = 1 }]
+
+[[attributes]]
+key = "charm"
+name = "魅力"
+group = "aptitude"
+desc = "人物对你的好感涨得更快，招募航海士也更便宜。"
+hidden = false
+hooks = [{ hook = "affinity_gain", per_point = 100 }, { hook = "recruit_discount", per_point = 100 }]
+
+[[attributes]]
+key = "fortune"
+name = "运气"
+group = "aptitude"
+desc = "检定里碰运气的那一部分偏向你多少；生日定下，极少改变。"
+hidden = false
+hooks = [{ hook = "check_random", per_point = 1 }]
+
+[[attributes]]
+key = "astronomy"
+name = "观星"
+group = "craft"
+desc = "每天定位得多准，海图能揭开多少未知；与领航员取较高者。"
+hidden = false
+hooks = [{ hook = "position_fix", per_point = 10 }, { hook = "chart_reveal", per_point = 1 }]
+
+[[attributes]]
+key = "gunnery"
+name = "炮术"
+group = "craft"
+desc = "海战里的炮击威力，练兵也更有效；与炮术长取较高者。"
+hidden = false
+hooks = [{ hook = "naval_combat", per_point = 500 }, { hook = "train", per_point = 100 }]
+
+[[attributes]]
+key = "command"
+name = "统率"
+group = "craft"
+desc = "能带多少艘船、多船海战配合得多好，船员士气也看它。"
+hidden = false
+hooks = [{ hook = "fleet_coordination", per_point = 100 }, { hook = "fleet_limit", per_point = 1 }, { hook = "morale", per_point = 1 }]
+
+[[attributes]]
+key = "etiquette"
+name = "礼仪"
+group = "craft"
+desc = "求见贵人的门槛；礼数周到，宫廷与外交的门才好进。"
+hidden = false
+hooks = [{ hook = "audience", per_point = 100 }]
+
+[[attributes]]
+key = "intrigue"
+name = "机变"
+group = "craft"
+desc = "情报更可靠、更不易泄密，违禁货也更难被查获。"
+hidden = false
+hooks = [{ hook = "intel_reliability", per_point = 100 }, { hook = "intel_secrecy", per_point = 100 }, { hook = "smuggling", per_point = 100 }]
+
+[[attributes]]
+key = "medicine"
+name = "医术"
+group = "craft"
+desc = "医治疾病、伤员与坏血病的本事；与船医取较高者。"
+hidden = false
+hooks = [{ hook = "healing", per_point = 100 }]
+
+[[attributes]]
+key = "learning"
+name = "学识"
+group = "craft"
+desc = "鉴定古物、宝石与奇物的真伪，辨出书和海图值多少。"
+hidden = false
+hooks = [{ hook = "appraisal", per_point = 100 }]
+
+[[attributes]]
+key = "arcana"
+name = "秘术"
+group = "craft"
+desc = "施法时的力道，也决定怪异之事对你的牵连有多深。"
+hidden = true
+hooks = [{ hook = "spell_power", per_point = 100 }]
+
+[[attributes]]
+key = "morality"
+name = "道德"
+group = "conduct"
+desc = "善与恶的倾向，私掠与劫掠的声望、部分人物的态度都看它。"
+hidden = false
+hooks = [{ hook = "morality", per_point = 1 }]
+
+[[attributes]]
+key = "honor"
+name = "信义"
+group = "conduct"
+desc = "守约还是背约的名声；谈判时对方信不信你，也看它。"
+hidden = false
+hooks = [{ hook = "honor", per_point = 1 }]
+
+[[attributes]]
+key = "piety"
+name = "虔敬"
+group = "conduct"
+desc = "与教会、清真寺、寺社的亲疏，也左右宗教裁判所的疑心。"
+hidden = false
+hooks = [{ hook = "religion", per_point = 1 }]
+
+[[attributes]]
+key = "sensibility"
+name = "感性"
+group = "conduct"
+desc = "对诗、音乐与美术的鉴赏；藏品、送礼和诗会都看它。"
+hidden = false
+hooks = [{ hook = "gift_appreciation", per_point = 1 }]
+
+[[ratings]]
+key = "naval"
+name = "战斗"
+weights = { gunnery = 30, command = 30, seamanship = 20, arms = 20 }
+
+[[ratings]]
+key = "mercantile"
+name = "贸易"
+weights = { commerce = 30, numeracy = 30, stewardship = 20, eloquence = 20 }
+
+[[ratings]]
+key = "scholarship"
+name = "学识"
+weights = { learning = 40, intellect = 20, astronomy = 20, medicine = 20 }
+
+[[ratings]]
+key = "social_rating"
+name = "社交"
+weights = { etiquette = 30, eloquence = 30, charm = 20, sensibility = 20 }
+
+[[ratings]]
+key = "arcane_rating"
+name = "秘术评价"
+weights = { arcana = 40, resolve = 20, learning = 20, perception = 20 }
+
+[[abilities]]
+key = "astronomy"
+name = "观星"
+
+[[abilities]]
+key = "gunnery"
+name = "炮术"
+
+[[abilities]]
+key = "medicine"
+name = "医术"
+
+[[abilities]]
+key = "eloquence"
+name = "口才"
+
+[[roles]]
+key = "captain"
+name = "舰长"
+ability = "navigation"
+scope = "fleet"
+legacy = "captain"
+desc = "掌舵定航，旗舰跑得快不快先看舰长。"
+hooks = [{ hook = "flagship_speed", per_point = 10 }]
+
+[[roles]]
+key = "navigator"
+name = "领航员"
+ability = "astronomy"
+scope = "fleet"
+desc = "观星定位：远远认出港口与地标；近岸、过礁时少撞少擦。"
+# H01：position_fix 与 steering_precision 按观星原数计（0–100），上限见 rules.toml [voyage_posts]
+hooks = [{ hook = "position_fix", per_point = 1 }, { hook = "steering_precision", per_point = 1 }]
+
+[[roles]]
+key = "gunner"
+name = "炮术长"
+ability = "gunnery"
+scope = "fleet"
+desc = "管炮与火药，海战里炮打得准不准看他。"
+hooks = [{ hook = "naval_combat", per_point = 50 }]
+
+[[roles]]
+key = "boatswain"
+name = "水手长"
+ability = "combat"
+scope = "fleet"
+desc = "带水手干活：风暴里收帆护船、少丢货；接舷时冲在前头。"
+# H01：战斗 60 → 风暴损伤 −18%、接舷船员项 +18%（基点：60 × 30 = 1800）
+hooks = [{ hook = "melee", per_point = 30 }, { hook = "storm_check", per_point = 30 }]
+
+[[roles]]
+key = "trader"
+name = "交易员"
+ability = "trade"
+scope = "owner"
+legacy = "trader"
+desc = "在港里讲价，交易税与价钱都能省一点。"
+hooks = [{ hook = "tax_discount", per_point = 10 }, { hook = "bargain_discount", per_point = 5 }]
+
+[[roles]]
+key = "accountant"
+name = "会计"
+ability = "management"
+scope = "owner"
+legacy = "accountant"
+desc = "管账也管舱：工资、粮水都精打细算，远航少吃一点存粮。"
+# H01：管理 60 → 粮水日耗 −12%（上限 30%）
+hooks = [{ hook = "wage_discount", per_point = 10 }, { hook = "supply_discount", per_point = 20 }]
+
+[[roles]]
+key = "surgeon"
+name = "船医"
+ability = "medicine"
+scope = "fleet"
+desc = "照看病号：船上少闹病，病了也少死人。"
+# H01：医术 60 → 发病 −30%、病死 −30%（上限 70% / 50%）
+hooks = [{ hook = "healing", per_point = 50 }, { hook = "disease_guard", per_point = 50 }]
+
+[[roles]]
+key = "interpreter"
+name = "通事"
+ability = "eloquence"
+scope = "owner"
+desc = "翻译与交涉：谈判、求见贵人都更顺。"
+hooks = [{ hook = "negotiate", per_point = 10 }, { hook = "audience", per_point = 10 }]
+
+[[roles]]
+key = "caravan_leader"
+name = "商队头领"
+ability = "navigation"
+scope = "caravan"
+legacy = "caravan_leader"
+desc = "带陆上商队，走得快、少遭劫。"
+hooks = [{ hook = "caravan_speed", per_point = 10 }]
+
+[[roles]]
+key = "industry_manager"
+name = "产业管理人"
+ability = "management"
+scope = "industry"
+legacy = "industry_manager"
+desc = "管工坊与产业，出货更多。"
+hooks = [{ hook = "industry_efficiency", per_point = 20 }]
+
+# H01 新增：瞭望长。只能追加在末尾（任职按岗位的顺序编号存档）。
+# 航海 60 → 看见别的舰队远 2 格（基点 1200，每 5 个百分点 1 格，最多 +4 格）；揭开迷雾的半径 +2。
+[[roles]]
+key = "lookout"
+name = "瞭望长"
+ability = "navigation"
+scope = "fleet"
+desc = "桅顶守望：更早看见帆影与天边的动静，雾里也看得远些。"
+hooks = [{ hook = "intel_detection", per_point = 20 }, { hook = "fog_reveal", per_point = 1, max = 2 }]

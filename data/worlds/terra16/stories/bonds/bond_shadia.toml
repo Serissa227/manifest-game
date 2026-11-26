@@ -1,0 +1,348 @@
+# 再来一趟（bond_shadia）——羁绊线，编辑标签 GL（莎迪娅 romance=any，主角纳吉玛为女）。
+# 人物：莎迪娅（shadia，1540-08-21 生），马斯喀特的三角帆赛船手，赢了不走，非要把输家喊回来再比；
+#       主角：纳吉玛（najma，1540-08-24 生），大领航家伊本·马吉德的曾外孙女，领航世家的船上学堂学生；沉静，执拗于精确，用诗记航路。
+#       年龄：C1（1554 春）两人 13；A1（1556 春）两人 15；S（1556-12）两人 16；重逢（1562）两人 21—22。
+# 情谊尺度 D：莎迪娅住马斯喀特，只在船上学堂靠港时与纳吉玛相见，交谈、赠礼加不了情谊，
+#       每章选项自带 +15/+15/+15/+17/+17/+19，全部回应可到 98，漏一章仍能到 A。
+# 结构：bond_shadia（request，academy）C1 → C2 → B1 → B2 → A1 → A2 → S；S 的选项与 default 都开 reunion_shadia（main，1562）。
+# 羁绊阶梯：C2 keep_the_rope 给 C，B1 tell_her 补签 C；B2 stay_ashore 给 B，A1 swear_her_secret 补签 B；
+#       A2 take_palm / hold_her_hand 给 A + 缝帆掌皮（sailmakers_palm）+ 回忆。每章都有不带 bond 的选项。
+#       效果顺序：affinity 写在 bond 前面（内核按顺序在试算副本上执行，bond 检查的是加过情谊以后的值）。
+# 心动：A1 come_till_it_sets +6 → A2 hold_her_hand +6（要 ≥ 6）→ S heart +12（要 ≥ 12）→ 重逢 love 要 ≥ 24。
+#       决定表写 S +10，算下来只到 22、永远够不着 24，这里按简报改为 +12。学院期只到 heart 与 crush，S 不写 dating。
+# 依据（史实）：1552 年皮里·雷斯率奥斯曼舰队攻下并劫掠马斯喀特（莎迪娅家的房子因此烧掉；当地人把奥斯曼人叫“鲁姆人”）；
+#       1554 年 8 月塞伊迪·阿里·雷斯的奥斯曼舰队在马斯喀特外海与葡萄牙舰队交战后被风暴打散——纳吉玛家的船在阿曼湾救起一条奥斯曼小艇即在此时，
+#       所以 B1（1554 秋冬）说“今年八月”，不照简报写“前年夏天”。
+#       阿拉伯领航人以昴宿的晨出、昏没定航海的节令：春末傍晚昴宿在西边沉入日光，此后西南季风起，印度西岸诸港“关海”；初夏昴宿又在黎明前从东方升起。
+#       领航人量星高用“指”（isba‘）。肉眼看昴宿，有人数六颗，有人数七颗。
+# 原创：莎迪娅一家、补了三块的帆、断索、烧焦的门框与柠檬树、没升起来的红旗、港外的礁与那个炭笔小圈、掌皮、只写了港口的赛约。
+# 秘密：莎迪娅独自出海时撞过港外一片礁，一直没敢写进父亲的航簿；B2 露出端倪，A2 她把礁画在纳吉玛的图上。永远不进见闻（本文件的章都没有 stage，不写 news）。
+# 老人星归 bond_kabir，本文件 A1 看昴宿西沉。卡比尔的事归 pair_kabir_shadia，重逢只提一封古吉拉特领航员的竞航书；
+#       variants with_kabir 读 c7_pair_kabir_shadia_together，只换这一句，不展开两人的事。
+# 缺省走向：每章 default 照走下一章（缺省时发生的事写在各 default 上方的注释里）；S 不选 → 开重逢并记 c7_bond_shadia_parted；
+#       重逢错过 → 她托一条阿曼船捎来一张航图与一封信（来信），记 _missed。
+# 共享旗标：S 的 promise 与 heart 设 c7_pair_kabir_shadia_taken（配角线 pair_kabir_shadia 据此改走“并肩的朋友”）；重逢读 c7_pair_kabir_shadia_together。
+#       本文件自有：c7_bond_shadia_promise / _romance / _own / _parted / _landing_friend / _landing_rival / _landing_love / _missed。
+# 口头禅：莎迪娅的（cast 里的 catchphrase）只在 C1 完整说一次；纳吉玛量星高的那句只在 A2 完整说一次；别处（S 的“敢不敢？”、重逢来信）只作呼应。
+# 地点（2026-11-01 close-places）：学院章正文都写学堂的船靠马斯喀特，养成期纳吉玛只在扎比德，七章都去掉 at（不限地点），正文不动；
+#   重逢 1562 仍在马斯喀特。配角线 pair_kabir_shadia 学院期的两章 witness 仍挂 muscat，只作见闻。
+
+[[tracks]]
+key = "bond_shadia"
+name = "莎迪娅：再来一趟"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["shadia"]
+
+# C1：1554 春，马斯喀特港湾。港里的孩子拉学堂的学生赛三角帆小船；补了三块的帆。
+[[tracks.chapters]]
+key = "c1"
+title = "再来一趟"
+text = "船上学堂在马斯喀特停了三天。第二天下午，港湾里的孩子划着小船来挑我们：一人一条三角帆小船，从停船的石阶跑到港口那块黑礁，绕过来再跑回去。学堂的人一个接一个上去，一个接一个输回来，赢他们的都是同一个晒得黝黑的女孩，岸上的孩子扯着嗓子喊她莎迪娅。轮到我，我先看她的帆。帆上补了三块，一块靛蓝，一块土黄，一块是褪了色的红头巾，风一吹，三块补丁鼓得各不一样。绕黑礁的时候她抢在我里头掉了头，帆一甩就吃满了风，我还贴着礁石找角度。到了石阶，她赢我半个船身。赢了也不靠岸，她把船横过来，咧着嘴冲我笑：“领航家的学生，就这点本事？”她拿桨拍了拍我的船头。“再来一趟，敢不敢？”"
+window = [[1554, 1, 1], [1554, 4, 30]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_shipboard_zabid" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+# 缺省：那天船上学堂的人都输给了她，她一个人在港湾里来回跑了三趟。
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "race_again"
+text = "掉转船头，跟她再跑一趟。"
+requires = []
+reply = "第二趟我输了一整个船身，比头一趟还多。莎迪娅笑得往后一仰，差点翻进水里，一把抓住船舷才坐稳：“越比越远！你是往回划的吧？”上了岸，她从腰上的布袋里抓出一把椰枣，分了我一半，自己嚼着说：“明天还来。你们的船走以前，我天天在这儿。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "shadia", value = 15 }]
+
+[[tracks.chapters.choices]]
+key = "ask_the_turn"
+text = "先问她：刚才绕黑礁那一下，是怎么抢到风的？"
+requires = []
+reply = "她愣住了，桨停在半空。过了一会儿，她把船拖上沙滩，蹲下来拿手指在湿沙上画：礁石，风，她的船，船头先往下风让一点。“不能硬掰，得让它自己转过去。”画完她拍掉手上的沙，斜着眼看我：“你是头一个问我怎么赢的输家。别的输家只会骂礁石。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "shadia", value = 15 }, { kind = "skill", skill = "rigging", value = 8 }]
+
+# C2：1554 夏，马斯喀特港外。她让我掌舵，帆索却不替我拉；一根磨破了的帆索。
+[[tracks.chapters]]
+key = "c2"
+title = "她的帆，你的手"
+text = "学堂的船再靠马斯喀特，莎迪娅已经蹲在码头上等着了。她把那条补了三块的小船让给我掌舵，自己往船头一坐：“帆索你自己拉，我只管看。”出了港湾，风一下子硬起来。我把帆角收得太紧，船身猛地一歪，船舷吃进一口水。“松！”她在船头喊。我一松就松过了头，帆哗啦啦地抖，船停在浪里打转。她抱着膝盖，一动不动，就那么看着。我收一点，再收一点，收到帆不抖了，船也正了，手里那根索忽然变得很轻。她这才笑：“就是这儿。记住你手上是什么分量。”上了岸，她从船底摸出一截磨破的帆索扔给我，断口毛毛的。“我头一回也收得这么紧，紧到索断了，是我爹划船把我拖回来的。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那根断索莎迪娅扔进了海里，说留着不吉利。
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "keep_the_rope"
+text = "收下这截断索，跟她说下回靠港还要上她的船。"
+requires = [{ kind = "affinity", person = "shadia", ge = 5 }]
+hint = "她还当你是学堂里来看热闹的。断索她转手就会扔进海里，她的船你也上不去第二回。"
+reply = "莎迪娅挑起眉毛：“下回你拉帆，我掌舵。看你会不会把我扔进海里。”我把那截断索在腰上绕了两圈，打了个结。她瞧了一眼，说结打得倒好看，可惜不顶用，伸手扯开，替我重打了一个水手结，又使劲拽了两下：“这样才掉不了。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "shadia", value = 15 }, { kind = "bond", person = "shadia", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "thank_and_go"
+text = "谢过她，回船上把刚才那个帆角记进本子。"
+requires = []
+reply = "我在本子上记了一页：风从哪边来，帆角收到哪里，手上是多重的分量。为了好记，我把它编成了两行押韵的句子。莎迪娅扒着我们的船舷探进头来，磕磕绊绊地念了一遍：“你们领航家的人，连输了都要写诗？”我说这不是诗，是记性。她把本子推回来：“念出来像。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "shadia", value = 15 }]
+
+# B1：1554 秋冬，鱼市后头的沙地。她家原来的房子，只剩一截烧焦的门框。
+[[tracks.chapters]]
+key = "b1"
+title = "烧过的门框"
+text = "这一回莎迪娅没提赛船。她领我穿过鱼市后头的巷子，走到一片沙地上。沙子里立着一截门框，黑的，顶上烧得只剩一个尖。“我家。”她说，“门原来在这儿，院子里有棵柠檬树。”两年前鲁姆人的船进了港，炮先打在码头上，她家是头一批烧起来的。她跟着母亲在港口的礁石后头蹲了一夜，看着火从这条巷子烧到那条巷子。她伸手掰下门框上一块焦木，在指头里捻成了粉。“鲁姆人。”她把粉吹掉，“我看见他们的帆就想吐。”我站在门框旁边，想起今年八月，我家的船在阿曼湾救起过一条鲁姆人的小艇。艇上的人渴得说不出话，我端水给其中一个，他的手抖得厉害，水洒了一半。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那截门框莎迪娅后来拔了，扔进海里，说留着看着心烦。
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "tell_her"
+text = "告诉她，我家的船救过鲁姆人，然后等她骂完。"
+requires = [{ kind = "affinity", person = "shadia", ge = 5 }]
+hint = "她还没信你到能听这种话的地步。你一开口，她只会转身就走。"
+reply = "她骂了很久。骂鲁姆人，骂我家的船，骂那天阿曼湾怎么不起一阵风把小艇掀翻，骂到嗓子哑了，一脚踢在门框上，又疼得抱着脚跳。然后她蹲下来，背对着我问：“那条艇上的人，后来呢？”我说送到了霍尔木兹，放他们上了岸。她盯着那截门框看了半天：“那他们比我们运气好。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "shadia", value = 15 }, { kind = "bond", person = "shadia", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "scrape_the_char"
+text = "什么也不说，帮她把门框上的焦木刮干净。"
+requires = []
+reply = "我跟鱼市的摊主借了一把剖鱼刀，她拣了一片蚌壳，一人一边刮。焦木一层层往下掉，黑灰落了我们一身。刮到底下，露出来的木头是浅黄的，一圈一圈的纹路还在。莎迪娅把手掌贴上去，贴了很久。“它还活着。”说完她低下头去刮另一边，刮得比刚才更用力。"
+next = "b2"
+effects = [{ kind = "affinity", person = "shadia", value = 15 }]
+
+# B2：1555 年，马斯喀特的大赛。风硬浪高，她第一个收帆不比；桅杆下一面没升起来的红旗。
+[[tracks.chapters]]
+key = "b2"
+title = "没开的赛"
+text = "这一年马斯喀特的人办大赛，码头那根旗杆底下备了一面红旗，旗一升就开赛。那天风太硬，浪一层一层翻过港外的礁石，白沫溅得老高。别的船都在拉帆，莎迪娅第一个把帆收了，把船往沙滩上拖：“我不比。”几个小子在旁边起哄：“赢了一年的人，今天怕输了？”“鲁姆人来的那晚她也是躲着的！”她的脸一下子涨红了，嘴张了张，一个字也没回，低头去解船上的索。我站在她旁边，看见她解索的手停了一下，眼睛越过那些人，盯着港外东边一片翻白的浪。那里什么都看不见，只有浪。她看那片浪的样子，像在看一个欠了她债不还的人。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那天的赛照常开了，翻了两条船；莎迪娅在岸上一个人坐到天黑。
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "stay_ashore"
+text = "留在岸上帮她收船，跟起哄的人说：我也不比。"
+requires = [{ kind = "affinity", person = "shadia", ge = 33 }, { kind = "bond", person = "shadia", level = "C" }]
+hint = "她不想让人看出她为什么不比。你这时候站过去，她只会更难堪。"
+reply = "那几个小子笑得更响了，说领航家的人也是胆小鬼。我没理他们，帮莎迪娅把帆卷好，把船拖到潮水够不着的地方。那天出港的船在东边的礁上翻了两条，人都捞了回来，有一个断了胳膊。天黑以后莎迪娅来找我，往我怀里塞了一卷红布：“这面旗，今天没升起来，归你了。”我问她从哪儿拿的。“偷的。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "shadia", value = 17 }, { kind = "bond", person = "shadia", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "ask_the_reef"
+text = "悄悄问她：你看的是港外哪一片礁？"
+requires = []
+reply = "她猛地转过头来，像被人踩了脚。她看了我很久，久到起哄的人都散去拉帆了，才压低声音说：“你看出来了。”我等她往下说。她把解下来的索一圈一圈盘好，盘得整整齐齐，放进船底。“以后告诉你。现在别问。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "shadia", value = 17 }]
+
+# A1：1556 年春末，马斯喀特的沙滩。傍晚西边的昴宿一天比一天低，快要沉进日光里。
+[[tracks.chapters]]
+key = "a1"
+title = "昴宿西沉"
+text = "这一场她赢，我只输了一个船头。我们把两条船拖上沙滩，背靠着船舷坐下。太阳刚落，西边天上还亮着，昴宿挂在那片亮光里，小小的一团，比十天前又低了一截。我在本子上记它离海面的高度，莎迪娅凑过来看：“又记？”“再过几晚，它就沉进日光里，看不见了。”她“嗯”了一声，把手垫在脑后躺下去：“我奶奶说，昴宿一沉，海就要关门。”往后西南风一起，印度那边的港口都封了，船只能等。她没问下一场什么时候比，这是头一回。过了好一会儿，她看着那团星说：“它沉下去以前，你还会来吗？”"
+window = [[1556, 4, 1], [1556, 5, 31]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 4, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那一年昴宿沉下去的那一晚，莎迪娅一个人在沙滩上看。
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "come_till_it_sets"
+text = "说会。往后每个傍晚都来陪她看，看到它沉下去那一晚。"
+requires = [{ kind = "affinity", person = "shadia", ge = 15 }, { kind = "romance_open", romance_open = "shadia" }]
+hint = "她只是随口一问。你们还没熟到能许下每个傍晚的约。"
+reply = "学堂的船那几天恰好不走。我每个傍晚都去，她每个傍晚都在，靠着同一条船。昴宿一晚比一晚低，到最后一晚，只剩贴着海面的一点光，闪了两下，就没了。她没说话，我也没说。她从布袋里摸出一颗椰枣，放进我手心，手指在我掌心停了一下，才拿开。"
+next = "a2"
+effects = [{ kind = "affinity", person = "shadia", value = 17 }, { kind = "heart", person = "shadia", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "swear_her_secret"
+text = "说会。再告诉她：港外那片礁的事，我等她自己开口。"
+requires = [{ kind = "affinity", person = "shadia", ge = 33 }, { kind = "bond", person = "shadia", level = "C" }]
+hint = "那片礁是她碰都不让人碰的事。你们还没到能提起它的那一步。"
+reply = "她侧过头看我，天暗下来了，她的眼睛还亮着。“等它下回升起来，”她说，“我就告诉你。”我说昴宿再从东边升起来，得等到夏天。她把脸转回去，对着天：“那就等到夏天。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "shadia", value = 17 }, { kind = "bond", person = "shadia", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "count_stars"
+text = "跟她数一数：昴宿到底有几颗星？"
+requires = []
+reply = "她数出来六颗，我数出来七颗。她说多出来那颗是我眼花，我说我从小数的就是这个。两个人凑着头一颗一颗地指，指到天黑透了，星都看不清了，还没吵出个结果。她往沙子上一倒：“领航家的人眼睛太好，没意思。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "shadia", value = 17 }]
+
+# A2：1556 年夏秋，马斯喀特码头。她送我缝帆用的掌皮，又在我的航图上画了那片礁。
+[[tracks.chapters]]
+key = "a2"
+title = "缝帆掌皮"
+text = "夏天学堂的船再进马斯喀特时，昴宿已经在天亮前从东边升起来了。莎迪娅在码头上等我，一见面就往我手里塞了一样东西：她缝帆用的掌皮。皮带磨得发亮，掌心那块铁片上全是针顶出来的小坑，密密麻麻。“你的帆以后破了，自己补。”说完她抽走我夹在胳膊底下的航图，摊在一只倒扣的鱼筐上，拿炭条在港口东边画了个小圈：“就这儿，差不多。”“差一指，就差一百里。”我说。她瞪我一眼，炭条往左挪了一点，重画一个，压得纸都起了毛。“这回不差了。那年我一个人出海，船底就是在这儿撞开的。我爹的航簿上没有它。”她把炭条往筐上一丢，“你的图上，有了。”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+# 缺省：那只掌皮莎迪娅自己留着，那片礁还是没写进任何一本航簿。
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_palm"
+text = "收下掌皮，在那个小圈旁边写上她的名字。"
+requires = [{ kind = "affinity", person = "shadia", ge = 61 }, { kind = "bond", person = "shadia", level = "B" }]
+hint = "这只掌皮跟了她好些年。这份东西太重，你们还没熟到能接过来。"
+reply = "我拿笔在小圈旁边写了“莎迪娅”，字写得很小，挤在圈和海岸线中间。她弯着腰看了半天：“写我的名字干什么？又不是我的礁。”我说是你找着的。“那也是我撞的！”她说完自己先笑，笑得直不起腰，拿手背去抹眼角，抹了一脸炭灰。"
+next = "s"
+effects = [{ kind = "affinity", person = "shadia", value = 19 }, { kind = "bond", person = "shadia", level = "A" }, { kind = "item", item = "sailmakers_palm", qty = 1 }, { kind = "memory", memory = "mem-bond_shadia-a2", title = "缝帆掌皮" }]
+
+[[tracks.chapters.choices]]
+key = "hold_her_hand"
+text = "收下掌皮，握住她画圈的那只手：这片礁，往后我替你看着。"
+requires = [{ kind = "affinity", person = "shadia", ge = 61 }, { kind = "bond", person = "shadia", level = "B" }, { kind = "heart", person = "shadia", ge = 6 }, { kind = "romance_open", romance_open = "shadia" }]
+hint = "你的手伸到一半，又停在那张图上。她的手你还没握过，这句话说出来，太早了。"
+reply = "她的手在我手里停了很久，没有抽回去。掌心硬硬的，一层叠一层，全是缝帆磨出来的茧，指头上还沾着炭。她低头看着两只叠在一起的手，说：“你的手太软了。”过了一会儿又说：“得多缝几块帆。”说完才把手抽走，转身去卷那张图，卷得很慢。"
+next = "s"
+effects = [{ kind = "affinity", person = "shadia", value = 19 }, { kind = "bond", person = "shadia", level = "A" }, { kind = "item", item = "sailmakers_palm", qty = 1 }, { kind = "memory", memory = "mem-bond_shadia-a2", title = "缝帆掌皮" }, { kind = "heart", person = "shadia", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "tell_father"
+text = "劝她把这片礁也写进她父亲的航簿。"
+requires = []
+reply = "她把炭条捡起来，在指头间转了一圈，没看我：“等我敢了。”她从我手里拿回那只掌皮，套在自己手上，拿铁片那一面敲了敲我的航图。“先把你自己的帆补好再说。补好了，再来跟我要它。”"
+next = "s"
+effects = [{ kind = "affinity", person = "shadia", value = 19 }]
+
+# S：1556 年 12 月，马斯喀特码头。我随东北季风出海，她开春跑父亲的船；一张只写了港口的赛约。
+[[tracks.chapters]]
+key = "s"
+title = "日子空着的赛"
+text = "十二月，东北风稳了，学堂的船要往南去，我跟着走。莎迪娅开春也要上她父亲的船，跑霍尔木兹。最后一个傍晚，她在码头上摊开一张纸，拿炭条写赛约，一笔一画写得很用力：比的人，莎迪娅、纳吉玛；地方，马斯喀特港，绕黑礁回来。日子那一栏，她没写。“你回来的那天，”她说，“就是开赛的那天。”炭条在纸上敲了两下，“可别为了赶回来跑坏天气。翻在半路上的人不算输，算没来。”她把赛约折成四折，塞进我手里，又攥着我的手腕不放，扬起下巴补了一句：“敢不敢？”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+cast = ["shadia"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：开春我出海那天，莎迪娅在港湾里一个人跑了一趟，回来把帆收了。
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_shadia" }, { kind = "flag", flag = "c7_bond_shadia_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "跟她约好：回来那天，先报平安，再开赛。"
+requires = [{ kind = "bond", person = "shadia", level = "A" }]
+hint = "赛约捏在手里，“先报平安”这句却说不出口：你们的交情还没绕过一整圈黑礁；要么，一辈子的约，你已经跟另一个人赛定了。"
+reply = "“先报平安？”莎迪娅哼了一声，“那你得活着回来才报得了。”我说当然活着回来，领航家的人不翻在半路上。她把赛约从我手里抽回去，摊在膝盖上，借着码头上的灯，在日子那一栏旁边画了个小圈。圈画得很圆，大小、位置，都跟她画在我航图上的那个一模一样。“这个圈，”她拿炭条点着它，“就是你回来那天。哪天你的船进了港，先上岸来找我，当着我的面说一句你没事。然后——”她把纸重新折好，这回折得整整齐齐，塞进我胸前的衣襟，隔着布按了按，“然后你就等着输吧。”她站起来，拍掉身上的沙，往岸上走了几步，又回过头：“我说真的。先报平安。”"
+next = "done"
+effects = [{ kind = "bond", person = "shadia", level = "S" }, { kind = "relation", person = "shadia", relation = "friends" }, { kind = "memory", memory = "mem-bond_shadia-s", title = "日子空着的赛" }, { kind = "flag", flag = "c7_bond_shadia_promise" }, { kind = "flag", flag = "c7_pair_kabir_shadia_taken" }, { kind = "start_track", track = "reunion_shadia" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "在日子那一栏写上“成年以后”，说那天除了比赛，还有一句话。"
+requires = [{ kind = "bond", person = "shadia", level = "A" }, { kind = "heart", person = "shadia", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "shadia", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "shadia" }]
+hint = "炭条到了你手上，你却写不下去：要么你们还没熟到能写这样的日子，要么同样的话，你已经许给另一个人了。"
+reply = "我接过炭条，在日子那一栏写了四个字。莎迪娅凑过来念：“成年以后。”念完她就不出声了，盯着那四个字看了很久。码头的灯照在她脸上，她的脸慢慢红上来，红得跟帆上那块旧头巾一个颜色。“什么话？”她问。我说到那天再说。她低头去折赛约，折了两回都没对齐，干脆揉成一团攥在手心，然后伸过手来，握住我的手，那团纸就夹在我们两个的掌心中间。“那句话，”她说，“我先替你留着一半。”她就那样握着，一直握到学堂的船上有人喊我的名字，才松开手，把那团纸展开，顺着日子那一栏一撕两半，一半揣进自己怀里，一半塞回给我：“另一半，你自己收好。丢了，就算你认输。”"
+next = "done"
+effects = [{ kind = "bond", person = "shadia", level = "S" }, { kind = "heart", person = "shadia", value = 12 }, { kind = "relation", person = "shadia", relation = "crush" }, { kind = "flag", flag = "c7_bond_shadia_romance" }, { kind = "memory", memory = "mem-bond_shadia-s", title = "日子空着的赛" }, { kind = "flag", flag = "c7_pair_kabir_shadia_taken" }, { kind = "start_track", track = "reunion_shadia" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "跟她约好：往后十年，每年回马斯喀特比一场。"
+requires = []
+reply = "“十年？”莎迪娅瞪大了眼睛，掰着指头算，“十年以后我们都二十六了，老了，划不动了。”我说那就比到划不动为止。“那你得输十场。”“说不定是你输。”她一把抢过炭条，在日子那一栏写了个“十”，后面画了十道短杠：“比一场划掉一道，谁赢得多谁算赢。”我问划掉的那道记在谁头上。她想了想，说记赢家的，又说不对，记输家的，省得输家赖账，说着说着自己也糊涂了，笑着一推，把我推下了沙坡。我滚了一身沙，她叉着腰站在坡上喊：“第一场，你已经输了！”"
+next = "done"
+effects = [{ kind = "affinity", person = "shadia", value = 2 }, { kind = "relation", person = "shadia", relation = "rivals" }, { kind = "flag", flag = "c7_bond_shadia_own" }, { kind = "start_track", track = "reunion_shadia" }]
+
+[[tracks]]
+key = "reunion_shadia"
+name = "莎迪娅：旧对手的码头"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["shadia"]
+
+# 重逢：1562 年，马斯喀特港湾。她教一群孩子赛船，一条新漆的竞渡船；那片礁已经画进她父亲的航簿。
+[[tracks.chapters]]
+key = "reunion"
+title = "旧对手的码头"
+text = "1562 年，我的船在马斯喀特下了锚。港湾里一群孩子在赛三角帆小船，乱成一锅粥，一个女人站在一条新漆的竞渡船上，拿桨指着他们骂：“帆角！收那么紧做什么，想翻吗？”是莎迪娅。她骂到一半抬头看见我的帆，桨一收，丢下那群孩子，一个人划着船冲了过来，船头差点撞上我的船舷。她扒着船舷翻上来，晒得比当年还黑，先从怀里抽出一封信，在我面前晃了晃：“古吉拉特一个领航员下的竞航书。这个人每年都来挑战，每年都输。”她把信揣回去，抱着胳膊打量我：“你呢？这回是来比的，还是来坐坐的？”我还没答，她往港口东边扬了扬下巴：“那片礁，我画进我爹的航簿了。他骂了我一整天。”"
+window = [[1562, 1, 1], [1562, 12, 31]]
+at = "muscat"
+cast = ["shadia"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1562, 12, 31] }, { kind = "age", ge = 18 }, { kind = "age", person = "shadia", ge = 18 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "shadia", text = "纳吉玛：你的船今年没进马斯喀特。港务的人说你在马六甲那边，也有人说你去了更远的地方。我不管，反正你没来。这张图是我自己画的，画得难看，你们领航家的人看了不许笑。石阶、黑礁、港口东边那片礁，都在上头。那片礁我画得清清楚楚——你说过差一点点就差出去老远，我记着，量了三回才落的笔。我爹的航簿上也有它了。他骂了我一整天，问我为什么早不说，骂完了，自己拿笔又描了一遍。我现在教港湾里的孩子赛船，他们收帆收得跟你当年一样紧，我一看就想笑。有个古吉拉特来的领航员每年都来下竞航书，每年都输，输了还来，脸皮比你还厚。那条补了三块的旧船我拆了，帆留着，三块补丁都在，挂在我屋里的墙上。那年说好的那一场，还欠着。我不催你，别为了赶回来跑坏天气。可哪天你的船进了港，先来找我。图上那片礁旁边我写了三个字，你认得。——莎迪娅" }, { kind = "flag", flag = "c7_bond_shadia_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "说来坐坐，跟她分一把椰枣，把这几年的海讲给她听。"
+requires = []
+reply = "莎迪娅冲那群孩子吼了一嗓子，叫他们自己把船拖上岸，然后拉着我在沙滩上坐下，从布袋里抓出一把椰枣，一人一半，跟当年一样。我从霍尔木兹讲到卡利卡特，讲到马六甲外海那一场风：帆刚收到一半，桅杆就叫起来，船侧着身子在浪里滑了半夜，天亮时舵手的手都僵了。她听得椰枣都忘了嚼，听到最后一拍大腿：“那场风我要是在，一定比你跑得好。”我说你又没见过那么大的风。“没见过才要去见。”她把枣核往海里一弹，弹得老远，又问那场风是从哪边来的、帆收到了哪儿、舵往哪边压，一样一样问得比港务的人还细。太阳落下去，孩子们早散了，她还在拿手指在沙上画那场风的方向，画完了指着它说：“下回你出海，带我一程。就一程。”"
+next = "done"
+effects = [{ kind = "affinity", person = "shadia", value = 5 }, { kind = "relation", person = "shadia", relation = "friends" }, { kind = "flag", flag = "c7_bond_shadia_landing_friend" }, { kind = "memory", memory = "mem-reunion_shadia", title = "旧对手的码头" }]
+
+[[tracks.chapters.choices]]
+key = "rival"
+text = "说来比的——绕黑礁，跟当年一样再跑一趟。"
+requires = []
+reply = "她笑得露出了一口白牙：“就等你这句。”她把那条新漆的竞渡船让给我，自己跳上一条孩子的旧船，说这样才公平。孩子们挤在石阶上，有一个自告奋勇地喊开赛。出了港湾，我才发现这些年我的手一直记着那根索的分量，帆角收到哪里，不用想。绕黑礁的时候我们几乎并排，她还是抢在我里头掉了头，帆一甩就满了。回到石阶，她赢我半个船身，跟当年一模一样。孩子们哄地叫起来。她从船上站起来，冲我扬起下巴，笑得比孩子们还响。上了岸，她把孩子们凑给赢家的一把椰枣分了我一半：“这回输得像样多了。明年还来不来？”"
+next = "done"
+effects = [{ kind = "affinity", person = "shadia", value = 3 }, { kind = "relation", person = "shadia", relation = "rivals" }, { kind = "flag", flag = "c7_bond_shadia_landing_rival" }, { kind = "memory", memory = "mem-reunion_shadia", title = "旧对手的码头" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "说想上她的船，跟她一起掌舵。"
+requires = [{ kind = "flag", flag = "c7_bond_shadia_romance" }, { kind = "heart", person = "shadia", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "shadia", ge = 18 }, { kind = "romance_open", romance_open = "shadia" }]
+hint = "她的桨还横在船舷上。当年赛约上空着的那一栏你没有填，如今舵柄就在手边，那句话还是没出口。"
+reply = "她看了我一会儿，没说话，回身把舵柄让出一半。我们挤在船尾，一人一只手握着舵，把那条新漆的船开出了港湾，开过黑礁，一直开到港口东边那片礁外面。浪在礁上翻成白沫，她把帆松下来，船在礁外头轻轻地晃。“到了。”她从衣襟里摸出半张纸，揉得皱巴巴的，炭迹都磨淡了，日子那一栏只剩“成年”两个字。“我替你留着的那一半，在这儿。”我从怀里摸出另一半，“以后”两个字也还在。她把两半并在船舷上，对齐了撕口，看了一会儿，伸手按住我握舵的手，凑过来吻了我。海风把帆吹得哗哗地响，船头慢慢偏了，舵柄松松地搁在我们两个的手底下。过了好一会儿，她才贴着我的耳朵说：“这一场，算平手。”"
+next = "done"
+effects = [{ kind = "affinity", person = "shadia", value = 5 }, { kind = "relation", person = "shadia", relation = "lovers" }, { kind = "flag", flag = "c7_bond_shadia_landing_love" }, { kind = "memory", memory = "mem-reunion_shadia", title = "旧对手的码头" }]
+
+[[tracks.chapters.variants]]
+key = "with_kabir"
+when = [{ kind = "flag", flag = "c7_pair_kabir_shadia_together" }]
+text = "1562 年，我的船在马斯喀特下了锚。港湾里一群孩子在赛三角帆小船，乱成一锅粥，一个女人站在一条新漆的竞渡船上，拿桨指着他们骂：“帆角！收那么紧做什么，想翻吗？”是莎迪娅。她骂到一半抬头看见我的帆，桨一收，丢下那群孩子，一个人划着船冲了过来，船头差点撞上我的船舷。她扒着船舷翻上来，晒得比当年还黑，往码头那边一指：一个古吉拉特人蹲在一条翻过来的船旁边，正在替她修舵。“那个领航员，输了我三次。输了三次的人，总得有点用。”她抱着胳膊打量我：“你呢？这回是来比的，还是来坐坐的？”我还没答，她往港口东边扬了扬下巴：“那片礁，我画进我爹的航簿了。他骂了我一整天。”"

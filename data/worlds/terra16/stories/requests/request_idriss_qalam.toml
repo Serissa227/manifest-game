@@ -1,0 +1,162 @@
+# 请托：页边那一行（request_idriss_qalam）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：伊德里斯·卡拉姆（idriss_qalam，1540 年 5 月 22 日生，男），非斯抄书匠家的儿子，批注写得比正文还密。cast：cast/classmates_custom_fez_scholar.toml。
+# 类型：去某处（gs）。三章：offer（报价）、arrive（到突尼斯，怎么记）、report（回来怎么说）。没有 stage 章，所以没有 window 与 default；普通章靠 deadline_days 与 timeout 结算。
+# 报价：V（到访）。他从非斯下到得土安港口接一批寄来的书；auto=true，offer 的 at=tetouan；窗口 1563-01-01 至 1575-06-30。
+#       offer 写 family=c13_offer_tetouan、冷却 20 天；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：arrive 在突尼斯宰图纳清真寺的书库，deadline_days=90，超时走 failed：来信一封、好感 -3、旗标 _late。report 没有期限，可以一直等。
+# 依据·史实：宰图纳清真寺是突尼斯最老的讲席之一，书库藏抄本。1569 年以后的 variant 只用一句话带过城里换旗，不写战事。
+# 依据·原创：伊德里斯、书库里管书的老人、页边那句“此句闻之于师，未见其书”、得土安的书摊。老人的名字不写。
+# 秘密：批注里有一条引文，他从没找到原本，照样写进去，页边一个字也没注。只在 report 章、情谊 ≥ 30 的 let_him_say 里由他本人说出口；见闻、来信永远不写。
+# 读的旗标：bond idriss_qalam ≥ C（offer 的 variant，非斯的老同学）；c13_request_idriss_qalam_gloss、_keeper（report 的 variant 读 arrive 的结果）。
+# 设的旗标：c13_request_idriss_qalam_accepted（offer 两条接法）、_asked（ask_page）、_declined（offer 回绝）、_gloss（read_hand）、_keeper（ask_keeper 检定成功）、_late（arrive 超时）、_done（report 两条收尾）、_confessed（let_him_say）、_partial（leave_it）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不写娜拉、不写曲本、不写非斯（C7 的章节）。
+# 报酬：现金最多 900（leave_it 给 500）；好感合计不超过 +13；名声 +1；回忆 mem-request_idriss_qalam-report（let_him_say 与 suggest_note 两条收尾给同一幅）。没有物品。
+# 依赖：港口 tetouan、tunis（ports_north_africa.toml）；技能 lang_arabic（skills.toml）；属性 eloquence；人物 idriss_qalam。无需 B10b 改名。不加 c13_main_ 门禁：伊德里斯不在主线名单里。
+# 与 brief 的差异（为了引擎能表达）：
+#   (1) 普通章不写 window 与 default，窗口由 when 里的日期条件表示。
+#   (2) 检定失败时选项的回复不换，所以 ask_keeper 的回复写成成败都说得通；只有检定成功才有的那一句，放进 report 的 keeper 变体正文。
+#   (3) 回复不随变体改，gloss 的那句“原来两百年前就有人跟我一样”放进 report 的 gloss 变体正文。
+#   (4) 见闻写在各选项上而不写在章上，免得超时也报出“抄了一下午”。
+#   (5) 名声门槛按 brief 的 when 不写；V 模式的名声门槛没有列进 brief 的 when，这里照 brief。
+# 回忆插画清单：
+#   mem-request_idriss_qalam-report「两本书的页边」：得土安的书摊边，一本书摊开，页边一行小字，旁边空着。
+
+[[tracks]]
+key = "request_idriss_qalam"
+name = "页边那一行"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["idriss_qalam"]
+
+# 一、没注出处的一条：得土安港口的书摊边，他拦住你说一个引错的字，再说正事。
+[[tracks.chapters]]
+key = "offer"
+title = "没注出处的一条"
+text = "得土安港口的书摊边，伊德里斯蹲在一摞刚到的书中间，翻到一页就皱起眉。“这个字引错了。”他把书往你面前一摊，指给你看：有人把一个点落在了别的字上，整句的意思就歪了。他抬头才认出你，手里还攥着书脊。“你来得正好。”他说，“突尼斯宰图纳清真寺的书库里，有人说藏着一部书，里面有我那条引文的原句。你去看一眼，把那一行连同前后两行抄回来。”说到这儿，他把自己那本批注合上了：“是对是错，我都要知道。”"
+speaker = "captain"
+mood = "tense"
+at = "tetouan"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1575, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "idriss_qalam", ge = 18 }]
+deadline = [1575, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_classmate"
+when = [{ kind = "bond", person = "idriss_qalam", level = "C" }]
+text = "得土安港口的书摊边，伊德里斯蹲在一摞刚到的书中间，翻到一页就皱起眉。他一眼认出你，把书往你面前一推：“这个字引错了，你看。”一个点落在了别的字上，整句的意思就歪了。他没停，手已经伸进书堆里，抽出一张没写字的纸递过来。“你抄东西从不漏字，这回别破例。”他说，“突尼斯宰图纳清真寺的书库里，有人说藏着一部书，里面有我那条引文的原句。你去看一眼，把那一行连同前后两行抄回来。”说到这儿，他把自己那本批注合上了：“是对是错，我都要知道。”"
+
+[[tracks.chapters.choices]]
+key = "go_tunis"
+text = "接下，去突尼斯把那一行抄回来。"
+next = "arrive"
+reply = "他在一张纸上写下那一行，又写了书名、卷数，写到页码那一栏，笔停了。他抬头看了看港口外的海，说：“就照这么抄。前后两行也要，少一行，我就得重新翻。”纸交给我的时候，页码那一栏还是空的。"
+effects = [{ kind = "affinity", person = "idriss_qalam", value = 2 }, { kind = "flag", flag = "c13_request_idriss_qalam_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_page"
+text = "接下，先问：你的批注里，这一行注的是哪一页？"
+next = "arrive"
+reply = "他看了我一眼，说：“先去看。”这人一向张口就是页码，这回他没答。我把纸折好收进袖子，他又拿笔在页边添了一个字，看了看，划掉了，什么也没留下。"
+effects = [{ kind = "affinity", person = "idriss_qalam", value = 2 }, { kind = "flag", flag = "c13_request_idriss_qalam_accepted" }, { kind = "flag", flag = "c13_request_idriss_qalam_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "为一行字跑一趟突尼斯，不值。"
+next = "failed"
+reply = "“一行字错了，后面一百个抄的人都错。”他说完，又低头去找那个引错的字了。书摊上的风把纸吹翻了一页，他顾不上去按，只顾着用手指点那个字。"
+effects = [{ kind = "flag", flag = "c13_request_idriss_qalam_declined" }]
+
+# 二、书库的老人：突尼斯，那部书找到了，那一行在页边，不在正文里。
+[[tracks.chapters]]
+key = "arrive"
+title = "书库的老人"
+text = "宰图纳清真寺的书库在院子深处，管书的老人眼睛浑了，记性却好。你报上书名，他不问版本，抬手就指向第三架：“书不外借，抄可以，页角别折。”那部书摊在矮桌上，纸页脆得一碰就掉渣。你照着伊德里斯的纸找到那一行，字一个不差。可它不在正文里。它在页边，用一种发褐的墨，写得很小，像是另一个人的手。"
+speaker = "captain"
+mood = "mystic"
+at = "tunis"
+when = [{ kind = "alive", person = "idriss_qalam", value = true }, { kind = "date", from = [1563, 1, 1], to = [1576, 8, 23] }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "idriss_qalam", value = -3 }, { kind = "flag", flag = "c13_request_idriss_qalam_late" }, { kind = "letter", person = "idriss_qalam", text = "突尼斯的那一行，我托一个去讲席的学生去看了。他说书在，可他没找到那一页。——伊德里斯" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_flags"
+when = [{ kind = "date", from = [1569, 10, 1] }]
+text = "宰图纳清真寺的书库照样开着。管书的老人先说了一句：“城里这几年换过几回旗，今年是这面，去年是那面，书库的门却一直没关。”开门的人换了三拨，他算最后一拨。他眼睛浑了，记性却好，你报上书名，他抬手就指向第三架。那部书摊在矮桌上，纸页脆得一碰就掉渣。你照着伊德里斯的纸找到那一行，字一个不差。可它不在正文里，在页边，用一种发褐的墨，写得很小。"
+
+[[tracks.chapters.choices]]
+key = "read_hand"
+text = "细读那段批注的笔迹与前后文，连墨色一起记下。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60, hard = true }]
+hint = "那种老写法你认不全，只看得出是另一只手"
+next = "report"
+reply = "我认出批注的字是马格里布的老写法，比正文晚了至少一百年。我把正文、批注、墨色都抄了，还抄下了批注者自己在页底写的一句话：“此句闻之于师，未见其书。”"
+effects = [{ kind = "affinity", person = "idriss_qalam", value = 3 }, { kind = "flag", flag = "c13_request_idriss_qalam_gloss" }]
+news = "突尼斯宰图纳清真寺的书库，有个外乡人对着一页书的页边抄了一下午，连页底的小字也没放过。"
+
+[[tracks.chapters.choices]]
+key = "ask_keeper"
+text = "请老人讲讲这部书是谁捐来的、谁读过。"
+check = { attr = "eloquence", base = 35, per = 6 }
+next = "report"
+reply = "老人想了想，说这部书是前任管书的人收的，那人的名字他记不清了。页边的字，他说看不出是谁写的。我把那一页原样抄了下来。老人看着我抄，嘴里跟着念那一页的页码，念错了一个，又自己改过来。"
+effects = [{ kind = "affinity", person = "idriss_qalam", value = 3 }, { kind = "flag", flag = "c13_request_idriss_qalam_keeper" }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "idriss_qalam", value = -2 }], news = "突尼斯宰图纳清真寺的书库里，一个外乡人问了老人半天，老人只记得那部书是前任收的。" }
+news = "突尼斯宰图纳清真寺的书库里，老人替一个外乡人翻出两百年前的旧册子，那人抄了一页就走。"
+
+[[tracks.chapters.choices]]
+key = "pay_copy"
+text = "照书库的规矩，付钱请抄写人把那一页整页抄下。"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "你身上的钱不够付这一页的抄价。"
+next = "report"
+reply = "抄写人抄得一丝不差，连页边那段批注的位置都照原样挪到了纸上。他收了钱，把抄件递过来，顺手捋平页角，说：“正文和页边分开抄的，你自己拿去对。”"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "idriss_qalam", value = 2 }]
+news = "突尼斯宰图纳清真寺的书库里，有个外乡人花钱请抄写人把一页书整页抄下，抄完才肯走。"
+
+# 三、页边对页边：他在得土安接过抄回来的那页，先找那一行，再看位置。
+[[tracks.chapters]]
+key = "report"
+title = "页边对页边"
+text = "伊德里斯在得土安的书摊边等你，书还压在他手底下。你把抄回来的那页递过去。他先找那一行，找到了，脸上一松；再看它在哪里，脸色又变了。“在页边？”他抬起眼，“出处呢？哪一页，第几行？”你说就在页边，不在正文。他没再问，把书压平，手指在那一行上停了一会儿。然后他把自己那本批注翻开，翻到那一条。它也写在页边，字比别的都小，旁边空着，什么也没注。"
+speaker = "captain"
+mood = "tender"
+at = "tetouan"
+when = [{ kind = "alive", person = "idriss_qalam", value = true }, { kind = "date", from = [1563, 1, 1], to = [1576, 8, 23] }]
+news = "得土安港口的书摊边，非斯来的抄书人家的儿子给自己的书添了一条注。"
+
+[[tracks.chapters.variants]]
+key = "v1_gloss"
+when = [{ kind = "flag", flag = "c13_request_idriss_qalam_gloss" }]
+text = "伊德里斯在得土安的书摊边等你，书还压在他手底下。你把抄回来的那页递过去。他先找那一行，找到了，脸上一松。看到页底那句“此句闻之于师，未见其书”，他先笑了一声。“原来早就有人跟我一样。”再看那一行的位置，脸色又变了。“在页边？”他抬起眼，“出处呢？哪一页，第几行？”你说就在页边，不在正文。他翻开自己那本批注，翻到那一条。它也写在页边，字比别的都小，旁边空着，什么也没注。"
+
+[[tracks.chapters.variants]]
+key = "v2_keeper"
+when = [{ kind = "flag", flag = "c13_request_idriss_qalam_keeper" }]
+text = "伊德里斯在得土安的书摊边等你，书还压在他手底下。你把抄回来的那页递过去，又把老人送到门口时补的那句话原样说了一遍：页边那字是一位讲席先生写的，讲课时爱引一句书上没有的话。他先找那一行，找到了，脸上一松；再看它在哪里，脸色又变了。“在页边？”他抬起眼，“出处呢？哪一页，第几行？”你说就在页边，不在正文。他翻开自己那本批注，翻到那一条。它也写在页边，字比别的都小，旁边空着，什么也没注。"
+
+[[tracks.chapters.choices]]
+key = "let_him_say"
+text = "等他自己开口。"
+requires = [{ kind = "affinity", person = "idriss_qalam", ge = 30 }]
+hint = "他把书合上了，你们还没熟到能等他开口"
+next = "done"
+reply = "他说那一行他从没找到原本，是从先生的讲课里听来的，照样写进了批注，页边一个字也没注。“我追了别人十年出处。”他提笔在那一条旁边写上：“见突尼斯本页边，某先生所批，原本未见。”写完，他付了钱，手还有点抖。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "idriss_qalam", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_idriss_qalam_done" }, { kind = "flag", flag = "c13_request_idriss_qalam_confessed" }, { kind = "memory", memory = "mem-request_idriss_qalam-report", title = "两本书的页边" }]
+
+[[tracks.chapters.choices]]
+key = "suggest_note"
+text = "建议他在那一条旁边注上：见突尼斯本页边。"
+next = "done"
+reply = "他想了很久，照写了，字比正文还小。他付了钱，说这是他批注里最短的一条注。写完他拿笔尖去点那一条，点了两下，像是在确认它还在。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "idriss_qalam", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_idriss_qalam_done" }, { kind = "memory", memory = "mem-request_idriss_qalam-report", title = "两本书的页边" }]
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "说页边也算出处，照原样留着就好。"
+next = "done"
+reply = "“页边不是出处。”他把抄回来的那页夹进书里，付了一半的钱，说剩下的要等他找到正文。他又说了一句：“你没替我改，谢谢。”然后把书往怀里一抱，走得很快。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "idriss_qalam", value = 3 }, { kind = "flag", flag = "c13_request_idriss_qalam_partial" }]

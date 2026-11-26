@@ -1,0 +1,329 @@
+# 达昂：风不认得王子（bond_daeng / reunion_daeng）——C7 重写，2026-10-11，Claude（Opus）；旧 GPT 稿作废，只沿用章节 key、地点与年份。
+# 标签：BL（羁绊线，可恋爱）。适用主角：凯奇利（kaicili）。
+# 人物：达昂 daeng（1539-11-22，男，romance.with = m，纯 BL）；凯奇利·劳特 kaicili（1540-09-09，男，主角，“我”）。
+#       学院期 1554—1556：凯奇利 13—16 岁、达昂 14—17 岁；S 章（1556-12）凯奇利 16、达昂 17，心动选项只到牵手与 crush。
+#       重逢 1565：凯奇利 24、达昂 25，双方成年，恋人落点合法；生年相差不足一年。
+#       拉惹·穆达 raja_muda（1540-09-16）只在重逢的 variant 里作“他身边的人”被提起，不上场、不写其感情。
+# 依据：
+#   史实——16 世纪中叶望加锡与戈瓦苏丹国兴起，布吉斯与望加锡的船往来爪哇北岸；格雷西克是吉里（苏南·吉里的学府）旁的港口，
+#         华人与爪哇商人放钱给船户、以长约换船本的做法常见；班顿（pantun）四行一首，前两句起兴押韵、后两句才是本意；
+#         布吉斯人的单桅小船、椰棕与棕榈纤维的绳；马鲁古的特尔纳特是凯奇利的家乡，有火山。
+#   原创——达昂其人、木料场与龙骨上的刻痕、船户的契约与“续约由东家定”、河口竞舟、两股拧成的辨风绳、上风的泊位之约。
+#   待核——格雷西克秋季河口竞舟的习俗为本世界线的写法；契约条款的措辞按常理拟写。
+# 缺省走向：玩家不在场时故事照走（C1—A2 的 default 无收获）；S 的 default 开启重逢并设 c7_bond_daeng_parted；
+#           重逢的 default 是达昂托人带来的一片棕榈叶（letter），设 c7_bond_daeng_missed。
+# 旗标：写 c7_bond_daeng_promise / _romance / _own / _parted / _landing_friend / _landing_rival / _landing_love / _missed；
+#       S 的 promise 与 heart 另设共享旗标 c7_pair_raja_muda_daeng_taken（配角线 pair_raja_muda_daeng 读）；
+#       重逢的 variant 读 c7_pair_raja_muda_daeng_together（由 pair_raja_muda_daeng 设）。
+# 日程：cast 里达昂 1557 年起在格雷西克；重逢在 1565 年的望加锡，需整合方让他 1565 年在 makassar（或整段改到望加锡）。
+# 口头禅：人设里的“你说去哪儿，我说怎么去。”只在 A1 用一次；S 章“河口给我留个位置，我会来。”是这一幕的承诺，不当口头禅用。
+# 秘密：量好的木料与差一半的钱，B2 由达昂自己给“我”看；不进任何见闻。
+
+[[tracks]]
+key = "bond_daeng"
+name = "达昂：风不认得王子"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["daeng"]
+
+# C1：1554 年初，格雷西克码头一条布吉斯船。先问谁会打结；那根绳。
+[[tracks.chapters]]
+key = "c1"
+title = "风不认得王子"
+text = "格雷西克码头下靠着一条布吉斯船，船主雇吉里的学生帮着装货。甲板上站着个比我高半头的少年，赤着脚，腰上缠一圈绳。船主喊他“达昂”，喊得像喊自家的一支桨。他没问我们是谁家的人，开口先问：“谁会打结？”我举起手，顺嘴添了一句：“特尔纳特的王子会，算不算？”几个同学笑起来。他没笑，把一根椰棕绳抛过来：“风不认得王子。打个系帆的结。”我打了。他接过去一拽，结滑开了半截。他一声不响，把它拆开摊在船板上，一圈一圈重打给我看。打到压住绳头那一下，他的手慢下来，停在那里，等我的眼睛跟上，才收紧。“这一道压反了。”他说，“越拉越松的结，到了海上比没有还坏。”他把绳子塞回我手里。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "cheerful"
+news = "格雷西克码头那条布吉斯船招学生装货，船上的布吉斯少年谁家的人都不问，只问会不会打结；听说有位王子打错了，被他当众拆开重打。"
+when = [{ kind = "flag", flag = "family_access_giri" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "learn_knot"
+text = "请他再教一遍，我打到他拽不松为止。"
+reply = "我打了五遍。前四遍他都是一拽就开，一个字不多说，把绳头递回来。第五遍他两手攥住绳子往外一扯，结纹丝不动。他点点头：“可以上船了。”我问上谁的船。他拿脚跟在甲板上跺了跺：“先上这条。”停了一下，又说：“等我有了自己的，再说。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "skill", skill = "knotwork", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "pantun_back"
+text = "照班顿的规矩，回他四句。"
+reply = "我清了清嗓子，用吉里集市上对歌的调子念：“风不认得王子，浪不认得船头；结打松了要走，绳子认得手。”同学们拍着船舷叫好。达昂愣了一下，笑出声来，那是我头一回听他笑：“最后一句还行，前两句是废话。”我说班顿的前两句本来就是拿来押韵的。他把绳子往我怀里一扔：“那你押韵的工夫，拿来打结。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "daeng", value = 4 }, { kind = "skill", skill = "poetry", value = 4 }]
+
+# C2：1554 年夏，船坞。闭眼敲船板；修船单上记的是“我”的名字。
+[[tracks.chapters]]
+key = "c2"
+title = "哪块板在响"
+text = "那条布吉斯船上了坞，船主说底下有几块板松了，可说不出是哪几块。达昂叫我们几个学生排在船边，闭上眼，拿木槌一下一下地敲。“松的那块，声音是空的。”他说，“像敲一只没装水的罐子。”我只听见一片乱响：槌子声、海鸟、岸上卖槟榔的吆喝，全搅在一起。达昂从船头敲过来，敲到第七块停住，在板上按了一下：“这块。下一块你找。”我敲了一下午，手掌震得发麻，终于听见一声发闷的空响。睁开眼，他已经在修船的单子上添了一行——写的是我的名字。同船的老水手探过头来：“头一块是你找的，怎么不记你自己？”达昂头也没抬：“谁找到的记谁。”他把单子折好，塞进腰上那圈绳里。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "tense"
+news = "格雷西克船坞里，一条布吉斯船的伙计叫吉里的学生闭着眼敲船板找松的，修船单上记的全是学生的名字，没有一个是他自己的。"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hear_hull"
+text = "闭上眼，把整条船从头敲到尾。"
+requires = [{ kind = "affinity", person = "daeng", ge = 20 }]
+hint = "他说新手别满船乱敲——你们还没熟到让你从船头敲到船尾。"
+reply = "我从船头敲到船尾，天快黑时，在舵底下找出第三块。达昂蹲下去敲了两下，回头看我：“这块，船主自己都不知道。”他又把单子打开，在我的名字底下再写一遍。他写的是爪哇字母，一笔一笔，写得很慢，像怕写错了还得拆开重写。"
+next = "b1"
+effects = [{ kind = "affinity", person = "daeng", value = 4 }, { kind = "skill", skill = "shipbuilding", value = 4 }, { kind = "bond", person = "daeng", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "chess_bet"
+text = "跟他下一盘棋，赌谁去补那块板。"
+reply = "我从包里摸出随身的小木棋盘，就摆在船板上。我赢了。达昂二话不说，扛起木料就去补，补完回来，手背上还沾着木屑：“再下一盘。”第二盘他赢了。他看看棋盘，又回头看看那块刚钉好的新板：“板都补完了。这盘白赢。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }]
+
+# B1：1554 年秋，河口竞舟。胜负已定，他赢；再走一次最后那道弯。
+[[tracks.chapters]]
+key = "b1"
+title = "最后一道弯"
+text = "秋天，格雷西克河口赛小船，吉里的学生一人领一条。我和达昂分在两头。一路上我都咬着他的船尾。到最后一道弯，风从岸上斜着压过来，我的帆收晚了，船身一歪，水漫上船舷。等我把船扶正，他已经冲过了插旗的竹竿。岸上的人喊他的名字。他没举手，也没回头看那面旗，掉转船头划回来，停在我旁边：“再走一次最后那道弯。”“名次都定了。”“不计名次。”他抬手指了指我的帆，“只看你什么时候收。”他自己的帆还鼓着，被风撑得满满的，帆角上补过的那一块颜色比别处深。他就让它那么鼓着，等我把船划回弯口。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "cheerful"
+news = "格雷西克河口的秋季竞舟，布吉斯少年达昂拿了头名，彩头都没去领，掉头就划回最后一道弯，陪输了的人重走了一遍。"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "walk_bend"
+text = "跟他把最后那道弯再划三遍。"
+reply = "第一遍我又收晚了，第二遍刚好，第三遍心一慌，收得太早，船在弯里慢得像在漂。达昂的船在旁边等着：“早比晚好。早了只是慢，晚了是翻。”回岸的路上，他用指节在船舷上敲：一下，一下，第三下停住——“这一下，收。”我跟着他敲了一路。"
+next = "b2"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "skill", skill = "rigging", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "raise_his_hand"
+text = "等他靠岸，当众把他的手举起来。"
+reply = "他刚踏上跳板，我就抓住他的手腕举过头顶。岸上一下子哄起来。达昂往回抽，没抽开，耳根红到了脖子。回到船上他才闷声说：“下回别这样。”可他把那天用的帆绳解下来，绕成一圈扔给我：“赢的那根。你拿着，记住什么时候收。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "daeng", value = 4 }]
+
+# B2：1555 年，木料场。船户的契约；他早量好的木料，龙骨上的刻痕。
+[[tracks.chapters]]
+key = "b2"
+title = "自己的船钱"
+text = "开年，格雷西克有个船户找上达昂，说愿意出钱替他造一条船，条件是十年里只替自家跑一条线：格雷西克到望加锡，来回运米和布。达昂没答应，也没回绝。那天傍晚他带我去河边的木料场，走到最里头一堆，蹲下拨开上面盖的棕榈叶。底下几根木头上都刻着记号，深浅不一，像是刻了好几回。“龙骨。”他摸着最长那根，“两边的肋材。这几根做船板。”他一根一根数过去，每数一根，就用拇指按一下那道刻痕，“够一条小船。钱差一半。”他从腰上的绳圈里抽出一张折得发软的纸，是船户的契约，递到我面前，手却不松：“你读得比我快。你告诉我该看哪几条——别告诉我签不签。”"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "tense"
+news = "格雷西克有个船户放话，要替布吉斯水手达昂出钱造船，只要他十年里只跑格雷西克到望加锡这一条线。码头上都在猜他签不签。"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "read_contract"
+text = "陪他把契约一条条读完，看“十年”后面还跟着什么。"
+requires = [{ kind = "affinity", person = "daeng", ge = 50 }, { kind = "bond", person = "daeng", level = "C" }]
+hint = "他把契约攥得很紧——这种纸，他还不肯摊开给你看。"
+reply = "我们借着看门人的油灯逐条往下读。读到“十年”那一行，后面缀着一句小字：“期满续约，由东家定。”达昂叫我再念一遍，又自己念了两遍，脸慢慢沉下来：“那就不是十年。是一辈子。”第二天，他把契约照原样叠好送了回去。回来时他蹲在那堆木头边，把棕榈叶重新盖好：“木料先放着。钱我自己挣。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "daeng", value = 4 }, { kind = "skill", skill = "negotiation", value = 6 }, { kind = "bond", person = "daeng", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "offer_loan"
+text = "说差的那一半我来出，不要利息。"
+reply = "达昂摇头，摇得很干脆：“王子的钱也是债。”我说这跟王子不相干——他抬手止住我，把契约塞回绳圈里。过了好一会儿，他才又开口：“你肯说这句话，我记着。”他拔出腰上的小刀，在龙骨那根木头的尾巴上又刻了一道，比别的都浅：“这道是你的。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "daeng", value = 2 }]
+
+# A1：1556 年春，河口傍晚。他把舵交给“我”，站在一臂之外；磨得发亮的舵柄。
+[[tracks.chapters]]
+key = "a1"
+title = "让舵的一刻"
+text = "开春后一个风小的傍晚，我们把船从河口往外带。走到一半，达昂把舵柄往我这边一推，自己退开一步，站在一臂之外。“你说去哪儿，我说怎么去。”他抱起胳膊，“今天反过来——你说怎么去。”他把该叫他的时候挨个讲清：帆角抖起来，叫他；船头往下风偏、拉两下拉不回来，叫他；水色发浑、底下见沙，叫他。“别的时候，别叫。”河口的水被夕阳照成金色，一层一层往岸上推。舵柄被他握了两年，手握的那一截磨得发亮，还留着他掌心的热。我攥上去，船轻轻往右一偏。他没动，只说：“觉出来了？它在问你。”"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "tender"
+news = "格雷西克河口傍晚常有条小船慢慢进港，掌舵的换成了特尔纳特来的学生，布吉斯水手达昂抱着胳膊站在一边，一路不出声。"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "steer_alone"
+text = "请他转过身去，让我一个人把船带回河口。"
+reply = "达昂真的转过身去，背对着我坐在船头，看岸上的灯。我一路没叫他。快到泊位时我转晚了，船身斜着蹭上木桩，偏出去半个船身。他没回头，伸手撑住桩子，把船推正，系好缆，这才开口：“下回早半口气转。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "skill", skill = "rigging", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "his_hand"
+text = "他的手覆上来教我转向，我没有把手抽开。"
+requires = [{ kind = "age", le = 17 }, { kind = "age", person = "daeng", le = 17 }, { kind = "romance_open", romance_open = "daeng" }]
+hint = "他这时还不会站得这么近——你们还不够熟。"
+reply = "过弯口时他走回来，手掌盖在我手背上，往左压了半寸：“这样。”弯过完了，他的手没走，一直到船靠岸、缆绳套上木桩，才松开。他说：“今天风好。”我说：“是。”两个人都没再出声，系好船，在码头上分了手。第二天一早，他照常在船边喊我上船。"
+next = "a2"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "heart", person = "daeng", value = 6 }]
+
+# A2：1556 年夏秋，码头。两股棕榈纤维拧成的辨风绳；一股是他的，一股是“我”的。
+[[tracks.chapters]]
+key = "a2"
+title = "辨风的绳"
+text = "东南风吹了一整个夏天。一天下了课，达昂在码头上叫住我，摊开手心：一根细绳，比小指还细，两股棕榈纤维拧在一起，一股发黄，一股旧得发灰。“系在桅顶，风往哪边，它就往哪边飘。”他说，“没挂旗的船，也看得出风。”我认出了那股发灰的。前年秋天竞舟，我那条船上换下来的帆绳，我扔在船坞角落里，以为早被人拿去烧火了。“一股是我的。”他把两股掰开一点给我看，又拧回去，“一股是你的。”他把绳子在指头上绕了两圈，又松开：“以后不管上谁的船，系上它，就知道风从哪边来。”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "tender"
+news = "格雷西克码头上的人说，布吉斯水手达昂这个夏天总在编一根细绳，编了拆、拆了又编，问他编来做什么，他只说看风。"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "tie_mast"
+text = "爬上我常驾的那条小船，把绳系在桅顶。"
+requires = [{ kind = "affinity", person = "daeng", ge = 80 }, { kind = "bond", person = "daeng", level = "B" }]
+hint = "他把绳子在指头上绕着，没有递过来的意思——你们还没熟到这一步。"
+reply = "我爬上桅顶，照他教的结系牢。风一来，绳头飘向东北。达昂在底下仰着头看：“季风要转了。”过了一会儿又说：“结也对。”他就站在那儿，看那根绳在风里打转，直到我从桅上下来，才说：“等我的船造好，也系一根。”"
+next = "s"
+effects = [{ kind = "affinity", person = "daeng", value = 4 }, { kind = "bond", person = "daeng", level = "A" }, { kind = "item", item = "braided_cord", qty = 1 }, { kind = "memory", memory = "mem-bond_daeng-a2", title = "辨风的绳" }]
+
+[[tracks.chapters.choices]]
+key = "tie_wrist"
+text = "伸出手腕，让他把绳系在我手上。"
+requires = [{ kind = "affinity", person = "daeng", ge = 80 }, { kind = "bond", person = "daeng", level = "B" }, { kind = "heart", person = "daeng", ge = 6 }, { kind = "age", le = 17 }, { kind = "age", person = "daeng", le = 17 }, { kind = "romance_open", romance_open = "daeng" }]
+hint = "这时伸手，他只会把绳挂到桅上去——你们还没走到那一步。"
+reply = "他愣了一下，低下头去系。系得很慢，绕一圈，压一下，打结的时候拇指在我腕子内侧停了停，又用指头勾住绳子试松紧。我说系在桅上不是更有用。他没抬头：“你又不是桅。”说完把多出来的绳头咬断，吐进了海里。"
+next = "s"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "heart", person = "daeng", value = 6 }, { kind = "bond", person = "daeng", level = "A" }, { kind = "item", item = "braided_cord", qty = 1 }, { kind = "memory", memory = "mem-bond_daeng-a2", title = "辨风的绳" }]
+
+[[tracks.chapters.choices]]
+key = "ask_money"
+text = "问他木料钱还差多少。"
+reply = "他报了个数，比去年在木料场说的少了三成。“再跑两季，就够了。”我说那我帮你算哪两季风好，从哪个港装货最划算。他把那根细绳收回腰上的绳圈里：“你算，我跑。”"
+next = "s"
+effects = [{ kind = "affinity", person = "daeng", value = 2 }]
+
+# S：1556 年 12 月，河口石堤。吉里的课散了；“河口给我留个位置，我会来。”
+[[tracks.chapters]]
+key = "s"
+title = "河口留个位置"
+text = "十二月，吉里的课散了。过几天有船回特尔纳特，我搭那一条；达昂要去望加锡，那边船多，木料也便宜。那堆刻了记号的木头，他说会找人一起运过去。最后一个傍晚，我们坐在河口的石堤上，脚底下是退潮露出来的泥滩，招潮蟹举着一只大螯跑来跑去。他把攒钱的小布袋掂了掂，又塞回腰里。“到了望加锡，先替人跑两年。”他说，“然后造船。”我问造好了去哪里。他看着海，没答这一句。过了一会儿才说：“你回特尔纳特，河口那么多泊位——”他转过头来，“河口给我留个位置，我会来。”潮水正往回涨，一点一点漫过蟹洞。他在等我回话。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "gresik"
+cast = ["daeng"]
+speaker = "captain"
+mood = "tender"
+news = "吉里的课散了，格雷西克河口的石堤上，布吉斯水手达昂和特尔纳特来的同学坐到潮水涨上来。听说过几天他就去望加锡。"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_daeng" }, { kind = "flag", flag = "c7_bond_daeng_parted" }]
+news = "吉里散学那几天，有个布吉斯水手每天傍晚坐在格雷西克河口的石堤上，等一个没来的同学，后来搭船去了望加锡。"
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "答应他：特尔纳特的河口，给他的船留一个泊位。"
+requires = [{ kind = "bond", person = "daeng", level = "A" }]
+hint = "这样的泊位，只留给交情到了头的人；要不然，就是你这辈子唯一的约已经给了别人。这一回，只能在岸上目送他的船。"
+reply = "我说泊位我留，特尔纳特河口最好的那一个。达昂摇头：“留在上风。下风的位置，我不停。”我说上风那几个泊位，停的是王族的船。“那正好。”他说得一本正经，像在跟人议木料的价。我笑出声来，伸出手掌。他看了看，也伸出手，啪地拍上来。他的掌心全是茧，绳子勒出来的，一道一道，硬得像船板。拍完他没马上收手，把我的手翻过来看了看：“你的也有了。”我低头看，是两年打结勒出来的，薄薄一层。潮水涨到石堤脚下，他站起来，拍掉裤腿上的泥：“上风。别忘了。”"
+next = "done"
+effects = [{ kind = "affinity", person = "daeng", value = 5 }, { kind = "bond", person = "daeng", level = "S" }, { kind = "relation", person = "daeng", relation = "friends" }, { kind = "flag", flag = "c7_bond_daeng_promise" }, { kind = "flag", flag = "c7_pair_raja_muda_daeng_taken" }, { kind = "memory", memory = "mem-bond_daeng-s", title = "河口留个位置" }, { kind = "start_track", track = "reunion_daeng" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "告诉他：我要留的，不只是一个泊位。"
+requires = [{ kind = "bond", person = "daeng", level = "A" }, { kind = "heart", person = "daeng", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "daeng", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "daeng" }]
+hint = "潮水漫过了蟹洞，这句话还是没说出来——你们还没走到那一步；也许那个一辈子只许一回的约，你已经许出去了。"
+reply = "话说出口，我自己先愣住了。达昂也没动，看着我，看了很久，久到一只招潮蟹从他脚边爬过去，又爬回洞里。“我知道。”他说。他伸过手来，握住我的手，握得很紧，指节都发了白。他的手心是烫的。潮水漫上石堤脚，打湿了鞋，他没挪，我也没挪。“船造好那天，我先来特尔纳特。”他说，“别的话，等那天再说。”“那天是哪天？”“我也不知道。”他终于笑了一下，“所以你得等。”天黑透了他才松手。走回学院的路上，他一直走在我靠海的那一边，替我挡着从海上来的风。"
+next = "done"
+effects = [{ kind = "heart", person = "daeng", value = 12 }, { kind = "relation", person = "daeng", relation = "crush" }, { kind = "bond", person = "daeng", level = "S" }, { kind = "flag", flag = "c7_bond_daeng_romance" }, { kind = "flag", flag = "c7_pair_raja_muda_daeng_taken" }, { kind = "memory", memory = "mem-bond_daeng-s", title = "河口留个位置" }, { kind = "start_track", track = "reunion_daeng" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好等两人都有了自己的船，在海上比一程。"
+reply = "达昂眼睛亮了一下：“比哪一段？”我说从望加锡到特尔纳特，顺风逆风都算。“输的请喝棕榈酒。”他想了想，又补一句，“一整罐。”我说一言为定，又问要是两条船一起到呢。他摇头：“不会一起到。风总站在一边。”他抬头看河口那根挂灯笼的竹竿，竹竿上的布条正往北飘，“到时候，看它站在谁那边。”走之前，他把我打结的手艺又考了一遍。结打完，他拽了拽，点头：“上了海，别给我丢人。”我说你也一样，别输给一个王子。他哼了一声，算是认了。"
+next = "done"
+effects = [{ kind = "affinity", person = "daeng", value = 2 }, { kind = "relation", person = "daeng", relation = "rivals" }, { kind = "flag", flag = "c7_bond_daeng_own" }, { kind = "memory", memory = "mem-bond_daeng-s", title = "河口留个位置" }, { kind = "start_track", track = "reunion_daeng" }]
+
+[[tracks]]
+key = "reunion_daeng"
+name = "达昂：他自己的船"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["daeng"]
+
+# 重逢：1565 年，望加锡港。他自己的船，桅顶褪色的辨风绳，龙骨上的刻痕；先端一碗水。
+[[tracks.chapters]]
+key = "reunion"
+title = "他自己的船"
+text = "望加锡港里的船挤得桅杆连成一片林子。达昂的船泊在最外一排，不大，单桅，船尾高高翘起，新漆还没被海晒褪。桅顶系着一根辨风的细绳，两股拧成一股，褪得分不清哪一股是谁的。他看见我，没喊，先转身进舱，端出一碗水递过来：“喝了再上。”我喝完，他才伸手把我拉上船，从船头带到船尾，每根绳都说得出来处：这根是在格雷西克拿三天工换的，那根是一个马来船长跟他打赌输掉的。走到船中，他蹲下去，拍了拍龙骨露出来的那一截。那几道刻痕还在，最浅的那一道也还看得出。“九年。”他说，“木料一根没换。”他站起来，朝我泊在港外的船看了一眼：“你那条，如今舵交给谁？”"
+window = [[1565, 1, 1], [1565, 12, 31]]
+at = "makassar"
+cast = ["daeng"]
+speaker = "captain"
+mood = "cheerful"
+news = "望加锡港最外一排泊着布吉斯船主达昂的单桅新船，今年有个远道来的船长上了他的船，从船头一直看到船尾。"
+when = [{ kind = "date", from = [1565, 1, 1], to = [1565, 12, 31] }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "daeng", text = "船造好了。单桅，龙骨还是格雷西克那一根，刻痕一道没刨。桅顶系着辨风的绳，这几天它往东飘，正好往你那边走。上风的泊位，你还留着吗？——达昂（刻在一片棕榈叶上，托一条往东去的布吉斯船带到）" }, { kind = "flag", flag = "c7_bond_daeng_missed" }]
+news = "望加锡港新下水一条单桅的布吉斯船，船主达昂托往东去的船捎了一片棕榈叶，码头上的人说，是问一个泊位。"
+
+[[tracks.chapters.choices]]
+key = "sail_together"
+text = "跟他的船结伴，一起跑一趟马鲁古。"
+reply = "我们在望加锡装了米和布，结伴往东走。他的船比我的轻，顺风时一不留神就拉出去半里，可每到傍晚，他总落了帆等着，等我的船跟上来，两条船的灯隔着一段水对着亮。第五天下了一场雨，我隔着雨听见他在那边喊布吉斯号子，喊得满船的桨都齐了。走到第九天，看见了特尔纳特的火山。进河口时，他的船径直往上风那一排泊位去，停进王族那几艘大船中间。守港的人追出来嚷。“问他。”达昂站在船头，指着我，“他是这儿的王子。”这是我头一回不嫌这个称呼。那天夜里我们在码头上分一罐棕榈酒，他说下一趟去万丹，问我去不去。"
+next = "done"
+effects = [{ kind = "affinity", person = "daeng", value = 5 }, { kind = "relation", person = "daeng", relation = "friends" }, { kind = "flag", flag = "c7_bond_daeng_landing_friend" }, { kind = "memory", memory = "mem-bond_daeng-reunion", title = "他自己的船" }]
+
+[[tracks.chapters.choices]]
+key = "race_him"
+text = "当场约他比一程，从望加锡跑到格雷西克。"
+reply = "他连手里的水碗都没放下：“现在？”第二天天没亮我们就出了港。头两天我咬得很紧；第三天过了一片浅滩，他抄进一条我不知道的水道，从那以后，我只看得见他的帆。我到格雷西克时已近傍晚。他坐在码头上，脚边一罐棕榈酒，已经下去了一截。看见我，他把另一只碗推过来，碗里倒得满满的。“赢了半天。”他说，“风站在我这边。下回未必。”我坐下喝酒，问那条水道是谁教他的。他想了想：“你下回赢了，我就告诉你。”不远处就是当年竞舟的河口，潮水正往回涨，最后那道弯还在老地方。"
+next = "done"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "relation", person = "daeng", relation = "rivals" }, { kind = "flag", flag = "c7_bond_daeng_landing_rival" }, { kind = "memory", memory = "mem-bond_daeng-reunion", title = "他自己的船" }]
+
+[[tracks.chapters.choices]]
+key = "stay_aboard"
+text = "那晚留在他的船上，把当年河口那句话说完。"
+requires = [{ kind = "flag", flag = "c7_bond_daeng_romance" }, { kind = "heart", person = "daeng", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "daeng", ge = 18 }, { kind = "romance_open", romance_open = "daeng" }]
+hint = "当年在河口没说到那一步，今天这句话，只能留在心里。"
+reply = "夜里港里的灯一盏一盏灭了。我们坐在船尾，脚垂在舷外，水轻轻拍着船板。我把九年前在河口没说完的话说完了。说得不好，比我在吉里念过的哪一首班顿都笨。达昂听着，没打断。等我说完，他才开口：“这句话，我等了九年。”他低头看着水，“其实那天就听见了。”“那你还让我等？”“船没造好。”他说，“说好船造好那天，我先去特尔纳特。结果你先来了。”他的肩靠过来，抵着我的肩，就那么靠着。后半夜风从东边转到北边，桅顶那根细绳跟着慢慢偏过去。我们一直坐到天亮，看它在晨光里飘向南边。"
+next = "done"
+effects = [{ kind = "affinity", person = "daeng", value = 5 }, { kind = "relation", person = "daeng", relation = "lovers" }, { kind = "flag", flag = "c7_bond_daeng_landing_love" }, { kind = "memory", memory = "mem-bond_daeng-reunion", title = "他自己的船" }]
+
+[[tracks.chapters.variants]]
+key = "with_raja_muda"
+when = [{ kind = "flag", flag = "c7_pair_raja_muda_daeng_together" }]
+text = "望加锡港里的船挤得桅杆连成一片林子。达昂的船泊在最外一排，不大，单桅，船尾高高翘起，新漆还没被海晒褪。桅顶系着一根辨风的细绳，两股拧成一股，褪得分不清哪一股是谁的。他看见我，没喊，先转身进舱，端出一碗水递过来：“喝了再上。”他带我从船头看到船尾，每根绳都说得出来处。走到船中，他拍了拍龙骨，那几道刻痕还在：“九年。木料一根没换。”舵柄底下压着一封信，封口是柔佛的火漆。他看见我在看，也不藏：“拉惹·穆达写的。”停了一下，又说，“他是我身边的人。”他把信往里推了推，朝我泊在港外的船看了一眼：“你那条，如今舵交给谁？”"

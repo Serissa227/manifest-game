@@ -1,0 +1,213 @@
+# 琉球使节之子·个人小线（free_naha_envoy）
+#
+# 标签：琉球使节之子（自由船长·久米村进贡船模板，门槛为 c12_voyage_custom_naha_envoy）。
+#   “我”不写性别、外貌、肤色与身高，也不写名字；speaker = "captain" 时说话的是“我”；别人叫“船长”“正使家的孩子”。
+# 依据：史实——福州柔远驿与琉球的硫磺贡品，经市舶司过秤；1566 年岛津家新当家继任后，萨摩要求来琉球的船持萨摩印判（信里只写印判，不写人名）；
+#   1579 年明朝册封使乘冠船到那霸册封尚永（sho_ei 只被提起，不说话）；1587 年萨摩降秀吉，1588 年萨摩转达秀吉要琉球入贡（史实背景）。
+#   原创：正使一家；“家里的话”（海上的路是借来的，全线只在 a00 与 c01 出现）；老祝女思户与她洒的海水；柔远驿的秤；萨摩使者的书信。
+# 轨道：free_naha_envoy（kind = main，auto = true，start = a00_gate）。a00_gate 是见闻门槛，default 设 c13_free_naha_envoy。
+# 本文件设置的旗标：c13_free_naha_envoy（只在 a00_gate 的 default 设）。
+# 读取的旗标：c12_voyage_custom_naha_envoy（门槛，由养成结业发放）。
+#   没有变体，没有 HIST_ 占位旗标，没有需要等待的包（本线只用 cast 里已有的人物、港口、货物与物品）。
+# 人物：c8_naha_envoy 在本线是“父亲”，即这一船的正使；人设卡写的是学院里的梁先生，整合时决定是否合为一人（见交付说明）。
+#   c8_naha_noro 是老祝女（思户）。
+# 不写的题目：同学与 1562 年的重逢；C7 的 1570 年官方南下与 1575 年萨摩责船；C13d 的金城真失事名单与真荣澄的大城名簿。
+# 结构：a00_gate（见闻，1557 年正月）→ a01_fuzhou（限期，福州的秤）→ a02_satsuma（1566 年萨摩的书信）→ b01_crown（1579 年冠船）→ c01_blessing（1588 年终章）。
+#   每个选项都有自己的回应与见闻；检定失败的 fail 分支 news 同时作为显示的回应与见闻。
+# 回忆插画清单（mem-* 键与画面，不超过 60 字）：
+#   mem-free_naha_envoy-c01：夜里的那霸码头，一个白衣的老祝女往船头洒海水，船长站在船边低着头。
+# 秘密：本线没有身世秘密；伏笔是祝女往船头洒的那一把水，c01 才知道她洒了多少年。
+# 人物在场：b01_crown 的 cast 是 c8_naha_envoy（父亲，在场核礼单）；尚永（sho_ei）是册封的对象，正文里只被提起、不出场，不放进 cast（放了会被记成“见过”）。
+
+[[tracks]]
+key = "free_naha_envoy"
+name = "进贡船"
+kind = "main"
+start = "a00_gate"
+auto = true
+cast = ["c8_naha_envoy", "c8_naha_noro"]
+
+[[tracks.chapters]]
+key = "a00_gate"
+title = "装硫磺的船"
+text = "正月的那霸港，进贡船的舱口敞着，硫磺一袋一袋往舱里送，黄粉的味道飘过了久米村的墙头。正使家的孩子今年不随进贡船去福州，要驾自己的小船跟在后头。装船那天，祝女穿着白衣站在码头上，先往进贡船的船头洒了一把海水，又走到小船边上，也洒了一把，比前头那把还多。缆桩边的老水手看着，嘴里念了一句：“海上的路是借来的，回来要还。”没人接他的话。"
+stage = "rumor"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "naha"
+cast = ["c8_naha_envoy"]
+mood = "tender"
+news = "那霸港的人都在说，进贡船装着硫磺，正使家的孩子驾着自己的小船跟在后头，祝女往两条船的船头都洒了海水。"
+when = [{ kind = "flag", flag = "c12_voyage_custom_naha_envoy" }]
+
+[tracks.chapters.default]
+next = "a01_fuzhou"
+effects = [{ kind = "flag", flag = "c13_free_naha_envoy" }]
+
+[[tracks.chapters]]
+key = "a01_fuzhou"
+title = "柔远驿的秤"
+text = "福州城外的柔远驿，琉球人住的馆舍，门口一对石狮子被春雨泡得发黑。市舶司的官员带着两个书吏来过秤，一筐一筐硫磺倒进秤盘，书吏报数，官员拿笔尖点着账册。轮到“我”运来的那几筐，秤杆往下一沉，又翘了起来。官员伸手抓了一把，黄粉在指缝里结成了块，捏一捏，有水渗出来。“湿了。”他把手缩回去，在袖口上擦了擦，“琉球的硫磺，向来是足秤的。今年怎么了？”官员把账册一合：“记进账里。明年的贡期，怕是要往后推。”父亲站在廊下，手里的礼单折了一折，又折一折，脸上没有一点波纹。我没说出口的是，这些硫磺是在海上湿的，秤不认这个。"
+when = [{ kind = "date", from = [1557, 3, 1] }]
+at = "fuzhou"
+speaker = "captain"
+mood = "tense"
+deadline = [1557, 11, 30]
+objectives = [{ kind = "goods", good = "sulfur", qty = 10, at = "fuzhou", text = "把进贡的硫磺运到福州" }]
+
+[tracks.chapters.timeout]
+next = "a02_satsuma"
+effects = [{ kind = "letter", person = "c8_naha_envoy", text = "你的船没到，贡品照数交了。驿丞说今年的硫磺湿，我说是海湿的。你不必回信，先把船修好。" }]
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "照秤交，短的那份记在账上"
+next = "a02_satsuma"
+effects = [{ kind = "cash", value = 350 }, { kind = "reputation", faction = "ryukyu", value = 2 }]
+news = "福州市舶司的人在码头上说，琉球来的硫磺湿了，分量短了一截，账上只记了个“湿”字。"
+reply = "官员在账上记了一笔“湿”，一个字也不多写，连是哪家的船都没问。父亲回了馆舍，一句话没说，夜里却把“我”的被角掖了又掖，掖到“我”装作睡着，他才停下。第二天一早，他把那页账的抄件折好，放进了自己的袖子里。"
+
+[[tracks.chapters.choices]]
+key = "silver"
+text = "拿自己的银子，把短的那份补足"
+next = "a02_satsuma"
+effects = [{ kind = "cash", value = -500 }, { kind = "reputation", faction = "ming", value = 3 }, { kind = "reputation", faction = "ryukyu", value = 1 }]
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你身上的银子不够补这一份。"
+news = "柔远驿的书吏悄悄说，琉球那个孩子拿自己的银子把硫磺的短秤补齐了，账上写的是一个“足”字。"
+reply = "银子是“我”从箱底数出来的，官员对着窗口一锭一锭看过，才肯收进袖子里。他在账上补写了一个“足”字，抬头看“我”的眼神变了一点：“琉球人，还肯把账补齐。”“我”没接话，只把空了的箱子合上。"
+
+[[tracks.chapters.choices]]
+key = "reweigh"
+text = "请驿丞再称一次，硫磺晒干了再称"
+next = "a02_satsuma"
+effects = [{ kind = "reputation", faction = "ryukyu", value = 2 }, { kind = "reputation", faction = "ming", value = 1 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "a02_satsuma", effects = [{ kind = "reputation", faction = "ryukyu", value = 1 }], news = "福州柔远驿的驿丞不肯再称，说称过的不再称。正使家的孩子还想争，父亲拍了拍那孩子的肩，没让再说下去。" }
+news = "柔远驿的驿丞跟人闲谈，说琉球来的硫磺晒了三天才肯过秤，说这些人跟秤较上了劲。"
+reply = "硫磺在驿馆的院子里摊了三天，日头晒干了，再称时一两也不少。驿丞把账册翻到“湿”字那一页，拿笔尖点了点，又把那一行划掉了。“我”把秤杆上的刻痕指给他看，他看了很久，摇着头说：“当了半辈子驿丞，头一回见琉球人跟秤较真。”"
+
+[[tracks.chapters]]
+key = "a02_satsuma"
+title = "萨摩的书信"
+text = "秋天，那霸港里多了一条挂萨摩旗的船。使者是个瘦高的武士，住进了久米村的馆舍，每天一早派人去码头数船。他带来一封信，封口是萨摩的印，信里的话很短：今后来琉球的日本船，没有萨摩的印判，一律不许进港。使者把信交到父亲手里，又说了一句：“我们只是想知道，来琉球的船，是谁的船。”父亲把信读了两遍，放回案上，说：“王府要拿主意，我先看看。”王府的人来了三回，来了又走。“我”的船常在福州与那霸之间跑，货舱里装的是什么，那使者大概比“我”自己还清楚。我想先看清那封信的印，再决定替谁说话。船进港那天，使者在缆桩边叫住了“我”。“我”手里还捏着货单，一页一页翻过去，没有马上答。他问：“你常去福州。那边的人，怎么看萨摩？”他问得很平，像是问天气。"
+when = [{ kind = "date", from = [1566, 9, 1] }]
+at = "naha"
+speaker = "captain"
+mood = "tense"
+deadline = [1568, 8, 31]
+
+[tracks.chapters.timeout]
+next = "b01_crown"
+effects = [{ kind = "letter", person = "c8_naha_envoy", text = "萨摩的使者走了，书信留在王府。王府没回，也没烧。" }]
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "劝父亲先收下书信，再慢慢议"
+next = "b01_crown"
+effects = [{ kind = "reputation", faction = "shimazu", value = 2 }]
+news = "萨摩的使者在那霸港数了几天船，走的时候说，琉球的正使收下了书信，这是个好的开头。"
+reply = "父亲听完，没有马上回话。“我”劝他先收下，他把信收进柜子里，只说了一句：“先放着。”那天夜里，他又把信拿出来，在灯下看到末一行，用指甲在纸边掐了一道印，才又放回去。过了两天，王府的通事来驿馆问那封信怎么办，父亲还是那一句：“先放着，等萨摩的人自己来问。”萨摩的使者走的时候很满意，站在码头边朝港里的船看了一圈，像是在数。“我”的船也在里头。父亲没有问“我”的意思，只在柜门上多挂了一把锁。通事走的时候，回头只说了一句：“萨摩那边，只问船上有没有印判。”"
+
+[[tracks.chapters.choices]]
+key = "fuzhou"
+text = "把萨摩的要求抄一份，带去给福州的人看"
+next = "b01_crown"
+effects = [{ kind = "reputation", faction = "ming", value = 2 }, { kind = "reputation", faction = "shimazu", value = -2 }]
+news = "福州的官员看了那份抄本，笑着说这事由天朝管。那霸港的人听了，都觉得这话比船上的货还顺耳。"
+reply = "福州的官员看完抄本，把纸角对齐，说琉球是天朝的藩属，萨摩管不着。书吏在抄本上盖了一方小印，写了日子，说要存进档里。官员又看了一遍“印判”两个字，问：“那使者是骑马来的，还是坐船来的？”“我”说，坐船来的，船上挂着萨摩的旗。官员把抄本的一半推回来：“存档的是天朝的字。船上挂什么旗，还是你们自己的事。”书吏在一旁抄了一句，抄完，把笔搁在砚台上，没有再蘸墨。出门时，门口那对石狮子还湿着，“我”的袖口沾了一点水气。"
+
+[[tracks.chapters.choices]]
+key = "escort"
+text = "送使者回鹿儿岛，路上带一份王府的礼"
+next = "b01_crown"
+effects = [{ kind = "cash", value = -800 }, { kind = "reputation", faction = "shimazu", value = 1 }, { kind = "reputation", faction = "ryukyu", value = 1 }]
+requires = [{ kind = "cash", ge = 800 }]
+hint = "你凑不出一份像样的礼。"
+news = "那霸港里有人看见琉球使节家的船送萨摩的使者往北去，船舱里装着一份礼，使者上船时还走得很稳。"
+reply = "使者在船上喝醉了，靠着舱壁说，萨摩其实也怕，怕的是京都那边的人。他说这话时没看“我”，眼睛盯着舱顶的一根横梁。说完这一句他就睡了，醒来以后再没提过。礼盒是“我”搬上船的，四方的，比一只箱子轻。盖子一直没有掀开，“我”也没有问。船出了那霸的港口，风转到北边，水手在船尾喊了一声，问要不要把帆收一半。使者在舱里打起了鼾，那霸港的灯一盏一盏灭下去。使者醒来以后，只要求再喝一口水，别的什么也没说。到鹿儿岛的那天，码头上风很大，使者下船时扶了一下“我”的肩，很快就放开了。"
+
+[[tracks.chapters]]
+key = "b01_crown"
+title = "冠船来了"
+text = "夏天，明朝的册封使乘着冠船到了那霸港，来册封新王尚永。港里挂满了彩旗，久米村的人忙着备礼、备宴、备诗。父亲老了，走路要扶着墙，礼单交给“我”来核。一样一样对：哪匹布是福州来的，哪箱漆器是首里定的，哪对灯笼挂在哪道门上。册封使的从人里，有人要看那霸港的地形，有人要买琉球的漆器，还有人袖子里的银子，比礼单上写的多。一个从人凑过来，笑着问：“礼单是哪位核的？这么细。”港口墙根下，几个卖鱼的萨摩人蹲着，话很少，眼睛一直盯着船。父亲看了一眼，说：“礼单上少一样，船上就多一样。你查查是哪一样。”我想，这些礼要是出了错，丢的是父亲的脸，也是王府的脸。"
+when = [{ kind = "date", from = [1579, 5, 15] }]
+at = "naha"
+cast = ["c8_naha_envoy"]
+speaker = "captain"
+mood = "cheerful"
+deadline = [1579, 11, 30]
+
+[tracks.chapters.timeout]
+next = "c01_blessing"
+
+[[tracks.chapters.choices]]
+key = "list"
+text = "一样一样核礼单，找出被换掉的那匹布"
+next = "c01_blessing"
+effects = [{ kind = "reputation", faction = "ryukyu", value = 2 }]
+check = { attr = "numeracy", base = 20, per = 7 }
+fail = { next = "c01_blessing", effects = [{ kind = "reputation", faction = "ryukyu", value = 1 }], news = "册封的礼单对到半夜还是对不上，王府的礼官急得满头汗。最后是久米村的正使凑近布匹闻了闻，说那匹布有一股萨摩的烟味。" }
+news = "册封的礼单在久米村对了一夜，最后查出一匹萨摩来的布被人换了。王府没有声张，那匹布的事，久米村的人谁也不提。"
+reply = "那匹布是被萨摩的耳目换走的，换上去的是一匹福州布。“我”把两匹布并排放在桌上，一匹是萨摩来的粗棉，一匹是福州的细布，边上的线头却一样。王府的人没出声，把两匹布叠在一起，包好收进了箱底。"
+
+[[tracks.chapters.choices]]
+key = "escort"
+text = "陪册封使的从人去看那霸港"
+next = "c01_blessing"
+effects = [{ kind = "reputation", faction = "ming", value = 2 }]
+check = { attr = "etiquette", base = 20, per = 7 }
+fail = { next = "c01_blessing", effects = [{ kind = "reputation", faction = "ming", value = 1 }], news = "那霸港里，一个册封使的从人嫌那孩子礼数不熟，看了半截就回了船，嘴里嘀咕着琉球人的规矩学得还不到家。" }
+news = "册封使的从人在那霸街上转了一圈，三只漆碗付的是现钱，漆匠老头数钱时一直笑，说天朝的人手松。"
+reply = "从人看完港口，说那霸比福州小，可海比福州干净。临走时在街上买了三只漆碗，漆还没干透，他们用布包着抱上了船，付的是现钱，还夸“我”带路带得稳。漆匠在后头追了两步，嚷着说碗底还没写上字号。"
+
+[[tracks.chapters.choices]]
+key = "spies"
+text = "把混在港里的萨摩耳目指给王府"
+next = "c01_blessing"
+effects = [{ kind = "reputation", faction = "ryukyu", value = 2 }, { kind = "reputation", faction = "shimazu", value = -2 }]
+check = { attr = "intrigue", base = 20, per = 7 }
+fail = { next = "c01_blessing", news = "王府的人凭一个孩子的一句话，把一个卖鱼的老头带走，问了半天，什么也没问出来，又把他放回墙根下。" }
+news = "港口墙根下那几个卖鱼的，这几天没再露面，有人在王府门口看见他们被领着进去，脸上还带着笑。"
+reply = "“我”指了指墙根，只说了一句：“第三个，别看他手上的鱼。”王府的人没抓人，只把那几个卖鱼的请去喝了三天酒。喝到册封使的船开走，才一个个放出来，每人手里塞着一包点心。墙根下的鱼摊三天没有开门。"
+
+[[tracks.chapters]]
+key = "c01_blessing"
+title = "祝女的海水"
+text = "春天，萨摩又来了书信：岛津家已经降了关白秀吉，关白要琉球派使者去京都道贺。王府里吵成一片，三司官说要去，首里的老臣说要拖。父亲去年冬天走的，走前把礼单交给“我”：“这张单子，以后你替我看。”如今“我”坐在久米村的长桌边，两边的信摊了一桌。我想起的是礼单最后一行，父亲还没写完。夜里，码头上有人叫“我”的名字，是老祝女，白衣，提着一只小陶瓶，瓶口缺了一角。她说自己老了，这是她最后一次为出海的船祝祷。她没让“我”去拎水桶，自己一步一步走到船边的石阶上，身后的石板上留着一串湿脚印。“我这辈子洒过的水，比那霸港还多，”她把瓶口对着海，“可回来的船，我记不清有几条。”“我”想问她，那一把水是从哪一年洒起的。她按着瓶口的指节全是盐斑，“我”就没有开口。她看着“我”，又说了一句：“海上的路是借来的。我替你再借一回。”"
+when = [{ kind = "date", from = [1588, 2, 1] }]
+at = "naha"
+speaker = "captain"
+mood = "tender"
+deadline = [1588, 12, 31]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "c8_naha_noro", text = "王府还在议去不去京都。你的船不在港里，我替你在御岳里祷了一回。" }]
+
+[[tracks.chapters.choices]]
+key = "kagoshima"
+text = "开船去鹿儿岛，先跟萨摩的人谈"
+next = "done"
+effects = [{ kind = "reputation", faction = "shimazu", value = 2 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "reputation", faction = "shimazu", value = 1 }], news = "萨摩的家老只听不答，送客时说：“关白不等人。”那霸港的人学着这句话，学得很像。" }
+news = "萨摩的家老在鹿儿岛答应替琉球说一句好话，条件是先送一船漆器过去。那霸港的人说，漆器的价又要涨了。"
+reply = "萨摩的家老在鹿儿岛的宅子里见了“我”，茶凉了才开口。他答应替琉球说一句好话，条件是琉球的漆器先送一船过去，船上要挂萨摩的印判。“我”问，船上挂着萨摩的印判，那这船算谁的？家老笑了一下，没有答。在码头上，他把条件写成抄本，折成四折塞进腰里，说：“这条件，我替你们记着。”“我”把礼单留在久米村的长桌上，只带了那张抄本回来。抄本的纸角被海水洇过，晕开的几个字，“我”也认不全。回程的风很顺，“我”一路上都把那张抄本压在货单底下，怕它再被水洇。"
+
+[[tracks.chapters.choices]]
+key = "delay"
+text = "劝王府拖一年再议"
+next = "done"
+effects = [{ kind = "reputation", faction = "ryukyu", value = 2 }]
+check = { attr = "eloquence", base = 35, per = 6 }
+fail = { next = "done", effects = [{ kind = "reputation", faction = "ryukyu", value = 1 }], news = "王府的议事厅里，一个使节家的孩子说了半天，没人接话。议到天亮，还是没有定下来。" }
+news = "王府定了明年再派使者，那霸港的人说，正使家的孩子在议事厅里说了一个时辰，三司官才松了口。"
+reply = "王府决定明年再派使者，礼单要从头再核一遍，每一样都要有人签字。“我”在议事厅里说了几句，说冠船走了还没清的账，京都的路上每一样东西都要过三道手，急不得。首里的老臣点了头，三司官却盯着“我”的袖口，没说话。最后他把笔递到“我”面前：“这一回，你来点。”“我”接过笔，在礼单最末一行的下面签了字，签的是自己的名，笔画比父亲的小一圈。散会的时候，港口那几个萨摩人还在等，看见“我”出来，脸绷得像上了浆的布。墨还没干，萨摩的人在港口骂了一声，骂完，把船帆重新扯了起来。"
+
+[[tracks.chapters.choices]]
+key = "bless"
+text = "请祝女为我的船祝祷，然后照常出海"
+next = "done"
+effects = [{ kind = "memory", memory = "mem-free_naha_envoy-c01", title = "祝女的海水" }]
+news = "夜里的那霸码头，老祝女给一条小船的船头洒了海水，蹲在码头边的人全看着，没人敢出声。"
+reply = "祝女洒完水，在船头放了一枝草，叶子细，边上有一圈齿，是“我”认不出的。她说：“船回来的时候，把它还我。”说完，她把瓶子倒过来，最后几滴顺着船舷的木头往下流，滴滴答答。“我”伸手去摸那枝草，草汁沾了指头，有一股说不出的苦。缆桩边那个老水手摘下了帽子，站在一旁，没有念那句话。她走时头也没回，白衣在码头的灯下一闪，走到码头尽头，就不见了。石板上那一串湿脚印，过了好一阵才干。夜风从港口吹过来，灯笼的火歪了一下，又直了。"

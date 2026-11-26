@@ -1,0 +1,155 @@
+# 请托：拖了三个月的工钱（request_hasan）。Claude 写（C13d，2026-10-25），仅中文，不写英文覆盖。
+# 人物：哈桑（hasan，1531-10-04 生，男），金角湾兵工厂的船匠；势力 ottoman，身份档 1（匠人）。cast 在 cast/story_islamic.toml，日程 1553—1590 在 istanbul 的 dock。
+# 类型：说服某人（persuade）。三章：offer（报价）、persuade（账房里的三条路）、result（发钱那天）；另有 result_partial（只发了一半的收尾）。终点 done / failed。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_hasan）启动；offer 章不写 at，目标是在港里找到他。
+#       窗口 1574-01-01 至 1590-06-30；offer 的 deadline 即止日，到期走 timeout（next=failed，不写见闻）。
+# 进行中：persuade 章 deadline_days=30，超时走 failed，来信一封，好感 -5，旗标 _late。result 与 result_partial 是普通章，可以一直等。
+# 依据·史实背景：金角湾兵工厂（史实）的船匠与发饷官的账房；造炮的先发、船匠后发，写成账房里的说法，不写具体的人名与数目。
+#   本轨道从 1574 年起，不写 1571 年以后一冬重建舰队的事，也不写勒班陀。
+# 依据·原创：哈桑、刻了三十道痕的木头、账房里的复式记账与逐个点名、半数发饷的说法、一个月的垫付。
+# 秘密：cast 没写秘密，本请托不触碰 C7 阿尔维塞与哈桑的线（那条线止于 1573 年）；正文不写阿尔维塞、塞利姆，见闻也不写。
+# 读的旗标：无。不读任何 c7_* 或 c13_main_* 旗标；没有主线门禁（gate_main 为空），没有 variant_main。
+# 设的旗标：c13_request_hasan_accepted（offer 两条接法）、_asked（offer 问了收不回来的话，persuade 的变体读）、
+#   _paid（persuade 三条路走通，分支）、_declined / _late / _done（终局各一面）、_partial（result_partial 两条收尾，终局；清单未列，见交给整合的说明）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不用 growth。
+# 报酬：现金最多 900（半数分支 500）；好感最多 +15；名声 +2；回忆 mem-request_hasan-result。木头只写在正文，不发物品。
+# 依赖：港口 istanbul（ports_east_med.toml）；技能 double_entry（skills.toml）；属性 eloquence、numeracy；人物 hasan。无 B10b 改名。
+# 回忆插画清单：
+#   mem-request_hasan-result「刻了三十道痕的木头」：船台边的木架下，一块刻着三十道痕的木头摆在长凳上，排在最后的老船匠伸手去拿。
+
+[[tracks]]
+key = "request_hasan"
+name = "拖了三个月的工钱"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["hasan"]
+
+# 报价：船台的木架下。哈桑手里托着一块刻了三十道痕的木头，要你陪他去账房。
+[[tracks.chapters]]
+key = "offer"
+title = "许了一句"
+text = "哈桑站在船台的木架下，手里托着一块木头，上面用刀刻着三十道痕。船匠们排在他身后，没有人说话。发饷官的工钱拖了三个月，每回都说下个月。哈桑向来不许诺，木料没接牢，他一句话也不肯说。这回他当着三十个船匠，许了一句：“这个月底，钱到。”许完，他把木头翻过来，看着你：“我只会读木头的纹，读不懂他的账。你陪我去，把账摊开。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1574, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "hasan", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应陪他去发饷官那里。"
+next = "persuade"
+reply = "他把木头放回桌上，三十道痕朝上。“一道一个人。账上要是少了一个，我就认得出来。”说完，他像是想起什么，又补了一个字：“行。”"
+effects = [{ kind = "affinity", person = "hasan", value = 2 }, { kind = "flag", flag = "c13_request_hasan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_promise"
+text = "问他：许出去的话，收不回来怎么办？"
+next = "persuade"
+reply = "“收不回来。”他把木头翻到背面，那里有一道裂，他用拇指按着，“所以我才找你。”"
+effects = [{ kind = "affinity", person = "hasan", value = 2 }, { kind = "flag", flag = "c13_request_hasan_accepted" }, { kind = "flag", flag = "c13_request_hasan_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "兵工厂的账，我不掺和。"
+next = "failed"
+reply = "他点点头，把刻着痕的木头收进怀里，没再劝。走出几步，船台那头的锤声又响起来了。"
+effects = [{ kind = "flag", flag = "c13_request_hasan_declined" }]
+
+# 账房：账本堆了半面墙。发饷官说钱拨下来了，可要先发给造炮的。三条路：复式记账、当面争、逐个点名。
+[[tracks.chapters]]
+key = "persuade"
+title = "排在造炮的后面"
+text = "发饷官的账房里，账本堆了半面墙，算盘声隔着门也听得见。那人翻到三个月前的那几页，说钱已经拨下来了，可要先发给造炮的，船匠排在后面。哈桑站在门边，一个字也没说，眼睛只盯着账页上那些名字。发饷官把账本往你这边一推：“不信，你自己看。”哈桑这才走过来，用拇指按住一行歪的数，“这根肋材弯了半指，得回火上再烤。”"
+at = "istanbul"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "hasan", value = true }]
+news = "金角湾兵工厂的发饷官账房里，一个老船匠拿着一块刻了三十道痕的木头来对账。"
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "hasan", value = -5 }, { kind = "flag", flag = "c13_request_hasan_late" }, { kind = "letter", person = "hasan", text = "月底到了，钱没到。我许的那句话，收不回来，我自己先垫了一个月的。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_hasan_asked" }]
+text = "发饷官的账房里，账本堆了半面墙。哈桑进门先看了一眼那堵墙，又看了你一眼，像是在等你想起那句收不回来的话。发饷官说钱拨下来了，可要先发给造炮的，船匠排在后面。他把账本往你这边一推：“不信，你自己看。”哈桑用拇指按住一行歪的数，没有说话。你翻到那一行，才看清它歪在哪里。"
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "坐下来，用复式记账的法子把这三个月的进出对一遍。"
+next = "result"
+requires = [{ kind = "skill", skill = "double_entry", ge = 60 }]
+hint = "复式记账你还不熟，对到第二页就乱了。"
+reply = "你一笔一笔对下去，对到第二个月，发现有一笔钱记了两回出、一回进。发饷官的脸白了，说是书记记错了，当天就把船匠的钱拨了下去。哈桑没道谢，把那一页折好，揣进怀里。"
+effects = [{ kind = "affinity", person = "hasan", value = 5 }, { kind = "flag", flag = "c13_request_hasan_paid" }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说：船匠三个月没工钱，造不出船来，造炮的也白造。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "你把话说得不高，句句都扣在账上。发饷官嘴里还在嘟囔“账要照规矩来”，手却已经去拉抽屉了。哈桑在旁边一直看着你，没有插嘴。"
+effects = [{ kind = "affinity", person = "hasan", value = 3 }, { kind = "flag", flag = "c13_request_hasan_paid" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "hasan", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "照哈桑的木头，一个人一个人点：账上的名字，有没有少。"
+next = "result"
+check = { attr = "numeracy", base = 20, per = 7 }
+reply = "你照着木头上的三十道痕，一个名字一个名字地点。账上少了两个。发饷官说是新来的，还没登记。哈桑说：“干了三个月了。”钱当天就补上了。"
+effects = [{ kind = "affinity", person = "hasan", value = 3 }, { kind = "flag", flag = "c13_request_hasan_paid" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "hasan", value = -2 }] }
+
+# 发钱那天：船匠排成一队领钱，哈桑排在最后一个，木头还在他手里。
+[[tracks.chapters]]
+key = "result"
+title = "排在最后一个"
+text = "发钱那天，船匠们在兵工厂门口排成一队，一个一个报名字。书记从账房里一枚一枚点出钱来，每点一枚，就在账本上划一道。船匠们接了钱就往回走。哈桑站在最后。等人都走完了，他才走过来，手里还是那块刻着三十道痕的木头。“三十道，一道没少。”他说，把木头递给你。"
+speaker = "captain"
+mood = "tender"
+at = "istanbul"
+when = [{ kind = "alive", person = "hasan", value = true }]
+objectives = [{ kind = "person", person = "hasan", text = "在兵工厂门口找到他" }]
+news = "金角湾兵工厂的船匠们领到了拖了三个月的工钱，一个老船匠排在最后一个。"
+
+[[tracks.chapters.choices]]
+key = "take_wood"
+text = "收下木头，也收下这份酬金。"
+next = "done"
+reply = "他说这木头是从一条拆掉的旧船上锯下来的，纹路他读过，结实。钱他一张张数给你，数完说，下回他许诺之前，先来问你。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "hasan", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_hasan-result", title = "刻了三十道痕的木头" }, { kind = "flag", flag = "c13_request_hasan_done" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_wood"
+text = "木头留给他，下回还要用。"
+next = "done"
+reply = "他想了想，把木头收回去了：“也是。许诺的事，还会有。”钱他照付，一个子儿也没少。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "hasan", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_hasan_done" }]
+
+# 只发了一半：发饷官只肯先发船匠的一半，哈桑把自己那份从这一半里摸出来。
+[[tracks.chapters]]
+key = "result_partial"
+title = "只发了一半"
+text = "发饷官只肯先发一半，另一半说是月底再补。船匠们排着队领钱，书记照旧一枚一枚点，点到一半就停了，说账上只有这么多。哈桑站在最后，领了那一半，没数，先从里头抽出你那一份，递到你手里。“另一半月底会到。”他看着你说，“这一回，我信他。”"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+when = [{ kind = "alive", person = "hasan", value = true }]
+news = "金角湾兵工厂的发饷官只先发了船匠的一半工钱，老船匠哈桑接过了那一半。"
+
+[[tracks.chapters.choices]]
+key = "take_half"
+text = "收下这一半，另一半等月底。"
+next = "done"
+reply = "你接过钱，一枚一枚数了一遍，数对了。“月底要是没到，你来找我。”哈桑说完，又补了一句：“我不跑。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "hasan", value = 4 }, { kind = "flag", flag = "c13_request_hasan_partial" }]
+
+[[tracks.chapters.choices]]
+key = "decline_half"
+text = "这一半不要，等全数到了再说。"
+next = "failed"
+reply = "他愣了一下，把递过来的钱推了回去。“那你等着，这回是全数。”他说完才发觉把话说满了，抿着嘴，没收回去。"
+effects = [{ kind = "flag", flag = "c13_request_hasan_partial" }]

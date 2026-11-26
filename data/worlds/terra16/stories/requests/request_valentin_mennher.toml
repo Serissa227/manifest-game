@@ -1,0 +1,188 @@
+# 请托：两地的汇价（request_valentin_mennher）。中文，Claude 执笔（C13d）。
+# 人物：瓦伦丁·门纳 valentin_mennher（1521 年生，男；生月日不详，TOML 里的 1 月 1 日只是占位；约 1570 年卒）。德意志肯普滕人，安特卫普算术学校的教师，1550 年代起在安特卫普出版算术与簿记书。cast/historical_01_europe.toml。
+# 类型：去某处（go）。五章（brief 是四章，见下面的结构说明）：offer（安特卫普的算术学校，报价）→ lisbon（里斯本新街的兑换桌）→ venice（威尼斯里亚尔托桥边的银行柜台）→ report 或 report_terms（安特卫普，回报）→ done / failed。
+# 报价：当面（T）。auto=false，玩家在安特卫普找到他（ask:request_valentin_mennher）。offer 窗口 1557-03-01 至 1568-06-30，止日即 deadline，超时走 failed，不写见闻（没人知道这件事没成）。offer 之后每章都要求他还在世。
+# 进行中：lisbon、venice 各 150 天；两个回报章的期限都是 1569-12-31（日程到 1569 年底）。
+# 身份档 1（低风险）：报酬上限 900，折中 450（50%）。
+# 依据·史实：门纳 1550 年代起在安特卫普出版算术与簿记书（cast 出处：1550 年的法文记账书）；圣安布罗斯行会只作口吻里的背景。
+# 依据·原创：里斯本新街的三张兑换桌与墙上的旧汇价表；威尼斯里亚尔托桥边的小黑板；热那亚人的四十天与六十天期票之说；格子纸上的五栏；报价人的名字（不写真名）。
+# 待核：卒年约 1570，确切月日未核；正文不写具体的卒期。
+# 结构说明（brief 与引擎的偏离）：brief 的 report 章有两个旗标门禁——explain 要 terms、names 要 clean。bot 审计要求门禁在每条到达该章的路径上都能满足（准备后仍不满足即分支错误），而 terms 只有热那亚人的成功分支会设，clean 只有里斯本的两个选项会设，所以：
+#   1. explain 挪到 report_terms 章，只从 venice 的 genoese 成功分支到达（那条分支设 terms，章的 when 写 terms）；
+#   2. names 改为检定（eloquence 一般），不再门禁 clean；
+#   3. clean 改为 report 章的一个变体（只换正文，不换选项）：纸上写满了报价人的名字时，正文有一句不同。
+# 读的旗标：c13_request_valentin_mennher_terms（report_terms 的 when）、c13_request_valentin_mennher_clean（report 的变体）。不读 c7_*、c13_main_*；不设任何 c7_* 旗标。
+# 设的旗标：accepted / declined / clean / loud / signed / terms / done / partial / late。终局旗标：done（explain、names 成功）与 partial（shrug，names 失败）；late 只在超时时设。
+# 依赖：无改名依赖（antwerp、lisbon、venice 现成）；技能 double_entry 现成；属性 numeracy、commerce、eloquence 沿用 captain 表。唯一奖励 ympyn_dutch（items/books_05_commerce.toml）。
+# 回忆插画清单：
+#   mem-request_valentin_mennher-report：教室的黑板上两行汇价，中间画着一个大大的问号。
+
+[[tracks]]
+key = "request_valentin_mennher"
+name = "两地的汇价"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["valentin_mennher"]
+
+# offer · 1557—1568 · 安特卫普的算术学校：他要两地的新数，报价的人也要记下来
+[[tracks.chapters]]
+key = "offer"
+title = "十年前的数"
+text = "安特卫普的算术学校在行会大楼二楼。教室里一排学徒对着同一道例题皱眉：里斯本兑安特卫普的汇价，书上印的还是十年前的数。门纳把书往桌上一摔，书脊裂开一道缝。“账簿不撒谎，”他用德意志口音一字一顿地说，“可书会过时。所以我要新数。你去里斯本和威尼斯，各记一天当天真实的汇价。报价的人是谁，也要写上。报价的人比数还要紧，因为数是从他嘴里出来的。”"
+mood = "tense"
+objectives = [{ kind = "person", person = "valentin_mennher", text = "在安特卫普的算术学校找到他" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1568, 6, 30] }, { kind = "alive", person = "valentin_mennher", value = true }]
+deadline = [1568, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：先里斯本，后威尼斯"
+next = "lisbon"
+effects = [{ kind = "affinity", person = "valentin_mennher", value = 2 }, { kind = "flag", flag = "c13_request_valentin_mennher_accepted" }]
+reply = "他从抽屉里抽出一张画好格子的纸：日期、地点、报价人、买价、卖价，五栏。“报价人那一栏写全名。”他把笔递过来，笔尖已经削好了。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：一张汇价表，不值我跑两趟"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_valentin_mennher_declined" }]
+reply = "他没有再劝。“旧数，你们自己去查。”他拿粉笔在黑板上把那道题改了个数，学徒们偷偷笑，他敲了两下黑板，让他们接着算。"
+
+# lisbon · 1557—1569 · 里斯本新街的兑换桌：同一个时辰，三张桌子报了三个数
+[[tracks.chapters]]
+key = "lisbon"
+title = "三张桌子"
+text = "里斯本新街的拱廊下，三张长桌并排摆着，兑换商坐在桌后，喊声一阵高一阵低。同一个时辰，三张桌子报了三个数，买价和卖价混在一起，谁也不肯说自己报的是哪一个。石柱上贴着一张旧汇价表，纸角卷了起来，上面的数是十年前的，没人去撕。中间那张桌子的书记抄得很快，手指上全是墨。你得趁他把纸收起来之前，把三行都记下来。"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+objectives = [{ kind = "at", at = "lisbon", text = "到里斯本新街的兑换桌前" }]
+when = [{ kind = "alive", person = "valentin_mennher", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "valentin_mennher", value = -3 }, { kind = "flag", flag = "c13_request_valentin_mennher_late" }, { kind = "letter", person = "valentin_mennher", text = "里斯本的数等不到了。新版我先用旧数印了，学徒们还在做十年前的题。" }] }
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "记下三张桌子的买价、卖价和报价人"
+next = "venice"
+requires = [{ kind = "skill", skill = "double_entry", ge = 60 }]
+hint = "你记不清哪个是买价、哪个是卖价"
+effects = [{ kind = "affinity", person = "valentin_mennher", value = 3 }, { kind = "flag", flag = "c13_request_valentin_mennher_clean" }]
+reply = "你照着桌上的喊声，一格一格填进格子纸：买价在前，卖价在后，报价人的名字写进第三栏。三行写完，纸面上不见一处涂改。"
+news = "里斯本新街的拱廊下，一个外港来的船长守着三张兑换桌，买价、卖价和报价人，一行一行记进格子纸里。"
+
+[[tracks.chapters.choices]]
+key = "calc"
+text = "当场把三个数折成安特卫普的钱"
+next = "venice"
+check = { attr = "numeracy", base = 20, per = 7 }
+fail = { next = "venice", effects = [{ kind = "affinity", person = "valentin_mennher", value = -2 }], news = "里斯本新街上，一个外港来的船长在兑换桌前心算，折到第三个数时算错了一位，桌边的书记笑出了声。" }
+effects = [{ kind = "affinity", person = "valentin_mennher", value = 3 }, { kind = "flag", flag = "c13_request_valentin_mennher_clean" }]
+reply = "你把三个数往安特卫普的钱上折，一个折完划一笔，再折下一个。折到第三行，笔尖停了一下。"
+news = "里斯本新街上，一个外港来的船长当场把三个数折成了安特卫普的钱，几张桌子都停下喊声，朝这边看过来。"
+
+[[tracks.chapters.choices]]
+key = "shout"
+text = "记下最大声那个人喊的数"
+next = "venice"
+effects = [{ kind = "flag", flag = "c13_request_valentin_mennher_loud" }]
+reply = "你记下了声音最大那张桌子的数。那个兑换商喊完就把帽子压低，你没看清他的脸。纸上的数写得很大，大得有点刺眼，可是谁报的，纸上一个字也没有。"
+news = "里斯本新街的拱廊下，一个外港来的船长只认喊得最响的那张桌子，记下的数却没人知道是谁报的。"
+
+# venice · 1557—1569 · 里亚尔托桥边的银行柜台：小黑板上的数写完就擦，热那亚人说这边不认
+[[tracks.chapters]]
+key = "venice"
+title = "小黑板"
+text = "里亚尔托桥边的银行柜台前，书记把今天的汇价写在一块小黑板上，念一个数，擦一个数。书记的袖套磨得发亮，念数时没有抬头。柜台后面的运河上，船夫在吆喝，喊的是另一种价钱。你刚把里斯本的数在纸上对好，旁边一个热那亚人凑过来看了一眼，摇摇头：“你那个数，这边的人不认。”"
+speaker = "captain"
+mood = "tense"
+at = "venice"
+objectives = [{ kind = "at", at = "venice", text = "到里亚尔托桥边的银行柜台前" }]
+when = [{ kind = "alive", person = "valentin_mennher", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "valentin_mennher", value = -3 }, { kind = "flag", flag = "c13_request_valentin_mennher_late" }, { kind = "letter", person = "valentin_mennher", text = "里斯本的数他先用上了，威尼斯的等下一版。" }] }
+
+[[tracks.chapters.choices]]
+key = "clerk"
+text = "请柜台的书记把今天的数抄在你的纸上，签个名"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report", effects = [{ kind = "affinity", person = "valentin_mennher", value = -1 }], news = "里亚尔托桥边的银行柜台上，书记不肯替外港来的船长签字，只说纸上的数自己抄，签名的事免谈。" }
+effects = [{ kind = "affinity", person = "valentin_mennher", value = 3 }, { kind = "flag", flag = "c13_request_valentin_mennher_signed" }]
+reply = "你把纸推到柜台上，请书记把今天的数抄上去，再签上名字。书记先看纸，再看你，手里的粉笔停在半空。"
+news = "里亚尔托桥边的银行柜台上，书记替一个外港来的船长在汇价纸上签了名，签完就把小黑板擦了。"
+
+[[tracks.chapters.choices]]
+key = "genoese"
+text = "问那个热那亚人，为什么不认"
+next = "report_terms"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "report", news = "威尼斯里亚尔托桥边，一个热那亚人跟外港来的船长说了一大串话，船长只听懂了“期限”两个字。" }
+effects = [{ kind = "affinity", person = "valentin_mennher", value = 3 }, { kind = "flag", flag = "c13_request_valentin_mennher_terms" }]
+reply = "热那亚人把笔往桌上一放，先伸出四根手指，又翻起一只手，再加上一根，比了两个数。里斯本的数按四十天的期票报，这边的按六十天，他说得又快又急。你在纸边记下一行小字。"
+news = "威尼斯里亚尔托桥边的银行柜台前，一个热那亚人替外港来的船长讲清了期票的期限，书记在旁边直点头。"
+
+# report · 1557—1569 · 安特卫普的算术学校：学徒举手说两边对不上，门纳等你开口
+[[tracks.chapters]]
+key = "report"
+title = "两地的数对不上"
+text = "门纳把你的纸压在教室的长桌上，叫学徒们照着格子自己算。题目要他们把两地的汇价折成同一个钱，再算一笔买卖划不划算。算到一半，窗边的学徒举起手：“老师，两边对不上。”学徒们的纸上都是墨点，有人蘸着口水去擦，擦出一大片灰。门纳在学徒身后敲了一下桌子：“再算一遍，别看数。”说完他没有看学徒，只看着你，眼镜滑到了鼻尖上，等你开口。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "valentin_mennher", text = "回安特卫普的算术学校找门纳" }]
+when = [{ kind = "alive", person = "valentin_mennher", value = true }]
+deadline = [1569, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_valentin_mennher_late" }, { kind = "letter", person = "valentin_mennher", text = "新版已经付印了，你的数没赶上。下一版我再补。" }] }
+
+[[tracks.chapters.variants]]
+key = "clean"
+when = [{ kind = "flag", flag = "c13_request_valentin_mennher_clean" }]
+text = "门纳把你的纸压在教室的长桌上，叫学徒们照着格子自己算。你那张纸上，报价人的名字一行一行写得整整齐齐。算到一半，窗边的学徒举起手：“老师，两边对不上。”门纳在学徒身后敲了一下桌子：“再算一遍，别看数。”说完他没有看学徒，先看了看你的纸，眼镜滑到了鼻尖上，等你开口。"
+
+[[tracks.chapters.choices]]
+key = "names"
+text = "指着报价人的名字，说你们去问他们"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "valentin_mennher", value = 1 }, { kind = "flag", flag = "c13_request_valentin_mennher_partial" }], news = "安特卫普的算术学校里，外港来的船长指着报价人的名字要去问，门纳皱着眉，只让学徒们接着算。" }
+effects = [{ kind = "cash", value = 900 }, { kind = "item", item = "ympyn_dutch", qty = 1 }, { kind = "skill", skill = "double_entry", value = 30 }, { kind = "fame", value = 2 }, { kind = "affinity", person = "valentin_mennher", value = 6 }, { kind = "flag", flag = "c13_request_valentin_mennher_done" }]
+reply = "门纳看了你一眼，等你把话说完。他把纸翻到背面，让学徒们一个一个念出报价人的名字，念错一个，就罚他重念。"
+news = "安特卫普的算术学校里，一个外港来的船长让学徒们把报价人的名字念出来，门纳在旁边笑出了声。"
+
+[[tracks.chapters.choices]]
+key = "shrug"
+text = "说你只管记数，别的不管"
+next = "done"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "valentin_mennher", value = 1 }, { kind = "flag", flag = "c13_request_valentin_mennher_partial" }]
+reply = "他叹了口气，当着学徒的面把那一题从头讲了半个时辰。钱照付了一半。"
+news = "安特卫普的算术学校里，门纳当着学徒的面把一道汇价题从头讲了一遍，讲完叹了口气。"
+
+# report_terms · 1557—1569 · 同一间教室：你带着期限的道理回来，门纳等你把话说完
+[[tracks.chapters]]
+key = "report_terms"
+title = "期限不同"
+text = "你走进教室时，学徒们还在为两边的数吵。门纳把你的纸往长桌上一放，示意学徒们拿去对。纸边上还蹭着里亚尔托那块小黑板的粉笔灰。窗边的学徒举起手：“老师，我的数还是对不上。”你没等门纳开口，把手指按在纸边那行小字上：期限不同。门纳没有接你的话，只看着你，眼镜往下滑了一截，等你说完。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "valentin_mennher", text = "回安特卫普的算术学校找门纳" }]
+when = [{ kind = "alive", person = "valentin_mennher", value = true }, { kind = "flag", flag = "c13_request_valentin_mennher_terms" }]
+deadline = [1569, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_valentin_mennher_late" }, { kind = "letter", person = "valentin_mennher", text = "新版的版已经排好了，期限那一行没赶上。下一版我再补。" }] }
+
+[[tracks.chapters.choices]]
+key = "explain"
+text = "告诉他们：期限不同，数就不同"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "item", item = "ympyn_dutch", qty = 1 }, { kind = "skill", skill = "double_entry", value = 30 }, { kind = "fame", value = 2 }, { kind = "affinity", person = "valentin_mennher", value = 8 }, { kind = "memory", memory = "mem-request_valentin_mennher-report", title = "对不上的两个数" }, { kind = "flag", flag = "c13_request_valentin_mennher_done" }]
+reply = "门纳难得点了一下头。“这一题新版里要加一个脚注，”他说，“注上你的船，注上日期。”学徒们重新埋头算，这回没人再举手。"
+news = "安特卫普的算术学校里，门生们对着两地的汇价算了一下午，最后是一个外港来的船长把期限的事说破了。"
+
+[[tracks.chapters.choices]]
+key = "shrug"
+text = "说记数是你的事，期限不归你管"
+next = "done"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "valentin_mennher", value = 1 }, { kind = "flag", flag = "c13_request_valentin_mennher_partial" }]
+reply = "你说记数是你的事，期限不归你管。门纳没有去看那行小字，只把那一题从头讲了一遍。讲完他从抽屉里数出一半的钱，推到你面前。"
+news = "安特卫普的算术学校里，一个外港来的船长说自己只管记数，门纳的脸沉了下来，讲了一个时辰的汇价题。"

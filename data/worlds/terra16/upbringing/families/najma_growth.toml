@@ -1,0 +1,1793 @@
+# C9：纳吉玛的成长内容（2026-11-03）。玩家文案由 Claude 补写。
+# 含：B1 新手旬（1553 年 1 月三节）、B2 家乡玩伴（努尔、阿米尔，家乡期各四段，入学后各一封来信）、
+#     B5 第一年采珠季（六至九月：说服母亲、第一次下水、分珠）、B7 第一次远足（需 outing_permission）、
+#     以及 B5 解锁的“辨珍珠”练习。
+# 门槛只决定这条线何时能入队；具体日期与旗标写在各轨道的 when 里。
+"format_version" = 1
+
+# ---- 门槛（event_gates）----
+# 家乡期的人物事件要求人物与主角同处一地（actors_present）；入学后的来信按学院门禁。
+
+[event_gates.c9_najma_novice_upper]
+"stage" = "home"
+"from" = [1553, 1, 1]
+
+[event_gates.c9_najma_novice_middle]
+"stage" = "home"
+"from" = [1553, 1, 11]
+
+[event_gates.c9_najma_novice_lower]
+"stage" = "home"
+"from" = [1553, 1, 21]
+
+[event_gates.c9_najma_friend_nur_01]
+"stage" = "home"
+"from" = [1553, 2, 1]
+"actors" = ["nur"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_nur_02]
+"stage" = "home"
+"from" = [1553, 4, 1]
+"actors" = ["nur"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_nur_03]
+"stage" = "home"
+"from" = [1553, 7, 1]
+"actors" = ["nur"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_nur_04]
+"stage" = "home"
+"from" = [1553, 11, 20]
+"actors" = ["nur"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_amir_01]
+"stage" = "home"
+"from" = [1553, 2, 11]
+"actors" = ["amir"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_amir_02]
+"stage" = "home"
+"from" = [1553, 5, 1]
+"actors" = ["amir"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_amir_03]
+"stage" = "home"
+"from" = [1553, 8, 1]
+"actors" = ["amir"]
+"actors_present" = true
+
+[event_gates.c9_najma_friend_amir_04]
+"stage" = "home"
+"from" = [1553, 11, 1]
+"actors" = ["amir"]
+"actors_present" = true
+
+[event_gates.c9_najma_letter_nur]
+"stage" = "academy"
+"from" = [1554, 3, 1]
+"academy" = "shipboard_zabid"
+
+[event_gates.c9_najma_letter_amir]
+"stage" = "academy"
+"from" = [1554, 5, 1]
+"academy" = "shipboard_zabid"
+
+[event_gates.c9_najma_pearl_season]
+"stage" = "home"
+"from" = [1553, 6, 1]
+
+[event_gates.c9_najma_first_outing]
+"stage" = "home"
+"from" = [1553, 2, 1]
+"tier" = "timed"
+
+# 2026-11-12 剧情增写（第九批）：四条人物线的门槛，日期由各章的 when 排开。
+
+[event_gates.c9_najma_rw_old_man]
+"stage" = "any"
+"from" = [1553, 1, 1]
+
+[event_gates.c9_najma_rw_missing_line]
+"stage" = "any"
+"from" = [1553, 1, 1]
+
+[event_gates.c9_najma_rw_nur_dives]
+"stage" = "any"
+"from" = [1553, 1, 1]
+
+[event_gates.c9_najma_rw_seer]
+"stage" = "any"
+"from" = [1553, 1, 1]
+
+# ---- B5 解锁的练习：辨珍珠 ----
+# 数值待 U02 校准：增益、疲劳、心情与技能经验照 c9_najma_stars（牵星板实测）的中间值抄来，只改了增益的属性与技能。
+[[activities]]
+"key" = "c9_najma_pearl_appraisal"
+"name" = "辨珍珠"
+"description" = "市集的珠子摊上，把一颗颗珠子对着光看，说出它的光、圆与价钱；说错了，摊主会把珠子推回来。"
+"kind" = "training"
+"stage" = "any"
+"scene" = "souq"
+"unlock" = { "flag" = "c9_najma_pearl_appraisal_unlocked" }
+"age" = [12, 17]
+"gains" = { "commerce" = [4, 7] }
+"skills" = [{ "skill" = "negotiation", "xp" = 12 }]
+"fatigue" = 6
+"mood" = 1
+"events" = ["c9_najma_rare_*"]
+"risk" = { "failure_bp" = 1800, "attr" = "commerce", "per" = 100 }
+"failure" = { "gains_pct" = 60, "income_pct" = 0, "mood" = -1, "extra_fatigue" = 2 }
+"where" = { "at" = "julfar" }
+
+# ---- B1 新手旬（1553 年 1 月）----
+# 三节按顺序出现：上旬 -> 中旬（须先过上旬）-> 下旬（须先过中旬）。中旬只写场景，不发零用钱（零用钱由引擎按月发）。
+
+[[tracks]]
+"key" = "c9_najma_novice_upper"
+"name" = "头一天的日程"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "头一天的日程"
+"text" = "正月初一的早上，家里没有人催。母亲在书房门口铺好了一张席子，父亲的鞋已经不在门边，他天没亮就去了滩上。姨母在市集的账桌前拨算盘，连头都没抬。桌上并排放着三样东西：一卷旧诗、一本空账、一把潜水用的小刀。母亲说：今天你自己挑一样，挑完，就照着它过这一天。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }]
+[[tracks.chapters.choices]]
+"key" = "poem"
+"text" = "坐到书房，先抄诗。"
+"reply" = "母亲没有夸我，只把墨推到我手边。我抄到第三行，才发现自己的字比平时稳。她在旁边念，念到哪一句，我就抄到哪一句。抄完，她从箱底抽出一张亲手抄的诗笺，夹进我的抄本里，说：这一张你留着，以后拿出来对。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_novice_upper_done", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_pick_poem", "value" = true }, { "kind" = "affinity", "person" = "najma_mother", "value" = 4 }, { "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "c9_najma_poem_copy_kept", "value" = true }]
+[[tracks.chapters.choices]]
+"key" = "ledger"
+"text" = "去姨母的桌边，学对账。"
+"reply" = "姨母把算盘推过来，指着一行珠价：这一行错一个数，这个月的饭钱就没了。我对了三遍，才对上。她没有说好，只把账册翻到下一页，说：明天的账，你来记。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_novice_upper_done", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_pick_ledger", "value" = true }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 4 }, { "kind" = "growth", "attr" = "numeracy", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "dock"
+"text" = "跟父亲去滩上，看潮水和下水的人。"
+"reply" = "父亲站在潮线上，回头看了我一眼，没有赶我。他说，风向不对，今天不下海。我陪他站到日头偏西，学会了看水色。回家的路上，他第一次叫我的全名，纳吉玛，像叫一个要上船的人。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_novice_upper_done", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_pick_dock", "value" = true }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 4 }, { "kind" = "growth", "attr" = "perception", "value" = 2 }]
+
+[[tracks]]
+"key" = "c9_najma_novice_middle"
+"name" = "第一次排日程"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "第一次排日程"
+"text" = "正月中旬，母亲在灯下把一只小布袋放到我面前，袋口系着红线。她说：这是你这个月的，花不花、怎么花，你自己定。我摸到硬币的棱角，没有打开。然后她把一张空白的日程纸推过来，一行是一周，每行分早、午、夜三格，排好了，往后每周照着走。我第一次排，潜水账、抄诗、量星都排了进去，到夜里那一格，我停了很久。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_upper_done", "value" = true }, { "kind" = "date", "from" = [1553, 1, 11] }]
+[[tracks.chapters.choices]]
+"key" = "keep_night"
+"text" = "夜里那一格留给量星。"
+"reply" = "我把纸折成四折，夹进牵星板的木框里。第二天清早，我照着它起床。午后那一格错了半个时辰，我用炭笔改了。夜里我爬上屋顶，北星在头顶，我一指一指地量。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_novice_middle_done", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_first_schedule", "value" = true }, { "kind" = "growth", "attr" = "astronomy", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "sleep"
+"text" = "夜里那一格空着，留给睡觉。"
+"reply" = "我把那一格涂成空白。母亲看了日程纸，什么也没说，只在空白的地方画了一个小小的月牙。那一夜我睡得很好，第二天醒来才发现，自己一直在等她说点什么。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_novice_middle_done", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_first_schedule", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+[[tracks]]
+"key" = "c9_najma_novice_lower"
+"name" = "市集上的一句话"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+"cast" = ["nur"]
+[[tracks.chapters]]
+"key" = "event"
+"title" = "市集上的一句话"
+"text" = "正月底，母亲打发我去市集买灯油。我第一次一个人走出旧城的门，沿着晒珠的石墙走到市集，人声一下子涌上来：卖椰枣的、卖麻绳的、吵着要退一枚银币的。我在一个织网的棚子前停下，棚里有人在数网眼，数得很快，嘴里念念有词，数错了一个，又自己骂了一句。那女孩抬起头，问我：你也数？我说，我数绳结。她笑了，露出一颗缺了的门牙，说：那我们比一比，谁数得准。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_novice_middle_done", "value" = true }, { "kind" = "date", "from" = [1553, 1, 21] }]
+"cast" = ["nur"]
+[[tracks.chapters.choices]]
+"key" = "race"
+"text" = "和她比谁数得准。"
+"reply" = "我们数到日头偏西，网眼数了一千个。她赢了我三次，我赢了她一次，因为她数到后来，手一直在抖，是天冷的缘故。她叫努尔，家在码头边，网棚里的网够全村人用。临走她说：下次来，我教你认真的网结。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_met_nur", "value" = true }, { "kind" = "relation", "person" = "nur", "relation" = "friends" }, { "kind" = "affinity", "person" = "nur", "value" = 4 }, { "kind" = "growth", "attr" = "perception", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "buy"
+"text" = "买完灯油就走。"
+"reply" = "我买了灯油，沿原路走回家。路过织网棚时，那女孩还在数网眼，抬头朝我挥了挥手。我没有回应，只把灯油换到另一只手上。直到夜里，我才想起还没问她的名字。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_met_nur", "value" = true }, { "kind" = "affinity", "person" = "nur", "value" = 1 }]
+
+# ---- B2 家乡玩伴：努尔（女，织网人家，与纳吉玛同岁）----
+# 各四段家乡期事件，主角与她同处一地时才会入队。
+
+[[tracks]]
+"key" = "c9_najma_friend_nur_01"
+"name" = "织网棚里的结"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "织网棚里的结"
+"text" = "二月，码头边的风转了北，织网棚的门开着。努尔见我来，把一根麻绳扔过来：你不是会数绳结吗？打一个给我看。我打了一个，她拆开，又让我打，拆开，再打。第三次，她没有拆，只把结握在手心里，说：这个结，海上的人认得。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 2, 1] }]
+[[tracks.chapters.choices]]
+"key" = "tie"
+"text" = "照她的手法，一圈一圈地打。"
+"reply" = "我的手指磨红了，结还是松的。努尔笑得弯下腰，说：认真的人，手都在抖。临走，她把一截细绳塞给我，让我带回家练。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 4 }, { "kind" = "skill", "skill" = "knotwork", "value" = 8 }]
+[[tracks.chapters.choices]]
+"key" = "teach"
+"text" = "我教她认网上的数字。"
+"reply" = "我用炭在木板上写一二三，她看得很认真，却总把三写成倒的。她说：字是给账房先生看的，我们看的是网眼。可她还是把那几个数字，小心地抄进了袖口的布里。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "growth", "attr" = "learning", "value" = 2 }]
+
+[[tracks]]
+"key" = "c9_najma_friend_nur_02"
+"name" = "晒网的午后"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "晒网的午后"
+"text" = "四月，日头晒得网线发白。努尔的母亲在棚子里补网，咳了一阵。努尔压低声音说：我娘说，今年的网要拿去抵税，明年的网，还没有人来买。她说这话时没看我，只把一根网线拧得很紧。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 4, 1] }]
+[[tracks.chapters.choices]]
+"key" = "sit"
+"text" = "陪她坐着，什么也不说。"
+"reply" = "我们坐在网影里，听海浪一下一下拍着石堤。过了很久，她说：你不会安慰人，可你不走。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 5 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "mend"
+"text" = "帮她把破网补起来。"
+"reply" = "我补了三个破洞，麻绳勒出了印子。努尔的母亲看了一眼，说：这孩子的结，比你还稳。努尔没有说话，把自己那一份，也推到了我这边。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "skill", "skill" = "knotwork", "value" = 8 }]
+[[tracks.chapters.choices]]
+"key" = "ask_father"
+"text" = "回家替她去问父亲，能不能让网先抵别的账。"
+"reply" = "父亲听完，沉默了很久，只说：网不是我们的账。第二天，他却让人从船上送来两张新网，说是船上多出来的。我没有说这是谁的主意。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }, { "kind" = "affinity", "person" = "nur", "value" = 4 }]
+
+[[tracks]]
+"key" = "c9_najma_friend_nur_03"
+"name" = "潜水船回港"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "潜水船回港"
+"text" = "七月，潜水船一条条靠回码头，篓子里装着湿漉漉的蚌壳。努尔趴在栏杆上，一条条数船，数到第三条就忘了。她说：我也想下海。我说：我娘不许。她说：我娘也不许。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 7, 1] }]
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "替她数完剩下的船。"
+"reply" = "我们一起数，数到第七条，船上的人朝我们挥手。努尔说：你数得准，可你还没有下过水。我说：快了。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "growth", "attr" = "perception", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "promise"
+"text" = "说，等我下第一次水，就带你上船看。"
+"reply" = "她没有立刻答应，只把手指伸进栏杆的缝里，勾住了我的小指。她说：那你要先跟你娘说。我说：我会的。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_friend_promise_boat", "value" = true }, { "kind" = "affinity", "person" = "nur", "value" = 5 }]
+
+[[tracks]]
+"key" = "c9_najma_friend_nur_04"
+"name" = "碎贝串"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "碎贝串"
+"text" = "学院的船要来接人了。努尔在码头上塞给我一个小布袋，里面是几颗磨圆的碎贝，穿在一根麻绳上。她说：写信。我说：你不会写字。她说：那你念给我听，我记。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 11, 20] }]
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "收下，说我会念给你听。"
+"reply" = "我把贝串绕在手腕上，系了一个她教过的结。努尔看着那个结，眼睛有点红，嘴上却说：歪了，回头我教你重打。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_friend_nur_letter", "value" = true }, { "kind" = "affinity", "person" = "nur", "value" = 6 }, { "kind" = "skill", "skill" = "knotwork", "value" = 6 }]
+[[tracks.chapters.choices]]
+"key" = "teach_name"
+"text" = "教她写自己的名字。"
+"reply" = "我用炭在木板上写下“努尔”两个字。她一笔一笔地学，写到第二笔，就笑了，说：像网结。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_friend_nur_letter", "value" = true }, { "kind" = "affinity", "person" = "nur", "value" = 4 }, { "kind" = "growth", "attr" = "learning", "value" = 2 }]
+
+# ---- B2 家乡玩伴：阿米尔（男，市集椰枣摊小贩的侄子，与纳吉玛同岁）----
+
+[[tracks]]
+"key" = "c9_najma_friend_amir_01"
+"name" = "椰枣摊上的三种说法"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "椰枣摊上的三种说法"
+"text" = "阿米尔站在椰枣摊后面，嘴没停过。这是从巴士拉运来的，那是从马斯喀特运来的，他手里这一篮是我叔叔从尤尔法的树上摘的。他眨眨眼，说：一枚银币，三颗椰枣，外加一句我知道的船名，怎么样？"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 2, 11] }]
+[[tracks.chapters.choices]]
+"key" = "buy"
+"text" = "买下，不问船名的来历。"
+"reply" = "我付了银币，他把椰枣装进我的布袋，又塞了一颗在我手里。他说：你是第一个不还价的。我说：我不喜欢数钱。他笑得把篮子都碰翻了。"
+"next" = "done"
+"effects" = [{ "kind" = "cash", "value" = -1 }, { "kind" = "affinity", "person" = "amir", "value" = 3 }]
+[[tracks.chapters.choices]]
+"key" = "haggle"
+"text" = "压价，说他的椰枣有虫。"
+"reply" = "他急得直摆手，说椰枣有没有虫，只有我叔叔知道。最后他让了一颗，又说：你这人嘴上不饶人，心里却记住了每一条船。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "affinity", "person" = "amir", "value" = 2 }]
+
+[[tracks]]
+"key" = "c9_najma_friend_amir_02"
+"name" = "进港的船"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "进港的船"
+"text" = "一条从东边来的小船靠了港，船头挂着湿了的旗子。阿米尔跑过来，把一张皱巴巴的纸塞给我：念念，船名是什么？我念出来，是阿拉伯文，一笔一笔都清楚。他的脸亮了，说：我就知道你念得出来。他每天数船，数到的船名都记在纸上，可惜有些字他认不全。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 5, 1] }]
+[[tracks.chapters.choices]]
+"key" = "read"
+"text" = "帮他把所有的船名都念一遍。"
+"reply" = "我一个一个念过去，他用炭笔记。念到第十条，他的手停了，说：这条船的船主，是我舅舅的朋友。我没有问是哪一个舅舅。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "amir", "value" = 4 }, { "kind" = "growth", "attr" = "learning", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "refuse"
+"text" = "说我没空，有空也不念。"
+"reply" = "他没有生气，只把那张纸折起来，收进了袖口。那天他没有再叫我，市集那头的椰枣摊，他也没有来。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "amir", "value" = -2 }, { "kind" = "growth", "attr" = "resolve", "value" = 1 }]
+
+[[tracks]]
+"key" = "c9_najma_friend_amir_03"
+"name" = "躲雨的廊下"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "躲雨的廊下"
+"text" = "一场急雨把市集赶进了廊下。阿米尔缩在柱子边，脸烧得通红，嘴里还在念船名。他说：不用你管，我叔叔说，这点热算不了什么。我看见他攥着的那枚银币，攥得发白。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 8, 1] }]
+[[tracks.chapters.choices]]
+"key" = "fetch"
+"text" = "去找姨母，拿她手边的退热草药。"
+"reply" = "姨母翻出一小包干草，说：煮水，喝一碗，出一身汗就好了。她看了一眼阿米尔，又看了一眼我，什么也没问，只在账页边上记了一笔。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "amir", "value" = 3 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 2 }, { "kind" = "growth", "attr" = "medicine", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "sit"
+"text" = "坐下来，陪他数廊下的雨点。"
+"reply" = "我们数到三百，他的声音慢慢低了下去，最后靠着我的肩膀睡着了。雨停了，他醒来，装作什么也没发生，只把那枚银币塞进了我手里。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "amir", "value" = 5 }, { "kind" = "flag", "flag" = "c9_najma_friend_amir_coin", "value" = true }]
+
+[[tracks]]
+"key" = "c9_najma_friend_amir_04"
+"name" = "船票的价钱"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "船票的价钱"
+"text" = "阿米尔说，明年春天，他叔叔的船要去巴士拉，他能跟船去搬货。他把攒下的银币摊在我面前，一共十三枚，数了又数。他说：我想让你替我看看，这些钱够不够买一张船票。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 11, 1] }]
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "和他一起算船票的价钱。"
+"reply" = "我们把船上的规矩、船员的份例、船票的价钱都算了一遍。算下来，还差一小截。我说：先别急，明年你先搬一季货，给船主留个好印象。他咧嘴笑了，说：你这人，连算账都不跟人吵。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_friend_amir_passage", "value" = true }, { "kind" = "affinity", "person" = "amir", "value" = 4 }, { "kind" = "growth", "attr" = "numeracy", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "warn"
+"text" = "告诉他，海上不是搬货，是吃苦。"
+"reply" = "他沉下脸，半天才说：我知道。可我不想一直站在市集的摊子后面，看别人的船进港。我没有再劝，只把一块牵星板的小样放在了他的银币旁边。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "amir", "value" = 2 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+# ---- B2 入学后的来信：各一封（按船期到，正文只写来信的场面，内容记在 letter 效果里）----
+
+[[tracks]]
+"key" = "c9_najma_letter_nur"
+"name" = "织网棚的来信"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "织网棚的来信"
+"text" = "信是从尤尔法寄来的，封口用一根细麻绳，结打得歪歪扭扭。里面只有一张纸，字迹像是用炭笔一笔一笔描出来的。我坐在扎比德学堂的窗下，一行一行念：学院的船比我们的大，比我们的网还大。我把网坠重新穿过一遍，下雨就数一遍，还是数不清。网补到第十一张。我念不出来的字，你念给我听。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 3, 1] }]
+[[tracks.chapters.choices]]
+"key" = "reply"
+"text" = "回信，把北星的口诀抄给她。"
+"reply" = "我把北星的口诀抄成三行，每一行都用她认得的网结来比：这一指是打一个结，这一指是两个。信寄出那天，我还在想，她念不念得出来。"
+"next" = "done"
+"effects" = [{ "kind" = "letter", "person" = "nur", "text" = "努尔来信：学院的船比尤尔法的网还大，网补到第十一张，字要纳吉玛念。" }, { "kind" = "affinity", "person" = "nur", "value" = 3 }]
+
+[[tracks]]
+"key" = "c9_najma_letter_amir"
+"name" = "椰枣摊的来信"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "event"
+"title" = "椰枣摊的来信"
+"text" = "信是一张皱巴巴的纸，上面用阿拉伯文写着一排船名，每个名字后面都有一个小小的勾。最后一行写着：来了三条船，一条是去巴士拉的，我没去。上次说的船票，我还在攒，攒到了几枚，不说。阿米尔。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 5, 1] }]
+[[tracks.chapters.choices]]
+"key" = "reply"
+"text" = "回信，写一句：先搬一季货，再说船票。"
+"reply" = "我回了一句话，又添了两个字：别急。把信交给港口的邮差时，我忽然想起市集的椰枣摊，和他那枚攥得发白的银币。"
+"next" = "done"
+"effects" = [{ "kind" = "letter", "person" = "amir", "text" = "阿米尔来信：一排船名，三条船，去巴士拉那条没去；船票的钱还在攒。" }, { "kind" = "affinity", "person" = "amir", "value" = 3 }]
+
+# ---- B5 第一年采珠季（六至九月）：说服母亲 -> 第一次下水（体魄掷骰）-> 分珠（交易掷骰）----
+# 输赢各有后续：下水失败的，分珠那一章的文字换成“这一季你先看”；分珠成功（或靠姨母）才解锁“辨珍珠”。
+
+[[tracks]]
+"key" = "c9_najma_pearl_season"
+"name" = "采珠季开船"
+"kind" = "request"
+"start" = "persuade"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "persuade"
+"title" = "上船的事"
+"text" = "六月，采珠船从浅滩出发，船舷上新编的绳子一圈圈地挂着。父亲在码头上点人数，点到最后，没有叫我的名字。母亲站在商馆门口，手里捏着我的抄本，一句话也不说。我知道她怕海。她堂兄的船，有一年没有回来，这件事她从不提起，只在每年采季前，把嫁妆箱上的锁检查两遍。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 6, 1] }]
+[[tracks.chapters.choices]]
+"key" = "steady"
+"text" = "不吵，先把绳子数完，等父亲开口。"
+"reply" = "我把船上的绳子一根根数完，数到第七根，父亲回头看了我一眼，说：上来，站在船头，不许下水。我抱着绳子上了船，没有说谢谢。"
+"next" = "dive"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }, { "kind" = "fame", "value" = -1 }]
+[[tracks.chapters.choices]]
+"key" = "recite"
+"text" = "当着母亲的面，把外曾祖父的诗从头念到尾。"
+"reply" = "念到“北星不动船自行”那一句，母亲的手停在了诗卷上。她把诗卷合上，说：这首诗我教过你，不是拿来吵架的。可你念对了。下水的事，你爸说了算。"
+"next" = "dive"
+"effects" = [{ "kind" = "affinity", "person" = "najma_mother", "value" = 3 }, { "kind" = "growth", "attr" = "eloquence", "value" = 4 }, { "kind" = "flag", "flag" = "c9_najma_pearl_mother_agreed", "value" = true }]
+"check" = { "attr" = "eloquence", "base" = 45, "per" = 5 }
+"fail" = { "next" = "dive", "news" = "母亲没有听完，只说：你要上船，先把这一卷背完。我背了一夜，天亮时只背到一半。父亲在门外站了很久，最后什么也没说，转身去了码头。", "effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_mother_refused", "value" = true }, { "kind" = "affinity", "person" = "najma_mother", "value" = -3 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }] }
+[[tracks.chapters.choices]]
+"key" = "aunt"
+"text" = "请姨母替我说话。"
+"reply" = "姨母把账册摊在母亲面前，一笔一笔地说：这一季，她替我记十二次下水的账，账对不上，我自己认罚。母亲看完账，很久才点了头。"
+"next" = "dive"
+"effects" = [{ "kind" = "affinity", "person" = "najma_mother", "value" = 4 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "c9_najma_pearl_mother_agreed", "value" = true }]
+"requires" = [{ "kind" = "affinity", "person" = "najma_aunt", "ge" = 35 }]
+[[tracks.chapters]]
+"key" = "dive"
+"title" = "第一次下水"
+"text" = "七月，海水热得发烫。我把石坠绑在脚上，腰上系了绳，绳头在父亲手里。阿明拍拍我的肩膀，说：看着绳子，别看水。石坠一沉，耳朵里全是水声，光从头顶一层层暗下去。我数到二十，手指碰到一只蚌壳，滑溜溜的，壳口紧闭。我想拽绳子，却先想起外曾祖父诗里的那一行。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 7, 1] }]
+[[tracks.chapters.choices]]
+"key" = "shallow"
+"text" = "只在浅处下，抓一只蚌就上来。"
+"reply" = "我抓到一只蚌，姨母在岸上用刀撬开，里面的珠子小得像一粒盐。父亲看了一眼，说：下次深一点。这是我第一次下水，没有输给任何人。"
+"next" = "sort"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_dived", "value" = true }, { "kind" = "growth", "attr" = "constitution", "value" = 2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }]
+[[tracks.chapters.choices]]
+"key" = "deep"
+"text" = "屏住气，沉到第二级石坠的高度。"
+"reply" = "我摸到了三只蚌，第三只卡在石缝里，我用指甲把它抠了出来。浮上来的时候，阿明把我拉上船，嘴里骂着，眼睛却笑着。"
+"next" = "sort"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_dive_won", "value" = true }, { "kind" = "growth", "attr" = "constitution", "value" = 6 }, { "kind" = "skill", "skill" = "diving", "value" = 10 }]
+"check" = { "attr" = "constitution", "base" = 50, "per" = 5 }
+"fail" = { "next" = "sort", "news" = "一口气没撑住，石坠带着我往下沉了一截，阿明的绳子把我拽了上来。我呛了水，躺在船板上半天不动。父亲没有骂，只把自己的外衣盖在我身上。母亲听说了，那晚一句话也没有问。", "effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_dive_failed", "value" = true }, { "kind" = "growth", "attr" = "constitution", "value" = 1 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 3 }, { "kind" = "affinity", "person" = "najma_mother", "value" = -2 }] }
+[[tracks.chapters.choices]]
+"key" = "father_ties"
+"text" = "让父亲亲手系绳，他的结，我下水也不会松。"
+"reply" = "父亲把绳结一圈圈压紧，手背上青筋都起来了。他说：这一根绳，是你下水的命。我下到石坠的第二级，绳子一直绷着，耳朵里只有自己的心跳。上船的时候，他第一次没有骂人。"
+"next" = "sort"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_dive_won", "value" = true }, { "kind" = "skill", "skill" = "diving", "value" = 6 }, { "kind" = "growth", "attr" = "constitution", "value" = 3 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 4 }]
+"requires" = [{ "kind" = "affinity", "person" = "rashid_julfari", "ge" = 35 }]
+[[tracks.chapters]]
+"key" = "sort"
+"title" = "分珠"
+"text" = "八月，珠子从各船运回岸上，摊在麻布上一颗颗分开。大小、光泽、圆的程度，每一样都要人看。买珠的商人伸出手指，要我们说这一批值多少。税吏的人站在一边，姨母坐在一边算价。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "date", "from" = [1553, 8, 15] }]
+[[tracks.chapters.variants]]
+"key" = "after_won"
+"when" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_dive_won", "value" = true }]
+"text" = "八月，珠子从各船运回岸上，摊在麻布上一颗颗分开。我下水摸到的那只蚌，就在这一批里。买珠的商人伸出手指，要我们说这一批值多少。税吏的人站在一边，姨母坐在一边算价。我看得出几颗珠子的光是浮在表面的，那是磨过的。"
+[[tracks.chapters.variants]]
+"key" = "after_failed"
+"when" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_dive_failed", "value" = true }]
+"text" = "八月，珠子从各船运回岸上，摊在麻布上一颗颗分开。上次下水呛了水，姨母这一季不让我碰秤。买珠的商人伸出手指，要我们说这一批值多少。税吏的人站在一边，姨母坐在一边算价。我只能看，看几颗珠子的光是浮在表面的，那是磨过的。"
+[[tracks.chapters.choices]]
+"key" = "steady"
+"text" = "照姨母的记法，一颗颗记在账上。"
+"reply" = "账记得清清楚楚，每一颗珠子都有了号码。买家压价压到第三轮才让步，我没有开口，只把账册推了过去。姨母在我那一页的边上画了个小圈。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 2 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 3 }]
+[[tracks.chapters.choices]]
+"key" = "appraise"
+"text" = "自己上前，拿起一颗珠子，说出它的价。"
+"reply" = "我说出的价，比买家心里想的低了一成，比姨母估的高了半成。姨母盯着我看了很久，说：价是你报的，账是你记的。买家笑着点头，那颗珠子他一口就收了。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_sort_won", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_pearl_appraisal_unlocked", "value" = true }, { "kind" = "growth", "attr" = "commerce", "value" = 8 }, { "kind" = "memory", "memory" = "mem-c9-najma-pearl-sort", "title" = "第一次分珠" }]
+"check" = { "attr" = "commerce", "base" = 45, "per" = 5 }
+"fail" = { "next" = "done", "news" = "我报的价差了一大截，买家把那颗珠子推回来：小姑娘，珠子不会骗人，你却骗了自己。姨母把账补平，从自己的袋子里垫了一笔。", "effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_sort_failed", "value" = true }, { "kind" = "cash", "value" = -5 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = -2 }] }
+[[tracks.chapters.choices]]
+"key" = "aunt_hands"
+"text" = "请姨母把珠子一颗颗交到我手里，让我站在买家那一边看。"
+"reply" = "姨母把珠子一颗颗交到我手里，说：你看，我不替你说。我看着光，看着圆，看着每颗珠子的底色，报出一个价。姨母没有改，买家也没有还价。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_pearl_sort_won", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_pearl_appraisal_unlocked", "value" = true }, { "kind" = "growth", "attr" = "commerce", "value" = 4 }, { "kind" = "skill", "skill" = "negotiation", "value" = 6 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 5 }]
+"requires" = [{ "kind" = "affinity", "person" = "najma_aunt", "ge" = 35 }]
+
+# ---- B7 第一次远足 ----
+# 需要引擎在家乡期满 30 天时发放旗标 outing_permission；本事件只在它已有、且这件事还没发生过时入队。
+
+[[tracks]]
+"key" = "c9_najma_first_outing"
+"name" = "第一次远足"
+"kind" = "encounter"
+"start" = "outing"
+"auto" = false
+"academy" = true
+[[tracks.chapters]]
+"key" = "outing"
+"title" = "第一次远足"
+"text" = "父亲在饭桌上把一块小木牌推过来，木牌上刻着“可出城”三个字，是霍尔木兹驻军的印。他说：去吧，带上努尔，不许走到盐滩那边。第一次出城，太阳刚升起，城墙根的石头还是凉的。我们沿着海岸往北走，潮水退下去，露出一片暗色的礁，礁上站满了白鹭。努尔指着海那边说：那边就是阿曼了，我们的网能飘过去。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "flag", "flag" = "outing_permission", "value" = true }, { "kind" = "flag", "flag" = "c9_najma_first_outing_done", "value" = false }, { "kind" = "date", "to" = [1554, 1, 9] }]
+[[tracks.chapters.choices]]
+"key" = "walk_on"
+"text" = "跟着她，过了界线，往盐滩尽头走。"
+"reply" = "我们越过父亲说的界线，一直走到盐滩的尽头。风从海面上吹过来，带着咸味和一点硫磺的气味。努尔笑得很大声，说这是她第一次走到头。我把这一天记在牵星板的木框背面。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_first_outing_done", "value" = true }, { "kind" = "affinity", "person" = "nur", "value" = 4 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = -2 }, { "kind" = "growth", "attr" = "perception", "value" = 3 }, { "kind" = "memory", "memory" = "mem-c9-najma-outing", "title" = "第一次远足" }]
+[[tracks.chapters.choices]]
+"key" = "turn_back"
+"text" = "照父亲的话，在界线前折回。"
+"reply" = "我们在界线前停下，把白鹭的数目数给对方听，数到第三十只，努尔说这是她数过最准的一次。回城的路上，父亲站在门口，什么也没问，只点了点头。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_najma_first_outing_done", "value" = true }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 4 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+# ════════════════ 2026-11-12 剧情增写（第九批 · 纳吉玛）════════════════
+# 四条人物线写在本文件（najma_events.toml 与本文件都没有英文覆盖，照莉芙那家的先例放在这里，门槛加在本文件头的 event_gates）。
+# 各线 kind = request、auto = false、academy = true，章与章之间用 next 串起来，日期写在各章的 when 里；新旗标一律 rw_najma_*，只用来选变体。
+
+# ---- 人物线 A「海老人」：父亲拉希德、姨母萨菲娅、潜水人朱马与他的儿子优努斯 ----
+# 母本：《一千零一夜》辛巴达第五次航行里的“海老人”——求人背他过河、过了河两腿缠住脖子再也不肯下来的老头（只取骨架，不搬原句）；
+#       文化：海湾采珠的担保与欠账——采季前的借粮（预支）、季末的算账、死者的欠账记到儿子名下；船上同生共死，一根绳子两头是两条命。
+#       （这一整套账的细节多见于后来的海湾史料，这里成组平移到 1553 年的尤尔法。）
+#       张力：拉希德背着霍尔木兹的债，潜水人背着他的债。他最怕人下海没上来，可正是他手里这本账，把人一层层压往海底。
+# 家乡 1553（借粮、放账人、最后一趟、算账日）→ 学院 1554—1555（三行字的信、瘸腿的萨阿德）→ 返乡 1556 夏（父亲的肩）→ 结业 1556 年底（不下海了）。
+# 与关键事件“第一个采珠季”（阿明的绳子）、“珠税的收据”、“采珠人的欠账”（阿卜杜拉的借据）和支线“姨母的采珠账”咬住；主线旁轨 main_najma_rw_debt_rope 接着写。
+[[tracks]]
+"key" = "c9_najma_rw_old_man"
+"name" = "海老人"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "借粮的日子"
+"text" = "三月二十，采季还没开，院子里已经坐满了潜水的人。每年这几天，他们背着空口袋来，背着米、椰枣和几枚银币回去，家里人靠这一口粮熬到船回湾。父亲坐在门槛上，膝头摊着那本黑皮账，借一笔，记一笔，叫我在旁边数口袋。轮到老朱马，父亲的笔停了停。朱马名下有三行旧账，最上面那行的墨已经发褐，写的不是他的名字，是他父亲的。朱马把口袋往肩上一甩，冲我挤眼：“看见没有？我肩上骑着我爹，我爹肩上骑着他爹。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 3, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "照父亲说的，把口袋一只只数清"
+"reply" = "我数到第二十四只，父亲合上了账。二十四只口袋，二十四个名字，每个名字底下压着一家人。人散了以后，父亲把账锁回箱子，手在箱盖上按了好一会儿，像怕它自己弹开。我问他朱马说的骑在肩上是什么意思，他说：“说书人的话，你别学。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_salaf_counted", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_juma"
+"text" = "追出去问朱马，骑在肩上的是谁"
+"reply" = "朱马在巷口站住，把口袋换到另一边肩上。他说从前有个水手，好心背一个老头过河，过了河老头不肯下来，两条腿缠在他脖子上，一骑就是好几年。“后来呢？”“后来水手酿了一葫芦酒，把他灌醉，甩下来，拿石头砸死了。”他笑出一口黄牙，“我家里可没有葫芦。”他走远了，一边肩膀比另一边低。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_heard_old_man", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_father"
+"text" = "等人走光了，问父亲账上为什么有死人的名字"
+"reply" = "父亲没抬头：“人死了，账不死。”他把那一页翻过去，又翻回来，用指甲在朱马父亲的名字上刮了一下，墨没有掉。“他爹欠的，是我爹的账。”我说那就不是你的账。父亲看了我一眼，那一眼很长：“船是我爹传下来的。船要，账就得要。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_asked_dead_name", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "霍尔木兹来的客人"
+"text" = "五月，一条挂霍尔木兹旗的快船进了湾，下来一个穿细棉长袍的人，鞋面上一点沙也不沾。父亲叫他霍贾·萨尔曼，亲手给他倒咖啡，倒了三回。我在里屋听他们算数，萨尔曼的声音很软，每报一个数都要笑一下。他走的时候摸了摸我的头，说听人讲这孩子会算账，将来替她爹算利钱，省得她爹算错。父亲送他到船边，回来在门槛上一直坐到天黑，那天没有去码头点名。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 5, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "peek"
+"text" = "趁他们说话，瞄一眼萨尔曼摊开的账"
+"reply" = "萨尔曼的账是波斯字，我只认得数。父亲的名字在一页正中，底下不是一行，是一串：去年的珠税，前年的借款，利上滚出来的利。一串的最末记着我们家的桑布克，还有一本账——父亲那本黑皮账，也押在他的账上。我退回里屋，手心全是汗。原来那二十四只口袋，是从萨尔曼的口袋里倒出来的。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_saw_khwaja_book", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "serve"
+"text" = "端着壶进去，替父亲倒第四杯"
+"reply" = "我把壶举高，咖啡落进杯里，一滴没洒。萨尔曼看着我笑，说拉希德的女儿手稳，手稳的人记账不会错。他喝完第四杯才走。父亲后来跟我说，在霍尔木兹人面前，杯子要倒满，话要说少。他说这话的口气，像在念一条连他自己也不信的规矩。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "etiquette", "value" = 2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_served_khwaja", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_after"
+"text" = "客人走了，问父亲欠萨尔曼多少"
+"reply" = "父亲说：“小孩子不问钱。”我说我替姨母记了三个月的账，不算小孩子。他想了一会儿，伸出两只手，翻了三翻，又收回一根指头。我在心里过了一遍，比我们家一年捞的珠子还多。他看出我算出来了，把剩下的指头也收了回去：“别跟你娘说。”"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_debt", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "最后一趟"
+"text" = "八月底，采季快到头了，账上的珠子还不够还萨尔曼的数。父亲把船开到那道水急的礁外，说再下一趟。我坐在船舷上数绳：拽一下是到底了，拽两下是要上来。朱马下去，拉他绳子的是他儿子优努斯，十六岁，掌心里全是绳子勒出的白印。我数到六十，数到九十，数到一百二十，绳子没有动。优努斯看着我，像是我数得太快了。父亲从船尾走过来，一把攥住了那根绳。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 8, 25] }]
+
+[[tracks.chapters.choices]]
+"key" = "pull"
+"text" = "跟优努斯一起，往上拉"
+"reply" = "绳子很沉，沉得不像一个人。我和优努斯拉，父亲拉，阿明也扑过来拉。朱马上来的时候脸朝下，一只手还攥着网兜，网兜里四只蚌。父亲把他翻过来，压他的胸口，一直压到太阳偏西。优努斯攥着那截绳头，谁去掰他的手，他都不松。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "constitution", "value" = 1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_pulled_rope", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "keep_count"
+"text" = "不停，接着数，数给船上每个人听"
+"reply" = "“一百三十。一百四十。”我的声音在抖，可我没停。父亲回头吼了一声叫我闭嘴，船上的人却都在听我报数。报到一百六十，朱马被拉了上来。后来阿明跟我说，那天要不是我一直数着，谁也不知道过去了多久。我宁愿谁也不知道。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_counted_on", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "dive"
+"text" = "解下自己的石坠，要下去看"
+"reply" = "父亲一只手就把我按回了船板，按得我肩胛骨生疼。“你下去，我拉谁？”他头一回冲我吼。阿明已经跳了下去。朱马被拉上来时，绳子在一块珊瑚上缠了三道。父亲盯着那三道看了很久，后来把那截绳子割下来，扔回了海里。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "constitution", "value" = 1 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_tried_dive", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2b"
+"title" = "空着的那根绳"
+"text" = "朱马下葬没几天，船又出了湾，采季还剩十来天。拉绳的人一排坐在船舷上，朱马那根绳空着，盘在船尾，没人碰。领唱的老哈迪起了头，还是往年起锚的那支调子，唱到该朱马接腔的那一句，大家都停了一下，停够一口气的工夫，又接着唱下去。晌午分饭，阿明先从自己碗里拨出一勺米，倒进一只空碗，一个接一个，每人一勺。优努斯坐在船头，问父亲他能不能今天就下。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 9, 8] }]
+
+[[tracks.chapters.choices]]
+"key" = "hold"
+"text" = "替优努斯说：让他下，我来拉他的绳"
+"reply" = "父亲看了我很久，把那根空绳解下来，扔在我脚边。“你拉。”他说，“他拽两下，你就往上拉，不许等。”优努斯下去了，头一趟就拽了两下，上来时满脸是水，分不清是海水还是别的。我手掌上勒出一道红印，跟他掌心里的一样。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "constitution", "value" = 1 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_held_yunus_rope", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "wait"
+"text" = "说：今天不行，他还在守丧"
+"reply" = "父亲没出声，算是答应了。优努斯在船头坐了一整天，看别人一趟趟下去，一趟趟上来。傍晚收工点名，父亲点到朱马，停了一下，跳过去点下一个。优努斯在船头应了一声，是替他爹应的。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_yunus_waited", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "bowl"
+"text" = "端起那只空碗，问阿明这碗米给谁"
+"reply" = "阿明说给朱马家。船上的规矩，谁没上来，他家这一季的饭，大家从碗里匀。“海不认人，”他说，“船上的人认。”到傍晚，那只碗满了，倒进一只口袋，口袋也满了。账上没有这一笔。这是我头一回见到账上没有、可是人人都记着的东西。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_saw_bowl", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "算账日"
+"text" = "十月，船都回了湾，院子里又坐满了人，这回不是来借，是来算。每个人这一季捞的珠子折成钱，先扣借粮，再扣饭钱，剩下的才归自己；剩不下的，记到明年。父亲翻到朱马那一页：三行旧账，加上今年的借粮，加上那天的四只蚌——四只蚌里一颗珠子也没有。他蘸了墨，在朱马的名字旁边写下一个新名字：优努斯。优努斯站在门边，没有进来，头上缠着守丧的白布。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 10, 12] }]
+
+[[tracks.chapters.choices]]
+"key" = "beg"
+"text" = "求父亲把朱马那一页划了"
+"reply" = "父亲的笔没有停。“我划了他的，萨尔曼划不划我的？”他把笔搁下，头一回跟我说了很多话：账是一根绳子，一头在霍尔木兹，一头在海底，中间这一截在他肩上。他一松手，下面的人往下掉，他自己也往下掉。“你当我是骑在他们身上的人，”他说，“我也是被骑的那一个。”"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_begged_release", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "minimum"
+"text" = "替优努斯把这一页重算，看最少能少到多少"
+"reply" = "我把三行旧账一笔笔拆开，找出两处利上滚利，一处饭钱记了两回。少下来的，不到一成。父亲看了我的算稿，没说话，照着我的数改了。优努斯在门边问少了多少，我告诉他，他点点头：“那就是还要四年。”他说四年，像在说四口气。"
+"next" = "n4"
+"check" = { "attr" = "numeracy", "base" = 45, "per" = 8 }
+"fail" = { "next" = "n4", "news" = "我算了一夜，算到最后，和父亲账上的数一模一样，一个铜子儿也没少。账是对的。对的账，比错的账更叫人难受。", "effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_sum_checked", "value" = true }] }
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "skill", "skill" = "double_entry", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_sum_lowered", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "aunt"
+"text" = "去市集找姨母，她替好几家潜水人作过保"
+"reply" = "姨母听我说完，把账册一合——她生气的时候就这样。“作保是作保，免账是免账，两回事。”她不肯去找父亲。可第二天一早，优努斯家门口多了一袋米，没人说是谁放的。我去问姨母，她说她不认得什么优努斯。"
+"next" = "n4"
+"effects" = [{ "kind" = "affinity", "person" = "najma_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_aunt_yunus", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "三行字的信"
+"text" = "四月，一条从霍尔木兹南下的船，把父亲的信捎进了扎比德。父亲很少写字，信只有三行，字一个比一个大，像是越写越没力气：今年借粮还是二十四只口袋，朱马那一只，换成优努斯来背。他替他爹下水了，头一天就上来得太早，挨了阿明一顿骂。你在学堂吃不吃得饱。我把信翻过来，背面没有字，只有一圈黑指印，是蘸着船上的柏油按的。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 4, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_begged"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_begged_release", "value" = true }]
+"text" = "四月，一条从霍尔木兹南下的船，把父亲的信捎进了扎比德。父亲很少写字，信只有三行，字一个比一个大，像是越写越没力气：今年借粮还是二十四只口袋，朱马那一只，换成优努斯来背。你那天求我的事，我想了，没有划。你在学堂吃不吃得饱。我把信翻过来，背面没有字，只有一圈黑指印，是蘸着船上的柏油按的。"
+
+[[tracks.chapters.variants]]
+"key" = "a_lowered"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_sum_lowered", "value" = true }]
+"text" = "四月，一条从霍尔木兹南下的船，把父亲的信捎进了扎比德。父亲很少写字，信只有三行，字一个比一个大，像是越写越没力气：今年借粮还是二十四只口袋，朱马那一只，换成优努斯来背。他的账照你算的数记，少的那一截他说要谢你，我说不用。你在学堂吃不吃得饱。我把信翻过来，背面没有字，只有一圈黑指印，是蘸着船上的柏油按的。"
+
+[[tracks.chapters.variants]]
+"key" = "a_aunt"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_asked_aunt_yunus", "value" = true }]
+"text" = "四月，一条从霍尔木兹南下的船，把父亲的信捎进了扎比德。父亲很少写字，信只有三行，字一个比一个大，像是越写越没力气：今年借粮还是二十四只口袋，朱马那一只，换成优努斯来背。冬天他家门口隔几天就多一袋米，你姨母说不是她。你在学堂吃不吃得饱。我把信翻过来，背面没有字，只有一圈黑指印，是蘸着船上的柏油按的。"
+
+[[tracks.chapters.choices]]
+"key" = "reply_eat"
+"text" = "回信只答最后一句：吃得饱"
+"reply" = "我写：吃得饱，学堂的椰枣比家里的甜。写完又添一句：替我告诉优努斯，上来得早不丢人。信寄走我才想起，父亲认不全我的字，要拿去给姨母念。姨母念到那一句，大概会把账册合上。"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_wrote_eat", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "reply_numbers"
+"text" = "回信替优努斯算，一季要捞多少才够"
+"reply" = "我把他的账从头推了一遍：一季要捞上多少颗中等的珠子，才够还一年的利。算出来的数抄在信尾，一个字也没加。寄出去我就后悔了。父亲看得懂数，优努斯也看得懂。有的数，看得懂比看不懂还沉。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_wrote_numbers", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "show_khamis"
+"text" = "把信拿给哈米斯师傅看"
+"reply" = "师傅看完，把信还给我，说他年轻的时候也替人拉过绳。“拉绳的人比下水的人老得快，”他说，“下水的只怕一口气，拉绳的什么都怕。”就说了这么两句，他转身去敲他的牵星板，敲得比平时重。"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "c8_shipboard_pilot", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_showed_khamis", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "瘸腿的萨阿德"
+"text" = "九月，姨母寄来一页账，要我核今年的分成。账是她的字，一行一行像刀切出来的，只有一行不一样：萨阿德，旧欠，清。那个“清”字比别的字淡，像写下去以后又想擦掉。萨阿德我认得，前年从桅杆上摔下来，一条腿断成两截，如今在码头上搓椰绳。同一条船还捎来萨阿德托人带的口信：替他谢谢拉希德船长免了他的账，他这辈子记着。可父亲春天的信里说，账上一笔也没有免。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 9, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "照账核对，那一行不问"
+"reply" = "我把那一页核了三遍，每一行都对，“清”字那一行也对——底下记着一笔钱，正好填平萨阿德的旧欠，来处写的是“杂项”。姨母的账上从来没有杂项。我在回信里只写：核过了，无误。她的回信更短：好。"
+"next" = "n5b"
+"effects" = [{ "kind" = "skill", "skill" = "double_entry", "value" = 3 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_kept_aunt_secret", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_aunt"
+"text" = "回信问姨母，“清”字底下那笔钱是谁的"
+"reply" = "姨母的回信隔了两个月才到，只有一行：账平了，就别问是谁平的。信封里夹着一小截椰绳，搓得极匀，我认得那手艺。她嘴上说情分记不进账，可她记了，记在杂项里，记在别人的名字底下。"
+"next" = "n5b"
+"effects" = [{ "kind" = "affinity", "person" = "najma_aunt", "value" = -1 }, { "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_aunt_saad", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "tell_father"
+"text" = "写信告诉父亲，萨阿德谢错了人"
+"reply" = "父亲没有回信。下一条船带来的是姨母的信，说你父亲那天去了码头，在萨阿德的绳摊前站了一会儿，买了一捆绳，没还价。回家以后两个人吵了一架，吵的什么她没写。最后一行是：往后我的账，你少管。"
+"next" = "n5b"
+"effects" = [{ "kind" = "affinity", "person" = "najma_aunt", "value" = -2 }, { "kind" = "affinity", "person" = "rashid_julfari", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_told_father_saad", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5b"
+"title" = "让价"
+"text" = "阿卜杜拉那张借据的事过去没几天，我写信回家问父亲：萨尔曼的账，是不是也是利上滚利？鲁卡娅讲过，教法不许这样收。回信是姨母代笔的，写的是父亲的话：萨尔曼的账上从来不写一个“利”字。他每年把我们的珠子照市价让两成收走，那两成叫“让价”；借给我们的钱，写作“预付珠款”。账上干干净净，法官来查，也挑不出一个错字。姨母在信尾自己添了一句：字干净的账，最难还。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 2, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "ruqayya"
+"text" = "拿信去问鲁卡娅，让价算不算利"
+"reply" = "鲁卡娅读完，说这种法子有名目，学者里有人许，有人不许：许的说买卖本来有贵有贱，不许的说换了名字的东西还是那样东西。她把信还给我：“你父亲问的是法官挑不挑得出错，你问的是这件事对不对。这是两个问题。”我说我问的是第二个。她说那就别指望从一张纸上得到答案。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "affinity", "person" = "c8_zabid_woman_scholar", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_ruqayya_rate", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "compute"
+"text" = "把让价折回利，算一年到底滚几回"
+"reply" = "两成让价，一年两回结账各让一回，折下来，萨尔曼每年拿走的比借出的多四成上下。我把算法写在信背面寄回去，一个字的评语也没加。下一封姨母的信里夹着一张小纸条，是父亲的字，歪歪扭扭两个：知道。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_rate_computed", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "abdullah"
+"text" = "去码头找阿卜杜拉，问他父亲那张借据后来怎样"
+"reply" = "阿卜杜拉坐在石阶上补他的护指皮套，头也不抬，说那一截利划掉了，可他父亲又借了一回，新借据上写的不是利，写的是让价。他笑了一下：“你看，债也会换衣裳。”我没告诉他，我家的债穿这身衣裳已经很多年了。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_abdullah", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n6"
+"title" = "父亲的肩"
+"text" = "师傅的船穿过海峡以后，在尤尔法的湾里停了五天，补水，换绳。我回到家，父亲坐在门槛上，母亲正用热沙子替他敷左肩。他的肩一边高一边低，像朱马那年扛口袋的样子。今年他没出海，船交给了阿明。我问他肩怎么了，他说是绳子勒的，勒了二十年。夜里，他把那本黑皮账推到我面前：“你在学堂学了算，你算算，我还要背多少年。”"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 6, 5] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_fingers"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_asked_debt", "value" = true }]
+"text" = "师傅的船穿过海峡以后，在尤尔法的湾里停了五天，补水，换绳。我回到家，父亲坐在门槛上，母亲正用热沙子替他敷左肩。他的肩一边高一边低，像朱马那年扛口袋的样子。今年他没出海，船交给了阿明。我问他肩怎么了，他说是绳子勒的，勒了二十年。夜里，他把那本黑皮账推到我面前：“那年你用我的手指头算过一回。现在你用笔算，算算我还要背多少年。”"
+
+[[tracks.chapters.variants]]
+"key" = "a_seen"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_saw_khwaja_book", "value" = true }]
+"text" = "师傅的船穿过海峡以后，在尤尔法的湾里停了五天，补水，换绳。我回到家，父亲坐在门槛上，母亲正用热沙子替他敷左肩。他的肩一边高一边低，像朱马那年扛口袋的样子。今年他没出海，船交给了阿明。我问他肩怎么了，他说是绳子勒的，勒了二十年。夜里，他把那本黑皮账推到我面前，推得很慢。我十三岁那年在萨尔曼的账上见过它的名字，他不知道。“你在学堂学了算，你算算，我还要背多少年。”"
+
+[[tracks.chapters.choices]]
+"key" = "compute"
+"text" = "一笔一笔算，把年数告诉他"
+"reply" = "我算到半夜。萨尔曼的利，珠子的价，船上二十四个人的口粮。算出来的数，比父亲的岁数还长。那个数我没说，只说：珠价要是不跌，十一年。父亲笑了一声：“珠价哪年不跌。”他合上账，叫我去睡。我听见他在院子里坐到鸡叫。"
+"next" = "n7"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_computed_years", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "old_man"
+"text" = "不算，问他骑在肩上的那个老头，该不该甩下来"
+"reply" = "父亲愣了一下，才想起这是朱马的故事。他看着那本账，看了很久：“甩下来的是霍尔木兹，砸着的是优努斯。”他说他这辈子只会一件事，就是不松手。说完他把左肩往上耸了耸，像在把背上的东西背得更稳些。"
+"next" = "n7"
+"effects" = [{ "kind" = "affinity", "person" = "rashid_julfari", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_asked_old_man", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "yunus"
+"text" = "去码头找优努斯，看他这几年怎么样"
+"reply" = "优努斯在阿明的船上，已经是最能憋气的那一个。他耳朵里塞着一团羊毛，跟他说话得喊。他问我学堂里是不是天天看星，我说是。他说他在海底也见过星：蚌壳张开那一下，里面一闪。说完他自己先笑了。他名下的账，比我替他算的那年又多了一行。"
+"next" = "n7"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_saw_yunus", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n7"
+"title" = "不下海了"
+"text" = "腊月底，我从扎比德回到尤尔法，结业的印还压在包袱底下。饭桌上父亲说，明年他不下海了，桑布克归我，开春就走。母亲没有抬头。饭后他把我叫进里屋，开了箱子，那本黑皮账就摆在箱子最上面。“桑布克我从萨尔曼那里赎出来了，”他说，“拿什么赎的，你别问。我让阿明的小船接着采珠，账上的二十四个人跟着小船。萨尔曼那一头，我自己背。”他把手放在账上，没有拿起来，也没有推给我。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 12, 26] }]
+
+
+[[tracks.chapters.variants]]
+"key" = "a_rate"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_rate_computed", "value" = true }]
+"text" = "腊月底，我从扎比德回到尤尔法，结业的印还压在包袱底下。饭桌上父亲说，明年他不下海了，桑布克归我，开春就走。母亲没有抬头。饭后他把我叫进里屋，开了箱子，那本黑皮账就摆在箱子最上面。“桑布克我从萨尔曼那里赎出来了，”他说，“拿什么赎的，你别问。我让阿明的小船接着采珠，账上的二十四个人跟着小船。萨尔曼那一头，我自己背。一年四成，你算过的，我记着。”他把手放在账上，没有拿起来，也没有推给我。"
+[[tracks.chapters.choices]]
+"key" = "fold"
+"text" = "求他把优努斯那一页撕了，那一笔我出海挣回来"
+"reply" = "父亲看着我，没撕，也没说不撕。他把那一页折了一个角，折得很整齐。“你挣了钱，先养你自己的船。”他说，“这一页折着，等你回来。”"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "rashid_julfari", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_page_folded", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "take"
+"text" = "把账收进自己的包袱：这一程我替他记"
+"reply" = "父亲没有拦我。账很沉，比我那几卷结业的抄本加起来还沉。他说：“你记，别替我算。”我问有什么分别。他说：“记，是把它写下来；算，是把它算出来。算出来的，你就背上了。”"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "stewardship", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_took_book", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "leave"
+"text" = "把箱子扣上：这是他的绳子，我不替他拉"
+"reply" = "我扣上箱子的搭扣。父亲点点头，像早知道我会这么做。“好。”他说，“领航的人，手里不能攥两根绳。”他把箱子推回床底，推得很慢。那天夜里我没睡着，听见他在院子里数着什么，数到二十四，停了。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_book_left", "value" = true }]
+
+# ---- 人物线 B「缺的那一行」：母亲玛丽亚姆 ----
+# 母本：阿塔尔《鸟的会议》（三十只鸟飞过七道山谷去找神鸟，最后在水面上看见的是自己）；
+#       文化：荣誉与沉默——家名是一家人共有的东西，护它的人可以不说真话；
+#       张力：她教女儿“错一个字就错一条路”，自己却藏着一整行。女儿可以去找刮掉的数、墨压住的星（关键事件“嫁妆箱里的航路诗”、支线“航路诗的缺行”），
+#       这一行她不让找。她藏它，为的是家名；纳吉玛找它，为的是真。那一行写着什么，养成期一字不露，到主线旁轨 main_najma_rw_31st_bird 后半才露出来，意思不说死。
+# 家乡 1553（戴胜、刀口、两姐妹）→ 学院 1554—1555（划掉的一句、书市上的那句话）→ 返乡 1556 夏（装订线）→ 结业（一本变轻的书）。
+[[tracks]]
+"key" = "c9_najma_rw_missing_line"
+"name" = "缺的那一行"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "戴胜"
+"text" = "商馆打烊以后，母亲不急着回家。她点上账桌边的小灯，从抽屉里取出一本波斯文的书，封皮是磨旧了的绿皮子，后封比前封厚一圈。她念给我听：鸟儿们聚在一处，要去找它们的王，戴胜领路，前头有七道山谷。她念一句波斯话，再用阿拉伯话说一遍，说得像在报价。念到一半，有的鸟说怕，有的鸟舍不得窝，一只一只掉了队。母亲念书的时候，手一直按在那块厚的后封上。"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 4, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "问她一共飞出去多少只，到了多少只"
+"reply" = "母亲笑了：“出发的时候数不清。到的时候，三十只。”我问掉队的那些，书里记不记名字。她翻了翻，说有的记了，有的只写“还有一只”。我说这样不准。她把书合上：“诗不是账，我的星星。”这是她头一回跟我说，诗不是账。"
+"next" = "n0b"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_birds_counted", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "persian"
+"text" = "请她教我那几句波斯话"
+"reply" = "她教我念戴胜开口的那一句，我的舌头总在一个音上打滑。母亲不说“从头”，只说“慢点”。回家的路上我一直念，念到门口，她忽然说：“霍尔木兹的人说波斯话，记账用波斯字。你学会了，他们就骗不了你。”她说的已经不是诗了。"
+"next" = "n0b"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "affinity", "person" = "najma_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_learned_persian", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "cover"
+"text" = "问她后封为什么比前封厚"
+"reply" = "母亲的手没有动。“装订的人手笨，多糊了一层。”她答得太快，不像她。她平时说什么都要押个韵，这一句没押。我没再问，可那块厚皮子我记住了，像记住一颗不在星表上的星。"
+"next" = "n0b"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_noticed_cover", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n0b"
+"title" = "商馆里的夸奖"
+"text" = "六月，商馆里来了个葡萄牙书记，替霍尔木兹的税关来对账。他会几句阿拉伯话，说得磕磕绊绊，却很热心。对完账，他指着母亲桌上那本抄着星名的小册子问：您是伊本·马吉德家的人？我们的人都知道他，是他领我们的船到了印度。他说得很诚恳，像在夸一件好东西。母亲笑着谢了他，结清了账，送他到门口。他走以后，她拿一块湿布擦那张账桌，擦了很久，桌上本来什么也没有。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 6, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问母亲：他说的是真的吗"
+"reply" = "母亲把布叠好，搭在桌角。“他说的是他听来的，”她说，“他们的书里写了什么，我没读过。我读过的，是你外曾祖父自己写的。”我问那他自己写的里面有没有。她看着我，像看一笔对不上的账：“回家背诗去。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_clerk_true", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "wipe"
+"text" = "拿另一块布，帮她一起擦"
+"reply" = "我从桌子另一头擦过来，擦到中间，两块布碰在一起。母亲停下来看着我，眼睛有一点湿，嘴上却说：“你擦得不匀。”她又从头擦了一遍。那天回家的路上，她一句诗也没念。"
+"next" = "n1"
+"effects" = [{ "kind" = "affinity", "person" = "najma_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_wiped_table", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "source"
+"text" = "追出去，问那书记是从哪本书里知道的"
+"reply" = "书记很高兴有人问，说是听船上的老水手讲的，老水手又是听他父亲讲的。他说里斯本有人在写一部很大的书，什么都写在里头。我问书里写的是谁的名字。他想了想，说记不清了，好像是个摩尔人的名字，好像就是这一个。他说“好像”两个字的时候，自己都没听见。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_clerk_source", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "刀口"
+"text" = "九月，母亲让我把航路诗从头誊一遍，誊到最后一页。最后一联只剩上半句，写的是那颗往西落下去的星。下半句该在的地方，纸上开着一道窄窄的窗，四边齐齐整整，透过去看得见底下的席子。我把灯挪近了看。母亲在纺车边说，那是虫蛀的。可她教过我，缺一行，耳朵听得出来；我也看得出来，虫子不走直线。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 9, 5] }]
+
+[[tracks.chapters.choices]]
+"key" = "say_knife"
+"text" = "说：这是刀割的"
+"reply" = "纺车停了。“是刀割的，”母亲说，“割它的人死了二十多年了。”我问是谁。她说是她父亲，我的外祖父。我还要问，她已经又摇起了纺车，摇得比刚才快。“誊你的，”她说，“上半句誊对了，下半句不归你管。”"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "najma_mother", "value" = -1 }, { "kind" = "flag", "flag" = "rw_najma_said_knife", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "measure"
+"text" = "不出声，拿牵星板的绳结量那道窗"
+"reply" = "窗宽一指半，长短正好是外曾祖父一行字的长短，不多也不少。割的人量过。我把这个数记在誊本的页边，用最小的字。第二天早上，那个数被人用指甲刮掉了。早饭时母亲多给我倒了一杯羊奶，什么也没说。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_measured_window", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "worm"
+"text" = "照她说的，在誊本上写：此处虫蛀"
+"reply" = "我写了，写得很工整。母亲看了一眼，把誊本拿过去，划掉“虫蛀”两个字，改成一个“缺”。她把誊本还给我：“错的字不要写。”我想问，缺的是什么，可她已经吹了灯。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "affinity", "person" = "najma_mother", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_wrote_worm", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "两姐妹"
+"text" = "腊月，学院的船快来接人了，我的包袱已经打好。夜里我起来喝水，听见母亲和姨母在院子里说话，声音压得很低。姨母说：“那张纸，烧了干净。她这一走，什么人都见得着，什么话都听得到。”母亲说：“烧了，他就只剩别人嘴里的那一句。”姨母说别人嘴里的那一句，好歹没有凭据。两个人都不出声了。椰枣树的影子在地上一晃一晃。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 12, 12] }]
+
+[[tracks.chapters.choices]]
+"key" = "step_out"
+"text" = "走出去，问她们说的是哪张纸"
+"reply" = "姨母先看见我，把手里的灯往身后一藏，像藏一笔记错的账。母亲没有慌：“说的是你外曾祖父的一张旧债条，你姨母要烧，我舍不得。”她说得很顺。我知道她在说谎，她也知道我知道。那一夜我们三个坐在院子里，坐到灯油烧干，谁也没再提那张纸。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = -1 }, { "kind" = "flag", "flag" = "rw_najma_stepped_out", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "back"
+"text" = "退回屋里，把这几句话记下来"
+"reply" = "我把她们的话一字一字刻在牵星板背面，刻在一年的日程旁边，刻完又用炭抹了，抹得很匀，只有我知道哪里有字。第二天母亲替我收拾包袱，翻出那块牵星板，用拇指在背面那片黑上摸了一下，又放了回去。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_wrote_it_down", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_aunt"
+"text" = "第二天去市集，问姨母别人嘴里的是哪一句"
+"reply" = "姨母在账桌后面拨算盘，拨了很久才开口：“码头上有人讲，法兰克人头一回来印度，是一个阿拉伯老领航给他们带的路。”她把算盘一推，“讲的人多了，就有人讲出了名字。”我问是谁的名字。她看着我：“你知道是谁的名字。”"
+"next" = "n3"
+"effects" = [{ "kind" = "affinity", "person" = "najma_aunt", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_heard_rumor_home", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "划掉的一句"
+"text" = "母亲的信从来不长，一张纸写满半张，另半张留给我回。这一封问扎比德热不热，叮嘱头巾要勤换，背诗不要背到天亮。最后一行被墨划掉了，划得很重，墨透到了纸背。我把纸举到窗口对着太阳，划痕底下的字一个个浮出来：问路的人多了，路就不是你的了。后面还有半句，划得最狠，一个字也透不出来。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 7, 5] }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "回信问她，划掉的那半句是什么"
+"reply" = "回信隔了一季才到，比上一封还短，只答我信里的别的事：卡比尔是谁，拉妮娅的诗是不是她自己写的。我问的那一句，她像没看见。信封里夹着一片干了的椰枣叶，叶背上用针刺了一行小孔，是航路诗的第一联。她是在告诉我：问别的。"
+"next" = "n3b"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_crossed", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "不问，把信夹进航路诗的誊本"
+"reply" = "我把信夹在誊本的最后一页，正好压在那道窄窗上。从窗里望过去，能看见信上被划掉的那一行。两样缺着的东西叠在一起，倒像补上了一点。我再没有对着太阳看过它。"
+"next" = "n3b"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "najma_mother", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_kept_letter", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ruqayya"
+"text" = "拿去问鲁卡娅：划掉的话，算不算说过"
+"reply" = "鲁卡娅把信对着光看了一会儿，还给我。“传述有一条规矩，”她说，“传话的人自己划掉的，不算传下来的。可你看见了。”她顿了顿，“看见的人还要不要往下传，是看见的人自己的事。”说完她去讲课，讲的是另一件事。"
+"next" = "n3b"
+"effects" = [{ "kind" = "affinity", "person" = "c8_zabid_woman_scholar", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_ruqayya_crossed", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n3b"
+"title" = "只背上半句"
+"text" = "正月，船上的晚课，哈米斯师傅叫我们轮流背伊本·马吉德的诗。轮到最后一联，拉妮娅背完上半句，张嘴要往下接，师傅抬手止住她。“到这儿就停，”他说，“船上背这一联，向来只背上半句。”拉妮娅问为什么。师傅说他的师傅就是这么教的，他师傅的师傅也是。“老领航们讲，下半句是他自己的事。”说完他看了我一眼，好像我该知道点什么。"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 1, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_khamis"
+"text" = "课后问师傅：您听过下半句吗"
+"reply" = "师傅在船尾抽着烟管，想了很久。“听过一回。”他说，“年轻时在苏尔港，一个瞎了眼的老领航喝多了咖啡，念过。念完他就哭了。”我问念的是什么。师傅摇头：“那时候我只顾着记星，没记字。”他把烟管在船舷上磕了磕，“记星的人，都这样。”"
+"next" = "n4"
+"effects" = [{ "kind" = "affinity", "person" = "c8_shipboard_pilot", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_khamis_heard_once", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "silent"
+"text" = "不问，把上半句在心里多背一遍"
+"reply" = "我在心里把上半句背了一遍，背到最后一个字停住，像船到了一处没测过的水，帆还鼓着，人已经不敢往前。拉妮娅在旁边小声问：你家里有，对不对？我没答。她也没再问，转头去背下一首了。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_kept_silent_khamis", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "road"
+"text" = "问师傅：只背一半，船上不会记错吗"
+"reply" = "师傅笑了：“少一句不会错，多一句才会错。”他说航路诗里每一句都是一条路，背对了船就到，背错了船就丢。“那一句不是路，”他说，“背它做什么。”这是我头一回听人说，外曾祖父的诗里有一句不是路。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_not_a_road", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "书市上的那句话"
+"text" = "四月，扎比德的书市上，一个从吉达回来的老领航在卖旧航路书，一本本摊在席子上。我蹲下去翻，翻到一本，扉页上抄着外曾祖父的名字。老领航见我翻得仔细，问我是哪家的。我说了。他把书从我手里抽回去，笑了一下，对旁边的人说：“伊本·马吉德的曾外孙女。就是那一个，给法兰克人带过路的。”旁边的人也跟着笑。他说得那么随便，像在说一条早就测准了的水道。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 4, 10] }]
+
+
+[[tracks.chapters.variants]]
+"key" = "a_home"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_heard_rumor_home", "value" = true }]
+"text" = "四月，扎比德的书市上，一个从吉达回来的老领航在卖旧航路书，一本本摊在席子上。我蹲下去翻，翻到一本，扉页上抄着外曾祖父的名字。老领航见我翻得仔细，问我是哪家的。我说了。他把书从我手里抽回去，笑了一下，对旁边的人说：“伊本·马吉德的曾外孙女。就是那一个，给法兰克人带过路的。”旁边的人也跟着笑。姨母那年在账桌后面说的话，我头一回从一个不相干的人嘴里听见，听起来比她说的轻得多，也重得多。他说得那么随便，像在说一条早就测准了的水道。"
+[[tracks.chapters.choices]]
+"key" = "argue"
+"text" = "当着书市的人，问他哪一年、哪条船"
+"reply" = "我问哪一年，他说法兰克人头一回来的那年。我问哪条船，他说法兰克人的船。我问他听谁说的，他说人人都这么说。我说：人人都说的，就是谁也没看见的。书市上的人不笑了。老领航把那本书塞回我手里，说送你了，别在我摊子前头站着。"
+"next" = "n5"
+"check" = { "attr" = "eloquence", "base" = 45, "per" = 8 }
+"fail" = { "next" = "n5", "news" = "我才问出一句“哪一年”，他就笑着摆手，已经转身去招呼别的客人。旁边一个卖纸的说：小姑娘，跟一个说法吵架，说法是不会输的。我在书市上站到收摊，那本书他没卖给我。", "effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_rumor_lost", "value" = true }] }
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_rumor_argued", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "buy"
+"text" = "不吵，把那本书买下来"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"hint" = "身上的钱不够买他那本书。"
+"reply" = "他要十枚，比书本身贵了一倍，我没还价。回到住处，我把书从头翻到尾，翻到最后一页，那一联也只有上半句，下半句空着——是抄的人没抄，不是被割的。原来缺着的，不止我们家那一本。"
+"next" = "n5"
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "learning", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_bought_copy", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "write_home"
+"text" = "回去写信，问母亲有没有听过这句话"
+"reply" = "信写了三遍。头一遍太长，第二遍太凶，第三遍只剩一句：书市上有人这么说，是真的吗。母亲的回信只有两个字：从头。别的什么也没有。我拿着那张纸看了很久，不知道她是要我从头念诗，还是要我从头想这件事。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_mother_rumor", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "装订线"
+"text" = "师傅的船泊在尤尔法那几天，我去商馆找母亲。她不在账桌后面，在后屋，膝上摊着那本绿皮的波斯书，手里一根针，正在缝书脊。线是新的，白得扎眼。后封还是比前封厚。我站在门口，她没有抬头：“书老了，线断了，得重缝。”这本书的线三年前就是旧的，可一直没有断。她把针在头发里抿了抿，接着缝。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 5, 28] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_cover"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_noticed_cover", "value" = true }]
+"text" = "师傅的船泊在尤尔法那几天，我去商馆找母亲。她不在账桌后面，在后屋，膝上摊着那本绿皮的波斯书，手里一根针，正在缝书脊。线是新的，白得扎眼。后封还是比前封厚，三年前我问过一回，她说是装订的人手笨。我站在门口，她没有抬头：“书老了，线断了，得重缝。”这本书的线三年前就是旧的，可一直没有断。她把针在头发里抿了抿，接着缝。"
+
+[[tracks.chapters.variants]]
+"key" = "a_window"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_noticed_cover", "value" = false }, { "kind" = "flag", "flag" = "rw_najma_measured_window", "value" = true }]
+"text" = "师傅的船泊在尤尔法那几天，我去商馆找母亲。她不在账桌后面，在后屋，膝上摊着那本绿皮的波斯书，手里一根针，正在缝书脊。线是新的，白得扎眼。后封比前封厚，厚出来的那一层，看上去正好藏得下一条一指半宽的纸。我站在门口，她没有抬头：“书老了，线断了，得重缝。”这本书的线三年前就是旧的，可一直没有断。她把针在头发里抿了抿，接着缝。"
+
+[[tracks.chapters.choices]]
+"key" = "ask_line"
+"text" = "问她：那一行，在不在这本书里"
+"reply" = "针停了。母亲抬头看我，看了很久，像在量一颗星的高度。“在。”她说。我等她往下说。她把针穿过去，拉紧，打了个结，用牙咬断线头。“在我这里，”她说，“不在你那里。等你走得比他远了，再来问我。”"
+"next" = "n6"
+"effects" = [{ "kind" = "affinity", "person" = "najma_mother", "value" = 1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_line", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "promise"
+"text" = "说：你不给我看，我就不找"
+"reply" = "母亲的手抖了一下，针扎进指头，一滴血落在白线上。她没去擦。“你外曾祖父一辈子没答应过谁不找，”她说，“你答应得太快了。”可她还是点了头。那根沾了血的线她没有拆，就那么缝了进去。"
+"next" = "n6"
+"effects" = [{ "kind" = "affinity", "person" = "najma_mother", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_promised_mother", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "bird"
+"text" = "问她：书里掉队的那只鸟，后来怎样了"
+"reply" = "母亲笑了，那是她今天头一回笑。“书里没写。”她说，“三十只鸟到了，看见的是它们自己。掉队的那一只看见了什么，没人知道。”她把书合上，按在膝头，“也许它看见的比那三十只都多。也许它只是飞累了。”她没说她指的是谁。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_31st", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n6"
+"title" = "变轻的书"
+"text" = "结业的印盖下来第二天，尤尔法来的船捎来一个布包，是母亲的。布包里是那本绿皮波斯书，书脊上的白线已经发灰。我把书托在手掌上掂了掂，比在商馆里那回轻。后封和前封一样厚了。书里夹着一张纸，是母亲的字：给我的星星，结业。三十只鸟你都认得了，路上读。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 12, 8] }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "把书收进箱子，不去按那块后封"
+"reply" = "我把书和外曾祖父的誊本放在一处，裹了两层油布。那块后封我一次也没按过，它已经空了，按也按不出什么。母亲把那一行从书里取走，放到了一个我不知道的地方，就像当年有人把它从诗里取走一样。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_book_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "reply_31st"
+"text" = "回信写：三十只都认得了，第三十一只呢"
+"reply" = "这封信到的时候，我多半已经在回家的路上了，可我还是写了，托最早开的那条船，信里就这一句。后来母亲说她收到了，那天在商馆里笑出了声，管账的伙计还以为她算错了钱。她没有回信。我到家那天，她站在门口等我。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "najma_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_31st_letter", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "read"
+"text" = "在回家的船上，把书从头读到尾"
+"reply" = "船走得慢，我读得也慢。七道山谷，一道一道读过去，读到最后一道，书上说走到这里的鸟，忘了自己是谁。我在页边写了一个小小的数：三十。又划掉了。到尤尔法时，那本书我已经背得下一半，母亲听我背，一个字也没纠正。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_read_birds", "value" = true }]
+
+# ---- 人物线 C「努尔下海」：织网人家的女儿努尔 ----
+# 母本：渴望——不许下海的女孩偷偷下了海，成了最好的潜水人，又被债拴上；
+#       文化：海湾的采珠船只许男人上，女人在岸上缝网兜、晒贝；好的一面是她头一回在海底是自由的，坏的一面是这份自由要拿拇指印去换；
+#       张力：纳吉玛能替她写一封信、算一笔账，却解不开那条绳。
+# 家乡 1553（憋气、那一道礁）→ 学院 1554—1555（阿米尔代笔、拇指印、鸽子蛋）→ 返乡 1556 夏（穆萨的船）→ 结业（石堤）。
+# 与家乡玩伴“晒网的午后”（她娘咳嗽、网拿去抵税）“潜水船回港”（我也想下海）、人物线 A（朱马淹死的那道礁）咬住；
+# 主线旁轨 main_najma_rw_debt_rope 的“二十四岁”“绳子”两章接着写（与美术已画的 24 岁立绘一致：腕上一根引向画外的绳，看着一颗珠子，笑不到眼里）。
+[[tracks]]
+"key" = "c9_najma_rw_nur_dives"
+"name" = "努尔下海"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "憋气"
+"text" = "五月的夜里，努尔把我叫到码头尽头，那里的石堤底下水只到胸口。她说：你会数，你给我数。说完吸一口气，整个人沉下去，只剩几根头发浮在水面，像一把散开的网线。我数到三十，四十，数到六十，心跳比数得还快。数到八十七，她冒上来，呛了一口，笑得直咳：“几？”"
+"once" = true
+"mood" = "cheerful"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 5, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "tell"
+"text" = "报真数：八十七"
+"reply" = "“八十七。”她把这个数在嘴里念了三遍，像在背一个刚学会的字。她说阿明能憋一百，她明天要憋九十。我说明天我不来了。她说那你后天来。我后天去了。她憋了九十一。"
+"next" = "n0b"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_nur_counted", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "lower"
+"text" = "少报十个，怕她再往下沉"
+"reply" = "“七十七。”她的脸一下子垮了，又很快笑起来，说那明天憋一百。第二天她真沉了很久，久到我开始喊她的名字。她上来以后躺在石堤上喘，问：“这回你没骗我吧？”我说没有。这一回，我是真的没骗她。"
+"next" = "n0b"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_lowered", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "stop"
+"text" = "把她拽上来，说再这样就告诉她娘"
+"reply" = "她甩开我的手，头发上的水甩了我一脸。“你去告诉啊，”她说，“我娘能做的，就是不让我出门。我不出门，就在家里憋，憋给墙看。”我没有去告诉她娘。那以后她不再叫我去数，可我知道，她自己在数。"
+"next" = "n0b"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = -2 }, { "kind" = "flag", "flag" = "rw_najma_nur_threatened", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n0b"
+"title" = "龟甲鼻夹"
+"text" = "七月，采季正旺，滩上的女人坐成一排缝网兜、剖蚌。努尔也在，手里的针穿得飞快，眼睛却一直往船那边瞟。剖出来的珠子先过姨母的眼，再进税吏的箱子。晌午歇工，努尔把我拉到网棚后面，摊开手：一只鼻夹，龟甲磨的，夹口磨得发亮。她说是从阿明晒在船舷上的那一堆里拿的。“就借一个夏天，”她说，“他有三只。”"
+"once" = true
+"mood" = "cheerful"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 7, 25] }]
+
+[[tracks.chapters.choices]]
+"key" = "return"
+"text" = "拉着她把鼻夹还给阿明"
+"reply" = "阿明接过鼻夹，看看努尔，又看看我，没骂人。他说龟甲夹子要照着鼻梁磨，他的鼻梁宽，夹在她脸上要掉。第二天他托我带给努尔一只新的，小一号，夹口还带着锉痕。他说：女孩子不许上船，可没人管女孩子在石堤底下干什么。"
+"next" = "n1"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_nose_clip_returned", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "cover"
+"text" = "替她瞒着，说我没看见"
+"reply" = "那个夏天，阿明找过一回他的第三只鼻夹，问到我，我说没看见。他看了我一眼，没再问。九月收工时，那只鼻夹又回到了船舷上那一堆里，夹口多了一道新磨的印子，磨得更窄了。我不知道是谁放回去的，也没去问。"
+"next" = "n1"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "growth", "attr" = "intrigue", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_nose_clip_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "make"
+"text" = "说我替她做一只，拿姨母的旧角梳改"
+"reply" = "我向姨母讨了一把断齿的牛角梳，跟努尔蹲在网棚后面磨了三个晚上。磨出来的夹子是歪的，夹上去疼。她夹着它在石堤底下憋了一口气，上来时鼻梁红了一道，说：比龟甲的好，这是我自己的。阿明那只，她当天就放了回去。"
+"next" = "n1"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nose_clip_made", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "那一道礁"
+"text" = "九月底，船都回了湾，采季结了。努尔来找我，手里攥着一样东西，攥得指节发白。她张开手，是一只蚌，壳缝里夹着一点光。她说是在那道礁底下摸到的——父亲在沙上画过、不许人去的那一道，朱马就没从那里上来。“那底下的蚌没人摸过，”她说，“一层压一层，像铺的地砖。”她把蚌塞给我：“你家会卖珠子。你替我卖。”"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1553, 9, 25] }]
+
+
+[[tracks.chapters.variants]]
+"key" = "a_pulled"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_pulled_rope", "value" = true }]
+"text" = "九月底，船都回了湾，采季结了。努尔来找我，手里攥着一样东西，攥得指节发白。她张开手，是一只蚌，壳缝里夹着一点光。她说是在那道礁底下摸到的——父亲在沙上画过、不许人去的那一道，朱马就没从那里上来。那天我和优努斯一起拉的那根绳，勒出的印子到现在还没褪干净。“那底下的蚌没人摸过，”她说，“一层压一层，像铺的地砖。”她把蚌塞给我：“你家会卖珠子。你替我卖。”"
+
+[[tracks.chapters.variants]]
+"key" = "a_counted"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_counted_on", "value" = true }]
+"text" = "九月底，船都回了湾，采季结了。努尔来找我，手里攥着一样东西，攥得指节发白。她张开手，是一只蚌，壳缝里夹着一点光。她说是在那道礁底下摸到的——父亲在沙上画过、不许人去的那一道，朱马就没从那里上来。那天我在船舷上一直数到一百六十，那几个数，夜里还会自己在耳朵里响。“那底下的蚌没人摸过，”她说，“一层压一层，像铺的地砖。”她把蚌塞给我：“你家会卖珠子。你替我卖。”"
+[[tracks.chapters.choices]]
+"key" = "aunt"
+"text" = "拿去给姨母，照规矩称、照规矩记"
+"reply" = "姨母撬开蚌，挑出那颗珠子，不大，可是圆。她称了，记了，问我记在谁名下。我说努尔。姨母的笔停住：“女孩子的名字，账上没有这一栏。”最后她记在“杂项”底下，把钱交给我，一枚不少。我把钱给努尔，她数了两遍，问我：杂项，是我吗？"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 2 }, { "kind" = "affinity", "person" = "najma_aunt", "value" = 1 }, { "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_pearl_aunt", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "her_mother"
+"text" = "不卖，交给她娘，说清是哪里来的"
+"reply" = "努尔的娘在网棚里补网，听完一句话也没说，把珠子攥在手心攥了很久，然后一巴掌打在努尔脸上。打完，她把珠子揣进怀里，转身咳了一阵。“这一颗换药，”她说，“下一颗，换你的命。”努尔捂着脸没哭，冲我做了个口型：九十五。"
+"next" = "n2"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = -1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_pearl_to_mother", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "hide"
+"text" = "替她收着，谁也不说"
+"reply" = "我把蚌裹进一块旧头巾，塞在牵星板的木框背后。那颗珠子在我那里一直放到我上船，谁也不知道。努尔问过一回，我说还在。她说在就好，好像那是她存在我这里的一口气。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_pearl_hidden", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "阿米尔代笔"
+"text" = "六月，又来一封尤尔法的信。字是阿米尔的，话是努尔的，一看就知道：阿米尔写字爱拖尾巴，努尔说话不拐弯。信上说，采季开了，她每天天不亮就去那道礁，趁船还没出湾。她现在能数到一百二十才上来。她摸到过一颗比指甲盖还大的，卖给了一个霍尔木兹来的人，阿米尔说价钱被压了一半。最后一行是阿米尔自己添的：她不让我写这一句，我还是写了——她的耳朵流过血。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 6, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "ears"
+"text" = "回信教她护耳朵的法子"
+"reply" = "我写：下去以前先捏住鼻子往耳朵里鼓一口气，上来别急，在半路停一停。这是阿明在船上教我的，我抄得一字不差。信尾我画了一只耳朵，画得很丑。阿米尔后来回信说，努尔看着那只耳朵，笑了一下午。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "medicine", "value" = 2 }, { "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_ears", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "price"
+"text" = "回信替她算，那颗珠子本该卖多少"
+"reply" = "我照扎比德珠市的价算了一遍，又照姨母账上的价算了一遍，那颗珠子至少值她拿到的两倍。两个数我都写上，又写：下一颗，先拿给姨母看。写完我就知道她不会去——她是偷偷下的海，偷偷下海的人，珠子也只能偷偷卖。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_price", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "warn"
+"text" = "回信劝她别去了，那道礁淹死过人"
+"reply" = "我写了朱马，写他上来时脸朝下，手里还攥着网兜。写完念一遍，觉得自己像在吓唬小孩，可我还是寄了。回信很久才来，还是阿米尔的字：她说她知道朱马，朱马淹死的地方，蚌最多。"
+"next" = "n2b"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = -1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_warned", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2b"
+"title" = "剪发"
+"text" = "十一月，阿米尔的信里一个船名也没写，写的全是努尔：她把头发剪了，剪得跟她哥哥一样短，她娘拿扫帚追了她半条街。她试了她哥哥的衣裳，腰太宽，拿麻绳勒了三道。她在码头上学男孩子走路，学了一下午，阿米尔说学得很像，只有笑起来不像。最后一行他写：她叫我问你，男孩子说话的时候，手放在哪里。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 11, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "answer"
+"text" = "认真回答：手搭在腰上的绳结上"
+"reply" = "我写：手搭在腰上的绳结上，像随时要解绳下水；话说得短，句尾不拐弯。写完读了一遍，觉得自己在教她撒谎，又觉得这是她头一回求我教她一样字以外的东西。我把信寄了。后来听说，她学得比我写的还像。"
+"next" = "n3"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "growth", "attr" = "intrigue", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_taught_boy", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "stronger"
+"text" = "回信说：你不用学，你本来就比他们强"
+"reply" = "阿米尔回信说，努尔听完骂了我一句，说我站着说话不腰疼，海上不看谁强，看谁穿着什么。骂完，她又叫阿米尔把我那一句念了一遍。阿米尔说，念第二遍的时候，她没骂。"
+"next" = "n3"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 1 }, { "kind" = "growth", "attr" = "resolve", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_told_stronger", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "take_off"
+"text" = "回信问她：穿上那身衣裳，脱得下来吗"
+"reply" = "这一封回信来得很慢。阿米尔的字，努尔的话，只有一行：脱不脱得下来，等我上了船再告诉你。底下画了一个结，是她教过我的那一种，海上的人都认得。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_asked_take_off", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "拇指印"
+"text" = "二月，努尔的信里夹着一张纸，不是信，是账。阿米尔在旁边写：她娘咳出了血，买药要钱。哈伊马角有个船主叫穆萨，早听说码头上有个丫头憋气比男人还长，找上门来，说今年采季给她一个位子，先借她一袋银子治病，条件是穿她哥哥的衣裳上船，船上的人不问，岸上的人不说。她按了拇指印。这张账是穆萨的人抄给她的，她看不懂，叫阿米尔寄来给我看。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 2, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "compute"
+"text" = "一行一行拆开算，她到底借了多少、要还多少"
+"reply" = "账写得很巧：借的是一袋，记的是一袋半，多出来的半袋叫“船位钱”；利息不叫利息，叫“分成先扣”。我一行行拆开，算出她这一季要捞上多少颗珠子才不欠——比阿明一季捞的还多。我把这个数写进回信，又写了一句：这不是借钱，是把你卖给他三年。"
+"next" = "n4"
+"check" = { "attr" = "numeracy", "base" = 45, "per" = 8 }
+"fail" = { "next" = "n4", "news" = "账上的字是波斯字和阿拉伯字掺着写的，有两行我怎么也认不出。算出来的数前后差了一倍，我不敢寄，最后只回了一句：先别再按拇指印。信到的时候，采季已经开了。", "effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_sum_failed", "value" = true }] }
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "skill", "skill" = "double_entry", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_nur_sum", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "aunt_letter"
+"text" = "写信请姨母去找穆萨，替她把账重立一张"
+"reply" = "姨母的回信说，她去了。穆萨客客气气，请她喝咖啡，说账是努尔自己按的，按了就是按了；要重立，先把那一袋银子还上。姨母没有一袋银子替织网人家的丫头还。信的最后一行她写：我替人作保二十年，头一回保不了。"
+"next" = "n4"
+"effects" = [{ "kind" = "affinity", "person" = "najma_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_aunt_tried", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "money"
+"text" = "把这个月的零用钱寄回去，先替她还一点"
+"requires" = [{ "kind" = "cash", "ge" = 15 }]
+"hint" = "手头的零用钱不够寄。"
+"reply" = "钱托去霍尔木兹的船带，要转三道手。阿米尔回信说钱到了，少了一成，是路上被人抽的。努尔拿着钱去找穆萨，穆萨收了，在账上划了一道，然后告诉她：今年的利已经起了，划掉的这一道，正好够利。"
+"next" = "n4"
+"effects" = [{ "kind" = "cash", "value" = -15 }, { "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_money", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "鸽子蛋"
+"text" = "十月，从尤尔法来的人在扎比德的码头上讲闲话，讲到哈伊马角穆萨的船：今年那船上有个瘦小子，憋气比谁都长，摸上来的蚌比谁都多，有一回在那道礁底下待了快两百下，上来时鼻子里全是血，手里攥着一颗鸽子蛋大的珠子。讲的人说，穆萨把那颗珠子卖给了霍尔木兹的大商人，卖出了一条船的钱。至于那瘦小子是谁家的，没人知道，只知道他在船上从来不脱衣裳。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 10, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "share"
+"text" = "问讲闲话的人，那颗珠子分了那小子多少"
+"reply" = "他想了想：“分？船上的规矩，先扣欠的。听说他欠穆萨的，比那颗珠子还多。”说完他自己先笑了，说这才叫潜水人，捞上来一条船，自己还光着脚。我没有笑。我想起她在石堤底下冒上来，呛着水问我数到了几。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_share_heard", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "keep_quiet"
+"text" = "不说那是谁，替她守着"
+"reply" = "旁边有人猜那小子是谁家的，猜了几个名字，都是男孩的。我坐着喝我的咖啡。她用一身哥哥的衣裳、一口比男人还长的气，才换得这一船人不知道她是谁。我不能替她把名字说出来，哪怕这是她最好的一天。"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "letter"
+"text" = "回去写信，只写一句：我听说了"
+"reply" = "我写了很多句，又一句句划掉，最后只留一句：我听说了，鸽子蛋那么大。阿米尔回信说，努尔让他念了三遍，念完一声不吭，把信叠好塞进网兜底下，跟她的石坠放在一起。"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_nur_heard_letter", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "穆萨的船"
+"text" = "我在尤尔法的那几天，穆萨的船正好回湾补水。我在滩上等，等到太阳快落，才看见努尔从船上跳下来。哥哥的衣裳脱在了船上，她换回自己的，头发剪短了，短得像个男孩。她看见我，跑过来抱了我一下，身上的海腥味比从前重。她左耳贴着一块布，右手腕上缠着一圈潜水的绳，绳头还没解。她笑着说：“我是这条船上最好的。”穆萨的账簿就搁在船舱里。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 6, 10] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_sum"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_nur_sum", "value" = true }]
+"text" = "我在尤尔法的那几天，穆萨的船正好回湾补水。我在滩上等，等到太阳快落，才看见努尔从船上跳下来。哥哥的衣裳脱在了船上，她换回自己的，头发剪短了，短得像个男孩。她看见我，跑过来抱了我一下，身上的海腥味比从前重。她左耳贴着一块布，右手腕上缠着一圈潜水的绳，绳头还没解。她笑着说：“我是这条船上最好的。”穆萨的账簿就搁在船舱里，我在信里替她拆过的那一页，应该就在里面。"
+
+[[tracks.chapters.choices]]
+"key" = "read"
+"text" = "上船去，把穆萨的账一行一行念给她听"
+"reply" = "穆萨没拦我，他知道我念出来的也是他的数。我念：借，一袋半。船位钱。分成先扣。鸽子蛋那一颗，记了，扣了。念到最后一行，还欠两季。努尔听完，伸出拇指去按那一行，按的正是她当初按印的地方。“我看不懂，”她说，“可我认得我的手指头。”"
+"next" = "n6"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_read", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "knots"
+"text" = "解下她腕上的绳，照账上的数，一季打一个结"
+"reply" = "我把她的绳子解下来，照账上的数打结：欠一季，打一个大结；欠半季，打一个小结。打完是两个大结。我把绳子系回她手腕上，说：还清一季，你就解开一个。她低头看那两个结，看了很久，说这比字好认。过后我才想到，我是把她的账系在了她手上。"
+"next" = "n6"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_nur_knots", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "拿出自己攒的钱，先替她还上一截"
+"requires" = [{ "kind" = "cash", "ge" = 20 }]
+"hint" = "攒下的钱不够替她还一截。"
+"reply" = "穆萨收了钱，数得很仔细，在账上划掉半季。努尔看着他划，没有谢我。夜里她来找我，坐在门槛上半天才开口：“下回别这样。我欠你的，比欠穆萨的难还。”她说完就走了，走得很快，像怕我看见她的脸。"
+"next" = "n6"
+"effects" = [{ "kind" = "cash", "value" = -20 }, { "kind" = "affinity", "person" = "nur", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_nur_paid", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n6"
+"title" = "石堤"
+"text" = "我到家的第三天，努尔来找我。穆萨的船开春要去巴林，她跟着去，一去一整季。她剪短的头发长出来一点，扎不起来，拿一根麻绳勒着。她说：你明年也走，走得比我还远。我们坐在石堤上，就是她头一回叫我替她数的地方。潮水退了，石堤底下露出一圈白盐。她问我，领航的人去的那些地方，有没有她这样的人。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 12, 28] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_knots"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_nur_knots", "value" = true }]
+"text" = "我到家的第三天，努尔来找我。穆萨的船开春要去巴林，她跟着去，一去一整季。她剪短的头发长出来一点，扎不起来，拿一根麻绳勒着。她右手腕上还是那根绳，两个大结一个也没解开，旁边又多了一个小的。她说：你明年也走，走得比我还远。我们坐在石堤上，就是她头一回叫我替她数的地方。潮水退了，石堤底下露出一圈白盐。她问我，领航的人去的那些地方，有没有她这样的人。"
+
+[[tracks.chapters.variants]]
+"key" = "a_paid"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_nur_paid", "value" = true }]
+"text" = "我到家的第三天，努尔来找我，头一句话就是：那半季的钱，我会还你。穆萨的船开春要去巴林，她跟着去，一去一整季。她剪短的头发长出来一点，扎不起来，拿一根麻绳勒着。她说：你明年也走，走得比我还远。我们坐在石堤上，就是她头一回叫我替她数的地方。潮水退了，石堤底下露出一圈白盐。她问我，领航的人去的那些地方，有没有她这样的人。"
+
+[[tracks.chapters.choices]]
+"key" = "yes"
+"text" = "说有：哪里都有憋着一口气往下沉的人"
+"reply" = "她点点头，像是放了心。“那就好，”她说，“我不想当头一个。”她从怀里摸出一颗小珠子，不圆，有点扁，塞给我，说是她自己留下的，不在任何人的账上。那颗珠子我后来一直带在身上。它哪本账上都没有，所以它是我们两个的。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_nur_pearl_given", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "fetch"
+"text" = "说：哪天你想走，捎个信给我，我来接"
+"reply" = "她笑了，说她又不会写信。我说你会按拇指印。她笑得更厉害，笑完把头靠在我肩上，靠了一会儿。“好，”她说，“我按一个给你。”她走的时候没有回头。那以后，我等过一个拇指印，一直没有等到。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_promise_letter", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "only_you"
+"text" = "说：没有，只有你一个"
+"reply" = "她愣了一下，然后大笑，笑得缺牙的地方全露了出来。“那我值钱了，”她说，“穆萨该多分我一成。”笑完她站起来，拍掉裙子上的盐，往网棚那边走，走几步又回头喊：“领航的！你头一回给我数的，才几十！我现在憋两百！”"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "nur", "value" = 2 }, { "kind" = "growth", "attr" = "charm", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_nur_only_you", "value" = true }]
+
+# ---- 人物线 D「看见的人」：扎比德海口的舵手穆巴拉克（新人物，只在正文出现，不作 speaker，不加情谊）----
+# 母本：《忏悔录》的转折（不信的人在一个夜里被击中，从此生命不归自己）；苏菲所说的“揭开”——帷幕开了一条缝的那一瞬；
+#       文化：也门的苏菲夜里念主的名字时喝咖啡提神；1511 年麦加的市场监察官召集学者会审、禁过咖啡，开罗那边很快又放开。
+#       信的人说咖啡叫人醒着记主，反对的人说它乱人心——两边都照信众看待自己的方式写，不嘲讽；
+#       张力：纳吉玛要的是准，他看见的那一角量不出来。他把船让给伙计，去守海边一座没人管的小清真寺，每天傍晚点灯。
+# 学院期 1554—1556：黑水 → 麦加的旧案 → 那一夜 → 让船 → 海边的小寺 → 灯的方位；与家乡的支线“苏菲夜会的咖啡”、关键事件“咖啡馆传闻”相映；
+# 主线旁轨 main_najma_rw_lamp 接着写。
+[[tracks]]
+"key" = "c9_najma_rw_seer"
+"name" = "看见的人"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "黑水"
+"text" = "扎比德城西的海口，学堂的船靠岸补水，我跟师傅去买咖啡豆。卖豆子的是个舵手，叫穆巴拉克，有一条小船，一张快嘴。他管咖啡叫黑水，管苏菲院里的人叫喝黑水的，说他们一夜念几千遍主的名字，念到天亮，豆子是他的，困是他们的。他一边说一边过秤，秤杆翘得老高。我看见他的小拇指搭在秤盘底下。"
+"once" = true
+"mood" = "cheerful"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 3, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "call_out"
+"text" = "当面说：你的小拇指压着秤"
+"reply" = "穆巴拉克把手抬起来，端详自己的小拇指，像头一回见它。“这根指头，”他说，“比我的嘴还会做买卖。”他重新过秤，少了差不多一成。哈米斯师傅在旁边笑出了声，说这丫头的眼睛是量星量出来的。穆巴拉克说：“可惜了，量星不赚钱。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "c8_shipboard_pilot", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_seer_caught", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "note"
+"text" = "不说破，记下他多称了多少"
+"reply" = "我在心里记：一袋差一成，三袋差三成。回到船上，我把数告诉师傅。师傅说他知道，这一带的豆子都这么卖，穆巴拉克的手还算轻的。“你要是把这一成要回来，”他说，“下回他就不卖给你了。买卖上的事，有时候知道就够了。”我不觉得够。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_noted", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问他：既然看不起他们，为什么卖给他们"
+"reply" = "他大笑：“姑娘，鱼看不起鱼钩吗？”笑完压低嗓子说，苏菲院的钱最好赚，他们不还价，还替你祷告。他这辈子做过的买卖里，只有这一样是赚了钱还落一句好话的。我说那你也该进去听听他们念什么。他说：“听了，就不好意思压秤了。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_asked", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "麦加的旧案"
+"text" = "十月，扎比德的大清真寺里来了一位从麦加回来的法学家，讲到咖啡。他说四十多年前，麦加的市场监察官召集学者会审，把咖啡和喝咖啡的人一起审了，判它乱人心，豆子当街烧了。底下有人小声说，后来开罗又放开了。法学家说，放开的是苏丹，不是道理。散了以后，海口苏菲院的老长老在门外等他，两个人说了很久，说得很慢，谁也没提高嗓门。穆巴拉克蹲在台阶底下，听得眉飞色舞。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1554, 10, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "listen"
+"text" = "挤过去，听长老怎么答"
+"reply" = "长老说，夜里念主的名字，人会困，困了就念错，念错了比不念还不敬；咖啡叫人醒着。“醒着记主，醉着忘主，”他说，“你看哪一样像酒？”法学家没有驳，只说人心难测，今天醒着记主的，明天就醒着记别的。两个人行了礼，各走各的路。我觉得两个人都有道理，这让我很难受。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_listened", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "mubarak"
+"text" = "去问穆巴拉克，他乐什么"
+"reply" = "“我乐他们吵来吵去，豆子还是我的。”穆巴拉克说，“禁了，我就去走私；放了，我就涨价。”他掰着指头给我算，禁一回，价翻一倍。“你说，我该替哪一边祷告？”他说得那么得意，可我看见他的眼睛一直跟着长老的背影，跟到长老拐过街角。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_mubarak_laughed", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ruqayya"
+"text" = "回去问鲁卡娅，这件事算谁对"
+"reply" = "鲁卡娅在誊书，没有停笔。“四十年前那场会审，判词我读过，”她说，“判的人里有真怕的，也有借着怕的。”她把笔蘸了蘸，“你要问谁对，先问他们各自从谁那里听来的，听来的人又是从谁那里看来的。问完了，你也就不急着要一个对了。”"
+"next" = "n2"
+"effects" = [{ "kind" = "affinity", "person" = "c8_zabid_woman_scholar", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_asked_ruqayya", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "那一夜"
+"text" = "正月里一个没有月亮的夜，海口的苏菲院念诵，学堂的几个女孩去帮着煮咖啡，我也去了。院子里坐了一圈人，念主的名字，一遍，又一遍，声音像潮水往岸上推。穆巴拉克是来收账的，长老还欠他三袋豆子的钱。他靠在门框上等，等着等着坐了下来，坐着坐着，身子跟着念诵一前一后地晃。到后半夜，他忽然停了，两只手捂住脸，泪从指缝里往外淌。他说：“我看见了。”谁也没有问他看见了什么。"
+"once" = true
+"mood" = "mystic"
+"night" = true
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 1, 25] }]
+
+
+[[tracks.chapters.variants]]
+"key" = "a_listened"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_seer_listened", "value" = true }]
+"text" = "正月里一个没有月亮的夜，海口的苏菲院念诵，学堂的几个女孩去帮着煮咖啡，我也去了。院子里坐了一圈人，念主的名字，一遍，又一遍，声音像潮水往岸上推。长老那天在清真寺门外说的“醒着记主”，我到这一夜才听懂一半：念到后来，人不困，也不醒，像船停在两道潮水中间。穆巴拉克是来收账的，长老还欠他三袋豆子的钱。他靠在门框上等，等着等着坐了下来，坐着坐着，身子跟着念诵一前一后地晃。到后半夜，他忽然停了，两只手捂住脸，泪从指缝里往外淌。他说：“我看见了。”谁也没有问他看见了什么。"
+[[tracks.chapters.choices]]
+"key" = "ask_what"
+"text" = "走过去问他：看见了什么"
+"reply" = "他把手放下来，眼睛通红，脸上却在笑，笑得像个刚学会走路的孩子。“像一扇门，”他说，“开了一条缝，就一条缝。”我问多宽。他看着我，像听不懂我在问什么。“多宽？”他说，“姑娘，那里头没有宽。”这是我头一回碰上一件我量不了的事。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_asked_what", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pour"
+"text" = "什么也不问，给他添一杯咖啡"
+"reply" = "我把杯子递过去，他接了，手抖得厉害，咖啡洒了一半在袍子上。他没有喝，就那么捧着，一直捧到天亮。天亮时念诵停了，长老走过来，把手放在他头顶上按了一下。穆巴拉克没提那三袋豆子的钱，长老也没提。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_poured", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "leave"
+"text" = "这不是我该看的，退到门外去"
+"reply" = "我退到门外，坐在台阶上看海那边的星。猎户正往西沉，我量了一下，四指。门里的念诵还在一遍遍地推，其中有一个声音比别的都哑，是穆巴拉克的。我把四指这个数记下来，好像记下一个数，就能记下这一夜。可我知道，我记下的只是星。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "astronomy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_left", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "让船"
+"text" = "六月，海口的人都在说穆巴拉克疯了。他把小船给了船上那个从索马里来的伙计，船、帆，连那杆压秤的秤一起给了。他把自己的账本拿到海边，一页一页撕：撕一页，就去找那一页上的人。欠他的，他说不要了；他欠人的，他说宽限些日子，他去挣。有人说他是欠了谁的钱，躲到信仰里去了。他一个一个找过去，找到了我们学堂的船，说他欠我一成，是那天压秤的那一成。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 6, 15] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_caught"
+"when" = [{ "kind" = "flag", "flag" = "rw_najma_seer_caught", "value" = true }]
+"text" = "六月，海口的人都在说穆巴拉克疯了。他把小船给了船上那个从索马里来的伙计，船、帆，连那杆压秤的秤一起给了。他把自己的账本拿到海边，一页一页撕：撕一页，就去找那一页上的人。欠他的，他说不要了；他欠人的，他说宽限些日子，他去挣。有人说他是欠了谁的钱，躲到信仰里去了。他一个一个找过去，找到了我们学堂的船，说他欠我一成。那一成当天就被我点破、他也重新称过了，可他说，还是欠着。"
+
+[[tracks.chapters.choices]]
+"key" = "accept"
+"text" = "收下他还的钱"
+"reply" = "他还的是几枚旧铜钱，裹在一块布里，比那一成还多。我说多了。他说多的是利。我说你不是不要利吗。他想了想：“别人欠我的，不要利。我欠的，要。”他说这话的时候很认真，像在背一条刚学会的规矩。我收下了，在自己的账上记了两个字：还清。"
+"next" = "n3b"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_repaid", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "refuse"
+"text" = "不收：那一成早就两清了"
+"reply" = "他不肯，把布包往我手里塞，塞了三回。最后他说：“你不收，这一页我就撕不下来。”我收了。他走以后我打开布包，铜钱底下压着一粒咖啡豆，焙得很黑。我不知道那是什么意思。也许什么意思也没有，他只是顺手。"
+"next" = "n3b"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_refused", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_why"
+"text" = "问他：一个夜晚，值得把一辈子的船给出去吗"
+"reply" = "他想了很久，久到我以为他不会答了。“你们领航的，”他说，“看见岸上一盏灯，就把船往那边转，对不对？你们不问那盏灯值不值。”我说那是因为灯在那里，量得出方位。他点点头：“我那一盏，量不出方位。可我看见了。看见了，船头就转不回去了。”"
+"next" = "n3b"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_asked_why", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n3b"
+"title" = "伊斯坦布尔的上书"
+"text" = "十一月，伊斯坦布尔有人上书要禁咖啡馆的消息传到了扎比德海口，传得比船还快。卖豆子的人慌了，有的压价甩货，有的囤着不卖，等价翻一倍。我想起穆巴拉克说过：禁一回，价翻一倍。我去小寺找他，他正蹲在门口推石磨，磨好的豆子一包一包分给夜里来念诵的人，一文不收。我问他知不知道伊斯坦布尔的事。他说知道。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1555, 11, 8] }]
+
+[[tracks.chapters.choices]]
+"key" = "free"
+"text" = "问他：价要翻了，你怎么白给"
+"reply" = "他把磨好的一包递给一个过路的老人，才回我：“价一翻，夜里念诵的人就喝不起了。喝不起就困，困了就念错。”他说得很慢，像在给我算一笔账，“我从前的买卖，算的是豆子。现在算的是夜。”"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_free", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ban"
+"text" = "问他：要是这边也禁了呢"
+"reply" = "“那就不喝。”他说，“醒着的法子多得很：冷水洗脸，站着念，掐自己的手背。”他伸出手背给我看，上面一排指甲印，“豆子是给人方便的，不是给主的。主不缺这一杯。”说完他又低头去推磨，推得比刚才还匀。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_seer_ban", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "grind"
+"text" = "蹲下来帮他推磨"
+"reply" = "石磨很沉，推一圈要使上全身的劲。我推了半个时辰，胳膊就酸了，他接过去，一圈一圈，不快不慢，像在数什么。我问他数什么。他说数主的名字，一圈一遍。我算了算，一包豆子，要念九百多遍。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "constitution", "value" = 1 }, { "kind" = "flag", "flag" = "rw_najma_seer_ground", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "海边的小寺"
+"text" = "正月，学堂的船从海口出去试帆，我在桅上看见岸边那座小清真寺：一间方屋，一座矮矮的宣礼台，台顶挂着一盏灯。往年那里是黑的，没人守，屋顶塌了一角。如今屋顶补好了，墙刷白了，灯亮着。哈米斯师傅说，那是穆巴拉克，他就住在那里，每天傍晚爬上去点灯，天亮再爬上去吹灭。夜里路过这片海口的船，已经开始认那盏灯了。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 1, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "bearing"
+"text" = "趁天黑，量那盏灯和北极星的方位"
+"reply" = "我在船头量了三回，把灯的方位和北极星的高度一起记下来，又在海图上把那座小寺点成一个点，点在一段原先什么也没标的岸上。后来我拿给穆巴拉克看，他看了半天，说：原来它在这儿。他守了半年，头一回知道自己守的地方在哪里。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "astronomy", "value" = 2 }, { "kind" = "skill", "skill" = "cartography", "value" = 3 }, { "kind" = "flag", "flag" = "rw_najma_lamp_measured", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "visit"
+"text" = "上岸去看他"
+"reply" = "他瘦了，袍子是白的，补了好几块。屋里只有一张席子、一只水罐、一本页角卷了边的经书。他给我煮咖啡，用的是最贱的豆子，焙过了头，苦。他说现在他喝的都是别人卖剩下的，从前他压别人的秤，如今别人压他的。他说这话时在笑，一点也不委屈。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_lamp_visited", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "khamis"
+"text" = "问师傅：一盏没人管的灯，船该不该信"
+"reply" = "师傅说，船信的从来不是灯，是点灯的人。“灯谁都点得着，”他说，“难的是天天点。点十天的人你不能信；点了十年的，你可以把船头往那边转。”他算了算，“这一个才点了半年。”说完又看了那盏灯一眼：“不过，他点得很准时。”"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "c8_shipboard_pilot", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_lamp_asked_khamis", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "灯的方位"
+"text" = "结业前一个月，我去海口跟穆巴拉克道别。他正在宣礼台上擦灯罩，擦得极细，一面擦完再擦另一面。听说我要回尤尔法，开春就自己带船，他下来给我煮了一壶咖啡，这回的豆子是好的，他说是专门留的。喝到第二杯，他问我：你量过那么多星，有没有哪一颗，是你先看见、后来才量的？"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_najma", "value" = true }, { "kind" = "date", "from" = [1556, 11, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "canopus"
+"text" = "说有：老人星，我十四岁生日那天"
+"reply" = "我说十四岁生日的清晨，老人星从东南冒头，我没有去量，就那么看着。等它整个升起来，我才想起要举板子。他听完点点头，好像这就够了。“你看，”他说，“你也有一回。”我说就那一回。他说：“一回就够了。我也只有一回。”"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_lamp_canopus", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "none"
+"text" = "说没有：没量过的，我不敢说看见"
+"reply" = "他没有不高兴，反倒笑了，说这才是领航的人。“你别学我，”他说，“你要是也看见了，海上就少了一个报准数的人。”他把咖啡壶推到我手边：“你量你的，我替你看着。”那天夜里我回船，回头看了好几次，那盏灯一直在那儿，不偏，不晃。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "astronomy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_lamp_none", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask_back"
+"text" = "反问他：那一回你看见的，后来还看得见吗"
+"reply" = "他想了很久。“看不见了，”他说，“就那一回。后来每天夜里点灯，等，再也没开过。”我问那他守的是什么。他说：“守着那扇门在的地方。它开不开，是它的事；我点灯，是我的事。”他把灯罩举起来对着太阳照，一点灰也没有。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "flag", "flag" = "rw_najma_lamp_asked_back", "value" = true }]

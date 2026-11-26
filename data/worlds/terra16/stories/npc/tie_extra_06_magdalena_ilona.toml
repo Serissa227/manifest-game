@@ -1,0 +1,143 @@
+# C7 故事线重写（Claude，2026-10-11）：故事 2.0 轨道，遵循 docs/DECISIONS.md“第九批 A5 / E37 开工：故事 2.0 TOML 契约”。
+# 标签：GL（恋爱，伊洛娜唯一的恋人；两人都是纯 GL）。
+# 人物：玛格达莱娜（magdalena，1529-10-25，布拉格老城的炼金术士）× 伊洛娜（ilona，1531-11-24，黑海边来的女人，1560 年起住布拉格）。
+#   生年相差两岁；第一章 1577 年两人四十多岁，恋人效果在 1584-03 以后（54 岁、52 岁），远晚于最早日期 1577-01-01。
+# 依据：
+#   史实——1576 年鲁道夫二世即位；1583 年他把宫廷从维也纳搬到布拉格，城里的炼金术士、占星者与卖“哲人石”的骤增；
+#   1584 年 8 月迪伊与凯利来到布拉格，9 月见皇帝（落点章只作窗外闲话，“黑镜子”取坊间说法）。
+#   原创——两人的相遇、工房、互教认脚印与称药、门边的椅子、铜量杯、借炉账的“吹炉匠”、查理桥头追她的人。
+#   待核——坩埚与木炭“价钱翻了一倍”是街谈口吻，没有具体物价出处；“查理桥”在当时叫石桥或布拉格桥（1870 年才改今名），沿用今名方便辨认。
+# 秘密：伊洛娜的来历全线只写“追她的人”“桥头那几个人”“拖左脚的那个”；第一章留一处伏笔（新伤收口快得反常），不点破。
+#   见闻、标题、选项、回复都不写她的来历；柳德米拉只以“旧城图书馆夜里管书的”出现在第一章的 variants。
+# 缺省走向（玩家什么也不做）：1577 相识（friends）→ 1578 心动（crush）→ 1583 宫廷迁来（传闻）
+#   → 1583—84 骗子借账、桥头追兵，她们自己扛过去 → 1584 成为恋人，同住工房楼上（lovers，圆满）。玩家的帮助只让她们少熬几夜。
+# 旗标：设 c7_tie_extra_06_magdalena_ilona_together（落点 default）、_helped（choice：挡骗子）、_hidden（choice：引开追兵）；
+#   读 c7_pair_ilona_ludmila_confidants（由 npc/pair_ilona_ludmila.toml 设，只用于第一章 variants）。
+# 整合：cast/ties.toml 的 extra_06_magdalena_ilona 由 mentor 改为两段——friends（since 1577-05-31，to 1584-08-30）与 lovers（since 1584-08-31，即缺省落点日）；
+#   ilona_ludmila 由 lovers 改为 confidants。日程不必改：两人 1560 年起都在布拉格。
+
+[[tracks]]
+key = "tie_extra_06_magdalena_ilona"
+name = "收起量杯以后"
+kind = "request"
+start = "tie_extra_06_magdalena_ilona_meeting"
+auto = true
+cast = ["magdalena", "ilona"]
+
+# 一、相识：1577 年春，半夜治肩伤。
+[[tracks.chapters]]
+key = "tie_extra_06_magdalena_ilona_meeting"
+title = "药先别喝"
+text = "后半夜，工房的门被撞开，一个女人带着一身寒气进来，左肩的衣服湿了一大片。玛格达莱娜起身去关门。“别关门。……好，你就站那儿。”女人背贴着门框，一只手按在腰间的刀上，不肯坐，先把窗户看了一圈。玛格达莱娜把刚熬好的药碗推到桌子另一头：“药先别喝。哪里疼？”“少啰嗦。药给我。”“不说哪里疼，我就不猜。”玛格达莱娜翻开账本，“少一分就写少一分，别拿愿望凑。”炉膛噼啪响了好一阵。女人咬着牙，抬手指了指左肩。剪开衣服，洗净，上药。伤是新的，边上却已经收了口，像三五天前的。玛格达莱娜照实记下剂量和这一笔，没在后面打问号，也没问她杀过什么。女人说她叫伊洛娜。走到门口，她回过头：“往后夜里，别关门。”"
+stage = "witness"
+window = [[1577, 2, 1], [1577, 5, 31]]
+at = "prague"
+cast = ["magdalena", "ilona"]
+speaker = "magdalena"
+mood = "tense"
+night = true
+news = "布拉格老城有间炼金工房，后半夜还亮着灯，听说是在给一个黑海边来的女人治肩伤。"
+
+[tracks.chapters.default]
+next = "tie_extra_06_magdalena_ilona_closer"
+effects = [{ kind = "tie", a = "magdalena", b = "ilona", relation = "friends" }]
+
+[[tracks.chapters.variants]]
+key = "ludmila"
+when = [{ kind = "flag", flag = "c7_pair_ilona_ludmila_confidants" }]
+text = "后半夜，工房的门被撞开，一个女人带着一身寒气进来，左肩的衣服湿了一大片。玛格达莱娜起身去关门。“别关门。……好，你就站那儿。”女人背贴着门框，一只手按在腰间的刀上，不肯坐。玛格达莱娜问：“谁让你来的？”“旧城图书馆夜里管书的那个。她说你这里的药不撒谎。”玛格达莱娜哼了一声：“她借了我三本书，一本没还。”她把刚熬好的药碗推到桌子另一头：“药先别喝。不说哪里疼，我就不猜。少一分就写少一分，别拿愿望凑。”女人咬着牙，抬手指了指左肩。伤是新的，边上却已经收了口，像三五天前的。玛格达莱娜照实记下，没问她杀过什么。女人说她叫伊洛娜。走到门口，她回过头：“往后夜里，别关门。”"
+
+# 二、靠近：1578 年秋冬，互教认脚印与称药。
+[[tracks.chapters]]
+key = "tie_extra_06_magdalena_ilona_closer"
+title = "门边那把椅子"
+text = "肩上的伤早好了，伊洛娜还是隔几天来一回，有时说还药钱，有时说肩又疼了。入冬前，门外的泥地上一连三夜多出脚印。第四夜她在门槛外撒了一层炉灰，天亮蹲下去看：“这只是新靴子，跟还没磨平。这只拖左脚，走了远路。”玛格达莱娜蹲在旁边学，认错一回，伊洛娜就把灰抹平，重印一遍。回到屋里轮到伊洛娜称药，差一钱，玛格达莱娜把药倒回罐里：“重来。”伊洛娜不服，临走借了一只铜量杯回去练。墙上画着两行道道，谁教一回谁画一道。门边那把椅子渐渐只有伊洛娜坐。有一晚她坐着说了一刻钟的话，才发觉自己背对着窗，愣了一下，先笑了：“你这屋子，把我教坏了。”"
+stage = "witness"
+window = [[1578, 9, 1], [1578, 12, 31]]
+at = "prague"
+cast = ["magdalena", "ilona"]
+speaker = "ilona"
+mood = "tender"
+news = "布拉格老城那间炼金工房的女主人，最近天一亮就蹲在门口学认脚印；常来的黑海女人在屋里学称药。"
+
+[tracks.chapters.default]
+next = "tie_extra_06_magdalena_ilona_turning"
+effects = [{ kind = "tie", a = "magdalena", b = "ilona", relation = "crush" }]
+
+# 三、转折：1583 年宫廷迁到布拉格（传闻）。
+[[tracks.chapters]]
+key = "tie_extra_06_magdalena_ilona_turning"
+title = "宫廷搬来了"
+text = "这一年，皇帝把宫廷从维也纳搬来了布拉格。城堡山脚下一夜多出许多招牌：炼金的、占星的、卖“哲人石”的，还有些说不清做什么营生的生面孔，天天在查理桥上转。坩埚和木炭的价钱翻了一倍。老城那间工房照旧只卖药。听说有个穿天鹅绒的人上门，要买“能点金的粉”，女主人头也没抬：“金子不卖。退烧的、止血的，有。”门边椅子上坐着的黑海女人站起来，把门拉开一半：“买药的进来。别的，出去。”那人走了。没过几天，半条街都管这家叫“不肯点金的那家”。"
+stage = "rumor"
+window = [[1583, 5, 1], [1583, 9, 30]]
+at = "prague"
+cast = ["magdalena", "ilona"]
+mood = "tense"
+news = "皇帝的宫廷搬来以后，布拉格的木炭贵了一倍，炼金的比面包师还多，老城只有一家不肯点金。"
+
+[tracks.chapters.default]
+next = "tie_extra_06_magdalena_ilona_choice"
+effects = []
+
+# 四、选择：1583 年冬，借炉账的人与桥头的人挤在同一个月。
+[[tracks.chapters]]
+key = "tie_extra_06_magdalena_ilona_choice"
+title = "两张单子"
+text = "那个穿天鹅绒的又来了。如今他在城堡山上给贵人炼金，这回不买粉，要借炉账：“借我抄三页。你的数字，替我的金子作个证。”他留下一张字据，说月底来取。同一个月，伊洛娜从查理桥回来，往桌上拍了一张纸：三道杠，其中一道底下画了只歪脚。玛格达莱娜认得那只脚。她把两张纸并排摊开，拿秤砣压住。“我这张能等，你那张不能。”伊洛娜按住那张字据：“你那张也不能。他拿你的数去骗皇帝，骗穿了，先砸的是你的炉子。”那天夜里，工房没点灯。"
+stage = "involve"
+window = [[1583, 10, 1], [1584, 2, 28]]
+at = "prague"
+cast = ["magdalena", "ilona"]
+speaker = "magdalena"
+mood = "tense"
+night = true
+news = "布拉格查理桥头这些天总站着几个外乡人，老城那间炼金工房一到夜里就不点灯了。"
+
+[tracks.chapters.default]
+next = "tie_extra_06_magdalena_ilona_landing"
+effects = []
+news = "布拉格老城那间工房三夜没点灯，查理桥头那几个外乡人第四天走了；城堡山上来借的炉账，一页也没借出去。"
+
+[[tracks.chapters.choices]]
+key = "block_charlatan"
+text = "月底替她守在门口，把来取账本的人挡回去。"
+reply = "月底那人来取账，你站在门口没让。他说宫里有人等着看数字，你说那就请宫里的人自己来。他骂骂咧咧走了，转头在别家借到了账。开春，他在城堡山上当众点金，坩埚底下的夹层叫人撬了出来。没过多久，宫里的药房派人来老城，点名要“那个不肯借账本的女人”配一批退烧药。玛格达莱娜在账上记了一行：“账本未借出。经手：船长。”"
+next = "tie_extra_06_magdalena_ilona_landing"
+effects = [{ kind = "flag", flag = "c7_tie_extra_06_magdalena_ilona_helped" }, { kind = "affinity", person = "magdalena", value = 5 }]
+news = "布拉格有个在城堡山上混饭的炼金术士，去老城那间工房借炉账，叫一个外乡船长堵在了门口。"
+
+[[tracks.chapters.choices]]
+key = "cover_ilona"
+text = "披上伊洛娜的旧斗篷，把桥头那几个人引到河对岸去。"
+reply = "天黑以后，你披着伊洛娜那件旧斗篷，从桥头慢慢走过去，拐进小城的巷子。拖左脚的那个跟了你半夜，另外两个在河边来回找，天亮才散。伊洛娜比你晚一刻回来，她在对岸的屋檐下跟着看了一夜。她手上没有血。她头一回没先擦刀，先在门边那把椅子上坐下了：“饿了。有吃的没有？”"
+next = "tie_extra_06_magdalena_ilona_landing"
+effects = [{ kind = "flag", flag = "c7_tie_extra_06_magdalena_ilona_hidden" }, { kind = "affinity", person = "ilona", value = 5 }]
+news = "布拉格查理桥头那几个外乡人前些天夜里过了河，在小城的巷子里追了半宿，也不知道追的是谁。"
+
+# 五、落点：1584 年，恋人，同住工房楼上（缺省即圆满）。
+[[tracks.chapters]]
+key = "tie_extra_06_magdalena_ilona_landing"
+title = "各有一把椅子"
+text = "墙上那两行道道画到了门框边，再画不下了。伊洛娜把那只铜量杯擦亮了还回来，搁在账本旁边。玛格达莱娜添了一把椅子，和门边那把并排。伊洛娜放下碗，把刀搁在灶台上，不挡门的地方：“吃完了。我是走，还是留？”玛格达莱娜翻开账本写了一行，推过去。伊洛娜认得的字不多，看了很久：“写的什么？”“少一分就写少一分。我写的是‘愿意’，一分不少。”伊洛娜坐下了，这回没说肩疼。后来她们搬到工房楼上住。那年夏末，窗外有人在讲，两个英格兰人带着一面黑镜子进了城，说是要见皇帝。"
+stage = "witness"
+window = [[1584, 3, 1], [1584, 8, 31]]
+at = "prague"
+cast = ["magdalena", "ilona"]
+speaker = "magdalena"
+mood = "tender"
+news = "布拉格老城那间不肯点金的工房，楼上的灯如今亮到很晚，门边并排摆着两把椅子。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "tie", a = "magdalena", b = "ilona", relation = "lovers" }, { kind = "flag", flag = "c7_tie_extra_06_magdalena_ilona_together" }, { kind = "memory", memory = "mem-tie_extra_06_magdalena_ilona-landing", title = "各有一把椅子" }]
+
+[[tracks.chapters.variants]]
+key = "v1_hidden"
+when = [{ kind = "flag", flag = "c7_tie_extra_06_magdalena_ilona_hidden" }]
+text = "墙上那两行道道画到了门框边，再画不下了。伊洛娜把那只铜量杯擦亮了还回来，搁在账本旁边。玛格达莱娜添了一把椅子，和门边那把并排。伊洛娜放下碗，把刀搁在灶台上，不挡门的地方：“吃完了。我是走，还是留？”玛格达莱娜翻开账本写了一行，推过去。伊洛娜认得的字不多，看了很久：“写的什么？”“少一分就写少一分。我写的是‘愿意’，一分不少。”伊洛娜把自己那把椅子转了个方向，背对着窗坐下，这回没说肩疼。后来她们搬到工房楼上住。那年夏末，窗外有人在讲，两个英格兰人带着一面黑镜子进了城，说是要见皇帝。"
+
+[[tracks.chapters.variants]]
+key = "v2_helped"
+when = [{ kind = "flag", flag = "c7_tie_extra_06_magdalena_ilona_helped" }]
+text = "墙上那两行道道画到了门框边，再画不下了。伊洛娜把那只铜量杯擦亮了还回来。门边那把椅子旁边，玛格达莱娜又添了一把。宫里订的退烧药摆了一桌子，两人一边吃饭一边贴签条，伊洛娜贴歪了一张，玛格达莱娜揭下来重贴。贴完最后一张，伊洛娜把刀搁在灶台上，不挡门的地方：“贴完了。我是走，还是留？”玛格达莱娜翻开账本写了一行，推过去。伊洛娜认得的字不多，看了很久：“写的什么？”“少一分就写少一分。我写的是‘愿意’，一分不少。”伊洛娜坐下了，这回没说肩疼。后来她们搬到工房楼上住。那年夏末，窗外有人在讲，两个英格兰人带着一面黑镜子进了城，说是要见皇帝。"

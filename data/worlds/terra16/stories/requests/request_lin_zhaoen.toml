@@ -1,0 +1,170 @@
+# 请托：收殓的布与粮（request_lin_zhaoen）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：林兆恩（lin_zhaoen，1517 生，男，号龙江，莆田人），弟子尊称“三教先生”；cast 在 cast/historical_06_ming.toml。势力 ming，身份档 2（学者）。
+# 类型：送货（deliver）。三章：offer（募捐的簿子）、deliver（白布与粥，交货，货款在这一章另付）、settle（三教先生，结账）；没有 stage 章，因此没有 window 与 default。
+# 报价：V（到访）。他从莆田上福州募捐，出场说话；offer 章 at=fuzhou，auto=true；窗口 1562-12-15 至 1564-06-30，名声门槛 5。
+#       offer 写 family=c13_offer_fuzhou、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=120，超时走 failed（来信一封，好感 -3，旗标 _late）；settle 章 deadline_days=120，超时走 done（旗标 _partial，不付不罚，短信一封）。
+# 依据·史实背景：1562 年冬倭寇攻陷兴化府城，1563 年戚继光入闽收复；林兆恩带着弟子拿出家财收埋无主的人，施粥施药（《林子本行实录》一类传记所述）。
+#       正文只写布、粮、册子和坟，不写倭寇的屠杀，也不写戚家军的战斗；“三教合一”不讲道理，只借葬礼上哪一家的经都念了这一句带出。
+#       settle 在 1563-04-20 以后的变体提一句“莆田城头换了戚家军的旗”，他一个字没提，仅此而已。
+# 依据·原创：福州小庙前的募捐簿、最小的那个弟子念数、赊棺木的木行、系了三道死结的布包、两个没人认得经的番人。
+#       商品按产地改：棉布（cloth）宁波产，约 480 公里；谷物（grain）登州、天津、旅顺一带有；棺木由莆田本地木行赊给他（写进 offer 正文），福州本地产木材，不就地买，因此不设木板。
+# 秘密：cast 无 secret，本请托不处理，见闻也不写。基调肃穆，不写尸首与惨状。
+# 口头禅：“时候到了，自然明白。”只在 settle 的 take 回复里说一次。
+# 依赖：港口 fuzhou（ports_east_asia.toml）；货物 cloth（goods/02_manufactures.toml）、grain（goods/01_staples_raw.toml）；属性 stewardship；人物 lin_zhaoen。无需 B10b 改名。
+# 主线门禁：无（林兆恩不是主线人物）。C7：none；本文件不读也不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 读写旗标：只写，不读本轨道旗标。写 c13_request_lin_zhaoen_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_late（deliver 超时，终局）、_partial（settle 超时，终局）、_done（settle 两条收尾，终局）。
+#       共享冷却 family c13_offer_fuzhou 由引擎按 family 管理，不在本文件设旗标。
+# 报酬：货款 1300（deliver 给一次，三条选项都付）；现金 400（settle 的 take，refuse 则换好感）；好感最多 +2+5+10=17；名声 +2；无声望；回忆 mem-request_lin_zhaoen-settle。无物品。
+# 写法说明（相对于 C13d 任务单的调整）：
+#   1. 普通章没有 window/default，窗口写成 offer 的 date 条件与 deadline。
+#   2. register 检定失败的分支 news 同时是玩家看到的结果文字（引擎如此），所以写成一句带地名的见闻。
+#   3. 两个收尾选项的回复各回答“怎么葬”这一问的一半：take 讲两个番人，refuse 讲三家的经；口头禅只在 take。
+#   4. 章节文字不含换行（文案工具不允许），段落直接接排。
+# 回忆插画清单：
+#   mem-request_lin_zhaoen-settle「城外新坟前的素袍人」：莆田城外一片新立的坟，素袍的中年人站在最前面，背挺得很直；远处是收复后的城墙。
+
+[[tracks]]
+key = "request_lin_zhaoen"
+name = "收殓的布与粮"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["lin_zhaoen"]
+
+# 一、募捐的簿子：福州一座小庙前。
+[[tracks.chapters]]
+key = "offer"
+title = "募捐的簿子"
+text = "福州城里一座小庙前，一个穿素袍的中年人端坐在蒲团上，面前摊着一本募捐簿，墨是新磨的。他看我走近，先说了一句：“坐下，背挺直。”我坐下，背挺直，他才点头。“兴化府城破了以后，城里城外的人没人收。莆田的木行肯赊棺木，赊的是我这张脸。裹身的布，莆田织不出这么多；给帮工吃的粮，城里的米价早翻了几倍。”他指了指簿子，“宁波的棉布十匹，谷子二十袋，运到福州码头，我的弟子在那里接。钱从我的田里出。”"
+speaker = "lin_zhaoen"
+mood = "sad"
+at = "fuzhou"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1562, 12, 15], to = [1564, 6, 30] },
+  { kind = "fame", ge = 5 },
+]
+deadline = [1564, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_fuzhou"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：十匹棉布、二十袋谷子，运到福州。"
+next = "deliver"
+reply = "他在簿子上写下我的船名，只写船名，后面空着。“布和粮来了，就是数目。”他把笔搁在砚边，“明天起，我的人每天清早去码头上看你的船。”"
+effects = [
+  { kind = "flag", flag = "c13_request_lin_zhaoen_accepted" },
+  { kind = "affinity", person = "lin_zhaoen", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，但先问：官府为什么不先来收？"
+next = "deliver"
+reply = "他的笔悬了一会儿，才落下去写船名，写得很慢，每一笔都压到纸背。“官府要先点清是谁家的人。”笔没有停，“死了的人，等不了。”"
+effects = [
+  { kind = "flag", flag = "c13_request_lin_zhaoen_accepted" },
+  { kind = "affinity", person = "lin_zhaoen", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝。"
+next = "failed"
+reply = "他双手合了一下，又像是作揖，说一声“善”。簿子翻到下一页，墨还没干，他已经不看我了。"
+effects = [{ kind = "flag", flag = "c13_request_lin_zhaoen_declined" }]
+
+# 二、白布与粥：货到福州码头，莆田来的弟子挑着往南。
+[[tracks.chapters]]
+key = "deliver"
+title = "白布与粥"
+text = "货搬下船，十匹宁波棉布码在最上面，白得发青。石阶下已经架起一口大锅，锅里的粥冒着热气。几个穿粗衣的弟子用扁担挑着，一担一担往南走。一个年纪最小的弟子站在码头上念数：几匹，几袋——念到一半哭了，又接着念。林先生站在石阶上，没有过去。“哭完再数，”他说，“数错了，从头来。”"
+speaker = "captain"
+mood = "sad"
+at = "fuzhou"
+objectives = [
+  { kind = "goods", good = "cloth", qty = 10, at = "fuzhou", text = "十匹棉布运到福州" },
+  { kind = "goods", good = "grain", qty = 20, at = "fuzhou", text = "二十袋谷子运到福州" },
+]
+when = [{ kind = "alive", person = "lin_zhaoen", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "lin_zhaoen", value = -3 }, { kind = "flag", flag = "c13_request_lin_zhaoen_late" }, { kind = "letter", person = "lin_zhaoen", text = "先生卖了自家的田，布和粮从别的船上凑齐了。簿子上你的船名旁边还空着，先生没有划去。弟子代笔。" }] }
+
+[[tracks.chapters.choices]]
+key = "register"
+text = "和那个小弟子对着册子，一笔一笔记清。"
+next = "settle"
+check = { attr = "stewardship", base = 35, per = 6 }
+fail = { next = "settle", news = "福州码头上，船长帮莆田来的弟子记册子，记乱了，几个弟子守着灯把册子重抄了一夜。", effects = [{ kind = "cash", value = 1300 }] }
+reply = "他念，我记。他数错了一袋，石阶上先生咳了一声，他就红着眼从头数起。念完最后一个数，他冲我鞠了一躬，鼻涕还挂在脸上。"
+news = "福州码头卸了十匹棉布、二十袋谷子，莆田来的小弟子一边念数一边哭，船长陪他把册子记完了。"
+effects = [
+  { kind = "cash", value = 1300 },
+  { kind = "affinity", person = "lin_zhaoen", value = 3 },
+]
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "派两个水手，帮他们挑一程。"
+next = "settle"
+reply = "两个水手天黑才回来，扁担是借来的，鞋上全是泥。他们一句话也没说，那天晚上船上没人喝酒。"
+news = "福州码头有条船卸完了布和粮，还派了两个水手替莆田来的弟子挑了一程，天黑才回。"
+effects = [
+  { kind = "cash", value = 1300 },
+  { kind = "affinity", person = "lin_zhaoen", value = 5 },
+]
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "交完货就走。"
+next = "settle"
+reply = "弟子们挑起担子，没有回头。那个小弟子的数声一直念到听不见。"
+news = "福州码头有条船给莆田的三教先生卸下了布和粮，弟子们挑起担子就走了。"
+effects = [{ kind = "cash", value = 1300 }]
+
+# 三、三教先生：一个月后，林兆恩再来福州。
+[[tracks.chapters]]
+key = "settle"
+title = "三教先生"
+text = "一个月后，林兆恩又到福州，素袍下摆沾着红泥，是莆田城外的土。他在小庙前坐下，说了城外新坟的数，说完，很久没有出声。簿子合着，一只麻雀落在上面，他也没有赶。我问他：收的人里，有信佛的，有信道的，有信天主的番人，也有谁都说不清信什么的，怎么葬？他没有答，从袖里取出一个布包推过来，系口的绳打了三道死结。“募来的钱，花剩下这些。你的船名在簿子上，有你一份。”"
+speaker = "lin_zhaoen"
+mood = "sad"
+at = "fuzhou"
+objectives = [{ kind = "wait", days = 25, text = "等他从莆田再来福州" }]
+when = [{ kind = "alive", person = "lin_zhaoen", value = true }]
+deadline_days = 120
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_lin_zhaoen_partial" }, { kind = "letter", person = "lin_zhaoen", text = "先生说，布和粮都记在册子里了，坟前的事不必再问。簿子上你的船名还在。弟子代笔。" }] }
+news = "莆田城外立起一片新坟，是三教先生带着弟子收的；福州有条船替他们运过布和粮。"
+
+[[tracks.chapters.variants]]
+key = "walls"
+when = [{ kind = "date", from = [1563, 4, 20], to = [1564, 6, 30] }]
+text = "一个月后，林兆恩又到福州，素袍下摆沾着红泥，是莆田城外的土。他在小庙前坐下，说了城外新坟的数，说完，很久没有出声。听说莆田城头换了戚家军的旗，他嘴上不接这个话。我问他：收的人里，有信佛的，有信道的，有信天主的番人，也有谁都说不清信什么的，怎么葬？他没有答，从袖里取出一个布包推过来，系口的绳打了三道死结。“募来的钱，花剩下这些。你的船名在簿子上，有你一份。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下他推过来的布包。"
+next = "done"
+reply = "“时候到了，自然明白。”他说，“你问的，我只说埋的时候：哪一家的经都念了。有两个番人，没人认得他们的经，弟子们就站着，低了一会儿头。”他把布包又往前推了半寸，等我的手按上去。"
+effects = [
+  { kind = "cash", value = 400 },
+  { kind = "affinity", person = "lin_zhaoen", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "memory", memory = "mem-request_lin_zhaoen-settle", title = "城外新坟前的素袍人" },
+  { kind = "flag", flag = "c13_request_lin_zhaoen_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "把布包推回去，留给莆田的人。"
+next = "done"
+reply = "他看了我一眼，没有劝，把布包收回袖里。簿子翻开，在我的船名旁边添了一个小小的圈，墨点得很轻。我问的那件事，他随口答了：“佛的念佛，道的念道，儒的读《孝经》。不知信什么的，三样各来一遍。”"
+effects = [
+  { kind = "affinity", person = "lin_zhaoen", value = 10 },
+  { kind = "fame", value = 2 },
+  { kind = "memory", memory = "mem-request_lin_zhaoen-settle", title = "城外新坟前的素袍人" },
+  { kind = "flag", flag = "c13_request_lin_zhaoen_done" },
+]

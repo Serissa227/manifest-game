@@ -1,0 +1,172 @@
+# C13d 请托：验不过的扔进海（request_murakami_takeyoshi）。中文，Claude 写。
+# 人物：村上武吉 murakami_takeyoshi（1533 生，男；能岛村上家的当主，濑户内海的主人，身份档 3 统帅，1604 卒）。
+# 类型：送货（deliver）；brief 三章 offer → deliver → settle，另把 settle 按交货结果拆成 settle / settle_partial 两章（共 4 章）。
+#   拆章的理由：brief 的 settle 要按旗标 clean / thrown 拆选项，可这两面旗标是本轨道 deliver 章在不同路径上设的，
+#   用 requires 读它们会被审计报“准备后条件仍不满足”；改成 deliver 的各选项直接用 next 分流——验过的去 settle，
+#   有布被扔进海的（检定失败、拿名字担保）去 settle_partial，两章各有自己的乘船检定与岸上旁观。
+# 报价：当面（T）。人物按日程在能岛（noshima，dock，1553—1584），auto=false，玩家“问请托”（ask:request_murakami_takeyoshi）启动；
+#   offer 章不写 at，用 person 目标。历史人物，先要过求见（audience：名声 40、村上家声望 20）。
+# 窗口：报价 1579-01-15 至 1584-03-31（offer 的 deadline 即窗口止日，到期走 failed，不写见闻）；
+#   交货进行中 120 天（同一片内海外加去宁波 / 热田 / 那霸买布）；交货后二十天棉帆下水，结账章 90 天，最晚约 1584 年 10 月，在他离开能岛（1584-12-31）以前。
+# 货：棉布 cloth ×15（做帆，宁波、热田、那霸有）、米 rice ×30（船工的口粮，釜山、鹿儿岛、府内等多处有）；能岛不产米也不产布。
+# 货款：Σ(15×80 + 30×12)×1.25 = 1950，交货章三个选项都付（goods 目标回应时扣货）。
+# 依据·史实：1578 年第二次木津川口，九鬼家的大船击退毛利与村上水军；十六世纪后期日本的船帆从草席帆逐渐改用木棉帆（研究笔记）。
+#   正文不写那一仗本身，只写“木津川口那一回”草席帆吸了水；brief 写的是“去年”，可报价窗口一直开到 1584 年，写死“去年”会错，改成不带年份的“那一回”。
+# 依据·原创：船坞里刮藤壶的船工；滴水的草席帆；缺两根手指的老验货人、泡布条的海水桶与插米袋的竹签；码头水面上漂着的别人家的布；
+#   帆角的三道麻绳；窄了一幅的帆与晾竿上留着的两匹烂布；能岛与来岛之间转流时的漩涡。
+# 口吻：粗、快，开口先问船，管来客叫“船老大”；抢船说得像收鱼税（offer 里一句“抢来的船，帆也全是草席”）。
+#   全轨道唯一要紧的一句“验不过的，我扔海里，钱照付——下回你就知道该带什么来了。”只在 offer 用一次。
+# 不写：过所旗与帆别钱的收费（澪主线 5 与汐的请托）；汐、鹰丸（C7，都是能岛村上家的人）；cast 无 secret。
+# 读的旗标：c13_main_mio（offer 的变体 v1_mio，只换一句，由澪的主线设，尚未写）；c13_request_murakami_takeyoshi_vouched（settle_partial 的变体 v1_vouched，只改正文）。不读 c7_*。
+# 设的旗标：c13_request_murakami_takeyoshi_accepted（offer 接下）/ declined（回绝，终局）/ late（交货或结账超时，终局）/ done（验过的结账，终局）/ partial（有布被扔的结账，终局）；
+#   分支（三面）：clean（布全过了：分过等检定成功或当场教绑帆）、thrown（有布被扔进海：检定失败或拿名字担保）、vouched（拿名字担保，只给 settle_partial 换正文）。
+# 报酬：货款 1950；报酬至多 2600（验过的结账）、1300（有布被扔的结账）；好感至多 +2 +3 +8 = 13；声望 murakami +3；名声 +5；回忆一张——后三样只在验过的、跟他上船那一条路上。
+#   超时：好感 −3（决定 §二）；交货超时有一封来信，结账超时没有信（全轨道来信只一封）。
+# 依赖：港口 noshima（ports_east_asia.toml）；商品 cloth（goods/02_manufactures.toml）、rice（goods/05_terra_trade.toml）；技能 rigging（skills.toml）；
+#   势力 murakami（factions/10_japan.toml，“村上水军”；人物与声望都在 murakami 上）；人物 murakami_takeyoshi（cast/historical_07_japan.toml）。
+# 回忆插画清单：mem-request_murakami_takeyoshi-settle「棉帆的小早」，画面：能岛与来岛之间的转流里，一条挂白棉帆的小早贴着漩涡的边窜过去，船头的武吉仰头大笑。
+
+[[tracks]]
+key = "request_murakami_takeyoshi"
+name = "验不过的扔进海"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["murakami_takeyoshi"]
+
+# 一、报价：1579—1584 年，能岛的船坞。他摔下一张滴水的草席帆，要十五匹好棉布和三十袋米。
+[[tracks.chapters]]
+key = "offer"
+title = "吸了水的草席帆"
+text = "能岛的船坞里，一排小早底朝天晾着，船工蹲在船肚子底下刮藤壶，碎壳落了一地。村上武吉从船底钻出来，两手腥泥，先问的是你的船：“几根桅？吃水多深？水手哪里人？”你一样样答了，他才从架子上扯下一张发黑的草席帆，往地上一摔，席缝里还在滴水。“木津川口那一回，就是这东西。吸饱了水，船慢得像拖着网。”他要试棉帆：外头织得密的棉布十五匹，再加三十袋米喂船工——能岛这块礁石上，米和布一样也不长。“这几年抢来的船，帆也全是草席，要块好布还得掏钱买。”货到了，在码头上一件件验。“验不过的，我扔海里，钱照付——下回你就知道该带什么来了。”"
+speaker = "murakami_takeyoshi"
+mood = "cheerful"
+when = [{ kind = "date", from = [1579, 1, 15] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "murakami_takeyoshi", text = "在能岛找到武吉" }]
+deadline = [1584, 3, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "能岛的船坞里，一排小早底朝天晾着，船工蹲在船肚子底下刮藤壶，碎壳落了一地。村上武吉从船底钻出来，两手腥泥，眯眼把你从头看到脚：“阿濑带大的那个姬君？好。几根桅？吃水多深？水手哪里人？”你一样样答了，他才从架子上扯下一张发黑的草席帆，往地上一摔，席缝里还在滴水。“木津川口那一回，就是这东西。吸饱了水，船慢得像拖着网。”他要试棉帆：外头织得密的棉布十五匹，再加三十袋米喂船工——能岛这块礁石上，米和布一样也不长。“这几年抢来的船，帆也全是草席，要块好布还得掏钱买。”货到了，在码头上一件件验。“验不过的，我扔海里，钱照付——下回你就知道该带什么来了。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：十五匹棉布、三十袋米，运来能岛。"
+next = "deliver"
+reply = "他在你肩上拍了一巴掌，拍得你往前一栽，手上的泥全印在你衣服上。“船老大，别拿你们那边织坏了的布来。经线松的，泡一回海水就散，我这儿的人一拉就知道。”说完又钻回船底下去了，刮藤壶的声音比刚才响。"
+effects = [{ kind = "flag", flag = "c13_request_murakami_takeyoshi_accepted" }, { kind = "affinity", person = "murakami_takeyoshi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟货跑不了，你另找船。"
+next = "failed"
+reply = "他没再看你，把草席帆往架子上一甩，转身冲船底下吼：“刮了一上午才刮出半条船？手是借来的？”几个船工缩着脖子，铲子刮得火星直冒。"
+effects = [{ kind = "flag", flag = "c13_request_murakami_takeyoshi_declined" }]
+
+# 二、交货：能岛码头。老验货人撕布条泡海水、插竹签查米；三种交法，货都扣走、钱都照付。
+[[tracks.chapters]]
+key = "deliver"
+title = "码头上验布"
+text = "货卸上能岛的码头，棉布一摞，米袋一垛。武吉的验货人是个缺了两根手指的老船工，从每匹布的边上撕下一条，泡进一桶海水，捞出来和徒弟一人捏一头，使劲对拉；米袋一袋袋插竹签，抽出来倒在掌心里，看有没有掺沙。码头边的水面上漂着一匹布，泡得发白，是前一条船送来的。武吉蹲在缆桩上啃鱼干，一句话不说，只盯着那两双手。"
+speaker = "captain"
+mood = "tense"
+at = "noshima"
+when = [{ kind = "alive", person = "murakami_takeyoshi", value = true }]
+objectives = [{ kind = "goods", good = "cloth", qty = 15, at = "noshima", text = "十五匹棉布运到能岛" }, { kind = "goods", good = "rice", qty = 30, at = "noshima", text = "三十袋米运到能岛" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "murakami_takeyoshi", value = -3 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_late" }, { kind = "letter", person = "murakami_takeyoshi", text = "船老大：布我从别处弄到了，米也有人送了。你那船货还在半路的话，卖给别人去。下回别空着船过我的海，我的人认得你的帆。武吉" }] }
+
+[[tracks.chapters.choices]]
+key = "sorted"
+text = "让他们验——货在船上就分过等了。"
+news = "能岛码头上验布，一个外来船长的十五匹棉布泡过海水条条拉不断，村上家那个缺两根手指的老验货人，这回一匹也没往海里扔。"
+next = "settle"
+reply = "十五条布泡过海水，拉得绷绷响，一条也没断；竹签抽出来，掌心里只有米。老船工把最后一条布搭在桶沿上，朝缆桩那边点了点头。武吉把鱼干一口咬断：“船老大，你的舱比我的账房还干净。”他叫人把米扛去伙房，布直接抱进了缝帆的棚子。"
+effects = [{ kind = "cash", value = 1950 }, { kind = "affinity", person = "murakami_takeyoshi", value = 3 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_clean" }]
+check = { attr = "stewardship", base = 20, per = 7 }
+fail = { next = "settle_partial", effects = [{ kind = "cash", value = 1950 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_thrown" }], news = "能岛码头的海面上又多漂了两匹布，是村上家的老验货人当场扔下去的，货主是个外来船长，听说货款倒一文没少拿。" }
+
+[[tracks.chapters.choices]]
+key = "rig"
+text = "不等验完，拿一匹布当场教船工给小早绑帆。"
+news = "能岛的船坞里，一个外来船长拿自己运来的棉布教村上家的船工给小早绑帆，武吉蹲在帆角底下看了半天，回头把船工骂了一顿。"
+next = "settle"
+reply = "你挑了一匹，比着小早的桅杆裁开，教船工怎么锁边、帆角绑几道才吃得住急流里的横风。帆升起来，兜住风，绷得像鼓皮。武吉跳上船，蹲在帆角底下看你打结，看完回头冲船工骂：“学着点！”老船工把验到一半的布条扔回桶里，不验了。"
+effects = [{ kind = "cash", value = 1950 }, { kind = "affinity", person = "murakami_takeyoshi", value = 3 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_clean" }]
+requires = [{ kind = "skill", skill = "rigging", ge = 60 }]
+hint = "小早的桅矮、帆窄，帆角该往哪里绑，你一时说不上来。"
+
+[[tracks.chapters.choices]]
+key = "word"
+text = "不让他们验，拿我的名字担保。"
+news = "能岛码头上，一个外来船长不让村上家验货，拿自己的名字作保，武吉竟一脚把验布的海水桶踢翻了。"
+next = "settle_partial"
+reply = "武吉眯起眼，看了你好一会儿，从缆桩上跳下来，抬脚把那桶海水踢翻了。“好。我记着你的名字——验出一匹坏的，我也记着。”货款一文不少地数给了你，他的眼睛却一直跟着那摞布，跟进了缝帆的棚子。"
+effects = [{ kind = "cash", value = 1950 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_thrown" }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_vouched" }]
+
+# 三、结账（布全过了）：二十天后第一条棉帆小早下水，趁转流跑一趟来岛。
+[[tracks.chapters]]
+key = "settle"
+title = "棉帆的小早"
+text = "二十天后，第一条挂棉帆的小早下了水。帆是新缝的，白得晃眼，帆角绑着三道麻绳，是那个缺两根手指的老船工熬了一夜打的。武吉站在船头朝你招手：“上来！趁转流，跑一趟来岛再回来。”能岛和来岛之间的水道正在掉头，海面上一个漩涡挨着一个漩涡，像有人在底下搅一口大锅。船工解了缆，帆一下子吃满了风，小早贴着漩涡的边窜了出去，快得像一条鱼。"
+speaker = "murakami_takeyoshi"
+mood = "cheerful"
+when = [{ kind = "alive", person = "murakami_takeyoshi", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "棉帆还在缝" }, { kind = "person", person = "murakami_takeyoshi", text = "在能岛找到武吉" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "murakami_takeyoshi", value = -3 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_late" }] }
+
+[[tracks.chapters.choices]]
+key = "ride"
+text = "跳上船，跟他跑这一趟。"
+news = "能岛的人说，头一条换了棉帆的小早在来岛海峡的转流里跑了个来回，比从前快一截，船上有个外来船长，站得比武吉还稳。"
+next = "done"
+reply = "船斜着擦过一个漩涡的边，船舷底下的水打着旋往下沉，你脚下一步没乱。武吉把舵往怀里一压，仰头大笑：“九鬼的铁船来了也追不上！”到了来岛，他没靠岸，掉头就往回跑，一路把舵让给你掌了一半。回到能岛，他抓起一把鱼干塞进你手里，算是请客。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "murakami_takeyoshi", value = 8 }, { kind = "reputation", faction = "murakami", value = 3 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_done" }, { kind = "memory", memory = "mem-request_murakami_takeyoshi-settle", title = "棉帆的小早" }]
+check = { attr = "seamanship", base = 35, per = 6 }
+fail = { next = "done", effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "murakami_takeyoshi", value = 6 }, { kind = "reputation", faction = "murakami", value = 3 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_done" }, { kind = "memory", memory = "mem-request_murakami_takeyoshi-settle", title = "棉帆的小早" }], news = "能岛的小早换了棉帆，在来岛海峡的转流里跑得比从前快一截；头一趟试船，有个外来船长差点被甩下海，是武吉揪着领子拎回来的。" }
+
+[[tracks.chapters.choices]]
+key = "shore"
+text = "我不上船，在岸上看。"
+news = "能岛的小早换了棉帆，在来岛海峡的转流里跑得比从前快一截，岸上看热闹的人说，回来时武吉站在船头喊得嗓子都哑了。"
+next = "done"
+reply = "小早一个来回，只用了半顿饭的工夫。回来时离岸还有一箭地，武吉站在船头朝你喊了句什么，风太大，只听见一个“布”字。靠了岸，他把帆角的三道绳结解开又系上，系得更紧，那句话没再提。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "murakami_takeyoshi", value = 4 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_done" }]
+
+# 三′、结账（有布被扔进海）：帆少了两匹布，窄了一幅；同样的试船，报酬折半。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "窄一幅的帆"
+text = "二十天后，第一条挂棉帆的小早下了水。缝帆棚外的晾竿上，挂着那两匹泡开了线的布，水早就干了，没人收——武吉叫人留着的。帆少了两匹布，比他要的窄了一幅，帆角打着补丁。他站在船头朝你招手：“上来！布少两匹，帆小一圈，看看还跑不跑得过来岛的转流。”能岛和来岛之间的水道正在掉头，漩涡一个接一个往下拧。船工解了缆，窄帆鼓起来，小早晃了一下，才歪着身子冲进急流。"
+speaker = "murakami_takeyoshi"
+mood = "cheerful"
+when = [{ kind = "alive", person = "murakami_takeyoshi", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "棉帆还在缝" }, { kind = "person", person = "murakami_takeyoshi", text = "在能岛找到武吉" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "murakami_takeyoshi", value = -3 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_late" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_vouched"
+when = [{ kind = "flag", flag = "c13_request_murakami_takeyoshi_vouched", value = true }]
+text = "二十天后，第一条挂棉帆的小早下了水。缝帆那几天，船工拆开你那摞布，有两匹经线是松的，一扯就起毛。武吉没吭声，当着一棚子船工把那两匹扔进了海里，又叫人捞回来，挂在晾竿上留着。帆少了两匹布，比他要的窄了一幅，帆角打着补丁。他站在船头朝你招手：“上来！你的名字担了两匹，帆小一圈，看看还跑不跑得过来岛的转流。”船工解了缆，窄帆鼓起来，小早晃了一下，才歪着身子冲进急流。"
+
+[[tracks.chapters.choices]]
+key = "ride"
+text = "跳上船，跟他跑这一趟。"
+news = "能岛新下水的棉帆小早，帆比别的窄一幅，说是有两匹布不经拉、进了海，可在来岛海峡的转流里照样跑得飞快。"
+next = "done"
+reply = "窄了一幅的帆照样兜满了风，船擦着漩涡过去，比挂草席的那几条快出一大截。你脚下站得稳稳的。武吉一边掌舵一边数落：“少两匹布，少跑半个船身。”到了来岛，他啐了一口，又笑了：“半个船身也比草席强。”"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "murakami_takeyoshi", value = 4 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_partial" }]
+check = { attr = "seamanship", base = 35, per = 6 }
+fail = { next = "done", effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "murakami_takeyoshi", value = 2 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_partial" }], news = "能岛的人说，那条帆窄一幅的棉帆小早头一趟去来岛，船上的外来船长在转流里没站稳，是武吉一把拎回船里的。" }
+
+[[tracks.chapters.choices]]
+key = "shore"
+text = "我不上船，在岸上看。"
+news = "能岛的小早换了棉帆，帆窄一幅，跑来岛海峡的转流一点不慢；靠岸以后，武吉把晾竿上那两匹烂布叠好，塞上了一个外来船长的船。"
+next = "done"
+reply = "小早跑了一个来回，回来时帆角的补丁绽开了一道线，武吉在船头骂了一路。靠了岸，他从晾竿上扯下那两匹烂布，叠成方块，塞进你的船舱。“带回去。下回买布，拿它比着买。”"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "murakami_takeyoshi", value = 4 }, { kind = "flag", flag = "c13_request_murakami_takeyoshi_partial" }]

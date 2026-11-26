@@ -1,0 +1,212 @@
+# 请托：不问名字的一家人（request_gracia_nasi）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：格拉西亚·纳西（gracia_nasi，1510-01-01 生，1569 年卒，女），伊斯坦布尔的“夫人”，门德斯家香料与汇兑生意的掌舵人；势力 ottoman，身份档 3。cast：cast/historical_01_europe.toml。
+# 类型：复合（mixed）。五章：offer（报价）、pickup（拉古萨接人）、passage（海上一件事）、arrive（到伊斯坦布尔）、letter（威尼斯送信）；letter 的检定失败走 cold（多走一章的一句回话）。没有 stage 章，因此没有 window 与 default。
+# 报价：T（当面）。auto=false，玩家在伊斯坦布尔“问请托”（ask:request_gracia_nasi）启动；offer 章不写 at，目标是在加拉塔的商号找到她。求见门槛（fame 25 或 ottoman 声望 10）由引擎的求见流程负责，本文件不再设门槛条件。
+# 窗口：offer 1557-03-01 至 1567-12-31（deadline 为窗口止日，timeout 直接 failed，不写见闻）。pickup、arrive、letter 的窗口只是规划用的可能时间，不写进 TOML。
+# 进行中：pickup 120 天、arrive 90 天、letter 150 天，超时各给一封来信（格拉西亚的口气），好感 −3，旗标 _late，走 failed。三封信互不相容，一局里至多收到一封。cold 没有期限，玩家不回应就一直挂着。
+# 依据·史实：1556 年安科纳焚烧二十多个改宗者后，格拉西亚号召奥斯曼的犹太商人抵制那座教皇治下的港口；1558 年起苏丹把太巴列租给她（不写本人迁居）。本作里没有安科纳，信送到威尼斯与黎凡特往来的犹太商人手里。
+# 依据·原创：拉古萨码头的一家人（不写名字、不写原来的城）、科孚外海的威尼斯商船、金角湾的管事与车、威尼斯犹太区小屋里的长老与年轻的商人、那枚刻着记号的铜牌。
+# 待核：安科纳事件的人数与日期只作传闻口吻，正文不写；格拉西亚受租太巴列的确切年份（1558 年起）。
+# 秘密：被接的一家人不写名字，见闻只说“一家人”；妹妹布里安达在威尼斯告发过她——不写。谁在哪条船上、走哪条路，正文只写到海上的事为止。
+# C7：无本人 C7 线。相关：埃丝特的线里有 1569 年格拉西亚去世的传闻；本请托不碰埃丝特。
+# 读的旗标：无（本请托不读 c7_ 旗标，也不读主角的主线旗标）。
+# 设的旗标：c13_request_gracia_nasi_accepted（offer 接下）、_declined（offer 回绝）、_asked（pickup 问了来处）、_followed（passage 上有船一路跟着）、_partial（arrive 只收钱）、_late（三处超时之一）、_done（letter 或 cold 收尾）。每条轨道只设一面终局旗标 done；partial 是 arrive 的一条分支，之后直接 done。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不用 growth、title、world、join、leave、start_track、end_track。
+# 报酬：现金最多 3650（接人 2400 + 送信 1250），可能自付 400（passage 的 pay 选项）；好感正向合计最多 +19；声望 ottoman +2（arrive 的 take 选项）；隐秘的请托不加名声；回忆 mem-request_gracia_nasi-letter。
+# 依赖：港口 istanbul、ragusa_port、venice（ports_east_med.toml）；技能 lang_hebrew（letter 的 hebrew 选项）；属性 seamanship、eloquence（检定）；人物 gracia_nasi（日程在 istanbul）。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_gracia_nasi-letter「犹太区的小屋」：威尼斯犹太区一间低矮的屋子，几位长老围着一盏灯读信，桌角一只铜秤砣压着回信的一角。
+
+[[tracks]]
+key = "request_gracia_nasi"
+name = "不问名字的一家人"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["gracia_nasi"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "商号楼上的船期表"
+text = "加拉塔的商号楼上，格拉西亚面前摊着一张船期表，纸角压着一只铜秤砣。她没让你坐，先问你的船能装几个人、几天能到拉古萨，还不等你算完，就自己说：“四口。两个大人，两个孩子。不问他们原来叫什么，接到伊斯坦布尔来。船单上写几个人，就写几个人，一个字也不用改。”她的手指在船期表上点了一下：“钱是会走路的。人也一样，只是得有人带路。”"
+speaker = "gracia_nasi"
+mood = "tense"
+when = [{ kind = "date", from = [1557, 3, 1], to = [1567, 12, 31] }, { kind = "age", ge = 17 }, { kind = "alive", person = "gracia_nasi", value = true }]
+objectives = [{ kind = "person", person = "gracia_nasi", text = "在加拉塔的商号找到她" }]
+deadline = [1567, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，不问名字"
+next = "pickup"
+reply = "她把一枚刻着记号的铜牌推过来，说那家人认得它。“名字不用问，记号错不了。你只管把船开稳，到了伊斯坦布尔，钱照数付，一文不少。”"
+effects = [{ kind = "affinity", person = "gracia_nasi", value = 2 }, { kind = "flag", flag = "c13_request_gracia_nasi_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟我不接"
+next = "failed"
+reply = "她点点头，没有劝，也没有追问。船期表上划掉了你的船名，她把笔帽扣上，说：“船是你的，走哪条航路，你自己定。这一趟，别人会去。”"
+effects = [{ kind = "flag", flag = "c13_request_gracia_nasi_declined" }]
+
+[[tracks.chapters]]
+key = "pickup"
+title = "拉古萨城外的码头"
+text = "拉古萨城墙外的码头上，一对夫妇带着两个孩子坐在一只旧箱子上，已经等了好几天。你把铜牌递过去，男人先看了一眼，然后站起来。他的手上全是墨，像个抄书的书记。“船是你的？”他的卡斯蒂利亚话带着葡萄牙腔，压得很低，“我们不问你，你也别问我们。”两个孩子缩在母亲的裙子后面，只有小的那个探出头，盯着你的帽子看。"
+at = "ragusa_port"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "gracia_nasi", value = true }]
+objectives = [{ kind = "at", at = "ragusa_port" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "gracia_nasi", value = -3 }, { kind = "flag", flag = "c13_request_gracia_nasi_late" }, { kind = "letter", person = "gracia_nasi", text = "那一家人等不到船，搭了别人的船，到了。你报的船名我记下了，下回按这个船名排船期。——格拉西亚" }] }
+
+[[tracks.chapters.choices]]
+key = "no_names"
+text = "不问名字，请他们上船"
+next = "passage"
+reply = "母亲把孩子们安顿进舱底，自己守在舱口，一直没有坐下，手里攥着那枚铜牌。船离岸的时候，她回头看了一眼拉古萨的城墙，什么也没说。"
+news = "拉古萨城外的码头上，一家人上了一条船，船主只收船钱，连船票也没开，不问来历。"
+effects = [{ kind = "affinity", person = "gracia_nasi", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问一句他们从哪里来"
+next = "passage"
+reply = "父亲说了一个城名，你知道那多半不是真的。他看着你，等你还要不要问下去。你没有再问，他也就没有再说，只把身后那只旧箱子往自己这边挪了挪。"
+news = "拉古萨码头上，有个船长问那家的父亲从哪里来，父亲报了一个城名，船长没有再问。"
+effects = [{ kind = "flag", flag = "c13_request_gracia_nasi_asked" }]
+
+[[tracks.chapters]]
+key = "passage"
+title = "科孚外海的取水"
+text = "科孚外海，你停船取水。一家人还躲在舱底，父亲却爬到甲板上，蹲在水桶边看海。一条威尼斯商船从东边靠过来，船舷上有人盯着他看，忽然扯着嗓子喊出了一个名字。父亲没有回头，只把帽子压低了一点，手还搭在桶沿上，指节发白。那条船起了锚，不紧不慢，跟在你后面。"
+night = true
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "gracia_nasi", value = true }]
+objectives = [{ kind = "wait", days = 6 }]
+
+[[tracks.chapters.choices]]
+key = "outsail"
+text = "趁夜改航，甩开那条船"
+next = "arrive"
+reply = "天亮的时候，海上只剩你一条船。那条威尼斯船的帆影，你在夜里的浪头上看了最后一眼，之后再也没有见到。水手们这才敢把灯点起来。"
+effects = [{ kind = "affinity", person = "gracia_nasi", value = 3 }]
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "gracia_nasi", value = -2 }, { kind = "flag", flag = "c13_request_gracia_nasi_followed" }] }
+
+[[tracks.chapters.choices]]
+key = "answer"
+text = "那条船靠上来问话，替那个父亲答：船上是你拉古萨的远亲"
+next = "arrive"
+reply = "对方先是不信，又盯着船舷看了一会儿，嘟囔着说认错了人，骂了一句威尼斯话，才把船头调开，朝西边去了。船上的人一直没有跟这一家人说话。"
+effects = [{ kind = "affinity", person = "gracia_nasi", value = 3 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "gracia_nasi", value = -2 }, { kind = "flag", flag = "c13_request_gracia_nasi_followed" }] }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "送那条船一桶好酒，请他们别多事"
+next = "arrive"
+reply = "酒桶吊过去以后，那条船转向去了别处。船上的人在桶边喝了一口，朝你举了举杯子，然后就不见了。那一船人再没有盯着甲板上的人看。"
+hint = "一桶好酒的钱，你这会儿凑不齐。"
+requires = [{ kind = "cash", ge = 400 }]
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "gracia_nasi", value = 3 }]
+
+[[tracks.chapters]]
+key = "arrive"
+title = "金角湾的码头"
+text = "金角湾的码头上，格拉西亚的管事带着一辆车等着，车帘放得很低。那家人下船时，最小的孩子回头朝你挥了挥手，很快被母亲拉走了。格拉西亚在商号里把船钱点清，数得一点不差。她从抽屉里拿出一封信，封口还是热的：“给威尼斯与黎凡特往来的犹太商人的长老。问他们还敢不敢跟教皇治下的港口做生意。”"
+at = "istanbul"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "gracia_nasi", value = true }]
+objectives = [{ kind = "at", at = "istanbul" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "gracia_nasi", value = -3 }, { kind = "flag", flag = "c13_request_gracia_nasi_late" }, { kind = "letter", person = "gracia_nasi", text = "那一家人自己找到了商号，门房问不出什么，就把他们放了进去。信我另托人送了。——格拉西亚" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_followed"
+when = [{ kind = "flag", flag = "c13_request_gracia_nasi_followed" }]
+text = "金角湾的码头上，格拉西亚的管事带着一辆车等着，车帘放得很低。那家人下船时，最小的孩子回头朝你挥了挥手。格拉西亚的人早听说路上有船一直跟着，她只问了一句船名，记在账本的边上。她在商号里把船钱点清，又从抽屉里拿出一封信，封口还是热的：“给威尼斯与黎凡特往来的犹太商人的长老。问他们还敢不敢跟教皇治下的港口做生意。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下信，往威尼斯去"
+next = "letter"
+reply = "“信不用藏，藏在靴子里反而招人看。”她把信按进你手里，又补了一句：“也别拿酒来谢我。人情我只认船期。”你应了一声，把信收进了外套的内袋。"
+news = "金角湾的码头上，格拉西亚的车接走了一家人，最小的孩子下船时还回头挥了手。"
+effects = [{ kind = "cash", value = 2400 }, { kind = "affinity", person = "gracia_nasi", value = 3 }, { kind = "reputation", faction = "ottoman", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "done_here"
+text = "钱收下，信请她另找人"
+next = "done"
+reply = "她没有不高兴，只说你这一趟办得干净。船钱照数收下，信她自己另找人去送，抽屉一关，不再提。她也没有请你吃饭，这一点你记得很清楚。"
+news = "金角湾的码头上，格拉西亚的管事点清了一笔船钱，那个船长没有接她的信。"
+effects = [{ kind = "cash", value = 2400 }, { kind = "affinity", person = "gracia_nasi", value = 2 }, { kind = "flag", flag = "c13_request_gracia_nasi_partial" }]
+
+[[tracks.chapters]]
+key = "letter"
+title = "威尼斯的回信"
+text = "威尼斯犹太区的一间小屋里，几位黎凡特商人的长老围着一盏灯，把格拉西亚的信读了两遍。读完，他们互相看了一眼，没有人先开口。一个年轻的商人先说话：“教皇的港口税低。抵制只是让别人赚钱。”老人们没有接，眼睛都落在你身上，等你说点什么。屋外是运河的水声，灯油快烧干了，没有人去添。这封信在他们手里转了一圈，又回到了你面前。"
+at = "venice"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "gracia_nasi", value = true }]
+objectives = [{ kind = "at", at = "venice" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "gracia_nasi", value = -3 }, { kind = "flag", flag = "c13_request_gracia_nasi_late" }, { kind = "letter", person = "gracia_nasi", text = "信另托人送去了威尼斯。你没有来，我也不怪你，船期就是这样。——格拉西亚" }] }
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "只说你带的是信，回话你原样带回去"
+next = "done"
+reply = "长老们商量了一会儿，写了一封很短的回信，封好交给你。信封上没有写字，只按了一个小小的印，你不必问那印是谁的，回去交给她就是。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "gracia_nasi", value = 5 }, { kind = "memory", memory = "mem-request_gracia_nasi-letter", title = "犹太区的小屋" }, { kind = "flag", flag = "c13_request_gracia_nasi_done" }]
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "说说你在海上见到的那一家人（不说名字）"
+next = "done"
+reply = "老人们沉默了很久，回信写了两页。年轻的商人没有再说港口税的事，只把那两页纸看了又看，一句话也没有说，最后替老人们把灯芯挑亮了一点。"
+news = "威尼斯犹太区的一间小屋里，一个从东边来的船长说起一家人的事，没提名字，老人们沉默了很久。"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "cold", effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "gracia_nasi", value = 3 }] }
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "gracia_nasi", value = 8 }, { kind = "memory", memory = "mem-request_gracia_nasi-letter", title = "犹太区的小屋" }, { kind = "flag", flag = "c13_request_gracia_nasi_done" }]
+
+[[tracks.chapters.choices]]
+key = "hebrew"
+text = "用希伯来文替老人们把信里那一段经文念出来"
+next = "done"
+reply = "念完以后，那个年轻的商人先低下了头，把手里的笔放回了墨台上。老人们互相点了点头，回信写得比你想的还长，最后一行是用希伯来文写的，只有他们自己认得。"
+news = "威尼斯犹太区的小屋里，一位长老用希伯来文念了一段经文，那个年轻的商人低下了头。"
+hint = "信里引的那一段，你念不出来。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_hebrew", ge = 60, hard = true }]
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "gracia_nasi", value = 8 }, { kind = "memory", memory = "mem-request_gracia_nasi-letter", title = "犹太区的小屋" }, { kind = "flag", flag = "c13_request_gracia_nasi_done" }]
+
+[[tracks.chapters]]
+key = "cold"
+title = "年轻人的一句话"
+text = "年轻的商人把信推回桌子中间，话说得很客气：“一家人是一家人，生意是生意。”老人们没有接，也没有拦他。年轻的商人的袖口沾着墨，手指在回信的边上按了一下，又收了回去。那一页回信已经写好了，字很小，一句多余的话也没有。你看得出来，它不会再长了。"
+at = "venice"
+mood = "sad"
+when = [{ kind = "alive", person = "gracia_nasi", value = true }]
+objectives = [{ kind = "at", at = "venice" }]
+
+[[tracks.chapters.choices]]
+key = "take_back"
+text = "收下回信，原样带回伊斯坦布尔"
+next = "done"
+reply = "回信只有一页，话很客气。你把它折成四折，收进了袖袋。船出港的时候，你还在隔着布料摸那一页纸，摸到的只是纸的一角。那几行字，你一个也没有念出声。"
+effects = [{ kind = "flag", flag = "c13_request_gracia_nasi_done" }]
+
+[[tracks.chapters.choices]]
+key = "tell_her"
+text = "把年轻人的话一字不落地记下，带给格拉西亚"
+next = "done"
+reply = "你把那句话一字不差记在心里，回到伊斯坦布尔，原样说给格拉西亚听。她听完，只说：“生意是生意，我记下了。”之后她再没有提过威尼斯。"
+effects = [{ kind = "affinity", person = "gracia_nasi", value = 2 }, { kind = "flag", flag = "c13_request_gracia_nasi_done" }]

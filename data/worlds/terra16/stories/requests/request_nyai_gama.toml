@@ -1,0 +1,211 @@
+# 请托：合约上的字（request_nyai_gama）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：奈·加玛（nyai_gama，1540-03-20 生，女），万丹一户胡椒商家的女儿，账本一条一条写在纸上；cast 在 cast/classmates_giri.toml。
+# 类型：说服（persuade）。三章：offer（报价）、persuade（船舱里）、result（下一栏）；另有 result_partial（只赔一半）。终点 done / failed。
+#   结构说明：persuade 的 argue 检定失败分支转入 result_partial，由它自己的两个选项结账（现金 500）；不用 variant 改现金，因为 variant 只能改文字。
+# 报价：T 当面（auto=false）。人物按日程就在万丹港，玩家用 ask:request_nyai_gama 启动；offer 章不写 at，objectives 为找到她；
+#   deadline 为窗口止日 1590-06-30，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1573-01-01..1590-06-30；persuade 进入后 60 天期限，超时给一封信；
+#   result 与 result_partial 1573-01-01..1590-12-31。
+# 依据·史实背景：万丹的胡椒贸易；福建、广东的唐人船每年来装胡椒；合约用马来文（爪夷字）写，船主多半找通事读。港口 banten_port。
+# 依据·原创：奈·加玛、她的胡椒栈与账本、那条漳州来的船、船舱里那张马来文的货单与墨笔批注。违约的船主是叙事人物（不进 cast，正文不写姓）。
+# 依赖：港口 banten_port（ports_southeast_asia.toml）；技能 lang_malay、lang_chinese（skills.toml）；人物日程 key 随 B10b 从 banten 改为 banten_port。
+#   主线门禁：无（奈·加玛不是主线人物，不写 c13_main_ 旗标）。
+# C7：违约的船主不是黄寿官，正文不写黄寿官（他的请托是赶大帆船的生丝）。不写买船信（秘密）。本文件只读 bond_nyai_gama，不设任何 c7_ 旗标。
+# 读的旗标：无 c7_ 旗标；bond nyai_gama 至少 C 只决定 offer 的 v1_bond_c 变体（只改开场）。
+# 设的旗标：c13_request_nyai_gama_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_small（argue 检定失败，只赔小的那个数，只设不读）、
+#   _late（超时，终局）、_done（终局）、_partial（result_partial 的终局）。
+# 秘密：课本里夹着一封没寄出的买船信。正文不写，见闻不写。
+# 口头禅：“下回哪天到港，先说清。”只在 result 章由她说出一次。
+# 报酬：现金最多 900（只赔一半 500）；好感最多 +13；名声 +1；回忆 mem-request_nyai_gama-result（只给 result 与 result_partial 两条终局）。
+# 回忆插画 mem-request_nyai_gama-result：胡椒栈的木匣开着，合约背面写着“已赔讫”，下面一行是明年到港的日子，窗外是万丹港的桅杆。
+
+[[tracks]]
+key = "request_nyai_gama"
+name = "合约上的字"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["nyai_gama"]
+
+# 一、晚了两个月：奈·加玛在胡椒袋上摊开合约，托你去找船主。
+[[tracks.chapters]]
+key = "offer"
+title = "晚了两个月"
+text = "奈·加玛把一张合约摊在胡椒袋上，马来文的字一行一行写得很密。哪天到港装货，晚一天怎么赔，她的指甲在那一行底下划了一道。一条漳州来的唐人船晚了两个月，栈里的胡椒受了潮，发了霉。船主却说合约上没写赔，他不识马来字，签字的通事早就回了漳州。她没吵，也没恼，只说：“字是怎么写的，就怎么赔。”她托你去找那位船主。“我说，他就说听不懂。你去说。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "nyai_gama", text = "在万丹找到她" }]
+when = [
+  { kind = "date", from = [1573, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "nyai_gama", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "nyai_gama", level = "C" }]
+text = "奈·加玛站在胡椒栈的门口，先问你：“下一船哪天到港，你算过没有？”你答了，她才把那张合约从胡椒袋上拿起来。合约摊开，马来文的字一行一行写得很密。一条漳州来的唐人船晚了两个月，栈里的胡椒受了潮，船主却说合约上没写赔，签字的通事早就回了漳州。“字是怎么写的，就怎么赔。”她说，“你去跟他说。我说，他就说听不懂。”"
+
+[[tracks.chapters.choices]]
+key = "take_contract"
+text = "接下，拿着合约去找船主。"
+next = "persuade"
+reply = "她把合约抄了一份给你，原件留在自己手里。抄件上，赔法那一条被红线圈了出来。“他要是看不懂，就指这一条。”"
+effects = [
+  { kind = "affinity", person = "nyai_gama", value = 2 },
+  { kind = "flag", flag = "c13_request_nyai_gama_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_damage"
+text = "接下，先问：胡椒受潮，损了多少？"
+next = "persuade"
+reply = "她报了一个数，又报了一个小一点的数。“大的是我算的，小的是船主会认的。”她把合约往你这边推了推，“我要的是大的。”"
+effects = [
+  { kind = "affinity", person = "nyai_gama", value = 2 },
+  { kind = "flag", flag = "c13_request_nyai_gama_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "船主跟你的事，我不插手。"
+next = "failed"
+reply = "她点点头，把合约折好，压进账本里。“那就把这条船写进明年的‘不要’那一栏。”"
+effects = [{ kind = "flag", flag = "c13_request_nyai_gama_declined" }]
+
+# 二、听不懂的船主：船舱里，船主装作看不懂马来文；桌上的货单有他自己的批注。
+[[tracks.chapters]]
+key = "persuade"
+title = "听不懂的船主"
+text = "唐人船的船主坐在舱里喝茶，舱门敞着，码头上的湿热一阵阵往里灌。他见你拿着合约进来，笑着把茶碗推过来：“马来字？我不识。合约是我的通事签的，通事回漳州了。”奈·加玛站在舷梯下没有上来，只隔着舱门说了一句：“他要是还说听不懂，就念第三条。”船主的桌上压着一张马来文的货单，纸角上有他自己用墨笔写的批注，字迹比他嘴上说的熟得多。"
+speaker = "captain"
+mood = "tense"
+at = "banten_port"
+objectives = [{ kind = "at", at = "banten_port", text = "到万丹港去" }]
+when = [
+  { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "nyai_gama", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "nyai_gama", value = -3 }, { kind = "flag", flag = "c13_request_nyai_gama_late" }, { kind = "letter", person = "nyai_gama", text = "那条船走了，没赔。我把它写进了“不要”那一栏。——奈·加玛" }] }
+
+[[tracks.chapters.choices]]
+key = "read_malay"
+text = "当着他的面，把合约和货单并排念一遍。"
+next = "result"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_malay", ge = 60, hard = true }]
+hint = "那几行爪夷字你认不全，念不下去。"
+reply = "你把合约念完，又把货单上他的批注念了一遍，一个字都没念错。船主手里的茶碗停在半空，半天才放下。“那就照合约。”他说，声音低了下去。"
+news = "万丹港口的酒馆里有人说，一条漳州来的唐人船主被人当面念了一遍马来文的合约，念到他自己的批注，茶就凉了。"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "in_chinese"
+text = "用闽南话把赔法讲给他听，讲到他没法再装听不懂。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "你的官话他听得懂，可他偏说只懂乡音。"
+reply = "你用他家乡的话把赔法讲了一遍，讲到第三条，他把手按在了桌上。他听完叹了口气，说你们这些人都学会了，生意难做。他认了赔。"
+news = "万丹的脚夫们说，有个外乡人用漳州话把合约的赔法讲给一条唐人船的船主听，讲到他没法装听不懂，他认了赔。"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他说：万丹的胡椒栈不止一家，记得违约的，会是每一家。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他想了很久，说明年还想来装胡椒，赔就赔吧。"
+news = "万丹的胡椒栈里传开了：一条唐人船的船主想着明年还要装胡椒，松了口，认了赔。"
+fail = { next = "result_partial", news = "万丹港口有人说，那条唐人船的船主只肯赔一部分，合约上写的，他认的只是小的那个数。", effects = [{ kind = "flag", flag = "c13_request_nyai_gama_small" }, { kind = "affinity", person = "nyai_gama", value = -2 }] }
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+# 三、下一栏：船主派人把赔款送到胡椒栈，她在合约背面写了“已赔讫”，又添了明年的一行。
+[[tracks.chapters]]
+key = "result"
+title = "下一栏"
+text = "船主派人把赔款送到胡椒栈，奈·加玛一枚一枚点清，数完在合约背面写了“已赔讫”。写完她又在下面添了一行新的：明年这条船哪天到港。她把笔搁下，抬眼看你：“下回哪天到港，先说清。”"
+news = "万丹一家胡椒栈的木匣里，又多了一份赔清了的合约，背面添着明年到港的日子。"
+speaker = "captain"
+mood = "cheerful"
+at = "banten_port"
+objectives = [
+  { kind = "at", at = "banten_port", text = "到万丹港去" },
+  { kind = "person", person = "nyai_gama", text = "在港里找到她" },
+]
+when = [
+  { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "nyai_gama", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "witness"
+text = "替她在“已赔讫”旁边签个见证。"
+next = "done"
+reply = "她吹干墨，把合约收进一只木匣。“木匣里都是赔清了的合约，不多，所以要收好。”她付了钱，数得清清楚楚。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "nyai_gama", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_nyai_gama_done" },
+  { kind = "memory", memory = "mem-request_nyai_gama-result", title = "合约背面的一行" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_next"
+text = "问她：明年还让这条船来？"
+next = "done"
+reply = "“让。他赔了，就是好船主。”她付了钱，说生意就是这样，“说清了，就还能做。”"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "nyai_gama", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_nyai_gama_done" },
+  { kind = "memory", memory = "mem-request_nyai_gama-result", title = "合约背面的一行" },
+]
+
+# 三之二、只认一半：船主只肯赔小的那个数。她照样写“已赔讫”，后面添了四个字。
+[[tracks.chapters]]
+key = "result_partial"
+title = "只赔一半"
+text = "赔款送到了，只有一半。奈·加玛数到一半停住，把剩下那张单子推回给送钱的人。她在合约背面写了“已赔讫”，后面又添了四个字：只认一半。送钱的人想说什么，她没让他开口，只说：“认的那一半，写清楚就是账。”"
+news = "万丹的胡椒栈里传开了，一份合约只赔了一半，背面添着“只认一半”四个字。"
+speaker = "captain"
+mood = "tense"
+at = "banten_port"
+objectives = [
+  { kind = "at", at = "banten_port", text = "到万丹港去" },
+  { kind = "person", person = "nyai_gama", text = "在港里找到她" },
+]
+when = [
+  { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "nyai_gama", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "partial_witness"
+text = "在“只认一半”那四个字下面签个见证。"
+next = "done"
+reply = "她看了看“只认一半”那四个字，没有划掉。“一半也是赔了，写清楚就好。”她付了钱，每一枚都放在桌上照着光看了一遍。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "nyai_gama", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_nyai_gama_partial" },
+  { kind = "memory", memory = "mem-request_nyai_gama-result", title = "合约背面的一行" },
+]
+
+[[tracks.chapters.choices]]
+key = "partial_ask"
+text = "问她：这一半，明年还让那条船来？"
+next = "done"
+reply = "“让。认了一半，明年就照认的那一半写。”她说完付了钱，把木匣的盖子轻轻合上。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "nyai_gama", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_nyai_gama_partial" },
+  { kind = "memory", memory = "mem-request_nyai_gama-result", title = "合约背面的一行" },
+]

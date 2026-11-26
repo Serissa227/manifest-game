@@ -1,0 +1,183 @@
+/* 人物肖像（components/portrait/）：AI 生成的时代肖像平滑缩放（不做最近邻放大）；
+   会动的头像（LivePortrait.tsx 的 LiveFigure）的动画。
+   页面不可见时组件加 .is-paused 暂停动画；系统要求减少动态效果时加 .is-still（媒体查询也兜底）。 */
+
+.portrait-art {
+  display: block;
+  flex: none;
+  object-fit: cover;
+  image-rendering: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+canvas.portrait-fallback {
+  display: block;
+  flex: none;
+}
+/* 会动的大头像（PortraitArt 的 live）：外面这层顶替原来的 <img>，接它的类名与尺寸；里面是 .live-portrait */
+.portrait-live {
+  overflow: hidden;
+}
+
+/* ───────────── 会动的头像与立绘 ───────────── */
+.live-portrait {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  line-height: 0;
+  user-select: none;
+  /* 2026-11-12 A02：头像与立绘是按原图缩小的插画（768、960×1440），平滑缩放。v1 的弹窗（.modal-body）设了 pixelated，
+     以前这里继承它，立绘在弹窗里被按最近邻缩小、起锯齿 */
+  image-rendering: auto;
+}
+.live-portrait .lp-body {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: lp-breathe 4.2s ease-in-out infinite;
+}
+.live-portrait .lp-base {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.live-portrait .lp-blink {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+/* 网格形变的画布（新界面、带骨架的头像）：盖在底图上；它接管画面以后，整体伸缩的呼吸与 DOM 的眨眼补丁都让位 */
+.live-portrait .lp-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+.live-portrait.is-warp .lp-canvas {
+  opacity: 1;
+}
+.live-portrait.is-warp .lp-body {
+  animation: none;
+}
+.live-portrait.is-warp .lp-blink {
+  visibility: hidden;
+}
+.live-portrait .lp-lens {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.live-portrait .lp-glint {
+  position: absolute;
+  top: -25%;
+  left: -70%;
+  width: 36%;
+  height: 150%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85) 50%, transparent);
+  transform: skewX(-22deg);
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  animation: lp-glint 0.95s ease-out forwards;
+}
+
+@keyframes lp-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(var(--lp-breath, 1.005));
+  }
+}
+@keyframes lp-glint {
+  from {
+    left: -70%;
+  }
+  to {
+    left: 135%;
+  }
+}
+
+/* 暂停与静止 */
+.live-portrait.is-paused * {
+  animation-play-state: paused !important;
+}
+.live-portrait.is-still * {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-portrait * {
+    animation: none !important;
+  }
+}
+
+/* ───────────── 新增人物的小头像位 ───────────── */
+/* 头像 + 名字 + 头衔的一行（情报贩子、殖民地总管、君主、商会会长、船长信息卡） */
+.cast-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.cast-frame {
+  flex: none;
+  line-height: 0;
+  padding: 2px;
+  background: var(--pn-wood, #5c3a21);
+  border: 1px solid var(--pn-ink, #2b1b17);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-wood-lt, #b8804a),
+    1px 1px 0 rgba(43, 27, 23, 0.3);
+}
+.cast-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+.cast-text strong {
+  font-size: 13px;
+}
+.cast-text small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* 酒馆：传闻旁的情报贩子 */
+.tv-news {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* 势力办事处：本国君主与外交关系里对方君主的小头像 */
+.of-ruler {
+  margin: 2px 0 8px;
+}
+.of-relation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0;
+}
+.of-face {
+  padding: 1px;
+}
+/* 情报窗口的人物志：君主与商会会长排成网格 */
+.cast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 8px 12px;
+  margin: 4px 0 10px;
+}
+.cast-subhead {
+  margin: 6px 0 4px;
+  font-size: 13px;
+}
+/* 殖民地详情标题旁的总管 */
+.colony-steward {
+  margin-top: 6px;
+}

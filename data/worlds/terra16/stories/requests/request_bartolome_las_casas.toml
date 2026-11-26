@@ -1,0 +1,141 @@
+# 请托：一捆画押的证词（request_bartolome_las_casas）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude 执笔。
+# 人物：巴托洛梅·德·拉斯·卡萨斯 bartolome_las_casas（1484 生，1566 年 7 月卒于马德里；男；多明我会士，cast/historical_05_americas.toml）。
+# 类型：送信（letter）。章节：offer 油布包里的十字（韦拉克鲁斯，接下 / 先看一页 / 回绝）→ handover 黄金塔下（塞维利亚，当众讲清 / 拨开人群 / 打点差役；讲不清或挤不过去走 half）→ reply 老主教的回信（马德里来信，回一封短信 / 问非洲一事 / 收起来；等 30 天）。
+# 报价：L 来信式的当面报价。auto=true；offer 在 veracruz（韦拉克鲁斯），交件的是瓦哈卡来的一位多明我会修士（不新建 cast）。窗口 1562-01-15 至 1565-12-31，offer 的 deadline 为 1565-12-31（timeout 不写见闻）；handover 期限 240 天，reply 期限 200 天。
+# 身份档：2（学者、官员）：现金基数 1600，中档 ×1.4 = 2250。失败的半价按 1150 结（brief 只写了全额，半价是编者决定，见 notes）。
+# 依据（史实）：1550—51 年巴利亚多利德的辩论（背景，正文不写）；1562—65 年他在马德里的修院里写证词；1566 年 7 月卒于马德里（reply 有 alive 条件，到期不写死因）；1516 年前后替印第安人提过从非洲运人的主意，后来在书里认错（秘密，只在 reply 的 ask 回信里出现）。
+# 依据（原创）：米斯特克山里三个镇的证词（镇名、年份、人名、数目，不写酷刑细节）；油布包与老主教的短笺；瓦哈卡来的修士；塞维利亚阿雷纳尔码头上的公证人与差役；黄金塔下那个穿白袍的年轻修士。
+# 待核（正文一律传闻口吻）：贸易总署在塞维利亚扣押私人信件的权限；瓜达尔基维尔河边的具体码头名。
+# 读写的旗标：设 c13_request_bartolome_las_casas_accepted（offer 接下、先看一页）/ _read（先看一页）/ _declined / _half（handover 的 argue、push 失败）/ _late / _done / _partial；读 _read（handover 变体）与 _half（reply 变体）；不读任何 c7_ 旗标，不设 c7_ 旗标。
+# 依赖：无改名依赖（veracruz、seville 现成）；无主线旗标依赖。
+# 回忆插画清单：
+#   mem-request_bartolome_las_casas-reply：塞维利亚黄金塔下，年轻修士把油布包塞进白袍，远处黑衣公证人在骂。
+# 说明：brief 的 window 只是规划用的出现区间，普通章不写 window / default。brief 的 keyed tables 指英文覆盖层的写法，中文分片是数组表（[[tracks]] / [[tracks.chapters]]），与 request_ursula 等现有分片一致。
+
+[[tracks]]
+key = "request_bartolome_las_casas"
+name = "一捆画押的证词"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["bartolome_las_casas"]
+
+# offer · 1562—1565 · 韦拉克鲁斯海关门廊：修士递来油布包，公证人在码头上订了舱
+[[tracks.chapters]]
+key = "offer"
+title = "油布包里的十字"
+text = "韦拉克鲁斯的海关门廊下，一个凉鞋开了口的多明我会修士拦住你。他身后站着两个瓦哈卡山里来的人，一句西班牙话也不说。修士把一只油布包塞进你怀里，包里是米斯特克山里三个镇的证词，每页底下都是长老画的十字和手印，写着哪年多收了几担可可，哪家的男人被带去矿上，再也没有回来。包里还夹着一张短笺，字又密又斜：“哪个镇，哪一年，谁做的。我要名字。” 修士朝码头那边努努嘴，那里一个穿黑衣的公证人正在看船期。“监护主家的人，订了同一支船队的舱位。”"
+speaker = "captain"
+mood = "tense"
+at = "veracruz"
+when = [{ kind = "date", from = [1562, 1, 15], to = [1565, 12, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，把油布包收进船舱"
+next = "handover"
+effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_accepted" }, { kind = "affinity", person = "bartolome_las_casas", value = 2 }]
+reply = "修士把包按在你胸口按了一下，像在祝圣。包角硌着肋骨，走几步就碰一下。“到了塞维利亚，找黄金塔下穿白袍的那个年轻人。”"
+
+[[tracks.chapters.choices]]
+key = "peek"
+text = "接下，先问能不能看一页"
+next = "handover"
+effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_accepted" }, { kind = "flag", flag = "c13_request_bartolome_las_casas_read" }, { kind = "affinity", person = "bartolome_las_casas", value = 2 }]
+reply = "他抽出一页给你：一行一行，镇名、年份、人名、数目，没有一个形容词。你把那一页看完，又原样夹回包里，指尖上沾了一点油布的味道。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这趟不替他跑"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_declined" }]
+reply = "修士把包抱回怀里，说下一班船还有三个月。他没有生气，只是抱得更紧了些，好像你刚才要从他手里把包抢走。"
+
+# handover · 1562—1565 · 塞维利亚阿雷纳尔码头：公证人带着差役先下了船
+[[tracks.chapters]]
+key = "handover"
+title = "黄金塔下"
+text = "塞维利亚的阿雷纳尔码头，晒鱼干的味道压过了海水。黑衣公证人比你先下了船，身边多了一个拿权杖的差役。“这包东西涉及王室案件，”差役把权杖横过来，“交贸易总署封存。”公证人在一旁补了一句：“船长，一包修士的信，不值得押上你的执照。”黄金塔的阴影里，那个年轻修士攥着袍子，两脚像钉在石板上，不敢走过来。"
+speaker = "captain"
+mood = "tense"
+at = "seville"
+when = [{ kind = "alive", person = "bartolome_las_casas", value = true }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_late" }, { kind = "affinity", person = "bartolome_las_casas", value = -3 }, { kind = "letter", person = "bartolome_las_casas", text = "韦拉克鲁斯的修士来信：证词托另一条船带到了，晚了一季。老主教问你路上可好。" }] }
+objectives = [{ kind = "at", at = "seville", text = "到塞维利亚的阿雷纳尔码头" }]
+
+[[tracks.chapters.variants]]
+key = "read"
+when = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_read" }]
+text = "塞维利亚的阿雷纳尔码头，晒鱼干的味道压过了海水。你读过那一页，知道包里每个名字都是哪个镇的人。黑衣公证人比你先下了船，身边多了一个拿权杖的差役。“这包东西涉及王室案件，”差役把权杖横过来，“交贸易总署封存。”黄金塔的阴影里，那个年轻修士攥着袍子，两脚像钉在石板上，不敢走过来。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "当众讲清：这是寄给修院的私信"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "reply", effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_half" }, { kind = "cash", value = 1150 }, { kind = "affinity", person = "bartolome_las_casas", value = -2 }], news = "塞维利亚的阿雷纳尔码头，差役把修士的油布包带去了贸易总署，三天后只还回来一半。" }
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "bartolome_las_casas", value = 3 }]
+news = "塞维利亚阿雷纳尔码头上，一个外港船长当众说那包是修院的私信，监护主家的公证人想截，没截住。"
+reply = "围观的水手起哄，有人叫好，有人骂娘。你把“寄给修院的私信”几个字喊了出来，差役的权杖在半空晃了晃，人群一挤，就看不清它最后落在谁手里。"
+
+[[tracks.chapters.choices]]
+key = "push"
+text = "拨开人群，直接把包交到修士手里"
+next = "reply"
+check = { attr = "arms", base = 35, per = 6 }
+fail = { next = "reply", effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_half" }, { kind = "cash", value = 1150 }], news = "塞维利亚黄金塔下，推搡之间修士的几页证词掉进了瓜达尔基维尔河，水手们捞了半个早上。" }
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "bartolome_las_casas", value = 3 }]
+news = "塞维利亚黄金塔下，一个外港船长推开差役，把修士的油布包直接送进了年轻修士怀里，公证人气得直跺脚。"
+reply = "你肩膀一撞，挤到了塔下。油布包在推搡里晃了一下，年轻修士伸手去接，袍子底下的手抖得厉害。那个黑衣公证人在人群后面喊你的船名，喊了两遍，没人应他。"
+
+[[tracks.chapters.choices]]
+key = "bribe"
+text = "往差役手里塞点钱，请他行个方便"
+next = "reply"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你摸了摸钱袋，里头的钱不够打点一个差役。"
+effects = [{ kind = "cash", value = -300 }, { kind = "cash", value = 2250 }, { kind = "affinity", person = "bartolome_las_casas", value = 3 }]
+news = "阿雷纳尔码头上，有个外港船长往差役手里塞了一包钱，那包修士的信就这么过了关，监护主的公证人在后头骂。"
+reply = "差役掂了掂那几枚钱，转身去盘查别的船。公证人在后面骂得很响，码头上的水手都在笑，没人理他。"
+
+# reply · 1562—1566 · 马德里来的信（不写 at：信到哪个港都算）
+[[tracks.chapters]]
+key = "reply"
+title = "老主教的回信"
+text = "一个月后，马德里来的信追上了你的船。老主教的字比短笺上更斜，前两页全是证词里的数目，一个镇一行，写着年份、人名和担数。第三页骂监护主，骂得一个脏字也没有，只是一条一条地数。第四页预言天主的怒火，写得很笃定，说西班牙的船迟早要为这些名字付账。信里还说，有了这些名字，他要再写一份呈文。最后一行才是谢你，只有一句。"
+mood = "mystic"
+when = [{ kind = "alive", person = "bartolome_las_casas", value = true }]
+deadline_days = 200
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_partial" }, { kind = "letter", person = "bartolome_las_casas", text = "马德里的修院来信，替老主教写：回信没能追上你的船。呈文还在抄，那几页名字，一个也没有落下。" }] }
+objectives = [{ kind = "wait", days = 30, text = "信还在路上" }]
+
+[[tracks.chapters.variants]]
+key = "half"
+when = [{ kind = "flag", flag = "c13_request_bartolome_las_casas_half" }]
+text = "一个月后，马德里来的信追上了你的船。老主教的字比短笺上更斜，可包里有几页没回来，他只能照着剩下的残页重抄。重抄的那几页，一个镇一行，写着年份、人名和担数，空缺的地方，他在旁边写了一个“缺”字。最后一行才是谢你，只有一句。"
+
+[[tracks.chapters.choices]]
+key = "thanks"
+text = "回一封短信：码头上的事，照实写"
+next = "done"
+effects = [{ kind = "affinity", person = "bartolome_las_casas", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_bartolome_las_casas-reply", title = "黄金塔下的油布包" }, { kind = "flag", flag = "c13_request_bartolome_las_casas_done" }]
+reply = "你把码头上的事一五一十写了下来，差役的权杖、公证人的骂，都写进了信里。没过几天，马德里的回信又追上了船，只有一行：“你写的那个差役，我记下了名字。”"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "回信问他：从非洲运来的人，谁替他们画押"
+next = "done"
+effects = [{ kind = "affinity", person = "bartolome_las_casas", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_bartolome_las_casas-reply", title = "黄金塔下的油布包" }, { kind = "flag", flag = "c13_request_bartolome_las_casas_done" }]
+reply = "这一封隔了很久才到，纸上只有几行。他答得很短：契据上替他们画押的，只有买人的那一个。年轻时他自己也提过那样的主意，从非洲运人来替印第安人干活，后来在书里认了错。他写：“认错不能叫死人活过来。所以我才要名字。”一处墨迹洇开了一大片，像是笔停了很久。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把信收起来，不回"
+next = "done"
+effects = [{ kind = "affinity", person = "bartolome_las_casas", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_bartolome_las_casas_partial" }]
+reply = "信纸叠好压在海图下面，最后一行的“谢”字正好露在外头。后来的船再没带来马德里的信。"

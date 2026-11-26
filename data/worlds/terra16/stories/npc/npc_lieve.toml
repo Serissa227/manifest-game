@@ -1,0 +1,448 @@
+# C13c NPC 线·莉芙·德克莱尔克：安特卫普最年轻的银行家（故事 2.0，request 轨道）
+#
+# 标签：玩家不是莉芙时才跑（s00_gate 的 when 读 c12_voyage_lieve 为 false，并要求 upbringing_graduated）。
+#   脊轨 npc_lieve：s00_gate（1557 正月）、s01_default（1557 六月停付）、s02_fury（1576—77 西班牙之怒以后）、
+#   s03_fall（1585 安特卫普陷落以后）。
+#   交汇旁轨（脊轨 default 打开，各自 auto=false）：npc_lieve_bet（胡椒的远期）、npc_lieve_loan（三千与三千六）、
+#   npc_lieve_torches（见信如见她）、npc_lieve_beggars（只问价）、npc_lieve_genoa（绿盘的抄本）、
+#   npc_lieve_partner（页边的到期日）。
+#
+# 依据（史实；正文只从人物嘴里、物件上、码头的告示里透出来）：
+#   1557 西班牙王室停付，交易所的西班牙票一个上午成了废纸；1558 伊丽莎白即位，格雷沙姆在安特卫普转期王室债；
+#   1562 普朗坦的工人被捕、印机被拍卖；1564 迪伊在安特卫普住了十二天；1566 圣像破坏；1567 阿尔瓦与血腥议会；
+#   1572 海上乞丐夺取布里尔与弗利辛恩；1576 西班牙之怒；1584—85 帕尔马围城与詹贝利的火船；1585 新教徒北迁；
+#   1575 伦敦保险局；1588 无敌舰队。
+#   原创：德克莱尔克一家、父亲的账簿与第二本账、比安卡·马雷、龙印（C11）、热那亚圣杯的描图与抄本。
+#   待核：热那亚圣杯在祝圣日示人的具体节日（正文只写“祝圣日”，不写日子）。
+#
+# 读写的共享旗标：
+#   设：c13_npc_lieve（s00_gate）；c13_npc_lieve_bet_up / _bet_down（b1_offer，b2_settle 读）；
+#       c13_mark_genoa（m1_mark，与 main_lieve 的 c01 共用，发印记的选项全部 requires 它为 false）；
+#       c13_npc_lieve_mate（p1_ledger 的 join；l1_offer 与 m1_mark 读它）。
+#   读：c12_voyage_lieve（为 false）、upbringing_graduated；h47_antwerp_fury_arrears_paid、h57_antwerp_siege_antwerp_holds（C10，变体）。
+#
+# 等待的包：A9（门槛章可加 protagonist 条件；若引擎接管开轨道，auto 改 false）；C10（HIST 占位替换）；
+#   整合方核对 p1_ledger 的 join 招募检查（mates.toml 没有 lieve，门槛只读旗标）。
+# 回忆插画：无（NPC 线不设回忆）。
+# 本文件不写的人：比安卡的身份与家里的亏空永远不进 NPC 线。
+
+[[tracks]]
+key = "npc_lieve"
+name = "安特卫普最年轻的银行家"
+kind = "request"
+start = "s00_gate"
+auto = true
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "s00_gate"
+title = "留在桌边的女儿"
+text = "正月里，安特卫普交易所门口的台阶上还结着霜。跑单的伙计搓着手说，兑换商德克莱尔克家的女儿没有出海，本该跟着船走的人，偏坐上了父亲兑换桌对面那把椅子。有人来借钱，她先不问利息，先问船叫什么、往哪里去。“她问我借钱的船长叫什么，我说不知道，她说：那就别让那人进门。”伙计学她的口气，学得有模有样。"
+stage = "rumor"
+window = [[1557, 1, 16], [1557, 1, 22]]
+at = "antwerp"
+cast = ["lieve"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_lieve", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "安特卫普交易所的人说，兑换商德克莱尔克家的女儿坐上了父亲的兑换桌，借钱先问你的船叫什么。"
+
+[tracks.chapters.default]
+next = "s01_default"
+effects = [{ kind = "flag", flag = "c13_npc_lieve" }, { kind = "start_track", track = "npc_lieve_bet" }]
+
+[[tracks.chapters]]
+key = "s01_default"
+title = "头一个卖票的人"
+text = "六月，西班牙王室停付的消息从马德里追到了安特卫普。交易所里西班牙票一个上午成了废纸，只有热那亚人一边收票一边搓手。卖鲱鱼的女人说，头一个卖的是兑换商家那个十几岁的女儿，四成，当着她父亲的面。老德克莱尔克差点把算盘摔在地上。那姑娘只回了一句：“再等半天，票就是三成半。”傍晚票价果然跌到三成半。卖鲱鱼的女人说：“我听不懂，可我把鲱鱼的价也涨了。”"
+stage = "rumor"
+window = [[1557, 6, 10], [1557, 7, 31]]
+at = "antwerp"
+cast = ["lieve"]
+mood = "tense"
+news = "停付那天，安特卫普交易所里头一个把西班牙票卖给热那亚人的，是兑换商家那个十几岁的女儿。"
+
+[tracks.chapters.default]
+next = "s02_fury"
+effects = [{ kind = "start_track", track = "npc_lieve_loan" }, { kind = "start_track", track = "npc_lieve_torches" }, { kind = "start_track", track = "npc_lieve_beggars" }]
+
+[[tracks.chapters]]
+key = "s02_fury"
+title = "账房过了海"
+text = "西班牙之怒以后的冬天，交易所的柱廊塌了一半，窗口挂着草席，雪水从屋檐滴进空桌子底下。人们说德克莱尔克家的女儿把账房搬去了伦敦，走前在门上贴了一张告示：凡在她这里存过钱的，凭票到伦敦兑，一个子儿不少。码头的人笑她，说她把账摆到了海那边，要兑钱就得坐船去找她。“她说的是‘一个子儿不少’，没说‘利息照算’——你们自己算吧。”"
+stage = "rumor"
+window = [[1576, 11, 11], [1577, 2, 28]]
+at = "antwerp"
+cast = ["lieve"]
+mood = "sad"
+news = "兑换商家的女儿把账房搬去了伦敦，门上留了告示：凭票到伦敦兑，一个子儿不少，码头上的人都在笑。"
+
+[tracks.chapters.default]
+next = "s03_fall"
+effects = [{ kind = "start_track", track = "npc_lieve_genoa" }]
+
+[[tracks.chapters.variants]]
+key = "v_spared"
+when = [{ kind = "flag", flag = "h47_antwerp_fury_arrears_paid" }]
+text = "城没有被劫，交易所的柱廊还立着，门口多了几个抱着票等兑钱的商人。德克莱尔克家的女儿还是把账房搬去了伦敦，走前在门上贴了一张告示：凭票到伦敦兑，一个子儿不少。有人问她为什么，她说：“差一点被劫的城，下一回就会被劫。”"
+
+
+[[tracks.chapters]]
+key = "s03_fall"
+title = "票角上的猫牙印"
+text = "伦敦交易所楼上，有个安特卫普女人在一张旧桌子后面坐着。从斯海尔德河那边来的人，十个里有三个先找她兑钱。安特卫普开了城门，那些旧票却还在人手里。她认得每一张票上的字，连哪家的票角被猫咬过都记得。“那张票是二十多年前开的，票角是她家老猫咬的——对了，真是。”伦敦的书记这样讲给旁人听，一边讲一边把票角翻过来给人看。"
+stage = "rumor"
+window = [[1585, 8, 17], [1585, 12, 31]]
+at = "london"
+cast = ["lieve"]
+mood = "sad"
+news = "伦敦交易所楼上那个安特卫普女人，认得每一张从斯海尔德河那边带来的旧票。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "npc_lieve_partner" }]
+
+[[tracks.chapters.variants]]
+key = "v_holds"
+when = [{ kind = "flag", flag = "h57_antwerp_siege_antwerp_holds" }]
+text = "安特卫普守住了城，城门一直关着。可从斯海尔德河那边来的人，还是十个里有三个先找她兑钱。票角上的猫牙印还在，伦敦的书记说，城守住了，来兑钱的人一个也没少。"
+
+[[tracks]]
+key = "npc_lieve_bet"
+name = "胡椒的远期"
+kind = "request"
+start = "b1_offer"
+auto = false
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "b1_offer"
+title = "胡椒的远期"
+text = "三月的交易所，大厅里挤满了穿毛皮的商人。胡椒行情板挂在柱子上，粉笔写的数一天要换三遍。德克莱尔克家的女儿坐在父亲的兑换桌边，耳坠一晃一晃，手里只拿着一支笔。她看见你，没问你从哪里来，先问你是不是那个远来的船长。里斯本的胡椒船几时到、到几条，她心里有数。“兑钱还是赌钱？今天只做后一样。”她把一张还没填数的票推过来，“一年以后，安特卫普的胡椒是涨还是跌。一人一千，书记作证。想好了再说，我只听一遍。”"
+at = "antwerp"
+speaker = "lieve"
+mood = "cheerful"
+cast = ["lieve"]
+when = [{ kind = "date", from = [1557, 3, 1] }]
+deadline = [1560, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "up"
+text = "押一年以后胡椒涨。"
+next = "b2_settle"
+requires = [{ kind = "cash", ge = 1000 }]
+effects = [{ kind = "cash", value = -1000 }, { kind = "flag", flag = "c13_npc_lieve_bet_up" }]
+hint = "你的钱箱还撑不起这一注。"
+news = "安特卫普交易所的兑换商女儿又跟远来的船长赌上了胡椒，赌注一千，交易所的书记作证。"
+reply = "她在票上写下“涨”，又在旁边添了一个价，笔尖在那个数字上停了停。“过了这条线才算你赢。”书记过来盖了章，她把票折成两半，一半压进抽屉，一半推给你：“输了不许哭。赢了，我也不会。”"
+
+[[tracks.chapters.choices]]
+key = "down"
+text = "押一年以后胡椒跌。"
+next = "b2_settle"
+requires = [{ kind = "cash", ge = 1000 }]
+effects = [{ kind = "cash", value = -1000 }, { kind = "flag", flag = "c13_npc_lieve_bet_down" }]
+hint = "押跌也要先交一千现银，你的钱箱里现在凑不出。"
+news = "安特卫普交易所里，兑换商的女儿和那个远来的船长为胡椒立了一张跌价的远期票，赌注一千，书记当场盖了章。"
+reply = "她挑了挑眉，写下“跌”，又添了一个价，比涨的那一注还低一截。“跌破这条线才算你赢。书记在这里，别想赖。”她把票收进抽屉，锁了一下，又开了锁，把票拿出来再看一眼。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不赌。"
+next = "done"
+reply = "她把票收回抽屉，没有生气，只说了一句：“不赌也行。”说完给你兑了一笔钱，汇率倒是公道，公道得让人有点过意不去。她在账上记的是你这一次没下注。她说，见过的船长里，不赌还肯回头来兑钱的，你是头一个。"
+
+[[tracks.chapters]]
+key = "b2_settle"
+title = "结账日的行情板"
+text = "将近一年以后，还是那块行情板，还是那张兑换桌。粉笔写的胡椒价被擦过又写，最底下留着去年的一个数。她把远期票摊在桌上，票角压着一块蜂蜜蛋糕，油纸都没拆。“蛋糕是给输家的。”她说，“你要是赢了，就让给我。”她把票翻过来，先问你押的是什么，像是忘了。她当然没忘。“行情板不会撒谎，我也不会。看吧。”交易所的钟敲了十二下，大厅里的人一下子少了一半，只剩下几个还在看板的人。"
+at = "antwerp"
+speaker = "lieve"
+mood = "cheerful"
+cast = ["lieve"]
+when = [{ kind = "wait", days = 330 }]
+deadline_days = 540
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "affinity", person = "lieve", value = -5 }]
+news = "安特卫普那个兑换商的女儿在行情板前等一个船长来结账，等了一个月，把蛋糕自己吃了。"
+
+[[tracks.chapters.choices]]
+key = "win_up"
+text = "指着行情板结账：胡椒涨过了线。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_npc_lieve_bet_up" }, { kind = "price", good = "spice", at = "antwerp", ge = 132 }]
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "lieve", value = 8 }]
+hint = "行情板上的胡椒还没翻过那条线。"
+reply = "她看了行情板一眼，数钱数得飞快，一枚一枚码在桌上，数到最后把蛋糕也推了过来：“规矩是规矩。”你坐下吃蛋糕的时候，她在行情板底下添了一行小字，是这一年胡椒的价。“记下来，省得下回你又忘。”"
+
+[[tracks.chapters.choices]]
+key = "win_down"
+text = "指着行情板结账：胡椒跌破了线。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_npc_lieve_bet_down" }, { kind = "price", good = "spice", at = "antwerp", le = 108 }]
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "lieve", value = 8 }]
+hint = "行情板上的胡椒还没跌破那条线。"
+reply = "她咬了一下嘴唇，把钱一叠一叠码齐推过来，码得比平常整齐，像是要把这一笔记得牢一点。“下回我押跌。”蛋糕她留在原处，没再推给你。她的手指在桌面上敲了两下，像在算下一注的价，算到一半又停住：“这一笔，我记在你名下，别以为我忘了。”"
+
+[[tracks.chapters.choices]]
+key = "concede"
+text = "认输，照她的规矩结。"
+next = "done"
+effects = [{ kind = "affinity", person = "lieve", value = 3 }]
+reply = "她把你那一注收进抽屉，又把蜂蜜蛋糕推回来：“输家的。下回带消息来，别带运气。”你还没走到门口，她已经在票背面写下了下一个日期。她没回头，只把油纸撕开一角，掰下一小块，自己先尝了一口，像是替输家验过了味道。"
+
+[[tracks]]
+key = "npc_lieve_loan"
+name = "三千与三千六"
+kind = "request"
+start = "l1_offer"
+auto = false
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "l1_offer"
+title = "船名、去处、到期日"
+text = "1561 年的交易所柱廊下，德克莱尔克家的女儿有了一张自己的桌子。桌上一杆秤，一本账，一只打盹的猫，压着一摞借据。你走过来的时候，她已经翻开了账簿，手指按在一页上。你的名字在上面。你在安特卫普港做过的每一笔买卖，哪一天的潮水、哪一船的胡椒，她都记着。“船名、去处、上回几时回的港，三样说清楚，我再告诉你利息。”她又说：“三千，一年，还三千六。到期日那天我在这张桌子后面，你也得在。”"
+at = "antwerp"
+speaker = "lieve"
+mood = "cheerful"
+cast = ["lieve"]
+when = [{ kind = "date", from = [1561, 1, 1] }, { kind = "flag", flag = "c13_npc_lieve_mate", value = false }]
+deadline = [1566, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "borrow"
+text = "借三千，一年后还三千六。"
+next = "l2_repay"
+requires = [{ kind = "affinity", person = "lieve", ge = 20 }]
+effects = [{ kind = "cash", value = 3000 }]
+hint = "她翻了翻你的账，又合上了——还没到她肯借的时候。"
+reply = "她数钱的时候没看你，数完把借据推过来，一行一行指给你看：本钱、一年、到期日。到期日那一栏的墨格外浓，像是她自己写了两遍。你签字的时候，她的笔在桌面上轻轻敲了两下，像在催一笔还没到期的账。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "谢过她，不借。"
+next = "done"
+effects = [{ kind = "affinity", person = "lieve", value = 2 }]
+reply = "“不借钱的人，比借了不还的人好记。”她在账簿上你的名字旁边画了一个小勾，画完又把那一页翻过去，像是怕别人看见这一页上多了一笔人情。你走到柱廊尽头回头看，她已经低下头去数别人的借据了。"
+
+[[tracks.chapters]]
+key = "l2_repay"
+title = "到期日那天"
+text = "一年以后的交易所柱廊，她的桌子还在原处，借据压在秤盘底下，纸角被秤砣磨出一道毛边。你带着钱来了。她没起身，先问你的船进的是哪个港。“准时的人我见得不多。”她说，“坐。说说路上的事。”又补一句：“消息新的话，利息另算。”她手边那一页账已经记到了末尾，最后一格空着，等你的话把它填上。柱廊那头有人在吵一笔欠了三年的谷价，吵得很大声，她连眼皮都没抬。"
+at = "antwerp"
+speaker = "lieve"
+mood = "tense"
+cast = ["lieve"]
+deadline_days = 365
+objectives = [{ kind = "cash", ge = 3600, text = "一年之内带三千六回安特卫普" }]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "affinity", person = "lieve", value = -10 }, { kind = "fame", value = -2 }]
+news = "安特卫普交易所的人说，有个船长欠了德克莱尔克家女儿的钱没还，她在账上那个名字底下画了一道红线。"
+
+[[tracks.chapters.choices]]
+key = "repay"
+text = "连本带利还清。"
+next = "done"
+effects = [{ kind = "cash", value = -3600 }, { kind = "affinity", person = "lieve", value = 10 }]
+reply = "她数了两遍，把借据撕成两半，撕口齐得像是拿尺子比过。一半还给你：“留着。下回好认。”另一半她压回秤盘底下，压得很实，像是要留着做下一笔账的凭据。桌上的猫跳下来，在那半张纸上踩了一脚，她把猫抱起来，顺手把纸角抚平。"
+
+[[tracks.chapters.choices]]
+key = "news_interest"
+text = "还本金，拿一条随船带来的新消息抵利息。"
+next = "done"
+effects = [{ kind = "cash", value = -3000 }, { kind = "affinity", person = "lieve", value = 8 }]
+check = { attr = "perception", base = 20, per = 7 }
+reply = "你讲完，她已经在账簿上记了满满一页，字迹越写越小，最后在利息那一栏写下“已收”。她把借据还给你，没有撕，只在角上添了一个日期，说下次还要用它。“这一笔消息我记下了。下一笔，还按这个价。”"
+fail = { next = "done", effects = [{ kind = "cash", value = -3600 }, { kind = "affinity", person = "lieve", value = 3 }], news = "安特卫普那个银行家姑娘说，旧消息不抵利息，那位船长还是连本带利付了。" }
+
+[[tracks]]
+key = "npc_lieve_torches"
+name = "见信如见她"
+kind = "request"
+start = "t1_refugees"
+auto = false
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "t1_refugees"
+title = "见信如见她"
+text = "初秋的伦敦塔下码头，风里有煤烟和咸鱼的味道。一个安特卫普来的蕾丝女工，带着三个女儿，站在你的跳板前头。她手里攥着一张信用状，纸角被汗浸软了。信是莉芙的笔迹：“凡持此信者，见信如见德克莱尔克。”背面还有一行小字，写得急：“船钱我付过了，伦敦的房租没有。替我先垫上，账记我名下——利息免了，别得意。”女工说：“她说您是个记得住名字的人。”她们在码头上一直站到日头出来，没有一个人坐下。"
+at = "london"
+mood = "tender"
+cast = ["lieve"]
+when = [{ kind = "date", from = [1566, 9, 1] }]
+deadline = [1567, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "pay_rent"
+text = "替莉芙垫上半年房租。"
+next = "done"
+requires = [{ kind = "cash", ge = 300 }]
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "lieve", value = 8 }, { kind = "letter", person = "lieve", text = "房租的账已入我名下，利息免。你垫钱比我还爽快。我记下了，没打算夸你。莉芙" }]
+hint = "你身上的现钱，不够伦敦半年的房租。"
+reply = "房东收了钱，女孩们把一卷蕾丝挂在窗口晾，风一吹，半条街都是白的。那位母亲没有道谢，只把手里的线团塞进你袖子里，说是还账用的。过了几天，一封从安特卫普寄来的信追到了你手里，信封上的火漆还没有凉透。"
+news = "伦敦塔下的码头上，有个船长替安特卫普一户蕾丝女工垫了房租，信用状上签的是兑换商家女儿的名字。"
+
+[[tracks.chapters.choices]]
+key = "norwich"
+text = "送她们去诺里奇，那边的佛兰德织工正缺人手。"
+next = "done"
+effects = [{ kind = "affinity", person = "lieve", value = 4 }, { kind = "reputation", faction = "netherlands", value = 2 }]
+reply = "你托一条运羊毛的驳船，沿河北上，两天后靠了岸。临下船的时候，蕾丝女工把那张信用状还给你，手指在字上按了一下：“留着，她会认的。”你后来听说，她的大女儿在诺里奇学会了打蕾丝的结。"
+news = "伦敦塔下的码头上，一个船长把一家蕾丝女工送去了诺里奇，那张信用状还留在她们手里。"
+
+[[tracks]]
+key = "npc_lieve_beggars"
+name = "只问价，不问站哪边"
+kind = "request"
+start = "g1_powder"
+auto = false
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "g1_powder"
+title = "只问价，不问站哪边"
+text = "春天的弗利辛恩，城门口的旗换了两回，今天又换了回去。港里的船都挂着没有名字的旗。莉芙坐在码头一只木箱上，膝上摊着账簿，账页边角卷了毛，身边站着一个脚夫，怀里抱着一杆小秤。海上乞丐要火药，阿尔瓦的军需官也要，她替两边开价、收钱、记账，两边都找她，两边都说她不偏。你的船舱里正好有火药。“我不问你站哪边。”她头也不抬，“我只问价——还有，你要我把这一笔记在谁的名下。”"
+at = "flushing"
+speaker = "lieve"
+mood = "tense"
+cast = ["lieve"]
+when = [{ kind = "date", from = [1572, 3, 1] }]
+deadline = [1572, 6, 30]
+objectives = [{ kind = "goods", good = "gunpowder", qty = 10, at = "flushing", text = "带十桶火药到弗利辛恩" }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "beggars"
+text = "卖给海上乞丐。"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "reputation", faction = "netherlands", value = 3 }, { kind = "reputation", faction = "spain", value = -3 }, { kind = "affinity", person = "lieve", value = 3 }]
+reply = "她把钱数给你，在账簿上写了一个“O”。“奥兰治的人，我只记个字母。”她说，“名字写全了，每回都有人来问账，那就不划算了。”她把账页折了一角，压进木箱底下，脚夫正把火药桶滚上船，一声一声敲在石板上。"
+news = "弗利辛恩码头上，安特卫普的银行家姑娘坐在木箱上替人卖火药，只问价，不问卖给谁。"
+
+[[tracks.chapters.choices]]
+key = "spain"
+text = "卖给西班牙人的军需官。"
+next = "done"
+effects = [{ kind = "cash", value = 2200 }, { kind = "reputation", faction = "spain", value = 3 }, { kind = "reputation", faction = "netherlands", value = -5 }, { kind = "affinity", person = "lieve", value = 3 }]
+reply = "军需官的钱成色最好，她对着光验了两遍，又把其中一枚咬了咬。账簿上写的是一个“A”。“阿尔瓦的人付钱痛快。”她说，“痛快的人我记得最清楚，因为他们从不还价。你下回再来，价钱还按这个数，我替你记着。”"
+news = "弗利辛恩的码头上，一船火药换成了西班牙军需官的银子，经手的是个安特卫普来的姑娘。"
+
+[[tracks.chapters.choices]]
+key = "broker"
+text = "交给她去卖，你只留一份利。"
+next = "done"
+effects = [{ kind = "cash", value = 2400 }, { kind = "affinity", person = "lieve", value = 6 }]
+check = { attr = "commerce", base = 20, per = 7 }
+news = "弗利辛恩的码头上，一船火药在两条船之间转了一手，买主都说那个安特卫普姑娘的抽成算得清。"
+reply = "她让两边各加了一次价，你的火药在两条船之间过了一手，卖完把你那一份推过来，数得又快又齐。“你不问卖给了谁？好习惯。”她说，“问了的人，我都得替那人找一条船，那就成了照顾人，不叫买卖了。”"
+fail = { next = "done", effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "lieve", value = 3 }], news = "弗利辛恩码头上，那个安特卫普的银行家姑娘替人卖了十桶火药，买主压了价，她骂了一句没再争。" }
+
+[[tracks]]
+key = "npc_lieve_genoa"
+name = "绿盘的抄本"
+kind = "request"
+start = "m1_mark"
+auto = false
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "m1_mark"
+title = "绿盘的描图"
+text = "伦敦交易所楼上，她的账房墙上钉着一张描图：一只六角的绿盘，旁边写着三个一样的数，数字底下还压着一小片干了的墨。她刚从热那亚回来，据她自己说，祝圣日那天教士会准她进了圣器室，她只带了笔和尺。热那亚人管它叫祖母绿，她不争这个名字，只称重。“热那亚人说它是祖母绿，我称了三遍——我只告诉你它多重。”她把描图翻过来，背面写着重量。你问它的价，她没马上答，先问了一句：“你要它做什么？先说清楚。”"
+at = "london"
+speaker = "lieve"
+mood = "mystic"
+cast = ["lieve"]
+when = [{ kind = "date", from = [1578, 9, 1] }, { kind = "affinity", person = "lieve", ge = 50 }, { kind = "flag", flag = "c13_mark_genoa", value = false }, { kind = "flag", flag = "c13_npc_lieve_mate", value = false }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "按她开的价，买一份抄本。"
+next = "done"
+requires = [{ kind = "cash", ge = 2000 }, { kind = "flag", flag = "c13_mark_genoa", value = false }]
+effects = [{ kind = "cash", value = -2000 }, { kind = "item", item = "emerald_mark_genoa", qty = 1 }, { kind = "flag", flag = "c13_mark_genoa" }]
+hint = "她开的价，你这会儿付不起。"
+reply = "她亲手描了一份，描得比墙上那张还细，描完在角上注了重量，又注了一行小字：不许转卖。她把卷好的抄本交到你手里，手指在纸卷上停了一会儿才松开。“拿去对着星看，图上的数不许改。”她说。"
+
+[[tracks.chapters.choices]]
+key = "trade"
+text = "拿一条亚速尔以西的消息换。"
+next = "done"
+requires = [{ kind = "affinity", person = "lieve", ge = 70 }, { kind = "flag", flag = "c13_mark_genoa", value = false }]
+effects = [{ kind = "item", item = "emerald_mark_genoa", qty = 1 }, { kind = "flag", flag = "c13_mark_genoa" }, { kind = "affinity", person = "lieve", value = 5 }]
+hint = "她还没信你到能拿消息换这张图的地步。"
+reply = "你讲完那片海草与停了的风，她沉默了很久，把墙上那张描图摘下来，卷好递给你。“这张图我不卖。你讲的那片海，算它的价。”她说完，去把账房的窗子关上了，关得很慢。窗外有人在卸一船羊毛，吆喝声一阵阵传进来，她一直没回头。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "不要了。"
+next = "done"
+reply = "她把图钉回墙上，钉子敲得很轻。她又看了一眼那三个一样的数，像是在心里又称了一遍，称完把图的一角慢慢抚平。“要的时候再来，价钱不会比今天高，账也还在这张桌子上。”"
+
+[[tracks]]
+key = "npc_lieve_partner"
+name = "页边的到期日"
+kind = "request"
+start = "p1_ledger"
+auto = false
+cast = ["lieve"]
+
+[[tracks.chapters]]
+key = "p1_ledger"
+title = "页边的到期日"
+text = "安特卫普陷落以后，她在伦敦交易所楼上的保险局有了一张桌子，替船东承保。桌上摊着一本旧账簿，牛皮封面磨得发亮，页边记满了汇票的到期日和一串港口，字是她父亲的。你问她，愿不愿意上你的船做账。她没马上答。“这几年西班牙的船，我一张保单也没签。我站哪边不要紧，他们的票我信不过。”她的手指压在页边一行旧字上，“上你的船，薪水按月付，到期日写清楚——别跟我说‘以后’。”她合上账簿，说她这辈子只在岸上算别人的海，还没算过自己的。"
+at = "london"
+speaker = "lieve"
+mood = "tender"
+cast = ["lieve"]
+when = [{ kind = "date", from = [1586, 1, 1] }]
+deadline = [1590, 10, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "join"
+text = "请她上船做账。"
+next = "done"
+requires = [{ kind = "affinity", person = "lieve", ge = 60 }]
+effects = [{ kind = "join", person = "lieve" }, { kind = "flag", flag = "c13_npc_lieve_mate" }]
+hint = "她把笔搁下，又拿了起来——还不到时候。"
+reply = "她把父亲的账簿装进箱子，又把猫交给楼下的书记照看，猫不肯走，在箱子上趴了一会儿。上船的那天，她先数了一遍舱里的货，数完才看你一眼：“货是齐的。账，从今天算起。”"
+
+[[tracks.chapters.choices]]
+key = "insure"
+text = "只请她替你的船承保这一程。"
+next = "done"
+requires = [{ kind = "cash", ge = 1500 }]
+effects = [{ kind = "cash", value = -1500 }, { kind = "fame", value = 2 }, { kind = "affinity", person = "lieve", value = 3 }]
+hint = "你的钱箱还撑不起这一程的保费。"
+reply = "保单签好，她在承保人一栏的第一行写了自己的名字，字写得很小，一笔也没有含糊。她把保费的收据也开了，抬头写的是你的船名。“这一程，你这条船我信。”她把保单折成一条，塞进你的袖口。"
+
+[[tracks.chapters.choices]]
+key = "drink"
+text = "只跟她喝一杯，聊聊安特卫普。"
+next = "done"
+effects = [{ kind = "affinity", person = "lieve", value = 1 }]
+reply = "她说起交易所门楣上那行字，说着说着就停了，像是那行字离她已经很远。窗外的雾很重，码头上的灯一盏盏亮起来，她看了一会儿，才把杯子推给你：“该你说了。说说你那边的港，哪家的票还能兑。”"
+news = "伦敦交易所楼上保险局那个安特卫普女人，这几年一张西班牙船的保单也没签。"

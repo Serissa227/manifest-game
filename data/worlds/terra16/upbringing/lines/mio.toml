@@ -1,0 +1,435 @@
+# R10-U06K1 / U06C3：澪家的课线（门）。门名（name，≤6 字）由 Claude 写；各档的名字取各档活动自己的名字。
+# 每门：主属性 attr（本领或资质）、旁属性 side、技能 skill、根基 root（资质）、师长 mentor、上课的地点 place。
+# 根基门（attr 是资质的门）只练资质、至多三档，不写 side / skill / root。
+# 档的门槛（本门主属性比开局多多少）由生成器写进 upbringing/act/generated_mio.toml，这里不写 gain。
+# 第四档要师事（gate = "master_test"），并要一门旁门开到第二档（requires 的 tier 从 0 起，tier = 1 即第二档）。
+# 每一档引用的活动只决定失手率、疲劳、心情、事件与地点；收益按规则表 [upbringing.act] 算。第一档的活动 cost = 0 时这一档不收学费。
+# 门表总览与取舍理由见 docs/drafts/u06c3-handoff.md。
+format_version = 1
+
+# ———— 下田（家乡期，1553 年一整年，另有两次返乡）：五门本领，四门根基 ————
+
+[[lines]]
+key = "mio_tide"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_dock"
+name = "潮与操船"
+attr = "seamanship"
+side = "command"
+skill = "tide_reading"
+root = "perception"
+mentor = "ase"
+clever = "side"
+# 第三档原定“实习航行”，那个活动要借实习船整周，不能排进课格（规格勘误），换成跟船值夜。
+tiers = [
+  { activity = "c9_mio_tide_race" },
+  { activity = "lesson_navigation" },
+  { activity = "watch_keeping" },
+  { activity = "u04_unlock_mio_5", gate = "master_test", requires = [{ line = "mio_arms", tier = 1 }] },
+]
+
+[[lines]]
+key = "mio_letters"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_library"
+name = "笔墨与家记"
+attr = "learning"
+side = "numeracy"
+skill = "calligraphy"
+root = "intellect"
+mentor = "mio_mother"
+clever = "side"
+tiers = [
+  { activity = "lesson_calligraphy" },
+  { activity = "c9_mio_temple_sutra" },
+  { activity = "u04_unlock_mio_3" },
+]
+
+[[lines]]
+key = "mio_rites"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_home"
+name = "礼与歌"
+attr = "etiquette"
+side = "eloquence"
+skill = "poetry"
+root = "charm"
+mentor = "mio_mother"
+clever = "side"
+tiers = [
+  { activity = "lesson_etiquette" },
+  { activity = "lesson_music_poetry" },
+  { activity = "u04_unlock_mio_4" },
+]
+
+[[lines]]
+key = "mio_accounts"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_trading_house"
+name = "记账"
+attr = "commerce"
+side = "numeracy"
+skill = "double_entry"
+root = "intellect"
+mentor = "mio_mother"
+clever = "cash"
+tiers = [
+  { activity = "lesson_accounts" },
+  { activity = "c9_mio_toll_ledger" },
+  { activity = "u04_unlock_mio_1" },
+]
+
+# 规格写武艺的根基是膂力，可这条路线上没有练膂力的门；水练、刮船底练的是体魄，就以体魄为根基。
+[[lines]]
+key = "mio_arms"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_garden"
+name = "桨与刀"
+attr = "arms"
+side = "command"
+root = "constitution"
+mentor = "ase"
+clever = "side"
+tiers = [
+  { activity = "c9_mio_oar_staff" },
+  { activity = "u04_unlock_mio_2" },
+  { activity = "command_drill" },
+]
+
+[[lines]]
+key = "mio_water"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_dock"
+name = "凫水"
+attr = "constitution"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_water" },
+  { activity = "swimming_diving" },
+  { activity = "conditioning" },
+]
+
+# 两条改投路线共用的感知根基。第一档原来借潮线的“潮流竞渡练习”，同一阶段两门共用一个活动容易认错门，换成看水色。
+[[lines]]
+key = "mio_home_perception"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_roof"
+name = "辨风色"
+attr = "perception"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_read_water" },
+  { activity = "gathering" },
+  { activity = "night_patrol" },
+]
+
+[[lines]]
+key = "mio_home_intellect"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_classroom"
+name = "碁盘前"
+attr = "intellect"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_go" },
+  { activity = "c9_mio_go_kifu" },
+  { activity = "c9_mio_go_life" },
+]
+
+[[lines]]
+key = "mio_home_charm"
+family = "mio"
+stage = "home"
+academy = ""
+place = "mio_home_shrine"
+name = "神乐"
+attr = "charm"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_kagura" },
+  { activity = "c9_mio_shrine_host" },
+  { activity = "c9_mio_kagura_lead" },
+]
+
+# ———— 京都（宫中女房见习，1554 年正月到结业）：五门本领，四门根基 ————
+# 导师照规格勘误：假名是广桥保子，和歌是广桥国子，礼法是三条西公条；医药、观星是山科言继。
+
+[[lines]]
+key = "mio_kyoto_kana"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_classroom"
+name = "假名与物语"
+attr = "learning"
+side = "eloquence"
+skill = "calligraphy"
+root = "intellect"
+mentor = "hirohashi_yasuko"
+clever = "side"
+tiers = [
+  { activity = "kyoto_court_course_self_study" },
+  { activity = "kyoto_court_course_kana" },
+  { activity = "c9_mio_sutra" },
+  { activity = "c9_mio_hosho", gate = "master_test", requires = [{ line = "mio_kyoto_etiquette", tier = 1 }] },
+]
+
+[[lines]]
+key = "mio_kyoto_poetry"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_roof"
+name = "和歌"
+attr = "eloquence"
+side = "etiquette"
+skill = "poetry"
+root = "perception"
+mentor = "hirohashi_kuniko"
+clever = "side"
+tiers = [
+  { activity = "poetry_circle" },
+  { activity = "kyoto_court_course_poetry" },
+  { activity = "c9_mio_tsukinami" },
+  { activity = "c9_mio_hyakushu", gate = "master_test", requires = [{ line = "mio_kyoto_kana", tier = 1 }] },
+]
+
+[[lines]]
+key = "mio_kyoto_etiquette"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_classroom"
+name = "宫中礼法"
+attr = "etiquette"
+side = "eloquence"
+skill = "court_etiquette"
+root = "charm"
+mentor = "sanjonishi_kineda"
+clever = "side"
+tiers = [
+  { activity = "kyoto_court_course_etiquette" },
+  { activity = "c9_mio_zen_tray" },
+  { activity = "c9_mio_sechie" },
+  { activity = "c9_mio_yusoku", gate = "master_test", requires = [{ line = "mio_kyoto_poetry", tier = 1 }] },
+]
+
+[[lines]]
+key = "mio_kyoto_medicine"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_library"
+name = "医药"
+attr = "medicine"
+side = "learning"
+skill = "herbal_medicine"
+root = "intellect"
+mentor = "yamashina_tokitsugu"
+clever = "cash"
+tiers = [
+  { activity = "kyoto_court_course_medicine" },
+  { activity = "gathering" },
+  { activity = "c9_mio_house_call" },
+]
+
+[[lines]]
+key = "mio_kyoto_stars"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_roof"
+name = "观星"
+attr = "astronomy"
+side = "learning"
+skill = "astral_navigation"
+root = "intellect"
+mentor = "yamashina_tokitsugu"
+clever = "side"
+tiers = [
+  { activity = "stargazing" },
+  { activity = "kyoto_court_course_stars" },
+  { activity = "c9_mio_reki" },
+]
+
+[[lines]]
+key = "mio_kyoto_incense"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_garden"
+name = "香道"
+attr = "perception"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_incense" },
+  { activity = "kyoto_court_course_incense" },
+  { activity = "c9_mio_kumiko" },
+]
+
+[[lines]]
+key = "mio_kyoto_kemari"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_garden"
+name = "蹴鞠"
+attr = "agility"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_kemari" },
+  { activity = "c9_mio_kemari_ring" },
+  { activity = "c9_mio_kemari_asukai" },
+]
+
+[[lines]]
+key = "mio_kyoto_koto"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_dorm"
+name = "筝"
+attr = "charm"
+clever = "cash"
+tiers = [
+  { activity = "kyoto_court_course_koto" },
+  { activity = "c9_mio_koto_ensemble" },
+  { activity = "c9_mio_koto_secret" },
+]
+
+[[lines]]
+key = "mio_kyoto_intellect"
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+place = "kyoto_court_place_dorm"
+name = "碁盘前"
+attr = "intellect"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_go" },
+  { activity = "c9_mio_go_kifu" },
+  { activity = "c9_mio_go_life" },
+]
+
+# ———— 能岛（改投路线：家乡期选了 c9_mio_route_noshima，学院期整段在能岛水路见习处）：三门本领，三门根基 ————
+
+[[lines]]
+key = "mio_noshima_nav"
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+place = "noshima_boat_school_place_classroom"
+name = "岛与潮路"
+attr = "seamanship"
+side = "command"
+skill = "tide_reading"
+root = "perception"
+mentor = "c8_noshima_bosun"
+clever = "side"
+tiers = [
+  { activity = "noshima_boat_school_course_navigation" },
+  { activity = "noshima_boat_school_course_sails" },
+  { activity = "watch_keeping" },
+  { activity = "c9_mio_nobi_strait", gate = "master_test", requires = [{ line = "mio_noshima_yard", tier = 1 }] },
+]
+
+[[lines]]
+key = "mio_noshima_study"
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+place = "noshima_boat_school_place_library"
+name = "背潮表"
+attr = "astronomy"
+side = "numeracy"
+skill = "astral_navigation"
+root = "intellect"
+mentor = "c8_noshima_bosun"
+clever = "side"
+tiers = [
+  { activity = "noshima_boat_school_course_self_study" },
+  { activity = "noshima_boat_school_course_stars" },
+  { activity = "stargazing" },
+  { activity = "c9_mio_tide_table", gate = "master_test", requires = [{ line = "mio_noshima_nav", tier = 1 }] },
+]
+
+[[lines]]
+key = "mio_noshima_yard"
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+place = "noshima_boat_school_place_dock"
+name = "船坞"
+attr = "stewardship"
+side = "might"
+skill = "shipbuilding"
+root = "constitution"
+mentor = "c8_noshima_bosun"
+clever = "cash"
+tiers = [
+  { activity = "noshima_boat_school_course_shipbuilding" },
+  { activity = "c9_mio_caulk" },
+  { activity = "c9_mio_keel" },
+]
+
+[[lines]]
+key = "mio_noshima_dive"
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+place = "noshima_boat_school_place_garden"
+name = "急流凫水"
+attr = "constitution"
+clever = "cash"
+tiers = [
+  { activity = "noshima_boat_school_course_diving" },
+  { activity = "swimming_diving" },
+  { activity = "conditioning" },
+]
+
+[[lines]]
+key = "mio_noshima_lookout"
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+place = "noshima_boat_school_place_roof"
+name = "岬头了望"
+attr = "perception"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_read_water" },
+  { activity = "gathering" },
+  { activity = "night_patrol" },
+]
+
+[[lines]]
+key = "mio_noshima_intellect"
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+place = "noshima_boat_school_place_dorm"
+name = "碁盘前"
+attr = "intellect"
+clever = "cash"
+tiers = [
+  { activity = "c9_mio_go" },
+  { activity = "c9_mio_go_kifu" },
+  { activity = "c9_mio_go_life" },
+]

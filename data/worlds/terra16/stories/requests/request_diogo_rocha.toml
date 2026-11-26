@@ -1,0 +1,117 @@
+# 请托：一门新炮缺的锡（request_diogo_rocha）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：迪奥戈·罗沙（diogo_rocha，1537-01-25 生，男），投奔卡利卡特扎莫林的葡萄牙炮手；cast：cast/story_indian_ocean.toml，kind=story，势力 calicut。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（卸锡验货，交货）、settle（试炮，结账）。没有 stage 章，因此没有 window 与 default；日期与人物存活写在 when 里。
+# 报价：T（当面）。auto=false，玩家在卡利卡特（calicut_port）用“问请托”（ask:request_diogo_rocha）启动；offer 不写 at，目标是在港里找到他。
+#       窗口 1561-01-01 至 1570-06-30（offer 的 when 与 deadline），timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=120，超时走 failed：来信一封、好感 -3、旗标 _late、卡利卡特的一条见闻；settle 是普通章，可以一直等。
+# 依据·史实背景：16 世纪葡萄牙炮手投奔印度诸王的现象（TERRA16-PLUS §14 / §2）；卡利卡特的炮厂与河口炮台；锡从马六甲、北大年经海峡商路运来。
+# 依据·原创：迪奥戈本人、炮厂里拆下的旧钟与旧锅、掺了铅的两担锡、河口的第一炮。
+# 秘密：cast 里的秘密（科钦的旧事）与“良心”的说法一概不写，本轨道不让任何人提他为什么投奔；C7 的库提线（pair_kutti_diogo_rocha）不写。
+# 待核：无。
+# 读的旗标：c13_request_diogo_rocha_asked（本轨道 offer 设的分支旗标，deliver 的变体读它）；不读 C7 旗标；本请托不设主线门禁，没有 gate_main、variant_main。
+# 设的旗标：c13_request_diogo_rocha_accepted（offer 答应两条）、_asked（offer 问为什么，分支旗标，deliver 的变体读它）、_declined（offer 回绝，终局）、_late（deliver 超时，终局）、_done（settle 两条收尾，终局）。
+# 依赖：港口 calicut_port（ports_india.toml，已是现名，无需 B10b 改名）；货物 tin（goods/05_terra_trade.toml，基准价 55）；属性 numeracy（captain.toml）；势力 calicut、portugal；人物 diogo_rocha。
+# 报酬（每份只给一次）：现金 1600（settle 一次）+ 货款 700（deliver 三条分支互斥，只付一次）；好感最多 +15（offer +2、deliver +5、settle +8）；名声 +2；声望 calicut +3、portugal -2；回忆 mem-request_diogo_rocha-settle。没有唯一奖励物品，没有技能奖励。
+# 回忆插画清单：
+#   mem-request_diogo_rocha-settle「河口的第一炮」：河口的炮台上一门黑铁炮冒着白烟，岸边几条渔船上的人站起来往这边看。
+
+[[tracks]]
+key = "request_diogo_rocha"
+name = "一门新炮缺的锡"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["diogo_rocha"]
+
+# 一、报价：炮厂里擦炮的人，要十担锡。
+[[tracks.chapters]]
+key = "offer"
+title = "不用分辩"
+text = "炮厂的棚子底下，迪奥戈·罗沙正拿一块旧布擦一门炮，擦得发亮。炮是刚试过的，炮身还烫手。炉子边堆着拆开的旧钟，钟面上的字被他一个个刮平了。“别碰那门炮，还热着。说葡萄牙话？好——你也是来骂我叛徒的？”扎莫林要一门新炮，铜他从拆下来的旧钟和旧锅里凑够了，锡不够，青铜铸不成。他把布搭在炮身上：“要十担锡。两边的人都叫我叛徒，我懒得分辩。你运不运，不用分辩。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "diogo_rocha", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1561, 1, 1], to = [1570, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1570, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应运十担锡来。"
+next = "deliver"
+reply = "他把擦炮的布扔给你，布上一股炮油味。“锡到了就直接来炮厂，炉子我先生着，别走正门，走河边那条路。铸好了，第一炮你来听。”"
+effects = [{ kind = "affinity", person = "diogo_rocha", value = 2 }, { kind = "flag", flag = "c13_request_diogo_rocha_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问他：为什么替扎莫林铸炮？"
+next = "deliver"
+reply = "他看了你一眼，接着擦炮。擦到炮口，才停下来说：“因为他给我工钱。别的理由，是别人替我编的，你不用记。”他说完又擦起来，擦的还是那一门炮。"
+effects = [{ kind = "affinity", person = "diogo_rocha", value = 2 }, { kind = "flag", flag = "c13_request_diogo_rocha_accepted" }, { kind = "flag", flag = "c13_request_diogo_rocha_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不运。扎莫林的炮，葡萄牙人那边你得罪不起。"
+next = "failed"
+reply = "他点点头，像是早知道你会这么说。他把布叠好搭回炮架上，说：“那就不耽误你。港里的人要是问起，你就说没见着我。”这话他说得很平，没有生气。"
+effects = [{ kind = "flag", flag = "c13_request_diogo_rocha_declined" }]
+
+# 二、交货：十担锡卸进炮厂，他拿铁钎敲，听声音。两担发闷。
+[[tracks.chapters]]
+key = "deliver"
+title = "掺了铅的两担"
+text = "十担锡卸进炮厂，秤是他自己的，秤砣缠着布条。他没让人码齐，自己一块一块拿起来，用铁钎敲，贴着耳朵听。敲到第三块，他停住手，把那块举到你眼前：“声音发闷。”另外两担他也敲了，都发闷，像是掺了铅。这炮一响，先炸的是站在炮位上的人。他骂了一句葡萄牙话，没翻成中文。"
+speaker = "captain"
+mood = "tense"
+at = "calicut_port"
+when = [{ kind = "alive", person = "diogo_rocha", value = true }]
+objectives = [{ kind = "goods", good = "tin", qty = 10, at = "calicut_port", text = "十担锡" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "diogo_rocha", value = -3 }, { kind = "flag", flag = "c13_request_diogo_rocha_late" }, { kind = "letter", person = "diogo_rocha", text = "锡没等到，炮铸了一半，用的是旧锅。不知道响不响。" }], news = "卡利卡特的炮厂等了一季没等到锡，听说扎莫林的新炮铸了一半，改用了旧锅。" }
+news = "卡利卡特的炮厂里卸了十担锡，那个替扎莫林干活的葡萄牙炮手一块一块敲着听声音。"
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_diogo_rocha_asked" }]
+text = "十担锡卸进炮厂，秤砣缠着布条。你问过他为什么替扎莫林铸炮，这会儿他不答，只拿铁钎敲锡：一块，两块，第三块停住了。“声音发闷。”他把那块举到你眼前。另外两担也敲了，都发闷，像是掺了铅。这炮一响，先炸的是站在炮位上的人。他骂了一句葡萄牙话，没翻成中文。"
+
+[[tracks.chapters.choices]]
+key = "replace"
+text = "掺铅的两担不查了，十担一起按价结。"
+next = "settle"
+reply = "他把那两担推到一边，说拿去铸别的，不铸炮。十担照价数给你，一担也没扣，他说这样就不用再为它吵。这两担他拿去铸锅，锅不会炸人。"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "diogo_rocha", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "assay"
+text = "跟他一起把十担都敲一遍，挑出真正掺了铅的。"
+next = "settle"
+check = { attr = "numeracy", base = 20, per = 7 }
+reply = "敲完，掺铅的只有一担半，剩下的都是好锡。他把那一担半单独堆到墙角，说：“你的耳朵比我想的好使。”"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "diogo_rocha", value = 5 }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "diogo_rocha", value = -2 }], news = "卡利卡特炮厂的十担锡挑了一下午，还有一担说不准，那个葡萄牙炮手照好锡的价收下了。" }
+
+# 三、试炮：新炮拉到河口的炮台上放。第一炮响了，河口那边的渔船上有人站起来。
+[[tracks.chapters]]
+key = "settle"
+title = "是好炮"
+text = "新炮铸好了，拉到河口的炮台上试放。迪奥戈让你站在他旁边，不许躲到石墙后头去。炮口对着河心，他先说：“炮口朝哪边，我自己负责。”然后点火。第一炮响得很远，河口那边几条渔船上的人都站了起来，有人把手搭在眼前往这边看。炮台的石板还烫着，他的靴子踩在上头，半天没挪开。炮声过去，他没看你，只看那几条船，说：“你听，是好炮。”"
+speaker = "captain"
+mood = "tense"
+at = "calicut_port"
+when = [{ kind = "alive", person = "diogo_rocha", value = true }]
+news = "卡利卡特河口试了一门新铸的炮，响声传得很远，听说锡是一条外乡船运来的。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "说：是好炮。"
+next = "done"
+reply = "他擦了擦炮口，把工钱给你，说这门炮是你运来的锡铸的。往后谁问起，他就说是一个不分辩的船长，别的不用多讲。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "diogo_rocha", value = 8 }, { kind = "fame", value = 2 }, { kind = "reputation", faction = "calicut", value = 3 }, { kind = "reputation", faction = "portugal", value = -2 }, { kind = "flag", flag = "c13_request_diogo_rocha_done" }, { kind = "memory", memory = "mem-request_diogo_rocha-settle", title = "河口的第一炮" }]
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "不说话，只看着河口。"
+next = "done"
+reply = "他也不说话，看着河口的渔船慢慢坐回去，过了一会儿说：“我也不喜欢听。可它得响。”他付了钱，数得很慢。他把钱放在石头上压着，怕风吹走。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "diogo_rocha", value = 6 }, { kind = "fame", value = 2 }, { kind = "reputation", faction = "calicut", value = 3 }, { kind = "reputation", faction = "portugal", value = -2 }, { kind = "flag", flag = "c13_request_diogo_rocha_done" }]

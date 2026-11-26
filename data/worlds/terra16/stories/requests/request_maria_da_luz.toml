@@ -1,0 +1,163 @@
+# 请托：雨季仓里的帮工（request_maria_da_luz）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：玛丽亚·达·卢斯（maria_da_luz，1529-05-12 生，女），果阿的寡妇女商人，仓库在果阿码头。cast：cast/story_indian_ocean.toml。
+# 类型：押运／带人（escort）。三章：offer（报价）、passage（登船，码头上的黑衣人拦下来问人数）、arrive（回果阿，玛丽亚问一路上他说了什么）。
+#       offer 两条接法（不问了答应载；陪她谈完胡椒价再答应）加一条回绝。
+#       passage 三条路：说是船上雇的脚夫（eloquence 一般 20/7）、塞钱请他记一个“未见”（现金 ≥ 300）、趁潮马上开船（seamanship 一般 20/7）。
+#       两个检定失败都照样往下走，只扣好感，不改时间线。
+#       brief 写 arrive 的 at 为 cochin_port；改为 goa：玛丽亚站在果阿仓库门口问话，科钦的交接只在正文里回叙，且用 wait 30 天把章节推到回港之后。
+# 报价：T（当面）。人物按日程在果阿（goa）；auto=false，玩家用“问请托”（ask:request_maria_da_luz）启动；offer 不写 at，objectives 为“在港里找到她”。
+#       窗口 1562-01-01 至 1590-06-30；offer 写 deadline=1590-06-30，timeout 直接 failed，不写见闻。
+# 进行中：arrive 在 passage 之后等 30 天（wait）才出现，之后 60 天内回果阿有效（deadline_days=60）；超时走 failed，来信一封（好感 -5，旗标 _late）。
+# 依据·史实背景：1560 年果阿设宗教裁判所（真实年代），码头上有书记与熟人（familiares）盘问往来的人。正文只写书记与黑衣人的盘问，不写审讯与刑罚。
+# 依据·原创：玛丽亚本人、她的仓库与仓单、那袋胡椒、码头上的黑衣人、帮工这个人。
+# 秘密：cast 没写可用的秘密项，但人设里有一件事永远不写：帮工是谁、信什么、仓库夹层里的事一字不提。问急了，她只谈货价（arrive 的 ask_again 只问到“帮工”两字）。
+#       不设、不读 c7_ 旗标；不写玛尔塔与夹层。C7 线 pair_marta_lobo_maria_da_luz 的年份与港口避开：本轨道从 1562 年起，不在 1559—1561 的 C7 章节里。
+# 读写的旗标：
+#       写 c13_request_maria_da_luz_accepted（offer 接受，price_talk 成败都设）、
+#           c13_request_maria_da_luz_declined（回绝，直接 failed）、
+#           c13_request_maria_da_luz_done（arrive 的两个回答都设，终局）、
+#           c13_request_maria_da_luz_late（arrive 超时，终局）。
+#       每条路径只设一面终局旗标。本文件不读任何旗标，不设分支旗标。
+# 依赖：港口 goa；科钦（cochin_port）只在正文里提到，不作 at；人物 maria_da_luz；属性 commerce / eloquence / seamanship（captain 表定下来后统一换算）。
+#       无主线门禁：玛丽亚不在 TERRA16 §12 的主线人物里，不写 c13_main_<主角>。不依赖 B10b 改名。
+# 回忆插画：mem-request_maria_da_luz-arrive：果阿仓库门口，雨停了。一个脚夫回头看了你一眼，手里攥着一角仓单。
+# 隐秘请托：passage 与 arrive 不写见闻；offer 的超时也不写见闻（没人知道这件事没成）。不加名声。
+
+[[tracks]]
+key = "request_maria_da_luz"
+name = "雨季仓里的帮工"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["maria_da_luz"]
+
+# 一、报价：玛丽亚把你拉到胡椒袋后面，先说她的招呼语，再说人的事。
+[[tracks.chapters]]
+key = "offer"
+title = "仓单上没有的人"
+text = "玛丽亚的仓库里，雨水从檐沟往下灌。她把你拉到一袋胡椒后面，先说了一句：“先进来，雨要下大了。货明天再点，今晚谁也别在码头上淋着。”仓单上记着八个脚夫，屋里住的人却多出几张生面孔。其中一个帮工，被裁判所的书记叫去问了两回。再问第三回，人就回不来了。她要你把他送到科钦，话说得很轻：“走之前，我只告诉你他是帮工。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1562, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "maria_da_luz", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "不问了，答应载他去科钦。"
+next = "passage"
+reply = "她往你手里塞了一个小包袱，里面是帮工的工钱，还有一件洗净的旧衣裳。“到了科钦，码头上有人收胡椒。你把人交给他，就完了。”"
+effects = [
+  { kind = "affinity", person = "maria_da_luz", value = 2 },
+  { kind = "flag", flag = "c13_request_maria_da_luz_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "price_talk"
+text = "陪她把胡椒价谈完，再答应。"
+next = "passage"
+check = { attr = "commerce", base = 35, per = 6 }
+fail = { next = "passage", effects = [{ kind = "affinity", person = "maria_da_luz", value = -2 }, { kind = "flag", flag = "c13_request_maria_da_luz_accepted" }] }
+reply = "你陪她把胡椒价一条一条摊开来对，她算得比你快。对到一半，她合上账本，说：“懂规矩的人不问规矩外面的事。”"
+effects = [
+  { kind = "affinity", person = "maria_da_luz", value = 3 },
+  { kind = "flag", flag = "c13_request_maria_da_luz_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "盯上这种事的人，你不载。"
+next = "failed"
+reply = "她点点头，没有生气，把仓门拉上一半。“那今年的胡椒，你也别在我这儿买了。”"
+effects = [{ kind = "flag", flag = "c13_request_maria_da_luz_declined" }]
+
+# 二、登船：船还没解缆，黑衣人站在跳板边上，问船上一共几个人。
+[[tracks.chapters]]
+key = "passage"
+title = "一共几个人"
+text = "天没亮，帮工扛着一袋胡椒上了你的船，肩上的麻布垫被汗浸得发黑，跟别的脚夫没两样。船还没解缆，码头上走来一个穿黑衣的人，站在跳板边上不肯挪步。他的目光从跳板滑到舱口，把船上的人一个一个看过去，看得很慢。他说裁判所的书记有话要问，又问你船上一共几个人。"
+speaker = "captain"
+mood = "tense"
+at = "goa"
+when = [{ kind = "alive", person = "maria_da_luz", value = true }]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "说他是你船上雇的脚夫，船要赶潮，回来再问。"
+next = "arrive"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "maria_da_luz", value = -2 }] }
+reply = "你说得又快又硬，像真有个脚夫在船上等潮水。黑衣人没接你的话，目光落在帮工肩上的胡椒袋上，停了一停。"
+effects = [{ kind = "affinity", person = "maria_da_luz", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "塞钱给黑衣人，请他记一个“未见”。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "钱袋里的银子不够，塞不出那一个“未见”。"
+reply = "黑衣人把钱掂了一下，在本子上写了两个字，合上本子，转身走回码头的阴影里。他没再问你船上是几个人。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "maria_da_luz", value = 3 },
+]
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "不答话，趁潮马上开船。"
+next = "arrive"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "maria_da_luz", value = -2 }] }
+reply = "船离了码头，潮水正往外走，桨一下一下落进水里。岸上的黑衣人站着，没有追，也没有喊。"
+effects = [{ kind = "affinity", person = "maria_da_luz", value = 3 }]
+
+# 三、回港：一个月后，玛丽亚在仓库门口问你一路上他说了什么。
+[[tracks.chapters]]
+key = "arrive"
+title = "他一路上说了什么"
+text = "科钦的交接已经办完：收胡椒的人认出了玛丽亚的包袱，把帮工领走了。帮工在码头上回头看了你一眼，什么也没说，手里还攥着一角仓单。一个月后，你回到果阿。玛丽亚站在仓库门口，雨停了，檐沟里还在滴水，账房的窗里还亮着灯。这一个月里，她派人去科钦问过三次。她开口问的第一句是：“他一路上说了什么？”"
+speaker = "captain"
+mood = "tender"
+at = "goa"
+when = [
+  { kind = "alive", person = "maria_da_luz", value = true },
+  { kind = "wait", days = 30 },
+]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "maria_da_luz", value = -5 },
+  { kind = "flag", flag = "c13_request_maria_da_luz_late" },
+  { kind = "letter", person = "maria_da_luz", text = "帮工搭了一条运椰子的船走了。今年的胡椒价不错，你要几袋？" },
+]
+
+[[tracks.chapters.choices]]
+key = "nothing"
+text = "说：他一路上什么也没说。"
+next = "done"
+reply = "她点点头，那是她要听的话。她付了船钱，又把今年最好的一袋胡椒的价钱让了一成。“这一成，算我欠你的。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "maria_da_luz", value = 8 },
+  { kind = "flag", flag = "c13_request_maria_da_luz_done" },
+  { kind = "memory", memory = "mem-request_maria_da_luz-arrive", title = "回头看了一眼的帮工" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_again"
+text = "说他什么也没说，又问她：他到底是谁？"
+next = "done"
+reply = "她看了你很久，才说：“帮工。”然后问你今年的胡椒要几袋。钱她照付了，只是没让那一成。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "maria_da_luz", value = 4 },
+  { kind = "flag", flag = "c13_request_maria_da_luz_done" },
+]

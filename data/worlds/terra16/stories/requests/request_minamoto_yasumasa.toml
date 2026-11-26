@@ -1,0 +1,218 @@
+# 请托：百年前的海界（request_minamoto_yasumasa）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude 执笔，仅中文。
+# 人物：源康政 minamoto_yasumasa（生年不详，占位 0-1-1；男；中村“政所”的诸大夫，用奉书办理土佐一条家的政务；cast/historical_07_japan.toml）。
+# 类型：说服某人（persuade）。brief 的三章：offer 退回三次的诉状（下田）→ persuade 清水的网元（土佐清水）→ result 格式合了（下田）。
+#   result 按 persuade 的结果分成四个同名起头的章节，由 next 直接路由（不在同一轨道里用 requires 读本轨道另一条路设的旗标）：
+#     result（讲赢：旧界照打到明年）、result_stone（看界石）、result_newstone（出钱立新石）、result_refused（讲输）。
+#   每章各两个选项：照实写清 / 只报个大概（refused 那章是照实写 / 不答了），回复与效果各不相同。
+# 报价：L（遗事式的代理人报价）。1557 年以后源康政没有日程，本人不出场，只有抄本上的批语与中村送来的回文；出面的是下田政所分署的年轻书役（不起名，不进 cast）。
+#   auto=true；offer 写 at=shimoda_tosa、family=c13_offer_shimoda_tosa、冷却 20 天；when：1557-03-01 起、玩家满 17 岁；deadline=1568-06-30，timeout 直接 failed，不写见闻。
+#   不写 alive 条件（人物 1557 年后无日程，按 brief）。
+# 进行中：persuade 期限 120 天，超时 failed、设 _late，来一封源康政的短信（≤120 字）；四个 result 章各 120 天，超时 failed、设 _late，见闻交代下田的政所分署后来怎样。
+# 依据：
+#   史实背景：土佐一条家的政所以奉书裁决诉讼、发安堵状；中世渔村之间为海界打官司极常见（docs/research/terra16/P_eastasia_1540.md 与研究笔记）；
+#             下田是四万十川口、中村一条家的外港；清水在足摺岬下，加久见一族的船队名义上奉一条家为主。
+#   原创：百年前那份裁决书与刻字的礁石（界石）、礁背阴面的箭头、前年的大风、浅滩上的新石、三份退回的诉状、回文里的三问（日期、在场的人、谁按的印）。
+#   正文只写人物与物件，不写出处。
+# 报酬：身份档 2 的低风险档，现金至多 1600（只在 result / result_stone 的照实写）；newstone 的照实写付 1100（立石垫付的 200 之外再付 900），只报大概付 800；讲输的那条路 0。
+#   好感：接下 +2；persuade 讲赢或看界石 +3；最好的结局 +8（合计 +13），newstone 照实写 +4；只报大概 −2；讲输照实写 −2，不答 −3。
+#   声望 ichijo +2、名声 +3（只在最好的结局）；无唯一奖励物品；回忆一张（只在看界石那条路）。
+# 招牌话：“纸上写的是哪块礁，就是哪块礁。”批在抄本边上，只在 offer 正文里出现（澪的变体与原文二选一显示，玩家只读到一次）。“格式不合”是他退回诉状的批语，不算招牌话。
+# 读的旗标：c13_main_mio（offer 变体，玩家是澪时书役认出一条家的姬君；由澪的主线设，尚未写）。不读、不设任何 c7_ 旗标。
+# 设的旗标：c13_request_minamoto_yasumasa_accepted（offer 接下）；分支三面：_agreed（讲赢）、_stone（看界石）、_newstone（立新石）；
+#   终局一面：_declined（offer 回绝）/ _done / _partial / _failed / _late。
+#   brief 里讲输的那面 _refused 没有设：讲输直接路由到 result_refused，终局记 _failed，分支旗标保持三面以内。
+# 秘密：乡里关于他身世的传闻，正文与见闻一律不写。
+# 网元：不起名；只有独眼、屋檐下晒鲣鱼这两样特征。
+# 依赖：港口 shimoda_tosa、shimizu_tosa（ports_east_asia.toml）；技能 tide_reading（skills.toml）；势力 ichijo（factions/10_japan.toml）；属性 eloquence。无 B10b 改名依赖。
+# 回忆插画清单：
+#   mem-request_minamoto_yasumasa-result「落潮时露出来的界石」：大潮落底，两条渔船并排泊在礁边，礁背阴面露出刻字与箭头，独眼的老人弯腰刮藤壶。
+
+[[tracks]]
+key = "request_minamoto_yasumasa"
+name = "百年前的海界"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["minamoto_yasumasa"]
+
+# 一、报价：下田的政所分署，书役递上百年前裁决书的抄本与三份退回的诉状。
+[[tracks.chapters]]
+key = "offer"
+title = "退回三次的诉状"
+text = "下田的政所分署只有一间临河的屋子，门口晾着几张刚刷过浆的纸。年轻的书役把我让进去，先捧出一册抄本：百年前一条家的裁决书，写明下田渔户与清水渔户的海界，以海上一块刻了字的礁石为准。今年清水的人不认这块礁了。抄本边上有一行朱笔批语，字小而硬：“纸上写的是哪块礁，就是哪块礁。”书役又从匣底抽出三份诉状，每份封皮上都是同一个朱印、同四个字：格式不合。“源大夫在中村，只看纸。”他压低了声音，“下田的人去清水，话没说完就要动手。得有个外人去，跟那边的网元讲讲道理。”"
+at = "shimoda_tosa"
+mood = "cheerful"
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "age", ge = 17 }]
+deadline = [1568, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_shimoda_tosa"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "mio"
+when = [{ kind = "flag", flag = "c13_main_mio" }]
+text = "下田的政所分署只有一间临河的屋子，门口晾着几张刚刷过浆的纸。年轻的书役抬头看见我，笔掉在案上：“姬、姬君——”他手忙脚乱地行了礼，好半天才想起正事，捧出一册抄本：百年前一条家的裁决书，写明下田渔户与清水渔户的海界，以海上一块刻了字的礁石为准。今年清水的人不认了。抄本边上有一行朱笔批语，字小而硬：“纸上写的是哪块礁，就是哪块礁。”匣底还压着三份诉状，封皮上同一个朱印、同四个字：格式不合。“源大夫只看纸。”他说话还有点结巴，“下田的人去清水，话没说完就要动手。姬君若、若肯去一趟，那边的网元总得听两句。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下抄本，去清水找那位网元。"
+next = "persuade"
+reply = "书役找来一张油纸，把抄本包了三层，拿麻绳扎紧。“原本在中村，抄本丢了还能再抄，别弄湿了就行。”他送我到门口，又想起一件事：“到了清水，问屋檐下晒鲣鱼最多的那一家。”"
+effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_accepted" }, { kind = "affinity", person = "minamoto_yasumasa", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "两个渔村的官司，我不掺和。"
+next = "failed"
+reply = "书役没再多说，把抄本收回匣里，压在那三份诉状上面。“那就再写一份。”他铺开新纸，蘸了墨，写下一行又停住，抬头问我今天是几月几日——中村要的日期，差一天都不行。"
+effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_declined" }]
+
+# 二、清水的网元：独眼的老人说礁前年挪了位。三条路：讲裁决书（检定）、等大潮看界石（技能）、出钱立新石。
+[[tracks.chapters]]
+key = "persuade"
+title = "清水的网元"
+text = "清水的网元住在港口高处的一间屋，屋檐下晒着一排剖开的鲣鱼，苍蝇绕着打转。我解开油纸，把抄本摊在他面前。他只剩一只眼睛，看字看得很慢，看完了，拿指节敲敲窗框，指着外头的海：“那块礁，前年一场大风过后就挪了位。我们的船在那边下网下了两年，鱼是从那边来的。”他把抄本往我这边推了推，“海认不得纸，渔夫认得鱼。”"
+speaker = "captain"
+mood = "tense"
+at = "shimizu_tosa"
+objectives = [{ kind = "at", at = "shimizu_tosa", text = "去清水找网元" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_late" }, { kind = "letter", person = "minamoto_yasumasa", text = "下田、清水海界一事，期满未得回报。政所另行裁断。抄本一册，请交还下田分署书役。源康政。" }] }
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "按裁决书一条一条跟他讲。"
+next = "result"
+check = { attr = "eloquence", base = 5, per = 8 }
+fail = { next = "result_refused", news = "土佐清水的网元把下田那边请来的外人连同一册抄本请出了门，说替人来吵架，丢的是两个村子的脸。" }
+reply = "我从裁决的年月念起：当年谁递的诉状，谁在场，界线从哪道岬角量到哪块礁。网元一声不吭，那只眼睛盯着我，屋外晒鲣鱼的竹竿被风吹得咯吱响。念到第三条，他抬起手，让我停下。"
+effects = [{ kind = "affinity", person = "minamoto_yasumasa", value = 3 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_agreed" }]
+news = "土佐清水的网元和下田的渔户为海上一块礁吵了一个夏天，听说如今说定了，旧界先照着打，明年再议。"
+
+[[tracks.chapters.choices]]
+key = "stone"
+text = "约他等大潮退到底，两条船一起去看界石。"
+next = "result_stone"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "这片海的大潮几时落到底，你算不准。"
+reply = "我照月龄推了大潮的日子，算准落底的时辰，天没亮就和网元的船并排出了港。潮退到最低，那块礁露出半截，背阴的一面刻着字和一道箭头，爬满了藤壶。网元叫人刮净藤壶，箭头指的方向，和抄本上画的一模一样。他用那只眼睛看了很久，朝海里啐了一口：“前年那场风，吹花的是我的眼。”"
+effects = [{ kind = "affinity", person = "minamoto_yasumasa", value = 3 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_stone" }]
+news = "土佐清水的网元趁大潮落底出海，同下田来的一条船并排泊在一块礁边上，回港以后就不再提挪礁的事了。"
+
+[[tracks.chapters.choices]]
+key = "stake"
+text = "出钱请两个村子一起立一块新界石。"
+next = "result_newstone"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋里凑不出凿一块界石的钱。"
+reply = "网元掂了掂钱袋，没推辞。“新石头要两边的人一起抬，谁也别说是谁的。”他叫来石匠，说定在旧礁边的浅滩上立石，刻什么字，等下田的人来了一起商量。“抬完喝一顿，”他说，“鲣鱼我出。”"
+effects = [{ kind = "cash", value = -200 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_newstone" }]
+news = "土佐清水的石匠在凿一块新界石，听说是网元收了笔钱，要和下田的渔户一起抬到浅滩上去。"
+
+# 三之一、讲赢的那条路：书役记下“旧界照打，明年再议”，中村回文三问。
+[[tracks.chapters]]
+key = "result"
+title = "格式合了"
+text = "回到下田，书役把我带回来的话记下：网元答应旧界先照着打，到明年再议。他誊清了三遍，才封好送去中村。半个月后，中村的回文到了。书役当着我的面拆开，纸上只有三行：“何日。何人在场。何人押印。”他把回文翻过来看了看，背面什么也没写。“大夫就问这三件。”他把笔递到我面前，又收回去，自己握住，“您说，我写。”"
+mood = "cheerful"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "回下田，把网元答应的话带给书役" }, { kind = "wait", days = 15, text = "等中村的回文" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_late" }], news = "下田的政所分署说，清水那边的海界口头上定了，去回话的人却一直没再露面，中村那份诉状还压在匣底。" }
+
+[[tracks.chapters.choices]]
+key = "exact"
+text = "照实写：哪天、屋里有谁、指印按在哪里。"
+next = "done"
+reply = "我从那天说起：几月几日进的清水港，网元屋里还坐着两个补网的伙计，指印按在抄本背面第三条底下，是他左手的拇指。书役写一句，念一句，誊清了送走。又过了半个月，回文来了，最后一行只有三个字：“格式合。”书役捧着那张纸，半天没放下。“这三个字，”他说，“我等了三年。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "minamoto_yasumasa", value = 8 }, { kind = "reputation", faction = "ichijo", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_done" }]
+news = "下田的政所分署说，中村终于收下了下田与清水海界的那份回话，老网元在抄本背面按的指印也一并存了档。"
+
+[[tracks.chapters.choices]]
+key = "skip"
+text = "只报“两个村子说定了”，细处不必啰嗦。"
+next = "done"
+reply = "书役照我说的写了一行，送去中村。回文退回来的时候，封皮上还是那个朱印、那四个字：格式不合。书役苦笑着把它压进匣底，和前三份摞在一起。“清水那边不吵了，”他说，“中村这边，还得接着写。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "minamoto_yasumasa", value = -2 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_partial" }]
+news = "下田的渔户说清水的海界已经说定了，可中村又把下田政所分署的回话退了回来，封皮上照旧是“格式不合”。"
+
+# 三之二、看界石的那条路：书役写“礁未移”，中村照样三问；照实写给回忆。
+[[tracks.chapters]]
+key = "result_stone"
+title = "礁未移"
+text = "在下田的分署里，我把落潮那天看见的说给书役听：礁背阴的一面刻着字，箭头指的方向和抄本上的一样。书役听得直搓手，让我在一张废纸上把那道箭头画出来，画歪了一笔，他又找来一张。当晚他就写好送去中村，开头三个字是“礁未移”，写得比平常大一圈。过了十几天，脚夫从中村带回一张纸，上头只有三行：“何日。何人在场。何人押印。”书役念完，抬头看我：“刻字的事，大夫一句也没问。”"
+mood = "cheerful"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "回下田，把界石的事讲给书役" }, { kind = "wait", days = 15, text = "等中村回信" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_late" }], news = "下田的书役逢人就说清水外海那块礁没挪过，可到底是哪天、谁看见的，他说不上来，中村也就没再回信。" }
+
+[[tracks.chapters.choices]]
+key = "exact"
+text = "照实写：大潮那天的日子、两条船上的人、谁按的印。"
+next = "done"
+reply = "我报了那天的月龄与落底的时辰，两条船上各有几个人，谁的手扶着那块礁。礁石不会按印，按印的是网元：回港以后，他在抄本上写着界石的那一行旁边按了拇指。书役一条一条写清，又附上我画的那道箭头。回文来时，最后一行是：“格式合。”书役没说话，熬了一小碗米浆，把我画的那道箭头粘进抄本的末页，四个角抹得平平整整。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "minamoto_yasumasa", value = 8 }, { kind = "reputation", faction = "ichijo", value = 2 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_minamoto_yasumasa-result", title = "落潮时露出来的界石" }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_done" }]
+news = "下田的政所分署说，清水外海那块界礁上的箭头画进了抄本，中村收下了，这回连日子和按印的人都写得清清楚楚。"
+
+[[tracks.chapters.choices]]
+key = "skip"
+text = "只报“界石找到了”，日子和人就不写了。"
+next = "done"
+reply = "书役有点舍不得，还是照我说的只写了一句。没几天回文就退了回来，朱印底下照旧是“格式不合”。他叹了口气，把回文和我画的那道箭头夹在一起，塞回匣里。“石头倒是找着了，”他说，“纸上还没有它。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "minamoto_yasumasa", value = -2 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_partial" }]
+news = "清水外海那块界礁露出过一回水面，下田的渔户都知道了，可中村还是把政所分署的回话退了回来。"
+
+# 三之三、立新石的那条路：两村抬石喝酒，回文问印按在哪里。
+[[tracks.chapters]]
+key = "result_newstone"
+title = "浅滩上的新石"
+text = "下田分署的书役听我讲完浅滩上的新石——两个村子的人喊着号子一起抬上去，石匠在正面刻了两个村名，抬完在清水喝了一顿，网元还真出了鲣鱼——笑着记下，当天就封好交给去中村的脚夫。半个月后，回文来了，三行字一行比一行短：“何日。何人在场。何人押印。”书役把回文摊在案上，压上砚台，用指头点着第三行：“新石头是抬上去的，印按在哪儿？”"
+mood = "cheerful"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "回下田，说说浅滩上的新石" }, { kind = "wait", days = 15, text = "等中村的回话" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_late" }], news = "土佐清水的浅滩上立起了一块新界石，两个村子都认，可下田的政所分署一直没等到人来回话，中村那边也没有下文。" }
+
+[[tracks.chapters.choices]]
+key = "exact"
+text = "照实写：哪天立的石、谁出的钱、两边谁按了印。"
+next = "done"
+reply = "我把立石那天说清：日子，两边各来了几个人，钱是我垫的，印是两个村子的网元在石匠的账上按的。书役写好送走。回文来时，倒数第二行是“格式合”，最后一行是：“旧礁为界，新石不载。”书役看了半天，说中村认的是两个村子说定了；浅滩上那块新石头，在中村的纸上只算一块石头。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "minamoto_yasumasa", value = 4 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_partial" }]
+news = "土佐清水浅滩上的新界石，两个村子一起抬上去的，中村的政所也认了这桩说和，只是界线还照旧礁算。"
+
+[[tracks.chapters.choices]]
+key = "skip"
+text = "只报“新界石立好了”，钱和人就不提了。"
+next = "done"
+reply = "书役照写了一句送去。回文退回来，朱印下面是“格式不合”，旁边还多了一行小字：“石在何处，高几尺，何人所立。”书役把它收进匣里，望着窗外的河口：“大夫连石头有几尺高都要。您下回去清水，带根绳子量一量。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "minamoto_yasumasa", value = -2 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_partial" }]
+news = "土佐清水的浅滩上多了一块新界石，下田与清水的船都绕着它下网，中村却又把下田的回话退了一回。"
+
+# 三之四、讲输的那条路：网元把抄本推了回来，回文的第三问没法答。
+[[tracks.chapters]]
+key = "result_refused"
+title = "推回来的抄本"
+text = "从清水回来，我把那边的事说给书役听——网元把抄本推了回来，说下田的人请个外人来吵架，丢脸——他没多说什么，只把那句话原样记下。他誊的时候停过两回笔，像是想把“丢脸”两个字换得好听些，最后还是照写，封好送去中村。半个月后，中村的回文送到，问的是三件事：“何日。何人在场。何人押印。”书役把笔搁下：“人家没按印，这第三条怎么写？”"
+mood = "sad"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "回下田，把清水的回绝告诉书役" }, { kind = "wait", days = 15, text = "等中村来文" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_minamoto_yasumasa_late" }], news = "下田的政所分署等一个去过清水的人回来答话，等过了一季没等到，书役只好又写了一份诉状送去中村。" }
+
+[[tracks.chapters.choices]]
+key = "exact"
+text = "照实写：哪天被请出门，在场几人，没人按印。"
+next = "failed"
+reply = "我照实说，书役照实写。第三条底下，他只写了一个“无”字。回文来得比哪一回都快，最后一行是：“格式合。所诉不成，候明年再审。”书役看着那行字，说这是源大夫头一回准了他的格式，偏偏准在这一份上。"
+effects = [{ kind = "affinity", person = "minamoto_yasumasa", value = -2 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_failed" }]
+news = "下田与清水的海界官司，中村的政所批了“所诉不成”，要等明年再审，清水的船照旧越过那块礁下网。"
+
+[[tracks.chapters.choices]]
+key = "drop"
+text = "这份回文不答了，把抄本交还书役。"
+next = "failed"
+reply = "书役接过油纸包，解开看了一眼，抄本还是干的。“没弄湿就好。”他把它放回匣里，和三份退回的诉状摞在一起。后来我听说，中村又发下一张新的诉状式样，让下田的人从头写起。"
+effects = [{ kind = "affinity", person = "minamoto_yasumasa", value = -3 }, { kind = "flag", flag = "c13_request_minamoto_yasumasa_failed" }]
+news = "下田的政所分署又在照中村发下的新式样重写那份海界诉状，听说这已经是第四份了。"

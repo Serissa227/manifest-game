@@ -1,0 +1,191 @@
+# 请托：三年的咖啡钱（request_leyla_fincan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：莱拉·芬詹（leyla_fincan，1540-04-19 生，女），金角湾兵工厂门口咖啡摊家的女儿，替船匠把口述的订单写成字；势力 ottoman，身份档 1。cast：cast/classmates_custom_istanbul_shipyard.toml。
+# 类型：说服某人（persuade）。五章：offer（报价）、persuade（书记们的房间）、result（书记认账，她写自己的名字）、result_mother（她当面说出以后的收尾）、result_partial（只讨回一半）；终点 done / failed。
+#   说明：简报写的是三章。收尾拆成 result / result_mother / result_partial 三章，是因为“母亲的签名”这一面的旗标由 confess 在本轨道里设，按规则改由 next 分流，不用 requires 门禁；对账失败的 result_partial 同理。
+# 报价：T（当面）。auto=false，玩家在兵工厂门口“问请托”（ask:request_leyla_fincan）启动；offer 不写 at，目标是在港里找到她。
+#   窗口 1575-01-01 至 1590-06-30，期限到 1590-06-30，超时 next=failed，不写见闻。玩家满 17 岁，她满 18 岁。
+#   offer 与 persuade 不写 window／default（它们和 deadline／timeout 同日或更早，审计报“默认分支被超时分支覆盖”）；日期范围写在 when 里，期限写在 deadline／deadline_days 里。
+# 进行中：persuade 在 istanbul，期限 60 天；超时走 failed，来信一封，好感 -3，旗标 _late；超时的见闻只在到过伊斯坦布尔的人那里传开。
+# 依据·史实背景：1554 年伊斯坦布尔开出头几家咖啡馆，此后在码头、兵工厂一带兴起（正文只写咖啡摊与书记，不写禁令）。
+# 依据·原创：莱拉、她家的咖啡摊、四个书记、签名的事、来信。
+# 秘密：母亲不识字，签名是莱拉替她练的。只在 persuade 的 confess 选项（情谊 ≥ 30）里由莱拉自己说出；书记只说“签名太整齐”，不替她说破。见闻与来信永远不写这一件。
+# 读的旗标：bond_leyla_fincan 的 C 级（offer 的 v1_bond，只读）；c7_tie_new_marietta_filo_leyla_fincan_together（offer 的 v2_lamp，只读，只写隔壁一盏灯，不提人）。不设任何 c7_ 旗标，不写玛丽埃塔与灯坊。
+# 设的旗标：c13_request_leyla_fincan_accepted（offer 两种接法）、_declined（回绝）、_counted（offer 对账，分支）、_mother（confess，分支）、_half（对账检定失败，分支）、_late（超时）、_done（完结）、_partial（只讨回一半的完结）。
+# 报酬：现金最多 900（只讨回一半 500）；好感最多 +13；名声 +1（只在最好的结局）；回忆 mem-request_leyla_fincan-result；无物品。
+# 依赖：港口 istanbul；技能 negotiation（skills.toml）；属性 eloquence（captain.toml）；cast 日程 1554 年起在 istanbul。不依赖 c13_main_ 旗标（她不在主线里）。
+# 回忆插画清单：
+#   mem-request_leyla_fincan-result「钉在木柱上的收据」：咖啡摊的木柱上钉着一张新收据，墨还没干透，收款一栏是一个女人自己的名字，旁边一杯咖啡冒着热气。
+
+[[tracks]]
+key = "request_leyla_fincan"
+name = "三年的咖啡钱"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["leyla_fincan"]
+
+# 一、一摞收据：兵工厂门口的咖啡摊，她把收据拍在桌上，说书记们赖账，也说她自己去讨没用。
+[[tracks.chapters]]
+key = "offer"
+title = "一摞收据"
+text = "莱拉把一摞收据拍在桌上，最上面那张的边已经磨得起了毛。兵工厂的四个书记喝了她家三年的咖啡，一个铜子没付。她去讨，他们说收据是她自己伪造的，还当着船匠的面笑她。“每天两杯，三年。”她把收据一张张翻开给你看，“字是我写的，名字是我娘的。他们说我编的，我编什么？”她停了停，又把最上面那张压平，“我自己去，他们只会笑一个卖咖啡的女人。你去，他们得把话说完。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "leyla_fincan", text = "在兵工厂门口的咖啡摊找到她" }]
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "leyla_fincan", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "leyla_fincan", level = "C" }]
+text = "莱拉把一摞收据拍在桌上，最上面那张的边已经磨得起了毛。她先抽出一张给你看，付款人那一栏写的是你的名字。“你这杯也欠着，先替我讨别人的。”她说，又把其余的摊开，“兵工厂的四个书记喝了我家三年的咖啡，一个铜子没付。他们说收据是我自己伪造的，还当着船匠的面笑我。”她停了停，“我自己去，他们只会笑一个卖咖啡的女人。你去，他们得把话说完。”"
+
+[[tracks.chapters.variants]]
+key = "v2_lamp"
+when = [{ kind = "flag", flag = "c7_tie_new_marietta_filo_leyla_fincan_together" }]
+text = "莱拉把一摞收据拍在桌上，最上面那张的边已经磨得起了毛。隔壁那盏灯亮到很晚，窗缝里漏出一道白光。兵工厂的四个书记喝了她家三年的咖啡，一个铜子没付。她去讨，他们说收据是她自己伪造的。“字是我写的，名字是我娘的。”她把收据一张张翻开，“我自己去，他们只会笑一个卖咖啡的女人。你去，他们得把话说完。”"
+
+[[tracks.chapters.choices]]
+key = "go_clerks"
+text = "接下，替她去书记那里讨个说法。"
+next = "persuade"
+reply = "她把收据按日子排好，用一根麻绳捆成一摞递给你，捆得像一份要送去官署的公文。“他们问哪一张，你就照日子念。念错一个日子，他们就会说你也是来编的。”"
+effects = [{ kind = "affinity", person = "leyla_fincan", value = 2 }, { kind = "flag", flag = "c13_request_leyla_fincan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "count_it"
+text = "接下，先陪她把三年的账对一遍。"
+next = "persuade"
+reply = "她念，你记。念到第二年冬天，她不念了，直接报出总数，一文不差。你把自己记的那页翻过来给她看，两边只差在书记们多画的一道杠上。“他们那本账，就差在这个数上。”"
+effects = [{ kind = "affinity", person = "leyla_fincan", value = 2 }, { kind = "flag", flag = "c13_request_leyla_fincan_accepted" }, { kind = "flag", flag = "c13_request_leyla_fincan_counted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一季走不开，跟书记们结仇也不划算。"
+next = "failed"
+reply = "她把收据收回去，一张张塞回柜台底下，塞得很慢，像在等你改主意。“那就天天给他们端最烫的那一杯。”"
+effects = [{ kind = "flag", flag = "c13_request_leyla_fincan_declined" }]
+
+# 二、签名：书记们的房间，为首的那个说签名太整齐，莱拉冲进来，把门带上。
+[[tracks.chapters]]
+key = "persuade"
+title = "签名"
+text = "书记们的房间里一股墨味，四个人都认得那摞收据，也都认得自己喝了多少。为首的那个把一张举起来对着窗，看了半天，说：“这签名一笔一划太整齐，不像个老妇人写的。”莱拉跟着你来了，在门口站住，脸一下子白了。四个书记嚷成一团，有人拍桌子，有人说要叫人把她轰出去。她冲进门来，回手把门带上，嗓子压得很低：“要吵就吵这一张。喝完再吵，字还没写清。”"
+news = "兵工厂的书记们今天在房间里跟门口咖啡摊的姑娘吵了一架，为了三年的咖啡钱，有人拍了桌子。"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+objectives = [{ kind = "at", at = "istanbul", text = "在伊斯坦布尔" }, { kind = "person", person = "leyla_fincan", text = "带着她去书记的房间" }]
+when = [{ kind = "alive", person = "leyla_fincan", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "leyla_fincan", text = "书记们去别家喝咖啡了。账我拿去灶里烧了半本，另半本锁在柜子里。——莱拉" }, { kind = "affinity", person = "leyla_fincan", value = -3 }, { kind = "flag", flag = "c13_request_leyla_fincan_late" }], news = "兵工厂门口的老咖啡摊灯空了一个月，书记们去了别家，船匠们都说新摊子的咖啡太淡。" }
+
+[[tracks.chapters.variants]]
+key = "v1_counted"
+when = [{ kind = "flag", flag = "c13_request_leyla_fincan_counted" }]
+text = "书记们的房间里一股墨味。你昨晚陪她把三年的账对过一遍，总数抄在一张纸上，揣在袖子里。四个人都认得那摞收据，也都认得自己喝了多少。为首的那个把一张举起来对着窗，看了半天，说：“这签名一笔一划太整齐，不像个老妇人写的。”莱拉跟着你来了，在门口站住，脸一下子白了。四个书记嚷成一团，有人拍桌子，有人说要叫人把她轰出去。她冲进门来，回手把门带上，嗓子压得很低：“要吵就吵这一张。喝完再吵，字还没写清。”"
+
+[[tracks.chapters.choices]]
+key = "confess"
+text = "把莱拉拉到门外，等她自己说。"
+next = "result_mother"
+requires = [{ kind = "affinity", person = "leyla_fincan", ge = 30 }]
+hint = "她咬着嘴唇不看你，你们还没熟到能问这一句"
+reply = "门外的巷子窄，她靠着墙，咬着嘴唇不看你。过了很久，她才说：“我娘不识字。签名是我照着她的样子练的，练了几百遍，练到连我自己都分不清哪张是哪张。”你回屋对书记们说：签名的人明天来，当着诸位的面按手印。第二天她母亲来了，按了印，书记们一句话也没有了。"
+effects = [{ kind = "affinity", person = "leyla_fincan", value = 3 }, { kind = "flag", flag = "c13_request_leyla_fincan_mother" }]
+
+[[tracks.chapters.choices]]
+key = "argue_coffee"
+text = "不争签名，只问：这三年的咖啡，诸位喝了没有？"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_partial", effects = [{ kind = "flag", flag = "c13_request_leyla_fincan_half" }, { kind = "affinity", person = "leyla_fincan", value = -2 }] }
+reply = "你不跟他们争签名，只把三年的咖啡一杯杯数给他们听：哪天几杯，哪天加了糖，哪天赊到下个月。数到第二年，为首的那个开始看窗外。他没说话，手指却在桌上一下一下敲着。"
+effects = [{ kind = "affinity", person = "leyla_fincan", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "witnesses"
+text = "请口述订单的船匠师傅们来作证。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "船匠们不想为一杯咖啡得罪书记，你找不到说动他们的话"
+reply = "三个船匠师傅来了。哪天谁喝了几杯，他们说得清清楚楚，连哪天书记加了糖都记得。书记们听完，只好把话咽回去。"
+effects = [{ kind = "affinity", person = "leyla_fincan", value = 3 }]
+
+# 三a、新的收据：书记们把钱送来，她这回签的是自己的名字。
+[[tracks.chapters]]
+key = "result"
+title = "新的收据"
+text = "书记们把钱送到咖啡摊，铜子一枚一枚数在桌上，数到最后一枚，为首的那个把手缩回了袖子里。莱拉收了钱，当场写了一张新收据，用一只铜杯压住一角，摊在柜台上晾墨。签名那一栏，她这回写的是自己的名字，写完把笔压在那一个字上，没有再写别的。“三年，每天两杯。”她把收据抚平，“以后谁再来赖账，先看这一张。”"
+news = "兵工厂门口的咖啡摊，书记们把三年的咖啡钱送齐了，收据上签的是咖啡摊姑娘自己的名字。"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "leyla_fincan", text = "在咖啡摊前面找到她" }]
+when = [{ kind = "alive", person = "leyla_fincan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "witness_sign"
+text = "在收据角上替她签一个见证人。"
+next = "done"
+reply = "她吹干墨，把收据钉在摊子的木柱上，钉得很正。她把钱点清，又倒了一杯咖啡推过来，说这杯记在账上，“付过了”。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "leyla_fincan", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_leyla_fincan_done" }, { kind = "memory", memory = "mem-request_leyla_fincan-result", title = "钉在木柱上的收据" }]
+
+[[tracks.chapters.choices]]
+key = "keep_quiet"
+text = "收了钱，不替她签。"
+next = "done"
+reply = "你把钱收进袖子里，看她把收据夹进账本。她没有让你替她签名的意思，只把账本合上，摸了摸封面。“这回不用谁作证。”她说，“书记们认了账，字自己会说话。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "leyla_fincan", value = 4 }, { kind = "flag", flag = "c13_request_leyla_fincan_done" }]
+
+# 三b、母亲的签名：她当面说了以后，收据上写的是“代母收讫”。
+[[tracks.chapters]]
+key = "result_mother"
+title = "母亲的签名"
+text = "钱是书记们亲自送来的，一枚铜子数了三遍，数完还把一枚放在桌角看了看。莱拉收了钱，当场写了一张新收据。签名那一栏，她写的是“莱拉，代母收讫”，一笔一划，写得不快，写到“讫”字时笔尖停了一下。写完她把笔递给你，手指上还沾着墨，指甲缝里也是。“我娘在后屋看着呢。”她说，“看不懂，可看着还行。”"
+news = "兵工厂门口的咖啡摊今天收齐了三年的咖啡钱，书记们是当着船匠的面一枚一枚数的。"
+speaker = "captain"
+mood = "tender"
+at = "istanbul"
+objectives = [{ kind = "person", person = "leyla_fincan", text = "在咖啡摊上找到她" }]
+when = [{ kind = "alive", person = "leyla_fincan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "witness_sign"
+text = "在“代母收讫”旁边，添上见证人的名字。"
+next = "done"
+reply = "你在那四个字旁边落了名。她看了一眼，没说话，把收据钉上木柱，钉子正好压在“莱拉”两个字中间。她倒了一杯咖啡推过来，说这杯是娘煮的，“娘喝了，说不苦。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "leyla_fincan", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_leyla_fincan_done" }, { kind = "memory", memory = "mem-request_leyla_fincan-result", title = "钉在木柱上的收据" }]
+
+[[tracks.chapters.choices]]
+key = "ask_mother"
+text = "问她：往后的收据，还替母亲签吗？"
+next = "done"
+reply = "“她说她要学。”莱拉笑了一下，从柜台底下抽出一张纸。上面歪歪扭扭写着一个名字，写了十几遍，第一遍的那个字还歪在一边。她把钱又数了一遍，一个铜子不少。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "leyla_fincan", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_leyla_fincan_done" }, { kind = "memory", memory = "mem-request_leyla_fincan-result", title = "钉在木柱上的收据" }]
+
+# 三c、只认一半：对账检定失败，书记们只认了一半，她照样写新收据，金额后面添“余欠”。
+[[tracks.chapters]]
+key = "result_partial"
+title = "只认一半"
+text = "书记们只认了一半的账。钱一张张推过来，推到一半，为首的那个就把手收了回去，说剩下的要回去翻账本。莱拉没有争。她把钱收进抽屉，又拿出一张新收据，金额一栏只写了一半，后面添了两个字：“余欠”。写完她看了看那两个字，把纸吹干，说：“余下的，我慢慢讨。”她又添一句：“他们喝过的，一杯也不会忘。”柜台边的书记们没有起身，只把账本一本一本收进了箱子。她把笔放回笔筒。"
+news = "兵工厂的书记们只认了一半的咖啡钱，咖啡摊的姑娘照样写了新收据，金额后面添着“余欠”两个字。"
+speaker = "captain"
+mood = "sad"
+at = "istanbul"
+objectives = [{ kind = "person", person = "leyla_fincan", text = "回到咖啡摊找她" }]
+when = [{ kind = "alive", person = "leyla_fincan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "witness_owed"
+text = "替她在“余欠”后面签一个见证人。"
+next = "done"
+reply = "她把收据压在铜杯底下，“余欠”两个字正对着书记们的座位。“他们每回坐下，先看见这个。”她给你添了一杯咖啡，“这杯不记账。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "leyla_fincan", value = 4 }, { kind = "flag", flag = "c13_request_leyla_fincan_partial" }]
+
+[[tracks.chapters.choices]]
+key = "ask_rest"
+text = "问她：余下的那一半，要不要我替你再去讨？"
+next = "done"
+reply = "她摇头。“他们要是肯给，早就给了。”她把钱按在桌上，手指压着那几个铜子，压了很久。“你替我讨的这一半，我记着。下一回来，咖啡算你的。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "leyla_fincan", value = 2 }, { kind = "flag", flag = "c13_request_leyla_fincan_partial" }]

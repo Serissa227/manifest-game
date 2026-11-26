@@ -1,0 +1,106 @@
+# 推荐角色温星槎的故事线“星槎”（剧本 scenarios/07_xingcha.toml）。
+# 可以随意改文字与数值；章节按顺序推进，key 只允许追加、不要改名、删除或重排。写法见 stories/rossella.toml 的说明。
+#
+# 世界观只写只言片语：1471 年归航时沉没的昭远号（官府说是台风，幸存的舵工说“海是自己裂开的，从底下亮起来”）；
+# 船上那封国书盖着阿尔坎海冠皇帝的印——帝国亡了二百六十九年之后；最后一行被海水泡开，只剩“……门以东，勿……”。
+
+key = "xingcha"
+name = "星槎"
+
+[[chapters]]
+key = "resign"
+title = "交还官印"
+hint = "开始航行，故事就开始了。"
+speaker = "portrait:keeper-eastern-office-a"
+speaker_name = "市舶司的老主事"
+text = "朝岚港市舶司的老主事捧着你交回的领航官印，半天没有说话。“二十年了，”他终于开口，“宝船队最好的领航，辞了官去跑买卖？”你笑了笑，没有回答。他叹了口气，压低声音：“我知道你要去找昭远号。可那封国书，朝廷找了三十一年——你以为是找不到，还是不想找？”"
+[[chapters.choices]]
+text = "“我只是想知道，父亲最后看见了什么。”"
+reply = "老主事把官印收进匣子，又从匣底抽出一张发黄的航路图塞进你袖子里：“我什么也没给过你。”"
+effects = [{ kind = "chart", region = "yaohua_sea" }, { kind = "reputation", faction = "yaohua", value = -3 }, { kind = "flag", flag = "xingcha_honest" }]
+[[chapters.choices]]
+text = "“年纪大了，想自己做点买卖。”"
+reply = "“那就好，”他说，“那就好。”可他的眼睛一直看着你腰间那只旧罗盘——你父亲的罗盘。"
+effects = [{ kind = "reputation", faction = "yaohua", value = 3 }]
+
+[[chapters]]
+key = "helmsman"
+title = "缺了两根手指的舵工"
+hint = "在朝岚港的码头茶棚里找骆长风。"
+speaker = "mate:luo_changfeng"
+when = { wait = 1, docked = ["zhaolan"] }
+text = "码头最里头的茶棚，骆长风坐在他的老位置上，左手少了两根指头，右手端着一碗早就凉了的茶。三十一年前，他是昭远号上最年轻的舵工。“你爹是个好船长，”他说，“那天夜里没有台风——官府的记录是假的。海是自己裂开的，从底下亮起来，像有人在水里点灯。你爹叫我抓紧舵，然后……我就只剩这只手了。”"
+[[chapters.choices]]
+text = "请他上船，再掌一次舵。"
+reply = "他盯着你看了很久，把凉茶一口喝干：“我这把老骨头，就等这一句。”——他在你的海图上画了一个圈：巨龟岛西北，三天的航程。"
+effects = [{ kind = "mate", mate = "luo_changfeng" }, { kind = "reveal", discovery = "treasure_fleet_wreck" }]
+[[chapters.choices]]
+text = "给他留些钱，让他好好养老。"
+cost = 500
+reply = "他把钱推回来一半：“剩下的，替我在昭远号沉的地方撒一把米。”然后他告诉你，那地方在巨龟岛西北，三天的航程。"
+effects = [{ kind = "reveal", discovery = "treasure_fleet_wreck" }, { kind = "morale", value = 5 }]
+
+[[chapters]]
+key = "wreck"
+title = "昭远号"
+hint = "去巨龟岛西北的海面，找昭远号的残骸（宝船残骸）。"
+speaker = "captain"
+when = { wait = 5, sighted = "treasure_fleet_wreck" }
+text = "昭远号躺在浅海的沙底，桅杆像一排折断的笔。潜下去的水手上来说，舱里全是瓷器与丝绸，都烂了——只有一只封着铜蜡的竹筒完好无损。筒身上刻着市舶司的印，还有一枚你从没见过的印：一顶海冠。"
+[[chapters.choices]]
+text = "当着大家的面，打开竹筒。"
+reply = "里面是一封信，写在一种你不认识的文字上，只有末尾一行是瑶华官话，墨迹被海水泡开了一半：“……门以东，勿……”水手们你看我、我看你，谁也没说话。"
+effects = [{ kind = "goods", good = "relics", qty = 3 }, { kind = "flag", flag = "xingcha_letter" }]
+[[chapters.choices]]
+text = "不打开，用油布包好，锁进自己的舱房。"
+reply = "你把竹筒包了三层，锁进舱房。那天夜里，你梦见父亲站在船头朝你摆手——不知道是在招呼你过去，还是叫你回去。"
+effects = [{ kind = "fame", value = 5 }, { kind = "flag", flag = "xingcha_letter" }]
+
+[[chapters]]
+key = "interpreter"
+title = "通事"
+hint = "去琅京，找一个读得懂旧世界文字的人。"
+speaker = "mate:xie_qingyan"
+when = { wait = 5, docked = ["langjing"] }
+text = "琅京市舶司的通事谢清晏戴上水晶镜片，看了那封信很久。“这是阿尔坎的帝国文字，”他说，“旧世界的国王们写国书，早就不用它了。”他的手指停在信头那枚海冠印上：“可这枚印……盖印的人，是阿尔坎的海冠皇帝。帝国亡于航海历一二〇二年——这封信，是在帝国亡了二百六十九年之后写的。”"
+[[chapters.choices]]
+text = "请他上船，把整封信译出来。"
+reply = "“我在市舶司抄了十五年别人的信，”他摘下镜片，慢慢擦干净，“也该去看看写信的人了。”"
+effects = [{ kind = "mate", mate = "xie_qingyan" }, { kind = "flag", flag = "xingcha_translated" }]
+[[chapters.choices]]
+text = "把信交给市舶司，让朝廷去查。"
+reply = "主事郑重地收下竹筒，给你写了一张收据。你在收据背面，偷偷抄下了信里的每一个字。"
+effects = [{ kind = "reputation", faction = "yaohua", value = 10 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "xingcha_handed_over" }]
+
+[[chapters]]
+key = "the_seal"
+title = "海冠印"
+hint = "把信带回旧世界：去拉玛塔岛、维拉马雷或赫伦丹，找认得海冠印的人。"
+speaker = "portrait:keeper-mediterranean-guild-c"
+speaker_name = "白头发的老学者"
+when = { wait = 20, docked = ["dengta", "chenggang", "jinsuigang"] }
+text = "旧世界的学者们围着那封信吵了一整夜。有人说是伪造的，有人说是帝国遗臣的恶作剧。只有一个白头发的老学者一言不发，最后指着信里反复出现的一个词：“这个字，帝国人只在一个地方用过——灯塔的镜铭上。意思是‘守夜的人’。”他抬起头：“写这封信的人，在一二〇二年之后，还在守夜。”"
+[[chapters.choices]]
+text = "把抄本卖给王家航海学院。"
+reply = "学院的人付钱很痛快，痛快得让你有点后悔。"
+effects = [{ kind = "cash", value = 4000 }, { kind = "fame", value = 5 }]
+[[chapters.choices]]
+text = "谁也不给。这是父亲用命换来的。"
+reply = "你把信锁回箱子。老学者送你到门口：“那就好好收着。门以东的事，总有一天会轮到门以东的人来问。”"
+effects = [{ kind = "morale", value = 10 }, { kind = "flag", flag = "xingcha_secret" }]
+
+[[chapters]]
+key = "zhaoyuan"
+title = "昭远"
+hint = "回朝岚。"
+speaker = "captain"
+when = { wait = 30, docked = ["zhaolan"] }
+text = "回到朝岚的那天，港口起了薄雾。你把父亲的罗盘放在船头，照骆长风说的，往海里撒了一把米。国书的最后一行你已经会背了：“……门以东，勿……”——勿什么？勿来？勿忘？勿开？也许你一辈子都不会知道。可你终于知道了父亲最后看见了什么：海从底下亮起来，像有人在水里点灯。"
+[[chapters.choices]]
+text = "上书朝廷，把知道的都写下来。"
+reply = "奏折递上去三个月，没有回音。第四个月，市舶司的老主事托人给你捎来一句话：“有人读了。”——温星槎的故事到这里告一段落。"
+effects = [{ kind = "reputation", faction = "yaohua", value = 15 }, { kind = "fame", value = 15 }]
+[[chapters.choices]]
+text = "什么也不说，继续出海。"
+reply = "你把罗盘收回怀里。星槎，本来就是往天河里去的船。——温星槎的故事到这里告一段落。"
+effects = [{ kind = "fame", value = 10 }, { kind = "morale", value = 20 }]

@@ -1,0 +1,64 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/manifest-core",
+    "crates/manifest-data",
+    "crates/manifest-ai",
+    "crates/manifest-sim",
+    "crates/manifest-cli",
+    "crates/manifest-appcore",
+    "crates/manifest-app",
+    "xtask",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT"
+publish = false
+
+[workspace.dependencies]
+manifest-core = { path = "crates/manifest-core" }
+manifest-data = { path = "crates/manifest-data" }
+manifest-ai = { path = "crates/manifest-ai" }
+manifest-sim = { path = "crates/manifest-sim" }
+manifest-appcore = { path = "crates/manifest-appcore" }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+anyhow = "1"
+rand_core = "0.9"
+rand_chacha = "0.9"
+blake3 = { version = "1", default-features = false, features = ["std", "pure"] }
+toml = "0.9"
+schemars = "1"
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "sync", "time"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "native-tls"] }
+wiremock = "0.6"
+proptest = "1"
+clap = { version = "4", features = ["derive"] }
+ruzstd = "0.8"
+tempfile = "3"
+
+[profile.dev]
+# 模拟测试跑数百天，调试构建稍作优化以缩短测试时间
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.release]
+codegen-units = 16
+
+# 数据校验这类工具用的轻量构建：整数运算的语义与 release 完全一样
+# （不开溢出检查、不带调试断言），只是少做优化，为的是编得快。给玩家的程序仍然用 release。
+# 用法：cargo run --profile fast --locked --offline -p manifest-cli -- --world terra16 validate-data
+[profile.fast]
+inherits = "release"
+opt-level = 1
+codegen-units = 256
+lto = false
+debug = false
+incremental = false

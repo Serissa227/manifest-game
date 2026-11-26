@@ -1,0 +1,310 @@
+# C7 羁绊线重写（2026-10-11，Claude Opus）：故事 2.0 轨道，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 标签：BG（阿伊莎只对男性开放；恋爱只对主角塔里克）。适用主角：tariq（塔里克·加尔纳蒂）。
+# 人物：阿伊莎 aisha（1541-08-13，格拉纳达流亡学者的女儿，在非斯安达卢斯区的家里教邻里女孩识字，也教塔里克的两个妹妹）；
+#   塔里克 tariq（1540-01-02，主角“我”）。学院期 1554—1556：塔里克 14—16 岁，阿伊莎 12—15 岁；1556-12 的 S 章她 15 岁。
+#   重逢 1564：塔里克 24 岁，阿伊莎 22—23 岁，双方都已成年。生年相差不到两年。
+# 依据：
+#   史实——1554 年 1 月瓦塔斯家的阿布·哈松借阿尔及尔的奥斯曼兵进入非斯，城里人对阿尔及尔口音侧目（c1）；
+#         同年 9 月萨阿德家的穆罕默德·谢赫打回非斯，阿尔及尔兵撤走（b1）；格拉纳达流亡者家里留着老宅的门钥匙（s）；
+#         瓦伦西亚的摩里斯科人常把受洗名与阿拉伯姓氏写在一起。
+#   待核——非斯经学院侧室开女子讲席的具体先例（重逢里只写“一座经学院的侧室”，不点名哪一座）。
+#   原创——阿伊莎一家与她的学堂；织工家的女儿与筐沿上的刻痕；书箱与扉页的原主名单（米格尔·卡西姆）；
+#         水手家门上的催租木牌；石榴花笔袋；两张钥匙拓片；那首背漏的安达卢斯诗（不引原文）。
+#   口头禅：阿伊莎“这本书可以借，下一位也在等。”只在 b1 用原句；s 的 promise 回应与重逢的 give_books 回应、来信各用一次改过字句的呼应。
+#     塔里克“只劫货，不劫人。”只在 a2 用原句；b1 由阿伊莎换话说出。
+#   秘密：阿伊莎想办自己的讲席——a1 由她自己说出一半，重逢里实现；本线没有见闻（章节都不是 stage），不进任何 news。
+#   与简报的出入：重逢 the_key 的选项改为“拿出她当年给我的拓片，问她我那张还收不收着”——s 的 heart 分支里，
+#     我的拓片连同笔袋已交给她保管，重逢时在她手里，不在我手里。效果与门禁照简报。
+# 缺省走向：c1—a2 不在场只是没有收获，故事照走；s 不在场 → 设 c7_bond_aisha_parted，照样开启重逢；
+#   重逢不在场 → 阿伊莎来信（讲席开了，二十一个学生，附书单），设 c7_bond_aisha_missed。
+#   友情落点：给她的讲席送书的老朋友（friends）；恋爱落点：s 的 heart 交换信物且心动 ≥ 24、1564 年双方成年（lovers）。
+# 心动来源：a1 finish_line +6，a2 stay_summer +6（要求已有 6），s heart +12（要求已有 12）——合计 24，正好是重逢的门槛。
+# 设旗标：c7_bond_aisha_promise / _romance / _own / _parted（s），c7_bond_aisha_landing_friend / _landing_love / _missed（重逢）。
+# 读旗标：c7_bond_aisha_romance（重逢 the_key）。不读写其他文件的共享旗标。本线不写娜拉（她与阿伊莎的姐妹线是 tie_new_nala_aisha）。
+
+[[tracks]]
+key = "bond_aisha"
+name = "阿伊莎：先让孩子读"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["aisha"]
+
+# —— C1：1554 年春，阿尔及尔的兵还在城里 ——
+[[tracks.chapters]]
+key = "c1"
+title = "先让孩子读"
+text = "开春了，阿尔及尔来的兵还驻在城里。我一开口，巷子里就有人把窗板拉上——打小在阿尔及尔学的口音，一时改不掉。我领着两个妹妹走到阿伊莎家门口，肚子里备好了一套说辞，等她问我父亲是做哪一行的。她没问。她蹲下来，蹲得跟最小的那个一样高：“你叫什么？”我替妹妹答了。阿伊莎抬起一只手，眼睛没离开孩子：“让她自己说。”小妹攥着我的衣角，憋了好一会儿，把自己的名字连着父亲、祖父的名字一口气报完，最后一个字差点没接上气，脸涨得通红。屋里几个女孩没有一个笑。阿伊莎这才站起来看我。她从墙边拿过一块石板、一截白垩，塞到我手里。“你扶着，她写。”"
+window = [[1554, 2, 1], [1554, 4, 30]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_fez_qarawiyyin" }, { kind = "date", from = [1554, 2, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_slate"
+text = "蹲下去替妹妹扶住石板，一句话也不插。"
+reply = "小妹的第一个字写歪了三回，白垩断了一截。我的手搭在石板边上，一动没动，嘴也闭得紧紧的——这比让我在船头站一夜还难。阿伊莎在旁边看了一会儿，把断掉的那截白垩捡起来，放回我手心：“扶石板的人，比写字的人难当。”她转身去看别的孩子，又补了一句，“下回还请你来扶。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "aisha", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "recite_poem"
+text = "背一段祖母教的安达卢斯诗，逗孩子们笑。"
+reply = "我站起来，学着祖母的腔调背那首写赫尼尔河的诗，手还跟着比画。背到第三句，脑子里一空，漏了。阿伊莎头也没抬，替我往下念，一字不差——她家也背这首。女孩们笑成一团，小妹笑得最响。“你祖母教的没错，”阿伊莎说，“是你记岔了。”被人当场补了诗，我倒不觉得丢脸，回去的路上，把漏掉的那句念了三遍。"
+next = "c2"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }, { kind = "skill", skill = "poetry", value = 6 }]
+
+# —— C2：1554 年夏，一筐缠到一半的线 ——
+[[tracks.chapters]]
+key = "c2"
+title = "两个上午"
+text = "织工家的女儿连着三天没来。阿伊莎托人去问，回话说她母亲要她在家缠线，往后不来了。“你陪我去一趟。”阿伊莎说，“你会说话。”那家在染坊街后头，院里摆着一架纺车，脚边一筐线缠了一半，线头搭在筐沿上。那位母亲脚下踩着纺车不停，眼睛也不抬：“识字能当饭吃？她多缠一筐，家里多一块面饼。”我张嘴要接，阿伊莎先开了口，声音很平：“她缠线的时候，账是谁记的？”纺车慢了下来，停了。母亲低头看那只筐。筐沿上刻着一道一道的口子，一道是一筐，刻到后来挤成一片，她自己也数不清了。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "count_wages"
+text = "替那位母亲算一笔账：会记账的织工，一年能多挣多少。"
+requires = [{ kind = "affinity", person = "aisha", ge = 20 }]
+hint = "这笔账轮不到你开口——阿伊莎还没把学生家里的事放心交给你。"
+reply = "我掰着手指头算：线行按斤收线，压秤压掉的，少找的零钱，一年下来够买两筐好羊毛。母亲不信，叫我再算一遍。我又算了一遍，数没变。她盯着筐沿上那些口子看了很久：“一个礼拜，两个上午。多一个都不行。”回去的路上，阿伊莎走在前头：“算账的是你，开口的是我。”她回头看了我一眼，“正好。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "aisha", value = 4 }, { kind = "skill", skill = "negotiation", value = 4 }, { kind = "bond", person = "aisha", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "play_oud"
+text = "先借邻居的乌德琴弹一曲，把气氛弹软。"
+reply = "隔壁的乌德琴弦松了，我拧了半天才弹成调。母亲笑了，手里的线跟着拍子绕，还哼了两句。可曲子一停，说到上学，她照样摇头。阿伊莎谢过她，领我走了。第二天傍晚她来还琴，顺口说：“两个上午。”我问她怎么说动的。“又去了一趟，”她说，“坐着帮她缠了一下午线。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }, { kind = "skill", skill = "oud_playing", value = 6 }]
+
+# —— B1：1554 年秋，萨阿德家打回非斯 ——
+[[tracks.chapters]]
+key = "b1"
+title = "书从哪里来"
+text = "九月，萨阿德家的人打回了非斯，阿尔及尔的兵连夜撤走。城里敲着鼓过节，听见我这种口音的，都要回头多看两眼。我走路把头埋得更低了。父亲的船从海上回来，捎来一箱书，说是货里挑剩的。我扛着它穿过半个城，放在阿伊莎家的院子当中，像放下一份大礼。她翻开最上面那本。扉页上一行字：瓦伦西亚，米格尔·卡西姆。墨色还新。“你家的船只拿货，我知道。”她用指尖按着那行字，“可这一页上写着一个人。”“书就是货。”我说。她没跟我争，又翻开第二本、第三本，每本扉页上都有名字。翻完，她合上箱盖，手按在上头。“学生等着用，我留下。这本书可以借，下一位也在等。”她抬起头，“这些名字，你记得住吗？”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "copy_owners"
+text = "把每本书原主的名字抄成一张单子交给她。"
+reply = "我借了她的笔，坐在台阶上，把十一本书的扉页一本本抄下来：名字，城，有的还写着年份。她把单子钉在墙上。第二天上课前，她叫女孩们一个一个先念一遍。我在门口听她们念，念得磕磕绊绊。念到第七个，是个女人的名字，我就出去了。"
+next = "b2"
+effects = [{ kind = "affinity", person = "aisha", value = 4 }, { kind = "skill", skill = "calligraphy", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "take_crate_back"
+text = "说要把整箱书搬回去，等找到原主再送来。"
+reply = "我弯腰去抬箱子，她一只手按住箱盖：“学生今天就要书。”原书她收着，找到原主就还；孩子们用的，她另抄一份。她当场把书一本本搬出来，码在窗台上。我扛着空箱子穿过半个城回去。来的时候装满书，没觉得怎样；空箱子倒压得肩膀发疼。"
+next = "b2"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }]
+
+# —— B2：1555 年，海峡里被劫的那条船 ——
+[[tracks.chapters]]
+key = "b2"
+title = "缺课的那一个"
+text = "坐第二排的那个女孩十天没来了。“十天。”阿伊莎说，“我去她家问过。”她父亲是水手，船在海峡里叫阿尔及尔的船劫了。人放回来了，工钱没了，房租交不上。她说这些的时候在削笔，没看我，没有一句怪罪。削完了，才问：“货没了，船上的人吃什么？”我答不上来。第二天我去城外阿尔及尔商人落脚的客栈问了一圈。劫那条船的船长，名字我认得——每年开斋节他都来我家吃饭，还送过我一把小刀。回城时我绕到那户人家门口。门板上钉着一块木牌，钉得歪歪的，写着欠几个月的租，最后一行是期限。我站在木牌前，把那几个数字念了两遍。"
+window = [[1555, 3, 1], [1555, 10, 31]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 3, 1], to = [1555, 10, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "pay_rent"
+text = "拿自己的零用钱替那家付三个月房租，不留名。"
+requires = [{ kind = "affinity", person = "aisha", ge = 50 }, { kind = "bond", person = "aisha", level = "C" }]
+hint = "这件事她还没向你开口——她不愿你觉得她在替学生讨债。"
+reply = "房东收钱时眉开眼笑，转头就满街说了。第二天阿伊莎就知道了。她没谢我，只说：“她今天来了，坐第一排。”我说那钱是我父亲的船挣的。她把我面前的茶添满：“那就更该这么花。”门上那块木牌是我自己去拔的，钉子锈在门板里，拔了三回才拔下来。"
+next = "a1"
+effects = [{ kind = "affinity", person = "aisha", value = 4 }, { kind = "bond", person = "aisha", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "write_father"
+text = "给父亲写信，问那条船上的人后来怎样了。"
+reply = "我写了三张纸。写完才发觉，跟着父亲的船跑了这么多年，从来没问过被劫的船上有几个人、后来去了哪儿。信要走一个月。阿伊莎看完，拿笔改了一个拼错的字，别的一个没动。“寄吧。”她把信折好还给我，“回信来了，念给我听。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }]
+
+# —— A1：1556 年春，窗格 ——
+[[tracks.chapters]]
+key = "a1"
+title = "窗格后的一句"
+text = "开春，我送妹妹来上课，到早了。阿伊莎在门口洒水压土，看见我，停了手。“前天卡拉维因的一位先生来借书，”她说，“他问我是替谁抄的笔记。”她把水罐放下，说得很慢，像在试这句话站不站得住：“我想有一天在讲席上教。不只是在自家屋里，教邻居的女儿。”后半句她没说，进屋去了。我在门外等。窗子装着木窗格，一格一格雕成星形，声音从格子里漏出来。她在教诗——是祖母常念、我总背不全的那首。“这一句是塔里克念过的。”她说，“谁记得下一句？”屋里没人出声。小妹小声说：“哥哥也不记得。”一屋子都笑了。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "wait_outside"
+text = "等她教完再进门，只说妹妹今天念得好。"
+reply = "我一直等到最后一个女孩出了门才进去，只说妹妹今天念得好。阿伊莎看了看门外那块被我踩实了的泥地，没拆穿，倒了一杯薄荷茶给我：“早上的话，你就当我没说。”我把茶喝完，杯子放回托盘上：“我听见了。记着。”她没接话，端起托盘进了里屋，两只杯子在托盘上碰得叮当响。"
+next = "a2"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "finish_line"
+text = "隔着窗格把下一句接上。"
+requires = [{ kind = "age", le = 17 }, { kind = "age", person = "aisha", le = 17 }, { kind = "romance_open", romance_open = "aisha" }]
+hint = "那一句卡在嘴边——隔着窗跟她搭话，你还没有这个胆子。"
+reply = "我隔着窗格把下一句念了出来，声音比我想的大。屋里先静了一下，接着女孩们笑成一片，小妹的嗓门最尖：“是哥哥！”阿伊莎没有抬头，手里的笔停了一停，又接着写。散了课，她站在门口，看着我：“下回别在门外接。”她侧身让出半个门，“进来接。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }, { kind = "heart", person = "aisha", value = 6 }]
+
+# —— A2：1556 年夏，石榴花笔袋 ——
+[[tracks.chapters]]
+key = "a2"
+title = "绣花的笔袋"
+text = "六月，父亲来信，叫我回阿尔及尔，暑里跟船出一趟海——十六岁了，该上船了。我去阿伊莎家辞行。她听完，没说话，从针线篮底下拿出一只小袋：青布的，袋面上绣着一枝石榴花，针脚密得看不见底布。“装笔的。”她说，“装不下战利品。”我伸手去接，她却没松手。“别去。”她头一回开口要我做什么。我愣了愣，笑着说出那句在阿尔及尔说了很多年的话：“只劫货，不劫人。”“那你回来的时候，”她说，“告诉我这一回劫了谁的货。”她没再劝。袋口的绳子松着，她低头替我系好，打了个结，又拉了两下，看它牢不牢。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "promise_report"
+text = "答应回来以后，把这一趟一五一十讲给她听。"
+requires = [{ kind = "affinity", person = "aisha", ge = 80 }, { kind = "bond", person = "aisha", level = "B" }]
+hint = "你们还没熟到这一步——她那句“别去”，你还不知道该怎么接。"
+reply = "“一个字都不许漏。”她说，“对面船上几个人，几个是水手，几个是搭船的，都要说。”我说好，把笔袋塞进怀里。她就不再看我，转身去擦石板，擦得很用力。走到巷口我回头看，她家的门还开着一条缝。"
+next = "s"
+effects = [{ kind = "affinity", person = "aisha", value = 4 }, { kind = "bond", person = "aisha", level = "A" }, { kind = "item", item = "embroidered_pouch", qty = 1 }, { kind = "memory", memory = "mem-bond_aisha-a2", title = "绣花的笔袋" }]
+
+[[tracks.chapters.choices]]
+key = "stay_summer"
+text = "这个夏天不上船，留在非斯给她的学生搬书、修凳子。"
+requires = [{ kind = "affinity", person = "aisha", ge = 80 }, { kind = "bond", person = "aisha", level = "B" }, { kind = "heart", person = "aisha", ge = 6 }, { kind = "age", le = 17 }, { kind = "age", person = "aisha", le = 17 }, { kind = "romance_open", romance_open = "aisha" }]
+hint = "为她留下一整个夏天——这话现在说出口还太早，她也不会答应。"
+reply = "我给父亲回信，说学堂要考试，走不开。父亲回信骂了我两页纸。阿伊莎知道没有什么考试，一句也没问。只是从那天起，每天散了课，她都多倒一杯茶，放在我修了一半的凳子旁边。那个夏天我修好了七张凳子。笔袋天天挂在我腰上，里头真装着两支笔。"
+next = "s"
+effects = [{ kind = "affinity", person = "aisha", value = 3 }, { kind = "heart", person = "aisha", value = 6 }, { kind = "bond", person = "aisha", level = "A" }, { kind = "item", item = "embroidered_pouch", qty = 1 }, { kind = "memory", memory = "mem-bond_aisha-a2", title = "绣花的笔袋" }]
+
+[[tracks.chapters.choices]]
+key = "joke_away"
+text = "讲个笑话，把话岔开。"
+reply = "我讲了个阿尔及尔港口的笑话，讲得很卖力，连手势都配上了。她一直听到最后一句，没有笑，把笔袋放回针线篮里，盖上了盖子。“路上当心。”那天我走得很早。"
+next = "s"
+effects = [{ kind = "affinity", person = "aisha", value = 1 }]
+
+# —— S：1556 年十二月，两把格拉纳达的钥匙 ——
+[[tracks.chapters]]
+key = "s"
+title = "祖母的钥匙"
+text = "到了年底，卡拉维因的课散了，回阿尔及尔的商队定在月底。阿伊莎家和我家都留着一把格拉纳达老宅的门钥匙。我家那把，三年前祖母塞进我的行囊：“读书的人，带着它。”她家那把锁在她父亲的书箱里。她说，各拓一张吧。我们在她家院子里铺开纸，拿炭条拓。她拓得细，齿上的豁口都拓了出来；我拓得急，纸皱了一角。“你家的门在阿尔拜辛？”她问。“祖母说，在一棵橘子树后头。”“我家的在王宫底下那条坡上。”她把两张拓片并排晾在窗台上，拿两块小石头压住，“门早就不在了。”风把纸角掀起来，又放下。“钥匙还在。”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_aisha" }, { kind = "flag", flag = "c7_bond_aisha_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "交换拓片，约好每次靠岸都给她的学生带一本书，扉页写清从哪里来。"
+requires = [{ kind = "bond", person = "aisha", level = "A" }]
+hint = "你已经许过别人一生一次的约——这张拓片，你只能当纪念收下。"
+reply = "我把我那张递过去，她把她那张递给我。她把我的夹进她父亲那本最厚的书里，压平了。“每次靠岸，一本。”她说，“扉页上写清楚：从哪条船上来，原来是谁的。”“要是正经买来的呢？”“那就写哪个书摊，花了多少。”她已经拿过一张纸写书单：先是识字的，再是算术的，再是诗。写到第七本，她停下想了想，又添了一本给小妹的。“头一本别让她们等太久。”我把她的拓片折成四折，放进石榴花笔袋，大小正好。她写满了半张纸，墨还没干就塞给我，叫我路上背熟。"
+next = "done"
+effects = [{ kind = "affinity", person = "aisha", value = 5 }, { kind = "bond", person = "aisha", level = "S" }, { kind = "relation", person = "aisha", relation = "friends" }, { kind = "flag", flag = "c7_bond_aisha_promise" }, { kind = "memory", memory = "mem-bond_aisha-s", title = "祖母的钥匙" }, { kind = "start_track", track = "reunion_aisha" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "把自己的拓片包进她绣的笔袋里，请她替我保管到下次见面。"
+requires = [{ kind = "bond", person = "aisha", level = "A" }, { kind = "heart", person = "aisha", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "aisha", ge = 15, le = 17 }, { kind = "romance_open", romance_open = "aisha" }]
+hint = "这只笔袋她不会替你收着——你们还没走到这一步，或者，你的约已经许给了别人。"
+reply = "我把拓片折好，塞进石榴花笔袋，照她那天的样子系好绳子，打了个结，又拉了两下，递回给她。“替我收着。”我说，“下回见面再还我。”她看看笔袋，又看看我，脸一直红到耳根。“收着可以。”她说，“不许在信里问它好不好。”“那我问钥匙好不好。”她终于笑出了声，把笔袋揣进袖子里，又把她那张拓片塞到我手上：“这张你拿着。门是我家的，别弄丢了。”她送我到巷口，手背在我手背上碰了一下，很快又缩回去了。"
+next = "done"
+effects = [{ kind = "heart", person = "aisha", value = 12 }, { kind = "relation", person = "aisha", relation = "crush" }, { kind = "bond", person = "aisha", level = "S" }, { kind = "flag", flag = "c7_bond_aisha_romance" }, { kind = "memory", memory = "mem-bond_aisha-s", title = "祖母的钥匙" }, { kind = "start_track", track = "reunion_aisha" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "收好自己的拓片，各走各的：她留在非斯，我回海上，谁也不许诺。"
+reply = "“这样也好。”她点点头，从窗台上揭下我那张拓片，“不用掰着指头等船。”她拿过笔，在拓片背面写了一行，写完对着吹干，才叠好递给我。我没当场看。商队出了城门，我在驼背上打开——是那首诗的最后一句。那首诗我背了这些年，一到后半截就乱，从来没背到过那儿。我把拓片翻过来，钥匙的齿朝上，那句诗朝下，夹进了随身的书里。"
+next = "done"
+effects = [{ kind = "affinity", person = "aisha", value = 2 }, { kind = "relation", person = "aisha", relation = "friends" }, { kind = "flag", flag = "c7_bond_aisha_own" }, { kind = "memory", memory = "mem-bond_aisha-s", title = "祖母的钥匙" }, { kind = "start_track", track = "reunion_aisha" }]
+
+[[tracks]]
+key = "reunion_aisha"
+name = "阿伊莎：多出来的名字"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["aisha"]
+
+# —— 重逢：1564 年，非斯的讲席 ——
+[[tracks.chapters]]
+key = "reunion"
+title = "多出来的名字"
+text = "我从阿尔及尔带了一箱书，走了十几天陆路到非斯。阿伊莎的讲席开在安达卢斯区一座经学院的侧室里。来听的不只是邻居的女儿：后排坐着两个织工的妻子，膝上也放着石板。我把箱子打开，每本扉页上都写了来处。她先挑，挑出一本退给我：“太难，等她们再大两岁。”她领我到墙边。墙上钉着那箱书原主的单子，纸都黄了。瓦伦西亚，米格尔·卡西姆，后面添了一行新墨：书已还。往下数，这样的新墨有三行。“找了十年，找着三个。”她把退回的那本放在我手上，“那年夏天说好的，你还欠我。这些年，你劫的是谁的货？”"
+window = [[1564, 1, 1], [1564, 12, 31]]
+at = "fez"
+cast = ["aisha"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1564, 1, 1], to = [1564, 12, 31] }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "aisha", text = "塔里克：讲席开了，在安达卢斯区一座经学院的侧室里。二十一个学生，最大的那个比我母亲还大两岁，头一天把石板拿反了，第二天就自己正过来了。附一张书单，按难易排好，难的在后头，别买错。墙上那张单子又找着了三个人，书都还回去了；米格尔·卡西姆是头一个，他在拉巴特，回了一封信，说那本书他小时候读过三遍。你那年夏天欠我的话，我还记着账。书架上一直留着空位，后头总有人等着——这一回，等的人是你。阿伊莎" }, { kind = "flag", flag = "c7_bond_aisha_missed" }]
+
+[[tracks.chapters.choices]]
+key = "give_books"
+text = "把这一箱交给她的讲席，答应以后每年送一批。"
+reply = "我把这些年的船一条一条说给她听：劫过谁，放过谁，哪条船上的人后来在阿尔及尔被我赎了出来。她听完，没说好也没说不好，叫学生们坐好，当着她们的面，把每本书扉页上的来处念了一遍。念到一本从我父亲船上来的，她也没停，念得跟别的一样清楚。散了课，她把那张原主单子取下来，在最底下添了一行：今年的书，塔里克送。“每年一批。”她把单子钉回墙上，“后头还有人排着队，你别迟到。”我说迟到了罚什么。她想了想：“罚你扶石板。”"
+next = "done"
+effects = [{ kind = "affinity", person = "aisha", value = 5 }, { kind = "relation", person = "aisha", relation = "friends" }, { kind = "flag", flag = "c7_bond_aisha_landing_friend" }, { kind = "memory", memory = "mem-bond_aisha-reunion", title = "多出来的名字" }]
+
+[[tracks.chapters.choices]]
+key = "the_key"
+text = "拿出她当年给我的那张拓片，问她：我的那张，还替我收着吗？"
+requires = [{ kind = "flag", flag = "c7_bond_aisha_romance" }, { kind = "heart", person = "aisha", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "aisha", ge = 18 }, { kind = "romance_open", romance_open = "aisha" }]
+hint = "当年的话没说到那一步，她今天也不会先开口。"
+reply = "我先回答她：劫过谁，放过谁，赎回来几个人，一个数也没漏。然后我从怀里拿出那张拓片，八年了，折痕磨得发白。她看了很久，转身从讲席底下的匣子里取出一只青布笔袋，石榴花褪了色，袋口还是那个结。“你一回也没在信里问过它好不好。”她说，“说到做到。”她解开结，把两张拓片并排摊在讲席上。“钥匙早就打不开什么门了。”“那你还收着吗？”她握住我的手，握了很久才放开，眼睛一直看着那两张纸。“讲席散了以后，”她说，“你来接我。”"
+next = "done"
+effects = [{ kind = "affinity", person = "aisha", value = 5 }, { kind = "relation", person = "aisha", relation = "lovers" }, { kind = "flag", flag = "c7_bond_aisha_landing_love" }, { kind = "memory", memory = "mem-bond_aisha-reunion", title = "多出来的名字" }]

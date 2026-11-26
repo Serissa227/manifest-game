@@ -1,0 +1,165 @@
+# C13d 请托：看得懂图的矿冶书（request_wang_zheng）。中文，Claude 写。
+# 人物：王徵 wang_zheng（本世界线 1516 生，男；陕西泾阳人，做过推官，此时回泾阳家中摆弄齿轮；未受洗；身份档 2 官员／学者）。
+# 类型：找东西（find）；4 章 offer → handin → use_book | use_copy。
+#   brief 写 3 章（offer、handin、use）。use 的报酬要按“书送了”还是“描了图”拆开（1600／1100），
+#   而按旗标给选项加 requires 会被审计机器人报“准备后条件仍不满足”，所以改为在 handin 里按 next 分流：
+#   送书 → use_book，描图 → use_copy。两章场景不同（前者他手里有整部书，后者只有五幅描图，轮子是他自己猜的），选项与检定照 brief。
+# 报价：来信（L）。auto=true，offer 章 at=tianjin，出面的是陕西盐商，王徵只在信里说话；不写 speaker。
+# 窗口：offer 1578-03-01 至 1588-03-31（deadline 即窗口止日，到期走 failed，不写见闻）；
+#   handin 到 1588-09-30；use 两章各 180 天。
+# 依据·史实：王徵（1571—1644）的《奇器图说》《诸器图说》，本世界线整体提前约 55 年；他自己不通西文，靠图看懂机关；
+#   《奇器图说》的图样有取自阿格里科拉《矿冶全书》（1556，巴塞尔）一路的传统，这里平移成“他托人从海外找一部多图的矿冶书”。
+#   不写登州监军、不写受洗、不写火器。船上的链泵（链子挂在轮上、底下坠重物）按十六世纪常见的样子写，不点名具体船型。
+# 依据·原创：陕西盐商和他的油布筒；第三个齿上的墨圈；轮周三十三寸、一节三寸、画了十二个齿的算式；铜尺；
+#   “链子底下坠一块铅、轮上开槽不开齿”的两处改法；盐商把书垫在货包最上头。
+# 读的旗标：无（不读 c7_* 与 c13_main_*；王徵没有 C7 线，也不在主线里）。
+# 设的旗标：c13_request_wang_zheng_accepted（offer 接下）/ declined（回绝，终局）/ late（超时，终局）/ done（办成，终局）/ partial（折中，终局）；
+#   分支：gave（送了书）、traced（描了图）。
+# letter：全轨道两封——handin 超时一封（≤120 字）、use_book 的 pump 办成一封（≤300 字，附图描述）；use_copy 的 pump 没有信，结果写在回复里。
+# 依赖：港口 tianjin（ports_east_asia.toml 已有）；物品 agricola_basel（items/books_05_commerce.toml；商店文化为 italian／iberian／low_countries，
+#   寰宇港口目前对不上，见交付说明）；技能 shipbuilding；人物 wang_zheng（cast/historical_09_liaodong.toml）；势力 ming。
+# 回忆插画清单：mem-request_wang_zheng-use，画面：泾阳的灯下，一张草图上第三个齿的墨圈被一道横线划掉，旁边压着一把铜尺。
+
+[[tracks]]
+key = "request_wang_zheng"
+name = "看得懂图的矿冶书"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["wang_zheng"]
+
+# 一、报价：1578 年起，天津码头上，陕西盐商递来一封信和一张草图。
+[[tracks.chapters]]
+key = "offer"
+title = "卡在第三个齿"
+text = "天津卸盐的码头上，一个陕西来的盐商守着一排麻袋，见你走近，从怀里掏出一封信，信里夹着一张草图。图上画的是一盘自己会转的磨，齿轮密密匝匝，第三个齿那里被人用墨圈了一个大圈，圈外又描了三道。“泾阳的王老爷托我带的。”盐商抖开信纸，一个字一个字念给你听：“听说西洋有一部讲矿山的书，里头画着怎样把井里的水抽上来。西洋字我不认得。图上的齿轮要是画对了，字我一个不认也看得懂；画错了，认得字也没用。烦你寻一部来。”"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "date", from = [1578, 3, 1] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+deadline = [1588, 3, 31]
+timeout = { next = "failed" }
+family = "c13_offer_tianjin"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，我去找这部书。"
+next = "handin"
+reply = "盐商把草图折回四折，塞进信里，递到你手上。“王老爷说了，书要图多的那种，字少点不要紧。”他想了想又补一句，“圈着的那个齿你留意些，书里要是有一页能讲通它，就是这一部。”"
+effects = [{ kind = "affinity", person = "wang_zheng", value = 2 }, { kind = "flag", flag = "c13_request_wang_zheng_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这书我找不来。"
+next = "failed"
+reply = "盐商把草图对折，折到第三个齿那里停了一下，才折过去。“王老爷会自己琢磨出来的，”他把信塞回怀里，“就是慢。”"
+effects = [{ kind = "flag", flag = "c13_request_wang_zheng_declined" }]
+
+# 二、交书：书到手以后回天津。盐商问：书是送去，还是让他描。
+[[tracks.chapters]]
+key = "handin"
+title = "满书的木刻图"
+text = "盐商早把码头边一只空盐桶擦干净，让你把书放上去。书一翻开，他就没了话：整页整页的木刻，井口的辘轳，水车，一节扣一节的链子，工人弯着腰拉风箱，连矿渣怎么淘都画了出来。他拿沾着盐的手指悬在图上，不敢落下去。“这些字我也不认得。”他抬起头，“王老爷那边，书是送给他，还是让他照着描？描的话，我能找个画工。”"
+speaker = "captain"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "alive", person = "wang_zheng", value = true }]
+objectives = [{ kind = "item", item = "agricola_basel", qty = 1, text = "带来阿格里科拉的矿冶书" }, { kind = "at", at = "tianjin" }]
+deadline = [1588, 9, 30]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "wang_zheng", value = -3 }, { kind = "flag", flag = "c13_request_wang_zheng_late" }, { kind = "letter", person = "wang_zheng", text = "书我等不得，已把第三个齿改成了第四个。磨是转了，转得不大好看。不怪你，路远。" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把书送给王老爷。"
+next = "use_book"
+reply = "盐商用青布把书包了三层，打了个死结。“路上要走一个多月，”他说，“我把它垫在货包最上头，盐湿了，也湿不到它。”"
+effects = [{ kind = "item", item = "agricola_basel", qty = -1 }, { kind = "affinity", person = "wang_zheng", value = 3 }, { kind = "flag", flag = "c13_request_wang_zheng_gave" }]
+
+[[tracks.chapters.choices]]
+key = "trace"
+text = "书我留着，请画工描下抽水的几幅。"
+next = "use_copy"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "画工一幅图要收多少钱，你心里有数，眼下手头凑不够。"
+reply = "画工在空盐桶边坐了一下午，描了五幅：井口的辘轳，整条链子，水车上的斗，水槽，木管。描完他把链子的节数数了又数，一节不少。“王老爷是会数的人，”盐商说，“少一节，他能从信里骂回来。”"
+effects = [{ kind = "cash", value = -200 }, { kind = "flag", flag = "c13_request_wang_zheng_traced" }]
+
+# 三之一、送了书：三个月后，盐商带来新草图，轮上画了十二个齿。
+[[tracks.chapters]]
+key = "use_book"
+title = "泾阳寄来的草图"
+text = "三个月后，盐商又来了，肩上的盐袋换成一只油布筒。筒里是王徵的回信和一张新草图：他照书里的链式水车造了一架，转到半圈，链子就滑，水洒了一地。信上写：“轮周三十三寸，链子一节三寸，我画了十二个齿，数了三遍。你们船上抽舱底水的泵，链子也挂在轮上，怎么就不滑？画给我看。”草图边上落着几个墨点，是他敲笔杆敲出来的。"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "alive", person = "wang_zheng", value = true }]
+objectives = [{ kind = "wait", days = 90 }, { kind = "at", at = "tianjin" }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "wang_zheng", value = -3 }, { kind = "flag", flag = "c13_request_wang_zheng_late" }], news = "天津码头的陕西盐商说，泾阳王老爷那架水车的链子还在打滑，他等不来回信，把书翻了个遍，又把轮子拆了装。" }
+
+[[tracks.chapters.choices]]
+key = "pump"
+text = "照船上的链泵讲给他，画一张图寄去。"
+news = "天津码头的陕西盐商说，泾阳的王老爷照一本外国书造了一架水车，链子总算不打滑了，他逢人就把那页图掏出来比划。"
+next = "done"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "船上的泵你只听过它响，没低头看过链子是怎么挂的。"
+reply = "你讲得很慢：船上的泵，轮子不开齿，开的是槽，一节链子卡一个槽；链子最底下坠着一块铅，往下一拽，链子就直了。盐商听不明白，让你画。你画了轮，画了链，画了舱底那截木管，他拿手指一个槽一个槽地数，数完才把图卷进油布筒。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "wang_zheng", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_wang_zheng-use", title = "划掉了圈的第三个齿" }, { kind = "flag", flag = "c13_request_wang_zheng_done" }, { kind = "letter", person = "wang_zheng", text = "改了两处，都照你讲的：轮上不开齿了，开槽，一节链子卡一个槽；链子底下坠了块铅。转了三天，没滑。第三个齿那里的圈，我划掉了。附图一张：轮上刻十一个槽，每个槽边写着“三寸”；链子顺着一根木管垂下去，管底吊着铅，铅旁边画了把铜尺。" }]
+
+[[tracks.chapters.choices]]
+key = "ratio"
+text = "照信里的数算齿比，把错处圈出来。"
+news = "天津码头的陕西盐商说，泾阳王老爷水车上多画的那个齿，是一位过路的船长给指出来的，王老爷嘴上没认，却把图重画了。"
+next = "done"
+check = { attr = "numeracy", base = 20, per = 7 }
+reply = "你拿信里的数一除：轮周三十三寸，一节三寸，一圈只容得下十一节，他画了十二个。你在第十二个齿上画了个圈，旁边写“十一”。盐商皱眉：“王老爷数了三遍的。”下一趟他带回一行字：“对了一半。齿数你圈对了，另一半在链子下头，我自己想通了。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "wang_zheng", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_wang_zheng-use", title = "划掉了圈的第三个齿" }, { kind = "flag", flag = "c13_request_wang_zheng_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "wang_zheng", value = 3 }, { kind = "flag", flag = "c13_request_wang_zheng_partial" }], news = "天津码头的陕西盐商说，有位船长给泾阳的王老爷的图挑毛病，挑错了地方，王老爷回了满满一页，客气得很。" }
+
+[[tracks.chapters.choices]]
+key = "unknown"
+text = "照实说：泵我见过，不懂它怎么走。"
+news = "天津码头的陕西盐商说，泾阳的王老爷去信问船上的泵怎么走，一位船长回说不懂，王老爷倒夸了他一句。"
+next = "done"
+reply = "你照实写了一行：泵我见过，里头怎么走，我不懂。盐商抄在信纸背面，说会原话带到。下一趟他带回的回话只有一行：“不懂的人肯说不懂，比懂一半的人强。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "wang_zheng", value = 4 }, { kind = "flag", flag = "c13_request_wang_zheng_partial" }]
+
+# 三之二、描了图：他手里只有五幅描图，轮子是他自己猜着画的。
+[[tracks.chapters]]
+key = "use_copy"
+title = "猜出来的轮子"
+text = "三个月后，盐商又来了，肩上扛着一只油布筒。筒里是王徵的回信和一张新草图：他照你留下的五幅描图造了一架链式水车。轮子那一页你们没描，他自己猜着画：“轮周三十三寸，链子一节三寸，我猜是十二个齿。”链子转到半圈就滑，水洒了一地。信末问：“你们船上抽舱底水的泵，怎么不滑？画给我看。”"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "alive", person = "wang_zheng", value = true }]
+objectives = [{ kind = "wait", days = 90 }, { kind = "at", at = "tianjin" }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "wang_zheng", value = -3 }, { kind = "flag", flag = "c13_request_wang_zheng_late" }], news = "天津码头的陕西盐商说，泾阳的王老爷把五幅描图翻出了毛边，水车仍在打滑，回信没等到，他又把第三个齿改了一回。" }
+
+[[tracks.chapters.choices]]
+key = "pump"
+text = "先画一张链泵的图，再讲给他听。"
+news = "天津码头的陕西盐商说，泾阳的王老爷照五幅描来的图造了一架水车，起先打滑，如今不滑了，轮上改凿了一圈槽。"
+next = "done"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "舱底那台泵的链子怎么挂，你从没蹲下去看过。"
+reply = "你索性先画图：一个轮，轮沿凿着一圈槽，链子一节嵌一个槽；链子最底下坠着块铅，管子立在舱底。画完才开口讲，盐商一边听，一边用手指数槽。回信过了三个月才到，王徵说改了两处，链子不滑了，第三个齿那里的圈也划掉了，又嫌你把铅画得小了。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "wang_zheng", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_wang_zheng-use", title = "划掉了圈的第三个齿" }, { kind = "flag", flag = "c13_request_wang_zheng_done" }]
+
+[[tracks.chapters.choices]]
+key = "ratio"
+text = "拿他猜的齿数除一遍，把多出的那个圈出来。"
+news = "天津码头的陕西盐商说，泾阳王老爷凭描图猜的齿数多了一个，被一位船长算了出来，他又重画了一遍。"
+next = "done"
+check = { attr = "numeracy", base = 20, per = 7 }
+reply = "你在纸边写下除法：三十三寸，一节三寸，得十一，他猜的是十二。多出来的那个齿，你圈了。盐商盯着看了半天，说王老爷猜得挺有把握的。回信下一趟到，也是一行：“对了一半。多的齿是我猜过头了，链子下头那一半，我自己想通了。”"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "wang_zheng", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_wang_zheng-use", title = "划掉了圈的第三个齿" }, { kind = "flag", flag = "c13_request_wang_zheng_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "wang_zheng", value = 3 }, { kind = "flag", flag = "c13_request_wang_zheng_partial" }], news = "天津码头的陕西盐商说，泾阳的王老爷那架水车还在打滑，有位船长出了主意，出得不对，王老爷驳了他一页纸。" }
+
+[[tracks.chapters.choices]]
+key = "unknown"
+text = "老实回一句：舱底的泵我天天听，没拆开看过。"
+news = "天津码头的陕西盐商说，王老爷问船上的泵，船长答不上来，盐商硬着头皮把话带到泾阳，王老爷听了反倒高兴。"
+next = "done"
+reply = "你叫盐商转告：舱底的泵我天天听它响，没拆开看过，说不上来。盐商挠挠头，说这话他不好意思转，还是转了。回话到时，只有一行：“懂一半的人我见得多了，肯说不懂的，你算头一个。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "wang_zheng", value = 4 }, { kind = "flag", flag = "c13_request_wang_zheng_partial" }]

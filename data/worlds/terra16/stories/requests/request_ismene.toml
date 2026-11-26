@@ -1,0 +1,184 @@
+# C13d 请托：外人的海事法（request_ismene）。中文，Claude 写。
+# 人物：伊斯梅妮 ismene（1564-06-14 生，女；亚特兰蒂斯波塞冬神庙守山铜柱的“克莱托”，神庙里最年轻的一位；cast/story_atlantic.toml，原创人物，势力 free_port）。
+# 类型：找东西（find）；3 章：offer（柱子与书）→ handin（送，还是借）→ use（柱子上没有的那一条）；终点 done / failed。没有 stage 章。
+# 报价：当面（T）。人物按日程在亚特兰蒂斯外港（atlantis_port，日程 1583-01-01 至 1590-12-31，venue library），auto=false，玩家“问请托”（ask:request_ismene）启动；offer 章不写 at，用 person 目标“在港里找到她”。
+# 窗口：报价章 1584-01-15 至 1590-06-30，止日走 timeout（next=failed，不写见闻）。交书章与收尾章不设 window 与 deadline：普通章没有 default，靠 when 的日期与 alive 条件挂在待决队列里，玩家不来就一直等。
+# 报酬：use 章 translate 与 explain 成功各得现金 1600、好感 +8、名声 +3、回忆一次；explain 检定失败与 let_her 各得现金 1000、好感 +4、名声 +2（不给回忆）。
+#   货款另付：give 送书付 1750（《海事法庭之书》基准价 1400 × 1.25，送书章付）；other_law 换《七章法典》付 600（基准价 480 × 1.25）；lend 借看不付。
+#   好感正向合计最多 +14（ask_why 3 + give 3 + translate 8）。
+# 依据·史实背景：《海事法庭之书》（consulate_barcelona，1494 巴塞罗那印本）与《七章法典》（siete_seville，1491 塞维利亚）是 items 里选用的史实书。地中海海事法庭与“船沉了谁赔”的争议是史实背景。
+#   原创：神庙、山铜柱、克莱托的称呼、木尺、柱脚的石台与陶片、学神庙的规矩。
+#   正文不写十王会议（TERRA16 第 8.5 节，由主线写）、不引山铜柱上律文的原文、不写银枝（C7 tie_ismene_silver_branch 的 1583—86 线）、不写恋爱。
+# 依据·待核：无。
+# 读的旗标：无（不读 c7_* 与主线旗标）。
+# 设的旗标：c13_request_ismene_accepted（接下）、declined（回绝，终局）、given（送书）、other（换《七章法典》）、done（终局，translate 或 explain 成功）、partial（终局，let_her 或 explain 检定失败）。given 与 other 是分支旗标，只做 next 之外的文字变化与记录。
+# 依赖：B10b 改名 atlantis→atlantis_port（已用 atlantis_port）；亚特兰蒂斯 1583 年以后开放（日程起点）。ismene 已在 cast 且 tracks 含 request_ismene。请托没有主线门禁（gate_main 与 variant_main 都为空）。
+# 检定：explain 用 eloquence，base 20、per 7（一般档）。技能门槛：translate 需要 lang_catalan ≥ 60。
+# 回忆插画清单：
+#   mem-request_ismene-use（柱子脚下的陶片）：山铜柱脚下的石台上，放着一块刻了几行字的陶片，字迹一笔一笔，旁边摊着一本外人的书，书页边上有几处墨点的记号。
+
+[[tracks]]
+key = "request_ismene"
+name = "外人的海事法"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ismene"]
+
+# 一、柱子与书：1584 年以后，人物在神庙里，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "柱子与书"
+text = "亚特兰蒂斯外港的波塞冬神庙，殿里立着一根山铜柱，柱身刻满了字，被香火熏成了暗色。守柱的是个年轻的女子，腰间别着一把木尺。我进门时，她正用尺子量一段刻痕，没有回头，先开了口：“你来做什么？先说这个。是哪位王的人，等一会儿再说也不迟。”她问我的船从哪片海来，问得很细。听完，她说外面的海上没有柱子，可船照样知道谁欠谁的。“我要一部外人的海事法，《海事法庭之书》。我想知道，你们怎么定规矩，又怎么在规矩外面打官司。”"
+speaker = "captain"
+mood = "mystic"
+cast = ["ismene"]
+when = [
+  { kind = "date", from = [1584, 1, 15], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "ismene", ge = 18 },
+]
+objectives = [{ kind = "person", person = "ismene", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应带一部来。"
+next = "handin"
+reply = "她在柱子底下的石阶上划了一道，说这是她等的日子的记号，“来了，我就擦掉。”她把木尺收回腰间，“你的船登在哪一页，等书到了再说。”"
+effects = [
+  { kind = "affinity", person = "ismene", value = 2 },
+  { kind = "flag", flag = "c13_request_ismene_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问她：柱子上的律法不够用吗？"
+next = "handin"
+reply = "“够用。”她想了想，“可来港的船越来越多，他们不认柱子。我得先认他们的书。”她把刻痕上的灰吹掉，又说，“书要带全，缺了页的我不要。”"
+effects = [
+  { kind = "affinity", person = "ismene", value = 3 },
+  { kind = "flag", flag = "c13_request_ismene_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "外人的书，我不往这里带。"
+next = "failed"
+reply = "她点点头，说柱子上也有一条讲这个，然后没再说下去。她转回去量那段刻痕，尺子落下的声音一下一下，像是送客。"
+effects = [{ kind = "flag", flag = "c13_request_ismene_declined" }]
+
+# 二、送，还是借：书带到神庙，她先不翻开，问的是书的去处。
+[[tracks.chapters]]
+key = "handin"
+title = "送，还是借"
+text = "你把书带到神庙，伊斯梅妮没有先翻开。她把手掌按在书皮上，停了一会儿，像在掂它有多重。书脊上的烫金磨掉了一半，她的拇指在那几个字上慢慢摸过去。旁边的执事捧着香炉，站得远远的，没有凑过来看。“这本书，”她抬起眼，“是送给神庙的，还是借给我的？”"
+at = "atlantis_port"
+speaker = "captain"
+mood = "mystic"
+cast = ["ismene"]
+when = [{ kind = "alive", person = "ismene", value = true }, { kind = "date", from = [1584, 1, 15], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "送给神庙。"
+next = "use"
+requires = [{ kind = "item", item = "consulate_barcelona", qty = 1 }]
+hint = "舱里没有那部书，这一步走不下去。"
+reply = "她把书放在山铜柱脚下的石台上，那里原来只放过祭品。执事取来银子，她一枚一枚数到你手心里，数得很慢。“外面的规矩，这一条我已经懂了。”"
+effects = [
+  { kind = "item", item = "consulate_barcelona", qty = -1 },
+  { kind = "cash", value = 1750 },
+  { kind = "affinity", person = "ismene", value = 3 },
+  { kind = "flag", flag = "c13_request_ismene_given" },
+]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借给她读，读完还我。"
+next = "use"
+requires = [{ kind = "item", item = "consulate_barcelona", qty = 1 }]
+hint = "舱里没有那部书，借也借不出去。"
+reply = "她抄了一个月，抄本用的是神庙的字。书原样还给你，书页里夹着一片晒干的叶子，当书签用。她还说，下一回来，要把书里的行话也问个明白。"
+effects = [{ kind = "affinity", person = "ismene", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "other_law"
+text = "那部没找到，带来的是《七章法典》。"
+next = "use"
+requires = [{ kind = "item", item = "siete_seville", qty = 1 }]
+hint = "舱里没有《七章法典》，这一条也走不了。"
+reply = "她翻了几页，说这是国王的法，不是海上的法，可也有用，“国王总要管到海上来的”。她又翻到一页，停了停，没再往下看。"
+effects = [
+  { kind = "item", item = "siete_seville", qty = -1 },
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "ismene", value = 2 },
+  { kind = "flag", flag = "c13_request_ismene_other" },
+]
+
+# 三、柱子上没有的那一条：书和柱子并排念，念到一条柱上没有的。
+[[tracks.chapters]]
+key = "use"
+title = "柱子上没有的那一条"
+text = "伊斯梅妮把书和柱子并排，一条一条念给你听。她念一条外人的，就问一句柱子上的；柱子上有的，她用木尺敲一下柱脚。书页边上有人用红墨写过批注，念到那几处，她的声音会慢下来。念到“船沉了，货主与船主谁来赔”，她停住了。柱子上没有这一条，她把尺子搁在石台上，看了你很久。“这一条，”她说，“该怎么定？”"
+news = "亚特兰蒂斯外港的神庙里，最年轻的克莱托把一部外人的海事法和山铜柱并排念了一下午。"
+at = "atlantis_port"
+speaker = "captain"
+mood = "mystic"
+cast = ["ismene"]
+when = [{ kind = "alive", person = "ismene", value = true }, { kind = "date", from = [1584, 1, 15], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "translate"
+text = "照书上的原文，替她一个词一个词译准。"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_catalan", ge = 60, hard = true }]
+hint = "书里的行话，你只认得几个词。"
+reply = "她把你译的那句写在一块陶片上，放在柱子脚下。她说这不是律法，只是“一句可以拿来问的话”。她看了一遍，没改一个字。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ismene", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_ismene_done" },
+  { kind = "memory", memory = "mem-request_ismene-use", title = "柱子脚下的陶片" },
+]
+
+[[tracks.chapters.choices]]
+key = "explain"
+text = "用你跑船的经验，讲外面的港是怎么打这种官司的。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "她听着，笔在书页边上停了又停，写下的不多。末了，她把你的话折成一句，记在书的最后一页上：“外面的人怎么吵的，我记下了。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ismene", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_ismene_done" },
+  { kind = "memory", memory = "mem-request_ismene-use", title = "柱子脚下的陶片" },
+]
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "affinity", person = "ismene", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ismene_partial" },
+]
+news = "亚特兰蒂斯外港的神庙里，一个跑船的人讲外面的港怎么打官司，讲乱了。最年轻的克莱托只在书页上记下一句：外面的人也吵不清。"
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "说这一条该她自己定。"
+next = "done"
+reply = "她看了你一眼，很久没说话。最后她说，那就先空着。一条没定的规矩，也是规矩。说完，她用指尖把那一行的墨迹抹平，什么也没写。"
+effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "affinity", person = "ismene", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ismene_partial" },
+]

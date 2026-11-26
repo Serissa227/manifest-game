@@ -1,0 +1,158 @@
+# 请托：三户人家的画押（request_lin_xiyuan）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-24，Claude（Sonnet）执笔。
+# 人物：林希元 lin_xiyuan（1481 生，男），号次崖，泉州同安人，正德进士，做过钦州知州，辞官回乡著书讲学（cast/historical_06_ming.toml）。
+# 类型：说服某人（persuade）。章节：offer 轿子里的奏疏稿 → persuade 放债的人 → result 三个红手印（三户）或 result_two 缺一户的联名（两户）→ done；回绝与超时走 failed。
+# 报价：到访（V）。auto=true；他从同安坐轿子下到月港，offer 在月港（yuegang）码头。窗口 1557-03-01 至 1564-12-31，offer 的 deadline 为窗口止日；
+#   offer 写 family="c13_offer_yuegang"、family_cooldown_days=20（同一港口二十天内只冒出一条新请托）；名声门槛 0，不写。
+# 身份档 2（官员、学者），中档：现金 2250（最好）/1350（只有两户画押）；好感合计 +13；名声 +3；无声望（他是乡绅，不是官府）；无物品、无技能经验。
+# 结构说明：放债的不肯画押时（talk 检定失败）走到单独的一章 result_two（只有 take_two 一个选项），并设旗标 c13_request_lin_xiyuan_two；
+#   三户都画押时走 result（take / ask）。分支靠 next 走到各自的章节，不靠互斥旗标门禁（brief 里写的同章 variants + requires 会被引擎审计判为不可达）。
+# 依据（史实）：林希元主张放开海禁，被时人指为庇护通番、私造大船的“势家”（评价留两面，正文借他自己的口与放债人的账各露一半）；
+#   1549 年朱纨丢官自尽，正文只在他的纸条上以“酷吏”二字带过一次，不写朱纨之名；他 1565 年卒（正文不写）。
+# 依据（原创）：月港的三户人家（竹器铺、烧了船的寡妇、挂钱秤的放债人）、联名、茶寮、纸条。三户人家都不起全名，不建 cast。
+# 秘密：他与私造大船、接济番舶的人家过从甚密，替他们说话有私心——他绝不承认。只在 offer 的 ask 选项里让玩家问到，他拿拐杖顿桶板否认；见闻一字不提。
+# 不碰：月港的 C7 同学（黄墩、许采、周砚、小蛮、陈栋）不出场、不画押；不写 1567 开海的结果；不设任何 c7_ 旗标。
+# 读写的旗标：读 c13_main_lin_wandeng（主角林晚灯的主线接口，主线第一章设；offer 的 variant）；
+#   写 c13_request_lin_xiyuan_accepted / declined / two / late / done / partial。终局旗标 declined、late、done、partial 各在互斥的分支上设。
+# 依赖：无 B10b 改名（lin_xiyuan、yuegang 现成）；技能 negotiation 现成。
+# 回忆插画清单：
+#   mem-request_lin_xiyuan-result：月港码头的茶寮里，白发老先生对着摊开的联名，三个红手印按在纸上，最后一个红泥洇偏了一角。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；persuade 限期 60 天，过了老先生另托了同安的人，来信一封；result 没有期限，他在茶寮里等着。
+# 地点（2026-11-01 close-places）：四章由 yuegang 改 fuzhou——月港 1567 年以前休眠，而林希元 1565 年就过世，请托窗口 1557—1564 整段走不到；
+#   福州是省城，疏稿托省里递，联名改附福州南台铺户；offer 的 family 改 c13_offer_fuzhou（与林兆恩、涂泽民同港共用冷却）。
+#   上面“报价”“依据（原创）”与插画清单里的月港作废；“不碰月港的 C7 同学”照旧。
+
+[[tracks]]
+key = "request_lin_xiyuan"
+name = "三户人家的画押"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["lin_xiyuan"]
+
+# offer · 1557—1564 · 福州码头：旧轿子、倒扣的木桶、一卷改了又改的奏疏稿
+[[tracks.chapters]]
+key = "offer"
+title = "轿子里的奏疏稿"
+text = "福州南台的码头边，货船正沿着闽江卸货，一顶从同安抬来的旧轿子停下，轿夫放下轿杆，扶出一位七八十岁的老先生。他拄着竹拐，怀里抱一卷奏疏稿，纸边起了毛，朱笔墨笔改得满页都是。他不看货，在一只倒扣的木桶上坐下，朝歇脚的人招了招拐杖，问福州眼下怎么议论开海。那人拣了两句说：开了海倭就进来，禁海的告示三年两变。老先生指了指身旁的矮凳。“后生，坐。你说的那些，是亲眼见的，还是听人说的？”没等回答，他自己点点头，在稿子上添了一个字。“罢了，福州的话，老夫要当面问来的。这道疏得过省里才递得上去，南台铺户的联名附在后头，分量不同。三户还没画押：一户怕官，一户怕倭，一户只怕吃亏。你替老夫去说。”"
+speaker = "lin_xiyuan"
+mood = "tense"
+at = "fuzhou"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1564, 12, 31] }]
+family = "c13_offer_fuzhou"
+family_cooldown_days = 20
+deadline = [1564, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，请他把三户人家的门牌写下来"
+next = "persuade"
+effects = [{ kind = "flag", flag = "c13_request_lin_xiyuan_accepted" }, { kind = "affinity", person = "lin_xiyuan", value = 2 }]
+reply = "他把三户的门牌写在一张纸条上，字瘦得像竹枝，写一户，抬头看来人一眼，像在对账。末了把纸条折两折递过来，拇指压着折痕。“联名只写铺号，不写船名。这一条记牢，怕官的那户用得着。”"
+news = "福州码头边停了一顶同安来的旧轿子，轿里的林老先生拉住一位歇脚的船主，托他去跟几户铺面说开海联名的事。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "接下，问他：开了海，您家能得什么好处"
+next = "persuade"
+effects = [{ kind = "flag", flag = "c13_request_lin_xiyuan_accepted" }, { kind = "affinity", person = "lin_xiyuan", value = 2 }]
+reply = "竹拐重重顿在桶板上，轿夫低下头，去看自己的草鞋。“老夫这把年纪，还图什么？这话是谁在码头上嚼的？”他喘了口气，声音落回来，“同安的乡亲靠海吃饭，海不开，他们就得去别处吃。这便是老夫的好处。”门牌写好的纸条递过来时，他拇指按得很重。"
+news = "福州码头边有人听见同安的林老先生拿竹拐顿了桶板，嗓门大得盖过了卸货的号子，轿夫在一旁只管低头。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这不是船上的事"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_lin_xiyuan_declined" }]
+reply = "他把奏疏稿一圈圈卷好，用布带系住。“福州的人，胆子越来越小了。”叹气不重，像是说给自己听。轿夫抬起轿杆，竹拐在石板上点了几下，走远了。"
+
+[[tracks.chapters.variants]]
+key = "wandeng"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng", value = true }]
+text = "福州南台的码头边，货船正沿着闽江卸货，一顶从同安抬来的旧轿子停下，轿夫放下轿杆，扶出一位七八十岁的老先生。他拄着竹拐，怀里抱一卷奏疏稿，纸边起了毛，朱笔墨笔改得满页都是。他在一只倒扣的木桶上坐下，打量着我，问是哪里人，答是月港。他点了点矮凳：“月港的后生，坐。你们那边怎么议论开海？”我拣了两句答：开了海倭就进来，禁海的告示三年两变。“你说的这些，是亲眼见的，还是听人说的？”没等我回答，他自己点点头，在稿子上添了一个字。“罢了。老夫要再上一道疏，托省里递上去，想附南台铺户的联名。三户还没画押：一户怕官，一户怕倭，一户只怕吃亏。这几户你不认得不要紧，月港的话你说得出，他们听得进。你替老夫去说。”"
+
+# persuade · 福州：三户人家，最难的是挂钱秤的放债人
+[[tracks.chapters]]
+key = "persuade"
+title = "放债的人"
+text = "老先生的纸条上写着三户。头一户是竹器铺，名下另批了一行小字：“堂兄遭酷吏拿过，莫提‘官’字。”我只说联名写铺号、不写船名，男人听完，蘸了印泥，红手印按在纸上，没多问一句。第二户是个寡妇，船在倭乱里烧过，烧黑的龙骨还搁在后院。“有人说得出修船的钱从哪来，”她说，“我就画押。”最后一户门口挂着钱秤，放债的人请我喝茶，笑眯眯地不看联名，先问：“海禁越紧，我的利钱越高。开了海，我手里的钱往哪放？”"
+speaker = "captain"
+mood = "tense"
+at = "fuzhou"
+when = [{ kind = "alive", person = "lin_xiyuan", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "lin_xiyuan", text = "后生：三户人家的事，老夫等了两个月，没有等到一句话。疏稿等不得，老夫已另托同安的人去递。你忙你的。次崖手书。" }, { kind = "affinity", person = "lin_xiyuan", value = -3 }, { kind = "flag", flag = "c13_request_lin_xiyuan_late" }] }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "讲给他听：开了海，债也能放到南洋去"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_two", effects = [{ kind = "flag", flag = "c13_request_lin_xiyuan_two" }, { kind = "affinity", person = "lin_xiyuan", value = -2 }], news = "福州有个放债人听船主讲了半天南洋，茶凉了也没按手印，联名上最后只有两个红手印。" }
+effects = [{ kind = "affinity", person = "lin_xiyuan", value = 3 }]
+reply = "他捻着胡子算了半天，指头在钱秤的秤杆上一下一下敲。“先说好，南洋的债，我要头一份。”红手印按下去，又添一句：“隔壁那条烧过的船，修的钱我借，利钱照乡里的老规矩。”寡妇站在门口听见了，转身回去取印泥。"
+news = "福州的放债人听一个船主讲南洋，算了半天，在联名上按了手印，还说南洋的债要头一份。"
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "跟他算一笔账：出洋的本钱、税、利"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "出洋的本钱、税银、回港的利，你只知道个大概，在他面前报不出整数。"
+effects = [{ kind = "affinity", person = "lin_xiyuan", value = 3 }]
+reply = "我把一条船出洋的本钱、关税、回港的利，一项一项写在他账页的背面。他看得比我还快，笔杆往耳后一夹，反过来指出我少算了一笔泊港的费。算完，他在联名上画了押，顺手又在账本里记下一笔：烧过的那条船，修的钱他放。隔了两天，寡妇的手印也按在了联名上，旁边添了一行炭笔字，写的是放债人的字号。"
+news = "福州的放债人让一个船主列了出洋的本钱、关税和回港的利，算得比船主还快，当场画了押。"
+
+[[tracks.chapters.choices]]
+key = "widow"
+text = "替寡妇家垫一笔修船钱，先拿下她的"
+next = "result"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你的钱袋里，垫不起一条船的修理钱。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "lin_xiyuan", value = 3 }]
+reply = "我把银子在龙骨旁的木板上数出来，寡妇没推辞，也没道谢，拿炭条在船板上记了数。她按手印的时候，隔着一条巷子，放债人站在钱秤后面看着。过了一阵，他嘟囔一句“邻居都按了，我不按像什么话”，也把手指按进了印泥。"
+news = "福州有个船主替烧了船的寡妇垫了修船钱，寡妇按了手印，隔巷的放债人看见了，也跟着按了。"
+
+# result · 福州码头的茶寮：摊开的联名，三户都画了押
+[[tracks.chapters]]
+key = "result"
+title = "三个红手印"
+text = "码头边的茶寮里，老先生已经坐了半晌，面前的茶凉透了，伙计来添水，他用手掌盖住杯口，眼睛没离开桌上。联名摊开着，他用拐杖压住一角，一个手印一个手印地看：竹器铺的按得端正，寡妇的按在她画的小船旁边，放债人的按偏了，红泥洇出去一角。他看到那一角，笑了一声。“递上去，又要有人骂老夫通番了。”他把联名卷起来，往稿子里夹。"
+speaker = "lin_xiyuan"
+mood = "tender"
+at = "fuzhou"
+when = [{ kind = "alive", person = "lin_xiyuan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下他的谢礼"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "lin_xiyuan", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_lin_xiyuan-result", title = "三个红手印" }, { kind = "flag", flag = "c13_request_lin_xiyuan_done" }]
+reply = "“收了这个，又有人要说老夫是庇护私贩的势家了。”他笑着把一包银子推过来，手指在联名的边上摩挲了一下，“随他们说。同安的乡亲吃饭，往后有你一碗。”"
+news = "福州三户商家在一道开海的联名上按了手印，同安的林老先生亲自来收的。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：这道疏递得上去吗"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "lin_xiyuan", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_lin_xiyuan-result", title = "三个红手印" }, { kind = "flag", flag = "c13_request_lin_xiyuan_done" }]
+reply = "他沉默了一会儿，凉茶碰也没碰。“递不上去，也要递。老夫写了一辈子，不差这一道。”谢礼照付，银子推过来的时候他没看人，只看着那三个手印。"
+news = "福州码头的茶寮里，同安的林老先生对着一张联名坐了半晌，说这道疏递不递得上去，他也要递。"
+
+# result_two · 福州码头的茶寮：放债人没画押，联名上只有两个手印（talk 检定失败时走到这里）
+[[tracks.chapters]]
+key = "result_two"
+title = "缺一户的联名"
+text = "茶寮的伙计来添水，老先生一手盖住杯口，另一手的拐杖压着桌上的联名：竹器铺的手印按得端正，寡妇的按在她画的小船旁边，第三格空着，格头是放债人的字号。他问怎么回事。听说那人肯借钱给寡妇修船，只是不肯具名，他“唔”了一声，拐杖在桌脚敲了两下。“空着的这一格，往后有人问，老夫就说是留着的。”"
+speaker = "lin_xiyuan"
+mood = "tender"
+at = "fuzhou"
+when = [{ kind = "alive", person = "lin_xiyuan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "take_two"
+text = "收下谢礼，看着那空着的一格"
+next = "done"
+effects = [{ kind = "cash", value = 1350 }, { kind = "affinity", person = "lin_xiyuan", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_lin_xiyuan_partial" }]
+reply = "他盯着空着的那一格，指甲在纸上掐出一道印子。“两户也是人心。”银子推过来，比说好的轻了些，他没有解释，“余下那户，老夫自己再走一趟。”"
+news = "福州有两户商家在开海的联名上按了手印，还空着一格，同安的林老先生看了半晌，没说什么。"

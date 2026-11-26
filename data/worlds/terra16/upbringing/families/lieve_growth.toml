@@ -1,0 +1,2128 @@
+# 第九批 养成内容·莉芙（Claude 写）：新手旬（B1）、家乡玩伴（B2）、书信、五月节大事（B5）、第一次远足（B7）。
+# 关键事件 00–05 的三岔改写也在本文件（原在 lieve_events.toml，因英文覆盖的闭合校验整份搬来；lieve_events.toml 只保留 00 的门槛改期）。
+# 新人物玛伊肯·斯滕在 lieve_growth_persons.toml（同样因闭合校验单独成文件）。
+# 出现时间由 event_gates 与章节的日期条件决定；轮到哪一件仍由每旬抽签（A5 之后改为按优先级分层）。
+# 门槛数值为按 1553 年中位估的初值，之后统一校准（见 U02 的年度中位表）。
+"format_version" = 1
+
+"event_gates"."c9_lieve_novice_ten" = { "stage" = "any", "from" = [1553, 1, 1] }
+"event_gates"."c9_lieve_friend_lace" = { "stage" = "any", "from" = [1553, 2, 1] }
+"event_gates"."c9_lieve_friend_mathijs" = { "stage" = "any", "from" = [1553, 3, 1] }
+"event_gates"."c9_lieve_letter_lace_bruges" = { "stage" = "any", "from" = [1554, 5, 1] }
+"event_gates"."c9_lieve_letter_mathijs_tour" = { "stage" = "any", "from" = [1554, 9, 1] }
+"event_gates"."c9_lieve_yearly_may_1553" = { "stage" = "any", "from" = [1553, 5, 1], "festival" = "festival_lo_may", "festival_window_days" = [-3, 5] }
+"event_gates"."c9_lieve_first_outing" = { "stage" = "any", "from" = [1553, 2, 1], "tier" = "timed" }
+"event_gates"."c9_lieve_rw_furnace" = { "stage" = "any", "from" = [1553, 1, 1] }
+"event_gates"."c9_lieve_rw_candles" = { "stage" = "any", "from" = [1553, 1, 1] }
+"event_gates"."c9_lieve_rw_two_faces" = { "stage" = "any", "from" = [1553, 1, 1] }
+"event_gates"."c9_lieve_rw_lace" = { "stage" = "any", "from" = [1553, 1, 1] }
+"event_gates"."c9_lieve_rw_joos" = { "stage" = "any", "from" = [1553, 1, 1] }
+
+# C9-meta: {"key": "c9_lieve_critical_00", "family": "lieve", "category": "critical", "weight": "focus", "source": "docs/TERRA16.md §12.2、17.12；docs/research/terra16/T_anchors_1553.md §2；N_books_academies.md。1554 为家学预备，月桂树正式开办不得早于1555年8月。三位家人姓名为原创。", "context": "兑换桌上的轻币", "events": 2}
+[[tracks]]
+"key" = "c9_lieve_critical_00"
+"name" = "兑换桌上的轻币"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "兑换桌上的轻币"
+"text" = "二月中旬，父亲一早去了码头看进港的船，兑换桌归我守着。柜台前排着两队人。一个汉萨商行的伙计推来一只袋子，要把金币换成本地的镑。袋口的结是新打的，我解了好一会儿才解开。我把币一枚枚倒在秤盘上，大半都轻了一点，边缘有新刮过的亮痕。他笑着说，路上颠簸，磨掉些也是常事。后面的人都在等我开口，我的手心开始出汗。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 2, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "plain"
+"text" = "全数按面值收下，轻的部分由柜上补。"
+"reply" = "我照规矩点收，把差额记进柜上的损益，签了字。伙计把袋子拎走时回头看了我一眼，笑里带着一点得意。父亲回来看账，什么也没说，只用拇指在那一行上抹了抹，墨迹淡了下去。"
+"next" = "done"
+"effects" = [{ "kind" = "cash", "value" = -12 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -2 }, { "kind" = "flag", "flag" = "c9_lieve_hansa_remembers", "value" = true }, { "kind" = "flag", "flag" = "c9_lieve_critical_00_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "weigh"
+"text" = "按当天行情，一枚枚折成兑率报给他听。"
+"reply" = "我开口报价：金币的分量，镑的行情，轻的部分该扣多少，一条条报给伙计听。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_critical_00_solved", "value" = true }]
+"check" = { "attr" = "commerce", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [] }
+
+[[tracks.chapters.choices]]
+"key" = "weights"
+"text" = "拿出父亲留下的小天平，当众称一遍。"
+"reply" = "我把木盒打开，黄铜砝码一个个摆上秤盘，每一枚都在众人面前报出分量。伙计脸上的笑慢慢收了起来，他把袋子推回来，说：这一桌，我们不做了。"
+"next" = "done"
+"requires" = [{ "kind" = "item", "item" = "balance_weights", "qty" = 1 }]
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 5 }, { "kind" = "skill", "skill" = "double_entry", "value" = 6 }, { "kind" = "fame", "value" = 1 }, { "kind" = "flag", "flag" = "c9_lieve_hansa_left", "value" = true }, { "kind" = "flag", "flag" = "c9_lieve_critical_00_solved", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "兑换桌上的轻币·报价"
+"text" = "伙计听得发愣，把袋子里的币一枚枚拿回去称了一遍，最后把价码照我报的数重算。码头上的人都看见了，有人在柱子底下说，兑换商的女儿连轻币都分得清。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "把每一步抄进账页。"
+"reply" = "分量、行情、扣的数，我一样不落地抄进账页，抄完才发现手指一直在抖。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 6 }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "兑换桌上的轻币·报错"
+"text" = "我折错了一枚的成色。伙计当场掏出自己的小秤，把整袋币又称了一遍。差额不小，柜上只能认下，从我的抽屉里补齐。父亲站在柱子后面看了很久，才开口：下回先称，再算。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "在账上记下这笔亏空。"
+"reply" = "我在账页末尾写下：这一笔，是我算错的。写完，手不再抖了。"
+"next" = "done"
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -3 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+# C9-meta: {"key": "c9_lieve_critical_01", "family": "lieve", "category": "critical", "weight": "focus", "source": "docs/TERRA16.md §12.2、17.12；docs/research/terra16/T_anchors_1553.md §2；N_books_academies.md。1554 为家学预备，月桂树正式开办不得早于1555年8月。三位家人姓名为原创。", "context": "母亲的口译", "events": 2}
+[[tracks]]
+"key" = "c9_lieve_critical_01"
+"name" = "母亲的口译"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "母亲的口译"
+"text" = "开春头一天，葡萄牙商人团体的账房派人来请母亲去口译。一张从里斯本转来的汇票上，数目写的是克鲁扎多，要按当天的行情换成佛兰德镑。港口的风还冷，母亲带上我，两人一前一后走进商馆。账房里的人说得飞快，一会儿是几千，一会儿又是零头。母亲的声音很平，每个动词都咬得清清楚楚。母亲看了我一眼，示意我把数目记在自己的小册子上。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 3, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "mother_speaks"
+"text" = "让母亲自己念完，我只在一旁记。"
+"reply" = "母亲一个个念出数目，我把它们记在小册子上，记到最后一行，我的字比平时还小。账房的人点头，母亲没有看我，只把我的册子往自己这边挪了一寸。回家的路上，她说：下回你来念。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_mother", "value" = 4 }, { "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "fame", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_critical_01_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "speak"
+"text" = "我来念数目，念给账房听。"
+"reply" = "我把数目按葡萄牙语的读法一个个念出来，念到千位也没有停。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_critical_01_solved", "value" = true }]
+"check" = { "attr" = "eloquence", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [] }
+
+[[tracks.chapters.choices]]
+"key" = "mother_backs"
+"text" = "请母亲在账房的名册上替我签个名。"
+"reply" = "母亲在名册上签下她的名字，又在我的名字旁边画了一个小圈。账房的人客气起来：通事的女儿，有通事的担保，就不必再核了。"
+"next" = "done"
+"requires" = [{ "kind" = "affinity", "person" = "lieve_mother", "ge" = 40 }]
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 4 }, { "kind" = "skill", "skill" = "lang_portuguese", "value" = 8 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }, { "kind" = "flag", "flag" = "c9_lieve_critical_01_solved", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "母亲的口译·报数"
+"text" = "账房的人听见我报出的总数，笔尖停在纸上。他把写错的那一行划掉，重写了一遍，写完才对我说：通事的女儿，念得比书记还快。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "记进账本。"
+"reply" = "我把那一页的数字重抄一遍，每个数都能念出声。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 6 }, { "kind" = "skill", "skill" = "lang_portuguese", "value" = 6 }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "母亲的口译·念错"
+"text" = "书记把三千二百念成了三百二，差了一个零。母亲在桌子另一头没有出声，只在纸上划了一道线。回家后，她把一叠旧账单推到我面前：念一张，念对了才准吃饭。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "一张张念给母亲听。"
+"reply" = "我从第一张念起，念错一个数就停，停了又重来，直到天黑。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = -2 }]
+
+# C9-meta: {"key": "c9_lieve_critical_02", "family": "lieve", "category": "critical", "weight": "focus", "source": "docs/TERRA16.md §12.2、17.12；docs/research/terra16/T_anchors_1553.md §2；N_books_academies.md。1554 为家学预备，月桂树正式开办不得早于1555年8月。三位家人姓名为原创。", "context": "公会的限额", "events": 2}
+[[tracks]]
+"key" = "c9_lieve_critical_02"
+"name" = "公会的限额"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "公会的限额"
+"text" = "四月一日，交易所大厅的墙上贴出了公会的新告示：今年只批十二个公证经纪人的名额，名单已经写满。公会的印章压在告示右下角，油墨还是湿的，印子边缘发亮。父亲抬头看了一眼，没有说话，把帽子往头上一扣。我数了数告示上的名字，十二个，没有一个是女人，也没有一个是我认得的新人。账房的书记在门口朝我笑，说，规矩就是规矩。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 4, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "waitlist"
+"text" = "接受候补，先替父亲的桌子跑腿。"
+"reply" = "我在候补的那一行写下自己的名字，字迹很小。书记看了一眼，没说什么，只在名单旁画了个不起眼的记号。接下来的一个月，我替父亲跑遍了交易所的每一根柱子。名字没有上名单，跑腿的人却都认得我。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "fame", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_critical_02_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "draw_seats"
+"text" = "把交易所的席位画成平面图。"
+"reply" = "我把柱子、桌子、门口和窗子的位置都照比例量下来，一排一排画进图里。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_critical_02_solved", "value" = true }]
+"check" = { "attr" = "perception", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [] }
+
+[[tracks.chapters.choices]]
+"key" = "mathijs_letter"
+"text" = "请马蒂斯去找修辞学会的书记，求一封请愿信。"
+"reply" = "马蒂斯把信纸往桌上一拍，学着公会书记的腔调念：‘伟大的公会，请按章程复核名额。’ 念完他自己先笑了，说：这是戏，别当真。可信是真的，学会的人替你盖了章。"
+"next" = "done"
+"requires" = [{ "kind" = "affinity", "person" = "mathijs", "ge" = 4 }]
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 4 }, { "kind" = "fame", "value" = 2 }, { "kind" = "affinity", "person" = "mathijs", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_critical_02_solved", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "公会的限额·席位图"
+"text" = "父亲拿起图看了很久，手指一格一格地摸过去，停在一个空位上。那是公会留给老席位的名额，早就被挪给了别人。他把图收进怀里：明天去找书记。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "把每一处标注都记进小册子。"
+"reply" = "每个空位旁边，我都写下了被挪走的日子。"
+"next" = "done"
+"effects" = [{ "kind" = "skill", "skill" = "cartography", "value" = 18 }, { "kind" = "growth", "attr" = "perception", "value" = 5 }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "公会的限额·图错了"
+"text" = "图画到一半，柱子的位置对不上，我把第四排的桌子画到了门外。父亲接过去看，叹了口气，把它撕成两半：规矩要的是准，不是快。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "从门口重新量起。"
+"reply" = "我从门口重新量起，量到第四排就忘了数，只好又从头来。画完那天，手上全是墨。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -2 }]
+
+# C9-meta: {"key": "c9_lieve_critical_03", "family": "lieve", "category": "critical", "weight": "focus", "source": "docs/TERRA16.md §12.2、17.12；docs/research/terra16/T_anchors_1553.md §2；N_books_academies.md。1554 为家学预备，月桂树正式开办不得早于1555年8月。三位家人姓名为原创。", "context": "第一笔保管款", "events": 2}
+[[tracks]]
+"key" = "c9_lieve_critical_03"
+"name" = "第一笔保管款"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "第一笔保管款"
+"text" = "六月一日，一位穿黑衣的太太走进兑换桌，把一只封了蜡的小袋放到我面前，封蜡上印着一只帆船，已经有些裂了。她的丈夫去年在风暴里没有回来，她要在这里存下一笔钱，等儿子满了十八岁，再由他自己来取。规矩是父亲定的：保管款不许借出，每一笔都要记进账里，两边各签一次字。她看着我，问我做不做得到。她的袖口缝着黑纱，手指很瘦。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 6, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "father_keeps"
+"text" = "请父亲接手保管，收进柜子里。"
+"reply" = "我没有把握，把袋子交给父亲，请他收进柜子里。太太没说什么，只在收据上签了字。父亲把这件事记在他自己的账上，我替他誊了三遍。码头上有人说，兑换商的女儿，一袋保管款也要父亲替她看着。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "fame", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_widow_remembers_father", "value" = true }, { "kind" = "memory", "memory" = "mem-c9-lieve-03", "title" = "第一笔保管款" }, { "kind" = "flag", "flag" = "c9_lieve_critical_03_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "balance"
+"text" = "把两栏对平，一笔一笔核过去。"
+"reply" = "我把存入的数目记进借方，把她名下的户头记进贷方，每一笔都在两边对上。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_critical_03_solved", "value" = true }]
+"check" = { "attr" = "numeracy", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [] }
+
+[[tracks.chapters.choices]]
+"key" = "maeyken_elders"
+"text" = "请玛伊肯带我去找她母亲的老主顾。"
+"reply" = "玛伊肯拉着我跑过回廊。她母亲的几个老主顾在码头上都摘下了帽子，什么也没说，只站在柜台前，让那位太太从人前走过去。太太把袋子交到我手里，手指还在抖，却没有哭。"
+"next" = "done"
+"requires" = [{ "kind" = "affinity", "person" = "maeyken_steens", "ge" = 10 }]
+"effects" = [{ "kind" = "fame", "value" = 3 }, { "kind" = "growth", "attr" = "commerce", "value" = 3 }, { "kind" = "affinity", "person" = "maeyken_steens", "value" = 3 }, { "kind" = "memory", "memory" = "mem-c9-lieve-03", "title" = "第一笔保管款" }, { "kind" = "flag", "flag" = "c9_lieve_critical_03_solved", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "第一笔保管款·对平"
+"text" = "写到最后一行，我在页脚画了一条细线，两栏的合计正好相等。太太看着那条线，肩膀松了下来。她把袋子交到我手里，说：你记的账，我信。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "把收据折好，压进账本。"
+"reply" = "收据的折痕压得很平。那一页，我誊了两遍。"
+"next" = "done"
+"effects" = [{ "kind" = "skill", "skill" = "double_entry", "value" = 18 }, { "kind" = "growth", "attr" = "commerce", "value" = 4 }, { "kind" = "memory", "memory" = "mem-c9-lieve-03", "title" = "第一笔保管款" }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "第一笔保管款·差一笔"
+"text" = "两栏差了一笔，我翻遍账页也找不到。太太等得不耐烦，把收据收回去，说：等你们家算清了再来。父亲替我补平了那笔钱，记在我的名字下面。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "亲手把那一笔的名字写在账页上。"
+"reply" = "我写下自己的名字，又在名字旁边写上父亲补的数。墨迹干得很慢。"
+"next" = "done"
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -2 }]
+
+# C9-meta: {"key": "c9_lieve_critical_04", "family": "lieve", "category": "critical", "weight": "focus", "source": "docs/TERRA16.md §12.2、17.12；docs/research/terra16/T_anchors_1553.md §2；N_books_academies.md。1554 为家学预备，月桂树正式开办不得早于1555年8月。三位家人姓名为原创。", "context": "胡椒远期样单", "events": 2}
+[[tracks]]
+"key" = "c9_lieve_critical_04"
+"name" = "胡椒远期样单"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "胡椒远期样单"
+"text" = "八月一日，父亲从里斯本的来信里抽出一张胡椒远期合约的样单，让我先填一遍。样单的折痕是一路颠过来的。样单上印着到港的月份、每百磅的价格、利息与违约的罚金，空格是手写的。卖方是一家葡萄牙商行，买方是安特卫普的香料商。热风从交易所的门缝里钻进来，纸角不停地翻。父亲说，到港那天的价，今天就得算出来。我拿起笔，先从利息算起。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 8, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "father_finish"
+"text" = "请父亲接着算下去，我照抄一遍。"
+"reply" = "我请父亲帮我补完样单。他用同样的墨水，把利息那一栏又算了一遍，一个小数点都没改。我把他算的每一行抄进自己的小册子，抄到天黑。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = 3 }, { "kind" = "growth", "attr" = "numeracy", "value" = 1 }, { "kind" = "fame", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_critical_04_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "voyage_days"
+"text" = "把船期拆成天，连北海上等风的那几天也算进去。"
+"reply" = "我把船期拆成天，每一天的运价、风向和利息各占一格，排成一列。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_critical_04_solved", "value" = true }]
+"check" = { "attr" = "seamanship", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [] }
+
+[[tracks.chapters.choices]]
+"key" = "najma_winds"
+"text" = "照纳吉玛信里的风向表，对进样单的每一天。"
+"reply" = "尤尔法的风向表是她一行行写来的。我照着它对进样单，卖方代理人看着那些我从没去过的港口名字，笑容慢慢收了起来，划掉了他那一格。"
+"next" = "done"
+"requires" = [{ "kind" = "affinity", "person" = "najma", "ge" = 2 }]
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 4 }, { "kind" = "skill", "skill" = "negotiation", "value" = 8 }, { "kind" = "affinity", "person" = "najma", "value" = 2 }, { "kind" = "flag", "flag" = "c9_lieve_critical_04_solved", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "胡椒远期样单·对上"
+"text" = "我把船期拆成了天，每一天的运价、保险和利息排成一列。算到第三十七天，数字对上了。父亲在旁边轻轻念了一遍我的结果，没有补充一个字。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "把结果誊在样单的空白处。"
+"reply" = "我把结果誊在样单上，和父亲的字并排放着。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 6 }, { "kind" = "skill", "skill" = "negotiation", "value" = 6 }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "胡椒远期样单·漏了风"
+"text" = "等风的那三天，我没有算进去。卖方的代理人指着那一格笑：小姐，海上的风可不会替你记账。他把那一格按他的数改了，还顺手添了一笔罚金。父亲没有骂我，只把罚金的收据推到我面前。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "收下收据，把这一笔算进自己的亏空。"
+"reply" = "我在账页上写下那笔罚金，写得很小，像是怕被人看见。"
+"next" = "done"
+"effects" = [{ "kind" = "cash", "value" = -6 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_pepper_penalty", "value" = true }]
+
+# C9-meta: {"key": "c9_lieve_critical_05", "family": "lieve", "category": "critical", "weight": "focus", "source": "docs/TERRA16.md §12.2、17.12；docs/research/terra16/T_anchors_1553.md §2；N_books_academies.md。1554 为家学预备，月桂树正式开办不得早于1555年8月。三位家人姓名为原创。", "context": "预备讲席的推荐", "events": 2}
+[[tracks]]
+"key" = "c9_lieve_critical_05"
+"name" = "预备讲席的推荐"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "预备讲席的推荐"
+"text" = "十一月一日，拜因斯先生的学堂要在冬天开一班预备讲席，只收十二个女孩。推荐信由她来写，送到学堂的委员手里，她先问我愿不愿意。我说愿意。她把一支鹅毛笔放到我手里，说：字写得好，不如先说清楚自己要学什么。窗子上结着一层水汽，我用袖口擦出一小块，看见学堂门口有几个女孩在等。笔尖是新削的，我握着它，半天没有落笔。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 11, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "mother_help"
+"text" = "请母亲帮我改草稿。"
+"reply" = "我把推荐信的事交给母亲。她先看了信，又看了我的字，只说一句：要学的东西，得自己说出来。她陪我把草稿改到深夜。拜因斯先生把我的名字往后挪了一行，我没有抱怨。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }, { "kind" = "fame", "value" = -1 }, { "kind" = "flag", "flag" = "c9_lieve_critical_05_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "essay"
+"text" = "写一篇说账的短文，把自己算过的账一件件写清楚。"
+"reply" = "我把母亲的口译、胡椒样单和那袋轻币一件件写进文章，哪一步算错过，哪一步改了回来，都照实写。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_critical_05_solved", "value" = true }]
+"check" = { "attr" = "learning", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [] }
+
+[[tracks.chapters.choices]]
+"key" = "ines_note"
+"text" = "请伊内丝替我把草稿递进学堂的委员手里。"
+"reply" = "伊内丝接过草稿，只看了第一行，就在页边写下半行诗，叫我去找拜因斯先生。拜因斯先生看了那半行，笑了一下，把我的座位往前挪了一排。"
+"next" = "done"
+"requires" = [{ "kind" = "affinity", "person" = "ines_costa", "ge" = 3 }]
+"effects" = [{ "kind" = "fame", "value" = 2 }, { "kind" = "affinity", "person" = "ines_costa", "value" = 3 }, { "kind" = "skill", "skill" = "poetry", "value" = 8 }, { "kind" = "flag", "flag" = "c9_lieve_critical_05_solved", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "预备讲席的推荐·短文"
+"text" = "拜因斯先生出的题目是：写一件自己算过的账。我写完交上去，她没有改一个字，只在末尾画了一个小圈。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "把那个小圈照样画进自己的账本。"
+"reply" = "我在账本第一页画上那个圈，旁边写上日子。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 6 }, { "kind" = "skill", "skill" = "poetry", "value" = 8 }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "预备讲席的推荐·笑声"
+"text" = "写到一半，前后对不上了，我把一笔收入写进了支出那一栏。学堂后排有个女孩笑出了声。拜因斯先生在末尾画了一个问号，把我的名字从正册上划到了候补。"
+"once" = true
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "ok"
+"text" = "记住笑声是从哪一排来的。"
+"reply" = "笑声从后排一个女孩的嘴里来，我把她的脸记住了。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -2 }, { "kind" = "flag", "flag" = "c9_lieve_essay_laughed", "value" = true }]
+
+[[tracks]]
+"key" = "c9_lieve_novice_ten"
+"name" = "莉芙·德克莱尔克·新手旬"
+"kind" = "request"
+"start" = "upper"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "upper"
+"title" = "新手旬·上：小天平与母亲的课"
+"text" = "一月的头一旬，家里的日子要重新排。父亲把兑换桌上那套旧的小天平推到我面前，黄铜秤杆磨得发亮，砝码装在一只带锁的木盒里。他说，这是他学徒时用的，今年归我用。母亲把葡萄牙语的小册子摊开，指给我看第一课的动词。姑母隔着门喊，说作坊的线今天到货，谁先去领谁先挑。三个地方都在等我，我得先去一处。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 1, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "scale"
+"text" = "先把小天平收下，跟父亲去兑换桌。"
+"reply" = "我把木盒抱在怀里，沉甸甸的。父亲替我把第一个砝码的位置指给我看，又让我照着在纸上画一遍，直到我能闭着眼把它摆对。他点了点头，那一刻我觉得这套东西真的归我了。"
+"next" = "middle"
+"effects" = [{ "kind" = "item", "item" = "balance_weights", "qty" = 1 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 3 }, { "kind" = "growth", "attr" = "commerce", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "lang"
+"text" = "先去母亲的课上，念完第一课。"
+"reply" = "母亲让我把动词念三遍，念错一个就停下重来。念到第三遍才顺口，母亲的嘴角动了一下，说：通事的孩子，该有这个速度。"
+"next" = "middle"
+"effects" = [{ "kind" = "skill", "skill" = "lang_portuguese", "value" = 6 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "lace"
+"text" = "先去姑母的作坊领线。"
+"reply" = "作坊里的线团堆得比人还高。姑母给我一只线轴，说：绕满了才算领到。我绕到手指发酸，线轴终于满了。她掂了掂，说了个‘行’字，把账本往我这边推了一寸。"
+"next" = "middle"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 3 }]
+
+[[tracks.chapters]]
+"key" = "middle"
+"title" = "新手旬·中：零用钱与第一张日程"
+"text" = "一月中旬，父亲在桌角放了一张小纸条，写着一个数目。这是每个月拨给我的用项，我自己管，花掉的每一笔都要写进账本。我把纸条夹进账本第一页。接着是日程。我第一次自己排日子：上午母亲的课，下午姑母的线，傍晚父亲的桌子。纸上空着一格，写着“自选”。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 1, 11] }]
+
+[[tracks.chapters.choices]]
+"key" = "fill_in"
+"text" = "在空格里写下：去码头看船。"
+"reply" = "我在那一格写下“码头”，写完又涂掉，换成“去码头看船”。怕以后忘了，这是自己选的。"
+"next" = "lower"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_novice_schedule", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "leave_blank"
+"text" = "空着，明天再定。"
+"reply" = "那一格我没有填。我把纸折起来，夹进账本，等哪一天想好了再写。"
+"next" = "lower"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_novice_schedule", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "lower"
+"title" = "新手旬·下：交易所边上的蕾丝铺"
+"text" = "一月下旬的一个午后，我第一次一个人出门。父亲交代：不许跑，不许进酒馆，回来算清路费。我从交易所后门绕出去，走到蕾丝铺门口。门口的小桌上，一个和我差不多大的女孩正蹲在地上，追一只滚进沟里的线轴，白线拖出老长。她抬头看见我，把线团往胸前一抱，说：别站着，帮我按住这头。她的手指上全是针扎的小红点。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 1, 21] }]
+
+[[tracks.chapters.choices]]
+"key" = "help"
+"text" = "蹲下来，替她按住线头。"
+"reply" = "我按住线头，她把线轴从沟里捞出来，一圈一圈绕回去，快得我看不清。她说她叫玛伊肯，是这家铺子的学徒，姑母在里头管账，她管手。她看看我的鞋，又看看我的账本：你是兑换桌那家的女儿吧？我点头。她笑了：那你替我算算，这一卷线该收几个铜子。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 5 }, { "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }, { "kind" = "growth", "attr" = "sensibility", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "先数她有几只线轴。"
+"reply" = "我数得很快，数到第三十二只时她还在笑，数到第五十只她就不笑了。她把最后一只线轴抢回去：你数得比我快，可你没看我手上的针眼。我一时不知道该回什么。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 1 }, { "kind" = "skill", "skill" = "double_entry", "value" = 4 }, { "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }]
+
+[[tracks]]
+"key" = "c9_lieve_friend_lace"
+"name" = "莉芙·德克莱尔克·蕾丝铺的玛伊肯"
+"kind" = "encounter"
+"start" = "lace_1"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "lace_1"
+"title" = "蕾丝铺的账"
+"text" = "二月，玛伊肯在蕾丝铺的后门等我，手里拿着一叠写满圈的纸。她说，姑母让她记订单，可她写的数字挤成一团，分不清。她不肯说自己认不全字，只说：你记得住，替我念一遍。我把订单上的名字和针数念给她听，她用指头在桌上敲着节拍，跟着记。念到第七张，她忽然停下：这个布鲁日来的太太，又要改尺寸。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }, { "kind" = "date", "from" = [1553, 2, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "help_count"
+"text" = "一张张念给她听。"
+"reply" = "我念得很慢，每念一个针数，她就在桌上敲一下。念完一整叠，她把纸折起来塞进围裙里，说：下回还这样念，我请你吃一碗热汤。"
+"next" = "lace_2"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 5 }, { "kind" = "skill", "skill" = "embroidery", "value" = 4 }]
+
+[[tracks.chapters.choices]]
+"key" = "decline"
+"text" = "说我还有账要对，先走了。"
+"reply" = "我把纸还给她，说自己还有账要对，转身就走。走到巷口，听见她在后头把线轴摔在桌上。"
+"next" = "lace_2"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "lace_2"
+"title" = "五月节后的笔盒"
+"text" = "五月节过去，玛伊肯在蕾丝铺门口把一只笔盒塞进我手里。笔盒是她自己绣的，角上绣着一只小鸟，针脚不太齐。她说：你总在算账，笔盒总得有个地方放。我问她为什么绣鸟。她耸耸肩：鸟飞得快，不用数。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }, { "kind" = "date", "from" = [1553, 5, 12] }]
+
+[[tracks.chapters.choices]]
+"key" = "take"
+"text" = "收下，说谢谢。"
+"reply" = "笔盒上的小鸟还带着她指尖的热。我把它放进账本的夹层里，那里正好能放下一支笔。"
+"next" = "lace_3"
+"effects" = [{ "kind" = "item", "item" = "quill_case", "qty" = 1 }, { "kind" = "affinity", "person" = "maeyken_steens", "value" = 5 }]
+
+[[tracks.chapters.choices]]
+"key" = "return"
+"text" = "说我用不上，还给她。"
+"reply" = "我把笔盒推回去。她没接，只把它搁在柜台上：搁着吧，等你哪天用得上。"
+"next" = "lace_3"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "lace_3"
+"title" = "缺的三条"
+"text" = "八月，姑母的订单短了三条。布鲁日那边的太太来信要货，蕾丝铺的太太查来查去，只把账本摔给玛伊肯看。玛伊肯站在柜台前，脸涨得通红，一个字也没说。我看见她的手在围裙里攥成了团。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }, { "kind" = "date", "from" = [1553, 8, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "cover"
+"text" = "替她把缺的那三条补上。"
+"reply" = "我连夜把那三条花边照着样子补齐。针脚不如她的整齐，可数目对得上。第二天早上，蕾丝铺的太太把账本合上，什么也没问。"
+"next" = "lace_4"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 5 }, { "kind" = "growth", "attr" = "sensibility", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "show"
+"text" = "把账本摊开给她母亲看，说清是谁的错。"
+"reply" = "我把账本摊到蕾丝铺的太太面前，一行一行指给她看：哪天出的货，哪天收的线，三条是怎么缺的。太太看完，没有骂谁，只说：下回先对数。"
+"next" = "lace_4"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 2 }, { "kind" = "fame", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "silent"
+"text" = "什么也不说，站在一边。"
+"reply" = "我低下头，把账本收进袖子里。玛伊肯没有看我。那天以后，她在柜台前就不和我一起数线了。"
+"next" = "lace_4"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = -2 }]
+
+[[tracks.chapters]]
+"key" = "lace_4"
+"title" = "布鲁日的船"
+"text" = "十一月末，蕾丝铺要搬走一半的线。玛伊肯的姑母在布鲁日开了个小铺，要她去帮忙。她来告诉我的时候，手里还攥着那只笔盒的布角。她说：布鲁日的船明年春天才走，我们码头上见最后一面吧。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }, { "kind" = "date", "from" = [1553, 11, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "promise_dock"
+"text" = "答应去码头送她。"
+"reply" = "我说好，到时候一定去。她点点头，把笔盒的布角抹平了：别算日子，算船。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_lace_left", "value" = true }, { "kind" = "affinity", "person" = "maeyken_steens", "value" = 4 }]
+
+[[tracks.chapters.choices]]
+"key" = "promise_letter"
+"text" = "说我会写信。"
+"reply" = "她笑了一下：我的字写得歪，你可别嫌。我说不嫌，她就把一张纸片塞进我手里，上面只有一个地址。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_lace_left", "value" = true }, { "kind" = "affinity", "person" = "maeyken_steens", "value" = 3 }]
+
+[[tracks]]
+"key" = "c9_lieve_friend_mathijs"
+"name" = "莉芙·德克莱尔克·紫罗兰的马蒂斯"
+"kind" = "encounter"
+"start" = "mat_1"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "mat_1"
+"title" = "紫罗兰的排练厅"
+"text" = "三月的一个傍晚，我从修辞学会的门口经过，里面传来一阵哄笑。门没关严，我从缝里看见一个少年站在桌子上，学着公证书记走路的样子，把手背在身后，一步一顿，嘴里念着“此据”。那个样子我太熟悉了，像是把我每天在交易所看见的人，一个个搬到了台上。他察觉到我，转过身，学起我的样子。"
+"once" = true
+"mood" = "cheerful"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 3, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "laugh"
+"text" = "忍不住笑出声。"
+"reply" = "我笑出了声。马蒂斯从桌上跳下来，一边拍手一边说：这是戏，别当真。他问，明天还有排练，要不要进来看？"
+"next" = "mat_2"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 4 }]
+
+[[tracks.chapters.choices]]
+"key" = "ignore"
+"text" = "装作没听见，转身走开。"
+"reply" = "我加快脚步，身后还有他学我走路的声音，一直送到了巷口。"
+"next" = "mat_2"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "mat_2"
+"title" = "女角的台词"
+"text" = "六月，修辞学会在旧仓库里排练。马蒂斯穿着借来的裙子，演一个等船的女人。他念着念着忽然停下，朝印书坊的方向看了一眼，像是在等什么人，等不到，就把台词又念了一遍。对手的那一段他念不下去，回头问我：你来念那个男的，好不好？"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 6, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "read"
+"text" = "接过对手的台词，替他念。"
+"reply" = "我念得很平，像在念账。马蒂斯听着听着，把嘴角抿成一条线，说：你这样念，我能演下去。"
+"next" = "mat_3"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 4 }, { "kind" = "growth", "attr" = "eloquence", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "critique"
+"text" = "说台词太假，哪一句都不像真的。"
+"reply" = "马蒂斯的脸一下子沉了下来，把裙子往地上一扔：那你来演！我没有接，只看着他把那一段又念了一遍。"
+"next" = "mat_3"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 1 }, { "kind" = "growth", "attr" = "learning", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "mat_3"
+"title" = "不署名的稿子"
+"text" = "九月，马蒂斯递来一页稿子：一首没有署名的短诗，要我替他抄成正式的字体，好交给修辞大会的评委。他说，评委只看字，不看人。我低头看了两行，发现那是一首写给某个人的诗，里头只有一个“你”，没有名字。我没有问。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 9, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "copy"
+"text" = "替他抄得工工整整，一个字也不改。"
+"reply" = "我用最细的笔抄完，末尾什么也没加。马蒂斯把稿子对着光看了很久，说：这字，比我本人还像样。"
+"next" = "mat_4"
+"effects" = [{ "kind" = "skill", "skill" = "calligraphy", "value" = 6 }, { "kind" = "affinity", "person" = "mathijs", "value" = 4 }]
+
+[[tracks.chapters.choices]]
+"key" = "decline"
+"text" = "说我的字不够好，抄不了。"
+"reply" = "马蒂斯把稿子收回去，没有生气，只说：那就不署名地投上去吧，谁的字也无所谓。他的背影比来时更瘦。"
+"next" = "mat_4"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "mat_4"
+"title" = "根特的台子"
+"text" = "十二月，学会的人在圣尼古拉节前夜聚在一起吃饼。马蒂斯塞给我一只小纸包，里面是一张抄好的诗，字迹和那页稿子一模一样。他说：这首是我抄给别人的，抄完我就不要了，你拿去吧。他又说，明年春天，学会要去根特参加修辞大会，我们这些学徒也要跟着去抬箱子。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 12, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "take"
+"text" = "收下纸包，说替他保管。"
+"reply" = "我把纸包放进账本的最后一页。马蒂斯笑着说：嘘，这是戏，别当真。"
+"next" = "done"
+"effects" = [{ "kind" = "item", "item" = "copied_poem", "qty" = 1 }, { "kind" = "affinity", "person" = "mathijs", "value" = 4 }, { "kind" = "flag", "flag" = "c9_lieve_mathijs_tour", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "return"
+"text" = "说这是他的稿子，还给他。"
+"reply" = "我把纸包推回去。他愣了一下，把它揣进怀里：那就当没送过。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 1 }, { "kind" = "flag", "flag" = "c9_lieve_mathijs_tour", "value" = true }]
+
+[[tracks]]
+"key" = "c9_lieve_letter_lace_bruges"
+"name" = "莉芙·德克莱尔克·布鲁日来的信"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "布鲁日来的信"
+"text" = "五月的最后一周，一封从布鲁日来的信送到了兑换桌上。信封是粗糙的灰纸，字歪歪扭扭，像一排没站稳的针。我拆开，里面只有一页纸。玛伊肯写：“莉芙：布鲁日的雨下了三天，姑母的屋子正对运河，船一过，窗户就跟着晃。这里的太太们问我会不会数针，我说会，她们不信，让我当场数给她们看。我数了，她们就信了。你的笔盒我还带着，角上那只鸟的线头又松了一根，你要是见了，别替我补，我自己补。字写得歪，你别笑，我的针脚比字齐。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_lace_left", "value" = true }, { "kind" = "date", "from" = [1554, 5, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "reply"
+"text" = "回一封信，说安特卫普的五月节。"
+"reply" = "我把五月节的花环、交易所的柱子和兑换桌上的汇率，一一写进回信，最后添上一句：布鲁日的船，我替你记着日子。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 3 }, { "kind" = "letter", "person" = "maeyken_steens", "text" = "莉芙：布鲁日的船，明年春天，我在码头等你。别算日子，算船。玛伊肯" }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "先收进账本，等有空再回。"
+"reply" = "我把信折成三折，夹进账本最后一页，和那张地址纸条放在一起。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 1 }]
+
+[[tracks]]
+"key" = "c9_lieve_letter_mathijs_tour"
+"name" = "莉芙·德克莱尔克·根特来的信"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "根特来的信"
+"text" = "九月中旬，一包从根特寄来的稿子送到了我手里。里面夹着一张便条，字写得飞快，几乎要溢出纸边：“嘘，这封信是戏，别当真。根特的台子比安特卫普的高出一个人，观众的鞋比我们的脚还臭，评委还嫌我的嗓子太细。我的戏投上去了，没署名，评委只看字，不看人——我觉得这是最好的一件事。印书坊那边要是来人问，就说我在演女角，演得很像。马蒂斯”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_mathijs_tour", "value" = true }, { "kind" = "date", "from" = [1554, 9, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "把便条夹进账本，写上日子：根特，一五五四年九月。"
+"reply" = "写完，我又觉得自己像是在替谁记台词。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "leave"
+"text" = "把便条放回包裹里，先不回信。"
+"reply" = "便条被我压在稿子下面。那页没署名的诗，我抄过的那一页，又在包裹里露了一角。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "mathijs", "value" = 1 }]
+
+[[tracks]]
+"key" = "c9_lieve_yearly_may_1553"
+"name" = "莉芙·德克莱尔克·五月节·山楂花环"
+"kind" = "encounter"
+"start" = "eve"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "eve"
+"title" = "五月节前夜·纸条"
+"text" = "昨天傍晚，有人在交易所后门拦住我，说明早林子口见，带上账本，我们一起数花。今夜的灯熄得晚，卖蕾丝的摊子收了一半，巷口站着一个裹灰披肩的人影。她看见我，就把一张折成小方块的纸塞进我手里，转身进了巷子，没有回头。纸上只有半行诗：“明早进林的人，露水要先沾上睫毛——”后半行空着，纸角上画着一个没写完的圈。"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 5, 1], "to" = [1553, 5, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "finish"
+"text" = "把空着的半行补上，再塞回去。"
+"reply" = "我想了很久，在纸背写下一句：“……天亮前，我替你把这一片林数完。” 写完才觉得脸热。我把纸条折好，放进袖口。"
+"next" = "forest"
+"effects" = [{ "kind" = "affinity", "person" = "ines_costa", "value" = 3 }, { "kind" = "skill", "skill" = "poetry", "value" = 6 }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "收进账本，明天再说。"
+"reply" = "纸条我夹进了账本第一页，和那张汇票挨在一起。我没有回。"
+"next" = "forest"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_may_note_kept", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "forest"
+"title" = "五月节清晨·进林"
+"text" = "天还没亮，女伴们已经结伴进林了。露水把裙边打湿，林子边的野花被摘得差不多。我沿着溪往里走，要找一丛开得高、花还带着露水的山楂。溪边的泥滑得很，树根横在路上，每一步都要看清。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 5, 11], "to" = [1553, 5, 16] }]
+
+[[tracks.chapters.choices]]
+"key" = "deep"
+"text" = "趁露水还在，往林子深处去找最高的那一丛。"
+"reply" = "我踩着树根往深处走，一边走一边抬头找那些挂着白花的枝子。"
+"next" = "win"
+"effects" = [{ "kind" = "flag", "flag" = "c9_lieve_may_bourse_early", "value" = true }, { "kind" = "growth", "attr" = "perception", "value" = 3 }]
+"check" = { "attr" = "perception", "base" = 35, "per" = 6 }
+"fail" = { "next" = "lost", "effects" = [{ "kind" = "flag", "flag" = "c9_lieve_may_lost_way", "value" = true }] }
+
+[[tracks.chapters.choices]]
+"key" = "old_path"
+"text" = "跟着大家走熟路，在溪边洗了脸就回去。"
+"reply" = "我在溪边用露水洗了脸，凉意一直到额头。枝头上好的山楂都开过了，我也不去挑了。"
+"next" = "plain"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "win"
+"title" = "五月节·花环挂上门"
+"text" = "我采到的那一丛还挂着露水，白花一簇簇挤在枝上。我把它们扎成一个花环，挂上家门框。路过交易所的人都抬了头：卖蕾丝的太太说，这花是林子深处来的；汉萨的伙计多看了两眼；经纪人笑着问，谁家的女儿连五月的花都抢得到。父亲从柱子底下走出来，把帽子摘下来看了看。"
+"once" = true
+"mood" = "cheerful"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 5, 11], "to" = [1553, 5, 16] }]
+
+[[tracks.chapters.choices]]
+"key" = "stand"
+"text" = "让大家都看够，再进门。"
+"reply" = "我站在门口，等路过的人都看过一眼，才伸手推开门。花环上的露水滴在石阶上，一滴，两滴。"
+"next" = "done"
+"effects" = [{ "kind" = "fame", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "memory", "memory" = "mem-c9-lieve-may-1553", "title" = "五月节·挂在门上的花环" }]
+
+[[tracks.chapters]]
+"key" = "lost"
+"title" = "五月节·蔫花"
+"text" = "溪边的泥滑得很，我一脚踩进沟里，裙边湿到膝盖。等我抱着东倒西歪的花枝回到门口，花已经蔫了一半，交易所的人都在看，花环挂不上去。母亲从屋里出来，看了看我的裙子，没有骂，只把花枝一根根理直，说：下回先看脚，再看花。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 5, 11], "to" = [1553, 5, 16] }]
+
+[[tracks.chapters.choices]]
+"key" = "hide"
+"text" = "把蔫花挂在门后，不让人看。"
+"reply" = "我把花枝挂在门后，挂得很低。母亲看了一眼，没说什么，只把门闩又推了一下，让它关得更严。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }]
+
+[[tracks.chapters]]
+"key" = "plain"
+"title" = "五月节·熟路"
+"text" = "我跟着大家走熟路，回到家时，门框上什么也没有。母亲已经把一束野花插进了窗口的瓶子里。我站在门口，没有人问我去了哪里，也没有人问我洗没洗脸。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 5, 11], "to" = [1553, 5, 16] }]
+
+[[tracks.chapters.choices]]
+"key" = "wipe"
+"text" = "把洗过脸的帕子晾在窗口。"
+"reply" = "我把帕子搭在窗台上，很快被晨风吹干了，像什么也没发生过。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }]
+
+[[tracks]]
+"key" = "c9_lieve_first_outing"
+"name" = "莉芙·德克莱尔克·河堤的旧驳船"
+"kind" = "encounter"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "河堤的旧驳船"
+"text" = "父亲在一月底的晚饭后说，家里许我出城了，但要带上同伴，日落前回来。我把这消息告诉玛伊肯，她当场扔下线轴：河堤那边我还没去过。我们沿着斯海尔德河的堤岸往北走，过了最后一排柳树，堤外是一片被潮水冲出来的滩地。滩上停着一条半沉的旧驳船，船帮上长满了贝壳。"
+"once" = true
+"mood" = "cheerful"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "flag", "flag" = "c9_lieve_met_lace", "value" = true }, { "kind" = "flag", "flag" = "outing_permission", "value" = true }, { "kind" = "flag", "flag" = "c9_lieve_first_outing_done", "value" = false }, { "kind" = "date", "from" = [1553, 2, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "boat"
+"text" = "踩上旧驳船的船板，看潮水从哪边来。"
+"reply" = "船板湿滑，我一步步踩上去，蹲下身看水线。潮水从南边的沙洲绕过来，又从船底下回去。玛伊肯在岸上喊我，我没有应。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 3 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 6 }, { "kind" = "affinity", "person" = "maeyken_steens", "value" = 3 }, { "kind" = "flag", "flag" = "c9_lieve_first_outing_done", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "替玛伊肯数清滩上的贝壳，好回去对账。"
+"reply" = "我们一只一只数，数到一百多个。她数得比我快，嘴里念着贝壳的名字，我却记不住那些名字。天黑前，我们把数目写在一张纸上，她说要留着。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "maeyken_steens", "value" = 4 }, { "kind" = "skill", "skill" = "double_entry", "value" = 3 }, { "kind" = "flag", "flag" = "c9_lieve_first_outing_done", "value" = true }]
+
+# 2026-11-12 剧情增写（第九批 · 莉芙）：人物线 A「地窖的炉子」，父亲彼得。这一家的主轴。
+# 母本：浮士德传说（后世的民间书，1587）——拿灵魂去换知识与金子；《每个人》（Elckerlijc，1495 年的佛兰德道德剧）——死神来召，财货只陪到坟边；
+#       文化：低地国家的商业信用（纸做的信用，一场挤兑就能烧光）与新学问的狂热（巴塞尔传出来的方子、阿尔马登的汞）；
+#       张力：他怕得要命，怕挤兑，怕女儿受苦，于是把自己的灵魂也当成一张可以贴现的票——签空白汇票去买药方与汞，为的是给女儿一样烧不掉的东西。
+# 家乡 1553（锁、挤兑、炉子）→ 1554（方子与第一张空白汇票、汞毒的手）→ 1555（阿尔马登的收据、铸币所的秤）→ 1556（签名在不该在的地方、熄炉）；
+# 与关键事件“拒付的汇票”“家族信用补救”“空白汇票的保管”咬住（这三件的正文同步加了几句）；主线旁轨 main_lieve_rw_ashes 接着写炉子没熄、汞毒与他死在炉边。
+# 改投印书圈的局同样走这一条：线上没有一章写死在月桂树或印坊里。
+[[tracks]]
+"key" = "c9_lieve_rw_furnace"
+"name" = "地窖的炉子"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "地窖的新锁"
+"text" = "四月，运河边的柳树刚冒青。我下地窖拿腌鲱鱼，那扇通往里间的木门上多了一把新锁，黄铜的，锁眼还亮着。门缝里漏出一股味道：臭鸡蛋似的，底下又压着一点甜，像炉子上烤糊了的糖。往年里间只堆着旧账箱和过冬的泥炭。我把鼻子贴近门缝，里面有什么东西在轻轻地响，噼、噼，像有人在很远的地方嗑榛子。父亲早饭时说，他今天一整天都在码头。"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 4, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "peek"
+"text" = "从锁眼里往里看"
+"reply" = "锁眼太小，只看得见一点红光，一明一暗，像有东西在里面喘气。我看得眼睛发酸，退出来时袖子蹭了一道黑灰。晚饭时父亲盯着我的袖子看了一会儿，什么也没问，只把盐罐推到我手边。那道灰我没有拍掉，夜里把袖子翻过来闻，还是那股甜。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_cellar_peeked", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ledger"
+"text" = "去翻家用账里的泥炭钱"
+"reply" = "泥炭的账是我记的：三月买了两车，比去年同月多一车半。那半车是父亲自己去河边叫的，说兑换桌冷。可兑换桌旁边的火盆，整个三月只生过四回。我在那一行底下画了一道细线，没有写字。账是平的，平得叫人心里发毛。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "skill", "skill" = "double_entry", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "mother"
+"text" = "上楼问母亲里间放了什么"
+"reply" = "母亲正在缝领口，针停了一下：“你父亲的旧账。”她说得很慢，像在念一个刚学会的动词，“旧账要锁，新账也要锁。去把鲱鱼拿上来。”我拿着鲱鱼上楼，看见她把针在头发里抿了一抿，又低下头去。那一下停顿，比她说的话还长。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "北廊的挤兑"
+"text" = "十月，交易所北廊的老约斯出了事。一早有人说他的钱箱是空的，不到晌午，他桌前挤了一百多人，攥着他开的收据要现钱。约斯付了二十个人，第二十一个拿到的是一张欠条，第三十个推翻了他的桌子。父亲拉着我站在柱子后面看，攥得我指节发疼。回家以后他没有上楼，掏出钥匙，领我下了地窖，打开那把黄铜锁。里间砌着一座砖炉，齐我的胸口，炉膛里压着暗红的火，旁边一排玻璃瓶，最小的那只里装着一汪会滚的银。“信用是纸做的，”父亲说，“约斯今天烧光了。金子不是纸。”"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 10, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "bellows"
+"text" = "接过风箱，替他拉"
+"reply" = "我握住风箱的两根柄，一推一拉，炉膛里的红一下子亮成了黄。父亲在旁边数：“一、二……慢一点，火也要喘气。”他用的是兑换桌上报汇率的嗓子，一个字也不多。拉到第六十下，我的胳膊酸了，他接过去。那晚我回房洗手，指缝里的黑洗了三遍。"
+"next" = "n2"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = 3 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_bellows", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "cost"
+"text" = "问他这些瓶子值多少钱"
+"reply" = "他拿起最小的那只瓶子，对着火看：“这一两，抵约斯半天的流水。”又放下，“可它一旦成了，就抵得上整座交易所。”我问要是不成呢。他把瓶塞按紧，按了很久：“不成，就当是一笔保费。保的是你。”我头一回听他把账算成这样，不知道该记进哪一栏。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "madness"
+"text" = "说这是约斯那样的疯事"
+"reply" = "我说约斯是借了不该借的钱，父亲这是要烧掉家里的钱。他没有生气，抓着我的手按到炉壁上，烫得我缩了回来。“摸到了？这是真的热。约斯的收据不热。”他关上炉门，送我上楼，在楼梯口说：“别告诉你母亲你下来过。”可我看见母亲就站在楼梯顶上。"
+"next" = "n2"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = -2 }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_called_madness", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "巴塞尔来的方子"
+"text" = "复活节后，家里来了个客人，穿一件黑呢长袍，袍角溅着一路的泥，说自己年轻时在巴塞尔听霍恩海姆博士讲过课。他从怀里掏出一卷手抄的方子，纸边烧焦了一块，说那一块是博士亲手烧的，后面的东西不该给俗人看。父亲请他坐下，亲自倒酒，又从兑换桌的抽屉里取出一张汇票，蘸了墨，签上名字。数目那一栏空着，期限那一栏也空着。客人把汇票折了两折，塞进袍子里，说到科隆再填。"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 4, 25] }]
+
+[[tracks.chapters.choices]]
+"key" = "note"
+"text" = "记下那张汇票的编号"
+"reply" = "汇票的编号印在左上角，我在门边扫了一眼就记住了：四十七号。夜里我翻开自己的小账簿，在最后一页写下“四十七，空，科隆”，又把这一页折了一个角。父亲的抽屉里还有多少张这样的票，我没有去数。我怕数清楚了，就再也忘不掉。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "skill", "skill" = "double_entry", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_bill_noted", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "当着客人问：方子要几两汞"
+"reply" = "我问方子要几两汞、几两硫，炉火要烧几天。客人笑着说小姐问的是秘密。我说秘密也有分量。他看了父亲一眼，父亲没替他解围。他只好说：七天七夜，汞要阿尔马登的，别处的不纯。他走后父亲把我叫进账房：“你问得对。下回别当着人问。”"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "growth", "attr" = "intellect", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "away"
+"text" = "回自己屋里，不看"
+"reply" = "我回屋关上门，摊开一本法文读本，一个字也没读进去。楼下的笑声停了，门响了一下，客人走了。过了很久父亲上楼，在我门口站了一会儿，说今天的账他自己记。他没有进来，我也没有开门。第二天账上那一行，写的是“招待，酒一壶”。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "含着铜钱的嘴"
+"text" = "十一月，第一场冻雨下来，兑换桌上的秤开始跟父亲作对。他托起秤盘，砝码在里面轻轻地抖，像秤自己怕冷。他说是天冷。吃饭的时候他把面包泡进汤里才咬，咬一口就停下来，用舌头去顶一颗牙。半夜我起来喝水，听见他在厨房里漱口，吐出来的水是淡红的。早上他说嘴里一股铜钱味，洗不掉。那天猫跳上他的账，他一巴掌把猫扫到地上，猫叫了一声，他自己先愣住了。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 11, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_madness"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_called_madness", "value" = true }]
+"text" = "十一月，第一场冻雨下来，兑换桌上的秤开始跟父亲作对。他托起秤盘，砝码在里面轻轻地抖，像秤自己怕冷。他说是天冷。那天我说他疯，他后来再没领我下过地窖，可他身上的味道一天比一天像那间里屋。吃饭的时候他把面包泡进汤里才咬，咬一口就停下来，用舌头去顶一颗牙。半夜我起来喝水，听见他在厨房里漱口，吐出来的水是淡红的。早上他说嘴里一股铜钱味，洗不掉。那天猫跳上他的账，他一巴掌把猫扫到地上，猫叫了一声，他自己先愣住了。"
+
+[[tracks.chapters.choices]]
+"key" = "scale"
+"text" = "把秤接过来，替他称"
+"reply" = "我把秤盘从他手里接过来，说今天的币我来称。他看了我一眼，没有争，坐到一旁报数。我称一枚，他报一枚的成色，一个也没报错，两只手却一直揣在袖子里。那一冬，兑换桌上称币的人换成了我。来兑钱的人都说德克莱尔克家的女儿手稳，没有人问为什么换了人。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "skill", "skill" = "double_entry", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_took_scale", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "sage"
+"text" = "煮一壶鼠尾草酒给他漱口"
+"reply" = "姑母说鼠尾草能收牙床，我在炉子上煮了一小壶，掺了醋。父亲含了一口，眉头皱成一团，又不好吐，只好咽下去。“比汞还难喝。”他说完自己先笑了，笑到一半捂住了嘴。那是他头一回在我面前说出那个字。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "medicine", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问他：是不是地窖里那只瓶子"
+"reply" = "他把手从袖子里抽出来，摊在桌上，让我看那一点止不住的抖。“兑换商的手，二十年没抖过。”他说，“抖一冬，换你一辈子不抖，这笔划得来。”我说他算错了。他说：“你还小，分不清哪一笔是本，哪一笔是利。”"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "阿尔马登的汞"
+"text" = "六月，父亲去布鲁日收账，钥匙串忘在了兑换桌上。地窖那把黄铜锁的钥匙最短，齿口磨得发亮。我在里间的砖缝里摸到一沓收据，细绳捆着：硫磺、炉砖、坩埚、玻璃匠的工钱；最厚的一叠是汞，每一张都盖着富格尔商行的印，货从西班牙的阿尔马登来。我把它们按日子排开，从一五四九年排到上个月。泥炭的烟熏得我眼睛发酸，我一边排一边在心里加，加到第三年，就不想再往下加了。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 6, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "total"
+"text" = "把六年的数加到底"
+"reply" = "我还是加到了底，借一栏，贷一栏。贷方那一栏是空的：六年里，这座炉子没有还过家里一个斯图弗。总数够在交易所北廊买下两张兑换桌。我把收据照原样捆好，绳结打成父亲的打法，塞回砖缝。那天夜里我梦见自己在称一块砖，砝码怎么加都不够。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "skill", "skill" = "double_entry", "value" = 4 }, { "kind" = "flag", "flag" = "rw_lieve_almaden_traced", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "one"
+"text" = "只抽走最新的一张收据"
+"reply" = "我只抽了最上面那一张，上个月的，汞六磅，其余的照原样捆好。我想等他发现少了一张来问我，我就把话说开。他回来以后翻过砖缝，我知道，因为绳结的打法变了。可他一直没有来问。那张收据我夹在自己的小账簿里，夹了整整一个夏天。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_receipt_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "aunt"
+"text" = "拿着收据去作坊找姑母"
+"reply" = "姑母只看了第一张，就把那沓纸推回来：“我知道。”她拿剪子剪断一根线头，“你父亲十四岁就想把铅变成金，那时候是为了你祖母的药钱。他这一辈子，一害怕就下地窖。”她说完低头数针，数到十，停一下，又从一数起。我站了很久，她没再抬头。"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }, { "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_aunt_told", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "铸币所的秤"
+"text" = "圣尼古拉节过后，父亲把我叫到地窖，打开炉门，从灰里夹出一只小坩埚。坩埚底上凝着一粒东西，比豌豆还小，黄得发亮。他的手抖得厉害，夹子碰在坩埚沿上叮叮地响。“第七年，”他说，“成了一粒。”他让我捧着，像捧一枚刚出模的新币。那一夜他没有睡，坐在楼梯上，隔一会儿就问我那一粒还在不在。天亮以前，我想起铸币所的试金房：试金师从来不看人的脸，只看秤。"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 12, 15] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_traced"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_almaden_traced", "value" = true }]
+"text" = "圣尼古拉节过后，父亲把我叫到地窖，打开炉门，从灰里夹出一只小坩埚。坩埚底上凝着一粒东西，比豌豆还小，黄得发亮。他的手抖得厉害，夹子碰在坩埚沿上叮叮地响。“第七年，”他说，“成了一粒。”他让我捧着，像捧一枚刚出模的新币。我捧着它，心里冒出来的却是砖缝里那一沓收据的总数。那一夜他没有睡，坐在楼梯上，隔一会儿就问我那一粒还在不在。天亮以前，我想起铸币所的试金房：试金师从来不看人的脸，只看秤。"
+
+[[tracks.chapters.choices]]
+"key" = "assay"
+"text" = "天一亮就拿去铸币所试金"
+"reply" = "试金师把那一粒在试金石上划了一道，又滴了一滴酸。黄色在酸里退下去，底下露出灰白。“铜里掺了砷，再拿汞熏过，熏得好看。”他把那一粒还给我，没收钱，“这种东西我一年见三回，送来的人都说是自己炼的。”我回家告诉父亲，他听完，说试金师的酸不纯。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -1 }, { "kind" = "flag", "flag" = "rw_lieve_assayed", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "keep"
+"text" = "替他收着，不去试"
+"reply" = "我把那一粒包进一块细麻布，放进自己的针线盒，和母亲给的那枚银针放在一处。父亲问起，我就打开给他看一眼。他每回看都笑，笑得像个刚押对了船期的人。我没有去试。秤会说什么我知道，我只是想让他再多笑几回。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_grain_untested", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "weigh"
+"text" = "当着他的面，用兑换桌的秤称"
+"reply" = "我把它放上兑换桌最小的那杆秤，一厘一厘地加砝码。同样大小的一粒金子，该比它重将近一倍。我没有说出口，只把砝码一枚枚取下来，在桌上排成一排。父亲看着那排砝码，看了很久，说：“秤也冷。”他把那一粒收回去，揣进背心的内袋，再没拿出来给我看过。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -1 }, { "kind" = "flag", "flag" = "rw_lieve_weighed", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n6"
+"title" = "签名在不该在的地方"
+"text" = "九月下旬，一个科隆来的伙计站在兑换桌前，递上一张汇票，要现钱。票是德克莱尔克家的纸，签名是父亲的，一笔不差；数目一栏是另一个人的字，写得又大又圆：三百镑，见票即付。三百镑，够这间铺面付五年的房租。伙计说开票的是科隆城里一个卖药的，去年冬天收了父亲这张票，换了一箱“东方来的矿石”。父亲在里屋咳嗽。我把汇票按在桌上，看着那个签名：它签在一个它不该在的地方，签得那么端正。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 9, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_noted"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_bill_noted", "value" = true }]
+"text" = "九月下旬，一个科隆来的伙计站在兑换桌前，递上一张汇票，要现钱。票的左上角印着四十七号——两年前那个黑袍客人折了两折、揣去科隆的那一张。签名是父亲的，一笔不差；数目一栏是另一个人的字，写得又大又圆：三百镑，见票即付。三百镑，够这间铺面付五年的房租。伙计说开票的是科隆城里一个卖药的，去年冬天收了这张票，换了一箱“东方来的矿石”。父亲在里屋咳嗽。我把汇票按在桌上，看着那个签名：它签在一个它不该在的地方，签得那么端正。"
+
+[[tracks.chapters.variants]]
+"key" = "a_locked"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_bill_noted", "value" = false }, { "kind" = "flag", "flag" = "c9_lieve_critical_16_solved", "value" = true }]
+"text" = "九月下旬，一个科隆来的伙计站在兑换桌前，递上一张汇票，要现钱。票是德克莱尔克家的纸，签名是父亲的，一笔不差；数目一栏是另一个人的字，写得又大又圆：三百镑，见票即付。三百镑，够这间铺面付五年的房租。抽屉里锁着的那几张空白汇票，我每天都数，一张没少，可这一张从来就不在抽屉里。伙计说开票的是科隆城里一个卖药的，去年冬天收了父亲这张票，换了一箱“东方来的矿石”。父亲在里屋咳嗽。我把汇票按在桌上，看着那个签名：它签在一个它不该在的地方，签得那么端正。"
+
+[[tracks.chapters.variants]]
+"key" = "a_lost"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_bill_noted", "value" = false }, { "kind" = "flag", "flag" = "c9_lieve_critical_16_solved", "value" = false }, { "kind" = "flag", "flag" = "c9_lieve_critical_16_deferred", "value" = true }]
+"text" = "九月下旬，一个科隆来的伙计站在兑换桌前，递上一张汇票，要现钱。票是德克莱尔克家的纸，签名是父亲的，一笔不差；数目一栏是另一个人的字，写得又大又圆：三百镑，见票即付。三百镑，够这间铺面付五年的房租。我先以为是被那个意大利掮客拿走的那一张，翻过来看，日子却是去年的。伙计说开票的是科隆城里一个卖药的，去年冬天收了父亲这张票，换了一箱“东方来的矿石”。父亲在里屋咳嗽。我把汇票按在桌上，看着那个签名：它签在一个它不该在的地方，签得那么端正。"
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "拿自己攒的钱先付一部分"
+"reply" = "我把攒了两年的钱倒在秤盘上，称给他看：先付这些，其余的三个月内付清，利息按天算，我写字据。伙计数了数，收下了。他走后，我把那张票的抄本夹进账簿。父亲从里屋出来，看见秤盘空了，什么也没问，只把手按在我肩上，按得很重，像要借我的肩膀站稳。"
+"next" = "n7"
+"requires" = [{ "kind" = "cash", "ge" = 20 }]
+"effects" = [{ "kind" = "cash", "value" = -20 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_paid_stray", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "protest"
+"text" = "请公证人来，当众拒付"
+"reply" = "公证人当着北廊的人念拒付证书：出票人的签名属实，数目与出票人无涉，本家拒付。那张票后来回了科隆，再没来过。可交易所里从此有人说，德克莱尔克家的票，签名靠得住，数目靠不住。父亲在里屋听完，一整天没有出来。"
+"next" = "n7"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_father", "value" = -2 }, { "kind" = "flag", "flag" = "rw_lieve_protested_stray", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "inside"
+"text" = "把汇票拿进里屋，放在父亲面前"
+"reply" = "父亲盯着那张票看了很久，手抖得拿不住，我替他按着。“这一张，我以为烧了。”他说，“他答应过我，不成就烧。”我问他外面还有几张。他张了张嘴，没有报出一个数。那是我头一回看见他算不出一笔账。最后他说：“你去付。用我的名字，别用你的。”"
+"next" = "n7"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_asked_how_many", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n7"
+"title" = "熄炉"
+"text" = "十二月，离上船还有三个礼拜。我把这三年的账摊在父亲面前：炉子的、科隆那张的、家用账里那几行不该有的泥炭。一笔一笔对平，最后一行是我替他圆上的数，从我攒下的嫁妆钱里出。父亲看完，把脸埋进手里。他哭起来不出声，只有肩膀在动。哭完他站起来，领我下地窖，提起一桶水泼进炉膛。白汽一下子冲上房梁，嘶的一声，满屋都是湿灰的味道。他把那把黄铜钥匙放在我手心：“熄了。你上船，我守着这本账。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 12, 10] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_assayed"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_assayed", "value" = true }]
+"text" = "十二月，离上船还有三个礼拜。我把这三年的账摊在父亲面前：炉子的、科隆那张的、家用账里那几行不该有的泥炭。一笔一笔对平，最后一行是我替他圆上的数，从我攒下的嫁妆钱里出。父亲看完，把脸埋进手里。他哭起来不出声，只有肩膀在动。那一粒他没提，我也没提；铸币所的酸纯不纯，我们俩心里都有数。哭完他站起来，领我下地窖，提起一桶水泼进炉膛。白汽一下子冲上房梁，嘶的一声，满屋都是湿灰的味道。他把那把黄铜钥匙放在我手心：“熄了。你上船，我守着这本账。”"
+
+[[tracks.chapters.choices]]
+"key" = "keep_key"
+"text" = "把钥匙收进贴身的钱袋"
+"reply" = "我把钥匙收进贴身的钱袋，和那枚改成耳坠的金币挨在一起。父亲看着我收，没有说话，眼睛里有一点我不认得的东西，像松了一口气，又像被人收走了什么。上楼的时候他走在后面，脚步很慢。那一夜地窖里没有一点声音，我却一直没睡，一直在听。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_key_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "give_back"
+"text" = "把钥匙还给他：我信你"
+"reply" = "我把钥匙放回他手里，合上他的手指。“你守着，”我说，“我信你。”他的手指在我手里抖，钥匙的齿口硌着我们两个人的掌心。他说：“信我，比信别人难。”我说我知道。他把钥匙挂回腰上，那一串钥匙叮当地响，一直响到楼梯顶上。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_key_returned", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "grain"
+"text" = "钥匙他留着，向他要那一粒金子"
+"reply" = "他愣了一下，从背心内袋里摸出那个小布包，放在我手里，比一枚铜钱还轻。“它是真的，”他说，“等你回来，我就能证明。”我没有反驳，把布包收进账簿的封皮里。秤会说什么我知道，可我想替他把这一句“等你回来”带到海上去。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grain_taken", "value" = true }]
+
+# 2026-11-12 剧情增写（第九批 · 莉芙）：人物线 B「星期五的蜡烛」，母亲莱昂诺尔。
+# 母本：《以斯帖记》——孤女进了王宫，不说出自己是哪一族的人，直到族人临难（安特卫普葡萄牙商人团体里的人，很多偏爱这一卷）；
+#       文化：葡萄牙商人团体里的“新基督徒”；里斯本宗教裁判所隔着海的手，与尼德兰的告示、边疆伯爵查名册；1553 年费拉拉印出的西班牙文旧约；
+#       张力：她把“说对每一个字”当成活下去的办法，又把它当成信本身教给女儿；她体面、守旧、望弥撒，星期五却在看不见的角落点两根蜡烛。
+# 只写看得见的：蜡烛、白桌布、不吃的东西、倒掉的血水、九月里不吃饭的一天、一个不肯念出来的名字。不点破她是不是、信的是什么。
+# 家乡 1553 → 1554（黑火漆的信、斋日、换皮的书）→ 1555（查名册、去费拉拉的票）→ 结业前带上船的蜡烛；主线旁轨 main_lieve_rw_candles 接着写。
+[[tracks]]
+"key" = "c9_lieve_rw_candles"
+"name" = "星期五的蜡烛"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "星期五的两根蜡烛"
+"text" = "家里的蜡烛钱归我记以后，我发现每个礼拜都多出两根。五月底的一个星期五，太阳还没落，母亲就把后屋的桌布换成白的，从柜子里拿出两只矮烛台，点上，放在窗台上外头看不见的那一角。我问为什么白天点蜡烛。她说：“天要黑了。”窗外的光还亮得数得清对面屋顶的瓦。她没有祷告，也没有画十字，只站着看了一会儿火苗，用手掌在火上拢了三下，像在暖手，然后就去厨房了。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 5, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "write"
+"text" = "在账上写：蜡烛两根，星期五"
+"reply" = "我在家用账上记了一行：蜡烛两根，星期五。字写得端正，和柴火、面包排在一起。礼拜天对账，母亲看到那一行，手指停住了。她拿起笔，把“星期五”三个字划掉，在旁边写“杂用”，划得很细，不仔细看就看不出。她把笔放回我手边：“账上只写数，不写日子。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = -1 }, { "kind" = "flag", "flag" = "rw_lieve_candles_written", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "misc"
+"text" = "记进杂用，不写是哪一天"
+"reply" = "我把那两根蜡烛记进杂用，和针线、灯芯混在一起，谁也看不出来。礼拜天对账，母亲一行一行看过去，看到杂用那一栏，停了一停，又往下看。看完她合上账簿，摸了摸我的头发，比平时多摸了一下。那一下我记住了，记得比哪一笔数都清楚。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_candles_hidden", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "trim"
+"text" = "去替她剪烛芯"
+"reply" = "我拿剪子去剪烛芯，她伸手拦住：“今晚的不剪，让它自己烧完。”我问为什么。她想了想，说：“你外祖母就是这么点的。”这是她头一回在我面前说起外祖母，说完就转身去切面包了。那两根蜡烛烧到半夜自己灭了，蜡油在烛台底下结成两块，第二天早上已经被她刮得干干净净。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "游行那天的香肠"
+"text" = "圣母游行那天，整条街摆出长桌，邻居家烤猪肉香肠，油从铁架上滴进炭火，滋滋地响。母亲带我坐在桌尾。香肠递到她面前，她笑着说胃不好，只掰了一块面包；递到我面前时，她在桌布底下按住了我的手，按得很轻。隔壁的布商太太大声说：“葡萄牙人的胃，都娇气。”满桌的人都笑，母亲也笑，笑得最得体。晚上回家，她在厨房里用粗盐把一块牛肉腌了一遍又一遍，血水淌了一盆。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 8, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "eat"
+"text" = "当着众人，拿起香肠咬一口"
+"reply" = "我从她手底下把手抽出来，拿起一根香肠咬了一大口，烫得直吸气。布商太太拍着手说：“这才是安特卫普的姑娘。”母亲没有看我，接着掰她的面包。回家的路上她走得很快，到了门口才说：“你做得对。”我不知道她说的是哪一件对。那根香肠的油，我在袖口上擦了很久。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = -1 }]
+
+[[tracks.chapters.choices]]
+"key" = "bread"
+"text" = "跟她一样，只吃面包"
+"reply" = "我也只掰了一块面包，说我跟母亲一样胃不好。布商太太笑得更响了：“母女俩，一个胃。”桌上又是一阵笑。母亲在桌布底下松开我的手，又握了一下。回家以后，她头一回让我帮她腌肉，告诉我盐要撒几遍、血要淌几回，讲得很细，像在教一个动词怎么变位。"
+"next" = "n2"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_salted_meat", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "blood"
+"text" = "回家问她：血水为什么要倒掉"
+"reply" = "她正把盆里的血水往阴沟里倒，倒得一滴不剩。“血不干净。”她说完又补了一句，“你父亲的胃也不好。”我知道父亲那天吃了三根香肠。猫凑过来闻那条阴沟，被她用脚尖轻轻拨开。她洗了手，洗了很久，指缝都搓红了。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "黑火漆的信"
+"text" = "三月，里斯本来了一封信，火漆是黑的。母亲在窗下读完，把信凑到烛火上烧了，灰拢在手心里，倒进炉膛。那天的葡萄牙语课她念得特别慢。我把一个动词的重音念偏了一个音节，她让我重念了十一遍。念到第十一遍，她忽然说：“在里斯本，有人就是因为念错一个字，被邻居记了一笔。记的人不识字，可他记得住。”她用指尖蘸了点水，在桌面上写了一个名字，写完马上用袖子抹掉了。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 3, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "read"
+"text" = "趁她没抹完，看清那几个字母"
+"reply" = "我只看清了头一个字母，是个 B，后面的已经被她的袖子抹成一片水痕。我问那是谁。她说：“一个表姐。”过了一会儿又说：“她现在穿黄衣服了。”我不懂穿黄衣服是什么意思。她没有解释，把课本翻到下一页：“念。”"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_name_seen", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "again"
+"text" = "再念第十二遍，一个音也不错"
+"reply" = "我把那个动词又念了一遍，重音落得稳稳的。她点点头：“这样，就记不了你。”她的手放在桌上，盖住刚才写过字的地方。那天以后，我念葡萄牙语再没错过重音。我不知道自己是在念书，还是在学怎么让人记不住。"
+"next" = "n3"
+"effects" = [{ "kind" = "skill", "skill" = "lang_portuguese", "value" = 6 }, { "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问她：记一笔，会怎么样"
+"reply" = "“会有人来问。”她说，“问你星期六换不换衬衣，问你母亲死的时候脸朝哪边，问你知不知道一个不该知道的名字。”她把手按在桌面那块水痕上，“所以我们家不知道任何名字。”她说完起身去看炉子。我坐在原地，头一回觉得这间屋子的墙很薄。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 3 }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "九月里不吃饭的那一天"
+"text" = "九月里有一天，母亲从早到晚没吃东西，连水也没喝。她穿了一件白衬裙，外面照旧罩着黑呢外衣，照旧去商馆替人口译，照旧回来做晚饭，只做我们的那份。天黑以后，她把女仆叫到跟前，说这一年里要是说重了哪句话，请她原谅；又走到我床边，说了同样的话。女仆以为太太病了，悄悄来问我。我说不知道。我是真不知道，只知道她请我原谅的时候，手是凉的。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 9, 25] }]
+
+[[tracks.chapters.choices]]
+"key" = "forgive"
+"text" = "说：我原谅你，你也原谅我"
+"reply" = "我说我原谅她，也请她原谅我念错的那些动词。她在黑里笑了一下，摸了摸我的脸：“动词不用原谅，改过来就行。”她在床边坐着，一直坐到对面教堂敲了十下才起身。第二天早上，她吃了两块面包，黄油抹得很厚，像什么事都没有过。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_forgave", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "cover"
+"text" = "替她把女仆打发回去"
+"reply" = "我对女仆说，太太替外祖母许了个愿，一年守一天斋，不许声张。女仆点头走了。我回来告诉母亲，她看着我，看了很久：“谁教你这么说的？”我说没有人。她说：“那就更要小心了，你这么会说。”她的口气说不上是夸，还是怕。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_covered_fast", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "soup"
+"text" = "端一碗汤过去，劝她喝"
+"reply" = "我端了一碗汤放在她手边。她看着汤冒热气，没有动：“今天不喝，明天喝两碗。”我说她会饿坏的。她说：“饿一天，记一年。”汤放凉了，她替我端回厨房，倒回锅里，一滴也没浪费。那一夜她的灯亮得很晚，我听见她在低声念什么，不是葡萄牙语，也不是拉丁文。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "费拉拉印的书"
+"text" = "十一月，母亲从商馆带回一包东西，裹在油布里。打开是一本西班牙文的书，厚得像一块砖，扉页上印着城名：费拉拉，一五五三年。她翻到中间一卷给我看，讲的是以斯帖王后：一个孤女进了波斯王的宫，不说自己是哪一族的人，直到她的族人要被杀尽的那一天。母亲说这一卷她小时候听外祖母讲过，从没见过印出来的字。她用指头一行一行抚过去，然后合上书：“这本书的皮，太干净了。”"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 11, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "plantin"
+"text" = "拿去请装书匣的普朗坦先生换皮"
+"reply" = "普朗坦先生接过书，只看了一眼扉页，就把它合上了，什么也没问。三天后书回来，换了一身旧小牛皮，烫着金边，书脊上印着“时辰祈祷书”。他只收了皮子钱，烫金的钱不肯收：“书的脸，是给外人看的。”我把书交给母亲，她摸着那行烫金字，很久没有说话。"
+"next" = "n5"
+"effects" = [{ "kind" = "affinity", "person" = "christophe_plantin", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_esther_plantin", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "sew"
+"text" = "自己拆一张旧祈祷书的皮，缝上去"
+"reply" = "我在旧书摊上花两个斯图弗买了一本烂了芯的时辰书，把皮子拆下来，一针一针缝到这本书上。针脚是姑母教的，缝得歪，远看看不出来。母亲接过去，翻开皮子看了看里面的线，说：“这一行歪了。”又说，“歪的好，像旧的。”"
+"next" = "n5"
+"effects" = [{ "kind" = "skill", "skill" = "embroidery", "value" = 4 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_esther_sewn", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "listen"
+"text" = "请她念以斯帖那一卷给我听"
+"reply" = "她坐在灯下念，用的是西班牙文，念得很慢。念到以斯帖说“我若死就死吧”，她停下来，把那一句又念了一遍，用的是葡萄牙语。然后她合上书，放进箱底，压在冬天的被子下面。“书皮的事，以后再说。”她说，“有些书，不翻开就没有字。”"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_esther_heard", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "查名册的人"
+"text" = "十月，交易所里传开一句话：边疆伯爵的人要挨家查葡萄牙人，查他们是哪一年来的安特卫普，来得晚的要走。母亲是七岁那年随外祖父来的，名册上写得清清楚楚。可她的一个表妹三年前才从里斯本过来，一家住在码头后面那条巷子里，男人替人修秤。那天傍晚表妹来了，坐在我家厨房，一直搓手，搓得手背发红。母亲关上门，对我说：“他们要去费拉拉。钱要先走，人才能走。你会写汇票。”"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 10, 25] }]
+
+[[tracks.chapters.choices]]
+"key" = "write"
+"text" = "替他们写一张去费拉拉的汇票"
+"reply" = "我把表姨的钱一枚枚称过，折成一张汇往费拉拉的票，收款人写的是母亲说的一个商号，我在任何账上都没见过它。票走威尼斯那条路，要经三个人的手。表姨把票缝进裙子的夹层，临走在门口抱了母亲一下，抱得很快，像怕被人看见。母亲送她到门口，没有说再见。"
+"next" = "n5b"
+"effects" = [{ "kind" = "skill", "skill" = "double_entry", "value" = 4 }, { "kind" = "growth", "attr" = "commerce", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_bill_ferrara", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "father"
+"text" = "去找父亲，用兑换桌的名义开票"
+"reply" = "父亲听完，什么也没问，从抽屉里抽出一张汇票，签了名，递给我：“数目你填。”我愣了一下，那是一张空白的票。他说：“替亲戚办事，就要拿自家的名字担着。”我照表姨的钱数填上，一个零也没多。那一晚我看着他签名的手，签到最后一笔，抖了一下。"
+"next" = "n5b"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_bill_ferrara", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "refuse"
+"text" = "说这是犯禁的事，不写"
+"reply" = "我说边疆伯爵的人要是查到这张票，查的就是我们家。母亲没有争，只说：“你说得对。”她起身从箱底拿出自己的一对金耳环，塞进表姨手里。表姨走了。那一冬，母亲的耳垂空着，她用头巾遮住。开春以后我才听说，表姨一家到了科隆，没到费拉拉，路上走散了一个孩子，到春天还没找着。"
+"next" = "n5b"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = -2 }, { "kind" = "flag", "flag" = "rw_lieve_refused_ferrara", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n5b"
+"title" = "换了三回的名字"
+"text" = "五月，一个跑威尼斯线的车夫捎来一封信，是给母亲的，字写得很大，一看就是不常写字的人写的。母亲在窗下读完，坐了很久，把信折成很小的一块，放进围裙的口袋。晚饭的时候她忽然问我：“一个人要是换了三回名字，到了最后那个地方，别人该叫他哪一个？”我说叫最后那个。她摇摇头，没说我错，也没说我对。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 5, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_ferrara"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_bill_ferrara", "value" = true }]
+"text" = "五月，一个跑威尼斯线的车夫捎来一封信，是表姨从费拉拉写来的，字写得很大，一看就是不常写字的人写的。她说一家人都到了，孩子们在学一种新的字，她自己又换了一回名字。母亲在窗下读完，坐了很久，把信折成很小的一块，放进围裙的口袋。晚饭的时候她忽然问我：“一个人要是换了三回名字，到了最后那个地方，别人该叫他哪一个？”我说叫最后那个。她摇摇头，没说我错，也没说我对。"
+
+[[tracks.chapters.variants]]
+"key" = "a_cologne"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_refused_ferrara", "value" = true }]
+"text" = "五月，一个跑科隆线的车夫捎来一封信，是表姨写来的，字写得很大，一看就是不常写字的人写的。她说那个走散的孩子还没找着，她天天去城门口问，问得守门的兵都认得她了。母亲在窗下读完，坐了很久，把信折成很小的一块，放进围裙的口袋。晚饭的时候她忽然问我：“一个人要是换了三回名字，到了最后那个地方，别人该叫他哪一个？”我说叫最后那个。她摇摇头，没说我错，也没说我对。"
+
+[[tracks.chapters.choices]]
+"key" = "read"
+"text" = "请她把信念给我听"
+"reply" = "她把信从围裙里掏出来，展开，念给我听，念得很慢，一个字也没跳。念完她说：“你表姨写错了四个字。”我问错在哪里。她说：“错在她从前不会写字，现在为了给我写信，学会了。”她把信重新折好，折得比刚才还小。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "three"
+"text" = "说：哪一个都叫，账上写三行"
+"reply" = "“账上写三行，”我说，“头一行是原来的，中间一行是路上的，最后一行是现在的。哪一行都不划掉。”母亲看着我，看了很久：“你外祖父也是这么记的。他在名册上只写一行，在心里写三行。”她把盘子推到我面前，那天她破例让我多吃了一块蜂蜜蛋糕。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "skill", "skill" = "double_entry", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_three_names", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "eat"
+"text" = "不问信，只问她晚饭吃不吃得下"
+"reply" = "我说汤要凉了。她拿起汤匙，喝了两口，又放下：“你像你父亲。他也是这样，不问，先叫人吃饭。”她说这话的时候没有怪我的意思。那天夜里我听见她在后屋走来走去，走到窗台那一角就停一下，像在数什么。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n6"
+"title" = "带上船的蜡烛"
+"text" = "上船前的最后一个星期五，母亲替我收拾箱子。她把两根细蜡烛用旧亚麻布包好，塞进我冬衣的袖子，又塞了一只小锡烛台，只有半个巴掌大。“到了海上，”她说，“星期五太阳落山以前，点上。”我问为谁点。她把袖口叠平，叠了三遍：“为你外祖母。她走的时候，没有人替她点。”窗台那一角的两根已经点起来了，火苗直直的，屋里一点风也没有。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 12, 14] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_written"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_candles_written", "value" = true }]
+"text" = "上船前的最后一个星期五，母亲替我收拾箱子。她把两根细蜡烛用旧亚麻布包好，塞进我冬衣的袖子，又塞了一只小锡烛台，只有半个巴掌大。“到了海上，”她说，“星期五太阳落山以前，点上。”当年我在账上写下的那三个字，她拿笔划掉了；现在她自己把它说了出来。我问为谁点。她把袖口叠平，叠了三遍：“为你外祖母。她走的时候，没有人替她点。”窗台那一角的两根已经点起来了，火苗直直的，屋里一点风也没有。"
+
+[[tracks.chapters.variants]]
+"key" = "a_hidden"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_candles_hidden", "value" = true }]
+"text" = "上船前的最后一个星期五，母亲替我收拾箱子。她把两根细蜡烛用旧亚麻布包好，塞进我冬衣的袖子，又塞了一只小锡烛台，只有半个巴掌大。“到了海上，”她说，“星期五太阳落山以前，点上。”家用账里，这四年的蜡烛都记在杂用那一栏，一根也没漏；她今天才把它们从杂用里拿出来，交到我手上。我问为谁点。她把袖口叠平，叠了三遍：“为你外祖母。她走的时候，没有人替她点。”窗台那一角的两根已经点起来了，火苗直直的，屋里一点风也没有。"
+
+[[tracks.chapters.choices]]
+"key" = "promise"
+"text" = "答应她：每个星期五都点"
+"reply" = "我说每个星期五都点。她点点头，没有说好，也没有说谢，只把我冬衣的扣子一颗一颗扣上，扣到领口。“别让人看见，”她说，“也别怕人看见。”这两句话怎么能同时做到，她没有教我。我想我要用一辈子去算。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_mother", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_candles_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问她：母亲，你信的是什么"
+"reply" = "她的手停在扣子上。“我信说对一个字。”她说，“说对了，人就能活；活下来，才能记得。”她把最后一颗扣子扣上，“你外祖母信的，我记得。我信的，你不用记。”她转身去看窗台上的火苗，背对着我站了很久。我没有再问。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_candles_asked", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "leave"
+"text" = "把蜡烛留下：船上用不着"
+"reply" = "我把那包蜡烛从袖子里抽出来，放回她手里：舱里点火是犯忌的，蜡烛要省着用。她没有争，把蜡烛收回柜子，和她自己的放在一起。“那我替你点，”她说，“你在海上的每个星期五，我多点一根。”后来在海上，每到星期五傍晚，我总忍不住往东边看一眼。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_candles_left", "value" = true }]
+
+# 2026-11-12 剧情增写（第九批 · 莉芙）：人物线 C「两张脸」，导师普朗坦（历史人物）与安娜·拜因斯（历史人物）。
+# 母本：普朗坦自己的一生（装订匠、1555 年前后夜里替国王秘书送匣子被错认挨了一剑、改行印书；同时替“爱之家”秘密印书）；
+#       拜因斯的《叠句集》（骂路德骂得最狠，又写过不嫁人的女人有多自在）。照史料写，不编私情；拿不准的从人嘴里传出来。
+#       文化：1550 年“血之敕令”下的禁书（男的砍头、女的活埋）；“爱之家”外守当地的教会、里守自己的心；热烈的天主教与小心的体面，是莉芙面前的两种信；
+#       张力：她看见的第一个“一辈子活在两本账里还活得体面”的人，和一个把信写在脸上的人；她要替谁说谎、替谁说真话。
+# 1553（装书匣的人）→ 1555（肩上的一剑、两本账、叠句）→ 1556（书记官的问话、游行里的蜡烛、两本书）；
+# 改投印书圈的局：同一条线，几章用 c9_lieve_route_printing 的变体换成印坊学徒的口吻（拜因斯照样到印坊来），两条路都走到“两本书”收尾。
+[[tracks]]
+"key" = "c9_lieve_rw_two_faces"
+"name" = "两张脸"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "贴金箔的人"
+"text" = "六月，父亲让我把一袋零钱送到交易所后面的一间小作坊。作坊主是个法国人，叫普朗坦，替人装订书、做皮匣子。我进门时他正往一只匣盖上贴金箔，金箔薄得一口气就能吹起来，他屏着气，拿一把松鼠毛的刷子一点点按平。匣子是给国王的一位秘书做的，盖上烫着西班牙的纹章。他收下钱，一枚一枚数，数完说：“小姐的父亲给的是好成色。金箔也要好成色，不然一年就发黑。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 6, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "watch"
+"text" = "留下来，看他贴完那片金"
+"reply" = "我站在门边一动也不敢动，怕喘气把金箔吹跑。他贴完最后一角，才吐出一口气，笑着说小姐也屏住了气。他把刷子上剩的金粉抖进一只小罐：“这些攒一年，够再贴一只。”我问他攒的金粉记不记账。他说记，记在另一本上。那时候我不知道，他说的另一本是什么意思。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "替他把这只匣子的账算一遍"
+"reply" = "我问他一张金箔几个斯图弗，一只匣子贴几张，秘书付多少。他报了三个数，我当场算出这只匣子他只赚两成，还要搭上一个礼拜的眼睛。他吃了一惊，又笑：“两成半。胶是我自己熬的。”他从此记住了我，每回见了都叫我“算账的小姐”。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "shelf"
+"text" = "问他架上那几本没有书名的书"
+"reply" = "架子上一排书，皮子上一个字也没烫。我问是什么书，他说是等主人来取的，主人还没想好书名。他把一块布搭在那排书上，动作很自然，像给鸟笼盖布。“小姐，”他说，“书的名字，有时候比书危险。”我回家把这句话记在小账簿的页边，和那天的金箔价写在一起。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_plantin_shelf", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "肩上的一剑"
+"text" = "正月，消息在交易所里传了一上午：装书匣的法国人昨夜送匣子去国王秘书家，在桥边被几个喝醉的人拦住，人家把他错认成一个得罪过他们的弹琴的，一剑捅进了他的肩膀。他捂着伤口走回家，匣子一路抱在怀里，金边上一点血也没沾。我跟母亲去看他。他躺在床上，右臂吊着，脸色白得像校样纸，说医生讲了，这只手往后提不了裁皮的刀。他望着天花板：“那就换一样不用刀的手艺。铅字比刀轻。”"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 1, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "collect"
+"text" = "替他去把匣子的尾款收回来"
+"reply" = "秘书家的管家先说匣子沾了晦气，要压价。我打开匣子给他看金边，一丝血也没有，又报出金箔和胶的价，报到第三样，他就不压了。我把钱带回去，放在普朗坦先生枕边。他用左手数，数得很慢，数完说：“小姐收账比我会。往后我要学的，不只是铅字。”"
+"next" = "n2"
+"effects" = [{ "kind" = "skill", "skill" = "negotiation", "value" = 4 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 3 }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问他：铅字比刀轻，也比刀险吗"
+"reply" = "他看了我一眼，像是没想到我会这么问。“刀只伤一个人，”他说，“书能伤一城的人，也能救一城的人。”他停了停，“所以印书的人要有两只手，一只给国王看，一只给自己。”他把那只吊着的右臂抬了抬，疼得吸了口气，又笑：“你看，我现在只剩左手了。”"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_asked_plantin", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pray"
+"text" = "听母亲用法语替他念病人的祷文"
+"reply" = "母亲在他床边用法语念了一段为病人的祷文，一个字一个字，念得端端正正。普朗坦先生闭着眼听，听完说：“夫人的法语，比巴黎人的还清楚。”母亲说：“念清楚，上帝才听得见。”回家的路上她又说了一句，像说给自己听：“念清楚，别人也听得见。”"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "etiquette", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_mother", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "两张桌子"
+"text" = "秋天，普朗坦的印坊已经有了两台压机。我去取校样，在排字房后面的小屋里看见他摆着两张桌子：靠窗那一张放着官府的许可、书商的订单、印好的书目，每一本都打着他的印记；靠墙那一张用布盖着，布底下露出一角纸，荷兰文，没有印记，没有书名页，头一行写的是“爱”。他看见我在看，没有去拉那块布，只问：“小姐，你父亲有几本账？”"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 9, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_print"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_route_printing", "value" = true }]
+"text" = "秋天，印坊添了第二台压机，我这个学徒也多了一样活：每天收工以后，去扫排字房后面那间小屋。小屋里摆着两张桌子：靠窗那一张放着官府的许可、书商的订单、印好的书目，每一本都打着他的印记；靠墙那一张用布盖着，布底下露出一角纸，荷兰文，没有印记，没有书名页，头一行写的是“爱”。普朗坦先生站在门口，看见我拿着扫帚停住了，没有去拉那块布，只问：“小姐，你父亲有几本账？”"
+
+[[tracks.chapters.variants]]
+"key" = "a_esther"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_route_printing", "value" = false }, { "kind" = "flag", "flag" = "rw_lieve_esther_plantin", "value" = true }]
+"text" = "秋天，普朗坦的印坊已经有了两台压机。我去取校样，在排字房后面的小屋里看见他摆着两张桌子：靠窗那一张放着官府的许可、书商的订单、印好的书目，每一本都打着他的印记；靠墙那一张用布盖着，布底下露出一角纸，荷兰文，没有印记，没有书名页，头一行写的是“爱”。去年他替母亲那本书换皮的时候，没有问过书里写的是什么。他看见我在看，也没有去拉那块布，只问：“小姐，你父亲有几本账？”"
+
+[[tracks.chapters.choices]]
+"key" = "one"
+"text" = "答：一本。我家只有一本账"
+"reply" = "“一本，”我说，“我记的那一本。”他点点头，没有拆穿我，也没有再问。他把布掀起一角，让我看了一眼那一行字，又放下：“我也只有一本。只是有的页，要翻到对的光底下才看得见。”我走出印坊，心里翻了一路的账，翻到家门口，才想起地窖那扇锁着的门。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_plantin_secret_kept", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "lift"
+"text" = "伸手把那块布掀开"
+"reply" = "布底下是一叠刚印的散页，墨还有点潮。头一页写的是一个叫“爱之家”的地方：那里的人不争哪个教会对，只求心里有爱，外面守着当地的规矩，里面守着自己。普朗坦先生站在我身后，没有拦。“现在你知道了，”他说，“知道的东西，要记在哪一本账上，你自己定。”"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 3 }, { "kind" = "flag", "flag" = "rw_lieve_plantin_secret_seen", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "away"
+"text" = "装作没看见，取了校样就走"
+"reply" = "我把校样夹在胳膊底下，说父亲只有一本账，就走了。走到门口他叫住我，把一小块剩下的金箔夹进我的校样：“给小姐的利钱。”回家我把金箔贴在小账簿的封皮内侧，贴歪了。它亮了好几年，从来没有发黑。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "拜因斯的叠句"
+"text" = "圣尼古拉节前，拜因斯女士在课堂上念她的叠句。她六十多岁了，嗓门比男人还大，一句一句往下砸，砸的是路德，是那些“把圣徒从神龛上赶下来、把自己抬上去的人”。每一节的末句都一样，念到第三节，全班的女孩都跟着念。念完她把纸往桌上一拍，看着我：“德克莱尔克家的丫头，你常去那个法国人的印坊。他印的书太干净了。干净的纸底下，总压着点什么。”"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 12, 10] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_print"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_route_printing", "value" = true }]
+"text" = "圣尼古拉节前，拜因斯女士到印坊来，问她那本叠句集能不能重印。她六十多岁了，嗓门比男人还大，站在压机旁边就念给普朗坦先生听，一句一句往下砸，砸的是路德，是那些“把圣徒从神龛上赶下来、把自己抬上去的人”。每一节的末句都一样，念到第三节，排字房里的学徒都跟着念。念完她把纸往版台上一拍，看着我：“德克莱尔克家的丫头，你天天在这个法国人这里。他印的书太干净了。干净的纸底下，总压着点什么。”"
+
+[[tracks.chapters.choices]]
+"key" = "defend"
+"text" = "替普朗坦先生说话：书干净，是他校得细"
+"reply" = "“书干净，是因为他校得细。”我说，“我替他对过校样，一个字母也不许错。”拜因斯女士盯着我，盯得我耳朵发烫。“一个字母也不许错，”她慢慢重复了一遍，“那他要么是个好天主教徒，要么是个很小心的人。丫头，小心的人最难救。”她转身去擦黑板，擦得很用力。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "affinity", "person" = "anna_bijns", "value" = -1 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "recite"
+"text" = "跟着她念最后一节"
+"reply" = "我跟着念，念得比谁都响。念完她点了点我：“好嗓子，可惜心思在算盘上。”散了以后，她把那张叠句的原稿塞给我，让我替她誊一份干净的。“干净的，”她特意说，“我的干净，底下什么也没有。”稿纸上的墨被她的拳头砸花了一块，我誊的时候绕开了那一块。"
+"next" = "n4"
+"effects" = [{ "kind" = "skill", "skill" = "poetry", "value" = 4 }, { "kind" = "affinity", "person" = "anna_bijns", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "unwed"
+"text" = "问她：为什么一辈子不嫁人"
+"reply" = "四下里的人都吸了一口气。拜因斯女士却笑了，笑声很大：“嫁人？我跟上帝订过约，再跟一个男人订一回，两本账，我记不过来。”她又念了一节别的叠句，讲不嫁人的女人有多自在，念得眉飞色舞，念完说：“这一首不考。”那是我头一回看见她笑。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "anna_bijns", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "书记官的问话"
+"text" = "三月，边疆伯爵衙门的一个书记官在交易所北廊叫住我。他认得我，知道我常去印坊取校样。“小姐，”他说话很客气，“你在那个法国人那里，见没见过没有印记、没有书名页的散页？荷兰文的。”他把一张告示的抄本递给我看：印、藏、卖禁书的，男的砍头，女的活埋。抄本边上，有人用红笔圈了“活埋”两个字。北廊的风很冷，书记官等我回话，手里的笔一直没放下。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 3, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_print"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_route_printing", "value" = true }]
+"text" = "三月，边疆伯爵衙门的一个书记官在交易所北廊叫住我。他认得我，知道我在印坊做学徒。“小姐，”他说话很客气，“你天天在那个法国人那里，见没见过没有印记、没有书名页的散页？荷兰文的。”他把一张告示的抄本递给我看：印、藏、卖禁书的，男的砍头，女的活埋。抄本边上，有人用红笔圈了“活埋”两个字。北廊的风很冷，书记官等我回话，手里的笔一直没放下。"
+
+[[tracks.chapters.variants]]
+"key" = "a_seen"
+"when" = [{ "kind" = "flag", "flag" = "c9_lieve_route_printing", "value" = false }, { "kind" = "flag", "flag" = "rw_lieve_plantin_secret_seen", "value" = true }]
+"text" = "三月，边疆伯爵衙门的一个书记官在交易所北廊叫住我。他认得我，知道我常去印坊取校样。“小姐，”他说话很客气，“你在那个法国人那里，见没见过没有印记、没有书名页的散页？荷兰文的。”我想起那叠墨还潮的散页，想起头一页上的那个“爱”字。他把一张告示的抄本递给我看：印、藏、卖禁书的，男的砍头，女的活埋。抄本边上，有人用红笔圈了“活埋”两个字。北廊的风很冷，书记官等我回话，手里的笔一直没放下。"
+
+[[tracks.chapters.choices]]
+"key" = "lie"
+"text" = "说没见过：我只管数页码"
+"reply" = "“没见过。”我说，“我只管数页码，数到几百页，哪一页没有印记我都知道，没有那样的页。”书记官看了我一会儿，把笔收起来：“小姐数得清，那就好。”他走了。我站在柱子后面，等手不抖了才回家。这是我头一回对着官府说谎，说得像报一个汇率。"
+"next" = "n4b"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 3 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_lied_for_plantin", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "bijns"
+"text" = "去找拜因斯女士，问她该怎么回话"
+"reply" = "拜因斯女士听完，沉默了很久。“我恨路德，”她说，“恨了三十年。可我还没恨到要把一个法国装订匠埋进土里。”她替我写了一张纸条给书记官，只有一行：此女我认得，所言所见，由我担保。纸条上没有提普朗坦的名字。她把纸条递给我：“你欠我一个人情，丫头。不，你欠上帝一个。”"
+"next" = "n4b"
+"effects" = [{ "kind" = "affinity", "person" = "anna_bijns", "value" = 3 }, { "kind" = "growth", "attr" = "etiquette", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_told_bijns", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "half"
+"text" = "照实说：见过一叠，盖着布，没看清"
+"reply" = "我说见过一叠，盖着布，没看清写的是什么。这句话有一半是真的。书记官在本子上记了一笔，谢过我。第二天印坊被查了一回，什么也没查到，那块布底下只剩一叠白纸。普朗坦先生见了我，照旧叫我“算账的小姐”，只是那一个月，他再没让我进过后面那间小屋。"
+"next" = "n4b"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = -3 }, { "kind" = "flag", "flag" = "rw_lieve_told_clerk", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n4b"
+"title" = "圆规的两只脚"
+"text" = "六月，普朗坦先生在印坊的墙上钉了一张草图：一只手从云里伸出来，握着一把圆规，圆规的一只脚扎在纸上，另一只脚在画圈。底下空着一行，等着写格言。他问我圆规像什么。我说像兑换桌上的分规，量金币的直径用。他笑了：“小姐眼里，什么都是账。”他用炭笔点了点扎在纸上的那只脚：“这一只不动，那一只才走得远。你说，哪一只是我？”"
+"once" = true
+"mood" = "mystic"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 6, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "fixed"
+"text" = "说：不动的那只"
+"reply" = "他点点头，又摇头：“不动的那只，是给人看的。人家看见它扎得那么稳，就不去看另一只画到了哪里。”他在那一行空白里写了两个拉丁词：劳作，恒心。写完他退后一步看，“恒心给不动的那只，劳作给走的那只。两只都是我。”"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_compass_fixed", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "moving"
+"text" = "说：画圈的那只"
+"reply" = "“画圈的那只，走得再远，也要回到起点。”他说，“小姐，汇票也是这样，跑遍里昂、科隆、热那亚，最后都要回到签名的那张桌子上。”他没注意到我的脸色变了，接着说，“走出去的东西，总要回来。所以落笔以前，要先想好它回来的时候是什么样子。”"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_compass_moving", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "both"
+"text" = "说：圆规本来就是两只脚"
+"reply" = "他看了我很久，把炭笔递给我：“那你来写格言。”我没敢接。他自己写了两个拉丁词，劳作，恒心，写完说：“拜因斯女士要是看见，会问一把圆规怎么能两只脚走两条路。”他把草图摘下来卷好，“所以这张图，先不给她看。”"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "游行里的蜡烛"
+"text" = "圣母游行那天，行会一队一队走过大广场，旗子、花车、巨人像，最后是抬着圣母像的人。我在人群里看见普朗坦先生，他走在圣路加公会的队伍里，捧着一根粗蜡烛，走得端端正正，到了大教堂门口跪下去，额头几乎碰到石板。隔着半条街，拜因斯女士也在看，她看的不是圣母，是他。游行散了，普朗坦先生在一个巷口碰见我，蜡烛还在手里，蜡油淌了一手背。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 8, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问他：跪下去的时候，心里想什么"
+"reply" = "“想膝盖疼。”他说，然后不笑了，“还想，跪下去的人那么多，上帝分得清谁是谁。”他把蜡烛递给我，让我替他拿着，自己搓掉手背上的蜡油。“小姐，跪下去的是膝盖，”他说，“我的膝盖是安特卫普的，我的心是我自己的。”"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_knees", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "bijns"
+"text" = "挤过去，跟拜因斯女士并排站一会儿"
+"reply" = "我挤过人群，站到她身边。她没看我，说：“他跪得比谁都低。”我说这不好吗。她说：“跪得低的人，有的是为了靠近上帝，有的是为了不叫人看见脸。”她拍了拍我的肩，拍得很重，“两样我都见过。丫头，你将来也要跪，看你为哪一样。”"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "anna_bijns", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "candle"
+"text" = "替他把那根蜡烛送进大教堂"
+"reply" = "我接过蜡烛，替他送进大教堂，插在圣母像前的铁架上，和几百根别的蜡烛挤在一处，火苗密得看不清哪一根是谁的。出来时他还在巷口等，问我插在哪一排。我说第三排左边。他点点头，好像这件事很要紧。那天晚上我想起家里窗台那一角：星期五傍晚，母亲点的蜡烛从来只有两根，从来不跟别的挤在一起。"
+"next" = "n6"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n6"
+"title" = "两本书"
+"text" = "上船前，两份礼物差不多同时送到。拜因斯女士托人带来她的叠句集，第一版，书页翻得起了毛，扉页上她用很大的字写着：信一个，信到底。普朗坦先生亲自送来一本小书，深棕色的皮，没有烫字，打开全是白纸，一百二十页，每一页都裁得一样齐。“账本，”他说，“给小姐在海上记账。哪一页记什么，你自己定。”两本书并排放在我的箱子上，一本写满了，一本一个字也没有。箱子里只剩一本书的地方。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 12, 12] }]
+
+[[tracks.chapters.choices]]
+"key" = "bijns"
+"text" = "带上拜因斯女士的叠句集"
+"reply" = "我把叠句集放进箱子，压在冬衣上面。普朗坦先生的空本子留在家里的书架上，和父亲的旧账簿挨着。临走那天我翻开叠句集，扉页那行大字底下，还有一行很小的字，是她后来添的：丫头，信不了一个，就信你的账。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "affinity", "person" = "anna_bijns", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_book_bijns", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "plantin"
+"text" = "带上普朗坦先生的空账本"
+"reply" = "我把空账本放进箱子。叠句集交给母亲替我收着，她把它放进箱底。上船以后我才发现，空账本的最后一页不是白的，对着光看，纸里压着一个很淡的水印：一只手，握着一把圆规。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "christophe_plantin", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_book_plantin", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "both"
+"text" = "两本都带，冬衣少带一件"
+"reply" = "我把冬衣抽出一件，把两本书都塞进去。母亲看见了，说海上冷。我说冷可以多穿，书不能少带。上船以后，我在普朗坦先生的空本子头一页抄了拜因斯女士的一节叠句，第二页记下第一笔账。两样东西挨在一处，墨色一样，谁也不压着谁。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_book_both", "value" = true }]
+
+# 2026-11-12 剧情增写（第九批 · 莉芙）：人物线 D「少念的一行」，姑母安娜（退出贝居安会的女人）。
+# 母本：中古尼德兰的圣母传说《贝阿特丽斯》（离开修院的修女，圣母替她在院里守着位置，没有人发觉她走了）；布拉班特的贝居安女子哈德维希的“爱”；
+#       文化：贝居安院——不发终身愿、自己织花边养活自己的女人们；织一行念一段经的老规矩，与“念过经的花边”论码卖给富人；
+#       张力：她不反教会，只是不再信织进去的祷告能抵账；她数针数到十还会停一下，那一下她念什么，她不说；她背着弟弟替地窖付账。
+# 1553（按十数针）→ 1554（红街的院门）→ 1555（织进去的祷告）→ 1556（针线匣里的收据、少念的一行）；与人物线 A 的收据、主线“炉边”一章互相照见。
+[[tracks]]
+"key" = "c9_lieve_rw_lace"
+"name" = "少念的一行"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "按十数针"
+"text" = "七月，作坊的窗全开着，枕头上的线轴哗啦啦地响。姑母数针跟别人不一样：数到十就停一下，嘴唇动一动，再从一数起，像在拨一串看不见的念珠。我问她念的是什么。她说念的是针数。可针数她不必念，她的手比嘴快。学徒里有个上了年纪的女人悄悄告诉我，姑母年轻时在贝居安院住过九年，院里的姐妹织一行花边念一段经，一条领子织完，经也念完了。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 7, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "count"
+"text" = "坐到她旁边，跟着她的节拍数"
+"reply" = "我坐到她旁边，跟着她数，数到十停一下。停的那一下我不知道该念什么，就在心里报了一个汇率。姑母看了我一眼：“你停那一下，在想钱。”我说是。她说：“也好，总比空着强。”那天我织的那一段，针脚比平时匀。"
+"next" = "n1"
+"effects" = [{ "kind" = "skill", "skill" = "embroidery", "value" = 4 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问她：为什么离开贝居安院"
+"reply" = "姑母的手没停：“丫头，问账，不问人。”她把一只线轴绕完，打了个结，咬断，“你祖父死那年，作坊没人管。你父亲二十三岁，只会算，不会管。我就出来了。”她说得很平，像报一笔旧账。我想问的不是这个，她也知道，可她已经低头去数下一行了。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = -1 }]
+
+[[tracks.chapters.choices]]
+"key" = "tidy"
+"text" = "不问，替她把散了的线轴理好"
+"reply" = "我把桌上散乱的线轴一只只理好，按粗细排成一排。姑母看了，没有夸，只把最细的那一只挪到最左边：“细的先用，粗的耐放。”那天收工前，她留给猫的鱼又说是剩下的，可那条鱼是整条的，连头都在。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "stewardship", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "红街的院门"
+"text" = "六月，贝居安院订了一批祭坛布的花边，姑母让我跟她去送。院子在红街，九年前才搬过来，原先那一座在城外，修新城墙的时候拆了。院门开着，里面是一排排一样的小屋，窗台上都摆着天竺葵，草地上晾着白布。看门的姐妹认出姑母，叫的是一个我没听过的名字，叫得很亲。姑母把花边交给她，只说了一句“数过了，一百二十码”，就站在门槛外面，一步也不往里走。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 6, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "enter"
+"text" = "替她走进去，把账单交给管事的姐妹"
+"reply" = "院子里静得听得见针落地。管事的姐妹是个白头发的老人，看了账单，又看我：“你是安娜的侄女？”我说是。她说：“她当年织得最好，也算得最快。院里的账，她管了三年，管得太清楚了。”她付了钱，多给一枚，说给安娜买线。我出来把钱交给姑母，那一枚她退了回去。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_aunt_beguinage_entered", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "stay"
+"text" = "陪她站在门槛外面"
+"reply" = "我陪她站在门槛外，太阳照在晾着的白布上，刺得人眯眼。姑母看着那排小屋里的一扇窗，那扇窗台上的天竺葵开得最旺。“我住过的那间，跟着老院子一起拆了，”她说，“砖拉去砌了城墙。花倒是搬过来了，还是我那年种的那一种。”她说完转身就走，走得很快，我差点没跟上。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "name"
+"text" = "问她：看门的姐妹叫你什么"
+"reply" = "“玛利亚·安娜。”她说，“进了院子，名字前头都添一个玛利亚。”她走了几步，又说，“出来那天，我把前头那个还给她们了。”我问名字也能还吗。她说：“账能还，名字也能还。还了，就两清。”可她说“两清”的时候，没有回头看我。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "织进去的祷告"
+"text" = "四月，一位穿貂皮的夫人来作坊订一条长领子，要贝居安院那种针法，还要“每一行都念过经的”。她出的价是平常的三倍。姑母听完，放下手里的活，说作坊只织花边，不织经。夫人说贝居安院就肯。姑母说：“那就去贝居安院。”夫人走了，作坊里的学徒都看着姑母：三倍的价，够全作坊吃两个月。姑母坐回枕头前，好一会儿没有拿起线轴。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 4, 10] }]
+
+[[tracks.chapters.choices]]
+"key" = "why"
+"text" = "等学徒散了，问她为什么推掉"
+"reply" = "“我在院里管过三年账。”她说，“念过经的花边，一码卖三倍，富人买去盖在棺材上，说能少在炼狱里待几年。我算过，一个姐妹一辈子念的经，够卖给多少人。”她拿起线轴，“算到后来，我就不信了。不是不信上帝，是不信经能论码卖。”她数针，数到十，这一回没有停。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "learning", "value" = 2 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_aunt_reason_heard", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "chase"
+"text" = "追出去，把那位夫人请回来"
+"reply" = "我追到街口，说作坊可以织，只是不念经，价钱照常。夫人想了想，订了。我回去告诉姑母，她没有骂我，只说：“你做得对，钱是钱。”那条领子她亲手织了一个月，每一针都数得清清楚楚，一次也没停。交货那天，她说手指头从来没这么干净过。"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "commerce", "value" = 3 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "price"
+"text" = "算给她听：三倍的价能付几个月工钱"
+"reply" = "我把数算给她听：三倍的价，扣去线钱，够付全作坊两个月的工钱，还能买一车泥炭。姑母听完：“你算的都对。”又说，“可你没算我。”我问她值多少。她拿剪子敲了敲桌子：“我值一间不卖经的作坊。这一笔你记不进账，就记在心里。”"
+"next" = "n2b"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n2b"
+"title" = "院里来的信"
+"text" = "十一月，贝居安院的老管事托人送来一封信，盖着院里的小印。信写得很客气：院里的账这几年乱了，姐妹们年纪大的多，算得慢；要是安娜愿意回来，院里给她留一间朝南的屋子，名字前头那一个，也可以还给她。姑母看完，把信放在枕头边上，那天晚上作坊的灯熄得比平时早。第二天一早她照常数针，数到十，停的那一下，比平时长。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 11, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "go"
+"text" = "劝她回去：那里清静"
+"reply" = "我说院里清静，不用替谁付账，也不用天天对着作坊里吵吵嚷嚷的学徒。姑母停下手：“你是替我想，还是替你父亲想？”我答不上来。她说：“我回去了，作坊谁管？有些账，谁付？”她把信折好，压在针线匣最底下一层，和别的纸放在一处。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = -1 }]
+
+[[tracks.chapters.choices]]
+"key" = "stay"
+"text" = "求她别走"
+"reply" = "我说作坊离不了她，我也离不了。姑母哼了一声：“你离得了。后年你就上船了。”可她当天就回了信，只有一行：屋子留给更年轻的姐妹。信封她让我来封，火漆压歪了，她也没让重压。"
+"next" = "n3"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_aunt_begged", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "name"
+"text" = "问她：那个名字，你想要回来吗"
+"reply" = "姑母想了很久：“名字还回去，账就平了。再拿回来，又是一笔。”她说，“我这辈子欠的够多了，不想再欠院里一笔。”她把那封信凑到灯上，看着它烧了一半，又吹灭了，剩下的那一半收进了针线匣。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "针线匣里的收据"
+"text" = "四月，姑母病了几天，让我去她的针线匣里找一卷金线。匣子分三层，金线在最底下一层，金线底下压着一叠收据，用一根红线扎着。最上面一张是汞，六磅，富格尔商行的印，付款人一栏写的是姑母的名字。下面还有炉砖、硫磺、一个玻璃匠的工钱，日子从前年一直排到上个月。我把金线拿上去，收据原样压回去，红线的结我照着打了一遍，可我打的结和她的不一样。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 4, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_traced"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_almaden_traced", "value" = true }]
+"text" = "四月，姑母病了几天，让我去她的针线匣里找一卷金线。匣子分三层，金线在最底下一层，金线底下压着一叠收据，用一根红线扎着。最上面一张是汞，六磅，富格尔商行的印——和地窖砖缝里那一沓是同一个印，只是付款人一栏写的是姑母的名字。下面还有炉砖、硫磺、一个玻璃匠的工钱，日子从前年一直排到上个月。我把金线拿上去，收据原样压回去，红线的结我照着打了一遍，可我打的结和她的不一样。"
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "把收据拿到她床前，问她"
+"reply" = "姑母看了那叠收据一眼，又看我：“结打错了。”她让我把收据放在被子上，“你父亲的票，在外头开不出去了，药铺要现钱。他是我弟弟。”她说，“他害怕就下地窖，我害怕就数针。我数针挣的钱，替他买他的害怕，这账有什么不对？”她咳了两声，“别告诉他是我付的。”"
+"next" = "n4"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }, { "kind" = "growth", "attr" = "perception", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_aunt_paid", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "silent"
+"text" = "不说破，从此对作坊的账多看一眼"
+"reply" = "我什么也没说。从那以后对作坊的账，我每回都在支出那一栏多看一眼。数是平的，姑母做账从来不留破绽，破绽在她自己的工钱上：这两年她没给自己发过一个子儿。我在自己的小账簿上替她记了一笔：欠姑母，数目不详。这一笔我一直没能结。"
+"next" = "n4"
+"effects" = [{ "kind" = "skill", "skill" = "double_entry", "value" = 4 }, { "kind" = "flag", "flag" = "rw_lieve_aunt_debt_noted", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "father"
+"text" = "去告诉父亲：姑母在替你付"
+"reply" = "父亲正在兑换桌后面打盹，听完一下子坐直了，坐得太急，手又抖起来。他去了作坊，关上门，我在外面听见他的声音越来越低，姑母的声音一直没变。他出来时眼睛是红的，对我说：“下个月起，作坊的账，你姑母不许再碰那一栏。”可下个月，那一栏照样是她的字。"
+"next" = "n4"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = -1 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = -1 }, { "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "少念的一行"
+"text" = "十一月，姑母给我织了一条领子，带上船穿。是贝居安院的老针法，花样是一圈小星，星和星之间连着细线。她把领子铺在我手上，指着靠扣眼的那一行：“这一行，我没念。”别的每一行，她织的时候都照老习惯数到十停一下；停那一下念了什么，她不说。只有这一行，从头到尾没有停过。“这一行留给你，”她说，“到了海上，你想往里填什么，就填什么。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 11, 20] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_heard"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_aunt_reason_heard", "value" = true }]
+"text" = "十一月，姑母给我织了一条领子，带上船穿。是贝居安院的老针法，花样是一圈小星，星和星之间连着细线。她把领子铺在我手上，指着靠扣眼的那一行：“这一行，我没念。”别的每一行，她织的时候都照老习惯数到十停一下。她早不信经能论码卖了，那一下却还是停；停那一下念了什么，她不说。只有这一行，从头到尾没有停过。“这一行留给你，”她说，“到了海上，你想往里填什么，就填什么。”"
+
+[[tracks.chapters.choices]]
+"key" = "pray"
+"text" = "说：那一行，我替你念完"
+"reply" = "我把领子凑到灯下，手指顺着那一行摸过去，数到十，停一下，念了一段小时候在教堂里学会的经。念完，姑母说：“你念的那段，我也会。”她没说她信不信，只把领子叠好放进我的箱子，叠的时候，那一行露在最外面。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_lace_prayed", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "number"
+"text" = "说：我往里填一个数"
+"reply" = "“什么数？”她问。我说还没想好，也许是到港的日子，也许是一个价钱，也许是我欠她的那一笔。姑母哼了一声：“填账，倒像你。”她把领子翻过来看了看背面的线头，“那一笔不用填。我织的东西，从来不收钱。”"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }, { "kind" = "flag", "flag" = "rw_lieve_lace_number", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "empty"
+"text" = "说：就让它空着"
+"reply" = "“空着也好。”她说，“空着，最难织。”她把领子放进我的箱子，压在最上面，“一行不停，手要稳，心要静，一口气织完。我织了四十年花边，这一行织得最慢。”我摸着那一行，针脚比别的密，像一句没说出口的话。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_lace_empty", "value" = true }]
+
+# 2026-11-12 剧情增写（第九批 · 莉芙）：人物线 E「约斯家的女儿」，北廊被挤兑烧光的兑换商老约斯之女格蕾特（新人物，只在正文，不作 speaker、不加情谊）。
+# 母本：《路加福音》浪子的比喻反写——逃债的是父亲，留在原地撕账的是女儿；马西斯《兑换商与他的妻子》（1514）：桌上的钱，镜里的人；
+#       文化：安特卫普兑换商的破产、逃债与查封；“信用是别人心里的数”；科隆的药铺替人往空白汇票上填数；
+#       张力：挤兑那天烧光的是约斯家，吓坏的是莉芙的父亲；后来往父亲空白汇票上填那笔又大又圆的数的手，正是约斯的手。父亲偷偷替约斯家付房租，约斯在科隆替人填父亲的票，谁也不欠谁，谁也没还清。
+# 1553（钉了木条的桌子）→ 1554（不用手接的工钱）→ 1555（替谁付的房租、科隆来的字）→ 1556（又大又圆的数、去科隆的车）；与人物线 A 的挤兑、科隆那张票咬住；主线“炉灰”最后一章读 rw_lieve_grete_left。
+[[tracks]]
+"key" = "c9_lieve_rw_joos"
+"name" = "约斯家的女儿"
+"kind" = "request"
+"start" = "n0"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "n0"
+"title" = "钉了木条的桌子"
+"text" = "十一月，北廊老约斯的那张桌子还钉着木条，木条上贴着市政厅的告示：财产查封，债主三日内登记。告示底下的台阶上坐着一个跟我差不多大的姑娘，裹着一条大人的披肩，膝盖上摊着一本账，一页一页地撕，撕下来折成小船，放进脚边的水洼。来来往往的人都绕开她走。那本账的封皮我认得，约斯每天早上都夹着它从我家门口过。她叫格蕾特，是约斯的女儿。"
+"once" = true
+"mood" = "sad"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1553, 11, 5] }]
+
+[[tracks.chapters.choices]]
+"key" = "boats"
+"text" = "在她旁边坐下，替她折船"
+"reply" = "我在她旁边坐下，从她手里接过一页，折成一只船。她看了我一眼：“你是德克莱尔克家的。你爹那天站在柱子后面看。”我说是。她没赶我走，又递给我一页。那一下午我们折了三十多只船，水洼太小，船挤在一起，一只也漂不动。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_boats", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "ask"
+"text" = "问她：撕掉的那几页记的是谁欠谁"
+"reply" = "“谁欠我爹，我爹欠谁。”她说，“都一样。告示叫人去登记，我登记什么？账在我手里，债在他们心里。”她又撕下一页，“我爹说，信用是别人心里的数。别人心里不信了，你手里的账就是废纸。”她把那页折成船，放进水里，“废纸至少能漂。”"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "bread"
+"text" = "跑回家拿一块面包给她"
+"reply" = "我跑回家，从厨房拿了一块面包和一角干酪。回来时她还在撕，接过面包，没说谢，掰成两半，一半塞进披肩，一半自己吃：“给我娘的。”我站在一旁看她吃完。她把掉在台阶上的面包屑也捡起来吃了，然后接着撕账。"
+"next" = "n1"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 1 }, { "kind" = "growth", "attr" = "sensibility", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n1"
+"title" = "不用手接的工钱"
+"text" = "二月，作坊里来了一个新学徒，是格蕾特。姑母说是她自己找上门的，进门就说她数针不会错。姑母让她试，她坐下就织，一行织完报出针数，一针不差。可她不碰钱。月底发工钱，姑母把几个斯图弗放在她手心，她立刻把手翻过来，钱掉在桌上，叮叮当当滚了一地。她蹲下去一枚一枚捡，用围裙兜着：“放在桌上就行，别放我手里。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1554, 2, 20] }]
+
+[[tracks.chapters.choices]]
+"key" = "why"
+"text" = "问她为什么不肯用手接钱"
+"reply" = "“钱会跑。”她说，“我爹的钱，那天上午全跑了，从他手里跑到别人手里，跑得比人快。”她把围裙里的钱倒进一只小布袋，扎紧口，“放在袋子里，它就跑不了。”我想说钱不会自己跑，可我想起北廊那一上午，没说出口。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "perception", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "scale"
+"text" = "借一杆小秤，教她称工钱"
+"reply" = "我从兑换桌借来一杆小秤，教她把工钱放在秤盘上称，看分量，不用手碰。她学得很快，第二个月就自己称了，称完还要报一遍成色。姑母在旁边看着，说：“兑换商家的规矩，倒先传给了外人。”格蕾特听见“兑换商”三个字，手停了一下，接着称。"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "skill", "skill" = "double_entry", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_scale", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "aunt"
+"text" = "去问姑母：为什么收她"
+"reply" = "“她数针不会错。”姑母说，“还有，她爹倒的那天，你爹在柱子后面看，我在作坊里听人讲。听完我就想，这一回是约斯，下一回不知道轮到谁。”她剪断一根线头，“收一个约斯家的丫头，就当给自己存一笔。”"
+"next" = "n2"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 1 }, { "kind" = "affinity", "person" = "lieve_aunt", "value" = 1 }]
+
+[[tracks.chapters]]
+"key" = "n2"
+"title" = "替谁付的房租"
+"text" = "五月，格蕾特的母亲替人洗衣裳，一家人住在码头后面一间漏雨的阁楼里。我去送作坊的旧布，碰见房东在楼梯口数钱。他说这家的房租每一季都有人付，付的人不留名字，只让一个跑腿的孩子送来，钱拿一块蓝布包着，打的是兑换商的那种结。那种结我认得。家里钱匣子上的绳，从来都是那么打的。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 5, 15] }]
+
+[[tracks.chapters.choices]]
+"key" = "father"
+"text" = "回家问父亲：是不是你"
+"reply" = "父亲正在兑换桌后面算账，听我说完，手里的笔没有停：“约斯欠我的，比欠别人的少。”算完一行，他才抬头，“那天要是先有人喊我的钱箱是空的，坐在台阶上撕账的，就是你。”他把笔搁下，手又抖起来，他把手压在账簿上：“别告诉那丫头。”"
+"next" = "n3"
+"effects" = [{ "kind" = "affinity", "person" = "lieve_father", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_rent_father", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "tell"
+"text" = "告诉格蕾特：有人在替你们付房租"
+"reply" = "格蕾特听完，脸一下子白了：“谁？”我说不知道。她不信，盯着我看，看得我把眼睛移开了。第二天她没来作坊。第三天她来了，坐下就织，一句话也不跟我说。那一季的房租后来是她母亲自己付的，付得很晚，房东骂了一整个楼梯。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_rent_told", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "silent"
+"text" = "什么也不说，回家翻一遍家里的账"
+"reply" = "我回家翻了家用账，没有这一笔；又翻父亲兑换桌上的账，也没有。这笔钱不在任何一本账上，可它每一季都在走。那天夜里我睡不着，想着父亲在地窖里烧掉的那些钱，又想着这一笔：两笔都不进账，一笔烧成了灰，一笔变成了一间阁楼的屋顶。"
+"next" = "n3"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n3"
+"title" = "科隆来的字"
+"text" = "十二月，格蕾特拿着一封信来作坊，信是从科隆来的，她爹的字。她认得字，却把信塞给我：“你念。我怕我念出来的，跟他写的不一样。”信里说他在科隆一家药铺里记账，管吃管住，攒够了钱就接她们过去。信末列着他这一年的工钱，一笔一笔，数字写得又大又圆，像一个个吹胀了的猪脬。格蕾特听完说：“他从前写数不是这个样子。从前他的数写得很小，怕占地方。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1555, 12, 1] }]
+
+[[tracks.chapters.choices]]
+"key" = "reply"
+"text" = "替她写回信"
+"reply" = "她说一句，我写一句。她不提钱，不提阁楼漏雨，也不提那天台阶上撕掉的账，只说母亲身子还好，作坊的针数她从来没错过。写到最后，她让我添一句：“你的数，写小一点。”我照写了。她把信折好，在封口上按了一个指印，像按在一张借据上。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_reply", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "warn"
+"text" = "说：药铺管吃管住，可没说药铺卖什么"
+"reply" = "格蕾特看着我：“药铺还能卖什么？卖药。”我说科隆的药铺，有的卖方子，卖矿石，卖一种会滚的银子。她没听懂，我也没再往下说。她把信收回去，压在胸口：“你们家的人，看什么都像账。”那一天作坊里，她的线轴响得最快。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "intrigue", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "copy"
+"text" = "请她把信借我抄一遍"
+"reply" = "我说想抄一遍，学学科隆人记账的格式。她犹豫了一下，借给了我。我把那一行又大又圆的数照样描下来，描得很慢，每个数字的弯都描得一样。描完我把抄本夹进自己小账簿的最后几页。那几页本来是空的。"
+"next" = "n4"
+"effects" = [{ "kind" = "growth", "attr" = "numeracy", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_copied", "value" = true }]
+
+[[tracks.chapters]]
+"key" = "n4"
+"title" = "又大又圆的数"
+"text" = "十月，格蕾特在作坊里说，她爹又来信了，说药铺的老板要他替人往票上填数，填一张，老板分他一成。“他说这是正经生意，”她说，“票是人家签好了名送来的，空着的地方，总要有人填。”她说得很平常，像在报针数。我手里的线轴停了。父亲兑换桌的抽屉里，也有签好了名、空着数的票。"
+"once" = true
+"mood" = "tense"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 10, 15] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_paid"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_paid_stray", "value" = true }]
+"text" = "十月，格蕾特在作坊里说，她爹又来信了，说药铺的老板要他替人往票上填数，填一张，老板分他一成。“他说这是正经生意，”她说，“票是人家签好了名送来的，空着的地方，总要有人填。”她说得很平常，像在报针数。我手里的线轴停了。九月里那张科隆来的票，数目又大又圆，三百镑，我刚拿攒了两年的钱替父亲付了头一笔。"
+
+[[tracks.chapters.variants]]
+"key" = "a_protest"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_protested_stray", "value" = true }]
+"text" = "十月，格蕾特在作坊里说，她爹又来信了，说药铺的老板要他替人往票上填数，填一张，老板分他一成。“他说这是正经生意，”她说，“票是人家签好了名送来的，空着的地方，总要有人填。”她说得很平常，像在报针数。我手里的线轴停了。九月里那张科隆来的票，数目又大又圆，三百镑，被我当着北廊的人拒付回了科隆。"
+
+[[tracks.chapters.variants]]
+"key" = "a_asked"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_asked_how_many", "value" = true }]
+"text" = "十月，格蕾特在作坊里说，她爹又来信了，说药铺的老板要他替人往票上填数，填一张，老板分他一成。“他说这是正经生意，”她说，“票是人家签好了名送来的，空着的地方，总要有人填。”她说得很平常，像在报针数。我手里的线轴停了。九月里那张科隆来的票，数目又大又圆，三百镑，父亲说要用他的名字去付。"
+
+[[tracks.chapters.choices]]
+"key" = "tell"
+"text" = "把父亲那些空白汇票的事告诉她"
+"reply" = "我把父亲签空白汇票的事说了：签给谁，拿去买什么，数目又是谁填的。格蕾特听着，脸上一点一点没了血色。她没有替她爹辩，只问：“你爹签的那些，是拿去买什么的？”我说买药。她笑了一下，笑得很难看：“那就是了。你爹买药，我爹卖药。他们俩，谁也不欠谁。”"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_told", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "write"
+"text" = "请她写信给她爹：德克莱尔克家的票别再填"
+"reply" = "她想了很久，答应了。信是她自己写的，我只替她改了两个字。她写：你填数的那一家，是替我们付了一年房租的人家。写完她抬头看我。我没说话，她就知道了。信寄出去以后，科隆再没来过又大又圆的数。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "eloquence", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_wrote", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "silent"
+"text" = "不说，替她把断了的线接上"
+"reply" = "我没说。我把她手边断了的线接上，打了个结，打得很紧。她看了看那个结：“你们家的结。”我说是。她没再说什么，低头接着织。那一天我一直在想，一张空着的票，到底是签名的人欠的，还是填数的人欠的。"
+"next" = "n5"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 2 }]
+
+[[tracks.chapters]]
+"key" = "n5"
+"title" = "去科隆的车"
+"text" = "十二月，格蕾特要走了。她爹来信，说攒够了钱，接她们母女去科隆。去科隆的货车月初从北门出发，车上堆着呢布，人坐在布包上。她来作坊辞工，姑母多给了她半个月的工钱，她照旧不肯用手接，让姑母放在桌上。她把钱扫进布袋，扎紧，又从披肩里掏出一只纸折的小船，放进我手里。船是旧账页折的，折痕都磨毛了：“台阶上折的那些，就剩这一只没漂走。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_lieve", "value" = true }, { "kind" = "date", "from" = [1556, 12, 5] }]
+
+[[tracks.chapters.variants]]
+"key" = "a_told"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_grete_told", "value" = true }]
+"text" = "十二月，格蕾特要走了。她爹来信，说攒够了钱，接她们母女去科隆。去科隆的货车月初从北门出发，车上堆着呢布，人坐在布包上。她来作坊辞工，姑母多给了她半个月的工钱，她照旧不肯用手接，让姑母放在桌上。她把钱扫进布袋，扎紧，说：“到了那边，我先看他写的数。”她又从披肩里掏出一只纸折的小船，放进我手里。船是旧账页折的，折痕都磨毛了：“台阶上折的那些，就剩这一只没漂走。”"
+
+[[tracks.chapters.variants]]
+"key" = "a_wrote"
+"when" = [{ "kind" = "flag", "flag" = "rw_lieve_grete_wrote", "value" = true }]
+"text" = "十二月，格蕾特要走了。她爹回了信，说那一家的票，他不填了；又说攒够了钱，接她们母女去科隆。去科隆的货车月初从北门出发，车上堆着呢布，人坐在布包上。她来作坊辞工，姑母多给了她半个月的工钱，她照旧不肯用手接，让姑母放在桌上。她把钱扫进布袋，扎紧，又从披肩里掏出一只纸折的小船，放进我手里。船是旧账页折的，折痕都磨毛了：“台阶上折的那些，就剩这一只没漂走。”"
+
+[[tracks.chapters.choices]]
+"key" = "see_off"
+"text" = "送她到北门"
+"reply" = "我送她到北门，车夫在吆喝，呢布包上已经坐了五六个人。她爬上去，坐在最高的那一包上，回头看我。车动了，她没挥手，只把手里的布袋举了一举，像是让我看清楚：钱在袋子里，跑不了。车出了城门，我才发现那只纸船一直攥在手里，攥湿了。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_seen_off", "value" = true }, { "kind" = "flag", "flag" = "rw_lieve_grete_left", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "money"
+"text" = "往她的布袋里塞十个斯图弗"
+"reply" = "我趁她不注意，把十个斯图弗塞进她的布袋，扎口照她的打法扎好。她到了科隆才会发现。也许她会把钱倒在桌上，不用手碰；也许她会把它扔进莱茵河，像扔一只纸船。我不知道。我只知道这一笔，我不记在任何一本账上。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "flag", "flag" = "rw_lieve_grete_money", "value" = true }, { "kind" = "flag", "flag" = "rw_lieve_grete_left", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "boat"
+"text" = "把纸船还给她：你留着"
+"reply" = "我把纸船放回她手里：“你留着。到了科隆，找一个水洼让它漂。”她愣了一下，笑了。这是我头一回看见她笑，左边嘴角有一个小坑。“科隆的水洼，比安特卫普的大。”她把纸船收进披肩，贴着胸口。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "sensibility", "value" = 2 }, { "kind" = "flag", "flag" = "rw_lieve_grete_boat_back", "value" = true }, { "kind" = "flag", "flag" = "rw_lieve_grete_left", "value" = true }]

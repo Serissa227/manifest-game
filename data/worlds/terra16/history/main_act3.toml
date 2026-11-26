@@ -1,0 +1,827 @@
+# C10：结构、引用、史实与玩法参数；显示正文均为待Claude替换的短占位。
+# 仅知年份／月份的条目在窗口末结算；不得把结算末日写成考证日期。
+
+# H49；事实上下文：葡萄牙王与摩洛哥两王身亡，塞巴斯蒂安尸身识认与归来传说须区分。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h49_three_kings"
+ripple_budget = 3000  # 涟漪预算（万分点）：结局出来后 30 日内，模型可据此写至多两条余波事件，倍率按 |倍率−1| 计费；离线不触发。
+title = "三王之战"
+summary = "1578年，葡萄牙王塞巴斯蒂安渡海南下，要扶持被赶下台的废王，与萨阿德王朝的苏丹决一胜负。丹吉尔是葡军的粮台，送粮、赈济、出钱都能在那里做；国王在里斯本，还能直接去谈。"
+region = "丹吉尔"
+date = [1578, 8, 4]
+history = { date = [1578, 8, 4], outcome = "sebastian_missing" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "葡萄牙王国", faction = "portugal", port = "tangier" },
+  { key = "opposition", name = "萨阿德摩洛哥", faction = "morocco" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助丹吉尔的军饷", port = "tangier", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "送粮木到丹吉尔", port = "tangier", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈济丹吉尔的城民", port = "tangier", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与国王塞巴斯蒂安议约", port = "lisbon", max_points = 16, with = "sebastian_i", cost = 1000, points = 16, leak = 15, risk = "消息若传到非斯，萨阿德的使者会在丹吉尔截住你的船。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_portuguese", reputation = { portugal = 0, morocco = 0 } },
+]
+outcomes = [
+  { key = "sebastian_missing", when = "<= 0", default = true, news = "丹吉尔的水手传话：葡萄牙王在北非的河谷里战死了，尸身认不认得出，众人各说各的。", chronicle = "1578年八月四日，三王同死于摩洛哥的战场，葡萄牙王的尸身识认成疑。", effects = [{ kind = "flag", flag = "h49_three_kings_sebastian_missing" }] },
+  { key = "sebastian_returns", when = "> 0", news = "里斯本有船从南边回来，带来一句话：葡萄牙王从河谷的败阵里脱身，已经上了接他的船。", chronicle = "1578年八月四日，葡萄牙王塞巴斯蒂安自败阵中脱身，人已在回里斯本的船上。", effects = [{ kind = "flag", flag = "h49_three_kings_sebastian_returns" }] },
+]
+window = [[1577, 1, 1], [1578, 8, 4]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["国王一心要打，朝中劝他缓兵的话，他一句也听不进。"]
+
+# H50；事实上下文：九鬼大船与大铁炮有记载；铁甲船说只作传闻。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h50_second_kizugawa"
+ripple_budget = 3000
+title = "第二次木津川口"
+summary = "天正六年，九鬼嘉隆奉信长之命造的六艘大船泊在堺外，封住了通往石山本愿寺的海路；奈良的僧人听人说那是铁做的船。毛利与能岛村上武吉的船队要再一次把米运进大坂，能岛的船坞里铳炮、船材都还不够。"
+region = "能岛"
+date = [1578, 12, 4]
+history = { date = [1578, 12, 4], outcome = "oda_navy_victory" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md", "太田牛一《信长公记》相关年条；研究P §1"]
+sides = [
+  { key = "support", name = "毛利氏", faction = "mori", port = "noshima" },
+  { key = "opposition", name = "织田氏", faction = "oda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "垫付毛利运粮船的船钱", port = "noshima", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "给能岛的船队配铳炮", port = "noshima", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "为本愿寺备米与火船木料", port = "noshima", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与村上武吉议定护航", port = "noshima", max_points = 16, with = "murakami_takeyoshi", cost = 1000, points = 16, leak = 15, risk = "九鬼在堺的船行布着眼线，护航的日子一漏出去，大船便抢先堵住木津川口。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { mori = 0, oda = 0 } },
+]
+outcomes = [
+  { key = "oda_navy_victory", when = "<= 0", default = true, news = "能岛的船头们回来时一声不吭。有人说九鬼的大船一开炮，打头的那条大将船就碎了，六百条船都被赶进木津浦，米一包也没运进去。", chronicle = "天正六年十一月，九鬼嘉隆以大船破毛利水军于木津川口，石山的海路自此断绝。", effects = [{ kind = "flag", flag = "h50_second_kizugawa_oda_navy_victory" }] },
+  { key = "murakami_holds_sea", when = "> 0", news = "能岛上下摆起了庆功酒：村上的船借着涨潮绕开九鬼的大船，米袋一包包扛进了本愿寺，大船笨重，追也追不上。", chronicle = "天正六年冬，村上水军冲破九鬼大船的封锁，运粮入石山本愿寺，内海仍在毛利手中。", effects = [{ kind = "flag", flag = "h50_second_kizugawa_murakami_holds_sea" }] },
+]
+window = [[1577, 1, 1], [1578, 12, 4]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["九鬼的大船船身高、载着大铁炮，焙烙火矢扔不上甲板，小早船也近不了身。"]
+
+# H51；事实上下文：大友军败于岛津，宗麟未在本战身亡。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h51_mimikawa"
+ripple_budget = 3000
+title = "耳川之战"
+summary = "天正六年，刚受洗的大友宗麟领大军南下日向，要替投奔他的伊东家夺回旧领，在高城川边撞上岛津义久兄弟；宗麟本人留在后方的无鹿。府内的仓里缺铳炮和军粮，长崎的南蛮屋源六说黑船上还有硝石。"
+region = "府内"
+date = [1578, 12, 10]
+history = { date = [1578, 12, 10], outcome = "otomo_defeated" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "大友氏", faction = "otomo", port = "funai" },
+  { key = "opposition", name = "岛津氏", faction = "shimazu" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助大友的日向远征", port = "funai", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运南蛮铳与火药进府内", port = "funai", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "替大友军运米和营材", port = "funai", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与源六议定黑船硝石的供货", port = "nagasaki", max_points = 16, with = "genroku", cost = 1000, points = 16, leak = 15, risk = "萨摩商人在长崎也开着铺子，硝石一装船，日向滩上就有岛津的船候着。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { otomo = 0, shimazu = 0 } },
+]
+outcomes = [
+  { key = "otomo_defeated", when = "<= 0", default = true, news = "府内的寺里诵经声一天没断。日向败回来的兵讲，高城川一仗大友家的老臣倒了一片，残兵被岛津一路追杀到耳川，渡河时又倒下许多。", chronicle = "天正六年，大友军败于日向高城川，被追至耳川，重臣多战死，九州之势倒向岛津。", effects = [{ kind = "flag", flag = "h51_mimikawa_otomo_defeated" }] },
+  { key = "otomo_preserves_army", when = "> 0", news = "府内的町口挤满了接人的家眷，回来的人没比走时少多少：高城川边见势不对，大友军收拢阵脚退了，仗没打赢，人马大多带回了丰后。", chronicle = "天正六年，大友军在日向高城川受挫，全师退还丰后，元气未伤。", effects = [{ kind = "flag", flag = "h51_mimikawa_otomo_preserves_army" }] },
+]
+window = [[1578, 1, 1], [1578, 12, 10]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["大友诸将对进退各执一词，宗麟又不在阵前，没人压得住急着渡河的人。"]
+
+# H52；事实上下文：葡萄牙王位继承战争；两个王冠与各自制度并存。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h52_iberian_union"
+ripple_budget = 3000
+title = "伊比利亚联合"
+summary = "1580年，葡萄牙的王位空了。腓力二世凭着母系的血脉伸手去拿，克拉图院长安东尼奥的旗号却在里斯本的街头立了起来。在里斯本出钱、运粮、赈济，或去找院长议约，正是时候。"
+region = "里斯本"
+date = [1580, 12, 31]
+history = { date = [1580, 12, 31], outcome = "philip_rules_portugal" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "葡萄牙王国", faction = "portugal", port = "lisbon" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助里斯本守军", port = "lisbon", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木进里斯本", port = "lisbon", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈济里斯本市民", port = "lisbon", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与克拉图院长议约", port = "lisbon", max_points = 16, with = "antonio_crato", cost = 1000, points = 16, leak = 15, risk = "西班牙派的密探若听到风声，里斯本的商人会先把银子收回去。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_portuguese", reputation = { portugal = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "philip_rules_portugal", when = "<= 0", default = true, news = "里斯本的粮商说，腓力的兵从阿尔坎塔拉的桥那边过来，葡萄牙的王位从此归了西班牙。", chronicle = "1580年，西班牙的兵进了里斯本，腓力二世兼任葡萄牙国王。", effects = [{ kind = "flag", flag = "h52_iberian_union_philip_rules_portugal" }] },
+  { key = "antonio_rules_portugal", when = "> 0", news = "里斯本的酒馆里说，克拉图院长的旗号还在城头飘着，西班牙的使者只好掉头回马德里。", chronicle = "1580年，克拉图院长安东尼奥的旗号在里斯本立住，葡萄牙留在自己手里。", effects = [{ kind = "flag", flag = "h52_iberian_union_antonio_rules_portugal" }] },
+]
+window = [[1580, 1, 1], [1580, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["贵族与大半教士都倒向腓力，安东尼奥的旗号只有市民肯扛。"]
+requires = [
+  { event = "h49_three_kings", outcome = "sebastian_missing" },
+]
+
+# H53；事实上下文：1582蓬塔德尔加达海战与1583特塞拉登陆分别发生。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h53_azores_campaign"
+ripple_budget = 3000
+title = "亚速尔海战"
+summary = "1582年，圣克鲁斯侯爵的西班牙舰队在亚速尔的海上打垮了法国与安东尼奥的船。次年七月，双方又在特塞拉岛外开战，岛上的归属还悬着。在安格拉出钱、送火器、运粮，在澳门也能找卡塔丽娜·佩雷拉谈。"
+region = "安格拉"
+date = [1583, 7, 26]
+history = { date = [1583, 7, 26], outcome = "spanish_azores" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "法兰西王国", faction = "france", port = "angra" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱养安格拉的兵", port = "angra", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送火铳与火药到安格拉", port = "angra", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮木入安格拉", port = "angra", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与卡塔丽娜·佩雷拉议约", port = "macao", max_points = 16, with = "catarina_pereira", cost = 1000, points = 16, leak = 15, risk = "消息传到澳门头人耳里，旧地租账会被翻出，佩雷拉家与商户都要翻脸。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_portuguese", reputation = { france = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "spanish_azores", when = "<= 0", default = true, news = "安格拉的水手说，西班牙的船队在特塞拉岛外打垮了法国与安东尼奥的舰队，岛上的守军降了。", chronicle = "1583年七月，西班牙人在特塞拉岛外取胜，岛归了西班牙。", effects = [{ kind = "flag", flag = "h53_azores_campaign_spanish_azores" }] },
+  { key = "antonio_holds_azores", when = "> 0", news = "安格拉的渔夫说，安东尼奥的旗还插在特塞拉岛的城头，西班牙的船队掉头回了伊比利亚。", chronicle = "1583年七月，特塞拉岛守住了，安东尼奥仍据亚速尔。", effects = [{ kind = "flag", flag = "h53_azores_campaign_antonio_holds_azores" }] },
+]
+window = [[1582, 7, 1], [1583, 7, 26]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["法国的船队从欧洲西岸启航，赶到亚速尔时西班牙已占了先手。"]
+requires = [
+  { event = "h52_iberian_union", outcome = "philip_rules_portugal" },
+]
+
+# H54；事实上下文：明智袭杀信长；明智山崎败亡另日处理，动机待核。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h54_honnoji"
+ripple_budget = 3000
+title = "本能寺之变"
+summary = "天正十年，信长只带着百来名近侍住进京都本能寺，准备西去援秀吉。明智光秀的一万多人马也在调动，人人都以为是去备中。伊贺来的百地枫这时正在堺，说她的人能抢在天亮前把消息送进寺里。"
+region = "堺"
+date = [1582, 6, 21]
+history = { date = [1582, 6, 21], outcome = "nobunaga_dies" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md", "太田牛一《信长公记》相关年条；研究P §1"]
+sides = [
+  { key = "support", name = "织田氏", faction = "oda", port = "sakai" },
+  { key = "opposition", name = "明智光秀", faction = "oda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱给信长添护卫", port = "sakai", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "为信孝的渡海军备粮与船材", port = "sakai", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与百地枫谈报信的价码", port = "sakai", max_points = 16, with = "momochi_kaede", cost = 1000, points = 16, leak = 15, risk = "伊贺人往来堺的路上有明智的耳目，话一漏到丹波龟山，明智只会动手更早。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { oda = 0 } },
+  { key = "secure_introduction", side = "support", kind = "bribe", label = "托百地枫打点信长的近侍", port = "sakai", max_points = 16, with = "momochi_kaede", cost = 1000, points = 16, leak = 15, risk = "近侍收了钱若转头禀报，信长头一个疑的就是送钱的人。" },
+]
+outcomes = [
+  { key = "nobunaga_dies", when = "<= 0", default = true, news = "堺的茶屋里有人失手摔了碗：京都的本能寺一夜烧光，右府大人没能出来，动手的是明智日向守。", chronicle = "天正十年六月二日，明智光秀袭本能寺，织田信长自尽，信忠亦死于二条御所。", effects = [{ kind = "flag", flag = "h54_honnoji_nobunaga_dies" }] },
+  { key = "nobunaga_survives", when = "> 0", news = "堺的会所里传着一封京都来的急信：本能寺火起之前右府大人已从后门走了，明智的兵在灰里翻了一早上，大人如今已回安土。", chronicle = "天正十年六月，明智光秀袭本能寺不成，信长脱身还安土。", effects = [{ kind = "flag", flag = "h54_honnoji_nobunaga_survives" }] },
+]
+window = [[1581, 1, 1], [1582, 6, 21]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["从丹波龟山翻过老之坂到京都只要一夜，报信的人抢不出多少时辰。"]
+requires = [
+  { event = "h30_nobunaga_kyoto", outcome = "nobunaga_enters_kyoto" },
+]
+
+# H55；事实上下文：极难救治分支；1584清算须受此结果约束，医术条件另设。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h55_zhang_juzheng_death"
+ripple_budget = 3000
+title = "张居正之死"
+summary = "首辅张居正病势沉重，满朝官员设坛祈祷，太医日日进药。考成法、清丈、一条鞭法全凭他一人撑着。要把大夫和药材送进他的卧房，得先过宫里与内阁的几道门，也得你自己真懂药，递话才有人肯听。"
+region = "天津"
+date = [1582, 7, 9]
+history = { date = [1582, 7, 9], outcome = "zhang_juzheng_dies" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -45
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出银聘名医入京", port = "tianjin", max_points = 20, value_per_point = 500, requires = [{ kind = "skill", skill = "herbal_medicine", ge = 8 }] },
+  { key = "relieve_households", side = "support", kind = "relief", label = "散粮药济天津饥户", port = "tianjin", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200, requires = [{ kind = "skill", skill = "herbal_medicine", ge = 8 }] },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮与木料入天津", port = "tianjin", max_points = 20, goods = ["grain", "timber"], value_per_point = 200, requires = [{ kind = "skill", skill = "herbal_medicine", ge = 8 }] },
+  { key = "secure_introduction", side = "support", kind = "bribe", label = "托谢清晏打点入京的门路", port = "ningbo", max_points = 16, with = "xie_qingyan", cost = 1000, points = 16, leak = 15, risk = "打点的风声若传进冯保耳朵，宫里的门就关了，谢清晏也担干系。", requires = [{ kind = "skill", skill = "herbal_medicine", ge = 8 }] },
+]
+outcomes = [
+  { key = "zhang_juzheng_dies", when = "<= 0", default = true, news = "天津卫的码头上传开了：京里的张阁老殁了，皇上辍朝，赐谥文忠。茶摊上有人叹气，老账房低声说，往后清丈的田册怕是没人肯再查。", chronicle = "万历十年六月，首辅张居正卒于任，帝辍朝，赠上柱国，谥文忠。", effects = [{ kind = "flag", flag = "h55_zhang_juzheng_death_zhang_juzheng_dies" }] },
+  { key = "zhang_juzheng_survives", when = "> 0", news = "漕船泊进天津卫，带来一句叫人不敢信的话：张阁老没有死。远来的人送了药，烧退了，他又坐回文渊阁票拟奏章。朝中松了口气的人不多，咬牙的倒不少。", chronicle = "万历十年，张居正病愈复起，仍掌阁务，考成法与一条鞭法不废。", effects = [{ kind = "flag", flag = "h55_zhang_juzheng_death_zhang_juzheng_survives" }, { kind = "var", campaign = "liaodong", var = "ming_treasury", add = 10 }, { kind = "var", campaign = "liaodong", var = "ming_court", add = 10 }, { kind = "var", campaign = "liaodong", var = "ming_open", add = 10 }] },
+]
+window = [[1580, 1, 1], [1582, 7, 9]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["病拖了几个月，床前设坛的人多，肯担干系用新药的太医少。"]
+
+# H56；事实上下文：柏拉图《克里提亚斯》为传说文本依据，1583会议属于本作设定，不冒称历史事实。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h56_ten_kings_council"
+ripple_budget = 3000
+knowledge = "topic_atlantis"
+title = "十王的会议"
+summary = "柏拉图记下的十王会议，到1583年又要开一回。外港的船工说，十位王的使者不用铁器捕牛，熄了火，在黑暗里议事。能上石台的，只有带着信物的人，外港的人只敢远远地看。"
+region = "亚特兰蒂斯外港"
+date = [1583, 12, 31]
+history = { date = [1583, 12, 31], outcome = "council_convenes" }
+basis = "adapted"
+sources = ["柏拉图《克里提亚斯》119c–120c", "docs/TERRA16.md §8.5；会议年份为本作设定"]
+sides = [
+  { key = "support", name = "亚特兰蒂斯", faction = "atlantis", port = "atlantis_port" },
+  { key = "opposition", name = "亚特兰蒂斯", faction = "atlantis" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "council_convenes", when = ">= -9223372036854775808", default = true, news = "亚特兰蒂斯外港的老人讲，十位王的使者在石台上议了一夜，天亮时有人见着金板上的字。", chronicle = "1583年，亚特兰蒂斯外港的船工传说，十王聚会于石台之上。", effects = [{ kind = "flag", flag = "h56_ten_kings_council_council_convenes" }] },
+]
+window = [[1583, 1, 1], [1583, 12, 31]]
+
+# H57；事实上下文：帕尔马围城与斯海尔德浮桥；投降后人口与商业北迁。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h57_antwerp_siege"
+ripple_budget = 3000
+title = "安特卫普之围"
+summary = "帕尔马的西班牙军在1584年围住了安特卫普，斯海尔德河上的浮桥一段段往前伸，城外的海路被封住了。城里的商人在守与降之间算账，谁也不肯先开口。眼下出钱、送火器、运粮、赈济，还来得及。"
+region = "安特卫普"
+date = [1585, 8, 17]
+history = { date = [1585, 8, 17], outcome = "antwerp_surrenders" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "哈布斯堡尼德兰", faction = "netherlands", port = "antwerp" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助安特卫普守城", port = "antwerp", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "火器押进安特卫普", port = "antwerp", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "粮木运进安特卫普", port = "antwerp", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "赈济安特卫普饥民", port = "antwerp", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "antwerp_surrenders", when = "<= 0", default = true, news = "安特卫普的商人说，城门开了，西班牙的兵进了城，北去的船挤满了斯海尔德河。", chronicle = "1585年八月十七日，安特卫普开城投降，西班牙的兵驻进了城里。", effects = [{ kind = "flag", flag = "h57_antwerp_siege_antwerp_surrenders" }, { kind = "port_owner", port = "antwerp", faction = "spain" }] },
+  { key = "antwerp_holds", when = "> 0", news = "安特卫普的船工说，浮桥没能合拢，城门还开着，尼德兰的船又进了港。", chronicle = "1585年八月，安特卫普守住了城墙，港口重新向尼德兰的船开放。", effects = [{ kind = "flag", flag = "h57_antwerp_siege_antwerp_holds" }, { kind = "port_state", port = "antwerp", state = "open" }, { kind = "port_owner", port = "antwerp", faction = "netherlands" }] },
+]
+window = [[1584, 1, 1], [1585, 8, 17]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["帕尔马的围城工事早已筑成，城外的援军迟迟不到。"]
+
+# H58；事实上下文：1584宣布独立、1593战役；象战细节存在叙述差异，不提前结算1593战果。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h58_naresuan_independence"
+ripple_budget = 3000
+title = "纳黎萱与阿瑜陀耶独立"
+summary = "1584年，阿瑜陀耶的王子纳黎萱在北方宣布独立，东吁王朝不肯罢手，大军一次次压来。阿瑜陀耶的朝廷缺粮少铳，火器与粮米都要从海上运进来。谁肯在大城港出钱、出船，北路的守军就多一分指望。"
+region = "大城"
+date = [1593, 1, 31]
+history = { date = [1593, 1, 31], outcome = "siam_independence_secured" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "阿瑜陀耶王国", faction = "ayutthaya", port = "ayutthaya_port" },
+  { key = "opposition", name = "东吁王朝", faction = "taungoo" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助阿瑜陀耶的兵饷", port = "ayutthaya_port", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "把火铳火炮运进大城", port = "ayutthaya_port", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给大城的守军送粮与木料", port = "ayutthaya_port", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与纳黎萱谈通行与粮约", port = "ayutthaya_port", max_points = 16, with = "naresuan", cost = 1000, points = 16, leak = 15, risk = "谈判若走漏，东吁会先知道，北路的兵马就提前调动。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { ayutthaya = 0, taungoo = 0 } },
+]
+outcomes = [
+  { key = "siam_independence_secured", when = "<= 0", default = true, news = "大城码头的脚夫说，北边传来消息，纳黎萱的独立算是保住了，东吁的旗子不再往南插。", chronicle = "1593年，阿瑜陀耶守住了独立，东吁的大军退出北境。", effects = [{ kind = "flag", flag = "h58_naresuan_independence_siam_independence_secured" }, { kind = "port_owner", port = "ayutthaya_port", faction = "ayutthaya" }] },
+  { key = "siam_supplied", when = "> 0", news = "大城的船工说，运到的粮米与火铳撑住了北路的守军，东吁的使者在城外等了许久，空手回了勃固。", chronicle = "1593年，阿瑜陀耶的粮与铳接济不断，北路的守军没有溃散。", effects = [{ kind = "flag", flag = "h58_naresuan_independence_siam_supplied" }] },
+]
+window = [[1584, 1, 1], [1593, 1, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["北边的东吁兵马不退，大城的府库要靠海船的货来补。"]
+
+# H59；事实上下文：葡萄牙舰队与津巴夹击，米尔阿里被俘；津巴身份和人数争议保留。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h59_mir_ali_coast"
+ripple_budget = 3000
+title = "米尔·阿里与东非海岸"
+summary = "1585年起，奥斯曼船长米尔·阿里·贝伊两次南下，斯瓦希里诸城有的倒向他。葡萄牙舰队要与人称津巴的兵马夹击，把他堵在港里。蒙巴萨缺火器也缺粮，谁肯把货运过去，城里的守备就能多撑些时日。"
+region = "蒙巴萨"
+date = [1589, 3, 31]
+history = { date = [1589, 3, 31], outcome = "mir_ali_captured" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "斯瓦希里诸城", faction = "swahili_cities", port = "mombasa" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助斯瓦希里诸城的守备", port = "mombasa", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运火铳火炮去蒙巴萨", port = "mombasa", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给蒙巴萨送粮与木料", port = "mombasa", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "托译人与米尔·阿里议补给", port = "mombasa", max_points = 16, with = "mir_ali_bey", cost = 1000, points = 16, leak = 15, risk = "译人若嘴松，葡萄牙的商馆会先听到风声，港口的税吏也跟着变脸。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_turkish", reputation = { swahili_cities = 0, portugal = 0 } },
+]
+outcomes = [
+  { key = "mir_ali_captured", when = "<= 0", default = true, news = "蒙巴萨的渔船回港，船老大说，米尔·阿里被押上了葡萄牙人的船，港口的旗子换了颜色。", chronicle = "1589年，葡萄牙舰队与人称津巴的兵马夹击，米尔·阿里·贝伊被俘。", effects = [{ kind = "flag", flag = "h59_mir_ali_coast_mir_ali_captured" }] },
+  { key = "coastal_autonomy", when = "> 0", news = "蒙巴萨的市集上传话：米尔·阿里没被押走，诸城的头目自己议定了补给和通航，葡萄牙人的船只只能在外海打转。", chronicle = "1589年，斯瓦希里诸城自定章程，葡萄牙人没能进港。", effects = [{ kind = "flag", flag = "h59_mir_ali_coast_coastal_autonomy" }] },
+]
+window = [[1585, 1, 1], [1589, 3, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["葡萄牙的炮舰守着港口，斯瓦希里诸城的船却凑不齐。"]
+
+# H60；事实上下文：舰队未能会合陆军后绕不列颠返航受灾，不写全舰队尽灭。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h60_armada"
+ripple_budget = 3000
+title = "无敌舰队"
+summary = "1588年，西班牙要借海峡把陆军送过去登陆英格兰，舰队须先与佛兰德的陆军会合。梅迪纳—西多尼亚公爵统率舰队，英格兰的私掠船与海峡的风，都不会替它留路。普利茅斯的码头上缺粮、缺木，也缺火炮，谁先把这些装上船，舰队就多一分胜算。"
+region = "普利茅斯"
+date = [1588, 9, 30]
+history = { date = [1588, 9, 30], outcome = "armada_retreats" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "西班牙诸王国", faction = "spain", port = "plymouth" },
+  { key = "opposition", name = "英格兰王国", faction = "england" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助西班牙的出海军饷", port = "plymouth", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "把火炮火药运进普利茅斯", port = "plymouth", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "装粮与木料上西班牙船", port = "plymouth", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与巴列斯特罗斯议通行与补给", port = "seville", max_points = 16, with = "jeronimo_ballesteros", cost = 1000, points = 16, leak = 15, risk = "走漏的话，英格兰的探子会先在塞维利亚的码头上记下船名。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_spanish", reputation = { spain = 0, england = 0 } },
+]
+outcomes = [
+  { key = "armada_retreats", when = "<= 0", default = true, news = "普利茅斯的渔夫讲，西班牙的船绕过北边的不列颠岛回去了，帆破了不少，可没听说全军覆没。", chronicle = "1588年，西班牙舰队未能与陆军会合，绕行不列颠北返，途中遇风受损。", effects = [{ kind = "flag", flag = "h60_armada_armada_retreats" }] },
+  { key = "spanish_landing", when = "> 0", news = "普利茅斯的人在酒馆里说，西班牙的兵已在英格兰东岸上了岸，烽火从海角一路烧到伦敦。", chronicle = "1588年，西班牙陆军与舰队会合，登上了英格兰的海岸。", effects = [{ kind = "flag", flag = "h60_armada_spanish_landing" }] },
+]
+window = [[1587, 1, 1], [1588, 9, 30]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["陆军在佛兰德待命，舰队到了海峡却接不上头。"]
+
+# H61；事实上下文：L19主线索引，采用提前55年的架空战役结果。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h61_beijing_reference"
+ripple_budget = 3000
+title = "北京与山海关"
+summary = "饥荒与辽饷把北方拖到绝路，流民成群围向京师。山海关的关门由总兵吴三桂掌着，一头等京里的消息，一头是关外的清兵。赈济、驿站、递信与谈判，都得赶在关门开合之前办成。"
+region = "山海关海口"
+date = [1589, 12, 31]
+history = { date = [1589, 12, 31], outcome = "qing_enters_pass" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "shanhaiguan" },
+  { key = "opposition", name = "后金", faction = "later_jin" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "qing_enters_pass", when = ">= -9223372036854775808", default = true, news = "山海关海口的船家咂着嘴说：往登州去的船价翻了几倍，渡口挤满从关里逃出来的人；问他们为什么走，只答一句，清兵进关了。", chronicle = "万历十七年，清兵越山海关而入，大明国祚至此而终。", effects = [{ kind = "flag", flag = "h61_beijing_reference_qing_enters_pass" }] },
+]
+window = [[1588, 1, 1], [1589, 12, 31]]
+requires = [
+  { event = "l19_beijing_shanhaiguan", outcome = "qing_enters_pass" },
+]
+
+# H62；事实上下文：北条投降后秀吉完成统一；信长存续分支须避免重复出现秀吉史实统一。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h62_odawara"
+ripple_budget = 3000
+title = "小田原之役"
+summary = "天正十八年，秀吉调集二十余万人马，水陆合围北条家的小田原城，九鬼与长宗我部的水军封住了相模的海面。北条父子从春天守到夏天，关东各城一座座开了门。"
+region = "热田"
+date = [1590, 8, 31]
+history = { date = [1590, 8, 31], outcome = "hideyoshi_unifies_japan" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md", "太田牛一《信长公记》相关年条；研究P §1"]
+sides = [
+  { key = "support", name = "丰臣氏", faction = "toyotomi", port = "atsuta" },
+  { key = "opposition", name = "后北条氏", faction = "hojo" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "hideyoshi_unifies_japan", when = ">= -9223372036854775808", default = true, news = "热田的渡船这几天载的全是往西回的兵，都说小田原开了城，北条家的老主公切了腹，关东八州要交给德川大人。", chronicle = "天正十八年，北条氏直开城出降，氏政、氏照切腹，秀吉一统天下。", effects = [{ kind = "flag", flag = "h62_odawara_hideyoshi_unifies_japan" }] },
+]
+window = [[1590, 1, 1], [1590, 8, 31]]
+requires = [
+  { event = "h54_honnoji", outcome = "nobunaga_dies" },
+]
+
+# H55；事实上下文：张居正身后清算按真实1584年；若1582救治成功，不发生此史实清算。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h55_zhang_family_purge"
+ripple_budget = 3000
+title = "张家清算"
+summary = "张居正死后两年，言官翻出旧账，皇帝先夺了他的官阶，又下旨籍没荆州张府。凡是他提拔过的人，一个个被劾去职，满朝没有人敢替他开口。"
+region = "天津"
+date = [1584, 12, 31]
+history = { date = [1584, 12, 31], outcome = "zhang_family_purged" }
+basis = "historical"
+sources = ["《明史·张居正传》", "docs/TERRA16.md §10.5"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "zhang_family_purged", when = ">= -9223372036854775808", default = true, news = "天津卫的脚行传来荆州的消息：官兵封死了张府大门，开门时里头已饿死十几口人；长子受刑不过，自缢了。", chronicle = "万历十二年，削张居正官阶谥号，籍没荆州家产，榜其罪状于天下。", effects = [{ kind = "flag", flag = "h55_zhang_family_purge_zhang_family_purged" }] },
+]
+window = [[1584, 1, 1], [1584, 12, 31]]
+requires = [
+  { event = "h55_zhang_juzheng_death", outcome = "zhang_juzheng_dies" },
+]
+
+# H55；事实上下文：极难救治仅延至1590，不授予不死；此年为设计反事实而非史实。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h55_extended_lifetime_ends"
+ripple_budget = 3000
+title = "延寿终点"
+summary = "那场重病之后，张居正又在内阁坐了八年。一条鞭法与考成法没有被废，万历却一年比一年冷淡，朝中怨他专权的人也越来越多。这一年，他终于走到了尽头。"
+region = "天津"
+date = [1590, 12, 31]
+history = { date = [1590, 12, 31], outcome = "zhang_juzheng_dies_later" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.5"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "zhang_juzheng_dies_later", when = ">= -9223372036854775808", default = true, news = "老首辅这回是真走了，消息顺着运河一路传到天津卫。新法还留在簿册里，只是灵前站着的，有一半是生前怨过他的人。", chronicle = "万历十八年，张居正卒于京师，生前所行新法仍在。", effects = [{ kind = "flag", flag = "h55_extended_lifetime_ends_zhang_juzheng_dies_later" }] },
+]
+window = [[1590, 1, 1], [1590, 12, 31]]
+requires = [
+  { event = "h55_zhang_juzheng_death", outcome = "zhang_juzheng_survives" },
+]
+
+# H54；事实上下文：光秀败走途中被杀，不在本能寺当日与信长同时死亡。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h54_yamazaki"
+ripple_budget = 3000
+title = "山崎之战"
+summary = "本能寺之后第十一天，羽柴秀吉从备中高松急行回来，在山城与摄津交界的山崎迎击明智光秀。光秀等的细川、筒井都没有来。"
+region = "堺"
+date = [1582, 7, 2]
+history = { date = [1582, 7, 2], outcome = "akechi_mitsuhide_dies" }
+basis = "historical"
+sources = ["docs/research/terra16/P_eastasia_1540.md 1582年条", "docs/TERRA16.md §11"]
+sides = [
+  { key = "support", name = "织田氏", faction = "oda", port = "sakai" },
+  { key = "opposition", name = "丰臣氏", faction = "toyotomi" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "akechi_mitsuhide_dies", when = ">= -9223372036854775808", default = true, news = "尼崎来的船一靠堺的岸就嚷开了：羽柴大人的兵像是从备中飞回来的，山崎一仗明智军溃了，光秀在逃路上被乡民打死。", chronicle = "天正十年六月十三日，羽柴秀吉破明智光秀于山崎，光秀败走途中被杀。", effects = [{ kind = "flag", flag = "h54_yamazaki_akechi_mitsuhide_dies" }] },
+]
+window = [[1582, 7, 2], [1582, 7, 2]]
+requires = [
+  { event = "h54_honnoji", outcome = "nobunaga_dies" },
+]
+
+
+# 补充新闻；事实上下文：1583大会合按年记录。哈维原书标题的4月28日是当时的预报口径，不能直接当作现代历算的会合时刻；具体会合日及历制换算待核。十王会议另用既有H56。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "h56_great_conjunction"
+ripple_budget = 3000
+title = "大会合"
+summary = "1583年，木星与土星在双鱼座相会。伦敦的占星家把这次相会看作大变局的钟声，街上的人抬头看天，都说一辈子难得见一回。"
+region = "伦敦"
+date = [1583, 12, 31]
+window = [[1583, 1, 1], [1583, 12, 31]]
+history = { date = [1583, 12, 31], outcome = "conjunction_reported" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md", "https://content.www.wellcomecollection.org/works/ab6j34hq"]
+sides = [{ key = "support", name = "英格兰王国", faction = "england", port = "london" }, { key = "opposition", name = "丹麦—挪威", faction = "denmark_norway" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "conjunction_reported", when = ">= -9223372036854775808", default = true, news = "伦敦的书铺里传着一本星象小册，说大会合的日子已过，天上的事人间却没人说得准。", chronicle = "1583年，木星与土星会合于双鱼，伦敦的占星家纷纷著文。", effects = [{ kind = "flag", flag = "h56_great_conjunction_conjunction_reported" }] }]
+
+# 补充新闻；事实上下文：1588年奇异之年的预言当时流行；雷吉奥蒙塔努斯的作者归属存疑，不能把预言当作舰队失利的史实原因。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "h60_wondrous_year_prophecy"
+ripple_budget = 3000
+title = "奇异之年的预言"
+summary = "1588年的伦敦，街头书摊上摆着一本署名雷吉奥蒙塔努斯的预言历，说这一年天上要出怪事，海上也要有大灾。书是谁写的，没人说得清，买的人多半当它是饭后的谈资。"
+region = "伦敦"
+date = [1588, 12, 31]
+window = [[1588, 1, 1], [1588, 12, 31]]
+history = { date = [1588, 12, 31], outcome = "prophecy_circulates" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md"]
+sides = [{ key = "support", name = "英格兰王国", faction = "england", port = "london" }, { key = "opposition", name = "西班牙诸王国", faction = "spain" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "prophecy_circulates", when = ">= -9223372036854775808", default = true, news = "伦敦圣保罗教堂前的书摊上，那本预言历的角已经卷了，摊主说买的人比买面包的还多。", chronicle = "1588年，伦敦流传一本署名雷吉奥蒙塔努斯的预言历，书里多是怪事的预兆。", effects = [{ kind = "flag", flag = "h60_wondrous_year_prophecy_prophecy_circulates" }] }]
+
+# 补充新闻；事实上下文：研究Q记1591-03-13通迪比战败；桑海残部退往登迪继续抵抗，不能写作全部人口或政权当日消失。
+# 日期精度：day；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1591_tondibi_campaign"
+ripple_budget = 3000
+title = "通迪比之战"
+summary = "1591年3月13日，萨阿德王朝的摩洛哥远征军越过撒哈拉，在通迪比与桑海的骑兵对阵。摩洛哥人的火枪在阵前齐放，桑海的骑兵冲不进火枪阵，残部退往登迪。里斯本的商船常把这些消息从非洲西岸带回来。"
+region = "里斯本"
+date = [1591, 3, 13]
+window = [[1591, 3, 13], [1591, 3, 13]]
+history = { date = [1591, 3, 13], outcome = "songhai_defeated" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md"]
+sides = [{ key = "support", name = "萨阿德摩洛哥", faction = "morocco", port = "lisbon" }, { key = "opposition", name = "桑海帝国", faction = "songhai" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "songhai_defeated", when = ">= -9223372036854775808", default = true, news = "里斯本码头的水手刚从摩洛哥回来，说通迪比那边的火枪一响，桑海的骑兵就散了阵。", chronicle = "1591年3月13日，萨阿德摩洛哥的火枪在通迪比击溃桑海的大军。", effects = [{ kind = "flag", flag = "n_1591_tondibi_campaign_songhai_defeated" }] }]
+
+# 补充新闻；事实上下文：1598年秀吉去世；只在小田原由秀吉统一的史实依赖路径出现，不给信长存活线强塞同一接班事件。
+# 日期精度：day；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1598_hideyoshi_death"
+ripple_budget = 3000
+title = "丰臣秀吉之死"
+summary = "庆长三年，太阁秀吉在伏见城卧病不起，把年幼的秀赖托给家康、前田利家等重臣。渡海去朝鲜的兵还没回来，堺的商人都在等伏见传来的话。"
+region = "堺"
+date = [1598, 9, 18]
+window = [[1598, 9, 18], [1598, 9, 18]]
+history = { date = [1598, 9, 18], outcome = "hideyoshi_dies" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（后续新闻）", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [{ key = "support", name = "丰臣氏", faction = "toyotomi", port = "sakai" }, { key = "opposition", name = "德川氏", faction = "tokugawa" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "hideyoshi_dies", when = ">= -9223372036854775808", default = true, news = "从伏见回来的脚夫悄悄说，太阁殿下已经不在了，消息还捂着，要等朝鲜那边的兵撤回来才发丧。堺的米价夜里就涨了。", chronicle = "庆长三年八月十八日，丰臣秀吉薨于伏见城。", effects = [{ kind = "flag", flag = "n_1598_hideyoshi_death_hideyoshi_dies" }] }]
+requires = [{ event = "h62_odawara", outcome = "hideyoshi_unifies_japan" }]
+
+# 补充新闻；事实上下文：真实1600年关原，按研究P西历日期；依赖秀吉去世的史实路径。不是1590小田原当日的效果。
+# 日期精度：day；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1600_sekigahara"
+ripple_budget = 3000
+title = "关原之战"
+summary = "秀吉死后两年，德川家康与石田三成各拉一方人马。庆长五年秋，两边的大军在美浓的关原撞上，好些大名直到开战那天还没定下站在哪一边。"
+region = "堺"
+date = [1600, 10, 21]
+window = [[1600, 10, 21], [1600, 10, 21]]
+history = { date = [1600, 10, 21], outcome = "tokugawa_victory" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（后续新闻）", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [{ key = "support", name = "德川氏", faction = "tokugawa", port = "sakai" }, { key = "opposition", name = "丰臣氏", faction = "toyotomi" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "tokugawa_victory", when = ">= -9223372036854775808", default = true, news = "去美浓贩盐的堺商人赶回来说，关原那边只打了半天，小早川的兵临阵倒向了内府，石田治部那边的阵脚一下就散了，他自己逃进了伊吹山。", chronicle = "庆长五年九月十五日，德川家康大破石田三成等于美浓关原。", effects = [{ kind = "flag", flag = "n_1600_sekigahara_tokugawa_victory" }] }]
+requires = [{ event = "n_1598_hideyoshi_death", outcome = "hideyoshi_dies" }]
+
+# 补充新闻；事实上下文：1600-12-31颁发英国东印度公司特许状；只记录制度消息，不凭时间线暗中新增商会定义或舰队。
+# 日期精度：day；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1600_east_india_charter"
+ripple_budget = 3000
+title = "英国东印度公司特许状"
+summary = "1600年年末，伦敦的商人凑了股本，求女王颁一纸专营东方贸易的特许状。拿到手，他们便可以在印度洋与东方诸港独占一段买卖，葡萄牙人的海路要被分走一块。"
+region = "伦敦"
+date = [1600, 12, 31]
+window = [[1600, 12, 31], [1600, 12, 31]]
+history = { date = [1600, 12, 31], outcome = "charter_granted" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md"]
+sides = [{ key = "support", name = "英格兰王国", faction = "england", port = "london" }, { key = "opposition", name = "葡萄牙王国", faction = "portugal" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "charter_granted", when = ">= -9223372036854775808", default = true, news = "伦敦的交易所里有人传话，女王的特许状已经盖了印，几家东方商号的账房这一夜都没睡。", chronicle = "1600年12月31日，英格兰女王颁下英国东印度公司的特许状。", effects = [{ kind = "flag", flag = "n_1600_east_india_charter_charter_granted" }] }]
+
+# 补充新闻；事实上下文：荷兰国家档案馆保存的VOC特许状日期为1602-03-20（档号1.04.02，编号1）。只记录成立消息，不凭时间线新增商会或舰队。
+# 日期精度：day；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1602_voc_charter"
+ripple_budget = 3000
+title = "荷兰东印度公司成立"
+summary = "1602年3月20日，议会签下东印度的特许状，各家分散的东方商号要合进同一面旗下。阿姆斯特丹的商人争着入股，连街角卖鲱鱼的小贩也想凑一份。"
+region = "阿姆斯特丹"
+date = [1602, 3, 20]
+window = [[1602, 3, 20], [1602, 3, 20]]
+history = { date = [1602, 3, 20], outcome = "voc_established" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md", "https://www.nationaalarchief.nl/beleven/onderwijs/bronnenbox/octrooi-voor-de-voc-1602"]
+sides = [{ key = "support", name = "哈布斯堡尼德兰", faction = "netherlands", port = "amsterdam" }, { key = "opposition", name = "葡萄牙王国", faction = "portugal" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "voc_established", when = ">= -9223372036854775808", default = true, news = "阿姆斯特丹的码头上，船主们拿着新号牌比来比去，往后去东方的船都要用同一个号。", chronicle = "1602年3月20日，议会的印章落在东印度的特许状上，荷兰东印度公司成立。", effects = [{ kind = "flag", flag = "n_1602_voc_charter_voc_established" }] }]
+
+# 补充新闻；事实上下文：1592年日本侵朝按真实年代；只在秀吉统一日本的路径发生。援朝的交涉对象另按L19结局记录，不能照搬史实明廷。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "n_1592_imjin_war"
+ripple_budget = 3000
+title = "壬辰战争"
+summary = "1592年，秀吉统一日本之后，丰臣氏的大军从对马渡海，在釜山登陆。朝鲜的守军挡不住满海的船帆，汉城很快落入对方之手。"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "japan_invades_joseon" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（后续新闻）", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [{ key = "support", name = "丰臣氏", faction = "toyotomi", port = "busan" }, { key = "opposition", name = "朝鲜", faction = "joseon" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "japan_invades_joseon", when = ">= -9223372036854775808", default = true, news = "釜山的渔户说，海上的船一眼望不到头，船上的人讲的话，朝鲜人一句也听不懂。", chronicle = "1592年，日本大军渡海登陆釜山，朝鲜的边防一时溃散。", effects = [{ kind = "flag", flag = "n_1592_imjin_war_japan_invades_joseon" }] }]
+requires = [{ event = "h62_odawara", outcome = "hideyoshi_unifies_japan" }]
+
+# 补充新闻；事实上下文：1592年战争背景沿史实；求援交涉对象按L19的qing_enters_pass结局分支。此处提供主线条件，不预先宣称任何朝廷已派援军或战胜。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "l19_imjin_qing_enters_pass"
+ripple_budget = 3000
+title = "壬辰战争的求援交涉"
+summary = "倭船泊满釜山，朝鲜国王弃了汉城往西北走。国书却不知该往哪个衙门递：朝鲜奉了二百年的明正朔，如今北京坐朝的是入关才三年的清，要开口求兵，就得向昔日关外的女真低头。"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "joseon_appeals_to_qing" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.4、§10.5.4", "docs/research/terra16/P_eastasia_1540.md §6"]
+sides = [{ key = "support", name = "朝鲜", faction = "joseon", port = "busan" }, { key = "opposition", name = "后金", faction = "later_jin" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "joseon_appeals_to_qing", when = ">= -9223372036854775808", default = true, news = "釜山的鱼市上传开了：国书是递给清廷的，使臣已往北京去了。有人说那边刚坐稳江山，流寇还没剿尽，哪有兵管海外，使臣怕是白跑一趟。", chronicle = "宣祖二十五年，倭军入侵，朝鲜遣使北上京师，乞援于清。", effects = [{ kind = "flag", flag = "l19_imjin_qing_enters_pass_joseon_appeals_to_qing" }] }]
+requires = [{ event = "l19_beijing_shanhaiguan", outcome = "qing_enters_pass" }, { event = "n_1592_imjin_war", outcome = "japan_invades_joseon" }]
+
+# 补充新闻；事实上下文：1592年战争背景沿史实；求援交涉对象按L19的frontier_stalemate结局分支。此处提供主线条件，不预先宣称任何朝廷已派援军或战胜。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "l19_imjin_frontier_stalemate"
+ripple_budget = 3000
+title = "壬辰战争的求援交涉"
+summary = "北京仍是明的天下，可辽东的陆路攥在清国手里，朝鲜的使臣过不去，只能出海，绕道登州上岸。釜山失陷，国王西走，国书几时送到，谁也说不准。"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "joseon_appeals_to_ming" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.4、§10.5.4", "docs/research/terra16/P_eastasia_1540.md §6"]
+sides = [{ key = "support", name = "朝鲜", faction = "joseon", port = "busan" }, { key = "opposition", name = "大明", faction = "ming" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "joseon_appeals_to_ming", when = ">= -9223372036854775808", default = true, news = "釜山港的老渔户说，朝鲜王的使臣不敢走辽东的旧路，雇了海船往登州去，国书是递给大明的。风顺也要半个月，风不顺就说不好。", chronicle = "宣祖二十五年，朝鲜国王西迁，自海道遣使登州，乞援于明。", effects = [{ kind = "flag", flag = "l19_imjin_frontier_stalemate_joseon_appeals_to_ming" }] }]
+requires = [{ event = "l19_beijing_shanhaiguan", outcome = "frontier_stalemate" }, { event = "n_1592_imjin_war", outcome = "japan_invades_joseon" }]
+
+# 补充新闻；事实上下文：1592年战争背景沿史实；求援交涉对象按L19的trade_peace结局分支。此处提供主线条件，不预先宣称任何朝廷已派援军或战胜。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "l19_imjin_trade_peace"
+ripple_budget = 3000
+title = "壬辰战争的求援交涉"
+summary = "使臣要拜的衙门有两处：北京的明廷，和辽河边设了马市、使者常驻北京的清国。倭军压境，国王退到了西北边，出兵的事，两边都在等对方先开口。"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "frontier_courts_consult" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.4、§10.5.4", "docs/research/terra16/P_eastasia_1540.md §6"]
+sides = [{ key = "support", name = "朝鲜", faction = "joseon", port = "busan" }, { key = "opposition", name = "大明", faction = "ming" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "frontier_courts_consult", when = ">= -9223372036854775808", default = true, news = "釜山码头上有人传，朝鲜来的使臣在北京的玉河馆住下了，辽河马市上的通事也在打听朝鲜的消息。两边的朝廷各有各的算盘，没人先说一句肯出兵。", chronicle = "宣祖二十五年，倭军入釜山，朝鲜遣使北上，明廷与辽河对岸的清国会商援朝。", effects = [{ kind = "flag", flag = "l19_imjin_trade_peace_frontier_courts_consult" }] }]
+requires = [{ event = "l19_beijing_shanhaiguan", outcome = "trade_peace" }, { event = "n_1592_imjin_war", outcome = "japan_invades_joseon" }]
+
+# 补充新闻；事实上下文：1592年战争背景沿史实；求援交涉对象按L19的jurchen_fragmented结局分支。此处提供主线条件，不预先宣称任何朝廷已派援军或战胜。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "l19_imjin_jurchen_fragmented"
+ripple_budget = 3000
+title = "壬辰战争的求援交涉"
+summary = "关外的女真各部互不统属，谁也号令不了谁，辽东的明军没有后顾之忧。倭军占了釜山，朝鲜国王带着朝臣北上，使臣走旧路渡鸭绿江，驿马一站接一站往北京送。"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "joseon_appeals_to_ming" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.4、§10.5.4", "docs/research/terra16/P_eastasia_1540.md §6"]
+sides = [{ key = "support", name = "朝鲜", faction = "joseon", port = "busan" }, { key = "opposition", name = "大明", faction = "ming" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "joseon_appeals_to_ming", when = ">= -9223372036854775808", default = true, news = "辽东来的皮货商在釜山说，朝鲜王的急使已过鸭绿江，沿辽东的驿路一站换一匹马往北京送国书。路上没人拦，女真各部还在为叶赫的地盘扯皮。", chronicle = "宣祖二十五年，朝鲜急使渡鸭绿江赴京，乞援于明，路无阻隔。", effects = [{ kind = "flag", flag = "l19_imjin_jurchen_fragmented_joseon_appeals_to_ming" }] }]
+requires = [{ event = "l19_beijing_shanhaiguan", outcome = "jurchen_fragmented" }, { event = "n_1592_imjin_war", outcome = "japan_invades_joseon" }]
+
+# 补充新闻；事实上下文：1592年战争背景沿史实；求援交涉对象按L19的dashun_faces_qing结局分支。此处提供主线条件，不预先宣称任何朝廷已派援军或战胜。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "l19_imjin_dashun_faces_qing"
+ripple_budget = 3000
+title = "壬辰战争的求援交涉"
+summary = "北京坐着大顺，山海关外立着清，两家隔着一道关门，谁也不认谁。朝鲜国王避往西北，国书该递哪一家，朝臣在行在里各执一词，最后索性两边都递。"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "joseon_seeks_divided_courts" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.4、§10.5.4", "docs/research/terra16/P_eastasia_1540.md §6"]
+sides = [{ key = "support", name = "朝鲜", faction = "joseon", port = "busan" }, { key = "opposition", name = "大顺", faction = "dashun" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "joseon_seeks_divided_courts", when = ">= -9223372036854775808", default = true, news = "釜山酒馆里的通事压低声音说，朝鲜王派了两路使臣：一路往北京见大顺，一路往沈阳见清。两份国书的措辞不一样，两路使臣出发前也互不通气。", chronicle = "宣祖二十五年，朝鲜分遣两路使者，一赴北京求大顺，一赴沈阳求清。", effects = [{ kind = "flag", flag = "l19_imjin_dashun_faces_qing_joseon_seeks_divided_courts" }] }]
+requires = [{ event = "l19_beijing_shanhaiguan", outcome = "dashun_faces_qing" }, { event = "n_1592_imjin_war", outcome = "japan_invades_joseon" }]
+
+# 补充新闻；事实上下文：1592年战争背景沿史实；求援交涉对象按L19的early_qing结局分支。此处提供主线条件，不预先宣称任何朝廷已派援军或战胜。
+# 日期精度：year；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "l19_imjin_early_qing"
+ripple_budget = 3000
+title = "壬辰战争的求援交涉"
+summary = "清入关已有数年，北京的衙门早已坐稳，朝鲜使臣进京不算生客。釜山失陷、国王西走的消息递上去，朝堂上的人先拨了拨算盘：出兵，朝鲜拿什么来换？"
+region = "釜山"
+date = [1592, 12, 31]
+window = [[1592, 1, 1], [1592, 12, 31]]
+history = { date = [1592, 12, 31], outcome = "joseon_appeals_to_qing" }
+basis = "adapted"
+sources = ["docs/TERRA16.md §10.4、§10.5.4", "docs/research/terra16/P_eastasia_1540.md §6"]
+sides = [{ key = "support", name = "朝鲜", faction = "joseon", port = "busan" }, { key = "opposition", name = "后金", faction = "later_jin" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "joseon_appeals_to_qing", when = ">= -9223372036854775808", default = true, news = "往来西海的盐贩在釜山说，朝鲜的使臣已到北京，清廷收下国书，头一句问的不是倭情，是朝鲜能出多少粮。", chronicle = "宣祖二十五年，朝鲜使臣入京，向入关多年的清廷乞师。", effects = [{ kind = "flag", flag = "l19_imjin_early_qing_joseon_appeals_to_qing" }] }]
+requires = [{ event = "l19_beijing_shanhaiguan", outcome = "early_qing" }, { event = "n_1592_imjin_war", outcome = "japan_invades_joseon" }]

@@ -1,0 +1,149 @@
+# C13d 请托：星诗里的三个数（request_sulayman_al_mahri）。中文，Claude 写。
+# 人物：苏莱曼·马赫里 sulayman_al_mahri（1480-01-01 生，1554 年前后去世）。哈德拉毛的老领航师，牵星的老手，写过航海的书，把导航星精简为十五颗（史实）。cast 在 cast/historical_02_islamic.toml。
+# 遗事请托：本人已故，只在学生的转述与星诗里出现；请托由亚丁教牵星的学生出面（叙事人物，不建 cast，不写 alive 条件）。
+# 类型：去某处（gs，kind go）；offer → measure → report → done / failed，共 3 章，没有 stage 章。
+# 报价：来信／代理人（L 模式），auto=true；offer 章 at=aden；family c13_offer_aden，冷却 20 天；deadline 1565-12-31，timeout 直接 failed，不写见闻。
+# 地点：亚丁 aden（报价与结账）；佐法尔 dhofar（夜里泊船量星）。
+# 窗口（非 stage 章，引擎不写 window，此处记预计范围）：offer 1557-03-01..1565-12-31；measure 1557-03-01..1566-03-31；report 1557-04-01..1566-12-31。
+# 报酬：身份档 1、低风险，现金 900（表里 cash_total）。报告时“照实”给 900 与牵星技能 +30（唯一技能奖励，最好结局）；“留台阶”给 450；不加名声与好感（遗事）；回忆 mem-request_sulayman_al_mahri-report。
+# 依据（史实）：苏莱曼·马赫里的航海著作，把导航星精简为十五颗；哈德拉毛的牵星，用手指与牵星板量星的高度；佐法尔是马赫拉人的海岸。
+# 依据（原创）：亚丁教牵星的学生、墙上的星图、那本年轻时抄错一个字的星诗抄本；马赫拉老渔夫；“说不清的话，就别叫自己船长”（全轨道只在 offer 出现一次）。
+# 待核：卒年约 1550 或 1553/54（正文不写年份）。
+# 读的旗标：c13_main_najma（纳吉玛主线的接口旗标，尚未设；offer 的 variants 只换学生的一句话）。
+# 设的旗标：accepted（接下）、declined（回绝）、done（最好结局）、partial（留台阶）、late（超时）；分支旗标 heard_poem（先听完诗）、three_stars（量到三颗）、two_stars（只量到两颗）、local_measure（请渔夫代量）——分支旗标四面，比规范多一面，因为 brief 指定了这四面。
+# 分支的读法：heard_poem 换测量章的开场（念过整首诗的船长）；two_stars 与 local_measure 各换报告章的开场。
+# 依赖：港口 aden、dhofar 在 ports_red_sea_gulf.toml；技能 astral_navigation 在 skills.toml；物品 kamal_board 在 items/items_instrument_01.toml（requires 只检查持有，不扣）；人物 sulayman_al_mahri 的 tracks 需含 request_sulayman_al_mahri（整合方登记）。
+# 回忆插画清单：
+#   mem-request_sulayman_al_mahri-report：亚丁一间画满星的小屋，墙下摊着旧抄本，一个字被炭笔划掉，旁边写着新改的字。
+
+[[tracks]]
+key = "request_sulayman_al_mahri"
+name = "星诗里的三个数"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sulayman_al_mahri"]
+
+# 一、亚丁港边的小屋：学生不信老师诗里的那一行，托你去佐法尔外海量一遍
+[[tracks.chapters]]
+key = "offer"
+title = "学生不信的那一行"
+text = "亚丁港边的一间小屋，墙上画满了星，炭笔的线一直拉到屋顶。苏莱曼·马赫里的学生，如今自己也收了学生。他指着墙上北极星旁边那两颗守护星，说老师的诗里有一行，三颗星的高度，跟他自己量出来的差了一指。他不信老师会错，也不敢全信自己，想请一条外人的船，往东沿海岸去佐法尔外海，泊一夜，把这三颗星再量一遍。墙角一卷旧绳，绳结数得发白。“老师说过：说不清的话，就别叫自己船长。”"
+mood = "mystic"
+at = "aden"
+family = "c13_offer_aden"
+family_cooldown_days = 20
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1565, 12, 31] }]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "najma"
+when = [{ kind = "flag", flag = "c13_main_najma", value = true }]
+text = "亚丁港边的一间小屋，墙上画满了星，炭笔的线一直拉到屋顶。苏莱曼·马赫里的学生，如今自己也收了学生。他看了你半天，忽然说：“你就是老师最后那几堂课上，坐在最前面的那个姑娘？”没等你答，他指着墙上北极星旁边那两颗守护星，说老师的诗里有一行，三颗星的高度，跟他自己量出来的差了一指。他想请一条外人的船，往东去佐法尔外海，泊一夜，把这三颗星再量一遍。“老师说过：说不清的话，就别叫自己船长。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下，去佐法尔外海量那三颗星。"
+next = "measure"
+effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_accepted" }]
+reply = "他把那一行诗念了三遍，叫你也跟着念三遍。念错一个字，就从头来。念对了，他才放你走：“量出来，不管是谁错，都要照实说。”"
+
+[[tracks.chapters.choices]]
+key = "recite"
+text = "接下，先请他把整首诗念完。"
+next = "measure"
+effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_accepted" }, { kind = "flag", flag = "c13_request_sulayman_al_mahri_heard_poem" }]
+reply = "他念得很慢，念到那一行，声音高了一点，又压下去。念完他说：“老师删了五十多颗星，就留下这几颗。一颗都不能错。”说完他拿炭笔在墙上那三颗星旁边各点了一下。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一季顾不上往东走。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_declined" }]
+reply = "他把炭笔放下，没生气，只说那他明年自己去。等北风转了，他一个人找条马赫拉人的渔船，把这三颗星量完。墙角那卷绳他没收，说留着，明年用得上。"
+
+# 二、佐法尔外海：云从南边过来，三颗星只能在云缝里量
+[[tracks.chapters]]
+key = "measure"
+title = "佐法尔外海的一夜"
+text = "佐法尔外海，天黑透了，云从南边一块一块地过来。北极星刚露出一角，又被云压住。你要在云缝里量它，还有它身边那两颗守护星。舵手压低了声音，船员都站在船舷边等，没人点灯。罗盘箱的盖子开着，磁针在黑里一下一下地抖。一个马赫拉族的老渔夫划着小船靠过来，船板吱呀一响，他问你在等什么。"
+speaker = "captain"
+mood = "mystic"
+at = "dhofar"
+objectives = [{ kind = "at", at = "dhofar", text = "到佐法尔外海去" }]
+news = "佐法尔外海，一条外国船泊了一整夜不点灯，船上的人对着北边的天伸手比划。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_late" }], news = "亚丁的牵星先生等不到佐法尔的数，自己雇了一条渔船往东去了，临走时把墙上的星图擦了一半。" }
+
+[[tracks.chapters.variants]]
+key = "heard_poem"
+when = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_heard_poem", value = true }]
+text = "佐法尔外海，天黑透了，云从南边一块一块地过来。北极星刚露出一角，又被云压住。你在心里把那一整首诗又念了一遍，念到那一行，手已经先伸出去了。舵手压低了声音，船员都站在船舷边等，没人点灯。一个马赫拉族的老渔夫划着小船靠过来，船板吱呀一响，他问你在等什么。"
+
+[[tracks.chapters.choices]]
+key = "kamal"
+text = "用牵星板量，咬着绳结，一颗一颗来。"
+next = "report"
+requires = [{ kind = "item", item = "kamal_board", qty = 1 }]
+hint = "你手里没有牵星板。"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_three_stars" }]
+reply = "三颗星都量到了。老渔夫在船尾替你数绳结，一个也没漏。你把数记在船板上，天亮前又量了一遍，两遍对得上。绳结打得紧，解开时手指都冻僵了。"
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_two_stars" }], news = "佐法尔的渔户说，外国船上的人只量到两颗星，第三颗被云压住，天亮前就走了。" }
+
+[[tracks.chapters.choices]]
+key = "fingers"
+text = "伸直手臂，用手指量——老领航人的办法。"
+next = "report"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "你伸出手臂，却不知道该从哪一指数起。"
+effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_three_stars" }]
+reply = "你一指一指地数，数到第三颗时云正好让开。马赫拉老渔夫在小船上看着，说他父亲也是这么量的，手指头比牵星板还准。"
+
+[[tracks.chapters.choices]]
+key = "hire_local"
+text = "请马赫拉的老渔夫上船，替你量。"
+next = "report"
+requires = [{ kind = "cash", ge = 150 }]
+hint = "老渔夫要的是银子，你拿不出来。"
+effects = [{ kind = "cash", value = -150 }, { kind = "flag", flag = "c13_request_sulayman_al_mahri_three_stars" }, { kind = "flag", flag = "c13_request_sulayman_al_mahri_local_measure" }]
+reply = "他上了船，看了一眼星就报出数来，比你数手指还快。量完他收下钱，说这一带的人都这么量，“诗是写给外人看的。”说完，他的小船已经划出去了。"
+
+# 三、亚丁港边：数对得上老师的诗，错的是学生年轻时抄本上的一个字
+[[tracks.chapters]]
+key = "report"
+title = "错在谁的手抄本"
+text = "你把量出来的数交给学生。屋里只点了一盏灯，灯油快干了。他念老师诗里的那一行：“北极星高一指半，守护星低三扎姆。”念完，手指在墙上比了一下，又比了一下。三颗星的高度跟诗对得上，跟他自己量的却差了一指。他不信，翻出年轻时抄的那本星诗，一行一行地对。对到一个字上，他的手停住了：那一行里有颗星的名字，他十几岁时抄成了旁边那颗，只差一个字。他每一回量，量的都是那颗错的星。“老师不会错。”他把抄本推过来，声音很低。"
+speaker = "captain"
+mood = "mystic"
+at = "aden"
+objectives = [{ kind = "at", at = "aden", text = "回亚丁，把数交给学生" }]
+news = "亚丁的牵星先生说，他老师的星诗一个字也没错，错的是他自己年轻时的抄本。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_late" }], news = "亚丁港边那间画满星的小屋，主人出海去了，门上写着“量完再回”。" }
+
+[[tracks.chapters.variants]]
+key = "v1_two_stars"
+when = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_two_stars", value = true }]
+text = "你把量出来的数交给学生。两颗星对得上，第三颗云遮住了，你没有数。他看看你的数，又看看自己的记录，眉头皱得很紧。他翻出年轻时抄的那本星诗，一行一行地对。对到一个字上，他的手停住了：那一行里有颗星的名字，他十几岁时抄成了旁边那颗，只差一个字。他每一回量，量的都是那颗错的星。“老师不会错。”他把抄本推过来，声音很低。"
+
+[[tracks.chapters.variants]]
+key = "v2_local_measure"
+when = [{ kind = "flag", flag = "c13_request_sulayman_al_mahri_local_measure", value = true }]
+text = "你把老渔夫报的数交给学生。他念老师诗里的那一行：“北极星高一指半，守护星低三扎姆。”念完，手指在墙上比了一下，又比了一下。老渔夫报的数跟诗对得上，跟他自己量的却差了一指。他不信，翻出年轻时抄的那本星诗，一行一行地对。对到一个字上，他的手停住了：那一行里有颗星的名字，他十几岁时抄成了旁边那颗，只差一个字。他每一回量，量的都是那颗错的星。“老师不会错。”他把抄本推过来，声音很低。"
+
+[[tracks.chapters.choices]]
+key = "show"
+text = "把你的记录和他的抄本并排摊开，让他自己看。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "skill", skill = "astral_navigation", value = 30 }, { kind = "memory", memory = "mem-request_sulayman_al_mahri-report", title = "改过一个字的抄本" }, { kind = "flag", flag = "c13_request_sulayman_al_mahri_done" }]
+reply = "他看了很久，拿起笔，把抄本上那个字划掉，改了。然后他把整整一夜的星诗讲给你听，讲到天亮，讲的都是老师删掉的那些星为什么该删。"
+
+[[tracks.chapters.choices]]
+key = "spare_him"
+text = "说你量得也不一定准，给他留个台阶。"
+next = "done"
+effects = [{ kind = "cash", value = 450 }, { kind = "flag", flag = "c13_request_sulayman_al_mahri_partial" }]
+reply = "他松了口气，又很快不高兴了：“老师最恨这种话。”他还是数出了钱，一枚一枚放在桌上，手有点抖。那一夜的星诗，没有讲给你听。"
+news = "亚丁港边那间画满星的小屋里，牵星先生付了一笔钱，把那本旧抄本锁进了箱子。"

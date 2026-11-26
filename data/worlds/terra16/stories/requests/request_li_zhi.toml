@@ -1,0 +1,207 @@
+# 请托：一个字也别改（request_li_zhi）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：李贽（li_zhi，号卓吾，1527 生，1602 卒），泉州晋江人，祖上是跑海的商人；弃官后寄住麻城龙湖边的芝佛院。
+#       本人不出场，只在信里说话：offer 的附笺、reply 三个选项各带的一封信、两条超时的代笔短信。
+# 类型：送信（letter）。三章：offer（宁波，芝佛院的俗家弟子出面）→ handover（天津码头，耿家管家接信，信被海水洇了）
+#       → reply（两个月后宁波码头，耿家老仆送回信）。
+# 报价：L（来信／代理人出面）。宁波（ningbo），auto=true；窗口 1584-01-15 至 1586-12-31，名声门槛 5；
+#       family=c13_offer_ningbo，冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实：李贽与耿定向的论学书信，两人翻脸是公开的事（麻城街上都知道）；耿定向 1584—1586 年在京任职；
+#       这些信后来收进《焚书》（正文不提刊行）；《传习录》初刻本是赣州的薛侃刻本，“知而不行，只是未知”出自该书。
+# 依据·原创：油布包、洇湿的封皮、弟子的为难、耿家管家与老仆、“弟不敢辩”和“以此教人，是教人做假也”两个半句（只引半句，不替两人编论说）、
+#       竹篮里的蓝布包、封蜡上的指甲印。耿定向可点名，他不是 cast 人物，不进 cast。
+# 秘密：李贽的两个女儿本请托一字不提；女弟子不写；不说《焚书》已经刊行。
+# 招牌话“你是来求学问的，还是来求名声的……”全轨道只在 offer 的附笺里用一次。
+# 读的旗标：无（c13_main_* 本请托不读）。
+# 设的旗标：c13_request_li_zhi_accepted / declined（offer）、_read（handover 先看一眼）、_recopied（handover 誊抄）、
+#       _done（reply 原封交）、_partial（reply 拆开看与劝弟子瞒下）、_late（handover 与 reply 超时）。
+#       终局旗标只设 done / partial / declined / late 之一的一面；不设 c7_ 旗标；
+#       不写 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 依赖：ningbo、tianjin 是现有港口；技能 calligraphy 在 skills.toml；物品 chuanxilu_ganzhou 有 shop；势力无声望（他已弃官）。
+#       recopy 的门槛是技能，不读本轨道自己设的旗标；reply 的 variant 读 recopied / read 只改文字。
+# 缺省走向（玩家什么也不做）：offer 到 1586-12-31 超时，走 failed，无见闻；handover 120 天不去，走 failed 并来一封弟子代笔的信；
+#       reply 180 天不去，走 failed 并来一封弟子代笔的信。
+# 回忆插画清单：
+#   mem-request_li_zhi-reply：宁波码头，湖广口音的年轻人抱着两个油布包，一封封蜡完好，一封一角洇着海水，脚边一只空竹篮。
+
+[[tracks]]
+key = "request_li_zhi"
+name = "一个字也别改"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["li_zhi"]
+
+# 一、报价：宁波码头货栈檐下，芝佛院的俗家弟子递信。
+[[tracks.chapters]]
+key = "offer"
+title = "芝佛院的信"
+text = "宁波码头的货栈檐下，一个穿短褐的年轻人等了你半个时辰，一开口是湖广腔。他从怀里掏出油布包，里头一封厚信，封皮上只有六个字：“耿老先生亲启”，笔画粗得像刀刻。“麻城芝佛院李先生的信。海船送到天津，耿家在京里的宅子会派管家来码头接。”他又递过一张折小的字条，“先生附的。”字条头一句问你：“你是来求学问的，还是来求名声的？前一样我这儿有一点；后一样，我这儿只有骂名。”末一行是：“原样送去，别替我润色，他的也别润色。”年轻人往四下看了看，压低声音：“信里骂得很凶。”"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1584, 1, 15], to = [1586, 12, 31] },
+  { kind = "fame", ge = 5 },
+]
+at = "ningbo"
+mood = "cheerful"
+deadline = [1586, 12, 31]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下这封信，送去天津"
+next = "handover"
+reply = "年轻人松了一口气，把油布又裹了两道，才递到你手里：“先生交代过，送信的人不用会读书，只要手稳。”他盯着你托信的手看了一会儿，这才松开自己的。"
+effects = [
+  { kind = "affinity", person = "li_zhi", value = 2 },
+  { kind = "flag", flag = "c13_request_li_zhi_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "接下，顺口问一句信里骂了什么"
+next = "handover"
+reply = "“骂他满口仁义，自己做的是另一套。”年轻人说得很快，说完自己先缩了缩脖子，“两位老先生翻脸的事，麻城街上卖菜的都知道。先生说，看了也无妨，只是别改。”"
+effects = [
+  { kind = "affinity", person = "li_zhi", value = 2 },
+  { kind = "flag", flag = "c13_request_li_zhi_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这趟不往北走"
+next = "failed"
+reply = "年轻人把信揣回怀里，拍了拍：“那就走运河，慢是慢一点。”他没有怪你的意思，转身时只是把短褐的前襟又掩了掩，像怕里头的东西受风。"
+effects = [{ kind = "flag", flag = "c13_request_li_zhi_declined" }]
+
+# 二、天津码头：信被海水洇了，三种交法。
+[[tracks.chapters]]
+key = "handover"
+title = "洇了的墨"
+text = "天津卫的码头上风硬，耿家的管家穿着绸里长衫，立在石阶上，靴面落了一层盐霜。“宁波来的船？”他伸出手，“老爷在书房等着。”你解开油布，才知道舱底的潮气没饶过这封信：封皮一角洇成了褐黄，“耿老先生亲启”的“亲”字缺了半边，里头有几行字的墨顺着纸纹化开，从信封背面透出一团灰影。管家的目光已经落在那团灰影上。"
+when = [{ kind = "alive", person = "li_zhi", value = true }]
+objectives = [{ kind = "at", at = "tianjin", text = "把信送到天津码头" }]
+at = "tianjin"
+speaker = "captain"
+mood = "tense"
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "li_zhi", value = -3 },
+  { kind = "flag", flag = "c13_request_li_zhi_late" },
+  { kind = "letter", person = "li_zhi", text = "你那头一直没有音信，我拿先生的底稿重誊一份，走运河送去了。先生说，海上来的人也会误事，这倒新鲜。（弟子代笔）" },
+]
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "原样交给管家"
+next = "reply"
+reply = "管家接过去，对着那片洇痕看了片刻，皱了皱眉，没有问。他把信往袖里一收：“回信两个月后到宁波码头。”"
+news = "天津码头上，海船带来一封被海水泡过的信，耿家的管家当场皱了眉，一句话没说就收进了袖子。"
+effects = [{ kind = "affinity", person = "li_zhi", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "peek"
+text = "借口晾潮，先看一眼糊了哪几行"
+next = "reply"
+reply = "你说潮气要晾一晾，免得粘住。封口的浆糊早泡软了，指甲一挑就开。糊掉的是一句骂人的话，后半句还认得出：“……以此教人，是教人做假也。”你用管家递来的浆糊把信重新封好，他一直盯着海河上的帆，没回头。"
+news = "天津码头上，耿家的管家等着接信，船上的人说潮气重，先把信晾了好一阵才交。"
+effects = [
+  { kind = "affinity", person = "li_zhi", value = 3 },
+  { kind = "flag", flag = "c13_request_li_zhi_read" },
+]
+
+[[tracks.chapters.choices]]
+key = "recopy"
+text = "借张桌子，一字不差誊一份，两份一起交"
+next = "reply"
+reply = "管家叫人从货栈搬来一张桌子。你连他的错字都照描了，洇成一团的那几行，也照着墨团的形状涂了一块。管家对着两份看了半天，说这抄本比原信还难认——因为一模一样。"
+news = "天津码头上，海船来的船长在货栈借了张桌子，当着耿家管家的面，把一封泡湿的信连墨团一起抄了一份。"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "你的字落笔太圆，学不来他那种刀刻似的笔画，更学不来墨团。"
+effects = [
+  { kind = "affinity", person = "li_zhi", value = 5 },
+  { kind = "flag", flag = "c13_request_li_zhi_recopied" },
+]
+
+# 三、回信：两个月后宁波码头，耿家老仆把回信交到你手里，弟子在一旁等。
+[[tracks.chapters]]
+key = "reply"
+title = "老仆抱来的两包"
+text = "两个月后，宁波码头的缆桩边，那个湖广年轻人已经等着，脚边一只空竹篮。耿家的老仆从北边坐船来，背有点驼，怀里抱着两个油布包，大的一个比去信厚出一指。“老爷说，信是你带去的，回信也得经你的手。”他把大包塞给你，小包叠在上头，“这是原信。洇的那几行，老爷叫人抄了留底，原件退回。”他转身上船，走了几步又站住：“老爷写完这封，一夜没睡。”"
+when = [{ kind = "alive", person = "li_zhi", value = true }]
+objectives = [
+  { kind = "at", at = "ningbo", text = "回宁波码头取回信" },
+  { kind = "wait", days = 60 },
+]
+at = "ningbo"
+speaker = "captain"
+mood = "cheerful"
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "li_zhi", value = -3 },
+  { kind = "flag", flag = "c13_request_li_zhi_late" },
+  { kind = "letter", person = "li_zhi", text = "耿家的回信由一个南下的茶商捎回了麻城。先生读了三遍，骂了三遍，说你不必再跑这一趟。（弟子代笔）" },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_recopied"
+when = [{ kind = "flag", flag = "c13_request_li_zhi_recopied", value = true }]
+text = "两个月后，宁波码头的缆桩边，那个湖广年轻人已经等着，脚边一只空竹篮。耿家的老仆从北边坐船来，背有点驼，怀里抱着两个油布包，大的一个比去信厚出一指。“老爷说，信是你带去的，回信也得经你的手。”他把大包塞给你，小包叠在上头，“你抄的那份老爷留下了。洇的这份是原件，退回。”他转身上船，走了几步又站住：“老爷写完这封，一夜没睡。”"
+
+[[tracks.chapters.variants]]
+key = "v2_read"
+when = [{ kind = "flag", flag = "c13_request_li_zhi_read", value = true }]
+text = "两个月后，宁波码头的缆桩边，那个湖广年轻人已经等着，脚边一只空竹篮。耿家的老仆从北边坐船来，背有点驼，怀里抱着两个油布包，大的一个比去信厚出一指。“老爷说，信是你带去的，回信也得经你的手。”他把大包塞给你，小包叠在上头，“这是原信。封口是重新糊的，老爷看出来了，没说什么。洇的那几行，他叫人抄了留底，原件退回。”他转身上船，走了几步又站住：“老爷写完这封，一夜没睡。”"
+
+[[tracks.chapters.choices]]
+key = "sealed"
+text = "原封交给年轻人"
+next = "done"
+reply = "年轻人双手接过去，洇了一角的原信在上，封蜡没动过的那封压在下面，一起抱在胸前。他蹲下身，从竹篮夹层里摸出一个蓝布包，塞进你手里：“先生交代，回信一到，这个就是你的，不用等他开口。”走出十几步，他回头喊了一声：“先生看了准高兴——他高兴起来，骂得更凶！”"
+news = "宁波码头上，一个湖广来的年轻人收了从京里来的厚信，封蜡一点没动，听说是一封骂人的回信。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "li_zhi", value = 8 },
+  { kind = "item", item = "chuanxilu_ganzhou", qty = 1 },
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_li_zhi-reply", title = "两封互骂的信" },
+  { kind = "letter", person = "li_zhi", text = "骂得好！比他做官的文章好看。他嘴上说“弟不敢辩”，一辩就是整整三页，我数过。去的信、回的信，你一个字都没动，麻城的读书人里找不出第二个。竹篮里那部书是赣州刻的，我年轻时读烂了，里头有一句我至今不骂：“知而不行，只是未知。”——卓吾" },
+  { kind = "flag", flag = "c13_request_li_zhi_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "open"
+text = "先拆开看看骂得有多难听"
+next = "done"
+reply = "你拇指一抵，封蜡裂开。第一页头一行就是：“……兄骂我假，弟不敢辩。”后面三页，字又密又齐，一笔不错。你把信合上，把裂开的蜡按回去。年轻人盯着那道缝，没说话，接信的手比刚才抱得更紧，还是从竹篮里把蓝布包拿出来给了你。"
+news = "宁波码头上，一封京里来的厚信封蜡裂了一道缝，湖广口音的年轻人盯着缝看了半天，什么也没说。"
+effects = [
+  { kind = "cash", value = 1200 },
+  { kind = "affinity", person = "li_zhi", value = 4 },
+  { kind = "item", item = "chuanxilu_ganzhou", qty = 1 },
+  { kind = "fame", value = 3 },
+  { kind = "letter", person = "li_zhi", text = "封口是你拆的吧？蜡上有道指甲印，耿家的人封信，从不留印。拆了也好，省得我一个人生气。书照给，赣州的旧刻，我读过太多遍，该换人读了。——卓吾" },
+  { kind = "flag", flag = "c13_request_li_zhi_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "hide"
+text = "劝年轻人先别给先生看，免得他气坏身子"
+next = "done"
+reply = "你说先生上了年纪，这样的回信，隔一阵再读也不迟。年轻人捧着两个油布包，站着没动，看看你，又看看北边。过了好一会儿，他才说：“我……收下。”竹篮底下那个蓝布包，他没有拿出来。"
+news = "宁波码头上，有人劝一个湖广来的年轻人别把京里的回信给先生看，年轻人抱着信在缆桩边站了半晌。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "li_zhi", value = -2 },
+  { kind = "letter", person = "li_zhi", text = "谁让你替我挡的？我说过，他的也别改。我祖上跑海，风浪都没替人挡过，倒要你替我挡一封信。信我读了，弟子在门口站了一刻钟才敢递进来。书不给了，留着等下一个手稳的人。——卓吾" },
+  { kind = "flag", flag = "c13_request_li_zhi_partial" },
+]

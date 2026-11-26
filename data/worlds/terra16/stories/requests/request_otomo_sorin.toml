@@ -1,0 +1,191 @@
+# C13d 请托：真的穆拉诺镜（request_otomo_sorin）。Claude 写（2026-10-25），仅中文。
+# 人物：大友宗麟 otomo_sorin（1530 生，男；丰后的大名，1562 年出家号宗麟，1563 年后居臼杵，常坐船到府内看南蛮船）。
+#   势力 otomo。cast：cast/historical_07_japan.toml。窗口止于 1577，不写受洗（1578），不称教名，不写耳川。
+# 类型：找东西（find）。三章：offer（报价）→ handin（交镜子）→ use（镜前的问话）；终点 done / failed。
+# 报价：V（到访），auto=true，at=funai（府内）；宗麟从臼杵坐船来看船，在码头上亲自开口。
+#   offer：family=c13_offer_funai、冷却 20 天；名声门槛 25；窗口 1565-01-15 至 1577-06-30（deadline 为窗口止日，timeout 直接 failed，不写见闻）。
+# 进行中：handin 期限 1577-10-31（超时走 failed：旗标 _late、一封 ≤120 字的来信）；
+#   use 在 handin 交出镜子后等 7 天、人在府内才出现，限 60 天（超时走 failed：旗标 _late、一封 ≤120 字的来信）。
+# 依据·史实：大友宗麟 1551 年起与葡萄牙人往来，向南蛮人求铳炮与稀罕器物，耶稣会士称他“丰后的王”（弗洛伊斯《日本史》）；
+#   1562 年出家号宗麟，1563 年后居臼杵；府内是南蛮船靠岸的港。穆拉诺的制镜手艺当时由威尼斯严禁外流。
+# 依据·原创：被摔碎、装在空木箱里的那面印度仿镜，照人发绿；裹镜子的深蓝丝绸与绸上的霉斑；宗麟凭樟脑味与霉斑猜来路；
+#   客殿后面那间空屋；镜前的问话。
+# 秘密：父亲之死（二阶崩之变）永远不写；“信教只为铳炮”的说法本请托不碰。见闻里都不出现。
+# 门禁：offer 写 c13_main_mio=false（澪的舅舅，对澪关闭；正文不提澪）；之后每章 alive otomo_sorin。
+# 读的旗标：c13_main_mio（offer，由主线设，尚未写成）。本轨道不读自设的旗标，没有变体。
+# 设的旗标：c13_request_otomo_sorin_accepted（offer 接下）；分支一面 _gave（handin 交出镜子）；
+#   终局 _declined（offer 回绝）/ _failed（handin 只给看不卖）/ _late（handin、use 超时）/ _done（use 照实说成功、不答）/ _partial（use 照实说失败、说他像）。
+# 报酬：现金至多 2600（use）；好感至多 +13（接下 +2、交镜子 +3、use 至多 +8）；声望 otomo +3；名声 +5；回忆一张。
+# 引擎注记：检定失败时不显示选项的 reply，界面显示 fail 分支的见闻，所以 honest 的 fail 见闻写成能当回应读的一句。
+#   handin 的见闻写在选项上，不写在章上：章级见闻会被 timeout 继承。use 的章级见闻在超时时也会公开——镜子那时已在他手里，说得通。
+# 实现说明：（a）普通章不写 window / default，到期靠 deadline / deadline_days 加 timeout。
+#   （b）handin 的 objectives 是 item（只查持有，不扣），交出的 give 自己写 item -1；show 不扣。
+#   （c）use 的超时来信是 brief 之外加的：镜子已经交出，玩家没再回府内，要让他知道后来怎样。全轨道来信共两封。
+# 依赖：港口 funai（ports_east_asia.toml）；物品 murano_mirror（items/items_curio_02.toml，shop 文化 italian——寰宇港口暂无此文化，现在买不到，整合时处理）；
+#   属性 eloquence；势力 otomo；人物 otomo_sorin。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_otomo_sorin-use「镜前的丰后之王」：一间空屋，只有一张席子和墙上一面清亮的威尼斯镜，剃了头的男人穿素白小袖坐在镜前，镜里映出门口站着的船长。
+
+[[tracks]]
+key = "request_otomo_sorin"
+name = "真的穆拉诺镜"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["otomo_sorin"]
+
+# 报价：府内码头，一只装着碎镜片的空木箱。口头禅在这里用一次。
+[[tracks.chapters]]
+key = "offer"
+title = "摔碎的那一面"
+text = "府内码头上，南蛮船的跳板刚搭稳，一队人已经从岸上走了过来。走在前头的剃着光头，僧衣外面罩一件织金的羽织，身后的家臣捧刀的捧刀，捧伞的捧伞，还有一个捧着只木箱。码头上的人压低声音说，那是大友家的主公，从臼杵坐船过来看船。他没理葡萄牙船长的鞠躬，眼睛扫过一圈，停在你的船上：“你的船走过很远的海？那我问你，有没有威尼斯的镜子？”家臣掀开木箱，里面是一堆碎片，背面的锡都翘了边。那是一个葡萄牙商人卖给他的，挂起来照人发绿，他当场就摔了，后来才问出是印度仿的。“上一面镜子照出来的我，比我本人胖。葡萄牙人说那是威尼斯的——威尼斯人听见了，会哭。”他拈起一片，又丢回箱里，“我要一面真的。”"
+speaker = "otomo_sorin"
+mood = "cheerful"
+at = "funai"
+when = [
+  { kind = "date", from = [1565, 1, 15], to = [1577, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "fame", ge = 25 },
+  { kind = "flag", flag = "c13_main_mio", value = false },
+]
+family = "c13_offer_funai"
+family_cooldown_days = 20
+deadline = [1577, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应替他找一面真的穆拉诺镜。"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "otomo_sorin", value = 2 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_accepted" },
+]
+reply = "他像是早知道你会点头，手指在木箱边上敲了两下：“找到了，先别说它是打哪条路来的，在谁手里停过——让我先猜。猜错了，我认。”他朝身后抬了抬下巴，一个家臣便上前，把你的船名记在纸上，问了两遍怎么写。"
+news = "府内码头上传开了：大友家的主公托一个远来的船长去找威尼斯的真镜子，上一面被他当场摔了。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "镜子不好找，不敢应承。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_otomo_sorin_declined" }]
+reply = "你的话还没说完，他已经转身去看下一条船了。捧木箱的家臣朝你欠了欠身，把箱盖合上，小跑着追过去。旁边卸货的脚夫说，主公问过一遍的事，从来不问第二遍。"
+news = "府内码头上，大友家的主公挨条船问威尼斯镜子，有个船长说不敢应，他连头都没回。"
+
+# 交镜子：绸子不许揭，他先猜来路。见闻写在选项上，超时不继承。
+[[tracks.chapters]]
+key = "handin"
+title = "他先猜"
+text = "镜子用一块深蓝的丝绸裹着，放在府内客殿正中的矮几上。宗麟一进门就摆手，不许人揭。他先绕着矮几走了一圈，蹲下来，凑近绸子底下露出的一角木框闻了闻：“油布裹过，潮气没进去，走的是海路。框角有樟脑味，在马六甲的仓里放过。”他又用指甲刮了刮绸面上一块淡淡的斑，“这是澳门的雨季。”家臣们跪成两排，屏着气，没人敢说他猜得对不对。他抬起头看你，指甲还按在那块斑上：“说吧，我猜中了几成？”"
+speaker = "captain"
+mood = "tense"
+at = "funai"
+when = [{ kind = "alive", person = "otomo_sorin", value = true }]
+objectives = [
+  { kind = "item", item = "murano_mirror", qty = 1, text = "带来一面真的穆拉诺镜" },
+  { kind = "at", at = "funai", text = "到府内，等大友家的人来客殿传话" },
+]
+deadline = [1577, 10, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_otomo_sorin_late" },
+  { kind = "letter", person = "otomo_sorin", text = "镜子的事，算了。我已经想不起当时为什么非要它不可。你船上近来还有什么？要没见过的那种。" },
+]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "揭开绸子，把镜子呈上。"
+next = "use"
+effects = [
+  { kind = "item", item = "murano_mirror", qty = -1 },
+  { kind = "affinity", person = "otomo_sorin", value = 3 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_gave" },
+]
+reply = "绸子滑下去，镜面清得像什么都没有，只映着客殿的梁、窗外的帆，和他自己。他看了很久，猜中几成的话再没问，忽然一挥手，把家臣全赶了出去。纸门合上之前，他背对着你说：“七天以后再来。”"
+news = "府内客殿里，大友家的主公没让人揭绸子，先对着一面镜子猜了半天来路，揭开以后就把家臣全赶了出去。"
+
+[[tracks.chapters.choices]]
+key = "show"
+text = "揭开给他看，看完包回去：这面不卖。"
+next = "failed"
+effects = [
+  { kind = "affinity", person = "otomo_sorin", value = -2 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_failed" },
+]
+reply = "他的脸一下子沉了下来，跪在门边的家臣有一个把手按上了刀柄。他盯着你看了半晌，又笑了：“你比葡萄牙人有骨气。滚吧。”你把镜子重新裹好，抱出客殿，一路上没有人拦。"
+news = "府内的人说，有个船长把一面威尼斯镜子揭给大友家的主公看了一眼，又包好抱回了船，主公竟笑着放他走了。"
+
+# 镜前：七天后的空屋，素白小袖，一个问题。
+[[tracks.chapters]]
+key = "use"
+title = "镜前的人"
+text = "七天后，家臣到船上叫你，领你穿过客殿后面的回廊，进了一间空屋。没有屏风，没有挂轴，地上一张席子，墙上挂着那面镜子。宗麟一个人坐在镜前，没穿僧衣，只着一件素白的小袖，头顶新剃过，泛着青。他从镜子里看你，没有回头。“禅寺的和尚叫我看自己的心，南蛮的神父叫我看他们的神。我看了这些年，看见的总是别人。”他抬手点了点镜面，“这面照得清。你也替我看看——我像不像一个会信神的人？禅也好，天主也好。”"
+speaker = "otomo_sorin"
+mood = "mystic"
+at = "funai"
+when = [{ kind = "alive", person = "otomo_sorin", value = true }]
+objectives = [
+  { kind = "wait", days = 7, text = "七天以后再去客殿" },
+  { kind = "at", at = "funai", text = "人在府内" },
+]
+deadline_days = 60
+news = "府内的人说，大友家的主公得了一面威尼斯的镜子，一个人对着它坐了一下午。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_otomo_sorin_late" },
+  { kind = "letter", person = "otomo_sorin", text = "第七天叫人去码头找你，船不在。镜子还挂在那间屋里。我想问你的话，换了别人来答，他们都答得很好听。" },
+]
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实说：像一个还在找的人。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "cash", value = 2600 },
+  { kind = "affinity", person = "otomo_sorin", value = 8 },
+  { kind = "reputation", faction = "otomo", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_done" },
+  { kind = "memory", memory = "mem-request_otomo_sorin-use", title = "镜前的丰后之王" },
+]
+reply = "镜子里的他点了点头，像是终于有人说对了一次。他没再问别的，起身把你送到回廊口，叫人捧来谢礼，又回头吩咐领路的家臣：“这个人再来府内，进这间屋子不用通报。”"
+
+[tracks.chapters.choices.fail]
+next = "done"
+news = "府内的人说，大友家的主公在镜子前问一个船长话，那人答得迟了半口气，主公就把脸转回了镜子。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "otomo_sorin", value = 2 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "flatter"
+text = "说他像。"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "otomo_sorin", value = 2 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_partial" },
+]
+reply = "他笑出了声，镜子里的人也跟着晃了晃：“你和我的家臣一样会说话。”谢礼照给。只是那以后再到府内，领路的家臣把你带到客殿就停下，回廊后面那间屋子，再没叫你进去过。"
+
+[[tracks.chapters.choices]]
+key = "silent"
+text = "不答，只看镜子里的他。"
+next = "done"
+effects = [
+  { kind = "cash", value = 2600 },
+  { kind = "affinity", person = "otomo_sorin", value = 6 },
+  { kind = "reputation", faction = "otomo", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "flag", flag = "c13_request_otomo_sorin_done" },
+]
+reply = "屋里静得听得见外面的潮声。他等了很久，镜子里的影子一动不动，最后说：“好。不答也是答。”他站起来，从你身边走过去，自己拉开了纸门，回廊上的光一下子照进镜子里。"

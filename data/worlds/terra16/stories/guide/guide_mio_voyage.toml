@@ -1,0 +1,469 @@
+# R10-Q03：澪的航海引导链（第一程：下田 → 堺 → 能岛 → 博多 → 釜山 → 平户，接主线 main_mio 的 a04_hirado）。
+# 设计稿：docs/drafts/q03-sailing-chain.md（含文末“规划方裁决”九条）；入库与改动说明：docs/drafts/q03b-handoff.md。
+# 只在本局主角是澪、跳过或结束养成（旗标 c12_voyage_mio）以后出现；别的主角没有引导线，这条轨道对他们不显示、不出场。
+#
+# 写法约定（改数据时照着来）：
+#   - 每章一步：title 名词短语；hint 是任务追踪条上的字（去哪儿、找谁、带什么、做到什么算完）；
+#     text 是办完时弹出的一段（澪的第一人称）；choices 只有一个，按钮字写在 choices.text。
+#   - teaches 对上 guide/mechanics.toml 的玩法键；完成条件只用 Q01 / Q01b 已有的条件与行为计数。
+#   - 行为计数大多写 since_entered = false：玩家先做了也算，走到这一步立刻办完，不会卡住。
+#     只有“这一步之后做才有意义”的几处写 true：v05 的旅店、v06 的买木材、v07 的赚钱卖、v21 的釜山卖货。
+#   - 有 at 的章 go.port 照抄 at。
+#   - 新起的路人：木材行的宫地老板（v06）、管粮袋的老水手阿权（v02、v04、v08、v19），入库前已查过不与已有人物撞名。
+#   - 现金奖励合计 3000，前五步 1500（裁决第 1 条）。
+[[tracks]]
+key = "guide_mio_voyage"
+name = "下田到平户"
+kind = "guide"
+start = "v01_sell_grain"
+auto = true
+
+# ───────────── 下田（1557-01-01 → 01-07 以后） ─────────────
+
+# 1 卖掉开局舱里的谷 3、盐 2，腾出舱位（开局空舱只有 4 格，粮水占了 36 格）。
+[[tracks.chapters]]
+key = "v01_sell_grain"
+title = "舱里的谷和盐"
+text = "米铺的伙计拎起谷袋掂了掂，说是去年的。“去年的，三袋，一袋十一文，三十三。您嫌陈，三十。”他还在找秤砣。盐他不收，指我去隔壁的鱼铺。鱼铺的老板娘正剖鲣鱼，两手是血，拿胳膊肘把秤推了过来。"
+hint = "在下田的交易所卖掉舱里的谷和盐，腾出五格舱位。"
+teaches = ["market_trade"]
+go = { port = "shimoda_tosa", panel = "market" }
+at = "shimoda_tosa"
+when = [
+  { kind = "protagonist", protagonist = "mio" },
+  { kind = "flag", flag = "c12_voyage_mio" },
+]
+objectives = [{ kind = "deed", deed = "sell", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "卖了"
+next = "v02_dismiss"
+effects = [{ kind = "cash", value = 400 }]
+
+# 2 遣散几个水手省工钱（裁决第 1 条新增；小早最少 12 人，工钱每人每天 2）。
+#   遣散在酒馆面板（PortPanel 的“遣散”）；不写 at，在哪个港办都算。dismiss_crew 不在玩法清单里，本步不写 teaches。
+#   2026-11-15：开船的人数跟着结业的档与志向走（一条小早的行都是 18 人起，船多的行人更多），玩家遣散几个也由他定，
+#   所以标题与正文不写死“十八个人”“六个名字”；人手不到最少人数的一倍半出海会添疲劳，提示里带一句。
+[[tracks.chapters]]
+key = "v02_dismiss"
+title = "水手的工钱"
+text = "我把名册摊在舱口，从末尾往上念。有人说他娘在清水，正好回去。有人不肯走，说开春的鲣鱼船还没招人；我多给了他十文，他数了数，退回来四文，说多了。阿权蹲在一边数走的人留下的草鞋，数来数去多出一只。"
+hint = "一条小早有十二人就开得动。在酒馆遣散几个水手，每人每天省工钱二；人手太紧，出海容易累。"
+go = { port = "shimoda_tosa", panel = "tavern" }
+objectives = [{ kind = "deed", deed = "dismiss_crew", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "就这样"
+next = "v03_contract"
+effects = [{ kind = "cash", value = 300 }]
+
+# 3 接一张小单（裁决第 1 条：委托提前；T04 / T04c：出海第一天日结后各势力补发一轮小单，下田有一条家的）。
+#   条件只写“接了任意一张委托”，不依赖抽到哪种货、发单的是哪一家。
+[[tracks.chapters]]
+key = "v03_contract"
+title = "一条家的小单"
+text = "单子用浆糊贴在板壁上，一条家那张贴得最低，我得蹲下看。货名、件数、起运地、交货的日子，最底下一行是罚金，那一行的字写得最大。伙计在我背后说，接了别反悔，一条家的单子罚的也是一条家的钱。“那就是罚我。”他挠了挠头，说也对。"
+hint = "出海第二天起，下田的商会贴出一条家的小单，交货港在下田或清水。看清件数、起运地和期限，接下来。"
+teaches = ["contract"]
+go = { port = "shimoda_tosa", panel = "guild" }
+objectives = [{ kind = "deed", deed = "accept_contract", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "接了"
+next = "v04_deliver"
+effects = [{ kind = "cash", value = 300 }]
+
+# 4 凑够件数交单：租仓、装卸、交货（小单 5–40 件，小早空舱约 9 格；交货可以从目的港的仓里交，contract.rs check_deliver）。
+#   交货港随单子而定，所以不写 at、go 不写 port。
+[[tracks.chapters]]
+key = "v04_deliver"
+title = "仓门上的炭道"
+text = "一趟装不完。我在交货的那个港租了半间仓，船来回跑了几趟，阿权每卸完一回就在仓门上划一道炭。件数凑够那天，伙计来点货，从头点到尾，点完回头看了看仓门上那几道炭。"
+hint = "照单上的起运地买货。舱位不够，就在交货港租一格仓，分几趟运进仓，凑齐了从仓里交。"
+teaches = ["warehouse", "transfer"]
+go = { panel = "warehouse" }
+objectives = [
+  { kind = "deed", deed = "rent_warehouse", ge = 1, since_entered = false },
+  { kind = "deed", deed = "transfer", ge = 1, since_entered = false },
+  { kind = "deed", deed = "deliver_contract", ge = 1, since_entered = false },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "交了"
+next = "v05_inn"
+effects = [{ kind = "cash", value = 300 }]
+
+# 5 在下田的旅店等到 1 月 7 日：主线 a01（旗钱，先付）同一天在下田出场。
+[[tracks.chapters]]
+key = "v05_inn"
+title = "旅店的炭盆"
+text = "旅店的老板娘每天早上问一回：“还不走？”第三天起她不问了，把我屋里的炭盆换成大的，账也照大的记。我说小的够了。“姬君是等人吧，等人的屋子冷不得。”初七一早，河口那边有人喊，一条吃水很深的堺船在栈桥外落帆。"
+hint = "堺来的船主1月7日才到下田。在下田的旅店住到那天。"
+teaches = ["inn"]
+go = { port = "shimoda_tosa", panel = "inn" }
+at = "shimoda_tosa"
+when = [{ kind = "date", from = [1557, 1, 7] }]
+objectives = [{ kind = "deed", deed = "inn_day", ge = 1, since_entered = true }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "去栈桥"
+next = "v06_to_sakai"
+effects = [{ kind = "cash", value = 200 }]
+
+# ───────────── 下田 → 堺 ─────────────
+
+# 6 买木材、排航线、出港、掌舵，到堺（约 12 格、4 天）。到堺当天主线 a02 出场。
+#   buy 写 since_entered = true：要的是这一步之后买的、带去堺卖的货（v03—v04 买委托货也会计 buy）。
+[[tracks.chapters]]
+key = "v06_to_sakai"
+title = "出河口"
+text = "木材行的宫地老板只肯按根卖。“姬君这船装得下几根？”“九根，横着放。舱口那根得锯掉一掌，锯掉的那截您收不收钱？”他叫伙计抬了九根到栈桥，锯掉的那截也抬来了。出河口，沙洲那道白线最难过。我自己扳舵，舵手在旁边报水深，报到五尺就闭了嘴。过了足摺，室户岬在第三天。"
+hint = "买几根木材带上，堺缺这个。在海图上排一条去堺的航线，出河口那段自己掌舵。"
+teaches = ["route_plan", "depart", "steer"]
+go = { port = "sakai", panel = "route_planner" }
+at = "sakai"
+objectives = [
+  { kind = "deed", deed = "buy", ge = 1, since_entered = true },
+  { kind = "deed", deed = "plan_route", ge = 1, since_entered = false },
+  { kind = "deed", deed = "depart", ge = 1, since_entered = false },
+  { kind = "deed", deed = "steer", ge = 1, since_entered = false },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "往东"
+next = "v07_sell_timber"
+effects = []
+
+# ───────────── 堺（1 月中 → 6 月） ─────────────
+
+# 7 赚钱的卖：入章后卖出一样比买价高的货（开局的谷盐成本记 0，所以写 since_entered = true）。
+[[tracks.chapters]]
+key = "v07_sell_timber"
+title = "堺的木材价"
+text = "堺的木材牙人把杉木挨根敲过，说下田的木头水汽重。“那您按下田的价收。”他拿烟管在杉木上磕了两下，按堺的价付了。我在船账上算了算，九根挣的，刚够十二个人两天的工钱。"
+hint = "在堺的交易所卖掉下田带来的木材。堺缺木材，卖价比下田高。"
+teaches = ["trade_profit"]
+go = { port = "sakai", panel = "market" }
+at = "sakai"
+objectives = [{ kind = "deed", deed = "sell_profit", ge = 1, since_entered = true }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "收钱"
+next = "v08_supply"
+effects = [{ kind = "cash", value = 200 }]
+
+# 8 补粮水、看船况、改常设命令。
+[[tracks.chapters]]
+key = "v08_supply"
+title = "粮袋与常设命令"
+text = "阿权管粮袋，补一回念一回：“米三斗，水两桶，盐别忘了。”常设命令里原写着遇风就收帆，我改成遇大风收帆。阿权看了一眼：“姬君胆子大。”他把备用的帆索又多绑了一道。"
+hint = "在堺补足粮水，顺手带上几份船材——海上修船靠它；再到船况页把常设命令改成你要的样子。"
+teaches = ["supply", "ship_status", "standing_orders"]
+go = { port = "sakai", panel = "ship_status" }
+at = "sakai"
+objectives = [
+  { kind = "deed", deed = "resupply", ge = 1, since_entered = false },
+  { kind = "deed", deed = "standing_orders", ge = 1, since_entered = false },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "照这样"
+next = "v09_tavern"
+effects = []
+
+# 9 酒馆读告示（read_news：至少一条由未读转已读）。招人留到 v17。
+[[tracks.chapters]]
+key = "v09_tavern"
+title = "堺的酒馆"
+text = "酒馆里坐满了等船的人，板壁上的告示一层糊一层，最上面那张的浆糊还没干。账台后头的人跟客人说，毛利家的兵已经进了周防。客人问周防在哪儿，他说在长门旁边。一个纪伊来的水手凑过来问我缺不缺人，我说过了五月再来问。"
+hint = "去堺的酒馆坐一坐，把告示上的新消息读一遍。"
+teaches = ["read_news"]
+go = { port = "sakai", panel = "tavern" }
+at = "sakai"
+objectives = [{ kind = "deed", deed = "read_news", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "记下了"
+next = "v10_naruto"
+effects = []
+
+# 10 鸣门的漩涡：发现物 wonder_naruto（半径 2 格，过纪伊水道时多半看得见；guide-report 记“无保底”）。
+#    discover 写 since_entered = false：来的路上看见的也算。
+[[tracks.chapters]]
+key = "v10_naruto"
+title = "鸣门的漩涡"
+text = "会所的书役把我说的写进簿子：几时、在哪儿、潮是涨是落。写到漩涡有多大，他抬头看我。我张开两只手比了比，又说比堺的钱箱大。他照着写了“比钱箱大”。"
+hint = "来的路上见到鸣门的漩涡了吗？到堺的探险页报上去。没见到，往淡路岛西边走一趟。"
+teaches = ["explore", "report_discovery"]
+go = { port = "sakai", panel = "explore" }
+at = "sakai"
+objectives = [
+  { kind = "deed", deed = "discover", ge = 1, since_entered = false },
+  { kind = "deed", deed = "report_discovery", ge = 1, since_entered = false },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "写上"
+next = "v11_sayo"
+effects = [{ kind = "cash", value = 300 }]
+
+# 11 请纳屋小夜上船当交易员（日程 1553–1590 在堺的市场，求见名声 0，招募好感 60；喜好手工、麻手帕一类）。
+#    条件只写“有航海士”和“交易员岗有人”，请别人也算。
+#    寰宇的航海士全由人物的 mate 定义而来，酒馆里雇不到（cast.rs 把它们设为 hidden），只能交谈到好感后招募（RecruitPerson，
+#    行为 recruit）。guide-report 的静态模型只认酒馆航海士，判不了“招募人物”，所以两条都写成“任一”，第二支是 deed recruit：
+#    游戏里招募了人就有了航海士，第一条等价；第二条（交易员岗）因此在游戏里不强制，靠 hint 指引。等模型认得招募后去掉第二支（见 q03b 交接）。
+[[tracks.chapters]]
+key = "v11_sayo"
+title = "纳屋家的小夜"
+cast = ["naya_sayo"]
+text = "小夜头一回见我，先点了一碗茶。茶没喝完，她问我船上一个月的米钱。我报了个数。她摇头：“这是十八个人的米钱。您船上如今是十二个。”第六回去，茶照样先喝完。“您要我上船，账就归我管。您花钱以前，先同我说一声。”“旗钱我自己收。”她把茶碗转了半圈：“旗钱您收，记在我的账上。”"
+hint = "纳屋小夜在堺的市场。常去找她说话，送一件手工的小东西；好感到六十，请她上船当交易员。"
+teaches = ["talk", "gift", "hire_mate", "mate_post"]
+go = { port = "sakai", panel = "people" }
+at = "sakai"
+objectives = [
+  { kind = "deed", deed = "talk", ge = 1, since_entered = false },
+  { kind = "deed", deed = "gift", ge = 1, since_entered = false },
+  { kind = "any", any = [
+    { kind = "mates", ge = 1 },
+    { kind = "deed", deed = "recruit", ge = 1, since_entered = false },
+  ] },
+  { kind = "any", any = [
+    { kind = "post", post = "trader" },
+    { kind = "deed", deed = "recruit", ge = 1, since_entered = false },
+  ] },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "一言为定"
+next = "v12_report"
+effects = [{ kind = "cash", value = 200 }]
+
+# 12 行情通报（100 + 40 × 港数）与行情推算页。
+[[tracks.chapters]]
+key = "v12_report"
+title = "别处的行情"
+text = "通报是几张抄纸，一港一页，页头写着哪天、哪条船带来的。博多那页是半个月前的。我说半个月前的价拿来做什么。小夜把平户那页折了个角，拿去问账台后头的人，下一条回平户的船几时走。"
+hint = "在堺的交易所买一份行情通报，底价一百，每港加四十。再到行情推算页看一看。"
+teaches = ["market_report", "analysis"]
+go = { port = "sakai", panel = "analysis" }
+at = "sakai"
+objectives = [{ kind = "deed", deed = "market_report", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "收着"
+next = "v13_shop"
+effects = []
+
+# 13 道具店：买、装备、用一件消耗品（裁决第 5 条）、读书。
+[[tracks.chapters]]
+key = "v13_shop"
+title = "道具店的南蛮衣"
+text = "店主拿出一件南蛮式的短外衣，说是葡萄牙船上的人当掉的，袖子短一截。我穿上抬了抬手，不碍着缆，就要了。书挑了一本讲潮汐的，店主说那本搁了两年没人问，可以便宜。我问便宜多少。他说一成。"
+hint = "去堺的道具店：买一件能穿戴的穿上，一样能用的用掉，再买一本读得懂的书在船上读。"
+teaches = ["item_shop", "equip", "use_item", "read_book"]
+go = { port = "sakai", panel = "shop" }
+at = "sakai"
+objectives = [
+  { kind = "deed", deed = "buy_item", ge = 1, since_entered = false },
+  { kind = "deed", deed = "equip", ge = 1, since_entered = false },
+  { kind = "deed", deed = "use_item", ge = 1, since_entered = false },
+  { kind = "deed", deed = "read_book", ge = 1, since_entered = false },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "买下"
+next = "v14_invest"
+effects = []
+
+# 14 投资（最低 1000）；投资页上看堺的阶段、商馆一级的门槛（约 6100）。
+[[tracks.chapters]]
+key = "v14_invest"
+title = "会合众的长纸"
+text = "会合众的人收了钱，在一张长纸的末尾添上“土佐一条”。前面一长串名字，最末那个也比我多投了好几倍。他说商馆要投到六千上下才开。我把这个数写在船账的最后一页，跟米钱写在一处。"
+hint = "在堺的投资页投一千。顺便看看堺在哪一阶，商馆一级还差多少。"
+teaches = ["invest"]
+go = { port = "sakai", panel = "house" }
+at = "sakai"
+objectives = [{ kind = "deed", deed = "invest", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "先这样"
+next = "v15_bank"
+effects = []
+
+# 15 存款或贷款，二选一（裁决第 2 条；Q01b 的“任一”）。
+[[tracks.chapters]]
+key = "v15_bank"
+title = "钱庄的掌柜"
+text = "掌柜先问存还是借，又问多久。“一年。不，半年。小夜，半年还是一年？”小夜在算盘上拨了两下：“您船上的米钱，够吃到几月？”我说五月。掌柜在簿子上写了一年。"
+hint = "钱放在船上会被花掉。去堺的银行存一小笔，船上留够月底的工钱；或者借一笔。两样做一样就行。"
+teaches = ["bank"]
+go = { port = "sakai", panel = "bank" }
+at = "sakai"
+objectives = [
+  { kind = "any", any = [
+    { kind = "deed", deed = "deposit", ge = 1, since_entered = false },
+    { kind = "deed", deed = "borrow", ge = 1, since_entered = false },
+  ] },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "办好了"
+next = "v16_june_yard"
+effects = []
+
+# 16 6 月以后在堺修船，或添第二条船，二选一（裁决第 2 条）。
+#    用日期把玩家留到 6 月的堺：主线 a03（6/1—8/15 在堺）一定出场。这期间可以出去跑委托，6 月回来就行。
+[[tracks.chapters]]
+key = "v16_june_yard"
+title = "六月的船坞"
+text = "船匠拿凿子敲船底，敲到船尾停下：“这里要换两块板。”我问几天。他说看雨。梅雨一直没停，我在船坞边上坐着，看博多来的船一条一条进港。"
+hint = "6月以后回到堺，去船厂修船；钱够的，添第二条船也算。博多来的船这时也该到了。"
+teaches = ["repair"]
+go = { port = "sakai", panel = "shipyard" }
+at = "sakai"
+when = [{ kind = "date", from = [1557, 6, 1] }]
+objectives = [
+  { kind = "any", any = [
+    { kind = "deed", deed = "repair", ge = 1, since_entered = false },
+    { kind = "deed", deed = "buy_ship", ge = 1, since_entered = false },
+  ] },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "修好了"
+next = "v17_hire"
+effects = [{ kind = "cash", value = 300 }]
+
+# 17 西行前添人（每人 30；小早上限 35 人）。
+[[tracks.chapters]]
+key = "v17_hire"
+title = "西行的水手"
+text = "开春那个纪伊来的水手还在酒馆里，见了我就站起来，说六月了。他还带了个同乡，说两个一起雇便宜。“两个六十，便宜在哪儿？”“他吃得少。”那个同乡在一旁点头，手里的饭团已经啃掉一半。"
+hint = "往西去平户的路远。在堺的酒馆添一两个水手，每人三十。"
+teaches = ["hire_crew"]
+go = { port = "sakai", panel = "tavern" }
+at = "sakai"
+objectives = [{ kind = "deed", deed = "hire_crew", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "雇下"
+next = "v18_noshima"
+effects = []
+
+# ───────────── 濑户内海 → 能岛 → 博多 ─────────────
+
+# 18 能岛：途中下锚上岸、做一件岸上差事（汲水等）。
+[[tracks.chapters]]
+key = "v18_noshima"
+title = "濑户内的锚地"
+text = "锚地是一处小河口，岸上有两户人家。水手们抬着桶去河边，一个老婆婆出来问是哪家的船。我说能岛的旗。她就不问了，回屋端出一盆煮芋头，一盆三十文。我还到二十五，她从盆里拣出两个，说二十五就这么多。"
+hint = "沿濑户内海往西去能岛。路上找一处锚地下锚上岸，汲一回水。"
+teaches = ["landing", "shore_task"]
+go = { port = "noshima", panel = "navigation" }
+at = "noshima"
+objectives = [
+  { kind = "deed", deed = "landing", ge = 1, since_entered = false },
+  { kind = "deed", deed = "shore_task", ge = 1, since_entered = false },
+]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "装满了"
+next = "v19_at_sea"
+effects = []
+
+# 19 海上三件事：喊话、所见、下网。喊话与所见没有保底，所以给 120 天期限；过期走 timeout，next 相同，只是不发奖励。
+[[tracks.chapters]]
+key = "v19_at_sea"
+title = "海上的事"
+text = "喊过去的那条船是博多的，船头说前面有海贼，又说他也没见着，是听人说的。网里上来半筐小鱼和一只破草鞋。阿权把草鞋扔回海里，鱼当晚就煮了。"
+hint = "往西的路上：靠近商船就喊话，海上漂着东西就过去看，收帆下一回网。120天内办完有赏。"
+teaches = ["hail", "sighting", "nets"]
+go = { panel = "navigation" }
+deadline_days = 120
+objectives = [
+  { kind = "deed", deed = "hail", ge = 1, since_entered = false },
+  { kind = "deed", deed = "sighting", ge = 1, since_entered = false },
+  { kind = "deed", deed = "nets", ge = 1, since_entered = false },
+]
+
+[tracks.chapters.timeout]
+next = "v20_hakata_chart"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "往西"
+next = "v20_hakata_chart"
+effects = [{ kind = "cash", value = 200 }]
+
+# 20 博多的酒馆买海图（价按 chart_price：500 + 60 × 海区面积 ÷ 100；guide-report 取最便宜的一片计花费）。
+#    设计稿原在平户买；改到博多，免得玩家先到平户、主线 a04 提前出场，末步“回平户”落空。
+[[tracks.chapters]]
+key = "v20_hakata_chart"
+title = "博多的海图"
+text = "卖海图的是个唐人，图上的字一半汉字一半南蛮字。他指着若狭那一块说，那边冬天的浪比这里高一倍，图只管画岸，不管浪。他开价，我还了两回，他只让了头一回的。"
+hint = "在博多的酒馆买一张海图，挑一片还没去过的海。往后去若狭、越前，日本海那张用得上。"
+teaches = ["buy_chart"]
+go = { port = "hakata", panel = "tavern" }
+at = "hakata"
+objectives = [{ kind = "deed", deed = "buy_chart", ge = 1, since_entered = false }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "买了"
+next = "v21_busan"
+effects = []
+
+# ───────────── 博多 → 对马 → 釜山 → 平户 ─────────────
+
+# 21 头一回出日本：釜山卖一样货（入章后卖的才算）。买卖第 1 步已教，这里不再写 teaches（重复教只出警告）。
+[[tracks.chapters]]
+key = "v21_busan"
+title = "釜山的倭馆"
+text = "倭馆门口有朝鲜的兵站岗，进门要报船名、货名、几个人。通事是对马人，替我把“土佐”写成了“对马”，说这样省事。货卖掉了，税单上的名字是对马的。"
+hint = "从博多经对马去釜山，在釜山的交易所卖掉一样货。"
+go = { port = "busan", panel = "market" }
+at = "busan"
+objectives = [{ kind = "deed", deed = "sell", ge = 1, since_entered = true }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "回平户"
+next = "v22_hirado"
+effects = [{ kind = "cash", value = 300 }]
+
+# 22 回平户，交给主线 a04_hirado（徽王的船；3/1 起、9/30 止）。
+[[tracks.chapters]]
+key = "v22_hirado"
+title = "平户的码头"
+text = "平户港里泊满了唐船，山坡上的宅子挂着“徽王”的旗号。码头上有个通事在等，问我是不是土佐来的那条小早。我说是，船上十四个人，要不要报名字。他说不用，王直只问船。"
+hint = "去平户。徽王的船泊在松浦家的码头，9月底以前去见他。"
+go = { port = "hirado" }
+at = "hirado"
+objectives = [{ kind = "deed", deed = "arrive", ge = 1, since_entered = true }]
+
+[[tracks.chapters.choices]]
+key = "ok"
+text = "上船"
+next = "done"
+effects = []

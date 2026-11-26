@@ -1,0 +1,187 @@
+# C7 故事线重写（2026-10-11，Claude 写）：故事 2.0 轨道格式，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 标签：BG（男女恋人；茂吉 romance=f，朴素月 romance=m）。
+# 人物：茂吉（mokichi，1536-05-18 生，平户的通事，会说葡萄牙话，译完一句总要等对方点一次头）；
+#       朴素月（park_sowol，1537-02-09 生，釜山浦译官之女，正式文书旁总另抄一句家常话）。生年差不到一年。
+#       成为恋人的 together 窗口 1563-04-01..06-30：茂吉 26→27 岁，素月 26 岁，都已成年，且不早于 1557-01-01；
+#       closer 窗口 1560 只写 crush（心照不宣）。一个在平户、一个在釜山，全线只在釜山倭馆里见过两次面，亲密只写到一个吻为止。
+#       素月的父亲是本线虚构的小人物，不进 cast，不起名。
+# 依据·史实：1547 年丁未约条以后，日本商人只许在釜山浦的倭馆里交易，不得出馆；对马宗氏每年派岁遣船往来，书契（国书与公文）
+#       由两边的通事、译官核对，朝鲜这边由釜山的译官（倭学）经手；馆里的柴米由朝鲜这边的杂役供给。
+#       1590 年朝鲜通信使赴日（正使黄允吉、副使金诚一），三月自汉城动身，经釜山出海；1591 年春回国，两位使臣复命不一致。
+# 依据·原创：茂吉与素月、“月”字多一横写成“目”的错字、朱笔圈、平户街口的天气（晒鱼的竹架、三只鸥、西南风）、
+#       倭馆公案前的那一天、冷饭、“饭凉了”、信里“兵船与粮仓”那一句、缝进船帆夹层的信。
+#       不预言 1592 年的战争，只写使臣复命不一；1587 年损竹岛倭变与 1589 年对马请使归 tie_new_yun_haeri_kim_munyeong，本线不写。
+#       待核：茂吉（松浦家的通事）随对马岁遣船入馆的做法（正文只写“随船来的通事”）；
+#       1590 年使行先遣人员渡海的时间（正文只写“使行里先过海的人”）。
+# 缺省走向：meeting（1556 春，退稿与一圈）→ closer（1560 夏，倭馆公案，crush）→ together（1563 夏，冷饭，成为恋人，lovers + 旗标）→
+#       turning（1590 春，通信使出发，传闻）→ choice（1590 夏，平户，那一句要不要删；缺省：信随对马的船入冬才到，一字未删）→
+#       epilogue（1591 春，使行回国，两人约定照实翻译，仍隔海相守）。没有坏结局。
+# 玩家能做的：choice 里带信（verbatim）、抢先送信（fast）、旁观（watch）。前两条分别设 _helped / _matched，只改落点章的变体，
+#       不改结局；两人的恋爱写在 together 的 default 里，与玩家在不在场无关。
+# 旗标：写 c7_pair_mokichi_park_sowol_together（共享，任务单约定）、_helped、_matched（本文件落点章变体读）。不读外部旗标。
+# 整合：cast 里茂吉与素月的日程都止于 1590-12-31，而 epilogue 窗口在 1591-02..04（at = busan），两人日程都要延长到 1591 年以后
+#       （茂吉仍在 hirado，素月仍在 busan）；cast/ties.toml 的 mokichi_park_sowol 现为 lovers、since = [1557, 12, 31]，
+#       应改为 since = [1563, 6, 30]（together 的窗口止日）；note 里“官文换了几回口气”可保留。
+#       1563 以前两人没有恋人关系，ties 里不要更早写 lovers。
+
+[[tracks]]
+key = "pair_mokichi_park_sowol"
+name = "公文之外一张纸"
+kind = "request"
+start = "pair_mokichi_park_sowol_meeting"
+auto = true
+cast = ["mokichi", "park_sowol"]
+
+# 相识（1556）：退稿，一个朱圈，下一封信字大了一倍。
+[[tracks.chapters]]
+key = "pair_mokichi_park_sowol_meeting"
+title = "错的一笔"
+text = "对马的船捎来平户通事的一份译稿，是南蛮船的货单。素月从头看到尾，只在收件人那一行停住了：他把她名字里的“月”多填了一横，写成了“目”。她取朱笔在那个字上画了个圈，别处一字不动，原样封回，托回程的船带走。父亲探头来看：“货单译得不错，你怎么只圈一个字？”“官话写完，家书还得送——名字先得写对。”二十天后下一封信到了，收件人那一行的字大得出奇，末尾添了一句：“平户街口今早晴，晒鱼的竹架上落了三只鸥。”素月改了他两处译词，那一句她没有划。"
+stage = "witness"
+window = [[1556, 3, 1], [1556, 5, 31]]
+at = "busan"
+cast = ["mokichi", "park_sowol"]
+speaker = "park_sowol"
+mood = "cheerful"
+news = "釜山译官家的女儿把平户来的一份译稿整份退了回去，只圈了一笔；听说下一封信字大了一倍。"
+
+[tracks.chapters.default]
+next = "pair_mokichi_park_sowol_closer"
+effects = []
+
+# 靠近（1560）：倭馆公案，压在公文底下的一张纸。
+[[tracks.chapters]]
+key = "pair_mokichi_park_sowol_closer"
+title = "倭馆的门"
+text = "对马的岁遣船靠了岸，随船来的通事里有个平户人，叫茂吉，通了四年信，素月头一回见到写信的人。馆门一关，日本人不许再出去一步，素月替父亲送文书，就在馆里一张公案前坐下，案这头一摞书契，案那头一摞。他念一句，她核一句：“‘贵国’写成了‘贵朝’。”“是我疏忽。”他等她点了头，才提笔改。一整天改了十一回，他回回等那一下点头，她数到第七回，才发觉自己在数。天擦黑，茂吉收拾文书，把一张折小的纸压在最底下，推了过去。素月回到家，在灯下抽出来，纸上只有一行：“平户，开船那天晴，风从西南来。”她研了墨，在后头添上一行釜山的，次日托送柴米的杂役递进了馆。"
+stage = "witness"
+window = [[1560, 4, 1], [1560, 6, 30]]
+at = "busan"
+cast = ["mokichi", "park_sowol"]
+speaker = "mokichi"
+mood = "tender"
+news = "对马的岁遣船到了釜山浦，倭馆里那个平户通事对了一整天文书，听说临走在公文底下压了一张纸。"
+
+[tracks.chapters.default]
+next = "pair_mokichi_park_sowol_together"
+effects = [
+  { kind = "tie", a = "mokichi", b = "park_sowol", relation = "crush" },
+]
+
+# 落点之一（1563）：冷饭，成为恋人。
+[[tracks.chapters]]
+key = "pair_mokichi_park_sowol_together"
+title = "饭凉了"
+text = "茂吉第二次随船来釜山浦，带的文书比上回多一倍，对到天黑才对了一半。素月带进馆的饭盒搁在案角，早凉透了。两人就着冷饭，把最后一份对完。茂吉放下筷子：“我出不了这道栅门。”“我也去不了平户。”她把朱笔插回笔筒，“那就写信。”“写一辈子？”“写一辈子。”灯芯爆了一声，他伸手碰了碰她的手背，她没有躲，倾身过去，在他嘴上碰了一下。那以后，每封公文旁边都另附一张纸，有时写满一面，有时只有一句：“饭凉了。”"
+stage = "witness"
+window = [[1563, 4, 1], [1563, 6, 30]]
+at = "busan"
+cast = ["mokichi", "park_sowol"]
+speaker = "park_sowol"
+mood = "tender"
+news = "釜山浦倭馆里对文书对到天黑，听说译官家的女儿和平户来的通事就着冷饭把最后一份对完了。"
+
+[tracks.chapters.default]
+next = "pair_mokichi_park_sowol_turning"
+effects = [
+  { kind = "tie", a = "mokichi", b = "park_sowol", relation = "lovers" },
+  { kind = "flag", flag = "c7_pair_mokichi_park_sowol_together" },
+]
+
+# 转折（1590 春，传闻）：通信使从釜山出海。
+[[tracks.chapters]]
+key = "pair_mokichi_park_sowol_turning"
+title = "通信使出发"
+text = "酒馆里传开了：朝廷派了通信使去日本，正使黄允吉，副使金诚一，要从釜山出海。这个月釜山浦人车不断，译官家里灯火通宵。听说那个译官的女儿替使行抄了一个月的文书，抄到手腕肿了，抄完又另封了一封自己的信，托使行里先过海的人带去。有人问她信里写的什么，她说：“家常话。”再问，她就把门关上了。"
+stage = "rumor"
+window = [[1590, 3, 1], [1590, 4, 30]]
+at = "busan"
+cast = ["mokichi", "park_sowol"]
+mood = "tense"
+news = "通信使从釜山出海去日本了，听说译官家的女儿替使行抄了一个月的文书，又另封了一封信托人带过去。"
+rumor_days = 30
+
+[tracks.chapters.default]
+next = "pair_mokichi_park_sowol_choice"
+effects = []
+
+# 抉择（1590 夏）：平户，那一句要不要删。
+[[tracks.chapters]]
+key = "pair_mokichi_park_sowol_choice"
+title = "不能删的话"
+text = "平户，通事的屋子。茂吉面前摊着素月的信，旁边是他刚写完的回信。我进门时他正拿指甲刮纸边，不抬头：“她说釜山这个月都在替使行抄文书。我回她的，写了这一段——”他念出来：“‘肥前几个港里新漆的兵船多了，仓里的米也多了，没人跟我说是为谁预备的。’”他把纸拿远了些。“这一句删了，她少担一份心。要不要删，你说？”没等我开口，他自己先摇头：“两边都听明白，才算说完。可信要过海，使行已经在路上了。”他把纸折好，看着我。"
+stage = "involve"
+window = [[1590, 5, 1], [1590, 7, 31]]
+at = "hirado"
+cast = ["mokichi", "park_sowol"]
+speaker = "mokichi"
+mood = "tense"
+news = "平户那个老通事这阵子天天在码头等对马的船，听说有一封要寄去釜山的信，他改了三遍，最后一个字没删。"
+
+[tracks.chapters.default]
+next = "pair_mokichi_park_sowol_epilogue"
+effects = []
+news = "平户通事寄往釜山的那封信随对马的船走了两个月，入冬才到，那一句到底没有删。"
+
+[[tracks.chapters.choices]]
+key = "verbatim"
+text = "一字不改，我替你把回信带去釜山"
+reply = "茂吉把信折成指宽，我拆开船帆的夹层，一针一针缝进去。到了釜山，素月在译官公房的廊下拆开，读到那一句，念出了声：“没人跟我说是为谁预备的。”她没哭，抽过一张新的禀帖纸，把这一句原样抄在头一行，一个字没动，转身去找父亲。"
+next = "pair_mokichi_park_sowol_epilogue"
+news = "平户那个老通事的回信缝进了外乡船的帆夹层，听说一个字没改，一路送到了釜山。"
+effects = [
+  { kind = "flag", flag = "c7_pair_mokichi_park_sowol_helped" },
+  { kind = "affinity", person = "mokichi", value = 4 },
+  { kind = "affinity", person = "park_sowol", value = 3 },
+  { kind = "memory", memory = "mem-pair_mokichi_park_sowol-line", title = "没删的那一句" },
+]
+
+[[tracks.chapters.choices]]
+key = "fast"
+text = "赶在使行回国以前，我先把信送到"
+reply = "我借了几天西南风，一口气渡过海峡。信到釜山时，使行还在日本，没有回来。素月当着我拆了信，读完拿着去找父亲。老译官把信看了两遍，半天没说话，只把案上的灯往她那边挪了挪。"
+next = "pair_mokichi_park_sowol_epilogue"
+news = "有个外乡船长借西南风把平户的一封信送到了釜山，比对马的船快了不知多少。"
+effects = [
+  { kind = "flag", flag = "c7_pair_mokichi_park_sowol_matched" },
+  { kind = "affinity", person = "park_sowol", value = 4 },
+  { kind = "affinity", person = "mokichi", value = 2 },
+  { kind = "memory", memory = "mem-pair_mokichi_park_sowol-wind", title = "抢在使行前的顺风" },
+]
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "我不插手，让信跟着对马的船慢慢走"
+reply = "我只把信交给码头上候船的对马船头，没再多问。后来听人说，对马的船在港里候风候了两个月，茂吉那两个月天天去码头问船期。信到釜山已是入冬。素月读完，回信只有一行：“照实写，我都看得懂。”"
+next = "pair_mokichi_park_sowol_epilogue"
+effects = [
+  { kind = "affinity", person = "mokichi", value = 1 },
+  { kind = "affinity", person = "park_sowol", value = 1 },
+]
+
+# 落点之二（1591 春）：使行回国，约定照实翻译。
+[[tracks.chapters]]
+key = "pair_mokichi_park_sowol_epilogue"
+title = "照实翻译"
+text = "使行回来了，两位使臣在朝上说的话对不上，一个说有动静，一个说没有，议了半个月也没议出结果。釜山译官公房里，素月把这些年茂吉的信一封封摊在案上，铺满了半张桌子，最底下是三十五年前那封大字的，末尾那行晴天还在。她提笔回信，只两行，写完念给父亲听：“往后不管谁来问，这句该怎么译，我都照实译。你也这样。”父亲问：“他肯？”“他的字比话利索。”她把信折好，在封皮上写下他的名字，写完对着灯看了一遍，一笔没错。"
+stage = "witness"
+window = [[1591, 2, 1], [1591, 4, 30]]
+at = "busan"
+cast = ["mokichi", "park_sowol"]
+speaker = "park_sowol"
+mood = "sad"
+news = "通信使回来了，两位使臣说法不一；釜山译官家的女儿翻出三十多年的旧信，说往后一律照实译。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "helped"
+when = [{ kind = "flag", flag = "c7_pair_mokichi_park_sowol_helped" }]
+text = "使行回来了，两位使臣在朝上说的话对不上，一个说有动静，一个说没有，议了半个月也没议出结果。釜山译官公房里，素月把这些年茂吉的信一封封摊在案上，铺满了半张桌子，最底下是三十五年前那封大字的，末尾那行晴天还在，最上面压着一份禀帖的底稿，头一行抄的是那句“没人跟我说是为谁预备的”。她提笔回信，只两行，写完念给父亲听：“往后不管谁来问，这句该怎么译，我都照实译。你也这样。”父亲问：“他肯？”“他的字比话利索。”她把信折好，在封皮上写下他的名字，写完对着灯看了一遍，一笔没错。"
+
+[[tracks.chapters.variants]]
+key = "matched"
+when = [{ kind = "flag", flag = "c7_pair_mokichi_park_sowol_matched" }]
+text = "使行回来了，两位使臣在朝上说的话对不上，一个说有动静，一个说没有，议了半个月也没议出结果。釜山译官公房里，素月把这些年茂吉的信一封封摊在案上，铺满了半张桌子，最底下是三十五年前那封大字的，末尾那行晴天还在。父亲桌上那封夏天抢先到的信，边角已被翻软了。她提笔回信，只两行，写完念给父亲听：“往后不管谁来问，这句该怎么译，我都照实译。你也这样。”父亲问：“他肯？”“他的字比话利索。”她把信折好，在封皮上写下他的名字，写完对着灯看了一遍，一笔没错。"

@@ -1,0 +1,288 @@
+# C7 故事线重写（2026-10-11，Claude 写）；C21b 重写（2026-11-12，Claude Opus）：故事 2.0 轨道格式，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 走向：看不上→服她的歌，到不了喜欢（看不上她；一辈子没当上上臈，见 tie_new_ayame_kogo 与 classmates_kyoto 的 after）。
+# 标签：对手（rival）羁绊线；只写较量，不开放恋爱，全线不写心动。
+# 人物：大炊御门菖（ayame，1540-03-07 生，被上臈寄予厚望的见习女房）；主角一条澪（mio，1540-06-21 生，“我”）。
+#   声音（手册 3.9）：端正，每个字落在该落的地方；当面挑错，说规矩条文；用“您”，敬语是她的墙，只在 A1 那个下午掉过一次；
+#   生气时脸色发白，气出在第二天、出在别人身上；高兴了笑一下马上理袖口；说谎越合礼。理袖口理三遍是她一个人的毛病。
+#   称呼：叫澪“土佐来的姬君”→“一条大人”→“一条澪”，从不叫“澪”。不说“请您帮我”，不说“喜欢”。
+# 依据·史实：天文末年朝廷穷困，节会常因无钱停办；1555 年 10 月改元弘治；正亲町天皇 1557 年践祚，
+#       即位礼拖到永禄三年（1560）正月，靠毛利元就的献金才办成；宫中的月次歌会、女房的局、宝镜寺（尼门迹）。
+# 依据·原创：菖与澪的全部场面（湿布、空碗、判词、补过的单衣、抄本、刮改的扇、二十张怀纸、小见习、改过折法的礼单）。
+# 关系会退（C21b）：c2 just_praise 情谊 -3，她第二天请了别人去挑错，不在当场和解。
+# 撞车改法（手册 4.2 第 4 条、裁决第 2 条）：S 的 promise 不再“每年寄一首歌”，改成澪往内里递的礼单、奉书先寄给她改折法，
+#   她只改规矩，不读内容，回信两个字“收到”。重逢的落点去掉“朋友”（裁决第 5 条）：tell_bows 撤掉 friends，只留情谊。
+# 不写：菖花米请小督代写和歌（归 bond_kogo B1 与 tie_new_ayame_kogo）；1554 年秋菖赢澪的那场歌合（归 bond_kogo B1）；1555 七夕（归 bond_reizei_yuki A1）。
+# 缺省走向：c1 → c2 → b1 → b2 → a1 → a2 → s（缺省：设 c7_bond_ayame_parted，开启重逢）→ reunion（缺省：菖来信，设 c7_bond_ayame_missed）。
+# 落点：S 的 promise（bond S + friends）/ own（rivals）；重逢的 tell_bows（撤 friends）/ one_more_match（rivals）。
+# 设的旗标：c7_bond_ayame_promise、_own、_parted、_landing_friend、_landing_rival、_missed（键名照旧；_landing_friend 现在不带 friends 关系）。
+# 读的旗标：c7_bond_ayame_promise、c7_bond_ayame_own（重逢的 variants）。不读、不写别的线的共享旗标。
+
+[[tracks]]
+key = "bond_ayame"
+name = "菖：不许乱的袖口"
+kind = "request"
+start = "c1"
+auto = true
+cast = ["ayame"]
+academy = true
+
+[[tracks.chapters]]
+key = "c1"
+title = "不许乱的袖口"
+text = "天文二十三年春，我进宫的头一天。上臈的局在廊子尽头，纸门关着，门前已经跪着一个和我差不多大的女孩。她把左手的袖口理了一遍，右手的理了一遍，又从左边重来，理到第三遍，才把手放回膝上。我在她旁边跪下。她的目光落在我右手上：虎口一片墨，是早上在淀川的船上替船家对账蹭的。她从袖里抽出一块叠成方块的湿布，递到我面前。“这一块布记下了，”我说，“船上的账，不记清楚要吵架的。”“这里不是船上。”她声音很轻，每个字都落在该落的地方，“袖口理好了，再开口。”话说得稳，递布的那只手却在抖。她自己也觉出来了，把手收回去，连指头带湿布的凉气，一起藏回了袖子里。纸门里头，上臈咳了一声。"
+window = [[1554, 3, 1], [1554, 4, 30]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_kyoto_court" }, { kind = "date", from = [1554, 3, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "wipe_ink"
+text = "接过湿布，当着她的面把墨擦干净，跟她一起进门。"
+reply = "我把虎口擦到发红，摊开手给她看。她点了一下头，把湿布接回去，叠回原来的方块。纸门拉开，她侧过身，让我跟在她后面半步。上臈问起家门，她先答：“大炊御门家，菖。”一个字不错，连停顿都像量过。轮到我，我照着她的停顿也答了。上臈看看她，又看看我，没挑出毛病。出了门，菖低声说：“您刚才第二个字咬得太重。土佐的口音，往后改。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }, { kind = "skill", skill = "court_etiquette", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "hand_back"
+text = "笑说土佐的海风比墨难洗，把湿布递回去，请她先擦擦自己的指尖。"
+reply = "她的脸一下子白了，低声说了句“失礼”，把手连布一起缩回袖里。进门以后上臈问话，她答得一字不差，眼睛没往我这边看。那天她一整天没理我，第二天把同局一个小见习的坐姿挑了七处错，挑得那孩子哭了。傍晚我回到局里，砚台边多了一块新墨，拿一张折得方方正正的纸包着，纸上写着：袖口。"
+next = "c2"
+effects = [{ kind = "affinity", person = "ayame", value = 4 }]
+
+[[tracks.chapters]]
+key = "c2"
+title = "请我挑错"
+text = "梅雨刚过，局里闷得像蒸笼。菖在廊下摆了一张膳台，台上一只空碗，她捧着它练端膳时的转身。“请您看着。”她说，“只许挑错，不许夸。”第一回，她转得太急，衣摆扫过膳台，台脚“咯”地响了一声。我说了。她点头，退回原处，重来。下一回是肩先动了。再下一回是膝盖落得慢了半拍。我说一处，她应一声“是”，一句不辩。后来我得眯起眼才找得出毛病，最后只好说她的气喘重了。“那也是错。”她说，“再来。”中间她让我也试一回。我捧起那只空碗，脚下一拧，碗沿磕上了下巴，衣摆缠住脚踝，差点连人带碗跪进膳台里。菖伸手扶住了碗，没扶我。她把碗放回原处，把袖口理平，跪回起手的位置：“第七回。请您接着挑。”我的下巴还在疼。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "count_seven"
+text = "陪她练完第七回，每一回都老老实实挑出一处。"
+requires = [{ kind = "affinity", person = "ayame", ge = 20 }]
+hint = "情谊 20。她不肯在您面前错第二回。"
+reply = "第七回她转完，衣摆离膳台还有一指宽，空碗稳稳地托在手上。我说没有错处了。“您再看一回。”她不信。又做完一回，我还是挑不出来。她把空碗放到我手里：“今日到这里。明日换您转，我来挑。您的错处，我一处也不会少说。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "ayame", value = 4 }, { kind = "skill", skill = "court_etiquette", value = 4 }, { kind = "bond", person = "ayame", level = "C" }]
+
+# just_praise（C21b 改）：情谊 -3。她请了别人来挑错，到 b1 才再跟澪说话。
+[[tracks.chapters.choices]]
+key = "just_praise"
+text = "不挑了，只说一句：“漂亮。”"
+reply = "她的脸白了：“我请您挑的是错处，不是漂亮。”她把空碗收起来，膳台也搬走了。第二天，她请了典侍家的女儿去廊下替她挑错。从我身边走过时，她脚步没停，冲我行了一个礼，礼数周全，对上臈也就行到这样。那以后一个多月，她在人前叫我“一条家的姬君”，叫得客客气气。"
+next = "b1"
+effects = [{ kind = "affinity", person = "ayame", value = -3 }]
+
+[[tracks.chapters]]
+key = "b1"
+title = "输了以后"
+text = "十一月的月次歌会，题是“初时雨”。我没报名，坐在末席替上臈磨墨，看得一清二楚。菖的歌念出来，满座都点头；判者却在判词末尾添了四个字：“工而无情。”那一番，记了她负。散了场，别人三三两两去烤火，她留在原位叠自己的怀纸。先对折，再对折，每一道折痕都拿指甲压一回，四个角对得严丝合缝。我走过去，她头也不抬：“您是来看笑话的？”“来看你叠纸。”她的手停了一下，把判词抽出来，摊在膝上，指着末尾那四个字。“前头的都是客气话。只这一句说得对。我认。”廊外下起了今年头一场时雨，打在竹帘上沙沙地响。"
+window = [[1554, 11, 1], [1554, 12, 31]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1554, 11, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "read_judgment"
+text = "陪她把判词一句一句读下去，读到天黑。"
+reply = "她念一句，我说一句：哪句是判者的场面话，哪句是真心。读到“无情”两个字，我说判者自己的歌也没什么情。她把判词合上：“判者的歌好不好，不是今日的事。今日的事，是我负了。”火盆里的炭塌下去一块，她拿火箸拨平，拨完把判词叠好，四个角对齐，起身告辞，走到纸门那里回头：“一条大人，您刚才那句话，往后在宫里不要说。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }, { kind = "skill", skill = "poetry", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "enter_next"
+text = "告诉她，下个月的歌会我也报名，跟她比一场。"
+reply = "她抬起头，眼睛一下子亮了，亮得不像刚输过的人。“那就照规矩比过。”她把判词收好，“别指望我让您。”那一夜，局里数她那盏灯熄得最晚。我隔着纸门听她一回一回低声念歌，念到后来，连我都背得出她改了哪个字。"
+next = "b2"
+effects = [{ kind = "affinity", person = "ayame", value = 4 }]
+
+[[tracks.chapters]]
+key = "b2"
+title = "补过的单衣"
+text = "改元弘治以前的那个正月，朝廷连元日的节会都差点凑不出钱来办。上臈说起这事，只叹了一声：“天下如此。”大炊御门家的日子也紧。局里的人小声传，菖的母亲把压箱底的那件好衣裳送进了当铺。从那以后，菖当值穿一件旧单衣，颜色洗得发浅，袖口照旧一丝不乱，折痕是刀裁出来的样子。那天她跪在我前头收拾香具，背弓下去，我看见她两片肩胛之间有一道缝补，针脚又粗又密，线色还差了一截，一看就是夜里就着灯赶出来的。她觉出我在看，把手里的香盒放下，背一下子挺直了，没回头。“补过的也是衣服。”她说。“我没说不是。”“您的眼睛说了。”她把香盒盖好，袖口又理了一回，“今日的香，请您来点。”香盒里只剩小半块沉香。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "mend_seam"
+text = "夜里借她的单衣，把那道缝补拆了重缝，针脚藏进折痕里。"
+requires = [{ kind = "affinity", person = "ayame", ge = 50 }, { kind = "bond", person = "ayame", level = "C" }]
+hint = "情谊 50、羁绊 C。她把那件单衣抱得紧紧的。"
+reply = "她起先不肯，半夜却把叠好的单衣放在我枕边，回去了。我就着残灯拆了那道补丁，换一根颜色更近的线，顺着折痕一针一针缝进去。第二天她穿上，在镜前转了一圈，又转了一圈。当值回来，我枕边多了一包干柿子，包纸上一行字，端端正正：“针脚比我的好。第三针歪了半分。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "ayame", value = 4 }, { kind = "skill", skill = "embroidery", value = 6 }, { kind = "bond", person = "ayame", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "装作没看见，当值时站在她身后，替她挡住那道缝。"
+reply = "那一整天，她走到哪里，我就跟在她背后半步。上臈终于忍不住问：“澪，你几时成了菖的影子？”局里的人都笑了。菖回头看我一眼，没笑，也没像平日那样说我走路手臂摆得太开。第二天她把这一条补上了，说得一处不落。"
+next = "a1"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }]
+
+[[tracks.chapters]]
+key = "a1"
+title = "不作第一的下午"
+text = "弘治二年春，宝镜寺的尼僧都去了别院，庭里只剩一树晚开的山樱和我们两个。菖坐在廊下，膝上什么也没有，手藏在袖里。过了一阵，她开口：“一条大人在船上学的那些，在这里一样也用不上。上臈说您数钱的时候嘴唇在动。”我转身从里间抱出一摞抄本，往她身边一放：寺里存的旧歌集，借来没还的《伊势》，不知谁抄了一半的《源氏》，纸头卷着，前后颠倒，好几年没人理过。“帮我分。”她看看那摞纸，又看看我，跪坐端正，一册一册翻起来。歌集归左，物语归右，残本放中间。分了半个时辰，日头挪了过来，她的一只脚不知什么时候从衣摆底下伸了出去，伸出廊檐的阴影，搁在了太阳地里。她自己先看见了，收回来，又把那一册残本的书脊对齐。“您分错了一册，”她说，“《古今》混进物语里了。”她把那一册抽出来，放到左边那一摞的最上头。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "sort_together"
+text = "就这样陪她分下去，一直分到暮钟响。"
+reply = "我们分错了好几处，一册《古今》混进了物语那堆，两个人都懒得挪。她说：“今日的事，别告诉上臈。”我说告诉了也没人信。暮钟从山门那边传过来，她把脚收回去，坐正，袖口从左到右又理了一回，理完朝我点点头：“一条大人，今日多有打扰。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "ayame", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "teach_counting"
+text = "倒出一把铜钱，教她船上数钱的法子：五个一叠，眼睛不看手。"
+reply = "我五个一叠，手指一捻一放，眼睛只看着她。她学得出奇地快，数到第三叠就比我利落，得意得忘了拿袖子遮嘴。“这个比和歌容易。”话一出口，她又赶紧压低声音，“学过这个，千万别对人讲。”她把几叠钱推回来，又挑出一枚：“这一枚是私铸的，边上薄。您收钱的时候也不看。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }]
+
+[[tracks.chapters]]
+key = "a2"
+title = "一把改过的扇"
+text = "重阳过后，菖拿来一把扇子，是她自己写的：正面一首旧歌，背面一首她新作的。我对着灯翻到背面，第三行有一处纸面比别处薄，起了细毛，是拿小刀刮过，重写了一个字。刮得极细心，不凑近看，看不出来。“那处是我写错了。”她说得很快，“本想重写一把，可扇骨只剩这一副。”她从袖里取出一小片裁好的纸，边角修得圆圆的，颜色和扇面一般无二，“贴上去，就看不见了。”“不用贴。”她捏着那片纸，看看扇子，看看纸，又看看扇子，手指把那片纸的边捏起了皱。最后她把纸对折，再对折，收回了袖子里。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "keep_scrape"
+text = "收下这把带刮痕的扇子，请她在刮痕旁写上改字那天的日子。"
+requires = [{ kind = "affinity", person = "ayame", ge = 80 }, { kind = "bond", person = "ayame", level = "B" }]
+hint = "情谊 80、羁绊 B。扇子她还捏在手里不肯松。"
+reply = "她提笔在刮痕旁写了一行小字，是改字那天的日子，写完又在底下添了一个更小的字：菖。“这是我头一样没写好就送出去的东西。”她把扇子合上，递过来，“别拿给人看。”我刚要收起来，她又补了一句：“可是要天天用。扇骨那一面朝外，那一面没有错。”"
+next = "s"
+effects = [{ kind = "affinity", person = "ayame", value = 4 }, { kind = "bond", person = "ayame", level = "A" }, { kind = "item", item = "calligraphy_fan", qty = 1 }, { kind = "memory", memory = "mem-bond_ayame-a2", title = "一把改过的扇" }]
+
+[[tracks.chapters.choices]]
+key = "ask_perfect"
+text = "还是请她另写一把，一处刮痕也不要。"
+reply = "过了十来天，她真的又写了一把，扇骨是从哪里借来的，她不肯说。两把扇子并排摆在我面前：“请您自己挑。”我挑了没刮痕的那把。她点点头，把另一把合上收好，起身告辞。第二天，局里新来的两个见习被她挑了一上午的袖口。"
+next = "s"
+effects = [{ kind = "affinity", person = "ayame", value = 1 }]
+
+[[tracks.chapters]]
+key = "s"
+title = "还会较量"
+text = "十二月，土佐来的船在堺等我，开春就要出海。临走前一晚，菖到局里来送我，带来一叠怀纸，裁得齐齐整整，说是给我路上作歌用的。“往后的歌合，我照样要和您比。”她跪坐着，手藏在袖里，“只是信里，不必每回都写上谁胜谁负。”“那你怎么知道自己赢了没有？”“我自然知道。您也知道。写出来，倒像要请上臈来判似的。”我把那叠怀纸数了一遍，二十张。她看我数，等我数完才问：“船上的人数纸也这么快？”“船上的人，什么都数得快。”她把那叠怀纸往我这边推了一寸：“船上的纸潮，第七张往后的您先用。”那叠纸是她从上臈那里讨来的，边上压着上臈局里的印。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_ayame" }, { kind = "flag", flag = "c7_bond_ayame_parted" }]
+
+# promise（C21b 改，裁决第 2 条）：不寄歌。往内里递的礼单、奉书先寄给她改折法，她只改规矩，不读内容，回信“收到”。
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好往后往内里递的礼单、奉书，先寄给她改折法。"
+requires = [{ kind = "bond", person = "ayame", level = "A" }]
+hint = "羁绊 A。一生一回的约若已许给别人，这回只能互道珍重。"
+reply = "“只改折法。”她说，“写的是什么，我不看。哪一家递给哪一家，我也不问。”“你不看，怎么改？”“折法有折法的规矩，与写的什么无关。”她从袖里取出一张纸，问清了我在土佐的住处，一笔一画写下来：国名、郡名、船家的名号，连那个渡口的旧称也问明白了才落笔。写完她把墨吹干，叠好，交到我手里，袖口一点墨都没沾。“寄来的我改好寄回，回信只写两个字。您别嫌短。”廊外又下起了时雨，像那年歌会散场的时候。"
+next = "done"
+effects = [{ kind = "affinity", person = "ayame", value = 5 }, { kind = "bond", person = "ayame", level = "S" }, { kind = "relation", person = "ayame", relation = "friends" }, { kind = "flag", flag = "c7_bond_ayame_promise" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "memory", memory = "mem-bond_ayame-s", title = "还会较量" }, { kind = "start_track", track = "reunion_ayame" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好下回见面，正正经经再比一场歌，照规矩比过。"
+reply = "“好。”她答得干脆，“到时请个判者来，输了不许讨饶。也不许拿船上的大白话作歌。”“那可说不准。海上的话，有时候比宫里的好听。”她瞪着我，瞪了一会儿，笑了，不拿袖子掩，笑得肩膀直抖。笑完她赶紧把袖口理平，从那叠怀纸里抽出一张，写上“弘治二年十二月，约歌一番，未比”，折好压进我行李的最底下：“这一场，先记下。到时候拿出来，别赖。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ayame", value = 2 }, { kind = "relation", person = "ayame", relation = "rivals" }, { kind = "flag", flag = "c7_bond_ayame_own" }, { kind = "memory", memory = "mem-bond_ayame-s", title = "还会较量" }, { kind = "start_track", track = "reunion_ayame" }]
+
+[[tracks]]
+key = "reunion_ayame"
+name = "菖：我先请教"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["ayame"]
+
+# 重逢：1561 年，内里。她如今在上臈跟前，还在等接班（1570 年认错以后就没人再提，见 tie_new_ayame_kogo）。
+[[tracks.chapters]]
+key = "reunion"
+title = "我先请教"
+text = "永禄四年，我为一桩生意回京都，要去一位公卿家递礼单。递法我记得七八分，剩下两三分拿不准，就先去了内里找菖。她如今在上臈跟前当差，局里的人都说，上臈那个位子往后是她的。我到的时候，她正跪在一个八九岁的小见习对面，教那孩子理袖口：“先左，再右。理完了，手放回膝上，不许再碰。”孩子理了三遍，第三遍才平。旁边的老女房还在说去年的事：正亲町天皇的即位礼拖了几年，总算办成了，靠的是西国毛利家献的钱。菖接过我的礼单看了一眼：“您的歌，我前年读了，好。这礼单是武家的折法，在内里递出去，人家要笑一条家的。我给您改，您站着别动。”她改了一处折法，示范了一回递单的手势，又俯身把小见习歪了的坐垫扶正，这才转过身来，看着我。“一条大人如今见的人，都是怎么行礼的？”小见习偷偷把袖口又理了一回。"
+window = [[1561, 1, 1], [1561, 12, 31]]
+at = "kyoto"
+cast = ["ayame"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1561, 12, 31] }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "ayame", text = "一条大人：今年没能见上一面。上臈把新来的见习交给我带，八岁，袖口理三遍才平。去年御即位总算办成，宫里过了一个不必向人借灯油的冬天。您寄来的礼单，第二折反了，已改，随信寄回。下回递公卿家，先右后左，不可颠倒。别的事，信里不必写。菖" }, { kind = "flag", flag = "c7_bond_ayame_missed" }]
+
+[[tracks.chapters.choices]]
+key = "tell_bows"
+text = "把这些年各地见过的行礼，一样一样做给她看。"
+reply = "我从澳门的葡萄牙人做起：脱帽，退半步，弯腰；再是明国官员的作揖，两手抱拳，从胸前推出去；再是琉球使者的跪拜。菖跪坐着看，看得比当年看我端膳还认真，一样一样挑出我做错的地方。做到暹罗人那一种，跪下，合掌举过额头，再伏身三回，她抬手止住我：“这个，宫里没有。请再做一回。”我又做了一回。她招手叫来那个小见习，让孩子跟着我学，自己在一旁看。孩子学得歪歪扭扭，她伸手把那双小手扶平：“先照着做对，好看不好看，往后再说。”她把暹罗那一拜画在一张怀纸上，四角对齐，放进教见习用的册子里。送我到廊下，她行了一个礼，是宫里送外客的礼。“一条大人路上小心。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ayame", value = 5 }, { kind = "relation", person = "ayame", relation = "friends", remove = true }, { kind = "flag", flag = "c7_bond_ayame_landing_friend" }, { kind = "memory", memory = "mem-bond_ayame-reunion", title = "我先请教" }]
+
+[[tracks.chapters.choices]]
+key = "one_more_match"
+text = "约她当晚比一场歌，判者就请那个小见习来当。"
+reply = "她说宫里的歌合不许这么胡来，说完就去取了怀纸。题是小见习抽的：“归帆”。我写了船尾的风，她写了宫墙外看不见的海。孩子捧着两张纸念了半天，指了菖那张。“不算。”菖说，“这孩子是我教的，偏心。”“那算我赢？”“算平局。”我们为“平局”两个字争到灯油见底，小见习早伏在坐垫上睡着了。菖解下外衣给孩子盖上，孩子翻了个身，梦里还嘟囔了一声“菖大人赢”。菖装作没听见：“下回请个不认识我的判者。您那一首，第二句的‘帆’字用重了。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }, { kind = "relation", person = "ayame", relation = "rivals" }, { kind = "flag", flag = "c7_bond_ayame_landing_rival" }, { kind = "memory", memory = "mem-bond_ayame-reunion", title = "我先请教" }]
+
+[[tracks.chapters.variants]]
+key = "promised"
+when = [{ kind = "flag", flag = "c7_bond_ayame_promise" }]
+text = "永禄四年，我为一桩生意回京都，要去一位公卿家递礼单。这几年我往内里递的礼单、奉书，都先寄给她，她改了折法寄回来，回信只有两个字：“收到。”有一回我在礼单里夹了一首歌，她改好礼单寄回，歌原样夹着，回信还是那两个字。这一回我直接去了内里。菖在上臈跟前当差，正跪在一个八九岁的小见习对面，教那孩子理袖口：“先左，再右。理完了，手放回膝上，不许再碰。”她接过我的礼单，看也不看上面写的什么，翻过来先看折痕：“这一折，您还是折反了。我写信说过两回。”她改好了，又俯身把小见习歪了的坐垫扶正，这才转过身来：“一条大人如今见的人，都是怎么行礼的？”我手里那张礼单，折痕被她压得笔直。"
+
+[[tracks.chapters.variants]]
+key = "rematch"
+when = [{ kind = "flag", flag = "c7_bond_ayame_own" }]
+text = "永禄四年，我为一桩生意回京都，要去一位公卿家递礼单。临走那年记下的那一场歌，一直还没比。递礼单的法子我拿不准，就先去了内里找菖。她在上臈跟前当差，正跪在一个八九岁的小见习对面，教那孩子理袖口：“先左，再右。理完了，手放回膝上，不许再碰。”旁边的老女房还在说去年的事：即位礼拖了几年，总算办成了，靠的是西国毛利家献的钱。菖看见我，第一句话是：“那一场，我还记着。”她把我的礼单看过，改了一处折法，示范了一回手势，又俯身把小见习歪了的坐垫扶正，这才转过身来：“一条大人如今见的人，都是怎么行礼的？比歌以前，我得先知道您在外头学坏了多少。”"

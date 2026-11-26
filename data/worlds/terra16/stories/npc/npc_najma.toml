@@ -1,0 +1,484 @@
+# 纳吉玛：NPC 线（故事 2.0，A5 / E37 契约）
+# 标签：NPC 线·纳吉玛。玩家不是纳吉玛时才跑的线；玩家是任何主角或自由船长，正文只写“你”，不写玩家的性别、身份与外貌。
+# 人物：纳吉玛（najma，1540-08-24 生，尤尔法人，采珠船长拉希德的女儿）。日程：1557—1575 霍尔木兹，1576—1584 马斯喀特，1585—1590 基尔瓦。
+# 轨道：npc_najma（脊轨，auto，4 章）：s00_gate 门槛（1557-02）→ s01_yemen（1567—68 也门起义，摩卡）→ s02_hajj（1577 朝觐与麦加的争辩，吉达）→ s03_east（1590 上半年，基尔瓦，结尾）。
+#       交汇旁轨（auto = false，由脊轨 default 开启）：npc_najma_pilot（雇她领航，1 章）、npc_najma_cartaz（描歪的印，1 章）、npc_najma_eclipse（星表，2 章）、
+#       npc_najma_seal（铅封，1 章）、npc_najma_muscat（红旗进了湾，1 章）、npc_najma_mombasa（星叫什么，1 章）、npc_najma_join（上船，1 章）。共 12 章。
+# 依据：史实（只作传闻与背景）：1557 前后霍尔木兹的葡萄牙商馆与通行证（卡塔兹）；1567—68 也门宰德派起义、扎比德被围、港边的书箱；
+#       1577 莫卧儿女眷的朝觐船（只作闲话）；1581 米尔·阿里袭取马斯喀特；1586—89 蒙巴萨与基尔瓦的斗嘴与津巴人。
+#       L23 日食之争（1574，马六甲到广州的星表，日期由 C10 按日食表定）。
+#       原创：尤尔法的采珠船、铜星盘与牵星板、铅封的铜瓶、怀圣寺的光塔与风向标、基尔瓦码头的那些夜晚。
+# 待核（正文一律传闻或人物嘴里的口吻）：扎比德被围的确切月份；L23 日食的日期；米尔·阿里 1581 年袭击的规模；津巴人屠基尔瓦的年份。
+# 读写的共享旗标：
+#   设：c13_npc_najma（门槛 default）、c13_npc_najma_hired（雇她领航）、c13_npc_najma_shielded（替她作证或交罚银）、
+#       c13_npc_najma_eclipse_data（星表送到广州的老教长手里）、c13_npc_najma_muscat_helped（借船或报信）、c13_npc_najma_mate（请她上船）、
+#       c13_half_solomon_bottle（铅封的拓片，或两半对上）。
+#   读：c12_voyage_najma（门槛，选中纳吉玛的那一局她不是 NPC）、upbringing_graduated；c13_npc_najma_eclipse_data（s02 变体）；
+#       c13_half_solomon_gate（巴拉卡组设，m1_seal 的 show_gate 选项）；c13_main_baraka（巴拉卡是玩家时 m1_quarrel 不跑）；
+#       mate najma（s03 变体，整合时核对 mate key）；h59_mir_ali_coast_coastal_autonomy（C10，s03 变体）。
+#   本文件不设、不读 heart / relation / tie / bond 效果：纳吉玛的恋爱归 C7。
+# 等待的包：C10（L23 日食的日期与杠杆钥匙 c13_npc_najma_eclipse_data 用不用；H59 的结果 h59_mir_ali_coast_coastal_autonomy）；
+#       若 C10 不做 swahili_free，删掉 s03 的 swahili_free 变体。
+# 回忆插画：没有（NPC 线不发回忆）。
+# 禁区：没有她的心里话（旁白里没有“我”，她的话只在引语里）；不写“马莱莫·卡纳”与任何反证（她只为外曾祖父的名字争过）；不写星路（majid_hidden_route）与黑暗之海；
+#       招募不写成恋爱；“差一指，就差一百里”全文件只用一次（m1_hire）。
+
+[[tracks]]
+key = "npc_najma"
+name = "印度洋的领航人"
+kind = "request"
+start = "s00_gate"
+auto = true
+cast = ["najma"]
+
+# s00_gate：霍尔木兹码头的门槛见闻。选中纳吉玛的那一局这条线静默失败；default 开启雇人、通行证两条交汇旁轨。
+[[tracks.chapters]]
+key = "s00_gate"
+title = "出了师的领航女"
+text = "霍尔木兹运淡水的码头上，脚夫们在传同一件事：尤尔法采珠船长拉希德的女儿出了师，桑布克归她掌舵，报的星位比她父亲还准。古吉拉特的船主排着队想雇她，她在码头上摆了一张矮凳，先问来人从哪里来。一个脚夫学她的口气说：“报错了，她当场改。”"
+stage = "rumor"
+window = [[1557, 2, 11], [1557, 2, 18]]
+at = "hormuz_port"
+cast = ["najma"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_najma", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "霍尔木兹码头上说，尤尔法采珠船长拉希德的女儿出了师，报星位从不含糊，想雇她得先报对自己的纬度。"
+
+[tracks.chapters.default]
+next = "s01_yemen"
+effects = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "start_track", track = "npc_najma_pilot" }, { kind = "start_track", track = "npc_najma_cartaz" }]
+
+# s01_yemen：摩卡港边的书箱，远景；只写传闻，老夫人不起名。
+[[tracks.chapters]]
+key = "s01_yemen"
+title = "摩卡港边的书箱"
+text = "摩卡的咖啡摊上，老板一边冲壶一边说：扎比德被宰德派围住那个冬天，港边堆满了书箱，没有一条船肯载。后来有个尤尔法来的女领航，把讲圣训的老夫人和三箱书一起运去了亚丁。奥斯曼的军官在码头上骂她误了运兵，她不还口，只说：“三箱书压舱正好，兵太沉。”"
+stage = "rumor"
+window = [[1567, 9, 1], [1568, 6, 30]]
+at = "mocha"
+cast = ["najma"]
+mood = "sad"
+news = "摩卡的人说，扎比德被围那年，有个尤尔法的女领航把讲圣训的老夫人和三箱书一起运去了亚丁。"
+
+[tracks.chapters.default]
+next = "s02_hajj"
+effects = [{ kind = "start_track", track = "npc_najma_seal" }, { kind = "start_track", track = "npc_najma_eclipse" }]
+
+# s02_hajj：吉达港的朝觐船与麦加的争辩。变体：若她托人送过星表去广州，闲话里带一句。
+[[tracks.chapters]]
+key = "s02_hajj"
+title = "领朝觐船的人"
+text = "吉达港的人说，今年莫卧儿那条朝觐船，是一个阿拉伯女领航带进港的。船上的女眷下船那天，码头上的人都站住了看。那领航后来上了麦加，在禁寺边为她外曾祖父的名字，跟写也门史的纳赫拉瓦利争了一场。争赢没有，各说各的。有人问她凭什么，她只问了对方一句：“谁看见的？”"
+stage = "rumor"
+window = [[1577, 1, 1], [1577, 12, 31]]
+at = "jeddah"
+cast = ["najma"]
+mood = "tender"
+news = "吉达的人说，莫卧儿女眷的朝觐船是一个阿拉伯女领航带进港的，她后来在麦加为外曾祖父跟纳赫拉瓦利争了一场。"
+
+[tracks.chapters.default]
+next = "s03_east"
+effects = [{ kind = "start_track", track = "npc_najma_muscat" }, { kind = "start_track", track = "npc_najma_mombasa" }, { kind = "start_track", track = "npc_najma_join" }]
+
+[[tracks.chapters.variants]]
+key = "eclipse"
+when = [{ kind = "flag", flag = "c13_npc_najma_eclipse_data" }]
+text = "吉达港的人说，今年莫卧儿那条朝觐船，是一个阿拉伯女领航带进港的。船上的女眷下船那天，码头上的人都站住了看。那领航后来上了麦加，在禁寺边为她外曾祖父的名字，跟写也门史的纳赫拉瓦利争了一场。争赢没有，各说各的。有人问她凭什么，她只问了对方一句：“谁看见的？”有人还说，几年前她托人把一部星表送去了广州，那边的回回人至今记得。"
+
+# s03_east：基尔瓦的结尾。诗里没有的星，她自己起名字。变体 mate：她在你的船上；swahili_free：诸城没有落进葡萄牙人手里（C10）。
+[[tracks.chapters]]
+key = "s03_east"
+title = "诗里没有的星"
+text = "基尔瓦的码头上，老水手们说，那个阿拉伯女领航还住在南边，没有回北边去。季风转向的夜里，她把船开到礁外，对着南边的天量星，量完在本子上记一行。有人问她量给谁看，她说：“外曾祖父的诗只写到这片海的北边。往南那几颗星，我要自己起名字。”"
+stage = "rumor"
+window = [[1590, 1, 1], [1590, 6, 30]]
+at = "kilwa"
+cast = ["najma"]
+mood = "tender"
+news = "基尔瓦的人说，那个阿拉伯女领航夜里总把船开到礁外，量诗里没写过的南边的星。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "mate"
+when = [{ kind = "mate", mate = "najma" }]
+text = "基尔瓦的码头上，老水手们说，那个阿拉伯女领航上了一条外国船，船上是谁，没人说得清。每到一个新港，她先在海图箱上量一回南边的星，量完往本子后面添一行。有人问她量给谁看，她说：“外曾祖父的诗只写到这片海的北边。往南那几颗星，我要自己起名字。”"
+
+[[tracks.chapters.variants]]
+key = "swahili_free"
+when = [{ kind = "flag", flag = "h59_mir_ali_coast_coastal_autonomy" }]
+text = "基尔瓦的码头上，老水手们说，诸城没有落进葡萄牙人手里，那个阿拉伯女领航还住在南边。季风转向的夜里，她把船开到礁外，对着南边的天量星。有人问她量给谁看，她说：“外曾祖父的诗只写到这片海的北边。往南那几颗星，得用诸城的话起名字。”"
+
+# ---- 交汇旁轨 ----
+
+# m1_hire：雇她领航。玩家在霍尔木兹付 1500 银子，挑一片海。
+[[tracks]]
+key = "npc_najma_pilot"
+name = "雇一位领航人"
+kind = "request"
+start = "m1_hire"
+auto = false
+cast = ["najma"]
+
+[[tracks.chapters]]
+key = "m1_hire"
+title = "先报纬度"
+text = "霍尔木兹运淡水的码头上，她坐在一只翻扣的箩筐上。腰里挂着牵星板，手里攥着一只磨亮的铜星盘，盘边的刻度被几代人的拇指摸得发亮。面前排着一队想雇领航的船主，个个脸上写满了价钱。轮到你，她不看你的船，先抬起头：“你说你从哪里来？报个纬度。差一指，就差一百里。”你报了。她把铜星盘对着太阳又量了一回，说错在第二位，当场替你改，改完才问船开多快。谈价的时候她一文不让。最后她翻过你的航簿，挑出三处错，一处一处用指甲点在页边上，然后说：“一程只领一片海。领完我就下船。”"
+at = "hormuz_port"
+speaker = "najma"
+mood = "cheerful"
+cast = ["najma"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1557, 6, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }]
+deadline = [1575, 12, 31]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "arabian_sea"
+text = "请她领你认阿拉伯海"
+next = "done"
+requires = [{ kind = "cash", ge = 1500 }]
+effects = [{ kind = "cash", value = -1500 }, { kind = "chart", region = "arabian_sea" }, { kind = "affinity", person = "najma", value = 5 }, { kind = "flag", flag = "c13_npc_najma_hired" }]
+hint = "她报的价，你的钱袋还差一截。"
+reply = "她领你横穿阿拉伯海，一路只说星名和指数，哪颗星该在船头哪一指的高度，她都要你报回来。夜里量星时不许人出声，舵手咳嗽一下，要挨一句骂。下船那天，她把你航簿里改过的地方又看了一遍，点了点头，把页角折了一个小印。"
+news = "霍尔木兹码头上，一个尤尔法的女领航先让船长报纬度，报错的当场改，然后领一条船横穿了阿拉伯海。"
+
+[[tracks.chapters.choices]]
+key = "persian_gulf"
+text = "请她领你认波斯湾"
+next = "done"
+requires = [{ kind = "cash", ge = 1500 }]
+effects = [{ kind = "cash", value = -1500 }, { kind = "chart", region = "persian_gulf" }, { kind = "affinity", person = "najma", value = 5 }, { kind = "flag", flag = "c13_npc_najma_hired" }]
+hint = "她的价码你的钱袋凑不齐，今天不谈。"
+reply = "湾里的浅滩她闭着眼都认得，哪片水下有珠贝床，哪片底下躺着沉船，一一报给你听。进巴士拉那天，她站在船尾看你靠岸，说你的舵手手太重，舵要顺着浪走，不要跟浪顶。那个舵手后来在码头上跟人说，她是他见过最难伺候的领航。"
+news = "有船长在霍尔木兹雇了尤尔法的女领航，她带船进波斯湾，一路报的全是浅滩和沉船的位置。"
+
+[[tracks.chapters.choices]]
+key = "red_sea"
+text = "请她领你认红海"
+next = "done"
+requires = [{ kind = "cash", ge = 1500 }]
+effects = [{ kind = "cash", value = -1500 }, { kind = "chart", region = "red_sea" }, { kind = "affinity", person = "najma", value = 5 }, { kind = "flag", flag = "c13_npc_najma_hired" }]
+hint = "钱袋里的银子不够她开的价。"
+reply = "过曼德海峡那夜，她让你的船上全部闭嘴，自己贴着一道礁把船带了进去。礁石擦着船底过去，声音像刮锅底。到吉达外礁，天刚亮，她才开口：“你的罗经偏东一指。”说完把罗经拿过去，拨了一下，又拨回来，像是怕伤着它。"
+news = "有船长在霍尔木兹雇了尤尔法的女领航，过曼德海峡那夜，全船闭嘴，只听她一个人的声音。"
+
+[[tracks]]
+key = "npc_najma_cartaz"
+name = "描歪的印"
+kind = "request"
+start = "m1_inspect"
+auto = false
+cast = ["najma"]
+
+# m1_inspect：葡萄牙商馆门口，通行证上描歪的印。超时与站在一边不见闻；替她作证或交罚银才有见闻。
+[[tracks.chapters]]
+key = "m1_inspect"
+title = "描歪的印"
+text = "霍尔木兹的葡萄牙商馆门口，她的桑布克还泊在外面，帆没落。一个书记员揪着一张通行证不放。印上十字的一个角描歪了，书记员说：“除了她，谁的手这么稳？”那个女领航站在台阶下，脸冷得像井水，一句替自己辩白的话都没有。直到她瞥了那张纸一眼，就说出那个角差了多少：“描歪的角差了半粒米。我描，不会歪。”书记员的脸色变了，扣船的单子已经叫人去拿。旁边站着的文书拿鹅毛笔蘸了又蘸，不敢抬头。你恰好排在后面，等着领自己的通行证。"
+at = "hormuz_port"
+mood = "tense"
+cast = ["najma"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1558, 1, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }]
+deadline = [1562, 12, 31]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "vouch"
+text = "替她作证：那张纸是商馆自己抄错的"
+next = "done"
+requires = [{ kind = "reputation", faction = "portugal", ge = 10 }]
+effects = [{ kind = "affinity", person = "najma", value = 10 }, { kind = "reputation", faction = "portugal", value = -2 }, { kind = "flag", flag = "c13_npc_najma_shielded" }]
+hint = "商馆的人不认得你，你的话他们不听。"
+reply = "你说你见过商馆的底簿抄错过一个角，那是前一季的事，底簿就压在你船上的箱子底下。书记员骂骂咧咧地放了人，临走还回头瞪了你一眼。她没有道谢，只问了你的船名，用指甲在蜡板上刻下来，刻得很深，像是要记很久。"
+news = "霍尔木兹商馆门口，有个外国船长替尤尔法的女领航作证，说那张描歪的通行证跟她无关。"
+
+[[tracks.chapters.choices]]
+key = "pay_fine"
+text = "替她把罚银交了"
+next = "done"
+requires = [{ kind = "cash", ge = 800 }]
+effects = [{ kind = "cash", value = -800 }, { kind = "affinity", person = "najma", value = 6 }, { kind = "flag", flag = "c13_npc_najma_shielded" }]
+hint = "你的钱袋交不起。"
+reply = "她看着你数银子，一句话也不说，只在你数完的时候，把钱袋的绳子替你系紧。三个月后，一条从尤尔法来的船在霍尔木兹靠了岸，船主捎来一张纸条，上面只写着你的船名和一个纬度。银子没有捎回来，纸条倒是一张不少。"
+news = "霍尔木兹商馆门口，一个外国船长替那个尤尔法的女领航交了罚银，她没道谢，只看了看那条船。"
+
+[[tracks.chapters.choices]]
+key = "stand_by"
+text = "站在一边看"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = -3 }]
+reply = "她自己把那个角的歪处一笔一笔讲给书记员听，讲到第三遍，书记员才放了人。书记员走后，她把那张通行证卷起来收进袖子里，又从袖子里摸出蜡板，在上面记了一笔什么。她从你身边走过，连看都没看你一眼。"
+
+[[tracks]]
+key = "npc_najma_eclipse"
+name = "送往广州的星表"
+kind = "request"
+start = "m1_tables"
+auto = false
+cast = ["najma"]
+
+# m1_tables：马六甲的星表。L23 的日期由 C10 按日食表定，deadline 与 m2 的期限随之调。
+[[tracks.chapters]]
+key = "m1_tables"
+title = "一包星表"
+text = "马六甲克林人街后面的清真寺，正午的日头晒得石板发白，门口的水缸边搭着一根晾布的竹竿。她把一包油布裹好的星表推到你面前，包角压着一小块铅，压得很死。广州的回回人等着它，要拿它跟大统历比一场日食。她自己被马六甲的税官盯上了，这几天走不开。门口的孩子拿竹签在地上画星图，画到一半被税官的靴子踩花了。她说你的船往东去，正好。你伸手去拿，她却先把你的罗经拿过去看了一眼：“偏东半指，不碍事。”然后才松手，“表到了不会推的人手里，就是一叠纸。给老教长，别给别人。”"
+at = "malacca"
+speaker = "najma"
+mood = "tense"
+cast = ["najma"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1573, 1, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }]
+deadline = [1574, 1, 31]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "接下星表，替她送去广州"
+next = "m2_guangzhou"
+effects = [{ kind = "affinity", person = "najma", value = 3 }]
+reply = "她把油布包的结又紧了一扣，交到你手里，嘱咐你别让海水沾着，也别让税官的眼睛沾着。这一包要是湿了，广州的老教长就得拿一叠纸去跟太阳对，对不上，就只能照旧历报。她说完，又看了一眼你的罗经，没有再说什么。"
+
+[[tracks.chapters.choices]]
+key = "pay_tax"
+text = "替她把马六甲的税付了，让她自己去"
+next = "done"
+requires = [{ kind = "cash", ge = 600 }]
+effects = [{ kind = "cash", value = -600 }, { kind = "affinity", person = "najma", value = 6 }]
+hint = "你的钱袋不够。"
+reply = "她数了数你付的税单，揣进袖子，话也没说一句，当夜就开了船。税官在岸上站了半天，最后只得放她走。船离岸时她在艄上站了一会儿，朝你喊了一句：“到广州我替你说一声。”风把后半句吹散了，你只听见一个“声”字。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不接：这一程你不往东"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = -2 }]
+reply = "她点了点头，把表收回包里，一句也没有多说，转身去找下一条船。那一包星表她自己背着，一步一步走上码头。走到码头口，她又回头看了一眼你停在湾里的船，像是在记它的吃水。她背着包的肩膀往下沉了一寸，走得却还是很稳。"
+
+# m2_guangzhou：限期到港；星表在日食前送到。
+[[tracks.chapters]]
+key = "m2_guangzhou"
+title = "怀圣寺的老教长"
+text = "广州城西，怀圣寺的光塔顶上立着一只金鸡风向标，风一转，鸡头就对着海。光塔底下一排卖香料的摊子，摊主们把扇子拍得啪啪响，眼睛全盯着这边。一个小童捧着纸灯笼从人群里挤过去，灯笼上画着一条鲤鱼。老教长在寺门口等着，手里的念珠没停过。门外站着一个穿青袍的大统历书吏，也在等，攥着一只鼓鼓的钱袋，袋口的绳子已经解开一半。老教长问：“她托的人，就是你？”青袍书吏抢着说：“交给我，对谁都好。”他开的价，比运一船胡椒还多。"
+at = "guangzhou"
+mood = "tense"
+cast = ["najma"]
+objectives = [{ kind = "at", at = "guangzhou", text = "在日食之前把纳吉玛的星表送到广州" }]
+deadline = [1574, 5, 31]
+timeout = { next = "done", effects = [{ kind = "affinity", person = "najma", value = -5 }], news = "广州怀圣寺的人说，马六甲托来的星表晚到了，日食那天他们只能照旧历报。" }
+
+[[tracks.chapters.choices]]
+key = "deliver"
+text = "把表交给老教长"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = 12 }, { kind = "flag", flag = "c13_npc_najma_eclipse_data" }]
+reply = "老教长捧着油布包上了光塔，一级一级走得很慢，说要在塔顶念一遍经再交出去。风把念经的声音吹下来，断断续续的。他没有问你走了多少日子，只说了一句：“她托的东西，到了。”后来有船从马六甲来，带来她一句话：“那个人可靠。”"
+news = "广州怀圣寺的老教长说，马六甲来的星表是一个外国船长替那个阿拉伯女领航送到的。"
+
+[[tracks.chapters.choices]]
+key = "sell"
+text = "把表卖给青袍书吏"
+next = "done"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "najma", value = -10 }]
+reply = "书吏把表锁进雕花匣子，钱袋递过来时，一个铜子也没有掉。匣子上的雕花是新刻的，漆味还没散。他拍了拍匣子，像是在拍一笔已经落袋的账，走出寺门时还回头看了一眼光塔的窗。老教长看了你一眼，什么也没说，关上了寺门。"
+news = "广州城西的书吏买下了一部马六甲来的星表，怀圣寺的老教长在光塔上站了一下午。"
+
+# ---- 交汇旁轨（续）----
+
+[[tracks]]
+key = "npc_najma_seal"
+name = "铅封"
+kind = "request"
+start = "m1_seal"
+auto = false
+cast = ["najma"]
+
+# m1_seal：铅封的拓片，七件翠玉印记里所罗门那一件的另一半（与巴拉卡组对齐）。不撬瓶子，不偷。
+[[tracks.chapters]]
+key = "m1_seal"
+title = "铅封的拓片"
+text = "马斯喀特她租的屋子里，墙上挂着牵星板，架子最高一层放着一只封着铅的铜瓶，窗下的矮桌上摊着她量星用的小本子，边角已经卷了。铜瓶是尤尔法一个老渔夫网上来的，瓶口压着铅，铅面上刻着六角星和一圈细字，肚子上还留着网绳勒出的印子。新月夜，她说：“瓶子会出声。我从来不开。”她用灯烟拓过几张，夹在外曾祖父的诗抄里，抽出来摊在你面前。那圈字和她见过的任何字都不像。她用指尖点着其中一个说：“只有南边一个金商说过，他在一座石门上见过差不多的。”你问她，开瓶的人该怎么办。她把铜瓶往架子里推了推：“开它的人，得先想好放出来的是什么。”"
+at = "muscat"
+speaker = "najma"
+mood = "mystic"
+cast = ["najma"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1576, 1, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }]
+deadline = [1584, 12, 31]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "ask_rubbing"
+text = "请她借你一张铅封的拓片"
+next = "done"
+requires = [{ kind = "affinity", person = "najma", ge = 40 }]
+effects = [{ kind = "flag", flag = "c13_half_solomon_bottle" }]
+hint = "她看了你一眼，把拓片收回袖子里，还不到时候。"
+reply = "她从诗抄里抽出最清楚的一张，又在背面用灯烟补了一个角，补得很小心，怕把纸烤裂。交给你时她说：“另一半在南边。找着了，告诉我它像什么。你别跟别人说这一张是我给的。”纸是温的，她的手指按在上面按了很久，才松开。"
+news = "马斯喀特的人说，那个阿拉伯女领航肯借一张拓片给人了，纸上是一圈谁也不认得的字。"
+
+[[tracks.chapters.choices]]
+key = "show_gate"
+text = "把你拓的那行门铭拿给她看"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_half_solomon_gate" }]
+effects = [{ kind = "flag", flag = "c13_half_solomon_bottle" }, { kind = "affinity", person = "najma", value = 10 }]
+hint = "你手里没有能跟它对上的东西。"
+reply = "她把两张纸并排摊在桌上，看了一夜，没有说话。油灯添了两回油，她的手指在两圈字之间来回移，一次也没有碰到纸边。天亮时她把自己那张推给你，手背上有一道被灯烟熏黑的印子：“两半该放在一处。”"
+
+[[tracks.chapters.choices]]
+key = "just_look"
+text = "只看，不借"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = 3 }]
+reply = "她把油灯挪近，让你看清那圈字，一个一个指给你看，指到第四个字就停住了，不往下指。她没问你看懂了没有，也没有再提拓片。油灯熄灭前，你看见她的手指还按在桌面上，按着一个没有说出口的数。黑暗里，铜瓶安安静静，没有出声。"
+news = "马斯喀特的人说，那个阿拉伯女领航屋里有只封着铅的铜瓶，新月夜会响，她从来不开。"
+
+[[tracks]]
+key = "npc_najma_muscat"
+name = "红旗进了湾"
+kind = "request"
+start = "m1_raid"
+auto = false
+cast = ["najma"]
+
+# m1_raid：米尔·阿里袭取马斯喀特的那个清晨。NPC 线只写撤人与报信，不写米尔·阿里登场讨情。
+[[tracks.chapters]]
+key = "m1_raid"
+title = "红旗进了湾"
+text = "天没亮，城墙上的鼓一下一下敲起来，三条桨帆船挂着红旗划进马斯喀特的小海湾，城里的人往海里跑。她的桑布克泊在湾口，正一船一船地往外送人，船太小，送不完。船舷边的水手扯着嗓子喊：“再送一船，就到礁边了！”她没有回头。你的船也在湾里。岸上的孩子被大人一把一把抱起来，往山坡上送，有一个哭得背过气去。码头上是抢来的货，堆得比人还高，没有人看着。她冲着你的船喊过来，喊的是潮转的时辰，一句求人的话也没有：“潮还有半个时辰转！你的船吃水多深？”"
+at = "muscat"
+mood = "tense"
+cast = ["najma"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1581, 8, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }]
+deadline = [1581, 10, 31]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "lend_ship"
+text = "把你的船借给她撤人"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = 12 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_npc_najma_muscat_helped" }]
+reply = "她跳上你的船，替你的舵手报水道，一句话说一遍，不重复。两条船一前一后把人送出了湾口，湾里的水越来越浅，船底擦着沙。潮转的那一刻，礁露出来，最后一条船刚好擦过去。岸上的人替她数着船，数到第七条，才有人哭出声来。"
+news = "马斯喀特被劫那天，一个外国船长把自己的船借给尤尔法的女领航撤人，两条船抢在潮转之前出了湾。"
+
+[[tracks.chapters.choices]]
+key = "warn_town"
+text = "替她进城去报信"
+next = "done"
+check = { attr = "perception", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "najma", value = 8 }, { kind = "flag", flag = "c13_npc_najma_muscat_helped" }]
+fail = { next = "done", effects = [{ kind = "affinity", person = "najma", value = 2 }], news = "马斯喀特被劫那天，有个外国船长进城挨家报信，晚了一步，红旗已经插上了蓄水池。" }
+reply = "你挨家敲门，报的是她喊的那句：还有半个时辰。有人不信，你就把她的船指给人看。等红旗插上蓄水池，城里的人已经走了一大半，剩下的几户，是你一扇门一扇门拍出来的。有一户的老头不肯走，你把他的门板也拍了，才把他拉出来。"
+news = "马斯喀特被劫那天，有个外国船长挨家敲门报信，城里的人走了一大半，红旗插上蓄水池时，最后几户刚关上门。"
+
+[[tracks.chapters.choices]]
+key = "loot"
+text = "趁乱收下码头上没人看的货"
+next = "done"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "najma", value = -10 }]
+reply = "货装上了你的船。她远远看见了，没有说话，转身又送了一船人出去。那天之后，在霍尔木兹到马斯喀特的码头上，她不再跟你报纬度。有人问她为什么不跟你计较，她说：“拿错的东西，装得再稳也是错的。”"
+
+[[tracks]]
+key = "npc_najma_mombasa"
+name = "星叫什么"
+kind = "request"
+start = "m1_quarrel"
+auto = false
+cast = ["najma"]
+
+# m1_quarrel：蒙巴萨码头上为一颗星吵架。c13_main_baraka 为真（巴拉卡是玩家）时本章不跑，由 main_baraka c06 负责。两人之间不写恋情。
+[[tracks.chapters]]
+key = "m1_quarrel"
+title = "星叫什么"
+text = "蒙巴萨的码头，天刚黑，灯笼一盏盏挂上桅杆。基尔瓦的金商巴拉卡坐在一只黄铜小箱上，和那个阿拉伯女领航为头顶一颗星叫什么吵了一下午：一个报阿拉伯名字和指数，一个报斯瓦希里的名字和他父亲的说法。码头边的炭炉上烧着一壶咖啡，没有人去看它开没开。米尔·阿里的水手在旁边下注，赌的是谁先认输，铜币压在黄铜箱的边上，谁也不肯先收。两人同时转过头来，要你评理。巴拉卡说：“船长，你评评理，星又不识字，叫哪个它都亮！”她说：“它不识字。可他量少了半指。”"
+at = "mombasa"
+mood = "cheerful"
+cast = ["najma", "baraka"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1586, 1, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }, { kind = "flag", flag = "c13_main_baraka", value = false }]
+deadline = [1586, 6, 30]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "measure"
+text = "拿牵星板当场量给他们看"
+next = "done"
+check = { attr = "astronomy", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "najma", value = 6 }, { kind = "affinity", person = "baraka", value = 6 }]
+fail = { next = "done", effects = [{ kind = "affinity", person = "baraka", value = 3 }], news = "蒙巴萨码头上，一个外国船长替两个吵架的人量星，量出了第三个数，三个人一起吵到半夜。" }
+reply = "你量出来的数跟她的一样，差一丝都没有。巴拉卡认了，接着讲了一段史诗，说的是一个量错星的金商，讲到一半自己先笑了。她没有笑，只是嘴角动了一下，把牵星板从你手里接过去，又量了一遍。量完她把牵星板还给你，板子的边已经被她的拇指摸亮了。"
+news = "蒙巴萨码头上，基尔瓦的金商和尤尔法的女领航为一颗星吵了一下午，一个外国船长拿牵星板当场量给两人看，两人都不吭声了。"
+
+[[tracks.chapters.choices]]
+key = "side_her"
+text = "站在她那边"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = 8 }, { kind = "affinity", person = "baraka", value = -3 }]
+reply = "巴拉卡捂着胸口说他被两个人欺负了，然后请大家喝酒，钱从黄铜小箱里拿。她没有笑，也没有坐下，只是等他把酒喝完。然后她端起杯子，第一次主动跟他碰了杯，碰完说：“下一颗星，你先报。”码头上的鸽子被碰杯声惊起，绕着灯笼飞了一圈。"
+news = "蒙巴萨码头上，基尔瓦的金商和尤尔法的女领航为一颗星吵了一下午，一个外国船长被拉去评理。"
+
+[[tracks.chapters.choices]]
+key = "coffee"
+text = "不评理，请两人喝咖啡"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = 3 }, { kind = "affinity", person = "baraka", value = 3 }]
+reply = "两人端着杯子，还在吵，只是声音小了。吵到杯底，巴拉卡把阿拉伯名念对了一回，她没有纠正，只把自己的杯子推过去，又推回来。你的咖啡凉了，没有人再去续，码头上的鸽子倒是飞过来，啄走了一粒糖。"
+news = "蒙巴萨码头上有个外国船长请吵架的两人喝咖啡，两人吵到杯底，声音一句比一句低。"
+
+[[tracks]]
+key = "npc_najma_join"
+name = "上船"
+kind = "request"
+start = "m1_join"
+auto = false
+cast = ["najma"]
+
+# m1_join：基尔瓦的招募。invite 走内核的招募检查（情谊够才行）；join 效果在条件不够时整项被挡。
+[[tracks.chapters]]
+key = "m1_join"
+title = "你的船值不值得量"
+text = "基尔瓦的码头，她这几年住在南边。船卖了，只留着牵星板和铜星盘，牵星板用绳子挂在门框上，板子的边被手指磨得发白。每天傍晚她在码头尽头量星，把数字写进一本航路书。书的封皮被海风泡软了，她用布条又缝了一回。你问她肯不肯上你的船。她先问：“你最远到过哪里？报个纬度。”你报了。她不看你，码头尽头的晒鱼架在风里吱呀作响，她却报了一串你从没去过的纬度，一个接一个，报到末了指了指南边低空的一颗星：“南边还有几颗星，我没量。”"
+at = "kilwa"
+speaker = "najma"
+mood = "tender"
+cast = ["najma"]
+when = [{ kind = "flag", flag = "c13_npc_najma" }, { kind = "date", from = [1585, 1, 1] }, { kind = "flag", flag = "c13_npc_najma_mate", value = false }]
+deadline = [1590, 12, 31]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "invite"
+text = "请她上船做领航"
+next = "done"
+requires = [{ kind = "affinity", person = "najma", ge = 60 }]
+effects = [{ kind = "join", person = "najma" }, { kind = "flag", flag = "c13_npc_najma_mate" }]
+hint = "她听完你的请求，摇摇头，说这条船还不值得量。"
+reply = "她把航路书夹在胳膊下面上了船，第一件事是把你的罗经拆下来擦了一遍，擦完装回去，只说了一句：“偏东的毛病还在，你自己知道。”第一夜，她站在船头量星，不许人说话。航路书的第一页，她写下了你船的吃水。"
+news = "基尔瓦的人说，那个每天傍晚在码头尽头量星的阿拉伯女领航，上了一条外国船。"
+
+[[tracks.chapters.choices]]
+key = "invite_old_debt"
+text = "提起霍尔木兹那一回，再请她"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_npc_najma_shielded" }, { kind = "affinity", person = "najma", ge = 45 }]
+effects = [{ kind = "join", person = "najma" }, { kind = "flag", flag = "c13_npc_najma_mate" }]
+hint = "她不记得欠过你什么。"
+reply = "她想了一会儿，说那个描歪的角她还记得差了多少。然后她回屋收拾，只拿了牵星板、星盘和那本书。锁门的时候，她把钥匙留在门框上，没有给房东，也没有带走。她上船前，把你的船名又念了一遍，像是要记牢。"
+news = "基尔瓦的人说，那个阿拉伯女领航上了一条船，船主是个她早前在霍尔木兹见过的人。"
+
+[[tracks.chapters.choices]]
+key = "ask_star"
+text = "不强求：问她最远量到过哪颗星"
+next = "done"
+effects = [{ kind = "affinity", person = "najma", value = 3 }, { kind = "skill", skill = "astral_navigation", value = 4 }]
+reply = "她指给你看南边低空的一颗星，说那是她这辈子量得最远的一颗。星在海面上贴得很低，像要沉下去。你记下了那个数，回船后在罗经旁边写了一行，写完又划掉，重新写了一遍。那一行字后来没有抄进航簿，只留在罗经旁边的木板上。"
+news = "基尔瓦的人说，那个每天傍晚在码头尽头量星的阿拉伯女领航，这几年常有船长来请她，她一个也没应。"
+
+[[tracks.chapters.variants]]
+key = "hired"
+when = [{ kind = "flag", flag = "c13_npc_najma_hired" }]
+text = "基尔瓦的码头，她这几年住在南边。船卖了，只留着牵星板和铜星盘，牵星板用绳子挂在门框上，板子的边被手指磨得发白。每天傍晚她在码头尽头量星，把数字写进一本航路书。书的封皮被海风泡软了，她用布条又缝了一回。她翻出一本旧蜡板，上面还记着你那年报错的纬度。你问她肯不肯上你的船。她先问：“你最远到过哪里？报个纬度。”你报了。她不看你，码头尽头的晒鱼架在风里吱呀作响，她却报了一串你从没去过的纬度，一个接一个，报到末了指了指南边低空的一颗星：“南边还有几颗星，我没量。”"
+
+[[tracks.chapters.variants]]
+key = "muscat"
+when = [{ kind = "flag", flag = "c13_npc_najma_muscat_helped" }]
+text = "基尔瓦的码头，她这几年住在南边。船卖了，只留着牵星板和铜星盘，牵星板用绳子挂在门框上，板子的边被手指磨得发白。每天傍晚她在码头尽头量星，把数字写进一本航路书。书的封皮被海风泡软了，她用布条又缝了一回。她认出了你的船，是马斯喀特那天替她撤人的那一条。你问她肯不肯上你的船。她先问：“你最远到过哪里？报个纬度。”你报了。她不看你，码头尽头的晒鱼架在风里吱呀作响，她却报了一串你从没去过的纬度，一个接一个，报到末了指了指南边低空的一颗星：“南边还有几颗星，我没量。”"

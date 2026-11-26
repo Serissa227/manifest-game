@@ -1,0 +1,169 @@
+# C13d 请托：岛后面的倭船（request_shin_gyeong）。Claude 写（2026-10-25），仅中文，不配英文覆盖。
+# 人物：申景 shin_gyeong（1534-10-22 生，男；朝鲜水军的年轻军官，势力 joseon，身份档 1）。cast：cast/story_eastasia.toml。
+#   日程 1560—1590 在釜山（busan）的水营（garrison）。说话恭敬、敬语周全，自称“在下”，称主角“您”。
+# 类型：打一仗（fight）。三章：offer（报价）→ battle（岛后打退倭船）→ after（军报上的那一行）；终点 done / failed。没有 stage 章。
+#   offer 有一条不打的路：算潮困敌（requires 技能 tide_reading ≥ 60），直接进 after。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_shin_gyeong）启动；offer 章不写 at，目标是在港里找到他。
+#   offer 的 when：日期 1565-01-01 至 1586-06-30、主角满 17、申景在世；deadline 为 1586-06-30，timeout 直接 failed，不写见闻。
+#   battle 是普通章：目标为进入本章后赢下一场海战；deadline_days=60（同一海区），超时走 failed，来信一封、好感 -3、设 _late。
+#   after 是普通章，at=busan，没有期限，可以一直等。
+# 依据·史实背景：1555 年乙卯倭变以后，朝鲜南海岸的海防一年紧过一年；同一年前后板屋船开始成为水军的主力兵船；
+#   水军靠熟水性的渔户与海女报信。正文只借“乙卯年”一句当背景，不写具体战事。
+# 依据·原创：申景的军报与“倭船泊于何处”那一行；前几年那份写着“臣探得”的旧军报副本；岛后拴在礁上等潮的两条倭船；
+#   落水的年轻水兵（渔户的儿子，无名，不进 cast）；寅时的落潮；外海的小岛（不上地图、不起名）。
+# 口头禅：招呼语“这片海您比我熟，请先说说路上所见。”全轨道只在 offer 正文出现一次——他开口托人的那一句。
+# 秘密：cast 未写 secret；summary 里“军报有几行不是他自己的见识”是本轨道的落点，只在 after 章正文里由旧军报副本带出，见闻一律不写。
+# C7：高海月×申景（pair_ko_haewol_shin_gyeong，1555—57、1564）。本轨道 1565—86，一字不写高海月；报信的只写“海女们”，不点名。
+#   不写恋爱、心动；不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_shin_gyeong_tide、c13_request_shin_gyeong_dir（after 章 variants 换一句话）。
+# 设的旗标（c13_request_shin_gyeong_<事件>）：accepted；终局 declined / late / done（每条路径只设一面）；分支 tide（算潮困敌）、dir（追看去向）。
+# 报酬（与 brief 一致，每份一次）：after 两个选项各付现金 1600、名声 +2、joseon 声望 +2；好感 credit_them +8 / credit_him +4；
+#   回忆只给 credit_them。好感正向合计：打的路 2+5+8=15，算潮的路 3+8=11。唯一奖励物品与技能经验：无。
+#   battle 的 haul 检定失败照样进 after，好感 +3（成功 +5，按“检定失败 −2”）。
+# 失败与超时：不罚钱、不扣物品、不改时间线。battle 超时的来信改了一个字：brief 的“我的军报”按他的口吻写成“在下的军报”。
+# 依赖：港口 busan；人物 shin_gyeong；技能 tide_reading（skills.toml）；势力 joseon；属性 seamanship。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_shin_gyeong-after「军报上海女的那一行」：釜山水营的灯下，湿发未干的年轻军官伏案写军报，窗外码头上晾着海女们的浮瓢。
+
+[[tracks]]
+key = "request_shin_gyeong"
+name = "岛后面的倭船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["shin_gyeong"]
+
+# 一、报价：水营的桌上，军报写到“倭船”两个字停住了。
+[[tracks.chapters]]
+key = "offer"
+title = "上头要的是确报"
+text = "釜山水营的桌上摊着一份军报，字一笔一画，横平竖直，像刻上去的。最后一行只写了“倭船”两个字。申景站在桌边，袖口还沾着沙，见你进来，先行了礼：“失礼了。这片海您比我熟，请先说说路上所见。”你说了几句，他一句一句点头，然后才讲自己的事：海女们今早上岸，说外海那座小岛背后泊着两条倭船，吃水很深，拴在礁上等潮。“在下信她们。”他用指头按住那两个字，“可乙卯年以后，上头不收‘听说’。上头要的是确报。”营里能出海的板屋船只剩一条。“请您的船与在下的兵船同去。打一仗也好，趁潮把它们困住也好。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1565, 1, 1], to = [1586, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "alive", person = "shin_gyeong", value = true },
+]
+objectives = [{ kind = "person", person = "shin_gyeong", text = "在釜山的水营找到他" }]
+deadline = [1586, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "备好炮，跟他的兵船一起去打。"
+next = "battle"
+reply = "他把军报折成三折，压在砚台底下，先问你船上谁最熟这片水。你指了舵手，他便请那人站到自己身边，又躬了躬身：“出了港，在下听您的人说话。”板屋船的橹手已经在码头上等着，十几支橹齐齐竖着。"
+effects = [
+  { kind = "affinity", person = "shin_gyeong", value = 2 },
+  { kind = "flag", flag = "c13_request_shin_gyeong_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "trap"
+text = "算好落潮的时辰，把它们困在岛后的浅水里。"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "你说不准那座岛后面的浅水几时见底。"
+next = "after"
+reply = "你借他的笔，在一张废了的草稿背面排了一夜的潮：落潮在寅时，岛后那片水退下去不到半人深。倭船吃水深，等的是涨潮，却先等来了落潮。天亮时两条船斜搁在浅滩上，船上的人只好涉水上岛，岛的两头早有水军守着。申景站在板屋船的船头，一个一个数上岸的人，数完了回头问你：“寅时，您是怎么算出来的？”"
+news = "釜山外海的一座小岛后面，两条等潮的倭船没等到涨潮，先搁在了浅水里，船上的人涉水上岛，叫水军围住了。"
+effects = [
+  { kind = "affinity", person = "shin_gyeong", value = 3 },
+  { kind = "flag", flag = "c13_request_shin_gyeong_accepted" },
+  { kind = "flag", flag = "c13_request_shin_gyeong_tide" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "水军的仗，我的船不掺和。"
+next = "failed"
+reply = "他点点头，没再劝，把军报重新摊平，在最后添了一行：外船不与。墨还没干，他已经拿起斗笠往码头去了，说要再找海女们问一遍潮。"
+effects = [{ kind = "flag", flag = "c13_request_shin_gyeong_declined" }]
+
+# 二、岛后：你打退的那条船跑了，他的兵落了水，他头一个跳下去。
+[[tracks.chapters]]
+key = "battle"
+title = "头一个跳下去"
+text = "绕到岛后，两条倭船果然在那里，船尾拴在同一块礁上。你打退的那条船砍断缆绳，往外海跑，另一条跟着走了。板屋船上乱了一阵：一个年轻水兵被倭船的钩竿带下了水，浪一卷，只剩一只手在外头。申景喊了一声“盯住它们往哪边去！”，摘下头盔往甲板上一扔，头一个跳了下去。他的水性不算好，抓住那水兵的衣领就沉了半个头。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "shin_gyeong", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在岛后打退倭船" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "shin_gyeong", value = -3 },
+  { kind = "flag", flag = "c13_request_shin_gyeong_late" },
+  { kind = "letter", person = "shin_gyeong", text = "倭船等到了潮，走了。在下的军报上写的是：未遇。——申景" },
+] }
+
+[[tracks.chapters.choices]]
+key = "haul"
+text = "把船靠过去，扔绳子把两个人一起拉上来。"
+next = "after"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "绳子落在他手边。他先把水兵的胳膊套进绳圈，才抓住自己那一截。拉上船，他趴在船板上吐了一口水，顾不上喘，先爬过去问那水兵还有没有气。水兵咳出半肚子海水，骂了一句什么，他才坐下来。“渔户的儿子，水性比在下好得多。”他抹了一把脸，“是被钩下去的。”"
+news = "釜山外海的小岛后面，水军的兵船和一条外乡船赶走了两条等潮的倭船，落水的两个人也叫外乡船拉了上来。"
+fail = { next = "after", effects = [
+  { kind = "affinity", person = "shin_gyeong", value = 3 },
+], news = "釜山外海的小岛边，一条外乡船给落水的水军扔绳子，头一回扔偏了，那位申军官多喝了好几口海水，第二回才拉上来。" }
+effects = [{ kind = "affinity", person = "shin_gyeong", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "落水的交给他的兵，我追出去看倭船往哪边跑。"
+next = "after"
+reply = "你追到两条船的帆缩成两个白点，记下方位和时辰：往对马去了。回到岛后，申景已经被自己的兵捞了上来，浑身湿透坐在船板上，纸搁在膝盖上写字，墨被衣角滴下来的水洇开一片。“往哪边？”他头也不抬。你说对马。他写下了，又在旁边注了时辰。"
+news = "釜山外海的小岛后面，水军的兵船和一条外乡船赶走了两条等潮的倭船，外乡船一路跟着，看它们往对马去了。"
+effects = [
+  { kind = "affinity", person = "shin_gyeong", value = 2 },
+  { kind = "flag", flag = "c13_request_shin_gyeong_dir" },
+]
+
+# 三、回到水营：“倭船泊于何处”那一行，写谁的见识。
+[[tracks.chapters]]
+key = "after"
+title = "这一行写谁的"
+text = "回到水营，申景换了干衣裳，头发还湿着，在灯下把那份军报摊开，一行一行往下写：某日出港，某时至岛后，打退倭船二。写到“倭船泊于何处”那一行，他停了笔。笔尖上的墨坠下一滴，他用纸角吸干。他从匣里抽出前几年的一份军报副本推给你，上面有一行“臣探得：某礁暗，舟可避”。“那一回，也是海女们说的。”他把笔搁在砚边，看着你：“这一行，该写谁的见识？”"
+speaker = "captain"
+mood = "tender"
+at = "busan"
+when = [{ kind = "alive", person = "shin_gyeong", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_tide"
+when = [{ kind = "flag", flag = "c13_request_shin_gyeong_tide" }]
+text = "回到水营，申景在灯下把那份军报摊开，一行一行往下写：某日出港，寅时潮落，倭船二搁浅，贼众涉水上岛，尽数围之。下面多了一行：外船船长算潮，困敌于浅水。写到“倭船泊于何处”那一行，他停了笔。他从匣里抽出前几年的一份军报副本推给你，上面有一行“臣探得：某礁暗，舟可避”。“那一回，也是海女们说的。”他把笔搁在砚边，看着你：“您那一行，在下照实写了。这一行，该写谁的见识？”"
+
+[[tracks.chapters.variants]]
+key = "v2_dir"
+when = [{ kind = "flag", flag = "c13_request_shin_gyeong_dir" }]
+text = "回到水营，申景换了干衣裳，头发还湿着，在灯下把那份军报摊开。膝盖上写的那张纸也摊在旁边，墨洇了一角，“向对马遁”四个字还认得出。他一行一行往下抄，写到“倭船泊于何处”那一行，停了笔。他从匣里抽出前几年的一份军报副本推给你，上面有一行“臣探得：某礁暗，舟可避”。“那一回，也是海女们说的。”他把笔搁在砚边，看着你：“这一行，该写谁的见识？”"
+
+[[tracks.chapters.choices]]
+key = "credit_them"
+text = "写海女们报的信，照原样写。"
+next = "done"
+reply = "他蘸了墨，写：海女报，倭船二泊岛后，候潮。字和前面的一样工整，一样大。写完他把那份旧副本也拿过来，在“臣探得”旁边补了一行小注。“这几行不是在下的见识，”他说，“写清楚是谁的，下回上头要问，也知道该问谁。”他把酬银的袋子双手递过来：“下回出海，还请您先听熟水性的人说话。在下也是。”"
+news = "釜山水营的军报上，这回白纸黑字写明了，倭船泊在哪座岛后头，是海女们报的信。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "shin_gyeong", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "reputation", faction = "joseon", value = 2 },
+  { kind = "memory", memory = "mem-request_shin_gyeong-after", title = "军报上海女的那一行" },
+  { kind = "flag", flag = "c13_request_shin_gyeong_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "credit_him"
+text = "写他自己探明的，上头爱看这个。"
+next = "done"
+reply = "他的笔悬在纸上停了很久，灯芯爆了一下。最后他还是写了，写的是“海女报”三个字，挤在行尾，小得几乎看不见。那份旧副本被他翻过去，扣在了桌上。他把酬银的袋子推到你面前，道了声辛苦，就没再说什么。"
+news = "釜山水营递上去的军报里，倭船的泊处后头挤着“海女报”三个字，小得快看不见，码头上的海女们说，好歹是写上了。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "shin_gyeong", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "reputation", faction = "joseon", value = 2 },
+  { kind = "flag", flag = "c13_request_shin_gyeong_done" },
+]

@@ -1,0 +1,118 @@
+# 请托：点给学徒的灯（request_amina）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：阿米娜（amina，1538-04-10 生，女），开罗的抄书人，抄书房只在白天开门；势力 ottoman，身份档 1。cast：cast/classmates_cairo.toml。
+# 类型：送货（deliver）。三章：offer（报价，亚历山大港）、deliver（交蜂蜡）、settle（一个月后看蜡烛）；终点 done / failed。
+# 报价：V（到访）。她从开罗下到亚历山大港买纸与蜡，auto=true；窗口 1562-01-01 至 1588-12-31；offer 写 family=c13_offer_alexandria，冷却 20 天；玩家满 17 岁，她满 18 岁。
+# 进行中：deliver 章 deadline_days=120，超时走 failed，来信一封，好感 -3，旗标 _late，另写一条见闻；settle 是普通章，人在亚历山大港、等满 30 天即进入，不设期限。
+# 依据·史实背景：开罗的抄书业与书坊学徒（正文只用传闻口吻，不点具体书坊名）。
+# 依据·原创：阿米娜与她的抄书房；蜂蜡从克里特、罗得一带的作坊收来，不在亚历山大港本地买；蜡烛匠。
+# 秘密：视力越来越吃力，夜里的活悄悄推掉了一半，只跟家里说是灯油涨了价。正文只写“凑得很近”“把账单拿得离烛火很近”，不写看不清、眼疾，见闻一律不写。
+# 读的旗标：bond amina ≥ C（offer 的变体，只读）。不读也不设任何 c7_ 旗标。
+# 设的旗标：c13_request_amina_accepted（offer 两种接法）、_declined（offer 回绝）、_done（settle 终局）、_late（deliver 超时）。
+# 不用 relation / tie / bond / heart 效果；bond 只作条件读取。
+# 报酬：货款 450（交货时付，两个选项相同）；报酬 900（settle 终局一次）；好感最多 +13；名声 +2；回忆 mem-request_amina-settle。无物品奖励。
+# 依赖：港口 alexandria（ports_north_africa.toml）；货物 beeswax（cities.toml 已在用）。cast 日程 1557 起一直在开罗（market），报价时她“从开罗下来”，正文已这样写，cast 不改。
+# 回忆插画清单：
+#   mem-request_amina-settle「墨未干的一页」：抄书房的烛火下，一页墨迹未干的抄件，压在你的手底下。
+
+[[tracks]]
+key = "request_amina"
+name = "点给学徒的灯"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["amina"]
+
+# 一、灯油熏眼：亚历山大港的纸铺里，她挑纸，顺口提起蜡的事。
+[[tracks.chapters]]
+key = "offer"
+title = "灯油熏眼"
+text = "亚历山大港的纸铺里，阿米娜一张一张挑纸，拿到窗边对着光看，看完才还给伙计。她从开罗下来，小本子里记着每位主顾要的字体与页边的宽窄。“抄书房只在白天开门。”她说，“天一黑，灯就点给学徒读书。灯油熏眼睛，读一夜，第二天抄出来的字就歪。”她抬头看我，凑得很近，看得很仔细。“我要十箱好蜂蜡，让作坊做成蜡烛。烟淡，学徒的眼睛才顶得住。”"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+objectives = [{ kind = "at", at = "alexandria", text = "在亚历山大港" }]
+when = [{ kind = "date", from = [1562, 1, 1], to = [1588, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "amina", ge = 18 }]
+deadline = [1588, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_alexandria"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "amina", level = "C" }]
+text = "亚历山大港的纸铺里，阿米娜一张一张挑纸，看见我，先把手里那张放下。“你那年替我磨过墨，这回替我买蜡。”她说，“抄书房只在白天开门。天一黑，灯就点给学徒读书。灯油熏眼睛，读一夜，第二天抄出来的字就歪。”她抬头看我，凑得很近，看得很仔细。“我要十箱好蜂蜡，让作坊做成蜡烛。烟淡，学徒的眼睛才顶得住。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，去岛上收十箱好蜂蜡。"
+next = "deliver"
+reply = "她把蜡的成色说得很细：要黄里透白的，断口要干净。“灰的不要，灰的烧起来有味道。”"
+effects = [{ kind = "affinity", person = "amina", value = 2 }, { kind = "flag", flag = "c13_request_amina_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_lamp"
+text = "接下，问她：她自己晚上用什么灯？"
+next = "deliver"
+reply = "“我晚上不抄。”她说得很快，又补了一句：“灯油涨了价。”说完她把账本往袖子里收了收，没有再往下讲。"
+effects = [{ kind = "affinity", person = "amina", value = 2 }, { kind = "flag", flag = "c13_request_amina_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一季走不开，蜂蜡收不来。"
+next = "failed"
+reply = "她点点头，把小本子合上，说那就先让学徒少读一会儿。"
+effects = [{ kind = "flag", flag = "c13_request_amina_declined" }]
+
+# 二、十箱蜂蜡：货在码头上开箱，她一块一块看过去，最后说到蜡烛匠。
+[[tracks.chapters]]
+key = "deliver"
+title = "十箱蜂蜡"
+text = "码头上，十箱蜂蜡卸在石板上，一箱一箱开了盖，箱子上还留着罗得岛作坊的封条。阿米娜先拿起一块，凑到鼻子底下闻，又举到眼前看，看得太近，蜡差点碰到睫毛。“黄里透白，这块能用。”她说，把每箱都抽一块出来，掰开看中心。有一箱中心发灰，她没说话，只在单子上记了一笔。脚夫在一旁等着，额头上全是汗。她不催，只把手里那块对着太阳又看了一遍。她说蜡要做成蜡烛，开罗哪家作坊接，还没定。"
+speaker = "captain"
+mood = "cheerful"
+at = "alexandria"
+objectives = [{ kind = "goods", good = "beeswax", qty = 10, at = "alexandria", text = "十箱蜂蜡" }]
+when = [{ kind = "alive", person = "amina", value = true }, { kind = "date", from = [1562, 1, 1], to = [1590, 2, 24] }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "amina", value = -3 }, { kind = "flag", flag = "c13_request_amina_late" }, { kind = "letter", person = "amina", text = "蜡我在开罗买了些，灰的，烧起来有味道。学徒们说不碍事。" }], news = "亚历山大港的纸铺里有人说，那个开罗来的抄书女人等不到好蜡，只好先买了灰的。" }
+news = "亚历山大港码头上，一个开罗来的抄书女人把十箱蜂蜡一箱一箱闻了过去。"
+
+[[tracks.chapters.choices]]
+key = "to_chandler"
+text = "交货，并替她在亚历山大港找个蜡烛匠，做好了再运上去。"
+next = "settle"
+reply = "蜡烛匠是个老人，手背上全是烫疤，答应做得细一点。“抄书用的，要细，烧得慢。”他说完，就去翻自己的料单。阿米娜付清了货款，又多塞给老人一小包钱，说做好了就运到开罗去。"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "amina", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "交货，蜡她自己带回开罗。"
+next = "settle"
+reply = "她付清了货款，叫了两个脚夫，自己跟着箱子走。走两步回头看一眼，怕箱子掉进水里。"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "amina", value = 2 }]
+
+# 三、第一支蜡烛：一个月后，她在纸铺里点起一支细蜡烛。
+[[tracks.chapters]]
+key = "settle"
+title = "第一支蜡烛"
+text = "一个月后，阿米娜在纸铺后头点起一支细蜡烛给我看。小桌角上还压着一碗凉了的饭，她没顾上吃。烛火很稳，烟几乎看不见。“学徒们读到了深夜，”她说，“第二天的字，一个也没歪。”她把一页刚抄好的纸平铺在烛光下，墨还是湿亮的。我伸手想去翻背面，她按住了我的手背，力气不大，却没有松开。“墨还没干，谁也别翻这一页。”她收回手，拿起账单，把它拿得离烛火很近，一行一行地看。"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+objectives = [{ kind = "at", at = "alexandria", text = "在亚历山大港" }, { kind = "wait", days = 30, text = "等一个月" }]
+when = [{ kind = "alive", person = "amina", value = true }, { kind = "date", from = [1562, 1, 1], to = [1590, 2, 24] }]
+news = "亚历山大港的纸铺后头，开罗来的抄书女人点起一支细蜡烛，据说烟淡得几乎看不见。"
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "什么也不说，等墨干了再翻。"
+next = "done"
+reply = "墨干了，她自己翻过去。背面是一行小字，抄的是学徒的名字，一个一个排得很齐。她把剩下的钱付了，说这一页是给我看的，不卖。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "amina", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_amina_done" }, { kind = "memory", memory = "mem-request_amina-settle", title = "墨未干的一页" }]
+
+[[tracks.chapters.choices]]
+key = "bigger_candle"
+text = "说：你自己抄书的时候，也点一支吧。"
+next = "done"
+reply = "她愣了一下，笑了，说她白天抄。可她还是把一支蜡烛包进了自己的书袋。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "amina", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_amina_done" }, { kind = "memory", memory = "mem-request_amina-settle", title = "墨未干的一页" }]

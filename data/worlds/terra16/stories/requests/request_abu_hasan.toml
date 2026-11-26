@@ -1,0 +1,156 @@
+# 请托：是谁抄错了（request_abu_hasan）。Claude 写（C13d，2026-10-25），仅中文，不写英文覆盖。
+# 人物：阿布·哈桑（abu_hasan，1497-04-01 生，男），开罗的老学者；势力 ottoman。cast：cast/story_islamic.toml。身份档 1（按 brief 定，报酬 900；学者档本应为 2，待定）。
+# 类型：找东西（find）。四章：offer（报价）、handin（交书）、return（只走借书一条：书半年后还回）、use（结账）；终点 done / failed。
+# 报价：L（来信）。人物在开罗、不下港，出面的是一封信，由学生送到亚历山大港码头；auto=true；offer 写 at=alexandria、family=c13_offer_alexandria、冷却 20 天。
+#       窗口 1557-06-01 至 1582-06-30；offer 的 deadline 即窗口止日，timeout 直接 failed，不写见闻。名声门槛：窗口起年 1557，门槛为 0，不写。
+# 进行中：handin 是普通章，等玩家持有书；return 与 use 以 wait 目标计时（借出的书半年后还回，结账再等半年；送书的一路只等结账的半年）。没有 window、没有 default。
+# 依据·史实背景：《赫尔墨斯文集》希腊文初版，巴黎，1554 年（items/books_10_occult.toml 的 hermetica_greek，价 1400，送书时付书价 1750）；伊斯兰学术里“赫尔墨斯即伊德里斯”的传统。
+# 依据·原创：阿布·哈桑、他的学生（叙事人物，不进 cast）、书斋里的十七处对照（十一处阿拉伯这边抄错、四处希腊那边印错、两处说不准）。
+# 依据·改动：brief 的“借给他看”只写了好感、没有扣书，书又不回来；这里借出那条路加了 item -1，经 return 章 item +1 还回，自成一条慢路（多半年、书先回来）。
+# 读的旗标：c13_request_abu_hasan_copied（use 的 v1_copied 只改文字）。不读 c7_* 或 c13_main_* 旗标；没有主线门禁，也没有 variant_main。
+# 设的旗标：c13_request_abu_hasan_accepted（offer 两条接法）、_declined（offer 回绝）、_given（handin 送书）、_copied（handin 借书对读）、_done（use 两条收尾）。
+#   不设任何 c7_ 旗标；不用 relation / tie / bond / heart / growth 效果。
+# 秘密：cast 的 persona 里有一条关于一部缺末页的抄本，本请托不触碰，正文与见闻都不写；不写七级试炼，不写《造化之秘》。
+# 报酬：现金 900（报酬）+ 1750（书价，送书时付；借看不付，书由 return 章还回）；好感最多 +16；名声 +2；回忆 mem-request_abu_hasan-use。
+# 依赖：港口 alexandria（ports_north_africa.toml）；物品 hermetica_greek（有 shop）；技能 lang_greek（skills.toml）；人物 abu_hasan。无 B10b 改名。
+# 回忆插画清单：
+#   mem-request_abu_hasan-use「十七处对不上」：一张铺开的纸上列着十七行对照，最后两行旁边有人用小字注了“说不准”。
+
+[[tracks]]
+key = "request_abu_hasan"
+name = "是谁抄错了"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["abu_hasan"]
+
+# 一、码头上的信：学生递来一封叠了四折的信，信里先讲抄本的谱系，后讲正事。
+[[tracks.chapters]]
+key = "offer"
+title = "哪部抄本，谁抄的"
+text = "亚历山大港的码头上，开罗来的学生把一封信递过来，信纸叠了四折，写得很密。前半截讲抄本的谱系：哪部是谁抄的，哪一年，从哪部抄来的。后半截才说到正事：巴黎印了一部希腊文的赫尔墨斯文集，老师要你买一部来。“我要对着阿拉伯文的抄本，一句一句看是谁抄错了——是我们，还是他们。”学生说，老师还让他原样带一句话：“进来。这一架讲的都是希尔米斯——外头人念成赫尔墨斯。你读过哪一部？”"
+mood = "mystic"
+at = "alexandria"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1582, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1582, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_alexandria"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应找一部来。"
+next = "handin"
+reply = "学生点点头，把信纸翻过来，在背面用铅笔记下书名，连拼法也记。“书要原样的，不带任何人的批注。别人的批注，老师要先问是谁、哪一年。”"
+effects = [{ kind = "affinity", person = "abu_hasan", value = 2 }, { kind = "flag", flag = "c13_request_abu_hasan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_which"
+text = "问学生：要是两边都没错呢？"
+next = "handin"
+reply = "学生笑了，把信重新叠回四折，压进袖口。“老师说，那就是第三部抄本错了。总有一部错的。两边都对，那就没有可抄的了。”他说完，还从袖子里摸出笔，在信的背面画了一道线。"
+effects = [{ kind = "affinity", person = "abu_hasan", value = 2 }, { kind = "flag", flag = "c13_request_abu_hasan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这种书你不经手。"
+next = "failed"
+reply = "学生把信收回去，叠成四折。“老师会在本子上记一行：问过，没成，哪一年。”他说完就走，脚步很快，像是要赶在傍晚的风向变之前回船。"
+effects = [{ kind = "flag", flag = "c13_request_abu_hasan_declined" }]
+
+# 二、交书：学生先看扉页上的年份与地名，再问书是送还是借。
+[[tracks.chapters]]
+key = "handin"
+title = "送，还是借"
+text = "学生凑过来看你手里的书，先看扉页上的印刷年份和地名，看完才肯翻开。纸是巴黎的纸，希腊字一个个写得很干净。他把书合上又打开，凑近了闻一闻纸边的油墨，然后顺着目录往下看，手指在“赫尔墨斯”那一行停了停。最后他抬起头，问你：“这部书，是送给老师的，还是借给老师看的。”"
+speaker = "captain"
+mood = "mystic"
+at = "alexandria"
+when = [{ kind = "alive", person = "abu_hasan", value = true }]
+objectives = [{ kind = "item", item = "hermetica_greek", qty = 1, text = "找到一部希腊文初版" }]
+news = "亚历山大港码头边的一间仓房里，开罗来的学生对着一部巴黎印的希腊书抄了三天。"
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "送给老师。"
+next = "use"
+requires = [{ kind = "item", item = "hermetica_greek", qty = 1 }]
+reply = "学生把书包了三层，从袖子里摸出一只钱袋，封口的线还没剪。他不数，只放在你手边，又把书往怀里按了按。“老师说，书不能欠。”"
+news = "亚历山大港码头上，开罗来的学生把一部巴黎的希腊书包了三层，抱在怀里走了。"
+effects = [{ kind = "item", item = "hermetica_greek", qty = -1 }, { kind = "cash", value = 1750 }, { kind = "affinity", person = "abu_hasan", value = 3 }, { kind = "flag", flag = "c13_request_abu_hasan_given" }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借给老师看，看完还我。"
+next = "return"
+requires = [{ kind = "item", item = "hermetica_greek", qty = 1 }]
+reply = "学生说老师看书很慢，一页要看三遍，可能要半年。你说半年就半年，把书的扉页朝上交到他手里，又嘱咐他书角别折。他把书夹进旧袍子的内袋，拍了拍，说好。"
+news = "亚历山大港码头上，有个船长把一部巴黎印的希腊书借给了开罗来的学生，说好看完还。"
+effects = [{ kind = "item", item = "hermetica_greek", qty = -1 }, { kind = "affinity", person = "abu_hasan", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "greek_help"
+text = "借给老师，再陪学生把最要紧的几章对一遍，免得抄错。"
+next = "use"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "item", item = "hermetica_greek", qty = 1 }, { kind = "skill", skill = "lang_greek", ge = 60, hard = true }]
+hint = "你的希腊文还读不顺，对到第二页就得停下来。"
+reply = "你和学生在码头边的仓里对了三天，一页一页地比，学生的手指在两行字之间来回。书你带回去了，抄本他带回开罗，临走时说这几章抄得比老师要求的还细。"
+effects = [{ kind = "affinity", person = "abu_hasan", value = 5 }, { kind = "flag", flag = "c13_request_abu_hasan_copied" }]
+
+# 三、借出的书回来：只有借看那一路会走到这里。书是先还的，老师的字条是后补的。
+[[tracks.chapters]]
+key = "return"
+title = "书先还你"
+text = "半年后，学生又到亚历山大港码头，怀里抱着那部希腊书，封皮被磨得发白，书角卷了一边。他把书递还给你，说老师看完了前半部，剩下的要拿抄本来对，书先还你。“前半部的页码，老师都记在纸上了。”他说完，从袖子里摸出一张纸条，上面是老师写的两行小字，字很小，要凑到光底下才认得清。"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+when = [{ kind = "alive", person = "abu_hasan", value = true }]
+objectives = [{ kind = "wait", days = 180, text = "等老学者看完前半部" }]
+news = "亚历山大港码头上，开罗来的学生抱着一部旧希腊书，说老师看完了前半部，还要再对半年。"
+
+[[tracks.chapters.choices]]
+key = "take_back"
+text = "收下书，请他转告老师慢慢看。"
+next = "use"
+reply = "学生摆摆手。“老师说，书别谢，谢了要记账。”他把纸条塞进你手里，又低头看了一眼书脊，确认没有折痕，才转身往码头的另一头去了。"
+effects = [{ kind = "item", item = "hermetica_greek", qty = 1 }, { kind = "affinity", person = "abu_hasan", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask_page"
+text = "收下书，问他老师看到哪一页了。"
+next = "use"
+reply = "学生翻开书，指着一页边上的墨点。“老师说，这一页他看了三遍。希腊字跟拉丁字，在这里说的不是一回事。”他合上书，把纸条按在封皮上压平，说老师要的是这一页的原样。"
+effects = [{ kind = "item", item = "hermetica_greek", qty = 1 }, { kind = "affinity", person = "abu_hasan", value = 3 }]
+
+# 四、结账：信里列了十七处对不上的地方，两处说不准，问怎么写。
+[[tracks.chapters]]
+key = "use"
+title = "说不准的两处"
+text = "又过了些日子，学生来亚历山大港找你，带着老学者的信。信里列了十七处：阿拉伯文的抄本跟希腊文对不上的地方。十一处是阿拉伯这边抄错了，四处是希腊那边印错了。还有两处，老师说不准。学生把信摊在桌上，手指压着最后两行。每一处旁边都注着页码与行数，有几处墨迹洇开了，老学者用铅笔在边上补了字。“老师问你，说不准的那两处，该怎么写。”"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+when = [{ kind = "alive", person = "abu_hasan", value = true }]
+objectives = [{ kind = "wait", days = 180, text = "等老学者校完" }]
+news = "亚历山大港的酒馆里，有人说开罗一位老学者对着一部巴黎印的希腊书校了半年，校出十七处。"
+
+[[tracks.chapters.variants]]
+key = "v1_copied"
+when = [{ kind = "flag", flag = "c13_request_abu_hasan_copied" }]
+text = "又过了些日子，学生来亚历山大港找你，带着老学者的信。信的头一段先说，你们在码头仓里对过的那几章，一处错也没有。“对过的东西，才不用对第二遍。”信里列的十七处，都在别的地方。学生把信摊在桌上，手指压着最后两行。每一处旁边都注着页码与行数，有几处墨迹洇开了，老学者用铅笔在边上补了字。“老师问你，说不准的那两处，该怎么写。”"
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "回信说：两种都写上，注明说不准。"
+next = "done"
+reply = "他回信说，这是他这辈子写过最长的一条注。两种都注了，还在边上用小字写了一行：此说由一个船长建议。报酬他附在信里，数目一点没少。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "abu_hasan", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_abu_hasan-use", title = "十七处对不上" }, { kind = "flag", flag = "c13_request_abu_hasan_done" }]
+
+[[tracks.chapters.choices]]
+key = "pick"
+text = "回信说：照阿拉伯文的写，那是你们的传统。"
+next = "done"
+reply = "他回信说，传统是传统，错是错。两种写法他都抄了一遍，没注你的名字。报酬照付，附在信的最后一页，压在那两行说不准的字底下。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "abu_hasan", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_abu_hasan_done" }]

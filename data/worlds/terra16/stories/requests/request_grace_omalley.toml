@@ -1,0 +1,282 @@
+# 请托：拦下补给船（request_grace_omalley）。Claude 写（C13d，2026-10-18），仅中文。
+# 人物：格蕾丝·奥马利（grace_omalley，1530 生、1603 卒），梅奥奥马利家的女儿，克卢湾的海上女首领。
+# 类型：打一仗（fight）。主线四章：offer（报价）、battle（打退护航）、shadow（贴上去逼回港）、after（收尾）；
+#       另有两个收尾章：after_bribe（花钱，partial）、after_missed（没拦住，failed）。
+#       收尾拆成三章而不是一章加 requires 选项：带 requires 的版本会把被挡住的选项全部列出，一章只放得下两三个。路线由 next 决定。
+# 报价：V（到访）。戈尔韦（galway）城外的浅滩，auto=true；窗口 1574-01-01 至 1577-06-30；
+#       名声门槛 20；family=c13_offer_galway，冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实：1574 年英格兰人从戈尔韦出兵围攻她在克卢湾的罗克弗利特城堡，被她击退（约年，正文只写“城堡还在”，不写战事经过，不定结果）。
+#       1577 年她在利默里克被关押，不写。1574 年下半年以后的报价用 variant late，只说“又来了”。
+# 依据·原创：补给船与护航小船、黑帆小艇、皮酒壶与旧绳、戈尔韦浅滩上的会面、一句带过的过路钱。
+#       秘密：无单列秘密。拦船收钱、劫掠商船一事只在 offer 与 after 里各说一句，不洗白，见闻不提。
+# 读写的旗标：写 c13_request_grace_omalley_accepted（offer 三条接法）、_fought（battle 两条）、_turned（shadow 成功）、
+#       _late（battle 超时）、_done（after）、_partial（after_bribe）、_failed（after_missed）。
+#       读 _fought / _turned（after 的 variant 换她那句话）。分支旗标另设 _bribe（花钱）与 _missed（shadow 失败）；终局旗标 _done / _partial / _failed 各只设一面。不读外部旗标，不设 c7_ 旗标。
+# 依赖：港口 galway、人物 grace_omalley、势力 irish_lords / england 均已存在；不依赖 B10b 改名。
+#       与 C7 无交叉：不写艾希林·奥弗莱厄蒂、彼得与海图。
+# 回忆插画：mem-request_grace_omalley-after：戈尔韦城外浅滩，一条黑帆小艇，船舷上短发的女人递出皮酒壶。
+
+[[tracks]]
+key = "request_grace_omalley"
+name = "拦下补给船"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["grace_omalley"]
+
+# 报价：浅滩上的黑帆小艇，她先看你的手。
+[[tracks.chapters]]
+key = "offer"
+title = "浅滩上的黑帆小艇"
+text = "戈尔韦城外的浅滩上泊着一条黑帆小艇。船舷上坐着个剪短了头发的女人，先看你的手，再看你的船。“我看过你的手了，现在让我看看你的船。”她说，“英格兰人要来打我在克卢湾的罗克弗利特城堡，这回是真的。给他们送粮的船，这两天正在戈尔韦港里装货。”她要你在外海把它拖住。她自己拦过多少船、收过多少过路钱，她没提，你也没问。"
+speaker = "grace_omalley"
+mood = "tense"
+at = "galway"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1574, 1, 1], to = [1577, 6, 30] },
+  { kind = "alive", person = "grace_omalley", value = true },
+  { kind = "fame", ge = 20 },
+]
+deadline = [1577, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_galway"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "late"
+when = [{ kind = "date", from = [1574, 7, 1] }]
+text = "戈尔韦城外的浅滩上又泊着那条黑帆小艇。她还坐在船舷上，这一回没先看你的手，先看的是港口的方向。“上一回英格兰人没打下来，这一回又来了。”她说，“给他们送粮的船还在戈尔韦港里装货。这一船要是进了城堡，我的人就得多守一个冬天。”她说这话时没有看港口，只看你的船。她要你在外海把它拖住。她自己拦过多少船、收过多少过路钱，她没提，你也没问。"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "接下：在外海截住它"
+next = "battle"
+reply = "她拍了一下船舷：“别弄沉了，粮食我还要。”说完把小艇掉了个头，走之前回头看了一眼你的船尾，像在记你船的名字。“船要是沉在浅滩上，我可不去捞。”她又补了一句，声音大得全港都听得见。"
+effects = [
+  { kind = "affinity", person = "grace_omalley", value = 2 },
+  { kind = "flag", flag = "c13_request_grace_omalley_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "shadow"
+text = "接下：不开炮，跟着它，把它逼回港"
+next = "shadow"
+reply = "她说那得看你的船够不够快。“慢了就别跟来，我的人不等慢船。”她说完把帆一转，小艇先一步钻进了浅滩的水道，水花溅到你的船舷上，她的桨手还回头笑了一下。"
+effects = [
+  { kind = "affinity", person = "grace_omalley", value = 2 },
+  { kind = "flag", flag = "c13_request_grace_omalley_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "bribe"
+text = "出钱让船主“病”上一个月"
+next = "after_bribe"
+reply = "她大笑，说这是她听过最便宜的仗。“钱我收了，病我替你买。船主躺一个月，粮袋就只能在码头上晒太阳。”她说完把钱袋往怀里一揣，动作利落得像收渔网。"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "钱袋太瘪，买不起船主的一场病。"
+effects = [
+  { kind = "cash", value = -600 },
+  { kind = "affinity", person = "grace_omalley", value = 2 },
+  { kind = "flag", flag = "c13_request_grace_omalley_accepted" },
+  { kind = "flag", flag = "c13_request_grace_omalley_bribe" },
+]
+
+# 战斗：打退护航，补给船停在船边，粮食怎么办由你定。
+[[tracks.chapters]]
+key = "battle"
+title = "外海的护航船"
+text = "补给船出了戈尔韦港，后面跟着一条护航的小船。你打退的那条船挂着白旗，划着小艇往戈尔韦的方向逃，旗角被打掉了一块，漂在水上。补给船还停在你的船边，粮袋堆在甲板上，船主的人站在舷边没动。有个水手把缆绳抛过来，手上全是水泡，像是划了一路桨。这一船粮食去哪里，由你定。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "grace_omalley", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在外海打退补给船的护航" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "grace_omalley", value = -5 },
+  { kind = "flag", flag = "c13_request_grace_omalley_late" },
+  { kind = "letter", person = "grace_omalley", text = "粮船到了，城堡还在。你答应得快，走得也慢。下回要是还这么慢，就别再接我的单子了。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "cargo"
+text = "让它的水手划小艇回戈尔韦，粮食送去克卢湾"
+next = "after"
+reply = "她的人把粮袋一袋袋传上黑帆船，冲你吹口哨。有人把一袋米扛在肩上朝你晃了晃，袋口的麻线还是新的。“下回还拦，先告诉我。”她说。"
+news = "戈尔韦港外的一条补给船被截住，粮袋被搬上了克卢湾的黑帆船。英格兰人的管事在码头骂了一个下午。"
+effects = [
+  { kind = "cash", value = 2900 },
+  { kind = "reputation", faction = "irish_lords", value = 3 },
+  { kind = "reputation", faction = "england", value = -2 },
+  { kind = "affinity", person = "grace_omalley", value = 3 },
+  { kind = "flag", flag = "c13_request_grace_omalley_fought" },
+]
+
+[[tracks.chapters.choices]]
+key = "let"
+text = "放它回港，粮食不动"
+next = "after"
+reply = "她骂了一句，又笑了：“打退了就行。”她的人朝补给船挥了挥手，像送走一个不太讨喜的亲戚。补给船的人没再回头，船尾的旗在风里歪了一下。"
+news = "外海那一仗之后，戈尔韦的补给船灰头土脸地回了港，粮袋一袋没少。英格兰人的管事只把粮袋重新点了一遍。"
+effects = [
+  { kind = "cash", value = 2300 },
+  { kind = "reputation", faction = "irish_lords", value = 2 },
+  { kind = "reputation", faction = "england", value = -1 },
+  { kind = "affinity", person = "grace_omalley", value = 1 },
+  { kind = "flag", flag = "c13_request_grace_omalley_fought" },
+]
+
+# 贴上去：补给船一出港，你就压它的上风。
+[[tracks.chapters]]
+key = "shadow"
+title = "贴着补给船的帆"
+text = "补给船一出港，你就贴上去，抢它的上风。护航的小船朝你打了一炮，没打中，水柱落在船舷外，溅了甲板一身咸水。补给船的船主在舵楼上喊，喊的是英格兰人的粮，还是你，听不清。它的舵手把帆角往下拽，船身一斜，想借着潮水把你甩在后头。这一船粮食能不能回港，就看你怎么逼它。"
+speaker = "captain"
+mood = "tense"
+at = "galway"
+when = [{ kind = "alive", person = "grace_omalley", value = true }]
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "一直压着它的上风，逼它掉头"
+next = "after"
+reply = "你一直压在它的上风，帆角对着帆角，逼得它的舵手不得不回头看你。它朝你比了个手势，风把骂声吹散了。护航的小船在后头又放了一炮，水柱落在两条船中间。"
+news = "天黑前，戈尔韦外海的一条补给船掉头回了港，船尾那条护航的小船还在后面跟。这一船粮要晚两天才卸得完。"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "after_missed", effects = [
+  { kind = "affinity", person = "grace_omalley", value = -2 },
+  { kind = "flag", flag = "c13_request_grace_omalley_missed" },
+], news = "补给船借着潮水溜过了阿兰群岛，戈尔韦港的人说，那条船连一袋粮都没卸下来。" }
+effects = [
+  { kind = "cash", value = 2300 },
+  { kind = "reputation", faction = "irish_lords", value = 2 },
+  { kind = "reputation", faction = "england", value = -1 },
+  { kind = "affinity", person = "grace_omalley", value = 3 },
+  { kind = "flag", flag = "c13_request_grace_omalley_turned" },
+]
+
+[[tracks.chapters.choices]]
+key = "signal"
+text = "打旗号，假装是英格兰的巡船叫它回港"
+next = "after"
+reply = "你把英格兰巡船的旗号升上桅顶，旗手照着样子挥了两下，又换了一面更大的。补给船的舵楼上有人举起望远镜，看了很久，半天没有人出声。"
+news = "阿兰群岛外有一条补给船听了一面假的英格兰巡船旗号，掉头回了戈尔韦港。港里的人笑了一个下午。"
+check = { attr = "eloquence", base = 5, per = 8 }
+fail = { next = "after_missed", effects = [
+  { kind = "affinity", person = "grace_omalley", value = -2 },
+  { kind = "flag", flag = "c13_request_grace_omalley_missed" },
+], news = "阿兰群岛外有人打英格兰的旗号，补给船不理，自顾自地往外海去了。戈尔韦的水手骂那旗号做得太假。" }
+effects = [
+  { kind = "cash", value = 2300 },
+  { kind = "reputation", faction = "irish_lords", value = 2 },
+  { kind = "affinity", person = "grace_omalley", value = 3 },
+  { kind = "flag", flag = "c13_request_grace_omalley_turned" },
+]
+
+# 收尾（打赢或逼回）：她递来皮酒壶，按船上的事说一句。
+[[tracks.chapters]]
+key = "after"
+title = "黑帆下的酒壶"
+text = "过了些日子，那条黑帆小艇又泊在戈尔韦的浅滩上。她递过来一只皮酒壶，壶口缠着一圈旧绳，绳结是克卢湾的渔户打的。“爱尔兰的烧酒，比英格兰人的火药还烈。”她笑着，短发在风里一翘一翘的。壶里的酒晃得响，是今早刚灌的，她把壶口对着你，又收回去，自己先灌了一口，才把壶推过来。港里的人说，她这些年拦下的船，数都数不清。"
+speaker = "grace_omalley"
+mood = "cheerful"
+at = "galway"
+when = [{ kind = "alive", person = "grace_omalley", value = true }]
+
+[[tracks.chapters.variants]]
+key = "fought"
+when = [{ kind = "flag", flag = "c13_request_grace_omalley_fought" }]
+text = "过了些日子，那条黑帆小艇又泊在戈尔韦的浅滩上。她递过来一只皮酒壶，壶口缠着一圈旧绳，绳结是克卢湾的渔户打的。“你的炮手是哪里人？”她问，眼睛盯着的是你的船舷。“炮打得那么准，我的人想知道是谁教的。”你还没答，她已经笑出了声，说那一炮要是打中了，这船粮食就只能进鱼肚子，她可舍不得。她伸手摸了摸船舷上新添的一道刮痕，说这一道不记账。"
+
+[[tracks.chapters.variants]]
+key = "turned"
+when = [{ kind = "flag", flag = "c13_request_grace_omalley_turned" }]
+text = "过了些日子，那条黑帆小艇又泊在戈尔韦的浅滩上。她递过来一只皮酒壶，壶口缠着一圈旧绳，绳结是克卢湾的渔户打的。“你的船比我想的快。”她说，把酒壶在手里掂了掂，“我的船要是有你的船一半快，英格兰人的桅杆早就断了。”她不谢你，只把壶口朝你这边转了一下，像是在说：喝吧。她先喝了一口，把壶底朝天给你看，壶里还剩半口，她说那是给你留的。"
+
+[[tracks.chapters.choices]]
+key = "drink"
+text = "接过酒壶喝一口"
+next = "done"
+reply = "烈酒呛得你直咳，她看着你咳，笑得前仰后合，一边拍船舷一边说：“这才像个能拦船的人。”笑完她又灌了一口，抹抹嘴，说这一口算她请你的。"
+news = "戈尔韦浅滩上那条黑帆小艇，这回停了一下午。克卢湾的女首领和一个外来的船长喝烧酒，一个呛得直咳，一个笑得更厉害。"
+effects = [
+  { kind = "affinity", person = "grace_omalley", value = 4 },
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_grace_omalley-after", title = "黑帆下的酒壶" },
+  { kind = "flag", flag = "c13_request_grace_omalley_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "next"
+text = "问她下一回要拦谁"
+next = "done"
+reply = "她说下一回她自己拦，用不着你。“你的船够快，留着去送信吧。”她说完又笑，好像这句话她早就想了很久。岸边有个跑过的孩子，她伸手拦住，塞给他一枚铜子，说是给下一个拦船的人的。"
+news = "戈尔韦浅滩上有人问那条黑帆小艇下一回要拦谁。克卢湾的女首领说，这回不用旁人，她自己拦。"
+effects = [
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_grace_omalley_done" },
+]
+
+# 花钱的路线：船主病了一个月，她来算账。
+[[tracks.chapters]]
+key = "after_bribe"
+title = "病倒的船主"
+text = "一个月过去，那条黑帆小艇从港口那边摇过来，在浅滩边上停住。她朝港口的方向歪了歪头，侧耳听了听那边的钟声，说船主家又请了一个大夫，第三个了。“船主真的病了，躺在床上起不来。他喝的是我送去的酒，烈得能放倒一头牛。”她说完先笑，递过来一只皮酒壶，壶身被摸得油亮。“这一个月的粮，一袋也没出港。账我记在船上，哪天你缺一条船，报我的名字。”"
+speaker = "grace_omalley"
+mood = "cheerful"
+at = "galway"
+when = [
+  { kind = "wait", days = 30 },
+  { kind = "alive", person = "grace_omalley", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "drink"
+text = "接过酒壶喝一口"
+next = "done"
+reply = "你喝下去，脸一下子红到耳根。她拍着船舷笑个不停，笑完才擦着眼角说：“让船主躺在床上，比让他挨刀省事。钱花在这种地方，我没看走眼。”她的笑声在浅滩上传得很远。"
+news = "戈尔韦港的一条粮船，船主病倒了一个月，粮袋没能出港。嘴上都说是喝坏了肚子，没人愿意细问。"
+effects = [
+  { kind = "affinity", person = "grace_omalley", value = 4 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_grace_omalley_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "next"
+text = "问她下一回还有没有这样便宜的仗"
+next = "done"
+reply = "她笑着摇头：“便宜的仗只有一场。下一回的仗，我们一起打得贵些。”她把酒壶收回去，自己喝了一口。“要是还有这样的船主，你先来找我。”"
+effects = [
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_grace_omalley_partial" },
+]
+
+# 没拦住：补给船溜了，她只说城堡还在。
+[[tracks.chapters]]
+key = "after_missed"
+title = "城堡还在"
+text = "那条黑帆小艇又泊在戈尔韦的浅滩上，这回她没有递酒壶。补给船从你眼前溜走了，这事港里已经传开。“城堡还在。”她只说了这一句，声音不高，也不骂人。她把手里的旧绳一圈圈绕在指头上，绕完又解开。“你的船慢，我不怪你。”她身后的小艇上，两个桨手一直没抬头，像在等她一句话。她跳回自己的小艇，木板一响，才回头看了你一眼。"
+speaker = "grace_omalley"
+mood = "sad"
+at = "galway"
+when = [{ kind = "alive", person = "grace_omalley", value = true }]
+
+[[tracks.chapters.choices]]
+key = "apologize"
+text = "跟她道个歉"
+next = "failed"
+reply = "“道歉？”她愣了一下，随即摆手，“留着给英格兰人吧，他们的账比我的还难算。他们还不起的时候，比你还会道歉。”她把小艇推离了浅滩，桨手这才抬起头。"
+effects = [
+  { kind = "affinity", person = "grace_omalley", value = 1 },
+  { kind = "flag", flag = "c13_request_grace_omalley_failed" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问她城堡还守得住吗"
+next = "failed"
+reply = "她看了看海，说守得住守不住，是城堡自己的事。“你把你的船修好，下回别再慢半拍。”她说完又看了看天，像在算风向，算完把手里的旧绳又绕了一圈。"
+effects = [
+  { kind = "flag", flag = "c13_request_grace_omalley_failed" },
+]

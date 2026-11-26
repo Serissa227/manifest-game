@@ -1,0 +1,218 @@
+# C13d 请托：同名不同物（request_garcia_de_orta）。中文，Claude 写。
+# 人物：加西亚·达·奥尔塔 garcia_de_orta（1501 生，男；葡萄牙医生，果阿的诊所与药草园，身份档 2 学者，1568 卒）。
+# 类型：混合（mixed）；5 章 offer → samples → cochin → back → epilogue。送货（樟脑 5 担，运到果阿）＋ 去某处（科钦药市问树皮）＋ 收尾。
+# 报价：当面（T）。人物按日程在果阿（goa，trading_house），auto=false，玩家“问请托”（ask:request_garcia_de_orta）启动；offer 章不写 at。
+# 窗口：报价 1557-03-01 至 1567-12-31（offer 的 deadline 即窗口止日，到期走 failed，不写见闻）；
+#   樟脑交货进行中 300 天；科钦树皮 90 天；回果阿结账 120 天；书印出来后的收尾只到 1568-06-30。
+# 依据·史实：奥尔塔《印度草药与药物对话》（Coloquios dos simples），1563 年果阿印行；书中分辨了婆罗洲与中国的樟脑。
+#   库尔奇（kurchi）是科钦一带止痢退热的本地树皮，不写成金鸡纳（那是美洲的，晚一百年）。
+#   1560 年宗教裁判所到了果阿（史实），正文只在 back 章的 1560 年以后变体里写一句影子，不写家人，不写机构细节，不进见闻。
+# 依据·原创：科钦药市最里头嚼槟榔的老药师；果阿那块假树皮的染色；烧樟脑的铜盘；印歪的几页；“信了的人”之外的一句“不留名的人，话往往最准”。
+# 货款：樟脑 5 担 × 基准价 100 × 1.25 = 625，按 50 取整取 600（按 brief）。
+# 读的旗标：无（不读 c7_* 与 c13_main_*；本轨道没有主线门禁，对六位主角都说得通）。
+# 设的旗标：c13_request_garcia_de_orta_accepted（offer 接下）/ declined（回绝，终局）/ late（超时，终局）/ done（结账，终局）；
+#   分支：pointed_out、he_guessed（樟脑）、true_bark、half_answer（树皮）、named、healer_credited（结账）、book_to_healer（收尾）。
+#   结构说明：back 的 credit_healer 原先 requires 旗标 true_bark，审计机器人会报“准备后条件仍不满足”；按 brief 本来就没有门禁，现已去掉（half_answer 的玩家带回的是老药师的一句话，也可以请他写进书里）。
+# 依赖：B10b 日程与港口 goa、cochin_port（ports_india.toml 已有）；商品 camphor（goods/05_terra_trade.toml）；
+#   物品 orta_goa（items/books_06_medicine.toml，唯一奖励）；技能 herbal_medicine（skills.toml）；人物 garcia_de_orta（cast/historical_03_indian_ocean.toml）。
+# 避开 C7：不写里斯本（贝阿特丽丝线），不写玛尔塔与玛丽亚的线；cast 没有秘密字段，本请托不碰宗教与家人。
+# 回忆插画清单：mem-request_garcia_de_orta-back，画面：书稿最后一页写着一位船长的名字，墨迹未干，旁边是一块烧黑的樟脑印。
+
+[[tracks]]
+key = "request_garcia_de_orta"
+name = "同名不同物"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["garcia_de_orta"]
+
+# 一、报价：1557—1567 年间，玩家在果阿找到他，他要五担樟脑，还要一味树皮。
+[[tracks.chapters]]
+key = "offer"
+title = "两种樟脑"
+text = "果阿的诊所门口晒着一排药草。你进去的时候，加西亚·达·奥尔塔一手按着病人的脉，一手把一块樟脑举到窗前，头也不回。“坐，别碰那块。”他说话比手快，“阿维森纳说樟脑只有一种，胡说。名字一样，东西未必一样。婆罗洲出的一种，中国的又是一种，我拿鼻子就闻得出来。”病人被他打发走，他才转过身，上下打量你的手：“从东边来的？替我跑一趟，要五担樟脑。码头上问清楚是哪个港买的，那一批我闻了就知道是哪一种。”"
+speaker = "garcia_de_orta"
+mood = "cheerful"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1567, 12, 31] }]
+objectives = [{ kind = "person", person = "garcia_de_orta", text = "在港里找到他" }]
+deadline = [1567, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下，去东边带五担樟脑来。"
+next = "samples"
+reply = "他把病人打发走，在一张纸上画了两块樟脑的样子，一块像冰糖，一块像盐。“带来了，我烧给你看哪块是哪块。钱的事你自己跟管事说，我只认货。”"
+effects = [{ kind = "affinity", person = "garcia_de_orta", value = 2 }, { kind = "flag", flag = "c13_request_garcia_de_orta_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_avicenna"
+text = "接下，但问：阿维森纳要是对的呢？"
+next = "samples"
+reply = "“那我就在书里认错。”他说得飞快，“认错也是一章，我还要把错的那一段抄给你看。可他不对——他没见过婆罗洲，我见过。”"
+effects = [{ kind = "affinity", person = "garcia_de_orta", value = 2 }, { kind = "flag", flag = "c13_request_garcia_de_orta_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "东边那一趟今年不走。"
+next = "failed"
+reply = "他耸耸肩，没有劝你，转身去骂学徒把药碾得太粗了。“粗的药也能治病，”他说，“就是治得不准。”学徒低着头，把碾子推得更用力。"
+effects = [{ kind = "flag", flag = "c13_request_garcia_de_orta_declined" }]
+
+# 二、交樟脑：他在铜盘上烧两种樟脑，问你是哪个港买的。三种交法，都交出五担。
+[[tracks.chapters]]
+key = "samples"
+title = "烧给你看"
+text = "樟脑摆在他的桌上，一排灰白的块子，有的亮，有的碎。他掰下一小块凑到鼻子底下闻，又点一块放在铜盘上烧，烟一起来，屋里全是凉丝丝的气味。学徒捂着嘴往窗边躲。“你这批是哪个港买的？”他的眼睛盯着烟，手却在碎屑里扒拉，“婆罗洲的块儿大，结得亮；中国的碎，烧起来发甜。我闻了二十年药，没闻错过一回。商人要是混着卖，我可不替他们背锅。”"
+speaker = "garcia_de_orta"
+mood = "cheerful"
+at = "goa"
+when = [{ kind = "alive", person = "garcia_de_orta", value = true }]
+objectives = [{ kind = "goods", good = "camphor", qty = 5, at = "goa", text = "把樟脑（5）运到果阿" }, { kind = "person", person = "garcia_de_orta", text = "在港里找到他" }]
+deadline_days = 300
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "garcia_de_orta", value = -3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_late" }, { kind = "letter", person = "garcia_de_orta", text = "樟脑那一章我先照别人的样货写了。你若带来，我再改——改书我不怕。" }] }
+
+[[tracks.chapters.choices]]
+key = "tell_port"
+text = "照实说是在哪个港买的，让他自己分。"
+news = "果阿的奥尔塔医生在诊所里烧樟脑，满屋子的烟，他说这一批两种都有，商人混着卖。"
+next = "cochin"
+reply = "他闻了闻烟，说你这批里两种都有，商人混着卖。他高兴得像捡了钱，把碎的那堆拨到一边，又把亮的那堆拨过来。“混着卖，正好写进书里。这种事，书里要有个例子。”"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "garcia_de_orta", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "point_out"
+text = "你先说：这一块是婆罗洲的，那一块是中国的。"
+news = "果阿的奥尔塔医生在诊所里烧樟脑，一个船长先指出哪块是婆罗洲的，医生笑得拍了桌子。"
+next = "cochin"
+reply = "他瞪着你，烧了两块对比，烟一样，气味却分得开。然后他哈哈大笑，拍着桌子承认你说对了：“这一章，有你一句话。”他让学徒把两块都包起来，说要记在你的名下。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "garcia_de_orta", value = 3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_pointed_out" }]
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "两块樟脑在你眼里一模一样。"
+
+[[tracks.chapters.choices]]
+key = "let_guess"
+text = "让他先猜，你再揭底。"
+news = "果阿的奥尔塔医生在诊所里烧樟脑，让一个船长先猜，猜错了一块，脸红到耳朵根，嘴上还不认。"
+next = "cochin"
+reply = "他猜错了一块，脸都红了，嘴上还不认：“是你的商人骗了你。”过一会儿又小声说，“记下来，我也会猜错。”他把猜错的那块单独放进抽屉，锁上，说留着下回再猜。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "garcia_de_orta", value = 3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_he_guessed" }]
+
+# 三、科钦的树皮：他要一味树皮，本地叫“库尔奇”。老药师不说话，你得自己开口或者自己尝。
+[[tracks.chapters]]
+key = "cochin"
+title = "库尔奇树皮"
+text = "他又托你去科钦的药市问一种树皮。马拉雅拉姆的药贩管它叫“库尔奇”，说能止痢、退热；他手里那块干巴巴的，颜色像陈年的茶梗，不知道是不是同一种。“去问，问它叫什么，怎么剥，怎么晒。别问药贩，药贩只会报价。”他把树皮塞进你手里，又补一句，“买对的，别买贵的。”科钦的药市挤在河边，腥气、香料和晒干的鱼混在一起。最里头坐着一个老药师，嚼着槟榔，嘴角一片红。他看你手里的树皮，不说话。"
+speaker = "captain"
+mood = "mystic"
+at = "cochin_port"
+when = [{ kind = "alive", person = "garcia_de_orta", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "garcia_de_orta", value = -3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_late" }, { kind = "letter", person = "garcia_de_orta", text = "科钦的树皮我托别人去问了。那人回来说是同一种。我不信，可书要印了。" }] }
+
+[[tracks.chapters.choices]]
+key = "herbal"
+text = "跟老药师比对树皮的断面和苦味。"
+news = "科钦药市最里头，一个嚼槟榔的老药师掰开两块树皮，让一个外来的船长尝，尝出哪块是假的。"
+next = "back"
+reply = "他掰开两块，叫你尝；一块苦得发涩，一块只是苦。他说果阿那块是假的，是商人拿别的树皮染了色。他给你包了一块真的，还教你怎么煎，煎的时候要盖着，别让气跑了。"
+effects = [{ kind = "affinity", person = "garcia_de_orta", value = 3 }, { kind = "skill", skill = "herbal_medicine", value = 20 }, { kind = "flag", flag = "c13_request_garcia_de_orta_true_bark" }]
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "两块树皮在你嘴里都是一个味：苦。"
+
+[[tracks.chapters.choices]]
+key = "ask_kindly"
+text = "坐下来陪他嚼一会儿槟榔，慢慢问。"
+news = "科钦药市最里头，一个嚼槟榔的老药师跟一个外来的船长讲了一下午树皮，讲到晒的时候吐了口槟榔渣。"
+next = "back"
+reply = "他讲了一下午：这树长在哪里，什么时候剥，剥了怎么晒，晒到什么颜色算好。讲到晒的时候，他把槟榔渣吐进痰盂，说：“你们葡萄牙人只问价钱。”讲完他说：“你那个葡萄牙医生，叫他自己来。”"
+effects = [{ kind = "affinity", person = "garcia_de_orta", value = 3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_true_bark" }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "back", effects = [{ kind = "flag", flag = "c13_request_garcia_de_orta_half_answer" }], news = "科钦药市最里头，一个外来的船长陪老药师坐了一下午，老药师只肯说一句：果阿的那块不对。" }
+
+[[tracks.chapters.choices]]
+key = "buy_bundle"
+text = "买下他一捆好树皮，请他写一张用法。"
+news = "科钦药市里，一个外来的船长买下老药师的一捆树皮，还让老药师的徒弟用马拉雅拉姆文写了张用法。"
+next = "back"
+reply = "他收了钱，数得很慢，数完叫徒弟用马拉雅拉姆文写张用法，写的时候念出声来，念一句写一句。背面他又画了一片叶子，叶缘有细齿，画得比写字还认真。"
+effects = [{ kind = "cash", value = -150 }, { kind = "affinity", person = "garcia_de_orta", value = 3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_true_bark" }]
+requires = [{ kind = "cash", ge = 150 }]
+hint = "一捆好树皮，你买不起。"
+
+# 四、书上写不写你的名字：树皮的话带回果阿，他问你要不要留名。1560 年以后门口多了一个修士，见下方变体。
+[[tracks.chapters]]
+key = "back"
+title = "书上写不写你的名字"
+text = "你把科钦的树皮带回果阿。奥尔塔先闻，再掰，断口一看就皱起了眉，最后一拍桌子：“果阿那块，我早疑心是染的。”他把你带回的东西一样样写进书稿，左边一栏是树皮的产地，右边一栏是他自己的话。写到一半他抬头，用笔杆指着你：“用不用写你的名字？”"
+speaker = "garcia_de_orta"
+mood = "tense"
+when = [{ kind = "alive", person = "garcia_de_orta", value = true }]
+objectives = [{ kind = "person", person = "garcia_de_orta", text = "在港里找到他" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "garcia_de_orta", value = -3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_late" }, { kind = "letter", person = "garcia_de_orta", text = "树皮那一段我照我自己的意思写了。错了，你来骂我。" }] }
+
+[[tracks.chapters.variants]]
+key = "half_1560"
+when = [{ kind = "flag", flag = "c13_request_garcia_de_orta_half_answer" }, { kind = "date", from = [1560, 1, 1] }]
+text = "你只带回老药师的一句话：果阿的那块不对。奥尔塔一拍桌子，说这一句就够了，他自己去查。门口站着一个多明我会的修士，在打听什么。奥尔塔看了他一眼，把话头引回了药上。写到一半他抬头，用笔杆指着你：“用不用写你的名字？”"
+
+[[tracks.chapters.variants]]
+key = "half_answer"
+when = [{ kind = "flag", flag = "c13_request_garcia_de_orta_half_answer" }, { kind = "date", to = [1559, 12, 31] }]
+text = "你只带回老药师的一句话：果阿的那块不对。奥尔塔一拍桌子，说这一句就够了，他自己去查。他把这一句写在书稿的页边，写完又涂掉一个字，换上一个更重的。写到一半他抬头，用笔杆指着你：“用不用写你的名字？”"
+
+[[tracks.chapters.variants]]
+key = "after_1560"
+when = [{ kind = "date", from = [1560, 1, 1] }, { kind = "flag", flag = "c13_request_garcia_de_orta_half_answer", value = false }]
+text = "你把科钦的树皮带回果阿。奥尔塔先闻，再掰，最后一拍桌子：“果阿那块，我早疑心是染的。”门口站着一个多明我会的修士，在打听什么。奥尔塔看了他一眼，把话头引回了树皮上。他把你带回的东西一样样写进书稿，左边一栏是树皮的产地，右边一栏是他自己的话。写到一半他抬头，用笔杆指着你：“用不用写你的名字？”"
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "用我的名字。"
+news = "果阿的人说，奥尔塔医生的药书稿里，有一章是一个船长从科钦带回来的话，末尾写着船长的名字。"
+next = "epilogue"
+reply = "他在稿子上写下你的名字，旁边加了一句“一个肯尝苦的船长”。“这样，后世的人骂这一章，就有两个人一起挨骂。”他说完自己先笑了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "garcia_de_orta", value = 6 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "memory", memory = "mem-request_garcia_de_orta-back", title = "稿上的名字" }, { kind = "flag", flag = "c13_request_garcia_de_orta_done" }, { kind = "flag", flag = "c13_request_garcia_de_orta_named" }]
+
+[[tracks.chapters.choices]]
+key = "anonymous"
+text = "写“一位船长”就好。"
+news = "果阿的人说，奥尔塔医生的药书稿里，有一章是一个船长从科钦带回来的话，署名是一位不肯留名的船长。"
+next = "epilogue"
+reply = "他想了想，写下“一位不肯留名的船长”，嘴里嘟囔：“不留名的人，话往往最准。”他把笔搁下，又拿起来，在那句话底下画了一个小圈，说这是给你留的记号。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "garcia_de_orta", value = 8 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "memory", memory = "mem-request_garcia_de_orta-back", title = "稿上的名字" }, { kind = "flag", flag = "c13_request_garcia_de_orta_done" }]
+
+[[tracks.chapters.choices]]
+key = "credit_healer"
+text = "请他把科钦那位老药师写进书里。"
+news = "果阿的人说，奥尔塔医生的药书稿里，有一章写的是科钦药市一位老药师的话，老药师的名字排在前头。"
+next = "epilogue"
+reply = "他张嘴想抬杠，又闭上了，在稿子上写下“科钦药市一位老药师”，写得很慢，一笔一笔。“好。这一回，书比我老实。”他把笔递给你，“要改就现在改，印出来就改不了了。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "garcia_de_orta", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_garcia_de_orta_done" }, { kind = "flag", flag = "c13_request_garcia_de_orta_healer_credited" }]
+
+# 五、果阿印的书：1563 年印出来，他拿一本给你，翻到印歪的那几页。
+[[tracks.chapters]]
+key = "epilogue"
+title = "果阿印的书"
+text = "书印出来了，是果阿的印书坊印的，纸有点黄，有几页的字印歪了，油墨在角上晕开。奥尔塔拿着一本走到你跟前，翻到写樟脑和树皮的那几页，手指点着一行一行往下看。“印歪的那几页，我最喜欢。”他说，“错字都在里头，印的时候没人发现。等后来的人骂我，就从那几页骂起。”他把书合上，用拇指在书口上蹭了一下，蹭下一点油墨。"
+speaker = "garcia_de_orta"
+mood = "tender"
+when = [{ kind = "alive", person = "garcia_de_orta", value = true }, { kind = "date", from = [1563, 4, 10] }]
+objectives = [{ kind = "person", person = "garcia_de_orta", text = "在港里找到他" }]
+deadline = [1568, 6, 30]
+timeout = { next = "done", effects = [{ kind = "letter", person = "garcia_de_orta", text = "书印出来了，你没来取。我托下一条去科钦的船，把那一本带给了老药师。" }] }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下这本书。"
+next = "done"
+reply = "他在扉页上写了一行字，写完又划掉一半。“剩下的那半句才是真话，”他说，“你自己猜去。”"
+effects = [{ kind = "item", item = "orta_goa", qty = 1 }]
+
+[[tracks.chapters.choices]]
+key = "send_healer"
+text = "请他把这本送给科钦的那位老药师。"
+next = "done"
+reply = "他愣了一下，笑了：“他不识葡萄牙字。”可他还是把书包好，在封皮上写下科钦的地名，托下一条去科钦的船带去。“他要是看不懂，就拿去垫药碾子。”"
+effects = [{ kind = "affinity", person = "garcia_de_orta", value = 2 }, { kind = "flag", flag = "c13_request_garcia_de_orta_book_to_healer" }]

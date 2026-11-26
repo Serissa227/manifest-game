@@ -1,0 +1,66 @@
+# 吵了一辈子的人：主角之间的关系轨道·纳吉玛×巴拉卡·童年玩伴（故事 2.0，A5 / E37 契约）
+# 标签：关系轨道（tie）；两人都不是玩家时才跑。玩家是任何主角或自由船长时，两人的事都只以见闻的形式从旁人嘴里转述。
+# 人物：纳吉玛（najma，1540-08-24，尤尔法的采珠船长之女）与巴拉卡·宾·萨利姆（baraka，1540-07-23，基尔瓦的金商之子）。
+#       童年玩伴，随季风相识，一生斗嘴。本线不写恋情，不用 heart / relation / tie / bond 效果。
+# 轨道：tie_najma_baraka_childhood（request，auto，cast 为两人）；两章见闻，无选项，无回忆插画。
+#       t1_mombasa（1586 年初—6 月，蒙巴萨）→ t2_kilwa（1589 年 6—9 月，基尔瓦）。门槛章 t1 要两人的 c12_voyage_* 都为假且 upbringing_graduated。
+# 依据：
+#   史实（TERRA16 §12.10；H59）：1586 年米尔·阿里·贝伊的奥斯曼桨帆船南下，帕泰、拉穆等城的使者上船献礼；
+#         1587 年前后津巴人从内陆南下，基尔瓦陷落；1589 年葡萄牙舰队与津巴人夹击蒙巴萨，米尔·阿里被俘。
+#   原创：金商抱回去的那匹绸子、“那条船吃水太浅”、挑夫的转述、两人在基尔瓦码头上数砝码与量星的那一晚。
+#   待核（正文一律传闻或转述的口吻）：无。
+# 旗标：读 c12_voyage_najma、c12_voyage_baraka、upbringing_graduated（门槛）；读 h59_mir_ali_coast_coastal_autonomy（C10 提供，t2 变体）。本线不设旗标。
+# HIST 占位清单：h59_mir_ali_coast_coastal_autonomy（t2 的 swahili_free 变体）。C10 不做这个结果就删掉那个变体，缺省正文照样成立。
+# 交付：登记为 tie_najma_baraka_childhood（world.toml 的 stories 与 runtime_links 的 pending_tracks）；本文件只写中文，没有英文覆盖。
+# 禁区：不写秘密，不写两人的恋情，不写津巴人的屠杀细节，不写谁死了；见闻里不写任何未揭开的事。
+
+[[tracks]]
+key = "tie_najma_baraka_childhood"
+name = "吵了一辈子的人"
+kind = "request"
+start = "t1_mombasa"
+auto = true
+cast = ["najma", "baraka"]
+
+# 1586 年初—6 月 · 蒙巴萨码头：米尔·阿里的船进港那天，献礼的队伍里有一匹绸子。
+[[tracks.chapters]]
+key = "t1_mombasa"
+title = "抱回去的绸子"
+text = "蒙巴萨码头上的人说，米尔·阿里那条挂红旗的奥斯曼桨帆船进港那天，帕泰和拉穆的使者排着队上船献礼。基尔瓦那个讲史诗的金商也抱着一匹绸子排在里头。走到跳板跟前，一个阿拉伯女领航在他耳边说了句什么，他站了好一会儿，把绸子又抱回怀里。挑夫说：“他一路走一路笑，说这是头一回听她的。”有人问她说了什么，她只道：“那条船吃水太浅。”"
+stage = "rumor"
+window = [[1586, 1, 1], [1586, 6, 30]]
+at = "mombasa"
+cast = ["najma", "baraka"]
+mood = "cheerful"
+when = [
+  { kind = "flag", flag = "c12_voyage_najma", value = false },
+  { kind = "flag", flag = "c12_voyage_baraka", value = false },
+  { kind = "flag", flag = "upbringing_graduated" },
+]
+news = "蒙巴萨的人说，诸城的使者都上了那条奥斯曼桨帆船献礼，只有基尔瓦那个金商听了一个女领航一句话，把绸子又抱了回去。"
+
+[tracks.chapters.default]
+next = "t2_kilwa"
+effects = []
+
+# 1589 年 6—9 月 · 基尔瓦码头：津巴人过去以后，两人在码头尽头坐到半夜。
+[[tracks.chapters]]
+key = "t2_kilwa"
+title = "替他讲完的笑话"
+text = "基尔瓦的人说，津巴人过去以后，那两个吵了一辈子的人坐在码头尽头，一个举着牵星板量星，一个一只只数砝码，从傍晚坐到半夜，一整晚没拌嘴。金商讲个笑话，讲到一半停住，领航女接过去替他讲完。码头上的人说：“她讲笑话不好笑，可他笑了。”"
+stage = "rumor"
+window = [[1589, 6, 1], [1589, 9, 30]]
+at = "kilwa"
+cast = ["najma", "baraka"]
+mood = "sad"
+when = []
+news = "基尔瓦的人说，津巴人过去以后，那两个吵了一辈子的人在码头上坐到半夜，这一回没拌嘴。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "swahili_free"
+when = [{ kind = "flag", flag = "h59_mir_ali_coast_coastal_autonomy" }]
+text = "基尔瓦的人说，津巴人过去以后，那两个吵了一辈子的人坐在码头尽头，一个举着牵星板量星，一个一只只数砝码，从傍晚坐到半夜，一整晚没拌嘴。诸城的旗还挂在旗杆上，金商讲个笑话，讲到一半停住，领航女接过去替他讲完。码头上的人说：“她讲笑话不好笑，可他笑了。”金商说，这是他这辈子讲过最好的一个结尾。"

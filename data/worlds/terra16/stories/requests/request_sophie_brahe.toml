@@ -1,0 +1,211 @@
+# 药圃的书与籽（request_sophie_brahe）——C13d 人物的请托，故事 2.0 TOML。
+# 人物：索菲·布拉赫（sophie_brahe，1556 年生，1643 年卒），第谷的妹妹；1588 年丈夫去世后管埃里克斯霍尔姆的庄园与花园，自己配药、替邻里看病。cast 已登记本轨道，日程为 1588—1590 埃里克斯霍尔姆。
+# 类型：找东西（fd），offer（报价）→ handin（交书），收尾分三章：garden（带籽）、garden_marked（标了书）、garden_book（只交书），由 handin 选项的 next 分流。
+# 报价：V 到访。auto=true；offer 在 copenhagen（哥本哈根药铺门口）；窗口 1588-02-01..1590-04-30，deadline 即窗口止日，超时 next=failed，无见闻；名声门槛 5；family=c13_offer_copenhagen，冷却 20 天。
+# 报酬：现金 1600（身份档 2，低风险）；可能自付 100 买籽（不发物品，只在叙事里）；唯一奖励 tycho_copenhagen（第谷《论新星》，只当礼物）；技能 herbal_medicine +20；名声 +3；声望 denmark_norway +2；好感正向合计不超过 13（接下 +2，交书的三条路 +1／+3／+5，收尾 +5／+6）；回忆 mem-request_sophie_brahe-garden（只给种了东西的两条路）。
+# 回忆插画：mem-request_sophie_brahe-garden——埃里克斯霍尔姆花园的一角，一排新苗旁插着写了名字的木牌，两块木牌被划掉。
+# 依据——史实：索菲·布拉赫 1570 年代起协助第谷观测；1588 年丈夫奥特·托特去世后管埃里克斯霍尔姆的庄园与花园，自己配药。多东斯《草药书》在低地国家文化的港口有卖（items books_06_medicine 的 dodoens_antwerp）；第谷《论新星》1573 年在哥本哈根出版（books_04_navigation 的 tycho_copenhagen）。
+# 原创：请托本身、南方的籽（四种里活了两种）、夜里标书的那一晚、港务处的来信、“种下去才知道”的口头禅（只在报价章用一次）。
+# 不写：婚恋与追求者；幼子只在人物卡里；第谷的岛与仪器；书的内容只当礼物。
+# 结构：收尾不用旗标门禁，而是三章分流（门禁写在选项上，审计的分支上会留下被挡住的选项）。seeds 与 marked 的旗标照 brief 设置，不再读取。
+# 旗标：设置——报价 c13_request_sophie_brahe_accepted / declined；分支 seeds（带了籽）、marked（标了书）；终局 done（三章收尾都设，只设这一面）。读取——无。不设、不读任何 c7_ 旗标；不读 noel_unveiled；不依赖主线旗标。
+# 英文覆盖：不写（本批仅中文）。
+
+[[tracks]]
+key = "request_sophie_brahe"
+name = "药圃的书与籽"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sophie_brahe"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "药铺门口的根名"
+text = "哥本哈根的药铺门口，一个穿黑衣的年轻寡妇拿着一张单子，正跟掌柜争一种根茎的名字。掌柜说是这个，她说不是，指甲在单子上划了一道。争完了，她才转过来，问你跑不跑南方：“我要一部多东斯的《草药书》，对着园子里的植株认。还想要几种我没见过的南方药草的籽。”她把你从头看到脚，像在估一株苗能活几成。“种下去才知道，别的都是猜。”"
+mood = "cheerful"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1588, 2, 1], to = [1590, 4, 30] },
+  { kind = "alive", person = "sophie_brahe", value = true },
+  { kind = "fame", ge = 5 },
+]
+objectives = []
+deadline = [1590, 4, 30]
+timeout = { next = "failed" }
+family = "c13_offer_copenhagen"
+family_cooldown_days = 20
+at = "copenhagen"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "sophie_brahe", value = 2 },
+  { kind = "flag", flag = "c13_request_sophie_brahe_accepted" },
+]
+reply = "她把单子从中间撕成两半，一半塞进你手里，一半折起来收进自己的袖口。“对得上，才算数。”说完她转身回到药铺门口，掌柜还在摇头，她已经开始报第一种根的拉丁名。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝"
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_sophie_brahe_declined" },
+]
+reply = "她点点头，没有劝，也没有再看你一眼。她把单子翻到背面，照着上面的字一行一行念给掌柜听，念到第三行，掌柜就不争了。那种根茎，她心里早就有了名字。"
+
+[[tracks.chapters]]
+key = "handin"
+title = "夜里对书"
+text = "码头边的客栈，二楼窗口正对着港子。她把那部《草药书》摊在桌上，一页一页翻，把带来的干标本按在书里的插图旁边，一片一片对。桌角压着一只小铜秤，是从家里带来称药的。对到一半，她停下来，手指压住一页，没有抬头：“你带籽了没有？这一种，书上画的是一个样子，我的标本是另一个样子。”"
+at = "copenhagen"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "alive", person = "sophie_brahe", value = true }]
+objectives = [
+  { kind = "item", item = "dodoens_antwerp", qty = 1, text = "带一部多东斯的《草药书》" },
+]
+
+[[tracks.chapters.choices]]
+key = "seeds"
+text = "交书，再送她一包在南方药铺买的籽"
+next = "garden"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "一包籽的钱，你身上凑不齐。"
+effects = [
+  { kind = "cash", value = -100 },
+  { kind = "item", item = "dodoens_antwerp", qty = -1 },
+  { kind = "affinity", person = "sophie_brahe", value = 3 },
+  { kind = "flag", flag = "c13_request_sophie_brahe_seeds" },
+]
+reply = "她把籽倒在手心里，一粒一粒对着窗口的光看，挑出两粒放在桌角。“这不是药铺说的那种，”她说，“药铺的人也认不全它们，才敢这样卖。”剩下的她收进小铜秤旁边的纸包里，一粒也没有扔。"
+news = "哥本哈根码头上有人传，一个寡妇在客栈里把一包南方的籽倒在手心，挑出两粒，说药铺卖的不是这种。"
+
+[[tracks.chapters.choices]]
+key = "herbal"
+text = "交书，陪她一页页对，把丹麦土里种得活的标出来"
+next = "garden_marked"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "书上那几种根，你一个也认不出来。"
+effects = [
+  { kind = "item", item = "dodoens_antwerp", qty = -1 },
+  { kind = "affinity", person = "sophie_brahe", value = 5 },
+  { kind = "flag", flag = "c13_request_sophie_brahe_marked" },
+]
+reply = "标完天已经黑了，她把灯挪近了些，逐条看你画的记号。最后她在书边上写了一个字，写得很小，然后抬起头，说：“这一页，总算对上了。”第一次笑了一下。"
+news = "哥本哈根的客栈二楼，一个跑南方的船长陪着寡妇对一部药书，对到天黑，灯油添了两回。"
+
+[[tracks.chapters.choices]]
+key = "book"
+text = "只交书，籽没有带"
+next = "garden_book"
+effects = [
+  { kind = "item", item = "dodoens_antwerp", qty = -1 },
+  { kind = "affinity", person = "sophie_brahe", value = 1 },
+]
+reply = "她把书接过去，压在标本上，只说了一句：“书也好，籽我自己想办法。”又停了停，“你要是哪天路过南方的药铺，回来告诉我，我会去对。”"
+news = "哥本哈根码头上的伙计说，那寡妇收下一部多东斯，南方的籽她说自己去想办法。"
+
+[[tracks.chapters]]
+key = "garden"
+title = "港务处的信"
+text = "过了一季，哥本哈根港务处给你留了一封信和一个包。信上说，那一包南方的籽，四种里活了两种。另外两种她把名字从木牌上划掉，又写一句：“药铺的人连它们是什么都说不清。”园子里一排新苗，每棵苗旁都插着木牌，其中两块上有一道横线，那是她自己划的。包里是她哥哥的一部书，书脊上贴着她的标签，和信上的字是一样的笔迹。信里只有一句：“下回当面讲。”"
+at = "copenhagen"
+mood = "tender"
+when = [{ kind = "alive", person = "sophie_brahe", value = true }]
+objectives = [
+  { kind = "wait", days = 90 },
+  { kind = "at", at = "copenhagen", text = "在哥本哈根港务处取信" },
+]
+
+[[tracks.chapters.choices]]
+key = "read"
+text = "读完信，收下那部书，记下园子的事"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "tycho_copenhagen", qty = 1 },
+  { kind = "skill", skill = "herbal_medicine", value = 20 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "denmark_norway", value = 2 },
+  { kind = "affinity", person = "sophie_brahe", value = 5 },
+  { kind = "memory", memory = "mem-request_sophie_brahe-garden", title = "新苗旁的木牌" },
+  { kind = "flag", flag = "c13_request_sophie_brahe_done" },
+]
+reply = "信末她写，下回来哥本哈根，可以去看看花园。她没写是哪一天，只把那排新苗的数目又写了一遍，一株不多，一株不少，像是怕你记错。"
+news = "哥本哈根港务处的人说，有位寡妇托人留了一包书，信里提到新苗，木牌插了好几排。"
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "回信，告诉她那两种假籽是哪里买的"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "tycho_copenhagen", qty = 1 },
+  { kind = "skill", skill = "herbal_medicine", value = 20 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "denmark_norway", value = 2 },
+  { kind = "affinity", person = "sophie_brahe", value = 6 },
+  { kind = "flag", flag = "c13_request_sophie_brahe_done" },
+]
+reply = "她回信说，那家药铺她记下了，下回有人从南方带籽来，她会先问是哪一家。信末附了一行：“木牌上划掉的两个名字，我不再写了。”"
+news = "哥本哈根港务处的书记说，有个跑南方的船长回了信，把那一包籽是哪家药铺卖的写得清清楚楚。"
+
+[[tracks.chapters]]
+key = "garden_marked"
+title = "新地上的苗"
+text = "过了一季，哥本哈根港务处给你留了一封信和一个包。信上说，园子里多了一块新地，种的就是你们在书页边上标出来的那几种。新苗才出来一个月，她写，还不知道能活几棵，夜里要起来看两回。园子里那块地她翻过三遍，说土比书上写的要硬。包里是她哥哥的一部书，书脊上贴着她的标签。末了添了一行小字：“标的那一种，我先前看走了眼。”"
+at = "copenhagen"
+mood = "tender"
+when = [{ kind = "alive", person = "sophie_brahe", value = true }]
+objectives = [
+  { kind = "wait", days = 90 },
+  { kind = "at", at = "copenhagen", text = "在哥本哈根港务处取信" },
+]
+
+[[tracks.chapters.choices]]
+key = "read"
+text = "读完信，收下那部书，记下园子的事"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "tycho_copenhagen", qty = 1 },
+  { kind = "skill", skill = "herbal_medicine", value = 20 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "denmark_norway", value = 2 },
+  { kind = "affinity", person = "sophie_brahe", value = 5 },
+  { kind = "memory", memory = "mem-request_sophie_brahe-garden", title = "新苗旁的木牌" },
+  { kind = "flag", flag = "c13_request_sophie_brahe_done" },
+]
+reply = "信末她写，下回来哥本哈根，园子里那块新地可以去看看。她没写是哪一天，只说新苗要一株一株地数。"
+news = "哥本哈根港务处的人说，有位寡妇在埃里克斯霍尔姆翻了一块新地，夜里还要起来看苗。"
+
+[[tracks.chapters]]
+key = "garden_book"
+title = "书页上的错"
+text = "过了一季，哥本哈根港务处给你留了一封信和一个包。信是她的字，一行挤着一行。书上的植株她对了一个冬天，有两处错，她自己改在了页边上。包里是她哥哥的一部书，封皮磨得发白，书脊上贴着她手写的标签。信纸角上她画了一个小小的星图，画得不准，旁边写：“画错了，别笑。”信的最后只有一句：“书是好书，错处也是真的。”"
+at = "copenhagen"
+mood = "tender"
+when = [{ kind = "alive", person = "sophie_brahe", value = true }]
+objectives = [
+  { kind = "wait", days = 90 },
+  { kind = "at", at = "copenhagen", text = "在哥本哈根港务处取信" },
+]
+
+[[tracks.chapters.choices]]
+key = "read_book"
+text = "读完信，收下那部书"
+next = "done"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "item", item = "tycho_copenhagen", qty = 1 },
+  { kind = "skill", skill = "herbal_medicine", value = 20 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "denmark_norway", value = 2 },
+  { kind = "affinity", person = "sophie_brahe", value = 5 },
+  { kind = "flag", flag = "c13_request_sophie_brahe_done" },
+]
+reply = "书收下了。她在信里写，下回别空手来，要带能让她对得上书页的东西来。那一季的事她一个字也不再提，只把书页上两处错又圈了一遍。"
+news = "哥本哈根港务处的伙计抱怨，有位寡妇留下一部她哥哥的书，书页边上两处错都改过了。"

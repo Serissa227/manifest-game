@@ -1,0 +1,194 @@
+# 组合事件的效果词表与边界（AI“组合事件”提案使用）。
+#
+# 组合事件没有预设类型：模型（或离线模板）给出标题、叙事，并从下面的效果中挑 1–max_effects 条组合而成。
+# 这里的边界是唯一的依据——发给模型的 JSON Schema（enum / minimum / maximum）、规则裁决器、内核校验都由它生成或读取，
+# 改动后无需改代码。删去某个 [[effects]] 条目，模型就不能再使用该效果。
+#
+# 字段说明：
+#   effect      效果 key（内核实现的封闭集合，见下方各条目；只能用这些 key）
+#   name        显示名（情报界面与提示词）
+#   description 给模型看的说明
+#   mult        系数范围 [下限, 上限]：1 表示不变，小于 1 为减少、大于 1 为增加（mult 恰好为 1 会被拒绝）
+#   days        持续天数范围
+#   delta       变化量范围（delta 为 0 会被拒绝）
+#   port_only   地点必须是港口
+#   peace_delta 仅关系类效果：两国处于和平或停战时允许的变化量范围（更窄，防止凭空挑起战争）
+#
+# 殖民扩展的效果（colony_* / site_claim / discovery_rumor）：
+#   - 殖民地都属于玩家，负面幅度要克制：内核只接受 mult 下限 ≥ 0.6、delta 下限 ≥ −15 的数据（改大会被校验拒绝）；
+#     另外，新殖民地在 colony_grace_days 天内、以及正在断粮或近 30 天遭袭的殖民地不会再受负面效果。
+#   - site_claim 与殖民竞赛遵守同样的节奏限制（rules.toml [colony] 的 claim_*），交战中的势力不能用它占领殖民点。
+#   - discovery_rumor 只在玩家名声达到 rules.toml [discovery] rumor_min_fame 后出现，只给出大致海区，不揭开迷雾。
+
+[composed]
+max_effects = 3        # 每个组合事件的效果条数上限（1–5）
+cooldown_days = 12     # 两个组合事件之间至少间隔的天数
+max_per_year = 20      # 每年最多几个组合事件
+repeat_days = 90       # 同一目标上的同类效果（来自组合事件）两次之间至少间隔的天数
+budget = 1.0           # 总强度预算：各效果 |mult − 1| 之和的上限（delta 类效果不计入）
+max_title_chars = 20   # 标题字数上限
+max_text_chars = 200   # 叙事字数上限
+colony_grace_days = 90 # 新建立的殖民地在多少天内不受负面的殖民地效果影响
+
+# ── 商品（全部地区）──
+[[effects]]
+effect = "good_supply"
+name = "商品产量（各地）"
+description = "某种商品在所有产地增产或减产，例如丰收、歉收、矿难。"
+mult = [0.6, 1.5]
+days = [20, 90]
+
+[[effects]]
+effect = "good_demand"
+name = "商品需求（各地）"
+description = "某种商品在各地的需求变化，例如风尚、禁令、宗教节期。"
+mult = [0.7, 1.5]
+days = [20, 90]
+
+# ── 某地某商品 ──
+[[effects]]
+effect = "supply_shift"
+name = "当地商品产量"
+description = "某地某种商品的产量变化，例如新矿脉、作坊失火、渔汛。"
+mult = [0.5, 1.8]
+days = [15, 90]
+
+[[effects]]
+effect = "demand_shift"
+name = "当地商品需求"
+description = "某地对某种商品的需求变化，例如修船急需木材、驻军采购火药。"
+mult = [0.6, 1.8]
+days = [15, 60]
+
+[[effects]]
+effect = "popularity"
+name = "当地流行"
+description = "某种商品在某地一时流行（价格上扬，一次性）。"
+days = [15, 40]
+
+# ── 某地全部商品 ──
+[[effects]]
+effect = "location_supply"
+name = "当地生产"
+description = "某地全部商品的产量变化，例如大火、疫病、集市开张。"
+mult = [0.6, 1.3]
+days = [15, 60]
+
+[[effects]]
+effect = "location_demand"
+name = "当地消费"
+description = "某地全部商品的需求变化，例如节庆、封城、朝圣人潮。"
+mult = [0.7, 1.4]
+days = [10, 45]
+
+# ── 海区 ──
+[[effects]]
+effect = "region_storm"
+name = "海区风暴"
+description = "某片海区的风暴概率变化（大于 1 更危险）。"
+mult = [0.5, 2.5]
+days = [20, 75]
+
+[[effects]]
+effect = "region_pirates"
+name = "海区海盗"
+description = "某片海区的海盗出没概率变化（大于 1 更危险）。"
+mult = [0.4, 2.5]
+days = [20, 90]
+
+# ── 势力 ──
+[[effects]]
+effect = "relation_shift"
+name = "两国关系"
+description = "两个势力的关系值变化（一次性；外交状态的转移仍由规则决定）。"
+delta = [-25, 25]
+peace_delta = [-12, 25]
+
+[[effects]]
+effect = "faction_tax"
+name = "关税"
+description = "某势力港口的交易税变化（大于 1 为加税）。"
+mult = [0.7, 1.4]
+days = [30, 120]
+
+[[effects]]
+effect = "development"
+name = "港口发展"
+description = "某港口的发展度变化（一次性），例如扩建码头或地震。"
+delta = [-6, 6]
+port_only = true
+
+# ── 全局 ──
+[[effects]]
+effect = "interest_shift"
+name = "银行利率"
+description = "各地银行的贷款利率变化。"
+mult = [0.8, 1.3]
+days = [30, 120]
+
+[[effects]]
+effect = "industry_efficiency"
+name = "工坊效率"
+description = "各地工坊产业的生产效率变化，例如新工艺传播或行会罢工。"
+mult = [0.8, 1.25]
+days = [30, 180]
+
+# ── 殖民地与新大陆（殖民扩展追加）──
+[[effects]]
+effect = "colony_output"
+name = "殖民地产量"
+description = "某个殖民地某座产出建筑（或全部建筑，building 填 all）的产量变化，例如风调雨顺、虫害、矿脉变贫、工匠到来。"
+mult = [0.75, 1.4]
+days = [20, 90]
+
+[[effects]]
+effect = "colony_morale"
+name = "殖民地士气"
+description = "某个殖民地的士气一次性变化，例如节庆、家书、热病谣言、监工失和。"
+delta = [-8, 12]
+
+[[effects]]
+effect = "colony_growth"
+name = "殖民地移民"
+description = "某个殖民地的人口增长与移民变化，例如故乡饥荒带来移民潮、航路传出疫病令移民裹足。"
+mult = [0.7, 1.6]
+days = [30, 120]
+
+[[effects]]
+effect = "site_claim"
+name = "势力占领殖民点"
+description = "某个势力抢先在一处无主的殖民点插旗（一次性；只能用“势力可以占领的无主殖民点”中列出的组合）。"
+
+[[effects]]
+effect = "discovery_rumor"
+name = "发现物传闻"
+description = "水手间流传某件发现物的消息，玩家由此得知它的大致海区（一次性，不直接揭开）。"
+
+# ── 势力的经济政策（第八批 E7，docs/ECONOMY.md 8.4、6.10）──
+# 内核另有规则触发（rules.toml [policies]）：主食价格居高不下时禁止运出、特产被大量运走时加征出口税，离线也会发生。
+[[effects]]
+effect = "export_ban"
+name = "出口禁令"
+description = "某势力禁止运出某种商品（在它的地点买不到这种货；本地消费不受影响），例如饥荒时禁运粮食、战时禁运军需。"
+days = [15, 60]
+
+[[effects]]
+effect = "import_tariff"
+name = "进口关税"
+description = "某势力对运进来的某种商品加征关税：在它的地点卖出这种货时交易税乘上系数，例如保护本国的织坊。"
+mult = [1.2, 3.0]
+days = [30, 120]
+
+[[effects]]
+effect = "export_tariff"
+name = "出口税"
+description = "某势力对运出去的某种商品加征出口税：在它的地点买入这种货时交易税乘上系数，例如特产被外商大量运走。"
+mult = [1.2, 3.0]
+days = [30, 120]
+
+[[effects]]
+effect = "subsidy"
+name = "产量补贴"
+description = "官府补贴某地某种商品的生产，产量上升，例如鼓励垦荒、减免矿税。"
+mult = [1.1, 1.5]
+days = [30, 120]

@@ -1,0 +1,347 @@
+# 拆自己的包（bond_naran_vaniya / reunion_naran_vaniya）——C7 重写，2026-10-11，Claude（Opus）；旧 GPT 稿作废，只沿用两条轨道 key、章节 key、地点、窗口与 C1 标题。
+# 标签：any（纳兰 romance.with = any；主角是自创的坎贝经纪人家学生 custom_cambay_broker，性别由玩家定——男主角时是 BL，女主角时是 BG）。
+# 人物：纳兰·瓦尼亚 naran_vaniya（1540-07-01，男，坎贝棉布经纪人家的学徒，守戒人家）；主角 custom_cambay_broker（模板生年 1540-01-01）。
+#       学院期 1554-01—1556-12：主角 14—16 岁，纳兰 13—16 岁（A1 时纳兰 15，1556-07-01 满 16）。
+#       S 的 heart 选项要求双方 16—17：1556-12 主角 16、纳兰 16，可行；重逢 1562 年双方 21—22 岁，恋人效果合法。
+# 依据：
+#   史实——坎贝湾的大潮（涨潮时潮头成墙，退潮露出几里泥滩）、马希河在坎贝附近入湾；坎贝的棉布、玛瑙珠与往霍尔木兹的生意；
+#         葡萄牙人在坎贝设商馆、发“通行证”；古吉拉特苏丹国这几年贵族互斗（正文只写“城里换了好几回管事的”）；腰机织带。
+#   原创——纳兰一家、他的印号（一杆小秤，秤盘里一朵棉花）、波斯与亚美尼亚买主、量布的争执、缩水布与它拆出的腰带、家学的比本事、各处对白。
+#   尺：坎贝的码尺与葡萄牙人的尺长短不同是寻常的事，“差了两指宽”是本线的写法，不指具体的度量史料。
+# 秘密：纳兰背着父亲买进过一批会缩水的棉布、赔了钱，用家学比本事赢来的钱补上（B1 撞破）。永远不进见闻；本文件的羁绊章没有 stage，不写 news。
+#   B1 的打赌选项里他只跟父亲说了“赔了钱”，没说是看走了眼买了缩水布——所以 A1 的“替他瞒着缩水布的事”对两种走法都说得通；重逢时他已全说了。
+# 缺省走向：玩家什么都不选时，C1—A2 按 default 走完（无效果），S 的 default 开启重逢并设 _parted；
+#   1562 年玩家不到坎贝，重逢的 default 是纳兰的一封来信（随信一块布样，布角盖着他的印号，旁边留着能按另一个印的地方）。
+# 羁绊阶梯：C2 to_the_factory → C；B1 keep_and_lend → C（补签）；B2 save_his_first → B；A1 keep_his_secret → B（补签）；
+#   A2 wear_it / tie_it_again → A + woven_band + 回忆；S promise / heart → S。
+# 心动：A1 talk_other_things +6 → A2 tie_it_again +6（要 ≥ 6）→ S heart +12（要 ≥ 12）= 24，正好够重逢 love（≥ 24）。
+#   简报原本的决定表写 S +10，算下来只有 22，到不了 24；这里照简报改为 +12。
+# 设旗标：c7_bond_naran_vaniya_promise / _romance / _own / _parted（S）；_landing_friend / _landing_rival / _landing_love / _missed（重逢）。
+#   重逢正文 variants 读 _own（当年的赌）与 _romance（手背上的印）。不读外部旗标；set_on_s_promise_or_heart 为空（纳兰没有配角线的恋人）。
+# 整合：cast 里纳兰的日程写 at = "cambay"，本线的 at 是地点 key "khambhat"；若 cambay 不是同一地点的 key，日程需改指 khambhat。
+#   本线不需要改日程；A2 的赠礼 woven_band 与塔拉的线共用（这里写成缩水布拆的线织的）。
+
+[[tracks]]
+key = "bond_naran_vaniya"
+name = "纳兰·瓦尼亚：拆自己的包"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["naran_vaniya"]
+
+# C1：1554 春。波斯买主看布，纳兰先拆自己的包。口头禅只在这里出现一次。
+[[tracks.chapters]]
+key = "c1"
+title = "拆自己的包"
+text = "一个波斯买主在坎贝的码头上看布，要二十包白棉布，赶在雨季以前随船回霍尔木兹。经纪行的学徒一拥而上，个个把最好的一匹摊在包顶，请他摸。纳兰不挤。他蹲下去，用小刀挑开自己那包的麻绳，从当中抽出一匹，抖开半截，指着一处给买主看：纬线在那里跳了两根，留下一道比指甲还细的疵。“这一包里，这样的有三匹。”旁边有人嗤了一声。我凑过去看了半天才看清，忍不住说：“你这是来卖布，还是来砸自己的摊子？”纳兰没理我。他从腰上抽出一根坎贝的量布尺，往桌上一横：“尺先给你，价再给我。”买主盯着那根尺看了一会儿，转过头，去看剩下的十九包。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_cambay_broker_house" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "point_flaws"
+text = "蹲下帮他拆剩下的包，把找得到的疵一处处指给买主看。"
+requires = []
+reply = "我拆得比他快，找出来的也比他多——第七包里有一块浆斑，连他都没看见。纳兰瞪着我：“你是来拆我台的？”买主却一处一处记在纸上，按疵点给每包定了价，二十包全订了。临走他又问我手里有没有布，跟我也订了五包。散场的时候，别的学徒都拿眼睛瞪纳兰，纳兰瞪的是我。"
+next = "c2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }, { kind = "skill", skill = "negotiation", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "hide_bad_bolt"
+text = "趁他跟买主说话，把那匹有疵的塞回包底。"
+requires = []
+reply = "我刚把布塞进去，纳兰的手就伸进了包底，又把它抽了出来，当着买主的面抖开，冲我挑了挑眉。买主哈哈大笑，二十包全订了。散场后他把麻绳一圈一圈绕回去，说：“这一回算你输。下回再来。”我说下回我塞得快一点。他说：“下回我看得更快。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }]
+
+# C2：1554 雨季。坎贝的尺和葡萄牙人的尺。
+[[tracks.chapters]]
+key = "c2"
+title = "两把尺"
+text = "雨季一来，坎贝湾里的船都下了锚，码头上没有生意，只剩吵架。一个葡萄牙商人把一匹布摔在纳兰的摊子上，说短了一截，要退钱。纳兰把布扯开，拿自己那根码尺一尺一尺地量，量完了说：“够数，一指都不短。”葡萄牙人从袖子里抽出他们商馆的尺，也一尺一尺地量，量完了说：“短了。”城里这几年换了好几回管事的，葡萄牙人的商馆倒一直没换过，他们的尺也没换过。两个人各举着各的尺，在雨棚底下越吵越响，看热闹的脚夫围了一圈。纳兰的头巾湿透了，分不清是雨还是汗。他忽然一把拉住我的袖子，压低声音：“你去过他们的商馆。他们的尺，到底有多长？”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "to_the_factory"
+text = "陪他去葡萄牙人的商馆，把两把尺并排放在柜台上量给所有人看。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 20 }]
+hint = "他正跟人吵得下不来台。这时候你插进去，他只当你是来抢他客人的。"
+reply = "商馆的书记把两把尺并排压在柜台上，一头对齐，另一头差了两指宽。看热闹的脚夫一路跟到商馆门口，这会儿全笑了。葡萄牙商人的脸红到耳根，把布夹回胳膊底下，再没提退钱。回来的路上雨还没停，纳兰把他那根尺揣进怀里，说：“以后我的单子上，两种尺都写。”走了几步，他又说：“这回算你的。”我问算我什么，他想了想：“算你一碗甜奶，下个月请。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "bond", person = "naran_vaniya", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "conversion_table"
+text = "替他把两种尺的换算写成一张表，贴在他的摊子上。"
+requires = []
+reply = "我借来商馆的尺，量了三遍，算出换算，用炭条写在一块木板上：坎贝几尺，合葡萄牙几尺几指。木板钉上摊子的第二天，隔壁的经纪人就照着抄了一块，纳兰气得在雨里跳脚，说我的字白送了人。可那个葡萄牙商人从此只找他买布，逢人便说：“他的尺，我信。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }]
+
+# B1：1554 秋冬。家学比本事，纳兰赢了；床底下那匹缩水的布。秘密只在这里撞破，永不进见闻。
+[[tracks.chapters]]
+key = "b1"
+title = "缩水的那一批"
+text = "家学请来教汇兑的拉迪卡出了个题目：每人领一笔一样的本钱，自己去买布、自己去卖，年底看谁的钱多，赢的人本钱和赚头都归自己。账一摊开，纳兰赢了，赢得漂亮，拉迪卡当着全家学的面夸了他两句。那天傍晚我去他住处还算盘，算盘滚进了床底。我趴下去摸，摸出来一匹布：洗过了，皱成一团，比该有的长短少了将近一成。布头上拴着货栈的签子，日子是七月——是他背着家里做的那笔小买卖，夏天跟我吹过一回，后来再没提。这批布要是都缩成这样，他赔进去的，差不多正是今天赢来的数。门响了。纳兰站在门口，脸一下子白了。我说：“算盘滚进去了。”他没问我看见了什么，只把门在身后关上。“别告诉我爹。”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "keep_and_lend"
+text = "替他瞒下，再借他一笔钱，把窟窿补严实。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 20 }]
+hint = "他还当你是来抓他把柄的对手。这时候把钱递过去，他只会更不肯收。"
+reply = "我把钱放在他的床沿上。他盯着那几块钱看了很久，没说谢，只说：“利息按坎贝的规矩算。”三个月后他来还钱，连本带利一文不差，最后又多放了一个铜板在我手心。我问这是什么。他说：“封口费。”那个铜板我一直没花。"
+next = "b2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "bond", person = "naran_vaniya", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "bet_he_tells"
+text = "跟他打赌：不出半年，他会自己去跟他父亲说。"
+requires = []
+reply = "“你输定了。”他把那匹布塞回床底，又往里推了推。赌注是一串玛瑙珠，我挑的。第二年开春，他有三天没来家学，回来时一边脸肿着，另一边在笑：“我说了，说我赔了钱。没说是看走了眼，买了会缩的布。”他把那串玛瑙珠拆开，只给了我一半：“你赌我会说，我说了一半。这一半算我赢。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }]
+
+# B2：1555。坎贝湾的潮头像一堵墙；他木头削的印号，和我的货。
+[[tracks.chapters]]
+key = "b2"
+title = "涨潮的码头"
+text = "坎贝湾的潮是出了名的：退的时候露出几里泥滩，涨的时候像一堵墙推过来，比马跑得还快。那天下午码头上的锣敲得不对，泥滩边上堆货的人全在喊。纳兰头一回用自己的名义收了八包布，包上盖着他自己拿木头削的印号——一杆小秤，行会还没认，他先按上了。那八包就码在泥滩边上，离水最近。我的十包也在那里，隔着两步远。远处的水线已经白了，潮声一阵紧过一阵。他看了我一眼，没说话。我也没说话。两个人站在两堆货中间，都在算：先拖谁的。“你看什么？”他终于开口，嗓子是哑的，“快拖啊！”"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "save_his_first"
+text = "先帮他把那八包盖了印号的拖上岸，再回头救自己的。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 50 }, { kind = "bond", person = "naran_vaniya", level = "C" }]
+hint = "他还不信你会先顾他的货。你一伸手，他只会扑过去护住自己的包。"
+reply = "我们两个一包一包往岸上拖，拖到第八包时水已经没过脚踝。等我回头，我那十包有四包泡在水里。纳兰的八包一包没湿，木头印号清清楚楚。他站在岸上，看着我蹲在泥里拧那几匹湿布，等我拧到第三匹，才开口：“湿的那几匹，我按干布的价收。”我说你这是赔本买卖。他说：“我乐意。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "bond", person = "naran_vaniya", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "each_saves_own"
+text = "各救各的，看谁拖上岸的多。"
+requires = []
+reply = "潮头扑上来又退下去，两个人都坐在泥里喘气。一数，我拖上岸九包，他拖上岸八包。“我赢了。”我说。他没争。我回头去找我那第十包，以为让潮卷走了——它在他那一堆里，压在最底下。他自己的八包里，有一包还泡在水里，木头印号已经糊成了一团。"
+next = "a1"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }]
+
+# A1：1556 春。马希河口，今天不谈价。
+[[tracks.chapters]]
+key = "a1"
+title = "河口不谈价"
+text = "傍晚纳兰来家学门口找我，说去马希河口走走。一路上他还是改不了：看见一船盐，说今年盐贱；看见卖椰子的，说那人多收了买主两个铜子；看见河堤上晒的渔网，估了估，说新的值多少，补过的值多少。走到河口，他自己也听不下去了，笑出声来：“今天不谈价。”堤上风大，他把头巾往下拉了拉，说起内地的一间织坊——他父亲带他去过一回，那里的老师傅肯收新来的孩子，从纺纱教起，一直教到织最细的布，教不会也不赶走。“那里织一匹布要三个月，”他说，“三个月，一个铜子都不算。”他说他想去那里待一年，不收布，只看人织。他说话的时候，河口的潮又涨上来了，漫过了堤脚的石头。他往我这边让了让。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "talk_other_things"
+text = "说不谈价，那就谈别的——然后谁也不先开口，一直走到天黑。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 20 }, { kind = "romance_open", romance_open = "naran_vaniya" }]
+hint = "他还在找话头。你这时候不出声，他只当你嫌他絮叨。"
+reply = "我们沿着河堤走，谁都没再说话。潮水涨到最高，停了一会儿，又一寸一寸退下去，堤下的泥滩重新露出来，亮得像抹了油。天黑透了才往回走，他说：“今天一个价都没谈，亏了。”第二天傍晚，他又来家学门口找我，还是去河口，还是不谈价。"
+next = "a2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "heart", person = "naran_vaniya", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "keep_his_secret"
+text = "答应替他瞒着缩水布的事，等他自己去跟他父亲说清楚。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 50 }, { kind = "bond", person = "naran_vaniya", level = "C" }]
+hint = "他还没把你当成能托付这件事的人。你一提，他只会把话岔开。"
+reply = "他停下来看了我一眼，从怀里掏出一枚铜印给我看：印面上刻了一半，另一半还是平的。“等我有了自己的印号，”他说，“行会认了的那种，我就去说。”他把印收回去，又补了一句：“到时候你得在场。我爹要是动手，你拉着点。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "bond", person = "naran_vaniya", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "ask_the_weavers"
+text = "问他那间织坊织得最细的布，能细到什么地步。"
+requires = []
+reply = "“细到能从一枚戒指里穿过去。”他说。我说你吹牛，戒指里穿得过去的那是线。他停下来，把手指上的银戒指褪下来比了比，说：“那等我带你去看。”说完又把戒指戴回去，一路上转了好几回。"
+next = "a2"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }]
+
+# A2：1556 雨季。缩水布拆成线，织成腰带。赠礼 woven_band。
+[[tracks.chapters]]
+key = "a2"
+title = "缩水布拆出的腰带"
+text = "一个下雨的下午，纳兰夹着一个油纸包来找我，在家学的廊下打开：是一条腰带，三指宽，白底上走着一红一蓝两道线。“你认得这白的。”他说。我认得。是床底下那匹缩水的布——他把它一根一根拆成了线，跟他母亲学着在腰机上重新织了起来。他说红的那一道是他母亲旧纱丽上拆下来的，蓝的那一道是他外婆的，两个人都不肯给，他磨了半个月。“赔钱的布，也得有个去处。”他不等我开口，就把腰带往我腰上一绕，打了个结，太紧；解开重系，又太松。廊外的雨下得哗哗响，他低着头跟那个结较劲，耳朵一点一点红了。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "wear_it"
+text = "收下腰带，说往后出门都系着它。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 80 }, { kind = "bond", person = "naran_vaniya", level = "B" }]
+hint = "这条腰带拆的是他最不愿让人看见的那匹布。你们还没熟到这一步，这话说出口，他只当你在客气。"
+reply = "“系着它，”他说，“你就得记着我赔过一次钱。”我说记一辈子，每天早上系一回，记一回。他伸手就来抢腰带，我躲，他追，两个人在廊下绕着柱子转了三圈。最后他一屁股坐在台阶上，喘着气说：“那你就记着吧。”"
+next = "s"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "bond", person = "naran_vaniya", level = "A" }, { kind = "item", item = "woven_band", qty = 1 }, { kind = "memory", memory = "mem-bond_naran_vaniya-a2", title = "缩水布拆出的腰带" }]
+
+[[tracks.chapters.choices]]
+key = "tie_it_again"
+text = "收下腰带，让他再替我系一遍。"
+requires = [{ kind = "affinity", person = "naran_vaniya", ge = 80 }, { kind = "bond", person = "naran_vaniya", level = "B" }, { kind = "heart", person = "naran_vaniya", ge = 6 }, { kind = "romance_open", romance_open = "naran_vaniya" }]
+hint = "这时候叫他再系一遍，他只会把腰带往你手里一塞，叫你自己系；你们心里那点意思，还没到能这样开口的时候。"
+reply = "他系了第三遍。这一回他系得很慢，手指隔着衣裳碰到我的腰，停住了，停了好一会儿。“这回松紧正好。”他说完转身就往屋里走，走得太急，肩膀撞在门框上，咚的一声。他没回头，揉着肩膀进去了。"
+next = "s"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "bond", person = "naran_vaniya", level = "A" }, { kind = "item", item = "woven_band", qty = 1 }, { kind = "memory", memory = "mem-bond_naran_vaniya-a2", title = "缩水布拆出的腰带" }, { kind = "heart", person = "naran_vaniya", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "问他这条腰带要卖多少钱。"
+requires = []
+reply = "“不卖。”他说，“尺我先给你，价……这回不给你。”说完他自己愣了一下——这句话他说了好几年，头一回拐了个弯——然后笑了。他把腰带从我腰上解下来，系回了他自己身上：“不卖，也不给了。等你哪天不问价了，再说。”"
+next = "s"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }]
+
+# S：1556 年腊月。家里的船要出海，他的印号刻好了，按在我的手背上。
+[[tracks.chapters]]
+key = "s"
+title = "先给真样"
+text = "腊月，家里的船要趁东北风出海，去霍尔木兹，我跟船走。纳兰留下，跟他父亲的老主顾学做独立的经纪。开船前三天，他到码头上找我，手心里攥着一枚铜印。印面刻好了，是一杆小秤，秤盘里一朵棉花，行会上个月认了它。他往印泥里按了按，拉过我的手，在我手背上盖了一下。“以后你有货要卖到坎贝，”他说，“先寄真样来。我照验——是朋友，也照验。”我说：“你验得那么狠，谁还敢寄？”“敢寄的，才是我的主顾。”印泥是凉的。他的手按在我手背上，没有马上拿开，比那枚印还烫。码头那头有人在喊装货，他像是没听见。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_naran_vaniya" }, { kind = "flag", flag = "c7_bond_naran_vaniya_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好往后的生意都先寄真样：他照验，我照付。"
+requires = [{ kind = "bond", person = "naran_vaniya", level = "A" }]
+hint = "往后的货都先寄真样——这是要守一辈子的约。你们的交情还盖不上这枚印；又或者，这一辈子的印，你已经盖在了别人的约上。"
+reply = "他从怀里掏出账本，翻到第一页。那一页一直空着，他说是留给头一笔自己的生意的。他蘸了墨，先写下年月和我的名字，再一笔一笔写：往后货到坎贝，先寄真样，验过再谈价；一方照验，一方照付。写完，他在底下按了自己的印号，又拉过我的手，在印泥里按了按，把我的手印按在他的印号旁边。我说手印不算数。他说：“在坎贝，手印比印号还算数——印号能刻假的，手印刻不了。”东北风起来那天，他没来码头送我。船出了湾，我打开行李，发现他把那一页账抄了一份，塞在我的鞋里，纸角上又按了一个印。"
+next = "done"
+effects = [{ kind = "bond", person = "naran_vaniya", level = "S" }, { kind = "relation", person = "naran_vaniya", relation = "friends" }, { kind = "memory", memory = "mem-bond_naran_vaniya-s", title = "先给真样" }, { kind = "flag", flag = "c7_bond_naran_vaniya_promise" }, { kind = "start_track", track = "reunion_naran_vaniya" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "让手背上的印留着不洗，说等成年回来，再让他按一次。"
+requires = [{ kind = "bond", person = "naran_vaniya", level = "A" }, { kind = "heart", person = "naran_vaniya", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "naran_vaniya", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "naran_vaniya" }]
+hint = "手背上的印泥还凉着，“留着不洗”这句却说不出口：心里搁得还不够久；又或者，同样的话已经有人先听你说过了。"
+reply = "他看着我的手背，半天没说话。印泥已经干了，那杆小秤歪在我的指节上面。“会蹭掉的。”他终于说。我说那就不让它蹭。他又说海上要洗手、要拉缆绳，我说那就少拉缆绳。他笑了一声，笑到一半停了，低头去看那枚铜印：“等你回来，我刻一枚新的。”开船那天他来了，一直站在跳板边上。临上船，他把那枚铜印塞进我手里，我刚握住，他又把它抽了回去：“不行，这个我还要用。”他的手却没有抽回去。我们就那么握着，一直握到船上的人第三次喊我。"
+next = "done"
+effects = [{ kind = "bond", person = "naran_vaniya", level = "S" }, { kind = "heart", person = "naran_vaniya", value = 12 }, { kind = "relation", person = "naran_vaniya", relation = "crush" }, { kind = "flag", flag = "c7_bond_naran_vaniya_romance" }, { kind = "memory", memory = "mem-bond_naran_vaniya-s", title = "先给真样" }, { kind = "start_track", track = "reunion_naran_vaniya" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "跟他赌：五年之内，看谁的印号先出现在霍尔木兹的码头上。"
+requires = []
+reply = "“赌什么？”他问。我说赌一包最好的布。他把铜印在手心里掂了掂：“那你可要输一包好布了。我的布，霍尔木兹的人认得。”我说他们认得的是你爹的印号，不是你的。他的脸一下子拉了下来，伸出手：“五年。”我一掌拍上去，他反手攥住，攥得很紧，像是怕我反悔。正好潮水涨上来，漫过泥滩，把两个人的鞋都泡湿了。他低头看了看两双湿透的鞋，说这一湿，赌约就算立下了，这是坎贝的规矩。我说坎贝从来没这规矩。他说：“从今天起有了。”"
+next = "done"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "relation", person = "naran_vaniya", relation = "rivals" }, { kind = "flag", flag = "c7_bond_naran_vaniya_own" }, { kind = "start_track", track = "reunion_naran_vaniya" }]
+
+[[tracks]]
+key = "reunion_naran_vaniya"
+name = "纳兰·瓦尼亚：自己的印号"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["naran_vaniya"]
+
+# 重逢：1562 年坎贝。一排布包盖着他的印号，他父亲坐在一边喝茶。
+[[tracks.chapters]]
+key = "reunion"
+title = "自己的印号"
+text = "五年多以后，我回到坎贝。潮水正退，码头上一排布包码得整整齐齐，每一包的麻布上都盖着同一个印号：一杆小秤，秤盘里一朵棉花。他父亲坐在货栈门口的凳子上，端着一碗茶，看他儿子验布。缩水布的事，纳兰到底全说了；他父亲还是让他自立了门户，只是每个月来坐一回，一句话不说，喝完茶就走。纳兰正在给一个亚美尼亚买主拆包。他照旧先拆自己的，从当中抽出一匹，抖开，找疵。抬头看见我，他手上停了一下，然后把那根量布尺往桌上一横——还没开口，自己先笑了。“你晚了，”他说，“我等着看你的货，等了一个雨季。”"
+window = [[1562, 1, 1], [1562, 12, 31]]
+at = "khambhat"
+cast = ["naran_vaniya"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1562, 12, 31] }, { kind = "age", ge = 18 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "naran_vaniya", text = "今年的货，我照旧先拆了自己的包。有个亚美尼亚买主跟我说，他在霍尔木兹的码头上见过一个人，验布的手法跟坎贝的一模一样，问是不是我的徒弟。我说不是。我自立门户了。缩水布的事，我跟我爹说了，从七月买进那批布说起，一直说到床底下。他听完没打我，只问那批布后来怎么样了。我说拆了，织了一条腰带。他问值多少钱。我说不卖。他就没再问。如今他每个月来货栈坐一回，喝一碗茶，看我验布，一句话不说，喝完就走。这一年我在码头上等了一个雨季，又等了一个旱季，你家的船没有来。拉迪卡说你们改走了别的港口，也许明年。随信寄一块布样，是今年最好的一批。布角上盖着我的印号，旁边那块我没盖——量过了，正好按得下另一个印。你回来的时候，把你的带上。真样我先给了。价，等你来了再谈。纳兰" }, { kind = "flag", flag = "c7_bond_naran_vaniya_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "在他的印号旁边按上我自己的印，约好往后的生意都过他的手。"
+requires = []
+reply = "我从行李里翻出自己的印，在印泥里按了按，盖在他印号的旁边。两个印并排在麻布上。纳兰盯着看了一会儿，拿量布尺量了量两个印之间的距离：“差了一指，再挨近点。”我在另一包上又盖了一个，这回挨得紧紧的。他满意了，冲他父亲那边扬了扬下巴：“这下坎贝人都知道，我们是一伙的了。”他父亲没说话，把碗里的茶喝干了。那天晚上他请我去吃甜奶，坐的还是家学那几年常去的摊子。付钱的时候我去掏钱袋，他把我的手按住：“这回我请。从前回回说我请，回回是你掏的钱——我一笔一笔记着呢。”"
+next = "done"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 5 }, { kind = "relation", person = "naran_vaniya", relation = "friends" }, { kind = "flag", flag = "c7_bond_naran_vaniya_landing_friend" }, { kind = "memory", memory = "mem-reunion_naran_vaniya", title = "自己的印号" }]
+
+[[tracks.chapters.choices]]
+key = "rival"
+text = "告诉他我的印号已经到了霍尔木兹的码头，问他的呢。"
+requires = []
+reply = "他把账本往桌上一拍，翻到中间一页，指着一行字：“上个月刚到。”我说我的前年就到了。他说我前年那批是搭别人的船，印号盖在别人的货单上，不算。我说他上个月那批也是搭别人的船。两个人从货栈吵到甜奶摊，又从甜奶摊吵回货栈，他父亲端着茶碗听了半天，摇摇头走了。账本翻了一夜，翻到天亮也没算清谁先谁后。纳兰揉着眼睛把账本合上：“那就赌下一个五年。这回赌马六甲。”我说赌就赌。他伸出手来，手心里还有印泥，一握，蹭了我一手红。"
+next = "done"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }, { kind = "relation", person = "naran_vaniya", relation = "rivals" }, { kind = "flag", flag = "c7_bond_naran_vaniya_landing_rival" }, { kind = "memory", memory = "mem-reunion_naran_vaniya", title = "自己的印号" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "趁潮水还没退尽，跟他说：这一回我想留下。"
+requires = [{ kind = "flag", flag = "c7_bond_naran_vaniya_romance" }, { kind = "heart", person = "naran_vaniya", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "naran_vaniya", ge = 18 }, { kind = "romance_open", romance_open = "naran_vaniya" }]
+hint = "量布尺横在桌上，他在等你的货，也只等货。当年码头上没说的那句，隔了一个又一个雨季，今天还是没出口。"
+reply = "他手里的量布尺停在半空。“留下？”他问，“留多久？”我说留到他验完这一包，再验下一包，一直验下去。他把尺放回桌上，放得很轻，一点声响都没有。买主还在等，他父亲还端着茶碗。他跟买主说了句什么，买主笑着走开了。然后他抓过我的手，把手背翻过来看——那里早就什么都没有了。他从怀里掏出一枚新刻的印，在印泥里按了按，盖在原来那个地方。“尺不给你了，”他说，“人给你。”潮水退到最低，泥滩上一片亮。他在码头上吻了我，当着他父亲的面。他父亲咳了一声，起身，把茶碗留在凳子上，走了。"
+next = "done"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 5 }, { kind = "relation", person = "naran_vaniya", relation = "lovers" }, { kind = "flag", flag = "c7_bond_naran_vaniya_landing_love" }, { kind = "memory", memory = "mem-reunion_naran_vaniya", title = "自己的印号" }]
+
+[[tracks.chapters.variants]]
+key = "bet"
+when = [{ kind = "flag", flag = "c7_bond_naran_vaniya_own" }]
+text = "五年多以后，我回到坎贝。潮水正退，码头上一排布包码得整整齐齐，每一包的麻布上都盖着同一个印号：一杆小秤，秤盘里一朵棉花。他父亲坐在货栈门口的凳子上，端着一碗茶，看他儿子验布。缩水布的事，纳兰到底全说了；他父亲还是让他自立了门户，只是每个月来坐一回，一句话不说，喝完茶就走。纳兰正在给一个亚美尼亚买主拆包。他照旧先拆自己的，从当中抽出一匹，抖开，找疵。抬头看见我，他手上停了一下，然后把那根量布尺往桌上一横——还没开口，自己先笑了。“五年早过了，”他说，“霍尔木兹那边，你的印号呢？”"
+
+[[tracks.chapters.variants]]
+key = "hand"
+when = [{ kind = "flag", flag = "c7_bond_naran_vaniya_romance" }]
+text = "五年多以后，我回到坎贝。潮水正退，码头上一排布包码得整整齐齐，每一包的麻布上都盖着同一个印号：一杆小秤，秤盘里一朵棉花。他父亲坐在货栈门口的凳子上，端着一碗茶，看他儿子验布。缩水布的事，纳兰到底全说了；他父亲还是让他自立了门户，只是每个月来坐一回，一句话不说，喝完茶就走。纳兰正在给一个亚美尼亚买主拆包。他照旧先拆自己的，从当中抽出一匹，抖开，找疵。抬头看见我，他手上停了一下，把那根量布尺往桌上一横——目光先落在我的手背上，才落到我脸上。“洗掉了？”他问完，自己先笑了。"

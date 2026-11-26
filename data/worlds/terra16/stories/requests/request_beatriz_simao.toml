@@ -1,0 +1,153 @@
+# 请托：去印度的病号舱（request_beatriz_simao）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：贝阿特丽丝·西芒（beatriz_simao，1540-10-01 生，女），医生家隔壁的姑娘，帮着记看诊的簿子；势力 portugal，身份档 1。cast：cast/classmates_custom_lisbon_medicine.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（舱底，交货）、settle（名字写在舱门上）；另有 settle_vent（检定失败的分支：只开通风口，舱位不换）。
+#   settle_vent 是引擎的变通：选项的 reply 与变体只能改文字，不能改效果，所以“只开通风口”的结账拆成独立一章，工钱 500 与 partial 旗标写在它自己的选项里。
+# 报价：T（当面）。贝阿特丽丝按日程在里斯本（lisbon），auto=false，玩家用 ask:request_beatriz_simao 启动；offer 不写 at，objectives 为 person。
+#   窗口 1571-01-01 至 1590-06-30；offer 写 deadline=1590-06-30、timeout=failed，不写见闻。
+# 进行中：deliver 的 deadline_days=120，超时走 failed，好感 -3，旗标 _late，来信一封，并写一条见闻（timeout 不写 news 会回落到章的 news，所以单独写）。
+#   deliver 的货物目标：棉布 20、药剂 3，在 lisbon 交；所有选项都扣货。
+# 依据·史实背景：里斯本去印度的船，回程常有病死的水手；船上照看病人靠修士与船医，舱位最差。
+# 依据·原创：病号舱、看诊簿后面的单子、船医、炮窗、舱门内侧的木板。
+# 秘密：怕血（cast secret）只通过手心的指甲印让人看见，不解释，不进见闻。
+# 读的旗标：bond beatriz_simao 至少 C（offer 的变体，只读）；不读 c7_ 旗标，不设 c7_ 旗标。
+# 设的旗标：c13_request_beatriz_simao_accepted（offer 两条接法）、_declined（offer 回绝）、_window（deliver 三条路之一）、_vent（deliver 检定失败）、_done（settle 两条收尾）、_partial（settle_vent 两条收尾）、_late（deliver 超时）。
+# 不用 relation / tie / bond / heart 效果；不写 1569 大疫与杜阿尔特，病号舱与病房是两件事。
+# 报酬：现金最多 900 + 货款 2550（只开通风口 500 + 2550），好感最多 +13，名声 +1，回忆 mem-request_beatriz_simao-settle（只给最好的结局）。
+# 依赖：港口 lisbon；货物 cloth、medicine；技能 herbal_medicine（skills.toml）；属性 stewardship；人物 beatriz_simao。无 B10b 改名；同学线，无 c13_main 门禁。
+# 回忆插画清单：
+#   mem-request_beatriz_simao-settle「舱门内侧的木板」：船舱里二十匹布叠在架上，炮窗开着，河风灌进来；舱门内侧钉着一块还没写字的木板。
+
+[[tracks]]
+key = "request_beatriz_simao"
+name = "去印度的病号舱"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["beatriz_simao"]
+
+# 一、一船的病号：里斯本，她翻着看诊簿，簿子后面夹着一张单子。
+[[tracks.chapters]]
+key = "offer"
+title = "一船的病号"
+text = "医生家后屋的窗关着，一股醋和艾草的味道闷在屋里。贝阿特丽丝一见有人进门，先走过去把窗推开，这才回头问你：“你叫什么？”她手边压着一本看诊的簿子，簿子后面夹着一张单子：去印度的船回来了，一船四百人，病死的名字写了半页。她要给下一条去印度的船备一个病号舱，二十匹干净的棉布，三箱药剂，舱要有窗。“钱我出。”她说，“货要你运来，交到船上。我去跟船长说，他只会叫我回家。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "beatriz_simao", text = "在里斯本医生家的后屋找到她" }]
+when = [{ kind = "date", from = [1571, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "beatriz_simao", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "beatriz_simao", level = "C" }]
+text = "医生家后屋的门一开，贝阿特丽丝抬头先问你：“你叫什么？”问完自己笑出了声，摆摆手：“习惯了。”窗还关着，她没去开，只把手边那本看诊簿往你这边推了推。簿子后面夹着一张单子：去印度的船回来了，一船四百人，病死的名字写了半页。她要给下一条去印度的船备一个病号舱，二十匹干净的棉布，三箱药剂，舱要有窗。“钱我出。”她说，“货要你运来，交到船上。我去跟船长说，他只会叫我回家。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，备齐棉布和药剂，送上那条船。"
+next = "deliver"
+reply = "她把那条船的名字写给我，又写了船医的名字，后面画了个问号。“他管不管病人，我还不知道。”她说这话时没抬头，笔尖在问号上又描了一遍，描得很重，纸都划破了一点。"
+effects = [{ kind = "affinity", person = "beatriz_simao", value = 2 }, { kind = "flag", flag = "c13_request_beatriz_simao_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_list"
+text = "接下，问她：半页名字，她都认得吗？"
+next = "deliver"
+reply = "“认得一半。”她说另一半她去码头问过，问到的就写上了，问不到的那几个还空着。她把那半页折起来，压在看诊簿最底下，又把簿子往你这边推了推，像是要你也看一眼那几个空着的名字。"
+effects = [{ kind = "affinity", person = "beatriz_simao", value = 2 }, { kind = "flag", flag = "c13_request_beatriz_simao_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "船上的事，让船长去管。"
+next = "failed"
+reply = "她把单子夹回簿子里，合上簿子，才抬头看你。“船长要是管，就没有这半页了。”她说完，又去把窗推开了一点，屋里的醋味散出去，她也没回头。"
+effects = [{ kind = "flag", flag = "c13_request_beatriz_simao_declined" }]
+
+# 二、舱底：病号舱在最底层，挨着水柜，没有窗。
+[[tracks.chapters]]
+key = "deliver"
+title = "舱底"
+text = "棉布和药箱搬上船，船长领你们下到最底层，指给你们病号舱的位置：挨着水柜，一间木板隔出来的小舱，没有一扇窗。贝阿特丽丝站在舱口闻了闻，脸色变了，手心里攥着拳头，指甲印一道一道压在掌纹上。她转向船长：“先把窗打开。这一舱躺十几个人，你算过要多少风？”船长笑了，说舱底哪来的窗。船医在一旁不吭声，可他看着那二十匹布，眼睛是亮的。"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "alive", person = "beatriz_simao", value = true }]
+objectives = [{ kind = "goods", good = "cloth", qty = 20, at = "lisbon", text = "二十匹棉布" }, { kind = "goods", good = "medicine", qty = 3, at = "lisbon", text = "三箱药剂" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "beatriz_simao", value = -3 }, { kind = "flag", flag = "c13_request_beatriz_simao_late" }, { kind = "letter", person = "beatriz_simao", text = "那条船开走了，病号舱还在舱底，没有挪。布和药我托人另送了一份，搭下一条去印度的船。——贝阿特丽丝" }], news = "里斯本河上那条去印度的大船开走了，舱底的病号舱没有挪动，窗也没开。" }
+news = "里斯本河上一条去印度的大船，把病号舱挪到了有炮窗的那一层，窗开着。"
+
+[[tracks.chapters.choices]]
+key = "argue_captain"
+text = "跟船长算账：病死一个水手，他少一个人手，回程多雇一个人要多少钱。"
+next = "settle"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "船长把账从头算到尾，骂了一句，抬手朝舱壁比划。比的是哪一截，他自己说了两回才定下来。旁边的水手笑出了声，被他瞪了一眼，就闭了嘴。"
+effects = [{ kind = "affinity", person = "beatriz_simao", value = 3 }, { kind = "flag", flag = "c13_request_beatriz_simao_window" }]
+fail = { next = "settle_vent", effects = [{ kind = "affinity", person = "beatriz_simao", value = -2 }, { kind = "flag", flag = "c13_request_beatriz_simao_vent" }], news = "里斯本河上一条去印度的大船，舱底只开了一个通风口，病号舱没挪地方。" }
+
+[[tracks.chapters.choices]]
+key = "win_surgeon"
+text = "先去说动船医，让他自己跟船长要。"
+next = "settle"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "船医问了你两句药名，你一句也答不上"
+reply = "船医问我三箱药各治什么，我一样样答上来了。他说这些够他用一个来回，转身就去找船长。船长拗不过船医，病号舱挪到了有炮窗的那一层。"
+effects = [{ kind = "affinity", person = "beatriz_simao", value = 3 }, { kind = "flag", flag = "c13_request_beatriz_simao_window" }]
+
+[[tracks.chapters.choices]]
+key = "pay_bunks"
+text = "自己掏钱，买下中层的两个铺位让给病号舱。"
+next = "settle"
+requires = [{ kind = "cash", ge = 400 }]
+reply = "船长收了钱，数得很仔细，说那两个铺位本来是要卖给去果阿的商人的，商人要是来问，他就说是你的。病号舱挪上来了，挨着一个炮窗，窗框上还留着前一个住客刻的记号。"
+news = "里斯本河上有个生面孔，掏钱买下了去印度的船上两个中层铺位，让给了病号舱。"
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "beatriz_simao", value = 3 }, { kind = "flag", flag = "c13_request_beatriz_simao_window" }]
+
+# 三a、名字写在舱门上：炮窗的病号舱，船开前一天。
+[[tracks.chapters]]
+key = "settle"
+title = "名字写在舱门上"
+text = "开船前一天，贝阿特丽丝上船看了一回病号舱。二十匹布叠在架上，药箱钉在舱壁，炮窗开着，河风灌进来，吹得她的头发贴在脸上。她没去拨，先在舱门内侧比了比高低，钉上一块木板，板上什么字也没有。“给船医写病人名字的。”她说，“病人是他管，名字该他自己写。”她转过身来，手没有藏，掌心朝上，几道月牙似的指甲印还没褪。她说船回来那天，她要来对这块板。“写上去的人，我要一个一个问他们后来怎么样。”"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "beatriz_simao", value = true }]
+news = "里斯本开往印度的船上多了一个病号舱，舱门内侧钉着一块写名字的木板。"
+
+[[tracks.chapters.choices]]
+key = "promise_board"
+text = "答应她，船回来那天陪她来对这块板。"
+next = "done"
+reply = "她点点头，把货款和工钱一起付了，又在板的最上面写了第一个名字，是船医的。“他也会病。”她说完，把笔递给你，笔杆被她攥得发白。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 2550 }, { kind = "affinity", person = "beatriz_simao", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_beatriz_simao_done" }, { kind = "memory", memory = "mem-request_beatriz_simao-settle", title = "舱门内侧的木板" }]
+
+[[tracks.chapters.choices]]
+key = "ask_hand"
+text = "看见她手心的指甲印，问她手怎么了。"
+next = "done"
+reply = "她把手背到身后，说：“搬布搬的。”她付了钱，没再说别的，只是又去把炮窗推开了一点。风一下子灌进来，她站在风口，站了很久。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 2550 }, { kind = "affinity", person = "beatriz_simao", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_beatriz_simao_done" }, { kind = "memory", memory = "mem-request_beatriz_simao-settle", title = "舱门内侧的木板" }]
+
+# 三b、通风口：检定失败的结账。病号舱仍在舱底，只多了一个通风口，工钱减半。
+[[tracks.chapters]]
+key = "settle_vent"
+title = "通风口与木板"
+text = "船长最后只肯在舱口挨着水柜的地方开一个通风口，拳头大小，装了铁栅。病号舱还在舱底，布还叠在架上，药箱还钉在舱壁。风从那个口子里一股一股地进来，带着水柜的潮气。贝阿特丽丝仰着头站了一会儿，说：“风能进来，也算一扇窗。”她还是在舱门内侧钉了一块木板，板上什么字也没有。“船回来那天，我得站到这块板跟前，上面写了谁，我一个一个问。”"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "beatriz_simao", value = true }]
+news = "里斯本开往印度的船舱底只开了一个通风口，舱门内侧钉着一块写名字的木板。"
+
+[[tracks.chapters.choices]]
+key = "promise_vent"
+text = "答应她，船回来那天陪她站到板前。"
+next = "done"
+reply = "她把货款付清，工钱照她自己算的数给，一文不多。板的最上面写了第一个名字，是船医的。“让他下来躺一晚。”她说完，又看了一眼那个通风口，说风从那里进来，至少不会闷着人。"
+effects = [{ kind = "cash", value = 500 }, { kind = "cash", value = 2550 }, { kind = "affinity", person = "beatriz_simao", value = 4 }, { kind = "flag", flag = "c13_request_beatriz_simao_partial" }]
+
+[[tracks.chapters.choices]]
+key = "ask_hand_vent"
+text = "看见她手心的指甲印，问她是不是搬布时伤的。"
+next = "done"
+reply = "她把手缩进袖子里，说：“搬布搬的。”钱数得很清楚，她数了两遍。走之前她把那个通风口的铁栅推了推，确定它还牢，才转身下了舱梯。"
+effects = [{ kind = "cash", value = 500 }, { kind = "cash", value = 2550 }, { kind = "affinity", person = "beatriz_simao", value = 3 }, { kind = "flag", flag = "c13_request_beatriz_simao_partial" }]

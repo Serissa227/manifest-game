@@ -1,0 +1,221 @@
+# 寰宇·船员的情绪（H02 哗变分阶段，docs/VOYAGE-PLAN.md §3.5）。
+# 这些奇遇不参与每天的随机（列在 rules.toml [voyage_wear] 的 grumble_events / slowdown_events / mutiny_events 里的都不抽），只由规则在士气跌到线下时派出：
+#   · 怨言：士气低于 30，每次出海一次；
+#   · 怠工：士气低于 15，航速 −20%，回到 20 以上才复工；
+#   · 哗变：士气低于 8 连续 3 天。
+# 每个阶段三套说法，按日子轮换；同一套一年内不重复（cooldown_days = 365），三套都在冷却里时这一阶段就不再出事件（状态照常）。
+# 选项留下的故事标记由内核兑现后清掉：
+#   voyage_back_to_work 复工；voyage_promise_port 答应改去最近的港（12 天内要靠港，否则士气 −10）；
+#   voyage_mutiny 哗变成真（沿用原来的结算：两成船员出走、两成货物丢失、士气回到 40）。
+# “改去最近的港”：内核当场把领航改到最近的已知港口（玩家可以再改回去），并记一条日志。
+# key 只允许追加，不要改名或删除。文字可以随意改。
+
+# ───────────────────────── 怨言 ─────────────────────────
+
+[[encounters]]
+key = "crew_grumble_galley"
+title = "伙房里的牢骚"
+text = "晚饭的时候，伙房那头有人把碗往桌上一磕：“咸肉又硬又臭，水里能养虫。”周围没人接话，可也没人叫他闭嘴。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "开一桶酒，今晚多分一份饼。"
+reply = "酒桶一开，伙房里的声音就换了调子。那个磕碗的人喝到第二杯，自己先笑了。"
+effects = [{ kind = "supplies", value = -2 }, { kind = "morale", value = 6 }]
+[[encounters.choices]]
+text = "把人叫到甲板上，说清楚还剩几天、到了港有什么。"
+check = { attr = "command", base = 35, per = 6 }
+reply = "你没有许什么愿，只把海图摊开，一天一天地数给他们听。散的时候，有人去把磕裂的碗换了。"
+effects = [{ kind = "morale", value = 5 }]
+fail_reply = "话说到一半，后排有人嘀咕了一句“说得轻巧”，笑声压过了你的声音。"
+fail = [{ kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "装作没听见。"
+reply = "牢骚没再大声说，只是换了个地方说。"
+effects = [{ kind = "morale", value = -2 }]
+
+[[encounters]]
+key = "crew_grumble_watch"
+title = "守夜的人"
+text = "下半夜换班，接班的迟了一刻钟。值班的老水手没骂他，只望着黑沉沉的海说：“再这么走下去，人要先烂在船上。”"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "把这一夜的守夜人都叫来，分一壶热酒。"
+reply = "几个人围着灯喝完了那壶酒，谁也没再提烂在船上的话。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = 5 }]
+[[encounters.choices]]
+text = "亲自值一班夜，和他们一起看着罗盘。"
+check = { attr = "command", base = 40, per = 5 }
+reply = "你在舵边站到天亮。第二天，舱里说起你时，口气不一样了。"
+effects = [{ kind = "morale", value = 5 }]
+fail_reply = "你熬了一夜，天亮时反倒是自己先打了瞌睡，被人看在眼里。"
+fail = [{ kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "记下迟到的人，扣他一天的酒。"
+reply = "规矩是立住了，舱里却安静得有些过分。"
+effects = [{ kind = "morale", value = -2 }]
+
+[[encounters]]
+key = "crew_grumble_rumor"
+title = "舱底的闲话"
+text = "舱底传开一句话：船主拿大家的命去换货，到了港，钱只进船主一个人的口袋。说这话的人是谁，没人肯讲。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "当众说定：这一趟赚了钱，人人有份。"
+reply = "你说得很慢，好让每个人都听清。几个年轻水手对视了一眼，没再出声。"
+effects = [{ kind = "morale", value = 4 }]
+[[encounters.choices]]
+text = "把水手长叫来，问清楚是谁先说的。"
+check = { attr = "command", base = 30, per = 6 }
+reply = "水手长找到了源头：一个想家想得发慌的新手。你让他去帮厨，闲话自己就散了。"
+effects = [{ kind = "morale", value = 5 }]
+fail_reply = "问来问去，谁都说是听别人讲的。追得越紧，舱底越冷。"
+fail = [{ kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "闲话而已，由它去。"
+reply = "第二天，闲话里又多了一句：船主心虚了。"
+effects = [{ kind = "morale", value = -2 }]
+
+# ───────────────────────── 怠工 ─────────────────────────
+
+[[encounters]]
+key = "crew_slowdown_ropes"
+title = "绳子收得很慢"
+text = "号子喊了三遍，帆才慢吞吞地升起来。没人顶撞你，也没人卖力气——每个人都在干活，每样活都干得比平时慢一倍。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "许下分红：到港后每人多拿一份。"
+cost = 200
+reply = "钱是到港才给的，可话一出口，绞盘就转得快了。"
+effects = [{ kind = "morale", value = 8 }, { kind = "flag", flag = "voyage_back_to_work" }]
+[[encounters.choices]]
+text = "找出带头磨洋工的，当众罚他。"
+check = { attr = "command", base = 30, per = 6 }
+reply = "罚得不重，可罚得明白。剩下的人互相看了看，手上快了起来。"
+effects = [{ kind = "morale", value = 5 }, { kind = "flag", flag = "voyage_back_to_work" }]
+fail_reply = "带头的那个人不服，嚷了起来，跟着嚷的人比你想的多。"
+fail = [{ kind = "morale", value = -5 }]
+[[encounters.choices]]
+text = "答应他们：改去最近的港口歇一歇。"
+reply = "消息传下去，舱里有人吹起了口哨。只要船头真的转过去，这口气就能撑到靠岸。"
+effects = [{ kind = "morale", value = 4 }, { kind = "flag", flag = "voyage_promise_port" }]
+
+[[encounters]]
+key = "crew_slowdown_pumps"
+title = "没人去摇泵"
+text = "舱底的水又涨了一指深，该摇泵的两个人坐在缆堆上，说手疼。别的人看着他们，也看着你。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "加一份工钱：摇满一班，当场给钱。"
+cost = 150
+reply = "铜板一放在桶盖上，泵把就响了起来，一直响到天黑。"
+effects = [{ kind = "morale", value = 7 }, { kind = "flag", flag = "voyage_back_to_work" }]
+[[encounters.choices]]
+text = "自己卷起袖子去摇第一班。"
+check = { attr = "command", base = 35, per = 5 }
+reply = "你摇到第三十下，坐在缆堆上的人站起来，把泵把接了过去。"
+effects = [{ kind = "morale", value = 6 }, { kind = "flag", flag = "voyage_back_to_work" }]
+fail_reply = "你摇了半个时辰，没人来接手。水退下去一些，人心却没回来。"
+fail = [{ kind = "morale", value = -4 }]
+[[encounters.choices]]
+text = "答应他们去最近的港口修船、休整。"
+reply = "“去港口”三个字比什么都管用。泵声又响了，只是响得不情不愿。"
+effects = [{ kind = "morale", value = 4 }, { kind = "flag", flag = "voyage_promise_port" }]
+
+[[encounters]]
+key = "crew_slowdown_silence"
+title = "一船的沉默"
+text = "甲板上一整天没人唱号子。你下的令都有人照做，可照做得像在给别人干活。舵工说，这样的船，风再好也跑不快。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "拿出私藏的好酒，跟大家说说这一趟的账。"
+cost = 120
+reply = "酒是好酒，账也算得清楚。夜里，前甲板上又有人哼起了家乡的调子。"
+effects = [{ kind = "morale", value = 7 }, { kind = "flag", flag = "voyage_back_to_work" }]
+[[encounters.choices]]
+text = "立规矩：谁再磨蹭，扣全月的工钱。"
+check = { attr = "command", base = 25, per = 6 }
+reply = "没人想丢一个月的钱。活又干起来了，只是笑声还没回来。"
+effects = [{ kind = "morale", value = 4 }, { kind = "flag", flag = "voyage_back_to_work" }]
+fail_reply = "规矩一立，舱里的沉默就变成了冷眼。"
+fail = [{ kind = "morale", value = -5 }]
+[[encounters.choices]]
+text = "答应改去最近的港口。"
+reply = "船头偏过去的时候，有人在桅下低声说了句“总算”。"
+effects = [{ kind = "morale", value = 4 }, { kind = "flag", flag = "voyage_promise_port" }]
+
+# ───────────────────────── 哗变 ─────────────────────────
+
+[[encounters]]
+key = "crew_mutiny_arms"
+title = "军械箱被撬开了"
+text = "天还没亮，军械箱的锁被撬了。十几个人聚在前甲板，手里拿着刀和铁钩，领头的人说：要么掉头回港，要么换个人来管这条船。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "带着信得过的人，把领头的拿下。"
+check = { attr = "command", base = 30, per = 6 }
+reply = "你先一步站到了领头人的面前。他犹豫的那一下，身后的人就散了。领头的关进了舱底，其余的人回去干活。"
+effects = [{ kind = "morale", value = 8 }, { kind = "crew", value = -1 }]
+fail_reply = "你的人不够。刀没有落下来，可舱里的东西被翻了个底朝天，一些人带着货划小艇走了。"
+fail = [{ kind = "flag", flag = "voyage_mutiny" }]
+[[encounters.choices]]
+text = "让步：发一笔钱，答应改去最近的港口。"
+cost = 300
+reply = "钱发下去，船头转过去。领头的人收了刀，说到了港他就下船。"
+effects = [{ kind = "morale", value = 8 }, { kind = "flag", flag = "voyage_promise_port" }]
+[[encounters.choices]]
+text = "由他们去。"
+reply = "你回到舱里，把门闩上。外面闹了一整天。"
+effects = [{ kind = "flag", flag = "voyage_mutiny" }]
+
+[[encounters]]
+key = "crew_mutiny_boats"
+title = "小艇边的人"
+text = "有人趁夜去解小艇的缆绳，被值更的撞见。拔出来的刀没有收回去，越来越多的人从舱口钻出来，站到了小艇那边。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "挡在缆桩前，叫他们把刀放下。"
+check = { attr = "command", base = 30, per = 6 }
+reply = "你没有退。僵了很久，第一个人把刀扔在了甲板上，接着是第二个。"
+effects = [{ kind = "morale", value = 8 }, { kind = "crew", value = -1 }]
+fail_reply = "你被推到了一边。两条小艇放了下去，跟着走的人还顺手搬走了几箱货。"
+fail = [{ kind = "flag", flag = "voyage_mutiny" }]
+[[encounters.choices]]
+text = "给钱，答应到最近的港口就放他们走。"
+cost = 250
+reply = "缆绳又系了回去。他们说，到了岸上，再也不上你的船。"
+effects = [{ kind = "morale", value = 8 }, { kind = "flag", flag = "voyage_promise_port" }]
+[[encounters.choices]]
+text = "放他们走。"
+reply = "小艇在夜里划远了，舱里空了一大块。"
+effects = [{ kind = "flag", flag = "voyage_mutiny" }]
+
+[[encounters]]
+key = "crew_mutiny_helm"
+title = "有人占了舵"
+text = "你被人声吵醒，走上后甲板时，舵已经换了人握着。握舵的人说得很平静：这条船要回家，谁拦着谁就留在海里。"
+place = "sea"
+cooldown_days = 365
+[[encounters.choices]]
+text = "一步步走过去，跟他把账说清楚，把舵要回来。"
+check = { attr = "command", base = 25, per = 7 }
+reply = "你讲了这一趟的每一笔账、每一天的风。他的手松开的时候，后甲板上的人都低下了头。"
+effects = [{ kind = "morale", value = 8 }, { kind = "crew", value = -1 }]
+fail_reply = "他没让你走近。船在原地打转了半天，等闹够了，一群人卷着货下了小艇。"
+fail = [{ kind = "flag", flag = "voyage_mutiny" }]
+[[encounters.choices]]
+text = "认了：发钱，改去最近的港口。"
+cost = 300
+reply = "舵还给了你，航向却是他们定的。你答应的事，到港前一天也不能忘。"
+effects = [{ kind = "morale", value = 8 }, { kind = "flag", flag = "voyage_promise_port" }]
+[[encounters.choices]]
+text = "不吭声，等他们自己散。"
+reply = "他们没有散。"
+effects = [{ kind = "flag", flag = "voyage_mutiny" }]

@@ -1,0 +1,1199 @@
+# C12：独立开局内容表，不是A3剧本，必须登记到[tables].opening_catalog，不能登记进scenarios集合。
+# 登记opening_catalog后，现有分片解析器会从自动扫描中排除此文件；11个真正剧本单独列入scenarios。
+# A3只消费严格剧本字段；本表供I1/A6/C9接线。身份头可按kind=template导出到upbringing/templates.toml。
+# card只含公开资料；gender是I1身份字段，诺埃尔的文字不使用他/he/Sir，也不点破秘密。
+# 船、船员、资金、货物、物品、见识为1557出海基线；养成期只有childhood，不能同时发两套资产。
+# skip_upbringing必须选择1557的控制日，按同一voyage发一次；当前A3仅保存选项，尚无此转接。
+# family_ref沿C6/C8的引用，家庭行为由C9实现；学院key复用C8，港口key复用C2。
+# mementos在此声明全部故事信物；有item字段者绑定C4现物，不另造一件。其余仅为不可转让的故事纪念条目，无装备效果。
+# estate/caravan是结业实物资本，不折成额外现金；source与grant_once供A6记账及防重复发放。
+# 家乡与学院公开地名是显示文字；中村/钦查没有C2海港，起航使用下田（土佐）/卡亚俄，不伪造港口。
+
+[[opening_catalog]]
+key = "mio"
+name = "一条澪"
+kind = "protagonist"
+scenario = "mio_1553"
+person = "mio"
+family_ref = "mio"
+academy_ref = "kyoto_court"
+main_track = "main_mio"
+born = [ 1540, 6, 21 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "mio"
+name = "一条澪"
+name_en = "Ichijō Mio"
+gender = "f"
+born = [ 1540, 6, 21 ]
+home = "土佐·中村与下田"
+region = "日本·土佐与京都"
+tagline = "能写一手好假名，也能一刀斩断缆绳。"
+style = "出了御帘的姬君"
+playstyle = "在潮水里打海战，替大名跑官位，向往来的商船卖过所旗。"
+tags = [ "海战", "护航", "外交" ]
+difficulty = 2
+strengths = [ "seamanship", "etiquette", "command", "sensibility" ]
+start_ship = "小早"
+known = [ "日本内海", "日本南海路", "九州、五岛与朝鲜南岸", "琉球" ]
+academy = { key = "kyoto_court", name = "京都宫中女房见习与宝镜寺", city = "京都" }
+keepsake = "桧扇"
+portraits = [ { from_age = 0, asset = "t16-mio-12" }, { from_age = 12, asset = "t16-mio-12" }, { from_age = 14, asset = "t16-mio-14" }, { from_age = 16, asset = "t16-mio-16" } ]
+bonds = [ { person = "ushio", name = "汐", kind = "从小同睡的乳姐妹" }, { person = "reizei_yuki", name = "冷泉雪", kind = "歌会上的对手" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "mio"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "shimoda_tosa"
+cash = 4800
+ships = [ "kobaya" ]
+crew = 18
+food = 18
+water = 18
+cargo = [ { good = "grain", qty = 3 }, { good = "salt", qty = 2 } ]
+items = [ { item = "court_fan", qty = 1 }, { item = "mio_pass_flag", qty = 1 } ]
+known_regions = [ "japan_inland", "japan_south", "kyushu", "ryukyu" ]
+mementos = [ { key = "mio_cypress_fan", name = "桧扇", kind = "story_keepsake", transferable = false, consumable = false, description = "桧木薄片串成的扇子。扇骨上用细细的假名写着一首歌，是那年七夕夜里写下的。" } ]
+source = "family_capital"
+grant_once = "c12_voyage_mio"
+
+[[opening_catalog]]
+key = "lieve"
+name = "莉芙·德克莱尔克"
+kind = "protagonist"
+scenario = "lieve_1553"
+person = "lieve"
+family_ref = "lieve"
+academy_ref = "antwerp_laurel"
+main_track = "main_lieve"
+born = [ 1540, 10, 12 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "lieve"
+name = "莉芙·德克莱尔克"
+name_en = "Lieve de Clercq"
+gender = "f"
+born = [ 1540, 10, 12 ]
+home = "安特卫普"
+region = "欧洲·安特卫普"
+tagline = "记得住每一个价格，也敢把钱借给国王。"
+style = "兑换商的女儿"
+playstyle = "在交易所对赌胡椒期货，给远航的船上保险，把钱借给打仗的国王——再看历史怎么还你。"
+tags = [ "金融", "贸易", "情报" ]
+difficulty = 2
+strengths = [ "numeracy", "commerce", "eloquence", "etiquette" ]
+start_ship = "卡拉维尔帆船"
+known = [ "北海", "英吉利海峡", "比斯开湾", "伊比利亚外海", "西地中海" ]
+academy = { key = "antwerp_laurel", name = "安特卫普女子法语学校与月桂树", city = "安特卫普" }
+keepsake = "父亲的账簿"
+portraits = [ { from_age = 0, asset = "t16-lieve-12" }, { from_age = 12, asset = "t16-lieve-12" }, { from_age = 14, asset = "t16-lieve-14" }, { from_age = 16, asset = "t16-lieve-16" } ]
+bonds = [ { person = "ines_costa", name = "伊内丝·达·科斯塔", kind = "月桂树的同窗" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "lieve"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "antwerp"
+cash = 18000
+ships = [ "swallow" ]
+crew = 18
+food = 30
+water = 30
+cargo = [ { good = "cloth", qty = 10 } ]
+items = [ { item = "abacus", qty = 1 }, { item = "exchange_earring", qty = 1 } ]
+known_regions = [ "north_sea", "english_channel", "biscay", "iberia", "west_mediterranean" ]
+mementos = [ { key = "lieve_fathers_ledger", name = "父亲的账簿", kind = "story_keepsake", transferable = false, consumable = false, description = "父亲的旧账簿，牛皮封面磨得发亮。页边记满了汇票的到期日，还有一串她没去过的港口。" } ]
+source = "family_capital"
+grant_once = "c12_voyage_lieve"
+
+[[opening_catalog]]
+key = "najma"
+name = "纳吉玛"
+kind = "protagonist"
+scenario = "najma_1553"
+person = "najma"
+family_ref = "najma"
+academy_ref = "shipboard_zabid"
+main_track = "main_najma"
+born = [ 1540, 8, 24 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "najma"
+name = "纳吉玛"
+name_en = "Najma al-Julfari"
+gender = "f"
+born = [ 1540, 8, 24 ]
+home = "尤尔法"
+region = "阿拉伯·尤尔法"
+tagline = "伊本·马吉德的曾外孙女，拿星星量海。"
+style = "用诗记航路的姑娘"
+playstyle = "亲手掌舵穿过没有海图的海，看星定位，赶在季风转向之前出航。"
+tags = [ "航行", "探索", "观星" ]
+difficulty = 3
+strengths = [ "astronomy", "seamanship", "learning", "perception" ]
+start_ship = "桑布克"
+known = [ "阿拉伯海", "红海", "波斯湾", "东非", "马拉巴尔海", "马六甲海峡" ]
+academy = { key = "shipboard_zabid", name = "领航世家的船上学堂与扎比德", city = "船上与扎比德" }
+keepsake = "外曾祖父的铜星盘"
+portraits = [ { from_age = 0, asset = "t16-najma-12" }, { from_age = 12, asset = "t16-najma-12" }, { from_age = 14, asset = "t16-najma-14" }, { from_age = 16, asset = "t16-najma-16" } ]
+bonds = [ { person = "rania", name = "拉妮娅", kind = "续诗的同门" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "najma"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "julfar"
+cash = 9000
+ships = [ "sambuk" ]
+crew = 28
+food = 60
+water = 60
+cargo = [ { good = "coffee", qty = 10 } ]
+items = [ { item = "majid_astrolabe", qty = 1 }, { item = "canopus_pendant", qty = 1 } ]
+known_regions = [ "arabian_sea", "red_sea", "persian_gulf", "east_africa", "malabar", "malacca" ]
+mementos = [ { key = "najma_brass_astrolabe", name = "外曾祖父的铜星盘", kind = "story_keepsake", transferable = false, consumable = false, description = "外曾祖父留下的铜星盘，边上的刻度被几代领航人的拇指磨得发亮。", item = "majid_astrolabe" } ]
+source = "family_capital"
+grant_once = "c12_voyage_najma"
+
+[[opening_catalog]]
+key = "lin_wandeng"
+name = "林晚灯"
+kind = "protagonist"
+scenario = "lin_wandeng_1553"
+person = "lin_wandeng"
+family_ref = "lin_wandeng"
+academy_ref = "zhangzhou_shexue"
+main_track = "main_lin_wandeng"
+born = [ 1540, 3, 23 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "lin_wandeng"
+name = "林晚灯"
+name_en = "Lin Wandeng"
+gender = "f"
+born = [ 1540, 3, 23 ]
+home = "月港"
+region = "中国·漳州月港"
+tagline = "提着天妃宫的灯，走朝廷不许走的海。"
+style = "海禁外的提灯人"
+playstyle = "开快船躲巡哨，打点衙门，辨清谣言真假，在禁海里赚最厚的利。"
+tags = [ "走私", "情报", "快船" ]
+difficulty = 3
+strengths = [ "intrigue", "eloquence", "agility", "commerce" ]
+start_ship = "鸟船"
+known = [ "东海", "台湾海峡", "南海北部", "九州、五岛与朝鲜南岸", "琉球", "北大年近海" ]
+academy = { key = "zhangzhou_shexue", name = "漳州龙溪社学与天妃宫", city = "漳州龙溪" }
+keepsake = "天妃宫的灯笼"
+portraits = [ { from_age = 0, asset = "t16-lin_wandeng-12" }, { from_age = 12, asset = "t16-lin_wandeng-12" }, { from_age = 14, asset = "t16-lin_wandeng-14" }, { from_age = 16, asset = "t16-lin_wandeng-16" } ]
+bonds = [ { person = "xu_cai", name = "许采", kind = "教读先生的女儿" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "lin_wandeng"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "yuegang"
+cash = 7500
+ships = [ "niaochuan" ]
+crew = 24
+food = 45
+water = 45
+cargo = [ { good = "porcelain", qty = 12 } ]
+items = [ { item = "tianfei_lantern", qty = 1 }, { item = "rigging_knife", qty = 1 } ]
+known_regions = [ "east_china_sea", "taiwan_strait", "south_china_north", "kyushu", "ryukyu", "pattani" ]
+mementos = [ { key = "wandeng_tianfei_lantern", name = "天妃宫的灯笼", kind = "story_keepsake", transferable = false, consumable = false, description = "天妃宫求来的小红纸灯笼，竹骨补过两回。出海的人说，灯不灭，人就回得来。", item = "tianfei_lantern" } ]
+source = "family_capital"
+grant_once = "c12_voyage_lin_wandeng"
+
+[[opening_catalog]]
+key = "ix_nikte"
+name = "伊希·妮克特"
+kind = "protagonist"
+scenario = "ix_nikte_1553"
+person = "ix_nikte"
+family_ref = "ix_nikte"
+academy_ref = "merida_franciscan"
+main_track = "main_ix_nikte"
+born = [ 1540, 3, 21 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "ix_nikte"
+name = "伊希·妮克特"
+name_en = "Ix Nikte'"
+gender = "f"
+born = [ 1540, 3, 21 ]
+home = "科苏梅尔"
+region = "美洲·尤卡坦"
+tagline = "神父叫她玛丽亚，母亲叫她“花”。"
+style = "月之岛的舟商之女"
+playstyle = "带两条独木舟沿岸贩可可和盐，替镇子打官司，把人和书藏到西班牙人找不到的地方。"
+tags = [ "外交", "近岸贸易", "庇护" ]
+difficulty = 4
+strengths = [ "eloquence", "command", "charm", "medicine" ]
+start_ship = "玛雅贸易独木舟 + 玛雅贸易独木舟"
+known = [ "尤卡坦沿岸", "墨西哥湾南部", "洪都拉斯湾" ]
+academy = { key = "merida_franciscan", name = "梅里达修院前院与家中医术", city = "梅里达" }
+keepsake = "伊希切尔神庙的黄铁矿镜"
+portraits = [ { from_age = 0, asset = "t16-ix_nikte-12" }, { from_age = 12, asset = "t16-ix_nikte-12" }, { from_age = 14, asset = "t16-ix_nikte-14" }, { from_age = 16, asset = "t16-ix_nikte-16" } ]
+bonds = [ { person = "xochitl", name = "霍奇特尔", kind = "那瓦特同学" }, { person = "ines_solis", name = "伊内斯·德·索利斯", kind = "互教语言的朋友" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "ix_nikte"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "cozumel"
+cash = 5000
+ships = [ "maya_canoe", "maya_canoe" ]
+crew = 44
+food = 50
+water = 50
+cargo = [ { good = "cocoa", qty = 20 }, { good = "salt", qty = 10 } ]
+items = [ { item = "ix_pyrite_mirror", qty = 1 }, { item = "ix_obsidian_knife", qty = 1 } ]
+known_regions = [ "yucatan", "mexico_gulf_south", "honduras_bay" ]
+mementos = [ { key = "ix_sanctuary_mirror", name = "伊希切尔神庙的黄铁矿镜", kind = "story_keepsake", transferable = false, consumable = false, description = "伊希切尔神庙里的黄铁矿镜，打磨过的碎片拼成一面圆。老人们说，镜子里看得见不在眼前的东西。", item = "ix_pyrite_mirror" } ]
+source = "family_capital"
+grant_once = "c12_voyage_ix_nikte"
+
+[[opening_catalog]]
+key = "noel"
+name = "诺埃尔·德·卡德纳"
+kind = "protagonist"
+scenario = "noel_1553"
+person = "noel"
+family_ref = "noel"
+academy_ref = "seville_tarifa"
+main_track = "main_noel"
+born = [ 1540, 11, 11 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "noel"
+name = "诺埃尔·德·卡德纳"
+name_en = "Noël de Cadena"
+gender = "m"
+born = [ 1540, 11, 11 ]
+home = "塔里法"
+region = "欧洲·塔里法与海峡"
+tagline = "骑士团只剩一个人——嘴毒，还起不来床。"
+style = "系红缎带的骑士"
+playstyle = "一对一决斗，守约攒下信义，照着名册把散落各地的骑士后人一个个找回来。"
+tags = [ "决斗", "信义", "探索" ]
+difficulty = 3
+strengths = [ "arms", "agility", "etiquette", "honor" ]
+start_ship = "探航小艇"
+known = [ "直布罗陀海峡", "伊比利亚外海", "摩洛哥大西洋岸", "加那利海流", "亚速尔海" ]
+academy = { key = "seville_tarifa", name = "塔里法侯爵府与人文讲席", city = "塞维利亚" }
+keepsake = "骑士团的星徽"
+portraits = [ { from_age = 0, asset = "t16-noel-12" }, { from_age = 12, asset = "t16-noel-12" }, { from_age = 14, asset = "t16-noel-14" }, { from_age = 16, asset = "story-noel" } ]
+bonds = [ { person = "margarita", name = "玛格丽塔", kind = "侯爵府的侍女" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "noel"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "tarifa"
+cash = 6500
+ships = [ "pinnace" ]
+crew = 12
+food = 24
+water = 24
+cargo = [  ]
+items = [ { item = "noel_red_ribbon", qty = 1 }, { item = "straits_order_roll", qty = 1 } ]
+known_regions = [ "gibraltar", "iberia", "morocco_atlantic", "canaries", "azores" ]
+mementos = [ { key = "noel_straits_star", name = "骑士团的星徽", kind = "story_keepsake", transferable = false, consumable = false, description = "骑士团的金色星徽，缝在白外套的胸前。老分团长留下的东西不多，这是最亮的一件。" } ]
+source = "family_capital"
+grant_once = "c12_voyage_noel"
+
+[[opening_catalog]]
+key = "tariq"
+name = "塔里克·加尔纳蒂"
+kind = "protagonist"
+scenario = "tariq_1553"
+person = "tariq"
+family_ref = "tariq"
+academy_ref = "fez_qarawiyyin"
+main_track = "main_tariq"
+born = [ 1540, 1, 2 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "tariq"
+name = "塔里克·加尔纳蒂"
+name_en = "Tariq al-Gharnati"
+gender = "m"
+born = [ 1540, 1, 2 ]
+home = "阿尔及尔"
+region = "北非·阿尔及尔与非斯"
+tagline = "带着祖母的钥匙出海，只劫货，不劫人。"
+style = "两岸之间的海盗"
+playstyle = "驾桨帆船接舷夺货，再到对岸把被掳的人赎回来——一岸恨你，一岸爱你。"
+tags = [ "私掠", "接舷", "谈判" ]
+difficulty = 4
+strengths = [ "arms", "gunnery", "intrigue", "sensibility" ]
+start_ship = "加列奥特快船"
+known = [ "西地中海", "北非近海", "安达卢西亚近海" ]
+academy = { key = "fez_qarawiyyin", name = "非斯卡拉维因与儿童学堂", city = "非斯" }
+keepsake = "祖母的格拉纳达门钥匙"
+portraits = [ { from_age = 0, asset = "t16-tariq-12" }, { from_age = 12, asset = "t16-tariq-12" }, { from_age = 14, asset = "t16-tariq-14" }, { from_age = 16, asset = "t16-tariq-16" } ]
+bonds = [ { person = "esther", name = "埃丝特", kind = "算账的朋友" }, { person = "nala", name = "娜拉", kind = "弹乌德琴的朋友" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "tariq"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "algiers"
+cash = 9000
+ships = [ "galiot" ]
+crew = 60
+food = 35
+water = 35
+cargo = [  ]
+items = [ { item = "granada_key", qty = 1 }, { item = "damascus_sabre", qty = 1 } ]
+known_regions = [ "west_mediterranean", "north_africa", "andalusia" ]
+mementos = [ { key = "tariq_granada_key", name = "祖母的格拉纳达门钥匙", kind = "story_keepsake", transferable = false, consumable = false, description = "祖母从格拉纳达带出来的门钥匙，铁已经磨得发亮。阿尔拜辛那扇门还在不在，谁也说不准；钥匙一直留着。", item = "granada_key" } ]
+source = "family_capital"
+grant_once = "c12_voyage_tariq"
+
+[[opening_catalog]]
+key = "kaicili"
+name = "凯奇利·劳特"
+kind = "protagonist"
+scenario = "kaicili_1553"
+person = "kaicili"
+family_ref = "kaicili"
+academy_ref = "giri"
+main_track = "main_kaicili"
+born = [ 1540, 9, 9 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "kaicili"
+name = "凯奇利·劳特"
+name_en = "Kaicili Laut"
+gender = "m"
+born = [ 1540, 9, 9 ]
+home = "特尔纳特"
+region = "东南亚·摩鹿加与爪哇"
+tagline = "苏丹之子，敌国的外甥，香料局上的棋手。"
+style = "海之王子"
+playstyle = "经营丁香园，左右香料的价钱，在四座苏丹国之间下一盘外交的棋。"
+tags = [ "种植园", "香料", "外交" ]
+difficulty = 3
+strengths = [ "etiquette", "commerce", "command", "learning" ]
+start_ship = "科拉科拉"
+known = [ "摩鹿加海", "班达海", "爪哇海", "马六甲海峡" ]
+academy = { key = "giri", name = "格雷西克吉里学堂", city = "格雷西克·吉里" }
+keepsake = "一枝特尔纳特的丁香"
+portraits = [ { from_age = 0, asset = "t16-kaicili-12" }, { from_age = 12, asset = "t16-kaicili-12" }, { from_age = 14, asset = "t16-kaicili-14" }, { from_age = 16, asset = "t16-kaicili-16" } ]
+bonds = [ { person = "wati", name = "瓦蒂", kind = "班达来的同窗" }, { person = "nyai_gama", name = "奈·加玛", kind = "万丹来的同窗" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "kaicili"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "ternate_port"
+cash = 12000
+ships = [ "kora_kora" ]
+crew = 48
+food = 40
+water = 40
+cargo = [ { good = "cloves", qty = 8 } ]
+items = [ { item = "clove_brooch", qty = 1 }, { item = "island_safeconduct", qty = 1 } ]
+known_regions = [ "moluccas", "banda", "java_sea", "malacca" ]
+mementos = [ { key = "kaicili_clove_sprig", name = "一枝特尔纳特的丁香", kind = "story_keepsake", transferable = false, consumable = false, description = "一枝晒干的丁香，摘自特尔纳特火山坡上的老树。揉碎了，满手都是家乡的味道。" } ]
+source = "family_capital"
+grant_once = "c12_voyage_kaicili"
+estate = { kind = "plantation", loc = "ternate_port", good = "cloves", level = 1, workers = 4, source = "family_capital", grant_once = "c12_kaicili_clove_grove" }
+
+[[opening_catalog]]
+key = "baraka"
+name = "巴拉卡·宾·萨利姆"
+kind = "protagonist"
+scenario = "baraka_1553"
+person = "baraka"
+family_ref = "baraka"
+academy_ref = "cairo_azhar"
+main_track = "main_baraka"
+born = [ 1540, 7, 23 ]
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "baraka"
+name = "巴拉卡·宾·萨利姆"
+name_en = "Baraka bin Salim al-Kilwi"
+gender = "m"
+born = [ 1540, 7, 23 ]
+home = "基尔瓦"
+region = "东非·斯瓦希里海岸"
+tagline = "读了外人写的家乡史，决定自己来写。"
+style = "讲故事的金商"
+playstyle = "让缝合船与内陆商队接力，到金市验金，把各自为政的海港拉到一张桌上。"
+tags = [ "商队", "联运", "贸易" ]
+difficulty = 3
+strengths = [ "commerce", "eloquence", "constitution", "learning" ]
+start_ship = "姆泰佩缝合船"
+known = [ "东非", "莫桑比克海峡", "阿曼近海", "古吉拉特海", "红海" ]
+academy = { key = "cairo_azhar", name = "开罗爱资哈尔与杰巴尔提住宿区", city = "开罗" }
+keepsake = "一枚基尔瓦苏丹的铜币"
+portraits = [ { from_age = 0, asset = "t16-baraka-12" }, { from_age = 12, asset = "t16-baraka-12" }, { from_age = 14, asset = "t16-baraka-14" }, { from_age = 16, asset = "t16-baraka-16" } ]
+bonds = [ { person = "zubayda", name = "祖贝达", kind = "书商家的女儿" } ]
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "baraka"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "kilwa"
+cash = 9000
+ships = [ "mtepe" ]
+crew = 16
+food = 35
+water = 35
+cargo = [ { good = "ivory", qty = 8 }, { good = "cloth", qty = 12 } ]
+items = [ { item = "counting_tokens", qty = 1 }, { item = "island_safeconduct", qty = 1 } ]
+known_regions = [ "east_africa", "mozambique_channel", "oman", "gujarat", "red_sea" ]
+mementos = [ { key = "baraka_kilwa_copper", name = "一枚基尔瓦苏丹的铜币", kind = "story_keepsake", transferable = false, consumable = false, description = "一枚基尔瓦苏丹的铜币，上面的阿拉伯字磨平了一半。父亲说，从前这样的钱整条海岸都认。" } ]
+source = "family_capital"
+grant_once = "c12_voyage_baraka"
+caravan = { loc = "kilwa", capacity = 40, guards = 4, cargo = [  ], cash = 0, source = "family_capital", grant_once = "c12_baraka_caravan" }
+
+[[opening_catalog]]
+key = "custom_seville_pilot"
+name = "塞维利亚的孤儿领航学徒"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_seville_pilot"
+academy_ref = "seville_pilot_school"
+classmates = [ "pedro_luna", "leonor_ruiz" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_seville_pilot"
+name = "塞维利亚的孤儿领航学徒"
+home = "塞维利亚"
+family = "贸易总署的老领航考官，收留孤儿的修道院修士"
+activities = "领航预备课、码头上的海图铺"
+style = "探索新航路"
+known = [ "伊比利亚外海", "加那利海流", "通往加勒比的航线" ]
+academy = { key = "seville_pilot_school", name = "塞维利亚贸易总署预备讲席", city = "塞维利亚" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_seville_pilot"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "seville"
+cash = 6500
+ships = [ "swallow" ]
+crew = 16
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "quadrant", qty = 1 }, { item = "apprentice_notebook", qty = 1 } ]
+known_regions = [ "iberia", "canaries", "caribbean_route" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_seville_pilot"
+
+[[opening_catalog]]
+key = "custom_murano_glass"
+name = "穆拉诺的玻璃匠之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_murano_glass"
+academy_ref = "murano_workshop"
+classmates = [ "piero_vetro", "marietta_filo" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_murano_glass"
+name = "穆拉诺的玻璃匠之子"
+home = "威尼斯·穆拉诺"
+family = "守着熔炉的父母，阿尔丁印书坊的老书商"
+activities = "吹玻璃、磨透镜"
+style = "玻璃与工坊"
+known = [ "亚得里亚海", "东地中海" ]
+academy = { key = "murano_workshop", name = "穆拉诺作坊与阿尔丁印书圈", city = "威尼斯·穆拉诺" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_murano_glass"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "venice"
+cash = 8000
+ships = [ "silvergull" ]
+crew = 18
+food = 30
+water = 30
+cargo = [ { good = "glass", qty = 8 } ]
+items = [ { item = "venice_glass_cup", qty = 1 }, { item = "shipwright_receipt", qty = 1 } ]
+known_regions = [ "adriatic", "east_mediterranean" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_murano_glass"
+
+[[opening_catalog]]
+key = "custom_lisbon_medicine"
+name = "里斯本的新基督徒医生之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_lisbon_medicine"
+academy_ref = "lisbon_medical_house"
+classmates = [ "duarte_ervas", "beatriz_simao" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_lisbon_medicine"
+name = "里斯本的新基督徒医生之子"
+home = "里斯本"
+family = "行医的父亲，周五傍晚悄悄点灯的祖母"
+activities = "认药草、记病案、进宫出诊"
+style = "医术与秘密"
+known = [ "葡萄牙与马德拉", "几内亚航线" ]
+academy = { key = "lisbon_medical_house", name = "里斯本家学与科英布拉医学预备", city = "里斯本" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_lisbon_medicine"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "lisbon"
+cash = 7000
+ships = [ "swallow" ]
+crew = 16
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "herbal_draught", qty = 1 }, { item = "apprentice_notebook", qty = 1 } ]
+known_regions = [ "portugal", "guinea_route" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_lisbon_medicine"
+
+[[opening_catalog]]
+key = "custom_lubeck_accounts"
+name = "吕贝克的记账学徒"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_lubeck_accounts"
+academy_ref = "lubeck_countinghouse"
+classmates = [ "hinrik_korn", "greta_tamm" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_lubeck_accounts"
+name = "吕贝克的记账学徒"
+home = "吕贝克"
+family = "汉萨商站的账房先生，老船长汉斯·布罗克"
+activities = "记账、给波罗的海的粮船验货"
+style = "汉萨的北方贸易"
+known = [ "波罗的海", "北海", "挪威海" ]
+academy = { key = "lubeck_countinghouse", name = "吕贝克卡塔琳娜学校与账房", city = "吕贝克" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_lubeck_accounts"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "lubeck"
+cash = 8500
+ships = [ "cog" ]
+crew = 18
+food = 30
+water = 30
+cargo = [ { good = "grain", qty = 12 } ]
+items = [ { item = "abacus", qty = 1 }, { item = "apprentice_seal", qty = 1 } ]
+known_regions = [ "baltic", "north_sea", "norwegian_sea" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_lubeck_accounts"
+
+[[opening_catalog]]
+key = "custom_basque_whaling"
+name = "巴斯克捕鲸人之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_basque_whaling"
+academy_ref = "bilbao_whaling_yard"
+classmates = [ "martin_itsas", "elene_urruti" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_basque_whaling"
+name = "巴斯克捕鲸人之子"
+home = "毕尔巴鄂"
+family = "站在船头的鱼叉手，懂草药的姨妈"
+activities = "跟船学捕鲸、腌鳕鱼"
+style = "捕鲸与寒海"
+known = [ "比斯开湾", "爱尔兰海", "大浅滩（听说，未揭图）" ]
+academy = { key = "bilbao_whaling_yard", name = "毕尔巴鄂船场与捕鲸师门", city = "毕尔巴鄂" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_basque_whaling"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "bilbao"
+cash = 7000
+ships = [ "cog" ]
+crew = 20
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "rigging_knife", qty = 1 }, { item = "herbal_draught", qty = 1 } ]
+known_regions = [ "biscay", "irish_sea" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_basque_whaling"
+rumored_regions = [ "grand_banks" ]
+
+[[opening_catalog]]
+key = "custom_istanbul_shipyard"
+name = "伊斯坦布尔造船厂的孩子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_istanbul_shipyard"
+academy_ref = "golden_horn_yard"
+classmates = [ "selim_kereste", "leyla_fincan" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_istanbul_shipyard"
+name = "伊斯坦布尔造船厂的孩子"
+home = "伊斯坦布尔"
+family = "金角湾兵工厂的船匠，煮得一手好咖啡的女主人"
+activities = "上船台造船、跟水兵操练"
+style = "船台与桨帆船"
+known = [ "马尔马拉海", "爱琴海", "黑海", "黎凡特海" ]
+academy = { key = "golden_horn_yard", name = "金角湾兵工厂学徒", city = "伊斯坦布尔" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_istanbul_shipyard"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "istanbul"
+cash = 8000
+ships = [ "brig" ]
+crew = 32
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "shipwright_receipt", qty = 1 }, { item = "rigging_knife", qty = 1 } ]
+known_regions = [ "marmara", "aegean", "black_sea", "levant" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_istanbul_shipyard"
+
+[[opening_catalog]]
+key = "custom_fez_scholar"
+name = "非斯的学者之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_fez_scholar"
+academy_ref = "fez_qarawiyyin_custom"
+classmates = [ "idriss_qalam", "khadija_rihla" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_fez_scholar"
+name = "非斯的学者之子"
+home = "非斯，经丹吉尔出海"
+family = "卡拉维因的学者，利奥·阿非利加努斯的旧友"
+activities = "经学、观星、跟撒哈拉商队见习"
+style = "学问、秘术与商队"
+known = [ "摩洛哥大西洋岸", "西地中海", "加那利海流" ]
+academy = { key = "fez_qarawiyyin_custom", name = "非斯家学与卡拉维因旁听", city = "非斯" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_fez_scholar"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "tangier"
+cash = 6000
+ships = [ "swallow" ]
+crew = 16
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "quadrant", qty = 1 }, { item = "apprentice_notebook", qty = 1 } ]
+known_regions = [ "morocco_atlantic", "west_mediterranean", "canaries" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_fez_scholar"
+
+[[opening_catalog]]
+key = "custom_cambay_broker"
+name = "坎贝经纪人之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_cambay_broker"
+academy_ref = "cambay_broker_house"
+classmates = [ "naran_vaniya", "tara_mani" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_cambay_broker"
+name = "坎贝经纪人之子"
+home = "坎贝"
+family = "坎贝的经纪人，磨玛瑙珠的匠人"
+activities = "验棉布、挑玛瑙、学汇兑"
+style = "汇兑与布匹"
+known = [ "古吉拉特海", "阿拉伯海", "马拉巴尔海" ]
+academy = { key = "cambay_broker_house", name = "坎贝经纪行学堂", city = "坎贝" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_cambay_broker"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "khambhat"
+cash = 9500
+ships = [ "dhow" ]
+crew = 24
+food = 30
+water = 30
+cargo = [ { good = "cloth", qty = 10 } ]
+items = [ { item = "abacus", qty = 1 }, { item = "counting_tokens", qty = 1 } ]
+known_regions = [ "gujarat", "arabian_sea", "malabar" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_cambay_broker"
+
+[[opening_catalog]]
+key = "custom_busan_interpreter"
+name = "釜山通事之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_busan_interpreter"
+academy_ref = "busan_interpreters"
+classmates = [ "kim_munyeong", "yun_haeri" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_busan_interpreter"
+name = "釜山通事之子"
+home = "釜山"
+family = "礼曹的译官，倭馆里的对马商人"
+activities = "当通事、誊外交文书"
+style = "通事与外交"
+known = [ "朝鲜与对马", "九州、五岛与朝鲜南岸", "黄海" ]
+academy = { key = "busan_interpreters", name = "釜山通事家学与司译院课业", city = "釜山" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_busan_interpreter"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "busan"
+cash = 5500
+ships = [ "sloop" ]
+crew = 10
+food = 20
+water = 20
+cargo = [  ]
+items = [ { item = "apprentice_notebook", qty = 1 }, { item = "linen_handkerchief", qty = 1 } ]
+known_regions = [ "korea", "kyushu", "yellow_sea" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_busan_interpreter"
+
+[[opening_catalog]]
+key = "custom_naha_envoy"
+name = "琉球使节之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_naha_envoy"
+academy_ref = "naha_envoy_house"
+classmates = [ "kinjo_shin", "mae_sumi" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_naha_envoy"
+name = "琉球使节之子"
+home = "那霸"
+family = "进贡船的正使，家中做祝女的长辈"
+activities = "学朝贡礼仪，做万国津梁的转口买卖"
+style = "朝贡与转口"
+known = [ "琉球", "福州近海", "九州、五岛与朝鲜南岸", "南海北部" ]
+academy = { key = "naha_envoy_house", name = "那霸使节家学与南京官生课本", city = "那霸" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_naha_envoy"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "naha"
+cash = 8000
+ships = [ "silvergull" ]
+crew = 18
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "linen_handkerchief", qty = 1 }, { item = "island_safeconduct", qty = 1 } ]
+known_regions = [ "ryukyu", "fuzhou", "kyushu", "south_china_north" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_naha_envoy"
+
+[[opening_catalog]]
+key = "custom_tondo_datu"
+name = "汤都大督之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_tondo_datu"
+academy_ref = "tondo_house_school"
+classmates = [ "lakan_pula", "amihan_dagat" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_tondo_datu"
+name = "汤都大督之子"
+home = "汤都"
+family = "汤都的大督，常来常往的福建商人"
+activities = "诸岛转口、听太平洋那头的传说"
+style = "千岛与大洋"
+known = [ "吕宋与米沙鄢", "南海南部" ]
+academy = { key = "tondo_house_school", name = "汤都大督家学", city = "汤都" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_tondo_datu"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "tondo"
+cash = 7000
+ships = [ "double_canoe" ]
+crew = 20
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "counting_tokens", qty = 1 }, { item = "rigging_knife", qty = 1 } ]
+known_regions = [ "luzon_visayas", "south_china_south" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_tondo_datu"
+
+[[opening_catalog]]
+key = "custom_chincha_rafts"
+name = "钦查筏商之子"
+kind = "template"
+scenario = "plus_ultra"
+born = [ 1540, 1, 1 ]
+family_ref = "custom_chincha_rafts"
+academy_ref = "chincha_raft_house"
+classmates = [ "mayta_qipu", "sisa_mullu" ]
+main_track = "free_captain"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = true
+
+[opening_catalog.card]
+key = "custom_chincha_rafts"
+name = "钦查筏商之子"
+home = "钦查，经卡亚俄出海"
+family = "筏商之家，一位还在替比尔卡班巴记账的结绳官"
+activities = "驾巴尔萨木筏、贩海菊蛤、打绳结记账"
+style = "太平洋岸的筏商"
+known = [ "秘鲁寒流", "巴拿马湾" ]
+academy = { key = "chincha_raft_house", name = "钦查筏商家学与库斯科讲读", city = "钦查" }
+
+[opening_catalog.childhood]
+date = [ 1553, 1, 1 ]
+cash = 200
+ships = [  ]
+crew = 0
+known_regions = [  ]
+family_ref = "custom_chincha_rafts"
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "callao"
+cash = 6000
+ships = [ "balsa_raft" ]
+crew = 12
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "braided_cord", qty = 1 }, { item = "counting_tokens", qty = 1 } ]
+known_regions = [ "peru_current", "panama_gulf" ]
+source = "family_capital"
+grant_once = "c12_voyage_custom_chincha_rafts"
+
+[[opening_catalog]]
+key = "free_1557"
+name = "自由航海·1557"
+kind = "free"
+scenario = "free_1557"
+
+[opening_catalog.options]
+history_toggle = true
+skip_upbringing = false
+
+[opening_catalog.voyage]
+date = [ 1557, 1, 1 ]
+start_loc = "lisbon"
+cash = 10000
+ships = [ "swallow" ]
+crew = 18
+food = 30
+water = 30
+cargo = [  ]
+items = [ { item = "quadrant", qty = 1 } ]
+known_regions = [ "portugal", "canaries" ]
+source = "opening_capital"
+grant_once = "c12_voyage_free_1557"
+
+# scenario_labels与严格A3剧本一一对应；I1从这里取name_en，与剧本日期及card合成ScenarioCard。
+[[scenario_labels]]
+key = "mio_1553"
+name = "潮之扇·1553"
+name_en = "Fan of the Tides · 1553"
+description = "1553年，土佐中村。父亲死得不明不白，已经四年；十岁的弟弟被接去京都本家，中村交给家臣们代管。澪跟着乳母在下田河口认潮水，明年春天也要上京，进宫做女房的见习。1557年正月，她从下田出海。"
+
+[[scenario_labels]]
+key = "lieve_1553"
+name = "父亲的账簿·1553"
+name_en = "Her Father's Ledger · 1553"
+description = "1553年，安特卫普。交易所的门楣上刻着：献给各民族、各语言的商人。十二岁的莉芙坐在父亲的兑换桌旁，什么金币过一遍手，成色和价钱就再也忘不掉。明年她进女子法语学校；三年后，西班牙国王的汇票开始越付越慢。1557年1月，她带着父亲的账簿出海。"
+
+[[scenario_labels]]
+key = "najma_1553"
+name = "星的路·1553"
+name_en = "The Star Road · 1553"
+description = "1553年，尤尔法。母亲的嫁妆箱底压着外曾祖父伊本·马吉德的航路诗，父亲的采珠船在等今年的采珠季。家门口的海不太平：去年奥斯曼的舰队围霍尔木兹不下，葡萄牙人的通行证一年比一年查得紧。明年起，纳吉玛在领航世家的船上学艺，冬天随季风去也门的扎比德；1557年1月，随东北季风出海。"
+
+[[scenario_labels]]
+key = "lin_wandeng_1553"
+name = "不灭的灯·1553"
+name_en = "The Unfading Lantern · 1553"
+description = "1553年，漳州月港。朝廷说这里没有一条海船，港里却住着上万户靠海吃饭的人家。林家的福船跑五岛、北大年和马六甲——在官府眼里是贼，在乡里人嘴里是商。这年妈祖诞辰，晚灯被选为提灯的童女；北边，倭寇正大举进犯江浙。1557年1月，她带着家里最后一条鸟船出海。"
+
+[[scenario_labels]]
+key = "ix_nikte_1553"
+name = "月之岛·1553"
+name_en = "Island of the Moon · 1553"
+description = "1553年，科苏梅尔岛。来伊希切尔圣所朝拜的人一年比一年少；前年的敕令不许夜里跳舞，也不许撒玉米粒占卜，母亲的手艺有一半成了禁术。父亲的独木舟照旧往返希卡兰戈与洪都拉斯湾，贩盐、可可和棉布。明年，伊希要跟船去梅里达，在修院的前院念教理。1557年1月，她回到岛上，出海。"
+
+[[scenario_labels]]
+key = "noel_1553"
+name = "链与缎带·1553"
+name_en = "Chain and Ribbon · 1553"
+description = "1553年，塔里法，欧洲大陆的最南端。城堡里点名，名册上七十七个名字，活着的只剩九个。诺埃尔三岁那年被放在城堡门口，老分团长收养了这个孩子，从不说是从哪里来的。明年起去塞维利亚，寄住在侯爵府，听宇宙志的课；1557年1月授剑，系上红缎带出海。"
+
+[[scenario_labels]]
+key = "tariq_1553"
+name = "两岸·1553"
+name_en = "Two Shores · 1553"
+description = "1553年，阿尔及尔。塔里克生在格拉纳达的阿尔拜辛，三岁随家人渡海逃到这里；祖母至今把老家的门钥匙带在身上。萨拉赫·雷斯的船队每回出海，都带回抢来的货，也带回抢来的人。明年正月，塔里克随大军去非斯，留在卡拉维因读书。1557年1月，他有了自己的加列奥特。"
+
+[[scenario_labels]]
+key = "kaicili_1553"
+name = "丁香的王冠·1553"
+name_en = "Crown of Cloves · 1553"
+description = "1553年，特尔纳特。丁香树结满了花苞，葡萄牙人的堡就立在海边。父亲海伦苏丹在堡里陪葡萄牙人周旋，回到宫里听人念《古兰经》；母亲是蒂多雷苏丹的女儿——海峡对面那座岛，是敌国，也是外祖家。明年，凯奇利要坐科拉科拉去爪哇，到格雷西克的吉里求学。1557年1月，他回到特尔纳特。"
+
+[[scenario_labels]]
+key = "baraka_1553"
+name = "金之河·1553"
+name_en = "River of Gold · 1553"
+description = "1553年，基尔瓦。这里曾是东非最富的港，将近五十年前被葡萄牙人洗劫，如今只是别人账上的一座小城邦。父亲萨利姆往来索法拉与内陆的金市，今年第一次带巴拉卡跟商队进内陆。他还读到一本葡萄牙人写的书，里面讲基尔瓦——讲得不对。明年，他随季风北上开罗，进爱资哈尔。1557年1月，他乘东北季风回家，出海。"
+
+[[scenario_labels]]
+key = "plus_ultra"
+name = "更远之处·自创船长"
+name_en = "Further Beyond · Custom Captain"
+description = "1553年，十二种出身任你挑：塞维利亚的孤儿领航学徒、穆拉诺玻璃匠的孩子、釜山通事的孩子……姓名、性别、样貌和生日都由你来定。在家乡过一年，进学院或拜师学三年，1557年1月，扬帆去更远之处。"
+
+[[scenario_labels]]
+key = "free_1557"
+name = "自由航海·1557"
+name_en = "Free Sailing · 1557"
+description = "1553年元旦起，世界先自己走上四年：有人登基，有人破产，有人的船再也没有回来。1557年1月1日，你在里斯本的码头接过一条船。没有童年与学院的岁月，船长的姓名、样貌与来历由你自己定，往后的航路也一样。"

@@ -1,0 +1,255 @@
+# 请托：指向西方的骑像（request_damiao_de_gois）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：达米昂·德·戈伊斯（damiao_de_gois，1502-01-01 生，1574 年卒，男）。里斯本王家档案塔看守长，1558 年起奉命写编年史；势力 portugal；身份档 2（学者、官员）。cast：cast/historical_01_europe.toml。
+# 类型：复合（mixed）。报价：T（当面，里斯本档案塔），auto=false，玩家“问请托”（ask:request_damiao_de_gois）启动；offer 不写 at，目标是在档案塔找到他。
+# 窗口：报价 1557-01-15 至 1569-12-31，到期走 failed、不写见闻；亚速尔一章 deadline_days=180；收尾三章 deadline=1570-12-31。
+# 章节路线：offer → borrower（里斯本，司铎）→ read（里斯本，档案塔）→ azores（安格拉，科尔武外海）→ 三选一收尾：report（崖下亲见 saw）、report_drawn（画下山脊 drawn）、report_unseen（没上岛或只问了人 tales / 登陆失败）。
+#   brief 的 5 章按旗标拆成 7 个章节：引擎不允许对本轨道自己设的旗标写 requires（否则报“准备后条件仍不满足”），只能靠 next 分流，各自的选项各写。
+# 依据·史实（传闻口吻，待核）：戈伊斯（Damião de Góis，1502—1574）任档案塔看守长，编《曼努埃尔王编年史》（1566—67 刊行）。史书记科尔武岛山上骑马石像的传说：国王派人去拆运，只带回几块碎片。石座与断崖上的细节为传说的转述，石人底座的字不知所终。
+# 依据·原创：借阅簿、司铎的研究稿、报告里的领航员、三个老水手的三种说法、断崖下小艇的一次失败、画在纸上的山脊、安格拉的老水手。
+# 秘密：早年的宗教问题与 1571 年的审讯一概不写，见闻也不写。“伊拉斯谟当年对我说”全轨道只用一次（offer）。
+# 读的旗标：c13_main_noel（read 的变体，只加一句沉默，不解释；不写 noel_unveiled 的内容）。
+# 设的旗标：c13_request_damiao_de_gois_accepted（offer 接下）、_declined（offer 回绝）、_back（司铎那边拿回原件或抄本谈成）、_saw（崖下亲眼看见石座）、_drawn（画下山脊）、_tales（安格拉问了老水手）、_partial（只写传说或不去）、_done（照实或石头收尾）、_late（超时）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不给 corvo_fragment，不触发 line_corvo_rider 发现物（石头只是崖下的普通石头）。
+# 依赖：港口 lisbon（ports_iberia.toml）、angra（ports_atlantic_islands_west_africa.toml）；技能 negotiation、cartography；属性 eloquence、seamanship；势力 portugal；物品 chart_atlantic_isles（唯一奖励）。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_damiao_de_gois-report「空的石座」：黑色断崖顶上一个空的方形石座，海鸟绕着飞。（照实的两条结局共用这一张）
+
+[[tracks]]
+key = "request_damiao_de_gois"
+name = "指向西方的骑像"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["damiao_de_gois"]
+
+# 一、借阅簿上的那一行：档案塔顶层，戈伊斯找一份八十年前的报告，找了三天。
+[[tracks.chapters]]
+key = "offer"
+title = "借阅簿上的那一行"
+text = "档案塔顶层的书架间，戈伊斯抱着一摞账簿，找一份八十年前的航海报告，找了三天没找到。他翻开借阅簿，手指按在一行墨迹上：十年前，大教堂的一位司铎借走了它，之后再没还。“伊拉斯谟当年对我说，书借出去就是嫁出去。”他把账簿往桌上一放，“这份报告是老水手自己写的，他见过什么就写什么。我要的就是这个。”他没有抬头，“你去一趟，替我把它要回来。”"
+mood = "mystic"
+objectives = [{ kind = "person", person = "damiao_de_gois", text = "在档案塔找到他" }]
+when = [{ kind = "date", from = [1557, 1, 15], to = [1569, 12, 31] }, { kind = "age", ge = 17 }, { kind = "alive", person = "damiao_de_gois", value = true }]
+deadline = [1569, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去大教堂找那位司铎"
+next = "borrower"
+reply = "他在借阅簿那一行旁边画了个小船，船头朝西。又把司铎住的那条巷子名字抄在纸角上，撕下来递给你：“门口有棵无花果，找得到。”"
+effects = [{ kind = "affinity", person = "damiao_de_gois", value = 2 }, { kind = "flag", flag = "c13_request_damiao_de_gois_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：旧纸的差事，我不接"
+next = "failed"
+reply = "他又爬上了梯子，把账簿一本本推回架子，梯子晃了一下，他没有回头。推到第三层，他背对着你说：“不接也行。我自己再找三天。”"
+effects = [{ kind = "flag", flag = "c13_request_damiao_de_gois_declined" }]
+
+# 二、司铎的书桌：大教堂后巷，报告压在一本写了一半的书底下。
+[[tracks.chapters]]
+key = "borrower"
+title = "司铎的书桌"
+text = "大教堂后面的小巷里，那位司铎的书桌上压着那份报告，报告上压着他自己写了一半的书。他没有起身，只抬了抬眼：“这是我的研究，写完之前不能还。两年里，每一页都是从这份报告里一句一句拆出来的。”他把书稿又压了压，手指按在报告的边角上，不让你碰。钟楼敲过三下，他才又开口：“你们档案塔想要什么？”"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "alive", person = "damiao_de_gois", value = true }]
+news = "大教堂后巷的司铎把档案塔那份八十年前的航海报告压在自己的书稿底下，说没写完不还。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟他说：档案塔的东西，抄一份给他总可以"
+next = "read"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他想了很久，把报告从书稿底下抽出来，推到你面前。“原件还给档案塔，抄本归我。”说完又按住书稿，手指在书稿边上敲了两下，像是怕你连书一起拿走。"
+effects = [{ kind = "affinity", person = "damiao_de_gois", value = 3 }, { kind = "flag", flag = "c13_request_damiao_de_gois_back" }]
+fail = { next = "read", effects = [{ kind = "affinity", person = "damiao_de_gois", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "出钱请抄写员给他抄一份，原件带走"
+next = "read"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "钱袋太薄，请不起一个抄写员熬一整夜"
+reply = "抄写员当晚就来了，司铎一边监督一边挑错，挑出一个错字，就让抄写员重抄一页。抄本他攥在手里，原件则由你收进了包里，压在最底下。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "damiao_de_gois", value = 3 }, { kind = "flag", flag = "c13_request_damiao_de_gois_back" }]
+
+[[tracks.chapters.choices]]
+key = "deal"
+text = "跟他约定：他的书写成以后，档案塔替他存一部"
+next = "read"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "你还不知道档案塔能许他什么，这话不能先开口"
+reply = "他笑了，说这比还书划算。“书写成，档案塔存一部，我的名字印在第一页上。”他把报告推过来，手指在纸上按了按，像是在给这笔买卖盖章。"
+effects = [{ kind = "affinity", person = "damiao_de_gois", value = 3 }, { kind = "flag", flag = "c13_request_damiao_de_gois_back" }]
+
+# 三、窗边的报告：戈伊斯念那一段，然后问你肯不肯去亚速尔。
+[[tracks.chapters]]
+key = "read"
+title = "窗边念的那一段"
+text = "戈伊斯在窗边念那份报告。纸是八十年前的，墨色已经发了褐。一个领航员在里头写，科尔武岛西北的山脊上有一尊骑马的石人，手指着西方。念到最后一页，戈伊斯停住了：石人底座上刻着字，领航员抄在另一张纸上，那张纸不知去向。他放下报告，看着你：“我想让你去亚速尔走一趟，看看那座山现在还有什么。”"
+speaker = "captain"
+mood = "mystic"
+at = "lisbon"
+when = [{ kind = "alive", person = "damiao_de_gois", value = true }]
+news = "里斯本档案塔的老看守长在窗边念一份八十年前的航海报告，念到石人的地方停了很久。"
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "flag", flag = "c13_main_noel" }, { kind = "flag", flag = "c13_request_damiao_de_gois_back", value = false }]
+text = "戈伊斯在窗边念的是你在司铎桌边读到的那一段。报告还压在司铎的书稿底下，你只读了一个下午，纸页边角被他的手指磨得发毛。那一段里，一个领航员写，科尔武岛西北的山脊上有一尊骑马的石人，手指着西方。念到“科尔武”三个字，你没有接话，只把手里的笔转了一圈。戈伊斯听完没有生气，只把窗户推开一条缝：“最后一页呢？”你说没有读到。他沉默了一会儿：“那就去亚速尔看看。”"
+
+[[tracks.chapters.variants]]
+key = "noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "戈伊斯在窗边念那份报告。纸是八十年前的，墨色已经发了褐。一个领航员在里头写，科尔武岛西北的山脊上有一尊骑马的石人，手指着西方。他念到“科尔武”三个字，你没有接话，只把手里的笔转了一圈。念到最后一页，戈伊斯停住了：石人底座上刻着字，领航员抄在另一张纸上，那张纸不知去向。他放下报告，看着你：“我想让你去亚速尔走一趟，看看那座山现在还有什么。”"
+
+[[tracks.chapters.variants]]
+key = "unreturned"
+when = [{ kind = "flag", flag = "c13_request_damiao_de_gois_back", value = false }]
+text = "戈伊斯在窗边念的是你在司铎桌边读到的那一段。报告还压在司铎的书稿底下，你只读了一个下午，纸页边角被他的手指磨得发毛。那一段里，一个领航员写，科尔武岛西北的山脊上有一尊骑马的石人，手指着西方。戈伊斯听完没有生气，只把窗户推开一条缝：“最后一页呢？”你说没有读到。他沉默了一会儿：“那就去亚速尔看看。”"
+
+[[tracks.chapters.choices]]
+key = "go"
+text = "去：从安格拉转到科尔武外海"
+next = "azores"
+reply = "他把报告里那一段抄给你，抄得很慢，每个地名都写两遍。又补了一句：“碎片在国王的屋里，我见过。”说完就不肯再往下讲。他把报告叠好，压进书里。"
+effects = [{ kind = "affinity", person = "damiao_de_gois", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "enough"
+text = "不去了：就到这里，报酬照付"
+next = "done"
+reply = "他有点失望，钱还是照数付了，一个子儿不少。报告收回抽屉里，他把抽屉锁上，钥匙挂回腰间，说：“底座上的字，就让它一直没人读到吧。”"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "damiao_de_gois", value = 2 }, { kind = "flag", flag = "c13_request_damiao_de_gois_partial" }]
+
+# 四、断崖下：安格拉雇的老水手，船绕着科尔武的西北岬转。
+[[tracks.chapters]]
+key = "azores"
+title = "断崖下的座子"
+text = "在安格拉雇了一个熟悉西边两座小岛的老水手，船往科尔武去。岛的西北是一道黑色的断崖，浪在下面炸开，白沫溅得比桅杆还高。老水手说，上面原先立着一尊石人，后来让人拆了，只剩一个座子。“拆的人是国王派来的，”他把舵柄往回拉了一把，“拆下来的东西装了两车，走到半路车轮陷进泥里，最后只有几块碎片运进了王宫。”船在断崖外头打转，山脊的轮廓看得清，山顶却雾着，看不真切。"
+speaker = "captain"
+mood = "tense"
+at = "angra"
+objectives = [{ kind = "at", at = "angra" }]
+when = [{ kind = "alive", person = "damiao_de_gois", value = true }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "damiao_de_gois", value = -3 }, { kind = "flag", flag = "c13_request_damiao_de_gois_late" }, { kind = "letter", person = "damiao_de_gois", text = "编年史里那一段，我照报告写了，没有等你。科尔武的事就到这里。——达米昂" }] }
+news = "安格拉港的老水手说，科尔武岛的断崖上原先立着一尊骑马的石人，后来让人拆了，只剩座子。"
+
+[[tracks.chapters.choices]]
+key = "land"
+text = "等浪小一点，放小艇靠近断崖下"
+next = "report"
+check = { attr = "seamanship", base = 5, per = 8 }
+reply = "小艇贴着礁石靠过去，浪把船抛起来又摔下去。你仰头看见山脊上一个方形的石座，空的，座面上连一根草都没有。水手们松了口气，有人在船尾骂了一句。"
+effects = [{ kind = "affinity", person = "damiao_de_gois", value = 3 }, { kind = "flag", flag = "c13_request_damiao_de_gois_saw" }]
+fail = { next = "report_unseen", effects = [{ kind = "affinity", person = "damiao_de_gois", value = -2 }], news = "安格拉港外，一条小船在科尔武的断崖下差点翻了，船上的人被拖回来，说那一带的浪不是人能靠近的。" }
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "绕岛一圈，把山脊和断崖画下来"
+next = "report_drawn"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "浪太大，你的手画不稳"
+reply = "你画下了那道山脊的轮廓，线条有几处抖，断崖的弯道画得太急。老水手拿指甲在画上点了一下：“座子在这儿。”他又看了看天，说这个方向没错。"
+effects = [{ kind = "affinity", person = "damiao_de_gois", value = 3 }, { kind = "flag", flag = "c13_request_damiao_de_gois_drawn" }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "回安格拉，听老水手们讲石人的样子"
+next = "report_unseen"
+reply = "三个老人讲了三个样子。一个说石人朝西，一个说朝北，第三个说那不是马，是一匹海马。你把三种说法记在一张纸上，每种后面写上是谁说的。"
+effects = [{ kind = "flag", flag = "c13_request_damiao_de_gois_tales" }]
+
+# 五之一、亲眼见过：照实说、石头、传说照传说写。
+[[tracks.chapters]]
+key = "report"
+title = "草稿上的那一行"
+text = "戈伊斯在档案塔等你，桌上摊着他编年史的草稿。窗外的船刚靠岸，搬箱子的脚夫在码头上喊。他没有听见，只盯着你的手。你的袖口还带着崖下的盐霜，硬得发白。“你在崖下看见了什么？只说你亲眼见过的。”他的笔悬在纸上，草稿停在传说那一段，后面还空着。怎么写进史书，他想听你的意见，可他先要的是你看见的。"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "damiao_de_gois" }]
+when = [{ kind = "alive", person = "damiao_de_gois", value = true }]
+deadline = [1570, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_damiao_de_gois_late" }, { kind = "letter", person = "damiao_de_gois", text = "编年史那一段，我照报告写了，没有等你的话。若路过档案塔，桌上那张草稿还在。——达米昂" }] }
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：崖上只剩一个空座子"
+next = "done"
+reply = "他在草稿上添了一行：“据某船长亲见，座尚在。”每个字都照着你的口气写。写完他问船长的名字要不要署上，你摇了摇头，他便把那一行又抄了一遍。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "item", item = "chart_atlantic_isles", qty = 1 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "affinity", person = "damiao_de_gois", value = 8 }, { kind = "memory", memory = "mem-request_damiao_de_gois-report", title = "空的石座" }, { kind = "flag", flag = "c13_request_damiao_de_gois_done" }]
+
+[[tracks.chapters.choices]]
+key = "stone"
+text = "带回一块断崖下捡的石头，给他看"
+next = "done"
+reply = "他把石头压在报告上当镇纸，说这不是石人身上的，可他喜欢。石头的棱角硌着纸页，他不让人挪开，就这么压着，把那一页写完了。他没有再问石头是哪儿捡的。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "chart_atlantic_isles", qty = 1 }, { kind = "fame", value = 5 }, { kind = "affinity", person = "damiao_de_gois", value = 5 }, { kind = "flag", flag = "c13_request_damiao_de_gois_done" }]
+
+[[tracks.chapters.choices]]
+key = "legend"
+text = "劝他把传说照传说写，不添你的话"
+next = "done"
+reply = "他想了想，没有写你的名字，只把石人的传说抄成老水手们说的样子。最后一页他留着空，说要等别的船长也去看看，再回来填，不急。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "damiao_de_gois", value = 4 }, { kind = "flag", flag = "c13_request_damiao_de_gois_partial" }]
+
+# 五之二、画下的山脊：只能照实说，或者把传说照传说写。
+[[tracks.chapters]]
+key = "report_drawn"
+title = "画下的那道山脊"
+text = "戈伊斯在档案塔等你。你把画下的山脊摊在他的草稿上，线条有些抖，断崖的弯道画得太急。他拿放大镜看了很久，指着山脊顶上一个小方框：“这是座子？”你说是老水手指给你看的。窗外的风把纸吹得翻了个边，他用镇纸压住，又问你是怎么想到要画它的。你说，是想让后来的人知道山脊在哪儿。他没有生气，把草稿翻到新的一页：“那就照你画的写。”"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "damiao_de_gois" }]
+when = [{ kind = "alive", person = "damiao_de_gois", value = true }]
+deadline = [1570, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_damiao_de_gois_late" }, { kind = "letter", person = "damiao_de_gois", text = "编年史那一段，我照报告写了，没有等你的画。若路过档案塔，桌上那张草稿还在。——达米昂" }] }
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：你画下的山脊，老水手指的座子"
+next = "done"
+reply = "他在草稿上添了一行：“据某船长画下，座子犹在。”他把你的画夹进书里，夹在那一页，又用铅笔在山脊顶上描了一个小方框，说这样读的人一眼就看得见。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "item", item = "chart_atlantic_isles", qty = 1 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "affinity", person = "damiao_de_gois", value = 8 }, { kind = "memory", memory = "mem-request_damiao_de_gois-report", title = "空的石座" }, { kind = "flag", flag = "c13_request_damiao_de_gois_done" }]
+
+[[tracks.chapters.choices]]
+key = "legend"
+text = "劝他把传说照传说写，画也不必署你的名"
+next = "done"
+reply = "他把画收进抽屉，一边收一边又看了一眼，草稿上只写老水手们的传说，没有提你。他说完，把抽屉轻轻推上，推到一半又停住，像是怕画里的山脊听见。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "damiao_de_gois", value = 4 }, { kind = "flag", flag = "c13_request_damiao_de_gois_partial" }]
+
+# 五之三、没有上岛：登陆失败，或只在安格拉问了人。
+[[tracks.chapters]]
+key = "report_unseen"
+title = "没有上岛的那份草稿"
+text = "戈伊斯在档案塔等你。草稿上那一段还空着，他问你看见了什么。你告诉他，你在船上远远看见那道山脊，小艇试着靠过断崖，浪把船掀了回来。窗外的船在卸货，木箱撞在码头上，闷响一下一下。他没有去看，只把笔放下：“那你就只说你看见的。那一段我先空着，等有人亲眼看过，再来填。”"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "person", person = "damiao_de_gois" }]
+when = [{ kind = "alive", person = "damiao_de_gois", value = true }]
+deadline = [1570, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_damiao_de_gois_late" }, { kind = "letter", person = "damiao_de_gois", text = "编年史那一段，我照老水手们的说法写了，没有等你的话。若路过档案塔，桌上那张草稿还在。——达米昂" }] }
+
+[[tracks.chapters.variants]]
+key = "tales"
+when = [{ kind = "flag", flag = "c13_request_damiao_de_gois_tales" }]
+text = "戈伊斯在档案塔等你。你把安格拉酒馆里三个老水手的话讲给他听，每人讲的石人都不一样。他把三句话一句句抄进草稿，问你哪一句是真的。你说不知道。“那就都写上，”他说，“谁说的，就写谁的名字。”"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实说：我没上岛，只把自己知道的说给他"
+next = "done"
+reply = "他把草稿上那一段划掉，换成一句“据船上远望与岸上所闻”。“听来的也是见证，”他说，“只是离石头远了一步。”说这话时他没有笑，把那一行的墨迹吹干了才放下笔。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "damiao_de_gois", value = 2 }, { kind = "flag", flag = "c13_request_damiao_de_gois_partial" }]
+
+[[tracks.chapters.choices]]
+key = "legend"
+text = "劝他把传说照传说写，别替你没上岛的事下判语"
+next = "done"
+reply = "他把传说抄成老水手们的话，每句后面注明是谁说的，一句也没替哪一个下判语。抄完，他把笔帽拧上，把那一页压进了抽屉，说先放着。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "damiao_de_gois", value = 4 }, { kind = "flag", flag = "c13_request_damiao_de_gois_partial" }]

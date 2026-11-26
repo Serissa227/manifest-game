@@ -1,0 +1,117 @@
+# C13d 人物的请托：掺沙的沥青（送货 deliver，3 章）
+# 人物：约翰·霍金斯（1532—1595），1578 年起任英格兰海军司库，管伦敦德特福德女王船坞的木料、沥青、缆绳与水手的饷。
+# 报价模式 T（当面）：在德特福德船坞找到他（交谈话题 ask:request_john_hawkins 启动）。offer 章不写 at；求见门槛（fame 40 或 england 声望 20）由引擎判定，本文件不写。
+# 窗口：报价 1578-02-01 至 1587-06-30，offer 的 deadline 为窗口止日；接货后交货章限期 150 天。
+# 依据：史实——1578 年起任海军司库，整顿船坞账目，改船型（削低船楼、拉长船身）；船坞里有人说他和亲戚吃得太肥（承包商不写名字，亲戚不写）。
+#   沥青与缆绳的产地（卑尔根、但泽、斯德哥尔摩、吕贝克、阿姆斯特丹、弗利辛恩）见 docs/research/terra16。
+#   原创——当众过秤与“过到一半吵起来”的经过、账房墙上的草图、那一桶掺沙的沥青。
+#   秘密——1562—68 年三次贩奴（史实，cast 的 secret）。本请托只在“问旧事”一支以一句冷淡的回答带过，不借此给玩家任何好处；见闻只说有人被请了出去，不提问的是什么。
+# 读写旗标：写 c13_request_john_hawkins_accepted / declined / weighed / done / late；不读外部旗标；不设 c7_ 旗标。
+# 依赖：cast 日程（1578 起在 london 的 dock）；无 B10b 改名；无主线门禁（不写 c13_main_*）。
+# 回忆插画：mem-request_john_hawkins-settle——船坞账房的墙上钉着一张新船草图，船楼削得很低，桌上放着一块掺沙的沥青。
+
+[[tracks]]
+key = "request_john_hawkins"
+name = "船坞的沥青"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["john_hawkins"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "掺沙的沥青"
+text = "德特福德的船坞里，一条新船的龙骨架搁在滑道上，锤声一阵接一阵。霍金斯从承包商送来的桶里捏起一块沥青，在指间搓了搓，搓下一层沙。“一桶掺两成沙，船缝里三个月就裂。”他把那块东西扔回桶里，拍拍手，“你算算，这是多花了我多少钱。”他要一批波罗的海来的真沥青，还有好缆绳。“你去运，运来当着书记的面过秤。那几个承包商，让他们看看真货该有多沉。”"
+mood = "tense"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1578, 2, 1], to = [1587, 6, 30] }, { kind = "alive", person = "john_hawkins", value = true }]
+objectives = [{ kind = "person", person = "john_hawkins", text = "在德特福德船坞找到他" }]
+deadline = [1587, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去波罗的海运货"
+reply = "他在纸上写下斤两、日子和该付的运费，一笔不漏，算得比你还快。末了用笔尖点了点纸角，示意你在下面签个名。"
+next = "deliver"
+effects = [{ kind = "affinity", person = "john_hawkins", value = 2 }, { kind = "flag", flag = "c13_request_john_hawkins_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这烂账不归你管"
+reply = "他把那块沥青扔回桶里，拍了拍手上的沙。“不接就不接，账我自己算。”说完低头看账本，书记的笔也跟着停了一下。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_john_hawkins_declined" }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters]]
+key = "deliver"
+title = "当众过秤"
+text = "德特福德的大秤边围了一圈人：书记捧着账本，木匠头抱着胳膊，两个承包商站得远远的，脸色不太好看。你的沥青和缆绳堆在秤旁，承包商上一季交来的旧货摆在另一头，桶口还有没刮干净的沙。霍金斯没有走过来，只朝书记抬了抬下巴。书记看看你，笔悬在半空，等你开口。"
+speaker = "captain"
+mood = "tense"
+at = "london"
+when = [{ kind = "alive", person = "john_hawkins", value = true }]
+objectives = [
+  { kind = "goods", good = "pitch", qty = 30, at = "london", text = "三十份沥青运到伦敦" },
+  { kind = "goods", good = "rope", qty = 20, at = "london", text = "二十份缆绳运到伦敦" },
+]
+deadline_days = 150
+
+[[tracks.chapters.choices]]
+key = "weigh"
+text = "当着所有人一桶一桶过秤，再把承包商的旧货也秤一遍"
+reply = "书记一桶一桶念数，你把承包商的旧货也摆上秤。两堆沥青差出一截，书记把数记进账本，承包商抱着胳膊，没话说了。"
+check = { attr = "stewardship", base = 35, per = 6 }
+next = "settle"
+effects = [{ kind = "cash", value = 2150 }, { kind = "cash", value = 2600 }, { kind = "affinity", person = "john_hawkins", value = 5 }, { kind = "flag", flag = "c13_request_john_hawkins_weighed" }]
+news = "德特福德的船坞里，一个船长当众把沥青一桶桶过秤，两堆差出一截，几个承包商没敢再开口。"
+fail = { next = "settle", effects = [{ kind = "cash", value = 2150 }, { kind = "cash", value = 1600 }, { kind = "affinity", person = "john_hawkins", value = 2 }], news = "德特福德的船坞上，一个船长过秤过到一半，承包商吵了起来，书记最后只记下了船长那一份。" }
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "直接交给书记入库，不跟承包商比"
+reply = "书记照数记进入库册，一桶一桶看过去，没有多问一句。承包商松了一口气，把帽子戴上，没人再提秤。"
+next = "settle"
+effects = [{ kind = "cash", value = 2150 }, { kind = "cash", value = 1600 }, { kind = "affinity", person = "john_hawkins", value = 1 }]
+news = "德特福德的船坞里，一批波罗的海来的沥青和缆绳直接入了库，书记照数记了账，承包商松了一口气。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "john_hawkins", value = -3 },
+  { kind = "flag", flag = "c13_request_john_hawkins_late" },
+  { kind = "letter", person = "john_hawkins", text = "沥青我已从但泽订了，船坞等不起。你那批货要是还在路上，改送别处。这笔账到此为止。" },
+]
+
+[[tracks.chapters]]
+key = "settle"
+title = "账房里的草图"
+text = "傍晚，账房里只点了一盏灯，窗外的风大，门框吱吱地响。火盆早就灭了，屋里冷得很。霍金斯把账本合上，袖口沾着墨，指头在墙上那张新船的草图上敲了两下。草图画的是一条船，船楼削得很低，船身却拉得很长。门外书记的算盘声一下一下，停了。他眼睛没离开草图，问的口气像在谈一批木料的价：“图是我画的。你看这船怎么样，哪里不对。”"
+speaker = "captain"
+mood = "tense"
+at = "london"
+when = [{ kind = "alive", person = "john_hawkins", value = true }]
+
+[[tracks.chapters.variants]]
+key = "weighed"
+when = [{ kind = "flag", flag = "c13_request_john_hawkins_weighed" }]
+text = "傍晚，账房里只点了一盏灯。书记的记录摊在桌角，两堆沥青差出的那一截还压在纸上。霍金斯把账本合上，指头在墙上那张新船的草图上敲了两下。草图画的是一条船，船楼削得很低。他没看你，只问：“你看这船，哪里不对。”"
+
+[[tracks.chapters.choices]]
+key = "ship"
+text = "说说你对这条船的看法"
+reply = "他听完，拿铅笔在草图的船楼上改了一笔，又用指头压住那一笔。“这一笔记在你头上。”"
+check = { attr = "seamanship", base = 35, per = 6 }
+next = "done"
+effects = [{ kind = "affinity", person = "john_hawkins", value = 4 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "england", value = 2 }, { kind = "memory", memory = "mem-request_john_hawkins-settle", title = "低船楼的草图" }, { kind = "flag", flag = "c13_request_john_hawkins_done" }]
+news = "德特福德的船坞账房里，新任司库在一张船的草图上改了一笔，说那一笔记在一个船长的头上。"
+fail = { next = "done", effects = [{ kind = "fame", value = 5 }, { kind = "reputation", faction = "england", value = 2 }, { kind = "flag", flag = "c13_request_john_hawkins_done" }], news = "德特福德的船坞账房里，司库把一个船长的意见听完，把草图收进了抽屉。" }
+
+[[tracks.chapters.choices]]
+key = "past"
+text = "问他年轻时在几内亚做的是什么买卖"
+reply = "他合上账本，没有接你的话头，只冷冷说了一句：“账算得过来的事，就没有做不得的。”然后请你走。书记在旁边翻着账本，一页也没翻过去。"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_john_hawkins_done" }]
+news = "德特福德的船坞账房里，有个船长问了司库几句闲话，司库一句话就把人请了出去。"

@@ -1,0 +1,146 @@
+# C13d 人物的请托：尤斯特的钟（查理五世）。故事 2.0，遵循 A5 / E37 契约。
+# 人物：查理五世（charles_v，1500-01-01 生，1558 卒；男；cast 中 kind=historical）。1557-02-03 起住进尤斯特修院旁的居所，痛风缠身，人不到海边。
+#       出面的修士（哲罗姆会庶务修士）是原创，不进 cast；钟表匠胡安内洛·图里亚诺（史实随侍）不出场。
+# 类型：find（找东西）；三章 offer / handin / use，终点 done / failed。
+# 报价：L（来信／代理人），auto=true，报价港 lisbon（里斯本码头）。offer 窗口 1557-02-15..1557-12-31，when 写年龄 ≥17、日期窗口、人物在世；
+#       family=c13_offer_lisbon，冷却 20 天；名声门槛为 0，不写。
+# 交表窗口 1557-02-15..1558-08-31（deadline 1558-08-31，超时走 failed 并收一封修士代笔的信）；
+#       回信窗口 1557-03-15..1558-09-20（进入后等 40 天，deadline 1558-09-20，超时走 done，不再来信）。
+# 依据（史实与原创的界线）：
+#   史实：1557-02-03 住进尤斯特修院旁的居所；1558-09-21 卒（正文不写）；痛风；自称“朕”；欠富格尔家与热那亚人的债（见 cast persona）。
+#   后世轶事：老人把屋里的钟一只只对过，没有两只走得一样。只当修士转述的闲话写，不作史实叙述。
+#   原创：修士、单子、里斯本码头的交表与对时、骡夫与来信、怀表在北方港口的买卖。
+#   待核：纽伦堡怀表是否真由查理五世的人从北方订过；正文只写修士的说法。
+# 缺省走向：offer 不回应到期 → failed（无见闻）；handin 不交到期 → failed，修士代笔一封来信（late）；
+#       use 不回信到期 → done（只说表已交出，不写老人的死）。
+# 读写的旗标：c13_request_charles_v_accepted / declined / truth / set / late / done；其中 done 为唯一终局旗标。
+#       只读 c13_request_charles_v_truth / _set 决定 use 的变体。不读外部旗标，不设 c7_ 旗标。
+# 依赖：无主线门禁（不写 c13_main_*）。无英文覆盖。
+# 秘密：寄养在乡下的孩子与老人屋里管事的身份本请托一律不碰，见闻也不提。
+# 数值注记：现金 2600 为表内 cash_total（交表那一章付）。好感正向合计 8。set 的失败分支照 brief 也给名声 +5，
+#       与“名声只给最好结局”的一条不一致，待裁定。
+# 引擎注记：选项的 reply 只在检定成功（或无检定）时显示，检定失败的那一句话写在 fail 分支的见闻里。
+# 回忆插画：mem-request_charles_v-use：修院小屋里一排钟，中间一只纽伦堡怀表，窗外是栎树林。
+
+[[tracks]]
+key = "request_charles_v"
+name = "尤斯特的钟"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["charles_v"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "修道院来的单子"
+text = "里斯本码头的海关棚下，一个穿白袍、披黑斗篷的修士挨着北方来的船问话。他手里捏着一张单子，字是老爷屋里的人写的，末一行写着：“纽伦堡怀表一只。”修士压低声音说，尤斯特修院旁边住着一位退了位的老人，每天早上把屋里的钟一只只拿来对，对来对去，没有两只走得一样。随侍的钟表匠只是笑。修士学着老人的口气说：“朕要一只走得准的。”他得在入夏的酷热前回修院，问你接不接。"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 2, 15], to = [1557, 12, 31] }, { kind = "alive", person = "charles_v", value = true }]
+at = "lisbon"
+cast = ["charles_v"]
+mood = "mystic"
+family = "c13_offer_lisbon"
+family_cooldown_days = 20
+deadline = [1557, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去北方的港口找一只纽伦堡怀表"
+reply = "修士把单子折成小方块塞进你手里，说他每逢月初都来码头问一次船。他还念了两个北方港口的名字，说那里的钟表铺子多，只是别信头一家的价。"
+next = "handin"
+news = "里斯本海关棚下，一个修士替尤斯特修院找北方的怀表，单子在码头上从这条船传到那条船。"
+effects = [{ kind = "affinity", person = "charles_v", value = 2 }, { kind = "flag", flag = "c13_request_charles_v_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：北方的货这一季顾不上"
+reply = "修士点点头，把单子收回袖子里，说北方的船他问得多，不差这一条。走到下一条船的跳板前，他又把单子拿了出来，问船长认不认得纽伦堡的表匠。"
+next = "failed"
+news = "里斯本海关棚下，一个修士问遍了北方来的船，要一只纽伦堡怀表，船长们都说顾不上。"
+effects = [{ kind = "flag", flag = "c13_request_charles_v_declined" }]
+
+[[tracks.chapters]]
+key = "handin"
+title = "码头上对正午"
+text = "修士伸手要看表，你把它托在掌心里。他把表凑到耳边听了一会儿，又请你陪他在码头上对一回正午：大教堂的钟声一响就看表。钟声响过，表上的针慢了一刻。修士没说话，把它又看了一遍。然后他犹豫着讲，老爷会把这只表摆到钟表匠的钟旁边，总有一只是“错的”。他不知道到时候该怎么回话，问你肯不肯替他想一句。"
+when = [{ kind = "alive", person = "charles_v", value = true }]
+at = "lisbon"
+cast = ["charles_v"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "item", item = "nuremberg_watch", qty = 1, text = "带一只纽伦堡怀表回里斯本" }]
+deadline = [1558, 8, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "charles_v", value = -3 }, { kind = "flag", flag = "c13_request_charles_v_late" }, { kind = "letter", person = "charles_v", text = "修士代笔：老爷屋里的钟还是对不上。单子上那一行，老爷自己划掉了，说不必再等。" }]
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "交出怀表，托他带一句：“没有一只钟走得准，这只最好。”"
+reply = "修士把这句话默念两遍，说老爷听了大概要发火，也可能笑。他把表包进袖子里，又让你把那句话写在单子背面，说路上的话最容易走样。"
+next = "use"
+news = "里斯本码头上，修士说尤斯特那位老爷的表交到了，还捎去一句怪话：没有一只钟走得准。"
+effects = [{ kind = "item", item = "nuremberg_watch", qty = -1 }, { kind = "cash", value = 2600 }, { kind = "affinity", person = "charles_v", value = 3 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "flag", flag = "c13_request_charles_v_truth" }]
+
+[[tracks.chapters.choices]]
+key = "set"
+text = "交出之前守一夜，对着日影和钟声把它调准"
+reply = "你在甲板上守了一夜，拿日影和钟声一点点对，天亮时表走得准了。修士看着你画的日影线，说他回去要学这一手，又问你下回还在不在码头。"
+next = "use"
+news = "里斯本码头昨夜有人在甲板上守了一宿，拿日影对钟声，天亮前把北方来的怀表调准了。"
+check = { attr = "numeracy", base = 20, per = 7 }
+effects = [{ kind = "item", item = "nuremberg_watch", qty = -1 }, { kind = "cash", value = 2600 }, { kind = "affinity", person = "charles_v", value = 3 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "flag", flag = "c13_request_charles_v_set" }]
+
+[tracks.chapters.choices.fail]
+next = "use"
+news = "里斯本码头上传话，守了一夜的北方怀表天亮时还慢一刻，修士说路上颠一颠也许就好了。"
+effects = [{ kind = "item", item = "nuremberg_watch", qty = -1 }, { kind = "cash", value = 1550 }, { kind = "affinity", person = "charles_v", value = -2 }, { kind = "fame", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "只交表，什么话也不带"
+reply = "修士把表包进麻布，说老爷大概会自己找话说。你问他要不要替你带一句，他摇摇头，说老爷最不耐烦别人替他把话说完。他把麻布在胸前抱紧，转身往修院的方向走去。"
+next = "use"
+news = "里斯本码头上，修士把北方来的怀表包进麻布带走了，什么话也没捎，只说老爷大概会自己找话说。"
+effects = [{ kind = "item", item = "nuremberg_watch", qty = -1 }, { kind = "cash", value = 1550 }, { kind = "affinity", person = "charles_v", value = 1 }]
+
+[[tracks.chapters]]
+key = "use"
+title = "骡夫捎来的信"
+text = "一个多月后，修士托一个骡夫捎回一封短信，信纸是修院里最粗的那种。老人把怀表摆在钟表匠的几只钟中间，一只只对过去，对得很慢，中间停下来好几回。对完了，他只问一句：“这表是谁带来的？”修士答不上来，只回了一句：北方来的船。信的末了，修士写道，表这会儿挂在老人床头，比屋里别的钟都低一点，好让他躺着也看得见。"
+when = [{ kind = "alive", person = "charles_v", value = true }]
+cast = ["charles_v"]
+mood = "tender"
+objectives = [{ kind = "wait", days = 40 }]
+deadline = [1558, 9, 20]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_charles_v_done" }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "回一封信，问那只表在内陆走得怎样"
+reply = "修士下一封信里写：比海上走得稳。老人看了你的问话，说这只表没白买，让他想起年轻时在低地国家赶路，钟楼上的铜钟也都是这样慢一拍。"
+next = "done"
+effects = [{ kind = "affinity", person = "charles_v", value = 3 }, { kind = "memory", memory = "mem-request_charles_v-use", title = "尤斯特的钟" }, { kind = "flag", flag = "c13_request_charles_v_done" }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把信收进箱子，不回了"
+reply = "你把信折好，收进箱底，没有再回。信纸上还有一点蜡烛油，修士的字在最后一行歪了一下，像是写的时候手在抖。骡夫在码头等了一阵，见没有回音，就往修院的方向去了。"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_charles_v_done" }]
+
+[[tracks.chapters.variants]]
+key = "set"
+when = [{ kind = "flag", flag = "c13_request_charles_v_set" }]
+text = "老人收到怀表以后，连着三天拿它去对屋里别的钟，对完一只记一只，记在本子上的数字比钟表匠的还细，最老的那只落地钟，他对了三回，让钟表匠把摆锤往上挪了一指。第三天晚上，他把表放在枕边，问了一句：“给朕调表的是谁？”修士答不上来，只在信末补了一行：这表是北方来的船长在码头上守了一夜调准的。表如今也挂在床头。"
+
+[[tracks.chapters.variants]]
+key = "truth"
+when = [{ kind = "flag", flag = "c13_request_charles_v_truth" }]
+text = "老人起先把那句怪话听成了挖苦。他发了一通火，把怀表往桌上一放，一连几天不看它。后来有一天早上，他自己笑了，对钟表匠说：“朕一辈子想让几块地方的钟同时走准，没成过。”钟表匠没接话，只把那只表又拿起来对了一遍。骡夫说，那天老人的早饭比平时多吃了半块饼。修士写到这里，字迹还算稳，末了说，表如今挂在老人的床头，他睡醒就看它一眼。"

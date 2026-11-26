@@ -1,0 +1,492 @@
+# 塔里克的 NPC 线（故事 2.0，C13c；Claude 写）。
+# 标签：NPC 线（塔里克不是玩家时才跑）。人物：塔里克·加尔纳蒂（tariq，1540-01-02 生），阿尔及尔的摩里斯科海盗，加列奥特“鸥”的船长。
+# 轨道：npc_tariq（脊轨，auto，s00—s04，全是见闻）+ 六条交汇旁轨（均 auto=false，由脊轨开）：
+#   npc_tariq_raid（过路钱，瓦伦西亚外海）、npc_tariq_ransom（托他赎一个人，阿尔及尔）、
+#   npc_tariq_alpujarras（往山里去的一船，玩家是诺埃尔时排除）、npc_tariq_stones（沉船上的五块石头）、
+#   npc_tariq_cervantes（花园里的洞，玩家是诺埃尔时排除）、npc_tariq_join（请他上船）。
+# 依据·史实：马耳他围城（1565，图尔古特死在围城里）；阿尔普哈拉斯起义（1568 年以后的余波）；勒班陀（1571，乌卢赤·阿里突围后去了伊斯坦布尔）；
+#   塞万提斯在阿尔及尔为俘（1575 年以后，几次越狱没成）；三王之战（1578，马哈赞河）；1541 年查理五世的船队沉在阿尔及尔外海。
+# 依据·原创：塔里克、“鸥”、祖母的钥匙与乌德琴、外号（肥羊、熟面孔、老伙计、带钥匙的人，按情谊叫）、沉船上的五块绿石、船长团章程里的一句话。
+# 待核：兰萨罗特远航的月份（正文只写“那一趟”）；章程里那句话到底有没有写进去（正文只写码头上的说法）；戈马拉书里那五块雕石的说法只在传闻里出现。
+# 不写：诺埃尔的性别（只叫名字或“那位骑士”，全文不用代词）；恋爱（塔里克对任何玩家只到朋友与航海士）；非斯（C7）；战后赎俘过秤（C7）；
+#   C13d 的题目：撒丁岛老水手、三个卡拉布里亚渔夫、乌卢赤的召船与一切 request_* 的题目。
+# 读的旗标：c12_voyage_tariq 与 upbringing_graduated（门槛）；c13_main_noel（诺埃尔玩家的排除与变体）；
+#   c13_npc_ix_nikte_jade_hint（伊希当 NPC 时的信）与 c13_main_ix_nikte_jade_eye（伊希当玩家时的画）；mate tariq（请上船以后）；
+#   h22_malta_siege_ottoman_takes_malta、h37_lepanto_ottoman_fleet_holds、h49_three_kings_sebastian_returns（C10 的占位，见下）。
+# 设的旗标：c13_npc_tariq（门槛 default）、c13_npc_tariq_ransomed、c13_npc_tariq_owed、c13_npc_tariq_alpujarras_helped、
+#   c13_npc_tariq_cervantes_helped、c13_npc_tariq_mate（请上船）、c13_mark_cortes（印记，任何选项只发一次）。
+# 缺省走向（玩家什么也不做）：s00 → s01 → s02 → s03 → s04 照常走完；交汇旁轨各自静默结束。
+# 检定失败：引擎的 fail 分支没有回复字段，失败时玩家看到的是章节正文与 fail.news（进见闻），所以失败的话写在 fail.news 里。
+# 等待的包：A9（门槛可改成 protagonist ≠ tariq，整合方定）；C10（HIST 占位三个，照 C10 的 key 替换，改不了的删变体）；
+#   A8 与 C11 不涉及。
+# HIST 占位：h22_malta_siege_ottoman_takes_malta（s01 a_falls）、h37_lepanto_ottoman_fleet_holds（s02 a_hold）、h49_three_kings_sebastian_returns（s03 a_lives）。
+# 回忆插画清单：mem-npc_tariq_stones-m01“海底的五块石头”——小船上，海盗把一张湿漉漉的纸摊在船板上晾干，纸上用炭笔描着玫瑰、号角、鱼、小铃和小杯。
+
+[[tracks]]
+key = "npc_tariq"
+name = "塔里克：海峡上的海盗"
+kind = "request"
+start = "s00_gate"
+auto = true
+cast = ["tariq"]
+
+# s00：阿尔及尔码头上的闲话，门槛章。选中塔里克时 c12_voyage_tariq 为真，窗口一过本线静默结束。
+[[tracks.chapters]]
+key = "s00_gate"
+title = "海峡上的新面孔"
+text = "阿尔及尔的码头上，一个弹乌德琴的摩里斯科小子有了自己的加列奥特。船头漆着一只白鸟，船名叫“鸥”，他逢人就说只劫货。老船长们笑他嫩。（转述）一个老船长说：“只劫货？等他饿上一冬再说。”卖沙丁鱼的老头倒不笑，说那小子昨天在船头弹了一支曲子，弹给整条码头听，一个子儿也没收。"
+stage = "rumor"
+window = [[1557, 2, 2], [1557, 2, 9]]
+at = "algiers"
+cast = ["tariq"]
+mood = "cheerful"
+news = "阿尔及尔的码头上新来了个弹乌德琴的年轻海盗，船叫“鸥”，逢人就说他只劫货。"
+when = [{ kind = "flag", flag = "c12_voyage_tariq", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+
+[tracks.chapters.default]
+next = "s01_malta"
+effects = [{ kind = "flag", flag = "c13_npc_tariq" }, { kind = "start_track", track = "npc_tariq_raid" }, { kind = "start_track", track = "npc_tariq_ransom" }]
+
+# s01：比尔古的旧码头，围城散了以后。H22 的结果改写的是这条码头上的说法。
+[[tracks.chapters]]
+key = "s01_malta"
+title = "围城散了以后"
+text = "比尔古的旧码头上，围城那年夏天，有条叫“鸥”的阿尔及尔船整天在港外捞落水的桨手，捞上来的多半是基督徒。老图尔古特死在这场围城里，灵柩也是那条船陪着送到黎波里的。说这话的人一边骂一边说，骂完又说那小子琴弹得好。（转述）一个被捞上来的西西里桨手：“他凿我的链子，凿了一下午，手上全是泡。”"
+stage = "rumor"
+window = [[1565, 9, 9], [1565, 11, 30]]
+at = "malta"
+cast = ["tariq"]
+mood = "sad"
+news = "比尔古的人说：围城那年，有条叫“鸥”的阿尔及尔船整天在港外捞人，捞上来的多半是锁着链子的桨手。"
+when = []
+
+[tracks.chapters.default]
+next = "s02_lepanto"
+effects = [{ kind = "start_track", track = "npc_tariq_alpujarras" }]
+
+[[tracks.chapters.variants]]
+key = "a_falls"
+when = [{ kind = "flag", flag = "h22_malta_siege_ottoman_takes_malta" }]
+text = "马耳他的城墙塌了以后，骑士团的仆役一船一船地往西西里逃。比尔古的旧码头上，逃来的人还在找人。（转述）一个逃来的仆役说：“港外那条叫‘鸥’的阿尔及尔船整天捞人，捞上来的多半锁着链子。他凿了一个西西里桨手的链子，凿了一下午，那人手上全是泡。”他骂了一句，又说那小子琴弹得好。"
+
+[[tracks.chapters.variants]]
+key = "b_noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "比尔古的旧码头上，围城那年夏天，有条叫“鸥”的阿尔及尔船整天在港外捞落水的桨手，捞上来的多半是基督徒。（转述）一个西西里桨手说：“他凿我的链子，凿了一下午，手上全是泡。”有人还看见他在壕沟边和一个系红缎带的骑士吵了一架，吵完两人都没付船钱。那骑士是谁，码头上的人心里有数：就是你。"
+
+# s02：勒班陀以后，阿尔及尔的码头。
+[[tracks.chapters]]
+key = "s02_lepanto"
+title = "弹给没回来的人"
+text = "从勒班陀逃回来的船一条一条进港，桨座空了一半。乌卢赤·阿里没有回来，听说他带着马耳他人的旗直接去了伊斯坦布尔。那条叫“鸥”的加列奥特靠岸那夜，船头的海盗没进城，坐在缆桩上弹了一夜乌德琴，说是弹给没回来的桨手听，两边的都算。（转述）卖沙丁鱼的说：“他一个音也没弹错，就是弹得太慢，整条码头没人说话。”"
+stage = "rumor"
+window = [[1571, 11, 1], [1572, 2, 28]]
+at = "algiers"
+cast = ["tariq"]
+mood = "tense"
+news = "阿尔及尔的人说：勒班陀逃回来的“鸥”靠岸那夜，船头那个海盗弹了一夜琴，说是弹给没回来的桨手听。"
+when = []
+
+[tracks.chapters.default]
+next = "s03_alcazar"
+effects = [{ kind = "start_track", track = "npc_tariq_stones" }, { kind = "start_track", track = "npc_tariq_cervantes" }]
+
+[[tracks.chapters.variants]]
+key = "a_hold"
+when = [{ kind = "flag", flag = "h37_lepanto_ottoman_fleet_holds" }]
+text = "从勒班陀回来的船一条一条进港，港里敲的是庆功的鼓，桨座却空了一半。那条叫“鸥”的加列奥特靠岸那夜，船头的海盗没进城，坐在缆桩上弹了一夜乌德琴，说是弹给没回来的人听。（转述）卖沙丁鱼的说：“他一个音也没弹错，就是弹得太慢，整条码头没人说话。”"
+
+[[tracks.chapters.variants]]
+key = "b_hills"
+when = [{ kind = "flag", flag = "c13_npc_tariq_alpujarras_helped" }]
+text = "从勒班陀逃回来的船一条一条进港，桨座空了一半。乌卢赤·阿里没有回来，听说他带着马耳他人的旗直接去了伊斯坦布尔。那条叫“鸥”的加列奥特靠岸那夜，船头的海盗坐在缆桩上弹了一夜乌德琴，说是弹给没回来的桨手听。（转述）说这话的人还提起你：“听说那年你替他往山里跑过一趟船。”卖沙丁鱼的又说：“他一个音也没弹错，整条码头没人说话。”"
+
+# s03：三王之战以后，丹吉尔的码头。
+[[tracks.chapters]]
+key = "s03_alcazar"
+title = "中军里的格拉纳达人"
+text = "丹吉尔的码头上，马哈赞河边那一仗死了三个王。有人说那个弹琴的阿尔及尔海盗也在阿卜杜·马利克的中军，和格拉纳达来的火枪手站在一起。仗打完，他把河湾里陷住的一队葡萄牙小侍从带到海边，交给渔船，连一文钱也没提。（转述）一个葡萄牙侍从说：“他一路上都在哼歌，哼的是我们听不懂的调子。”"
+stage = "rumor"
+window = [[1578, 8, 5], [1578, 10, 31]]
+at = "tangier"
+cast = ["tariq"]
+mood = "sad"
+news = "丹吉尔的人说：河边那一仗打完，一个阿尔及尔海盗把一队葡萄牙小侍从带到海边，交给了渔船。"
+when = []
+
+[tracks.chapters.default]
+next = "s04_taife"
+effects = [{ kind = "start_track", track = "npc_tariq_join" }]
+
+[[tracks.chapters.variants]]
+key = "a_lives"
+when = [{ kind = "flag", flag = "h49_three_kings_sebastian_returns" }]
+text = "丹吉尔的码头上，马哈赞河边那一仗，人都说死了三个王。可也有人说，葡萄牙的国王活着回去了；还有人说，那一队小侍从是一个阿尔及尔海盗带到海边的。说的人自己摇头：“不信，一定是别人。”（转述）一个葡萄牙侍从说：“他一路上都在哼歌，哼的是我们听不懂的调子。”"
+
+# s04：兰萨罗特那一趟以后，船长团重新定规矩。结尾。
+[[tracks.chapters]]
+key = "s04_taife"
+title = "章程里的一句话"
+text = "阿尔及尔的码头上，兰萨罗特那一趟以后，船长团重新定规矩。听说那个弹琴的老海盗站起来念了一句话，要写进章程，手里还转着一把旧钥匙。举手的有一半，另一半骂他饿死人。最后到底写没写进去，码头上的人各说各的。（转述）穆拉特·雷斯说：“他那句话，说清楚了。我信。”"
+stage = "rumor"
+window = [[1586, 3, 1], [1586, 12, 31]]
+at = "algiers"
+cast = ["tariq", "murat_reis_elder"]
+mood = "tender"
+news = "阿尔及尔人说：船长团议事那天，那个弹琴的老海盗站起来念了一句话，厅里吵了一下午。"
+when = []
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "a_mate"
+when = [{ kind = "mate", mate = "tariq" }]
+text = "阿尔及尔的码头上，兰萨罗特那一趟以后，船长团重新定规矩。议事那天，那个弹琴的老海盗不在厅里，他在你的船上。码头上的人说，没有他念，那句话没人敢提。（转述）穆拉特·雷斯说：“他那句话，说清楚了。我信。”"
+
+[[tracks.chapters.variants]]
+key = "b_ransomed"
+when = [{ kind = "flag", flag = "c13_npc_tariq_ransomed" }]
+text = "阿尔及尔的码头上，兰萨罗特那一趟以后，船长团重新定规矩。听说那个弹琴的老海盗站起来念了一句话，要写进章程，手里还转着一把旧钥匙。被他赎回去的人里，有一个是你托他赎的。（转述）穆拉特·雷斯说：“他那句话，说清楚了。我信。”"
+
+[[tracks.chapters.variants]]
+key = "c_cave"
+when = [{ kind = "flag", flag = "c13_npc_tariq_cervantes_helped" }]
+text = "阿尔及尔的码头上，兰萨罗特那一趟以后，船长团重新定规矩。听说那个弹琴的老海盗站起来念了一句话，要写进章程。听说那个独手的西班牙人回去以后在写书，书里有个阿尔及尔的海盗，是不是他，谁也说不准。（转述）穆拉特·雷斯说：“他那句话，说清楚了。我信。”"
+
+# 交汇旁轨一：过路钱。普通章，无 default；限期 1575-12-31，超时静默失败。
+[[tracks]]
+key = "npc_tariq_raid"
+name = "过路钱"
+kind = "request"
+start = "m01_toll"
+auto = false
+cast = ["tariq"]
+
+[[tracks.chapters]]
+key = "m01_toll"
+title = "瓦伦西亚外海的过路钱"
+text = "清早进瓦伦西亚港之前，一条加列奥特横在你的船头，船名“鸥”。一个年轻人笑嘻嘻地跳上甲板，一屁股坐在你的货箱上，指着舱口问里面装的是什么。他的船员在船舷边嗑瓜子，没人拔刀。“吃水这么深，舱里货不少吧？别怕，只劫货，不劫人。”他拍拍箱盖，又看看你的脸，玩笑停了一下。“肥羊，听说你船上有人病着？”舵手在后舱压低声音问要不要抄家伙，他听见了，回头冲舵手咧嘴一笑。“别紧张。今天嘛——看你笑话讲得好不好。”"
+at = "valencia"
+cast = ["tariq"]
+speaker = "tariq"
+mood = "cheerful"
+when = [{ kind = "date", from = [1558, 3, 1] }, { kind = "flag", flag = "c13_npc_tariq_mate", value = false }]
+deadline = [1575, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "付一笔过路钱，再请他喝一杯"
+next = "done"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你兜里的钱不够他开口。"
+effects = [{ kind = "cash", value = -500 }, { kind = "affinity", person = "tariq", value = 3 }]
+reply = "他数都没数就揣进怀里，喝完用你的杯子敲了敲船舷，说下回进港先挂一面红布，他的人就认得，不会再拦你的船。杯底还剩一点，他递回来让你也喝。"
+news = "瓦伦西亚的渔夫说：外乡船进港前付了一笔钱，港外那个阿尔及尔海盗收下了，还请人喝了一杯。"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "不给——拔刀，看他是不是只会嘴硬"
+next = "done"
+check = { attr = "arms", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "tariq", value = 5 }, { kind = "fame", value = 2 }]
+reply = "两个回合，他的刀被你挑飞。他大笑着弯腰去捡，在手里转了两圈，说这一仗算他输，钱不要了，下回换他请你喝酒。船员在船舷边鼓掌，有人把瓜子壳一把扔进了海。"
+news = "瓦伦西亚的渔夫说：港外有个阿尔及尔海盗的刀被一条外乡船上的人挑飞了，他笑着捡起来，说这一仗算他输。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "tariq", value = -2 }], news = "瓦伦西亚的渔夫说：那个只劫货的阿尔及尔海盗在港外拦了一条船，两个回合没打赢，只拿走了一桶酒，临走还替人关好了舱门。" }
+
+[[tracks.chapters.choices]]
+key = "joke"
+text = "讲一个笑话，让他笑着放行"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [{ kind = "affinity", person = "tariq", value = 6 }]
+reply = "他笑得从货箱上滑下来，扶着舷板直不起腰。笑完抹着眼角，说这个笑话要记下来，回去讲给祖母听，看她笑不笑。临走给你弹了半支曲子，弹的是他们那边的调子。“那调子你学不会，”他说，“学会了也别在我面前唱。”"
+news = "瓦伦西亚的渔夫说：港外一个阿尔及尔海盗听完一个笑话，乐得直拍船舷，回船时还弹了半支曲子。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "tariq", value = 1 }], news = "瓦伦西亚的渔夫说：有个外乡船长在港外讲笑话，那个阿尔及尔海盗没笑，说他祖母讲得更好，还是放了船。" }
+
+[[tracks.chapters.variants]]
+key = "a_noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "清早进瓦伦西亚港之前，一条加列奥特横在你的船头，船名“鸥”。跳上甲板的年轻人一眼看见你剑柄上的红缎带，愣了一下，接着笑出声：“是你？那今天换你请我喝酒，信里欠的那顿也一起。”他的船员在船舷边嗑瓜子，没人拔刀。“吃水这么深，舱里货不少吧？别怕，只劫货，不劫人。”他拍拍你的货箱，又看看你的脸，玩笑停了一下，“听说你船上有人病着？”舵手在后舱压低声音问要不要抄家伙，他回头冲舵手咧嘴一笑。“今天嘛——看你笑话讲得好不好。”"
+
+# 交汇旁轨二：托他赎一个人。普通章；限期 1590-06-30，超时静默失败。
+[[tracks]]
+key = "npc_tariq_ransom"
+name = "托他赎人"
+kind = "request"
+start = "m01_bagnio"
+auto = false
+cast = ["tariq", "fray_juan"]
+
+[[tracks.chapters]]
+key = "m01_bagnio"
+title = "托他赎一个人"
+text = "阿尔及尔的俘虏院门口，看门的老头正收钱。你船上一个老水手的兄弟被关在里面，是去年在海上被掳的。塔里克认得看门的，也认得帕夏的书记，掰着手指给你数：赎金之外，还有帕夏的抽成、港税、自由证、通事费。“赎金是一笔，剩下四笔是这座城自己加的。你要哪种赎法，便宜的还是快的？”胡安修士在小桌上翻名册，纸页被手汗洇出一圈圈印子。塔里克先问：“那人叫什么？家在哪个村？”修士抬头瞪了他一眼：“孩子，先别说价——他叫什么？”"
+at = "algiers"
+cast = ["tariq", "fray_juan"]
+speaker = "tariq"
+mood = "tense"
+when = [{ kind = "date", from = [1558, 6, 1] }, { kind = "flag", flag = "c13_npc_tariq_mate", value = false }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "pay_full"
+text = "照他报的价付清，今天就把人领出来"
+next = "done"
+requires = [{ kind = "cash", ge = 1200 }]
+hint = "你兜里的钱付不清赎金和那四笔零碎。"
+effects = [{ kind = "cash", value = -1200 }, { kind = "affinity", person = "tariq", value = 4 }, { kind = "flag", flag = "c13_npc_tariq_ransomed" }]
+reply = "人领出来时腿上还有锁链磨出的印子，一瘸一拐，却硬要自己走上船。塔里克把自己的红腰带解下来给他缠上，说别让船上那个水手看见，看见了又要哭。他没道谢，只问那水手有没有吃饱。"
+news = "阿尔及尔的人说：那个弹琴的海盗又替外乡船长赎了一个人，帕夏的书记气得摔了笔。"
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "请他陪你去跟帕夏的书记压价"
+next = "done"
+requires = [{ kind = "cash", ge = 900 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "cash", value = -900 }, { kind = "affinity", person = "tariq", value = 5 }, { kind = "flag", flag = "c13_npc_tariq_ransomed" }]
+reply = "书记被你们俩一唱一和说得直擦汗，最后把通事费那一行划掉，在旁边写了个更小的数。塔里克在一旁笑出声，被修士瞪了一眼。"
+news = "阿尔及尔的人说：帕夏的书记被一个海盗和一个外乡船长说得直擦汗，通事费免了一笔。"
+fail = { next = "done", effects = [{ kind = "cash", value = -900 }, { kind = "affinity", person = "tariq", value = 2 }, { kind = "flag", flag = "c13_npc_tariq_ransomed" }], news = "阿尔及尔的人说：书记那天没松口，差的那一截钱是海盗自己掏的，说请他喝酒就算还清了。" }
+
+[[tracks.chapters.choices]]
+key = "front"
+text = "请他先替你垫上，你出海回来再还"
+next = "done"
+requires = [{ kind = "affinity", person = "tariq", ge = 30 }]
+hint = "他还不够信你，不肯替你垫钱。"
+effects = [{ kind = "affinity", person = "tariq", value = -2 }, { kind = "flag", flag = "c13_npc_tariq_ransomed" }, { kind = "flag", flag = "c13_npc_tariq_owed" }]
+reply = "他垫了钱，在你的掌心用炭笔写了个数，写完用指头抹了一下，说洗掉了也不要紧，他记得。等你的船回来，要还他好酒，不要外头的甜酒。“别让我在码头上等第二回。”"
+news = "阿尔及尔的人说：那个弹琴的海盗替一个外乡船长垫了赎金，说那笔账记在自己头上。"
+
+[[tracks.chapters.variants]]
+key = "a_noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "阿尔及尔的俘虏院门口，看门的老头正收钱。你船上一个老水手的兄弟被关在里面，是去年在海上被掳的。塔里克见是你，挤挤眼：“赎人这行你也干，今天是来抢我生意的？”他认得看门的，也认得帕夏的书记，掰着手指给你数：“赎金是一笔，剩下四笔是这座城自己加的。”抽成、港税、自由证、通事费，一笔都少不了。胡安修士在小桌上翻名册。塔里克先问：“那人叫什么？家在哪个村？”修士抬头瞪了他一眼：“孩子，先别说价——他叫什么？”"
+
+# 交汇旁轨三：往山里去的一船。玩家是诺埃尔时排除。普通章；限期 1570-06-30。
+[[tracks]]
+key = "npc_tariq_alpujarras"
+name = "往山里去的一船"
+kind = "request"
+start = "m01_hills"
+auto = false
+cast = ["tariq", "uluc_ali"]
+
+[[tracks.chapters]]
+key = "m01_hills"
+title = "往山里去的一船"
+text = "冬天的阿尔及尔码头，风从海上吹进来，人人缩着脖子。塔里克腰上缠着一条丝腰带，说是阿尔普哈拉斯的山里送来的，他母亲一眼就认出那是她村里的丝。西班牙人的巡逻船一直盯着“鸥”，他想借你这条挂别国旗的船，跑一趟马拉加东边的海滩。“你的旗干净。帮我跑一趟，就一趟。”乌卢赤·阿里在缆桩那头看着，没有走过来，只对着海面说了一句：“枪的事，别让我听见。”塔里克头一回没开玩笑，低头把腰带又紧了紧：“你不去，我不怪你。”"
+at = "algiers"
+cast = ["tariq", "uluc_ali"]
+speaker = "tariq"
+mood = "tense"
+when = [{ kind = "date", from = [1569, 1, 1] }, { kind = "flag", flag = "c13_main_noel", value = false }, { kind = "flag", flag = "c13_npc_tariq_mate", value = false }]
+deadline = [1570, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "people"
+text = "替他把一船人从山脚的海滩接出来"
+next = "done"
+effects = [{ kind = "reputation", faction = "spain", value = -3 }, { kind = "affinity", person = "tariq", value = 8 }, { kind = "flag", flag = "c13_npc_tariq_alpujarras_helped" }]
+reply = "接上来二十几个人。有个老妇人上船时只带着一包蚕种，抱得紧紧的。到了阿尔及尔，塔里克的母亲在码头上一个一个问她们的村名，问完了，又去问那个老妇人的名字，问了两遍。"
+news = "阿尔及尔的人说：那个弹琴的海盗借了一条外乡的船往西班牙海岸跑了一趟，回来时船上多了一群山里人。"
+
+[[tracks.chapters.choices]]
+key = "guns"
+text = "替他把一舱火绳枪运进去"
+next = "done"
+effects = [{ kind = "reputation", faction = "spain", value = -8 }, { kind = "affinity", person = "tariq", value = 6 }, { kind = "flag", flag = "c13_npc_tariq_alpujarras_helped" }]
+reply = "枪压在腌鱼底下，过巡逻船时你的船员一直在冒汗，有人攥着绳子，指节白得吓人。卸完货，塔里克在海滩上站了很久，背对着山，一句话也没说。他的手一直插在腰带里，把那条丝带攥成了一团。"
+news = "阿尔及尔的人说：外乡船的舱底压着一舱火绳枪，从西班牙巡逻船旁边溜过去了，船员回来个个脸色发白。"
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不掺和，这不是你的仗"
+next = "done"
+effects = [{ kind = "affinity", person = "tariq", value = -3 }]
+reply = "他点点头，没开玩笑，也没再劝一句，转身去找下一条船。那天傍晚码头上没人听见他弹琴。他走的时候，腰上那条丝带还系得整整齐齐。"
+news = "阿尔及尔的码头上，那个弹琴的海盗借不到一条敢去西班牙海岸的船，转身走了，琴都没拿出来。"
+
+# 交汇旁轨四：沉船上的五块石头。玩家是伊希时从这里拿印记（c13_mark_cortes 只设一次）。
+[[tracks]]
+key = "npc_tariq_stones"
+name = "沉船上的五块石头"
+kind = "request"
+start = "m01_stones"
+auto = false
+cast = ["tariq"]
+
+[[tracks.chapters]]
+key = "m01_stones"
+title = "沉船上的五块石头"
+text = "夏天风停的时候，塔里克拿着一张羊皮来找你。城东外海沉着皇帝船队的旧骨头，他的潜水人在那里摸到过五块雕成花样的绿石：玫瑰、号角、一条金眼的鱼、珍珠作舌的小铃、金足的小杯。他不要石头，只想让人下去看清、描下来。可绳子、铅坠和小船都得重新备，他这一季的钱全花在了赎人上。“皇帝丢在我家门口的东西，我只想看一眼。看完让它接着睡。”他把羊皮摊在你的桌上，手指压着那条金眼的鱼。（转述）潜水人说：“绿是绿，可不透亮，不像祖母绿。”塔里克把羊皮卷起来又摊开：“描下来的那张纸归你。我留着它，迟早有人来抢；你带着它满世界跑，倒安全。”"
+at = "algiers"
+cast = ["tariq"]
+speaker = "tariq"
+mood = "mystic"
+when = [{ kind = "date", from = [1576, 1, 1] }, { kind = "affinity", person = "tariq", ge = 40 }]
+deadline = [1588, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "rope_boat"
+text = "你出绳子和小船，他的潜水人下水"
+next = "done"
+requires = [{ kind = "cash", ge = 800 }, { kind = "flag", flag = "c13_mark_cortes", value = false }]
+hint = "你手里的钱买不齐绳子和小船。"
+effects = [{ kind = "cash", value = -800 }, { kind = "item", item = "emerald_mark_cortes", qty = 1 }, { kind = "flag", flag = "c13_mark_cortes" }, { kind = "affinity", person = "tariq", value = 3 }, { kind = "memory", memory = "mem-npc_tariq_stones-m01", title = "海底的五块石头" }]
+reply = "潜水人下了五回，每回上来都用炭笔描一块，手指冻得发白也不肯歇。最后一块描完，塔里克把纸在船板上吹干，折成四折放进你手里，说别给葡萄牙人看见，也别给自己人看见。"
+news = "阿尔及尔的人说：那个弹琴的海盗和一个外乡船长在城东的海上放了一夏天的绳子，什么也没捞上来。"
+
+[[tracks.chapters.choices]]
+key = "jade_hint"
+text = "把伊希说过的话告诉他：那几块不是祖母绿，是玉"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_npc_ix_nikte_jade_hint" }, { kind = "flag", flag = "c13_mark_cortes", value = false }]
+hint = "你还没听伊希说起过那几块石头。"
+effects = [{ kind = "item", item = "emerald_mark_cortes", qty = 1 }, { kind = "flag", flag = "c13_mark_cortes" }, { kind = "affinity", person = "tariq", value = 6 }, { kind = "memory", memory = "mem-npc_tariq_stones-m01", title = "海底的五块石头" }]
+reply = "潜水人照你说的找那种温吞吞的绿，一上午就描齐了。塔里克听完拍着大腿笑：“科苏梅尔的人比皇帝还识货。”他把纸折好收进腰带，压在那把旧钥匙底下，再没提海底的事。"
+news = "阿尔及尔的人说：城东海底下，一个外乡船长和海盗的潜水人一上午就把石头描齐了，描完没捞一块。"
+
+[[tracks.chapters.choices]]
+key = "jade_eye"
+text = "指着画上的纹路告诉他：这是玉，你一眼就认得"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_main_ix_nikte_jade_eye" }, { kind = "flag", flag = "c13_mark_cortes", value = false }]
+hint = "你说不准画上那几块到底是什么石头。"
+effects = [{ kind = "item", item = "emerald_mark_cortes", qty = 1 }, { kind = "flag", flag = "c13_mark_cortes" }, { kind = "affinity", person = "tariq", value = 6 }, { kind = "memory", memory = "mem-npc_tariq_stones-m01", title = "海底的五块石头" }]
+reply = "你说出那块石头在你们那里的名字，塔里克学了三遍才学对，学完又把那个名字写在纸角上，写得歪歪扭扭。潜水人上来时，炭笔描的正是你说的纹路，一条一条，连鱼鳞都没漏。"
+news = "阿尔及尔的人说：城东海底的五块石头被一个外乡人指出了纹路，潜水人描完，塔里克把纸折起来揣进了怀里。"
+
+[[tracks.chapters.variants]]
+key = "v1_mate"
+when = [{ kind = "mate", mate = "tariq" }]
+text = "他在你船上闲不住，一靠阿尔及尔就拉着你去城东看海。夏天风停的时候，他拿着一张羊皮又来找你，羊皮边上写着潜水人的名字，字歪得厉害。城东外海沉着皇帝船队的旧骨头，他的潜水人摸到过五块雕成花样的绿石：玫瑰、号角、一条金眼的鱼、珍珠作舌的小铃、金足的小杯。他不要石头，只想看清、描下来。“看完让它接着睡。”说完又把羊皮卷了起来，卷到一半停住，问你的绳子够不够长，船上还有没有人肯陪他下水。"
+
+[[tracks.chapters.variants]]
+key = "v2_ix"
+when = [{ kind = "flag", flag = "c13_main_ix_nikte_jade_eye" }]
+text = "夏天风停的时候，塔里克拿着一张羊皮来找你。城东外海沉着皇帝船队的旧骨头，他的潜水人在那里摸到过五块雕成花样的绿石：玫瑰、号角、一条金眼的鱼、珍珠作舌的小铃、金足的小杯。他不要石头，只想让人下去看清、描下来。你在韦拉克鲁斯读过戈马拉的那本书，书里的画你早就看出不对。“皇帝丢在我家门口的东西，我只想看一眼。看完让它接着睡。”他把羊皮摊在你的桌上，手指压着那条金眼的鱼。（转述）潜水人说：“绿是绿，可不透亮，不像祖母绿。”"
+
+# 交汇旁轨五：花园里的洞。玩家是诺埃尔时排除。夜里；限期 1579-12-31。
+[[tracks]]
+key = "npc_tariq_cervantes"
+name = "花园里的洞"
+kind = "request"
+start = "m01_cave"
+auto = false
+cast = ["tariq", "miguel_de_cervantes"]
+
+[[tracks.chapters]]
+key = "m01_cave"
+title = "花园里的洞"
+text = "夜里，塔里克把你带到俘虏院的后墙下。墙那边有个西班牙兵，左手残了，正在给人讲故事，讲得看守都忘了换岗。他身上搜出过唐·胡安的推荐信，赎价因此被抬得吓人。他跑过，被抓回来，还要再跑。城东有个花园，园子里有个洞，他说过很多次。墙里的人隔着石缝说：“远来的人肚子里都装着故事。你先讲，我再讲，看谁的更不像真的。”塔里克在旁边低声说：“他讲的那些，一半是编的，另一半比编的还难信。这人不是我劫的，可我听他的故事听了一年，欠他的。”"
+at = "algiers"
+cast = ["tariq", "miguel_de_cervantes"]
+speaker = "tariq"
+mood = "tense"
+night = true
+when = [{ kind = "date", from = [1576, 3, 1] }, { kind = "flag", flag = "c13_main_noel", value = false }, { kind = "flag", flag = "c13_npc_tariq_mate", value = false }]
+deadline = [1579, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "food"
+text = "替他往花园的洞里送一个夏天的吃食"
+next = "done"
+check = { attr = "intrigue", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "tariq", value = 5 }, { kind = "affinity", person = "miguel_de_cervantes", value = 6 }, { kind = "flag", flag = "c13_npc_tariq_cervantes_helped" }]
+reply = "面包和水送了一整个夏天，空罐子每回都从石缝里推出来，罐底刻着一行字：“多谢，下回讲完。”最后还是有人去告了密。人被抓了回去。塔里克一个人把罪揽下，说送饭的人是他自己雇的，跟外乡人没有关系。"
+news = "阿尔及尔的人说：城东花园的洞里藏着一个西班牙俘虏，一夏天有个外乡船长给他送面包和水，后来被人告了密。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "miguel_de_cervantes", value = 3 }, { kind = "flag", flag = "c13_npc_tariq_cervantes_helped" }], news = "阿尔及尔的人说：有个外乡船长给城东花园的洞送饭，只送了三回，就被巡港的人盯上，断了。" }
+
+[[tracks.chapters.choices]]
+key = "fund"
+text = "掏钱交给三一会的修士，记在他的赎金上"
+next = "done"
+requires = [{ kind = "cash", ge = 800 }]
+hint = "你这点钱，在他的赎价面前像一枚铜子。"
+effects = [{ kind = "cash", value = -800 }, { kind = "affinity", person = "miguel_de_cervantes", value = 5 }, { kind = "affinity", person = "fray_juan", value = 4 }, { kind = "flag", flag = "c13_npc_tariq_cervantes_helped" }]
+reply = "修士在名册上那一行旁边记下了你的船名，又拿笔圈了一圈，说这个名字他念了就不忘。塞万提斯托塔里克带话，说欠你一个故事，出去以后写，写成了先寄给你。"
+news = "阿尔及尔的人说：三一会的修士在名册上多记了一个外乡船长的名字，说是替城东花园里那个西班牙人凑的赎金。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "不掺和，只坐下来听他讲完一个故事"
+next = "done"
+effects = [{ kind = "affinity", person = "miguel_de_cervantes", value = 3 }, { kind = "affinity", person = "tariq", value = 1 }]
+reply = "他讲的是一个骑着瘦马的乡绅，马怎么瘦的，乡绅怎么不肯服老。讲到一半看守来了，他说剩下的下回讲。塔里克靠在墙上听了前半截，笑着摇头，说这人讲故事比打仗还难缠。"
+news = "阿尔及尔的人说：俘虏院后墙那晚有人讲故事，讲得看守都忘了换岗，讲到一半就断了。"
+
+# 交汇旁轨六：请他上船。普通章；限期 1590-06-30，超时静默失败。
+[[tracks]]
+key = "npc_tariq_join"
+name = "请他上船"
+kind = "request"
+start = "m01_join"
+auto = false
+cast = ["tariq"]
+
+[[tracks.chapters]]
+key = "m01_join"
+title = "请他上船"
+text = "黄昏，“鸥”的船头。塔里克鬓角有了白，琴弦是新换的。他说船长团的人越来越像商人，西班牙的巡逻船越来越像海盗，他在中间夹了快三十年，有点闷。码头上的孩子在缆桩下面抢一只螃蟹，没人去管。你开口问他要不要换一条船。他没马上答，先把一支曲子弹完，手指停在最后一根弦上，才抬起头。“上你的船？那我的规矩也跟着上。只劫货——不，算了，你的船不劫。”他把琴靠在缆桩上：“歌唱到最后一句，人就到了门口。我祖母说的。”"
+at = "algiers"
+cast = ["tariq"]
+speaker = "tariq"
+mood = "tender"
+when = [{ kind = "date", from = [1580, 1, 1] }, { kind = "affinity", person = "tariq", ge = 50 }, { kind = "flag", flag = "c13_npc_tariq_mate", value = false }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "invite"
+text = "请他上船，做你的航海士"
+next = "done"
+requires = [{ kind = "affinity", person = "tariq", ge = 60 }]
+hint = "他的船长们还离不开他。"
+effects = [{ kind = "join", person = "tariq" }, { kind = "flag", flag = "c13_npc_tariq_mate" }]
+reply = "他把“鸥”交给大副，只带了琴、一把弯刀和一个小布包。上了你的船，第一件事是去看桨手吃什么，看完才肯把布包打开，里面是一沓旧信和一把旧钥匙。他说：“你的桨手要是饿着，我先拿琴砸你。”"
+news = "阿尔及尔的人说：那个弹琴的老海盗把“鸥”交给了大副，自己背着琴上了一条外乡人的船。"
+
+[[tracks.chapters.choices]]
+key = "drink"
+text = "不勉强，请他喝一杯，听他把这支曲子再弹一遍"
+next = "done"
+effects = [{ kind = "affinity", person = "tariq", value = 3 }]
+reply = "第二遍弹得比第一遍慢，几个音停得很久，像在等谁接下去。弹完他拍了拍弦：“熟面孔，今晚的酒是你请的，曲子是我的。”他说哪天真想走了，会先来找你，不会一声不响地把“鸥”开走。"
+news = "阿尔及尔的码头上，有人看见那个弹琴的老海盗在一条外乡船的船头，把同一支曲子弹了两遍。"
+
+[[tracks.chapters.variants]]
+key = "a_owed"
+when = [{ kind = "flag", flag = "c13_npc_tariq_owed" }]
+text = "黄昏，“鸥”的船头。塔里克鬓角有了白，琴弦是新换的。他说船长团的人越来越像商人，西班牙的巡逻船越来越像海盗，他在中间夹了快三十年，有点闷。码头上的孩子在缆桩下面抢一只螃蟹，没人去管。你开口问他要不要换一条船。他没马上答，先把一支曲子弹完，才抬起头。他提起你掌心里那个炭笔写的数：“上船也行，那笔账就从我的工钱里扣。”“歌唱到最后一句，人就到了门口。我祖母说的。”"
+
+[[tracks.chapters.variants]]
+key = "b_ransomed"
+when = [{ kind = "flag", flag = "c13_npc_tariq_ransomed" }]
+text = "黄昏，“鸥”的船头。塔里克鬓角有了白，琴弦是新换的。他说船长团的人越来越像商人，西班牙的巡逻船越来越像海盗，他在中间夹了快三十年，有点闷。码头上的孩子在缆桩下面抢一只螃蟹，没人去管。你开口问他要不要换一条船。他没马上答，先把一支曲子弹完，才抬起头。你托他赎回来的那个人，如今在你船上当厨子，正从舱口探出头来看他。“上你的船？那我的规矩也跟着上。只劫货——不，算了，你的船不劫。”他把琴靠在缆桩上：“歌唱到最后一句，人就到了门口。我祖母说的。”"

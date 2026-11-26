@@ -1,0 +1,187 @@
+# C13d 人物的请托：另一半的辽东（来信模式，去某处 go，3 章 + 1 章分流；故事 2.0 契约，按 2026-10-12 的 C13d 总决定写）
+# 人物：崔鸣吉 choe_myeonggil（cast 在 historical_09_liaodong.toml，born 1531；辽东战役链，年代提前约 55 年）。本世界线里他是汉城朝廷的主和派文臣，读阳明书，被骂软骨头。
+# 类型与报价：去某处（gs/go），L 来信。kind=request，auto=true；offer 章 at=busan，出面的是司译院派到釜山的玄译官（代理人，不新建 cast），崔鸣吉只在信里说话，speaker 省略。
+#   offer 写 family=c13_offer_busan、冷却 20 天；窗口 1573-01-15 至 1579-12-31，deadline 即窗口止日，timeout 直接 failed，不写见闻。
+#   接下后 arrive 150 天（釜山到牛庄跨黄海），report / report_rice 各 150 天（回釜山）。窗口避开 1572 丁卯与 1580—82 丙子两役，两役本身一字不写。
+# 依据：史实——崔鸣吉是朝鲜的主和派，读王阳明，后来被骂作软骨头；司译院是朝鲜培养与派遣译官的衙门，釜山有倭馆，译官常驻；牛庄在辽河口，明末是辽东的集镇与互市之处。
+#   本世界线把辽东战役链提前约 55 年，牛庄作后金一侧的马市。
+#   原创——玄译官（川宁玄氏是朝鲜有名的译官世家，只借一个姓）；信里的一二三四五；那张看上去像买货单的单子；牙人账本上涂过两回的米价；
+#   去年使臣带回的旧抄件与“我”的价单并排摊在桌上（回忆“两本账”）；马贩掰开马嘴看牙口。
+#   不写：盟约条款与“屈辱”的字眼；兵数、城防、军令；任何战役变量。只带回米、豆、盐、布、马的价与开市的条件。
+#   与金尚宪的请托（同在釜山）不撞：正文不点他的名，只在 report 章留一句“主战的大人们”。
+# 要紧的一句（“朝堂上每个人只带回自己想听的那一半……”）只在 offer 的信里用一次。
+# 结构说明：brief 的 report 章按旗标 prices / rice_only 拆选项；这两面旗标由 arrive 的不同选项设置，直接 requires 会让故事机器人报“准备后条件仍不满足”。
+#   改成按 next 分流：arrive 的 han / jurchen / walk 成功走 report，walk 检定失败走 report_rice；两章各有 plain / soften / numbers 三个选项。
+#   report 有一个变体 v1_jurchen（读 jurchen_view，把马贩的话写进正文）；report_rice 无变体。
+#   引擎在检定失败时不显示选项的 reply（queue.rs：success != Some(false)），所以 walk 的 reply 只写成功（价问全了）；
+#   失败时被人跟上、只问到米价，由 fail 的见闻与 report_rice 的正文交代。
+# 读写的旗标：设 c13_request_choe_myeonggil_accepted / _declined / _done / _partial / _late（终局）；
+#   分支旗标 _prices / _rice_only / _jurchen_view / _softened（brief 定的四面；prices 与 rice_only 互斥，同一条路上至多三面）。
+#   读的只有本轨道自己的 _jurchen_view（变体）；不读外部旗标，不设 c7_ 旗标；无 secret，无 C7 线，无主线门禁。
+# 信（letter）：arrive 超时一封；report 的 plain 与 numbers 各一封（两封内容不同，互斥，一条路上至多一封）。report / report_rice 超时只设旗标。
+# 依赖：港口 busan、niuzhuang 是现有港口，无 B10b 改名；势力 joseon 在 factions/09_eastasia.toml；技能 lang_chinese / lang_jurchen 在 skills.toml。
+# 缺省走向：不接（declined → failed）；窗口过了没进釜山（offer 超时 → failed，无见闻）；接了没去牛庄（late → failed，来信说有人报了“他们想报的那一半”）。
+# 回忆插画清单：
+#   mem-request_choe_myeonggil-report「马市上的两本账」：倭馆边小屋的木桌上并排摊着两份纸，左边一份字迹工整，右边一份满是数和描下来的涂改，砚里泡着一支笔。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_choe_myeonggil"
+name = "另一半的辽东"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["choe_myeonggil"]
+
+# 一、釜山码头：司译院的人，一封列得像账的信。
+[[tracks.chapters]]
+key = "offer"
+title = "司译院的人"
+text = "倭馆那边的鼓刚敲过午时，一个穿青袍的译官拦在我的跳板前。他姓玄，司译院派下来管倭馆书契的，袖子里掏出来的却是一封汉城的信，封皮上写着崔鸣吉。信不长，列得像一本账：一，牛庄马市上米、豆、盐的价；二，马价，骟马儿马分开记；三，青布的价；四，后金的人说起朝鲜，怎么说；五，开市要什么条件。末了一行字压得最重：“朝堂上每个人只带回自己想听的那一半。我要另一半——米几钱一斗，马几两一匹，城门几时开。”玄译官等我看完，把信折回原样。“大人吩咐过，看见什么说什么，别替谁说好话。”"
+mood = "tense"
+at = "busan"
+when = [{ kind = "date", from = [1573, 1, 15], to = [1579, 12, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 25 }]
+deadline = [1579, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_busan"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去牛庄的马市，把单子上的价问回来"
+next = "arrive"
+effects = [{ kind = "flag", flag = "c13_request_choe_myeonggil_accepted" }, { kind = "affinity", person = "choe_myeonggil", value = 2 }]
+reply = "玄译官从怀里又抽出一张窄纸，上面只有几行：米、豆、盐、骟马、儿马、青布、开市。没写为什么问，也没有落款。“信我得带回去。”他把窄纸塞进我手里，“单子你留着。叫人翻到了，也不过是一张买货的单子。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：辽东的事，我不碰"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_choe_myeonggil_declined" }]
+reply = "玄译官把信塞回袖子，一点也不意外。“大人料到了。他说十个船主里，九个这么回，剩下一个先问价钱。”他拱了拱手，往倭馆那边走，走了几步又回头看我一眼，像是在记我是那九个里的哪一个。"
+
+# 二、牛庄马市：三种人挤在一处，米贵马贱，一句问话。
+[[tracks.chapters]]
+key = "arrive"
+title = "马市"
+text = "牛庄在辽河口，河滩上搭着一溜棚子，就是马市。汉人牙人坐在棚下拨算盘，女真马贩牵着马在泥里转圈，蒙古的赶车人蹲在大车边，一边嚼炒米一边看热闹。米价比去年高了一截，牙人说河上的粮船少了；马价倒跌了，去年买一匹好骟马的钱，如今能买一匹半。一个戴貂皮帽的女真马贩听说我从釜山来，把缰绳往胳膊上一绕，凑过来问：“朝鲜人，是不是都怕我们？”"
+at = "niuzhuang"
+speaker = "captain"
+mood = "tense"
+news = "牛庄马市上来了个釜山的船长，挨家问价，连马贩的账本都要借来看。"
+when = [{ kind = "alive", person = "choe_myeonggil", value = true }]
+objectives = [{ kind = "at", at = "niuzhuang", text = "去牛庄的马市" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_choe_myeonggil_late" }, { kind = "affinity", person = "choe_myeonggil", value = -3 }, { kind = "letter", person = "choe_myeonggil", text = "辽东的价，已经有人报来了——报的是他们想报的那一半：马贱，没提米贵。你那一份不必送了。单子留着买货吧。——鸣吉" }]
+
+[[tracks.chapters.choices]]
+key = "han"
+text = "跟汉人牙人一家家问价，借账本来看"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "牙人的话又快又碎，十句里你只跟得上三句"
+next = "report"
+effects = [{ kind = "affinity", person = "choe_myeonggil", value = 3 }, { kind = "flag", flag = "c13_request_choe_myeonggil_prices" }]
+reply = "我在棚子底下蹲了一整天，一家一家问，问完再借账本来对。七种货的价都记下了：米、豆、盐、青布、骟马、儿马、皮子。有一家的账本上，米价涂过两回，旧数划掉，新数挤在旁边，墨色还新。我连涂改也照样描了下来。牙人看见了没拦，只是奇怪：“你描它做什么？又不是你的账。”"
+
+[[tracks.chapters.choices]]
+key = "jurchen"
+text = "用女真话回那个马贩的话"
+requires = [{ kind = "skill", skill = "lang_jurchen", ge = 60 }]
+hint = "你只会几句女真人的招呼，接不住他的话"
+next = "report"
+effects = [{ kind = "affinity", person = "choe_myeonggil", value = 3 }, { kind = "flag", flag = "c13_request_choe_myeonggil_prices" }, { kind = "flag", flag = "c13_request_choe_myeonggil_jurchen_view" }]
+reply = "我用女真话回他：怕不怕，先得看你的马卖几两。马贩愣了一下，笑出声来：“不怕最好。怕了的人才麻烦——怕了的人不来买马，只在家里骂。”他掰着指头数开市要什么：要盐，要青布，要耕牛，价钱当场说定，别回去再改。比汉人牙人说得还直。说完他把我拉到马跟前，掰开马嘴让我看牙口，报的价比棚下牌子上的低。"
+
+[[tracks.chapters.choices]]
+key = "walk"
+text = "在市上转一天，能问多少问多少"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "report"
+effects = [{ kind = "flag", flag = "c13_request_choe_myeonggil_prices" }]
+reply = "我从棚子这头走到那头，见人先问吃了没有，再问米，再问马。卖盐的老汉话多，一问三答；蒙古赶车人不开口，只伸手指头，一个指头一个价。第三排棚子的马贩嫌我问得絮叨，干脆把骟马、儿马的价一口气报完，挥手赶我去问下一家。天擦黑的时候，窄纸上七行都填满了，开市那一行是卖青布的婆子收摊时顺嘴说的。"
+fail = { next = "report_rice", effects = [{ kind = "affinity", person = "choe_myeonggil", value = -2 }, { kind = "flag", flag = "c13_request_choe_myeonggil_rice_only" }], news = "牛庄马市上有个釜山来的船长，问马价问到第三排棚子，背后跟了个人，天没黑就上船走了。" }
+
+# 三、回釜山，价问全了：两份纸并排摊在桌上，一句“主战的大人们”。
+[[tracks.chapters]]
+key = "report"
+title = "照实说"
+text = "回到釜山，玄译官在倭馆边的小屋里等我，纸铺好了，笔泡在砚里。他先从匣子里取出一份抄件放在左手边，是去年使臣回来报的辽东，字写得工整，说马瘦，市面冷清。我那张记满了数的纸，他摊在右手边。两份并排，一份说冷清，一份记着米贵马贱。他看了半天，才蘸笔：“主战的大人们也会读这份东西。你想好了再说，我照你说的记。”"
+at = "busan"
+speaker = "captain"
+mood = "tense"
+news = "釜山倭馆边上的玄译官这几天一封接一封往汉城寄信，说是有个船长从牛庄带回一张价单。"
+when = [{ kind = "alive", person = "choe_myeonggil", value = true }]
+objectives = [{ kind = "at", at = "busan", text = "回釜山，把价单交给玄译官" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_choe_myeonggil_late" }, { kind = "affinity", person = "choe_myeonggil", value = -3 }]
+
+[[tracks.chapters.variants]]
+key = "v1_jurchen"
+when = [{ kind = "flag", flag = "c13_request_choe_myeonggil_jurchen_view" }]
+text = "回到釜山，玄译官在倭馆边的小屋里等我，纸铺好了，笔泡在砚里。他先从匣子里取出一份抄件放在左手边，是去年使臣回来报的辽东，说马瘦，市面冷清。我那张记满了数的纸，他摊在右手边。我说起那个马贩的话：怕了的人才麻烦，开市要盐、要布、要耕牛，价钱当场说定。玄译官问了两遍，是马贩自己说的，还是牙人转的话。他看了半天，才蘸笔：“主战的大人们也会读这份东西。你想好了再说，我照你说的记。”"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "看见什么报什么：价钱、市面，连马贩那句问话"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "choe_myeonggil", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_choe_myeonggil-report", title = "马市上的两本账" }, { kind = "flag", flag = "c13_request_choe_myeonggil_done" }, { kind = "letter", person = "choe_myeonggil", text = "你那份东西，我在殿上念了。念到牛庄的马贩问朝鲜人怕不怕，殿上一下子静了，比念米价的时候还静。有人说，船主的话不足信。我问他：去年使臣带回来的那一份，是使臣自己去马市问的，还是在驿馆里听来的？他不接。我又问：马贱米贵，是马多了，还是粮少了？他也不接。今天骂我的折子多了两道。折子我也记账，记到如今，没有一道写着米价。你的原稿我收着，一个字没改。——鸣吉" }]
+reply = "我从米价说起，说到马价跌了，说到那个马贩凑过来问朝鲜人怕不怕。玄译官一字一字地记，记到马贩那句，笔尖停了停，还是照写了。写完他吹干墨，把纸折成三折，压在旧抄件上头。“大人会喜欢这一份。”他说，“也会因为这一份挨骂。”口气平平常常，像在说明天要下雨。"
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "把后金那边说得弱一点，好让朝堂上的人听得进"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "choe_myeonggil", value = -2 }, { kind = "flag", flag = "c13_request_choe_myeonggil_partial" }, { kind = "flag", flag = "c13_request_choe_myeonggil_softened" }]
+reply = "我说马价跌，是马卖不出去；米价涨，是辽河上闹了水，过一季就落。玄译官停了笔，抬头看我：“大人说过，别替谁说好话。”我没改口。他低下头，照我说的记了。记完，他把左手那份旧抄件挪过来，跟我这份并在一处看了看，两份说得差不多。他一句话没说，把两份一起收进了匣子。"
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "只报数，不说我怎么看"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "choe_myeonggil", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_choe_myeonggil-report", title = "马市上的两本账" }, { kind = "flag", flag = "c13_request_choe_myeonggil_done" }, { kind = "letter", person = "choe_myeonggil", text = "你只报了数，这最好。数不替谁说话，殿上谁也没法说它软。我一条一条念，没添一个字。有人问：这是谁的数？我说，是牛庄牙人的，是女真马贩的，是蒙古赶车人的，偏偏不是我的。他又问：那你自己怎么看？我说，我怎么看，你们听了十年，听出米价来了没有？他坐下了。散了朝，廊下有人骂我软骨头。我问他，软骨头三个字，在牛庄值几钱一斗？他没算出来。——鸣吉" }]
+reply = "我把那张窄纸摊开，一行一行念：米一斗几钱，豆几钱，盐几钱，骟马几两，儿马几两，青布几钱，开市要什么。念完就停了。玄译官等了一会儿，见我不再开口，才搁下笔：“这才是大人要的另一半。”他把纸吹干，没有折，平平地垫在旧抄件底下。"
+
+# 三（降级）：只问到米价，单子上空着四行。
+[[tracks.chapters]]
+key = "report_rice"
+title = "空着的四行"
+text = "船一靠釜山，玄译官就等在跳板底下，把我领进倭馆边的小屋，纸已经铺好。我把那天的事说了：米价问齐了，豆和盐也问了几家；问到马价，背后有人跟上来，我没敢再问，天没黑就回了船。他听完没出声，把那张窄纸拿过去，在骟马、儿马、青布、开市四行底下各点了一个墨点。“空着就空着。”他蘸了笔，“这一份，汉城那边不止大人一个人读。你说多少，我记多少。”"
+at = "busan"
+speaker = "captain"
+mood = "tense"
+news = "釜山的玄译官往汉城寄了一张牛庄的价单，听说上面只有米价，马价那几行空着。"
+when = [{ kind = "alive", person = "choe_myeonggil", value = true }]
+objectives = [{ kind = "at", at = "busan", text = "回釜山，把问到的价交给玄译官" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_choe_myeonggil_late" }, { kind = "affinity", person = "choe_myeonggil", value = -3 }]
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照实说：米价问到了，马价没问成，被人跟了"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "choe_myeonggil", value = 4 }, { kind = "flag", flag = "c13_request_choe_myeonggil_partial" }]
+reply = "玄译官先记米价，再记豆和盐，最后把被人跟的事也写上，就在米价底下一行。“大人会想知道是谁跟着你。”我说不知道，只看见那人紧了三回绑腿。他想了想，照写：不知何人，紧绑腿三回。写完他自己先笑了一下。"
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "没问成的那几行，照朝堂上爱听的补上"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "choe_myeonggil", value = -2 }, { kind = "flag", flag = "c13_request_choe_myeonggil_partial" }, { kind = "flag", flag = "c13_request_choe_myeonggil_softened" }]
+news = "釜山的玄译官往汉城寄了一张牛庄的价单，行里人说单子上的马价写得比去年使臣报的还冷清。"
+reply = "我说马价想必还在跌，市面冷清，开市的事他们求着朝鲜。玄译官的笔停了：“大人说过，别替谁说好话。”我没改口。他把那四个墨点涂成四行字，照我说的填满了。填完他看了一会儿，说这一份跟去年使臣报的倒是一个样，然后不再说话。"
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "只报问到的数，空着的不填"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "choe_myeonggil", value = 4 }, { kind = "flag", flag = "c13_request_choe_myeonggil_partial" }]
+reply = "我只念米、豆、盐三样，念完就停。玄译官等了一会儿，见我不再开口，便在那四个墨点旁边各添了两个小字：未问。“大人认得出哪里是空的。”他说，“空着，他还能再找人去问；填错了，就没人去问了。”"

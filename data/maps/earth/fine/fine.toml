@@ -1,0 +1,51 @@
+# 细图层的说明（自动生成，不要手改）。生成命令：cargo xtask mapgen real --config data/maps/earth/mapgen.toml
+# 这三层只给显示用（下一轮也给玩家手动航行的碰撞用）；航行网格仍以上一级目录的 map.txt 为准。
+# 二进制格式的逐字节定义见 crates/manifest-data/src/fine_map.rs 开头的说明；来源文件与校验和见上一级的 sources.toml。
+version = 1
+# 每粗格的细分数：一粗格（20 角分）= 24 × 24 细格，一细格约 0.83 角分
+cells_per_cell = 24
+
+# 细海岸：每细格一类——海、陆、内陆水（湖）。
+# 来源：Natural Earth 1:10m 陆地 + 小岛 − 湖泊，与粗格同样的等距圆柱投影与奇偶扫描，每细格取中心。
+# 水库是后世才有的：只有航行网格在那里确有内陆水格时才画（略去 36 座）。
+# “骨架”修正：每个可航行粗格以格心为圆心、半径 4 细格的圆，以及内核允许直接相通的相邻可航行粗格
+# （八方向，斜向不穿陆角）之间沿格心连线、半宽 3 细格的通道，凡是陆的细格改成水；其余真实海岸原样保留，
+# 粗格是陆的地方一格不改。真挖过的地方，骨架外面两圈按平滑噪声啃掉一部分（两岸参差，不像尺子画的），
+# 夹在水道之间、整个落在可航行粗格里的小块碎地（不超过 96 细格）也改成水。
+# carved_fine_cells 是挖掉的细格数，sliver_fine_cells 是清掉的碎地，carved_coarse_cells 是涉及的粗格数。
+# synthesized_islets：航行网格是陆、真实数据里却没有一粒陆的粗格（设定岛等），在格内画了一座小岛。
+[coast]
+file = "coast.bin"
+blake3 = "fd3738183a215ac8872308a48d514b0cafbb1f9565bbfd58931a6773be80da3b"
+bytes = 401292
+width = 25920
+height = 9504
+mixed_coarse_cells = 22676
+land_fine_cells = 73794680
+lake_fine_cells = 888109
+lake_polygons = 1330
+carved_fine_cells = 267917
+sliver_fine_cells = 23802
+carved_coarse_cells = 6435
+skeleton_cells = 297927
+skeleton_links = 1165440
+water_cells_mostly_land = 738
+land_cells_mostly_water = 1573
+synthesized_islets = [[421, 112], [423, 112], [421, 113], [424, 113], [423, 114], [424, 114], [421, 115], [423, 115]]
+
+# 细高程：ETOPO5 的原始 5 角分样本（每粗格 4 × 4），单位米，海底为负；缺测按 0。
+[elevation]
+file = "elevation.bin"
+blake3 = "d24890236cccb44ebf4baeb8aa9ec1937c9e0be2ce87d6170b3ef0d4d3178d27"
+bytes = 5925752
+width = 4320
+height = 1584
+samples_per_cell = 4
+
+# 细河流：Natural Earth 1:10m 河流中线（不含湖心线），坐标单位 1/24 格，横向不取模；rank 是原数据的 scalerank（越小河越大）。
+[rivers]
+file = "rivers.bin"
+blake3 = "6dfa1a783d0a4604c12975e591f62f149b60db94962187363c614785427ed73e"
+bytes = 177219
+segments = 1919
+points = 219548

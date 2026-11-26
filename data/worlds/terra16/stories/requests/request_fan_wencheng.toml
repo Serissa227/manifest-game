@@ -1,0 +1,180 @@
+# C13d 请托：一部《大明会典》（request_fan_wencheng）。中文，Claude 写。
+# 人物：范文程 fan_wencheng（本世界线 1542-01-01 生，男；沈阳生员出身，范仲淹之后，势力 later_jin，身份档 2）。
+#       cast 在 cast/historical_09_liaodong.toml，1571—1588 日程在沈阳（court）。不出面，只来信。
+# 类型：找东西（fd）；offer → handin →（交原书）use /（交抄本）use_copy → done / failed。
+#       handin 的两种交法给的钱不同（原书 2250、抄本 1500），而同一轨道不在选项上用 requires 读自己设的旗标，
+#       所以抄本一路另走 use_copy，两章各有各的 3 个选项，选项不读本轨道设的旗标。
+#       文字里不能有换行：两封信的一二三条写在同一段里。
+# 报价：来信（L）。auto=true；offer 在牛庄，出面的是汉人书铺的掌柜，范文程只在信里说话；
+#       family c13_offer_niuzhuang，冷却 20 天。没有 stage 章，没有 window 与 default。
+# 规划窗口（不进 TOML）：报价 1571-01-15 至 1588-06-30；交书 1571-02-01 至 1588-10-31；请教 1571-04-01 起，进章后 120 天。
+# 依据：
+#   史实——范文程，沈阳生员，范仲淹后人，投后金后主要为汗起草文书、议定降官安民的办法（史实 1618 → 本世界线提前约 55 年，1571 年前后）；
+#          《大明会典》正德本 1511 年刻于北京（items/books_08_history_politics.toml 的 ming_huidian_print）。
+#   原创——书铺掌柜、扉页上的官印（只是一件看得见的物件）、两封一条一条的信、“一座城开了门以后原来的县官留不留”这一问（只写治理，不写攻城，不写哪座城）。
+# 辽东战役链（TERRA16 §10.5）：只写人、书与家信；不运兵器、火药、火炮、铁料，不传军情；不改任何战役变量，不给 jianzhou 加声望。
+# 不碰：达海与《三国演义》（另有请托）；会典交给谁去译；范文程的秘密只在信里漏半句，不点破。
+# 读的旗标：无。
+# 设的旗标（c13_request_fan_wencheng_<事件>）：accepted / declined（offer）；gave / copied（handin）；
+#       failed（handin 拒绝）；done / partial（use、use_copy）；late（handin、use、use_copy 超时）。
+# 依赖：港口 niuzhuang；物品 ming_huidian_print（商店：日本、朝鲜文化的港口）；技能 lang_chinese；检定属性 eloquence。
+# 来信：handin 超时一封（≤120 字）；use 里 brief 检定失败一封。use_copy 的失败不再写来信（全轨道来信 ≤2 封），只靠见闻。
+# 回忆插画：mem-request_fan_wencheng-use（原书一路）——舱里的小桌，会典摊在扉页，一方朱红官印边角磨白，灯下压着一张写满卷次的纸；
+#           mem-request_fan_wencheng-use_copy（抄本一路）——同一张桌，抄本首页的空方格被朱笔描上印的轮廓，原书摊在一旁。
+
+[[tracks]]
+key = "request_fan_wencheng"
+name = "一部《大明会典》"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["fan_wencheng"]
+
+# 一、一条一条的信：牛庄的书铺里，掌柜递来一封没有落款的信。
+[[tracks.chapters]]
+key = "offer"
+title = "一条一条的信"
+text = "牛庄街尾的汉人书铺里，掌柜从柜台底下抽出一封信，封蜡是新的，没有印，也没有落款。纸折了三折，字写得一条一条：“一、《大明会典》一部，刻本，不要抄本，缺页的也不要。二、书钱照付，路费另算，不必赶着回。三、书到之后，或许还要请教一两处。”第三条下面空了一行，又添一句小字：“这部书我不为读它，为照着它做。照着做的人多了，就少死人。”掌柜拿抹布擦着柜台：关内的刻本这几年过不了边，倒是日本、朝鲜的书肆里，偶尔还见得到。"
+mood = "tense"
+at = "niuzhuang"
+when = [{ kind = "date", from = [1571, 1, 15] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 25 }, { kind = "age", person = "fan_wencheng", ge = 18 }]
+deadline = [1588, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_niuzhuang"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去找一部刻本《大明会典》"
+next = "handin"
+reply = "掌柜把信折回三折，推到你手边。“这位爷的信，从来不落名字。”他又擦了一遍柜台，“可整个牛庄都知道是谁。他挑书挑得细，翻开先数页码，缺一张都要退。”"
+effects = [{ kind = "affinity", person = "fan_wencheng", value = 2 }, { kind = "flag", flag = "c13_request_fan_wencheng_accepted" }]
+news = "牛庄街尾的汉人书铺里，有位船主接下一封没落款的信，要替沈阳那边找一部刻本的《大明会典》。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这部书，我不往关外送"
+next = "failed"
+reply = "掌柜点点头，把信收回抽屉，动作很熟，像是从前也有人这样回过。“不勉强。”他说，“书铺开了这些年，什么样的回话都听过。”"
+effects = [{ kind = "flag", flag = "c13_request_fan_wencheng_declined" }]
+
+# 二、书上的印：书找来了，扉页上盖着一方官印。
+[[tracks.chapters]]
+key = "handin"
+title = "书上的印"
+text = "书摆在牛庄书铺的柜台上。掌柜翻开第一册，扉页右下角盖着一方朱红的官印，印文是关内某个衙门的，边角磨得发白。这部书原先挂在哪个架子上，后来怎么流到海外的书肆，印不会说。掌柜拿指甲在印边上刮了刮：“裁掉这一页，书还是全的。留着，他一眼就看见。那位爷看书，先看印，再看页码。”他把书转过来，等你开口。"
+speaker = "captain"
+mood = "tense"
+at = "niuzhuang"
+when = [{ kind = "alive", person = "fan_wencheng", value = true }]
+objectives = [{ kind = "item", item = "ming_huidian_print", qty = 1, text = "带来一部刻本《大明会典》" }, { kind = "at", at = "niuzhuang" }]
+deadline = [1588, 10, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_fan_wencheng_late" }, { kind = "letter", person = "fan_wencheng", text = "书已从别处得了，多谢费心。一、你不必再找；二、此事作罢；三、日后若有新刻的书，仍请留意。" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "原样交出，印也留着"
+next = "use"
+reply = "掌柜拿蓝布把书包好，打结时顺手压平了扉页的一角。“那就让他看。”他说，“看完了，我估摸他会翻到后头去，找一处，再来问你。”"
+effects = [{ kind = "item", item = "ming_huidian_print", qty = -1 }, { kind = "affinity", person = "fan_wencheng", value = 3 }, { kind = "flag", flag = "c13_request_fan_wencheng_gave" }]
+news = "牛庄书铺里，一部盖着关内官印的《大明会典》原样包好，送去了沈阳那位读书人手里。"
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "书留在船上，雇人把吏部、户部几卷抄给他"
+next = "use_copy"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "雇抄手的钱，你手头现在凑不齐。"
+reply = "掌柜荐了街口一位落第的老秀才。抄了二十天，字是端正的馆阁体，每卷首页留一个方格，旁边小字注着：此处原有官印。掌柜翻着新抄的册子：“抄本也是书。只是那位爷要问的，未必都在这几卷里。”"
+effects = [{ kind = "cash", value = -300 }, { kind = "flag", flag = "c13_request_fan_wencheng_copied" }]
+news = "牛庄书铺请了一位落第的老秀才，二十天抄完几卷《大明会典》，抄本送往沈阳，原书留在了船上。"
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "这部书，不送了"
+next = "failed"
+reply = "掌柜把那封一条一条的信从抽屉里取出来，还给你。“留着吧，”他说，“当个念想。”信纸三折，第三条的折痕正压在那行小字上。"
+effects = [{ kind = "affinity", person = "fan_wencheng", value = -2 }, { kind = "flag", flag = "c13_request_fan_wencheng_failed" }]
+news = "牛庄书铺的掌柜说，有个船主把会典找来了，临到交货又不送了，那封没落款的信还给了他自己留着。"
+
+# 三、一两处请教（原书一路）：书已经在他手里。
+[[tracks.chapters]]
+key = "use"
+title = "一两处请教"
+text = "两个月后，掌柜又递来一封信，纸是同一种，字也是一条一条的：“一、会典里写到官员交代，我有两处拿不准。二、一座城开了门，原来的县官是留是换；若留，印信交给谁，谁点收，仓里的册子谁来封。三、书在你船上走过一程，想必翻过几回，记得多少写多少，请照卷次。”信末照旧客气：若不便，不答也无妨。纸角有一点墨，像是写到这里停过很久。"
+mood = "tense"
+at = "niuzhuang"
+when = [{ kind = "alive", person = "fan_wencheng", value = true }]
+objectives = [{ kind = "wait", days = 60 }, { kind = "at", at = "niuzhuang" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_fan_wencheng_late" }], news = "牛庄书铺的柜台下压着一封没人来取回话的信。掌柜说，那位爷问的是会典里的一处，终究没等到回音。" }
+
+[[tracks.chapters.choices]]
+key = "explain"
+text = "照会典的卷次，一条一条讲清楚"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "会典里的官话你读得磕绊，卷次讲不清。"
+reply = "你在灯下写了一页，从哪一卷起、哪几条相关、先点印还是先点仓，一条一条标着卷次。回信隔了三天才到，只有一行：“明白了。这一处，我照着办。”信纸边上拓着一小块朱红，是扉页那方官印的一角。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "fan_wencheng", value = 8 }, { kind = "memory", memory = "mem-request_fan_wencheng-use", title = "扉页上的官印" }, { kind = "flag", flag = "c13_request_fan_wencheng_done" }]
+news = "牛庄书铺里，有个船主写了一页字回沈阳，讲的是《大明会典》里交印点仓的卷次，对方回了一行字。"
+
+[[tracks.chapters.choices]]
+key = "brief"
+text = "只答一句：书上写着，自己翻"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_fan_wencheng_partial" }, { kind = "letter", person = "fan_wencheng", text = "来信收到，有劳。一、所言甚是，书中自有，有劳指点；二、此后不敢再以细事相扰；三、前账已清，有劳费心，日后若有新书，自当另托他人。" }], news = "牛庄书铺的掌柜说，沈阳那位爷这回的信客气得出奇，一连三个“有劳”，读的人手心发凉。" }
+reply = "你只回了一句：卷次都在书里，翻到那几页便是。回信来得快，三个字：“说得是。”随信的银钱一文不少，字迹比往常略紧。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "fan_wencheng", value = 4 }, { kind = "flag", flag = "c13_request_fan_wencheng_done" }]
+news = "牛庄书铺的掌柜说，有个船主只回了沈阳一句话，那位爷回信三个字：说得是。钱一文没少。"
+
+[[tracks.chapters.choices]]
+key = "stop"
+text = "不再答了：书给了，往后怎么用是你的事"
+next = "done"
+reply = "掌柜把信退了回去，封蜡原样。过了几天，书钱和路费送到，没附一个字。此后柜台底下，再没压过那样的信。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_fan_wencheng_partial" }]
+news = "牛庄书铺的掌柜说，沈阳那位爷的信不再来了，书钱路费却一文没少，托人送来的，没带话。"
+
+# 三之二、缺的那几卷（抄本一路）：书还在船上，他要的卷次只有原书里有。
+[[tracks.chapters]]
+key = "use_copy"
+title = "缺的那几卷"
+text = "两个月后，掌柜又递来一封信，纸是同一种，字也是一条一条的：“一、抄本里没有写印信的那几卷，原书在你手里，请翻到那里去。二、一座城开了门，原来的县官是留是换；若留，印信交给谁，谁点收，仓里的册子谁来封。三、请照卷次作答。”信末照旧客气：若不便，不答也无妨。信里夹着抄本首页的一角，那一格方框还空着。"
+mood = "tense"
+at = "niuzhuang"
+when = [{ kind = "alive", person = "fan_wencheng", value = true }]
+objectives = [{ kind = "wait", days = 60 }, { kind = "at", at = "niuzhuang" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_fan_wencheng_late" }], news = "牛庄书铺的柜台下压着一封没人来取回话的信。掌柜说，那位爷想翻的是会典缺的那几卷，终究没等到回音。" }
+
+[[tracks.chapters.choices]]
+key = "explain_copy"
+text = "翻开原书，照卷次一条一条讲清楚"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "对着原书讲，会典里的官话也读得磕绊，卷次容易报错。"
+reply = "你把原书摊在舱里的小桌上，从扉页的官印翻起，一路翻到那几卷，写了满满一页，每条标着卷次，末尾还描了印文的样子。回信隔了三天到，只有一行：“明白了。印的一节，我另抄一份留着。”随信附回抄本首页的一张，那个空方格里，他用朱笔描上了印的轮廓。"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "fan_wencheng", value = 8 }, { kind = "memory", memory = "mem-request_fan_wencheng-use_copy", title = "扉页上的官印" }, { kind = "flag", flag = "c13_request_fan_wencheng_done" }]
+news = "牛庄书铺里，有个船主翻着自己船上的原书，给沈阳写了一页卷次，抄本首页那个空方格因此有了印。"
+
+[[tracks.chapters.choices]]
+key = "brief_copy"
+text = "只答一句：缺的几卷，另雇抄手补上"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_fan_wencheng_partial" }], news = "牛庄书铺的掌柜说，沈阳那位爷给船主的回话写得客客气气，通篇“有劳”，看得人心里发紧。" }
+reply = "你只回了一句：缺的那几卷，另雇抄手补上便是，条文不必转述。回信来得更快，还是三个字：“说得是。”随信的钱不少一文，那三个字却写得一笔一画，像在抄。"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "fan_wencheng", value = 4 }, { kind = "flag", flag = "c13_request_fan_wencheng_done" }]
+news = "牛庄书铺的掌柜说，有个船主只回了沈阳一句话，让他们另雇抄手补抄缺的几卷。那位爷回了三个字：说得是。"
+
+[[tracks.chapters.choices]]
+key = "stop_copy"
+text = "不再答了：抄本给了，往后怎么用是你的事"
+next = "done"
+reply = "掌柜把信退了回去，封蜡原样。过了几天，路费送到，没附一个字。抄本首页那一格，大概就一直空着了。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_fan_wencheng_partial" }]
+news = "牛庄书铺的掌柜说，沈阳那位爷的信不再来了，路费倒是照付，托人送来的，没带话。"

@@ -1,0 +1,164 @@
+# C13d 请托：荐书与五匹绢（request_hirohashi_yasuko）。中文，Claude 写；寰宇先只做中文，不配英文覆盖。
+# 人物：广桥保子 hirohashi_yasuko（生年不详，女；京都一条本家关白兼冬的遗孀，1554 年守寡；宫中门路极熟；1557 年后无日程，人在京里，以信出面）。
+# 类型：送信（letter）；3 章 offer → handover → reply，其中 reply 按荐书交没交拆成 reply / reply_withheld 两章（见下“结构说明”）。
+# 报价：来信（L）。auto=true；offer 章 at=sakai，出面的是一条家的青侍（代理人，不新建 cast），保子只在信里说话，speaker 省略；
+#   family="c13_offer_sakai"、family_cooldown_days=20（堺的请托二十天内只冒出一条）。
+# 窗口：报价 1557-03-01 起，deadline 1562-12-31（到期走 failed，不写见闻）；交绢 deadline_days 240（宁波、澳门到堺，跨一片海）；
+#   回话 deadline_days 120（交绢后等二十天，青侍再来堺）。
+# 依据·史实：女房见习要由宫中女官引荐，入宫要备衣料与礼（docs/research/terra16/P_eastasia_1540.md）；保子的姐妹国子在宫中为典侍
+#   （正文不点名，1557 年国子出家）；“长桥局”是勾当内侍的局名，宫中事务经她的手——荐书封皮上写的就是这个称号。
+#   堺北庄是堺的北半町；堺不产绢，唐绢从宁波（1557—62 唯一稳定的产地）或澳门来。《古今集》是习字的女孩常抄的本子。
+# 依据·原创：北庄的一户米商（无名，不是纳屋家，不用真实的堺商人家名）与他家十三岁的女儿（无名）；桐木薄匣、量米的升子、
+#   往右斜的字帖、“人”字的起笔、名札、一匹留作谢礼的绢。
+# 货款：绢 5 匹 × 基准价 260 × 1.25 = 1625，按 50 取整为 1600，交绢那一章每个选项都付（goods 目标在回应时扣货）。
+# 报酬：最好的结局（reply.plain）付 1600、宫中见习扇 court_fan 一把、好感 +8、imperial_court 声望 +2、名声 +3、回忆一张、来信一封；
+#   折中（reply.gloss、reply_withheld 两个选项）付 900。好感正向合计至多 2+3+8=13。
+# 读的旗标：c13_main_mio（offer 的变体，只添信末一句；由澪的主线设，尚未写）。不读 c7_*。
+# 设的旗标：c13_request_hirohashi_yasuko_accepted（接下）；终局 declined（回绝）/ done（最好）/ partial（折中）/ late（超时）；
+#   分支 gave（荐书交出）、withheld（荐书带回）。
+# 结构说明：brief 的 reply.plain 要按 gave / withheld 拆成两个 requires 旗标的选项、praise 要 requires withheld。
+#   按本批的约定，不用 requires 读本轨道自己设的旗标：交出荐书的分支（judge、ask 成功）去 reply，带回荐书的分支（ask 失败、keep）去 reply_withheld，
+#   两章各两个选项，不设 requires。reply 章另补一个“只说端正、不提斜”的折中选项（gloss），免得这一章只剩一条路。
+# 超时：交绢、回话两章超时按总决定 §二 各扣好感 3；交绢超时来一封 ≤120 字的信，回话超时不来信。
+# 秘密：cast 的“在乎自己往后的着落”本请托不点破，只在最后那封信里把人情一份一份算清楚。不写宫中的阴暗，女孩只写字、墨与紧张。
+# 依赖：人物 hirohashi_yasuko（cast/historical_07_japan.toml）；港口 sakai；商品 silk；物品 court_fan（items/items_accessory_01.toml，唯一奖励）；
+#   技能 calligraphy；势力 imperial_court；主线旗标 c13_main_mio。
+# 回忆插画清单：mem-request_hirohashi_yasuko-reply，画面：米商家板间上摊开一本往右斜的字帖，一只沾满墨的小手在页脚重写一个“人”字。
+
+[[tracks]]
+key = "request_hirohashi_yasuko"
+name = "荐书与五匹绢"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["hirohashi_yasuko"]
+
+# 一、报价：堺北庄米商家门口，青侍递上保子熏过香的信。
+[[tracks.chapters]]
+key = "offer"
+title = "一封熏过香的信"
+text = "堺北庄一户米商的门口，站着个公家打扮的青侍，见你从码头那边过来，先行了一礼。米商跟在他身后，手里还捏着量米的升子，一听你是跑海的船主，脸都亮了。青侍递上的信是熏过的，一拆开，满纸沉香。“这户人家的女儿十三岁，我替她写好了进宫做见习的荐书。入宫要备衣料，非唐绢不可，五匹。他家只认得米，堺又不产绢，只好劳烦您从海外带来，连荐书一并交到他们手里。绢钱由他家出，我一个守寡的人，不敢再叫您垫。只有一件：交荐书以前，先看看那孩子的字。字是人的脸。脸不干净的孩子，我领进宫去，丢的是我的脸。”落款只写“一条家 保子”，字小得像怕占了纸。"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "age", ge = 17 }]
+deadline = [1562, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "堺北庄一户米商的门口，站着个公家打扮的青侍，见你从码头那边过来，先行了一礼。米商跟在他身后，手里还捏着量米的升子，一听你是跑海的船主，脸都亮了。青侍递上的信是熏过的，一拆开，满纸沉香。“这户人家的女儿十三岁，我替她写好了进宫做见习的荐书。入宫要备衣料，非唐绢不可，五匹。他家只认得米，堺又不产绢，只好劳烦您从海外带来，连荐书一并交到他们手里。绢钱由他家出，我一个守寡的人，不敢再叫您垫。只有一件：交荐书以前，先看看那孩子的字。字是人的脸。脸不干净的孩子，我领进宫去，丢的是我的脸。”落款只写“一条家 保子”，字小得像怕占了纸。信末另起一行：“澪姬当年在局里的袖口，总是沾着墨。如今该是沾着海水了。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下荐书，去海外找五匹唐绢。"
+next = "handover"
+reply = "青侍从怀里取出一只桐木薄匣，荐书平平地躺在里面。“保子大人吩咐过，荐书不能折。船上潮，匣子请搁在高处。”米商在一旁连连作揖，把升子碰翻了，白米撒了一门槛，他也顾不上捡。"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_yasuko_accepted" }, { kind = "affinity", person = "hirohashi_yasuko", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这门生意太细，我接不了。"
+next = "failed"
+reply = "青侍没有多劝，把信照原来的折痕叠好，收回袖子里，朝米商轻轻摇了摇头。走出两步，他又回身行了一礼：“改日。”米商站在门口看着他走远，那只升子一直没放下。"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_yasuko_declined" }]
+
+# 二、交绢与荐书：女孩的字帖每一行都往右斜。三种看字的办法，每一种都交出五匹绢、都收绢钱。
+[[tracks.chapters]]
+key = "handover"
+title = "米商女儿的字帖"
+text = "五匹唐绢摆在米商家的板间上，一家老小跪着收，米商的妻子拿袖子垫着手，才敢去摸绢面。女孩是被母亲从屏风后头推出来的，捧着一本抄《古今集》的字帖，十个指头上全是墨，指甲缝里也是。你翻开来看：一笔一画都端正，没有一处偷懒，可每一行都往右斜，越到行尾越斜，像船吃了偏风。她跪在那里，头埋得很低，只看得见发顶。桐木匣搁在你手边，一路都放在舱里最高的那层架子上。"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "alive", person = "hirohashi_yasuko", value = true }]
+objectives = [{ kind = "goods", good = "silk", qty = 5, at = "sakai", text = "把五匹唐绢运到堺" }]
+news = "堺北庄一户米商收下了五匹唐绢，街坊都说，他家那个手上总沾着墨的女儿要进宫了。"
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_hirohashi_yasuko_late" }, { kind = "affinity", person = "hirohashi_yasuko", value = -3 }, { kind = "letter", person = "hirohashi_yasuko", text = "入宫的日子已经过了，那孩子没赶上今年。绢不必再找了，米商家改托了别人的船。荐书请交给下回去堺的青侍，莫折。" }] }
+
+[[tracks.chapters.choices]]
+key = "judge"
+text = "细看字帖，指出那个总写斜的字，再交荐书。"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "你看得出字斜，却说不出是哪一笔把它带歪的。"
+next = "reply"
+news = "堺北庄一户米商收下了五匹唐绢，街坊说那个船主当场教他家女儿改了一个字，荐书也交了。"
+reply = "你指着一个“人”字：撇起得太高，又急着往下走，整个字就往右倒了，起笔先往回收半分，再出锋。女孩没抬头，接过笔在页脚写了一遍，又写一遍，第二个比第一个站得稳。你把桐木匣交到米商手里，他捧着匣子，半天不敢起身。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "hirohashi_yasuko", value = 3 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_gave" }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "好好跟她说，请她当场写荐书封皮上那位女官的称号。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply"
+news = "堺北庄一户米商收下了五匹唐绢，他家女儿当着船主写了三个字，写得稳，荐书当场就交了。"
+reply = "你没催她，只说这三个字往后要天天写，今天先写给你一个人看，写坏了也没人知道。封皮上写的是“长桥局”。她握笔的手一直在抖，墨在纸边滴了一点，三个字却比字帖上的稳，最后一笔收得干干净净。你把桐木匣交给米商，女孩这才抬头看了你一眼，又赶紧低下去。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "hirohashi_yasuko", value = 3 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_gave" }]
+fail = { next = "reply_withheld", effects = [{ kind = "cash", value = 1600 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_withheld" }], news = "堺北庄一户米商收下了五匹唐绢，可他家女儿当着船主写字，越写越斜，写到哭了，荐书没拿出来。" }
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "只交绢，荐书先带回去。"
+next = "reply_withheld"
+news = "堺北庄一户米商收下了五匹唐绢，那个船主却把京里来的荐书原样带走了，米商在门口站了半天。"
+reply = "你把桐木匣合上，收回怀里。米商张着嘴愣住了，他的妻子扯了扯他的袖子。女孩倒像是松了口气，把字帖抱回胸前，指头上的墨蹭了一块在封面上。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_withheld" }]
+
+# 三、回话（荐书交出）：二十天后青侍又来，保子头一件问的是那孩子的起笔。
+[[tracks.chapters]]
+key = "reply"
+title = "帘后的回信"
+text = "二十天后，那个青侍又到了北庄，这一回是来找你的。信还是熏过的，头一件问的是字，第二件才是绢。“那孩子起笔的那一下，是往里收，还是往外甩？您见过她提笔，我只见过她的字帖，字帖是可以描的。绢的颜色，米商家来信说是浅葱，他们的眼睛只分得清米白和糠黄，我不大敢信。”青侍念完，从袖子里取出纸笔等你开口，说保子大人吩咐过，船主说什么就记什么，一个字也不许改。"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "alive", person = "hirohashi_yasuko", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "等京里的回信" }, { kind = "at", at = "sakai", text = "回到堺" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_hirohashi_yasuko_late" }, { kind = "affinity", person = "hirohashi_yasuko", value = -3 }] }
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照实说：一笔一画都端正，只是每行往右斜。"
+next = "done"
+news = "堺北庄米商家的女儿进了京里的宫，街坊说是有个跑海的船主替京里那位看过她的字帖，才放她进去的。"
+reply = "青侍一个字一个字记下，连“往右斜”三个字也没改。半个月后回信到了堺，头一句是：“您看得比我请的先生还细。”同封的是一把桧木薄片串成的扇子，扇骨上还没写字，和那孩子进宫时领到的是同一种。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "court_fan", qty = 1 }, { kind = "affinity", person = "hirohashi_yasuko", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_done" }, { kind = "memory", memory = "mem-request_hirohashi_yasuko-reply", title = "往右斜的字" }, { kind = "letter", person = "hirohashi_yasuko", text = "那孩子初五进的宫。头一天叫她在名札上写自己的名字，三个字站得笔直，局里的老女房拿起来看了两遍。我想，是您那天让她当着人提了笔的缘故。绢五匹：一匹裁了她的小袖，一匹做了见习的袴，余下三匹，米商家说要谢我。我收了一匹，两匹退了回去——收多了，往后就说不清是谁欠谁。这样算来，米商家欠我一份，我欠您一份；局里替我收下这孩子的那一位，我欠她半份，年底前要还。您那一份，我记在最前头。扇子是我替您备的。您若哪天写出一首像样的歌，就写在扇骨上，拿来给我看。我未必说好，可我一定看。" }]
+
+[[tracks.chapters.choices]]
+key = "gloss"
+text = "只说字很端正，往右斜的事不提。"
+next = "done"
+news = "堺北庄米商家的女儿进了宫，街坊说她进去以后天天磨墨，捎回家的信都是别人替她写的。"
+reply = "青侍记下了，笔在纸上停了一停才落。回信隔了一个多月才来，比上一封薄，只问一句：“那么，斜不斜？”局里已经有人把那孩子写的名札拿给她看过了。信末说，那孩子先派去磨墨，三个月不许提笔，等字正了再说。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "hirohashi_yasuko", value = 4 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_partial" }]
+
+# 三′、回话（荐书带回）：青侍先看匣里的荐书折了没有，保子问那孩子的字究竟怎样。
+[[tracks.chapters]]
+key = "reply_withheld"
+title = "原样带回的荐书"
+text = "二十天后，青侍又到了北庄，进门先看你手里的桐木匣，见荐书还平平地躺着，没有折，才把信递过来。这一封比上一封短。“荐书原样回来了。米商家来信说是船主没给，没说为什么，大约他们也不明白。我不敢怪您，只想问一句：那孩子的字，究竟是怎样的？绢倒是收下了，米商家的信里一连写了三遍，这个我信。您说什么，我便记什么。我这样的人，坐在京里，看不见堺的一张纸。”"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "alive", person = "hirohashi_yasuko", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "等京里的回信" }, { kind = "at", at = "sakai", text = "回到堺" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_hirohashi_yasuko_late" }, { kind = "affinity", person = "hirohashi_yasuko", value = -3 }] }
+
+[[tracks.chapters.choices]]
+key = "plain_withheld"
+text = "照实说：字帖上的字行行往右斜，还不到进宫的时候。"
+next = "done"
+news = "堺北庄米商家的女儿今年没进宫，京里来的青侍把荐书带了回去，说开春再看她的字。"
+reply = "青侍把荐书连匣子一起收走。回信来得快：荐书她先收着，叫米商家开春再把字帖送一回。“斜的字，开春再看一回就是。送进去又叫人退出来，那孩子往后在北庄抬不起头，我在京里也一样。”五匹绢叫米商家留着，开春做见习的衣裳还用得上。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "hirohashi_yasuko", value = 4 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_partial" }]
+
+[[tracks.chapters.choices]]
+key = "praise"
+text = "说字很好，只是孩子胆小，见了生人发慌。"
+next = "done"
+news = "堺北庄米商家的女儿进宫的事没了下文，京里的青侍后来又来过几回，再没提起荐书。"
+reply = "青侍照着记了，荐书也带回了京里。回信只有一行：“改日再看。”此后青侍隔几个月来一趟堺，问的都是别的事，米商家托人去打听，只得回一句“快了”。北庄那户人家的字帖，后来又抄满了两本。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "hirohashi_yasuko", value = 2 }, { kind = "flag", flag = "c13_request_hirohashi_yasuko_partial" }]

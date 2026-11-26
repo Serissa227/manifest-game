@@ -1,0 +1,726 @@
+# C10：结构、引用、史实与玩法参数；显示正文均为待Claude替换的短占位。
+# 仅知年份／月份的条目在窗口末结算；不得把结算末日写成考证日期。
+
+[[ports]]
+port = "famagusta"
+state = "open"
+faction = "venice"
+
+[[ports]]
+port = "tunis"
+state = "open"
+faction = "hafsid"
+
+# H30；事实上下文：信长拥足利义昭入京；若桶狭间改写，后续由依赖分支处理。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h30_nobunaga_kyoto"
+ripple_budget = 3000  # 涟漪预算（万分点）：结局出来后 30 日内，模型可据此写至多两条余波事件，倍率按 |倍率−1| 计费；离线不触发。
+title = "信长上洛"
+summary = "永禄十一年秋，织田信长奉足利义昭从岐阜出兵，先要踏平近江的六角家，再进京都。三好诸将拥着病中的将军义荣，兵马散在摄津、河内各城。堺的商家在掂量：给三好送铁炮粮米，还是把钱留着，等新来的人开口。"
+region = "堺"
+date = [1568, 10, 31]
+history = { date = [1568, 10, 31], outcome = "nobunaga_enters_kyoto" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md", "太田牛一《信长公记》相关年条；研究P §1"]
+sides = [
+  { key = "support", name = "三好氏", faction = "miyoshi", port = "sakai" },
+  { key = "opposition", name = "织田氏", faction = "oda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "给三好诸将送军资", port = "sakai", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "替三好运铁炮与硝药", port = "sakai", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "往摄津三好诸城运米与木料", port = "sakai", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "nobunaga_enters_kyoto", when = "<= 0", default = true, news = "进京卖刀的堺人回来讲，织田的兵跟在义昭公身后进了京都，队伍从东山排到三条。又听说织田要向堺索两万贯矢钱，会所里吵了一整夜。", chronicle = "永禄十一年九月，织田信长奉足利义昭入京。", effects = [{ kind = "flag", flag = "h30_nobunaga_kyoto_nobunaga_enters_kyoto" }] },
+  { key = "miyoshi_holds_kyoto", when = "> 0", news = "堺的码头上说，织田的兵到了近江就停住了，三好的人还守着京都七口，进出的米车照旧收关钱。会合众松了口气，铁炮的价钱却又涨了。", chronicle = "永禄十一年秋，三好诸将拒织田于近江，足利义昭未能入京。", effects = [{ kind = "flag", flag = "h30_nobunaga_kyoto_miyoshi_holds_kyoto" }] },
+]
+window = [[1567, 1, 1], [1568, 10, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["观音寺骚动以后，六角家的重臣各怀心思，近江挡不了织田几天。"]
+requires = [
+  { event = "h17_okehazama", outcome = "nobunaga_victory" },
+]
+
+# H31；事实上下文：1568起义战争，1572海上乞丐取布里尔；舰船补给与武器走私。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h31_dutch_revolt"
+ripple_budget = 3000
+title = "尼德兰起义"
+summary = "1568年起，尼德兰的贵族与城市反对西班牙的重税，也反对阿尔瓦公爵的严刑。奥兰治的威廉在德意志募兵，海上乞丐的船却缺枪缺粮，弗利辛恩是他们靠岸的港。这里可以出钱、运枪、送粮，安特卫普的莉斯贝特也可以谈条件。"
+region = "弗利辛恩"
+date = [1572, 4, 1]
+history = { date = [1572, 4, 1], outcome = "sea_beggars_take_brielle" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "哈布斯堡尼德兰", faction = "netherlands", port = "flushing" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助起义的军费", port = "flushing", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运火绳枪与火药进港", port = "flushing", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给难户送粮与药", port = "flushing", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "约莉斯贝特当面谈", port = "antwerp", max_points = 16, with = "liesbeth_devries", cost = 1000, points = 16, leak = 15, risk = "谈的条件若走漏，西班牙的税吏会先知道，她在铸币所的差事也保不住。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { netherlands = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "sea_beggars_take_brielle", when = "<= 0", default = true, news = "弗利辛恩的酒馆里传来消息：海上乞丐的船开进了布里尔，港口的西班牙税吏跑散了。", chronicle = "1572年4月1日，海上乞丐夺下布里尔，尼德兰北方有了第一处立足的港。", effects = [{ kind = "flag", flag = "h31_dutch_revolt_sea_beggars_take_brielle" }] },
+  { key = "revolt_supplied", when = "> 0", news = "弗利辛恩有人讲，开春前船上就装足了枪与粮，北方几座城的守军开了门。西班牙的税吏躲进了海边的堡垒。", chronicle = "1572年，尼德兰北方的城门先后向起义军打开。", effects = [{ kind = "flag", flag = "h31_dutch_revolt_revolt_supplied" }] },
+]
+window = [[1568, 1, 1], [1572, 4, 1]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["西班牙驻军的兵饷按月从布鲁塞尔发出，税吏守着每个港口的仓门，一船枪没卸就先被登记。"]
+
+# H32；事实上下文：摩里斯科起义镇压后分散迁入卡斯蒂利亚；不写成整个西班牙穆斯林同年驱逐。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h32_alpujarras"
+ripple_budget = 3000
+title = "阿尔普哈拉斯"
+summary = "1568年冬天，格拉纳达山里的摩里斯科人起来反对禁止阿拉伯语与摩尔服饰的敕令。奥地利的唐·胡安带西班牙兵上山镇压。北非的得土安愿意接应，枪与粮能不能送进山里，要看墨西拿的谈判。"
+region = "得土安"
+date = [1571, 3, 31]
+history = { date = [1571, 3, 31], outcome = "moriscos_dispersed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "萨阿德摩洛哥", faction = "morocco", port = "tetouan" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助山里的起义", port = "tetouan", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运枪与火药上山", port = "tetouan", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给山里的村子送粮药", port = "tetouan", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "找唐·胡安谈过路与补给", port = "messina", max_points = 16, with = "don_juan_austria", cost = 1000, points = 16, leak = 15, risk = "消息若漏到宫廷去，山里的村子头一个要被搜。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_spanish", reputation = { morocco = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "moriscos_dispersed", when = "<= 0", default = true, news = "得土安的码头上传来消息，山里的摩里斯科人被打散，老人与妇孺被押往卡斯蒂利亚。", chronicle = "1571年，摩里斯科人被迁散到卡斯蒂利亚，山里的村子空了。", effects = [{ kind = "flag", flag = "h32_alpujarras_moriscos_dispersed" }] },
+  { key = "morisco_autonomy", when = "> 0", news = "得土安的船老大说，山里的摩里斯科人守住了几座村子，自己推出头人管事。", chronicle = "1571年，阿尔普哈拉斯的村子仍由摩里斯科人自治，西班牙的军队退回了平原。", effects = [{ kind = "flag", flag = "h32_alpujarras_morisco_autonomy" }] },
+]
+window = [[1568, 12, 1], [1571, 3, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["山里的粮道被断，海上的船靠岸前就会被西班牙的巡舰盯上。"]
+
+# H33；事实上下文：霍金斯与德雷克船队受袭；有限补给与预警提高撤离率。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h33_san_juan_ulua"
+ripple_budget = 3000
+title = "圣胡安·德·乌卢阿"
+summary = "1568年9月，英格兰的霍金斯与德雷克的船队在韦拉克鲁斯外海的圣胡安岛补给。西班牙的船队与岛上的炮台突然开火。你可以替英格兰人运粮与木料进船队，也能去戈尔韦找艾希林谈一条安全的航路。"
+region = "韦拉克鲁斯"
+date = [1568, 9, 23]
+history = { date = [1568, 9, 23], outcome = "english_fleet_shattered" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "英格兰王国", faction = "england", port = "veracruz" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助霍金斯的船队", port = "veracruz", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "替船队备粮与木料", port = "veracruz", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "分粮药给船上的人", port = "veracruz", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "去戈尔韦见艾希林", port = "galway", max_points = 16, with = "aisling", cost = 1000, points = 16, leak = 15, risk = "谈的事传到西班牙商人耳朵里，戈尔韦的船要先被扣在港里。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { england = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "english_fleet_shattered", when = "<= 0", default = true, news = "韦拉克鲁斯的酒馆里说，英格兰的船队在圣胡安岛上被炮火打散，只逃出两条船。", chronicle = "1568年9月，圣胡安·德·乌卢阿一役，英格兰的船队被西班牙的炮台打散。", effects = [{ kind = "flag", flag = "h33_san_juan_ulua_english_fleet_shattered" }] },
+  { key = "english_ships_escape", when = "> 0", news = "韦拉克鲁斯的渔夫看见英格兰的船队绕过岛后出了海湾，补给也装上了船。岸上的西班牙守兵骂了半天。", chronicle = "1568年，英格兰的船队带着补给从圣胡安岛脱身。", effects = [{ kind = "flag", flag = "h33_san_juan_ulua_english_ships_escape" }] },
+]
+window = [[1568, 1, 1], [1568, 9, 23]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["西班牙的船队和炮台都守在港口，英格兰人的补给快要见底。"]
+
+# H34；事实上下文：莽应龙攻陷阿瑜陀耶，暹罗进入附属状态。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h34_ayutthaya_fall"
+ripple_budget = 3000
+title = "大城之围"
+summary = "东吁的莽应龙率军围攻大城。城里的粮仓只够撑过一季，火器也所剩不多，宫廷的婆罗门还在择吉时。你可以在大城港出钱、运枪、送粮与木料，也能把粮药送到难民手里。"
+region = "大城"
+date = [1569, 8, 31]
+history = { date = [1569, 8, 31], outcome = "ayutthaya_falls" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "阿瑜陀耶王国", faction = "ayutthaya", port = "ayutthaya_port" },
+  { key = "opposition", name = "东吁王朝", faction = "taungoo" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助大城的守军", port = "ayutthaya_port", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送火器进大城", port = "ayutthaya_port", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮与木料进大城", port = "ayutthaya_port", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "开仓放粮赈城中难民", port = "ayutthaya_port", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "ayutthaya_falls", when = "<= 0", default = true, news = "大城港的船主说，城破之后东吁的旗子挂上了宫墙，暹罗从此要向勃固纳贡。", chronicle = "1569年，大城失守，暹罗降为东吁的附属。", effects = [{ kind = "flag", flag = "h34_ayutthaya_fall_ayutthaya_falls" }, { kind = "port_owner", port = "ayutthaya_port", faction = "taungoo" }] },
+  { key = "ayutthaya_holds", when = "> 0", news = "大城港的水手说，粮船与火器船陆续从海上进港，莽应龙的围营退到了河对岸。", chronicle = "1569年，大城守住，港口重新对外开放。", effects = [{ kind = "flag", flag = "h34_ayutthaya_fall_ayutthaya_holds" }, { kind = "port_state", port = "ayutthaya_port", state = "open" }, { kind = "port_owner", port = "ayutthaya_port", faction = "ayutthaya" }] },
+]
+window = [[1568, 1, 1], [1569, 8, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["东吁的象阵与火炮压在城外，河道一封，船就进不了城。"]
+
+# H35；事实上下文：尼科西亚1570年陷落、法马古斯塔1571年投降；守将随后被杀。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h35_cyprus_siege"
+ripple_budget = 3000
+title = "塞浦路斯之围"
+summary = "1570年七月，奥斯曼的大军在塞浦路斯登陆，尼科西亚九月陷落。守在法马古斯塔的威尼斯人还在城墙上撑着，粮与火药一天比一天少。送钱、送火器、送粮，都得冲过奥斯曼的封锁进港。"
+region = "法马古斯塔"
+date = [1571, 8, 1]
+history = { date = [1571, 8, 1], outcome = "famagusta_falls" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "威尼斯共和国", faction = "venice", port = "famagusta" },
+  { key = "opposition", name = "奥斯曼帝国", faction = "ottoman" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助法马古斯塔的守军", port = "famagusta", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运火铳大炮进法马古斯塔", port = "famagusta", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "运粮与木料进法马古斯塔", port = "famagusta", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "给城中的饥民发粮与药", port = "famagusta", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "famagusta_falls", when = "<= 0", default = true, news = "听说法马古斯塔的威尼斯人开了城门，说好放兵出城，奥斯曼的统帅却违了约，守将布拉加丁被剥了皮。", chronicle = "1571年八月，法马古斯塔降于奥斯曼，守将布拉加丁被杀。", effects = [{ kind = "flag", flag = "h35_cyprus_siege_famagusta_falls" }, { kind = "port_owner", port = "famagusta", faction = "ottoman" }] },
+  { key = "famagusta_holds", when = "> 0", news = "法马古斯塔的船老大说，威尼斯的粮船闯过了封锁，海口重新开了，城头的圣马可旗还在风里。", chronicle = "1571年八月，法马古斯塔的城墙仍在威尼斯人手中。", effects = [{ kind = "flag", flag = "h35_cyprus_siege_famagusta_holds" }, { kind = "port_state", port = "famagusta", state = "open" }, { kind = "port_owner", port = "famagusta", faction = "venice" }] },
+]
+window = [[1570, 1, 1], [1571, 8, 1]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["威尼斯的援舰迟迟不到，奥斯曼的舰队压住了港口。"]
+
+# H36；事实上下文：海伦1570遭葡萄牙人刺杀，巴布拉围城至1575年葡人撤离。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h36_ternate_revolt"
+ripple_budget = 3000
+title = "特尔纳特起义"
+summary = "1570年，特尔纳特苏丹海伦被请进葡萄牙人的要塞吃饭，门口的卫士被留在外面，他在堡门口被刺死。儿子巴布拉接过王位，在岛上围了要塞五年。你的船能替城外送粮、送药，也能替两边传话。"
+region = "特尔纳特"
+date = [1575, 12, 31]
+history = { date = [1575, 12, 31], outcome = "portuguese_expelled" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "特尔纳特苏丹国", faction = "ternate", port = "ternate_port" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助围城的特尔纳特军", port = "ternate_port", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "往岛上送米与木料", port = "ternate_port", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "开仓赈济岛民", port = "ternate_port", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与巴布拉谈通航与供货", port = "ternate_port", max_points = 16, with = "babullah", cost = 1000, points = 16, leak = 15, risk = "消息若传进要塞，葡萄牙守堡的人会先截下巴布拉的信使。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { ternate = 0, portugal = 0 } },
+]
+outcomes = [
+  { key = "portuguese_expelled", when = "<= 0", default = true, news = "码头边的老渔妇说，葡萄牙人终于交堡上船，走的时候两边都没有人受伤。", chronicle = "1575年，特尔纳特的要塞易主，葡萄牙人离岛而去。", effects = [{ kind = "flag", flag = "h36_ternate_revolt_portuguese_expelled" }, { kind = "port_owner", port = "ternate_port", faction = "ternate" }] },
+  { key = "fortress_evacuated_early", when = "> 0", news = "特尔纳特的码头上有人说，葡萄牙人的要塞空得比谁都早，钥匙已经交到了巴布拉手里。", chronicle = "1573年，葡萄牙人提前交出特尔纳特的要塞。", effects = [{ kind = "flag", flag = "h36_ternate_revolt_fortress_evacuated_early" }] },
+]
+window = [[1570, 2, 1], [1575, 12, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["要塞的炮压着港口，强攻就是送命，巴布拉只能围。"]
+
+# H37；事实上下文：神圣同盟大胜，但未立即收复塞浦路斯。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h37_lepanto"
+ripple_budget = 3000
+title = "勒班陀海战"
+summary = "1571年10月7日，神圣同盟的舰队与奥斯曼的舰队在勒班陀湾口相遇。阿尔及尔的乌卢赤·阿里在左翼突围，带走了三十多条船。你能在科孚替哪一方补给，也能去阿尔及尔找他谈退路。"
+region = "科孚"
+date = [1571, 10, 7]
+history = { date = [1571, 10, 7], outcome = "holy_league_victory" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "奥斯曼帝国", faction = "ottoman", port = "corfu" },
+  { key = "opposition", name = "威尼斯共和国", faction = "venice" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助奥斯曼舰队的饷银", port = "corfu", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送火铳与火炮上船", port = "corfu", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给加莱船补粮与木料", port = "corfu", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与乌卢赤·阿里谈退路", port = "algiers", max_points = 16, with = "uluc_ali", cost = 1000, points = 16, leak = 15, risk = "威尼斯的密探若听见风声，阿尔及尔来的人在科孚港里就脱不了身。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_arabic", reputation = { ottoman = 0, venice = 0 } },
+]
+outcomes = [
+  { key = "holy_league_victory", when = "<= 0", default = true, news = "科孚的水手讲，勒班陀湾里漂满了断桨，神圣同盟的船队赢了，奥斯曼的加莱船折了大半。", chronicle = "1571年10月，神圣同盟在勒班陀大败奥斯曼舰队。", effects = [{ kind = "flag", flag = "h37_lepanto_holy_league_victory" }] },
+  { key = "ottoman_fleet_holds", when = "> 0", news = "逃回科孚的桨手说，勒班陀湾口的烟雾散开时，奥斯曼的加莱船大半未损，掉头回了海峡。", chronicle = "1571年10月，奥斯曼的舰队保住主力，塞浦路斯的海路仍在其手。", effects = [{ kind = "flag", flag = "h37_lepanto_ottoman_fleet_holds" }] },
+]
+window = [[1570, 1, 1], [1571, 10, 7]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["加莱船上的桨手多是囚犯，一场海战下来，人手与船身都折得快。"]
+
+# H38；事实上下文：西班牙占领与城市建制分阶段，5月作冲突结算窗口。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h38_manila"
+ripple_budget = 3000
+title = "马尼拉"
+summary = "1571年，西班牙的黎牙实比在马尼拉河口打败了拉惹苏莱曼，王在邦库赛的河岸上战死。吕宋诸邦的人和马尼拉的华人商贩，还守着河口的几处码头。送火器与粮的船要先过河口，要谈和约就得进城找拉惹。"
+region = "汤都"
+date = [1571, 5, 31]
+history = { date = [1571, 5, 31], outcome = "spanish_manila" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "吕宋诸邦", faction = "luzon", port = "tondo" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助汤都的吕宋守军", port = "tondo", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "给汤都送火铳与火药", port = "tondo", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "往汤都送米与木料", port = "tondo", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "与拉惹苏莱曼谈和约", port = "tondo", max_points = 16, with = "rajah_sulayman", cost = 1000, points = 16, leak = 15, risk = "西班牙人若先听到风声，拉惹苏莱曼派来的人会被扣在城门外。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { luzon = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "spanish_manila", when = "<= 0", default = true, news = "汤都的船工说，西班牙人的旗已插到马尼拉河口，拉惹苏莱曼死在了邦库赛，码头上的吕宋人往内陆逃。", chronicle = "1571年，西班牙人入马尼拉，拉惹苏莱曼战死。", effects = [{ kind = "flag", flag = "h38_manila_spanish_manila" }, { kind = "port_state", port = "manila", state = "open" }, { kind = "port_owner", port = "manila", faction = "spain" }] },
+  { key = "luzon_holds_manila", when = "> 0", news = "汤都的老艄公说，吕宋的王旗还在马尼拉的木栅上，西班牙的船被挡在了湾外。", chronicle = "1571年，吕宋诸邦守住马尼拉，王城未破。", effects = [{ kind = "flag", flag = "h38_manila_luzon_holds_manila" }, { kind = "port_state", port = "manila", state = "open" }, { kind = "port_owner", port = "manila", faction = "luzon" }] },
+]
+window = [[1570, 1, 1], [1571, 5, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["西班牙人的火炮压住河口，马尼拉的木栅挡不住。"]
+
+# H39；事实上下文：R08主线索引；比叡山不是本愿寺，hongwanji仅为可交付的避难援助网络。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h39_hiei_reference"
+ripple_budget = 3000
+title = "比叡山事件"
+summary = "元龟二年九月，织田信长的兵从坂本攻上比叡山，放火烧了根本中堂与大讲堂，逃上八王子山的僧俗男女被一个个斩首。石山本愿寺与信长的仗已经打了一年，堺的门徒都在打听山上还有没有人活着。"
+region = "堺"
+date = [1571, 9, 30]
+history = { date = [1571, 9, 30], outcome = "enryakuji_burned" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "石山本愿寺", faction = "hongwanji", port = "sakai" },
+  { key = "opposition", name = "织田氏", faction = "oda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "enryakuji_burned", when = ">= -9223372036854775808", default = true, news = "堺的一向宗道场里念了一夜的佛。去近江收账的商人回来说，八王子山下的尸首没人敢收，去坂本的路口都站着织田的兵。", chronicle = "元龟二年九月十二日，织田信长以山门曾容浅井、朝仓之兵为由，纵火焚比叡山。", effects = [{ kind = "flag", flag = "h39_hiei_reference_enryakuji_burned" }] },
+]
+window = [[1571, 1, 1], [1571, 9, 30]]
+requires = [
+  { event = "r08_hiei_refugees", outcome = "enryakuji_burned" },
+]
+
+# H40；事实上下文：R09主线索引；救人分支不改写整场法国战争。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h40_bartholomew_reference"
+ripple_budget = 3000
+title = "圣巴托洛缪事件"
+summary = "1572年8月，巴黎的天主教徒拔刀对付胡格诺派，血很快流到了外省。拉罗谢尔的码头上挤满了逃来的人，要船，要路，要一个能走的方向。码头上的船一艘比一艘贵，能把人送出去的船主只有几个。"
+region = "拉罗谢尔"
+date = [1572, 8, 24]
+history = { date = [1572, 8, 24], outcome = "massacre_spreads" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "法兰西王国", faction = "france", port = "la_rochelle" },
+  { key = "opposition", name = "法兰西王国", faction = "france" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "massacre_spreads", when = ">= -9223372036854775808", default = true, news = "拉罗谢尔的货栈里有人说，巴黎的屠杀已传到各省，逃来的新教徒一船一船往外海送。", chronicle = "1572年8月，巴黎的屠杀蔓延到外省，新教徒四散外逃。", effects = [{ kind = "flag", flag = "h40_bartholomew_reference_massacre_spreads" }] },
+]
+window = [[1572, 1, 1], [1572, 8, 24]]
+requires = [
+  { event = "r09_bartholomew_refugees", outcome = "massacre_spreads" },
+]
+
+# H41；事实上下文：最后的印加政权被征服，图帕克·阿马鲁被俘并在库斯科处死。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h41_vilcabamba"
+ripple_budget = 3000
+title = "比尔卡班巴"
+summary = "山里的比尔卡班巴是印加人最后的王庭。年轻的图帕克·阿马鲁守着太阳神殿，副王托莱多要的却是山里的每一个人。卡亚俄的枪炮与粮食、阿里卡的信使与船路，都有人能送进山去。"
+region = "卡亚俄"
+date = [1572, 9, 24]
+history = { date = [1572, 9, 24], outcome = "tupac_amaru_executed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "比尔卡班巴印加", faction = "vilcabamba", port = "callao" },
+  { key = "opposition", name = "秘鲁副王辖区", faction = "peru" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱资助比尔卡班巴", port = "callao", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运枪、炮与火药进山", port = "callao", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "送粮与木料进山", port = "callao", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "找伊卡谈撤离的船路", port = "arica", max_points = 16, with = "ika", cost = 1000, points = 16, leak = 15, risk = "谈判若从阿里卡的码头漏出去，托莱多的探子就知道山里要走哪条船路。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_spanish", reputation = { vilcabamba = 0, peru = 0 } },
+]
+outcomes = [
+  { key = "tupac_amaru_executed", when = "<= 0", default = true, news = "卡亚俄的码头上都在传：比尔卡班巴的图帕克·阿马鲁被俘了，在库斯科的广场上被斩首。", chronicle = "1572年，最后一位印加王图帕克·阿马鲁在库斯科被处死，比尔卡班巴就此陷落。", effects = [{ kind = "flag", flag = "h41_vilcabamba_tupac_amaru_executed" }] },
+  { key = "vilcabamba_survives", when = "> 0", news = "卡亚俄的船夫说，阿里卡传来话，山里的人在谷口与西班牙人谈妥了退路，比尔卡班巴的旗子还在山上。", chronicle = "1572年，比尔卡班巴的谈判有了结果，印加的王庭仍在山中。", effects = [{ kind = "flag", flag = "h41_vilcabamba_vilcabamba_survives" }] },
+]
+window = [[1571, 1, 1], [1572, 9, 24]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["进山的路就那么几条，谷口早被西班牙人的探子盯死。"]
+
+# H42；事实上下文：1573唐胡安取突尼斯，1574奥斯曼夺回突尼斯与拉格莱特。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h42_tunis_recapture"
+ripple_budget = 3000
+title = "突尼斯争夺"
+summary = "1573年，奥地利的唐·胡安率西班牙的舰队夺下突尼斯，次年奥斯曼的船队又开了回来。拉格莱特的堡垒是守军最后的退路，城里的火药只够几个月。西西里的粮船若能送进港里，守军还能多撑一季。"
+region = "突尼斯"
+date = [1574, 9, 13]
+history = { date = [1574, 9, 13], outcome = "ottoman_tunis" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "西班牙诸王国", faction = "spain", port = "tunis" },
+  { key = "opposition", name = "奥斯曼帝国", faction = "ottoman" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱给突尼斯的守军", port = "tunis", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "运枪炮火药进突尼斯", port = "tunis", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给突尼斯送粮食与木料", port = "tunis", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "找唐·胡安谈补给船期", port = "tunis", max_points = 16, with = "don_juan_austria", cost = 1000, points = 16, leak = 15, risk = "唐·胡安的信若落进奥斯曼的密探手里，船期会先被人截住。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_spanish", reputation = { spain = 0, ottoman = 0 } },
+]
+outcomes = [
+  { key = "ottoman_tunis", when = "<= 0", default = true, news = "突尼斯的市集里传开了：奥斯曼的船队进了城，拉格莱特的西班牙守军也撑不住了。", chronicle = "1574年，奥斯曼的舰队夺回突尼斯与拉格莱特。", effects = [{ kind = "flag", flag = "h42_tunis_recapture_ottoman_tunis" }, { kind = "port_owner", port = "tunis", faction = "ottoman" }] },
+  { key = "spanish_tunis", when = "> 0", news = "突尼斯的港口又挂上了西班牙的旗，西西里来的粮船一趟趟靠上码头。", chronicle = "1574年，西班牙守住了突尼斯，港口重新向商船开放。", effects = [{ kind = "flag", flag = "h42_tunis_recapture_spanish_tunis" }, { kind = "port_state", port = "tunis", state = "open" }, { kind = "port_owner", port = "tunis", faction = "spain" }] },
+]
+window = [[1573, 10, 1], [1574, 9, 13]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["拉格莱特的堡垒守军缺粮，西西里的援船又总是晚到。"]
+
+# H43；事实上下文：不把三段射击或纯骑兵集团当已证实史实；火器、阵地和协同共同起作用。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h43_nagashino"
+ripple_budget = 3000
+title = "长篠之战"
+summary = "天正三年五月，武田胜赖围三河的长篠城，织田信长与德川家康领兵来救，在设乐原挖壕、立起马防栅，摆开上千挺铁炮。热田港里的铅与硝石先卖给哪一边，哪一边的铁炮就打得更久。"
+region = "热田"
+date = [1575, 6, 29]
+history = { date = [1575, 6, 29], outcome = "oda_tokugawa_victory" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md", "太田牛一《信长公记》相关年条；研究P §1"]
+sides = [
+  { key = "support", name = "武田氏", faction = "takeda", port = "atsuta" },
+  { key = "opposition", name = "织田氏", faction = "oda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助武田胜赖的军费", port = "atsuta", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "替武田胜赖暗运铁炮硝石", port = "atsuta", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给长篠城下的武田军运粮与木料", port = "atsuta", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "oda_tokugawa_victory", when = "<= 0", default = true, news = "热田的商人说，设乐原那天从早上打到午后，武田的老将一个接一个倒在栅栏前，山县、马场都没回来。这阵子港里的铁匠，全在给织田家修铁炮。", chronicle = "天正三年五月二十一日，织田、德川联军大破武田胜赖于三河设乐原。", effects = [{ kind = "flag", flag = "h43_nagashino_oda_tokugawa_victory" }] },
+  { key = "takeda_victory", when = "> 0", news = "热田的鱼市上有人压低了嗓子说，设乐原的栅栏没挡住，武田的兵从侧面绕进了织田的阵，信长连夜退回岐阜。冈崎那边已经有人在收拾细软了。", chronicle = "天正三年五月，武田胜赖破织田、德川之军于设乐原，长篠城降。", effects = [{ kind = "flag", flag = "h43_nagashino_takeda_victory" }] },
+]
+window = [[1574, 1, 1], [1575, 6, 29]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["织田、德川合起来三万多人，武田胜赖围城的兵只有一万五千上下。"]
+
+# H44；事实上下文：旧历9月中旬、具体换算待核；兼定败退，非当场死亡。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h44_shimanto"
+ripple_budget = 3000
+title = "渡川之战"
+summary = "天正三年秋，被逐到丰后的一条兼定借大友家的势，在伊予招兵，要渡海回幡多，从长宗我部元亲手里夺回中村。四万十川口的下田是一条家的外港，兵粮、船与铁炮都得从这里上岸。"
+region = "下田（土佐）"
+date = [1575, 10, 31]
+history = { date = [1575, 10, 31], outcome = "ichijo_defeated" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "土佐一条氏", faction = "ichijo", port = "shimoda_tosa" },
+  { key = "opposition", name = "长宗我部氏", faction = "chosokabe" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱帮兼定在伊予募兵", port = "shimoda_tosa", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "替一条家运铁炮上岸", port = "shimoda_tosa", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "在下田囤兵粮与造船木", port = "shimoda_tosa", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "在府内与兼定议约", port = "funai", max_points = 16, with = "ichijo_kanesada", cost = 1000, points = 16, leak = 15, risk = "府内的南蛮寺人多口杂，话若漏到冈丰，元亲会先封住四万十川口。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_japanese", reputation = { ichijo = 0, chosokabe = 0 } },
+]
+outcomes = [
+  { key = "ichijo_defeated", when = "<= 0", default = true, news = "土佐下田的渔夫说，长宗我部的兵涉过四万十川，一条家的阵一冲就散了。兼定没死，带着几个人上了船，往伊予那边去了。", chronicle = "天正三年九月，长宗我部元亲败一条兼定于渡川，土佐归于一统。", effects = [{ kind = "flag", flag = "h44_shimanto_ichijo_defeated" }] },
+  { key = "ichijo_holds_hata", when = "> 0", news = "土佐下田港里传开了：四万十川一战，长宗我部的兵没能过河，兼定的旗又插回了中村御所。幡多的船家说，今年的津料又得交给一条家了。", chronicle = "天正三年秋，长宗我部元亲渡川不克，一条兼定复据幡多。", effects = [{ kind = "flag", flag = "h44_shimanto_ichijo_holds_hata" }] },
+]
+window = [[1574, 1, 1], [1575, 10, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["去年把兼定赶出中村的，正是一条家自己的家臣。"]
+
+# H45；事实上下文：保罗·迪亚斯·德·诺瓦伊斯建立罗安达据点，恩东加战争延续。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h45_luanda"
+ripple_budget = 3000
+title = "罗安达建城"
+summary = "葡萄牙人保罗·迪亚斯·德·诺瓦伊斯带着船和兵，要在罗安达泊地的岸上立一座据点。恩东戈的国王不肯让出海岸，姆平达的商路和奴隶的买卖都经过这一带。运枪运粮去姆平达，木墙能不能立起来就看这几船。"
+region = "罗安达泊地"
+date = [1576, 1, 31]
+history = { date = [1576, 1, 31], outcome = "portuguese_luanda" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "恩东戈王国", faction = "ndongo", port = "mpinda" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱资助恩东戈王国", port = "mpinda", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "送火枪、炮与火药去姆平达", port = "mpinda", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "给姆平达运粮与木料", port = "mpinda", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+]
+outcomes = [
+  { key = "portuguese_luanda", when = "<= 0", default = true, news = "姆平达的船长们说，葡萄牙人在罗安达泊地的木墙已经立起来了，恩东戈的人退到了河那边。", chronicle = "1576年初，葡萄牙人在罗安达立下据点，恩东戈的战争延续下去。", effects = [{ kind = "flag", flag = "h45_luanda_portuguese_luanda" }, { kind = "port_state", port = "luanda", state = "open" }, { kind = "port_owner", port = "luanda", faction = "portugal" }] },
+  { key = "negotiated_settlement", when = "> 0", news = "姆平达的商人传话：葡萄牙人与恩东戈的使者在海边议定了，岸上的木墙不立了。", chronicle = "1576年初，罗安达的木墙未能立起，葡萄牙与恩东戈议定。", effects = [{ kind = "flag", flag = "h45_luanda_negotiated_settlement" }] },
+]
+window = [[1575, 1, 1], [1576, 1, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["罗安达的兵粮全靠里斯本的船，一趟要走几个月。"]
+
+# H46；事实上下文：1576-08-07或09，两说待核；村上水军护送石山兵粮。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h46_first_kizugawa"
+ripple_budget = 3000
+title = "第一次木津川口"
+summary = "天正四年七月，毛利家与能岛、来岛的船队载着兵粮驶向大坂湾，要送进被织田围困的石山本愿寺。织田在木津川口摆下三百多条船拦截。堺离河口只隔一片浅滩，织田船上缺的火药、木料与米，大半要从堺的仓里出。"
+region = "堺"
+date = [1576, 8, 31]
+history = { date = [1576, 8, 31], outcome = "murakami_breaks_blockade" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md", "太田牛一《信长公记》相关年条；研究P §1"]
+sides = [
+  { key = "support", name = "织田氏", faction = "oda", port = "sakai" },
+  { key = "opposition", name = "毛利氏", faction = "mori" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "资助织田守湾的水军", port = "sakai", max_points = 20, value_per_point = 500 },
+  { key = "deliver_firearms", side = "support", kind = "arms", label = "往木津川口送大铁炮弹药", port = "sakai", max_points = 20, goods = ["arquebus", "gunpowder", "cannon"], value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "替织田的船补木料兵粮", port = "sakai", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "雇百地枫护住堺的补给船", port = "sakai", max_points = 16, with = "momochi_kaede", cost = 1000, points = 16, leak = 15, risk = "堺的一向宗门徒多，护船的约一传进石山，毛利的船就会改日子进湾。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { oda = 0, mori = 0 } },
+]
+outcomes = [
+  { key = "murakami_breaks_blockade", when = "<= 0", default = true, news = "堺的人站在海边看了一夜火光。第二天漂上岸的全是织田船的碎板，听说真锅七五三兵卫也没回来，石山的本愿寺倒是收到了米。", chronicle = "天正四年七月，毛利水军以焙烙火矢焚织田船于木津川口，兵粮入石山。", effects = [{ kind = "flag", flag = "h46_first_kizugawa_murakami_breaks_blockade" }] },
+  { key = "oda_blockade_holds", when = "> 0", news = "堺的米行一早就有人掐着指头算账：毛利的船队在木津川口被织田拦腰截住，运粮船烧了一半，剩下的掉头往西去了，石山今冬难熬。", chronicle = "天正四年七月，织田水军阻毛利粮船于木津川口，石山围城不解。", effects = [{ kind = "flag", flag = "h46_first_kizugawa_oda_blockade_holds" }] },
+]
+window = [[1575, 1, 1], [1576, 8, 31]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["能岛与来岛的船上带着焙烙火矢，陶罐一碎，船板就烧起来。"]
+
+# H47；事实上下文：西班牙军欠饷哗变劫城；伤亡估计有争议，不把七八千写成精确值。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h47_antwerp_fury"
+ripple_budget = 3000
+title = "安特卫普之劫"
+summary = "西班牙的老兵欠饷已久，在安特卫普闹起哗变，城里的商人与市民成了他们抢掠的对象。奥兰治的威廉坐镇代尔夫特，手里也缺现钱。欠饷若能在兵闹起来前付清，城门还能照常开着。"
+region = "安特卫普"
+date = [1576, 11, 4]
+history = { date = [1576, 11, 4], outcome = "antwerp_sacked" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "哈布斯堡尼德兰", faction = "netherlands", port = "antwerp" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = [
+  { key = "fund_support", side = "support", kind = "money", label = "出钱为哗变兵付欠饷", port = "antwerp", max_points = 20, value_per_point = 500 },
+  { key = "deliver_supplies", side = "support", kind = "deliver", label = "装船运粮与木料进安特卫普", port = "antwerp", max_points = 20, goods = ["grain", "timber"], value_per_point = 200 },
+  { key = "relieve_households", side = "support", kind = "relief", label = "运粮与药去赈济城中住户", port = "antwerp", max_points = 20, goods = ["grain", "medicine"], value_per_point = 200 },
+  { key = "negotiate_terms", side = "support", kind = "negotiate", label = "找莉斯贝特·德弗里斯谈付饷", port = "antwerp", max_points = 16, with = "liesbeth_devries", cost = 1000, points = 16, leak = 15, risk = "这笔谈判若漏给哗变的头目，他们会加码，城里的富商也会趁机抬价。", terms = ["secure_safe_passage", "honor_supply_agreement"], language = "lang_latin", reputation = { netherlands = 0, spain = 0 } },
+]
+outcomes = [
+  { key = "antwerp_sacked", when = "<= 0", default = true, news = "安特卫普的码头上传开了：西班牙的兵进了城，市集上的铺子一家接一家地关了门。", chronicle = "1576年11月，哗变的西班牙兵洗劫安特卫普，此后各家记下的死者数目相差甚远。", effects = [{ kind = "flag", flag = "h47_antwerp_fury_antwerp_sacked" }, { kind = "port_state", port = "antwerp", state = "sacked", days = 90 }] },
+  { key = "arrears_paid", when = "> 0", news = "安特卫普的船工说，饷银在最后关头凑齐了，哗变的兵领了钱，各自回营去了。", chronicle = "1576年11月，安特卫普的欠饷付清，闹事的兵散回了营房。", effects = [{ kind = "flag", flag = "h47_antwerp_fury_arrears_paid" }] },
+]
+window = [[1576, 1, 1], [1576, 11, 4]]
+need = { kinds = 3 }
+counter = { side = "opposition", pct = 25, max = 12 }
+why_hard = ["哗变的士兵只认现钱，安特卫普的市政官凑不出一个月的饷。"]
+
+# H48；事实上下文：1579会见巴布拉，1580返回普利茅斯；不能在1577起航时发放完成旗标。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h48_drake_circumnavigation"
+ripple_budget = 3000
+title = "德雷克环球航行"
+summary = "德雷克的金鹿号从普利茅斯出海，绕过南美南端的海峡，沿着智利与秘鲁的海岸劫掠西班牙的船。港口里的人只能等消息，船出了海，岸上插不上手。"
+region = "普利茅斯"
+date = [1580, 9, 26]
+history = { date = [1580, 9, 26], outcome = "drake_returns" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "英格兰王国", faction = "england", port = "plymouth" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "drake_returns", when = ">= -9223372036854775808", default = true, news = "普利茅斯的酒馆里传开了：德雷克的金鹿号绕了地球一圈，满舱是西班牙人的银子。", chronicle = "1580年9月，德雷克的金鹿号回到普利茅斯，环球航行告终。", effects = [{ kind = "flag", flag = "h48_drake_circumnavigation_drake_returns" }] },
+]
+window = [[1577, 12, 13], [1580, 9, 26]]
+
+# H36；事实上下文：海伦遇刺触发长期围城，与1575年葡人离开分开；日期沿研究Q通说。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h36_hairun_assassination"
+ripple_budget = 3000
+title = "海伦遇刺"
+summary = "特尔纳特苏丹海伦应邀进了葡萄牙人的要塞，卫士被留在门外。岛上的丁香园照旧采摘，没人料到苏丹会死在门口。"
+region = "特尔纳特"
+date = [1570, 2, 28]
+history = { date = [1570, 2, 28], outcome = "hairun_killed" }
+basis = "historical"
+sources = ["docs/research/terra16/Q_world_1540.md", "docs/TERRA16.md §11"]
+sides = [
+  { key = "support", name = "特尔纳特苏丹国", faction = "ternate", port = "ternate_port" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "hairun_killed", when = ">= -9223372036854775808", default = true, news = "特尔纳特港的渔民说，苏丹进了葡萄牙人的堡，卫士在门外等到天黑，等来的是他的尸首。", chronicle = "1570年2月，特尔纳特苏丹海伦在葡人要塞前遇刺身亡。", effects = [{ kind = "flag", flag = "h36_hairun_assassination_hairun_killed" }] },
+]
+window = [[1570, 2, 28], [1570, 2, 28]]
+
+# H43；事实上下文：新城市记旧历五月十六返程被捕并处刑；沿研究P同月五月二十一=六月二十九推算为1575-06-24。逸话的同时代史料仍待核，结算须早于长篠战役。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h43_nagashino_messenger"
+ripple_budget = 3000
+title = "长篠的使者"
+summary = "天正三年，奥平家守着的长篠城被武田胜赖的大军围得水泄不通。足轻鸟居强右卫门趁夜潜出城去，赶到冈崎讨救兵，见过家康与信长，又揣着援军将至的消息往回赶。"
+region = "热田"
+date = [1575, 6, 24]
+history = { date = [1575, 6, 24], outcome = "torii_suneemon_killed" }
+basis = "historical"
+sources = ["docs/research/terra16/P_eastasia_1540.md §A8", "docs/TERRA16.md §11", "https://www.city.shinshiro.lg.jp/kanko/hito/torisuneemon.html"]
+sides = [
+  { key = "support", name = "德川氏", faction = "tokugawa", port = "atsuta" },
+  { key = "opposition", name = "武田氏", faction = "takeda" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "torii_suneemon_killed", when = ">= -9223372036854775808", default = true, news = "热田的客栈里，三河来的马夫说，长篠城有个叫强右卫门的足轻，报信回城时让武田兵捉了，押到城下还冲城里喊援军快到，随后就被绑上磔柱刺死了。", chronicle = "天正三年五月，长篠城足轻鸟居强右卫门求援还城，为武田军所执，死于城下。", effects = [{ kind = "flag", flag = "h43_nagashino_messenger_torii_suneemon_killed" }] },
+]
+window = [[1575, 6, 1], [1575, 6, 24]]
+
+
+# 补充新闻；事实上下文：采用研究Q记第谷1572-11-11的观测日；黑暗之海雾退属于设计的虚构层，不冒称天文史实。
+# 日期精度：day；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "h56_cassiopeia_nova"
+ripple_budget = 3000
+title = "仙后座新星"
+summary = "1572年11月，仙后座出现一颗新星，亮过金星，十几个月后才渐渐熄灭。丹麦的年轻学者第谷在回家的路上抬头看见了它，欧洲的学者从此争论天上的东西会不会变。哥本哈根的人只能夜夜仰头看。"
+region = "哥本哈根"
+date = [1572, 11, 11]
+window = [[1572, 11, 11], [1572, 11, 11]]
+history = { date = [1572, 11, 11], outcome = "nova_observed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md"]
+sides = [{ key = "support", name = "丹麦—挪威", faction = "denmark_norway", port = "copenhagen" }, { key = "opposition", name = "神圣罗马帝国", faction = "holy_roman_empire" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "nova_observed", when = ">= -9223372036854775808", default = true, news = "哥本哈根的码头上传开了：天上多了一颗新星，比金星还亮。有水手说，北边的雾也跟着退了一圈。", chronicle = "1572年11月，第谷在仙后座见到一颗新星，亮过金星。", effects = [{ kind = "flag", flag = "h56_cassiopeia_nova_nova_observed" }] }]
+
+# 补充新闻；事实上下文：1577年11月的大彗星，第谷自11月13日起观测；十王聚会属设计虚构层，不把彗星与战事的占验写成事实。
+# 日期精度：month；窗口末只表示结算时间，不把未核实的日数当史实。
+[[events]]
+key = "h56_great_comet"
+ripple_budget = 3000
+title = "大彗星"
+summary = "1577年十一月，北天一颗大彗星拖着长尾掠过。丹麦的第谷在岛上的观测台里每夜记下它的方位，哥本哈根的学者托人来借他的数字，抄本一份份传开。"
+region = "哥本哈根"
+date = [1577, 11, 30]
+window = [[1577, 11, 1], [1577, 11, 30]]
+history = { date = [1577, 11, 30], outcome = "comet_observed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10.4（秘史与后续新闻）", "docs/research/terra16/Q_world_1540.md"]
+sides = [{ key = "support", name = "丹麦—挪威", faction = "denmark_norway", port = "copenhagen" }, { key = "opposition", name = "神圣罗马帝国", faction = "holy_roman_empire" }]
+balance = 0
+roll = 0
+levers = []
+outcomes = [{ key = "comet_observed", when = ">= -9223372036854775808", default = true, news = "哥本哈根的书商说，第谷的彗星记录一抄再抄，城里的抄本摊子一早就摆满了。", chronicle = "1577年十一月，丹麦的第谷开始测量一颗大彗星的位置。", effects = [{ kind = "flag", flag = "h56_great_comet_comet_observed" }] }]

@@ -1,0 +1,891 @@
+/* 标题画面与主角创建的样式。颜色取自 art/palette.ts 的共享调色板（注释里标出对应的色阶）。
+   窗框与羊皮纸底纹是程序生成的像素图，由 StartScreen 以 CSS 变量 --ts-frame / --ts-parchment 传入；
+   没有画布时（测试环境）退回纯色边框。 */
+
+/* ───────────── 整体布局：背景场景 + 左侧标题菜单 + 右侧窗口 ───────────── */
+.title-screen {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #151c3d; /* night[1]，与天空顶端相接 */
+  color: #f3e3c3; /* paper */
+}
+.title-scene.pixel-stage {
+  position: absolute;
+  inset: 0;
+  align-items: flex-end; /* 场景贴底，上方多出来的部分用夜空色补齐 */
+  background: #151c3d;
+}
+.title-ui {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(520px, 700px);
+  gap: 24px;
+  padding: 16px clamp(16px, 3vw, 40px) 12px;
+  align-items: start;
+}
+.ts-sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ───────────── 标题与主菜单 ───────────── */
+.title-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-height: calc(100vh - 28px);
+  padding-top: 12px;
+  /* 宽屏时整体右移，让出左侧岬角上的灯塔 */
+  padding-left: clamp(0px, calc(56vw - 560px), 240px);
+}
+.title-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.title-emblem {
+  filter: drop-shadow(0 4px 0 #1a142399);
+}
+.title-name {
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  line-height: 1;
+  font-weight: 700;
+}
+.title-name-en {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
+  font-size: clamp(46px, 5.6vw, 80px);
+  letter-spacing: 0.04em;
+  padding: 0 6px 4px;
+  /* 金字：分成四阶的硬边渐变（gold 色阶），像素描边用叠加的硬投影 */
+  background: linear-gradient(#fff3b0 0 24%, #f5d66b 24% 50%, #dca434 50% 76%, #a86b1c 76%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(3px 0 0 #2b1b17) drop-shadow(-3px 0 0 #2b1b17) drop-shadow(0 3px 0 #2b1b17)
+    drop-shadow(0 -3px 0 #2b1b17) drop-shadow(0 6px 0 #1a1423aa);
+}
+.title-name-zh {
+  position: relative;
+  font-size: 22px;
+  letter-spacing: 0.6em;
+  padding: 7px 8px 7px calc(8px + 0.6em);
+  color: #fff3b0; /* gold[4] */
+  background: #8c1f28; /* red[1] */
+  border-top: 3px solid #2b1b17;
+  border-bottom: 3px solid #2b1b17;
+  box-shadow:
+    inset 0 3px 0 #c8373a,
+    inset 0 -3px 0 #4a1018;
+  text-shadow: 2px 2px 0 #4a1018;
+}
+/* 缎带两端的燕尾 */
+.title-name-zh::before,
+.title-name-zh::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  width: 22px;
+  height: calc(100% - 2px);
+  background: #4a1018;
+  border-top: 3px solid #2b1b17;
+  border-bottom: 3px solid #2b1b17;
+}
+.title-name-zh::before {
+  left: -22px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 9px 50%);
+}
+.title-name-zh::after {
+  right: -22px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 50%, 100% 100%, 0 100%);
+}
+.title-tagline {
+  margin: 14px 0 0;
+  font-size: 15px;
+  letter-spacing: 0.25em;
+  color: #ffd79a; /* dusk[4] */
+  text-shadow:
+    2px 2px 0 #1a1423,
+    -1px -1px 0 #1a1423;
+}
+.title-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 12px 20px 12px 12px;
+  background: #1a1423b3;
+  box-shadow:
+    0 0 0 2px #2b1b17,
+    inset 0 0 0 2px #5c3a21,
+    0 4px 0 2px #1a142366;
+}
+.title-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #e2c796; /* parchment */
+  background: none;
+  border: 0;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-shadow: 2px 2px 0 #1a1423;
+}
+.title-menu-item:hover,
+.title-menu-item.is-active {
+  color: #f5d66b; /* gold[3] */
+}
+.title-menu-item:focus-visible {
+  outline: 3px solid #4fd0c4; /* teal[3] */
+  outline-offset: 2px;
+}
+.title-menu-cursor {
+  visibility: hidden;
+}
+.title-menu-item:hover .title-menu-cursor,
+.title-menu-item:focus-visible .title-menu-cursor,
+.title-menu-item.is-active .title-menu-cursor {
+  visibility: visible;
+}
+.title-menu-item.is-active .title-menu-cursor {
+  animation: ts-nudge 0.8s steps(1) infinite;
+}
+/* 主菜单的“继续”（11-03）：下面一行小字写明是哪一局；读档途中按钮发灰 */
+.title-menu-continue {
+  flex-wrap: wrap;
+  row-gap: 0;
+}
+.title-menu-note {
+  flex-basis: 100%;
+  padding-left: 25px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-align: left;
+  color: #d6cbb8; /* plaster[2] */
+}
+.title-menu-item:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+/* 读档途中、等世界读进来时的状态行 */
+.title-wait {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #ffd79a; /* dusk[4] */
+  text-shadow: 1px 1px 0 #1a1423;
+}
+@keyframes ts-nudge {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+.title-footer {
+  margin: auto 0 0;
+  font-size: 12px;
+  color: #d6cbb8; /* plaster[2] */
+  text-shadow: 1px 1px 0 #1a1423;
+}
+
+/* ───────────── 窗口：木框 + 黄铜包角 + 羊皮纸底，标题做成牌匾 ───────────── */
+.ts-window {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 48px);
+  /* 切换“新的航程 / 读取存档”时窗口大小不要跳动太多 */
+  min-height: min(520px, calc(100vh - 48px));
+  margin-top: 20px;
+  border: 24px solid #5c3a21; /* wood[1]：没有像素窗框时的退路 */
+  border-image: var(--ts-frame, none) 8 / 24px stretch;
+  background: #e2c796 var(--ts-parchment, none) repeat;
+  background-size: 64px 64px;
+  image-rendering: pixelated;
+  color: #2b1b17;
+  box-shadow: 0 12px 0 -4px #1a142399;
+}
+.ts-plaque {
+  display: flex;
+  justify-content: center;
+  margin: -44px 0 2px;
+  pointer-events: none;
+}
+.ts-plaque h2 {
+  margin: 0;
+  padding: 7px 30px 7px calc(30px + 0.4em);
+  font-size: 18px;
+  letter-spacing: 0.4em;
+  color: #f5d66b;
+  background: #5c3a21;
+  border: 2px solid #2b1b17;
+  box-shadow:
+    inset 2px 2px 0 #b8804a,
+    inset -2px -2px 0 #3b2416,
+    0 3px 0 #2b1b17;
+  text-shadow: 2px 2px 0 #2b1b17;
+}
+.ts-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.ts-body {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 16px 6px;
+}
+.ts-section + .ts-section {
+  margin-top: 6px;
+}
+.ts-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 8px;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  color: #5c3a21;
+}
+.ts-heading::before,
+.ts-heading::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #7d5f36 0 6px, transparent 6px 9px);
+}
+.ts-lead,
+.ts-empty {
+  margin: 8px 0 12px;
+  color: #5c3a21;
+}
+
+/* ───────────── 剧本卡片 ───────────── */
+.ts-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 12px;
+}
+.ts-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: #f3e3c3; /* paper */
+  border: 2px solid #7d5f36; /* parchmentDeep */
+  box-shadow: 0 3px 0 #7d5f36;
+  cursor: pointer;
+}
+.ts-card:hover {
+  border-color: #2b1b17;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #7d5f36;
+}
+.ts-card.is-selected {
+  background: #fffaf0;
+  border-color: #2b1b17;
+  box-shadow:
+    0 0 0 3px #dca434,
+    0 4px 0 3px #a86b1c;
+}
+.ts-card:has(input:focus-visible) {
+  outline: 3px solid #239a9a;
+  outline-offset: 5px;
+}
+.ts-card-art {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background: #23305e;
+  border: 2px solid #2b1b17;
+  line-height: 0;
+  overflow: hidden;
+}
+.ts-card-seal {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 3px 6px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  color: #fff3b0;
+  background: #c8373a;
+  border: 2px solid #4a1018;
+  box-shadow: inset 1px 1px 0 #ec6a5c;
+}
+.ts-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ts-card-name {
+  font-size: 16px;
+  color: #3b2416;
+  letter-spacing: 0.05em;
+}
+.ts-card-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #5c3a21;
+}
+.ts-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 2px dotted #b8955f;
+  font-size: 12.5px;
+}
+.ts-fact {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+.ts-fact-pair {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 3px;
+}
+.ts-fact-pair .ts-fact-k {
+  width: auto;
+}
+.ts-fact-k {
+  flex: none;
+  width: 3.4em;
+  color: #8a5a32;
+}
+.ts-fact-v {
+  color: #2b1b17;
+  font-weight: 600;
+}
+.ts-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────────── 船长：头像、外貌、姓名 ───────────── */
+.ts-captain {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.ts-portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.ts-portrait-stage {
+  position: relative;
+}
+/* ◀ ▶ 压在头像框的左右两侧 */
+.ts-portrait-stage .ts-arrow-prev,
+.ts-portrait-stage .ts-arrow-next {
+  position: absolute;
+  top: calc(50% - 18px);
+  z-index: 1;
+}
+.ts-portrait-stage .ts-arrow-prev {
+  left: -14px;
+}
+.ts-portrait-stage .ts-arrow-next {
+  right: -14px;
+}
+.ts-portrait-stage .ts-arrow-prev:active:not(:disabled),
+.ts-portrait-stage .ts-arrow-next:active:not(:disabled) {
+  top: calc(50% - 16px);
+}
+.ts-portrait-frame {
+  line-height: 0;
+  /* 64×64 头像放大 3 倍（192px）+ 两侧 12px 画框，给右侧 6 列外貌缩略图留出位置 */
+  border: 12px solid #5c3a21;
+  border-image: var(--ts-frame, none) 8 / 12px stretch;
+  background: #23305e;
+}
+.ts-look-count {
+  margin-left: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #8a5a32;
+  font-variant-numeric: tabular-nums;
+}
+.ts-nameplate {
+  min-width: 168px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  padding: 5px 10px;
+  color: #f5d66b;
+  background: #5c3a21;
+  border: 2px solid #2b1b17;
+  box-shadow:
+    inset 2px 2px 0 #8a5a32,
+    inset -2px -2px 0 #3b2416;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-shadow: 1px 1px 0 #2b1b17;
+}
+.ts-captain-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.ts-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ts-field > label,
+.ts-field-label {
+  font-weight: 700;
+  font-size: 13px;
+  color: #5c3a21;
+  letter-spacing: 0.1em;
+}
+.ts-field-row {
+  display: flex;
+  gap: 8px;
+}
+.ts-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 16px;
+  padding: 6px 10px;
+  color: #2b1b17;
+  background: #fffaf0;
+  border: 2px solid #2b1b17;
+  border-radius: 0;
+  box-shadow: inset 2px 2px 0 #b8955f;
+}
+.ts-input::placeholder {
+  color: #b8955f;
+}
+.ts-input:focus {
+  outline: 3px solid #239a9a;
+  outline-offset: 1px;
+}
+.ts-input[aria-invalid="true"] {
+  border-color: #8c1f28;
+  box-shadow: inset 2px 2px 0 #ec6a5c;
+}
+.ts-hint {
+  margin: 0;
+  font-size: 12px;
+  color: #8a5a32;
+}
+.ts-hint.is-warn {
+  color: #8c1f28;
+  font-weight: 700;
+}
+.ts-looks {
+  display: grid;
+  /* 24 个缩略图（52×52 的脸部特写加 2px 边框）：宽度够时排成 6 列 4 行（最宽 356px），窄窗口按宽度自动减少列数，不溢出 */
+  grid-template-columns: repeat(auto-fill, 56px);
+  gap: 4px;
+  max-width: 356px;
+  margin: 2px 0 4px;
+}
+.ts-look {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  line-height: 0;
+  background: #23305e;
+  border: 2px solid #7d5f36;
+  cursor: pointer;
+}
+.ts-look:hover {
+  border-color: #2b1b17;
+}
+.ts-look.is-selected {
+  border-color: #2b1b17;
+  box-shadow: 0 0 0 3px #dca434;
+}
+.ts-look:has(input:focus-visible) {
+  outline: 3px solid #239a9a;
+  outline-offset: 4px;
+}
+
+/* ───────────── 像素按钮：有厚度，按下时下沉 ───────────── */
+.ts-btn {
+  position: relative;
+  top: 0;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fffaf0;
+  background: #8a5a32; /* wood[2] */
+  border: 2px solid #2b1b17;
+  border-radius: 0;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow:
+    inset 2px 2px 0 #b8804a,
+    inset -2px -2px 0 #5c3a21,
+    0 3px 0 #2b1b17;
+  text-shadow: 1px 1px 0 #3b2416;
+}
+.ts-btn:hover:not(:disabled) {
+  background: #9c6a3c;
+}
+.ts-btn:active:not(:disabled) {
+  top: 2px;
+  box-shadow:
+    inset 2px 2px 0 #5c3a21,
+    inset -2px -2px 0 #b8804a,
+    0 1px 0 #2b1b17;
+}
+.ts-btn:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 2px;
+}
+.ts-btn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.85);
+  opacity: 0.65;
+}
+.ts-btn-arrow {
+  padding: 5px 8px;
+  line-height: 0;
+}
+.ts-btn-small {
+  font-size: 13px;
+  padding: 3px 10px;
+}
+.ts-looks-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  max-width: 356px;
+}
+.ts-btn-go {
+  font-size: 18px;
+  letter-spacing: 0.25em;
+  padding: 10px 24px 10px calc(24px + 0.25em);
+  color: #3b2416;
+  background: #dca434; /* gold[2] */
+  box-shadow:
+    inset 2px 2px 0 #fff3b0,
+    inset -2px -2px 0 #a86b1c,
+    0 4px 0 #2b1b17;
+  text-shadow: 1px 1px 0 #f5d66b;
+}
+.ts-btn-go:hover:not(:disabled) {
+  background: #f5d66b;
+}
+.ts-btn-go:active:not(:disabled) {
+  top: 3px;
+  box-shadow:
+    inset 2px 2px 0 #a86b1c,
+    inset -2px -2px 0 #fff3b0,
+    0 1px 0 #2b1b17;
+}
+
+/* ───────────── 起航 ───────────── */
+/* 起航栏固定在窗口底部，不随上面的内容滚动：主要操作总在视野里 */
+.ts-launch {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 16px 4px;
+  border-top: 2px solid #b8955f;
+  box-shadow: 0 -6px 0 -4px #e2c796;
+}
+.ts-voyage-line {
+  margin: 0;
+  color: #5c3a21;
+  font-style: italic;
+}
+.ts-launch-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.ts-seed {
+  flex: 1 1 260px;
+  /* 窄窗口里输入框可以缩短，整行不撑出窗框 */
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #5c3a21;
+  white-space: nowrap;
+}
+.ts-seed .ts-input {
+  font-size: 14px;
+  padding: 5px 8px;
+}
+
+/* ───────────── 读档 ───────────── */
+.ts-saves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ts-save {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  font: inherit;
+  padding: 6px;
+  color: #2b1b17;
+  background: #f3e3c3;
+  border: 2px solid #7d5f36;
+  box-shadow: 0 3px 0 #7d5f36;
+  /* 浅底深字：不要外壳按钮的深色字影（深字叠深影，笔画糊成双影；docs/UI-REDESIGN.md 1.2 第 1 条） */
+  text-shadow: none;
+  cursor: pointer;
+}
+.ts-save:hover:not(:disabled) {
+  background: #fffaf0;
+  border-color: #2b1b17;
+}
+.ts-save:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 2px;
+}
+.ts-save-face {
+  line-height: 0;
+  border: 2px solid #2b1b17;
+  background: #23305e;
+}
+.ts-save-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ts-save-go {
+  margin-right: 8px;
+  line-height: 0;
+  visibility: hidden;
+}
+.ts-save:hover:not(:disabled) .ts-save-go,
+.ts-save:focus-visible .ts-save-go {
+  visibility: visible;
+}
+.ts-save-slot {
+  font-weight: 700;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ts-save-captain {
+  color: #5c3a21;
+}
+.ts-save-detail {
+  font-size: 12px;
+  color: #8a5a32;
+}
+/* 每一行：读档的大按钮 + 右边的“删除”；问“真的要删吗”时，确认条接在下面 */
+.ts-save-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+}
+.ts-save-row > .ts-save {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.ts-save-del {
+  flex: none;
+  align-self: center;
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  color: #8f2a1c;
+  background: #f3e3c3;
+  border: 2px solid #7d5f36;
+  box-shadow: 0 3px 0 #7d5f36;
+  cursor: pointer;
+}
+.ts-save-del:hover:not(:disabled) {
+  color: #fffaf0;
+  background: #8f2a1c;
+  border-color: #2b1b17;
+}
+.ts-save-del:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 2px;
+}
+.ts-save-row.is-asking > .ts-save {
+  border-color: #8f2a1c;
+}
+.ts-save-confirm {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  color: #2b1b17;
+  background: #fbe9d8;
+  border: 2px dashed #8f2a1c;
+}
+.ts-save-confirm-text {
+  flex: 1 1 200px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+/* ───────────── 较窄的桌面窗口：窗口收窄一些，给标题留出位置 ───────────── */
+@media (max-width: 1240px) {
+  .title-ui {
+    grid-template-columns: minmax(300px, 1fr) 600px;
+  }
+}
+
+/* ───────────── 窄屏：标题在上，窗口在下，整页滚动 ───────────── */
+@media (max-width: 1000px) {
+  .title-ui {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: max-content;
+    padding: 16px;
+  }
+  .ts-window {
+    min-height: 0;
+  }
+  .title-side {
+    min-height: 0;
+    padding-left: 0;
+  }
+  .title-menu {
+    flex-direction: row;
+    padding: 6px 12px;
+  }
+  .ts-window {
+    max-height: none;
+  }
+  .ts-body {
+    overflow: visible;
+  }
+}
+@media (max-width: 560px) {
+  .ts-captain {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+  /* 表单占满整行；外貌缩略图居中，列数按宽度自动排（宽度是确定值，auto-fill 才不会按最大宽度排成 6 列而溢出） */
+  .ts-captain-form {
+    justify-self: stretch;
+  }
+  .ts-looks,
+  .ts-looks-head {
+    width: 100%;
+    align-self: center;
+  }
+  .ts-looks {
+    justify-content: center;
+  }
+  .ts-window {
+    border-width: 16px;
+    border-image-width: 16px;
+  }
+  .title-name-zh {
+    font-size: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-menu-item.is-active .title-menu-cursor {
+    animation: none;
+  }
+  .ts-card:hover {
+    transform: none;
+  }
+}
+
+/* ───────────── 纪年：标题下的“航海历 1502 年”与剧本卡片上的纪年、限期日期 ───────────── */
+.title-era {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 10px 0 0;
+  text-align: center;
+}
+.title-era-year {
+  padding: 2px 14px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: #f5d66b; /* gold[3] */
+  border-top: 2px solid #a86b1c;
+  border-bottom: 2px solid #a86b1c;
+  text-shadow: 2px 2px 0 #1a1423;
+}
+.title-era-lore {
+  max-width: 22em;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.5;
+  color: #e2c796; /* parchment */
+  text-shadow: 1px 1px 0 #1a1423;
+}
+.ts-fact-until {
+  margin-left: 6px;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: #8a5a32;
+}
+
+/* 已下线的旧剧本存档：不能读，只能删 */
+.ts-save-row.is-retired .ts-save {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ts-save-retired {
+  display: block;
+  font-size: 12px;
+  color: var(--down, #a3302a);
+}

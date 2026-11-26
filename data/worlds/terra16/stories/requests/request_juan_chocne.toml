@@ -1,0 +1,170 @@
+# C13d 请托：照原话写（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与本人的任务单分片写）
+# 人物：胡安·乔克内 juan_chocne（生年不详，cast 里 born=0 为占位；cast/historical_05_americas.toml）。瓦曼加一带塔基·翁戈伊的传道人，受过洗，恨这个名字。本人不下山，话由一个赶骡人转述。
+# 类型与报价：说服某人（ps），3 章（offer / persuade / result），另有一支 result_b。kind=request，auto=true（L 来信）：offer 章在卡亚俄（callao），出面的是一个从瓦曼加赶骡下来的人（叙事人物，不新建 cast，不写 speaker）。
+# 窗口：报价 1569-03-01 至 1570-12-31；offer 的 deadline 即窗口止日，到期走 timeout（next=failed，不写见闻）。persuade 与 result 的时间由 deadline_days 与 wait 管，不另写日期条件。
+# 依据：史实背景——1564 年起安第斯的塔基·翁戈伊运动；1569—71 年阿尔沃诺斯的巡查，口供记录多出自镇压者之手。书记的“上头要什么，我写什么”是这一支的写法（据传闻）。
+#   原创——卡亚俄码头边的混血公证人、那一页口供、骡栏边的赶骡人、书记在页边添的“原话如此”、另抄的一份原话。
+#   待核：阿尔沃诺斯巡查的确切年份与口供原件的存放处；正文一律用传闻口吻，只写口供怎么录，不写仪式与附身的细节。
+# 读写的旗标：设 c13_request_juan_chocne_accepted（offer 接下，路上的分支）；终局旗标每条路径只设一面：declined（回绝）、failed（书记收回那页）、late（超时，书记已上船）、done（交了原话）、partial（只说了书记答应，或超时）。
+#   分支旗标：_margin（persuade 的说服或克丘亚话路线，书记在页边留了原话）、_copy（persuade 的付钱路线，另抄了一份原话）、_why（offer 的“先问为什么”，只换 persuade 开场的文字）。
+#   不读任何 c7_ 旗标，不读 c13_main_*（本请托与主线无关，offer 不设门禁）。
+# 依赖：港口 callao 为现有港口；技能 lang_quechua 为现有技能（skills.toml）；无 B10b 改名；无主线门禁。family c13_offer_callao 为卡亚俄共用的报价冷却旗标，与同港的其他请托共用。
+# 结构说明：persuade 的付钱选项进 result_b，说服与克丘亚话两条路进 result。付钱路线设的 _copy 旗标只在同一轨道的 pay 选项里设置，result_b 不以它做门禁，改由 next 分流。
+# 缺省走向：回绝（declined）走 failed，报价到期（1570-12-31）未接也走 timeout（failed，不写见闻，书记与赶骡人都不知道）。接下以后 persuade 有 60 天期限，超时书记已上船去利马（late，来信一封，不付）；result 与 result_b 等 20 天，之后 120 天内不交也走 timeout（done，partial，不付不罚，来信一封）。
+# 回忆插画清单：
+#   mem-request_juan_chocne-result「骡栏边念的一行字」：卡亚俄骡栏边，赶骡人闭着眼念一行字，骡子在吃草。
+
+[[tracks]]
+key = "request_juan_chocne"
+name = "照原话写"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["juan_chocne"]
+
+# 报价：骡栏边，赶骡人替乔克内传话。书记在卡亚俄等船，乔克内托你去说动他，照原话写。
+[[tracks.chapters]]
+key = "offer"
+title = "赶骡人的手"
+text = "骡栏边，一个从瓦曼加赶骡下来的人拦住了你。两只手一直在抖，他用力压着，压不住。他替人传话，话是背下来的，背得很慢：“瓦卡们回来了。不在石头里，在风里，在人的身子里。”他停了一下，闭了闭眼。“村里的人这么说。巡查的神父在村里录口供，书记坐在旁边写。乡人说的话，他一律写成‘魔鬼附身’。书记眼下在卡亚俄，等船把口供送去利马。”他的手抓紧了骡缰。“乔克内托我问你：能不能说动那书记，照原话写。”"
+at = "callao"
+mood = "tense"
+objectives = [{ kind = "at", at = "callao", text = "在卡亚俄的骡栏边" }]
+deadline = [1570, 12, 31]
+family = "c13_offer_callao"
+family_cooldown_days = 20
+when = [{ kind = "date", from = [1569, 3, 1], to = [1570, 12, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去说动那个书记。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "juan_chocne", value = 2 }, { kind = "flag", flag = "c13_request_juan_chocne_accepted" }]
+reply = "赶骡人把手按在膝盖上，手止住了抖。他把骡缰绕了两圈攥在手里，说：“你别说是我们托的。书记要是知道是乡里托的，会把村里人的名字全记进卷宗。”"
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，但先问他为什么非要原话。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "juan_chocne", value = 2 }, { kind = "flag", flag = "c13_request_juan_chocne_accepted" }, { kind = "flag", flag = "c13_request_juan_chocne_why" }]
+reply = "“改了字，瓦卡就成了魔鬼，我们就成了疯子。疯子的话，谁听？”他说完，又把那句话在嘴里念了一遍，念得很慢，像是怕自己记不住，也像是在等你把它记下来。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这件事我帮不上。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_juan_chocne_declined" }]
+reply = "他点点头，牵着骡子走了，背影一直在抖。走到骡栏门口，他停下来回头看了一眼，什么也没说，又转过去了。他把骡缰换到左手，右手一直按着胸口。"
+
+# 说服：码头边的小酒馆里，书记抽出一页口供。三条路：讲理、会说克丘亚话、付钱。
+[[tracks.chapters]]
+key = "persuade"
+title = "一页口供"
+text = "码头边的小酒馆里，混血的公证人袖口全是墨，按页誊抄，按页拿钱。他会克丘亚话，也会卡斯蒂利亚话。他抽出一页给你看：左边是乡里一个女人的话，他用卡斯蒂利亚话记下来，“瓦卡在我这里，他要我说话。”右边是他自己添的一行：“魔鬼借她的口作祟，问话时胡言。”他把纸压平，手指按在那一行上。“上头要什么，我写什么。按页付钱，就是这个价。”"
+at = "callao"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "callao", text = "在卡亚俄码头边找那个书记" }]
+when = [{ kind = "alive", person = "juan_chocne", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_juan_chocne_late" }, { kind = "affinity", person = "juan_chocne", value = -3 }, { kind = "letter", person = "juan_chocne", text = "书记上船去利马了，你没有来。口供照他的写法送去了。下一回，我们自己找人照原话写。" }] }
+
+[[tracks.chapters.choices]]
+key = "reason"
+text = "跟他讲：原话也是证词，改了就不算数。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "failed", effects = [{ kind = "affinity", person = "juan_chocne", value = -2 }, { kind = "flag", flag = "c13_request_juan_chocne_failed" }], news = "卡亚俄码头边的小酒馆里，混血的公证人把一页口供收回抽屉。有人问起，他只说：“这一页，上头已经看过了。”" }
+reply = "他想了半天，在那页的页边添了一行小字：“原话如此。”添完，他把笔插回袖口，又看了看那一行，像是怕它被人擦掉。那一行写得比页上别的字都小。"
+effects = [{ kind = "affinity", person = "juan_chocne", value = 3 }, { kind = "flag", flag = "c13_request_juan_chocne_margin" }]
+
+[[tracks.chapters.choices]]
+key = "quechua"
+text = "用克丘亚话，把那女人的原话念给他听。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_quechua", ge = 60 }]
+hint = "那女人的话你听得懂，可念出口的音不对，他听了要皱眉。"
+reply = "他愣住了，用克丘亚话跟着念了一遍，然后在旁边照音写下来，没改一个字。念到女人最后那一声，他的笔停了停，还是照样写了，写的时候嘴唇跟着动。"
+effects = [{ kind = "affinity", person = "juan_chocne", value = 3 }, { kind = "flag", flag = "c13_request_juan_chocne_margin" }]
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "按页付钱，请他另抄一份原话的。"
+next = "result_b"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上的银子，凑不够他这一页的价钱。"
+reply = "钱到手，他另铺一张纸，一句一句照原话写。纸是他自己带来的，边角已经磨毛。写到一半，他把笔搁下，喝了口酒。“这份不进卷宗。你拿走。”"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "juan_chocne", value = 3 }, { kind = "flag", flag = "c13_request_juan_chocne_copy" }]
+
+# 开场文字的变体：offer 时先问过“为什么非要原话”的，书记的笔停得久一些。只换文字，选项与后果不变。
+[[tracks.chapters.variants]]
+key = "why"
+when = [{ kind = "flag", flag = "c13_request_juan_chocne_why", value = true }]
+text = "码头边的小酒馆里，混血的公证人袖口全是墨，按页誊抄，按页拿钱。你记着赶骡人那句话：改了字，瓦卡就成了魔鬼。这支笔改过多少页，他自己也数不清。他抽出一页给你看：左边是乡里一个女人的话，他用卡斯蒂利亚话记下来，“瓦卡在我这里，他要我说话。”右边是他自己添的一行：“魔鬼借她的口作祟，问话时胡言。”他把纸压平。“上头要什么，我写什么。按页付钱，就是这个价。”"
+
+# 说服后的回话（说服或克丘亚话的路线）：赶骡人听你讲书记怎样留下原话，念出一句话，要你也念给他听。
+[[tracks.chapters]]
+key = "result"
+title = "骡栏边的回话"
+text = "赶骡人又来了，还在骡栏边，手抖得比上回轻。他先问：“他肯写？”问完不等你答，就闭上眼，嘴唇动了动，念了一句很短的克丘亚话。骡子在后面打了个响鼻，他没回头，只把手伸进怀里摸了摸，又放了回去。“乔克内要我把这句话带回去，念给村里的人听。”他睁开眼看着你：“你念一遍，让我听听他写的是什么。”"
+at = "callao"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "wait", days = 20 }]
+when = [{ kind = "alive", person = "juan_chocne", value = true }]
+deadline_days = 120
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_juan_chocne_partial" }, { kind = "letter", person = "juan_chocne", text = "赶骡人没有再下山。银子你不必送来，那一页原话，我们记下了。" }] }
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "把书记写下的那一行念给他听。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "juan_chocne", value = 8 }, { kind = "memory", memory = "mem-request_juan_chocne-result", title = "骡栏边念的一行字" }, { kind = "flag", flag = "c13_request_juan_chocne_done" }]
+news = "卡亚俄码头边的小酒馆里，有人说那个混血公证人在巡查的卷宗里添了一行“原话如此”，别的字一个没改。"
+reply = "他跟着念了三遍，记住了，然后从骡背上解下一小袋碎银：“村里凑的。”他把银子放在石头上，没有递到你手里，又把袋口系紧了两道。"
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "只说书记答应了，别的不提。"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "juan_chocne", value = 4 }, { kind = "flag", flag = "c13_request_juan_chocne_partial" }]
+news = "卡亚俄骡栏边，一个赶骡人听说书记答应了，只付了一半的银子，说村里还要买盐。"
+reply = "他点点头，没再问，银子只给了一半。“村里还要买盐。”他把剩下的话咽回去。布袋口没系紧，两枚碎银掉在石板缝里，他弯腰捡起来，才牵着骡子往栈道那边走。"
+
+# 说服后的回话（付钱的路线）：你手里有一份另抄的原话，赶骡人不认字，要你念。
+[[tracks.chapters]]
+key = "result_b"
+title = "另抄的那一页"
+text = "赶骡人又来了，还在骡栏边。这回他没先问话，先盯着你怀里露出一角的那张纸。他伸了伸手，又缩回去，手指在衣角上蹭了蹭，蹭出一道灰。“上头写的什么，你念给我？”他问，声音压得很低，像是怕骡子听见。骡栏的木栅挡在中间，他站在里面，手扶着栅栏，没有出来。木栅上的漆早就掉光了，露出灰白的木头。"
+at = "callao"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "wait", days = 20 }]
+when = [{ kind = "alive", person = "juan_chocne", value = true }]
+deadline_days = 120
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_juan_chocne_partial" }, { kind = "letter", person = "juan_chocne", text = "赶骡人没有再下山。那张纸你留着，别让人看见是我们托的。" }] }
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "把那份原话的抄本交给他。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "juan_chocne", value = 10 }, { kind = "memory", memory = "mem-request_juan_chocne-result", title = "骡栏边念的一行字" }, { kind = "flag", flag = "c13_request_juan_chocne_done" }]
+news = "卡亚俄码头上，一个赶骡人抱着一张纸不肯撒手，纸上是公证人照原话另抄的，说是不进卷宗。"
+reply = "他不认字，可他把那张纸贴在胸口，贴了很久。等他松开手，纸上已经有了一块汗印，骡子在一边啃草，他一直站着没有回头，等骡子啃够了，才把缰绳重新缠回手腕上。"
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "把那张纸上的原话，一句一句念给他听。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "juan_chocne", value = 8 }, { kind = "memory", memory = "mem-request_juan_chocne-result", title = "骡栏边念的一行字" }, { kind = "flag", flag = "c13_request_juan_chocne_done" }]
+news = "卡亚俄骡栏旁，一个赶骡人跟着一张抄来的纸念了几遍，念完才肯付银子。"
+reply = "他跟着念，每念一句就停下来闭一下眼。念完了，他把一小袋碎银压在纸上：“村里凑的。”纸被风吹起一角，他伸手按住，按了很久。"
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "只说书记答应了，别的不提。"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "juan_chocne", value = 4 }, { kind = "flag", flag = "c13_request_juan_chocne_partial" }]
+news = "卡亚俄码头边，有人看见一个赶骡人摸出半袋银子，另一半说等村里有了盐再给。"
+reply = "他没有伸手去碰那张纸，只摸出一半的银子。“剩下的，等村里有了盐再说。”他说完，把骡缰在手里绕了一圈，没有松开。骡子一步一步走远，蹄子踩在碎石上，声音很轻。"

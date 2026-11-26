@@ -1,0 +1,150 @@
+# 请托：给学生做的题（request_greta_tamm）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：格蕾塔·塔姆（greta_tamm，1540-12-07 生，女）；账房先生的女儿，学院同学（吕贝克）；势力 hanse，身份档 1。cast：cast/classmates_custom_lubeck_accounts.toml。
+# 类型：找东西（find）。四章：offer（报价）、bergen（商站的账房）、handin（交书，账目抄到手）、handin_partial（只拿到一页、没有人名的数，另一条收尾）。
+#   handin_partial 是 brief 里 handin 的 page 变体。变体只能覆写文字，不能改选项的现金与终局旗标，所以拆成独立章节，由 bergen 的分支 next 直接路由过去。
+# 报价：T（当面）。人物按日程在吕贝克港，auto=false，玩家“问请托”（ask:request_greta_tamm）启动；offer 章不写 at，目标是在港里找到她。窗口 1568-01-01 至 1590-06-30；offer 写 deadline=窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：bergen 章 deadline_days=150，超时走 failed，来信一封，好感 -3，旗标 _late；handin 与 handin_partial 是普通章，书没交到之前可以一直等。
+# 依据·史实背景：亚当·里斯《线上算法》（Rechnung auff der linihen，1518 年爱尔福特），德意志地区最通行的算术课本，北方与低地国家的书铺有卖（items/books_05_commerce.toml）；汉萨商站（卑尔根的布吕根）的账房、德意志书记与挪威搬运工，只作背景。
+# 依据·原创：格蕾塔的小学堂、码头上用作废货单教数桶、卑尔根账房里的“炉火钱”（商站书记的一笔小账，不写成大贪污，书记不出场受罚）、搬运工自己报数的那一条路。
+# 秘密：她背着人替码头工人的家里另记一本工钱副账。handin 与 handin_partial 只写她从怀里摸出一个旧本子、对几行、又合上，不说它是什么；见闻不写；不揭开。
+# C7：不写欣里克，不与欣里克的运粮请托共用一件事；不设任何 c7_ 旗标；offer 的 variant 只读 bond greta_tamm 至少 C；不用 relation / tie / bond / heart 效果。
+# 设的旗标：c13_request_greta_tamm_accepted（offer 两条接法）、_declined（offer 回绝）、_copy（bergen 书记让抄全本）、_page（bergen 只拿到一页或没有人名的数）、_late（bergen 超时）、_done（handin 收尾）、_partial（handin_partial 收尾）。
+# 报酬：现金 900（partial 500）、好感最多 +13、名声 +1、技能 double_entry +20（只一次）、回忆 mem-request_greta_tamm-handin（handin 与 handin_partial 共用这一件）。ries_lines 是玩家自己买来交出或借出，不是奖励；give_book 写 item ries_lines -1，lend_book 不扣。
+# 依赖：港口 lubeck、bergen（ports_north.toml）；技能 double_entry（skills.toml）；属性 eloquence；物品 ries_lines（有 shop，北方与低地国家书铺）。无需 B10b 改名。
+# 待核：无。
+# 回忆插画清单：
+#   mem-request_greta_tamm-handin「货箱上的算术书」：吕贝克码头的货箱当讲台，摊开的算术书第一页写着小学堂的名字，三个孩子踮脚围在箱边数桶。
+
+[[tracks]]
+key = "request_greta_tamm"
+name = "给学生做的题"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["greta_tamm"]
+
+# 一、一间小学堂：码头的货堆边，她拿作废的货单教孩子数桶。
+[[tracks.chapters]]
+key = "offer"
+title = "一间小学堂"
+text = "格蕾塔蹲在吕贝克码头的货堆边，拿作废的货单教三个搬运工的孩子数桶。最小的那个用手指头戳着桶箍，数到三就不肯往下了。“要开一间学堂，教人算账。”她头也不抬，“缺两样：一部好懂的算术书，里斯的《线上算法》；还有一本真账。拿货单能教会数数，教不了扣钱。真的工钱簿，扣在哪儿都写着。一个芬尼对不上，谁也别想走。”她把货单往膝上一拍，“你先去卑尔根的商站，把今年的工钱簿抄一份。回来顺路带书。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "greta_tamm", text = "在吕贝克码头边找到她" }]
+when = [{ kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "greta_tamm", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_old_schoolmate"
+when = [{ kind = "bond", person = "greta_tamm", level = "C" }]
+text = "格蕾塔蹲在吕贝克码头的货堆边，拿作废的货单教三个搬运工的孩子数桶。看见你走近，她抽出一张货单递过来：“你小时候在这张上算错过一笔，还记得吗？”最小的那个用手指头戳着桶箍，数到三就不肯往下了。“要开一间学堂，教人算账，缺两样：一部好懂的算术书，里斯的《线上算法》；还有一本真账。”她把货单往膝上一拍，“你先去卑尔根的商站，把今年的工钱簿抄一份。回来顺路带书。”"
+
+[[tracks.chapters.choices]]
+key = "take_both"
+text = "接下：卑尔根抄账，书我想法子找。"
+next = "bergen"
+reply = "她从货单堆里抽出一张，背面写着“工钱簿：日子、人名、工数、扣数、实付”，说：“抄这五栏就够了。”"
+effects = [{ kind = "affinity", person = "greta_tamm", value = 2 }, { kind = "flag", flag = "c13_request_greta_tamm_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_kids"
+text = "接下，问她：孩子们学会了算工钱，想干什么？"
+next = "bergen"
+reply = "“想知道爹拿到手的对不对。”她说完，摸了摸最小那个孩子的头。孩子正拿手指头数桶，数到三，又从头数。"
+effects = [{ kind = "affinity", person = "greta_tamm", value = 2 }, { kind = "flag", flag = "c13_request_greta_tamm_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "商站的账，人家不会给外人抄。"
+next = "failed"
+reply = "“那就先用货单。”她说，“货单也有扣数，只是少。”"
+effects = [{ kind = "flag", flag = "c13_request_greta_tamm_declined" }]
+
+# 二、商站的账房：卑尔根，书记不肯让外人看工钱簿。
+[[tracks.chapters]]
+key = "bergen"
+title = "商站的账房"
+text = "汉萨商站的账房在二楼，窗户小，炉子冷着，商站的规矩怕火。管账的德意志书记说，工钱簿是商站的事，外人不看。楼下的挪威搬运工扛着鳕鱼干进进出出，没有一个抬头往这间屋里看。“吕贝克要拿它教孩子。”我说。他嘴上不松口，手却按在那本簿子上，指节压得发白，像是怕人看见里面的什么。"
+speaker = "captain"
+mood = "tense"
+at = "bergen"
+when = [{ kind = "alive", person = "greta_tamm", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "greta_tamm", value = -3 }, { kind = "flag", flag = "c13_request_greta_tamm_late" }, { kind = "letter", person = "greta_tamm", text = "卑尔根的账我托回程的船问了，人家不给。孩子们先做货单上的题。——格蕾塔" }] }
+news = "卑尔根汉萨商站的账房里，有人把一年的工钱簿抄了一份，说是拿回吕贝克教孩子。"
+
+[[tracks.chapters.choices]]
+key = "book_talk"
+text = "跟书记聊复式簿记，说吕贝克要拿它教孩子，不外传。"
+next = "handin"
+requires = [{ kind = "skill", skill = "double_entry", ge = 60 }]
+hint = "书记问你借贷怎么对，你说不清"
+reply = "他跟我对了半天借贷，越说越来劲，最后把簿子推过来：“抄吧。抄完了，让孩子们找找我哪里记错了。”"
+effects = [{ kind = "affinity", person = "greta_tamm", value = 3 }, { kind = "flag", flag = "c13_request_greta_tamm_copy" }]
+
+[[tracks.chapters.choices]]
+key = "persuade_clerk"
+text = "跟他说：一本没人查的账，迟早出错；有人拿去当题做，等于替他查。"
+next = "handin"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他想了一会儿，把簿子翻到今年那几页，说：“人名不许抄错。”"
+effects = [{ kind = "affinity", person = "greta_tamm", value = 3 }, { kind = "flag", flag = "c13_request_greta_tamm_copy" }]
+fail = { next = "handin_partial", effects = [{ kind = "affinity", person = "greta_tamm", value = -2 }, { kind = "flag", flag = "c13_request_greta_tamm_page" }] }
+
+[[tracks.chapters.choices]]
+key = "ask_porters"
+text = "不找书记，下楼请搬运工们自己报工数和实拿的钱。"
+next = "handin_partial"
+reply = "搬运工们七嘴八舌报了，我记下来，跟他们说吕贝克有人拿这个教孩子算账。他们笑，说那得教孩子算算商站扣了多少。"
+effects = [{ kind = "affinity", person = "greta_tamm", value = 2 }, { kind = "flag", flag = "c13_request_greta_tamm_page" }]
+
+# 三、书与账：抄本到手，她找出“炉火”那一栏。
+[[tracks.chapters]]
+key = "handin"
+title = "书与账"
+text = "格蕾塔把卑尔根的抄本摊在膝上，一行一行看，看到扣数那一栏，从怀里摸出一个旧本子，翻开对了几行，又合上。“把小数目也算上。”她说。人名一栏一个不缺。抄本上，每个搬运工每个月都被扣了几个芬尼，名目写的是“炉火”，可商站的账房不许生火。她把《线上算法》翻到第一题，用指尖压平书页：“这一题，就用这几个芬尼出。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "greta_tamm", text = "在吕贝克码头边找到她" }, { kind = "item", item = "ries_lines", qty = 1, text = "带着一部《线上算法》" }]
+when = [{ kind = "alive", person = "greta_tamm", value = true }]
+news = "吕贝克码头边开了一间教人算账的小学堂，第一题算的是卑尔根商站的“炉火钱”。"
+
+[[tracks.chapters.choices]]
+key = "give_book"
+text = "把《线上算法》送给小学堂。"
+next = "done"
+reply = "她把书放在货箱上当讲台，第一页写上小学堂的名字，又在下面添了一行小字：“书由某船长所赠。”她付了钱，让三个孩子一人跟我说一句谢谢。最小那个说的是：“炉火是假的。”"
+effects = [{ kind = "item", item = "ries_lines", qty = -1 }, { kind = "cash", value = 900 }, { kind = "affinity", person = "greta_tamm", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "double_entry", value = 20 }, { kind = "flag", flag = "c13_request_greta_tamm_done" }, { kind = "memory", memory = "mem-request_greta_tamm-handin", title = "货箱上的算术书" }]
+
+[[tracks.chapters.choices]]
+key = "lend_book"
+text = "书借她抄一个月，抄完还我。"
+next = "done"
+reply = "她带着孩子们抄了一个月，抄得比书还工整。书还我的时候，夹着一张孩子们算的“炉火”那一题，答案旁边画了一个笑脸。她付了钱。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "greta_tamm", value = 6 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "double_entry", value = 20 }, { kind = "flag", flag = "c13_request_greta_tamm_done" }, { kind = "memory", memory = "mem-request_greta_tamm-handin", title = "货箱上的算术书" }]
+
+# 三之二、一页账：只拿到一页、或没有人名的数，她照样出题。
+[[tracks.chapters]]
+key = "handin_partial"
+title = "一页账"
+text = "格蕾塔把手里的纸摊平。没有人名，只有日子、工数和扣数，人名那一栏空着。她没有抱怨，从怀里摸出一个旧本子，对着纸翻了两页，又收回去。“一页也够算出炉火来。”她说，“扣数在，炉火就在。”她把《线上算法》翻到第一题，用指尖敲了两下：“这一题，先拿这几个芬尼算。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "greta_tamm", text = "在吕贝克码头边找到她" }, { kind = "item", item = "ries_lines", qty = 1, text = "带着一部《线上算法》" }]
+when = [{ kind = "alive", person = "greta_tamm", value = true }]
+news = "吕贝克码头边的小学堂开了课，手里只有一页工钱数，第一题算的是卑尔根商站的“炉火钱”。"
+
+[[tracks.chapters.choices]]
+key = "give_book_partial"
+text = "账只有一页，书照样送给小学堂。"
+next = "done"
+reply = "她把书摊在货箱上，第一页写上小学堂的名字。付的钱比整本账少一截，她说一页账就值这么多。三个孩子一人跟我说一句谢谢，最小那个说的是：“扣数还在呢。”"
+effects = [{ kind = "item", item = "ries_lines", qty = -1 }, { kind = "cash", value = 500 }, { kind = "affinity", person = "greta_tamm", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "double_entry", value = 20 }, { kind = "flag", flag = "c13_request_greta_tamm_partial" }, { kind = "memory", memory = "mem-request_greta_tamm-handin", title = "货箱上的算术书" }]
+
+[[tracks.chapters.choices]]
+key = "lend_book_partial"
+text = "书借给她，让孩子们抄一个月再还。"
+next = "done"
+reply = "她带着孩子们抄了一个月。书还我的时候，夹着一张“炉火”那一题的答案，旁边画了一个笑脸。那一页账的人名栏还是空的，她说不急，付的钱比整本账少一截。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "greta_tamm", value = 6 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "double_entry", value = 20 }, { kind = "flag", flag = "c13_request_greta_tamm_partial" }, { kind = "memory", memory = "mem-request_greta_tamm-handin", title = "货箱上的算术书" }]

@@ -1,0 +1,587 @@
+# R10-U06K1：地点行动、缺省课表、家业、寒暄与标记补充；家业名与说明、寒暄句由 U06C 写（可换字，键与数值别动）。
+# 家业名 ≤6 字、说明 ≤30 字；寒暄每句 ≤40 字，同一人可写多句，进地点时轮出一句。
+format_version = 1
+
+[[act_places]]
+family = "mio"
+place = "mio_home_dock"
+actions = ["job", "talk", "gift", "marker", "rumor"]
+jobs = ["c9_mio_sail_toll_1", "dock_work", "fishing_job"]
+shop = []
+# R10-U06K3a：按工种组记录接触的货。
+job_goods = { dock_work = ["rice", "salt"], fishing_job = ["fish"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_home_market"
+actions = ["job", "talk", "gift", "marker"]
+jobs = ["tavern_job", "countinghouse_job"]
+shop = [
+  { item = "u06c_grilled_mochi", price = 10 },
+  { item = "u06c_hemp_thread", price = 12 },
+  { item = "u06c_abalone_shell", price = 15 },
+  { item = "u06c_dried_bonito", price = 20 },
+  { item = "u06c_tosa_paper", price = 30 },
+  { item = "u06c_boxwood_comb", price = 150 },
+]
+
+# U06C：京都室町通的香铺与扇铺、能岛靠岸叫卖的鱼贩小船，各摆一架小东西。
+# 行动与工种照市集的缺省（打工、深谈、送礼、标记、听消息；工种是市集上的几类），只多一个货架。
+[[act_places]]
+family = "mio"
+place = "kyoto_court_place_market"
+actions = ["job", "talk", "gift", "marker", "rumor"]
+jobs = ["tavern_job", "countinghouse_job", "copyist_job", "interpreter_job", "kitchen_job"]
+shop = [
+  { item = "u06c_mizuame", price = 15 },
+  { item = "u06c_tanzaku", price = 20 },
+  { item = "u06c_makko", price = 30 },
+  { item = "u06c_nioi_bukuro", price = 40 },
+  { item = "u06c_plain_fan", price = 40 },
+  { item = "u06c_jinko_sliver", price = 120 },
+]
+
+[[act_places]]
+family = "mio"
+place = "noshima_boat_school_place_market"
+actions = ["job", "talk", "gift", "marker", "rumor"]
+jobs = ["tavern_job", "countinghouse_job", "copyist_job", "interpreter_job", "kitchen_job"]
+shop = [
+  { item = "u06c_dried_sardines", price = 10 },
+  { item = "u06c_sakuragai", price = 12 },
+  { item = "u06c_dried_octopus", price = 25 },
+  { item = "u06c_palm_rope", price = 25 },
+  { item = "u06c_net_shuttle", price = 120 },
+]
+
+[[act_places]]
+family = "mio"
+place = "kyoto_court_place_classroom"
+actions = ["job", "talk", "gift", "marker"]
+jobs = ["c9_mio_court_duty_1"]
+shop = []
+
+[[act_timetables]]
+family = "mio"
+stage = "home"
+academy = ""
+slots = [
+  { line = "mio_tide", tier = 0 },
+  { line = "mio_letters", tier = 0 },
+  { line = "mio_rites", tier = 0 },
+  { line = "mio_tide", tier = 0 },
+  { line = "mio_letters", tier = 0 },
+]
+
+[[act_timetables]]
+family = "mio"
+stage = "academy"
+academy = "kyoto_court"
+slots = [
+  { line = "mio_kyoto_kana", tier = 0 },
+  { line = "mio_kyoto_etiquette", tier = 0 },
+  { line = "mio_kyoto_poetry", tier = 0 },
+  { line = "mio_kyoto_kana", tier = 0 },
+  { line = "mio_kyoto_etiquette", tier = 0 },
+  { line = "mio_kyoto_poetry", tier = 0 },
+  { line = "mio_kyoto_kana", tier = 0 },
+]
+
+[[act_timetables]]
+family = "mio"
+stage = "academy"
+academy = "noshima_boat_school"
+slots = [
+  { line = "mio_noshima_nav", tier = 0 },
+  { line = "mio_noshima_study", tier = 0 },
+  { line = "mio_noshima_yard", tier = 0 },
+  { line = "mio_noshima_nav", tier = 0 },
+  { line = "mio_noshima_study", tier = 0 },
+  { line = "mio_noshima_yard", tier = 0 },
+  { line = "mio_noshima_nav", tier = 0 },
+]
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_flag_toll"
+stage = "home"
+academy = ""
+name = "替收帆别钱"
+desc = "跟阿濑在栈桥上替过往的船数帆、记船名，分得几文跑腿钱。"
+cash = [6, 12]
+growth = { "commerce" = 1 }
+skills = {}
+affinity = {  }
+milestone = 30
+award = { licenses = ["murakami"] }
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_boat"
+stage = "home"
+academy = ""
+name = "刮船底"
+desc = "退潮时把家里的小舟拖上滩，刮蛎壳、塞船缝，一身泥一身汗。"
+growth = { "constitution" = 1 }
+skills = {}
+affinity = {  }
+milestone = 20
+award = { repair_ship = true }
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_accounts"
+stage = "home"
+academy = ""
+name = "对粮账"
+desc = "坐在母亲旁边对这一季的粮账，几升几合都要对得上。"
+growth = { "numeracy" = 1 }
+skills = {}
+affinity = { "mio_mother" = 2 }
+milestone = 25
+award = { items = { narashiba_tea_caddy = 1 } }
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_court"
+stage = "academy"
+academy = "kyoto_court"
+name = "局里侍奉"
+desc = "在广桥家的局里奉茶、递文书，敬语错一个字就重说一遍。"
+growth = { "etiquette" = 1 }
+skills = {}
+affinity = { "hirohashi_yasuko" = 2 }
+milestone = 40
+award = { items = { hirohashi_letter = 1 } }
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_diary"
+stage = "academy"
+academy = "kyoto_court"
+name = "抄御汤殿日记"
+desc = "替当值的女房誊抄御汤殿上的日记，进献与来客一样不漏。"
+growth = { "learning" = 1 }
+skills = {}
+affinity = {  }
+milestone = 30
+award = { licenses = ["imperial_court"] }
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_errand"
+stage = "academy"
+academy = "kyoto_court"
+name = "上街跑腿"
+desc = "替局里去室町通买纸、买线香，跑一趟赏几文。"
+cash = [4, 8]
+growth = {  }
+skills = {}
+affinity = {  }
+milestone = 0
+
+[[act_duties]]
+family = "mio"
+key = "mio_duty_nets"
+stage = "academy"
+academy = "noshima_boat_school"
+name = "晒网补网"
+desc = "在晒网的院子里摊开渔网、补破眼，番所按张给几文。"
+cash = [4, 8]
+growth = {  }
+skills = {}
+affinity = {  }
+milestone = 0
+
+[[act_greetings]]
+family = "mio"
+person = "ase"
+seasons = []
+lines = [
+  "姬君。潮还有半个时辰才落，今天别往沙洲那头去。",
+  "又光脚？那年汐也这样，脚底让蛎壳划了一道。草鞋在网棚里。",
+  "嗯。篮子里有饭团，拿两个，一个给汐，别站着吃。",
+  "午后起南风，船都要早回。姬君要上船，过了未时就别去。",
+  "那年宿毛的船就是这种天出去的……算了，手伸过来，帮我绕这团线。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "mio_mother"
+seasons = []
+lines = [
+  "回来了？这一页你先念。",
+  "他走的那年，也是这样的天……米价你记了没有？",
+  "坐下。先别说话，闻一闻，这一炉是什么香。",
+  "账上差一文。不急，你再念一遍，我听着。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "ichijo_kanesada"
+seasons = []
+lines = [
+  "姊上。头一件，母亲找你。第二件，我今天临了三张帖。",
+  "姊上，海那边是哪儿？……再那边呢？",
+  "是。弥平次说我该回去念书了。姊上要去哪儿？",
+  "姊上，头一件，今天风大。第二件……想好了再说。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "ushio"
+seasons = []
+lines = [
+  "姬君。……我娘叫我来的。",
+  "今天小潮，申时才转，你别听他们的，水才到第二道绳。",
+  "我娘说，出门要带手巾。拿着，不是我给的。",
+  "……姬君先走。我跟在后头。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "chidori"
+seasons = []
+lines = [
+  "公家的！今天下到六寻，再过去一寻，摸着一只鲍，没拿。",
+  "你身上一股墨味。写字的地方，有海吗？",
+  "公家的，你脚边那块石头底下有章鱼。……骗你的。",
+  "婆婆不许我数寻。你会数？那你数给我听，数到六就停。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "takamaru"
+seasons = []
+lines = [
+  "岸上的，来了？上一场你差两个船身，我记着呢。",
+  "鼻栗濑户今天潮急。我爷爷那时候，一天在那儿收过五条船的钱，一条三百文。",
+  "桨拿反了。……算了，那就算你一半。",
+  "今天十一条小早出去，十一条回来。你那条最后。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "c8_noshima_bosun"
+seasons = []
+lines = [
+  "小鬼，来了。听。潮还没转，再等一炷香。",
+  "站稳。船上跌下去的人，我只捞一回。",
+  "手上的泡破了？破了好，下回就不起了。",
+  "别说话。……听见没有，水声变了。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "kogo"
+seasons = []
+lines = [
+  "学生，看字一眼一升，说话不要钱，您说吧。",
+  "米价又涨了。我娘说再涨，我的字就得论斗卖。",
+  "一升一首，改稿另算。学生要哪一样？",
+  "今天不算钱，我心情好。看一眼白看，两眼照收。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "ayame"
+seasons = []
+lines = [
+  "乡下来的姬君，您的袖口折反了。先左，再右。",
+  "失礼。您这一礼腰低了半寸，那是给上臈的，不是给我的。",
+  "您走路的声音太大。廊下听不见脚步，才合规矩。",
+  "怀纸露出一角。……理好了，手放回膝上，不许再碰。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "reizei_yuki"
+seasons = []
+lines = [
+  "土佐的那位。说‘梅雨’就够了，不必说下了好几天的雨。",
+  "你昨天那首，后两句删了，前两句我替你留着。",
+  "话多了。挑一句说。",
+  "秋风。……够了，后头的不用说。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "kikuchiyo"
+seasons = []
+lines = [
+  "一、一条大人。今天的鞠……落了三回，都、都是风的错。",
+  "你、你那个字写错了，是‘鞠’不是‘菊’。……我又说出来了。",
+  "鞠场四角种四棵树，樱、柳、枫、松，鞠从樱枝上落下来最好看，从松上——",
+  "那、那边别站，鞠会飞过去。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "hirohashi_yasuko"
+seasons = []
+lines = [
+  "姬君来了。外头风冷，先烤烤手，宫里的事不急，一样一样来。",
+  "国子那边我托过了，姬君只管把字写好，别的改日再说。",
+  "炭够不够？我叫人再添一筐，姬君写字的手可不能冻着。",
+  "淀川这几日水大，土佐的信怕要晚几天，姬君不必等，改日——",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "hirohashi_kuniko"
+seasons = []
+lines = [
+  "一条家的。字带来了？",
+  "先看字，再看人。今天看字。",
+  "站到那边去，上臈要过。",
+  "嗯。今天的墨磨得匀。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "sanjonishi_kineda"
+seasons = []
+lines = [
+  "来了？刚才讲到哪一句了？……总之先坐下。",
+  "读到哪一帖了？‘夕颜’？那就从‘夕颜’的注看起。",
+  "你那条注抄得不错。歌嘛，气太盛。",
+  "老了，讲着讲着就忘。你替我记着，讲到哪一句了。",
+]
+
+[[act_greetings]]
+family = "mio"
+person = "yamashina_tokitsugu"
+seasons = []
+lines = [
+  "哈哈，一条家的姬君！今天见了你，我要记进日记里。",
+  "宫里修个屋顶又差三十贯。你说，钱从哪儿来？哈哈！",
+  "昨天替人看病，诊金是一包茶。日记里该记病，还是记茶？",
+  "你来得巧，我正要出门讨钱去。替我拿着这卷，别弄皱。",
+]
+
+[[act_markers]]
+track = "c9_mio_family_bond_ase_0"
+person = "ase"
+places = { event = "mio_home_dock" }
+
+# R10-U06K3a：好处只记类型、门与旗标，显示文字另写。
+# U06C5：汐、千鸟、小督、鹰丸到 1 级也肯捎消息（各有一张只从他们嘴里听得到的见闻卡，见 rumors/japan.toml）。
+[[act_perks]]
+family = "mio"
+person = "ushio"
+level = 1
+kind = "rumor"
+
+[[act_perks]]
+family = "mio"
+person = "chidori"
+level = 1
+kind = "rumor"
+
+[[act_perks]]
+family = "mio"
+person = "kogo"
+level = 1
+kind = "rumor"
+
+[[act_perks]]
+family = "mio"
+person = "takamaru"
+level = 1
+kind = "rumor"
+
+[[act_perks]]
+family = "mio"
+person = "ase"
+level = 1
+kind = "rumor"
+
+[[act_perks]]
+family = "mio"
+person = "ushio"
+level = 2
+kind = "job_partner"
+
+[[act_perks]]
+family = "mio"
+person = "chidori"
+level = 2
+kind = "companion"
+
+[[act_perks]]
+family = "mio"
+person = "ase"
+level = 3
+kind = "teach"
+line = "mio_tide"
+
+# R10-U06K3b：甲板可休养；停靠码头可打工、深谈、听消息，识货沿用 K3a。
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_1_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_1_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_1_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["rice", "salt"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_1_leg3_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_1_leg3_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["rice", "salt"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_2_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_2_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_2_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["rice", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_2_leg3_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_2_leg3_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "charcoal"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_2_leg4_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_3_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_3_leg1_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_3_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_3_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_4_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_4_leg1_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_4_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_4_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_5_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_5_leg1_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_5_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_5_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["ironware", "timber"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_6a_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_6a_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_6a_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["rice", "salt"] }
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_6b_leg1_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_6b_leg2_deck"
+actions = ["rest", "talk", "gift"]
+
+[[act_places]]
+family = "mio"
+place = "mio_voyage_6b_leg2_dock"
+actions = ["job", "talk", "rumor"]
+jobs = ["dock_work"]
+job_goods = { dock_work = ["rice", "salt"] }

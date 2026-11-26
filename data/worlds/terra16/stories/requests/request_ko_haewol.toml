@@ -1,0 +1,181 @@
+# 请托：珠子怎么分（request_ko_haewol）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：高海月（ko_haewol，1535-03-14 生，女），济州出身的海女，1564 年起按日程在釜山（busan）的码头；身份档 0（平民），中风险。cast：cast/story_eastasia.toml。
+# 类型：说服某人（persuade）。任务单写的是三章，文件里是五章：offer（报价）、persuade（税吏棚子里的空匣子）、result（按规矩谈成）、result_paid（垫了贡银）、result_partial（检定失败，税吏只少收两成）。
+#   多出两章是引擎的限制：同一轨道里不能用 requires 去挡本轨道别的路上才设的旗标，所以 result 的两个 requires 选项（_rule / _paid）拆成三章，由 persuade 的 next 与 fail.next 分别送到；每章两个无 requires 的选项。
+#   检定失败没有回复文字（引擎在失败时不显示 reply），失败后的情形写在 result_partial 的正文与 fail 的见闻里。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_ko_haewol）启动；offer 章不写 at，objectives 为在港里找到她（她的日程 1564—1590 在釜山的码头）。offer 的 deadline 为窗口止日 1590-06-30，timeout 直接 failed，不写见闻。
+# 窗口：报价 1566-01-01 至 1590-06-30；之后的章节 1566-01-01 至 1590-12-31（when 的日期条件，普通章不写 window）。persuade 进行中 deadline_days=30，超时走 failed：她来信一封、好感 -3、旗标 _late，另有一条超时见闻（章级见闻挪到 argue 选项上，免得超时也报“按规矩收了贡”）。
+# 依据·史实背景：朝鲜王朝的海女（潜女）要向官府进贡鲍鱼、珍珠等海产，贡数由地方官按册征收，历来是海女的重负；济州海女也出陆到半岛南岸作业。海女在岸边用石墙围起的火塘（불턱）烤火、换衣、商量下水的事。
+# 依据·原创：高海月、新来的税吏、打结计人的绳子、“救一回，多一颗”的分法、税吏的空匣子与红绸、剩下的那一颗珠子。
+# 待核：釜山一带海女采珠的规模与贡额（正文不写数目，只写“全数”“两成”）。
+# 秘密：cast 写着她藏了最好的几颗珍珠没交——全轨道不写、不暗示，也不写她手里有多少；见闻同样不写。
+# C7：她与申景、真鹤、朴素月的线都在 1566 年以前或另有归属；本轨道 1566 年起，不写这三人，不写恋爱与心动，不用 relation/tie/bond/heart。
+# 口吻：招呼语“哟，旱地人。想下水？先看我潜一回，数数我憋了多久。”全轨道只用一次，在 offer 正文；长哨只在 offer 正文写一次（回绝的回复里是一声短哨）。
+# 读的旗标：无。不读 c7_ 旗标，无主线门禁（gate_main 与 variant_main 为空）。
+# 设的旗标：分支 c13_request_ko_haewol_accepted（offer 接下）、_rule（persuade 按规矩谈成）、_paid（persuade 垫了贡银）；终局每条路只设一面：_declined（offer 回绝）、_late（persuade 超时）、_done（result）、_partial（result_paid 与 result_partial）。
+# 报酬：最好的结局 cash 550、好感合计 +15（接下 2 + 下水 5 + 收尾 8）、名声 +1、回忆一幅；垫了贡银的路先付 300、收尾还 850（300 垫款 + 550）；检定失败的路付一半 300。
+# 依赖：港口 busan（ports_east_asia.toml）；技能 diving（skills.toml）；属性 eloquence；人物 ko_haewol。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_ko_haewol-result「按结分的珍珠」：釜山南滩石墙围起的火塘边，一块湿麻布上摊着珍珠，旁边一串打满结的绳子，海月指间捏着最后一颗。
+
+[[tracks]]
+key = "request_ko_haewol"
+name = "珠子怎么分"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ko_haewol"]
+
+# 一、一个结一个人：釜山浦的南滩，高海月潜了一回，上岸说起新来的税吏。
+[[tracks.chapters]]
+key = "offer"
+title = "一个结一个人"
+text = "釜山浦的南滩，海女们的小船泊在礁石外头。高海月扶着船帮朝岸上看了我一眼：“哟，旱地人。想下水？先看我潜一回，数数我憋了多久。”她一翻身没进水里。我在岸上数，数过了一百，水面还是平的。忽然一声长哨从水上炸开，半个海湾都听得见，船上的女人跟着笑起来。她上了岸，坐进礁石后头那圈石墙围着的火塘边，一把一把拧头发，水顺着辫梢滴进沙里。她说，新来的税吏昨天在滩头贴了告示：今年的珍珠，全数交上去。“我们有规矩。谁潜的，谁在水下救过谁，珠子按这个分。交贡的那一份，也按这个出。”她把头发甩到肩后，“全数交，就是说规矩不算数。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "ko_haewol", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去税吏那里，替她们把规矩讲清楚。"
+next = "persuade"
+reply = "她从腰上解下一串绳子递给我。绳上没穿珠子，只打着一排结，有大有小，有两个挨得特别紧。“一个结一个人。你给他数。”她把绳头在我手腕上绕了一圈，打了个活扣，“别弄丢了。这上头的人，一个也不许少。”"
+effects = [{ kind = "affinity", person = "ko_haewol", value = 2 }, { kind = "flag", flag = "c13_request_ko_haewol_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_rule"
+text = "先问她：在水下救过人的，多分几颗？"
+next = "persuade"
+reply = "“救一回，多一颗。”她说得很快，又补一句，“被救的那个，不少分。”她拿树枝在沙上划了两道，挨得很近，“去年秋天，西边礁石底下，一个托着一个上来的。”说完她才把那串打满结的绳子扔给我。绳子中间，两个结紧紧挨着，跟沙上那两道一样。"
+effects = [{ kind = "affinity", person = "ko_haewol", value = 2 }, { kind = "flag", flag = "c13_request_ko_haewol_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "贡物的事，我不插手。"
+next = "failed"
+reply = "她点点头，没劝，也没骂，把半干的头发往脑后一挽，起身往水边走。下水前她冲船上吹了一声短哨，那几个女人便一个跟一个翻进了海里。"
+effects = [{ kind = "flag", flag = "c13_request_ko_haewol_declined" }]
+
+# 二、空匣子：码头边税吏的草棚，案上一只新漆的空匣子，他要一个理由。
+[[tracks.chapters]]
+key = "persuade"
+title = "空匣子"
+text = "税吏的棚子搭在码头边上，草席顶，四面透风。他坐在一张矮案后头，案上摆着一只匣子，漆是新上的，里头垫着红绸，空的。他说贡数是上头定下的，册子上写多少就是多少；海女先自己分了再交，那叫欺上。我把那串绳子搁在案上。他看了一眼，没碰。“你替她们来，就给我一个理由。”他把匣盖合上，又掀开，“说不出来，明天我自己下滩去收。”"
+speaker = "captain"
+mood = "tense"
+at = "busan"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "ko_haewol", value = true }]
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "letter", person = "ko_haewol", text = "税吏自己下了滩，收走了一半。规矩还在，今年的珠子没了。——高海月" }, { kind = "affinity", person = "ko_haewol", value = -3 }, { kind = "flag", flag = "c13_request_ko_haewol_late" }], news = "釜山的新税吏等了一个月没人来讲理，自己带人下了南滩，海女们今年的珍珠被收走了一半。" }
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "数给他听：一个结一个人，交贡的那份早按规矩留出来了。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+reply = "我从头一个结数起，每数一个，说一句这人哪年下的水。数到第十二个，他抬手拦住，问这些人是不是都在。我说都在，在水里。他盯着那两个挨得紧的结看了一会儿，把空匣子往我这边推了推：“那就按她们的规矩交。交多少，我照数记。”"
+effects = [{ kind = "affinity", person = "ko_haewol", value = 3 }, { kind = "flag", flag = "c13_request_ko_haewol_rule" }]
+news = "釜山码头的棚子里，新来的税吏对着一串打满结的绳数了半天，最后按海女的规矩收了贡。"
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "ko_haewol", value = -2 }], news = "釜山码头的税吏听人数了一下午绳结，末了只肯少收两成珍珠，南滩的海女们在火塘边骂了半夜。" }
+
+[[tracks.chapters.choices]]
+key = "dive"
+text = "请他明天坐船出去，看一回海女下水。"
+requires = [{ kind = "skill", skill = "diving", ge = 60 }]
+hint = "要请他看，自己得先下得去——我这一口气，还撑不到礁石底下。"
+next = "result"
+reply = "第二天一早，他裹着官袍缩在船尾。我跟着她们下了一回，浮上来时喘得说不出话，手里只抓着一把海草。她们一个接一个下去，一个接一个上来，有一回两个人一起冒出水面，一个托着另一个的下巴。税吏在船上看了一上午，一句话没说。回到棚子里，他把那串绳子拿起来，从头数了一遍，说那就按规矩。"
+effects = [{ kind = "affinity", person = "ko_haewol", value = 5 }, { kind = "flag", flag = "c13_request_ko_haewol_rule" }]
+news = "釜山的新税吏坐海女的小船出了一趟湾，看了一上午人下水，回来就改口，说贡照海女的规矩收。"
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "替海女们补上差的那一点贡银。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "身上的银子凑不齐那个数。"
+next = "result_paid"
+reply = "税吏把银子一块一块过了秤，在册子上写了“贡足”两个字，匣子空着，他也不在意了。消息比我先回到南滩。高海月站在火塘边，看见我走过来，瞪了我一眼，什么也没说，转身去翻晒在石墙上的网。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "ko_haewol", value = 2 }, { kind = "flag", flag = "c13_request_ko_haewol_paid" }]
+news = "釜山码头的税吏收了外来船长一包银子，在册子上写了贡足，南滩的海女照旧按自己的规矩交珠子。"
+
+# 三、剩下的那一颗：按规矩谈成，海女们在火塘边按结分珠子，最后剩一颗。
+[[tracks.chapters]]
+key = "result"
+title = "剩下的那一颗"
+text = "收贡的事过去了几天，海女们在南滩分今年的珠子。高海月蹲在火塘边，面前摊着一块湿麻布，旁边是那串绳子和一只磨得发亮的旧木匣。她一颗一颗从布上拣，按结分：这个结三颗，那个结四颗，挨得紧的那两个结，前头那个多给一颗。女人们挨个过来拿，拿了就揣进怀里，没人争，也没人数第二遍。分到最后，布上还剩一颗，米粒大，颜色发灰。她捏在指尖，对着太阳看了看，又看我。“你那份，要不要？”"
+speaker = "captain"
+mood = "cheerful"
+at = "busan"
+objectives = [{ kind = "person", person = "ko_haewol", text = "在南滩的火塘边找到她" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "ko_haewol", value = true }]
+news = "釜山的海女在滩上按结分了今年的珍珠，剩下一颗，说是留给下一个在水下救人的。"
+
+[[tracks.chapters.choices]]
+key = "take_bead"
+text = "说：我不潜，不分。"
+next = "done"
+reply = "她笑出声来，笑得火塘边的女人都扭过头。她把那颗珠子丢进旧木匣里，“那就记在下一个救人的人名下。”说着在绳尾空出来的地方比了比，像是已经给那个人留了位置。她又从怀里摸出一个布包塞给我：“这是收贡剩下的钱，不是拿珠子换的。你拿着。”"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "ko_haewol", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_ko_haewol_done" }, { kind = "memory", memory = "mem-request_ko_haewol-result", title = "按结分的珍珠" }]
+
+[[tracks.chapters.choices]]
+key = "next_year"
+text = "说：留给明年头一个下水的人。"
+next = "done"
+reply = "“明年谁头一个下，我说了算。”她把珠子往木匣里一丢，啪地盖上盖子。过了一会儿，她从怀里摸出一个布包塞给我，“收贡剩下的钱，你拿着。珠子的事，少替我们操心。”她说这话时没看我，手上已经在给绳子打新结了。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "ko_haewol", value = 5 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_ko_haewol_done" }]
+news = "釜山南滩的海女按结分完了今年的珍珠，剩下一颗灰扑扑的，高海月说留给明年头一个下水的人。"
+
+# 三′、垫上的银子：贡银是我垫的，她照样按结分珠子，分完了来算这笔账。
+[[tracks.chapters]]
+key = "result_paid"
+title = "垫上的银子"
+text = "分珠子那天，高海月没招呼我，是船上的两个女人把我拉到火塘边的。她蹲在湿麻布前，按结一颗一颗分，分得很慢，像是故意让我看着。女人们拿了珠子，经过我身边时都看我一眼。最后一颗她没往布上放，夹在两根指头中间，眼睛一直在我脸上。“税吏的册子上写着贡足，满釜山浦都知道那是谁的银子。”她把珠子在指头上转了半圈，“这一颗，抵你那包银子，够不够？”"
+speaker = "captain"
+mood = "tense"
+at = "busan"
+objectives = [{ kind = "person", person = "ko_haewol", text = "去南滩的火塘边，跟她算那包银子" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "ko_haewol", value = true }]
+news = "釜山南滩的海女分珍珠那天，替她们垫贡银的外来船长也在火塘边，高海月跟那船长当众算了半天账。"
+
+[[tracks.chapters.choices]]
+key = "paid_way"
+text = "说：贡银我垫了，珠子就算了。"
+next = "done"
+reply = "她把一小包钱塞进我手里，又压上一包。头一包正好是我垫的那个数，一文不少；第二包是收贡剩下的。“规矩里没有外人替我们交贡这一条。”她把那颗珠子搁回麻布上，“下回要帮，先来火塘边问我。”"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "ko_haewol", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_ko_haewol_partial" }]
+
+[[tracks.chapters.choices]]
+key = "keep_silver"
+text = "说：垫的银子不用还了。"
+next = "done"
+reply = "“不用还？”她从怀里摸出两包钱掂了掂，小的那包揣了回去，大的塞给我，“那就欠着。”她拿起那串绳子，在绳尾另打了一个结，打得很紧，比别的结都小。“欠旱地人的，我们也记在绳上。哪年你跟我们下一回水，再来解。”"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "ko_haewol", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_ko_haewol_partial" }]
+
+# 三″、少收两成：我没讲动税吏，他只让了两成；她照样按结分，布上一颗不剩。
+[[tracks.chapters]]
+key = "result_partial"
+title = "少收的两成"
+text = "我没能讲动他。税吏数结数得不耐烦，最后只说少收两成，第二天带着人下了滩，把那只空匣子装满了。分珠子那天，火塘边的麻布上稀稀拉拉，铺不满一角。高海月照样按结一颗一颗分，有几个结只分到一颗；挨得紧的那两个结，前头那个多出的一颗，她也没省。分完了，布上什么也不剩。她把绳子绕回腰上，拍了拍手上的沙。“今年分得少。”她说，“规矩还在。”说着解下腰间的钱袋，在手里掂了掂。"
+speaker = "captain"
+mood = "sad"
+at = "busan"
+objectives = [{ kind = "person", person = "ko_haewol", text = "回南滩的火塘边，看她分今年的珠子" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "ko_haewol", value = true }]
+news = "釜山的海女今年还是按结分了珍珠，税吏只让了两成，火塘边的麻布上一颗也没剩下。"
+
+[[tracks.chapters.choices]]
+key = "take_half"
+text = "伸手去接她的钱袋。"
+next = "done"
+reply = "她没急着给，先把钱倒在麻布上，数出一半装回袋里，数得很仔细，数完把袋口一扎。“你讲下来两成，今年就付你一半。剩下的，等哪年税吏换了人再说。”她把钱袋往我怀里一推，“别嫌少，今年谁都少。”"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "ko_haewol", value = 4 }, { kind = "flag", flag = "c13_request_ko_haewol_partial" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_pay"
+text = "说：今年分得少，这钱我不要。"
+next = "done"
+reply = "她看了我一会儿，把钱袋系回腰上。“那这一趟算你白跑。”她转身朝水边喊了一嗓子，船上几个女人都往这边看，有人冲我扬了扬手里的网兜。“明年这时候再来，”她说，“那时候珠子多，你看着我们分。”"
+effects = [{ kind = "affinity", person = "ko_haewol", value = 5 }, { kind = "flag", flag = "c13_request_ko_haewol_partial" }]

@@ -1,0 +1,229 @@
+# 请托：湾外的接济船（request_wang_wanggao）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：王望高（wang_wanggao，生年不详），福建水寨的把总，渡海追捕林凤；1575 年 5—6 月在马尼拉同西班牙人周旋，8—9 月带着使节回福州。
+# 类型：打一仗（fight）。主线四章：offer（报价）、battle（打退）或 shoal（逼上浅滩）二选一、report（禀帖，实报或由他写）；
+#       另有 report_escaped（船溜了时的禀帖）。brief 把“船溜了”做成 report 里带旗标条件的第三个选项；被挡住的选项会整排列出来，
+#       一章放不下，所以拆成两章，路线由 shoal 的 fail 分支决定（做法同 request_grace_omalley 的 after_missed）。章数因此是 5，不是 4。
+# 报价：T（当面）。马尼拉（manila），auto=false，玩家“问请托”启动；offer 不写 at，目标是在港里找到他；
+#       门禁 c13_main_lin_wandeng=false（林晚灯主线写到王望高，对这位主角关闭）；窗口 1575-05-01 至 06-20（日程 05-01 至 06-25，收窄）；
+#       deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实：1574—75 年林凤袭马尼拉后退守吕宋北边（彭加丝兰一带）；1575 年王望高渡海追到吕宋，6 月底随西班牙使节离马尼拉，7 月入闽。
+#       正文用传闻口吻：林凤的残部缩在北边的海湾里；不写林凤本人，不写他被围或突围（归时间线与林晚灯主线）。
+# 依据·原创：给残部运米的接济船、船上的闽人（王望高眼里是逃民）、石桌上用酒划的海岸、潮州麻袋、收条上只有船名、
+#       “击沉贼船一艘，斩获无算”的禀帖。西班牙总督不出场，只写“总督府”。
+# 秘密：人设无 secret；他暗数西班牙人的炮、把吕宋的闽人看作逃民——只在 offer 里露一笔（问炮、说逃民），不进见闻。
+# 读写的旗标：写 c13_request_wang_wanggao_accepted（offer 两条接法）、_declined（回绝，终局）、_rice_given（battle 分米给村子）、
+#       _shoal（shoal 成功，供 report 换一句话）、_escaped（shoal 的 wind 失败）、_late（battle/shoal 超时）、
+#       _done（report 最好结局与由他写）、_partial（船溜了或 report 超时）。终局旗标 _declined / _done / _partial / _late 各条路径只设一面。
+#       读 c13_main_lin_wandeng（由林晚灯主线设，外部）；读自己设的 _rice_given / _shoal（report 的 variants）。不设 c7_ 旗标。
+# 依赖：港口 manila、tondo、fuzhou 与势力 ming 均已存在；技能 tide_reading 在 skills.toml；不依赖 B10b 改名。
+#       与 C7 无交叉（人设 c7 为 none）。
+# 回忆插画：mem-request_wang_wanggao-report：油灯下，一个武官模样的人握着笔，把禀帖上“斩获无算”划掉，旁边添上一个实数。
+
+[[tracks]]
+key = "request_wang_wanggao"
+name = "湾外的接济船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["wang_wanggao"]
+
+# 报价：总督府院子里的石桌。他用酒划海岸，顺嘴问了一句炮。
+[[tracks.chapters]]
+key = "offer"
+title = "总督府院子里的酒"
+text = "总督府的院子里摆着张石桌，一个穿明朝武官袍子的汉子正跟两个西班牙军官碰杯，袖口湿了一片也不管。他一眼瞧见你，举杯招手：“来，先喝一杯。番人的酒，酸是酸了点，劲儿倒足。”他用手指蘸酒，在石桌上划出一道海岸，北边画了个圈：林凤的残部缩在那儿，隔几夜就有一条船贴着西岸往北送米，“划船的是些赖在吕宋不肯回的逃民，一船米够几百口吃一旬”。他要你把那条船截下，在湾外打一仗，或者把它逼上浅滩。说着他凑近半步，笑容没变，声音低了：“对了，番人营里的炮，你数过没有？几门？”"
+speaker = "wang_wanggao"
+mood = "cheerful"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1575, 5, 1], to = [1575, 6, 20] },
+  { kind = "flag", flag = "c13_main_lin_wandeng", value = false },
+]
+objectives = [{ kind = "person", person = "wang_wanggao", text = "在港里找到他" }]
+deadline = [1575, 6, 20]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "在湾外守着，打"
+next = "battle"
+reply = "他一巴掌拍在你肩上，杯里的酒溅出半盏：“打下来，功劳簿上我给你写头一行。”说完又转身去和军官碰杯，笑声盖过了整个院子。只有你看见，他的目光越过杯沿，在院墙那一排炮口上停了停，嘴唇无声地动了几下。"
+effects = [
+  { kind = "flag", flag = "c13_request_wang_wanggao_accepted" },
+  { kind = "affinity", person = "wang_wanggao", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "shoal"
+text = "去汤都外头，把它逼上浅滩"
+next = "shoal"
+reply = "“不打也行，船上的米别糟蹋了。”他用袖口抹掉石桌上的海岸，湿漉漉的一片，“那米，我水寨的兄弟也饿着，半年没见过一顿干饭了。”他又补了一句：“汤都外头的水道一天一个样，你自己去看。”"
+effects = [
+  { kind = "flag", flag = "c13_request_wang_wanggao_accepted" },
+  { kind = "affinity", person = "wang_wanggao", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这仗我不接"
+next = "failed"
+reply = "他哈哈一笑，也不恼：“强人所难没意思。”转身又去和番人碰杯，杯沿叮的一声，酒洒在刚才画海岸的地方，把那个圈冲糊了。"
+effects = [{ kind = "flag", flag = "c13_request_wang_wanggao_declined" }]
+
+# 打：运米的船被打退，丢下几袋米；米交给谁，由你定。不点名对手。
+[[tracks.chapters]]
+key = "battle"
+title = "你打退的那条船"
+text = "炮声歇了，你打退的那条船丢下十一袋米，调头往北逃了，帆上挂着一串被打断的竹篾。袋子堆在你的甲板上，袋口缝的是潮州的粗麻线，还是湿的。水手拿刀划开一袋，白米淌出来，混着几粒碎贝壳。水手蹲在米袋边问往哪儿卸：马尼拉的总督府不远，沿岸的村子也不远。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "wang_wanggao", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在湾外打退运米的船" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [
+  { kind = "flag", flag = "c13_request_wang_wanggao_late" },
+  { kind = "affinity", person = "wang_wanggao", value = -3 },
+  { kind = "letter", person = "wang_wanggao", text = "我随使节回福建了，等不得你。北边那条运米的船后来自己断了，不必再追。欠你的那一杯，福州补。——王望高" },
+] }
+
+[[tracks.chapters.choices]]
+key = "to_governor"
+text = "把米交给马尼拉的总督府"
+next = "report"
+reply = "总督府的书记官收了米，用蘸水笔写了一张收条，一式两份，上头只有你的船名，水寨的字号一个字也没提。他按了印，说粮仓正缺米。你把收条折好，收进怀里。"
+effects = [{ kind = "affinity", person = "wang_wanggao", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "to_villages"
+text = "把米分给沿岸挨饿的村子"
+next = "report"
+reply = "你把米袋一袋袋扛到村头的空地上。一个老汉抓起一把米，看了又看，放进嘴里咬了一下，才信是真的；他身后的人谁也不敢往前站。后来听说，王把总知道了，嘟囔一句“便宜了番人”，倒也没说别的。"
+effects = [
+  { kind = "affinity", person = "wang_wanggao", value = 3 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_rice_given" },
+]
+
+# 逼：汤都外的海湾，落潮的沙洲。读潮的人稳，抢风的人险。
+[[tracks.chapters]]
+key = "shoal"
+title = "汤都外的沙洲"
+text = "汤都外头的海湾浅，落潮时沙洲一片片露出来，灰白灰白的，像趴了一湾子的牛。过了半夜，那条运米的船果然贴着岸来了：不点灯，帆只升了一半，船头站着个人，手里的长竹竿不住往水里探——他认得这里的水道。竹竿每探一回，你的船就在黑里多等一回。要让它搁下，只能把它从水道里逼出去，逼向那片刚露出来的沙。"
+speaker = "captain"
+mood = "tense"
+at = "tondo"
+when = [{ kind = "alive", person = "wang_wanggao", value = true }]
+objectives = [{ kind = "at", at = "tondo", text = "到汤都外的海湾守夜" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [
+  { kind = "flag", flag = "c13_request_wang_wanggao_late" },
+  { kind = "affinity", person = "wang_wanggao", value = -3 },
+] }
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "算准落潮，把它逼上沙洲"
+next = "report"
+reply = "你不动，等潮。潮水一寸一寸地退，你数着船舷上的刻痕，等到那根竹竿探不到底了，才放帆压过去。它想转舵，船底已经吃了沙，斜斜地搁在那儿，帆还鼓着，船身却纹丝不动。船上的人跳下水，涉着水往北跑了，一路喊的是闽南话。"
+news = "汤都外的海湾里，夜里运米的船在落潮时搁上了沙洲，船上的人涉水跑了。听说是被一条外来的船算准了潮，逼上去的。"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "你分不清哪片沙是在退、哪片是在涨，这一夜赌不起。"
+effects = [
+  { kind = "affinity", person = "wang_wanggao", value = 3 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_shoal" },
+]
+
+[[tracks.chapters.choices]]
+key = "wind"
+text = "抢上风，硬逼过去"
+next = "report"
+reply = "你抢到它的上风，船头几乎擦着它的舷，逼得它没处转身。它的舵手一把推死了舵，船头一歪，扎进沙里，桅杆晃了三晃才站住。船上的人翻过船舷，一个接一个跳进黑水里，没人回头。"
+news = "汤都外的沙洲上，夜里一条运米的船被一条外来的船抢了上风，船头扎进了沙里。第二天渔户划去看，船已经空了，只剩半袋米。"
+check = { attr = "seamanship", base = 5, per = 8 }
+fail = { next = "report_escaped", effects = [
+  { kind = "affinity", person = "wang_wanggao", value = -2 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_escaped" },
+], news = "汤都外的海湾里，夜里一条运米的船被追得没处躲，最后擦着沙洲溜了出去，只在浅滩上犁出一道长沟。" }
+effects = [
+  { kind = "affinity", person = "wang_wanggao", value = 3 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_shoal" },
+]
+
+# 禀帖：他已经写好了“击沉贼船一艘，斩获无算”。实报，或由他去写。
+[[tracks.chapters]]
+key = "report"
+title = "禀帖"
+text = "你找到王把总的时候，他正趴在桌上给上司写禀帖，一句一念，念到得意处，笔尖在纸上顿出个墨点。桌角压着你带来的那张收条，只有你的船名，没有水寨的字号，他看一眼，皱一下眉。“来，你说说。”他头也不抬，“截下来的那条船，多大？船上几个人？”不等你开口，他把禀帖转过来，上头已经写着：击沉贼船一艘，斩获无算。“上司最爱看这个‘无算’。”"
+speaker = "wang_wanggao"
+mood = "cheerful"
+when = [{ kind = "alive", person = "wang_wanggao", value = true }]
+objectives = [{ kind = "person", person = "wang_wanggao", text = "找到王把总" }]
+deadline = [1575, 9, 30]
+timeout = { next = "done", effects = [
+  { kind = "cash", value = 1100 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_partial" },
+  { kind = "letter", person = "wang_wanggao", text = "我回福建了，赏银托马尼拉的一个闽商转交。禀帖上写了你的船名，上司问起，我替你说话。那杯酒，下回补上。——王望高" },
+] }
+
+[[tracks.chapters.variants]]
+key = "v1_villages"
+when = [{ kind = "flag", flag = "c13_request_wang_wanggao_rice_given" }]
+text = "你找到王把总的时候，他正趴在桌上给上司写禀帖，一句一念，念到得意处，笔尖在纸上顿出个墨点。桌角撒着一撮白米，是他手下的兵从沿岸村子里带回来的，说村里人逢人就提那个扛米来的船长。他拈起几粒又丢回去：“米倒是白。”接着问：“截下来的那条船，多大？船上几个人？”不等你开口，他把禀帖转过来，上头已经写着：击沉贼船一艘，斩获无算。“上司最爱看这个‘无算’。”"
+
+[[tracks.chapters.variants]]
+key = "v2_shoal"
+when = [{ kind = "flag", flag = "c13_request_wang_wanggao_shoal" }]
+text = "你找到王把总的时候，他正趴在桌上给上司写禀帖，一句一念，念到得意处，笔尖在纸上顿出个墨点。禀帖旁摊着一张他自己描的汤都外水道图，沙洲涂成了灰色，有一块被墨手指蹭花了。“来，你说说。”他头也不抬，“搁在沙上的那条船，多大？船上几个人？”不等你开口，他把禀帖转过来，上头已经写着：击沉贼船一艘，斩获无算。“沉不沉，上司又看不见。”"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：船多大、几个人、怎么截的"
+next = "done"
+reply = "你一样一样报：船长不过六丈，十一个人，没挂旗，没一门炮；怎么截的，从头说到尾。他听着，笔尖悬在“无算”上头，悬了好一会儿，才一笔划掉，改成“船上十一人”，连“击沉”也划了，换了个“截”字。他把笔往砚台上一搁，叹口气：“实数也好，上司看了放心。”灯芯爆了个花，纸上改过的那一行，在油灯下看得清清楚楚。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "wang_wanggao", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "ming", value = 2 },
+  { kind = "memory", memory = "mem-request_wang_wanggao-report", title = "把总灯下的禀帖" },
+  { kind = "flag", flag = "c13_request_wang_wanggao_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "由他去写"
+next = "done"
+reply = "你点了点头。他高兴地又添了两句，“夺其粮船，贼众胆落”，念给你听，自己先笑了。赏银封好递过来，外头多包了一层红纸，掂着却和料想的一样沉：“多封一层纸，图个吉利。”桌上那行“斩获无算”，墨还没干。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "wang_wanggao", value = 6 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "ming", value = 2 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_done" },
+]
+
+# 禀帖（船溜了）：他已经写好了，你告诉他那条船还在北边。
+[[tracks.chapters]]
+key = "report_escaped"
+title = "遁走的贼船"
+text = "你找到王把总的时候，他刚把禀帖写完头一半，墨迹还亮着。他笑呵呵地问：“截下来的那条船，多大？船上几个人？”桌上的纸摊着，那一行早写好了：击沉贼船一艘，斩获无算。那夜它擦着沙洲溜了出去，这会儿多半已经靠了北边的岸，米袋一袋没少。他的笔搁在砚台上，正等你开口。"
+speaker = "wang_wanggao"
+mood = "tense"
+when = [{ kind = "alive", person = "wang_wanggao", value = true }]
+objectives = [{ kind = "person", person = "wang_wanggao", text = "找到王把总" }]
+deadline = [1575, 9, 30]
+timeout = { next = "done", effects = [
+  { kind = "cash", value = 1100 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_partial" },
+  { kind = "letter", person = "wang_wanggao", text = "我回福建了，赏银托马尼拉的一个闽商转交。禀帖上写了你的船名，船没拦住的事我也照实写了。那杯酒，下回补上。——王望高" },
+] }
+
+[[tracks.chapters.choices]]
+key = "escaped"
+text = "告诉他：那船溜了"
+next = "done"
+reply = "他沉默了一会儿，把笔蘸饱墨，在“击沉”上划一道，旁边添了“遁走”两个字。“也罢。”他吹了吹纸，“跑得了船，跑不了人。北边的米断它一回，他们就多饿一旬，我记着这一笔。”他没骂你，只把赏银封好，递过来的时候，手停了一下。"
+effects = [
+  { kind = "cash", value = 1100 },
+  { kind = "affinity", person = "wang_wanggao", value = 4 },
+  { kind = "flag", flag = "c13_request_wang_wanggao_partial" },
+]

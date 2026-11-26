@@ -1,0 +1,223 @@
+# C13d 请托：港外那条船（request_gaspar_yanga）。中文，Claude 写；寰宇先只做中文，不写英文覆盖。
+# 人物：加斯帕尔·扬加（gaspar_yanga，1545-01-01 生，男；cast/historical_05_americas.toml）。西非出身，被卖到新西班牙的甘蔗园，约 1570 年逃进韦拉克鲁斯腹地的山里，带着逃奴建起村子；人说他在故乡出身王族，他从不否认。势力 veracruz_maroons。
+# 类型：打一仗（fight）。四章：offer（报价）、battle（打退来劫的船）、license（港务官屋里的执照）、after（回港讨工钱）；没有 stage 章。
+# 报价：V（到访）。auto=true；offer 章 at=veracruz，人物混在骡栏的骡夫里说话（speaker=gaspar_yanga）；family=c13_offer_veracruz，冷却 20 天；offer 章 deadline=1590-10-31，timeout 走 failed，不写见闻。
+# 窗口：报价 1575-01-15 至 1590-10-31（人物 1570—1590 日程在韦拉克鲁斯）。进行中：battle 章 deadline_days=90；license 章 deadline_days=60；after 章 deadline_days=120。每个 timeout 都有去处（failed 或 done），附一封口信，不写见闻。
+# 依据·史实背景：16 世纪末新西班牙的逃奴社群在韦拉克鲁斯一带的山地里自立，靠劫补给队换口粮；扬加的名字在港口与骡夫之间流传。只写 1590 年以前的传闻，不写具体战役。
+# 依据·原创：扬加的口吻与口头禅、“庄稼遭了虫”的比方；骡栏与那袋银币；抓逃奴的武装小船与它的执照；港务官与墙上那张缺了一栏的纸。
+# 不写：村子的位置、山路、人数；1609 年的战事与后来建村；袭击的细节；对手的名字。
+# 读的旗标（只读，不设）：无。
+# 写的旗标：c13_request_gaspar_yanga_accepted（offer 接下的两条路）；declined（终局，回绝）；mercy（battle 放走小艇，分支，after 的 mercy 变体读它）；late（超时，终局）；partial（after 问地方，或超时，终局）；done（after 收下或只收一半，终局）。每条路径只设一面终局旗标。
+# 依赖：港口 veracruz；人物 gaspar_yanga；检定属性 eloquence（captain.toml 已有）；逃亡者的请托不加名声；不给奖励物品。势力 key veracruz_maroons 已在 factions_runtime.toml 登记，本请托不写 reputation。
+# 回忆插画：mem-request_gaspar_yanga-after：韦拉克鲁斯城外的骡栏，高个子把皮袋推过草料槽，远处是一道灰色的山脊。
+
+[[tracks]]
+key = "request_gaspar_yanga"
+name = "港外那条船"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["gaspar_yanga"]
+
+# 一、报价：骡栏的草料堆后面，他先说港外那条船。
+[[tracks.chapters]]
+key = "offer"
+title = "骡夫堆里的人"
+text = "骡栏的草料堆后面，一个披着麻布的高个子蹲在水槽边，慢慢把干草抖进槽里，抖得很匀，像在撒种。你走近，他没抬头，先开了口：“港外那条船，你看见了。”他说得不急不慢。“抓逃奴的。船主拿着市长签的执照，专等山上下来换盐的人。已经有三个被拖上了船，都是换完盐往回走的路上。”他拍了拍手上的灰，“庄稼遭了虫，不能等它自己死。都说我在故乡是王族，我没说不是。在这里我是逃奴。哪个算数，你自己挑。”他要那条船走。打一仗，或者让那张纸作废。哪样都行，只要它明天不在港外。"
+speaker = "gaspar_yanga"
+mood = "tense"
+at = "veracruz"
+cast = ["gaspar_yanga"]
+when = [{ kind = "date", from = [1575, 1, 15], to = [1590, 10, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "gaspar_yanga", ge = 18 }]
+deadline = [1590, 10, 31]
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "打一仗，把它赶走"
+next = "battle"
+reply = "他看着你，像在看一块地能种什么。“好。我的人在岸上看着。”"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "license"
+text = "去港务官那里，让它的执照作废"
+next = "license"
+reply = "“纸上的事，你们比我们会。”他点点头，“我等你的消息。”"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这事我不接"
+next = "failed"
+reply = "他把草料抖进槽里，背过身去，不再说话。"
+effects = [
+  { kind = "flag", flag = "c13_request_gaspar_yanga_declined" },
+]
+
+# 二、打退的那条船：战后，两个捞上甲板的人怎么办。
+[[tracks.chapters]]
+key = "battle"
+title = "捞上甲板的两个人"
+text = "那条船挨了你两轮炮，一根桅杆断了，船头已经转向。剩下的人跳进小艇往南岸划。划得慢，有两个没来得及上艇，被你的水手从水里捞上了甲板，缩在炮位边上发抖。港外那条船再也没有出现。你只知道，你打退了一条船。它是不是港外那一条，岸上的人比你清楚。进港那天，骡栏里有人冲你点了点头。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "gaspar_yanga", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在海上打退一条船" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = -3 },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_late" },
+  { kind = "letter", person = "gaspar_yanga", text = "骡夫带话：港外的船一直没走，山上的人等了你三天，等不下去，就自己想办法去了。" },
+]
+
+[[tracks.chapters.choices]]
+key = "hand_over"
+text = "把捞上来的两人交给港务官"
+next = "after"
+reply = "港务官记了一笔，说要按规矩审。骡栏那边听说了，没说好，也没说不好。"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = 3 },
+]
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "放他们划小艇走"
+next = "after"
+reply = "小艇划远了。岸上有人吹了一声口哨，像鸟叫。"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = 3 },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_mercy" },
+]
+
+# 三、港务官的屋里：墙上的执照缺了一栏。
+[[tracks.chapters]]
+key = "license"
+title = "盖了印的执照"
+text = "港务官的屋里，执照钉在墙上：市长的印，船主的名字，“缉拿逃奴”四个字写得很大。你凑近看，印是真的，朱红还亮。可纸的下半边，总督府那一栏是空的，只压着一道折痕。港务官咳了一声：“市长的印，够用了。”说着，他的手已经摸到了墙上的钉子。"
+speaker = "captain"
+mood = "tense"
+at = "veracruz"
+when = [{ kind = "alive", person = "gaspar_yanga", value = true }]
+objectives = [{ kind = "at", at = "veracruz", text = "到韦拉克鲁斯港务官那里去" }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = -3 },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_late" },
+  { kind = "letter", person = "gaspar_yanga", text = "骡夫带话：那条船还在港外，执照还钉在墙上。山上的人这个月没敢下来换盐。" },
+]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "指给他看：总督府没画押，这张纸不作数"
+next = "after"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "你把那一栏指给他看。港务官盯着看了很久，嘴角动了一下，没有说话。"
+news = "韦拉克鲁斯港务官的屋里，有个船长指着执照说总督府没画押，那张纸就进了抽屉。"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = 3 },
+]
+
+[tracks.chapters.choices.fail]
+next = "battle"
+news = "韦拉克鲁斯港务官不肯松口，执照照旧钉在墙上，船主冷笑着说，港外见。"
+effects = [
+  { kind = "affinity", person = "gaspar_yanga", value = -2 },
+]
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "把一袋钱放在他桌上"
+next = "after"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你身上的银子凑不齐一袋。"
+reply = "他没看钱，先把抽屉拉开又关上。钱袋不见了，执照也不见了。港务官说，那条船明天就得出港。"
+news = "韦拉克鲁斯港务官收了一袋钱，把执照从墙上摘下，港外那条船第二天就出了港。"
+effects = [
+  { kind = "cash", value = -500 },
+  { kind = "affinity", person = "gaspar_yanga", value = 3 },
+]
+
+[[tracks.chapters.choices]]
+key = "fight_after_all"
+text = "算了，还是去打"
+next = "battle"
+reply = "你出门的时候，港务官在后面喊，说出了事别找他。"
+
+# 四、回港讨工钱：皮袋，和一句关于山脊的话。
+[[tracks.chapters]]
+key = "after"
+title = "讨回的工钱"
+text = "骡栏里，高个子把一只沉甸甸的皮袋推到你面前。袋口没系紧，露出的银币有墨西哥城的戳，也有别处的，边缘磨得发亮。他说这是商队欠他们的工钱，他只是讨回来。“麦子晒过了头就发霉，工钱拖久了也一样。”他望着山脊，说有一天他们会有自己的镇子、自己的教堂，名字写在王的册子上。说这话的时候他没看你，看的是远处那道灰线，眼神像在量一段还没走完的路。"
+speaker = "gaspar_yanga"
+mood = "mystic"
+at = "veracruz"
+cast = ["gaspar_yanga"]
+when = [{ kind = "alive", person = "gaspar_yanga", value = true }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [
+  { kind = "flag", flag = "c13_request_gaspar_yanga_partial" },
+  { kind = "letter", person = "gaspar_yanga", text = "骡夫带话：那袋工钱交给了骡栏的老板，话是他留的。你没来，他也就不再提了。" },
+]
+
+[[tracks.chapters.variants]]
+key = "mercy"
+when = [{ kind = "flag", flag = "c13_request_gaspar_yanga_mercy" }]
+text = "骡栏里，高个子把一只沉甸甸的皮袋推到你面前。袋口没系紧，银币有墨西哥城的戳，也有别处的。他说这是商队欠他们的工钱，他只是讨回来。说到小艇，他停了一下：“放走的那几个，划到南岸了。岸上吹的口哨，是我们的暗号，说他们已经划远了。”他望着山脊，说有一天他们会有自己的镇子、自己的教堂，名字写在王的册子上。说完，他把皮袋往你这边推了推，没再看你。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下"
+next = "done"
+reply = "“收得及时，就不算晚。”他把皮袋口系紧，又推回你手边。"
+news = "韦拉克鲁斯港外那条抓逃奴的小船不见了，骡夫们说山上的人这个月下来换了两回盐。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "gaspar_yanga", value = 8 },
+  { kind = "memory", memory = "mem-request_gaspar_yanga-after", title = "骡栏里的皮袋" },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "只收一半，另一半换成他们要的盐和铁"
+next = "done"
+reply = "你只把一半银子收进袋里，另一半推回去，说换成盐和铁送上山。他看了你很久，笑了：“你记住了我们缺什么。”"
+news = "韦拉克鲁斯骡栏边上，有个船长只收了一半工钱，说另一半换成了盐和铁。骡夫们笑他傻。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "gaspar_yanga", value = 12 },
+  { kind = "memory", memory = "mem-request_gaspar_yanga-after", title = "骡栏里的皮袋" },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_town"
+text = "问他：镇子要建在哪里"
+next = "done"
+reply = "他笑而不答，把皮袋推过来，转身就走。走出两步，又回头说：“问地方的人多了，地方就得往别处挪。”"
+news = "韦拉克鲁斯骡栏里，有个船长问那群人的镇子建在哪里，被高个子笑着挡了回去。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "gaspar_yanga", value = 4 },
+  { kind = "flag", flag = "c13_request_gaspar_yanga_partial" },
+]

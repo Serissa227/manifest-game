@@ -1,0 +1,143 @@
+# 请托：回能岛的伤兵（request_takamaru）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：村上鹰丸（takamaru，1539-05-13 生，男），能岛村上家的水夫，汐的表兄；输赢都刻在船板上，一场也不肯抹。cast：cast/classmates_noshima.toml；势力 imperial_court；身份档 1。
+# 类型：押运／带人（escort）。三章：offer（能岛码头边，报价）、pickup（堺的鱼贩后屋，接人上船）、arrive（回到能岛，收尾）；done / failed 为终点。
+# 报价：T（当面）。人物按日程 1577—1590 在能岛（venue = dock）；auto=false，玩家用 ask:request_takamaru 启动；offer 不写 at，目标为在能岛的码头找到人。
+#   窗口 1579-01-15 至 1587-06-30（第二次木津川口之后、同学重逢之后开放）；offer 到期走 failed，不写见闻。
+# 进行中：pickup 章 deadline_days=60（同一片内海），到期走 failed，鹰丸来一封信，好感 -3，旗标 _late；arrive 是普通章，可以一直等。
+# 依据·史实背景：1578 年冬（天正六年十一月）第二次木津川口之战，九鬼家的大船击败毛利与村上的船队，焙烙火矢烧不动大船；堺此时在织田家治下；
+#   毛利家的家纹一字三星；能岛村上家的纹是圈里一个“上”字；能岛在备后滩西头的芸予诸岛之间。正文不写战斗场面。
+# 依据·原创：四个伤兵（叙事人物，不进 cast）、鱼贩家的后屋、木片上的“上”字记号、番所看手上的茧子、鲣鱼篓、毛利家的小早只问一句、鹰丸背人。
+#   那条“头一个掉头”的船不写船名、船头名，只写成他们的羞耻，不写成背叛。
+# 读的旗标：bond takamaru 至少 C（offer 的 variants：澪的主角多一句“这事，别让你那边的人知道”，不点破身份）；
+#   c13_request_takamaru_delay（arrive 的 variants：腿伤的那个在番所多关了一夜）。
+# 设的旗标：c13_request_takamaru_accepted（两种接法都设）、_declined（回绝）、_delay（番所扣人，分支旗标）、_late（超时）、_done（收尾）。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金 1250（只在 arrive 收尾付一次）、好感最多 +13（接下 +2、接人 +3、收尾 +8；检定失败 -2，超时 -3）、名声 +1、回忆 mem-request_takamaru-arrive；pay_guard 花 100（先 requires cash ≥ 100）。
+# 依赖：港口 noshima、sakai；属性 eloquence、seamanship；人物 takamaru。无需 B10b 改名，无主线门禁。
+# 秘密：他寄信的事、土佐、澪的身份一概不写；见闻里不写那条船。
+# 结构说明：简报要 arrive 在 _delay 时“少一句玩笑”。变体只能换正文、换不了回复，所以缺省正文里放鹰丸的一句玩笑（“瘦了……”），_delay 变体的正文去掉它、改写那条腿；
+#   say_nothing 的回复（口头禅）两种情况共用。番所扣人与鱼篓翻倒的失败分支照 C13d 总决定加了好感 -2，简报未列。
+#   pickup 章不写章级见闻：引擎在 timeout 没写见闻时会借用章级见闻，玩家没去堺却传出“船出了港”就不对了；三个选项与两个失败分支各写一条。
+#   简报写“船坞”，人物日程的场所是 dock，正文与目标都写码头边拖上岸的小早。
+# 回忆插画清单：
+#   mem-request_takamaru-arrive「码头上背着人的鹰丸」：阴天的能岛码头，鹰丸背着一个腿上缠黑布的水夫走上石阶，身后三个人互相搀着，船舷边还挂着鱼篓。
+
+[[tracks]]
+key = "request_takamaru"
+name = "回能岛的伤兵"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["takamaru"]
+
+# 一、困在堺的四个人：能岛码头边，他在船板上描木津川口那个叉。
+[[tracks.chapters]]
+key = "offer"
+title = "困在堺的四个人"
+text = "能岛的码头边拖上来一条小早，鹰丸骑在船舷上，拿小刀往船板上刻。刻痕一排排挤到了船尾，赢的是一道，输的是一个叉。他正在描其中一个叉，描了一遍又一遍，刻得比别的都深——木津川口那一场。“织田家那几条大船，焙烙扔上去，连个火星都不起。”他没抬头，“输就是输，刻上。”刻完了他才说正事：四个能岛的水夫受了伤，没赶上回来的船，困在堺。堺如今是织田家的地方，挂能岛旗的船进不了港，四个人躲在鱼市一个鱼贩家的后屋里。“你的船不挂我们的旗，进得去。”他把小刀插回腰上，压低了声音：“路上要是有毛利家的船来问，别说他们是哪条船上的。”停了停，又说：“那条船，是头一个掉头的。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "takamaru", text = "在能岛的码头找到他" }]
+when = [{ kind = "date", from = [1579, 1, 15], to = [1587, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "takamaru", ge = 18 }]
+deadline = [1587, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "takamaru", level = "C" }]
+text = "能岛的码头边拖上来一条小早，鹰丸骑在船舷上，拿小刀往船板上刻。刻痕一排排挤到了船尾，赢的是一道，输的是一个叉。他正在描其中一个叉，描了一遍又一遍，刻得比别的都深——木津川口那一场。“织田家那几条大船，焙烙扔上去，连个火星都不起。”他没抬头，“输就是输，刻上。”刻完了他才说正事：四个能岛的水夫受了伤，没赶上回来的船，困在堺。挂能岛旗的船进不了织田家的港，四个人躲在鱼市一个鱼贩家的后屋里。“你的船不挂我们的旗，进得去。”他压低了声音：“路上要是有毛利家的船来问，别说他们是哪条船上的。那条船，是头一个掉头的。”他抬眼看了看我，又补一句：“这事，别让你那边的人知道。”"
+
+[[tracks.chapters.choices]]
+key = "take_them"
+text = "接下，去堺把四个人接回能岛。"
+next = "pickup"
+reply = "他从船底摸出一块削平的木片，拿刀尖把堺的鱼市划出来：哪条巷子，巷口第几家，门上挂着一串干章鱼。最后在木片角上刻了一个圈，圈里一个“上”字。“他们见了这个，就知道是能岛来的人。”他把木片抛给我，抛得很准，“走的时候是四个，回来也得是四个。”"
+effects = [{ kind = "affinity", person = "takamaru", value = 2 }, { kind = "flag", flag = "c13_request_takamaru_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_ship"
+text = "接下，问他：那条船掉头，是谁的命令？"
+next = "pickup"
+reply = "“谁的命令都一样，掉头就是掉头。”他的刀一歪，在船板上拉出一道斜痕，划过了旁边两道旧的。他瞪着那道斜痕看了一会儿，没去补。“那四个是摇橹的。摇橹的听船头的。”说完他削下一块木片，划出堺鱼市的巷子，又在角上刻一个圈，圈里一个“上”字，塞进我手里。"
+effects = [{ kind = "affinity", person = "takamaru", value = 2 }, { kind = "flag", flag = "c13_request_takamaru_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "织田家的堺，我不去碰。"
+next = "failed"
+reply = "他没说话，回过头接着描那个叉，刻得很深，木屑一直溅到我的鞋面上。码头上有人喊他去看潮，他应了一声，手上的刀没停。我站了一会儿，他也没再抬头。"
+effects = [{ kind = "flag", flag = "c13_request_takamaru_declined" }]
+
+# 二、鱼贩的后屋：四个人挤在鱼篓中间，番所的人看手上的茧子。
+[[tracks.chapters]]
+key = "pickup"
+title = "鱼贩的后屋"
+text = "堺的鱼市天不亮就开了。鱼贩把我领进后屋，屋里堆满鱼篓，四个能岛的水夫挤在鱼篓中间。最年轻的那个腿上缠着布，布已经黑了，硬得像一层皮。我把木片递过去。领头的翻到角上，看见圈里那个“上”字，眼睛一下就红了：“是鹰丸的刀。他刻‘上’字，那一横总往上翘。”木片在四个人手里传了一圈，传到腿伤的那个手里，他攥着不放。鱼贩在门口探头：这个月港口的番所查船查得严，跳板底下站着两个人，挨个看手上的茧子。四个人身上带着伤，手上全是橹磨出来的茧，一上跳板就会被认出来。"
+at = "sakai"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "sakai", text = "到堺的鱼市接人" }]
+when = [{ kind = "alive", person = "takamaru", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "takamaru", value = -3 }, { kind = "flag", flag = "c13_request_takamaru_late" }, { kind = "letter", person = "takamaru", text = "四个人等不来船，自己扮成挑担的鱼贩出了堺，一路搭渔船，走了一个月才回到能岛。腿伤的那个，以后摇不了橹了。这一笔我记下了。——鹰丸" }] }
+
+[[tracks.chapters.choices]]
+key = "talk_guard"
+text = "大大方方带他们上船，跟番所说是我雇的伤病水手。"
+next = "arrive"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "番所的人看了看他们腿上的布、手上的茧，又看了看我的船尾，问是在哪里伤的。我说在纪伊外海遇了风，桅杆倒下来砸的。他嘴里啧了一声，挥手放了。四个人一个跟着一个上了跳板，没一个回头看。"
+news = "堺的码头上，番所放一条外来的船带走了四个带伤的水手，船主说是雇来的病号，在纪伊外海遇了风。"
+effects = [{ kind = "affinity", person = "takamaru", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "takamaru", value = -2 }, { kind = "flag", flag = "c13_request_takamaru_delay" }], news = "堺的番所扣下一个腿上带伤的水手，说要问话，关了一夜才放；同船的三个在跳板边蹲到天亮，船第二天才出港。" }
+
+[[tracks.chapters.choices]]
+key = "fish_baskets"
+text = "趁夜里装鱼篓，把他们藏在鱼篓里抬上船。"
+next = "arrive"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "鱼贩找来四只装鲣鱼的大篓，人蜷在篓底，上头码一层鲭鱼。脚夫抬着上跳板，番所的人捂着鼻子退了两步。我让人把四只篓直接码进底舱，压在鱼货最底下。鱼腥味熏得人睁不开眼，篓里一声也没有。天亮时，船已经出了堺的港口。"
+news = "堺的港口，一条外来的船天亮前出了港，满船的鱼腥味。鱼市的脚夫说，那几篓鱼抬着比平常沉。"
+effects = [{ kind = "affinity", person = "takamaru", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "takamaru", value = -2 }], news = "堺的鱼市码头夜里翻了一只鲣鱼篓，惊动了巡夜的。那条船只好连夜绕到南边的小码头，天亮才装完。" }
+
+[[tracks.chapters.choices]]
+key = "pay_guard"
+text = "给番所的人塞一笔钱，请他今晚别查这一条船。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "你摸了摸钱袋，里头那点钱，塞不满番所那人的袖子。"
+reply = "番所的人把钱拢进袖子，什么也没问。那一夜他在隔壁一条运米的船上待得特别久，灯笼一直亮到后半夜。四个人从跳板上过去的时候，他正背对着我们，跟米船的船主一斗一斗地算米。"
+news = "堺的番所有人前天夜里查一条米船查了半宿，一斗一斗地量，隔壁那条外来的船倒是一眼都没看。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "takamaru", value = 3 }]
+
+# 三、不问哪条船：备后外海的小早只问一句；能岛码头上，他把腿伤的那个背起来。
+[[tracks.chapters]]
+key = "arrive"
+title = "不问哪条船"
+text = "船过备后外海，一条小早从岛影里斜插过来，帆上是一字三星。船头的人隔着水喊：船上是什么人？四个水夫缩在舱底，一声不吭。我答是在堺雇的伤病水手，回西边养伤。那人往舱口看了一眼，没再问，掉头走了。到能岛那天是个阴天。鹰丸站在码头最外头，船还没靠稳就跳了上来，一个一个把人扶下跳板，扶一个，数一个：“一。二。三。”数到腿伤的那个，他捏了捏那人的胳膊：“瘦了。堺的鱼贩没给你们鱼吃？”说着转过身蹲下，把人背到了背上。那条船的事，他一个字也没问。"
+at = "noshima"
+speaker = "captain"
+mood = "tender"
+news = "能岛的码头上，四个从堺回来的水夫被人扶下了船。鹰丸背着腿上带伤的那个，一路背上了石阶。"
+objectives = [{ kind = "at", at = "noshima", text = "把人送到能岛" }, { kind = "person", person = "takamaru", text = "在码头上找到鹰丸" }]
+when = [{ kind = "alive", person = "takamaru", value = true }]
+
+[[tracks.chapters.variants]]
+key = "delay"
+when = [{ kind = "flag", flag = "c13_request_takamaru_delay" }]
+text = "船过备后外海，一条小早从岛影里斜插过来，帆上是一字三星。船头的人隔着水喊：船上是什么人？四个水夫缩在舱底，一声不吭。我答是在堺雇的伤病水手，回西边养伤。那人往舱口看了一眼，没再问，掉头走了。到能岛那天是个阴天。鹰丸站在码头最外头，船还没靠稳就跳了上来，一个一个把人扶下跳板，扶一个，数一个：“一。二。三。”数到腿伤的那个，他停住了。那人在堺的番所多关了一夜，回来时一条腿肿得发亮，布换过两回，还是黑的。鹰丸看了一眼，什么也没说，转过身蹲下，把人背到了背上。那条船的事，他一个字也没问。"
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "也不提那条船，帮他把人扶上岸。"
+next = "done"
+reply = "我扶着另外三个，跟在他后面上了石阶。他背着人走了一段，回过头来：“我记着账呢：你还欠我一场。”说完自己先笑了，把背上的人往上托了托，“这回不算。这回是我欠你，记在我这边的板上。”进了屋，他把钱数给我，数完又数了一遍。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "takamaru", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_takamaru_done" }, { kind = "memory", memory = "mem-request_takamaru-arrive", title = "码头上背着人的鹰丸" }]
+
+[[tracks.chapters.choices]]
+key = "tell_him"
+text = "告诉他：路上毛利家的小早问过，我没说。"
+next = "done"
+reply = "他站住了，把背上的人交给码头上的两个后生，转过身来，冲我深深弯下腰去，弯了很久。码头上补网的能岛人都停了手——鹰丸给人鞠躬，他们没见过。他直起身，什么也没说，进屋拿了钱出来，数好了，放在我手心里。"
+news = "能岛的人说，鹰丸在码头上给一个外来的船长鞠了一躬，鞠得很深，补网的人都停了手。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "takamaru", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_takamaru_done" }, { kind = "memory", memory = "mem-request_takamaru-arrive", title = "码头上背着人的鹰丸" }]

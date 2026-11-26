@@ -1,0 +1,183 @@
+# 加那利的罗盘（request_pedro_de_medina）——请托线，类型：去某处（kind=go），报价模式 T 当面（auto=false，玩家“问请托”启动，话题 ask:request_pedro_de_medina），报价港塞维利亚（seville）。
+# 人物：佩德罗·德·梅迪纳（pedro_de_medina，1493 年生，1567 年卒）；《航海术》（1545）的作者，晚年在塞维利亚改书，参与考核去西印度的领航员。cast 见 cast/historical_01_europe.toml。
+# 时间：报价 1557-01-15—1566-06-30（塞维利亚的书房）；arrive 在拉斯帕尔马斯连着记七夜，120 天内没到就 timeout；report / report_loose 回塞维利亚，1566-12-31 期限。
+#       普通章不写 window 与 default；arrive、report、report_loose 的 timeout 都有去处（failed + 一封来信）。
+# 依据（史实）：梅迪纳《航海术》1545 年印于巴利亚多利德，书中对磁偏的说法当时就有争议；正文只用他自己的话，不判谁对。
+#       1567 年卒：report 与 report_loose 的 alive 条件挡住，走不到就静默，不写死讯。
+#       查韦斯父子只提一句带刺的话，不出场。
+#       原创：拉斯帕尔马斯港的七夜记录、港里的老领航员、他的学生、旱罗盘与水碗里的罗盘两种器具、书房的陈设。
+# 结构：arrive 的三条路按结果分两个章节。star 与 steady 检定成功走 report（旗标 clean，report 的“只给数字”不加任何条件）；
+#       steady 检定失败与 hearsay 走 report_loose。report 与 report_loose 各有自己的三个选项，没有任何选项的 requires 挡在本轨道自己设的旗标上。
+#       report 与 report_loose 的 variants 只读本轨道的分支旗标（water / hearsay），换文字不换效果。
+# 读写旗标：设 c13_request_pedro_de_medina_accepted / declined / clean / hearsay / water / done / partial / late；不读外部旗标，不设 c7_ 旗标。
+# 依赖：无改名依赖（las_palmas、seville 已在港口表）；无主线旗标依赖；cast 的 catchphrase 只在 offer 章用一次。
+# 回忆插画清单：
+#   mem-request_pedro_de_medina-report：书房里摊开的《航海术》，页边一个小小的墨点，窗外是瓜达尔基维尔河。
+# 禁区：不写私情；不写查韦斯父子出场；不写他认错；见闻不泄露人物私事。
+
+[[tracks]]
+key = "request_pedro_de_medina"
+name = "加那利的罗盘"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["pedro_de_medina"]
+
+# 报价：塞维利亚贸易总署旁边的书房。找到他以后，他直接开口。
+[[tracks.chapters]]
+key = "offer"
+title = "页边改满的书"
+text = "塞维利亚贸易总署的一间书房里，佩德罗·德·梅迪纳桌上摊着自己那本《航海术》，页边改得密密麻麻，书脊的线都松了。他听说加那利一带的罗盘偏得厉害，一口咬定是水手的手不稳。“针没磁好，就别怪北方。”他把笔往砚台上一搁，“查韦斯父子只会在纸上画圆圈。我要你去拉斯帕尔马斯，每夜记下罗盘指的北和北极星差多少，记清是哪一夜，用的是哪一只罗盘。”"
+mood = "tense"
+objectives = [{ kind = "person", person = "pedro_de_medina", text = "在塞维利亚找到他" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 1, 15], to = [1566, 6, 30] }, { kind = "alive", person = "pedro_de_medina", value = true }]
+deadline = [1566, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "dry"
+text = "接下，用船上的旱罗盘记数"
+next = "arrive"
+requires = [{ kind = "item", item = "dry_compass", qty = 1 }]
+hint = "你船上没有一只能单独拿出来记数的罗盘。"
+reply = "他把旱罗盘的针拨了拨，对着窗口看了半天，说意大利人做的针还算老实，就是盒子太重。你记数的时候把罗盘放平，别让它在甲板上乱晃。"
+effects = [{ kind = "affinity", person = "pedro_de_medina", value = 2 }, { kind = "flag", flag = "c13_request_pedro_de_medina_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "water"
+text = "接下，用水碗里的罗盘记数"
+next = "arrive"
+requires = [{ kind = "item", item = "water_compass", qty = 1 }]
+hint = "你船上没有装在水碗里的那只罗盘。"
+reply = "他头一回见浮在水里的针，凑得鼻尖都快碰到碗沿。看够了，他说回来要画进书里，还让你把碗带来，他要亲手试一试水会不会晃。"
+effects = [{ kind = "affinity", person = "pedro_de_medina", value = 2 }, { kind = "flag", flag = "c13_request_pedro_de_medina_accepted" }, { kind = "flag", flag = "c13_request_pedro_de_medina_water" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这桩事我不接"
+next = "failed"
+reply = "他又低头改书了。笔尖在一行字上停了停，划掉，又写了一个新字。门口的学生一直没敢进来，等你走远了，才端着茶进去。书桌上那本书，页边又多了两行小字。"
+effects = [{ kind = "flag", flag = "c13_request_pedro_de_medina_declined" }]
+
+# 进行：拉斯帕尔马斯港。连着七夜在甲板上记数，数一夜比一夜清楚。
+[[tracks.chapters]]
+key = "arrive"
+title = "加那利的七夜"
+text = "拉斯帕尔马斯的港湾风小，夜里北极星挂在伊斯莱塔的山头上。你把罗盘固定在后甲板，每夜从舷灯点起，记到天亮：时辰，罗盘指的北，北极星偏了几度。头一夜数得乱。往后一夜比一夜清楚，你看出了一个样子：罗盘确实偏，而且每夜偏得差不多。连着七夜，一夜不落。"
+at = "las_palmas"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "at", at = "las_palmas", text = "到拉斯帕尔马斯港" }, { kind = "wait", days = 7, text = "连着记七夜" }]
+when = [{ kind = "alive", person = "pedro_de_medina", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "pedro_de_medina", value = -3 }, { kind = "flag", flag = "c13_request_pedro_de_medina_late" }, { kind = "letter", person = "pedro_de_medina", text = "加那利的事先放下，等下一版再说。你若量出了什么，寄来就是。书还在改，我这边没有定稿。——梅迪纳" }] }
+
+[[tracks.chapters.choices]]
+key = "star"
+text = "每夜按北极星绕极的位置修正，再记"
+next = "report"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "你还不会按护卫星的方位修北极星，数会错在这一步。"
+reply = "七行数整整齐齐，每一行旁边都注着时辰和修正的度数。你把算式也抄在纸背上，一笔一划，像交一份作业给老师，每一步都写得能让人跟着算下去。"
+news = "拉斯帕尔马斯的酒馆里说，有艘船连着七夜对着北极星记数，每一行都注着时辰，老水手看了直摇头。"
+effects = [{ kind = "affinity", person = "pedro_de_medina", value = 3 }, { kind = "flag", flag = "c13_request_pedro_de_medina_clean" }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "把罗盘固定在舱口，换最稳的水手来看"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "最稳的水手站了七夜，船摇得最轻的那一刻，他先报一声，你再记。站得腿发麻，他也没挪过地方。七夜都记下了，没有漏一行。"
+news = "拉斯帕尔马斯的码头上，有个船长把罗盘架在舱口，换了最稳的水手守着，连着七夜没漏一行。"
+effects = [{ kind = "affinity", person = "pedro_de_medina", value = 3 }, { kind = "flag", flag = "c13_request_pedro_de_medina_clean" }]
+fail = { next = "report_loose", effects = [{ kind = "affinity", person = "pedro_de_medina", value = -2 }], news = "拉斯帕尔马斯的码头上有人笑话一个外港船长，说他夜里对着北极星打哈欠，两夜的数记得乱七八糟。" }
+
+[[tracks.chapters.choices]]
+key = "hearsay"
+text = "去问港里的老领航员，记下他说的偏差"
+next = "report_loose"
+reply = "老领航员报的偏差都是整数，三度、三度、再三度。你把它记在另一页，页脚写上“听来的”。他看你一眼，说：“能亲手量的，就别听我讲。”"
+news = "拉斯帕尔马斯的码头上，老领航员说加那利的罗盘偏了整整三度，问他怎么量的，他只说是老规矩。"
+effects = [{ kind = "flag", flag = "c13_request_pedro_de_medina_hearsay" }]
+
+# 收尾（七夜记录完整）：回到塞维利亚，把记录摊在他的书旁边。
+[[tracks.chapters]]
+key = "report"
+title = "七行数对书"
+text = "塞维利亚的书房里，佩德罗把你的七行数摊在《航海术》旁边，两样东西并排放着，他一行一行地对。数和书对不上。他先说是罗盘没磁好，又问是哪一夜、云多不多、船是顺风还是逆风。你每一夜都答得出来，他便不再说话，桌角的茶早凉了，他也没有去喝，把眼镜从袖袋里摸出来，凑到纸背的算式上看了很久。“这些数，”他终于开口，“是你自己算的？”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "pedro_de_medina", text = "回塞维利亚，找到他" }]
+when = [{ kind = "alive", person = "pedro_de_medina", value = true }]
+deadline = [1566, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_pedro_de_medina_late" }, { kind = "letter", person = "pedro_de_medina", text = "老师病倒了，卧床两个月。你的记录他已经收下，说等身子好些，再和书对一遍。——他的学生代笔" }] }
+
+# 变体：罗盘是水碗里的那只，他先问的就是这个。只换文字，不换选项。
+[[tracks.chapters.variants]]
+key = "water"
+when = [{ kind = "flag", flag = "c13_request_pedro_de_medina_water" }]
+text = "塞维利亚的书房里，佩德罗把你的七行数摊在《航海术》旁边，两样东西并排放着，他一行一行地对。数和书对不上。他先问用的是哪一只罗盘。你说是装在水碗里的那只，他的眼睛亮了一下，又暗下去，接着问哪一夜、云多不多、船是顺风还是逆风。你每一夜都答得出来。他不说话了，把眼镜从袖袋里摸出来，凑到纸背的算式上看了很久。“这些数，”他终于开口，“是你自己算的？”"
+
+[[tracks.chapters.choices]]
+key = "face"
+text = "当面一行行摆数，让他自己看"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他沉默了很久，在书的页边点了一个小小的墨点，又在扉页签上名字，递还给你。他没有认错，也没有再辩。你要走的时候，他才抬起头，说了一句：“风向，下回也记上。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "medina_valladolid", qty = 1 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "affinity", person = "pedro_de_medina", value = 8 }, { kind = "memory", memory = "mem-request_pedro_de_medina-report", title = "页边的小记号" }, { kind = "flag", flag = "c13_request_pedro_de_medina_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "pedro_de_medina", value = 2 }, { kind = "flag", flag = "c13_request_pedro_de_medina_partial" }], news = "塞维利亚的酒馆里传开了，梅迪纳老爷和一个外港船长辩了一下午磁针，船长的话没说完，老爷先回了书房。" }
+
+[[tracks.chapters.choices]]
+key = "pupil"
+text = "把记录交给他的学生，请学生慢慢转述"
+next = "done"
+reply = "学生把纸接过去，说老师一向不爱听人讲结论，要自己翻到那一页才肯信。学生说这话的时候，手里还捏着你那几页纸的一角，没有松开。你走之前，学生又问了一句：那几夜云多不多。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "pedro_de_medina", value = 4 }, { kind = "flag", flag = "c13_request_pedro_de_medina_partial" }]
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "只给数字，不下结论"
+next = "done"
+reply = "他拿走那张纸，说他自己会算，不用谁来教。几天后他派人把签了名的书送到船上，扉页上只有他的名字，没有别的话，只有最后一页的边上，用铅笔添了一行小小的算式。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "medina_valladolid", qty = 1 }, { kind = "fame", value = 3 }, { kind = "affinity", person = "pedro_de_medina", value = 6 }, { kind = "flag", flag = "c13_request_pedro_de_medina_done" }]
+
+# 收尾（数只有一部分是自己量的）：五夜算数，两夜的数乱了，或是只听来的整数。
+[[tracks.chapters]]
+key = "report_loose"
+title = "五夜与整数"
+text = "塞维利亚的书房里，佩德罗把纸铺平，手指从第一行慢慢划下去。“七夜，”他说，“能用的只有五夜。”他指着其中两行，一行末尾写着“船摇”，另一行的时辰空着一格。他问你哪一夜是自己量的。你答得出的，他便记上；答不出的，他把笔一放，在纸边画了一条线。那条线画得很直，他画线的时候手很稳。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "pedro_de_medina", text = "回塞维利亚，把五夜的纸交给他" }]
+when = [{ kind = "alive", person = "pedro_de_medina", value = true }]
+deadline = [1566, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_pedro_de_medina_late" }, { kind = "letter", person = "pedro_de_medina", text = "老师病倒了，卧床两个月。你那几夜的记录他收下了，说等身子好些，再看哪几行是自己量的。——他的学生代笔" }] }
+
+# 变体：听来的整数。玩家没有自己的数，他先问的是这个。
+[[tracks.chapters.variants]]
+key = "hearsay"
+when = [{ kind = "flag", flag = "c13_request_pedro_de_medina_hearsay" }]
+text = "塞维利亚的书房里，佩德罗把纸铺平，从头看到尾。“这些整数，是谁告诉你的？”你说是港里老领航员的话。他把纸往桌上一拍：“罗盘不会只偏整数度。”他的手指压在另一页上，那是你记下的听来的偏差，页脚写着“听来的”。“你自己量的数呢？”你没有答。他把那一页推回来，没有骂人，只说：“下回先量。”"
+
+[[tracks.chapters.choices]]
+key = "face"
+text = "当面把能用的五夜一行行摆出来"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他看完了，没有说你的数对，也没有说你错。他把你自己量的那几夜用笔圈出来，在旁边写了一个小小的“可”字，又把听来的那一页推到了桌子另一头。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "pedro_de_medina", value = 4 }, { kind = "flag", flag = "c13_request_pedro_de_medina_partial" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "pedro_de_medina", value = 1 }, { kind = "flag", flag = "c13_request_pedro_de_medina_partial" }], news = "塞维利亚的酒馆里有人说，梅迪纳老爷把一个外港船长的五夜纸翻来覆去看，末了只说了句“再量一遍”。" }
+
+[[tracks.chapters.choices]]
+key = "pupil"
+text = "把记录交给学生，请他慢慢转述"
+next = "done"
+reply = "学生接过纸，翻了两页，说老师今天嫌字潦草，不肯看。等他想看的时候，会自己翻到这一页，你量的几夜和听来的整数会一起摆在他眼前。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "pedro_de_medina", value = 3 }, { kind = "flag", flag = "c13_request_pedro_de_medina_partial" }]
+
+[[tracks.chapters.choices]]
+key = "admit"
+text = "把自己量的几夜和听来的分开交上去"
+next = "done"
+reply = "你把自己量的几夜和听来的几度分开写，每一页都注明是谁量的。他看完，第一次没有反驳，只说：“那就照你写的算。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "pedro_de_medina", value = 5 }, { kind = "flag", flag = "c13_request_pedro_de_medina_partial" }]

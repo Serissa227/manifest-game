@@ -1,0 +1,179 @@
+# 穆拉德·米尔扎的请托：坎贝来的钱袋（C13d，request，押运／带人 escort，3 章：offer → pickup → handover）。
+# 人物：穆拉德·米尔扎（cast/historical_02_islamic.toml，生年不详，1574 年去世；本条窗口止于 1573-06，正文不写结局）。
+#   身份不说破：正文、回复、见闻只称“安朱丹的长老”；“给长老的捐”只由送袋的人在 pickup 说一次；不写教义、不写宗派名。
+# 依据：史实挂钩——安朱丹的信众从印度一带带献金来（传闻口吻，年份待核）；霍尔木兹在葡萄牙人的保护下，萨法维的眼线混在码头上（叙事）；
+#   坎贝的客栈、卡尚地毯商、送袋的人与他的儿子、钱袋里的账与家信，都是原创。
+# 报价：来信／代理人（L 模式），auto=true，报价港 hormuz_port；家族 c13_offer_hormuz_port，冷却 20 天；offer 的 deadline 为窗口止日。
+# 门禁：玩家年龄 ≥ 17；名声 ≥ 5（表里 fame_gate）；无 c13_main_ 门禁（gate_main 为空）。请托人 alive 只在 pickup 与 handover 写。
+# 读写旗标：只设 c13_request_murad_mirza_{accepted,declined,done,partial,searched,late}；不读外部旗标；不设 c7_ 旗标。
+# 依赖：港口 hormuz_port（ports_red_sea_gulf.toml）、khambhat（ports_india.toml）已存在；技能 lang_persian（skills.toml）已存在；
+#   玫瑰水 rose_water（items/items_consumable_01.toml，稀有度 1 消耗品，有 shop）已存在。
+# 报酬：现金最多 2250（不超过 cash_total）；玫瑰水一瓶（offer 的 take 一路，一次）；好感最多 15；不加名声，不加萨法维声望；无回忆（隐秘的请托不进回忆）。
+# 回忆插画清单：无。
+# 检定：handover 的 tea_money 用 eloquence 一般（base 20 / per 7），失败走 fail 分支（钱袋照样交到，降级为 partial）。
+# 见闻：只在 pickup（客栈交袋）与 handover（码头交货）的完结选项上写；timeout 与 offer 不写见闻（没人知道这件事没成）。
+
+[[tracks]]
+key = "request_murad_mirza"
+name = "坎贝来的钱袋"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["murad_mirza"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "地毯商的等待"
+text = "码头上的风已经换过一个季风，卡尚来的地毯商还坐在他的木箱上。他看见你的船靠了岸，站起来，把一张折了四道的信纸递过来。信是安朱丹的长老写的：“有个旅人在山里迷了路，走了两天，远远看见一口井，井边坐着个人。那人问他渴不渴。旅人说渴。那人说：先坐下喝水。”地毯商说，每年这时候，坎贝有户商人会托人送一只钱袋来。今年送袋的人没到。长老的意思是，托一个可靠的外人走一趟。"
+at = "hormuz_port"
+mood = "mystic"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1560, 6, 1], to = [1573, 6, 30] },
+  { kind = "fame", ge = 5 },
+]
+family = "c13_offer_hormuz_port"
+family_cooldown_days = 20
+deadline = [1573, 6, 30]
+timeout = { next = "failed", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下，去坎贝把钱袋带回霍尔木兹。"
+reply = "他从箱底摸出一只细颈的洒瓶，塞进你手里。“路上用，坎贝的井水是咸的。”袋子里是账，还有几封问平安的信，钱也有，不多。他把坎贝那户人家的街名写在信纸背面，又折了一道。"
+next = "pickup"
+effects = [
+  { kind = "affinity", person = "murad_mirza", value = 2 },
+  { kind = "flag", flag = "c13_request_murad_mirza_accepted" },
+  { kind = "item", item = "rose_water", qty = 1 },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_story"
+text = "接下，但问他：那个故事是什么意思？"
+reply = "地毯商笑了一下，眼角的纹路很深。“长老的故事，每个人听出来的都不一样。我听出来的是：别急。”他想了想，又说，“你听出来的，留着自己用。”"
+next = "pickup"
+effects = [
+  { kind = "affinity", person = "murad_mirza", value = 2 },
+  { kind = "flag", flag = "c13_request_murad_mirza_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "别人的钱袋，我不经手。"
+reply = "他点点头，像是觉得这也是个好回答，把信折起来收进怀里。“那就另找船。”说完，他就往码头另一头走了。"
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_murad_mirza_declined" },
+]
+
+[[tracks.chapters]]
+key = "pickup"
+title = "客栈里的病人"
+text = "坎贝的客栈后院晾着一排白布，风一吹，满院都是皂角味。送袋的人躺在最里间的板床上，烧得满脸通红，枕头底下压着那只钱袋。他的儿子守在床边，见你进门，手就按在枕头上。直到你说出卡尚地毯商的名字，那只手才慢慢松开。病人睁开眼，嗓子哑得厉害：“给长老的捐，一个铜子也不能少。”他儿子在一旁小声说：“袋子不让外人碰。”"
+at = "khambhat"
+speaker = "captain"
+mood = "tender"
+when = [
+  { kind = "alive", person = "murad_mirza", value = true },
+]
+deadline_days = 150
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "murad_mirza", value = -3 },
+  { kind = "flag", flag = "c13_request_murad_mirza_late" },
+  { kind = "letter", person = "murad_mirza", text = "坎贝那边来信，送袋的人病好了，自己带着袋子上了船。这件事不用你再跑了，多谢你肯接。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "take_bag"
+text = "接过钱袋，当着父子俩的面封好。"
+reply = "儿子看着你把袋口缠了三道，蜡封压上去，才松开手。病人又闭上了眼睛，嘴唇还在动，像是在数铜子。"
+next = "handover"
+effects = [
+  { kind = "affinity", person = "murad_mirza", value = 3 },
+]
+news = "坎贝的一家客栈里，一个发烧的商人把枕头底下的袋子交给了一个外来的船长。"
+
+[[tracks.chapters.choices]]
+key = "pay_doctor"
+text = "先替病人请个大夫，再接袋子。"
+reply = "大夫开了药，病人当晚就退了烧。儿子把钱袋交到你手里，一直送你到码头，站在岸上看着船出了港。"
+next = "handover"
+requires = [
+  { kind = "cash", ge = 150 },
+]
+hint = "请大夫的钱你凑不出来。"
+effects = [
+  { kind = "cash", value = -150 },
+  { kind = "affinity", person = "murad_mirza", value = 5 },
+]
+news = "坎贝的客栈里请来了大夫，发烧的商人当晚退了烧，把枕头底下的袋子交给了一个外来的船长。"
+
+[[tracks.chapters]]
+key = "handover"
+title = "码头上的眼线"
+text = "船还没把缆绳系稳，卡尚来的地毯商已经迎到了码头上，脚边堆着他的箱子。可他身后不远，有个穿萨法维官服的人在跟每条波斯湾来的船搭话，问船上有没有往内地送的钱。他问得随便，手里的名册却翻得很快。那人的眼睛在船舷上一条条扫过去，扫到你船上的茶箱，停住了。那人放下名册，朝这边走过来。"
+at = "hormuz_port"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "alive", person = "murad_mirza", value = true },
+]
+deadline_days = 120
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "murad_mirza", value = -3 },
+  { kind = "flag", flag = "c13_request_murad_mirza_late" },
+  { kind = "letter", person = "murad_mirza", text = "钱袋迟了，我这边已经另想了办法。袋子若还在你手里，请交给霍尔木兹的卡尚地毯行，他们认得送货的人。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "tea_money"
+text = "跟他说这是你自己的茶叶钱。"
+reply = "他的眼睛在茶箱和地毯商的箱子之间转了一圈，挥了挥手，走开了。地毯商接过钱袋，手在袋口上按了很久。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "murad_mirza", value = 8 },
+  { kind = "flag", flag = "c13_request_murad_mirza_done" },
+]
+news = "霍尔木兹码头上，一个萨法维的差人看了一眼船长的茶箱，挥挥手走开了，卡尚的地毯商接过了一只钱袋。"
+fail = { next = "done", effects = [
+  { kind = "cash", value = 1350 },
+  { kind = "affinity", person = "murad_mirza", value = 2 },
+  { kind = "flag", flag = "c13_request_murad_mirza_searched" },
+  { kind = "flag", flag = "c13_request_murad_mirza_partial" },
+], news = "霍尔木兹码头上，一个萨法维的差人翻了一个外来船长的钱袋，只翻出几本账。" }
+
+[[tracks.chapters.choices]]
+key = "persian"
+text = "用波斯话跟他攀扯坎贝的棉布行情，把话头带开。"
+reply = "你跟他聊到棉布涨价，他抱怨起自己的俸禄，越说越远，聊完就忘了问钱袋的事。地毯商在旁边一直没说话，等那人走远了，才伸手接过袋子。"
+next = "done"
+requires = [
+  { kind = "skill", skill = "lang_persian", ge = 60 },
+]
+hint = "他说的波斯话，你只能点头。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "murad_mirza", value = 8 },
+  { kind = "flag", flag = "c13_request_murad_mirza_done" },
+]
+news = "霍尔木兹码头上，一个官服的差人跟一个外来的船长聊起了坎贝的棉布，聊完就忘了查船。"
+
+[[tracks.chapters.choices]]
+key = "port_fee"
+text = "塞给他一笔“码头茶钱”。"
+reply = "他收下，嘴角动了动，说霍尔木兹的规矩他懂。地毯商接过钱袋，只说了一句：“长老要是知道，会替你心疼这笔茶钱。”"
+next = "done"
+requires = [
+  { kind = "cash", ge = 300 },
+]
+hint = "你的钱袋太轻，他不会为这点钱走开。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "murad_mirza", value = 6 },
+  { kind = "flag", flag = "c13_request_murad_mirza_done" },
+]
+news = "霍尔木兹码头上，有个船长给一个官服的差人塞了笔茶钱，才把卡尚地毯商的钱袋接过了手。"

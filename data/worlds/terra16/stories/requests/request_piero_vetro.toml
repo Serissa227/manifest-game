@@ -1,0 +1,169 @@
+# 请托：冷却时裂开的杯子（request_piero_vetro）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：皮耶罗·韦特罗（piero_vetro，1540-07-19 生，男），穆拉诺玻璃坊的学徒，学院同学（自创）；势力 venice，身份档 1。cast：cast/classmates_custom_murano_glass.toml。
+# 类型：去某处（gs，kind=go）。四章：offer（报价）、arrive（贝鲁特取样灰）、report（两袋灰，两只杯子）、report_partial（只有一袋灰）。
+#   brief 写三章；按“路由而不是门禁”的规定，检定失败与花钱买的一袋灰拆进 report_partial，report 只接两袋灰的路。
+# 报价：T（当面）。他按日程在威尼斯的玻璃坊，auto=false，玩家“问请托”（ask:request_piero_vetro）启动；offer 不写 at，目标是在港里找到他。窗口 1563-01-01 至 1572-06-30。
+# 进行中：offer 的 deadline 为 1572-06-30，timeout 走 failed，不写见闻。arrive 期限 120 天，超时走 failed，来信一封，好感 -3，旗标 _late。report 与 report_partial 是普通章，可以一直等。
+# 依据·史实背景：穆拉诺的透明玻璃用黎凡特（叙利亚沿海）的苏打灰，海滨草烧成；威尼斯与奥斯曼 1570—1573 年因塞浦路斯开战，期间威尼斯船不进黎凡特的港（arrive 的 v1_cyprus）。
+# 依据·原创：皮耶罗与他的小罐、贝鲁特城外的灰作坊与作坊主、春草与夏末草的说法、两袋灰的绳子颜色、窗台上的两只杯子。
+# 秘密：欠着一炉烧坏的料钱，不写；offer 里夸衣裳只是他的习惯，不解释。见闻不写秘密。
+# 与 brief 的偏离：（1）report 的 pick_up 与 note_only 不再 requires 两袋灰旗标——两袋灰的路直接进 report，一袋灰的路进 report_partial；（2）report 与 report_partial 写 at=venice，让见闻能在穆拉诺公开（brief 写 null）；（3）arrive 的 1570—73 年变体只覆写文字，“commerce 检定改为难”引擎的变体不能改玩法，检定保持一般，留作后续；（4）arrive 的 v2_asked 为新增变体（读 offer 的 ask_cups 旗标）。
+# 读的旗标：bond piero_vetro ≥ C（offer 的 v1_classmate，只读 C7 的重逢结果）；c13_request_piero_vetro_asked（arrive 的 v2_asked）。
+# 设的旗标：c13_request_piero_vetro_accepted（offer 两条接法）、_asked（offer 的 ask_cups）、_declined（offer 回绝）、_two（arrive 两袋灰的路，未被读取，留给后续）、_late（arrive 超时）、_done（report 的 pick_up）、_partial（report 的 note_only；report_partial 两条收尾）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 1250（只带回新灰 800；一袋灰 600—800）；好感最多 +13；名声 +1；唯一奖励 murano_beaker（只在 pick_up 给一次）；回忆 mem-request_piero_vetro-report。
+# 依赖：港口 venice、beirut（ports_east_med.toml）；技能 lang_arabic（skills.toml）；属性 commerce（captain.toml）；物品 murano_beaker（items/items_curio_02.toml）；人物 piero_vetro。日程已是 venice，无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_piero_vetro-report「窗台上的两只杯子」：穆拉诺玻璃坊的窗台上，两只杯子并排冷着，天快亮时一只从杯底裂上来。
+
+[[tracks]]
+key = "request_piero_vetro"
+name = "冷却时裂开的杯子"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["piero_vetro"]
+
+# 一、一排小罐：穆拉诺的玻璃坊，他先夸你的衣裳，再领你看架子。
+[[tracks.chapters]]
+key = "offer"
+title = "一排小罐"
+text = "皮耶罗先夸了我的衣裳，才领我看他的架子。一排排小罐，按颜色收着烧坏的碎片，罐口贴着手写的标签。这一季的杯子都在冷却时裂，裂纹细得像头发，一样从杯底往上爬。“杯子出窑的时候都好好的，放一夜就裂。”他把一只裂杯举到窗前又放下，“我疑心是苏打灰不对。贝鲁特城外那家烧海草灰的作坊，今年的灰发白。你去带一袋样灰回来，再问清他们烧的是哪一种草。灰不说话，烧灰的人会说。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "piero_vetro", text = "在穆拉诺的玻璃坊找到他" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1572, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "piero_vetro", ge = 18 }]
+deadline = [1572, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_classmate"
+when = [{ kind = "bond", person = "piero_vetro", level = "C" }]
+text = "皮耶罗先夸了我的衣裳，才领我看他的架子。一排排小罐，按颜色收着烧坏的碎片。他在一只罐子前停下，拿出一小块碎片，用布包好递到我手里。“你走那年的那一炉，还在。”他说，“这一块是那炉里的，颜色你还认得。”这一季的杯子都在冷却时裂，裂纹从杯底往上爬。“我疑心是苏打灰不对。贝鲁特城外那家烧海草灰的作坊，今年的灰发白。你去带一袋样灰回来，再问清他们烧的是哪一种草。”"
+
+[[tracks.chapters.choices]]
+key = "go_beirut"
+text = "接下，去贝鲁特取样灰，问清草。"
+next = "arrive"
+reply = "他把一块裂杯的碎片包进布里，压平了四角，递给我。“拿给烧灰的人看。”他说，“他一看裂纹，就知道我在说什么。”说完他回去摆罐子，把贝鲁特那一罐的标签重新描了一遍。"
+effects = [{ kind = "affinity", person = "piero_vetro", value = 2 }, { kind = "flag", flag = "c13_request_piero_vetro_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_cups"
+text = "接下，先问：裂了的那批杯子呢？"
+next = "arrive"
+reply = "他先把手往身后藏，藏了一下又拿出来。“碎了的都在罐子里。”他叹口气，“没碎的那几只，我舍不得砸。也许冷得慢一点，就不裂了。”说完，他从罐子里挑出一块最小的碎片，弹掉上面的灰，递给我。"
+effects = [{ kind = "affinity", person = "piero_vetro", value = 2 }, { kind = "flag", flag = "c13_request_piero_vetro_accepted" }, { kind = "flag", flag = "c13_request_piero_vetro_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "一袋灰，让商船顺路带就行。"
+next = "failed"
+reply = "“商船带来的就是这种灰。”他把碎片放回罐子里，罐口的标签没贴好，他用拇指按了又按。碎片在罐底磕了一声，他听了听，像在数还剩几块。“那就再试试别的炉温。”"
+effects = [{ kind = "flag", flag = "c13_request_piero_vetro_declined" }]
+
+# 二、贝鲁特的灰作坊：城外海滩，草堆着晒，作坊主看了碎片，说灰没换，草也没换。
+[[tracks.chapters]]
+key = "arrive"
+title = "割早了的草"
+text = "作坊在城外的海滩上，一垛垛灰白的草堆着晒，坑里冒着烟。作坊主接过碎片，用指甲刮了刮裂纹，又捏一撮灰在手心搓。“灰没换，草也没换。”他说，把灰撒回坑里，“是割草的日子换了。今年威尼斯的买办催得急，草没等到夏末就割了。春天的草烧出来的灰发白，不够咸。”这话他没跟买办说过，说的时候眼睛看着海，没有看你。"
+speaker = "captain"
+mood = "mystic"
+at = "beirut"
+objectives = [{ kind = "at", at = "beirut", text = "到贝鲁特城外的作坊" }]
+when = [{ kind = "alive", person = "piero_vetro", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "piero_vetro", value = -3 }, { kind = "flag", flag = "c13_request_piero_vetro_late" }, { kind = "letter", person = "piero_vetro", text = "贝鲁特的灰还是那样白。我把炉子烧慢了一点，裂得少了一点。——皮耶罗" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_cyprus"
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 3, 7] }]
+text = "作坊在城外的海滩上，一垛垛灰白的草堆着晒，坑里冒着烟。威尼斯与奥斯曼在塞浦路斯打仗，威尼斯的船这几年不进黎凡特的港，你的船挂的是自己的旗。作坊主先看了看旗，问你是不是威尼斯人，问完才接过碎片，用指甲刮了刮裂纹。“灰没换，草也没换。”他说，“是割草的日子换了。春天的草烧出来的灰发白，不够咸。”他说这话时眼睛看着海，没有看你。"
+
+[[tracks.chapters.variants]]
+key = "v2_asked"
+when = [{ kind = "flag", flag = "c13_request_piero_vetro_asked", value = true }]
+text = "作坊在城外的海滩上，一垛垛灰白的草堆着晒，坑里冒着烟。作坊主接过碎片，用指甲刮了刮裂纹。你提起穆拉诺那批裂了的杯子，他笑了一下，说他这边烧坏的灰，比杯子还多。他捏一撮灰在手心搓，说灰没换，草也没换。“是割草的日子换了。春天的草烧出来的灰发白，不够咸。”"
+
+[[tracks.chapters.choices]]
+key = "in_arabic"
+text = "用阿拉伯话细问：哪个月割的草，灰该是什么颜色。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "作坊主的话你只听懂了几个数字。"
+reply = "他带我去看两堆灰，一堆春天的，一堆去年夏末的，颜色差了一截。他把两种各装了一袋，袋口系上不同颜色的绳子，又在绳头上打了个结。“哪个是哪个，我不记，绳子记。”"
+news = "贝鲁特城外的作坊里，一个外乡人用阿拉伯话问了整整一个下午，问的是哪个月割的草。"
+effects = [{ kind = "affinity", person = "piero_vetro", value = 3 }, { kind = "flag", flag = "c13_request_piero_vetro_two" }]
+
+[[tracks.chapters.choices]]
+key = "haggle_old"
+text = "跟他讲价，把去年夏末剩下的那点老灰也买下来。"
+next = "report"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "老灰只剩半袋，他要价很高，我砍到一半。他嘴里骂了句什么，还是点了头。两袋灰，一袋新的，一袋老的。他把老的那袋压了压，说这是去年夏末最后的草。"
+news = "贝鲁特城外烧海草灰的作坊，有人买走了去年夏末剩下的老灰，新灰老灰两袋一起带走了。"
+effects = [{ kind = "affinity", person = "piero_vetro", value = 3 }, { kind = "flag", flag = "c13_request_piero_vetro_two" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "piero_vetro", value = -2 }], news = "贝鲁特城外烧海草灰的作坊，去年夏末的老灰留给了出价高的人，外乡人只带走了春天的灰。" }
+
+[[tracks.chapters.choices]]
+key = "pay_sample"
+text = "照他开的价，买一袋今年的灰，把他的话记下来。"
+next = "report_partial"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你的钱不够他开的价，他把灰袋又放回了架子上。"
+reply = "他收了钱，把一袋今年的灰封好口。“春天的草就是这样。”他说，“你们威尼斯人自己催的。”他没再讲价，把袋子往我手里一塞，转身去看他的炉子。"
+news = "贝鲁特城外烧海草灰的作坊，一个外乡人照价买走了一袋今年的灰，作坊主说了句“你们威尼斯人自己催的”。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "piero_vetro", value = 2 }]
+
+# 三、两只杯子：两袋灰各烧一炉，窗台上冷着，天快亮时春灰的那只裂了。
+[[tracks.chapters]]
+key = "report"
+title = "两只杯子"
+text = "皮耶罗拿两种灰各烧了一炉，吹了两只杯子，并排放在窗台上冷。他守着看了一夜，也把我拉着守。“冷得慢，裂得慢。”他一会儿看一只，一会儿看另一只，嘴里念着数。天色发灰的时候，春灰那只“叮”地一声，从杯底裂上来。他笑出声：“裂了也能告诉我们什么。”老灰的那只没裂，他却不敢碰，手伸到一半又缩回去，怕一碰就裂。"
+speaker = "captain"
+mood = "cheerful"
+at = "venice"
+objectives = [{ kind = "person", person = "piero_vetro", text = "在穆拉诺的玻璃坊找到他" }]
+when = [{ kind = "alive", person = "piero_vetro", value = true }]
+news = "穆拉诺一家玻璃坊的窗台上，两只杯子冷了一夜，一只从杯底裂上来，另一只没有裂。"
+
+[[tracks.chapters.choices]]
+key = "pick_up"
+text = "替他把没裂的那只拿起来，对着光看。"
+next = "done"
+reply = "杯子在晨光里一丝裂纹也没有，杯壁里缠着一圈白色的彩丝。他说这只给我，“第一只不裂的，给取灰的人”。他把灰的事写成一张字条，要拿去给作坊的老板看，让买办等到夏末再割草。他付了钱。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "item", item = "murano_beaker", qty = 1 }, { kind = "affinity", person = "piero_vetro", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_piero_vetro_done" }, { kind = "memory", memory = "mem-request_piero_vetro-report", title = "窗台上的两只杯子" }]
+
+[[tracks.chapters.choices]]
+key = "note_only"
+text = "两袋灰都看过了，劝他把买办的话记下来，明年再试。"
+next = "done"
+reply = "他把裂了的那只收进小罐，罐上写着“春灰”。他付了钱，说明年夏末，他自己去贝鲁特。“老灰那只，我还没敢碰。”他说完，又看了一眼窗台上那只没裂的杯子，把窗户关上了。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "piero_vetro", value = 4 }, { kind = "flag", flag = "c13_request_piero_vetro_partial" }]
+
+# 三之二、只有一袋灰：一袋春天的灰，窗台上只够放一只杯子。
+[[tracks.chapters]]
+key = "report_partial"
+title = "只有一袋灰"
+text = "一袋灰回到穆拉诺，皮耶罗趴在桌上，把袋口拨开看了又看。“只有春天的，没有老的。”他说，声音比平时低。窗台上只够放一只杯子，他拿起一只空杯，对着光看了看，又放下。“一袋灰烧一炉，能看出什么？”他把灰推到我面前，“你说，烧还是不烧。”窗外的船桅一根根亮起来，玻璃坊里的炉火还没熄。"
+speaker = "captain"
+mood = "tense"
+at = "venice"
+objectives = [{ kind = "person", person = "piero_vetro", text = "在穆拉诺的玻璃坊找到他" }]
+when = [{ kind = "alive", person = "piero_vetro", value = true }]
+news = "穆拉诺一家玻璃坊买回了一袋春灰，老灰没买到，灰封在小罐里没烧。"
+
+[[tracks.chapters.choices]]
+key = "fire_one"
+text = "就用这一袋灰烧一炉，看它裂不裂。"
+next = "done"
+news = "穆拉诺一家玻璃坊拿一袋春灰烧了一炉，窗台上冷着的那只杯子，杯底裂了一道细纹。"
+reply = "他烧了一炉，吹了一只杯子，放在窗台上冷。天亮的时候，杯底裂上来一道细纹，和罐子里的那些一样。他没笑，只说：“春天的草，烧出来就是春天的裂法。”付钱时他比我想的少给了一截，说老灰那一炉没法比。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "piero_vetro", value = 4 }, { kind = "flag", flag = "c13_request_piero_vetro_partial" }]
+
+[[tracks.chapters.choices]]
+key = "note_partial"
+text = "一袋灰看不出什么，劝他明年夏末再试。"
+next = "done"
+reply = "他把那袋灰倒进小罐，封好蜡口，数钱数得很慢。“老灰才是要比的。”他说，“明年的事，明年再想。”他把小罐放回架子，没有再拿下来。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "piero_vetro", value = 2 }, { kind = "flag", flag = "c13_request_piero_vetro_partial" }]

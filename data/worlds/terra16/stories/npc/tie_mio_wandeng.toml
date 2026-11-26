@@ -1,0 +1,62 @@
+# 旗与灯（tie_mio_wandeng）——主角之间的关系轨道（NPC—NPC），标签：无恋爱（恋爱归 C7；NPC 主角之间不写恋情）。
+# 走向：斗嘴→合伙（交汇线，不在本线加冲突；手册第八节林晚灯）。C21b（2026-11-12，Claude Opus）：只删腔调，剧情不动。
+# 人物：一条澪（mio，土佐一条家的姬君，替能岛村上家卖过所旗）；林晚灯（lin_wandeng，月港林家的私商，提一盏红纸灯笼）。
+#       两人都是 NPC：全文是码头上的转述，不写 speaker；两人合称用“她们”。见闻里不用代词，只叫“土佐的姬君”“月港的林家人”。
+# 轨道：tie_mio_wandeng（request，auto=true，start t1_quarrel）。两章，都是见闻（rumor），没有选项，窗口一到走 default。
+#       门槛：两人的 c12_voyage_* 都为 false 且 upbringing_graduated（两人都不是玩家时才跑）；第一章就是门槛。
+#       不用 heart、relation、tie、bond 效果；两人之间只写合伙与斗嘴。
+# 依据（史实）：1557 年冬王直应胡宗宪之招回国，1558 年在杭州被扣（1559 年处死）；毛海峰等余部据舟山岑港抵抗，后烧船突围，
+#       一部分人退回平户——王直在平户有宅邸与船队，是倭寇贸易的老窝。1567 年隆庆开海，月港的商船领船引往东西洋，
+#       唯独去日本仍禁，月港—平户之间照旧走私。能岛村上家向过濑户内海的船卖“过所旗”。
+# 原创：两人为一条王直旧船挂哪面旗吵架、船头喝酒、两面旗同挂；月港鸟船每年入夏来平户、桅上妈祖旗与一条家的藤花旗、
+#       “旗钱是土佐的”、两个东家先对账后说话。
+# 待核：岑港余部“烧船突围后退回平户”的时间与去向说法不一（有南下福建一说），正文只用码头传闻的口吻；
+#       一条家的旗正文只写“倒垂藤花旗”，不写家纹的正式名称。
+# 秘密：两人的秘密一个也不碰（澪的父亲、林晚灯在社学的事）；见闻不写任何秘密。
+# 共享旗标：读 c12_voyage_mio、c12_voyage_lin_wandeng（均为 false）、upbringing_graduated。写：无。
+# 等待的包：A9——门槛可改为 protagonist_in 排除两人；整合方把 cast/ties.toml 里澪与林晚灯那条关系的 story 指向本轨道（key 不变），
+#       并在 world.toml 的 tables.stories 登记本文件、从 runtime_links.toml 的 pending_tracks 删去本轨道。
+# HIST 占位清单：无。
+# 回忆插画清单：无（本轨道不设回忆）。
+# 写法注意：与 main_lin_wandeng b02（玩家是林晚灯时的合伙一船）、main_mio a04/a05 不用同一句话；本轨道只在两人都不是玩家时跑。
+
+[[tracks]]
+key = "tie_mio_wandeng"
+name = "旗与灯"
+kind = "request"
+start = "t1_quarrel"
+auto = true
+cast = ["mio", "lin_wandeng"]
+
+# 第一章（1558 春）：王直的余部退回平户，一条旧船上为挂哪面旗吵了半夜。门槛章，只有两人都不是玩家时才跑。
+[[tracks.chapters]]
+key = "t1_quarrel"
+title = "吵完再喝"
+text = "开春，王直在杭州给扣下了。码头上传说，岑港的船烧了一批，余下的人退回平户。王直一条旧船半宿亮着红灯笼——土佐卖能岛旗的姬君和月港提灯笼的林家人吵到三更，争的是挂谁的旗。一个说不挂能岛旗进不了内海，一个说不挂妈祖旗回不了月港。船工说：“一个嫌对方的灯晃眼，一个嫌对方的旗贵得咬人。”吵到后来，两人并排坐上船头，一坛酒对着喝。天亮，桅上两面旗都挂了，灯笼吊在中间，旗钱谁出，两本账上各记了各的。"
+stage = "rumor"
+window = [[1558, 3, 1], [1558, 6, 30]]
+at = "hirado"
+cast = ["mio", "lin_wandeng"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_mio", value = false }, { kind = "flag", flag = "c12_voyage_lin_wandeng", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "平户的人说，土佐的姬君和月港提红灯笼的林家人，在王直的旧船上为挂哪面旗吵了半夜，又一起喝到天亮。"
+
+[tracks.chapters.default]
+next = "t2_partners"
+effects = []
+
+# 第二章（1569 夏）：开海以后，往日本照旧不给船引；月港的鸟船每年入夏挂着两面旗进平户。关系轨道收尾。
+[[tracks.chapters]]
+key = "t2_partners"
+title = "挂两面旗的船"
+text = "开海以后，月港的船领了船引往南洋去，往日本照旧不给引，也照旧有人走。每年入夏，平户都进一条月港的鸟船：桅顶一面妈祖旗，底下一面土佐一条家的倒垂藤花旗。通事说，这船的生丝是月港的，旗钱是土佐的，过内海的路是能岛给的；两个东家一年见一回，先摆算盘对账，账平了才说话。“对起账来，一个比一个拨得快，谁也不让谁。去年为一钱旗钱争到上灯，今年一见面，头一句还是那一钱。”"
+stage = "rumor"
+window = [[1569, 3, 1], [1569, 8, 31]]
+at = "hirado"
+cast = ["mio", "lin_wandeng"]
+mood = "cheerful"
+news = "平户码头的人说，开海以后月港那条鸟船照样年年入夏就来，桅顶一面妈祖旗，底下还挂着土佐一条家的藤花旗。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []

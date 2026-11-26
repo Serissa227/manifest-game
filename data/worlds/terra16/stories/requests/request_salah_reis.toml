@@ -1,0 +1,152 @@
+# 请托：老船长的木匣（request_salah_reis）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：萨拉赫·雷斯（salah_reis，cast：cast/historical_02_islamic.toml），阿尔及尔的贝伊勒贝伊，1488 年生（月日不详，cast 按 1 月 1 日占位），1556 年死于瘟疫；势力 algiers，身份档 3。
+# 类型：押运（escort）。三章：offer（报价）、arrive（送到亚历山大港）、report（回阿尔及尔收尾）；没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信／代理人，遗事请托）。出面的是老舵手（不新建 cast，不写 speaker），人物本人不说话；auto=true，不写 alive。
+#       offer 在阿尔及尔（algiers）报价，窗口 1557-02-01 至 1559-12-31；offer 写 family=c13_offer_algiers、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：arrive 章 deadline_days=120，report 章 deadline_days=150，超时都走 failed、设 _late 旗标，并给一条见闻（不用来信：letter 需要 cast 里的发信人，见 DECISIONS 注）。
+# 依据·史实：萨拉赫·雷斯 1552—56 年任阿尔及尔贝伊勒贝伊；1555 年取贝贾亚；1556 年准备攻奥兰时死于鼠疫（brief 据此，年份待核）。
+#   “生在亚历山大港”是一种说法（cast 的 persona 也这样写），老家与家人所在待核，正文只写老舵手口述的“亚历山大港的家人”。
+#   正文不写非斯的劫掠、不写普雷韦扎，不写他的兵船与攻奥兰的筹备。
+# 依据·原创：老舵手、侄子与绳铺、雪松木匣与油布包里的钱、门楣上的刀、日志最后几页的萨累外海水深。
+# 秘密：无。老船长的旧事（非斯的兵）不写；日志里的水深是航海资料，不是秘密，但只在读过的一路上说出来。
+# 读的旗标：c13_main_tariq（offer 的变体 v1_tariq 只读，由塔里克的主线第一章设；尚未写，门禁等于不存在）；arrive 章读 c13_request_salah_reis_read_log；report 章读 sword_sold、copied_rough、sword_kept。
+# 设的旗标：c13_request_salah_reis_accepted（offer 接下）、_read_log（offer 先看了日志）、_declined（offer 回绝）、_handed（arrive 三条路都设，交到侄子手里）、
+#   _sword_kept（arrive 劝刀挂在墙上成功）、_sword_sold（arrive 劝刀挂墙失败，刀卖给了铁匠）、_copied（arrive 抄水深成功）、_copied_rough（arrive 抄水深失败）、
+#   _late（arrive 或 report 超时）、_done（report 两条收尾都设）、_softened（report 的 soften 一路）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不写 letter。
+# 报酬（每份只给一次）：现金 2250（report 章的两条收尾各给一次，同一笔钱）；航海制图技能 +20（只在 copy_depths 成功一路，arrive 章）；阿尔及尔声望 +2（report 的 tell_all 一路）；不加名声；没有好感（请托人已死）；无物品（佩刀只是叙事）。
+# 依赖：港口 algiers、alexandria（ports_north_africa.toml）；人物 salah_reis（cast 已列 tracks）；技能 lang_arabic（门槛 60）、cartography（效果 +20）；属性 seamanship、eloquence（检定）；派系 algiers（factions/05_ottoman_persia.toml）。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_salah_reis-report「回到防波堤」：防波堤尽头，老舵手解开油布包，里面是一叠用旧了的金币，他的手在抖。
+
+[[tracks]]
+key = "request_salah_reis"
+name = "老船长的木匣"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["salah_reis"]
+
+# 一、防波堤尽头的木匣：老舵手抱着雪松木匣，等了很久。
+[[tracks.chapters]]
+key = "offer"
+title = "码头上的木匣"
+text = "防波堤尽头坐着一个瘸腿的老舵手，拐杖横在膝上，怀里抱着一只雪松木匣，匣角的铜皮让手磨得发亮，在这里坐了快一年。匣子是萨拉赫·雷斯老船长的，里面是他的航海日志和一把弯刀。老船长死在瘟疫里，家人在亚历山大港，没有人去送。老舵手把木匣往你这边推了推：“送到亚历山大港，交给他家里人。”他顿了顿，又说，“老船长生前总讲，你带来的是哪一样，我们就从哪一样谈起。”"
+mood = "sad"
+at = "algiers"
+when = [{ kind = "date", from = [1557, 2, 1], to = [1559, 12, 31] }, { kind = "age", ge = 17 }]
+deadline = [1559, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_algiers"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_tariq"
+when = [{ kind = "flag", flag = "c13_main_tariq" }]
+text = "防波堤尽头坐着一个瘸腿的老舵手，怀里抱着一只雪松木匣。老船长死在瘟疫里，家人在亚历山大港，没有人去送。你走近，老舵手盯着你看了半天，忽然说：“老船长说过你，那个一路数城门的孩子。”他没再提旧事，把木匣往你这边推了推：“送到亚历山大港，交给他家里人。老船长生前总讲，你带来的是哪一样，我们就从哪一样谈起。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接过木匣，送去亚历山大港。"
+next = "arrive"
+reply = "老舵手把匣子的铜扣擦了一遍才交出来，又拿袖子在匣面上抹了抹：“刀别出鞘。日志别沾水。别的，你看着办。”"
+effects = [{ kind = "flag", flag = "c13_request_salah_reis_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "read_first"
+text = "接下之前，先请他把日志翻开给你看。"
+next = "arrive"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60, hard = true }]
+hint = "日志上的字挤成一团，你认不出几个。"
+reply = "日志里多半是风向和粮账。最后几页记着一串数字：萨累外海的水深，一处一处，比任何海图都细。老舵手说：“这个，老船长没给人看过。”"
+effects = [{ kind = "flag", flag = "c13_request_salah_reis_accepted" }, { kind = "flag", flag = "c13_request_salah_reis_read_log" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟顾不上，劝他另找人。"
+next = "failed"
+reply = "“另找人？港里的船长我都问过了。”他把匣子又抱回怀里，“听见是老船长的东西，都说有空再看。那就再等一季。”"
+effects = [{ kind = "flag", flag = "c13_request_salah_reis_declined" }]
+
+# 二、送到绳铺：老船长的侄子在亚历山大港卖刀，日志他翻都没翻。
+[[tracks.chapters]]
+key = "arrive"
+title = "侄子要卖刀"
+text = "亚历山大港的一间绳铺，门口挂着新搓的麻绳。老船长的侄子是个黑瘦的中年人，手上全是麻屑。他听完木匣的来历，叹了口气，接着就问：“那把刀，能卖多少钱？”他把弯刀抽出半截，对着门口的光看了看，又推回鞘里。日志他翻都没翻：“这些字，家里没人看得懂。”绳铺的伙计在一旁卷麻，手没停，耳朵却竖着。"
+speaker = "captain"
+mood = "sad"
+at = "alexandria"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_salah_reis_late" }], news = "阿尔及尔防波堤上，那个抱木匣的老舵手不见了，有人说他自己搭船去了亚历山大港。" }
+news = "亚历山大港的一间绳铺收到一只从阿尔及尔来的雪松木匣，是死在瘟疫里的那位老船长的遗物。"
+
+[[tracks.chapters.variants]]
+key = "v1_read_log"
+when = [{ kind = "flag", flag = "c13_request_salah_reis_read_log" }]
+text = "亚历山大港的一间绳铺，门口挂着新搓的麻绳。老船长的侄子听完木匣的来历，叹了口气，接着就问那把刀能卖多少钱。日志你在阿尔及尔已经看过，最后几页的水深还记在心里。侄子把日志拿起来翻了两页，见满纸都是字，又放下：“这些，家里没人看得懂。”绳铺的伙计在一旁卷麻，手没停，耳朵却竖着。"
+
+[[tracks.chapters.choices]]
+key = "hand_over"
+text = "照老舵手的托付，把刀和日志都交给他。"
+next = "report"
+reply = "他收下匣子，送你出门时说会给叔叔念一段经。你走出很远回头，看见他已经把刀拿出来，对着太阳看刃口。"
+effects = [{ kind = "flag", flag = "c13_request_salah_reis_handed" }]
+
+[[tracks.chapters.choices]]
+key = "keep_sword"
+text = "劝他把刀留在家里，至少挂在墙上。"
+next = "report"
+reply = "他想了想，把刀挂在绳铺的门楣上，踩着凳子调了两回才挂正：“那就当个招牌。叔叔一辈子在海上，绳子总是用得着的。”"
+effects = [{ kind = "flag", flag = "c13_request_salah_reis_handed" }, { kind = "flag", flag = "c13_request_salah_reis_sword_kept" }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_salah_reis_handed" }, { kind = "flag", flag = "c13_request_salah_reis_sword_sold" }], news = "亚历山大港一间绳铺的老板，把一把旧弯刀卖给了对街的铁匠，说是他叔叔的。" }
+
+[[tracks.chapters.choices]]
+key = "copy_depths"
+text = "交出之前，先把日志里萨累外海的水深抄下来。"
+next = "report"
+reply = "你在绳铺后院借了张桌子，抄到天黑，手指都抄僵了。那些数字一行一行对上了你见过的海岸，比你自己的海图还准。"
+effects = [{ kind = "flag", flag = "c13_request_salah_reis_handed" }, { kind = "flag", flag = "c13_request_salah_reis_copied" }, { kind = "skill", skill = "cartography", value = 20 }]
+check = { attr = "seamanship", base = 35, per = 6 }
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_salah_reis_handed" }, { kind = "flag", flag = "c13_request_salah_reis_copied_rough" }], news = "亚历山大港一间绳铺的后院点了一夜灯，外乡船长抄那本旧日志抄到手僵，最后几页的水深越抄越潦草。" }
+
+# 三、回到防波堤：老舵手听完亚历山大港的事，把老船长留的钱拿出来。
+[[tracks.chapters]]
+key = "report"
+title = "回到防波堤"
+text = "老舵手还坐在防波堤尽头，听你说完亚历山大港的事，半天没出声。然后他从怀里掏出一只油布包，油布边磨得发白，一层层解开，里面是老船长留给“送匣子的人”的钱，用麻绳捆成几捆。防波堤上风大，他把油布包压在膝盖底下，怕风吹走了。他一捆一捆数过，数得很慢，错了就从头数，指头在每一捆上停一下，数完，把最后一捆推到你面前。“攥了这么久，”他说，“手都攥酸了。”"
+mood = "sad"
+at = "algiers"
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_salah_reis_late" }], news = "阿尔及尔的老舵手等送匣子的船等到冬天，后来把那包钱捐给了码头边的清真寺。" }
+news = "阿尔及尔防波堤上的老舵手，送走了老船长的遗物，终于肯离开码头，去酒馆喝了一杯。"
+
+[[tracks.chapters.variants]]
+key = "v1_sword_sold"
+when = [{ kind = "flag", flag = "c13_request_salah_reis_sword_sold" }]
+text = "老舵手还坐在防波堤尽头，听你说完亚历山大港的事，才说了一句：“刀卖了，我听说了。”他没骂人，把一只油布包掏出来，油布边磨得发白，一层层解开。里面是老船长留给“送匣子的人”的钱，用麻绳捆成几捆。“攥了这么久，”他说，“手都攥酸了。”"
+
+[[tracks.chapters.variants]]
+key = "v2_copied_rough"
+when = [{ kind = "flag", flag = "c13_request_salah_reis_copied_rough" }]
+text = "老舵手还坐在防波堤尽头，听你说完亚历山大港的事，半天没出声。你把抄来的那几页水深拿给他看，他对着看了很久，把纸折起来，没还给你。“这几处，你自己也拿不准吧。”他说，然后从怀里掏出一只油布包，油布边磨得发白，一层层解开，里面是老船长留给“送匣子的人”的钱，用麻绳捆成几捆。"
+
+[[tracks.chapters.variants]]
+key = "v3_sword_kept"
+when = [{ kind = "flag", flag = "c13_request_salah_reis_sword_kept" }]
+text = "老舵手还坐在防波堤尽头，听你说完亚历山大港的事。说到门楣上的刀，他抬了抬眼：“挂着好。”他说，“老船长的刀，在船上挂了一辈子。”然后他从怀里掏出一只油布包，油布边磨得发白，一层层解开，里面是老船长留给“送匣子的人”的钱，用麻绳捆成几捆。"
+
+[[tracks.chapters.choices]]
+key = "tell_all"
+text = "照实说：刀和日志都交到了，侄子怎么待它，也照实说。"
+next = "done"
+reply = "“交到了就好。”他把油布包塞进你手里，“他家里人怎么用，是他家里的事。”他站起来，第一次没扶墙，朝亚历山大港的方向站了一会儿。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "reputation", faction = "algiers", value = 2 }, { kind = "memory", memory = "mem-request_salah_reis-report", title = "回到防波堤" }, { kind = "flag", flag = "c13_request_salah_reis_done" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "只说交到了，侄子卖刀的事不提。"
+next = "done"
+reply = "他点点头，没再问下去，像是把什么话在心里又过了一遍。你没说那把刀后来去了哪里。他把油布包推到你面前，手在衣襟上擦了擦，才站起来。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "flag", flag = "c13_request_salah_reis_done" }, { kind = "flag", flag = "c13_request_salah_reis_softened" }]

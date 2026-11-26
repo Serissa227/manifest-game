@@ -1,0 +1,160 @@
+# C13d 请托：交出去的咖啡馆（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单写）
+# 人物：优素福 yusuf（1518-07-16 生，cast 在 cast/story_islamic.toml）。摩卡港咖啡馆的老板，打算带着铜壶上船当司务长，咖啡馆交给常来的苏菲兄弟们。
+# 类型与报价：说服某人（ps），4 章：offer / persuade / result / result_partial（brief 原为 3 章；折中的分支另开一章，原因见“分支结构”）。kind=request，auto=false（T 当面）：人物按日程在 mocha，玩家用“问请托”（ask:request_yusuf）启动；offer 章不写 at，目标是在港里找到他。
+# 窗口：报价 1557-06-01 至 1590-06-30，offer 的 deadline 即报价止日，到期走 timeout（next=failed，不写见闻）。persuade 章起算 60 天。非 stage 章不写 window，窗口写在各章 when 的 date 条件里。
+# 依据：史实背景——摩卡的咖啡与苏菲兄弟会（夜里聚会喝咖啡提神）。只作常客与街面的背景，正文不写宗教名。
+#   原创——铜壶与旧毡子、高地咖啡农与亚丁代理人的定价、定钱、“一成”的让价、吉达的朝圣船。
+#   待核：无。
+# 分支结构：persuade 的检定成功与否分开落在 result（价钱定成全价）与 result_partial（只让一成）两章。选项不用 requires 去卡本轨道在别处设的旗标（c13_request_yusuf_fixed）。
+# 读写的旗标：设 c13_request_yusuf_accepted（接下）、_asked（问了账；persuade 的变体读它）、_fixed（价钱定成全价，分支旗标）；终局各只设一面：_declined、_late、_done、_partial。
+#   不设任何 c7_* 旗标，不读 c7_*（无 C7 线）。无主线门禁（不读 c13_main_*）；无 B10b 改名（mocha、aden 为现有港口）。
+# 缺省走向：不接，优素福再等一季（declined，failed）。接了但 60 天内没谈成价，他的壶又擦了一遍（late，failed）。价钱定成全价（done），或只让一成、各自决定上不上船（partial，done）。
+# 回忆插画清单：
+#   mem-request_yusuf-result「甲板上的第一壶」：吉达朝圣船的甲板上支起一只小炉子，铜壶架在炉口，码头的灯在远处。
+
+[[tracks]]
+key = "request_yusuf"
+name = "交出去的咖啡馆"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["yusuf"]
+
+# 报价：摩卡港的咖啡馆。他先给你倒一杯，然后才提正事。
+[[tracks.chapters]]
+key = "offer"
+title = "比脸还亮的铜壶"
+text = "摩卡港的咖啡馆里，优素福正把一只铜壶擦得发亮，亮到能照出人脸来。他给你倒了一杯，推过来，又把自己的杯子往你这边挪了挪：“兄弟，先喝一口！别说话——这一口咽下去，你那趟远路就不算白跑。”苦得你直皱眉，他笑得更响。放下杯子，他才说正事：他要带着这只壶上船当司务长，咖啡馆交给常来的苏菲兄弟们。可高地来的咖啡农只认他一个，他一走，豆子就断了。他要你去亚丁，见咖啡农的代理人，把以后的价说定。“说定了，我才走得了。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "yusuf", text = "在摩卡港里找到他" }]
+deadline = [1590, 6, 30]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去亚丁。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "yusuf", value = 2 }, { kind = "flag", flag = "c13_request_yusuf_accepted" }]
+reply = "他把铜壶举到灯下照了照自己，又用袖口蹭掉一个指印：“我走了，壶跟我走。兄弟们用别的壶，也煮得好。”说完他转身去翻炉子底下的灰，翻出一粒没烧透的豆子，夹在指间对着光看了很久。"
+
+[[tracks.chapters.choices]]
+key = "ask_brothers"
+text = "问他：兄弟们管得了账吗？"
+next = "persuade"
+effects = [{ kind = "affinity", person = "yusuf", value = 2 }, { kind = "flag", flag = "c13_request_yusuf_accepted" }, { kind = "flag", flag = "c13_request_yusuf_asked" }]
+reply = "他想了想，把壶放回炉子边，手指在壶嘴上敲了两下：“管得了咖啡，管不了账。所以价要先说定，说死。这一季的账，我一个铜子也不肯让别人替我记。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这事我帮不上，你另找人吧。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yusuf_declined" }]
+reply = "他点点头，把铜壶放回炉子上，手在壶把上停了一下：“那就再等一季。”他又给自己倒了一杯，这次没有再推给你。杯子搁下的时候，他又朝码头的方向看了一眼，船桅在雾里只剩一个尖。"
+
+# 亚丁：代理人（不新建 cast，只写身份）嫌价太高。玩家三条路：算账、说理、先付定钱。
+[[tracks.chapters]]
+key = "persuade"
+title = "高两成的价"
+text = "亚丁的码头上，咖啡农的代理人听说优素福要走，脸一下子拉了下来。码头边堆着几袋高地来的豆子，麻袋口上印着一个山头的记号。代理人站在袋子中间，说山上只认优素福，换了人，价就得重谈。账本翻开，指头点在一个数上，比往年高了两成。“不乐意，码头上有的是人要。”他把账本合上，又拿出来，等你开口。"
+speaker = "captain"
+mood = "tense"
+at = "aden"
+objectives = [{ kind = "at", at = "aden", text = "到亚丁的码头上" }]
+deadline_days = 60
+news = "亚丁码头上，高地咖啡农的代理人跟一个外乡船长谈了一下午摩卡那家咖啡馆以后的豆子价。"
+when = [{ kind = "alive", person = "yusuf", value = true }, { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "yusuf", text = "价钱没说定，我还在摩卡。壶又擦了一遍。" }, { kind = "affinity", person = "yusuf", value = -3 }, { kind = "flag", flag = "c13_request_yusuf_late" }]
+
+[[tracks.chapters.choices]]
+key = "commerce"
+text = "跟他算账：苏菲兄弟们每晚都喝，咖啡比优素福在时还多。"
+next = "result"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "yusuf", value = -2 }] }
+effects = [{ kind = "affinity", person = "yusuf", value = 3 }, { kind = "flag", flag = "c13_request_yusuf_fixed" }]
+reply = "代理人把算盘拨了两遍，又拨回去一遍，说那就照往年的价，一个子儿不多。签字的时候他多看了你一眼，像是在记你这个人，记你是个会算账的。"
+
+[[tracks.chapters.choices]]
+key = "eloquence"
+text = "说：优素福走了，他的壶还在海上煮你们的豆子，名声比在摩卡还响。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "yusuf", value = -2 }] }
+effects = [{ kind = "affinity", person = "yusuf", value = 3 }, { kind = "flag", flag = "c13_request_yusuf_fixed" }]
+reply = "代理人愣了一下，笑出声来，说这话他要讲给山上的人听。“山上的人爱听这种话，”他说，“比爱听价钱还爱听。”价钱照往年，他把笔递给你，让你自己在账上划线。"
+
+[[tracks.chapters.choices]]
+key = "deposit"
+text = "先替他付一季的定钱，把价钱压在往年的数上。"
+next = "result"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "这一季的定钱，你身上凑不出来。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "yusuf", value = 3 }, { kind = "flag", flag = "c13_request_yusuf_fixed" }]
+reply = "代理人把定钱收进抽屉，在账本上画了一道横线，又在横线下面写下：开春前到摩卡，价照往年。“定钱不退，”他说，“先付钱的人，最后都肯把话说死。”"
+
+# 变体：优素福在摩卡说过账要先说死，这里的代理人也听说了。读 asked 旗标，只换一段开头。
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_yusuf_asked" }]
+text = "亚丁的码头上，咖啡农的代理人听说优素福要走，脸一下子拉了下来。码头边的豆子袋子还没卸完。优素福在摩卡说过，账要先说死。代理人把账本往你面前一推，指头点在一个数上，比往年高了两成，白纸黑字，一个字不许改。“山上只认优素福，那就换人重谈。”他说，“重谈，也是这个价。”"
+
+# 价钱定成全价：当天就把咖啡馆交出去，只剩上船的事。
+[[tracks.chapters]]
+key = "result"
+title = "该上哪条船"
+text = "价钱说定了，代理人把账本合上，山上的豆子会走摩卡的船。优素福听说以后，当天下午就把咖啡馆的钥匙交给了苏菲兄弟里最年长的那个。钥匙串上还挂着一只小铜勺，他解下来，连勺子一起交了出去，说那是咖啡馆里最早的家当。铜壶他用一块旧毡子包了三层，放在脚边，怎么也不肯让人提。“船长，你替我看一看，我该上哪条船。”他把毡子的角又掖了一遍，“别是那种只装盐的。”"
+speaker = "captain"
+mood = "cheerful"
+at = "mocha"
+objectives = [{ kind = "person", person = "yusuf", text = "在摩卡找到他" }]
+when = [{ kind = "alive", person = "yusuf", value = true }, { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "advise"
+text = "替他挑一条去吉达的朝圣船，那种船上最缺好司务长。"
+next = "done"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "yusuf", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_yusuf_done" }, { kind = "memory", memory = "mem-request_yusuf-result", title = "甲板上的第一壶" }]
+news = "摩卡那家咖啡馆换了主人，原来的老板带着一只擦得发亮的铜壶上了一条去吉达的船。"
+reply = "他上了船，在甲板上支起小炉子，煮了第一壶，香味一直飘回码头上。开船前他把报酬塞进你手里，说铜壶的第一杯本该给你，可船开了。"
+
+[[tracks.chapters.choices]]
+key = "keep_fee"
+text = "报酬不收，船照样替他挑，只求他把第一壶留给摩卡的兄弟们。"
+next = "done"
+effects = [{ kind = "affinity", person = "yusuf", value = 8 }, { kind = "flag", flag = "c13_request_yusuf_done" }]
+news = "摩卡港的咖啡馆换了主人，老板没要那笔报酬，只说铜壶的第一壶要留给兄弟们。"
+reply = "他愣了一下，把准备好的钱袋收回柜底，搓了搓手，说兄弟们的第一壶，他得亲自煮，煮给他们看，看他们喝了说不说好。"
+
+# 只让一成：代理人绕着弯子让的，数字没写进账本。优素福没生气，把壶又擦了一遍。
+[[tracks.chapters]]
+key = "result_partial"
+title = "只让了一成"
+text = "代理人只肯让一成，还是绕着弯子说的，数字没有写进账本，那一栏到现在还没人落笔。优素福听完，没有生气，把铜壶拿起来又擦了一遍，壶肚上映出柜台，也映出你的脸。“一成也够我上船。可这一成写不进账，过了这一季，谁认？”他看着你，等你拿主意。"
+speaker = "captain"
+mood = "tender"
+at = "mocha"
+objectives = [{ kind = "person", person = "yusuf", text = "在摩卡找到他" }]
+when = [{ kind = "alive", person = "yusuf", value = true }, { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "not_yet"
+text = "价钱只让了一成，再等一季吧。"
+next = "done"
+effects = [{ kind = "cash", value = 200 }, { kind = "affinity", person = "yusuf", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_yusuf_partial" }]
+news = "亚丁那边的价只让了一成，摩卡的老板这一季不走了，说还要守着那只壶。"
+reply = "他想了想，说也好，壶再擦一季，等山上的豆子价回到往年。柜台上放下一半的钱，推到你手边：“脚钱，一半是够的。”"
+
+[[tracks.chapters.choices]]
+key = "go_half"
+text = "替他挑一条去吉达的船，一成的价也够他买一季的木炭。"
+next = "done"
+effects = [{ kind = "cash", value = 200 }, { kind = "affinity", person = "yusuf", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_yusuf_partial" }, { kind = "letter", person = "yusuf", text = "吉达到了。船上的炉子小，煮出来的还是摩卡那个味。壶没磕着。摩卡的价，你替我盯着点。" }]
+news = "摩卡码头边的豆行里有人说，咖啡馆那个老板吃了亚丁的一成让价，这回是跟一条去吉达的船走了。"
+reply = "他把铜壶包好，说一成也是钱，船上缺司务长的时候，他会煮得比谁都好。钱只付了一半，他说另一半算他欠你一壶咖啡，等你回摩卡，他给你煮，不收钱。"

@@ -1,0 +1,119 @@
+# C13d 请托：讲堂里的太阳（request_jeronimo_de_chaves）。中文，Claude 写。
+# 人物：赫罗尼莫·德·查韦斯（jeronimo_de_chaves，1523 年生、1574 年卒，男；势力 spain，身份档 2）。贸易总署宇宙志讲席的第一位教授。
+# 类型：找东西（find）；3 章：offer → handin → lecture；终点 done / failed；没有 stage 章。
+# 报价：当面（T）。人物按日程在塞维利亚贸易总署（seville）；auto=false，玩家“问请托”（ask:request_jeronimo_de_chaves）启动；offer 章不写 at，目标是在讲堂里找到他。
+# 窗口：报价 1557-01-15 至 1573-06-30，截止走 timeout（failed，只来一封信，不写见闻）；交付与讲课的 when 止于 1573-12-31（日程止于此，1574 年去世）。
+# 门槛：玩家满 17 岁；请托人是成年的历史人物，不写年龄门；T 模式，不写名声门槛。
+# 解法：handin 两条路——交给讲堂（扣一件十字测天仪，好感 +3）、只借一堂课（不扣，好感 +1）；lecture 三条路——照常量（航海一般检定 20/7，失败少拿现金、拿到那本书）、当场换算（技能门槛 天文导航 60）、交给最小的学徒（口才容易检定 35/6，失败少拿现金）。
+# 依据：史实——赫罗尼莫·德·查韦斯 1552 年起任宇宙志讲席，1545 年译萨克罗博斯科《天球论》，著历书《编年或时令手册》；十字测天仪在北方文化的港口有卖（items/items_instrument_01.toml 的 cross_staff）；萨克罗博斯科《天球论》费拉拉 1472 版（items/books_04_navigation.toml 的 sacrobosco_ferrara），正文只写他自己这么说。
+# 原创：讲堂与当众量太阳的场面、后排的老领航员（不写名字）、墨线洇了的仪器、offer 里的老水手与那本历书。
+# 与父亲阿隆索的请托区分：这里是讲堂里当众量，不去海上测；不提父亲那条请托，父子关系只用“查韦斯的儿子”一句。
+# 秘密：无单列秘密；占星与历书只作 offer 章里的一处闲笔，不进见闻。
+# 读的旗标：无（本条无主线门禁，不读 c13_main_*，不读 c7_*）。
+# 设的旗标：c13_request_jeronimo_de_chaves_accepted / declined（报价的两条路）、_given（交给讲堂，只记录，本轨道内不读）、_done（办成）、_partial（量错或没成）、_late（超时）。
+# 依赖：无 B10b 改名（seville、items cross_staff / sacrobosco_ferrara、skill astral_navigation 均已存在）；人物 jeronimo_de_chaves 在 cast/historical_01_europe.toml，tracks 已登记。
+# 回忆插画清单：
+#   mem-request_jeronimo_de_chaves-lecture「正午的院子」：贸易总署院子里正午的太阳，学徒围成一圈，后排的老领航员抱着胳膊。
+# 英文：不写（terra16 先只做中文，英文以后补）。
+
+[[tracks]]
+key = "request_jeronimo_de_chaves"
+name = "讲堂里的太阳"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["jeronimo_de_chaves"]
+
+# 一、报价：讲堂里的测天仪。玩家去贸易总署的讲堂找他，他要一支北方刻的。
+[[tracks.chapters]]
+key = "offer"
+title = "讲堂里的测天仪"
+text = "贸易总署的讲堂里，十几个学徒围着一支十字测天仪。横杆上的刻度被雨泡过，墨线洇成一团，看不出哪一格是哪一格。赫罗尼莫·德·查韦斯敲了敲它：“城里卖的都这样，像被人拿去腌过。”他要一支北方刻的，刻度清楚的，好让学徒们在讲堂里当众量一次太阳。“量太阳不是背书，”他说，“得有人站在院子里，举着仪器，一格一格地数。”桌角压着一本翻旧的历书，夹着一张写满日子的纸。他嘴上说占星是把戏，手却先翻开了历书。"
+mood = "cheerful"
+cast = ["jeronimo_de_chaves"]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 1, 15], to = [1573, 6, 30] }, { kind = "alive", person = "jeronimo_de_chaves", value = true }]
+objectives = [{ kind = "person", person = "jeronimo_de_chaves", text = "在贸易总署的讲堂找到他" }]
+deadline = [1573, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_jeronimo_de_chaves_late" }, { kind = "letter", person = "jeronimo_de_chaves", text = "讲堂的测天仪，学徒从北边来的商人那里买到了一支，刻度还算清楚。你那边不必再找了。" }]
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去北方港口找一支刻度清楚的。"
+next = "handin"
+reply = "他把那支洇了的递给一个学徒，当教鞭使。“北方的要是还洇，就别拿来了。”说完他转身，在纸上重画天球的第三层，线条画得很细，一根也不肯偏。"
+effects = [{ kind = "affinity", person = "jeronimo_de_chaves", value = 2 }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这种东西城里买得到，我不管。"
+next = "failed"
+reply = "他已经转回讲台前，讲起天球的第三层。有个学徒拿指甲去抠洇开的墨线，抠不掉，又把仪器放回了桌上。"
+effects = [{ kind = "flag", flag = "c13_request_jeronimo_de_chaves_declined" }]
+
+# 二、交付：你带来的仪器，他要看刻度，再问交给讲堂还是借一天。
+[[tracks.chapters]]
+key = "handin"
+title = "刻度清楚的那一支"
+text = "赫罗尼莫接过你带来的十字测天仪，举到眼前，指尖沿着横杆一格一格摸过去，嘴里念着刻度。念到第三十几格，他停住了。北方的刻法他认得，刻得浅，线却直。“好。”他把仪器放回木盒，又拿出来看了一眼，才抬头问：“交给讲堂，还是借一天？”门口的学徒挤成一团，有人踮着脚往木盒里看。"
+mood = "tense"
+speaker = "captain"
+cast = ["jeronimo_de_chaves"]
+when = [{ kind = "alive", person = "jeronimo_de_chaves", value = true }, { kind = "date", to = [1573, 12, 31] }]
+objectives = [{ kind = "item", item = "cross_staff", qty = 1, text = "带一支刻度清楚的十字测天仪" }, { kind = "person", person = "jeronimo_de_chaves", text = "回贸易总署的讲堂找他" }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "交给讲堂，留下给学徒们用。"
+next = "lecture"
+reply = "他在横杆末端刻了讲席的记号，刻完吹掉木屑。“这下它是讲堂的了，学徒们谁也不许拿它赌酒。”"
+effects = [{ kind = "item", item = "cross_staff", qty = -1 }, { kind = "affinity", person = "jeronimo_de_chaves", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_given" }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "只借给他上一堂课，课完拿回来。"
+next = "lecture"
+reply = "他说那就得在今天量，不能拖到明天，转身就去催学徒把石台搬到院子中央。“借来的东西，量完你就带走。”"
+effects = [{ kind = "affinity", person = "jeronimo_de_chaves", value = 1 }]
+
+# 三、讲课：正午的院子里，学徒们围着你，后排的老领航员等着看笑话。
+[[tracks.chapters]]
+key = "lecture"
+title = "正午的院子"
+text = "正午前，学徒们把你推到贸易总署的院子中央，石台上摆着那支十字测天仪，横杆上的刻度清清楚楚。后排坐着几个来考执照的老领航员，抱着胳膊等着看笑话。赫罗尼莫先把天球的道理讲了一遍，才说：“量错了也要量——错在哪儿，才是课。”一个老领航员大声插话：“查韦斯的儿子，凭眼睛看海就够了，用不着这根棍子。”赫罗尼莫笑了一下，笑得很勉强。"
+mood = "tense"
+speaker = "captain"
+at = "seville"
+cast = ["jeronimo_de_chaves"]
+news = "塞维利亚贸易总署的院子里，赫罗尼莫让一船长当着学徒的面量太阳，后排几个老领航员抱着胳膊看热闹。"
+when = [{ kind = "alive", person = "jeronimo_de_chaves", value = true }, { kind = "date", to = [1573, 12, 31] }]
+objectives = []
+
+[[tracks.chapters.choices]]
+key = "measure"
+text = "照常量，报出读数，让学徒们一起算。"
+next = "done"
+reply = "读数和赫罗尼莫历书上的数只差一点。学徒们凑上来看，后排的老人也不抱胳膊了。赫罗尼莫从架子上抽出一本旧书，封皮磨得发白，塞给你：“我译《天球论》时照的就是这一版。量得对，归你。”"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "sacrobosco_ferrara", qty = 1 }, { kind = "skill", skill = "astral_navigation", value = 20 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "affinity", person = "jeronimo_de_chaves", value = 8 }, { kind = "memory", memory = "mem-request_jeronimo_de_chaves-lecture", title = "讲堂里的太阳" }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 1000 }, { kind = "item", item = "sacrobosco_ferrara", qty = 1 }, { kind = "affinity", person = "jeronimo_de_chaves", value = 4 }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_partial" }], news = "塞维利亚贸易总署的院子里，有个船长量太阳时被云挡了一下，读错了半度；赫罗尼莫拿那半度讲了一整堂课。" }
+
+[[tracks.chapters.choices]]
+key = "astral"
+text = "当场把读数换成纬度，再请那位老领航员报他凭眼睛估的。"
+next = "done"
+reply = "两个数挨得很近。老领航员哼了一声，问那根棍子是哪里买的，又说北方的货他从不信。赫罗尼莫没接话，只把那本旧书往你这边推了推。"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "你还算不快那张赤纬表。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "sacrobosco_ferrara", qty = 1 }, { kind = "skill", skill = "astral_navigation", value = 20 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "affinity", person = "jeronimo_de_chaves", value = 8 }, { kind = "memory", memory = "mem-request_jeronimo_de_chaves-lecture", title = "讲堂里的太阳" }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_done" }]
+
+[[tracks.chapters.choices]]
+key = "pupil"
+text = "把测天仪交给最小的学徒，你在旁边扶着。"
+next = "done"
+reply = "学徒读出了数，脸红到耳朵。赫罗尼莫在本子上画了个勾，又让他念了一遍，这回没红。那本旧书他没给学徒，转手交给了你。"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "sacrobosco_ferrara", qty = 1 }, { kind = "affinity", person = "jeronimo_de_chaves", value = 6 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "jeronimo_de_chaves", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_de_chaves_partial" }], news = "塞维利亚贸易总署的讲堂里，一个最小的学徒量太阳时手抖，读数差了一度多，后排的老领航员笑出了声。" }

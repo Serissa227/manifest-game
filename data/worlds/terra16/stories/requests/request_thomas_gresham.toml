@@ -1,0 +1,217 @@
+# C13d 人物的请托：绸缎里的火药（故事 2.0，A5 / E37 契约）
+# 类型：mixed（复合）；轨道 request_thomas_gresham，offer 起，6 章（offer / load / crossing / rumor / settle / settle_partial），终点 done。
+# 人物：托马斯·格雷沙姆（thomas_gresham，约 1519 年生、1579 年卒；cast 里月日不详，生年按 1519-01-01 记）。英格兰王室派驻安特卫普的金融代理人。
+# 报价：T 当面。安特卫普交易所，ask:request_thomas_gresham 启动；求见门槛 fame 25（与 cast 的 audience 一致）。
+# 窗口：offer 1558-11-20 起，到期 1563-06-30；全线到 1563-12-31 为止。卸货在伦敦塔下（1558—63 年他人在安特卫普，伦敦只是卸货处）。
+# 依据：
+#   史实——1558 年伊丽莎白即位后，格雷沙姆在安特卫普交易所替英格兰借钱、展期、把英镑的汇价往上抬，也替王室弄火药、硝石与兵器，货包常常写作布匹。
+#         “劣币驱逐良币”是后人归在他名下的说法，正文不写成他的话。
+#         军械处的书记官是原创的，只作为伦敦塔码头的收货人；税吏与禁运告示的写法按 16 世纪尼德兰的海关惯例，只写传闻口吻。
+#   原创——二十桶火药包成绸缎、包布上的税吏、一张写着“天鹅绒”的提货单、伦敦塔码头上撬开的桶盖、柱子边上的那句闲话、账房里的小天平与金蚱蜢的砝码。
+#   待核——无（卸货的确切码头名与税吏的机构名只用传闻语气）。
+# 秘密：王室的事与他自己的生意分不开，每笔汇兑都抽一点。玩家在 settle 章只能问一句，他笑而不答；全线不进见闻。
+# 分流：rumor 章的结果决定去哪一章收尾——柱子边上的话说成了（rate）去 settle，没说成或拒绝去 settle_partial。两章都没有需要旗标的选项，不会出现永远挡住的选项。
+# 缺省走向：不接则 failed；接下来照线走。offer 到期 failed（不写见闻）；crossing 迟到 60 天 failed（好感 -3，来信）；settle 与 settle_partial 到期 done 并设 partial（来信）。
+# 读的旗标：c13_main_lieve（offer 与 rumor 的变体，主线第一章设；未设时不出现，不影响主线）。
+# 写的旗标：c13_request_thomas_gresham_accepted / declined / close / rate / done / partial / late。
+# 依赖：不需要 B10b 改名（antwerp、london 与日程 key 已有）；reputation 的势力 england 已有。唯一奖励 balance_weights 已由 C7 的 bond_yaqub（A2）发出，整合时去重（2026-10-24），本请托不再发物品，只留回忆。
+# 回忆插画清单：
+#   mem-request_thomas_gresham-settle：账房的桌上一架小天平，砝码上刻着一只金蚱蜢，窗外是交易所的回廊。
+# 写作注：引擎的 fail 分支没有回复字段，检定失败时玩家看到的就是 fail 分支的见闻，所以失败的经过写在见闻里。
+
+[[tracks]]
+key = "request_thomas_gresham"
+name = "绸缎里的火药"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["thomas_gresham"]
+
+# 1558-11 至 1563-06：报价。交易所的回廊里，他要你把火药当绸缎运过海峡。
+[[tracks.chapters]]
+key = "offer"
+title = "回廊里的报价"
+text = "交易所的回廊里挤满了人。格雷沙姆一边听两个热那亚人报价，一边朝你招手，笔一直没停。“二十桶火药。”他说得很轻，像在报一个汇率，“包成绸缎的样子，过海峡，卸在伦敦塔下的码头。路上的税吏只看包布。”热那亚人咳嗽了一声，他把笔在墨水瓶里一蘸，头也不抬：“你们等等，这位船长还没报价。”他终于转过来，把一张纸推到你面前：“几时到期？按什么价？”他问的是你的船。"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1558, 11, 20], to = [1563, 6, 30] }, { kind = "alive", person = "thomas_gresham", value = true }, { kind = "fame", ge = 25 }]
+objectives = [{ kind = "person", person = "thomas_gresham", text = "在交易所找到他" }]
+cast = ["thomas_gresham"]
+mood = "tense"
+deadline = [1563, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "lieve"
+when = [{ kind = "flag", flag = "c13_main_lieve" }]
+text = "交易所的回廊里挤满了人。你还没走近，格雷沙姆先抬了一下眼：“德克莱尔克家的。”就叫了这一句。接着他一边听两个热那亚人报价，一边朝你招手，笔一直没停。“二十桶火药。”他说得很轻，像在报一个汇率，“包成绸缎的样子，过海峡，卸在伦敦塔下的码头。路上的税吏只看包布。”他把那张纸推到你面前，纸上的数字已经改过三遍。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，替他把船定下来"
+next = "load"
+effects = [{ kind = "affinity", person = "thomas_gresham", value = 2 }, { kind = "flag", flag = "c13_request_thomas_gresham_accepted" }]
+reply = "他当场写了一张提货单，货名一栏写着“天鹅绒，二十包”。写完他把笔一搁：“船你来定，货我来备。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这边的海关不好惹"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_thomas_gresham_declined" }]
+reply = "他耸耸肩，转身又去听热那亚人报价了。"
+
+# 安特卫普码头：税吏拿着禁运告示一包一包地拍。这一章可以用检定、钱或特许状过关。
+[[tracks.chapters]]
+key = "load"
+title = "税吏的单子"
+text = "货包在码头上码成一垛，外面包着绸缎，一提却比绸缎沉得多。尼德兰的税吏捏着禁运的告示，一包一包地拍过去，拍一下，在单子上画一道。格雷沙姆站在仓门口，压低嗓子对你说：“二十包里，最外面这一包是绸缎，里头的不用看。”他的书记把一张纸递上来，纸角被汗浸皱了。税吏的手停在第三垛上，抬眼看你：“这是什么货？”"
+at = "antwerp"
+cast = ["thomas_gresham"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "thomas_gresham", value = true }]
+
+[[tracks.chapters.choices]]
+key = "declare"
+text = "跟税吏说，这是染坏了的布，要运回去重染"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "crossing"
+effects = [{ kind = "affinity", person = "thomas_gresham", value = 3 }]
+reply = "税吏拍了拍货包，在单子上画了个勾。“重染的布，单子我收下。”他把纸还给你，没有再看第二眼。"
+news = "安特卫普码头上，尼德兰税吏放行了一船英格兰人的布，说是染坏了要运回去重染，还夸那人会说话。"
+fail = { next = "crossing", effects = [{ kind = "affinity", person = "thomas_gresham", value = -2 }, { kind = "flag", flag = "c13_request_thomas_gresham_close" }], news = "安特卫普码头上，税吏拆开英格兰人的一包布，里头的绸缎是真的，押货的人当场出了一身汗。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "照格雷沙姆说的，把一小袋钱塞进单子里"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "钱袋不够厚，这时候拿不出手。"
+next = "crossing"
+effects = [{ kind = "cash", value = -500 }]
+reply = "税吏把钱袋揣进怀里，单子都没看，朝仓门那边一摆手。格雷沙姆在仓门那头看了你一眼，把手里的笔转了一圈。"
+news = "安特卫普码头上，一个税吏收了钱，连单子都没翻，手一抬就放行，脚夫们笑了一下午。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "拿出英格兰商人的特许状，跟他论条款"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "那张特许状在这边算不算数，你心里没底，不敢拿出来。"
+next = "crossing"
+effects = [{ kind = "affinity", person = "thomas_gresham", value = 3 }]
+reply = "你把特许状摊在箱盖上，一条一条念给他听。税吏读了一半就嫌麻烦，挥手放行。格雷沙姆在旁边低声笑：“这个你也会。”"
+news = "安特卫普码头上，一个英格兰船长拿着特许状跟税吏论条款，论到日头偏西，税吏嫌麻烦，挥手放行了。"
+
+# 伦敦塔下的码头：货卸在军械处的眼皮底下，书记官问路上的事。玩家可以照实说，也可以一路平安。
+[[tracks.chapters]]
+key = "crossing"
+title = "伦敦塔下的码头"
+text = "船靠在伦敦塔下的码头，潮水一退，石阶上全是湿的海草味。军械处的书记官带着两个人下来，一桶一桶撬开盖子，凑近了闻，闻完在账上记一笔。水手们把最后一垛货抬上石阶，包布底下还渗着海水。“格雷沙姆先生的货，我们认。”书记官合上账本，抬眼看你，问得很平常：“路上有没有人多看过这些包？”码头的风把纸角掀起来，你身后的水手在数缆绳，没有人回头。"
+at = "london"
+objectives = [{ kind = "at", at = "london", text = "把货送到伦敦塔下的码头" }]
+cast = ["thomas_gresham"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "thomas_gresham", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "thomas_gresham", value = -3 }, { kind = "flag", flag = "c13_request_thomas_gresham_late" }, { kind = "letter", person = "thomas_gresham", text = "你的船没有到。那批东西我另找了船，走北边的水路，已经过了海峡。这件事到此为止，不必再提。账下回到安特卫普再算。格雷沙姆" }] }
+
+[[tracks.chapters.choices]]
+key = "say"
+text = "照实说，货在安特卫普被税吏拦过"
+next = "rumor"
+effects = [{ kind = "cash", value = 2000 }, { kind = "reputation", faction = "england", value = 2 }, { kind = "affinity", person = "thomas_gresham", value = 3 }]
+reply = "书记官把税吏的样子一笔一笔记下，说格雷沙姆先生会处理。他没有谢你，只把那一页撕下来，夹进了自己的本子里。"
+news = "伦敦塔码头昨天卸了一船绸缎，一个书记官点完数，提起安特卫普的税吏，说那人的脸他记住了。"
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "说一路平安，没人多看"
+next = "rumor"
+effects = [{ kind = "cash", value = 2000 }, { kind = "reputation", faction = "england", value = 2 }]
+reply = "书记官点点头，给你盖了收讫。他的笔很稳，没有多问一个字。"
+news = "伦敦塔码头昨天卸了一船绸缎，书记官盖了收讫，码头的脚夫说，这一船比往年的都清静。"
+
+# 回到安特卫普：他要你在柱子边上说一句真话。真话从外人嘴里说出来，才有人信。
+[[tracks.chapters]]
+key = "rumor"
+title = "柱子边上的闲话"
+text = "回到交易所，格雷沙姆又在回廊里等你，身边站着两个佛罗伦萨人。他没绕弯子：“今天下午三点，你去那根柱子边上，随口说一句，英格兰王室这一期的利息是按时付的——一字不差地付了。”你问这话是不是真的。他说：“是真的。可这话得从一个外人嘴里出来，才有人信。”柱子那边的人群正在换汇，英镑的牌子挂在墙上，一动不动。"
+at = "antwerp"
+cast = ["thomas_gresham"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "thomas_gresham", value = true }]
+
+[[tracks.chapters.variants]]
+key = "lieve"
+when = [{ kind = "flag", flag = "c13_main_lieve" }]
+text = "回到交易所，格雷沙姆又在回廊里等你，身边站着两个佛罗伦萨人。你家的兑换桌就在那根柱子不远，你走过去的时候，老兑换商抬了抬下巴。他没绕弯子：“今天下午三点，你去那根柱子边上，随口说一句，英格兰王室这一期的利息是按时付的——一字不差地付了。”你问这话是不是真的。他说：“是真的。可这话得从一个外人嘴里出来，才有人信。”"
+
+[[tracks.chapters.choices]]
+key = "say"
+text = "在柱子边上闲聊，把这话说出来"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "settle"
+effects = [{ kind = "cash", value = 1650 }, { kind = "affinity", person = "thomas_gresham", value = 5 }, { kind = "flag", flag = "c13_request_thomas_gresham_rate" }]
+reply = "傍晚，英镑的汇价往上动了一格。格雷沙姆在回廊那头朝你点了一下头，没有走过来。"
+news = "安特卫普交易所的柱子边上，佛罗伦萨人议论英格兰的利息，傍晚英镑的汇价往上动了一格。"
+fail = { next = "settle_partial", effects = [{ kind = "affinity", person = "thomas_gresham", value = -2 }], news = "安特卫普交易所的柱子边上提了一句英格兰的利息，没人接话，佛罗伦萨人只顾着骂天气，英镑的牌子一格也没动。" }
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不干：话是真的，可你不替人抬价"
+next = "settle_partial"
+effects = [{ kind = "affinity", person = "thomas_gresham", value = 1 }]
+reply = "他笑了一声，说这就是为什么要找外人。他把那句话咽了回去，换成一句天气，说给身边的佛罗伦萨人听。"
+
+# 账房里的天平（汇价动了）：他问你下回能不能再替他捎东西。问“抽了几成”只能问，他笑而不答。
+[[tracks.chapters]]
+key = "settle"
+title = "账房里的天平"
+text = "他把你请上交易所楼上的账房，门一关，外头的喧闹就矮了下去。桌上摆着一架小天平，铜盘擦得发亮。墙上英镑的牌价还停在前几天那一格上，他瞥了一眼，没说话。他往一头放了一枚金币，又放一枚，指针晃了两下才停。“金子要称，人话也要称。”他把一盒砝码推过来，又把账本翻到最后一页，用指甲点着一行数：“下回去伦敦，肯不肯再替我捎两箱不必报关的东西？”问完他才想起来倒酒，酒是温的，他自己没喝。"
+cast = ["thomas_gresham"]
+objectives = [{ kind = "person", person = "thomas_gresham" }]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "thomas_gresham", value = true }]
+deadline = [1563, 12, 31]
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_thomas_gresham_partial" }, { kind = "letter", person = "thomas_gresham", text = "我回伦敦了，账已经结清。下回来伦敦，找交易所的人报我的名字。格雷沙姆" }] }
+
+[[tracks.chapters.choices]]
+key = "weights"
+text = "掂一掂那枚砝码，说下回再说"
+next = "done"
+effects = [{ kind = "affinity", person = "thomas_gresham", value = 3 }, { kind = "memory", memory = "mem-request_thomas_gresham-settle", title = "金蚱蜢的砝码" }, { kind = "flag", flag = "c13_request_thomas_gresham_done" }]
+reply = "他把一枚砝码放进你手心，沉甸甸的，上面刻着一只金蚱蜢。你掂了掂，他又拿回去，收进盒子里。“下回来，先跟我说清楚船哪天靠岸。”"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他这一趟自己抽了几成"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_thomas_gresham_partial" }]
+reply = "他大笑，说你该去当税吏。砝码盒合上了，桌上那杯温酒也被他收了回去。"
+
+# 账房里的天平（汇价没动）：同一间账房，汇价那一格没有动，他的语气也淡了。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "没动的那一格"
+text = "他还是把你请上账房，桌上的小天平擦过了，砝码摆得整整齐齐。汇价那一格没有动，他没提这件事，只把账本合上，推到你面前。“这一截账我记着，你的那份照样给。”他从抽屉里拿出一盒砝码，把上面的灰吹掉，什么也没说。窗外的回廊里，佛罗伦萨人还在换汇，没有人往这边看。"
+cast = ["thomas_gresham"]
+objectives = [{ kind = "person", person = "thomas_gresham" }]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "thomas_gresham", value = true }]
+deadline = [1563, 12, 31]
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_thomas_gresham_partial" }, { kind = "letter", person = "thomas_gresham", text = "我回伦敦了。汇价那一格没动，账我照记着。下回来伦敦，找交易所的人报我的名字。格雷沙姆" }] }
+
+[[tracks.chapters.choices]]
+key = "weights"
+text = "掂一掂那枚砝码，账以后再算"
+next = "done"
+effects = [{ kind = "affinity", person = "thomas_gresham", value = 3 }, { kind = "memory", memory = "mem-request_thomas_gresham-settle", title = "金蚱蜢的砝码" }, { kind = "flag", flag = "c13_request_thomas_gresham_partial" }]
+reply = "他把一枚砝码推过来，上面刻着一只金蚱蜢。你掂了掂，他拿回去，拿袖口擦了擦。“账以后再算，砝码不会跑。”"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他这一趟自己抽了多少"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_request_thomas_gresham_partial" }]
+reply = "他大笑，说你该去当税吏。这一句他不答，只把天平又往你这边推了推。"

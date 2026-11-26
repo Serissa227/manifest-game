@@ -1,0 +1,163 @@
+# 请托：井边住着谁（request_khadija_rihla）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：哈迪贾·里赫拉（khadija_rihla，1540-06-25 生，女），非斯商队人家的女儿，学院同学（在非斯隔着帘子旁听讲席）；势力 morocco，身份档 1。cast：cast/classmates_custom_fez_scholar.toml。
+# 类型：去某处（go）。三章起的分支：offer（报价）、arrive（领队与向导）、report（写上他的名字，向导讲的那一路）、report_partial（名字记不全的那一路）。普通章不写 stage，因此没有 window 与 default；到期只走 timeout。
+# 报价：V（到访）。哈迪贾的家在得土安（tetouan），她随家里的货下到港口，auto=true；窗口 1564-01-01 至 1568-12-31（同学的重逢在 1563 年非斯，之后才开放）。offer 写 family=c13_offer_tetouan、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：arrive 在萨累（sale）等盐队，deadline_days=90，超时走 failed，来信一封，好感 -3，旗标 _late；report 与 report_partial 是普通章，可以一直等。
+# 日程提示：cast 把她的日程定在非斯（1554—1572）。本文件里她不出城，报价与收尾都在得土安的货栈，只靠 offer 的 at 与她开口。整合时若要她在得土安现身，改 cast 日程；本文件不依赖它。
+# 依据·史实背景：马格里布到廷巴克图的盐金商路（塔阿扎的盐、沿途的井）；盐队从萨累一带南下，驼队里总有一两个认得每口井的人。待核：萨累盐队的编成与具体路线，正文一律用传闻口吻。
+# 依据·原创：哈迪贾的图与“谁讲的”的规矩；领队与向导（叙事人物，不进 cast）；五口井与其中那一户人家。井名与人家都是虚构的，不对应任何实有的井。
+# 秘密：怕家里叫她别念了，回去守货栈。只在 report 留一句影子（“家里问起之前”），不解释，不进见闻。
+# 读的旗标：bond khadija_rihla 至少 C（offer 的 variant）；c13_request_khadija_rihla_one（report_partial 的 variant）。
+# 设的旗标：c13_request_khadija_rihla_accepted（offer 两条接法）、_declined（offer 回绝）、_guide（arrive 向导讲，或用阿拉伯话周旋）、_one（arrive 向导的检定失败）、_late（arrive 超时）、_done（report 写向导的名字）、_partial（名字记不全，两条路都设）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不写塔拉、吉达、坎贝、游记。
+# 报酬：现金最多 1250（名字记不全 800），arrive 的 tea_dates 付 100 作代价；好感最多 +13；名声 +1；技能 cartography +20（两种结局都给，只一次）；回忆 mem-request_khadija_rihla-report。不发物品。
+# 依赖：港口 tetouan、sale（ports_north_africa.toml）；技能 cartography、lang_arabic（skills.toml）；人物 khadija_rihla。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_khadija_rihla-report「淡黄里的五个圆点」：货栈后屋的案上，图往南的一片淡黄里多了五个小圆点，每个圆点旁写着井名、人家与讲的人。
+
+[[tracks]]
+key = "request_khadija_rihla"
+name = "井边住着谁"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["khadija_rihla"]
+
+# 一、一大片没人说过的地方：得土安的货栈后头，她的图摊在案上。
+[[tracks.chapters]]
+key = "offer"
+title = "一大片没人说过的地方"
+text = "哈迪贾在得土安的货栈后头摊开她的图。北边密密麻麻，每条路旁都写着是谁讲的，字小得要凑近了看。往南过了阿特拉斯，就只剩一大片淡黄。她用指尖点着那一片，说：“图上空着的地方，也有人在过日子。”一支盐队刚从南边回到萨累，她家里不许她出城，跟驼队的人说一句话也要先过家里的门。她托你去听领队讲：路过哪几口井，井边住着谁，每一条都要记下是谁说的。“你只管去听，回来我再问你。”"
+speaker = "captain"
+mood = "tender"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan" }]
+when = [{ kind = "date", from = [1564, 1, 1], to = [1568, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "khadija_rihla", ge = 18 }]
+deadline = [1568, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "khadija_rihla", level = "C" }]
+text = "哈迪贾在得土安的货栈后头摊开她的图。北边密密麻麻，每条路旁都写着是谁讲的，字小得要凑近了看。她先指着其中一条：“这条是你讲的，记得吗？”往南过了阿特拉斯，就只剩一大片淡黄。她用指尖点着那一片，说：“图上空着的地方，也有人在过日子。”一支盐队刚从南边回到萨累，她家里不许她出城，跟驼队的人说一句话也要先过家里的门。她托你去听领队讲：路过哪几口井，井边住着谁，每一条都要记下是谁说的。“你只管去听，回来我再问你。”"
+
+[[tracks.chapters.choices]]
+key = "go_listen"
+text = "接下，去萨累听盐队的人讲。"
+next = "arrive"
+reply = "她撕下图的一角给我，上面只画了萨累和一个往南的箭头，说：“从这里开始记。”"
+effects = [{ kind = "affinity", person = "khadija_rihla", value = 2 }, { kind = "flag", flag = "c13_request_khadija_rihla_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_names"
+text = "接下，先问：为什么非要记下是谁说的？"
+next = "arrive"
+reply = "“地名会错，人不会。”她说哪口井的名字记错了，下回还能去问那个人；记不得是谁说的，错了就一直错下去。"
+effects = [{ kind = "affinity", person = "khadija_rihla", value = 2 }, { kind = "flag", flag = "c13_request_khadija_rihla_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "驼队的话，我听不懂。"
+next = "failed"
+reply = "她把图卷起来，说那她就等哪天能自己出城。"
+effects = [{ kind = "flag", flag = "c13_request_khadija_rihla_declined" }]
+
+# 二、领队与向导：盐队歇在萨累城外，领队讲井，向导只在第五口井开口。
+[[tracks.chapters]]
+key = "arrive"
+title = "领队与向导"
+text = "盐队歇在萨累城外，盐板一块块码成墙。领队是个嗓门很大的老商人，讲起井来头头是道。可他每讲一口井，都要回头看一眼蹲在骆驼边的年轻向导，向导点头，他才往下讲。讲到第五口井，领队摆摆手：“那口井早就没人了。”向导第一次开口，说得很慢：“那里住着一家人，井是这家人挖的。”"
+speaker = "captain"
+mood = "mystic"
+at = "sale"
+objectives = [{ kind = "at", at = "sale" }]
+when = [{ kind = "alive", person = "khadija_rihla", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "khadija_rihla", value = -3 }, { kind = "flag", flag = "c13_request_khadija_rihla_late" }, { kind = "letter", person = "khadija_rihla", text = "盐队又南下了。我没去成萨累，只从路过的脚夫嘴里听来两口井，名字没听清。——哈迪贾" }], news = "萨累城外的盐队在城下歇了一季，没等来那个要记井的外乡人，还是南下走了。" }
+news = "萨累城外的盐队里，一个年轻向导讲了一夜的井，外乡人在旁边一条条记。"
+
+[[tracks.chapters.choices]]
+key = "ask_guide"
+text = "请向导自己讲，从第一口井讲起。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "向导讲得很慢，每口井都说了井边的人家叫什么、养什么、哪一年井干过。我在每一条后面写上他的名字，不写领队的。"
+effects = [{ kind = "affinity", person = "khadija_rihla", value = 3 }, { kind = "flag", flag = "c13_request_khadija_rihla_guide" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "khadija_rihla", value = -2 }, { kind = "flag", flag = "c13_request_khadija_rihla_one" }] }
+
+[[tracks.chapters.choices]]
+key = "in_arabic"
+text = "用阿拉伯话跟领队周旋，请他让向导说。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "领队的南方口音你只听得懂一半"
+reply = "领队笑骂了一句，往旁边一让。向导讲了一夜，领队在旁边补了几处价钱。我把两个人的话分开记。"
+effects = [{ kind = "affinity", person = "khadija_rihla", value = 3 }, { kind = "flag", flag = "c13_request_khadija_rihla_guide" }]
+
+[[tracks.chapters.choices]]
+key = "tea_dates"
+text = "先请驼队的人喝茶吃椰枣，听他们自己闲聊。"
+next = "report_partial"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "身上的现钱不够请一圈茶。"
+reply = "茶喝到第三巡，驼夫们抢着讲，谁家的井、谁家的羊，七嘴八舌。我记了一大堆，名字记了一半。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "khadija_rihla", value = 2 }]
+
+# 三甲（向导讲的那一路，设了 _guide）：她的笔停在第五口井上，问你讲的人是谁。
+[[tracks.chapters]]
+key = "report"
+title = "写上他的名字"
+text = "哈迪贾一条一条往图上誊。墨是从货栈账房里借来的，笔杆上缠着一截布，写久了手心会出汗，她就在裙子上擦一擦。淡黄的那一片里多了五个小圆点，每个圆点旁边一个井名、一户人家、一个讲的人。誊到第五口井，她停下笔问你：“这一条，是领队讲的，还是向导？”她说：“这一段，得在家里问起之前画完。”说完没解释，低头接着写。"
+speaker = "captain"
+mood = "cheerful"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan" }]
+when = [{ kind = "alive", person = "khadija_rihla", value = true }]
+news = "得土安一家货栈的后屋里，一张图往南多画了五口井，每口井旁都写着是谁讲的。"
+
+[[tracks.chapters.choices]]
+key = "guide_name"
+text = "照实说是向导讲的，请她写向导的名字。"
+next = "done"
+reply = "她把向导的名字写得和领队一样大，又在旁边加了一个小记号，说那是“亲眼见过的”。她付了钱，把她自己练笔画的一张小图送我，说上面的路是我讲给她的。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "khadija_rihla", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "flag", flag = "c13_request_khadija_rihla_done" }, { kind = "memory", memory = "mem-request_khadija_rihla-report", title = "淡黄里的五个圆点" }]
+
+[[tracks.chapters.choices]]
+key = "both_names"
+text = "说讲的人很多，名字记得不全。"
+next = "done"
+reply = "她把记得的名字都写上，记不得的，写了“盐队的人”。她付了钱，说下回要记全。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "khadija_rihla", value = 4 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "flag", flag = "c13_request_khadija_rihla_partial" }]
+
+# 三乙（名字记不全的那一路：检定失败，或先去茶棚里听）。
+[[tracks.chapters]]
+key = "report_partial"
+title = "记不全的名字"
+text = "哈迪贾把盐队的井一口口誊到图上，誊得慢，笔尖常常停在纸上。墨是从货栈账房里借来的，淡得发灰，她就一笔一笔地描深，描完一截吹一吹，再往下誊。淡黄的那一片里添了几个小圆点，有的只写了井名，人家和讲的人都没写上。誊到第五口井，她停下笔问你：“这一条，是谁讲的？”她也没催你，只把那一行的空处轻轻点了一下，低头接着写。"
+speaker = "captain"
+mood = "cheerful"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan" }]
+when = [{ kind = "alive", person = "khadija_rihla", value = true }]
+news = "得土安一家货栈的后屋里，一张图往南添了几口井，井边的人家却有几家没写上名字。"
+
+[[tracks.chapters.variants]]
+key = "v1_one"
+when = [{ kind = "flag", flag = "c13_request_khadija_rihla_one" }]
+text = "哈迪贾把盐队的井誊到图上，誊到一半换了支笔。淡黄的那一片里多了几个小圆点，有的只有井名，有的人家那一栏还空着。誊到第五口井，她的笔停住，问你：“这条是领队讲的，还是向导？”向导那天只开了一回口，说的就是这一家，领队没让他再往下讲。她看了那一行一会儿，没再问，只把笔尖在纸上点了点，把墨吹干，又低头写。"
+
+[[tracks.chapters.choices]]
+key = "both_names"
+text = "讲的人太多，有几条没来得及问名字。"
+next = "done"
+reply = "她把几条都写上了，名字空着的那几条，一个字也没补。付钱时只说了一句：“下回要记全。”"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "khadija_rihla", value = 4 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "flag", flag = "c13_request_khadija_rihla_partial" }]
+
+[[tracks.chapters.choices]]
+key = "fifth_half"
+text = "第五口井那一家，我只听清了一半。"
+next = "done"
+reply = "她把那一家的名字空着，只写了“井边的一户人家”。她付了钱，说第五口井下回要自己去看。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "khadija_rihla", value = 2 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "flag", flag = "c13_request_khadija_rihla_partial" }]

@@ -1,0 +1,214 @@
+# C13d 人物的请托：过两遍秤的银币（2026-10-24，Claude 写）。
+# 标签：go（去某处：汉堡、但泽各换一袋新币，回安特卫普过秤）；T 当面（安特卫普铸币所，auto=false，玩家“问请托”或 ask:request_liesbeth_devries 启动）。
+# 人物：莉斯贝特·德弗里斯（liesbeth_devries，1528 年 2 月 12 日生），安特卫普铸币所的白银检验师；cast 日程在安特卫普。
+# 窗口：报价 1557-06-01 至 1574-06-30（offer 的 deadline 为窗口止日，到期走 timeout，不写见闻）；汉堡、但泽各限 90 天；收尾章不设期限。
+# 依据·史实：16 世纪北海与波罗的海一带的劣币流通，剪边与成色不足的旧币在市面上混用；汉堡与但泽有本地银币流通，兑换桌设在交易所与码头边。
+# 依据·原创：汉堡的两成水钱、但泽收新币去剪边的人、剪得很齐的边、铸币所后间的场景、两袋新币的数目与退还的水钱。
+# 待核：汉堡与但泽 16 世纪中叶兑换桌的具体行规只写传闻口吻，不写确切年份与条例。
+# 秘密：cast 的 secret（她当学徒时签字的事、松口气的原因）本请托不碰，正文与见闻都不写；C7 的 tie_extra_10_liesbeth_devries_kaspar 也不在本线里出现。
+# 主线：无门禁（gate_main 与 variant_main 都为空），四位主角都能接到。
+# 读的旗标：无。
+# 设的旗标：c13_request_liesbeth_devries_accepted / declined / hh / clip / done / partial / late（clip 只设不读，见下）。
+# 结构：收尾分两章。report 是没问出收币人去向时的收尾（只有“查不出来”一条路）；report_clip 是在但泽问出去向时的收尾（可以说“是有人剪的”，也可以什么都不提）。
+#       任务单原本用旗标 clip 门禁一个选项；分支检查的准备动作设不了旗标，门禁选项永远走不到，所以改为由 danzig 的 ask_more 成败分流到两章。
+# 依赖：无 B10b 改名；港口 antwerp、hamburg、danzig 须已登记。
+# 缺省走向：offer 不在场就挂着，到 1574-06-30 走 timeout（无见闻）；汉堡、但泽超过 90 天走 timeout（来信，不扣钱不扣货）；收尾章不设期限，玩家不回安特卫普就停在那里。
+# 回忆插画清单：
+#   mem-request_liesbeth_devries-report（对着光看边的银币）：铸币所后间的窗前，一枚劣币举到亮处，边缘剪得齐整，秤盘上并排两袋新币。
+
+[[tracks]]
+key = "request_liesbeth_devries"
+name = "过两遍秤的银币"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["liesbeth_devries"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "一袋就够"
+text = "安特卫普铸币所的后间，天平一排摆开。白麻帽浆得笔挺的莉斯贝特把一小堆银币倒在秤盘边上，一枚一枚翻过来看边。“这批是从城里各家收上来的，成色差了一截，秤上看不出来。”她把一枚银币夹在指甲间，对着窗光转了一圈。“我要知道是哪里铸的。汉堡和但泽各有一批刚铸好的新币，你去换一袋回来，一袋就够。我要过两遍秤。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1557, 6, 1], to = [1574, 6, 30] },
+  { kind = "alive", person = "liesbeth_devries", value = true },
+]
+objectives = [{ kind = "person", person = "liesbeth_devries", text = "在港里找到她" }]
+deadline = [1574, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去汉堡和但泽，各换一袋"
+next = "hamburg"
+effects = [
+  { kind = "affinity", person = "liesbeth_devries", value = 2 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_accepted" },
+]
+reply = "她把两只空皮袋推过来，袋口缝着铸币所的记号。“换的时候，别让人知道是给谁换的。”"
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问她：查出是哪里铸的，又能怎样？"
+next = "hamburg"
+effects = [
+  { kind = "affinity", person = "liesbeth_devries", value = 2 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_accepted" },
+]
+reply = "“能让那边的铸币所知道，有人在查。”她把银币扫回盒子里，扫得很快，一枚也没落在秤盘外。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "银币的事我不掺和"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_liesbeth_devries_declined" }]
+reply = "她点点头，把两只皮袋收回去。“那就算了。”"
+
+[[tracks.chapters]]
+key = "hamburg"
+title = "两成的水"
+text = "汉堡交易所的侧廊里有一张兑换桌，桌后的人接过你的银币，先拿牙咬了咬，又放上秤。“新铸的？”他抬眼多看了你一眼。“新币不零卖，要搭旧币换。一袋新的，收两成的水。”他用笔尖在账册上点了点，那一行数字早就抄好了，一个字也没改。桌边一个学徒把旧币一枚枚数进木匣，数得很响。"
+speaker = "captain"
+mood = "tense"
+at = "hamburg"
+news = "汉堡交易所的兑换桌上，新币要搭旧币换，一袋新的收两成的水，换钱的人不肯让半分。"
+when = [{ kind = "alive", person = "liesbeth_devries", value = true }]
+objectives = [{ kind = "at", at = "hamburg", text = "在汉堡交易所换一袋新币" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "letter", person = "liesbeth_devries", text = "汉堡的那袋我托别人换了，他换来的是旧币。没用。" },
+  { kind = "affinity", person = "liesbeth_devries", value = -3 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_late" },
+]
+
+[[tracks.chapters.choices]]
+key = "pay_water"
+text = "照收两成的水，换一袋"
+next = "danzig"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上的现钱不够这笔水钱，塞不出一袋像样的。"
+reply = "你换到一袋新币，亮得晃眼。水钱一文不少地数给了他，学徒低头在木匣边记了一笔。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "liesbeth_devries", value = 2 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_hh" },
+]
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "当面跟他算：两成太高，只收一成"
+next = "danzig"
+check = { attr = "numeracy", base = 20, per = 7 }
+reply = "他把账册翻回去看了一遍，用笔尖把那一行划掉重写。换给你一袋新币时，他没再开口，只让学徒把这一笔记得清楚些。"
+effects = [
+  { kind = "affinity", person = "liesbeth_devries", value = 3 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_hh" },
+]
+fail = { next = "danzig", news = "汉堡交易所的兑换桌上，有个船长跟换钱的人争水钱，争到最后还是照两成付了。", effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "liesbeth_devries", value = -2 }, { kind = "flag", flag = "c13_request_liesbeth_devries_hh" }] }
+
+[[tracks.chapters]]
+key = "danzig"
+title = "收新币的人"
+text = "但泽的兑换桌就摆在码头边上，木棚檐口滴着水，新币在木架上码得很齐。换钱的老人拿指甲刮了刮币边，又对着天光看了看，才把一袋新币推过来。“最近有人专门收新币，”他压低嗓子，“收去剪边。剪下来的银屑熔了再卖，买家不问来路。”他把一枚剪过的旧币摆在你面前，边缘齐齐整整一圈。"
+speaker = "captain"
+mood = "tense"
+at = "danzig"
+news = "但泽码头边的兑换桌上，有人专换刚铸的新币，换钱的人说，最近收新币的不止一个。"
+when = [{ kind = "alive", person = "liesbeth_devries", value = true }]
+objectives = [{ kind = "at", at = "danzig", text = "在但泽码头的兑换桌换一袋新币" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "letter", person = "liesbeth_devries", text = "但泽那袋没换到。汉堡的我过了秤，对不上。" },
+  { kind = "affinity", person = "liesbeth_devries", value = -3 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_late" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_more"
+text = "问他：收新币的人是哪里来的？"
+next = "report_clip"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他往码头另一头努了努嘴，说那人走海路，常往安特卫普去。你记下了，又把那枚剪过的旧币还给了他。"
+effects = [
+  { kind = "affinity", person = "liesbeth_devries", value = 3 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_clip" },
+]
+fail = { next = "report", news = "但泽码头边的兑换桌上，老人问急了就摇头，说收新币的人他一个也不认得。", effects = [{ kind = "affinity", person = "liesbeth_devries", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "just_swap"
+text = "只换一袋，不多问"
+next = "report"
+reply = "你换到一袋新币，边上的纹路还很清楚。你没有多问，就这么拎着回了船。"
+effects = [{ kind = "affinity", person = "liesbeth_devries", value = 2 }]
+
+[[tracks.chapters]]
+key = "report"
+title = "剪得很齐的边"
+text = "铸币所的后间，两袋新币和那批劣币并排摆在秤盘上，莉斯贝特过完一遍秤，又过了一遍。汉堡的对不上，但泽的也对不上。她把一枚劣币拈起来，推开窗户一条缝，对着亮处看它的边。“银子放这儿，人往后站。我验完以前，谁的话都不算数——包括你的。”边缘剪得很齐，一刀下去，连毛刺都没留下。她松了口气，眉头却马上又皱了起来。"
+speaker = "captain"
+mood = "tense"
+at = "antwerp"
+when = [{ kind = "alive", person = "liesbeth_devries", value = true }]
+objectives = [{ kind = "at", at = "antwerp", text = "回安特卫普铸币所过秤" }]
+
+[[tracks.chapters.choices]]
+key = "unknown"
+text = "说：两边都对不上，查不出来。"
+next = "done"
+reply = "她把劣币收进盒子，盖子合得很响。“对不上，也是一个结果。”她付了钱，没多说，只在账页上记了一笔。"
+news = "安特卫普铸币所那批劣币，汉堡和但泽的新币都对不上，到底是哪里剪的，还没人说得清。"
+effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "affinity", person = "liesbeth_devries", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_partial" },
+]
+
+# 七之二、问出了收币人的去向：但泽的老人说过的话，这一章才说得出口。
+[[tracks.chapters]]
+key = "report_clip"
+title = "走海路的人"
+text = "后间的窗开着一条缝。莉斯贝特把汉堡那袋和但泽那袋先后倒上秤盘，各过两遍，两遍都对不上。她拈起一枚劣币举到亮处，翻来覆去地看它的边，一圈剪得整整齐齐，毛刺也没留。你想起但泽的老人说过，收新币的人走海路，常往安特卫普去。她放下币，松了口气，眉头却又皱起来：“你在码头上听到了什么？说吧。”"
+speaker = "captain"
+mood = "tense"
+at = "antwerp"
+when = [{ kind = "alive", person = "liesbeth_devries", value = true }]
+objectives = [{ kind = "at", at = "antwerp", text = "回安特卫普铸币所，把码头上问到的话带给她" }]
+
+[[tracks.chapters.choices]]
+key = "clipped"
+text = "说：不是哪里铸坏的，是有人剪的，收新币的人走海路来安特卫普。"
+next = "done"
+reply = "她点点头，在账页上划了一道。“走海路，常来安特卫普。铸币所会去码头上查。”付钱时，她把两袋新币的钱也还给了你，一枚不少。"
+news = "安特卫普铸币所查出那批劣币是被剪过边的，码头上的兑换桌最近都多了个人盯着。"
+effects = [
+  { kind = "cash", value = 1550 },
+  { kind = "affinity", person = "liesbeth_devries", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_done" },
+  { kind = "memory", memory = "mem-request_liesbeth_devries-report", title = "对着光看边的银币" },
+]
+
+[[tracks.chapters.choices]]
+key = "keep_quiet"
+text = "什么也不提，只说两边都对不上。"
+next = "done"
+reply = "她盯了你一会儿，没有追问。盒子合上，钱付了，账页上只记了一笔。"
+news = "安特卫普铸币所那批劣币，汉堡和但泽的新币都对不上，铸币所的人说，这事还得再查。"
+effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "affinity", person = "liesbeth_devries", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_liesbeth_devries_partial" },
+]

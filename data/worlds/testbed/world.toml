@@ -1,0 +1,30 @@
+# 各引擎模块共用的最小测试世界；不进入开局列表。
+key = "testbed"
+name = "框架测试海域"
+map = "testbed"
+inherit = "classic"
+hidden = true
+# 测试脚手架：剧情线与旗标由测试代码直接开、直接设，加载时不做剧情可达检查。
+# 与 hidden 不同，这一项会被子世界继承；测试把本世界或继承它的夹具世界临时改成可见时照样不查。
+scaffold = true
+
+[modules]
+# 属性使用本世界的十项定义；关闭引用经典人物与地点的其他可选内容。
+captain = true
+# 秘境样例参与文件与翻译登记；专项测试显式启用，避免改变共享东岛的可见性。
+realms = false
+stories = true
+navigation = "route"
+
+[tables]
+realms = ["samples/realms.toml"]
+stories = ["stories/lineages.toml", "stories/tracks.toml", "stories/upbringing.toml", "stories/upbringing_activity.toml", "stories/academy_entry.toml"]
+upbringing = ["upbringing/contests.toml", "upbringing/common.toml", "upbringing/activities.toml", "upbringing/academy.toml", "upbringing/poem.toml", "upbringing/milestones.toml"]
+cast = ["cast/protagonists.toml", "cast/companions.toml"]
+scenarios = ["scenarios/sandbox.toml", "scenarios/bootstrap.toml", "scenarios/upbringing.toml"]
+
+# 真实月长（暂不计算闰年），用于日历迁移的边界测试。
+[calendar]
+era = "公元"
+months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+seasons = [3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3]

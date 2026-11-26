@@ -1,0 +1,164 @@
+# 请托：海峡的潮时表（request_kurushima_michiyasu）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：来岛通康（kurushima_michiyasu，1519-01-01 生，男，1567 年卒、无 fate）。来岛村上家当主、伊予河野家的重臣，来岛海峡的引航主；
+#       村上武吉是他的女婿。cast：cast/historical_07_japan.toml。
+# 类型：找东西（find）。章节：offer（没有计时的引航）→ handin（沙漏立在船头）→ use / use_lent（十个转流）→ done。没有 stage 章。
+#       brief 写三章、use 章里“按 flag 拆 choice”区分送与借的报酬。旗标门禁的选项在另一条路上永远满足不了，
+#       所以改成按 next 分路：handin 的“送”进 use，“借”进 use_lent。两章同一件事，只差沙漏放在哪（木架 / 桅脚）、报酬与收尾的那一句。
+# 报价：V（到访）。auto=true，offer 章 at=noshima（能岛与来岛一水之隔，人物日程的 kurushima 映射到这里），
+#       family=c13_offer_noshima、冷却 20 天；deadline=1566-06-30（他 1567 年去世），timeout 直接 failed，不写见闻。
+# 规划窗口（不进 TOML）：offer 1557-03-01—1566-06-30；handin 到 1566-09-30（deadline，超时来信一封）；
+#       use / use_lent 进入后 60 天（deadline_days，同一片内海），超时 failed，只留见闻。
+# 依据·史实背景：来岛海峡是濑户内最急的潮流之一，一天转四回流；来岛村上家给过路的船引航、收引航钱；
+#       大三岛的大山祇神社是河野与村上一族的守护神社，出船前去参拜。线香计时（香时计）是当时日本计时的常法。
+#       西洋船上的半小时沙漏（ampolleta）照 Pedro de Medina《Arte de navegar》（1545）一类航海书。
+# 依据·原创：请托本身；刻着浅痕、受潮发软的线香；船板上一道一道的记号；榉木包铜的沙漏架与桅脚的三道麻绳；
+#       夜里转流前横过海峡的那道白沫；两个年轻引航人；岸上木匠拿竹筒仿的那只沙漏；他“记错了三十年”的两回转流。
+#       brief 说一天四回转流、守十天、记“十个转流”、沙漏翻一百多回：这里统一成“守十夜，每夜记半夜那一回转流”，
+#       天黑起翻沙漏、翻到那一回过去为止，十夜合起来一百多回。白天的转流他的人看日头就估得出，难的只是夜里。
+#       “灰白头发的老人”：1557 年他三十八岁，正文写“两鬓灰白”，见闻称“来岛的当主”（他仍在位，不称“老当主”）。
+# 口头禅：“潮水是讲信用的。人记不准，就怪它翻脸。”全轨道只在 offer 用一次（mio 变体是同一章的替换正文）。
+# 不写：主君想让他继承河野家、被老臣闹翻那件事（秘密，本请托不碰，见闻一律不写）；严岛之战；村上武吉不出场。
+# 读的旗标：c13_main_mio（offer 的变体 v1_mio，由澪的主线设，尚未写）——他问起能岛的阿濑（澪的乳母）腰还疼不疼。不读不设任何 c7_ 旗标。
+# 设的旗标（全部为 c13_request_kurushima_michiyasu_<事件>）：accepted / declined（offer）；gave / lent（handin，分支）；
+#       late（handin、use 或 use_lent 超时）；done（最好结局）；partial（把船稳住的检定失败）。
+# 报酬：现金至多 2250（送沙漏的路线）/ 1400（借的路线）/ 1100（检定失败，两条路一样）；技能 tide_reading +30（三种收尾都给）；
+#       唯一物品：无。brief 把 omishima_amulet 从庆光院清顺移到这里，可 C7 的 bond_ushio（A2）已经发它；
+#       波次检查（2026-10-25）按决定删去这份重复，正文改成他把御守系在沙漏架上、不交给“我”，不换别的物品。好感至多 +13（接下 +2、送沙漏 +3、收尾 +8；失败收尾 +3）；
+#       声望 murakami +2、名声 +3（只在最好结局）；回忆一张。沙漏在“送”的选项里扣一只（item 目标不自动扣）。
+# 依赖：港口 noshima；人物 kurushima_michiyasu；物品 half_hour_glass（items/items_instrument_01.toml，商店文化 iberian）；
+#       技能 tide_reading；势力 murakami；检定属性 seamanship。
+# 回忆插画：mem-request_kurushima_michiyasu-use：夜里的来岛海峡口，一道白沫横过黑水，小船船头立着沙漏，两个年轻引航人一个翻沙漏、一个在船板上划记号。
+
+[[tracks]]
+key = "request_kurushima_michiyasu"
+name = "海峡的潮时表"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kurushima_michiyasu"]
+
+# 一、没有计时的引航：能岛码头，来岛的引航船靠过来，他听你说完一路的潮，才拿出那根受潮的香。
+[[tracks.chapters]]
+key = "offer"
+title = "没有计时的引航"
+text = "能岛码头潮正平，一条来岛的引航船贴着石岸靠过来，船身窄，橹声很轻。船头坐着个两鬓灰白的人，膝上横着一捆线香，每根香身上都刻着一道道浅痕。他没报名字，先问你一路从哪片海来、哪里的潮最难走。你说，他就听，一句不插，听到最后才开口，伊予口音拖得很长：“外海的潮，一涨一落半天。我们这里一天转四回流，夜里那一回最凶。”他抽出一根香递给你，下半截软塌塌的，刻痕糊成了一片。“我想做一张来岛海峡的潮时表。手下的人夜里记时辰全靠烧香，香一受潮就慢半刻，船就进了漩涡。潮水是讲信用的。人记不准，就怪它翻脸。”他听说西洋船上有半个钟头漏完一回的沙漏，想要一只，再请你陪他两个年轻引航人在海峡口守十夜。"
+at = "noshima"
+speaker = "kurushima_michiyasu"
+mood = "cheerful"
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "age", ge = 17 }]
+deadline = [1566, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_noshima"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "能岛码头潮正平，一条来岛的引航船贴着石岸靠过来，船身窄，橹声很轻。船头坐着个两鬓灰白的人，膝上横着一捆线香。他认得你，头一句问的是能岛的阿濑：“她的腰，入冬还疼不疼？”你答了，他才问你一路从哪片海来、哪里的潮最难走。你说，他就听，一句不插，听到最后才开口，伊予口音拖得很长：“外海的潮，一涨一落半天。我们这里一天转四回流，夜里那一回最凶。”他抽出一根香递给你，下半截软塌塌的，刻痕糊成了一片。“我想做一张来岛海峡的潮时表。手下的人夜里记时辰全靠烧香，香一受潮就慢半刻，船就进了漩涡。潮水是讲信用的。人记不准，就怪它翻脸。”他想要一只西洋船上的半小时沙漏，再请你陪他两个年轻引航人在海峡口守十夜。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应他：沙漏我去找，十夜我陪着守。"
+next = "handin"
+reply = "他把那根软了的香丢进海里，看它漂远。“十夜，夜里那一回转流，回回都记。少记一回，表就是废纸。”说完他才报了名字，来岛通康，又指了指能岛的码头：几时带着沙漏来，几时开始。"
+effects = [{ kind = "flag", flag = "c13_request_kurushima_michiyasu_accepted" }, { kind = "affinity", person = "kurushima_michiyasu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：我的船在内海停不了十夜。"
+next = "failed"
+reply = "他点点头，像是早知道会听到这一句，把那捆香搁回膝上，叫船尾的人掉头。橹声走远了你才想起来，他从头到尾没提引航钱——来岛的船，这一回是白靠的。"
+effects = [{ kind = "flag", flag = "c13_request_kurushima_michiyasu_declined" }]
+
+# 二、沙漏立在船头：能岛码头，他坐在沙漏跟前看了一整个落潮，问它怕不怕风。
+[[tracks.chapters]]
+key = "handin"
+title = "沙漏立在船头"
+text = "你把沙漏从箱里取出来，立在来岛引航船的船头。两只玻璃泡套在木框里，细沙一线一线往下落。来岛通康盘腿坐在它跟前，一坐就是一整个落潮：沙子漏完一回，船尾的年轻人翻一回，他就拿小刀在船板上划一道。水退到礁头全露出来，船板上划了十二道。他伸手挡在沙漏上风的那一面，又放下，转过头问你：“海风大的时候，它会不会被吹快了？香就怕风。”"
+at = "noshima"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "kurushima_michiyasu", value = true }]
+objectives = [{ kind = "item", item = "half_hour_glass", qty = 1, text = "带来一只半小时沙漏" }, { kind = "at", at = "noshima", text = "到能岛的码头找来岛的引航船" }]
+deadline = [1566, 9, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_kurushima_michiyasu_late" }, { kind = "letter", person = "kurushima_michiyasu", text = "这一季香又潮了几回，表的事先放下。海峡还是那个海峡，潮不等谁。你哪天要过来岛，我的引航船照样去接，引航钱照规矩收。" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "告诉他风吹不进玻璃，沙漏送给他"
+next = "use"
+reply = "他没道谢，叫船尾的年轻人上岸去找木匠。天黑前送来一个榉木架子，四角包了铜，沙漏卡进去，船再晃也倒不了。他拍了拍架子，像拍一匹马的脖子：“这就是来岛的东西了。”"
+effects = [{ kind = "item", item = "half_hour_glass", qty = -1 }, { kind = "affinity", person = "kurushima_michiyasu", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_gave" }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "说风吹不进玻璃，可它只借他这十夜"
+next = "use_lent"
+reply = "他想了一会儿。“十夜就十夜。十夜以后，我的人会自己做一只——做得没这只准。”他叫人拿麻绳把沙漏绑在桅脚上，绑了三道，每道都打死结。"
+effects = [{ kind = "flag", flag = "c13_request_kurushima_michiyasu_lent" }]
+
+# 三、十个转流（沙漏送给了他）：十夜守在海峡口，夜里那一回转流前，水面先起一道白沫。
+[[tracks.chapters]]
+key = "use"
+title = "十个转流"
+text = "十夜里，你和来岛的两个年轻引航人轮班守在海峡口。一个右手少了两根指头，翻沙漏比谁都快；一个话多，划记号时嘴里还在数。每夜从天黑起翻，翻到半夜那一回转流过去为止，榉木架子边的船板上划满了道道。最难的就是那一回：水面先起一道白沫，横着拉过海峡，像有人在水底扯一根绳；接着整片水一下子倒过来，船头猛地一偏。喊早了，记下的时辰是错的；喊晚了，船已经被带到漩涡边上。来岛通康每天清早划小船过来，只看船板，不问话。"
+at = "noshima"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "kurushima_michiyasu", value = true }]
+objectives = [{ kind = "wait", days = 10, text = "在海峡口守满十夜" }, { kind = "at", at = "noshima", text = "留在能岛" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_kurushima_michiyasu_late" }], news = "来岛海峡口守夜的那条外来船没守满十夜就走了，来岛的潮时表只记了几格，引航人夜里还是烧香。" }
+
+[[tracks.chapters.choices]]
+key = "foam"
+text = "看白沫往哪边拉，抢在水倒过来之前半刻喊转流"
+next = "done"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "那道白沫往哪边拉，你看不出门道，喊早喊晚全凭运气。"
+reply = "第十夜的白沫是从西边起的。你喊的时候，两个年轻人还没看出来，沙子才落了一小半，水就倒了。十个转流，一个没漏。第二天清早，来岛通康把那块船板搬到自己船上，对着记性一格一格看下去，看到两处停住了。“这两回，我记错了三十年。”他从腰上解下一只大三岛大山祇神社的御守，布袋缝得极密，系在榉木架子的铜角上，勒了两道：“出船前都去拜。往后夜里翻沙漏的人，一抬头就看得见它。”"
+effects = [{ kind = "cash", value = 2250 }, { kind = "skill", skill = "tide_reading", value = 30 }, { kind = "affinity", person = "kurushima_michiyasu", value = 8 }, { kind = "reputation", faction = "murakami", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_done" }, { kind = "memory", memory = "mem-request_kurushima_michiyasu-use", title = "沙漏翻了一百多回" }]
+news = "来岛海峡口守了十夜的那条外来船，回回抢在白沫倒过来之前喊转流。来岛的当主看了记录，说有两回是他自己记错了。"
+
+[[tracks.chapters.choices]]
+key = "hold"
+text = "把船稳在漩涡边上，让沙漏一回也别倒"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 1100 }, { kind = "skill", skill = "tide_reading", value = 30 }, { kind = "affinity", person = "kurushima_michiyasu", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_partial" }], news = "来岛海峡口第七夜急流大作，守夜的外来船被推出去半里，漏记了一回转流。来岛的当主在船板那一格上画了个圈，说明年他自己补。" }
+reply = "你让两个年轻人压住橹，船头顶着急流，一寸一寸挨着漩涡的边沿。白沫横过来的时候船身抖得厉害，榉木架子里的沙漏一下也没歪。十夜，十个转流都记上了。来岛通康看完船板，拿袖口在榉木架子的铜角上蹭掉一层盐霜，这才抬头看你。“往后你的船夜里过来岛，不用等天亮，我的人去引。”"
+effects = [{ kind = "cash", value = 2250 }, { kind = "skill", skill = "tide_reading", value = 30 }, { kind = "affinity", person = "kurushima_michiyasu", value = 8 }, { kind = "reputation", faction = "murakami", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_done" }, { kind = "memory", memory = "mem-request_kurushima_michiyasu-use", title = "沙漏翻了一百多回" }]
+news = "来岛海峡口有条外来船在漩涡边上一连泊了十夜，船头的沙漏没倒过一回，来岛的潮时表一格不缺。"
+
+# 三之二、十个转流（沙漏只借给他）：同样的十夜，沙漏绑在桅脚上，收尾时要还。
+[[tracks.chapters]]
+key = "use_lent"
+title = "桅脚上的沙漏"
+text = "十夜里，你和来岛的两个年轻引航人轮班守在海峡口。沙漏绑在桅脚上。一个右手缺了两根指头，每翻一回都得先松开一道麻绳，翻完再勒紧；另一个话多，蹲在一旁划记号，边划边数。天一黑就开始翻，一直翻到半夜那一回转流过去。那一回来得没有声响：先是一道白沫从对岸横拉过来，接着脚下的水整片掉头，桅杆跟着一斜。喊早了，船板上记的是错时辰；喊晚了，人已经在漩涡边上抓缆绳。岸上的木匠每天来看一眼沙漏，回去接着削他的竹筒。"
+at = "noshima"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "kurushima_michiyasu", value = true }]
+objectives = [{ kind = "wait", days = 10, text = "在海峡口守满十夜" }, { kind = "at", at = "noshima", text = "留在能岛" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_kurushima_michiyasu_late" }], news = "能岛码头那条借沙漏给来岛的外来船，没守满十夜就解了麻绳开走，来岛的潮时表只记了几格。" }
+
+[[tracks.chapters.choices]]
+key = "foam"
+text = "看白沫往哪边拉，抢在水倒过来之前半刻喊转流"
+next = "done"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "那道白沫往哪边拉，你看不出门道，喊早喊晚全凭运气。"
+reply = "第十夜，白沫贴着西岸起，比前几夜早了一线。你一喊，两个年轻人愣了一下才去翻沙漏，沙子还没落到一半，水就掉了头。十个转流，一个没漏。第二天清早，来岛通康对着船板一格一格看下去，看到两处停住了。“这两回，我记错了三十年。”他叫人解开桅脚的麻绳，把沙漏还到你手上：“借的还你。船板上这两格，算你改的。”木匠的竹筒沙漏立在旁边，漏一回快了小半刻，他叫木匠照着船板再削一只。"
+effects = [{ kind = "cash", value = 1400 }, { kind = "skill", skill = "tide_reading", value = 30 }, { kind = "affinity", person = "kurushima_michiyasu", value = 8 }, { kind = "reputation", faction = "murakami", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_done" }, { kind = "memory", memory = "mem-request_kurushima_michiyasu-use", title = "沙漏翻了一百多回" }]
+news = "能岛码头那条把沙漏借给来岛的外来船，在来岛海峡口守了十夜，回回抢在白沫前头喊转流，来岛的当主认了自己有两回记错。"
+
+[[tracks.chapters.choices]]
+key = "hold"
+text = "把船稳在漩涡边上，让沙漏一回也别倒"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 1100 }, { kind = "skill", skill = "tide_reading", value = 30 }, { kind = "affinity", person = "kurushima_michiyasu", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_partial" }], news = "来岛海峡的引航人说，借沙漏的那条外来船第七夜被急流推出去半里，漏了一回转流。当主照样把沙漏还了，缺的那一格说明年自己补。" }
+reply = "你让两个年轻人压住橹，船头顶着急流，一寸一寸挨着漩涡的边沿。白沫横过来的时候船身抖得厉害，桅脚上的三道麻绳勒得吱吱响，沙漏一下也没歪。十夜，十个转流都记上了。来岛通康看完船板，叫人一道一道解开麻绳，把沙漏还你。三道死结解了小半个时辰，他不许人拿刀割。“下回半夜过海峡，船头喊一声来岛，有人点灯。”"
+effects = [{ kind = "cash", value = 1400 }, { kind = "skill", skill = "tide_reading", value = 30 }, { kind = "affinity", person = "kurushima_michiyasu", value = 8 }, { kind = "reputation", faction = "murakami", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_kurushima_michiyasu_done" }, { kind = "memory", memory = "mem-request_kurushima_michiyasu-use", title = "沙漏翻了一百多回" }]
+news = "来岛海峡口那条外来船把沙漏绑在桅脚上，在漩涡边一连守了十夜，三道麻绳没松过，来岛的潮时表一格不缺。"

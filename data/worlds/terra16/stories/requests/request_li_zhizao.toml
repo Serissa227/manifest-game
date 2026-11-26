@@ -1,0 +1,230 @@
+# C13d 人物的请托：要译目录的宇宙志（故事 2.0，A5 / E37 契约）
+# 人物：李之藻（li_zhizao，本世界线生于 1510 年，杭州人；年轻时画过一幅十五省地图，迷上量天量地）；cast 日程 1565 年全年在杭州，未受洗。
+# 类型：找东西（fd）·4 章：offer（书铺里的十五省图）→ handin（交书，二选一：送书 / 雇人描）→ use（送书一支的译名单子）或 use_traced（描图一支的译名单子）→ done / failed。
+#       brief 写 3 章；因为两种交法的报酬不同（送书 1600、描图 1100），而选项不能用“本轨道别的路径设的旗标”当门槛，所以按交法拆成 use 与 use_traced 两章，各 2 个选项。
+# 报价：L 来信（宁波）。auto=true，offer 章 at="ningbo"，出面的是杭州来的书商（不新建 cast，不写名字），李之藻的话只在信与字条里。
+# 窗口：报价 1565-01-15..1565-12-31（到期走 timeout，无见闻）；交书 1565-02..1566-12-31（绝对期限，来信模式路远，放宽到 1566 年底）；译名单子进章后等 30 天、限 150 天。
+# 报酬：现金最多 1600（送书）／1100（描图）；好感正向合计 ≤ 13（接下 +2、送书 +3、结局 +8；折中结局 +3）；声望 ming +1；名声 +3；回忆一张。
+#       描图要自掏 200；不预付，超时不追回任何东西。书本身不发还（送书时 item −1）。
+# 依据·史实：赫马·弗里修斯《天文与宇宙志原理》，1530 年安特卫普，书里提过随船带钟、拿它与当地正午对比来定经度（物品 gemma_antwerp 的 lore）；
+#   明代地方志与路程书里同一段路里数各异、同一地名写法不一，是常事；十五省指两京十三布政使司。
+# 依据·原创：书商、手绘十五省图边上的批注、描歪的一格经度、单子上的“卢万”“安德威”两个猜音、错了九个的译名单；李之藻在信中的话（口头禅只在 offer 用一次）。
+# 待核（只写在这里，正文不提）：李之藻年轻时绘图的确切年份与图名；他在 1565 年（本世界线）是否已读到海外的钟表经度之说。
+# 不写：坤舆图的刻印、购炮联络、受洗（这些在本请托之后，不提前）；不写 C7（本人物没有 C7 线）。
+# 旗标：读——无。设——c13_request_li_zhizao_accepted / declined（offer）；gave / traced（handin 的分支）；done / partial / late（终局，各条路径只设一面）。
+# 依赖：B10b 不涉及；ningbo 是现有港口；技能 lang_latin 在 skills.toml；物品 gemma_antwerp 的商店文化是 italian / iberian / low_countries，要到欧洲港口买（见交付说明）。
+# 缺省走向：offer 不理会，到 1565-12-31 走 timeout（无见闻）；handin 到 1566-12-31 走 timeout（来信 ≤120 字，好感 −3）；
+#   use / use_traced 进章后 150 天不回应走 timeout（好感 −3，一条见闻）。
+# 回忆插画清单：
+#   mem-request_li_zhizao-use（错了九个的译名单）：一张写满小字的单子，九处红笔圈，空白处全是另一个人的批语，单子一角压着一把铜尺。
+
+[[tracks]]
+key = "request_li_zhizao"
+name = "要译目录的宇宙志"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["li_zhizao"]
+
+# 报价：书铺柜台上的十五省图。李之藻的口头禅只在这里用一次，是书商照字条念的。
+[[tracks.chapters]]
+key = "offer"
+title = "十五省的地图"
+text = "宁波的一家书铺里，柜台上摊着一幅手绘的十五省图，墨迹还新。图边挤满蝇头小字：这一段运河，三部路程书写了三个里数；这个县名，两部书写了两种写法，他全抄在旁边，打着问号。杭州来的书商压着图角说：“李先生画的。海船上的人跟他讲，西边有个叫赫马的人，写过一部讲经纬的书，他非要一部不可。”书商从袖里抽出一张折得很细的纸，照着念：“外国人念我们的地名，十个有九个念错。我们念他们的，大概也一样——所以先把目录译出来，两边一起错，才好对着改。”他抬起头：“拉丁字我一个不认，只认得那书里有幅圆图，画满了经纬线。不急，路远，李先生说一两年他等得起。”"
+mood = "cheerful"
+at = "ningbo"
+when = [{ kind = "date", from = [1565, 1, 15] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+deadline = [1565, 12, 31]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：替李先生找那部赫马的书"
+next = "handin"
+effects = [{ kind = "affinity", person = "li_zhizao", value = 2 }, { kind = "flag", flag = "c13_request_li_zhizao_accepted" }]
+reply = "书商把图卷起来，用绳子扎了两道，咬断绳头：“李先生交代了，书到手先别往他手里放，先给他一页目录。不然他看见那幅圆图，三天不吃饭。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这趟路太远"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_li_zhizao_declined" }]
+reply = "书商倒不见恼，把图夹在腋下：“李先生说了，没有书，他就自己再画一幅，错的地方一处一处去量。”他往隔壁的纸铺去了。"
+
+# 交书：圆图摊在柜台上。二选一：送给他，或者出钱雇人描下来、书自己留着。
+[[tracks.chapters]]
+key = "handin"
+title = "经纬的那一章"
+text = "我把《天文与宇宙志原理》放上柜台，书脊还带着海上的潮气。杭州来的书商先在围裙上擦了手，才敢用两根指头翻页。书里的字他一个也读不出，翻到一页画着圆球、满是弧线的图，停住了，又从袖里抽出那卷十五省图，两样并排摆着比。“这些线，李先生的图上没有。”他把书合上，手掌压着封皮，“我得问清楚——这本书是送给李先生，还是只让他抄一抄，回头还你？”"
+speaker = "captain"
+mood = "cheerful"
+at = "ningbo"
+when = [{ kind = "alive", person = "li_zhizao", value = true }]
+objectives = [{ kind = "item", item = "gemma_antwerp", qty = 1, text = "带来赫马·弗里修斯的书" }, { kind = "at", at = "ningbo" }]
+deadline = [1566, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "li_zhizao", value = -3 },
+  { kind = "flag", flag = "c13_request_li_zhizao_late" },
+  { kind = "letter", person = "li_zhizao", text = "书没等到。图上三处里数我自己走了一趟，改了。你那部书若还在，路上别丢；丢了，我就只好自己去学拉丁文。——李之藻" },
+]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "书送给李先生"
+next = "use"
+effects = [
+  { kind = "item", item = "gemma_antwerp", qty = -1 },
+  { kind = "affinity", person = "li_zhizao", value = 3 },
+  { kind = "flag", flag = "c13_request_li_zhizao_gave" },
+]
+news = "宁波一家书铺里，杭州书商收了一部海外来的经纬书，包了三层油纸，说要连夜送回杭州。"
+reply = "书商用油纸把书包了三层，绳结打得又紧又死，说：“李先生这个月不用出门了。”他又问我的船叫什么，要写在封条上，“李先生哪个字译不通，也好知道该找谁问。”"
+
+[[tracks.chapters.choices]]
+key = "trace"
+text = "书我留着，出钱雇人描下图和经纬表寄去"
+next = "use_traced"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "雇描图的匠人要先付定钱，你手头凑不出。"
+effects = [
+  { kind = "cash", value = -200 },
+  { kind = "flag", flag = "c13_request_li_zhizao_traced" },
+]
+news = "宁波的描图匠最近接了一桩怪差事，对着一本外国书描了半个月的圆图，描歪一格就重来。"
+reply = "书商领我去隔街的描图匠。匠人对着那页圆图描了半个月，把一格经度描歪了，发现以后撕了重描。书商把撕下来的歪图也夹进了寄去的信里：“李先生要看他们错在哪儿。”"
+
+# 译名单子（送书一支）：书商带回杭州的信与单子。
+[[tracks.chapters]]
+key = "use"
+title = "一张译名单子"
+text = "书商隔了一个月从杭州回来，袖里是李之藻的信，信后钉着一张单子，浓一笔淡一笔，是他连夜写的。单子上十几个地名，是他对着书里的图，按字母的样子一个一个猜出来的读音：这个写“卢万”，那个写“安德威”，旁边都打着问号。信里只有两句要紧的：“这几个我译得对不对？目录呢，一条一条，你打算怎么译？”书商把信放在柜台上，一只手没松开：“他要我当面看着你回，回了好带走。”"
+mood = "cheerful"
+at = "ningbo"
+when = [{ kind = "alive", person = "li_zhizao", value = true }]
+objectives = [{ kind = "wait", days = 30 }, { kind = "at", at = "ningbo" }]
+deadline_days = 150
+news = "宁波一家书铺替杭州的李先生收了一部外国的宇宙志，书铺掌柜说那先生为了几个地名吵了一个月。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "li_zhizao", value = -3 },
+  { kind = "flag", flag = "c13_request_li_zhizao_late" },
+]
+news = "宁波书铺的柜台上压着李先生的一封回信，压了小半年没人来取，纸角都卷了。"
+
+[[tracks.chapters.choices]]
+key = "toc"
+text = "把目录一条条译成汉文，再改他的单子"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "目录是拉丁文，你认得的字还不够译完一页。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "li_zhizao", value = 8 },
+  { kind = "reputation", faction = "ming", value = 1 },
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_li_zhizao-use", title = "错了九个的译名单" },
+  { kind = "flag", flag = "c13_request_li_zhizao_done" },
+  { kind = "letter", person = "li_zhizao", text = "对了三个。错的九个我都认，其中两个错得比我想的还远，我对着纸骂了半个时辰。目录读了三遍。“以钟定经度”那一条，我不信海上的钟走得准，可这个想法，是我这几年见过最像样的一个。书我留下了，你写的“经度”那个字，也和我写的一样。——李之藻" },
+]
+reply = "你在书铺后间摊开纸，一条一条译。译到论经度的那一章，你问书商该用哪个字，书商直摇头：“这个字，李先生一准有话讲。”你把译稿和改过的单子交给他。又过半个月，他带着回信进门，门槛还没跨过就笑了：单子上错了九个。“李先生高兴得像赢了一场赌，”他说，“我问他赌的什么，他不肯讲。”"
+
+[[tracks.chapters.choices]]
+key = "names"
+text = "只改他单子上的地名，用我跑过的港口的念法"
+next = "done"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "li_zhizao", value = 8 },
+  { kind = "reputation", faction = "ming", value = 1 },
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_li_zhizao-use", title = "错了九个的译名单" },
+  { kind = "flag", flag = "c13_request_li_zhizao_done" },
+  { kind = "letter", person = "li_zhizao", text = "你改了九个。我留着这张单子，对着你给的念法，把海图上转了三手的地名一个一个往回改——头一个是“卢万”，应当念得短，像咳了一声。目录往后再说。——李之藻" },
+]
+reply = "你把单子上的地名一个一个念给书商听，不照字母，照你在港口听来的念法。他跟着念，念歪了你就拉他回来，直到他能一口气念完十几个，不打磕巴。回信半个月后到，书商隔着街就喊：“他说这比目录还有用！”"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "li_zhizao", value = 3 },
+  { kind = "flag", flag = "c13_request_li_zhizao_partial" },
+  { kind = "letter", person = "li_zhizao", text = "你念的音，和我猜的一样怪。“卢万”在你嘴里是一个音，到了书商嘴里又是一个，写到纸上是第三个。罢了，谁也不比谁准，倒也公平。单子上的红字我留着，一处不擦，往后哪个对了，我再画圈。——李之藻" },
+]
+news = "宁波书铺里，有位船上人把一串外国地名念给杭州书商听，书商转念给李先生，已经走了样，三个人三个音。"
+
+# 译名单子（描图一支）：李之藻先看见的是那张描歪了的图。
+[[tracks.chapters]]
+key = "use_traced"
+title = "描歪的那一格"
+text = "杭州的回信比预想的到得早。书商进门先把信拍在柜台上，信后钉着一张单子，十几个地名，墨有浓有淡，是李之藻对着描本猜出来的读音：这个写“卢万”，那个写“安德威”，旁边都打着问号。信的头一行就不客气：“夹来的那张描歪了的图，我留下了——错在哪一格，比描对的那张还有用。”后面才是正事：“那一格经度我想不通错在哪，你对着原书量一量；目录呢，你打算怎么译？”书商在一旁说：“他把那张歪图贴在墙上，看了三天。”"
+mood = "cheerful"
+at = "ningbo"
+when = [{ kind = "alive", person = "li_zhizao", value = true }]
+objectives = [{ kind = "wait", days = 30 }, { kind = "at", at = "ningbo" }]
+deadline_days = 150
+news = "宁波一家书铺替杭州的李先生收了一份外国宇宙志的描本，书铺掌柜说那先生为一个描歪的经度吵了一个月。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "li_zhizao", value = -3 },
+  { kind = "flag", flag = "c13_request_li_zhizao_late" },
+]
+news = "宁波书铺的柜台上压着一封杭州来的信，里头夹着描本的批注，压了小半年没人来取。"
+
+[[tracks.chapters.choices]]
+key = "toc"
+text = "对着原书量过那一格，再把目录译成汉文、改他的单子"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "原书上的拉丁字，你读到论经度那一章就磕住了。"
+effects = [
+  { kind = "cash", value = 1100 },
+  { kind = "affinity", person = "li_zhizao", value = 8 },
+  { kind = "reputation", faction = "ming", value = 1 },
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_li_zhizao-use", title = "错了九个的译名单" },
+  { kind = "flag", flag = "c13_request_li_zhizao_done" },
+  { kind = "letter", person = "li_zhizao", text = "对了三个，错的九个我都认。那一格经度，我对着你的字量了一遍，就是差半度，一分不多。“以钟定经度”那一条，我不信海上的钟走得准，可这个想法，是我这几年见过最像样的一个。描本我留着，歪的那张贴在墙上，等哪天有了原书再对。——李之藻" },
+]
+reply = "你在书铺后间把原书摊在左手，白纸摊在右手，一条一条译。译到论经度的那一章，你先对着原书把那个描歪过的格子量了一遍，才落笔。译稿和改过的单子交给书商带回杭州。又过半个月，他进门就笑：单子上错了九个，那一格的经度也对上了。“李先生把你的字贴在那张歪图旁边，”他说，“又看了三天。”"
+
+[[tracks.chapters.choices]]
+key = "names"
+text = "那一格先不管，只把单子上的地名按港口的念法改过"
+next = "done"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [
+  { kind = "cash", value = 1100 },
+  { kind = "affinity", person = "li_zhizao", value = 8 },
+  { kind = "reputation", faction = "ming", value = 1 },
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_li_zhizao-use", title = "错了九个的译名单" },
+  { kind = "flag", flag = "c13_request_li_zhizao_done" },
+  { kind = "letter", person = "li_zhizao", text = "你改了九个。那一格歪了的经度，你没理我，我记着。不过这张单子比目录先到我手里要紧：我海图上转了三手的地名，正好对着你的念法一个一个往回改。——李之藻" },
+]
+reply = "你把单子摊在描本旁边，地名一个一个念，不照字母，照你在港口听来的念法；书商跟着念，念歪了你就拉他回来，直到能一口气念完。原书上那歪了的一格你没动。回信来得快，书商进门时手里挥着一张纸：李先生把你念的音，一个一个抄在描本上的拉丁拼写旁边，说头一回看见同一个地名的两张脸。"
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "li_zhizao", value = 3 },
+  { kind = "flag", flag = "c13_request_li_zhizao_partial" },
+  { kind = "letter", person = "li_zhizao", text = "你念的音，和我猜的一样怪。“卢万”在你嘴里是一个音，到了书商嘴里又是一个，写到纸上是第三个。罢了，谁也不比谁准，倒也公平。描歪的那一格还在墙上，往后哪个对了，我再画圈。——李之藻" },
+]
+news = "宁波书铺的伙计说，李先生墙上贴着一张描歪的图，旁边又添了一串地名，谁的念法都对不上。"

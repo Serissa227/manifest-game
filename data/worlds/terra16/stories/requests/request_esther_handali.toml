@@ -1,0 +1,132 @@
+# 请托：一卷退回去的呢绒（request_esther_handali）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：埃丝特·汉达利（esther_handali，女）。生年不详，数据里生日记 0 年 1 月 1 日作未知占位；塞法迪犹太女商人，伊斯坦布尔替后宫采买的“基拉”；势力 ottoman；身份档 2（富商）。cast：cast/historical_02_islamic.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（加拉塔交货）、return（威尼斯回款）；终点 done / failed。没有 stage 章，因此没有 window 与 default。
+# 报价：T（当面）。人物按日程在伊斯坦布尔（istanbul，trading_house）；auto=false，玩家“问请托”（ask:request_esther_handali）启动；offer 不写 at，objectives 为在港里找到她。窗口 1575-01-15 至 1583-06-30。
+# 进行中：deliver 章 deadline_days=180，return 章 deadline_days=150；两段超时都走 failed，各附一封来信，好感 -3，旗标 _late。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实：努尔巴努 1574 年 12 月塞利姆二世去世后成为太后，宫里托购与威尼斯总督府之间的存信里有小狗、布料与香膏；埃丝特·汉达利是有名的基拉。猩红呢绒在数据里只在安特卫普、伦敦有货，正文只说“西边来的猩红呢绒”，不写产地。
+# 依据·原创：加拉塔库房里的单子与蜡印，汇票对开的两半，退货的那一卷，威尼斯海关的拆箱，卷芯里叠得极小的信。信的内容只在 peek 的回复里露一次（小狗、香膏、镜子），不写政治；宫里那位的名字与称号一概不写。
+# 依据·待核：数据里的卒年是 1588，本条的窗口按 1583 年底之前收；正文不写她的卒年。原创的“里亚尔托的呢绒商”不指名。
+# 秘密：cast 里没有 secret 字段；“谁托了什么从不对第三个人讲”是性格，不进见闻。不与 C7 交叉：C7 的埃丝特是另一人，米丽娅姆也是基拉，本条不写米丽娅姆，不用“不能拆开的信”作主题的落点，信只决定玩家自己怎么做。
+# 读的旗标：无。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 设的旗标：c13_request_esther_handali_accepted（offer 接下）、_asked（offer 接下并问了海关的账）、_declined（offer 回绝）、_heavy_asked（deliver 问了那一卷为什么沉）、_partial（deliver 退货那一卷留下；return 海关失手或拆看）、_peeked（return 拆看了信）、_done（return 两条完成的路）、_late（deliver 或 return 超时）。
+# 报酬：货款 3100（deliver 交货章，三条路都付）；回款最多 3650（return 章，as_is 或 fee 付）；伊兹尼克瓷砖（iznik_tile，唯一奖励，只在 as_is 与 fee 给）；好感最多 +13；名声 +5；奥斯曼声望 +2（只在 as_is 与 fee）；回忆 mem-request_esther_handali-return。
+# 依赖：港口 istanbul、venice（ports_east_med.toml）；货物 scarlet_cloth（goods/04_overseas_crafts.toml）；物品 iznik_tile（items/items_curio_01.toml）；势力 ottoman；属性 eloquence（检定）。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_esther_handali-return「里亚尔托的汇票」：威尼斯海关的栈桥边，一卷猩红呢绒摊在木箱上，汇票对开的两半并排压在布角下。
+
+[[tracks]]
+key = "request_esther_handali"
+name = "一卷退回去的呢绒"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["esther_handali"]
+
+# 一、十匹猩红：加拉塔的库房，她量着一匹缎子，开口就报数目。
+[[tracks.chapters]]
+key = "offer"
+title = "十匹猩红"
+text = "加拉塔的库房里堆着半墙绸子，埃丝特·汉达利拿尺子量着一匹缎子，见你进门，眼睛还盯着布。伊斯坦布尔人管替宫里采买的女人叫基拉，她是其中算账最细的一个。“Bueno。船长，先报数目。宫里要十匹西边来的猩红呢绒，半年以内送进我的库房。海关的账上不许有这一笔，宫里买了什么，看账的人太多。”她把一张写着尺幅与颜色的单子推过来，单子角上压着一枚蜡印，不是她的。你问这印是谁的，她笑了笑，把单子翻了个面。“价钱另算。”"
+speaker = "esther_handali"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "esther_handali", text = "在港里找到她" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1575, 1, 15], to = [1583, 6, 30] }]
+deadline = [1583, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：十匹猩红，半年内送进她的库房。"
+next = "deliver"
+reply = "她在账本上记下你的船名和日期，墨还没干就合上了：“货到那天，你会多带一样东西回去。现在不说，说了你要加价。”她又看了一眼你的船，“先把船靠稳，别让脚夫碰那些箱子。”"
+effects = [{ kind = "affinity", person = "esther_handali", value = 2 }, { kind = "flag", flag = "c13_request_esther_handali_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_books"
+text = "接下，但先问：不进海关的账，出了事算谁的？"
+next = "deliver"
+reply = "“算我的。”她头也不抬，“宫里的东西进了海关的账，第二天全城的布商都知道那位夫人喜欢什么颜色。你只管把船靠到我的码头。”"
+effects = [{ kind = "affinity", person = "esther_handali", value = 2 }, { kind = "flag", flag = "c13_request_esther_handali_accepted" }, { kind = "flag", flag = "c13_request_esther_handali_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟不接，宫里的货我担不起。"
+next = "failed"
+reply = "“担不起的人肯说出来，比担得起的人少。”她把单子收回去，换了一张新的。抽屉没关严，里面压着另一张单子，上头的船名不是你的。"
+effects = [{ kind = "flag", flag = "c13_request_esther_handali_declined" }]
+
+# 二、交货：私码头上一匹匹过秤，她自己抱出退回来的那一卷。
+[[tracks.chapters]]
+key = "deliver"
+title = "颜色偏了的那一卷"
+text = "你的船靠上埃丝特的私码头，伙计们一匹一匹量过、对过颜色，抬进库房，一匹都没过海关的秤。最后她自己抱出一卷呢绒交到你手里：颜色偏了，要退给威尼斯里亚尔托的一家呢绒商。汇票一式两半，那人手里有一半，你的工钱要对着另一半付。这一卷比别的沉，卷芯硬邦邦的。她只说：“退货就是退货，船长。”"
+speaker = "esther_handali"
+mood = "tense"
+at = "istanbul"
+when = [{ kind = "alive", person = "esther_handali", value = true }]
+objectives = [{ kind = "goods", good = "scarlet_cloth", qty = 10, at = "istanbul", text = "猩红呢绒十匹，运到伊斯坦布尔" }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "esther_handali", value = -3 }, { kind = "flag", flag = "c13_request_esther_handali_late" }, { kind = "letter", person = "esther_handali", text = "埃丝特：宫里等不及，十匹呢绒已经另从一条热那亚船上凑齐。你若还带着那些布，加拉塔的布商会给公道价。这句是我替你说的，不收钱。" }] }
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "收下那卷退货，回头送去威尼斯。"
+next = "return"
+reply = "她把汇票的另一半撕给你，撕口歪歪扭扭：“对得上，他才付钱。对不上，你就当白跑。”撕完她把碎纸屑收进袖袋，一点也没漏下。"
+effects = [{ kind = "cash", value = 3100 }, { kind = "affinity", person = "esther_handali", value = 3 }]
+news = "加拉塔的码头上，十匹猩红呢绒没过海关的秤，直接抬进了一家犹太商行的库房。"
+
+[[tracks.chapters.choices]]
+key = "ask_heavy"
+text = "问她：这一卷为什么比别的沉？"
+next = "return"
+reply = "“因为它卷得紧。”她看着你，笑意没到眼睛里，“再问一句，我就要另算价钱了。”她还是把汇票的另一半撕了下来。"
+effects = [{ kind = "cash", value = 3100 }, { kind = "affinity", person = "esther_handali", value = 1 }, { kind = "flag", flag = "c13_request_esther_handali_heavy_asked" }]
+news = "加拉塔的码头上，一船猩红呢绒没过海关的秤，卸货的伙计说，有一卷沉得直往下坠。"
+
+[[tracks.chapters.choices]]
+key = "refuse_roll"
+text = "货交了，退货那一卷请她另找船。"
+next = "done"
+reply = "她没有劝，把那卷呢绒放回架子最高一层，照付货款，又按半价付了工钱。“Tamam，生意做一半，钱也付一半，公道。”"
+effects = [{ kind = "cash", value = 3100 }, { kind = "cash", value = 1800 }, { kind = "affinity", person = "esther_handali", value = 2 }, { kind = "flag", flag = "c13_request_esther_handali_partial" }]
+news = "加拉塔的私码头上，一船猩红呢绒卸完了；伙计们说，库房最高一层的架子上，还蒙着一卷没人敢动的布。"
+
+# 三、里亚尔托的汇票：威尼斯栈桥，海关要拆所有“退回”的货。
+[[tracks.chapters]]
+key = "return"
+title = "里亚尔托的汇票"
+text = "威尼斯海关要拆开所有“退回”的货，怕有人借退货逃税。风大，书记坐在木箱上，一根一根抽开布边的线头。收货的呢绒商站在栈桥尽头，手里攥着汇票的一半，看见你的船，帽子压低了一点。一只海鸥落在木箱边上，书记赶了两回，它又绕回来啄布边。那一卷布躺在箱子里，卷芯的线缝得很密，用的是丝线。你知道卷芯里是一封叠得极小的信，海关的人还不知道。"
+mood = "tense"
+at = "venice"
+when = [{ kind = "alive", person = "esther_handali", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "esther_handali", value = -3 }, { kind = "flag", flag = "c13_request_esther_handali_late" }, { kind = "letter", person = "esther_handali", text = "埃丝特：里亚尔托那位等了一季，汇票作废了。那一卷你留着吧，颜色偏了，做件斗篷倒合适。卷芯里的东西，烧了。" }] }
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "原样交给呢绒商，跟海关的人说这是退货。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "海关的人摸了摸布边，挥手放行。呢绒商把两半汇票对上，嘴里念着“Va bene”，数钱的时候手很稳。卷芯的线头，一根也没动过。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "esther_handali", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "item", item = "iznik_tile", qty = 1 }, { kind = "memory", memory = "mem-request_esther_handali-return", title = "里亚尔托的汇票" }, { kind = "flag", flag = "c13_request_esther_handali_done" }]
+news = "威尼斯里亚尔托的呢绒商接回一卷从伊斯坦布尔退回的猩红，海关的人挥手放了行，当晚就把钱数清了。"
+fail = { next = "done", effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "esther_handali", value = 2 }, { kind = "flag", flag = "c13_request_esther_handali_partial" }], news = "威尼斯海关抖开一卷从伊斯坦布尔退回的呢绒，一张小纸片掉了出来，被收货的商人先捡走了。" }
+
+[[tracks.chapters.choices]]
+key = "peek"
+text = "先在船舱里拆开线看一眼，再缝回去交货。"
+next = "done"
+reply = "信上写的是一张单子：两只白色的小狗、一种治手裂的香膏方子、十二面镜子。你把线照原样缝回去。几个月后埃丝特托人带来一句话：“针脚比我缝的还密。”"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "esther_handali", value = 4 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_esther_handali_peeked" }, { kind = "flag", flag = "c13_request_esther_handali_partial" }]
+news = "威尼斯里亚尔托的呢绒商验过一卷猩红，线脚缝得比别的都密，他没多问，数钱付了。"
+
+[[tracks.chapters.choices]]
+key = "fee"
+text = "塞给海关的书记一笔“退货费”，免得他们拆。"
+next = "done"
+requires = [{ kind = "cash", ge = 400 }]
+hint = "你的钱袋太轻，书记看都不会看一眼。"
+reply = "书记把钱扫进抽屉，在单子上盖了个章。呢绒商连声道谢，说埃丝特夫人从不白让人花钱——果然，他付的比汇票上多了一点。"
+effects = [{ kind = "cash", value = -400 }, { kind = "cash", value = 3650 }, { kind = "affinity", person = "esther_handali", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "item", item = "iznik_tile", qty = 1 }, { kind = "memory", memory = "mem-request_esther_handali-return", title = "里亚尔托的汇票" }, { kind = "flag", flag = "c13_request_esther_handali_done" }]
+news = "威尼斯海关的书记收了一笔“退货费”，替一卷从伊斯坦布尔退回的猩红盖了章，箱子连口都没开。"

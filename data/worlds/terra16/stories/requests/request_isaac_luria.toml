@@ -1,0 +1,156 @@
+# 请托：足秤的胡椒（request_isaac_luria）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：以撒·卢里亚（isaac_luria，1534 年生，月日不详，占位 1 月 1 日；男）。开罗的年轻犹太商人，做胡椒与粮食的买卖，账目一丝不苟；势力 ottoman，身份档 2（富商）。cast：cast/historical_02_islamic.toml。
+# 类型：送货（deliver）。四章：offer（来信，报价）、deliver（海关的秤，交货）、settle（结账，海关没有少称）、settle_short（结账，海关少称了一截）。没有 stage 章，因此没有 window 与 default。
+#   deliver 的结果按海关是否少称拆成两条结账章，各自的选项不再用旗标门禁（同一轨道在别的路径上设了 short，不能再做选项条件）。
+# 报价：L（来信／代理人）。出面的是开罗商行的伙计，不新建 cast；auto=true；offer 在 suez，窗口 1557-03-01 至 1568-12-31；family=c13_offer_suez，冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+#   交货港由 alexandria 改为 suez：胡椒从印度来，送到苏伊士顺路（见 decisions.md 的 fixes）。
+# 进行中：deliver 章 deadline_days=240，超时 failed，好感 -3，旗标 _late，来信一封；settle 与 settle_short 各 deadline_days=180，超时 done，旗标 _partial，来信一封。
+# 依据·史实：卢里亚 1553 年前后在开罗做香料与粮食的买卖，账目一丝不苟（出处见 cast 条目）；开罗的胡椒经吉达、苏伊士进城。
+# 依据·原创：送货的数目、海关的秤与秤手、伙计、补差额的做法、信上的那句话。
+# 秘密：cast 无 secret；卡巴拉与修行一概不写，只写一个规矩的商人。
+# 读的旗标：无（不读 c7_ 与主线旗标）。
+# 设的旗标：c13_request_isaac_luria_accepted（offer 接下）、_declined（offer 回绝）、_short（deliver 认了海关的数）、_late（deliver 超时）、_done（结账收尾）、_partial（结账超时）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；无 variants。
+# 报酬：货款 2250（交货章，三个选项与检定失败都给一次）；报酬最多 1600（结账章一次）；好感最多 +13（接下 2 + 认秤 3 + 收下 8）；名声 +3；奥斯曼声望 +1（只在 settle 的收下）；回忆 mem-request_isaac_luria-settle。无唯一奖励物品。
+# 依赖：港口 suez（ports_red_sea_gulf.toml）；商品 spice（goods/01_staples_raw.toml）；技能 double_entry（skills.toml）；属性 numeracy；人物 isaac_luria。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_isaac_luria-settle「苏伊士的大秤」：海关的大秤上压着一袋胡椒，秤杆平平地停着，秤边站着一个捏着信的年轻人。
+
+[[tracks]]
+key = "request_isaac_luria"
+name = "足秤的胡椒"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["isaac_luria"]
+
+# 一、写到一半的信：苏伊士码头，伙计抱着东家的信等船。
+[[tracks.chapters]]
+key = "offer"
+title = "写到一半的信"
+text = "苏伊士码头的货栈阴影里，开罗商行的伙计抱着一封双折的信，等印度来的船。信是他东家写的，字很密，中间有一行墨色明显深了一层。伙计说，东家写到那里去读了一段书，回来才接着写。信上的原话是：“请稍等，让我把这一句读完。”往下的事很简单：要十五担胡椒，送到苏伊士，按足秤交货。末了一句写得很重：“秤若偏了，哪怕一点，我宁可自己贴钱，也不要别人吃亏。”"
+mood = "tender"
+at = "suez"
+when = [{ kind = "date", from = [1557, 3, 1], to = [1568, 12, 31] }, { kind = "age", ge = 17 }]
+deadline = [1568, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_suez"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：十五担胡椒，足秤送到苏伊士。"
+next = "deliver"
+reply = "伙计松了口气，把信折起来放进袖口。“东家说，要找个肯在秤边上站着的船长。我看你像。他看人看得慢，看准了就不改。”"
+effects = [{ kind = "affinity", person = "isaac_luria", value = 2 }, { kind = "flag", flag = "c13_request_isaac_luria_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "接下，但问伙计：你们东家为什么这么较真秤？"
+next = "deliver"
+reply = "伙计挠挠头，想了一会儿才答：“东家说，秤是两个人之间的约。别的他就不说了，他平时话就少。有一回我多问了一句，他读了一下午的书，一句也没答我。”"
+effects = [{ kind = "affinity", person = "isaac_luria", value = 2 }, { kind = "flag", flag = "c13_request_isaac_luria_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "印度那一趟我今年不去。"
+next = "failed"
+reply = "伙计把信折回原来的样子，塞进袖口，没有生气，只说那他再等下一条船。“东家那边，我照实写。你今年不去，他也不会问为什么。”"
+effects = [{ kind = "flag", flag = "c13_request_isaac_luria_declined" }]
+
+# 二、海关的秤：胡椒卸到苏伊士海关的大秤上，秤手报的数少了一截。
+[[tracks.chapters]]
+key = "deliver"
+title = "海关的秤"
+text = "十五担胡椒卸到苏伊士海关的大秤上，麻袋一袋袋过秤，搬运的人光着膀子，汗顺着背往下淌。秤手报数，比你船上称的少了一截。不多，刚好够他抽成。你在船上算过的每一担都对得上，就是他报的那个数少。他把木牌往桌上一放，等你开口。伙计站在旁边，眼睛在你和秤之间来回，不敢插嘴。"
+speaker = "captain"
+mood = "tense"
+at = "suez"
+when = [{ kind = "alive", person = "isaac_luria", value = true }]
+objectives = [{ kind = "goods", good = "spice", qty = 15, at = "suez", text = "把胡椒（15）运到苏伊士" }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "isaac_luria", value = -3 }, { kind = "flag", flag = "c13_request_isaac_luria_late" }, { kind = "letter", person = "isaac_luria", text = "胡椒已经从吉达的一条船上凑够了。你没能按时到，我不怪你。这笔账我记着，欠你一封信的人是我。——以撒" }] }
+
+[[tracks.chapters.choices]]
+key = "check_scale"
+text = "当场要求换砝码复秤。"
+next = "settle"
+reply = "你指出那只最大的砝码底下粘着一块蜡。秤手红着脸刮掉，复秤的数跟你船上的一样。伙计长长出了一口气。"
+news = "苏伊士的人说，海关的大秤上，一船印度胡椒被外来的船长当场复了秤，最大那只砝码底下粘着蜡。"
+check = { attr = "numeracy", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "isaac_luria", value = 3 }]
+fail = { next = "settle_short", effects = [{ kind = "cash", value = 2250 }, { kind = "flag", flag = "c13_request_isaac_luria_short" }], news = "苏伊士海关的大秤上，一船印度胡椒少称了一截，外来的船长跟秤手争了半天，还是认了。" }
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "拿出装船时的账，一担一担对给他看。"
+next = "settle"
+requires = [{ kind = "skill", skill = "double_entry", ge = 60 }]
+hint = "你的账记得太乱，自己都对不上。"
+reply = "你的账从科钦装船记到苏伊士卸货，每一担都有日期和经手人，连搬运的人名字都记着。秤手看完，没吭声，把数改了。改完他把那张纸折起来，压在了秤砣底下。"
+news = "苏伊士的人说，一个外来船长拿着装船的账本，把海关的秤手问得没了话。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "isaac_luria", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "accept_weight"
+text = "不跟海关争，认他的数。"
+next = "settle_short"
+reply = "秤手满意地在单子上画了押，笔尖在纸上停了一下，才抬起来。伙计看着那个数，嘴唇动了动，什么也没说。你把单子叠好，收进了袋子里。"
+news = "苏伊士的人说，一船印度胡椒到了海关的大秤上，外来的船长没争，认了秤手报的数。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "flag", flag = "c13_request_isaac_luria_short" }]
+
+# 三、一个月后的钱：海关没有少称，东家付的是足数。
+[[tracks.chapters]]
+key = "settle"
+title = "一个月后的钱"
+text = "一个月后，伙计回到苏伊士，带着东家的钱和一封薄薄的信。钱袋口用红线扎着，线头是新剪的。他数钱的时候一枚一枚地过，过一枚，停一下，数得你都替他着急。信折了三折，折痕压得很平，看得出是东家自己一折一折压的。信是东家亲笔写的，字很慢，一笔一笔，只写了一句：秤是两个人之间的事，海关不在里头。伙计说，东家写完这句，搁下笔坐了很久，天黑了才点灯。"
+mood = "tender"
+at = "suez"
+when = [{ kind = "alive", person = "isaac_luria", value = true }]
+objectives = [{ kind = "wait", days = 30 }]
+deadline_days = 180
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_isaac_luria_partial" }, { kind = "letter", person = "isaac_luria", text = "你的船没再来苏伊士。钱我托商行替你存着，什么时候来取都行。——以撒" }] }
+
+[[tracks.chapters.choices]]
+key = "accept_full"
+text = "收下这笔钱。"
+next = "done"
+reply = "伙计数钱数得很仔细，数完没多说，只抬起头：“东家说，你站在秤边上那一下，值这个价。”他把钱袋扣好递过来，手心是热的。"
+news = "苏伊士的人说，开罗来的年轻商人送来一船印度胡椒，足秤交货，付钱时一枚铜子也没少。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "isaac_luria", value = 8 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "ottoman", value = 1 }, { kind = "memory", memory = "mem-request_isaac_luria-settle", title = "苏伊士的大秤" }, { kind = "flag", flag = "c13_request_isaac_luria_done" }]
+
+[[tracks.chapters.choices]]
+key = "decline_fee"
+text = "这一趟不收钱，只收他那句话。"
+next = "done"
+reply = "伙计愣了一下，把钱袋又推回你面前。“东家要问我为什么没带钱回去。”他说完笑了一下，眼角有褶子，“我就说，船长不肯收，只要了一句话。东家听了，大概会再写很久的信。”"
+news = "苏伊士的人说，一个印度来的船长把开罗商人的报酬推回了桌上，只说要一句话。"
+effects = [{ kind = "affinity", person = "isaac_luria", value = 8 }, { kind = "memory", memory = "mem-request_isaac_luria-settle", title = "苏伊士的大秤" }, { kind = "flag", flag = "c13_request_isaac_luria_done" }]
+
+# 三之二、贴出来的那一截：海关少称了，东家自己把差额补齐。
+[[tracks.chapters]]
+key = "settle_short"
+title = "贴出来的那一截"
+text = "伙计回到苏伊士的那天，东家的钱也一并带来了。海关少称的那一截，东家照足秤的数补齐了，补的钱是从他自己的份子里出的。这笔账伙计算了两遍，两遍的数都一样。他把钱交到你手里，手指在袋口停了一下，像是在等你说话。那一截他单独用纸包着，纸角写着海关的名字。东家没有另写信，只托他带了一句话：这一截记在我的账上。"
+mood = "tender"
+at = "suez"
+when = [{ kind = "alive", person = "isaac_luria", value = true }]
+objectives = [{ kind = "wait", days = 30 }]
+deadline_days = 180
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_isaac_luria_partial" }, { kind = "letter", person = "isaac_luria", text = "海关少称的那一截我已经补齐，钱托商行替你存着，你哪天来取都行。——以撒" }] }
+
+[[tracks.chapters.choices]]
+key = "accept_topup"
+text = "收下，连他自己贴的那一截。"
+next = "done"
+reply = "伙计把数好的钱推过来，脸上有点不好意思，像是替东家心疼。他把钱袋系紧，又往你这边推了推，仿佛怕你再推回去。“东家说，收下吧，别让他白贴。”"
+news = "苏伊士的人说，开罗的年轻商人一船胡椒被海关少称了一截，他自己把差额补给了送货的船长。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "isaac_luria", value = 3 }, { kind = "flag", flag = "c13_request_isaac_luria_done" }]
+
+[[tracks.chapters.choices]]
+key = "return_topup"
+text = "把他自己贴的那一截退回去。"
+next = "done"
+reply = "伙计睁大眼睛，把那一截钱包好揣进怀里，手按在胸口上，半天没松开。最后他才说：“东家写信慢，你别等他的回信。这一截，他记的是你的名字。”"
+news = "苏伊士的人说，开罗的年轻商人替送货的船长补了海关少称的一截，船长又把那一截退了回去。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "isaac_luria", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_isaac_luria-settle", title = "苏伊士的大秤" }, { kind = "flag", flag = "c13_request_isaac_luria_done" }]

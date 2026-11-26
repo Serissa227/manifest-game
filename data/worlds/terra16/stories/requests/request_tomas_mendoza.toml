@@ -1,0 +1,136 @@
+# 请托：迷了路就写迷了路（request_tomas_mendoza，C13d，find，3 章）
+# 人物：托马斯·德·门多萨（tomas_mendoza），1538-05-03 生；大帆船上的混血领航员（西班牙水手与印第安母亲的儿子），跟乌达内塔走过回程航线，如今常驻马尼拉码头。
+# 类型：找东西（北极星夜测盘 nocturnal_dial，有 shop）。窗口 1575-01-01 至 1590-06-30（offer），后两章至 1590-12-31。
+# 报价：当面（T），马尼拉（manila）。offer 章不写 at，auto=false，objectives 是 person 目标，界面用 ask:request_tomas_mendoza 启动。
+# 章节：offer（马尼拉值房，墨杠与旧盘）→ handin（马尼拉，交盘：卖或借）→ use（关岛乌马塔克，120 天期限；两条路：天文航法 60 / 一般检定 20/7）；终点 done / failed。
+# 解法：use 章——天文航法 ≥ 60（新旧两只盘并排对，一眼看出旧盘的零线偏了，最好的结局）；海事一般检定（陪他把第十夜的量法再过一遍，成功也是满额，失败降为折中 partial：现金 700、好感 +4、来信写“原因未明”）。
+# 依据：史实——1565 年乌达内塔从菲律宾找到向北再向东的回程航线，此后马尼拉大帆船年年往返；夜里靠北极星量纬度，要按“护卫星”的位置加减（航海书里的“北极星规则”），夜测盘用来读那个位置；关岛乌马塔克后来是大帆船的取水锚地。
+#       正文只写“偏北半度”“零线偏出一根睫毛的宽”这样的细节，不给具体刻度算法；半度约三十里（浬）按航海常识。
+# 原创：托马斯这个人（红笔批别人、黑笔记自己，骰子镇纸的脾气）、被墨涂掉的一行、旧盘上偏了的零线、邻船领航员的嘲笑、拴在盘上的皮绳；口头禅只用一次（use 章，含 lent 变体里各一份，玩家只看得到其中一份）。
+# 秘密：cast 没写本请托要碰的秘密；不写瓦伊蕾、塔希提与她的岛，不写恋爱、不写心动。C7 瓦伊蕾×托马斯（1569—74）是另一条线，本轨道从 1575 年起，与它互不读写。
+# 读的旗标：无（本条无主线门禁，不读 c13_main_*）。
+# 设的旗标：c13_request_tomas_mendoza_accepted（offer 两条接法）、_declined（offer 回绝）、_lent（handin 借盘，use 的变体读它换开头）、_late（use 超时）、_done（use 两条满额收尾）、_partial（use 检定失败降为折中，是这条的终局旗标）。
+#       每条轨道只设一面终局旗标：done / partial / late 三选一。
+# 报酬：现金最多 1250（use）+ 900（handin 卖盘）；好感最多 +13（接下 2、交盘 3、最好 8）；名声 +2（两条满额）；回忆 mem-request_tomas_mendoza-use。不发物品，不给技能经验。
+# 依赖：港口 manila、guam；物品 nocturnal_dial（items/items_instrument_01.toml，北方文化的店里有卖）；技能 astral_navigation；属性 seamanship；人物 tomas_mendoza（cast/story_southeast_asia.toml，tracks 已登记）。无需 B10b 改名。
+# 英文：不写（terra16 先只做中文，英文以后补）。
+# 回忆插画清单：
+#   mem-request_tomas_mendoza-use「写着“迷了路”的一行」：锚地的灯下，绞盘上摊着日志，第九夜那一行字没被涂掉，旁边压着一只铜夜测盘。
+
+[[tracks]]
+key = "request_tomas_mendoza"
+name = "迷了路就写迷了路"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["tomas_mendoza"]
+
+# 一、报价：马尼拉的值房，一摞日志，一条墨杠。
+[[tracks.chapters]]
+key = "offer"
+title = "被墨涂掉的一行"
+text = "马尼拉码头边的值房，窗子对着海。门多萨的桌上摞着一尺多高的日志，都是大帆船回程时各条船留下的，纸边被盐吃毛了，页边满是红笔批的字。“红笔批别人，”他先笑了，“黑笔记自己。”他要把这些日志重订一遍，可白天量太阳不差，一到夜里量北极星，他的数就差半度，差在哪里找不出来。“我要一只北极星夜测盘，北边人夜里用的，刻度比我这只细。找来以后你开船，从马尼拉走到关岛，我每夜量一次、记一次。迷了路，我就写迷了路。到时候我手痒想涂，你按住我的手。”最上面那页日志的中间，有一条墨杠。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "tomas_mendoza", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1575, 1, 1], to = [1590, 6, 30] }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：我去找一只夜测盘来。"
+next = "handin"
+reply = "他把那页日志转过来对着我，指节敲在墨杠上，墨吃透了纸，背面都鼓着。“我妈那边的话里，墨和黑是一个字。这一行，是让人用那个字盖住的。别的领航员涂的，我想知道底下写的是什么。”"
+effects = [{ kind = "affinity", person = "tomas_mendoza", value = 2 }, { kind = "flag", flag = "c13_request_tomas_mendoza_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_half"
+text = "接下，但先问：差半度，会差多远？"
+next = "handin"
+reply = "“三十里。”他拿笔杆在桌上量了量，“关岛才多大一点，桅杆顶上的人也就看得见十来里远。差三十里，船就从它旁边擦过去，一船人望着海，说岛大概在那边。”他又笑：“所以盘子得是好盘子。”"
+effects = [{ kind = "affinity", person = "tomas_mendoza", value = 2 }, { kind = "flag", flag = "c13_request_tomas_mendoza_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "仪器的事，我不跑。"
+next = "failed"
+reply = "托马斯点点头，没劝。他把最上面那页合上，墨杠朝下，伸手去翻下一本日志。"
+effects = [{ kind = "flag", flag = "c13_request_tomas_mendoza_declined" }]
+
+# 二、交盘：夜测盘到了，卖，还是借。
+[[tracks.chapters]]
+key = "handin"
+title = "比旧的细"
+text = "傍晚，值房的窗子正对着北边那片还没黑透的天。我把夜测盘放到桌上，托马斯没急着道谢，先把自己那只发绿的旧盘也摆出来，两只并排，举到窗口比了比。“新的刻度比旧的细。”他用指甲沿着盘缘划过去，一格一格数，“细一倍还多。北边人手艺好，就是价钱我不敢问。”他把盘子翻来覆去看了个遍，才抬起头：“这只盘，你是卖给我，还是借我这一趟？”"
+speaker = "captain"
+mood = "cheerful"
+at = "manila"
+news = "马尼拉码头的值房里，大帆船的领航员举着一只新铜盘对着北边的天看了半晚上，旁边还摆着一只发绿的旧的。"
+objectives = [{ kind = "item", item = "nocturnal_dial", qty = 1, text = "带上一只北极星夜测盘" }]
+when = [{ kind = "alive", person = "tomas_mendoza", value = true }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "卖给他，盘子归他。"
+next = "use"
+reply = "他把钱一枚一枚摞在桌上数给我，数得很仔细，数完用袖口擦了擦盘子，挂到自己脖子上。“买下来的，错了没处推，怪不到别人头上。”"
+effects = [{ kind = "item", item = "nocturnal_dial", qty = -1 }, { kind = "cash", value = 900 }, { kind = "affinity", person = "tomas_mendoza", value = 3 }]
+requires = [{ kind = "item", item = "nocturnal_dial", qty = 1 }]
+hint = "你手里没有这只盘子。"
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借给他，跑完这一趟还我。"
+next = "use"
+reply = "他点点头：“那这一趟，它是我们俩的。”说着从旧盘上解下一截皮绳，系到新盘的孔上，打了个活结。“夜里手冷，这个不容易脱手。”"
+effects = [{ kind = "affinity", person = "tomas_mendoza", value = 3 }, { kind = "flag", flag = "c13_request_tomas_mendoza_lent" }]
+requires = [{ kind = "item", item = "nocturnal_dial", qty = 1 }]
+hint = "盘子不在你手里，借不出去。"
+
+# 三、第九夜：关岛乌马塔克的锚地，一行字，涂还是不涂。
+[[tracks.chapters]]
+key = "use"
+title = "第九夜"
+text = "乌马塔克的锚地，锚链刚放完，托马斯把日志摊在绞盘上。十夜的数一行行排得整齐，只有第九夜那一行是字：迷了路。那夜云压得像扣了口锅，盘子在袋子里一动没动，他把舵柄推到我手里：“这一段，你来领，我来记。……别怕，我也迷过路——认了，才回得来。”第十夜云一开，他举盘量完，说我们偏北了半度。这会儿邻船的领航员探头瞥了一眼日志，笑出声：“门多萨，你这是写日记？”托马斯没回嘴，墨笔悬在那一行上头，滴下一点墨。"
+speaker = "captain"
+mood = "tender"
+at = "guam"
+news = "关岛乌马塔克的锚地，大帆船的混血领航员在日志上写了一行“迷了路”，没有涂掉。"
+deadline_days = 120
+when = [{ kind = "alive", person = "tomas_mendoza", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "tomas_mendoza", value = -3 }, { kind = "flag", flag = "c13_request_tomas_mendoza_late" }, { kind = "letter", person = "tomas_mendoza", text = "我一个人跑了一趟关岛，第九夜也阴天。我写了：迷了路。要涂的那只手，我自己按住了。——托马斯" }]
+news = "关岛乌马塔克的锚地来过一个独自搭船的领航员，十夜的星量完才走，日志上有一行“迷了路”，他没涂。"
+
+[[tracks.chapters.choices]]
+key = "keep_line"
+text = "按住他的手说别涂，再把新旧两只盘叠起来，指给他看歪在哪。"
+next = "done"
+reply = "我把两只盘叠在灯下，对准盘缘上的定位凿点：新盘的零线正落在凿点上，旧盘的偏出一根睫毛的宽。托马斯凑近看了很久，把旧盘翻过来敲了敲：“三年。我骂了三年北极星。”他在第十夜那一行旁边添了一句：偏北半度，因第九夜无星。第九夜那行字，他一笔没动。他翻回最上面那页，指腹在墨杠上蹭了蹭，没去刮。末了把日志合上，说重订完了，第一页写我的船名。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "tomas_mendoza", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_tomas_mendoza-use", title = "写着“迷了路”的一行" }, { kind = "flag", flag = "c13_request_tomas_mendoza_done" }]
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "两只盘叠在一起，你看不出刻度差在哪。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "按住他的手说别涂，陪他把第十夜的量法再过一遍。"
+next = "done"
+reply = "我们把第十夜从头过了一遍：举盘的手，孔里的星，指针落的格。他的量法没有错，错不在那一夜。他在那一行后面补了半句：偏北半度，因第九夜无星。邻船的人早走开了，他把笔放回墨瓶里：“这一行留着。后头翻到别的行的人，看见它，才肯照着走。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "tomas_mendoza", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_tomas_mendoza_done" }]
+check = { attr = "seamanship", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "tomas_mendoza", value = 4 }, { kind = "flag", flag = "c13_request_tomas_mendoza_partial" }, { kind = "letter", person = "tomas_mendoza", text = "第十夜的量法我们过了两遍，还是没找出那半度出在哪里。日志上我照实写了：原因未明。第九夜那一行，我没碰。——托马斯" }]
+news = "关岛乌马塔克的锚地，大帆船的领航员量了十夜的星，日志上写着“迷了路”，下面还有一行“原因未明”。"
+
+[[tracks.chapters.variants]]
+key = "v1_lent"
+when = [{ kind = "flag", flag = "c13_request_tomas_mendoza_lent" }]
+text = "乌马塔克的锚地，锚链刚放完，托马斯先用袖口把夜测盘擦干净，连皮绳一起还到我手里：“用完了，往后你留着。”然后他把日志摊在绞盘上。十夜的数一行行排得整齐，只有第九夜那一行是字：迷了路。那夜云压得像扣了口锅，盘子在袋子里一动没动，他把舵柄推到我手里：“这一段，你来领，我来记。……别怕，我也迷过路——认了，才回得来。”第十夜云一开，他举盘量完，说偏北了半度。邻船的领航员探头瞥了一眼，笑出声：“门多萨，你这是写日记？”他没回嘴，墨笔悬在那一行上头。"

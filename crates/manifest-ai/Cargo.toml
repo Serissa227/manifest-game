@@ -1,0 +1,37 @@
+[package]
+name = "manifest-ai"
+description = "AI 管线：提案 schema、Adjudicator、LLM 提供商、预算与离线模板"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[features]
+default = []
+# Jev 裁决器（HTTP 契约见 docs/JEV_CONTRACT.md）
+jev = []
+
+[dependencies]
+manifest-core.workspace = true
+manifest-data.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+schemars.workspace = true
+tokio.workspace = true
+reqwest.workspace = true
+blake3.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+keyring = { version = "3", features = ["windows-native"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+keyring = { version = "3", features = ["apple-native"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+keyring = { version = "3", features = ["linux-native"] }
+
+[dev-dependencies]
+wiremock.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

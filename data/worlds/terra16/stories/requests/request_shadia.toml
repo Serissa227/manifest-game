@@ -1,0 +1,182 @@
+# C13d 请托：写进航簿的礁（request_shadia）。中文，Claude 写。
+# 人物：莎迪娅 shadia（1540-08-21 生，女；马斯喀特的三角帆赛船手，势力 hormuz，身份档 1），学院同学（cast/classmates_ship.toml）。
+# 类型：去某处（gs）。共 5 章：offer → reef → report，另有 scrape（steer_close 检定失败的一章）与 report_partial（只量了露出来的尖的结账）。
+#   说明：引擎的 variants 只能换文字，换不了效果，所以“只量一个尖”的结账拆成独立章 report_partial（现金 800、终局旗标 partial）；
+#   检定失败后的船底擦礁是一段戏，失败分支只能给下一章，所以拆出 scrape（检定失败时 Choice 不显示失败分支的正文，只显示章节正文）。
+# 报价：当面（T）。人物按日程在马斯喀特码头（muscat，dock），auto=false，玩家“问请托”（ask:request_shadia）启动。
+# 窗口：报价 1563-01-01 至 1580-06-30；礁区与结账到 1581-08-24（1581 年马斯喀特遭袭归纳吉玛主线 8，窗口在其前）。
+#   普通章没有 window/default，窗口写在 when 里；reef 的 deadline_days=60，超时走 failed，寄一封信。
+# 地点：马斯喀特 muscat（报价、礁区）；结账与船底那一章靠人物 person 目标跟着日程走。
+# 身份档 1：只量一个尖 800，两道都量 1250（货币与好感的说明见 brief；正文不写数字）。
+# 依据（史实）：阿曼外海的礁区，阿拉伯领航人的航簿（rahmani）一代代手抄增补；航簿的外海一页记礁的位置与过不得的时辰。礁名不写，只写“那片礁”。
+# 依据（原创）：莎迪娅与父亲、父亲的航簿、撞礁的那一回、落潮露出的尖、水下的第二道礁、“再来一趟，敢不敢？”。
+# 待核：外海那片礁的具体位置与大潮的月份，正文一律不写具体日子，只写“大潮落潮那天”。
+# 秘密：独自出海撞过一回礁，一直不敢写进父亲的航簿（cast secret）。offer 由她自己说出口（notes 规定）；之后只写礁写进了航簿，见闻只写礁，不写她撞过。
+# 与 C7 的交界：不写卡比尔、赛船、看星；bond_shadia 只读（offer 的 variant：bond ≥ C 时她先提“我寄过你一张图”）；不设任何 c7_ 旗标。
+# 读的条件：bond shadia（C 级以上）。
+# 设的旗标：c13_request_shadia_accepted / declined / both / late / done / partial。
+#   accepted 在 offer 接下时设；declined 在回绝时设；both 在礁的两道都量时设（只读不用）；late 在礁区超时时设；done 与 partial 终局只设其一。
+# 依赖：B10b：人物日程 muscat/dock 现成；物品 sounding_lead、技能 tide_reading、属性 seamanship 现成（captain.toml、skills.toml、items_instrument_01.toml）；
+#   cast/classmates_ship.toml 的 shadia tracks 已含 request_shadia。无主线门禁（非主线人物）。
+# 回忆插画清单：
+#   mem-request_shadia-report：桌上摊着父亲的航簿，外海那一页画着一片礁，尖的旁边落着一行小字，墨还没干。
+
+[[tracks]]
+key = "request_shadia"
+name = "写进航簿的礁"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["shadia"]
+
+# 一、码头上的航簿：她把撞过的那一回说出口，托你陪她去量
+[[tracks.chapters]]
+key = "offer"
+title = "撞过的那一回"
+text = "马斯喀特的码头，莎迪娅坐在一卷旧缆绳上，膝上摊着父亲的航簿，翻到外海那一页。那一页上没有礁。她没抬头，手指压着纸边：“我撞过一回。一个人出海，撞在那里，船底裂了一道。”她说完停了停，又说：“那片礁在哪儿，我记得清清楚楚，就是不敢写进去。写进去，父亲就知道了。”她终于抬起头：“我要写了。可得先再去看一眼，量准了再写。我掌舵，你测深。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "shadia", text = "在马斯喀特的码头找到她" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1580, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "shadia", ge = 18 }]
+deadline = [1580, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "shadia", level = "C" }]
+text = "马斯喀特的码头，莎迪娅坐在一卷旧缆绳上，膝上摊着父亲的航簿，翻到外海那一页。见了我，她先说：“我寄过你一张画着那片礁的图——那张是凭记性画的，这回要量的。”那一页上没有礁。她手指压着纸边：“我撞过一回。一个人出海，撞在那里，船底裂了一道。”她说完停了停：“那片礁在哪儿，我记得清清楚楚，就是不敢写进去。”她终于抬起头：“我要写了。可得先再去看一眼，量准了再写。我掌舵，你测深。”"
+
+[[tracks.chapters.choices]]
+key = "go_reef"
+text = "接下，陪她去量那片礁。"
+next = "reef"
+effects = [{ kind = "affinity", person = "shadia", value = 2 }, { kind = "flag", flag = "c13_request_shadia_accepted" }]
+reply = "她合上航簿，说那片礁在落潮时才露一个尖，“涨潮时什么也看不见，那回我就是涨潮去的。”说完把航簿揣进怀里，手按在上面，像按着一件不肯给人看的东西。"
+
+[[tracks.chapters.choices]]
+key = "ask_father"
+text = "接下。先问：写进去以后，怎么跟父亲说？"
+next = "reef"
+effects = [{ kind = "affinity", person = "shadia", value = 2 }, { kind = "flag", flag = "c13_request_shadia_accepted" }]
+reply = "“不说，让他自己翻到。”她说完又改口，说还是说吧，“他翻到了再问，更难开口。”她把航簿往我手里一递，又收了回去，自己抱着。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "礁区太险，我不陪你去。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_shadia_declined" }]
+reply = "她哼了一声，把航簿往腋下一夹。“那就我一个人去。上回一个人，这回也一个人。”她起身走出两步，回头看了你一眼，没再开口。码头的风把她的辫子吹到脸前，她也没去拨。"
+
+# 二、落潮的礁：绕着礁测深，三种量法
+[[tracks.chapters]]
+key = "reef"
+title = "落潮的尖"
+text = "大潮落潮那天，礁上露出一个黑色的尖，四周的水是浅绿的。莎迪娅掌舵，船绕着礁走，我在船头一锤一锤测深。绕完一圈，她盯着那个尖，忽然笑了：“再来一趟，敢不敢？”第二圈绕到礁的东边，我才看见礁不止一个尖。水下还有一道黑线，平着伸向航道，涨潮时正好压在那条路上。她的舵慢了下来，嘴里低低地说：“这道，我见过。”说完就不再开口。"
+speaker = "captain"
+mood = "tense"
+at = "muscat"
+objectives = [{ kind = "at", at = "muscat", text = "在马斯喀特的港里候潮" }, { kind = "wait", days = 3, text = "等到大潮落潮" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1581, 8, 24] }, { kind = "alive", person = "shadia", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "shadia", text = "礁我一个人去量了，量了一半，风大了。航簿上我先画了一个尖。——莎迪娅" }, { kind = "affinity", person = "shadia", value = -3 }, { kind = "flag", flag = "c13_request_shadia_late" }] }
+news = "马斯喀特外海的礁区，大潮落潮那几天，有条船绕着一片礁转了两圈，船上的人不停地往水里放绳。"
+
+[[tracks.chapters.choices]]
+key = "lead_line"
+text = "用测深锤一锤一锤打，把水下那道礁的边量出来。"
+next = "report"
+requires = [{ kind = "item", item = "sounding_lead", qty = 1 }]
+hint = "你手上没有合用的测深锤，拿绳子拴石头打不准"
+effects = [{ kind = "affinity", person = "shadia", value = 3 }, { kind = "flag", flag = "c13_request_shadia_both" }]
+reply = "测深锤打下去，锤底的蜡粘上了碎珊瑚。我把水下那道礁的边一锤一锤量出来，画了一圈。她在舵边看我画，一句话也没说，只把船又压近了一尺。"
+
+[[tracks.chapters.choices]]
+key = "read_tide"
+text = "算好涨潮时那道礁离水面多深，记下哪个时辰过不得。"
+next = "report"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "这里的潮你还算不准"
+effects = [{ kind = "affinity", person = "shadia", value = 3 }, { kind = "flag", flag = "c13_request_shadia_both" }]
+reply = "我算出涨到一半时，那道礁离水面只有一人深，满潮也不过两人深。我把过不得的那个时辰写在航簿边上。她说，那回她就是半潮撞上的。"
+
+[[tracks.chapters.choices]]
+key = "steer_close"
+text = "请她把船贴着礁走，我凭眼睛看水色记。"
+next = "report_partial"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "scrape", effects = [{ kind = "affinity", person = "shadia", value = -2 }] }
+effects = [{ kind = "affinity", person = "shadia", value = 3 }]
+reply = "她贴着礁绕了一圈，船近得能听见礁面上的水声。我盯着水色，把浅绿变成深蓝的那条线记下来。线记得不准，忽远忽近，我只在纸上画了一条虚线，没敢画实。"
+
+# 三、检定失败：船底擦着礁边过去（只在 steer_close 失败时走到这里）
+[[tracks.chapters]]
+key = "scrape"
+title = "贴着礁边那一下"
+text = "船底擦着礁边过去，闷闷地响了一声，像有什么东西在龙骨底下刮了一道。莎迪娅一把把舵推开，船头猛地偏过去，浪从礁面上翻起来，泼了她半边身子。她没骂人，只盯着船底的水，看了很久，才说：“只量露出来的那个尖吧。”我看见她的手还压在舵柄上，没松开。舵柄上的木纹被手汗浸得发亮，离礁只有一臂远的水还在翻着白沫。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "shadia", text = "回港找到她" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1581, 8, 24] }, { kind = "alive", person = "shadia", value = true }]
+
+[[tracks.chapters.choices]]
+key = "check_hull"
+text = "靠岸，先看看船底。"
+next = "report_partial"
+effects = [{ kind = "affinity", person = "shadia", value = 1 }]
+reply = "我们在下一个湾靠了岸。船底一块板磨掉了漆，没漏。她蹲在船边，用指甲抠了抠木头，直起身说：“没漏就行。”然后回头看了一眼礁，眉头拧成一团，像是在心里又量了一遍。"
+
+[[tracks.chapters.choices]]
+key = "measure_tip"
+text = "不看了，今天就量尖。"
+next = "report_partial"
+reply = "我点了头。她把舵压正，船慢慢退出礁区，又一圈一圈地绕回来。尖的高矮、四周的深浅，我一样一样报，她一样一样记进航簿，船底的事，两个人都没提。"
+
+# 四、结账：父亲的航簿（两道都量过）
+[[tracks.chapters]]
+key = "report"
+title = "父亲的航簿"
+text = "莎迪娅把父亲的航簿摊开，翻到外海那一页。她用的是父亲给她的那支细笔，笔杆上缠着褪了色的红绳。照我量回来的数，她把那片礁画了进去：露出来的尖，水下的那一道，还有涨潮时过不得的那个时辰。笔尖几次停在半空，最后她画得很慢，水下那道画成实线，旁边落了一个小小的“量”字。画完了，她拿着航簿站了很久，才说：“父亲在屋里。我现在就去。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "shadia", text = "回马斯喀特找到她" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1581, 8, 24] }, { kind = "alive", person = "shadia", value = true }]
+news = "马斯喀特港里传，一位老领航的航簿上，外海那一页多画了一片礁，画得又细又准，连老水手都说没见过。"
+
+[[tracks.chapters.choices]]
+key = "wait_outside"
+text = "在门外等她。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "shadia", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_shadia_done" }, { kind = "memory", memory = "mem-request_shadia-report", title = "航簿上的一行小字" }]
+reply = "她进去了很久。出来时眼睛有点红，说父亲看完，在礁的旁边添了一行字：“小女量。”她把那行字指给我看，字很小，墨色却深。她付了钱，又说下回还比，这一趟算我让你。"
+
+[[tracks.chapters.choices]]
+key = "go_in"
+text = "陪她进去。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "shadia", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_shadia_done" }, { kind = "memory", memory = "mem-request_shadia-report", title = "航簿上的一行小字" }]
+reply = "她父亲看完那一页，没问她怎么知道的，只问量了几遍。她说两遍。父亲说，那就再来一遍，他陪着。她付了钱，把钱推过来时，先看了我一眼。"
+
+# 五、结账：只量了露出来的尖（steer_close 与船底那一章都走到这里）
+[[tracks.chapters]]
+key = "report_partial"
+title = "虚线的那一道"
+text = "莎迪娅把父亲的航簿摊开，翻到外海那一页。她用的还是那支细笔，笔杆上的红绳被她攥得发暗。照我们回来说的数，她把那片礁画了进去：露出来的尖，画得又稳又直。水下的那一道，只有个大概，她画成虚线，旁边写了两个小字：待量。画完以后，她把那一页的边角抚平，抚了两遍，指腹在那道虚线上停了停，才抬起头：“父亲还在屋里，我这就去。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "shadia", text = "回马斯喀特找到她" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1581, 8, 24] }, { kind = "alive", person = "shadia", value = true }]
+news = "马斯喀特港里传，一位老领航的航簿上，外海那一页多画了一片礁，水下那一道只画了虚线。"
+
+[[tracks.chapters.choices]]
+key = "wait_outside"
+text = "在门外等她。"
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "shadia", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_shadia_partial" }, { kind = "memory", memory = "mem-request_shadia-report", title = "航簿上的一行小字" }]
+reply = "她进去了很久。出来时脸色有点僵，说父亲问那道虚线是怎么回事，她照实说：还没量。父亲在旁边添了一行字：“小女量。”她付了钱，嘴上说下回再比，眼睛却还看着那道虚线。"
+
+[[tracks.chapters.choices]]
+key = "go_in"
+text = "陪她进去。"
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "shadia", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_shadia_partial" }, { kind = "memory", memory = "mem-request_shadia-report", title = "航簿上的一行小字" }]
+reply = "父亲看完那一页，先看的是那道虚线，没看尖。他问，还有没有人去量。她说，有。说完看了我一眼，没再往下说。她付了钱，手指在桌沿上停了一下才收回去。"

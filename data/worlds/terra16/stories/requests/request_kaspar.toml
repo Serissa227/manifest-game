@@ -1,0 +1,203 @@
+# 请托：站稳了再开炮（request_kaspar）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：卡斯帕（kaspar，1521-08-15 生，男），施瓦本出身的退伍炮手，在安特卫普码头教铳手、替船主验炮；势力 holy_roman_empire。cast：cast/story_europe.toml。
+# 类型：打一仗（fight）。四章：offer（报价）、battle（出海遇上来劫的船）、after（回港验炮）、after_misfire（那门炮哑过一轮的回港）；没有 stage 章。
+#       offer 两条接法（请他上船教三天；先看一个上午再决定）加一条回绝。
+#       battle 两条解法：技能门槛（firearms ≥ 60，自己顶炮）与属性检定（arms 一般 20/7）。检定失败走 after_misfire：那门炮哑了一轮，卡斯帕亲自点了火。
+#       after_misfire 是为了引擎：“当着他站一回”需要 steady 旗标，而失败的那支永远没有这个旗标，把门禁挂在选项上会让机器人在失败支上报错；所以失败的那支单开一章，选项里不再有门禁。
+#       代价：多出一章（brief 写的是三章），两个回港章的内容互不交叉；after 的“当着他站一回”挂 steady 门禁（只有成功的两支会到这一章），after_misfire 的选项都没有门禁。
+# 报价：T（当面）。人物按日程在安特卫普码头（antwerp），auto=false，玩家用“问请托”（ask:request_kaspar）启动；offer 不写 at，objectives 为“在港里找到他”。
+#       窗口 1560-01-01 至 1573-06-30（卡斯帕 1521 年生，窗口内都在世）；offer 写 deadline=1573-06-30，timeout 直接 failed，不写见闻。
+# 进行中：battle 章 deadline_days=120，超时走 failed，来信一封（好感 -3，旗标 _late）。after 是普通章，可以一直等。
+# 依据·史实背景：16 世纪欧陆的雇佣兵，多是从帝国军营里出来的炮手与铳手；军饷拖欠、兵变与洗劫的故事在低地国家与德意志流传。
+#       卡斯帕是原创人物，只借了“退伍炮手、左耳被炮震坏、随军打过仗”的背景。不写具体战役，不写西班牙之怒（1576 年，归 C7），不写 1573 年以后的事。
+# 依据·原创：卡斯帕本人与他的口令（装、塞、点、退）、左耳半聋、火绳与药池、那本写满拍子的旧本子。
+#       “站住——你左脚落得重”是他的招呼语，“先找退路，再摆炮”是他的口头禅，两句在全轨道各只用一次。
+# 秘密：cast 没写秘密，本请托无须处理。不设、不读 c7_ 旗标；不写格里特，不写莉斯贝特。
+# 读写的旗标：
+#       写 c13_request_kaspar_accepted（offer 的请他上船，以及 drill_check 的成功与失败两条都设）、
+#           c13_request_kaspar_declined（回绝，直接 failed）、
+#           c13_request_kaspar_steady（battle 检定成功，或 firearms 技能门槛）、
+#           c13_request_kaspar_misfire（battle 检定失败进 after_misfire：那门炮哑过一轮；分支旗标，不算终局）、
+#           c13_request_kaspar_late（battle 超时）、
+#           c13_request_kaspar_done（after 与 after_misfire 的收尾都设，终局）。
+#       本文件读 c13_request_kaspar_steady（只作 after 的 show 门禁，到 after 时它必定已设）；misfire 只写不读，是给别的文件看的分支标记。
+#       终局旗标在各条路径上只设一面（declined / late / done）。
+# 依赖：港口 antwerp；人物 kaspar（cast/story_europe.toml）；技能 firearms（skills.toml）；检定属性 arms 与 seamanship（captain 表定下来后统一换算）。
+#       不依赖 B10b 改名。无主线门禁：卡斯帕不在 TERRA16 §12 的主线人物里，没有 c13_main_<主角> 条件。
+# 回忆插画：mem-request_kaspar-after：安特卫普码头的石阶旁，一个半聋的老炮手把一本写满拍子的旧本子递给船长，身后的炮手们分开双脚站成一排。
+
+[[tracks]]
+key = "request_kaspar"
+name = "站稳了再开炮"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kaspar"]
+
+# 一、报价：码头上，他先看你的船员，再看你的人。
+[[tracks.chapters]]
+key = "offer"
+title = "他们站不稳"
+text = "安特卫普码头的石阶上，一个老炮手站在你的船员中间，左耳被炮震得半聋，说话却大得像喊口令。街角谁的脚步先乱了一拍，他听得最清楚。他一把攥住最前头那个水手的胳膊：“站住——你左脚落得重，海上待久了吧。”水手的脚在石阶上滑了一下。老炮手松开手，说你的船员站不稳。装铳的时候，脚站在哪里、退路在哪里，没一个人想过。他要教三天。教完了你出一趟海，遇上第一条来劫的船，他站在你身后数拍子。“数乱了，算我的。”"
+speaker = "captain"
+mood = "cheerful"
+when = [
+  { kind = "date", from = [1560, 1, 1], to = [1573, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "kaspar", text = "在港里找到他" }]
+deadline = [1573, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "请他上船，教三天。"
+next = "battle"
+reply = "第一天他只教站：脚怎么分开，膝盖怎么弯，铳托抵在哪一块骨头上。水手们骂了一整天，第三天，谁也不骂了。"
+effects = [
+  { kind = "affinity", person = "kaspar", value = 2 },
+  { kind = "flag", flag = "c13_request_kaspar_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "drill_check"
+text = "先看他教一个上午，再决定。"
+next = "battle"
+check = { attr = "arms", base = 20, per = 7 }
+reply = "你在码头上站了一个上午，看他怎么骂人，怎么掰开新兵的膝盖。门道看没看懂，要下了船才知道。你请他上了船。"
+effects = [
+  { kind = "affinity", person = "kaspar", value = 2 },
+  { kind = "flag", flag = "c13_request_kaspar_accepted" },
+]
+fail = { next = "battle", effects = [
+  { kind = "affinity", person = "kaspar", value = -2 },
+  { kind = "flag", flag = "c13_request_kaspar_accepted" },
+] }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "你的人不用他教。"
+next = "failed"
+reply = "他哼了一声，大声说了一句德语，听着不像好话。转身往码头另一头走，靴跟敲得石阶嗒嗒响。走到尽头，他又回头看了一眼你的船员，这回用的是你们的话，骂得很准。"
+effects = [{ kind = "flag", flag = "c13_request_kaspar_declined" }]
+
+# 二、出海：来劫的船从侧面压过来，他站在你身后数拍子。
+[[tracks.chapters]]
+key = "battle"
+title = "乱了半拍"
+text = "出海第十几天，一条来劫的船从侧面压过来。卡斯帕站在你身后，大声数拍子：装、塞、点、退。你打退的那条船挨了两轮炮，已经在转舵。第三轮装药时，左舷一个年轻炮手的手抖了一下，火绳在药池边晃，拍子慢了半拍，后面的人跟着乱了。卡斯帕在你身后吼：“先找退路，再摆炮！”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "kaspar", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在外海打退来劫的船" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "kaspar", value = -3 },
+  { kind = "flag", flag = "c13_request_kaspar_late" },
+  { kind = "letter", person = "kaspar", text = "一直没遇上来劫的船。我下船了。你的人现在站得稳，可没验过。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "按住那个炮手的肩，跟着卡斯帕的拍子再来。"
+next = "after"
+check = { attr = "arms", base = 20, per = 7 }
+reply = "你按住那人的肩，把他的手腕拽回拍子上，跟着卡斯帕又数了一遍：装、塞、点、退。第四轮你没回头，只盯着那门炮的火绳。"
+news = "安特卫普那个半聋的退伍炮手跟一条船出了海，回来时说那条船上的炮手站稳了。"
+effects = [
+  { kind = "affinity", person = "kaspar", value = 3 },
+  { kind = "flag", flag = "c13_request_kaspar_steady" },
+]
+fail = { next = "after_misfire", effects = [
+  { kind = "affinity", person = "kaspar", value = -2 },
+  { kind = "flag", flag = "c13_request_kaspar_misfire" },
+], news ="安特卫普那个半聋的退伍炮手跟一条船出了海，回来时说，船上有一门炮哑了一轮，是他自己上去点的火。" }
+
+[[tracks.chapters.choices]]
+key = "firearms"
+text = "你自己顶上那门炮。"
+next = "after"
+requires = [{ kind = "skill", skill = "firearms", ge = 60 }]
+hint = "你的手还没熟到能一个人顶一门炮。"
+reply = "你装、塞、点、退，一拍不差。火绳是你自己吹亮的，药池边没晃一下。卡斯帕不数了，那只好耳朵朝着你，就站在旁边看。"
+news = "安特卫普那个半聋的退伍炮手跟一条船出了海，回来时说，那船长自己顶上了炮，一拍不差。"
+effects = [
+  { kind = "affinity", person = "kaspar", value = 5 },
+  { kind = "flag", flag = "c13_request_kaspar_steady" },
+]
+
+# 三、回港：他把你的炮手挨个看一遍，最后问的是你。
+[[tracks.chapters]]
+key = "after"
+title = "问的是你"
+text = "回到安特卫普，卡斯帕把你的炮手挨个看了一遍，看他们站的样子：哪只脚先动，哪只肩往前送。站在最后的是那个手抖过的年轻炮手，左肩还缩着。卡斯帕走过去，用两根手指把那肩膀推下去，推了两回，第二回年轻人自己笑了。看完了，他从怀里掏出一本旧本子，封皮被汗浸成了深色，每一页都是一行行的拍子，有的字已经晕开。他指着你自己的脚，问你学会了没有。"
+speaker = "captain"
+mood = "cheerful"
+at = "antwerp"
+when = [{ kind = "alive", person = "kaspar", value = true }]
+
+[[tracks.chapters.choices]]
+key = "show"
+text = "当着他站一回，装、塞、点、退，空手比一遍。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_request_kaspar_steady" }]
+hint = "炮前那一回你还没站过，这话现在说不出口。"
+reply ="他看完，点点头，说你的脚还是分得太开，可拍子对了。他没提钱，朝码头的木棚喊了一声，学徒扛来一袋银币放在你脚边。那本旧本子，他也推了过来。"
+news = "安特卫普码头边的小酒馆里，那个半聋的退伍炮手大声讲了一晚上怎么站稳了再开炮。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "kaspar", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "skill", skill = "firearms", value = 30 },
+  { kind = "memory", memory = "mem-request_kaspar-after", title = "写满拍子的旧本子" },
+  { kind = "flag", flag = "c13_request_kaspar_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "not_yet"
+text = "说还没学会，他们比你学得好。"
+next = "done"
+reply = "他大笑，说承认没学会的人，下回能学会。他朝木棚那头招了招手，一个学徒抱着一袋银币过来。他没数，拍了拍你的肩，拍得很重。"
+news = "安特卫普码头边的小酒馆里，那个半聋的退伍炮手拍着桌子说，承认没学会的船长，下回能学会。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "kaspar", value = 5 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_kaspar_done" },
+]
+
+# 四、哑了一轮：检定失败的那一支。那门炮是卡斯帕亲自点的火，所以这一支不再让你“比一遍”。
+[[tracks.chapters]]
+key = "after_misfire"
+title = "哑了一轮"
+text = "回到安特卫普，卡斯帕照例把炮手们拉成一排，一个个看他们的脚。那个手抖过的年轻炮手站在最后，左肩缩着，卡斯帕没去推他。看到这里，他停下来，说海上那一轮，左舷有门炮哑过，是他自己上去点的火。他从怀里摸出一本旧本子，封皮被汗浸成了深色，每一页都是一行行的拍子。然后他转过头，问你学会了没有。"
+speaker = "captain"
+mood = "tense"
+at = "antwerp"
+when = [{ kind = "alive", person = "kaspar", value = true }]
+
+[[tracks.chapters.choices]]
+key = "not_yet"
+text = "说还没学会，那一轮的火是他替你点的。"
+next = "done"
+reply = "他沉默了一会儿，说那一轮的火他该点，不该你挨。学徒搬来一袋银币，放在你脚下。他用手掌在你胳膊上按了一下，没说话。"
+news = "安特卫普码头边的小酒馆里，那个半聋的退伍炮手说，那一轮的火是他自己点的，谁也不许替他挨骂。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "kaspar", value = 5 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_kaspar_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "admit"
+text = "说那一轮是你没站稳，怪不到别人。"
+next = "done"
+reply = "他摆摆手，说炮是他点的，错也归他。他没接你的话，把那本旧本子往你怀里一塞，说明天一早照着拍子把炮手再站一遍。木棚那头，学徒把一袋银币照数搬了过来。"
+news = "安特卫普码头边的小酒馆里，有人听见一个船长认了错，半聋的退伍炮手骂他傻，骂完又给他倒了一杯酒。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "kaspar", value = 3 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_kaspar_done" },
+]

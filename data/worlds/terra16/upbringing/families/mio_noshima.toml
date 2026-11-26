@@ -1,0 +1,809 @@
+# 11-04 改投学院：澪在家乡期可以改去能岛水路见习处。
+# 选了 c9_mio_route_noshima 的局，学院期整段在能岛（mio.toml 的 routes）；京都宫中专属的事件由门槛的 not_flag 挡掉，
+# 这里是能岛版的对应事件，章节条件都带这个旗标。只写中文（寰宇先只做中文），英文缺省回退中文。
+"format_version" = 1
+
+"event_gates" = { "c9_mio_route_offer" = { "stage" = "home", "from" = [1553, 12, 1], "tier" = "timed" }, "c9_mio_noshima_critical_06" = { "stage" = "any", "from" = [1554, 1, 11] }, "c9_mio_noshima_critical_07" = { "stage" = "any", "from" = [1554, 3, 1] }, "c9_mio_noshima_critical_08" = { "stage" = "any", "from" = [1554, 6, 1] }, "c9_mio_noshima_critical_09" = { "stage" = "any", "from" = [1554, 6, 21] }, "c9_mio_noshima_critical_10" = { "stage" = "any", "from" = [1555, 2, 1] }, "c9_mio_noshima_critical_11" = { "stage" = "any", "from" = [1555, 5, 1] }, "c9_mio_noshima_critical_13" = { "stage" = "any", "from" = [1555, 11, 1] }, "c9_mio_noshima_critical_14" = { "stage" = "any", "from" = [1556, 2, 1] }, "c9_mio_noshima_critical_15" = { "stage" = "any", "from" = [1556, 5, 1] }, "c9_mio_noshima_critical_16" = { "stage" = "any", "from" = [1556, 9, 1] }, "c9_mio_noshima_critical_17" = { "stage" = "any", "from" = [1556, 12, 1] } }
+
+# 改投的口子：立冬前后京都的邀请已经到了（c9_mio_critical_05），入冬后能岛也来了口信。选项 0 照原定上京。
+[[tracks]]
+"key" = "c9_mio_route_offer"
+"name" = "能岛来的口信"
+"kind" = "main"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "能岛来的口信"
+"text" = "北风刮起来以后，能岛的关船又靠上了下田的栈桥。鹰丸头一个跳下来，脚还没站稳就冲我扬下巴：“听说你要上京，进宫里学走路？”他比夏天又黑了一圈，手背上全是缆绳勒出来的白印。夜里阿濑把一壶酒温在灶边，才把他带来的话说全：能岛船坞的水手头开了年要收几个见习的孩子，认潮、摇橹、修小早，三年。“不是船家出身的，村上家肯写引荐，也收。”阿濑盯着灶里的火，“姬君若想去，我去替姬君求这封信。夫人那边，我去说。”广桥夫人的回信还压在母亲的砚台底下，信上说，开春以后，宫里有人等着看我的字。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1553, 12, 1], "to" = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+"key" = "kyoto"
+"text" = "照说定的，开了年上京"
+"reply" = "我替阿濑把酒斟满，说京都那边已经回了信，宫里也托了人，不好再改。阿濑点点头，没有再劝。鹰丸在门外听见了，隔着纸门哼了一声：“宫里的长廊上，可没有潮给你读。”第二天他的船出河口，我站在岬头看了很久，看那面帆一点点变成浪尖上的一粒白。"
+"next" = "done"
+"effects" = [{ "kind" = "affinity", "person" = "mio_mother", "value" = 1 }]
+
+[[tracks.chapters.choices]]
+"key" = "noshima"
+"text" = "求阿濑向村上家要一封引荐信"
+"reply" = "我把母亲的砚台搬进灶间，当着阿濑的面给广桥夫人写了第二封信：谢过宫里的好意，说土佐的海我还没认全，不敢先学宫里的走路。母亲读完信，半晌没有出声，最后把念珠在手腕上绕了一圈：“比上一封写得好。”阿濑当夜就托关船捎了话。鹰丸走的那天站在船头回过身来喊：“信到了，水手头会派船来接。宫洼濑户口，等平潮——晚了没人等你！”"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }, { "kind" = "affinity", "person" = "ase", "value" = 2 }, { "kind" = "affinity", "person" = "takamaru", "value" = 1 }, { "kind" = "affinity", "person" = "hirohashi_yasuko", "value" = -1 }]
+
+# ── 关键剧情链·能岛版（06—17）──────────────────────────────────────────
+# 原条（mio_events.toml 的 c9_mio_critical_06…17）写在京都宫里，改投能岛的局由主会话给原条门槛加 not_flag 挡掉，这里补对应的能岛版。
+# 结构照原条：四个选项（growth 靠成长、skill 靠技能、standing 靠名望、defer 稳妥必选并转“补课”章），补课章两项（pay 花钱、work 出力）；
+# 设的旗标（_solved、_deferred、_remedied）与原条完全相同，后面的剧情、志向与结局照旧读它们。requires 的种类与数值照抄原条，门槛由生成器统一重算。
+# 原条 06—17 都没有失败后续（setback）轨道，所以这里也没有。12（过所旗的账）发生在下田探亲期、正文没有京都的人和地方，不另写。
+# 在场的人只有鹰丸、又四郎（水手头）和岛上的船家、见习；母亲、阿濑、兼定、保子大人等只通过书信出现；16 在下田探亲期，母亲与阿濑在场。
+
+# C9-meta: {"key": "c9_mio_noshima_critical_06", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_06", "source": "docs/TERRA16.md §12.1、§17.2；宫洼濑户的急潮、番所与过所旗属史实挂靠（三岛村上水军，过所旗提前约二十年）；又四郎、鹰丸与岛上的事属原创。", "context": "能岛寄住", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_06"
+"name" = "能岛寄住"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "能岛寄住"
+"text" = "到能岛的第二天，天还没亮，又四郎就把新来的几个见习踢起来，叫到泊位上点名。点到我，他没喊姬君，只喊“土佐的小鬼”。见习的规矩，头一年的口粮自己带。中村送来的米和我的行李压在一条雇来的荷船上，船却泊在对岸大岛的宫洼浦里不肯过来——船头是堺人，没走过冬天的宫洼濑户，说那里的水像开了锅，给多少钱也不撑。又四郎蹲在桩子上剔牙：“米不到，你就跟海鸥抢饭吃。”鹰丸抱着胳膊站在一旁，等着看我怎么办。草棚里那口米缸还剩多少，见习们人人有数。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1554, 1, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "mem-c9-mio-noshima-06"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "借一条小早，自己摇过去分装"
+"reply" = "我向泊位借了一条小早，趁早潮刚止，一个人摇过濑户。荷船上的米倒进小早，一回只敢装半舱，来回摇了四趟。最后一趟潮已经转了，船头被水推得打横，我把橹死死压住，才擦着岬下的礁边靠上泊位。手心的血泡一碰就破。鹰丸蹲下来把米袋数了一遍，一袋不少，什么也没说，转身走了。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "seamanship", "ge" = 241 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_06_solved", "value" = true }, { "kind" = "growth", "attr" = "seamanship", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "掐准小潮的平潮，叫荷船跟着过"
+"reply" = "我把阿濑教的月龄掐了一遍：再过四天是小潮，濑户的流最缓，平潮能停小半个时辰。我托过路的渔船给荷船捎话：那天辰时末，看见能岛岬头挥白布就走。那天布一挥，荷船慢吞吞地滑过来，船底下的水平得像一张席子。船头上了岸直挠头，说在海上跑了二十年，头一回有人替他把时辰算好。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "tide_reading", "ge" = 41 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_06_solved", "value" = true }, { "kind" = "skill", "skill" = "tide_reading", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "带着阿濑的旧过所旗去番所求船"
+"reply" = "我把离开下田时阿濑给的那面旧过所旗揣上，去岬下的番所求人。番所的老人捏着旗角看了半天，认出那里缝着的记号，只问一句：“濑家奶大的那个姬君？”当即派了两条小早过去，一前一后把荷船拖过了濑户。消息比米先到泊位：土佐来的见习，头一天就请得动番所的船。又四郎听了，哼一声，把我从“土佐的小鬼”改叫“濑家的小鬼”。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "naval", "ge" = 198 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_06_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "托鹰丸去求水手头，自己先学结缆"
+"reply" = "我说不过濑户，求鹰丸替我去跟又四郎说一声。他斜了我一眼，还是去了。我留在草棚里跟老见习学结缆，手指勒得发紫，眼睛却一直往海上瞟。又四郎拖了七天才派船去拉，米运回来时已经潮了一袋。夜里通铺有人小声说：土佐来的姬君，原来也只会等。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_06_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "能岛寄住·补课"
+"text" = "米到底还是到了，可我总觉得那七天是欠下的。我翻出离开下田时阿濑塞给我的一块木札，上面刻着她教的几样功课：每天看一回水，记水位，结三种绳结，一样不许落。在能岛，海就在通铺的地板底下，可头一年的见习不许独自出泊位。我数了数袖子里的零钱，又抬头看了看岬头那块了望岩。鹰丸从旁边过，瞥了一眼木札：“这是阿濑的刀法。那你可赖不掉。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_06_deferred", "value" = true }, { "kind" = "date", "from" = [1554, 1, 21] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "雇岛上的老船家带我过一趟濑户"
+"reply" = "我把零钱全给了泊位上一个摇了一辈子橹的老船家，求他带我走一趟濑户。他的船载柴，吃水深，每到一处转流的地方就停桨，叫我看水面。我学着他看：起细皱的地方底下有礁，鼓成一面镜子的地方，是流在底下翻身。一天下来，木札背面也刻满了。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "seamanship", "value" = 6 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_06_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_06_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "照阿濑的木札，每天上了望岩记潮"
+"reply" = "我照木札上的功课，每天天亮前爬上岬头的了望岩，在岩缝里插一根竹签记水痕。海风刮得手指发僵，守岩的老水夫把蓑衣分了我半边。插满十根，我看出来了：宫洼濑户的水一天往东灌两回、往西退两回，可每天都晚那么一点，晚的那一点，正好是月亮晚出来的那一点。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_06_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_06_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_07", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_07", "source": "docs/TERRA16.md §17.2；船坞开春填缝（桐油、麻丝）与靠岸行商属原创；帆别钱属史实挂靠。", "context": "船坞的差使", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_07"
+"name" = "船坞的差使"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "船坞的差使"
+"text" = "开讲没几天，又四郎把一捆东西扔到我脚边：两张补得不能再补的旧帆，一串换下来的锈钉，还有半桶熬过的鱼油。“拿去卖给靠岸的行商，换桐油和麻丝回来。开春要填缝，坞里一文钱也没有。”我在土佐就听说村上家收帆别钱收得阔，没想到船坞穷到要卖破帆。小早还架在木墩上，板缝张着嘴，等人去喂。我拖着那捆东西下到滩上，鹰丸跟在后头说：“行商见你是新来的，准往低里压。”头一条靠岸的行商船上，船主摸了摸帆布，伸出两根指头。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1554, 3, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "跑三条船比出价钱"
+"reply" = "我没应他，拖着那捆东西又上了两条船。第二条看帆布，第三条看铁钉，出价差了将近一半。我拿炭条在船板上记下三家的价，回到头一条摊给船主看。他咂了咂嘴，又添了一根指头。桐油和麻丝换回来，还剩几文零头，我原样交给又四郎。他数也没数，往腰里一塞。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "commerce", "ge" = 117 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_07_solved", "value" = true }, { "kind" = "growth", "attr" = "commerce", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "跟船主讲到他肯加价"
+"reply" = "我说这帆布是村上家小早上拆下来的，挂过过所旗，往东去的船买回去补帆，过濑户时番所的人一眼就认得。船主说旧帆就是旧帆。我就跟他约：今天先加价，下回他的船过能岛门前，我替他排一个不用干等的顺潮时辰。他捻着胡子想了半天，加了。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "negotiation", "ge" = 53 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_07_solved", "value" = true }, { "kind" = "skill", "skill" = "negotiation", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "请土佐的木材船主出面作保"
+"reply" = "替一条家运木材去堺的土佐船，开春总要在能岛门前缴钱等潮。我去番所打听，正好有一条泊在岬下。船主认得我是在下田收过帆别钱的那个丫头，笑着跟我下到滩上，三言两语，价就抬了上去。没几天，泊位上传开了：土佐来的见习，在过路的商人里说得上话。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "mercantile", "ge" = 149 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_07_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "托鹰丸向管账的老人借钱救急"
+"reply" = "我没敢跟船主讲价，拖着那捆东西回了草棚，托鹰丸去跟管账的老人借钱。他嘴上说小事一桩，跑了三趟才借来一点，脸都涨红了。桐油是买回来了，旧帆原样还给又四郎。他什么也没说，把帆卷起来塞回了船屋。我把帆布、锈钉和船主伸出的两根指头，一样一样刻在木札上。第二天通铺里都知道了，土佐的姬君连一趟买卖都做不下来。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_07_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "船坞的差使·补课"
+"text" = "桐油用了十天，又见底了。又四郎再没叫我跑腿，差使全给了别人，我在草棚里干坐着，像一条没挂帆的船。鹰丸看不下去，把那两张旧帆又拖出来扔给我：“一回没卖成，就再卖一回。”泊位上的人照旧叫我岸上的，小早的板缝照旧张着。在下田跟堺商讲价，对面是年年来的熟脸；能岛门前过路的行商不认得我，只认得新来的见习好压价。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_07_deferred", "value" = true }, { "kind" = "date", "from" = [1554, 3, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "买下鱼贩大婶一桶杂鱼，求她教我讲价"
+"reply" = "我拿出零用钱，买下鱼贩小船上那位大婶一整桶杂鱼，求她教我。她验钱时对着太阳一枚枚照，讲起价来比验钱还狠：先问来路，再挑毛病，最后才报数；几时该松口、几时该转身走，她一边卖鱼一边讲，我一边记。讲到兴起，她还学了一遍过路的公家人怎么端着架子讨价，学得我直笑。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "commerce", "value" = 6 }, { "kind" = "skill", "skill" = "negotiation", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_07_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_07_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "帮又四郎清点船屋里的旧帆旧缆"
+"reply" = "我去求又四郎，说什么差使都行。他叫我清点船屋里的旧帆旧缆：哪张还能补，哪根该拆了打麻絮，哪样卖得出价。霉味呛得我直咳，十天理了三堆。最后他让我拿一卷旧缆去卖，我跟行商磨了半个时辰，多讨回一点。他点点头，把下一捆也扔给了我。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "negotiation", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_07_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_07_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_08", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_08", "source": "docs/TERRA16.md §12.1（关白兼冬 1554 年早逝、房通病中）；兼定与保子大人只通过书信出现；鹰丸的社“把错处留在潮图上”见 noshima_boat_school.toml。", "context": "兼冬的讣告", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_08"
+"name" = "兼冬的讣告"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "兼冬的讣告"
+"text" = "入梅前，一条往西去的堺船在能岛门前等潮，捎来兼定一封厚厚的信。二月初一兼冬大人走了，才二十六岁——这消息开春就到过岛上，信里说的是后来的事：各国的回书一封封捎回本家，中村的政所，丰后舅舅那边，还有几家我没听过名字的大名，保子大人一封也没拆完；本家能提笔的，只剩病中的房通大人。兼定的字歪歪扭扭，最后一张纸却不是他的：去年冬天，兼冬大人提笔写给我，没写完。开头一句问土佐的潮：“听说那边的海，一天要涨两回？”下面空着。旁边是兼定添的一行小字：保子大人说，百日那天，佛前要供一首歌。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1554, 6, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "揣着信上了望岩，替他看一整天潮"
+"reply" = "我揣着那封信爬上了望岩，从早潮看到晚潮。濑户的水往东灌了一回，又往西退了一回，岩下的海藻跟着倒过去、又倒回来。天黑以后，我给保子大人写回信，只写了这一天看见的：水怎么转身，海鸟几时落下。她的回信隔了一个月才到，说念给房通大人听了，老人家问，土佐的潮是不是也这样。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "sensibility", "ge" = 58 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_08_solved", "value" = true }, { "kind" = "growth", "attr" = "sensibility", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "替那封没写完的信作答歌"
+"reply" = "我在那封信的空处写了一首歌，答他问的潮：早潮推船出，晚潮送船归，一日两回，都在等人。字用假名写，写坏了三张纸，最后一张赶上了往东去的船。保子大人回信说，百日那天已经供到了佛前；又说往后本家回书里附的歌，我若肯拟，就寄给她。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "poetry", "ge" = 84 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_08_solved", "value" = true }, { "kind" = "skill", "skill" = "poetry", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "照母亲教的书札格式，替兼定拟回书底稿"
+"reply" = "兼冬大人生前开口就引旧例。我照母亲在下田教我的书札格式，替兼定拟了几封回书的底稿：给大名的怎么称，给寺社的怎么称，哪几封要附歌，一一注在边上，托船捎去。保子大人拿去给房通大人看，老人家咳着说了一句：“像是兼冬写的。”这句话后来跟着本家的信，一路传到了中村。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "scholarship", "ge" = 133 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_08_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "先回一封报平安的短信，再补功课"
+"reply" = "我只回了一封短信，说岛上一切都好，问候本家，歌等盂兰盆回家再写。信封好以后，我对着那张空着的纸坐了半夜，一个字也没添。后来兼定来信，说他一个人抄回书抄到天亮，抄到“兼”字停了一回笔，兄长手把手教过他这个字；停完了，接着抄。回书照着底稿誊完，一首歌也没附。京里有人说，一条家的回书，字比纸还薄。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_08_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "兼冬的讣告·补课"
+"text" = "兼定又来了一封信。山科言继大人给房通大人诊过脉，喝着茶顺口说起：他在别家看见了本家的回书，规规矩矩，一首歌也没附，像衙门里的公文。保子大人隔着帘子没接话。百日忌在十天以后，佛前要供的短册还空着，往东去的船五天后才有一条。我坐在通铺的窗边，把那封没写完的、问潮的信又摊开来看。窗外正涨潮，水一下一下拍着地板底下的桩子。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_08_deferred", "value" = true }, { "kind" = "date", "from" = [1554, 6, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "向行商买一叠薄样，重写短册"
+"reply" = "我拿零用钱向靠岸的行商买了一叠薄样，淡墨色，透着光能看见指纹。每晚写一首，写给那个没见过海的人：潮、帆、濑户里的旋涡。写到第十首，自己读着也觉得冷清。挑出的那一首赶上了船，其余九首也一并封了进去。保子大人回信说，十首都烧给他了。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "sensibility", "value" = 6 }, { "kind" = "skill", "skill" = "poetry", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_08_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_08_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "替鹰丸抄社里潮图上的旧歌"
+"reply" = "鹰丸听说了，抱来一摞社里的旧潮图，叫我把每道朱线旁边的歌抄一遍：“都是看错了潮的人写的。写给自己，也写给没回来的。”我抄了十天，手腕酸得端不住碗。抄到最后，我照着那个调子补了一首，赶上了往东去的船。鹰丸看了，没说好，也没说不好，把那张潮图卷起来，系紧了。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "poetry", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_08_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_08_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_09", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_09", "source": "docs/TERRA16.md §12.1（澪的志向：一条家的姬君、能岛的女船头、歌合的胜者）；保子大人、母亲、阿濑只通过书信出现；回忆插画借用通用场景 sea_jp（能岛急潮里的小早）。", "context": "十四岁的志向", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_09"
+"name" = "十四岁的志向"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "十四岁的志向"
+"text" = "十四岁这天，又四郎破例放了半天假。傍晚我坐在泊位的桩子上，鹰丸蹲在旁边剥枇杷——因岛来的见习从家里捎的，他剥一个递我一个，问：“你以后做什么？”早上刚到了两封信。一封是京都的保子大人，话说得婉转：宫里的门还没关，典侍国子大人还记得我的字，若肯回头，再过几年仍能做女房。一封是母亲，写了一首歌，说中村的稻秧插下去了；阿濑只托人带一句话：下田的小早还在船台上躺着。鹰丸剥完最后一个，等着我答。我含着一瓣枇杷，看濑户的水一圈一圈打着旋。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1554, 6, 21] }, { "kind" = "age", "ge" = 14 }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "mem-c9-mio-noshima-09"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "拉鹰丸划一回小早过急潮"
+"reply" = "我没答。第二天天刚亮，潮还没止，我就把鹰丸拖上了小早，自己掌橹，叫他在船头看礁。濑户的水正急，船头被推得直打转，他回头冲我吼，我只当没听见，借着一股回流斜着切了过去。靠上对岸时两个人都湿透了，他喘着气问我是不是疯了。我说没疯，我要自己的船。他愣了一下，把头扭开了。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "seamanship", "ge" = 300 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_09_solved", "value" = true }, { "kind" = "growth", "attr" = "seamanship", "value" = 8 }, { "kind" = "memory", "memory" = "mem-c9-mio-09", "title" = "十四岁的志向" }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "推算回土佐的船期作答"
+"reply" = "我从木柜里抽出潮表，一页一页数月龄，推算从能岛出伊予滩、绕佐田岬回土佐，哪几天顺潮、哪几天顶风。鹰丸看我写满了一张纸，问这是什么。我说，这是我往后要过的日子，先排出来。他凑过来跟着数，数到明年七夕就数不下去了，嘟囔一句：“你算得比我细。”"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "tide_reading", "ge" = 91 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_09_solved", "value" = true }, { "kind" = "skill", "skill" = "tide_reading", "value" = 18 }, { "kind" = "memory", "memory" = "mem-c9-mio-09", "title" = "十四岁的志向" }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "当着又四郎说要出海"
+"reply" = "第二天上课前，我当着满棚的见习对又四郎说：我要带一条家的船出海，走南海路。草棚里静了好一会儿，他才把嘴里的草根吐掉：“说出口的话，海是记得的。”我把这句原样写进给保子大人的回信里。没过几天，泊位上的人见了我就笑，说那个要出海的土佐姬君；也有新来的小鬼偷偷来问，南海路到底有多远。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "naval", "ge" = 214 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_09_solved", "value" = true }, { "kind" = "fame", "value" = 2 }, { "kind" = "memory", "memory" = "mem-c9-mio-09", "title" = "十四岁的志向" }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "写信回土佐问过再定"
+"reply" = "我说还没想好，要先问问母亲和阿濑。鹰丸撇撇嘴，说岸上的人做什么都要先问家里。信托往南去的渔船捎走，一来一回少说半个月，保子大人那边，我只能请她再等等。通铺里有人笑我，十四岁了，还要写信回家问自己想做什么。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_09_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }, { "kind" = "memory", "memory" = "mem-c9-mio-09", "title" = "十四岁的志向" }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "十四岁的志向·补课"
+"text" = "信还在路上。这些天鹰丸又问了我两回，我都答不上来。夜里睡不着，我把从土佐带来的那本潮记翻出来——阿濑口述、我小时候用假名记的下田河口的潮，哪个月哪天几时涨，字歪得像虫子爬。翻着翻着才发觉后面几页是空的：那年嫌记潮麻烦，我没记完。地板底下的潮正涨上来，一拍一拍敲着桩子，像是在说，空着的那几页，它可一天也没歇过。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_09_deferred", "value" = true }, { "kind" = "date", "from" = [1554, 7, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "向行商买一册新历，补完潮记"
+"reply" = "我用零用钱向靠岸的行商买了一册新历，照着上面的朔望，把潮记后头空着的几页一天一天补上，下田的补完，又在背面添上能岛的。补到秋分那页，顺手画了小早的帆，记下几时该扯、几时该落。鹰丸凑过来看了半天，只说了一句：“这条船要是缺人摇橹，算我一个。”"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "seamanship", "value" = 6 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_09_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_09_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "替又四郎排去堺的船期"
+"reply" = "又四郎要派一条关船押盐去堺，听说我会算潮，把排船期的差使扔给了我：“排错了，你自己下去推。”我在了望岩上守了两个早上，问清几处濑户转流的时辰，又照潮记算好堺那边的潮，排出三个日子。他看了半天，用指甲在中间那个上掐了一道：“就这天。”"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_09_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_09_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_10", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_10", "source": "龙神祠与扫祠的阿兼婆见能岛校历事件；祠里夜灯给过濑户的夜船照路、灯油欠大三岛油屋属原创；堺商运荏胡麻照原条。", "context": "龙神祠借灯", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_10"
+"name" = "龙神祠借灯"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "龙神祠借灯"
+"text" = "第二年开讲以前，岛上的夜长，通铺里不许点灯。我想趁这些天把木柜里的旧潮图抄一遍，可整座岛只有岩间的龙神祠夜里亮着——那盏灯是点给过濑户的夜船看的，一夜不熄。我抱着潮图去求扫祠的阿兼婆，她没让我进门，先拿出一册账给我看：去年的灯油钱还欠着大三岛的油屋，年关一过，油屋的船就泊在岬下讨。“祠里的灯，是要油的。”她说得很慢，“借光的人，往年都要纳一份。”我翻了翻那册账，油价比下田贵出一截。岬下果然泊着一条小船，船头的男人跺着脚取暖，眼睛一直往祠里瞟。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1555, 2, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "mem-c9-mio-noshima-10"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "替祠里把油账重算一遍"
+"reply" = "我借了阿兼婆的算木，蹲在祠门口把一年的油账重算一遍。斤两记得乱，有三笔记重了，还有一笔拿冬天的价算了夏天的油。我把这几笔圈出来给她看，又下到岬下跟那条船上的人对账。他翻着自己的账本，脸一阵红一阵白。欠的钱少了一截，省下来的正好抵我一冬的灯油。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "commerce", "ge" = 169 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_10_solved", "value" = true }, { "kind" = "growth", "attr" = "commerce", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "用抄潮时抵借光的油钱"
+"reply" = "我说我没有钱，可我的字还拿得出手。过路的船常来祠里求一张当月的潮时，外头请人抄一张要多少钱，阿兼婆比我清楚。我跟她讲定：每月抄二十张潮时供在祠前，抵一冬的灯油，多抄的另给我纸墨。她起先只肯认十张，我磨到灯芯结了两回花，她才改了口。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "negotiation", "ge" = 96 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_10_solved", "value" = true }, { "kind" = "skill", "skill" = "negotiation", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "托堺的油商替祠里送油"
+"reply" = "能岛的船常替堺的商家运荏胡麻。我写信托往东去的关船捎到堺，请相熟的油商开春先送一桶油到龙神祠，价钱照堺的算。没多少天油就到了，比大三岛的便宜。阿兼婆收了油，把供台边避风的那块地方留给我。岛上的船家都在问，那个土佐来的见习，怎么连堺的商人都请得动。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "mercantile", "ge" = 161 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_10_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "托鹰丸请又四郎去说情"
+"reply" = "我回草棚托鹰丸，请又四郎去跟阿兼婆说一声。又四郎骂了句“多事”，还是扛着橹去了一趟。阿兼婆看在他的面子上让了座，见了我却只淡淡点个头。夜里我在灯下摊开潮图，旁边来添油的船家小声说，那是水手头开了口才进来的。我只当没听见，把潮图压平。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_10_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "龙神祠借灯·补课"
+"text" = "夜里的祠里冷得看得见自己呵出的气。我坐在离灯最远的门边，潮图上的数看不清，只好把纸凑到鼻尖上。阿兼婆从我身边走过，说今年的油又涨了，大三岛的船前天又来过。她没看我，可我知道这话是说给我听的。这块地方是又四郎一句话换来的，我自己一文也没出，一句话也没说。回通铺的路上，岩缝里的风灌进袖口，冷得我直缩脖子。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_10_deferred", "value" = true }, { "kind" = "date", "from" = [1555, 2, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "自己买一桶油送进祠里"
+"reply" = "我揣着零用钱去岬下等那条油船。船上的人开的价比年前又高，我照祠里的旧账跟他讲：去年几月几斤、多少钱，今年凭什么涨。来回讲了一刻钟，他让了一点，我买下一桶，自己扛上石阶。阿兼婆看了看那桶油，拿竹帚把灯下那块地方扫干净，朝我抬了抬下巴。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "commerce", "value" = 6 }, { "kind" = "skill", "skill" = "negotiation", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_10_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_10_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "帮阿兼婆理船家许愿的初穗账"
+"reply" = "我去求阿兼婆给我一件差使。她把船家献给龙神的初穗账交给我：哪家许了愿没还，哪家答应的鱼一拖再拖，账上记得一笔比一笔可怜。我挨家去问，该宽的宽，该催的催，替祠里跟一个老渔夫约好，缓到秋汛再还。十天里跑得脚底起泡。阿兼婆看完账，什么也没说，第二天灯下多了一张草垫。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "negotiation", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_10_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_10_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_11", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_11", "source": "能岛的社“舟歌与闻香”见 noshima_boat_school.toml；六国香名（伽罗、罗国、真南蛮、真那贺、佐曾罗、寸门多罗）是室町后期的分法，母亲所教属原创。", "context": "闻香的误判", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_11"
+"name" = "闻香的误判"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "闻香的误判"
+"text" = "初夏的集日，一排鱼贩小船靠在滩上，其中一条的行商卖香木，社里照例讨来一包。十个人围成一圈，闭着眼闻，一炷一炷传，闻完在木片上写名字；分两组比，输的那组起头唱下一首舟歌。前六炷我都写对了。到第七炷，烟一入鼻，我想起母亲经箱里那块伽罗，提笔就写。揭晓时，行商念出来：罗国。我们这组原本领先一炷，就输在这一炷上。鹰丸那组赢了，他把木片在手里抛了两下，笑得露出一口白牙：“公家的姬君，鼻子也有看错潮的时候。”一圈人都笑起来，我脸上发烫。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1555, 5, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "mem-c9-mio-noshima-11"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "讨来剩下的香末，一炷炷往回想"
+"reply" = "我向行商讨来剩下的香末，一炷一炷往回想：第六炷是伽罗，甜味还挂在鼻子里，第七炷一来，我闻的其实是上一炷的尾巴。夜里我把鹰丸拖到船屋，叫他把伽罗和罗国隔一盏茶的工夫轮着熏给我，不许说先后。他嘴上嫌麻烦，还是陪我熏到了后半夜。头几回全错，到后来，罗国尾上那一点苦，隔着伽罗的甜我也找得出来了，像退潮后礁石上的味道。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "sensibility", "ge" = 68 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_11_solved", "value" = true }, { "kind" = "growth", "attr" = "sensibility", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "照罚起头，唱一首认输的歌"
+"reply" = "输的组起头唱舟歌，我把歌词换成自己的：错把罗国认作伽罗，好比错把晚潮认作早潮，船已经开出去了。滩上的人先是一愣，接着笑成一片，又四郎在草棚里听见，骂了一句“小鬼”，自己也笑了。鹰丸抿着嘴没说话。散了以后，他拿朱笔把这一句抄在潮图上，就写在他自己看错过的那道潮线旁边。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "poetry", "ge" = 120 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_11_solved", "value" = true }, { "kind" = "skill", "skill" = "poetry", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "默写母亲教的六国香名"
+"reply" = "我把母亲教过的香名一样一样默写出来：伽罗、罗国、真南蛮、真那贺、佐曾罗、寸门多罗，各从哪片海外的国来，船怎么运到堺，罗国为什么跟伽罗难分，写满了三张纸。行商看了直咂嘴，说他贩了十年香，头一回知道自己卖的东西有这么多名堂，非要讨一份抄本带走。社里的人传着看，下一回集日，再没人敢乱写名字。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "scholarship", "ge" = 226 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_11_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "写信请母亲指点，先补课"
+"reply" = "我没再碰香木，写了一封长信回土佐，问母亲伽罗和罗国到底怎么分。闻香是母亲教的，她会知道我错在哪里。信托往南去的渔船捎，少说半个月才回得来。这些天社里集日照旧闻香，没人再叫我。我坐在草棚门口听滩上的笑声，咬着牙把潮表又背了一遍。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_11_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "闻香的误判·补课"
+"text" = "母亲的回信还没到。集日又来了，滩上又飘起香烟，社里的人照旧围成一圈，没给我留位子。我在草棚里替又四郎磨刀，闻着风里飘过来的烟，一炷一炷在心里猜，猜对几炷也没人知道。鹰丸路过门口，扔下一句：“他们说你那天是想家了，才把罗国闻成你娘的伽罗。”我把刀搁下。母亲教我闻香时说过，香要静下心来听，拿鼻子去抢是抢不到的。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_11_deferred", "value" = true }, { "kind" = "date", "from" = [1555, 5, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "向行商买一片罗国来练"
+"reply" = "我拿出零用钱，向那条船上的行商买了指甲盖大的一片罗国，他包了三层纸。我把它切成五份，每晚熏一份。鹰丸闻完说一句大白话，“像淋湿的柴”“像船舱底下”，我把他的话改成歌的上句，再自己接下句。五个晚上凑成五首，他说一首也记不住，第二天却把“船舱底下”那首唱给了泊位上的小鬼们听。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "sensibility", "value" = 6 }, { "kind" = "skill", "skill" = "poetry", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_11_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_11_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "替社里备下一回集日的香"
+"reply" = "我去社里认了错，说下一回集日的香归我备。切香木，擦云母片，把香炉里的灰压平，再压出五道纹，十天里指甲缝全是灰。集日那天香烟一起，轮到输家起头，鹰丸把舟歌的头一句让给了我。我唱完，他把手里的木片一翻，说了一句：“这回还过得去。”"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "poetry", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_11_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_11_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_13", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_13", "source": "docs/TERRA16.md §12.1（房通 1556 年去世）、H06 严岛之战 1555-10（能岛属陶方、没有参战）；又四郎那夜只说“雨大”照人物设定；兼定只通过书信出现；番所的老账房、对岸的问丸属原创。", "context": "房通病讯", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_13"
+"name" = "房通病讯"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "房通病讯"
+"text" = "严岛那一仗过去半个多月，岛上谁也不提。又四郎那一夜在海上，回来只说了一句“雨大”。就在这时候，兼定的信到了：房通大人病倒了，夜里咳得整条廊下都听得见，累极了冒出一句幡多的土话，把他叫作“坊”。山科言继大人开了方子，要连吃一个月，药一帖比一帖贵。管家的老侍抄了一页账夹在信里：本家的米只够吃到腊月，土佐的年贡船要开春才到，京里的药铺已经不肯再赊。兼定在末尾写：姊上，我该怎么办。我十五岁了。隔着一片海，在这件事上，我也算是大人。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1555, 11, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "照老侍抄来的账，把开销重排一遍"
+"reply" = "我把那页账摊在通铺的地板上，一夜没睡，把能省的一笔一笔圈出来：正月的酒宴撤了，冬衣改旧的，炭只烧病人屋里那一盆。省下的钱，刚好够药吃到腊月底。我把圈好的账誊清，赶上往东去的关船。半个月后兼定回信，说老侍看着满页的红圈叹了口气：老爷年轻时也是这么记账的。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "commerce", "ge" = 200 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_13_solved", "value" = true }, { "kind" = "growth", "attr" = "commerce", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "跟等潮的堺船讲定预支"
+"reply" = "隔天有条堺船在能岛门前等潮，我跟着番所的人上了船，找到船主，说开春土佐的年贡船上有鲣节，分他三成，按京里的市价算；钱现在付，由他的船捎进京里本家，言继大人的方子往后都在他指的那家药铺抓。他咂着嘴盘算半天，在自己的账上写了“一条殿”。鹰丸在船下等我，说我讲价那个调门，跟阿濑骂水夫一模一样。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "negotiation", "ge" = 120 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_13_solved", "value" = true }, { "kind" = "skill", "skill" = "negotiation", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "托堺商凭一条家的名借钱"
+"reply" = "我给常跑幡多的那位堺商写了一封信，只盖一条家的印，写明开春的年贡船归他包运，托往东去的关船捎去。不到十天，他的伙计就把两贯钱、一包上好的人参送进了本家，带了一句话：一条家姬君的字，他认得。兼定来信说，药铺掌柜听说了，自己把赊账的期限宽到了二月。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "mercantile", "ge" = 217 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_13_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "写信回中村求母亲"
+"reply" = "我写信回中村，求母亲寄钱上京。信要先往南走，等中村的钱再绕过室户岬送进京里，腊月都要过半了。兼定的下一封信说，管家的老侍没说什么，转身去当了自己的一件衣裳。我知道这件事会在本家传开：土佐来的姬君，遇事只会往家里写信。那天夜里，我把那页账从头抄了一遍。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_13_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "房通病讯·补课"
+"text" = "母亲的回信还在路上，兼定又来信说，药先断了一天。我捏着信在泊位上发呆，又四郎从后头敲了我一下脑袋：“钱的事，岛上比谁都熟。过路的船哪条肯掏钱、哪条要哄、哪条要吓，番所的老账房记了三十年。”他说要教我一手：明天他去对岸的问丸那里赊开春填缝的桐油和麻丝，叫我跟着去，看他怎么开口；要不然，就花点钱买下老账房那册记着各家船主脾气的旧账抄，回去自己琢磨。说完他把橹往肩上一扛，走出两步又回头：“晚饭吃了没有？”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_13_deferred", "value" = true }, { "kind" = "date", "from" = [1555, 11, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "买下番所老账房的旧账抄"
+"reply" = "我把攒下的钱放在老账房的案上。他眉开眼笑，把一册旧账抄塞给我，纸边全是他的批注：某家船主好说话，某家要先夸他的船，某家逢酒必醉。我一夜翻完，照他的法子给京里的药铺写了信，先夸方子再谈钱。没过多久兼定来信，说掌柜竟又让了一成。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "commerce", "value" = 6 }, { "kind" = "skill", "skill" = "negotiation", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_13_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_13_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "跟又四郎去问丸那里赊货"
+"reply" = "问丸的主人是个胖老头。又四郎先送了一尾腌鲷，再讲濑户里的笑话，讲到第三个才提赊账。我在旁边跪坐了一个时辰，腿麻得站不起来。回去的路上他问我记住了什么，我说记住了您开口以前喝了四碗茶。他咧嘴一笑，说岸上的小鬼总算说了一句像样的话。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "negotiation", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_13_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_13_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_14", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_14", "source": "docs/TERRA16.md §12.1（宫中穷、女房奉书求献金；舅舅大友义镇在府内）；保子大人只通过书信出现；奉书经能岛的船西送府内属原创。", "context": "宫中募资", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_14"
+"name" = "宫中募资"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "宫中募资"
+"text" = "开讲以前，一封信跟着堺船到了能岛，是保子大人写来的。御所的屋顶漏了三处，修缮的钱还没着落，宫里要往各国的大名那里送女房奉书，请他们献金，名单上有丰后的大友家。“奉书由国子来写。你不在宫里，也还是大友家的外甥女。附在后头的那首歌，若是外甥女写的，读的人心里总不一样。”她说能岛的船往西去府内，比京里近得多，奉书先送到岛上，由我附了歌再转。末了一句：写不写，你自己定。奉书的抄本和一张淡红的薄样纸摊在膝上，我在龙神祠的灯下磨了三回墨，一个字也没落下去。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1556, 2, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "挑纸熏香，配上这封信"
+"reply" = "我没急着写歌，先挑纸。淡红太艳，像讨赏；素白又像吊唁。最后从文箱底下翻出一张浅黄的，迎着光透出一点梅枝的影子，再熏上一缕母亲教过的梅花香，淡得要贴着纸才闻得到。这张纸跟奉书一起上了往西去的船。后来保子大人来信说，舅舅读完，把这一张单独留在了身边。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "sensibility", "ge" = 68 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_14_solved", "value" = true }, { "kind" = "growth", "attr" = "sensibility", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "写一首歌附在奉书后"
+"reply" = "我写府内的海：南蛮船进港的那天，京里的屋檐正在漏雨，同一阵春风吹着两处。写完拿给鹰丸看。他只看了一遍，抓过笔就把漏雨那半句划了：“春风吹着两处，就够了。”我瞪了他半天，到底没改回去。保子大人回信说，舅舅读完，会想起他的姐姐。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "poetry", "ge" = 120 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_14_solved", "value" = true }, { "kind" = "skill", "skill" = "poetry", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "照《古今集》的旧例起稿"
+"reply" = "我翻出从下田带来的那册《古今集》，找到寄往远国的那几首，照旧例起了一首，又把出处一一注在纸背，跟奉书一起送上西去的船。保子大人回信说，三条西公条大人看了抄本，拿扇骨敲着纸背：“注得比歌还好。”往后宫里再往远国送歌，女房们都要先问一句：能岛那位姬君怎么说。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "scholarship", "ge" = 300 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_14_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "先写信问母亲的意思"
+"reply" = "我没敢下笔，先写信回中村，问母亲该怎么跟舅舅开口。西去的船不等人，奉书就那样空着后半页走了。保子大人的下一封信只写了一句“也好”，再没提这件事。后来听说，附在后头的是别人代写的一首。京里有人议论：一条家的姬君连自家舅舅都不敢求。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_14_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "宫中募资·补课"
+"text" = "奉书走了十天，中村还没有回音，保子大人的信倒先到了。她夹来一叠旧奉书的抄本，都是这些年宫里往各国求献金的底稿，出自好几位典侍之手。“哪一封讨到了钱，哪一封没有，国子心里有数。”信里问，“你看得出来吗？”草棚里冷得手握不住笔。我得挑一样：向靠岸的行商买一刀好纸，照这些底稿各和一首寄回去；或者这些夜里守在祠里的灯下，把这一叠一字不落地誊完。又四郎从门口经过，把一块用破布包着的热石头往我脚边一踢，自己把手缩回了袖子里。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_14_deferred", "value" = true }, { "kind" = "date", "from" = [1556, 2, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "买一刀纸，每封和一首"
+"reply" = "我向行商买了一刀上好的鸟子纸，一封一封读，一封一封和。讨到钱的那几封，歌都短，只说一样东西；没讨到的，满纸都是天恩浩荡。和到第十首，我自己也看出来了。寄回去的那一叠，保子大人回信说，国子抽出一首留下了，说下回用。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "sensibility", "value" = 6 }, { "kind" = "skill", "skill" = "poetry", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_14_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_14_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "守在祠里的灯下誊完这一叠"
+"reply" = "我在龙神祠的灯下誊到半夜，灯油添了一回，海风又把火苗压低了一回。底稿上的歌一首首过手，有几首抄着抄着就背了下来。天快亮时阿兼婆来扫地，看了一眼，说字还嫩，倒是一处没抄错，把她那件旧蓑衣往我肩上一搭，走了。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "poetry", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_14_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_14_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_15", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_15", "source": "docs/TERRA16.md §12.1（房通去世前后兼定回土佐）；兼定只通过书信出现；鞆浦是内海出名的潮待港；回忆插画借用通用场景 dock_jp。", "context": "兼定归乡行装", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_15"
+"name" = "兼定归乡行装"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "兼定归乡行装"
+"text" = "兼定这回的信写得很长。房通大人把他叫到病床前说了一下午的话：今年冬天以前，他得回中村去。他十三岁了，信上说嗓子刚开始变粗，“说一句破一句，姊上听了要笑”。回土佐的行装，他想托我张罗：书箱、铠柜、一条家的旧文书，还有跟他上京的十几个家臣。从堺出船，过纪伊水道，绕室户岬，沿着土佐的海岸往西——这条路我一回也没走过，只在能岛的潮图上一段一段描过。这一回船上坐的是土佐一条家的当主，出了事，谁也赔不起。信末附着一张单子，头一行写着“鞠”：这个也要带。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1556, 5, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "dock_jp"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "跟押盐的关船去堺，挑船定舱"
+"reply" = "又四郎准我跟押盐的关船去一趟堺。我在堺的码头看了三条船，挑了吃水最稳的那条。书箱怕潮，搁在舱中间最高处；铠柜沉，压在最底下当压舱；家臣按轮班分坐两舷。我把装舱图画好交给船头，他问我是哪家的船头。我说是能岛的见习。他把图折好揣进怀里，说到时候照办。后来兼定来信：那船头逢人便说，舱是一条家的姊上定的。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "seamanship", "ge" = 300 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_15_solved", "value" = true }, { "kind" = "growth", "attr" = "seamanship", "value" = 8 }, { "kind" = "memory", "memory" = "mem-c9-mio-15", "title" = "兼定归乡行装" }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "挑出出船的日子与潮时"
+"reply" = "室户岬外的流最难缠，入秋又有野分。我把这两年在能岛记的潮时和阿濑教的下田的潮摊在一起，一天一天往后推，避开野分最凶的那个月，在九月里圈了三个小潮、风偏北的日子，写成一张小签寄给兼定。他回信说小签夹进了书箱：“到了中村，我拿给政所的人看，就说是姊上算的。”"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "tide_reading", "ge" = 120 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_15_solved", "value" = true }, { "kind" = "skill", "skill" = "tide_reading", "value" = 18 }, { "kind" = "memory", "memory" = "mem-c9-mio-15", "title" = "兼定归乡行装" }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "托能岛派船护送一程"
+"reply" = "我去求又四郎，请他跟番所说一声，派一条小早从纪伊水道一路跟到室户岬。他听完没吭声，隔了两天才丢下一句：“一条家的姬君开口，护到下田。”这话随着往东的船在堺的码头传了一圈，船行听说这一趟有村上家的船跟着，船钱少收了两成。鹰丸当场说那条小早他来摇，被又四郎一橹柄敲了回去。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "naval", "ge" = 290 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_15_solved", "value" = true }, { "kind" = "fame", "value" = 2 }, { "kind" = "memory", "memory" = "mem-c9-mio-15", "title" = "兼定归乡行装" }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "写信请阿濑上京帮手"
+"reply" = "我写信回下田，求阿濑上京去帮着张罗。信走半个月，她去又要半个月。兼定等不及，自己去问家臣，家臣们背地里说，姬君在海岛上学了两年多的船，船的事还要问乳母。他回信把这话学给我听，学完又后悔，把单子上那个“鞠”字划掉了。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_15_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }, { "kind" = "memory", "memory" = "mem-c9-mio-15", "title" = "兼定归乡行装" }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "兼定归乡行装·补课"
+"text" = "下田那边还没有回音，信这会儿怕是才过佐田岬。鹰丸听我说完，只说了一句：“船的事，问船。”他说要么花钱搭一趟往东去的船，一路跟着看人家怎么装舱；要么去泊位替船家搬货，人家才肯开口。泊位上的老船家看见一个见习蹲在那儿，都当是来偷懒的。我在栈桥边蹲了一上午，看一条条船吃着深浅不一的水出入濑户，脚下的木板被太阳晒得发烫。兼定那张单子还揣在怀里，“鞠”字已经被汗洇开了一点。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_15_deferred", "value" = true }, { "kind" = "date", "from" = [1556, 5, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "搭一条往东的盐船跟到鞆浦"
+"reply" = "我掏钱买下一条往东去的盐船的舱位，从能岛一路坐到鞆浦。船头起先不理我，后来见我一直跟着他看水，就教我认沿途等潮的港：哪一处要停下等潮，哪一段水退了要绕开浅滩。回来我把一路的潮待港画成一张图寄给兼定，他回信说，比他的习字还整齐。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "seamanship", "value" = 6 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_15_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_15_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "去泊位帮船家搬货"
+"reply" = "我换上旧短褐，在泊位上帮船家搬了三天货。第三天收工，一个老船家才肯跟我说话：船装得好不好，看吃水线跟不跟着潮走——涨潮时稳，退潮时还稳，才算装对了。我记下了。鹰丸来叫我吃饭，看见我肩上勒出的红印，一句话没说，把他那份饭团掰了一半给我。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "tide_reading", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_15_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_15_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_16", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_16", "source": "第二回下田探亲（1556-09）；原条补课章有“回京的船期”，这里改成回能岛、结业考在岛上等着；政所的源康政属史实挂靠；母亲与阿濑在场。", "context": "出海分工", "events": 2}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_16"
+"name" = "出海分工"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "出海分工"
+"text" = "最后一回探亲，船刚靠上下田的栈桥，政所的源康政大人就点了头：开春以后，河口那条旧小早归我。十八个水夫的名单送到手里，一半是阿濑从能岛叫来的老人，有两个我在船坞见过，还记得我头一年抛缆，绳头三回落水的样子；一半是幡多的渔家子弟，头一天两边就为谁掌舵吵了起来。钱也没有着落：政所只拨米和盐，水夫的工钱、修船的钉子、一路的关钱，都得我自己想办法。母亲把一本空账册放在我面前，念珠在指间转着：“船上的账，从今天记起。”阿濑坐在栈桥上补网，头也不抬：“姬君，先把人分好。人分不好，船出不了河口。”"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1556, 9, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "mem-c9-mio-16"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "把米盐工钱一笔笔算清"
+"reply" = "我把十八个人的口粮、工钱和一路的关钱一项一项列出来。米在土佐贱，三袋留一袋路上吃，两袋到堺卖掉，正好抵水夫的工钱；两袋盐不卖，留着腌鱼。过能岛门前那一笔关钱，我照番所的价先记上，一文也不打算赖。母亲拨着念珠从头数到尾，一个数也没给我改。阿濑在旁边听着：“比我当年会算。”"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "commerce", "ge" = 200 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_16_solved", "value" = true }, { "kind" = "growth", "attr" = "commerce", "value" = 8 }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "跟两边领头的谈定分工"
+"reply" = "我把两边领头的各叫到一边谈。能岛的老水夫要掌舵，我把舵给他，可出港进港的号子归幡多的人喊——又四郎说过，号子喊得齐，船才不打架。幡多的渔家要多一份工钱，我答应每到一个港，捎货的钱分他们一成。谈到天黑，两边都觉得自己占了便宜。第二天在栈桥上碰头，谁也没再提舵的事。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "negotiation", "ge" = 120 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_16_solved", "value" = true }, { "kind" = "skill", "skill" = "negotiation", "value" = 18 }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "去下田的商家赊来船具"
+"reply" = "我挨家去了河口的盐屋、米屋和船具铺，说开春以后我的船替他们捎货去堺，运费先折一半；过内海时挂能岛的旗，不怕有人拦。盐屋的老板娘头一个点头，说姬君在河口收帆别钱，从来没少算过一文。一天下来，钉子、缆绳和两张新帆都赊到了。第二天就有渔家的后生来栈桥打听：一条家的姬君要开船行，收不收人？"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "mercantile", "ge" = 260 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_16_solved", "value" = true }, { "kind" = "fame", "value" = 2 }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "请阿濑与母亲替我分派"
+"reply" = "我把名单交给阿濑，账册还给母亲，说我还没想好。阿濑一晚上就把人分完了，舵给了能岛的人。幡多的渔家子弟当天走了两个，临走撂下一句：这条船原来是村上家的，姬君在能岛学了三年，学成了村上家的人。母亲把账册又推回我面前，只翻开了第一页。"
+"next" = "remedy"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_16_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "fame", "value" = -1 }]
+
+[[tracks.chapters]]
+"key" = "remedy"
+"title" = "出海分工·补课"
+"text" = "走掉的两个人，一个是渔家的长子，一个会修船。秋风一天比一天硬，回能岛的船期没剩几天了，最后一年的结业考还在岛上等着我。母亲把我叫到经箱前，拨着念珠说，那两家前年借过一条家的种谷，人情还在，礼数也少不得。阿濑说得更直：“去他家门口坐着，坐到他出来为止。”那两户人家都在四万十川上游的村子里，来回要走大半天。我把攒下的钱倒在案上数了一遍，又数一遍，身后的念珠声停了。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_16_deferred", "value" = true }, { "kind" = "date", "from" = [1556, 9, 11] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "pay"
+"text" = "备礼钱登门请人回来"
+"reply" = "我包了钱，又提了两条烤鲷鱼，上了渔家的门。他爹收了礼钱和鱼，却不松口，问我凭什么叫他儿子回去，船上掌舵的又不是幡多人。我把捎货分成的账摊给他看：一成能分到多少，走几趟能抵一张新网；又说开春以前舵还要再定，凭本事定。他看完把儿子叫了出来，说跟着姬君的船，账倒是清楚。"
+"next" = "done"
+"requires" = [{ "kind" = "cash", "ge" = 10 }]
+"effects" = [{ "kind" = "cash", "value" = -10 }, { "kind" = "growth", "attr" = "commerce", "value" = 6 }, { "kind" = "skill", "skill" = "negotiation", "value" = 8 }, { "kind" = "flag", "flag" = "c9_mio_critical_16_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_16_solved", "value" = true }]
+
+[[tracks.chapters.choices]]
+"key" = "work"
+"text" = "去他家门口坐着等"
+"reply" = "我在渔家门口的晒网场坐了两天。头一天没人理我；第二天傍晚，那个会修船的出来收网，见我还在，蹲下来说了一句：掌舵的事，他不服。我说能岛的船坞有个规矩，谁把船修得好，谁说话就算数，开春以前舵还要再定。他收完网，第二天一早到了栈桥，手里提着自己的凿子。"
+"next" = "done"
+"effects" = [{ "kind" = "growth", "attr" = "resolve", "value" = 4 }, { "kind" = "skill", "skill" = "negotiation", "value" = 3 }, { "kind" = "flag", "flag" = "c9_mio_critical_16_remedied", "value" = true }, { "kind" = "flag", "flag" = "c9_mio_critical_16_solved", "value" = true }]
+
+# C9-meta: {"key": "c9_mio_noshima_critical_17", "family": "mio", "category": "critical", "route": "c9_mio_route_noshima", "replaces": "c9_mio_critical_17", "source": "能岛结业前的送别小歌会，题“扇”；社“把错处留在潮图上”、龙神祠的老神主作判者、鹰丸刻输赢的船板见 noshima_boat_school.toml 与能岛校历事件；桧扇是澪随身的旧物；回忆插画借用通用场景 dock_jp。", "context": "潮之扇结业", "events": 1}
+[[tracks]]
+"key" = "c9_mio_noshima_critical_17"
+"name" = "潮之扇结业"
+"kind" = "request"
+"start" = "event"
+"auto" = false
+"academy" = true
+
+[[tracks.chapters]]
+"key" = "event"
+"title" = "潮之扇结业"
+"text" = "离岛的日子定在了岁末，结业以后。又四郎把我那支刨得太细的桨从架上取下来，说就留在船屋里，往后谁来谁用。收潮表的木柜里，我三年的潮簿已经编了号，跟大永年间那些发黄的挤在一个抽屉里。社里照例给要走的人办一场小歌会，就在晒网的院子里，网底下架一块旧船板当案，题是“扇”。我把桧扇从袖子里取出来，扇骨上那首歌是去年七夕在泊位边写的，被海风吹得墨色发灰。鹰丸坐在对面，膝上的短册还是白的，大冷的天，拿一把破团扇扇得飞快。龙神祠的老神主坐在上首当判者，谁的歌他都要念两遍。"
+"once" = true
+"mood" = "tender"
+"when" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "date", "from" = [1556, 12, 1] }, { "kind" = "flag", "flag" = "c9_mio_route_noshima", "value" = true }]
+"art" = "mem-c9-mio-noshima-17"
+
+[[tracks.chapters.choices]]
+"key" = "growth"
+"text" = "合上扇子，请鹰丸先咏"
+"reply" = "我合上扇子，请鹰丸先咏。他瞪了我一眼，念得很快，念的是秋天收进船屋的团扇，到了夏天，总有人会想起它。念完他低下头去理那把破团扇的边，耳朵红了。满院子的小鬼没听出什么，我听出来了，把那首歌一个字一个字记在心里，没有写下来。"
+"next" = "done"
+"requires" = [{ "kind" = "growth", "attr" = "sensibility", "ge" = 68 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_17_solved", "value" = true }, { "kind" = "growth", "attr" = "sensibility", "value" = 8 }, { "kind" = "memory", "memory" = "mem-c9-mio-17", "title" = "潮之扇结业" }]
+
+[[tracks.chapters.choices]]
+"key" = "skill"
+"text" = "在扇骨背面添一首新歌"
+"reply" = "我在扇骨背面，挨着去年那首，写了一首新的：岛上的潮一天转四回，船走了，它照样转。写完传给鹰丸，他提着笔看了半天，这回一个字也没划，只在末尾点了一个小小的圈。又四郎在草棚门口咳了一声，说网要收了，天黑前不收完，谁也别想走。"
+"next" = "done"
+"requires" = [{ "kind" = "skill", "skill" = "poetry", "ge" = 120 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_17_solved", "value" = true }, { "kind" = "skill", "skill" = "poetry", "value" = 18 }, { "kind" = "memory", "memory" = "mem-c9-mio-17", "title" = "潮之扇结业" }]
+
+[[tracks.chapters.choices]]
+"key" = "standing"
+"text" = "请老神主为短册题字"
+"reply" = "老神主把我的扇子接过去看了两遍，提笔在我的短册上题了一句，说这一首可以奉纳到龙神祠，跟历年的船歌挂在一起。满院子都静了。鹰丸坐在末席，摸出小刀，在他那块刻满道道的船板上，我的名字底下，端端正正添了一道。过了年，过濑户的船家还在传：土佐的姬君走的时候，歌挂进了龙神祠。"
+"next" = "done"
+"requires" = [{ "kind" = "attr", "attr" = "scholarship", "ge" = 300 }]
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_17_solved", "value" = true }, { "kind" = "fame", "value" = 2 }, { "kind" = "memory", "memory" = "mem-c9-mio-17", "title" = "潮之扇结业" }]
+
+[[tracks.chapters.choices]]
+"key" = "defer"
+"text" = "交白短册，说到海上再写"
+"reply" = "轮到我，我把空白的短册放在扇子旁边，说这一首想在海上写完。小鬼们笑了，鹰丸没笑。散了以后他追到泊位，把他那张也还白着的短册塞进我手里：“那这张也带上。写好了，捎回来。”说完转身就走，草鞋踩在栈桥的木板上，咚咚地响。"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_mio_critical_17_deferred", "value" = true }, { "kind" = "growth", "attr" = "resolve", "value" = 3 }, { "kind" = "memory", "memory" = "mem-c9-mio-17", "title" = "潮之扇结业" }]

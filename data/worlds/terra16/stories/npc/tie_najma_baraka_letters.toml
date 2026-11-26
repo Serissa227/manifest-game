@@ -1,0 +1,61 @@
+# 红海上错过的信（tie_najma_baraka_letters）——主角之间的关系轨道（NPC—NPC），C13a—c，Claude 写。
+# 标签：关系轨道·纳吉玛×巴拉卡·书信（无恋爱；恋爱归 C7，NPC 主角之间不写恋情）。只写见闻（rumor），没有选项，不用 heart、relation、tie、bond 效果，不写 speaker，全文是港口与摊子上的转述。
+# 人物：纳吉玛（najma，尤尔法的领航女，文中只称“领航女”）；巴拉卡·宾·萨利姆（baraka，基尔瓦金商之子，文中只称“金商的儿子”）。
+#       两人都是 NPC：全文不写内心，只让码头上的人转述一两句话；名字不进正文。
+# 轨道：tie_najma_baraka_letters（request，auto=true，start t1_aden）。两章，都是见闻（rumor），窗口一到走 default。
+#       门槛：t1 的 when 写两人的 c12_voyage_* 都为 false 且 upbringing_graduated（两人都不是玩家时才跑）。
+#       与 main_najma 的亚丁那一章（玩家是纳吉玛时，远景同一件事）措辞不同；这里只写港务所与船夫的说法。
+# 依据（TERRA16 §12.10：两封信在红海上擦肩而过；随船消息）。史实：红海口的亚丁是北上南下船只的歇脚港，开春与初秋两季的季风船都在这里查北极星高度；
+#       摩卡的咖啡摊与东非往返的船：咖啡从也门运出，东非的船在港边卖货、捎信。
+#       原创：两张字条差的那半指、“量歪了”的回信、信封上只写的一个纬度、史诗、开航日的问法。
+# 待核：无。
+# 秘密：不写任何人的秘密；见闻里不写。
+# 不读不写共享旗标；只在门槛章的 when 里读 c12_voyage_najma、c12_voyage_baraka（都为 false）与 upbringing_graduated。
+# 等待的包：无。整合方：cast/ties.toml 里 tie_najma_baraka_letters 照原 key 指向本轨道；在 world.toml 的 tables.stories 登记本文件；
+#       从 runtime_links.toml 的 pending_tracks 删去 tie_najma_baraka_letters（办法同 tie_baraka_mio）。
+#       upbringing_graduated 由引擎在结业时设，故事审计的 free_1557 剧本不结业，审计里 t1 会停在门槛上，属正常。
+# HIST 占位清单：无。
+# 回忆插画清单：无（本轨道不设回忆）。
+# 写法注意：窗口里没有变体；news 只说码头与摊子上看得见的事，不说字条是谁写的、写了什么数。
+#       两章的 at 一为亚丁，一为摩卡；亚丁一章与 main_najma 的远景同港，措辞已错开。
+
+[[tracks]]
+key = "tie_najma_baraka_letters"
+name = "红海上错过的信"
+kind = "request"
+start = "t1_aden"
+auto = true
+cast = ["najma", "baraka"]
+
+# 第一章（1557 春—秋）：亚丁港务所，两张字条在海上擦身而过。门槛章，两人都不是玩家时才跑。
+[[tracks.chapters]]
+key = "t1_aden"
+title = "红海上的两张字条"
+text = "亚丁港务所的人说，开春有条船从红海口上过，船上一个基尔瓦金商的儿子托船主捎了张字条，给尤尔法的领航女。一个月后那领航女进了港，看完字条，提笔改了一个数，回了一张，托往南去基尔瓦的船带走。纸上就一行字：“量歪了，你的数。”两张纸在海上擦身而过。港务官把抄件摊在柜台上念：“都是亚丁的北极星，一张写错，一张改对。错的那张，差了半指。”"
+stage = "rumor"
+window = [[1557, 3, 1], [1557, 9, 30]]
+at = "aden"
+cast = ["najma", "baraka"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_najma", value = false }, { kind = "flag", flag = "c12_voyage_baraka", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "亚丁的船夫说，有两封信在红海上错过了：一封往南去基尔瓦，一封往东去霍尔木兹，写的都只是一个数。"
+
+[tracks.chapters.default]
+next = "t2_mocha"
+effects = []
+
+# 第二章（1565—1566）：摩卡港边的咖啡摊，一个纬度的信封。见闻，无选项；关系轨道收尾。
+[[tracks.chapters]]
+key = "t2_mocha"
+title = "信封上只有纬度"
+text = "摩卡港边的咖啡摊上，一个跑东非的船夫替基尔瓦人捎信给尤尔法的领航女，逢人就拿出来看。信封上没有名字，只写着一个纬度。摊主拿手指在桌上一比，正是尤尔法的，一指不差。船夫说，信里据说是一段很长的斯瓦希里史诗，末尾问她今年的开航日是哪天。“他说她要是看见信封上的数对了，就会拆。”"
+stage = "rumor"
+window = [[1565, 1, 1], [1566, 12, 31]]
+at = "mocha"
+cast = ["najma", "baraka"]
+mood = "cheerful"
+news = "摩卡的咖啡摊上有人说，一个基尔瓦人托船夫捎信给尤尔法的领航女，信封上只写着一个纬度。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []

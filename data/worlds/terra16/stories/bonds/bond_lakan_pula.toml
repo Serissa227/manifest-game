@@ -1,0 +1,359 @@
+# 拉坎·普拉：筵席外的价（bond_lakan_pula）+ 河口的新桨手（reunion_lakan_pula）——羁绊线，标签 any：
+#   拉坎 romance = any，主角性别由玩家定；男主角时为 BL，女主角时为 BG。
+# 人物：拉坎·普拉（lakan_pula，1540-01-19 生），汤都大督家旁支的少年，家学里的对手；话说得漂亮、爱在筵席上撑场面，被戳穿时先笑再认。
+#       口头禅“先听船夫怎么说。”全文件只在 c2 原样出现一次。
+#       主角：自创主角（custom_tondo_datu，模板 1540-01-01 生），汤都大督家学的学生；第一人称“我”不写性别、外貌与家族专名。
+#       林蕙（lin_hui，1538 年生）只在 b1 说一句话，不进 cast。
+# 年龄：学院期 1554—1556 两人 14—16 岁；a1 的 heart 不受年龄限制（拉坎 1556-01-19 才满 16），s（1556-12）两人都是 16，心动选项写双方 16..17；
+#       重逢 1563 年两人都 23 岁，恋人落点另写双方 ≥ 18。学院期效果最多到 heart / crush（羁绊轨道设 academy）。
+# 依据：
+#   史实——巴石河口的汤都在西班牙人到来以前（1554—1556）是大督治下的港口；东北季风里福建帆船来卸瓷器、收蜂蜡与金砂，
+#         西南风起就走；巴朗盖船往来民都洛等岛收货；欠债人替债主划船、种田、甚至以家人抵债，是这一带真实的旧俗。
+#   原创——全部人物与情节：咬过的蜂蜡饼、竹签刻缺口的分账、缺口青花碗、长屋柱子上的欠债木牌、断桨刻的木勺、
+#         刻着拉坎本名的分账木牍（promise 分支掰下一角给主角）。
+#   秘密——拉坎不愿用家族的债逼邻人替自己划船：只在 a1 河口的夜里对主角说出口（老桨手的女儿被领去抵债），不进见闻。
+#         本文件的章节都没有 stage，不写 news。
+# 心动阶梯：a1 hold_the_oar +6 → a2 sit_by_him_at_feast +6（要求已有 6）→ s heart +12（要求已有 12）= 24，正好够重逢的 love 落点。
+#   （决定表写 s +10，算下来只有 22，永远到不了 24；按简报改为 +12。）
+# 羁绊阶梯：c2 / b1 给 C（b1 是补签）；b2 / a1 给 B（a1 是补签）；a2 前两个选项给 A + 亲刻木匙 + 回忆；s 的 promise / heart 给 S。
+# 缺省走向：c1 → c2 → b1 → b2 → a1 → a2 → s（default：开重逢，记 parted，无关系变化）
+#   → 1563 重逢（default：拉坎托福建帆船捎来一封信，记 missed）。
+# 设旗标：c7_bond_lakan_pula_promise / _romance / _own / _parted / _landing_friend / _landing_rival / _landing_love / _missed；
+#   c7_tie_new_kinjo_shin_lakan_pula_taken（s 的 promise 与 heart 设，配角线 tie_new_kinjo_shin_lakan_pula 读，据此改走“并肩的朋友”）。
+# 读旗标：重逢的 variants 读 _promise（船头那块木牍缺了一角）与 _own（赌约还算数）；love 落点读 _romance。
+# 日程：不改。
+
+[[tracks]]
+key = "bond_lakan_pula"
+name = "拉坎·普拉：筵席外的价"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["lakan_pula"]
+
+# C1：1554 年东北季风，大督家的筵席与河岸。一块咬过的蜂蜡饼。
+# default：拉坎第二天自己去了河边，那个价最后由他叔叔出面改了，他在家学里一整天没说话。
+[[tracks.chapters]]
+key = "c1"
+title = "筵席外的价"
+text = "福建帆船的船主来赴大督家的筵席，长屋里铜锣敲过三遍。船主问起蜂蜡，长辈们还在客气，拉坎先站了起来，一口一个整数，报得又快又响。船主掰下一角蜡饼咬了咬，笑着点头；满座长辈也跟着点头，他叔叔隔着席拍了拍他的背。散了席，我跟他到河岸。替他家运蜡的桨手正往竹筏上码蜡饼，领头的听说了那个价，把手里一块往竹筏上一摔：“这价，连我们划三天的饭钱都不够。”拉坎的脸一下红到耳根，下巴还抬着：“我叔叔说，汤都人说出口的价，河水都得认。”“河水认。”桨手把竹篙往泥里一插，“我们的胳膊不认。”我手里还捏着筵席上顺来的一块蜂蜡饼，饼边一圈牙印，是船主验货时咬的。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_tondo_house_school" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "walk_to_rowers"
+text = "拉他回河边，挨个问桨手：这一趟到底划几天、吃几顿。"
+requires = []
+reply = "拉坎问得结结巴巴，头一个桨手只伸了三根指头。问到第四个，桨手们倒抢着说开了：上游收蜡划两天，等货一天，顺水回来又是一天；一天两顿，饭里得有鱼。回去的路上，他把算出来的数在掌心写了三遍，越写越慢。“原来一趟要吃这么多。”他嘟囔着，把那只手攥成了拳头。"
+next = "c2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }, { kind = "skill", skill = "negotiation", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "laugh_at_him"
+text = "把那块带牙印的蜂蜡饼塞给他：“大督家的价，先尝尝。”"
+requires = []
+reply = "他瞪着那圈牙印，抓起蜡饼就追。我绕着长屋跑了两圈，他追了两圈，最后两个人都蹲在柱子底下喘气。他看着手里的蜡饼，自己先笑了，真咬了一口，“呸”地吐进河里：“又苦又粘，那船主倒咬得下去。”他抹了抹嘴，“明天我去河边，重算。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }]
+
+# C2：1554 年西南风起，家学的檐下。一捆刻着缺口的竹签。口头禅在这里原样出现，全文件仅此一次。
+# default：分账照老规矩办完，拉坎那捆签里多出来的缺口没人追究。
+[[tracks.chapters]]
+key = "c2"
+title = "竹签上的分账"
+text = "西南风起，福建帆船要走了。家学的先生抱来一捆新削的竹签，说今天学分账：这一趟运货的人每人一根签，刻一道缺口算一份。“大督家三份，桨手每人一份，”先生说，“这是老规矩。”拉坎抢先拿起小刀，刀尖抵在第一根签上，停住了。檐下蹲着的桨手都在看他。他忽然转过身，把刀柄递给最老的那个桨手：“先听船夫怎么说。”老桨手看看刀，又看看先生，在膝盖上擦了两回手才接过去。他在自己那根签上刻了一道，停了很久，又刻下第二道，刻完就把签攥进手心。拉坎这才把刀拿回来，替大督家刻了三道，刻得飞快。先生看了半天，一句话也没说，打开箱子，等着收我那一捆。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hand_over_your_stick"
+text = "把我那捆签也递给桨手们，请他们先刻。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 20 }]
+hint = "拉坎还当你是来看他笑话的。这捆签递过去，他只会以为你在学他出洋相。"
+reply = "老桨手冲我咧嘴一笑，露出缺了的门牙，接过签就刻，这一回刻得比给拉坎的还深，木屑崩到了我手背上。其余的桨手一个接一个凑过来。拉坎在旁边抱着胳膊，小声说：“你这是跟我学的。”我说是。他别过脸去，嘴角压不住。"
+next = "b1"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "bond", person = "lakan_pula", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "follow_old_rule"
+text = "照家学教的老规矩，先给大督家刻满三份。"
+requires = []
+reply = "我照规矩刻完，三道，一道，一道，交进先生的箱子。拉坎看了我一眼，没争。第二天先生开箱讲评，我看见他那捆签里，大督家那根上的三道缺口有一道被刮平了，刮得很仔细，摸上去只剩一点毛刺。"
+next = "b1"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }]
+
+# B1：1554 年秋冬，河岸的货摊。一只碗沿缺了口的青花碗。林蕙只说一句话。
+# default：年考按碗数算，拉坎第一；那只缺口碗被他塞进了床底下。
+[[tracks.chapters]]
+key = "b1"
+title = "缺了口的青花碗"
+text = "家学的年考摆在河岸的货摊上：每人一样多的金砂，去换瓷器，看谁换得多。拉坎换回来整整一摞青花碗，高得要拿下巴抵着；我只换到五只。教瓷器的林蕙是家学请来的福建人，比我们大不了几岁，砍起价来总是笑眯眯的。她拿起拉坎最上头那只碗，用指甲敲了敲，侧耳听了听：“这是给大督家的价，下回不给了。”拉坎的得意一下子没了。他把那摞碗一只一只翻过来看，翻到最底下，那只碗沿缺了一个口，缺口朝里，叠在中间根本看不出来。卖家早算准了，大督家的少年不肯当着众人验货。他把那只碗举到太阳底下，对着光看了很久，转过头问我：“你那五只，是怎么挑的？”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "redo_with_own_name"
+text = "约他明天不报家门，各拿一份金砂再去换一次。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 20 }]
+hint = "他刚输了面子，正在气头上。这时候约他重来，他只当你在挖苦。"
+reply = "第二天他换了身旧衣裳跟在我后头，一句“我叔叔”也没提。换回来的碗少了一半，一只缺口也没有。他把碗排在席子上数了两遍，又从床底下把那只缺口碗掏出来，塞到我手里：“给你当笔洗。这个记你的账。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "bond", person = "lakan_pula", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "learn_the_glaze"
+text = "认下这场输赢，回头请林蕙教我们看釉色和底足。"
+requires = []
+reply = "林蕙把那只缺口碗和我的一只并排扣着，底足对着光让我们比：胎薄的透亮，补过釉的发闷。拉坎学得比谁都认真，拿指甲一只只敲过去听声。末了林蕙报了个价，他还替我多问了一句：“五只一起拿，能不能再让一点？”"
+next = "b2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }, { kind = "skill", skill = "negotiation", value = 8 }]
+
+# B2：1555 年东北季风的贸易季，长屋。柱子上那块欠债木牌。
+# default：那条船照叔叔的意思出了海，拉坎没去送。
+[[tracks.chapters]]
+key = "b2"
+title = "替谁划船"
+text = "东北季风一起，河口又挤满了帆。拉坎的叔叔要派一条巴朗盖去民都洛收货，点的桨手全是欠他家债的邻居。长屋的柱子上挂着一块木牌，欠债人的名字一个挨一个刻在上面，最底下那个刻得最新，木茬还是白的。拉坎当着一屋子人顶了叔叔一句。叔叔没恼，倒笑了：“你想要不欠债的桨手？那你自己出钱。”傍晚他跑来找我，把一小袋金砂倒在席子上，拿竹片拨成一小堆一小堆，数了三遍，每一遍都一样。“够雇两个。”他说，“另外十个，怎么办？”"
+window = [[1555, 1, 10], [1555, 4, 30]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 10], to = [1555, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "pool_your_gold"
+text = "把我那份金砂也倒进去，凑够四个不欠债的桨手。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 50 }, { kind = "bond", person = "lakan_pula", level = "C" }]
+hint = "他还不肯让同窗替他家的事掏钱。你这袋金砂倒出来，他会一粒不少地装回去还你。"
+reply = "两堆金砂拨到一起，刚够四个。四个人不多，船出河口时，拉坎坐在第一排，自己划了一路。半个月后船回来，他跳上岸就来找我，两只手掌摊开伸到我眼前：满是血泡，有几个已经磨破了。“你看，”他眼睛亮得很，“这一趟有四个人是拿工钱的。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "bond", person = "lakan_pula", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "turn_it_into_shifts"
+text = "替他想个折中：欠债的人轮班划，这一趟按工抵债。"
+requires = []
+reply = "我们把一趟拆成三班，每班按工记数，抵掉木牌上的一截。叔叔眯着眼听完，居然点了头。第二天一早，拉坎站在柱子底下，把木牌上的名字一个个念给轮班的人听，念一个，记一个班次。念到最底下那个刻得最新的名字，他的声音小了下去。"
+next = "a1"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }]
+
+# A1：1556 年春，涨潮的夜里，巴石河口。一截在削的断桨。秘密在这里说出口，不进见闻。
+# default：那一夜河口没有别人，拉坎削完那截断桨就回去了。
+[[tracks.chapters]]
+key = "a1"
+title = "河口的夜潮"
+text = "夜里涨潮，我在河口碰见拉坎。他坐在一条翻过来的小船底上，手里削着一截断桨，木屑一卷一卷往下掉。他没抬头：“我叔叔的船从来不缺桨手，你知道为什么吗？因为他们都欠我们家的。”刀停了一下。“我小时候以为那些人是自愿陪我玩水的。我往河里扔石子，他们就潜下去替我捞。后来有一回，我看见一个老桨手的女儿被人领走，去抵他家的债。她回头看了一眼，看的是我。”潮水漫上来，舔到船沿。他把削下来的木屑攥成一把，撒进水里，看着它们打着转往上游漂。“这样划来的船，我不想要。”"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "tender"
+night = true
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_the_oar"
+text = "伸手替他扶稳那截断桨，陪他削到潮水退下去。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 20 }, { kind = "romance_open", romance_open = "lakan_pula" }]
+hint = "他今夜不想让人靠得这么近。等你们再熟一些，这截桨他才肯让你扶。"
+reply = "他削歪了一刀，刀刃离我的指头只差一点。我没松手，他也没叫我松手，只是削得慢了。潮退的时候，那截桨已经削出了一点样子。他站起来拍掉身上的木屑：“明天还来这里。”说完自己先走了。走了几步，又回过头来看。"
+next = "a2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "heart", person = "lakan_pula", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "return_the_tablet"
+text = "答应他：离开家学以前，陪他去把柱子上那块欠债木牌摘下来。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 50 }, { kind = "bond", person = "lakan_pula", level = "C" }]
+hint = "这件事太大，他还没把你当成能一起扛的人。再走近一些，他才肯让你答应。"
+reply = "他抬起头看了我很久，刀还捏在手里。“那得先说服我叔叔，”他说，“说不定要说一辈子。”我说那就说一辈子。他愣了一下，笑出了声，笑得太响，惊起了船底下的一只水鸟。他拿刀在那截断桨上刻了一道缺口：“今天算第一天。往后说一天，刻一道。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "bond", person = "lakan_pula", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "ask_his_ship"
+text = "问他：以后想要一条什么样的船？"
+requires = []
+reply = "“一条桨手都拿工钱的船。”他想了想，又补一句，“小一点也行。”他用断桨在湿沙上画了一条，船头翘得太高，两边的桨一长一短。我说这船会原地打转。他说那就先转着，转到攒够钱把桨配齐为止。潮水涌上来，把船尾冲掉了一角。"
+next = "a2"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }]
+
+# A2：1556 年夏秋，拉坎的席子上。断桨刻的木勺（赠礼 carved_spoon + 回忆）。
+# default：那几把勺一直摆在拉坎的席子上，后来不知谁拿去用了。
+[[tracks.chapters]]
+key = "a2"
+title = "断桨刻的勺"
+text = "拉坎把那截断桨刻成了木勺。前三把都刻裂了，他一把一把排在席子上给我看，裂口朝天，像一排打了败仗的兵。他说桨木太老，纹路是拧着的，刀子一偏，就顺着纹裂下去。第四把藏在他背后。勺边磨得圆圆的，勺柄上还留着一道旧桨的水痕。他递过来的时候，眼睛看着门外：“这是那条船上最后一根桨。老桨手说，它在巴石河上划了三十年。”我接过来，勺子比看上去沉，勺底摸着滑得像河里的卵石。他又补了一句，声音低下去：“你要是嫌丑，就当是我欠你的。”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_all_four"
+text = "收下第四把，也把刻裂的那三把一起要走。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 80 }, { kind = "bond", person = "lakan_pula", level = "B" }]
+hint = "这份东西太重。你们还没熟到这一步，这时候收下，他反倒要后悔拿了出来。"
+reply = "“贪心。”他嘴上骂着，手已经在找麻绳，把三把裂勺捆成一束塞给我，捆得太紧，勺柄互相硌着。我说以后每顿饭都用他刻的勺，裂的三把轮流挂在墙上。他转身就走，走到门口撞了一下门框，耳朵红到了脖子根。"
+next = "s"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "bond", person = "lakan_pula", level = "A" }, { kind = "item", item = "carved_spoon", qty = 1 }, { kind = "memory", memory = "mem-bond_lakan_pula-a2", title = "断桨刻的勺" }]
+
+[[tracks.chapters.choices]]
+key = "sit_by_him_at_feast"
+text = "收下木勺，说下回筵席要坐他旁边，就用这把勺吃饭。"
+requires = [{ kind = "affinity", person = "lakan_pula", ge = 80 }, { kind = "bond", person = "lakan_pula", level = "B" }, { kind = "heart", person = "lakan_pula", ge = 6 }, { kind = "romance_open", romance_open = "lakan_pula" }]
+hint = "这句话要等你们更近一些才说得出口。今天说了，他只会当你在客气。"
+reply = "他没接话，只“嗯”了一声。下一回大督家开筵，他旁边的位置一直空着，谁来坐都说有人。我进门时，满座的人看着我从他们中间走过去坐下。我从怀里掏出那把木勺，他低头看了一眼，把盘里最好的一块鱼拨进了我的碗。"
+next = "s"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "bond", person = "lakan_pula", level = "A" }, { kind = "item", item = "carved_spoon", qty = 1 }, { kind = "memory", memory = "mem-bond_lakan_pula-a2", title = "断桨刻的勺" }, { kind = "heart", person = "lakan_pula", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "too_good_to_use"
+text = "说这把勺太好，我舍不得用。"
+requires = []
+reply = "“勺是用来吃饭的。”他把勺子按进我手心，“舍不得，就别收。”他转身去灶边舀了一碗汤，往我面前一搁。我只好当着他的面，用那把勺一口一口喝。他一直盯着，看到最后一口，才说：“不漏。”"
+next = "s"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }]
+
+# S：1556 年 12 月，长屋与河岸。一份刻着拉坎本名的分账木牍。
+# default：开春我出海那天拉坎没来河岸，木牍挂在了他家的柱子上，挂在欠债木牌旁边（开重逢，记 parted，无关系变化）。
+[[tracks.chapters]]
+key = "s"
+title = "自己的名字"
+text = "年底，拉坎第一次替家里跟桨手们立分账。木牍摊在长屋的桌上，该刻的是叔叔的名号；他握着刀，刻下的却是自己的名字，一笔一笔，刻得很深。叔叔站在门口看着，没进来，也没走开。刻完他把刀往桌上一放，手还在抖。见我盯着他的手，他先笑了：“刀太沉。”桨手们挨个过来，在名字底下按了手印。我开春就要随船出海。他送我到河岸，木牍夹在胳膊底下，一路没说话。到了水边，他才开口：“以后汤都谁的船最公道，你回来就知道是谁的。”潮水在脚下来来回回。他把木牍举到我眼前，名字朝着我，等我说点什么。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_lakan_pula" }, { kind = "flag", flag = "c7_bond_lakan_pula_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好：等我们成年，一起跑一趟桨手都拿工钱的船。"
+requires = [{ kind = "bond", person = "lakan_pula", level = "A" }]
+hint = "木牍上刻的都是一辈子的账。你们的交情还刻不进去；要么，这样一辈子的账，你已经和另一个人立过了。"
+reply = "我说，等我们都成年了，一起跑一趟船：从汤都到民都洛，桨手每人一根签，刻满了就发工钱。拉坎听完，没像平常那样先来一串漂亮话。他低头盯着木牍上自己的名字，半天没动，然后握住一角，用力一掰。木头“咔”地断了，断口参差。他把掰下来的那一角塞进我手里，剩下的又夹回胳膊底下。“这个给你当凭据。”他说，“我身上没有好东西，这块是我头一回用自己的名字刻的。少了一角的约，看你敢不敢不来。”我把那一角木头攥在手里，断口硌着掌心。他已经转过身，背对着我站在水边，过了一会儿才说：“到时候我掌舵，你算账。我算不拢的价，还得你来。”"
+next = "done"
+effects = [{ kind = "bond", person = "lakan_pula", level = "S" }, { kind = "relation", person = "lakan_pula", relation = "friends" }, { kind = "memory", memory = "mem-bond_lakan_pula-s", title = "自己的名字" }, { kind = "flag", flag = "c7_bond_lakan_pula_promise" }, { kind = "flag", flag = "c7_tie_new_kinjo_shin_lakan_pula_taken" }, { kind = "start_track", track = "reunion_lakan_pula" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "说等我们都长大，我回汤都时，有一句话要当面问他。"
+requires = [{ kind = "bond", person = "lakan_pula", level = "A" }, { kind = "heart", person = "lakan_pula", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "lakan_pula", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "lakan_pula" }]
+hint = "潮水退了又涨，那句要留到长大再问的话还是没浮上来：心还没靠得那么近；要么，同样的话你早已留给了另一个人。"
+reply = "我说，等我们都长大了，我回汤都，有一句话要当面问他。现在先不问。拉坎愣住了，举着木牍的手慢慢放下来。他张了两回嘴，头一回什么也没说出来；第二回，他说：“那我先不告诉你，我会怎么答。”说完他就不看我了，看河。我也看河。巴石河上的帆一张一张收了，对岸长屋的灯一盏一盏点起来，我们并肩站着，从第一盏看到最后一盏。天黑透的时候，他的手背碰了我的手背一下。就那么一下，很快就挪开了，像是不小心。他把木牍换到另一只胳膊底下，清了清嗓子：“潮要退了。”我说是。我们又站了一会儿，才往回走。"
+next = "done"
+effects = [{ kind = "bond", person = "lakan_pula", level = "S" }, { kind = "heart", person = "lakan_pula", value = 12 }, { kind = "relation", person = "lakan_pula", relation = "crush" }, { kind = "flag", flag = "c7_bond_lakan_pula_romance" }, { kind = "memory", memory = "mem-bond_lakan_pula-s", title = "自己的名字" }, { kind = "flag", flag = "c7_tie_new_kinjo_shin_lakan_pula_taken" }, { kind = "start_track", track = "reunion_lakan_pula" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "跟他赌：成年以后在汤都码头比一比，谁的船先装满。"
+requires = []
+reply = "“赌什么？”他把木牍往胳膊底下一夹，眉毛已经挑起来了。我说赌一顿筵席。他“嗤”了一声：“筵席我家天天有。”他想了想，伸出手，“赌一条船。输的人，把赢家船上桨手一季的工钱全包了。”“你家的船，还是你的船？”“我的船。”他答得很快，答完自己也怔了一下，像是头一回听见这三个字从自己嘴里出来。我们在河岸上击了掌，声音很响，惊得水边的白鹭飞起来两只。然后转身，一个往长屋，一个往码头。走出十几步，我回头，他也正回头，两个人都装作在看别处。"
+next = "done"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 2 }, { kind = "relation", person = "lakan_pula", relation = "rivals" }, { kind = "flag", flag = "c7_bond_lakan_pula_own" }, { kind = "start_track", track = "reunion_lakan_pula" }]
+
+[[tracks]]
+key = "reunion_lakan_pula"
+name = "拉坎·普拉：河口的新桨手"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["lakan_pula"]
+
+# 重逢：1563 年，巴石河口与筵席外的树荫。桨手们按过手印的分账木牍。
+# variants：promise（船头那块木牍缺了一角）、own（他先提赌约）；落点关系只在这里出现。
+# default：错过了这一季，拉坎托福建帆船捎来一封信（letter + missed）。
+[[tracks.chapters]]
+key = "reunion"
+title = "河口的新桨手"
+text = "隔了七年，我的船又回到汤都。拉坎的船泊在巴石河口，船身新漆过，桨架上的桨却只剩从前的一半。他本人不在船上，在筵席外头的树荫底下盘腿坐着，跟一圈桨手一人一根签地分账，小刀在他手里转得很顺。我隔着人喊：“拉坎，筵席在里头，你坐错地方了。”他抬头，手一松，一捆签子撒了一地。他瘦了，颧骨都出来了，笑声倒没变，隔着十几步就听得见。他也不捡签子，跨过来一把抓住我的胳膊：“你来得正好，有个价我算不拢。”桨手们在后头一根一根捡签子，捡一根，看我一眼。他的船头挂着一块分账木牍，日晒雨淋得发了黑，上头那个名字还认得出来。"
+window = [[1563, 1, 1], [1563, 12, 31]]
+at = "tondo"
+cast = ["lakan_pula"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1563, 12, 31] }, { kind = "age", ge = 18 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "lakan_pula", text = "你今年没回来。福建船的船主说你的船在南边过冬，我就托他捎这封信。他问我写什么，我说写账。先说账。今年我头一回拿自己的船跟桨手签分账，签的是我的名字，不替家里，也不替叔叔。十一个人，十一根签，每根签头上我都刻了一道桨的记号，签底下刻名字，他们的在左边，我的在右边。有三个不会刻字，按的手印，手印比字还大。叔叔去年走了。柱子上那块木牌，我摘下来烧了，烧了半个早上，那木头比我想的硬。船小了，桨只有从前一半，桨手都拿工钱，所以出一趟河口我要算三遍。算不拢的时候我就想，要是你在，准先笑我，再替我算。眼下就有一个价我算不拢，留着等你回来。那截断桨剩下的木头，我削了一根新签，上头刻的是你的名字，挂在船头。桨手问这是谁的份，我说是还没回来的那个人的。拉坎。又：船夫们说今年东北风来得早，你回来，记得赶这一阵风。" }, { kind = "flag", flag = "c7_bond_lakan_pula_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "坐下听他跟桨手分完账，再跟他去吃一顿不用撑场面的饭。"
+requires = []
+reply = "我在树荫下找了块石头坐下。他分得很慢，每一根签都先递给桨手，桨手刻完了，他再刻自己的；刻错一道，就当着所有人刮掉重来。分到天黑，他没开筵席，只在河滩上生了一堆火，烤了几条鱼，请我和桨手们一起吃。鱼烤得有点焦。他拿手撕着吃，说起叔叔去年死了。“柱子上那块木牌，”他说，“我摘下来，当着那些人烧的。烧了半个早上才烧透，那木头太硬。”他说得很平常，像在报一个价。火边的老桨手往火里添了一根柴，什么也没说。吃完了，他把鱼骨头往河里一扔，问我：“我那个算不拢的价，明天还来帮我算吗？”我说来。他点点头，往沙上一躺，看着天，过了很久才说：“七年，你倒一点没变。”"
+next = "done"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 5 }, { kind = "relation", person = "lakan_pula", relation = "friends" }, { kind = "flag", flag = "c7_bond_lakan_pula_landing_friend" }, { kind = "memory", memory = "mem-reunion_lakan_pula", title = "河口的新桨手" }]
+
+[[tracks.chapters.choices]]
+key = "rival"
+text = "跟他赌这一季：谁的船先装满蜂蜡。"
+requires = []
+reply = "他一拍大腿，刚捡回来的签子又撒了一半：“就等你这句！”那一季，汤都的码头都知道河口有两条船在较劲。他天不亮就带桨手上游收蜡，我就去民都洛截福建帆船要的货；他压我的价，我抬他的价，有一回在同一个蜡户门口撞上，两个人同时开口，把蜡户吓得关了门。季风快转的时候，两条船并排泊在河口过秤。我的船差他半船蜂蜡。他赢了一坛酒，抱着坛子在码头上走了一圈，见人就说。走完一圈，他回到我船边，把坛子往船舷上一搁，倒了两碗，一碗推给我：“半坛。剩下半坛留着，下一季你赢回去。”我喝了一口，酒很冲。他眯着眼看我：“你那半船，不是故意差的吧？”我说不是。他说那就好，不然赢得没意思。"
+next = "done"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 3 }, { kind = "relation", person = "lakan_pula", relation = "rivals" }, { kind = "flag", flag = "c7_bond_lakan_pula_landing_rival" }, { kind = "memory", memory = "mem-reunion_lakan_pula", title = "河口的新桨手" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "把那把断桨刻的勺放回他手心，说这回我不急着走。"
+requires = [{ kind = "flag", flag = "c7_bond_lakan_pula_romance" }, { kind = "heart", person = "lakan_pula", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "lakan_pula", ge = 18 }, { kind = "romance_open", romance_open = "lakan_pula" }]
+hint = "当年那句话没有说出口，到今天也说不出口了。他只是笑着，弯腰去捡地上的签子。"
+reply = "桨手们散了，树荫底下只剩我们两个。我从怀里掏出那把勺，勺边被我用了七年，磨得比当初更圆。我把它放进他手心，说：“当年那句话，我回来问了。这回我不急着走。”他低头看着勺子，拇指在勺边上来回摸了两遍。然后他合上手，连勺带我的手一起握住，握得很紧，指节都白了。“我刻了七年勺子，”他说，嗓子有点哑，“刻坏的堆了半间屋子。就等这一天。”我还没开口，他就凑过来吻了我，很快，像怕我躲。我没躲。他又吻了一次，这回慢了。那晚河口涨潮，水漫上了石阶。我们坐在他的船上，听潮水一下一下拍着船底，听到后半夜，都没回长屋。"
+next = "done"
+effects = [{ kind = "affinity", person = "lakan_pula", value = 5 }, { kind = "relation", person = "lakan_pula", relation = "lovers" }, { kind = "flag", flag = "c7_bond_lakan_pula_landing_love" }, { kind = "memory", memory = "mem-reunion_lakan_pula", title = "河口的新桨手" }]
+
+[[tracks.chapters.variants]]
+key = "v1_promise"
+when = [{ kind = "flag", flag = "c7_bond_lakan_pula_promise" }]
+text = "隔了七年，我的船又回到汤都。拉坎的船泊在巴石河口，船身新漆过，桨架上的桨却只剩从前的一半。他本人不在船上，在筵席外头的树荫底下盘腿坐着，跟一圈桨手一人一根签地分账，小刀在他手里转得很顺。我隔着人喊：“拉坎，筵席在里头，你坐错地方了。”他抬头，手一松，一捆签子撒了一地。他瘦了，颧骨都出来了，笑声倒没变，隔着十几步就听得见。他也不捡签子，跨过来一把抓住我的胳膊：“你来得正好，有个价我算不拢。”桨手们在后头一根一根捡签子，捡一根，看我一眼。他的船头挂着那块分账木牍，缺了一角，断口早磨圆了。我怀里那一角，正好能对上。"
+
+[[tracks.chapters.variants]]
+key = "v2_own"
+when = [{ kind = "flag", flag = "c7_bond_lakan_pula_own" }]
+text = "隔了七年，我的船又回到汤都。拉坎的船泊在巴石河口，船身新漆过，桨架上的桨却只剩从前的一半。他本人不在船上，在筵席外头的树荫底下盘腿坐着，跟一圈桨手一人一根签地分账，小刀在他手里转得很顺。我隔着人喊：“拉坎，筵席在里头，你坐错地方了。”他抬头，手一松，一捆签子撒了一地。他瘦了，颧骨都出来了，笑声倒没变，隔着十几步就听得见。他也不捡签子，跨过来一把抓住我的胳膊：“你来得正好，有个价我算不拢。”他又压低了声音：“先说好，河岸上那一掌还作数。我的船，就是这一条。”桨手们在后头一根一根捡签子，捡一根，看我一眼。他的船头挂着一块分账木牍，日晒雨淋得发了黑，上头那个名字还认得出来。"

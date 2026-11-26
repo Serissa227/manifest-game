@@ -1,0 +1,230 @@
+# 请托：差了半个时辰的潮（request_kabir）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：卡比尔（kabir，1540-01-10 生，男），坎贝来的古吉拉特领航学徒，1557 年起回坎贝当领航员；身份档 1；cast：classmates_ship.toml。
+# 类型：去某处（go）。四章：offer（报价）、watch（守大潮）、report（改潮表，记得粗的那两支）、report_exact（改潮表，记得准的那一支）；没有 stage 章。
+#       结构说明：原稿 go_with 挂着 c13_request_kabir_exact 的旗标门禁，机器人审计要求门禁在到达该章的每条路径上都能满足，所以 mark_exact 单开 report_exact 一章，门禁去掉；hold_boat 与 just_watch 仍去 report，那里另给一个“陪他去，先说是大概”的选项。
+# 报价：T 当面（auto=false）。人物按日程在坎贝（khambhat），玩家用 ask:request_kabir 启动；offer 不写 at，objectives 为在港里找到他。
+#       窗口 1563-01-01 至 1590-06-30；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：watch 章 at=khambhat，objectives 为在沙岬上等满十天；deadline_days=60，超时走 failed，来信一封（好感 -3，旗标 _late，见闻一条）。
+#       report 与 report_exact 是普通章，没有期限，可以一直等。
+# 依据·史实背景：坎贝湾的涌潮（潮头像一堵墙推进湾里），湾口淤浅，船靠潮表进出；古吉拉特的领航人用潮表与星表。涌潮与湾口的沙岬是史实背景。
+# 依据·原创：卡比尔、他师傅传下来的铜沙漏、沙岬上的木桩、那一行被改过的旧潮表、两条被潮头撵回港的船。
+# 依赖：港口 khambhat（ports_india.toml）；技能 tide_reading（skills.toml）；人物 kabir。B10b：卡比尔的日程 key cambay→khambhat 改名后，“问请托”才找得到他。主线门禁：无（卡比尔不是主线人物）。
+# 读写旗标：读 bond kabir ≥ C（offer 变体）；写 c13_request_kabir_accepted / _declined / _bet / _exact（只写不读）/ _late / _done，另写分支旗标 _rough（守潮时沙漏掉水，或只凭眼看记下，report 读它换一句话）。不设任何 c7_ 旗标。
+# 秘密：卡比尔的私事一概不写，见闻也不写。口头禅“风变了。”只在 offer 章说一次（base 与 bond_c 变体各一次）；report 章他咽回去，不再说出口。
+# 报酬：现金最多 1250（report 一次）；好感最多 +13；名声 +1；技能 tide_reading +20（只一次）；回忆 mem-request_kabir-report。
+# 回忆插画：mem-request_kabir-report：潮退后的湾口沙岬，木桩上挂着那本改过一行的旧潮表，铜沙漏放在一旁，远处两个老领航站着看。
+
+[[tracks]]
+key = "request_kabir"
+name = "差了半个时辰的潮"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kabir"]
+
+# 一、旧潮表：坎贝湾口的码头上。卡比尔摊开潮表，托你去沙岬守一个大潮。
+[[tracks.chapters]]
+key = "offer"
+title = "旧潮表"
+text = "坎贝湾口的码头上，卡比尔把一张发黄的潮表摊在木桩上，指甲点着其中一行：大潮那天，潮头该在这个时辰到。可这两年，有两条船照着这张表进湾，都被潮头堵在湾里，进退不得。“表差了半个时辰。”他说，“师傅的老领航们说我胡说。”他抬眼看你，把表卷起来，又摊开：“湾口沙岬上守一个大潮，记下潮头到的时刻。要是我错了……”他停了一下，“那会儿风变了。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "kabir", text = "在坎贝的码头找到他" }]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "kabir", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "kabir", level = "C" }]
+text = "坎贝湾口的码头上，卡比尔见了你，先说的不是潮表：“这回是队友，不是对手。”然后他才把那张发黄的表摊在木桩上，指甲点着其中一行：大潮那天，潮头该在这个时辰到。两条船照着它进湾，都被潮头堵在湾里。“老领航们说表没错，错在我。”他说，“你替我守一个大潮，记下潮头到的时刻。要是我错了……”他停了一下，“那会儿风变了。”"
+
+[[tracks.chapters.choices]]
+key = "watch_tide"
+text = "接下，去湾口沙岬守一个大潮。"
+next = "watch"
+reply = "他从怀里摸出一只铜沙漏，木座上刻的名字被磨平了一半。“是师傅的。漏完一回是半个时辰，你别睡着。”我接过来，沙漏的玻璃上有道细裂，他用指甲抠了抠，说裂不碍事。"
+effects = [
+  { kind = "affinity", person = "kabir", value = 2 },
+  { kind = "flag", flag = "c13_request_kabir_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "bet"
+text = "接下，跟他赌一把：表没错。"
+next = "watch"
+reply = "“赌什么？”他眼睛亮了，说输了的人请对方喝一个月的茶。他把沙漏塞进你手里：“这回我一定赢。别说我没提醒，这回的潮不等人。”"
+effects = [
+  { kind = "affinity", person = "kabir", value = 2 },
+  { kind = "flag", flag = "c13_request_kabir_accepted" },
+  { kind = "flag", flag = "c13_request_kabir_bet" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "守潮是领航的事，我不掺和。"
+next = "failed"
+reply = "他没再劝，把潮表卷起来夹在腋下。“那我自己守。老领航们不守，我守。”走到船边，他又回过头，说了一句：“你哪天闲了，来湾口看看。”"
+effects = [{ kind = "flag", flag = "c13_request_kabir_declined" }]
+
+# 二、一堵墙：十天之后的大潮。沙漏才漏到一半，潮头已经到了木桩上。
+[[tracks.chapters]]
+key = "watch"
+title = "一堵墙"
+text = "你在湾口的沙岬上等了十天。白天晒着，夜里起雾，木桩上的盐结成一层白壳。卡比尔每天下午来一趟，看一眼日头，把铜沙漏倒过来，只说一句：“还早。”然后又走了。第十天天没亮，湾外起了一道白线，白线越来越近、越来越高，变成一堵墙，轰隆隆推进湾里，沙岬都在抖。他在后头喊：“来了！看它到哪根桩！”声音被潮声压散了。沙漏才漏到一半，潮头已经撞上第一根木桩，比旧表上写的早了半个时辰，一点不差。"
+speaker = "captain"
+mood = "mystic"
+at = "khambhat"
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "kabir", value = true },
+]
+objectives = [
+  { kind = "at", at = "khambhat", text = "在湾口的沙岬上等着" },
+  { kind = "wait", days = 10, text = "等满十天" },
+]
+deadline_days = 60
+timeout = { next = "failed", news = "坎贝湾口的沙岬上，大潮那天只有卡比尔一个人守着。潮头早了半个时辰，老领航们却说是风的缘故。", effects = [{ kind = "affinity", person = "kabir", value = -3 }, { kind = "flag", flag = "c13_request_kabir_late" }, { kind = "letter", person = "kabir", text = "大潮我自己守了，潮头早到，我说对了。可老领航们说，是那会儿起了风。——卡比尔" }] }
+news = "坎贝湾口的沙岬上，有人守了十天，第十天大潮的潮头像一堵墙推进湾里，据说比旧潮表早了半个时辰。"
+
+[[tracks.chapters.choices]]
+key = "mark_exact"
+text = "照着沙漏和日头，把潮头到的时刻、高度、推进的快慢都记下来。"
+next = "report_exact"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "这种记法得练过。潮头一到，你只顾得上看，顾不上看沙漏。"
+reply = "我记下了潮头到的时刻，在沙岬上量的高度，还有它从湾口推到第一根木桩用了多久。卡比尔接过纸，手指停在那串数字上，半天没挪开。"
+effects = [
+  { kind = "affinity", person = "kabir", value = 3 },
+  { kind = "flag", flag = "c13_request_kabir_exact" },
+]
+
+[[tracks.chapters.choices]]
+key = "hold_boat"
+text = "把小船拖上高处，护住沙漏，照眼看到的时刻记下来。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "我冲下去抢小船，潮头追到脚边才停。小船拖上了高处，沙漏护在怀里，我把看见的时刻记在纸上。卡比尔看了一眼，没挑毛病，只说：“记上了就好。”"
+fail = { next = "report", news = "坎贝湾口的沙岬上，大潮打翻了一条小船，船里的铜沙漏掉进了海里，守潮的人只记下个大概。", effects = [{ kind = "affinity", person = "kabir", value = -2 }, { kind = "flag", flag = "c13_request_kabir_rough" }] }
+effects = [{ kind = "affinity", person = "kabir", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "just_watch"
+text = "只看着，记下“早了大约半个时辰”。"
+next = "report"
+reply = "潮头过去了，湾里的水还在晃。我在纸上写：早了大约半个时辰。卡比尔把纸拿过去看，嘴张了张，又合上了。“大约？”他念了一遍，把纸折起来揣进怀里。"
+effects = [
+  { kind = "affinity", person = "kabir", value = 2 },
+  { kind = "flag", flag = "c13_request_kabir_rough" },
+]
+
+# 三、改潮表：潮退之后。他要去找老领航们改表，问你那天的风向。
+[[tracks.chapters]]
+key = "report"
+title = "改潮表"
+text = "卡比尔听你报完时刻，跳起来，抓起潮表就要去找老领航们。走到栈桥中间，他又折回来，问你潮头到之前，风是什么方向。“南风？”“跟往常一样。”他张了张嘴，那三个字到了嘴边，又咽了回去。“这回不能怪风。”他把潮表往怀里一揣，“表就是错了，我要改。”他说完就走，走得太急，差点撞翻码头边晒鱼的筐。码头上的人看着他的背影，有人笑，有人摇头。"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "kabir", text = "回到坎贝找到他" }]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "kabir", value = true },
+]
+news = "坎贝的老领航们改了一行潮表，大潮的潮头比从前早了半个时辰，码头上的人都在念那一行。"
+
+[[tracks.chapters.variants]]
+key = "bet_rough"
+when = [
+  { kind = "flag", flag = "c13_request_kabir_bet" },
+  { kind = "flag", flag = "c13_request_kabir_rough" },
+]
+text = "卡比尔听你报完，眉头拧成一团：“大概？”他把那一行拿笔圈了两圈，又看了你一眼，嘴角却翘起来：“这回是我赢了。赢了也请你喝茶，一个月，省得你记账。”他往栈桥那头走，走到一半又折回来，问你潮头到之前，风是什么方向。“南风？”那三个字到了嘴边，又咽了回去。码头上的人笑成一片，说他这回是赢了，又要请客。"
+
+[[tracks.chapters.variants]]
+key = "bet_win"
+when = [{ kind = "flag", flag = "c13_request_kabir_bet" }]
+text = "卡比尔听你报完时刻，跳起来，嘴角一下翘到耳根：“这回是我赢了。”他抓着潮表往栈桥那头走，走到一半又折回来，问你潮头到之前，风是什么方向。“南风？”他张了张嘴，那三个字到了嘴边，又咽了回去。“表就是错了，我要改。”他把潮表往怀里一揣，“赢了也请你喝茶，一个月，省得你记账。”码头上的人笑成一片，说卡比尔这回是真赢了。"
+
+[[tracks.chapters.variants]]
+key = "rough"
+when = [{ kind = "flag", flag = "c13_request_kabir_rough" }]
+text = "卡比尔听你报完，眉头拧成一团：“大概？”他把那一行的数字拿笔圈了两圈，又看了你一眼。“大概，也够改一行。”他把潮表往怀里一揣，大步往栈桥那头走。走到一半，他又折回来，问你潮头到之前，风是什么方向。“南风？”他张了张嘴，那三个字到了嘴边，又咽了回去。码头上没人敢问，那一行改得对不对。"
+
+[[tracks.chapters.choices]]
+key = "go_rough"
+text = "陪他去，先说清楚你记下的只是大概。"
+next = "done"
+reply = "老领航们听我说完“大概”两个字，没人接话。最老的那一个把潮表拿过去，用铅笔在那一行旁边写了个新时刻，写得很轻，后头还添了个问号。“先走一季。”他说。卡比尔盯着那个问号，没有反驳。他付了钱，又教了我坎贝湾大潮的算法。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kabir", value = 6 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "tide_reading", value = 20 },
+  { kind = "memory", memory = "mem-request_kabir-report", title = "改过一行的潮表" },
+  { kind = "flag", flag = "c13_request_kabir_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "让他自己去说。"
+next = "done"
+reply = "他去了一下午，回来时潮表上那一行改了，改得歪歪扭扭，旁边没有他的名字。他说老领航们答应先照新时刻走一季，“走一季，就知道谁对”。他付了钱，又教了我大潮的算法。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kabir", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "tide_reading", value = 20 },
+  { kind = "memory", memory = "mem-request_kabir-report", title = "改过一行的潮表" },
+  { kind = "flag", flag = "c13_request_kabir_done" },
+]
+
+# 三之二、改潮表：你手里是一页量准了的数
+[[tracks.chapters]]
+key = "report_exact"
+title = "改潮表"
+text = "卡比尔听你把时刻、高度和推进的快慢一口气报完，一个字也没问，抓起潮表就往栈桥那头跑。跑到一半，他折回来，问你潮头到之前，风是什么方向。“南风？”“跟往常一样。”他张了张嘴，那三个字到了嘴边，又咽了回去。“这回不能怪风。”他把潮表往怀里一揣，“表就是错了，我要改。这些数是你记的，你来念。”码头上的人看着他的背影，有人笑，有人摇头。"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "kabir", text = "回到坎贝找到他" }]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "kabir", value = true },
+]
+news = "坎贝码头上，卡比尔举着一页量好的潮头数字，一路念到老领航们的门口，后头跟着一群看热闹的。"
+
+[[tracks.chapters.variants]]
+key = "bet_win"
+when = [{ kind = "flag", flag = "c13_request_kabir_bet" }]
+text = "卡比尔听你把时刻、高度和推进的快慢一口气报完，嘴角一下翘到耳根：“这回是我赢了。”他抓起潮表往栈桥那头走，走到一半又折回来，问你潮头到之前，风是什么方向。“南风？”他张了张嘴，那三个字到了嘴边，又咽了回去。“表就是错了，我要改。”他把潮表往怀里一揣，“赢了也请你喝茶，一个月，省得你记账。这些数是你记的，你来念。”码头上的人笑成一片，说卡比尔这回是真赢了。"
+
+[[tracks.chapters.choices]]
+key = "go_with"
+text = "陪他去，把记下的时刻当面念给老领航们听。"
+next = "done"
+reply = "老领航们听完，没人说话。最老的那一个拿过潮表，用笔把那一行改了，又把笔递给卡比尔，让他在旁边写上自己的名字。他付了钱，又教了我坎贝湾大潮的算法。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kabir", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "tide_reading", value = 20 },
+  { kind = "memory", memory = "mem-request_kabir-report", title = "改过一行的潮表" },
+  { kind = "flag", flag = "c13_request_kabir_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "把那页纸留给他，让他自己去说。"
+next = "done"
+reply = "他拿着你的纸去了一下午，回来时潮表上那一行改得规规矩矩，旁边没有他的名字，页角多了一行小字：外来的船长所记。他付了钱，又教了我大潮的算法。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kabir", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "tide_reading", value = 20 },
+  { kind = "memory", memory = "mem-request_kabir-report", title = "改过一行的潮表" },
+  { kind = "flag", flag = "c13_request_kabir_done" },
+]

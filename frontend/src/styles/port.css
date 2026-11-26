@@ -1,0 +1,1284 @@
+/* 港口街景与设施窗口的样式。
+ * 颜色取外壳定义的变量（styles.css :root 与 .parchment）；变量缺失时回退到与调色板一致的写死色值。 */
+
+/* ── 街景舞台 ─────────────────────────────────────────── */
+.port-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  /* 舞台比街景高时，多出的部分接着天空最上面的颜色 */
+  background: #2a3f7a;
+}
+/* 放得下时横向居中、纵向贴底；放不下时（手机上的街景比屏幕宽）可以拖动：
+   用自动外边距对齐——超出时外边距归零、从头排起，左边与上边的部分也滚得到（hooks/usePanArea.ts 一开始把它移到居中、贴底） */
+.port-scene > .pixel-stage {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.port-scene > .pixel-stage::-webkit-scrollbar {
+  display: none;
+}
+.port-scene .pixel-stage-inner {
+  position: relative;
+  flex: none;
+  margin: auto auto 0;
+}
+/* 鼠标可以按住拖动：放不下时显示抓手 */
+.port-scene.can-pan-left > .pixel-stage,
+.port-scene.can-pan-right > .pixel-stage {
+  cursor: grab;
+}
+.port-scene > .pixel-stage.is-dragging {
+  cursor: grabbing;
+}
+.port-scene > .pixel-stage.is-dragging .scene-hotspot {
+  cursor: grabbing;
+}
+/* 左右还有没看到的部分：边上一道渐暗与小箭头（纯提示，不挡点击） */
+.port-scene::before,
+.port-scene::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+  background-repeat: no-repeat;
+  background-position: center 62%;
+  background-size: 12px 20px;
+}
+.port-scene::before {
+  left: 0;
+  background-image:
+    linear-gradient(90deg, rgba(20, 14, 26, 0.55), rgba(20, 14, 26, 0)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 10' shape-rendering='crispEdges'%3E%3Cpath d='M4 0h2v2H4zM2 2h2v2H2zM0 4h2v2H0zM2 6h2v2H2zM4 8h2v2H4z' fill='%23f5d66b'/%3E%3C/svg%3E");
+  background-size:
+    100% 100%,
+    12px 20px;
+}
+.port-scene::after {
+  right: 0;
+  background-image:
+    linear-gradient(270deg, rgba(20, 14, 26, 0.55), rgba(20, 14, 26, 0)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 10' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h2v2H0zM2 2h2v2H2zM4 4h2v2H4zM2 6h2v2H2zM0 8h2v2H0z' fill='%23f5d66b'/%3E%3C/svg%3E");
+  background-size:
+    100% 100%,
+    12px 20px;
+}
+.port-scene.can-pan-left::before,
+.port-scene.can-pan-right::after {
+  opacity: 1;
+}
+.port-scene .pixel-stage canvas {
+  display: block;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+.port-scene > .empty {
+  position: absolute;
+  inset: auto 0 45% 0;
+  text-align: center;
+  color: var(--ink, #2b1b17);
+}
+
+/* 设施热点：透明按钮盖在建筑上；悬停或键盘聚焦时建筑本身在画面里描金边，上方弹出名牌 */
+.scene-hotspots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.scene-hotspot {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: none;
+}
+.scene-hotspot:hover,
+.scene-hotspot:active {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+.scene-hotspot:focus-visible {
+  outline: 2px dashed var(--gold-3, #f5d66b);
+  outline-offset: 2px;
+}
+.scene-plate {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 6px;
+  white-space: nowrap;
+  font-family: var(--font-title, serif);
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--gold-4, #fff3b0);
+  text-shadow: 1px 1px 0 var(--ink-deep, #1a1423);
+  background: var(--wood-1, #5c3a21);
+  border: 2px solid var(--ink-deep, #1a1423);
+  box-shadow:
+    inset 1px 1px 0 var(--wood-3, #b8804a),
+    inset -1px -1px 0 var(--wood-0, #3b2416),
+    0 2px 0 rgba(26, 20, 35, 0.5);
+  transform: translate(-50%, 4px);
+  opacity: 0;
+  transition:
+    opacity 0.12s,
+    transform 0.12s;
+  pointer-events: none;
+}
+/* 名牌下方的挂钩小三角 */
+.scene-plate::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: var(--ink-deep, #1a1423);
+}
+.scene-hotspot:hover .scene-plate,
+.scene-hotspot:focus-visible .scene-plate,
+.scene-hotspot.hot .scene-plate {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+/* 触屏没有悬停（网页自适应）：设施的名牌一直挂着（小一号），一眼看得出哪座是哪座，点一下就进去 */
+@media (hover: none) {
+  .scene-plate {
+    gap: 3px;
+    padding: 2px 7px 2px 4px;
+    font-size: 12px;
+    letter-spacing: 0;
+    opacity: 0.94;
+    transform: translate(-50%, 0);
+  }
+  .scene-plate::after {
+    margin-left: -4px;
+    border-width: 4px;
+  }
+}
+
+/* 左上角的港口信息块：名牌 + 出港按钮（港口窗口停靠在右侧，这里总是看得见） */
+.scene-hud {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: calc(100% - 24px);
+  pointer-events: none;
+}
+
+/* 出港：舞台上最醒目的按钮 */
+.scene-depart {
+  position: relative;
+  display: inline-flex;
+  pointer-events: auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 18px 7px 10px;
+  font-family: var(--font-title, serif);
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: var(--ink, #2b1b17);
+  background: linear-gradient(var(--gold-3, #f5d66b), var(--gold-2, #dca434));
+  border: 3px solid var(--ink-deep, #1a1423);
+  border-radius: 0;
+  box-shadow:
+    inset 2px 2px 0 var(--gold-4, #fff3b0),
+    inset -2px -2px 0 var(--gold-1, #a86b1c),
+    0 4px 0 var(--ink-deep, #1a1423),
+    0 0 0 3px rgba(255, 243, 176, 0.35);
+  /* 金底深字：不要外壳按钮的深色字影（深字叠深影，笔画糊成双影；docs/UI-REDESIGN.md 1.2 第 1 条） */
+  text-shadow: none;
+  cursor: pointer;
+  animation: scene-depart-bob 2.4s steps(4) infinite;
+}
+/* 船员不足的提示（名牌下；按钮可点，其余不挡街景） */
+.scene-crew {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px;
+  max-width: 320px;
+  border: 2px solid var(--ink-deep, #1a1423);
+  box-shadow: 0 3px 0 rgba(26, 20, 35, 0.45);
+}
+.scene-crew-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  color: var(--down, #a8321c);
+}
+.scene-crew .crew-hire-row {
+  margin: 0;
+}
+.scene-crew .crew-hire-note {
+  margin: 0;
+}
+.scene-depart:hover {
+  background: linear-gradient(var(--gold-4, #fff3b0), var(--gold-3, #f5d66b));
+}
+.scene-depart:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 2px 2px 0 var(--gold-1, #a86b1c),
+    0 1px 0 var(--ink-deep, #1a1423);
+  animation: none;
+}
+.scene-depart:focus-visible {
+  outline: 3px dashed var(--gold-4, #fff3b0);
+  outline-offset: 3px;
+}
+@keyframes scene-depart-bob {
+  0%,
+  100% {
+    top: 0;
+  }
+  50% {
+    top: -3px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-depart {
+    animation: none;
+  }
+  .scene-plate {
+    transition: none;
+  }
+}
+
+/* 港口名牌：左上角的木牌，羊皮纸芯，势力旗色的三角旗 */
+.scene-sign {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  max-width: 100%;
+  padding: 8px 14px 8px 10px;
+  color: var(--ink, #2b1b17);
+  background: var(--paper, #f3e3c3);
+  border: 3px solid var(--wood-1, #5c3a21);
+  outline: 2px solid var(--ink-deep, #1a1423);
+  box-shadow:
+    inset 2px 2px 0 var(--white, #fffaf0),
+    inset -2px -2px 0 var(--parchment-dark, #b8955f),
+    0 4px 0 rgba(26, 20, 35, 0.45);
+}
+.scene-flag {
+  flex: none;
+  width: 16px;
+  margin: 2px 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+  box-shadow: inset -3px 0 0 rgba(0, 0, 0, 0.25);
+}
+.scene-sign-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.scene-sign-name {
+  font-family: var(--font-title, serif);
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--heading-parchment, #5c2a14);
+  line-height: 1.2;
+}
+.scene-sign-sub {
+  font-size: 12px;
+  color: #6b4f33;
+  white-space: nowrap;
+}
+.scene-sign-docked {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--red-1, #8c1f28);
+}
+
+/* ── 设施窗口：掌柜头部 ───────────────────────────────── */
+.port .tabbar .tab-icon canvas {
+  vertical-align: -3px;
+}
+.keeper {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 10px 0 12px;
+}
+.keeper-portrait {
+  flex: none;
+  padding: 3px;
+  background: var(--wood-1, #5c3a21);
+  border: 2px solid var(--ink-deep, #1a1423);
+  box-shadow:
+    inset 1px 1px 0 var(--wood-3, #b8804a),
+    0 3px 0 rgba(26, 20, 35, 0.35);
+}
+.keeper-portrait canvas {
+  display: block;
+}
+.keeper-talk {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.keeper-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 2px 0 4px 10px;
+}
+.keeper-name strong {
+  font-family: var(--font-title, serif);
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.keeper-name small {
+  color: var(--muted, #6b4f33);
+}
+.keeper-bubble {
+  position: relative;
+  margin: 0;
+  padding: 9px 12px;
+  line-height: 1.6;
+  color: var(--ink, #2b1b17);
+  background: var(--white, #fffaf0);
+  border: 2px solid var(--ink, #2b1b17);
+  box-shadow:
+    inset -2px -2px 0 var(--paper, #f3e3c3),
+    3px 3px 0 rgba(43, 27, 23, 0.25);
+}
+/* 气泡指向头像的小尾巴（两层三角：描边 + 填充） */
+.keeper-bubble::before,
+.keeper-bubble::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  border-style: solid;
+  border-color: transparent;
+}
+.keeper-bubble::before {
+  left: -12px;
+  border-width: 6px 12px 6px 0;
+  border-right-color: var(--ink, #2b1b17);
+}
+.keeper-bubble::after {
+  left: -8px;
+  top: 14px;
+  border-width: 4px 9px 4px 0;
+  border-right-color: var(--white, #fffaf0);
+}
+
+/* ── 能力条（航海士、船型） ───────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px 14px;
+  margin: 6px 0;
+}
+.stat {
+  display: grid;
+  grid-template-columns: 2.6em minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.stat-name {
+  color: var(--muted, #6b4f33);
+}
+.stat-val {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+.stat-bar {
+  position: relative;
+  height: 8px;
+  background: rgba(43, 27, 23, 0.18);
+  border: 1px solid var(--ink, #2b1b17);
+  box-shadow: inset 1px 1px 0 rgba(43, 27, 23, 0.3);
+}
+.stat-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--gold-2, #dca434);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+.stat-nav .stat-bar i {
+  background: var(--sea-3, #2f86b8);
+}
+.stat-trade .stat-bar i {
+  background: var(--gold-2, #dca434);
+}
+.stat-combat .stat-bar i {
+  background: var(--red-2, #c8373a);
+}
+.stat-mgmt .stat-bar i {
+  background: #5a9a5e;
+}
+
+/* ── 酒馆：航海士人物卡 ───────────────────────────────── */
+.mate-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+}
+.mate-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px;
+}
+.mate-portrait {
+  position: relative;
+  flex: none;
+  padding: 3px;
+  background: var(--wood-1, #5c3a21);
+  border: 2px solid var(--ink-deep, #1a1423);
+  box-shadow: inset 1px 1px 0 var(--wood-3, #b8804a);
+}
+.mate-portrait canvas {
+  display: block;
+}
+.mate-lv {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--ink, #2b1b17);
+  background: var(--gold-3, #f5d66b);
+  border: 2px solid var(--ink-deep, #1a1423);
+}
+.mate-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.mate-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mate-head strong {
+  font-family: var(--font-title, serif);
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+.mate-bio {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-style: italic;
+}
+/* 高等级航海士的名声门槛：够了是金色小牌，不够时变红并说明 */
+.mate-fame {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 6px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--gold-1);
+  border: 1px solid currentColor;
+}
+.mate-fame.short {
+  color: var(--red-2);
+  background: rgba(236, 106, 92, 0.12);
+}
+.mate-fame-short {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--red-2);
+}
+
+/* ── 造船厂：在售船型 ─────────────────────────────────── */
+.ship-offers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ship-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+.ship-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 120px;
+  padding: 8px 6px 0;
+  overflow: hidden;
+  border: 2px solid var(--ink-deep, #1a1423);
+  /* 船台背景：天空 → 海面（像素色带，不做平滑渐变） */
+  background: linear-gradient(
+    #a8c8ec 0 45%,
+    #dcecf8 45% 55%,
+    #6cc0dc 55% 72%,
+    #2f86b8 72% 86%,
+    #1d5b92 86% 100%
+  );
+  box-shadow: inset 0 -3px 0 #123a66;
+}
+.ship-art canvas {
+  display: block;
+  margin-bottom: 2px;
+}
+.ship-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ship-head strong {
+  font-family: var(--font-title, serif);
+  font-size: 16px;
+}
+.ship-price {
+  margin-left: auto;
+  font-weight: bold;
+  color: var(--red-1, #8c1f28);
+}
+
+/* ── 商会：委托书 ─────────────────────────────────────── */
+.contracts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+.contract-card {
+  position: relative;
+  padding: 12px 14px 10px;
+  color: var(--ink, #2b1b17);
+  background: #f7ecd2;
+  border: 2px solid var(--parchment-deep, #7d5f36);
+  box-shadow:
+    inset 0 0 0 3px #f7ecd2,
+    inset 0 0 0 4px var(--parchment-dark, #b8955f),
+    3px 4px 0 rgba(43, 27, 23, 0.3);
+}
+.contract-card.status-mine {
+  background: #fff6dc;
+}
+.contract-card.status-done,
+.contract-card.status-failed,
+.contract-card.status-expired {
+  opacity: 0.7;
+}
+.contract-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 5px;
+  margin-bottom: 6px;
+  border-bottom: 3px double var(--parchment-dark, #b8955f);
+}
+.contract-title {
+  font-family: var(--font-title, serif);
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.contract-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.contract-body p {
+  margin: 0;
+  line-height: 1.6;
+}
+.contract-good {
+  flex: none;
+}
+.contract-terms {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  gap: 2px 8px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+.contract-terms dt {
+  color: #6b4f33;
+}
+.contract-terms dd {
+  margin: 0;
+  font-weight: bold;
+}
+.contract-terms dd.reward {
+  color: #1e6b34;
+}
+.contract-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.contract-issuer {
+  font-size: 12px;
+  color: #6b4f33;
+}
+.contract-actions {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: auto;
+}
+/* 印章：斜盖的方形朱印（颜色取发布方的势力色） */
+.contract-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-family: var(--font-title, serif);
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+  writing-mode: vertical-rl;
+  border: 3px double currentColor;
+  border-radius: 4px;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+}
+
+/* FE1 委托书的新信息（T04）：小单 / 大单的签、货的出处一行、声望 / 熟客 / 加急一排、“接不接得下”的三枚小签 */
+.contract-head .contract-size,
+:root[data-ui="v2"] .contract-head .tag.contract-size {
+  margin-left: auto;
+}
+.contract-size--small {
+  color: #1e5a3a;
+  background: #d6ead7;
+}
+.contract-size--regular {
+  color: #5a3a1e;
+  background: #ecd9bd;
+}
+.contract-route {
+  margin: 0 0 2px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--v2-ink-2, #6b4f33);
+}
+.contract-extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--v2-ink-2, #6b4f33);
+}
+.contract-extra b {
+  color: var(--v2-ink, #2b1b17);
+  font-variant-numeric: tabular-nums;
+}
+.contract-extra .contract-urgent b {
+  color: #a3412a;
+}
+.contract-fit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.contract-fit li {
+  padding: 1px 6px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+}
+.contract-fit li.is-ok {
+  color: #1e6b34;
+}
+.contract-fit li.is-short {
+  color: #a3412a;
+  font-weight: bold;
+}
+
+/* 交易所（商品名、价格与涨跌）的样式在 styles/trade.css（交易台） */
+
+/* ── 殖民点：空地上的“建立殖民地”按钮（木桩上的告示牌，常亮，轻轻晃动） ── */
+.scene-found {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.scene-found:hover,
+.scene-found:active {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+.scene-found:focus-visible {
+  outline: 2px dashed var(--gold-3, #f5d66b);
+  outline-offset: 2px;
+}
+.scene-found-sign {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 6px 8px;
+  white-space: nowrap;
+  font-family: var(--font-title, serif);
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: var(--ink, #2b1b17);
+  background: linear-gradient(var(--gold-3, #f5d66b), var(--gold-2, #dca434));
+  border: 3px solid var(--ink-deep, #1a1423);
+  box-shadow:
+    inset 2px 2px 0 var(--gold-4, #fff3b0),
+    inset -2px -2px 0 var(--gold-1, #a86b1c),
+    0 4px 0 var(--ink-deep, #1a1423),
+    0 0 0 3px rgba(255, 243, 176, 0.35);
+  animation: scene-depart-bob 2.4s steps(4) infinite;
+}
+/* 告示牌下面的木桩 */
+.scene-found-sign::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 6px;
+  height: 14px;
+  margin-left: -3px;
+  background: var(--wood-1, #5c3a21);
+  border: 2px solid var(--ink-deep, #1a1423);
+  border-top: 0;
+}
+.scene-found:hover .scene-found-sign,
+.scene-found:focus-visible .scene-found-sign {
+  background: linear-gradient(var(--gold-4, #fff3b0), var(--gold-3, #f5d66b));
+}
+
+/* 殖民地的殖民建筑热点：名牌与设施相同 */
+.scene-building .scene-plate {
+  font-size: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-found-sign {
+    animation: none;
+  }
+}
+
+/* 旅店（11-03 在港暂停）：几个休息键排成一行；休息中一条进度、“第 k / n 天”与“起床” */
+.inn-rest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+.inn-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.inn-bar {
+  display: block;
+  flex: 1 1 160px;
+  height: 8px;
+  background: var(--paper-mid);
+  border: 1px solid var(--parchment-deep);
+}
+.inn-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--gold-1);
+  transition: width 120ms steps(3, end);
+}
+.inn-result {
+  margin: 6px 0;
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .inn-bar > span {
+    transition: none;
+  }
+}
+
+/* 港口与秘境港口的街景插画（寰宇，1536×672）：港口窗口标题下一整幅 */
+.port-lore-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  margin: 4px 0 8px;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+  border: 3px solid var(--wood-0);
+  box-shadow: inset 0 0 0 2px var(--gold-2);
+}
+
+/* ── 商馆（T01）：港口投资页的等级阶梯。六列：等级、累计投资、商誉、买得到、交易税、免费仓位；窄窗口横向滑动 ── */
+.house {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.house-ladder {
+  display: grid;
+  gap: 2px;
+  overflow-x: auto;
+}
+.house-head,
+.house-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 1.3fr) minmax(72px, 1fr) repeat(4, minmax(56px, 1fr));
+  gap: 8px;
+  align-items: center;
+  min-width: 440px;
+  padding: 4px 8px;
+}
+.house-head {
+  font-size: 12px;
+  color: var(--muted);
+}
+.house-row {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.04);
+}
+.house-row.is-done {
+  opacity: 0.7;
+}
+.house-row.is-now {
+  border-color: var(--gold-2, #b8923a);
+  background: rgba(184, 146, 58, 0.14);
+  font-weight: 600;
+}
+.house-row.is-next {
+  border-color: var(--wood-0, #6b5a45);
+  border-style: dashed;
+}
+.house-c-level {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.house-c-cost {
+  font-variant-numeric: tabular-nums;
+}
+.house-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+.house-gap {
+  margin: 0;
+  font-weight: 600;
+}
+.house-short {
+  flex-basis: 100%;
+  margin: 0;
+}
+.house-custom-title {
+  margin: 12px 0 4px;
+  font-size: 14px;
+}
+
+/* ── 商馆（T02）：一屏看全——阶梯一张卡在上；回报、风险、船厂台阶、投资者四张小卡两两并排，窄窗口排成一列 ── */
+.house-grid {
+  display: grid;
+  gap: 8px;
+}
+.house-col {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+}
+.house-side {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.house-card {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  min-width: 0;
+  padding: 6px 10px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.03);
+}
+.house-card-title {
+  margin: 0;
+  font-size: 13px;
+}
+.house-card p,
+.house-card .kv {
+  margin: 0;
+}
+.house-note {
+  font-size: 12px;
+}
+/* 卡里的事实：两列的紧凑清单（不用 .kv 的大表格） */
+.house-facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 10px;
+  margin: 0;
+}
+.house-facts dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.house-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+/* 现在的商馆、商誉、买得到哪一档排成一行 */
+.house-now-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+.house-now-row dd {
+  margin-right: 8px;
+}
+.house-more dd {
+  font-weight: normal;
+  font-size: 12px;
+}
+.house-t02 .house-head,
+.house-t02 .house-row {
+  padding: 2px 8px;
+}
+.house-t02 .house-intro,
+.house-t02 .house-ranks,
+.house-t02 .house-now {
+  margin: 0;
+}
+.house-quick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.house-quick-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.house-steps,
+.house-inv-list {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.house-steps li.is-reached {
+  opacity: 0.75;
+}
+.house-inv-list li {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) auto 3em;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.house-inv-list li.is-me {
+  font-weight: 600;
+}
+.house-inv-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.house-inv-amount {
+  text-align: right;
+}
+.sy-soon {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+}
+.sy-soon-list {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sy-soon-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+/* ── E02 发展度卡：投资页最上面——阶段名与一条进度条、上月构成（涨往右、回落往左的短条）、三四行“为什么” ── */
+.dev-card {
+  --dev-up: var(--up, #3d7a3a);
+  --dev-down: var(--down, #a5402e);
+  margin-bottom: 8px;
+}
+.dev-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+.dev-name {
+  font-size: 16px;
+}
+.dev-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.dev-depth {
+  font-size: 12px;
+  font-weight: normal;
+}
+.dev-scene {
+  font-size: 12px;
+  font-style: italic;
+}
+.dev-stage {
+  display: grid;
+  gap: 2px;
+}
+.dev-bar {
+  height: 8px;
+  background: var(--paper-mid, rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--parchment-deep, rgba(0, 0, 0, 0.2));
+}
+.dev-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--gold-1, #c99a3c);
+}
+.dev-bar-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.dev-net {
+  margin: 2px 0 0;
+}
+.dev-up {
+  color: var(--dev-up);
+}
+.dev-down {
+  color: var(--dev-down);
+}
+/* 构成：名字 | 以中线为界的条（涨往右、回落往左） | 数 */
+.dev-parts {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.dev-parts li {
+  display: grid;
+  grid-template-columns: 6.5em minmax(60px, 1fr) 4.5em;
+  align-items: center;
+  gap: 6px;
+}
+.dev-part-track {
+  position: relative;
+  height: 8px;
+  background: linear-gradient(
+    to right,
+    transparent calc(50% - 0.5px),
+    rgba(0, 0, 0, 0.25) calc(50% - 0.5px),
+    rgba(0, 0, 0, 0.25) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+.dev-part-track > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.dev-parts li.is-up .dev-part-track > i {
+  left: 50%;
+  background: var(--dev-up);
+}
+.dev-parts li.is-down .dev-part-track > i {
+  right: 50%;
+  background: var(--dev-down);
+}
+.dev-part-v {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.dev-parts li.is-up .dev-part-v {
+  color: var(--dev-up);
+}
+.dev-parts li.is-down .dev-part-v {
+  color: var(--dev-down);
+}
+.dev-why {
+  display: grid;
+  gap: 2px;
+  margin: 2px 0 0;
+  padding-left: 1.1em;
+  font-size: 12px;
+}
+.dev-preview {
+  margin: 4px 0;
+}
+/* E03F 每一档开什么：一行一档，已开的平常、下一档描金、更远的淡 */
+.dev-unlocks {
+  display: grid;
+  gap: 3px;
+  margin-top: 6px;
+  font-size: 12px;
+}
+.dev-unlocks-title {
+  margin: 0;
+  font-weight: 600;
+}
+.dev-unlock-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dev-unlock {
+  padding: 2px 6px;
+  border-left: 2px solid transparent;
+}
+.dev-unlock-stage {
+  margin-right: 4px;
+}
+.dev-unlock.is-next {
+  border-left-color: var(--gold-2, #b8923a);
+  background: rgba(184, 146, 58, 0.14);
+}
+.dev-unlock.is-far {
+  opacity: 0.6;
+}
+.dev-unlocks-more {
+  justify-self: start;
+}
+
+/* ── 商馆代办（T03）：仓库页的“代办”一栏 ── */
+.agency {
+  display: grid;
+  gap: 6px;
+}
+.agency-head {
+  margin: 0;
+}
+.agency-form {
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px 10px;
+}
+.agency-form .seg {
+  display: inline-flex;
+  gap: 2px;
+}
+.agency-form .seg .btn.on {
+  border-color: var(--gold-2, #b8923a);
+  background: rgba(184, 146, 58, 0.18);
+  font-weight: 600;
+}
+.agency-good {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.agency-cost {
+  align-self: center;
+}
+.agency-orders,
+.agency-fills ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.agency-orders li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 4px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.03);
+}
+.agency-orders li .btn {
+  margin-left: auto;
+}
+.agency-wait {
+  font-style: italic;
+}
+.agency-fills h5,
+.agency-ledger h5 {
+  margin: 4px 0;
+  font-size: 13px;
+}
+/* FE1：本港代办小账（估算）一行，几段之间留空 */
+.agency-ledger p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin: 0;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.agency-fills li {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.house-agency-next {
+  flex-basis: 100%;
+  margin: 0;
+}

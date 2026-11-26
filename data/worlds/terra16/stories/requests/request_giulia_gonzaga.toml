@@ -1,0 +1,168 @@
+# C13d 人物的请托：一包旧信（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：朱莉娅·贡扎加 giulia_gonzaga（1513 生，1566 卒）。丰迪的女伯爵，住在那不勒斯方济各会女修院的侧院里，不发愿、不再嫁，读书写信。
+# 类型与报价：送信（lt），3 章主线加一个分支章，共 4 个章节。kind=request，auto=true（L 来信）：offer 章在那不勒斯（naples），
+#   出面的是修院侧院的一位老侍女（代理人，不新建 cast，offer 不写 speaker）；请托人只在侍女念出的话里说话。
+# 窗口：报价 1557-01-15 至 1565-09-30；offer 的 deadline 即窗口止日，到期走 timeout（next=failed，不写见闻）。
+#   之后各章的 when 只写 alive（她 1566 年去世，去世后章节不再出现，到期走 timeout）。
+# 依据：史实背景——朱莉娅·贡扎加晚年在那不勒斯修院，与旧友暗中通信；1566 年去世。
+#   原创——老侍女、丝带与那包信（信的内容一字不写）、热那亚的书铺与木头地球仪、教皇国巡船的追赶、路上的几次应对。
+#   不写：1534 年的夜袭、通信的同伴与信件被查出的事、书商的名字。
+# 读写的旗标：
+#   写：c13_request_giulia_gonzaga_accepted / _declined（offer）；_close（search 检定失败）；_burned（search 烧信）；
+#       _done（handover 的 give 与 warn）；_warned（warn）；_partial（handover_burned 的 tell）；_failed（handover_burned 的 leave）；_late（timeout）。
+#   读：c13_request_giulia_gonzaga_close（handover 的 v1_close 变体，只读，改正文）。
+#   不读任何 c13_main_* 与 c7_* 旗标，不设任何 c7_ 旗标。
+# 结构说明：任务单的 handover 章用三个 requires（没烧 / 烧了 / 被记下）门禁选项。这些旗标都是本轨道 search 章设的，
+#   按总决定改为 next 分流：烧信的一支去 handover_burned（只有 tell / leave），其余去 handover（give / warn 都是 done，
+#   warn 另设 warned）；“被记下”只改 handover 的正文（v1_close）。search 的检定失败与成功都去 handover，失败的效果与旗标在 fail 分支里。
+# 依赖：港口 naples、genoa 都是现有港口，无 B10b 改名；人物 giulia_gonzaga 在 cast/historical_01_europe.toml；无主线门禁。
+#   family c13_offer_naples 为那不勒斯共用的报价冷却旗标，与同港的其他请托共用。
+# 缺省走向：拒绝（declined）走 failed；1565 年 9 月 30 日以前没有接下，报价到期走 timeout（failed，不写见闻，她不知道这件事没成）。
+#   接下以后，热那亚的书铺章挂着，60 天内没有交到，走 timeout（late，她得到一封侍女代笔的信）。
+# 回忆插画清单：
+#   mem-request_giulia_gonzaga-handover「木头地球仪」：热那亚窄街的书铺门口，一只木头地球仪在风里慢慢转。
+
+[[tracks]]
+key = "request_giulia_gonzaga"
+name = "一包旧信"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["giulia_gonzaga"]
+
+# 报价：那不勒斯鱼市后面，老侍女带来的一包信。侍女把女主人的话念出来。
+[[tracks.chapters]]
+key = "offer"
+title = "鱼市后面的篮子"
+text = "那不勒斯港边的鱼市后面，一位上了年纪的侍女拎着一只装亚麻布的篮子。布底下压着一包用丝带捆好的信。她说女主人要把它送到热那亚一位书商的手里，那家铺子门口挂着一只木头的地球仪。侍女把话一字不差地念出来：“信不长。只是有几个人，不愿它落到别人手里。”又念：“路通向哪里，我总想知道。”最后一句是她自己添的：路上别让人碰。"
+at = "naples"
+mood = "tense"
+deadline = [1565, 9, 30]
+family = "c13_offer_naples"
+family_cooldown_days = 20
+when = [{ kind = "date", from = [1557, 1, 15], to = [1565, 9, 30] }, { kind = "age", ge = 17 }, { kind = "alive", person = "giulia_gonzaga", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，替她把信带到热那亚。"
+next = "search"
+effects = [{ kind = "affinity", person = "giulia_gonzaga", value = 2 }, { kind = "flag", flag = "c13_request_giulia_gonzaga_accepted" }]
+reply = "侍女把丝带又紧了一扣，说丝带是女主人自己织的，织得慢。她把篮子放进你手里，没有再多说一个字，转身回了鱼市后面。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这种信沾不得。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_giulia_gonzaga_declined" }]
+reply = "侍女不急不恼，提起篮子，说：“那就去问别人。”她的步子不快，一会儿就没入了鱼市的人群。"
+news = "那不勒斯鱼市后面，一个老侍女拎着装亚麻布的篮子转了一圈，没人接她的活，又拎回修院去了。"
+
+# 路上：教皇国的巡船追上来要停船受检。舱底的篮子就在脚边。
+[[tracks.chapters]]
+key = "search"
+title = "巡船的旗"
+text = "过了奇维塔韦基亚，一条教皇国的巡船从北边追上来，打旗号要你停船受检，说是在找从那不勒斯来的禁书。你问他们找的是哪一本，对方只回了一句：“那不勒斯来的，都要看一看。”舱底那只亚麻布篮子就压在你脚边，布底下的丝带结还是侍女系的那一个。巡船的船长站在船头，隔着水喊了第二遍。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 4 }]
+when = [{ kind = "alive", person = "giulia_gonzaga", value = true }]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "请他们上船，大大方方地陪着查"
+next = "handover"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "giulia_gonzaga", value = 3 }]
+news = "那不勒斯来的一条商船，在奇维塔韦基亚外海被教皇国的巡船拦下搜了一遍。神父翻了半天货单，喝了船上一杯酒才放行。"
+reply = "你让他们上船，站在舱口，一样一样地把货单念给他们听，连桶里的橄榄油也报了斤两。"
+fail = { next = "handover", effects = [{ kind = "affinity", person = "giulia_gonzaga", value = -2 }, { kind = "flag", flag = "c13_request_giulia_gonzaga_close" }], news = "那不勒斯来的一条商船，在奇维塔韦基亚外海被教皇国的巡船搜了舱底，船名和旗号都被记进了巡船的本子。" }
+
+[[tracks.chapters.choices]]
+key = "run"
+text = "不理旗号，借着风往外海跑"
+next = "handover"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "giulia_gonzaga", value = 3 }]
+news = "那不勒斯来的一条商船，在奇维塔韦基亚外海想甩开教皇国的巡船，借着风跑了，天黑时巡船就不见了。"
+reply = "你把帆扯满，船头转向外海，顺着风把旗号甩在身后。舵柄压得很低，舱底的篮子在帆布底下晃了一路。"
+fail = { next = "handover", effects = [{ kind = "affinity", person = "giulia_gonzaga", value = -2 }, { kind = "flag", flag = "c13_request_giulia_gonzaga_close" }], news = "那不勒斯来的一条商船，在奇维塔韦基亚外海被教皇国的巡船追了半天，船名和旗号大概也都记下了。" }
+
+[[tracks.chapters.choices]]
+key = "burn"
+text = "停船之前，把信包塞进灶膛"
+next = "handover_burned"
+effects = [{ kind = "flag", flag = "c13_request_giulia_gonzaga_burned" }]
+news = "那不勒斯来的一条商船，在奇维塔韦基亚外海被教皇国的巡船截下，船舱翻了个遍，水手们说什么也没找到。"
+reply = "信包塞进灶膛，丝带最后才烧着，烧出一股发甜的味道。你关上灶门，巡船的小艇已经靠上了船舷。上船的人翻遍了舱，什么也没找到。"
+
+# 热那亚的书铺：信包还在，交给书商。
+[[tracks.chapters]]
+key = "handover"
+title = "热那亚的书铺"
+text = "热那亚码头上坡的一条窄街里，书铺门口挂着一只木头的地球仪，风一吹就慢慢转。书商是个瘦高的人，袖口磨得发亮。你把路上的事说了一遍，他的脸色变了几变，末了问了一句：“路上没出别的事？”柜台边上摞着一排旧账本，最上面那本的封皮已经脱了线。那包信放在柜台上，丝带还是那一条，结在灯下发白。他拿起来掂了掂，没有解开。"
+at = "genoa"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "genoa", text = "在热那亚的书铺里" }]
+deadline_days = 60
+when = [{ kind = "alive", person = "giulia_gonzaga", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "giulia_gonzaga", value = -3 }, { kind = "flag", flag = "c13_request_giulia_gonzaga_late" }, { kind = "letter", person = "giulia_gonzaga", text = "女主人说，书商那边不必去了，信已另有去处。这封是我代笔的，不必回信。路上辛苦。" }]
+
+[[tracks.chapters.variants]]
+key = "v1_close"
+when = [{ kind = "flag", flag = "c13_request_giulia_gonzaga_close" }]
+text = "书铺门口的木头地球仪还在转，你进门时它正好对着你。巡船纠缠了大半天，你的旗和船名都被记进了他们的本子。亚麻布篮子压在最底下，没有被翻出来。你把路上的事说完，书商没有立刻伸手，先把那包信拿起来掂了掂，没有解开。"
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把信包原样交给他"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "giulia_gonzaga", value = 8 }, { kind = "letter", person = "giulia_gonzaga", text = "热那亚的风比那不勒斯硬，窗上的雨一天没停。修院的柠檬树今年开得晚，照旧有人去看它。路上想必辛苦，多谢你。" }, { kind = "memory", memory = "mem-request_giulia_gonzaga-handover", title = "木头地球仪" }, { kind = "flag", flag = "c13_request_giulia_gonzaga_done" }]
+reply = "书商没有拆，只把丝带的结又看了一眼，直接锁进了柜台底下的抽屉。钥匙挂回他的腰带上。几天后，你在船上收到一封那不勒斯来的回信。"
+news = "热那亚码头上坡的书铺，这几天关门比平时早了一个时辰，门口的木头地球仪却照旧转个不停。"
+
+[[tracks.chapters.choices]]
+key = "warn"
+text = "交信时提醒他：路上有船在打听那不勒斯来的书"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "giulia_gonzaga", value = 8 }, { kind = "letter", person = "giulia_gonzaga", text = "热那亚的风比那不勒斯硬，窗上的雨一天没停。书商转来了你路上说的话，我记下了。修院的柠檬树今年开得晚，照旧有人去看它。多谢你说在前头。" }, { kind = "memory", memory = "mem-request_giulia_gonzaga-handover", title = "木头地球仪" }, { kind = "flag", flag = "c13_request_giulia_gonzaga_done" }, { kind = "flag", flag = "c13_request_giulia_gonzaga_warned" }]
+reply = "书商想了想，把信包收进抽屉，又加了一把锁。当晚，抽屉里的东西就挪到了别处。"
+news = "热那亚码头上坡的书铺，前一晚还挂着的木头地球仪，第二天一早不见了，掌柜的说是拿去修了。"
+
+# 烧了信的一支：书商问的是东西在哪里。
+[[tracks.chapters]]
+key = "handover_burned"
+title = "没有带到的信"
+text = "你还没走到柜台，书商已经看见了你空着的手，还有袖口上沾着的一点灰。铺子里的人都停下了手里的活，只有门口那只木头地球仪还在风里慢慢转。柜台底下的抽屉开着，里头垫着一张旧绒布，是空的。他没有叫你坐，只把账本合上，等你开口。后屋的箱子有人翻着，声音停了又响。“东西呢？”他问。"
+at = "genoa"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "genoa", text = "到热那亚的书铺，交代那包信的下落" }]
+deadline_days = 60
+when = [{ kind = "alive", person = "giulia_gonzaga", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "giulia_gonzaga", value = -3 }, { kind = "flag", flag = "c13_request_giulia_gonzaga_late" }, { kind = "letter", person = "giulia_gonzaga", text = "女主人说，热那亚那边不必再去了。这封是我代笔的，不必回信。" }]
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "告诉他信烧了，烧在哪里、怎么烧的"
+next = "done"
+effects = [{ kind = "cash", value = 1150 }, { kind = "affinity", person = "giulia_gonzaga", value = 4 }, { kind = "letter", person = "giulia_gonzaga", text = "丝带烧了，我并不意外。丝带我还会再织。多谢你肯照实说，没有绕路。" }, { kind = "flag", flag = "c13_request_giulia_gonzaga_partial" }]
+reply = "书商松了一口气，把账本合上，说烧了好，比落在别人手里好。他没有再问烧在哪里，只数出一叠钱，推到你面前。"
+news = "热那亚码头上坡的书铺，掌柜的这几天话少了，只在门口的木头地球仪旁边站一会儿，像在等什么人。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "什么也不说，转身走了"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_giulia_gonzaga_failed" }]
+reply = "你什么也没说，转身走出书铺。门口的地球仪在风里又转了一圈，停下时正对着你。"
+news = "热那亚码头上坡的书铺，一个那不勒斯口音的男人进去站了一会儿，什么也没买，转身就走了。"

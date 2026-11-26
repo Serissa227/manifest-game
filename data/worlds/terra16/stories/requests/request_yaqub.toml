@@ -1,0 +1,176 @@
+# 请托：过了秤的银子（request_yaqub）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：雅库布（yaqub，1540-07-10 生，男），非斯犹太区金匠的儿子；身份档 1；势力 morocco。cast 在 classmates_fez.toml，C7 线 pair_musa_yaqub、bond_yaqub 归 C7，本请托不写。
+# 类型：信件（letter）。三章：offer（得土安码头，他把几户人家的银袋与一封信交给你）→ handover（伊斯坦布尔织布的老寡妇，你选怎么念信）→ reply（回信与一小块布边）。
+# 报价：V 到访。auto=true，offer 在 tetouan（他从近旁下到港口）。窗口 1580-01-01 至 1590-06-30，玩家满 17 岁、雅库布满 18 岁；family c13_offer_tetouan，冷却 20 天。
+#   offer 的 deadline 为窗口止日，timeout 只走 failed，不写见闻（没人知道这件事没成）。
+#   brief 的 window 与 default 不写：普通章不接受 window 与 default，窗口由 when 的日期条件表达，缺省走 timeout。
+#   brief 未列名声门槛（fame_gate），这里没有加；若整合时要按窗口起年封顶，在 when 里补一条 fame。
+# 依据·史实背景：1492 年被逐的塞法迪人散在非斯、奥斯曼各地，家族之间靠商船带信带钱。伊斯坦布尔的收信人是叙事人物（织布的老寡妇与她的儿子）。三王之战（1578）只作背景，消息断了，不写战事。
+# 依据·原创：银袋的听声、掺了铜的一枚、布边（老寡妇织的细格子）、数单背面的一行字。埃丝特（esther）只在 ask_esther 里说一句，不写她的恋人与账本里的旧欠据。
+# 秘密（永远不写）：钱匣夹层里替穆萨藏着的、牵涉假币案的银钱。正文不写假币、钱匣、穆萨、金匠铺、赎金；见闻里一字不写。
+# 读的旗标：c13_request_yaqub_half（offer 的 ask_letter 设，handover 的 v1_half 变体读）；c13_request_yaqub_asked（handover 的 ask_esther 设，reply 的 v1_asked 变体读）；bond 条件读 bond yaqub（offer 的 v1_bond 变体）。
+# 设的旗标：_accepted（offer 接下）、_declined（offer 回绝）、_half（offer 问信里的好消息）、_gentle（handover 先挑好消息说）、_asked（handover 托埃丝特打听）、_late（handover 超时）、_done（reply 两条都设，终局）。
+#   c7_ 旗标只读不设（本文件一个都不读）。
+# 报酬：现金 1250（reply 两条都给，身份档 1 中档）；好感最多 +13（offer +2、handover +3、reply +8 或 +7）；名声 +1；回忆 mem-request_yaqub-reply；无物品、无声望、无技能、无海图。
+# 检定：handover 的 read_gently 用 eloquence，一般（base 20 / per 7）；失败走 fail：儿子照着念完，老寡妇哭了一下午（fail.news）。
+# 门禁：无主线门禁（brief 未列 gate_main、variant_main）。
+# 依赖：港口 tetouan 与 istanbul（ports_north_africa.toml、ports_east_med.toml）；人物 yaqub（classmates_fez.toml）与 esther（cast，ask_esther 的 requires 读她的情谊）；无 B10b 改名。
+# 缺省走向：不接（decline）→ failed，无见闻；报价到 1590-06-30 没去 → offer 超时 failed，无见闻；接了没把银袋送到伊斯坦布尔 → handover 到期（150 天）超时 failed，来信说另一条船送到了，好感 -3，设 _late；回信没取 → reply 是普通章，没有期限，可以一直等。
+# 回忆插画清单：
+#   mem-request_yaqub-reply「数单背面的一行」：得土安码头边的小桌上，一张秤过的数单摊开，背面一行字墨迹未干；一小块织着细格子的布边压在纸角上，窗外是港口的桅杆。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_yaqub"
+name = "过了秤的银子"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["yaqub", "esther"]
+
+# 一、报价：得土安码头，他把银袋一枚一枚摆在小桌上，听着落桌的声音。
+[[tracks.chapters]]
+key = "offer"
+title = "封口"
+text = "得土安的码头边，雅库布在一张小桌上把一袋银子倒出来，一枚一枚摆开。每摆一枚，先用指甲弹一下，侧着头听它落桌的声音。“这一枚发闷，掺了铜。”他收回袋里，又摆下一枚，“这一枚，听。”几户非斯人家凑的银子，连同一封信，要送到伊斯坦布尔的亲戚手里。他把信封了口，在封泥上按下自己的戳，抬头看你：“银会响，账不能哑。信里写的是谁家还活着。三王之战以后，有几户的消息断了，那边的人还不知道。”"
+speaker = "captain"
+mood = "tender"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "在得土安码头见到雅库布" }]
+when = [
+  { kind = "date", from = [1580, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "yaqub", ge = 18 },
+]
+deadline = [1590, 6, 30]
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "yaqub", level = "C" }]
+text = "得土安的码头边，雅库布把银袋倒在小桌上。他看见你，手里的一枚停住了，把它推到你面前：“你听，这一枚。”你听了，说它响得正。他这才松开袋口，一枚一枚收回去数。“信里写的是谁家还活着。三王之战以后，有几户的消息断了，那边的人还不知道。”"
+
+[[tracks.chapters.choices]]
+key = "take_silver"
+text = "接下，把银子和信送到伊斯坦布尔。"
+next = "handover"
+effects = [
+  { kind = "affinity", person = "yaqub", value = 2 },
+  { kind = "flag", flag = "c13_request_yaqub_accepted" },
+]
+reply = "他把秤过的数写在一张纸上，跟银袋绑在一起，又在纸角上画了一条短线。“到了那边，让收的人再秤一遍。少一枚是你的事，多一枚是我的事。”他说完，把银袋推过来，手指在袋口停了一下才松开。"
+
+[[tracks.chapters.choices]]
+key = "ask_letter"
+text = "接下，问他：信里写的，都是好消息吗？"
+next = "handover"
+effects = [
+  { kind = "affinity", person = "yaqub", value = 2 },
+  { kind = "flag", flag = "c13_request_yaqub_accepted" },
+  { kind = "flag", flag = "c13_request_yaqub_half" },
+]
+reply = "“一半。”他把信翻过来，背面是收信人的名字，几户人家轮流写的，笔迹各不相同。他看了你一眼，没有多解释。“另一半，等那边念了才知道。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "带银子走这么远，我担不起。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yaqub_declined" }]
+reply = "他点点头，把银袋收回柜里，没有一句怨话。“那就等下一条去伊斯坦布尔的商船。银子可以等，信等不得。”他把信重新包好，压在银袋底下，又翻开自己的账本，在后面一页写下一个日子。"
+
+# 二、送到伊斯坦布尔的织布人家：老寡妇不识字，儿子念信，念到一半停住。
+[[tracks.chapters]]
+key = "handover"
+title = "织布的老寡妇"
+text = "伊斯坦布尔的塞法迪人街区，一间窄屋，织机占了半间。织布的老寡妇坐在机前，不识字，只听儿子念。她儿子接过银袋，当着你的面又秤了一遍，一枚不少，才把信展开。念到一半他停住了，手指按在一行字上。那一行写着，她弟弟一家在三王之战以后就没了消息。老寡妇的梭子还停在经线中间。屋里冷，她没起身，只把披肩往肩上拢了拢。"
+speaker = "captain"
+mood = "sad"
+at = "istanbul"
+objectives = [{ kind = "at", at = "istanbul", text = "到伊斯坦布尔的塞法迪人街区" }]
+when = [{ kind = "alive", person = "yaqub", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "yaqub", value = -3 }, { kind = "flag", flag = "c13_request_yaqub_late" }, { kind = "letter", person = "yaqub", text = "银子和信托另一条船送到了。那边回话说收到了，秤过，一枚不少。——雅库布" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_half"
+when = [{ kind = "flag", flag = "c13_request_yaqub_half", value = true }]
+text = "伊斯坦布尔的塞法迪人街区，一间窄屋，织机占了半间。老寡妇坐在机前，儿子接过银袋，当着你的面又秤了一遍，一枚不少。你已经知道信里有一半是坏消息，没有抢在他前头开口。儿子念到一半停住了，手指按在一行字上。"
+
+[[tracks.chapters.choices]]
+key = "read_gently"
+text = "请儿子先别念，我来把信里的好消息先挑出来说。"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "affinity", person = "yaqub", value = 3 },
+  { kind = "flag", flag = "c13_request_yaqub_gentle" },
+]
+reply = "我先说活着的那几家：在非斯开了新铺子，添了孩子，孩子的名字也写在信上。最后才说没消息的那一家。老寡妇听完，说没消息，就还有消息。她把梭子穿回经线里，手没抖。"
+news = "伊斯坦布尔的塞法迪人街区有人传话：织布的老寡妇收了非斯的银子，信听完了，没当场掉泪。"
+fail = { next = "reply", effects = [{ kind = "affinity", person = "yaqub", value = -2 }], news = "伊斯坦布尔的塞法迪人街区，织布的老寡妇听儿子把信念完，哭了一下午，街坊轮流进门劝。" }
+
+[[tracks.chapters.choices]]
+key = "ask_esther"
+text = "托埃丝特在伊斯坦布尔的商号，帮着打听那一家的下落。"
+next = "reply"
+requires = [{ kind = "affinity", person = "esther", ge = 20 }]
+hint = "这一带你认识的人里，没有谁的商号能托"
+effects = [
+  { kind = "affinity", person = "yaqub", value = 3 },
+  { kind = "flag", flag = "c13_request_yaqub_asked" },
+]
+reply = "埃丝特听完，没问长短，只把那家人的名字抄进她的账本，抬头说：“我的船往阿尔及尔、非斯都走。有消息，就送到这家来。”"
+news = "伊斯坦布尔的塞法迪人街区，织布的那家收了非斯的银子，还托了城里一家商号去打听另一家的下落。"
+
+[[tracks.chapters.choices]]
+key = "deliver_only"
+text = "照规矩交了银子和信，让他们自己念。"
+next = "reply"
+effects = [{ kind = "affinity", person = "yaqub", value = 2 }]
+reply = "儿子念完了信，老寡妇没说话，只把织机上断了的线接上。梭子又走了起来。过了一会儿，她才让儿子把信拿给她，把折痕一道一道摸过去，说：“那边的人，秤得准，信也折得齐。”"
+news = "伊斯坦布尔的塞法迪人街区，织布的老寡妇没说什么，银子秤过，信让儿子念完，织机又响了起来。"
+
+# 三、回信与布边：他下到港口取回信，数单背面多了一行字。
+[[tracks.chapters]]
+key = "reply"
+title = "回信的秤"
+text = "得土安码头，雅库布又下到港口来，手里是一封新折的回信，还有那张秤过的数单。数单背面多了一行字：“秤过，一枚不少。”他点点头，才拆信。信纸里夹着一小块布边，窄窄的，织的是细格子，边上还带着织机上的毛刺。“是老寡妇织的，”他把布边放在桌上，“说是给送信的人的。布边上打了个小结，是她自己的记号，让人认得出是哪一家。”"
+speaker = "captain"
+mood = "tender"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "回到得土安码头，取回信" }]
+when = [{ kind = "alive", person = "yaqub", value = true }]
+news = "得土安码头边，非斯来的金匠之子拆开一封伊斯坦布尔寄回的信，拆完又把数单翻过来看了一眼。"
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_yaqub_asked", value = true }]
+text = "得土安码头，雅库布又下到港口来，手里是一封新折的回信，还有那张秤过的数单。数单背面多了一行字：“秤过，一枚不少。”他点点头，才拆信。信里多了一句：埃丝特的商号已经托人往阿尔及尔打听了。信纸里夹着一小块布边，是老寡妇织的，说是给送信的人的。"
+
+[[tracks.chapters.choices]]
+key = "keep_cloth"
+text = "收下那块布边。"
+next = "done"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "yaqub", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_yaqub-reply", title = "数单背面的一行" },
+  { kind = "flag", flag = "c13_request_yaqub_done" },
+]
+reply = "他把布边递给你，说那边的规矩，替人送了信，就收人家手上的一点东西。钱他照数付了，一枚也没少。“这个比钱耐放，”他说，“哪天用得上，你留着。”"
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "说布边该归那几户人家，请他转给他们。"
+next = "done"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "yaqub", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_yaqub-reply", title = "数单背面的一行" },
+  { kind = "flag", flag = "c13_request_yaqub_done" },
+]
+reply = "他想了想，说那就给最年长的那一家，“他们最想知道那边还好”。钱他照付，又在账本上记了一行，记完才合上。“布边的事我记下了，是谁家的，就给谁。”"

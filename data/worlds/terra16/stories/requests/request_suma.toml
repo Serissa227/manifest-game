@@ -1,0 +1,163 @@
+# 请托：日子她定（request_suma）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：苏玛（suma，1541-10-19 生，女），格雷西克蜡染商的女儿，学院同学（cast：classmates_giri.toml）；势力 giri，身份档 1。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（中间人，交货）、settle（收尾）；另有 settle_cut（工钱少一截的收尾）。
+#   结构说明：章节变体只换文字，不换选项效果，所以“工钱少一成”的现金差额走 next 分到 settle_cut，而不写成变体。
+# 报价：T（当面）。人物按日程就在格雷西克，auto=false，玩家用 ask:request_suma 启动；offer 不写 at，目标是 person suma。
+# 窗口：1573-01-01 至 1590-06-30，写在 offer 的 when 里（非 stage 章不写 window，所以没有 default）。
+# 进行中：deliver 章 deadline_days=60，超时走 failed，来信一封，好感 -3，旗标 _late。settle 与 settle_cut 是普通章，可以一直等。
+# 依据·史实背景：爪哇北岸的蜡染（靛蓝缸、蜂蜡描花）；染工的工钱从前经中间人的手。
+# 依据·原创：苏玛的铺子、布边上的合约、中间人、船帆上写着日子的新花样、染坊后院的人。
+# 待核：格雷西克在 1570 年代是否已有这样的蜡染铺（正文只写一家，用传闻口吻）。
+# 读的旗标：c13_main_kaicili（offer 的变体，“王子”的口吻只给该主角）；bond suma 至少 C（offer 的变体，只读情谊等级）。
+# 设的旗标：c13_request_suma_accepted（offer 两条接法）、_declined（offer 回绝）、_haggled（offer 磨日子，deliver 变体读）、
+#   _wages（deliver 把一成发给染工，settle 变体读）、_cut（deliver 中间人拿了一成，settle_cut 收尾）、_late（deliver 超时）、_done（两条收尾）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不写恋爱。
+# 报酬：现金最多 900 + 货款 950（收尾给一次）；好感合计 +13；名声 +1；唯一奖励 malay_sarong 已删（C7 bond_suma 的 s 章已发同一件 malay_sarong，整合裁定删去重复项；纱笼只是正文里的物件，不发）；回忆 mem-request_suma-settle。
+# 检定：deliver 的 show_bills 用 commerce 一般（base 20 / per 7），失败走 settle_cut。
+# 秘密：C7 的线、cast 里的秘密与“明年还来不来”一类的话一概不写；见闻不写私事。
+# 回忆插画清单：
+#   mem-request_suma-settle「竹竿上的新花样」：竹竿上晾着新染的布，花样是一条船，船帆上写着日子。
+
+[[tracks]]
+key = "request_suma"
+name = "日子她定"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["suma"]
+
+# 一、价钱她先开：格雷西克的蜡染铺，苏玛伸出一只手给你看指甲缝里的靛青。
+[[tracks.chapters]]
+key = "offer"
+title = "价钱她先开"
+text = "苏玛的铺子刚挂上自己的招牌，门口一排靛缸还冒着青泡。她伸出一只手给你看，指甲缝里一圈洗不掉的青。“从前买靛蓝要过中间人的手，他抽一成，染工的工钱再被他抽一成。”她笑得眼睛都弯了，“今年我自己买。二十担，价钱我先开。”她蘸着缸里的水，在一块染布的边上写下日子，递给你：“六十天。晚一天，扣一成。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "suma", ge = 18 }]
+objectives = [{ kind = "person", person = "suma", text = "在格雷西克的蜡染铺找到她" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "suma", level = "C" }, { kind = "flag", flag = "c13_main_kaicili" }]
+text = "苏玛的铺子刚挂上自己的招牌，门口一排靛缸还冒着青泡。她一见你就笑，先把你从头看到脚，才伸出一只手，指甲缝里一圈洗不掉的青。“王子也要会算钱，你也一样。”她说，“从前买靛蓝要过中间人的手，他抽一成，染工的工钱再被他抽一成。今年我自己买，二十担，价钱我先开。”她蘸着缸里的水，在一块染布的边上写下日子，递给你：“六十天。晚一天，扣一成。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下：二十担靛蓝，照她定的日子到。"
+next = "deliver"
+reply = "她笑着把布边塞进我的袖子，拍了拍：“这是合约，丢了也算数。”又补一句，“你丢了，我就去找那个抽成的人。”"
+effects = [{ kind = "affinity", person = "suma", value = 2 }, { kind = "flag", flag = "c13_request_suma_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "haggle_day"
+text = "接下，先跟她磨一磨日子。"
+next = "deliver"
+reply = "“磨也算一天。”她一天也不让，笑着把布边又塞回我的袖子里，手指在上面按了一下，把“六十天”三个字按得更深。"
+effects = [{ kind = "affinity", person = "suma", value = 2 }, { kind = "flag", flag = "c13_request_suma_accepted" }, { kind = "flag", flag = "c13_request_suma_haggled" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这日子我赶不上。"
+next = "failed"
+reply = "她笑着把布边收回去，说那就再找个赶得上的。缸里的靛青晃了一下，她的手指又伸进去搅。"
+effects = [{ kind = "flag", flag = "c13_request_suma_declined" }]
+
+# 二、中间人：二十担靛蓝抬进染坊后院，中间人站在院门口。
+[[tracks.chapters]]
+key = "deliver"
+title = "中间人"
+text = "二十担靛蓝抬进染坊后院，苏玛一担一担打开，抓一把放在手心搓，看颜色，闻气味。染工们围着缸边等。这时从前替她家买靛蓝的中间人来了，站在院门口，说：“这条路是我走熟的，今年这一成，照旧该是我的。”苏玛头也没回，只把手上的靛泥往围裙上一抹：“笑归笑，价不让。”中间人也笑，说那染工们明年的活，他就不保了。"
+speaker = "captain"
+mood = "tense"
+at = "gresik"
+when = [{ kind = "alive", person = "suma", value = true }]
+objectives = [{ kind = "goods", good = "indigo", qty = 20, at = "gresik", text = "二十担靛蓝" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "suma", value = -3 }, { kind = "flag", flag = "c13_request_suma_late" }, { kind = "letter", person = "suma", text = "日子过了，靛蓝我从中间人那里买了，多给了一成。布边你留着，下回日子还是我定。——苏玛" }], news = "格雷西克的蜡染铺等不到靛蓝船，苏玛把买卖又交回中间人手里，多给了一成，说是晚一天的规矩。" }
+news = "格雷西克的染坊后院，二十担靛蓝抬了进去，从前的中间人空着手走了。"
+
+[[tracks.chapters.variants]]
+key = "v1_haggled"
+when = [{ kind = "flag", flag = "c13_request_suma_haggled" }]
+text = "二十担靛蓝抬进染坊后院，苏玛一担一担打开，抓一把放在手心搓。她看见你，先笑：“磨过的那一天，我记着呢。”染工们围着缸边等。这时从前替她家买靛蓝的中间人来了，站在院门口，说：“这条路是我走熟的，今年这一成，照旧该是我的。”苏玛头也没回，只把手上的靛泥往围裙上一抹：“笑归笑，价不让。”中间人也笑，说那染工们明年的活，他就不保了。"
+
+[[tracks.chapters.choices]]
+key = "show_bills"
+text = "拿出买靛蓝的票据，当着染工跟他算：这一船，没走他的路。"
+next = "settle"
+reply = "我把票据一张张念给他听：买在哪里，卖的是谁，哪天装的船。念到一半，染工们都停了手，围着缸边看他的脸。"
+effects = [{ kind = "affinity", person = "suma", value = 3 }]
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "settle_cut", effects = [{ kind = "affinity", person = "suma", value = -2 }, { kind = "flag", flag = "c13_request_suma_cut" }], news = "格雷西克的蜡染坊后院，中间人跟船长争到了院子里，苏玛从工钱里拿出一点，打发他走了。" }
+
+[[tracks.chapters.choices]]
+key = "to_dyers"
+text = "提议：他要的那一成，干脆当着他的面发给染工当工钱。"
+next = "settle"
+reply = "苏玛愣了一下，拍手笑了，让染工们排好队，一人一份地发。中间人站在一边看了一会儿，自己走了。"
+effects = [{ kind = "affinity", person = "suma", value = 3 }, { kind = "flag", flag = "c13_request_suma_wages" }]
+
+[[tracks.chapters.choices]]
+key = "pay_him"
+text = "从我这边匀一成给他，省得他明年使绊子。"
+next = "settle_cut"
+reply = "苏玛没拦我，只是算钱的时候，把那一成单独记了一行，写着“船长替付”。"
+effects = [{ kind = "affinity", person = "suma", value = 1 }, { kind = "flag", flag = "c13_request_suma_cut" }]
+news = "格雷西克的蜡染铺，新来的船长替中间人付了一成，那人拿了钱，走的时候满脸是笑。"
+
+# 三、新花样：第一缸布染出来了，竹竿上晾着一条船。
+[[tracks.chapters]]
+key = "settle"
+title = "新花样"
+text = "第一缸布染出来了，苏玛把蜂蜡描过的布挂在竹竿上，一排排晾着，花样是新的：一条船，船帆上写着日子。她把货款和工钱算给你，一文不差，算盘打得噼啪响。“这回的账，我自己算的，一个铜子都不糊涂。”她从竹竿上取下一条纱笼，抖开给你看，“这一缸的头一条。头一条不卖。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "suma", value = true }]
+objectives = [{ kind = "person", person = "suma", text = "在蜡染铺找到她" }]
+news = "格雷西克的蜡染铺晾出了新花样，一条船，帆上写着日子。这一缸的工钱，染工们拿到手的比从前多。"
+
+[[tracks.chapters.variants]]
+key = "v1_wages"
+when = [{ kind = "flag", flag = "c13_request_suma_wages" }]
+text = "第一缸布染出来了，苏玛把蜂蜡描过的布挂在竹竿上，一排排晾着，花样是新的：一条船，船帆上写着日子。她把货款和工钱算给你，一文不差，算盘打得噼啪响。她朝院子里努努嘴：“染工记得你。”然后又说：“这回的账，我自己算的，一个铜子都不糊涂。”她从竹竿上取下一条纱笼，抖开给你看，“这一缸的头一条。头一条不卖。”"
+
+[[tracks.chapters.choices]]
+key = "take_cloth"
+text = "看她把纱笼挂回竹竿头一个的位置。"
+next = "done"
+reply = "她抖平纱笼的边，挂回竹竿头一个的位置，说船帆上那个日子，是我到港的那天。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 950 }, { kind = "affinity", person = "suma", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_suma-settle", title = "竹竿上的新花样" }, { kind = "flag", flag = "c13_request_suma_done" }]
+
+[[tracks.chapters.choices]]
+key = "ask_wages"
+text = "问她：这一缸，染工拿到的工钱比从前多多少？"
+next = "done"
+reply = "“多两成，一文不经别人的手。”她指了指院子里的染工，说今天都穿着新布。她付了钱，把那条纱笼夹回竹竿上，拍了拍。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 950 }, { kind = "affinity", person = "suma", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_suma-settle", title = "竹竿上的新花样" }, { kind = "flag", flag = "c13_request_suma_done" }]
+
+# 三之二、少的那一截：工钱里少了一截，记作“打发中间人”。
+[[tracks.chapters]]
+key = "settle_cut"
+title = "少的那一截"
+text = "蜂蜡描过的布在竹竿上还滴着青水，花样还是那条船，船帆上写着日子。苏玛把货款和工钱算给你，比先前少了一截。那一截在账上单独记了一行，她没念出来，只把算盘珠子往回一拨。她从竹竿上取下一条纱笼，抖开给你看：“这一缸的头一条，不卖。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "suma", value = true }]
+objectives = [{ kind = "person", person = "suma", text = "在蜡染铺找到她" }]
+news = "格雷西克的蜡染坊又晾出一排布，还是那条船，帆上写着日子。这一缸的工钱，听说有一截被中间人拿走了。"
+
+[[tracks.chapters.choices]]
+key = "take_cloth_cut"
+text = "看她把纱笼挂回竹竿。"
+next = "done"
+reply = "她把纱笼夹回竹竿，说少的那一截，下一缸从新花样上赚回来。"
+effects = [{ kind = "cash", value = 800 }, { kind = "cash", value = 950 }, { kind = "affinity", person = "suma", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_suma-settle", title = "竹竿上的新花样" }, { kind = "flag", flag = "c13_request_suma_done" }]
+
+[[tracks.chapters.choices]]
+key = "ask_cut"
+text = "问她：少的那一截，是谁拿去了？"
+next = "done"
+reply = "“中间人。他手下的人还在码头上等，等着看你的船什么时候回。”她把那一截的数字又念了一遍，念得很慢，一个字也没有含糊。她把纱笼抖平，用一个夹子夹回竹竿上。"
+effects = [{ kind = "cash", value = 800 }, { kind = "cash", value = 950 }, { kind = "affinity", person = "suma", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_suma-settle", title = "竹竿上的新花样" }, { kind = "flag", flag = "c13_request_suma_done" }]

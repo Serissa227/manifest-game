@@ -1,0 +1,221 @@
+/*
+ * 航海过程改造 H02（docs/VOYAGE-PLAN.md §3.6）：航行视图的船况状态区与常设命令面板（components/nav/ShipStatus.tsx），
+ * 补给页的船材与刮船底（SupplyDesk），H05 岸与锚地的小面板（ShorePanel）。
+ *
+ * 两套界面共用：经典像素（v1）下这几样东西也照样画出来，样式只有这一份（字色取 v2 的墨色阶，v1 落回继承色）。
+ * 原来放在 styles/ui-v2/seafaring.css 里、却没有 :root[data-ui="v2"] 前缀——那个目录只收新界面专用的规则
+ * （ui-v2.test.tsx 逐条检查），所以搬到这里；只属于新界面的一条（手机的 v2-nav-stack）留在原处并加了前缀。
+ * App.tsx 在 ui-v2/index.css 之后引入本文件：与搬家前一样排在新界面 voyage.css 之后，同样的特异度下照旧覆盖它。
+ *
+ * 少占屏：缺省一条细长的图标 + 数字，挂在仪表下方居中；点开才写名字。有问题的项变色（注意 = 黄铜、要紧 = 红）。
+ */
+.ship-status {
+  position: absolute;
+  z-index: 2;
+  top: 78px;
+  left: calc((100% - var(--stage-cover-right, 0px)) / 2);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+.ship-status > * {
+  pointer-events: auto;
+}
+.ship-status-toggle {
+  margin: 0;
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(17, 31, 49, 0.88);
+  color: #e8e1cf;
+  font: inherit;
+  cursor: pointer;
+}
+.ship-status-toggle:focus-visible {
+  outline: 2px solid #d9b25f;
+  outline-offset: 2px;
+}
+.ship-gauges {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ship-gauge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.ship-gauge .pn-icon {
+  flex: none;
+}
+.ship-gauge-label {
+  opacity: 0.75;
+}
+.ship-gauge.caution {
+  color: #f0c56a;
+  background: rgba(240, 197, 106, 0.12);
+}
+.ship-gauge.warn {
+  color: #ff9a8a;
+  background: rgba(255, 110, 90, 0.18);
+}
+.ship-status.open .ship-status-toggle {
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+.ship-status.open .ship-gauges {
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 120px;
+}
+.ship-status.open .ship-gauge {
+  justify-content: space-between;
+}
+.ship-status-note,
+.ship-status-speed {
+  margin: 0;
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: rgba(17, 31, 49, 0.88);
+  color: #f0c56a;
+  font-size: 12px;
+}
+.ship-status-speed {
+  color: #c9d3de;
+}
+
+/* 补给页：船材与刮船底，与上面的粮水隔开一点 */
+.sp-wear {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(12, 18, 28, 0.2);
+}
+
+/* 常设命令：与自动航行同一种弹出卡，里面三组 */
+.orders-pop {
+  width: min(300px, calc(100vw - 32px));
+}
+.orders-pop fieldset {
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+}
+.orders-pop legend {
+  margin-bottom: 4px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+.orders-row {
+  display: flex;
+  gap: 4px;
+}
+.orders-row .nav-pop-item {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+}
+.orders-row .nav-pop-item.active {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+.orders-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.orders-checks label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.orders-checks select {
+  margin-left: auto;
+}
+
+/* H05 岸与锚地的小面板（纸色底，字色取 v2 的墨色阶；旧界面落回继承色） */
+.shore-pop {
+  width: min(320px, calc(100vw - 32px));
+}
+.shore-site {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--v2-ink, inherit);
+}
+.shore-tag {
+  padding: 0 6px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--v2-ink-2, inherit);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+.shore-tasks,
+.shore-jobs {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--v2-ink, inherit);
+}
+.shore-task label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shore-task-name {
+  font-weight: 600;
+}
+.shore-task label small {
+  margin-left: auto;
+  color: var(--v2-ink-2, inherit);
+  font-variant-numeric: tabular-nums;
+}
+.shore-task-gain {
+  display: block;
+  padding-left: 22px;
+  color: var(--v2-ink-2, inherit);
+}
+.shore-task.off .shore-task-name,
+.shore-task.off label small {
+  color: var(--v2-ink-3, inherit);
+}
+.shore-task.off .shore-task-gain {
+  color: var(--v2-ink-3, inherit);
+  font-style: italic;
+}
+.shore-nets {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 6px 0;
+}
+.shore-nets small,
+.shore-lee {
+  font-size: 12px;
+  color: var(--v2-ink-2, inherit);
+}
+.nav-pop-item.primary:not(:disabled) {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 2px currentColor;
+}

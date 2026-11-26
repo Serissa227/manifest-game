@@ -1,0 +1,399 @@
+# C7 羁绊线：周砚——林兄的灯谜（故事 2.0，A5 / E37 契约）
+# 标签：BG，可恋爱的羁绊线；主角林晚灯（lin_wandeng，1540-03-23，女，在龙溪社学扮男装，同窗叫她“林兄”）。
+# 人物：周砚（zhou_yan，1540-06-25，男，romance.with = f）：同桌的书呆子，较真、爱引书、一急就结巴。
+#       他的苦恼（日记里“我是不是不正常，竟觉得林兄好看”）只在 B1 被“我”偷看到，永远不进见闻。
+#       许采（xu_cai，1540-04-19，女，社学教读许先生的女儿）、陈栋（chen_dong，镇海卫千户之子）只在揭开那一章出场。
+# 年龄：学院期两人 13—16 岁，只写在意、脸红、借口；A1 / A2 各一个心动选项（heart +6），
+#       S 的 heart 选项（1556-12，两人都 16 岁）只是“再见时告诉他那一点该落在哪里”，最多握手（heart +12、crush）；
+#       重逢 1567 年两人都 26—27 岁，恋人落点要 c7_bond_zhou_yan_romance + 心动 24（6 + 6 + 12）。
+# 依据：史实——明代社学；1567 年（隆庆元年）月港开海、准贩东西二洋，前后设海澄县，船引按梁头丈尺征水饷；
+#       明代戏文《同窗记》演梁山伯、祝英台；“青青子衿，悠悠我心”出《诗经·郑风·子衿》，曹操《短歌行》引作求贤。
+#       世界线——1556 年七月官兵搜港、林家的船被烧（TERRA16 §12.4）。
+#       原创——周砚一家、灯谜“一丁点火，守到天光”（谜底“灯”）、红纸结拜帖、少一点的“心”字灯笼、墨匣、点名簿上的“林家子”。
+#       待核：1555 年端午、1556 年元宵在世界日历上的日子（按学院校历取约 6 月 3 日、2 月 6 日）。
+# 轨道：bond_zhou_yan（request，auto=false，academy=true，由 ask:bond_zhou_yan 开启）；
+#       reunion_zhou_yan（main，auto=false，由 S 的三个选项与 default 开启）；
+#       wandeng_unmasked（request，auto=false，academy=true，一章 unmasked）——全游戏唯一一次写林晚灯的身份揭开，
+#       由本文件 c1 的 default 与每个选项 start_track 开启。
+# 缺省走向：C1—A2 玩家不回应时故事照走、没有收获；S 缺省他去县里应考没来送船（_parted），重逢照样开启；
+#       重逢缺省是他寄来的一份开海以后的申报纸式与一封信（_missed）。揭开那一章缺省：被搜港的兵当众认出（known）。
+# 旗标：设 c7_wandeng_unmasked_known / c7_wandeng_unmasked_kept（陈栋、许采、小蛮、黄墩、许采×小蛮的文件读）；
+#       设 c7_bond_zhou_yan_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed。
+#       S 与重逢用 variants 读本文件的揭开旗标；两个都没有时用基础文本，基础文本一律按“未揭开”写。
+# 秘密：揭开那一章以前，正文、标题、选项、回复都不写林晚灯是女孩；kept 分支的事永远不进见闻。
+# 日程：不改。
+
+[[tracks]]
+key = "bond_zhou_yan"
+name = "周砚：林兄的灯谜"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["zhou_yan"]
+
+# C1：1554 春，社学。物件：写着灯谜的纸条。口头禅原句只在这里出现。
+# 缺省：那个灯谜他三天以后才猜出来，跑来找我，我不在。
+[[tracks.chapters]]
+key = "c1"
+title = "林兄的灯谜"
+text = "社学开课第三天，先生把我跟一个叫周砚的排在同一张桌子。他的笔按长短排成一列，砚台擦得照得见人。我看着手痒，撕半张纸写了个灯谜推过去：“一丁点火，守到天光。打一字。”他猜了一上午，午饭也没好好吃，到下午忽然一拍桌子：“谜面有错字！书上只有‘一点火’，哪来的‘一丁点火’？这个‘丁’，写错了。”“要是真有错字，就算你赢。”他把纸条举到窗前，正面看完看背面，连背面透过来的墨迹都一笔一笔对过。对完还不放心，攥着纸条往先生那里跑，跑到门口又回头：“书上这样说，可还得问问人。”先生只看了一眼：“谜面没错。”周砚捏着纸条走回来坐下，又把那个“丁”字看了一遍。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+# 地点（2026-11-10 S01）：c1 由 yuegang 改 zhangzhou_city——入学事件一答完，阶段就切到社学、人到了漳州城，窗口内再没回过月港，这一章改之前从未出场。
+at = "zhangzhou_city"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_zhangzhou_shexue" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = [{ kind = "start_track", track = "wandeng_unmasked" }]
+
+[[tracks.chapters.choices]]
+key = "give_a_hint"
+text = "在纸条的空处画一盏歪歪的灯，不说破。"
+reply = "我画得歪七扭八，灯罩像顶倒扣的斗笠。周砚盯着那盏灯，一直盯到先生讲完一段书，忽然“啊”了一声，袖子扫过去，砚台翻了，墨泼了半张桌子。“火、火旁边一个丁——灯！”他顾不上擦墨，先把纸条护进怀里：“林兄，你这灯画得太丑，我是被它丑出来的。”先生在上头咳了一声，他才去找抹布。"
+next = "c2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 3 }, { kind = "start_track", track = "wandeng_unmasked" }]
+
+[[tracks.chapters.choices]]
+key = "bet_dried_fruit"
+text = "跟他赌：今天猜不出来，明天请我吃糖渍果脯。"
+reply = "到散学他也没猜出来。我把谜底写给他看，他张着嘴，半天合不上。第二天一早，我桌上多了个油纸包，折得方方正正，四个角对得齐齐的，里头是漳州的糖杨桃。“愿赌服输，”他说，“《论语》里没有这一句，可我认。”我拈一片放进嘴里，甜得牙酸。他一片也没吃，坐在旁边看我吃。"
+next = "c2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "start_track", track = "wandeng_unmasked" }]
+
+# C2：1554 夏。物件：红纸结拜帖。bond C 的选项要情谊 20。
+# 缺省：那张帖子他自己收着，我没按手印。
+[[tracks.chapters]]
+key = "c2"
+title = "结拜帖"
+text = "周砚说同桌也该立个约。我说那就结拜，磕个头完事。他不肯，非要写帖子，说没有帖子的结拜不作数。他铺开一张红纸写了一下午，条款越写越长：吃饭迟到算不算背约，借书不还算不算背约，借了不还又弄脏了算几回背约。写到第十一条，他咬着笔杆想“背后说对方坏话”该怎么写才不冤枉人。我趴在桌边看，看到抬头那两个字——“兄弟”——他写得特别用力，墨都透到了纸背。“这两个字怎么写这么重？”“书上的结拜帖都这么写。”他答得很快，头也没抬。最后他自己先按了手印，把帖子推到我面前，手掌压着纸边，等我。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "press_thumb"
+text = "在他的手印旁边按下我的，按得很重。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 20 }]
+hint = "他把帖子往回收了收，说要先拿给先生过目——你们还没熟到能按这个手印。"
+reply = "我把拇指在印泥里摁透，往他的手印旁边一按，按得指头发白。两个红手印并排在“兄弟”两个字底下，一大一小。周砚盯着那两个手印，半天没出声，盯得我都想把手缩回来。“林兄，从今天起，我们是兄弟了。”他说“兄弟”的时候，耳朵根一点一点红上去。我问他耳朵怎么了，他说天热。"
+next = "b1"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "bond", person = "zhou_yan", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "laugh_at_clauses"
+text = "笑他：这哪是结拜帖，分明是一张田契。"
+reply = "“田契哪有这么多条！”他不服，可越看越像，拿起笔一条一条地划，划到最后只剩一条：“遇事先报一声。”我问这一条出自哪本书，他把笔一搁：“哪本都没有，是我自己想的。”我按了手印。他把划得乱七八糟的帖子吹干，折好，说改天再誊一张干净的。"
+next = "b1"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 3 }]
+
+# B1：1554 秋冬。物件：摊开的日记。他的苦恼只在这里出现，永远不进见闻。bond C 补签。
+# 缺省：那本日记他第二天就锁起来了，钥匙拿绳子挂在脖子上。
+[[tracks.chapters]]
+key = "b1"
+title = "没合上的日记"
+text = "那天周砚去井边打水，日记摊在桌上，镇纸压着一角。我本来只想看看他是不是又在记我的账——上回他记了我借他三支笔没还——一低头，满页都是字，比他的功课还密。“我是不是不正常，竟觉得林兄好看。”底下又是一大段：看了一眼就该罚抄，抄的时候又想起来，该罚两遍……我拿另一张纸盖上去，憋着笑收好书袋，一路憋回家，蒙着被子笑了一夜。第二天他来得最早，眼睛底下两团青，一见我就问：“昨天，有、有没有人动过我的书？”没等我答，他又小声补了一句：“我那本日记……我记得是合上了的。”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "说是风掀的，替他把窗闩扣牢，照常对坐，一字不提。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 20 }]
+hint = "你的嘴角还压不住，这时候跟他对坐，非露馅不可。"
+reply = "“风掀的。”我过去把窗闩扣上，扣得咔哒一响，“秋天风大，你那本子又不压严实。”他盯着窗闩看了半天，长长出了一口气。那天他的功课写得特别好，先生在上头画了三个圈。下午习字，我偷偷看他，他也在偷偷看我，两个人同时低头，纸上各洇了一团墨。"
+next = "b2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "bond", person = "zhou_yan", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "leave_fruit"
+text = "说没看见，趁他转身，在那一页夹一颗糖杨桃。"
+reply = "“没看见啊。”我说。趁他去先生那里借灯油，我把袖子里剩的一颗糖杨桃夹进那一页，合上。他回来翻开，脸先白了，又一下红到脖子，一整天不敢往我这边看，借墨都隔着桌子伸长了手。过了几天，我又偷看了一回：那一页底下添了一行小字，“果脯是谁放的？书上没说。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 3 }]
+
+# B2：1555 端午前（世界日历约 6 月 3 日），九龙江边练龙舟。物件：练习用的棍。bond B 要 50 且已 C。
+# 缺省：那块淤青他带了半个月，问起来，他说是自己撞的。
+[[tracks.chapters]]
+key = "b2"
+title = "龙舟边的一棍"
+text = "端午前十天，社学的人天天在九龙江边练龙舟。练完上岸，陈栋就拎着练习棍来找我比。他是镇海卫千户家的，棍使得比桨好。那天江风大，鼓还没停，他一棍横扫过来，我往后一仰——那一棍没落到我身上。周砚不知什么时候站到了我前头，拿胳膊硬接了。“啪”的一声，打鼓的喊：“打着人了！”鼓停了。周砚抱着胳膊蹲下去，脸白得跟纸一样，嘴里还在说：“我、我站错地方了，站错了。”陈栋的棍停在半空。他看了我一眼，又看了周砚一眼，什么也没说，把棍扛上肩，走了。"
+window = [[1555, 5, 25], [1555, 7, 24]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 5, 25], to = [1555, 7, 24] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "rub_his_arm"
+text = "把他拽到榕树底下揉开淤青，骂他一个拿笔的逞什么强。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 50 }, { kind = "bond", person = "zhou_yan", level = "C" }]
+hint = "他把袖子往下一拉，胳膊藏得严严实实——还不肯让你看他的伤。"
+reply = "我拽着他坐到榕树底下，捋起袖子一看，小臂上一道青紫，肿得发亮。我跟船工讨了半碗药酒，倒在手心搓热了往上揉。他疼得直吸气，还要开口：“书上说，兄弟有难……”“书上说的不算。”我手底下又加一把劲，“你这个戆书呆，一个拿笔的，挡什么棍？”他疼得眼泪都出来了，却还在笑：“那我说的算。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "bond", person = "zhou_yan", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "settle_with_chen"
+text = "去找陈栋算账，约他端午那天当着一江的人比一场。"
+reply = "陈栋听我说完，只回了一个字：“比。”端午那天江边挤满了看龙舟的人，我们比了二十几招。他的棍明明点得到我，偏偏慢了半拍，让我一棍敲在他手背上。他认了输，扛着棍就走，脸上一点不服气都没有。周砚胳膊上还缠着布，在旁边看得直皱眉：“他是不是让你了？”“书上没写这一招。”我说完，自己先笑了。"
+next = "a1"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 3 }]
+
+# A1：1556 元宵（世界日历约 2 月 6 日），月港灯街。物件：“心”字少一点的灯笼。心动选项 heart +6。
+# 缺省：那盏灯他自己提回去了，挂在他的书桌上方。
+[[tracks.chapters]]
+key = "a1"
+title = "写错字的灯"
+text = "元宵夜，月港满街是灯，九龙江上也漂着灯。周砚提着一盏纸灯笼在社学门口等我，一路上拿袖子把灯面遮得严严实实。走到灯摊边，我趁他不防掀开袖子——灯上八个字：“青青子衿，悠悠我心。”那个“心”字，少了一点。“这是写给谁的？”“曹、曹孟德也引过这一句，是求贤的！”他的脸涨得通红，又拿袖子盖回去，“字写错了，见不得人。”“蜡烛点起来，谁看得清少一点多一点？”“看不清也是错。送你的东西，不能靠看不清蒙混过去。”我们跟卖灯的老伯借了一支笔。周砚捏着笔，对着那个“心”字比了好几回，人挤过来又挤过去，笔尖一直悬着没落。他张了几回嘴，又咽了回去。"
+window = [[1556, 2, 1], [1556, 4, 2]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 2, 1], to = [1556, 4, 2] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "walk_the_street"
+text = "按着他的手把那一点补上，提着灯跟他把整条街走完。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 20 }, { kind = "age", le = 17 }, { kind = "age", person = "zhou_yan", le = 17 }, { kind = "romance_open", romance_open = "zhou_yan" }]
+hint = "他把灯往你手里一塞就要走——还没熟到能陪你逛完一条街。"
+reply = "我握住他的手腕往下一按，偏偏后头的人一挤，那一点落歪了，落在卧钩外头，墨又粗，像颗痣。他看着直叹气，我说歪了也算补过了。我们提着灯从街头走到街尾，看舞狮，看猜谜的摊子，他每到一个摊子都要停下来跟人较真谜面。走到渡口，灯里的蜡只剩指甲那么长。他把灯杆塞进我手里，终于开口：“明年元宵……还一起走。”我说好。他想说的不是这一句，我听得出来。"
+next = "a2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "heart", person = "zhou_yan", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "keep_lantern"
+text = "说这盏灯我要了，少的那一点别补。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 50 }, { kind = "bond", person = "zhou_yan", level = "C" }]
+hint = "这话到了嘴边又咽回去——你们还没熟到能这样讨他的东西。"
+reply = "“不补？”他的笔还悬着，“错字留着做什么？”“留着你。”话一出口，我自己先愣住了，他也愣住了，笔尖上的墨滴下来，落在他鞋面上。我们站在灯底下，一个看灯，一个看地。卖灯的老伯咳了一声，伸手把笔要了回去。"
+next = "a2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "bond", person = "zhou_yan", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "ask_what"
+text = "问他：你刚才张了几回嘴，到底想说什么？"
+reply = "“书上……”他说了两个字就停住，耳朵红得跟灯笼纸一个颜色。我等着。他把笔还给老伯，把灯塞进我手里：“书上没写！”说完扭头就跑，撞歪了人家一担元宵。那盏灯我提回了家，“心”字上那一点，到底没补。"
+next = "a2"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 3 }]
+
+# A2：1556 四到六月。物件：墨匣（school_ink_case）。《同窗记》看到一半，他开始躲“我”。不写揭开。
+# bond A 的两个选项给赠礼与回忆；find_him 另给 heart +6（要已有 heart 6）。
+# 缺省：那只墨匣一直放在我桌上，他躲了我一个夏天。
+[[tracks.chapters]]
+key = "a2"
+title = "同窗记"
+text = "四月里，周砚从书坊借来一本《同窗记》的戏文，说是讲两个同窗结拜的事。他摊在桌上，念得摇头晃脑：“‘草桥结拜，情同手足’——你看，跟我们一样。”念到一半，他忽然不念了，脸色一点一点变了。他把书一合，推到我这边，再也没碰。那以后好几天，他不跟我对坐，搬到靠门的空桌上去，见了我就绕路，像我是江边的水鬼。我问他，他只说：“没、没事。”有一天我到社学，桌上放着他的墨匣，黑漆面磨掉了一角，一格放墨锭，一格放擦笔的碎布，底下压着一张纸条：“墨匣借你，不必还。”"
+window = [[1556, 4, 1], [1556, 6, 30]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1556, 4, 1], to = [1556, 6, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "keep_inkcase"
+text = "收下墨匣，在纸条背面写“兄弟的东西，不借，算送”，夹回他书里。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 80 }, { kind = "bond", person = "zhou_yan", level = "B" }]
+hint = "墨匣底下压着一张“不必还”的纸条。他正躲着你，这时候收下，倒像替他把没说的话认了下来——你们还没熟到能这样替他认。"
+reply = "第二天，那张纸条从他书里不见了。周砚坐在靠门那张桌子上，背对着我坐了一上午，先生问什么他一句也没答上来。散学前，他抱着书箱走过来，在我旁边坐下，坐回了原来的位置。他什么也没解释，我也没问，只把墨匣往我们两个中间推了推。"
+next = "s"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "bond", person = "zhou_yan", level = "A" }, { kind = "item", item = "school_ink_case", qty = 1 }, { kind = "memory", memory = "mem-bond_zhou_yan-a2", title = "合上的《同窗记》" }]
+
+[[tracks.chapters.choices]]
+key = "find_him"
+text = "收下墨匣，带上那本《同窗记》去江边找他。"
+requires = [{ kind = "affinity", person = "zhou_yan", ge = 80 }, { kind = "bond", person = "zhou_yan", level = "B" }, { kind = "heart", person = "zhou_yan", ge = 6 }, { kind = "age", le = 17 }, { kind = "age", person = "zhou_yan", le = 17 }, { kind = "romance_open", romance_open = "zhou_yan" }]
+hint = "墨匣太重，你们还没熟到能收下；就算收得下，去江边找他那几步，你也还迈不出去。"
+reply = "他坐在渡口的石阶上看船。我把书递过去：“后半本你还没看完。”他接过书，手在抖，书页哗啦啦地响。“后半本，我不敢看。”“那就别看。先跟我回社学，墨匣我收下了。”他跟在我后头走了一路，一句话也没有，快到社学门口才开口：“林兄，你等我想明白。”我说好，我等。"
+next = "s"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "bond", person = "zhou_yan", level = "A" }, { kind = "item", item = "school_ink_case", qty = 1 }, { kind = "memory", memory = "mem-bond_zhou_yan-a2", title = "合上的《同窗记》" }, { kind = "heart", person = "zhou_yan", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "return_it"
+text = "把墨匣还到他桌上，问他到底在躲什么。"
+reply = "我把墨匣“咚”一声放在他面前：“周砚，我欠你钱了？”他吓了一跳，看看墨匣，又看看我。“我在想一件书上没有的事，”他说得很慢，“没想明白以前，不好跟你对坐。”他把墨匣又推回来：“你先用着。”"
+next = "s"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 3 }]
+
+# S：1556 腊月，江边茶棚。物件：磨软的结拜帖。基础文本按“未揭开”写；variants known / kept 读揭开旗标。
+# 缺省：开春我出海那天，他在县里应考，没来送；结拜帖压在他的书箱里（_parted，重逢照样开启）。
+[[tracks.chapters]]
+key = "s"
+title = "不必替自己开脱"
+text = "腊月初，先生说开春不再开课了。我也要走：开春，家里剩下的最后一条鸟船要出海，我得跟船。周砚在江边的茶棚里等我，面前摆着两样东西，一本县学的考题集，一本空账簿。“我想考县学，”他说，“也想给你的船记账。两件事我想了一个月，揉不到一块儿去，不想拿一句好听的话糊弄你。”他又说起夏天躲着我的事，说那时候自己糊涂。我把他的话头截住：“免啦，不必替自己开脱。”他从怀里摸出那张结拜帖。红纸褪成了粉色，折痕磨得发软，四个角都起了毛，不知被他翻过多少遍。他把帖子摊平，用手掌一下一下地抹：“林兄，你开春就走了。”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_zhou_yan" }, { kind = "flag", flag = "c7_bond_zhou_yan_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "把结拜帖重新誊一份，各执一份，约好他考中那天我的船回来。"
+requires = [{ kind = "bond", person = "zhou_yan", level = "A" }]
+hint = "结拜帖誊一份，就是一辈子的兄弟。你们的交情还没到能重写这张帖子；又或者，结拜一辈子的帖子，你已经跟另一个人换过了。"
+reply = "周砚跟茶棚老板借了笔墨，又讨了一张红纸，一个字一个字地誊。原帖上划掉的、补上的、洇了墨的，他都照样誊过来，一笔不差。誊完，他吹干墨，把新的那份推给我：“新的给你。海上潮气重，新纸经得住。”“那旧的呢？”“旧的这一份，我留着。”他把磨软的旧帖折好，放回怀里，隔着衣裳按了按。我在新帖上按了手印，他也按了。“你考中那天，我的船回来。”“要是考不中呢？”“那就考到中。我的船等得起。”他低头笑了一下，拿袖子把新帖上的印泥又吸了一遍，怕它在海上洇开。"
+next = "done"
+effects = [{ kind = "bond", person = "zhou_yan", level = "S" }, { kind = "relation", person = "zhou_yan", relation = "friends" }, { kind = "memory", memory = "mem-bond_zhou_yan-s", title = "不必替自己开脱" }, { kind = "flag", flag = "c7_bond_zhou_yan_promise" }, { kind = "start_track", track = "reunion_zhou_yan" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "把那盏写错字的灯还给他：再见那天，告诉他那一点该落在哪里。"
+requires = [{ kind = "bond", person = "zhou_yan", level = "A" }, { kind = "heart", person = "zhou_yan", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "zhou_yan", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "zhou_yan" }]
+hint = "那盏写错字的灯拎在手里，你却递不出去：那一点该落在哪里，你自己心里还没数；又或者，这样的约，你已经跟另一个人有了。"
+reply = "我把那盏灯从包袱里取出来，搁在桌上。纸面黄了，竹骨松了一根，灯上那个“心”字，怎么看都还是不对劲。“灯还你。”我说，“那一点该落在哪里，等再见面那天，我告诉你。”周砚盯着那个字看了很久，看得茶都凉了。“那时候我再写一次，”他说，“写对。”他伸手过来，握住了我的手，握得很紧，手心全是汗，像那年拿胳膊去接那一棍。茶棚外头起了风，帘子一下一下拍着门框。他没松手，我也没往回抽。直到老板过来续水，他才松开，把灯抱进怀里，抱得跟抱书箱一样小心。"
+next = "done"
+effects = [{ kind = "bond", person = "zhou_yan", level = "S" }, { kind = "heart", person = "zhou_yan", value = 12 }, { kind = "relation", person = "zhou_yan", relation = "crush" }, { kind = "flag", flag = "c7_bond_zhou_yan_romance" }, { kind = "memory", memory = "mem-bond_zhou_yan-s", title = "不必替自己开脱" }, { kind = "start_track", track = "reunion_zhou_yan" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好他考中秀才那天，我的船在月港替他放一挂鞭炮。"
+reply = "“那你得在月港，”他立刻较起真来，“鞭炮要在月港放。你在海上放，我听不见。”“那你得考中。”“书上……”他刚开口，自己先摆了摆手，“算了，不拿书说。我自己说的：我一定考中。”他从空账簿上撕下一角，写了“鞭炮一挂”四个字，又写了日子——空着，等发榜再填。我把纸角收进贴身的荷包里。他看着我收好，才端起早就凉了的茶，一口喝干，好像这样就算画了押。喝完他又想起什么，把账簿翻到第一页，在页眉上写了我那条鸟船的名字：“账我还是要记的。考中以前，先记你欠我的那一挂鞭炮。”"
+next = "done"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 2 }, { kind = "relation", person = "zhou_yan", relation = "friends" }, { kind = "flag", flag = "c7_bond_zhou_yan_own" }, { kind = "start_track", track = "reunion_zhou_yan" }]
+
+[[tracks.chapters.variants]]
+key = "v1_known"
+when = [{ kind = "flag", flag = "c7_wandeng_unmasked_known" }]
+text = "腊月初，先生说开春不再开课了。我也要走：开春，家里剩下的最后一条鸟船要出海，我得跟船。周砚在江边的茶棚里等我，面前摆着一本县学的考题集、一本空账簿，还有那张结拜帖。红纸褪成了粉色，“兄弟”两个字还是那么重。“搜港那天以后，我想了半年，”他看着我，“原来……原来我没有不正常。”“你本来就不正常。”我说。他愣了一下，笑出声来，笑得趴在桌上，笑得眼泪都出来了，拿袖子擦了又擦。笑完，他说他想考县学，也想给我的船记账，两件事揉不到一块儿去，不想拿一句好听的话糊弄我。他又要说夏天躲着我的事，我把话头截住：“免啦，不必替自己开脱。”"
+
+[[tracks.chapters.variants]]
+key = "v2_kept"
+when = [{ kind = "flag", flag = "c7_wandeng_unmasked_kept" }]
+text = "腊月初，先生说开春不再开课了。我也要走：开春，家里剩下的最后一条鸟船要出海，我得跟船。周砚在江边的茶棚里等我，面前摆着一本县学的考题集，一本空账簿。“我想考县学，也想给你的船记账，”他说，“两件事揉不到一块儿去，不想拿一句好听的话糊弄你。”他又说起夏天躲着我的事，我把话头截住：“免啦，不必替自己开脱。”他从怀里摸出那张结拜帖，摊平了，一下一下地抹。红纸褪成了粉色，四个角都起了毛。“林兄，”他说，“兄弟要走远了，帖子不能只有一张。”"
+
+[[tracks]]
+key = "reunion_zhou_yan"
+name = "周砚：开海的账"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["zhou_yan"]
+
+# 重逢：1567（隆庆元年）月港开海，海澄县衙门廊下。物件：新刻的申报纸式与磨软的结拜帖。
+# 基础文本不写揭开；variants：known（他叫“晚灯”，《同窗记》后半本看完了）、kept（他是最后一个知道的）。
+# 缺省：我错过了月港，他寄来一份申报纸式和一封信（_missed）。
+[[tracks.chapters]]
+key = "reunion"
+title = "开海的账"
+text = "隆庆元年，朝廷准了月港的船去东西二洋。周砚考中秀才以后，再没进过考场，如今在新设的海澄县衙门里替船户写申报。他的桌子摆在衙门廊下，排队的人从廊下一直排到街上。轮到我，他抬起头，笔停在半空。他从案底下抽出一叠新刻的纸式：船名、梁头几丈、舱口几个、往哪一洋、带什么货。又从怀里摸出一样东西，摊在纸式旁边，是那张结拜帖，磨得比当年还软。“船的事，我不替你担保一句不真的话。”他把我带来的旧船契、旧货单一张一张翻过，拿朱笔把缺的凭据圈出来，“这个要补，这个要补，这个……也要补。”我们一样一样补齐。傍晚，第一份由我自己署名的申报送了进去。"
+window = [[1567, 1, 1], [1567, 12, 31]]
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1567, 1, 1], to = [1567, 12, 31] }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "zhou_yan", text = "见字如面。今年开海，月港的船可以去东西二洋了。我在海澄县衙门的廊下替船户写申报，一天写四十份，手腕写肿了，字倒越写越正。你的船这一年没回月港，我先把新刻的纸式寄一份给你：船名、梁头、舱口、往哪一洋、带什么货，一栏一栏都要填真的。哪一栏不会填，就空着，回来我教你，不许瞎填。你家那几张旧船契，我替你去县里对过底册，两张对得上，一张对不上，回来要补。补的时候我在，不收你的润笔。海澄的新码头修到了第三段，你回来时船可以靠得更近些。那张结拜帖还在我这里，磨得比当年还软，我不敢再折，夹在《同窗记》里。后半本，我看完了。纸式背面我写了一句“书上这样说”，是当年在先生门口说过的那句话的前半截。后半截，等你回来，当面问我。——周砚，隆庆元年，于海澄" }, { kind = "flag", flag = "c7_bond_zhou_yan_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "把那张磨软的结拜帖摊开，在上头再按一次手印。"
+reply = "衙门的印泥是官用的，红得发紫。我把拇指摁进去，在他那个褪成淡褐色的旧手印旁边，一下按了下去。周砚看了看，也把拇指摁进印泥，按在他自己当年那一个上头，按得很慢，像在核一笔账。新的叠着旧的，红叠着褐。“兄弟一辈子。”他说完自己愣了，赶紧改口，“结、结拜一辈子。”“你改什么口？”“书上……”他张了张嘴，“书上没这个讲究，是我自己要改的。”我笑他，他也笑，笑得朱笔掉在纸式上，落了个红点。他拿袖子去擦，越擦越大。排在后头的船户探头问还要等多久，他把帖子收回怀里，按了按，清了清嗓子：“下一位。”"
+next = "done"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 5 }, { kind = "relation", person = "zhou_yan", relation = "sworn" }, { kind = "flag", flag = "c7_bond_zhou_yan_landing_friend" }, { kind = "memory", memory = "mem-reunion_zhou_yan", title = "开海的账" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "把那盏写错字的灯拿出来，请他把那个字写对。"
+requires = [{ kind = "flag", flag = "c7_bond_zhou_yan_romance" }, { kind = "heart", person = "zhou_yan", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "zhou_yan", ge = 18 }, { kind = "romance_open", romance_open = "zhou_yan" }]
+hint = "灯还在包袱里。当年那句话没有说出口，今天也还拿不出来。"
+reply = "灯骨又松了两根，纸面黄得像旧账簿。我把它搁在纸式上，那个“心”字还是当年的样子，怎么看都不对。周砚盯着灯，一直盯到后头排队的船户咳嗽起来。他把朱笔放下，换了一支蘸墨的，没去动当年那一点，在旧的“心”字旁边，另写了一个。一笔一笔，三个点落得稳稳的，卧钩拖得很长。“当年想说的，就是这个字。”他说。这回他一个字也没结巴。然后他把灯提起来，挡住廊下排队的人，握住我的手，吻了我。开海头一年的月港，衙门廊下，一盏旧纸灯什么也挡不住。后头的船户咳了一声，又咳一声。周砚的耳朵红透了，握着我的那只手没松，隔着灯喊了一句：“下、下一位……等一等！”"
+next = "done"
+effects = [{ kind = "affinity", person = "zhou_yan", value = 5 }, { kind = "relation", person = "zhou_yan", relation = "lovers" }, { kind = "flag", flag = "c7_bond_zhou_yan_landing_love" }, { kind = "memory", memory = "mem-reunion_zhou_yan", title = "开海的账" }]
+
+[[tracks.chapters.variants]]
+key = "v1_known"
+when = [{ kind = "flag", flag = "c7_wandeng_unmasked_known" }]
+text = "隆庆元年，朝廷准了月港的船去东西二洋。周砚考中秀才以后，再没进过考场，如今在新设的海澄县衙门里替船户写申报。轮到我，他抬起头：“晚灯。”叫得很顺，好像这两个字早就记在他的账里。“那本《同窗记》，”他说，“后半本，我看完了。”他从案底下抽出一叠新刻的纸式：船名、梁头几丈、舱口几个、往哪一洋、带什么货。又从怀里摸出那张结拜帖，摊在纸式旁边，磨得比当年还软。“船的事，我不替你担保一句不真的话。”他把我带来的旧船契一张一张翻过，拿朱笔把缺的凭据圈出来：“这个要补，这个……也要补。”我们一样一样补齐。傍晚，第一份由我自己署名的申报送了进去。"
+
+[[tracks.chapters.variants]]
+key = "v2_kept"
+when = [{ kind = "flag", flag = "c7_wandeng_unmasked_kept" }]
+text = "隆庆元年，朝廷准了月港的船去东西二洋。周砚考中秀才以后，再没进过考场，如今在新设的海澄县衙门里替船户写申报。轮到我，我把头发绾得整整齐齐，报上船主的名字：林晚灯。他抬起头，愣在那里，手里那叠新刻的纸式哗啦一声掉了一地。全月港，他是最后一个知道的。他蹲下去捡，捡了半天，一张也没捡齐，最后抬起头看我：“原来……原来我没有不正常。”“你本来就不正常。”我说。他蹲在地上笑出声来，笑完，从怀里摸出那张磨软的结拜帖，摊在捡回来的纸式旁边，拿朱笔把我旧船契上缺的凭据一样一样圈出来：“船的事，我不替你担保一句不真的话。”傍晚，第一份由我自己署名的申报送了进去。"
+
+[[tracks]]
+key = "wandeng_unmasked"
+name = "搜港的那一天"
+kind = "request"
+start = "unmasked"
+auto = false
+academy = true
+cast = ["zhou_yan", "xu_cai", "chen_dong"]
+
+# 揭开：1556 年七八月，官兵搜港，林家的福船被烧，搜港的人进了社学。全游戏唯一一次写林晚灯的身份揭开。
+# 章节 news 只写搜港本身（kept 分支用它）；known 的结果写在 own_up 与 default 的 news 里。kept 分支永远不进见闻。
+[[tracks.chapters]]
+key = "unmasked"
+title = "搜港的那一天"
+text = "七月里的一个夜里，官兵说林家通番，把我家泊在月港的那条福船点了。火烧了一整夜，九龙江红了半边，桅杆倒下去的时候，岸上的人都叫出了声。第二天，搜港的人进了社学。领头的捧着点名簿，一个一个盘问学生是哪里人、家里做什么。问到“林”字，他停住了。他身后一个兵绕过来，盯着我的脸看了很久：“这个后生，脸怎么这么白？”说着伸手就来扯我的头巾。陈栋提着练习棍，一步跨到我前头，棍横着，一句话也没说。许采站在她父亲许先生身后，脸白得像纸，手指攥着父亲的袖子。周砚还在翻书，把《大明律》从书箱里翻出来，一页一页地找，嘴里念念有词：“保、保结……同窗互保……”"
+stage = "involve"
+window = [[1556, 7, 1], [1556, 8, 31]]
+at = "yuegang"
+cast = ["zhou_yan", "xu_cai", "chen_dong"]
+speaker = "captain"
+mood = "tense"
+news = "月港的官兵一连搜了三天港，烧了林家一条说是通番的福船，连龙溪社学的学生都被叫去，一个一个问了来历。"
+when = [{ kind = "date", from = [1556, 7, 1], to = [1556, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "flag", flag = "c7_wandeng_unmasked_known" }]
+news = "龙溪社学出了件稀奇事：官兵搜港那天，扯下学堂里那个“林兄”的头巾，才认出是月港林家的女儿。"
+
+[[tracks.chapters.choices]]
+key = "own_up"
+text = "当着先生与同窗，自己把头巾摘下来，说出自己是谁。"
+reply = "我把陈栋的棍往下按了按，自己解开头巾。头发散下来，一直落到背上。“我是月港林家的女儿，林晚灯。”屋里静得能听见江上的橹声。领头的翻着点名簿，册子上写的是“林家子”，他把那一行看了又看，骂了一句，拿笔划了。周砚是最后一个明白过来的。他手里的书掉在地上，张着嘴看我，看了好半天。然后他站起来，走到那个兵跟前，挡在兵和我中间：“大、大明律里……没有一条，说女子不能读书！”他的声音抖得不成样子，腿也在抖，可他没让开。陈栋的棍一直横着。兵走了以后，许采走过来，从袖子里摸出一根木簪，一声不吭地替我把头发挽了起来。"
+next = "done"
+effects = [{ kind = "flag", flag = "c7_wandeng_unmasked_known" }, { kind = "affinity", person = "zhou_yan", value = 3 }]
+news = "龙溪社学出了件稀奇事：搜港那天，学堂里那个“林兄”当众摘了头巾，原来是月港林家的女儿，同窗还有人挡在她前头。"
+
+[[tracks.chapters.choices]]
+key = "xu_cai_covers"
+text = "看向许采，等她开口。"
+requires = [{ kind = "affinity", person = "xu_cai", ge = 30 }]
+hint = "许采看着你，嘴唇动了动，没出声——她还没跟你熟到肯为你对父亲撒谎。"
+reply = "许采松开父亲的袖子，往前走了一步。“他是我舅家的表兄，”她对着那个兵，也对着她父亲说，“龙溪乡下种田的林家，跟月港那个林家八竿子打不着。他从小在我家吃饭，我看着他念书的。”许先生看着女儿，看了很久，久到那个兵都不耐烦了。然后他点了点头：“是我内侄。”领头的在点名簿那一行旁边打了个勾，带着人走了。陈栋把棍收回去，什么也没问。那天夜里，许采坐在社学后院的井台边，我去找她，她的手一直在抖，抖得端不住碗。“我头一回跟爹撒谎。”她说。周砚还蹲在学堂里收拾翻乱的书，一边收一边懊恼：“明明有一条的，同窗互保，我记得有一条……”"
+next = "done"
+effects = [{ kind = "flag", flag = "c7_wandeng_unmasked_kept" }, { kind = "affinity", person = "xu_cai", value = 3 }]

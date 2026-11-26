@@ -1,0 +1,211 @@
+/* ───────────── 新手教程：圈出目标（周围压暗）+ 说明框 ───────────── */
+/* 整层不挡点击：玩家可以照着说明直接操作；只有说明框本身接收点击 */
+.tut-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+.tut-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 8, 20, 0.45);
+}
+.tut-spot {
+  position: absolute;
+  border: 3px solid var(--gold-3);
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 200vmax rgba(10, 8, 20, 0.5);
+  transition:
+    left 0.25s ease,
+    top 0.25s ease,
+    width 0.25s ease,
+    height 0.25s ease;
+  animation: tut-glow 1.6s ease-in-out infinite;
+}
+@keyframes tut-glow {
+  0%,
+  100% {
+    border-color: var(--gold-3);
+  }
+  50% {
+    border-color: var(--gold-4);
+  }
+}
+
+.tut-bubble {
+  position: absolute;
+  pointer-events: auto;
+  padding: 10px 12px 10px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 3px solid var(--wood-1);
+  box-shadow:
+    inset 0 0 0 2px var(--parchment-dark),
+    0 4px 0 var(--ink),
+    0 10px 24px rgba(0, 0, 0, 0.45);
+  transition:
+    left 0.25s ease,
+    top 0.25s ease;
+}
+.tut-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+/* 小乌鸦站在说明框的上沿（朝右时在右上角，朝左时在左上角），脚踩着框线 */
+.tut-bubble .tut-guide {
+  position: absolute;
+  top: -66px;
+  right: 14px;
+}
+.tut-bubble .tut-guide.is-left {
+  right: auto;
+  left: 14px;
+}
+.tut-head-text {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  gap: 8px;
+}
+.tut-bubble h2.tut-title {
+  padding: 0;
+  border: 0;
+}
+.tut-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 17px;
+  color: #5c2a14;
+}
+.tut-count {
+  font-size: 12px;
+  color: #6b4f33;
+  font-variant-numeric: tabular-nums;
+}
+.tut-text {
+  margin: 8px 0 6px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.tut-try {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #6b4f33;
+}
+.tut-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tut-spacer {
+  flex: 1 1 auto;
+}
+.tut-skip {
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tut-spot {
+    animation: none;
+    transition: none;
+  }
+  .tut-bubble {
+    transition: none;
+  }
+}
+
+/* ───────────── 向导小乌鸦（components/tutorial/GuideCrow.tsx） ───────────── */
+.guide-crow {
+  position: relative;
+  flex: none;
+  line-height: 0;
+  user-select: none;
+  pointer-events: none;
+}
+.guide-crow .guide-crow-body,
+.guide-crow .guide-crow-flip,
+.guide-crow .guide-crow-img {
+  position: absolute;
+  inset: 0;
+}
+.guide-crow .guide-crow-body {
+  transform-origin: 50% 100%;
+}
+.guide-crow .guide-crow-body.is-hopping {
+  animation: guide-crow-hop 0.46s ease-out 1;
+}
+.guide-crow .guide-crow-flip.is-left {
+  transform: scaleX(-1);
+}
+.guide-crow .guide-crow-img {
+  background-repeat: no-repeat;
+  transform-origin: 50% 100%;
+  animation: guide-crow-breathe 2.6s ease-in-out infinite;
+}
+/* 第一次出现时从右上方飞进来，落地时压一下 */
+.guide-crow.is-flying-in {
+  animation: guide-crow-fly-in 0.9s cubic-bezier(0.25, 0.8, 0.35, 1) 1 both;
+}
+@keyframes guide-crow-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.025);
+  }
+}
+@keyframes guide-crow-hop {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  22% {
+    transform: translateY(0) scale(1.08, 0.88);
+  }
+  55% {
+    transform: translateY(-24%) scale(0.95, 1.06);
+  }
+  82% {
+    transform: translateY(0) scale(1.06, 0.92);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+@keyframes guide-crow-fly-in {
+  0% {
+    opacity: 0;
+    transform: translate(160%, -170%) rotate(-14deg) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+  }
+  72% {
+    transform: translate(0, -6%) rotate(4deg) scale(1.02);
+  }
+  86% {
+    transform: translate(0, 0) scale(1.08, 0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1, 1);
+  }
+}
+/* 页面不可见时暂停；系统要求减少动态效果时静止 */
+.guide-crow.is-paused,
+.guide-crow.is-paused * {
+  animation-play-state: paused !important;
+}
+.guide-crow.is-still,
+.guide-crow.is-still * {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-crow,
+  .guide-crow * {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,165 @@
+# C13d 人物的请托：一句一句讲的几何（到访模式，找东西 fd；故事 2.0 契约，按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：徐光启 xu_guangqi（cast 在 historical_09_liaodong.toml，生年 1507，本世界线比真实历史提前约 55 年；势力 ming；身份档 2）。无 secret，也没有 C7 线。
+# 类型与报价：找东西（fd），V 到访模式。kind=request，auto=true。offer 章 at=ningbo（他坐运粮的船从上海下来，在宁波码头蹲着问水手）；family=c13_offer_ningbo，冷却 20 天。
+# 窗口：报价 1557-03-01 至 1564-06-30（offer 的 deadline 即窗口止日，timeout 无见闻）。他的上海日程到 1564 年底；书交出去之后章节不设窗口，期限靠 deadline 与 timeout。
+# 章节：offer（报价）→ handin（交书或借书）→ use（送出去的书）/ use_lent（借出去的书）→ done / failed。
+#   brief 的 use 章按 gave / lent 旗标拆选项（现金 1600 与 900 不同）。同轨道的旗标不能被 requires 读，所以改成 handin 的两个选项各走各的章节：give → use，lend → use_lent，每章仍是三个选项。
+#   于是共四章，比任务单多一章。use_lent 的现金只有 900（latin、rope 成功）与 800（partial），use 是 1600 与 800。
+# 依据·史实：徐光启上海人，后来与耶稣会士合译欧几里得；一生关心农事、水利与历法，对测量器具和海外作物有兴趣（cast 的 persona）。
+#   本世界线：此时没有汉译，他守孝在家种地、写农书，未受洗。正文只写“洋人的量地书”“欧几里得的书”，不写汉译书名；不写火器、炮手；不写受洗。
+#   原创：宁波码头上拿一包种子换一句话的读书人；打了结的麻绳；以第一卷第一题（两个圆交出三边一样长的三角）为蓝本，在码头空地上用缆绳与木桩拉的那个三角；“点”“线”“面”写了一下午的涂改；他记下的事十件里能办成七件。
+#   那包种子是叙事里的东西，不发物品。
+# 物品：euclid_ratdolt（items/books_05_commerce.toml，有 shop，意大利、伊比利亚、低地国家的港口买得到）；技能 lang_latin（skills.toml，门槛 60）。
+#   整合注意：这件物品的商店文化对不上寰宇的港口（见 brief 的 fixes），是数据问题，不在本文件。
+# 读写的旗标：设 c13_request_xu_guangqi_accepted / _declined（报价）、_gave / _lent（handin，只供查阅，不被任何 requires 读）、
+#   终局 _done / _partial / _late（每条路径至多设一面）。不读外部旗标，不设 c7_ 旗标；无主线门禁。
+# 缺省走向：不接（declined → failed）。接了没带书来（handin 到 1564-09-30 过期）：他来信说书不急，先用绳子量了一块田（late → failed）。
+#   书交出去了没回宁波（use 90 天过期）：他来信说图描完了，字不认得（late → failed）。借出去的书没回宁波（use_lent 90 天过期）：设 late，走 failed，没有来信（全轨道来信至多两封）。
+# 回忆插画清单：
+#   mem-request_xu_guangqi-use「码头上用缆绳拉的三角」：码头后头的空地上，一个穿布衣的读书人蹲着，手里按着一根绷直的缆绳；地上两根木桩，两道弧交出一个三角；扛包的挑夫围了一圈。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_xu_guangqi"
+name = "一句一句讲的几何"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["xu_guangqi"]
+
+# 一、报价：宁波码头，一个读书人拿一包种子跟水手换话问。
+[[tracks.chapters]]
+key = "offer"
+title = "一包种子换一句话"
+text = "宁波码头，你的船边蹲着个读书人，布鞋沾着泥，膝上摊着一张写满数目的纸。他把一小包种子递给你的水手：“你们那边的麦子，一亩收几斗？”水手只会说几口袋。他又问：“你家那块田，走一圈几步？”抬头看见你，他站起来拍了拍膝上的土：“徐光启，上海人，在家守孝，闲不住，写一部讲农事的书。”他把纸翻过来，背面画着一道歪歪扭扭的渠。“田要量，渠要挖。挖错一尺，下游就淹一村——我想知道洋人是怎么算这一尺的。听说他们有一部专讲量地的老书，我要一部。再要一个肯一句一句讲给我听的人。”"
+speaker = "xu_guangqi"
+mood = "cheerful"
+at = "ningbo"
+when = [{ kind = "date", from = [1557, 3, 1], to = [1564, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1564, 6, 30]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应：把书找来，再一句一句讲给他"
+next = "handin"
+effects = [{ kind = "flag", flag = "c13_request_xu_guangqi_accepted" }, { kind = "affinity", person = "xu_guangqi", value = 2 }]
+reply = "他把那包种子塞进你手里，捏紧你的手指。“先收着，算定钱。种子比钱靠得住。”他想了想，又补一句：“印这种书的铺子，听船上的人讲，在威尼斯、里斯本一带。拉丁字，图排在页边。找着了就到宁波来，粮船隔几天我下来一趟。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这事我办不了"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_xu_guangqi_declined" }]
+reply = "他也不恼，把种子在手心里掂了掂，揣回怀里，朝隔壁那条福船走过去。走出老远，还能听见他在问：“你们那边，一亩收几斗？”"
+
+# 二、交书：客栈二楼，满桌的图，他一个字也不认得，翻得比谁都认真。
+[[tracks.chapters]]
+key = "handin"
+title = "满纸的图"
+text = "客栈二楼，书摊在桌上，拉丁字挤得密密麻麻，图排在页边。徐光启一个字也不认得，却翻得极慢，翻之前先在衣襟上擦手。翻到一张两个三角拼成方形的图，他停住，指甲在纸上比了比，又比了一遍。“这两个，一般大？”你说一般大。他还不放心，掏出袖里一根打了结的麻绳，贴着图的两边量了两遍：“量出来是一般大。可它为什么一定一般大？字里有没有讲？”"
+speaker = "captain"
+mood = "cheerful"
+at = "ningbo"
+objectives = [{ kind = "item", item = "euclid_ratdolt", qty = 1, text = "带来欧几里得的书" }, { kind = "at", at = "ningbo" }]
+when = [{ kind = "alive", person = "xu_guangqi", value = true }]
+deadline = [1564, 9, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_xu_guangqi_late" }, { kind = "letter", person = "xu_guangqi", text = "书的事不急。我先拿绳子量了一块田，三十步见方，量了五回，回回差一两寸，我得想想差在哪里。你有了书再来宁波，我下来看粮船，总碰得上。" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把书送给他"
+next = "use"
+effects = [{ kind = "item", item = "euclid_ratdolt", qty = -1 }, { kind = "affinity", person = "xu_guangqi", value = 3 }, { kind = "flag", flag = "c13_request_xu_guangqi_gave" }]
+reply = "他用一块旧布把书包了三层，包得很慢，像在包一窝刚出壳的雏鸡。“带回上海，先给种田的老农看。看不懂也要看——他们要是指着哪张图说一句‘这个我知道’，我就知道哪张图对我有用。”"
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借他三个月"
+next = "use_lent"
+effects = [{ kind = "flag", flag = "c13_request_xu_guangqi_lent" }]
+reply = "他掰着手指数，数到第三根停住，才放心。“三个月，够我把图一张张描下来，量出每张里谁比谁长几分。字以后慢慢找人译。到日子，我连描的稿子一起放在你手上。”"
+
+# 三a、书送出去了：十天的讲解，第四天拖着缆绳去码头。
+[[tracks.chapters]]
+key = "use"
+title = "码头上的三角"
+text = "十天里，徐光启天天踏着晨潮来客栈，要你一句一句讲；讲不到的地方，他蘸茶水在桌上画。第四天他抱来你船上的一卷缆绳，说书里头一张图是两个圆，两个圆交出一个三边一样长的三角：“没有尺，只有绳，地上能不能长出这个三角？”码头后头的空地上，他钉了两根木桩，把缆绳绕在桩上，回头问你：“桩距多少，绳留多长？”几个扛包的挑夫放下肩上的活，围过来看。"
+speaker = "xu_guangqi"
+mood = "cheerful"
+at = "ningbo"
+objectives = [{ kind = "wait", days = 10 }, { kind = "at", at = "ningbo" }]
+when = [{ kind = "alive", person = "xu_guangqi", value = true }]
+deadline_days = 90
+news = "宁波码头后头的空地上，一个上海来的读书人拿船上的缆绳和两根木桩拉三角，连着拉了一下午，挑夫围了一圈看。"
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_xu_guangqi_late" }, { kind = "letter", person = "xu_guangqi", text = "图我描完了，字还是不认得。你来宁波时若有空，我们接着讲；等不到，我就自己去澳门问。" }] }
+
+[[tracks.chapters.choices]]
+key = "latin"
+text = "把第一卷的定义一条条译给他"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "拉丁字你只认得几个，定义的句子译不顺。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "xu_guangqi", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_xu_guangqi-use", title = "码头上用缆绳拉的三角" }, { kind = "flag", flag = "c13_request_xu_guangqi_done" }]
+reply = "你一条一条译，他一句一句往木板上写，缆绳还挂在桩上。译到“三边相等的三角”，他把炭条一扔，抓起缆绳就去拉，拉完拿麻绳量，嘴里把刚写的词念了两遍。回来接着写“点”“线”“面”三个字，写了一下午，每个字下面都涂满了改动。挑夫里有人问那是什么符，他头也不抬：“量地的名字。”天黑时他把炭条一搁：“先这么叫，以后再改。”"
+
+[[tracks.chapters.choices]]
+key = "rope"
+text = "不讲字，把缆绳拉给他看"
+next = "done"
+check = { attr = "numeracy", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "xu_guangqi", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_xu_guangqi-use", title = "码头上用缆绳拉的三角" }, { kind = "flag", flag = "c13_request_xu_guangqi_done" }]
+reply = "你说绳留得跟两桩的距离一般长。缆绳一头系在桩上绷直，另一头在地上拖出一道弧；换另一根桩，再拖一道。两道弧交在一处，你用脚尖点了一下。徐光启拿麻绳量三条边，量了三回，回回一样长，高兴得像个得了新农具的孩子，又叫挑夫来量第四回。"
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "xu_guangqi", value = 3 }, { kind = "flag", flag = "c13_request_xu_guangqi_partial" }], news = "宁波码头后头的空地上，上海来的读书人拿缆绳拉三角，头一回拉歪了，挑夫围着看他从头再拉了一下午。" }
+
+[[tracks.chapters.choices]]
+key = "macao"
+text = "劝他去澳门，找会拉丁文的人"
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "xu_guangqi", value = 2 }, { kind = "flag", flag = "c13_request_xu_guangqi_partial" }]
+reply = "你说澳门的葡萄牙人里有读拉丁文的教士。他一口气问了三句：几天的路，多少船钱，一年几班船。你答得出数目，他就一条条记进小本子，没问一句那个教士靠不靠得住。“明年就去。”他合上本子。他记下的事，十件里能办成七件。"
+
+# 三b、书是借的：书摊在你桌上，他赶着描图。
+[[tracks.chapters]]
+key = "use_lent"
+title = "薄纸上的三角"
+text = "书借出去的这十天，徐光启天天踏着晨潮，把旧布包夹到客栈来，摊在桌上，薄纸蒙在书页上，描一张图，就要你讲一句；讲不到的地方，他蘸茶水在纸边画。描到两个圆交出三边一样长的三角那一张，他停了笔，向你借船上的缆绳：“没有尺，只有绳，地上能不能长出这个三角？”到了码头后头的空地，他钉下两根木桩，把缆绳绕在桩上，回头问你：“桩距多少，绳留多长？”几个扛包的挑夫放下肩上的活，围过来看。"
+speaker = "xu_guangqi"
+mood = "cheerful"
+at = "ningbo"
+objectives = [{ kind = "wait", days = 10 }, { kind = "at", at = "ningbo" }]
+when = [{ kind = "alive", person = "xu_guangqi", value = true }]
+deadline_days = 90
+news = "宁波客栈里天天有个上海来的读书人，捧着洋书蒙纸描图；这几天他又借了船上的缆绳，到码头后头的空地上钉桩拉线，引得挑夫围着看。"
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_xu_guangqi_late" }] }
+
+[[tracks.chapters.choices]]
+key = "latin"
+text = "照着薄纸边上描的字，把定义的句子逐条译给他"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "薄纸边上的拉丁句子，你读到一半就卡住了。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "xu_guangqi", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_xu_guangqi-use", title = "码头上用缆绳拉的三角" }, { kind = "flag", flag = "c13_request_xu_guangqi_done" }]
+reply = "你一条一条译，他一句一句写在描图的薄纸边上。“点”“线”“面”三个字，他写了一下午，每个字下面都涂满了改动。最后一天，他把书用旧布原样包好放回你手里，布角多缝了一道线：“说好的三个月，我用不着了。字我记在纸上，先这么叫，以后再改。”"
+
+[[tracks.chapters.choices]]
+key = "rope"
+text = "字先放下，当场把绳子拉一遍给他看"
+next = "done"
+check = { attr = "numeracy", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "xu_guangqi", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_xu_guangqi-use", title = "码头上用缆绳拉的三角" }, { kind = "flag", flag = "c13_request_xu_guangqi_done" }]
+reply = "你说绳留得跟两桩的距离一般长。缆绳一头系在桩上绷直，另一头在地上拖出一道弧；换另一根桩，再拖一道。两道弧交在一处，你用脚尖点了一下。徐光启拿麻绳量三条边，量了三回，回回一样长，转身把薄纸上那张图拍在你手里：“这张描对了。下一张。”"
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "xu_guangqi", value = 3 }, { kind = "flag", flag = "c13_request_xu_guangqi_partial" }], news = "宁波客栈里捧着洋书描图的读书人，今天在码头上拉的三角偏了一寸，挑夫换了两拨，看他重拉到傍晚。" }
+
+[[tracks.chapters.choices]]
+key = "macao"
+text = "劝他带着描稿去澳门，请懂拉丁文的教士讲"
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "xu_guangqi", value = 2 }, { kind = "flag", flag = "c13_request_xu_guangqi_partial" }]
+reply = "你说澳门的葡萄牙人里有读拉丁文的教士，比你讲得顺。他一口气问了三句：几天的路，多少船钱，一年几班船。你答得出数目，他就一条条记进小本子，没问一句那个教士靠不靠得住。“明年就去，书我包好带着，三个月一到，我托人送回宁波。”他合上本子。他记下的事，十件里能办成七件。"

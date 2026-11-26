@@ -1,0 +1,122 @@
+# C13d 人物的请托：先喝够水的马（request_khurram）。
+# 人物：胡拉姆 khurram，1531-10-10 生，设拉子来的波斯马商；日程常驻巴特卡尔（bhatkal，market），1553—1590 年都在那里卖马。
+# 类型：送货（deliver），3 章：offer（报价）→ deliver（交马）→ settle（结账）。
+# 报价模式：当面（T），auto=false，玩家在港里找到他并问请托（界面用 ask:request_khurram 启动）；offer 章不写 at，只写 person 目标。
+# 窗口：报价 1567-01-01..1590-06-30（写在 when 与 deadline 里）；交马 120 天，结账不限期。
+# 身份档：2（富商）。中风险 ×1.4，报酬 2250；马价另付 2000（五匹马的基准价 ×1.25，表里的 goods_reimburse）。
+# 依据：
+#   史实——霍尔木兹 1507 年以后由葡萄牙人管，波斯与阿拉伯的马要绕过葡萄牙人的税关，才能运到印度西岸；巴特卡尔一带的海运马匹与德干、维查耶纳伽尔的马市（正文只用传闻口吻，不写年份）；果阿的葡萄牙税关。
+#   原创——胡拉姆、巴特卡尔的马厩、“先喝够水再谈价”的做法、交马时的饮水账、五匹马的买主与结账。
+#   待核——巴特卡尔马市的确切年份与规模（正文不写具体数字）。
+# 缺省走向：不来就停在待决队列里，到期（1590-06-30）走 timeout，不写见闻。交了马，结账章玩家可以一直等。
+# 读写旗标：只写 c13_request_khurram_accepted / _declined / _done / _late（每条轨道只设一面终局旗标）。不读任何 c7_ 或 c13_main_ 旗标；
+#   C7 的 pair_vikram_khurram 只在它自己的线里，本轨道不写维克拉姆，也不写塔利科塔。
+# 依赖：cast/story_indian_ocean.toml 的 khurram 与港口 bhatkal 已存在；商品 horses 已存在。
+# 回忆插画清单：
+#   mem-request_khurram-settle：马厩的木桌上一杯淡茶，槽边一匹老马低着头，门外是巴特卡尔的热风。
+
+[[tracks]]
+key = "request_khurram"
+name = "先喝够水的马"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["khurram"]
+
+# —— 报价：胡拉姆的马厩空了，他托你去霍尔木兹那一带运五匹好马 ——
+[[tracks.chapters]]
+key = "offer"
+title = "先喝够水"
+text = "巴特卡尔的马厩空了一大半，只剩一匹老马站在槽边嚼草。胡拉姆见了你，先问的不是生意：“朋友，先别谈价。马喝过水没有？”没等你答，他已经叫人提水去了。他说霍尔木兹的马商如今只肯把好马卖给葡萄牙人，波斯来的马，他一匹也拿不到。“所以想请你跑一趟，从霍尔木兹那一带运五匹好马回来。”说到价钱，他的话头慢了下来：“马到了，先喝够水，才谈价。”"
+when = [{ kind = "date", from = [1567, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "khurram", text = "在港里找到他" }]
+speaker = "captain"
+mood = "cheerful"
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，运五匹马来。"
+reply = "他把一只铜水桶放在你面前，桶沿磨得发亮：“船上每天给它们喝多少，你记着。少了一桶，到了我这儿是看得出来的。”说完他又笑了，说马得先喝水，人再吃饭，这是他家的规矩。"
+next = "deliver"
+effects = [{ kind = "affinity", person = "khurram", value = 2 }, { kind = "flag", flag = "c13_request_khurram_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "price_now"
+text = "说先把价钱定下来，免得到时候慢慢让。"
+reply = "他看了你一会儿，在纸上写了一个数，推过来：“这个数，我让一步。到时候一步也不让了。”他把笔帽拧上，又添了一句，口气像在说马：“你急，马不急。”"
+next = "deliver"
+effects = [{ kind = "affinity", person = "khurram", value = 3 }, { kind = "flag", flag = "c13_request_khurram_accepted" }]
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "deliver", effects = [{ kind = "affinity", person = "khurram", value = -2 }, { kind = "flag", flag = "c13_request_khurram_accepted" }], news = "巴特卡尔的马厩里，波斯马商笑着答应运马的事，价钱却一个字没定下，他说等马到了，再看谁先让。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "运马太麻烦，你不接。"
+reply = "他客客气气地送你出门，说下回有好马，第一个想到你。门口的老马还在嚼草，他回头看了它一眼，像是在心里算它还能再站几个月。这话他没说出口。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_khurram_declined" }]
+
+# —— 交马：五匹马牵下跳板，胡拉姆先看它们喝水 ——
+[[tracks.chapters]]
+key = "deliver"
+title = "渴着了的那一匹"
+text = "五匹马牵下跳板，腿还在发软，蹄子踩在石板上一下一下打滑。胡拉姆没看牙口，也没摸鬃毛，先叫人提来一桶水，自己站在一旁，看它们一匹一匹地喝。第四匹喝得特别多，喝完了还把嘴伸进桶里，舔桶底。他眯起眼睛：“这匹路上渴着了。”又过了一会儿，他才转过头来问你：“船上的水，是怎么给的？”"
+when = [{ kind = "date", from = [1567, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "khurram", value = true }]
+objectives = [{ kind = "goods", good = "horses", qty = 5, at = "bhatkal", text = "五匹马在巴特卡尔卸下" }]
+at = "bhatkal"
+speaker = "captain"
+mood = "cheerful"
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "khurram", text = "马季过了，我从果阿的葡萄牙人手里买了两匹，贵得我说不出客套话。" }, { kind = "affinity", person = "khurram", value = -3 }, { kind = "flag", flag = "c13_request_khurram_late" }]
+
+[[tracks.chapters.choices]]
+key = "water_log"
+text = "把船上的饮水账拿给他看：每天两桶，没少。"
+reply = "他把饮水账从头翻到尾，一页一页看下来，点点头：“它是天生能喝。”马价付得比你想的快，付完还把账本推回给你：“这本账留着，下回还用它。”"
+next = "settle"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "khurram", value = 5 }]
+news = "巴特卡尔的马厩里来了五匹波斯马，卖马的商人没看牙口，先看它们喝了一下午的水。"
+check = { attr = "stewardship", base = 20, per = 7 }
+fail = { next = "settle", effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "khurram", value = -2 }], news = "巴特卡尔的马厩里，波斯马商翻着船上的饮水账，翻出两天没记上的水，没吭声，照样付了马价。" }
+
+[[tracks.chapters.choices]]
+key = "admit"
+text = "照实说：过海那几天浪大，水洒了一些。"
+reply = "他点点头：“说实话的人，马也喝得放心。”马价照付，一文不少。他把几匹马的名字念了一遍，念到第四匹，又停下来看了它一眼，看得那匹马打了个响鼻。"
+next = "settle"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "khurram", value = 3 }]
+news = "巴特卡尔的马厩里，送马的船长当着商人的面，承认海上洒了几桶水，商人照付了马价。"
+
+# —— 结账：一个月后，五匹马卖给了德干来的买主 ——
+[[tracks.chapters]]
+key = "settle"
+title = "让步让得最快的一回"
+text = "一个月后，五匹马卖给了德干来的买主。买主没还价，只问了一句：“一路上马吃得怎么样？”胡拉姆在马厩里请你喝茶，茶是设拉子带来的，泡得很淡。他先夸你的船，夸你的水手，夸巴特卡尔的太阳，一样一样夸完，才放下茶碗：“客套说完了。你说个数。”他没看你，看的是槽里那匹老马。老马把嘴伸过来，蹭了蹭他的袖子。他叹了口气：“说吧。”"
+when = [{ kind = "date", from = [1567, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "khurram", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等一个月，马卖出去" }]
+at = "bhatkal"
+speaker = "captain"
+mood = "cheerful"
+news = "巴特卡尔的波斯马商这一季卖了五匹好马，听说他跟送马的船长谈价，头一回让得那么快。"
+
+[[tracks.chapters.choices]]
+key = "fair"
+text = "说个公道的数。"
+reply = "他想了很久，让了一步，正好是你说的数。他说这是他这辈子让步让得最快的一回。说完他把茶碗推过来，茶已经凉了，他也不叫人换。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "khurram", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_khurram_done" }, { kind = "memory", memory = "mem-request_khurram-settle", title = "马厩里的那杯茶" }]
+
+[[tracks.chapters.choices]]
+key = "his_call"
+text = "说：您定吧。"
+reply = "他笑了，说那他就不让了，照他心里的数给——那个数，比你想的多一点。他没说多多少，只让人把钱袋搬到你脚边，袋口系得很紧，他自己连看都没看一眼。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "khurram", value = 6 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_khurram_done" }]

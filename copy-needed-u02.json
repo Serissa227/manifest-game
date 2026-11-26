@@ -1,0 +1,883 @@
+{
+  "task": "U02",
+  "owner": "Claude",
+  "status": "pending_copy",
+  "what": "检定像掷骰的通用失败回应：选项的数值门槛没达到、掷骰失败、选项又没有 fail 分支时，回到同一节点，这个选项本次不能再选，养成期扣疲劳 +3、心情 −2；界面上的回应文字从这里取。",
+  "where": {
+    "file": "data/worlds/terra16/rules.toml",
+    "pools": "[story.fail_lines] 下各键，数组里每个空串是一条待写的语句",
+    "fallback": "[story] 的 fail_line"
+  },
+  "how_picked": "按差得最多的那一项门槛分池；池内由世界随机数抽一条（只抽写好的，空串跳过）；池子全空时用 fail_line；fail_line 也空时回应为空串、前端自行显示。补写语句不改变存档与重放。",
+  "style": "一两句，不超过 40 字；只写这一次没做成，不写具体人名、地名、物品，能接在任何事件后面；不说教、不写数值；按 docs/COPY-STYLE.md 的叙述口吻。中文；英文本轮不写（寰宇先只做中文，缺译回退中文）。",
+  "counts": {
+    "pools": 15,
+    "lines": 47,
+    "fallback": 1,
+    "total": 48
+  },
+  "fallback": {
+    "key": "fail_line",
+    "label": "通用语（池子没写或抽不到时用）",
+    "value": ""
+  },
+  "pools": [
+    {
+      "key": "attr_craft",
+      "label": "本领",
+      "covers": "航海（64）、交易（61）、学识（42）、口才（36）、算学（31）、统率（16）、机变（16）、医术（16）、礼仪（13）、管理（12）、观星（10）、武艺（8）",
+      "uses": 325,
+      "lines": 4,
+      "examples": [
+        {
+          "chapter": "b1",
+          "choice": "formal_retort",
+          "file": "stories/bonds/bond_kikuchiyo.toml",
+          "text": "拿宫里的礼数把上臈的话顶回去，名正言顺地同队。",
+          "track": "bond_kikuchiyo"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_second",
+          "file": "stories/bonds/bond_kikuchiyo.toml",
+          "text": "心里已经许过一个人，还是把我那半页纸给他。",
+          "track": "bond_kikuchiyo"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_third",
+          "file": "stories/bonds/bond_kikuchiyo.toml",
+          "text": "已经许过两个人，还是把我那半页纸给他。",
+          "track": "bond_kikuchiyo"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_second",
+          "file": "stories/bonds/bond_kogo.toml",
+          "text": "心里已经许过一个人，还是请她在诗笺正面写一首。",
+          "track": "bond_kogo"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_third",
+          "file": "stories/bonds/bond_kogo.toml",
+          "text": "已经许过两个人，还是请她在诗笺正面写一首。",
+          "track": "bond_kogo"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_second",
+          "file": "stories/bonds/bond_reizei_yuki.toml",
+          "text": "心里已经许过一个人，还是把那封写着“姐君”的信交给她。",
+          "track": "bond_reizei_yuki"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_navigation",
+      "label": "航海技能",
+      "covers": "绘图（115）、操帆（89）、读潮（49）、天文航法（43）、潜水（5）",
+      "uses": 301,
+      "lines": 4,
+      "examples": [
+        {
+          "chapter": "read_route",
+          "choice": "align",
+          "file": "stories/c11_realms.toml",
+          "text": "把航路与翠玉录对读",
+          "track": "c11_najma_star_key"
+        },
+        {
+          "chapter": "a1_offer",
+          "choice": "kuroshio",
+          "file": "stories/main/main_free_regions.toml",
+          "text": "把你知道的黑潮讲给他听",
+          "track": "main_free_southeast_asia_a"
+        },
+        {
+          "chapter": "c05_wreck",
+          "choice": "dive_self",
+          "file": "stories/main/main_tariq.toml",
+          "text": "自己憋一口气下去看",
+          "track": "main_tariq"
+        },
+        {
+          "chapter": "deliver",
+          "choice": "dive_with",
+          "file": "stories/requests/request_abdullah.toml",
+          "text": "跟他一起下去，在海底看着绳子。",
+          "track": "request_abdullah"
+        },
+        {
+          "chapter": "proof",
+          "choice": "spot",
+          "file": "stories/requests/request_abraham_ortelius.toml",
+          "text": "照你记的名字一处处对",
+          "track": "request_abraham_ortelius"
+        },
+        {
+          "chapter": "measure",
+          "choice": "triple",
+          "file": "stories/requests/request_alonso_de_chaves.toml",
+          "text": "调头回角下，再量两次，三次取中",
+          "track": "request_alonso_de_chaves"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_commerce",
+      "label": "商务技能",
+      "covers": "谈判（162）、复式簿记（92）、结绳记账（16）",
+      "uses": 270,
+      "lines": 4,
+      "examples": [
+        {
+          "chapter": "mediate",
+          "choice": "mediate",
+          "file": "stories/c11_societies.toml",
+          "text": "出面替两人讲和",
+          "track": "c11_trial_hermetic_4"
+        },
+        {
+          "chapter": "a02_house",
+          "choice": "seat",
+          "file": "stories/main/free_lubeck_accounts.toml",
+          "text": "坐进新馆的账房，记一季的账",
+          "track": "free_lubeck_accounts"
+        },
+        {
+          "chapter": "b02_london_run",
+          "choice": "books",
+          "file": "stories/main/main_lieve.toml",
+          "text": "把他们的账也一起理好，让他们在伦敦重开铺子。",
+          "track": "main_lieve"
+        },
+        {
+          "chapter": "persuade",
+          "choice": "collect",
+          "file": "stories/requests/request_bianca_mare.toml",
+          "text": "跟他谈一个能付的数，名单不要了。",
+          "track": "request_bianca_mare"
+        },
+        {
+          "chapter": "borrower",
+          "choice": "deal",
+          "file": "stories/requests/request_damiao_de_gois.toml",
+          "text": "跟他约定：他的书写成以后，档案塔替他存一部",
+          "track": "request_damiao_de_gois"
+        },
+        {
+          "chapter": "persuade",
+          "choice": "negotiate",
+          "file": "stories/requests/request_eleni.toml",
+          "text": "跟他算账：压两成工钱，少收三成好脂，他亏的比省的多。",
+          "track": "request_eleni"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_language",
+      "label": "语言",
+      "covers": "阿拉伯语（61）、汉语（31）、卡斯蒂利亚语（24）、葡萄牙语（18）、日语（16）、德语（13）、马来语（11）、克丘亚语（11）、尤卡坦玛雅语（11）、琉球语（10）、奥斯曼土耳其语（10）、古吉拉特语（9）、朝鲜语（9）、法语（7）、女真语（4）、纳瓦特语（4）、英语（3）、波斯语（3）、斯瓦希里语（3）、意大利语（2）、拉丁语（2）、蒙古语（2）、尼德兰语（1）、希腊语（1）",
+      "uses": 266,
+      "lines": 4,
+      "examples": [
+        {
+          "chapter": "c1_offer",
+          "choice": "interpreter",
+          "file": "stories/main/main_free_regions.toml",
+          "text": "替他找一个懂克丘亚话的通事",
+          "track": "main_free_americas_c"
+        },
+        {
+          "chapter": "c03_yasuke",
+          "choice": "ask_home",
+          "file": "stories/main/main_mio.toml",
+          "text": "收下信，再用葡萄牙话问他：想不想回家",
+          "track": "main_mio"
+        },
+        {
+          "chapter": "search",
+          "choice": "arabic",
+          "file": "stories/requests/request_bati_del_wambara.toml",
+          "text": "用阿拉伯话跟他一条一条核，问清每个记号。",
+          "track": "request_bati_del_wambara"
+        },
+        {
+          "chapter": "deliver",
+          "choice": "nahuatl",
+          "file": "stories/requests/request_bernardino_sahagun.toml",
+          "text": "用纳瓦特话问他：集市那一卷写到哪了",
+          "track": "request_bernardino_sahagun"
+        },
+        {
+          "chapter": "order",
+          "choice": "keep_copy",
+          "file": "stories/requests/request_bernardino_sahagun.toml",
+          "text": "用纳瓦特话跟书手对账，拖住书记",
+          "track": "request_bernardino_sahagun"
+        },
+        {
+          "chapter": "arrive",
+          "choice": "han",
+          "file": "stories/requests/request_choe_myeonggil.toml",
+          "text": "跟汉人牙人一家家问价，借账本来看",
+          "track": "request_choe_myeonggil"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_craft",
+      "label": "手艺",
+      "covers": "书法与誊抄（63）、造船（33）、木雕（26）、点心与厨房（16）、刺绣（16）、编结（16）、织造（7）、调香（6）、绘画与上色（5）",
+      "uses": 188,
+      "lines": 4,
+      "examples": [
+        {
+          "chapter": "b01_observatory",
+          "choice": "repair",
+          "file": "stories/main/free_istanbul_shipyard.toml",
+          "text": "抢在拆毁令到之前，把大象限仪的木框装回去",
+          "track": "free_istanbul_shipyard"
+        },
+        {
+          "chapter": "c01_head",
+          "choice": "take",
+          "file": "stories/main/free_istanbul_shipyard.toml",
+          "text": "回来接下师傅的船台",
+          "track": "free_istanbul_shipyard"
+        },
+        {
+          "chapter": "persuade",
+          "choice": "show_hand",
+          "file": "stories/requests/request_aisha.toml",
+          "text": "请他细看那些字，指给他看哪一笔是哪个女孩写的。",
+          "track": "request_aisha"
+        },
+        {
+          "chapter": "deliver",
+          "choice": "sort_wood",
+          "file": "stories/requests/request_daeng.toml",
+          "text": "跟老船匠一起分：顺风干的做船板，逆风干的做肋材。",
+          "track": "request_daeng"
+        },
+        {
+          "chapter": "arrive",
+          "choice": "draw_both",
+          "file": "stories/requests/request_duarte_ervas.toml",
+          "text": "两株都画，把叶脉、叶缘一条条描清。",
+          "track": "request_duarte_ervas"
+        },
+        {
+          "chapter": "press",
+          "choice": "calligraphy",
+          "file": "stories/requests/request_han_liansheng.toml",
+          "text": "看刻工的刀路：这一家的“新”字，木字那一捺收得一样短。",
+          "track": "request_han_liansheng"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_social",
+      "label": "社交技能",
+      "covers": "礼仪（154）",
+      "uses": 154,
+      "lines": 4,
+      "examples": [
+        {
+          "chapter": "arrive",
+          "choice": "court_manner",
+          "file": "stories/requests/request_ayame.toml",
+          "text": "照宫里的礼数，替菖向她父母致意，再递信。",
+          "track": "request_ayame"
+        },
+        {
+          "chapter": "handover",
+          "choice": "precedent",
+          "file": "stories/requests/request_ichijo_fusamichi.toml",
+          "text": "照京里本家的作法：遗书只交受书的人",
+          "track": "request_ichijo_fusamichi"
+        },
+        {
+          "chapter": "handover",
+          "choice": "proper",
+          "file": "stories/requests/request_kaicili_gujirati.toml",
+          "text": "照宫廷的规矩，请他转呈苏丹的议事会。",
+          "track": "request_kaicili_gujirati"
+        },
+        {
+          "chapter": "handover",
+          "choice": "bow_it",
+          "file": "stories/requests/request_kim_munyeong.toml",
+          "text": "照两边的礼数，先替釜山的通事行礼致歉，再交信。",
+          "track": "request_kim_munyeong"
+        },
+        {
+          "chapter": "handover",
+          "choice": "form",
+          "file": "stories/requests/request_konoe_sakihisa.toml",
+          "text": "照公家的作法，请家老原封转呈臼杵",
+          "track": "request_konoe_sakihisa"
+        },
+        {
+          "chapter": "handover",
+          "choice": "etiquette",
+          "file": "stories/requests/request_mary_i.toml",
+          "text": "按宫廷的规矩递信，请他当日呈上",
+          "track": "request_mary_i"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "rating_mercantile",
+      "label": "贸易评价",
+      "covers": "贸易（115）",
+      "uses": 115,
+      "lines": 3,
+      "examples": [
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请管事出面，压住争论的人。",
+          "track": "c9_baraka_critical_07"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请东家出面，把抄本估个价。",
+          "track": "c9_baraka_critical_10"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请商会的人出面议价",
+          "track": "c9_baraka_critical_13"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请商人写一封推荐条子",
+          "track": "c9_baraka_critical_16"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "拿账单去找船东的账房",
+          "track": "c9_custom_basque_whaling_critical_01"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "把信里的消息讲给商船",
+          "track": "c9_custom_basque_whaling_critical_04"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "rating_naval",
+      "label": "战斗评价",
+      "covers": "战斗（114）",
+      "uses": 114,
+      "lines": 3,
+      "examples": [
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "借亚丁老领航的名声压住经纪人。",
+          "track": "c9_baraka_critical_06"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请船长听我讲星盘和季风。",
+          "track": "c9_baraka_critical_09"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "借哈米德家的名头去压",
+          "track": "c9_baraka_critical_12"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "借船长的名头替我说句话",
+          "track": "c9_baraka_critical_15"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "请老鱼叉手来作保",
+          "track": "c9_custom_basque_whaling_critical_00"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "找管事说清断索的缘由",
+          "track": "c9_custom_basque_whaling_critical_03"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "rating_scholarship",
+      "label": "学识评价",
+      "covers": "学识（114）",
+      "uses": 114,
+      "lines": 3,
+      "examples": [
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请先生过目，把说法列成单子。",
+          "track": "c9_baraka_critical_08"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请先生看成色表，判这一次。",
+          "track": "c9_baraka_critical_11"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "拿编年史的原文出来对证",
+          "track": "c9_baraka_critical_14"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/baraka_events.toml",
+          "text": "请先生在结业册上写评语",
+          "track": "c9_baraka_critical_17"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "写一张盐量的单子贴出去",
+          "track": "c9_custom_basque_whaling_critical_02"
+        },
+        {
+          "chapter": "event",
+          "choice": "standing",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "把伤情写清楚，连信一起送去",
+          "track": "c9_custom_basque_whaling_critical_05"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_medicine",
+      "label": "医药",
+      "covers": "草药医术（67）",
+      "uses": 67,
+      "lines": 3,
+      "examples": [
+        {
+          "chapter": "deliver",
+          "choice": "herbs",
+          "file": "stories/requests/request_bayano.toml",
+          "text": "留下来，教他们用船上的草药煎退热的汤。",
+          "track": "request_bayano"
+        },
+        {
+          "chapter": "deliver",
+          "choice": "win_surgeon",
+          "file": "stories/requests/request_beatriz_simao.toml",
+          "text": "先去说动船医，让他自己跟船长要。",
+          "track": "request_beatriz_simao"
+        },
+        {
+          "chapter": "rialto",
+          "choice": "herbs",
+          "file": "stories/requests/request_cecilia.toml",
+          "text": "自己闻一遍，说出里面几味药的名字。",
+          "track": "request_cecilia"
+        },
+        {
+          "chapter": "arrive",
+          "choice": "tell_apart",
+          "file": "stories/requests/request_duarte_ervas.toml",
+          "text": "揉碎两种叶子闻气味，分清哪一株才是药。",
+          "track": "request_duarte_ervas"
+        },
+        {
+          "chapter": "handin",
+          "choice": "read_together",
+          "file": "stories/requests/request_elene_urruti.toml",
+          "text": "书我留着，先陪她把图上的名字一个个念出来。",
+          "track": "request_elene_urruti"
+        },
+        {
+          "chapter": "cochin",
+          "choice": "herbal",
+          "file": "stories/requests/request_garcia_de_orta.toml",
+          "text": "跟老药师比对树皮的断面和苦味。",
+          "track": "request_garcia_de_orta"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_arts",
+      "label": "文艺",
+      "covers": "诗（46）、乌德琴（9）、合奏与歌（1）",
+      "uses": 56,
+      "lines": 3,
+      "examples": [
+        {
+          "chapter": "tower",
+          "choice": "music",
+          "file": "stories/c11_realms.toml",
+          "text": "用一段乐调回答",
+          "track": "c11_silver_branch"
+        },
+        {
+          "chapter": "tower",
+          "choice": "poem",
+          "file": "stories/c11_realms.toml",
+          "text": "用一首短诗回答",
+          "track": "c11_silver_branch"
+        },
+        {
+          "chapter": "trial",
+          "choice": "finish",
+          "file": "stories/c11_societies.toml",
+          "text": "以一首歌作答，不报鸟名",
+          "track": "c11_trial_kokin_denju_1"
+        },
+        {
+          "chapter": "trial",
+          "choice": "finish",
+          "file": "stories/c11_societies.toml",
+          "text": "在灯下一字不差地复诵",
+          "track": "c11_trial_kokin_denju_2"
+        },
+        {
+          "chapter": "a13_fudaraku",
+          "choice": "write_name",
+          "file": "stories/main/main_mio.toml",
+          "text": "留在岸上，把老僧的名字写进一首歌里",
+          "track": "main_mio"
+        },
+        {
+          "chapter": "a14_kanju",
+          "choice": "song",
+          "file": "stories/main/main_mio.toml",
+          "text": "不描，献一首歌给海神",
+          "track": "main_mio"
+        }
+      ],
+      "values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_martial",
+      "label": "武技",
+      "covers": "闽南棍法（11）、伊比利亚普通剑术（10）、奥斯曼刀盾术（4）、火器（2）",
+      "uses": 27,
+      "lines": 2,
+      "examples": [
+        {
+          "chapter": "battle",
+          "choice": "firearms",
+          "file": "stories/requests/request_kaspar.toml",
+          "text": "你自己顶上那门炮。",
+          "track": "request_kaspar"
+        },
+        {
+          "chapter": "event",
+          "choice": "skill",
+          "file": "upbringing/families/lin_wandeng_events.toml",
+          "text": "把作揖的起落当棍步来站",
+          "track": "c9_lin_wandeng_critical_07"
+        },
+        {
+          "chapter": "event",
+          "choice": "skill",
+          "file": "upbringing/families/lin_wandeng_events.toml",
+          "text": "抄起竹篙，横在帮闲面前",
+          "track": "c9_lin_wandeng_critical_10"
+        },
+        {
+          "chapter": "event",
+          "choice": "skill",
+          "file": "upbringing/families/lin_wandeng_events.toml",
+          "text": "横棍顶开人墙，护住婆婆",
+          "track": "c9_lin_wandeng_critical_13"
+        },
+        {
+          "chapter": "event",
+          "choice": "skill",
+          "file": "upbringing/families/lin_wandeng_events.toml",
+          "text": "夜里提棍守在船头",
+          "track": "c9_lin_wandeng_critical_16"
+        },
+        {
+          "chapter": "n1",
+          "choice": "expert",
+          "file": "upbringing/families/lin_wandeng_events.toml",
+          "text": "敲断铁条，看断口",
+          "track": "c9_lin_wandeng_side_gunnery_mould"
+        }
+      ],
+      "values": [
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "attr_aptitude",
+      "label": "资质",
+      "covers": "感知（18）、体魄（6）、意志（4）",
+      "uses": 28,
+      "lines": 2,
+      "examples": [
+        {
+          "chapter": "s",
+          "choice": "heart_second",
+          "file": "stories/bonds/bond_takamaru.toml",
+          "text": "心里已经许过一个人，还是上他的船，把那方手巾系上他的桅。",
+          "track": "bond_takamaru"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_third",
+          "file": "stories/bonds/bond_takamaru.toml",
+          "text": "已经许过两个人，还是上他的船，把手巾系上他的桅。",
+          "track": "bond_takamaru"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_second",
+          "file": "stories/bonds/bond_ushio.toml",
+          "text": "心里已经许过一个人，还是只写舵位，把空着工钱的那张纸交给她。",
+          "track": "bond_ushio"
+        },
+        {
+          "chapter": "s",
+          "choice": "heart_third",
+          "file": "stories/bonds/bond_ushio.toml",
+          "text": "已经许过两个人，还是只写舵位，把那张纸交给她。",
+          "track": "bond_ushio"
+        },
+        {
+          "chapter": "event",
+          "choice": "growth",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "扛着旧鱼叉来回走",
+          "track": "c9_custom_basque_whaling_critical_00"
+        },
+        {
+          "chapter": "event",
+          "choice": "growth",
+          "file": "upbringing/families/custom_basque_whaling_events.toml",
+          "text": "一个人拽住索头往回拉",
+          "track": "c9_custom_basque_whaling_critical_03"
+        }
+      ],
+      "values": [
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "attr_conduct",
+      "label": "品行",
+      "covers": "感性（8）、信义（6）、道德（2）、虔敬（2）",
+      "uses": 18,
+      "lines": 2,
+      "examples": [
+        {
+          "chapter": "borrow",
+          "choice": "borrow",
+          "file": "stories/c11_ships.toml",
+          "text": "登上这条船",
+          "track": "c11_ship_solomon_ship"
+        },
+        {
+          "chapter": "b07_league",
+          "choice": "malindi_honor",
+          "file": "stories/main/main_baraka.toml",
+          "text": "马林迪：以信义起誓，同盟不去打葡萄牙人",
+          "track": "main_baraka"
+        },
+        {
+          "chapter": "b07_siege_chess",
+          "choice": "lose_for_women",
+          "file": "stories/main/main_kaicili.toml",
+          "text": "故意输一步，换城里的妇孺先上船",
+          "track": "main_kaicili"
+        },
+        {
+          "chapter": "b09_crown",
+          "choice": "crown_out",
+          "file": "stories/main/main_kaicili.toml",
+          "text": "求哥哥把王冠请出宫，抬上山去镇火山",
+          "track": "main_kaicili"
+        },
+        {
+          "chapter": "a13_fudaraku",
+          "choice": "ask_him",
+          "file": "stories/main/main_mio.toml",
+          "text": "在纲切岛之前追上去，隔着木板问他还走不走",
+          "track": "main_mio"
+        },
+        {
+          "chapter": "a04_cartaz",
+          "choice": "refuse",
+          "file": "stories/main/main_najma.toml",
+          "text": "不描：叫他照规矩去商馆领",
+          "track": "main_najma"
+        }
+      ],
+      "values": [
+        "",
+        ""
+      ]
+    },
+    {
+      "key": "skill_arcana",
+      "label": "秘术技能",
+      "covers": "密写术（2）、符箓斋醮（1）、和歌言灵（1）",
+      "uses": 4,
+      "lines": 2,
+      "examples": [
+        {
+          "chapter": "at2_council",
+          "choice": "calm_wind",
+          "file": "stories/main/main_mio_atlantis.toml",
+          "text": "在黑暗里咏一首歌，让风停下",
+          "track": "main_mio_atlantis"
+        },
+        {
+          "chapter": "back",
+          "choice": "saw_layer",
+          "file": "stories/requests/request_alvise.toml",
+          "text": "说：没拆，可我看出信纸上还有一层字。",
+          "track": "request_alvise"
+        },
+        {
+          "chapter": "venice",
+          "choice": "steg",
+          "file": "stories/requests/request_alvise.toml",
+          "text": "把信对着灯看一眼，看看信纸有没有别的门道。",
+          "track": "request_alvise"
+        },
+        {
+          "chapter": "paper",
+          "choice": "talisman_eye",
+          "file": "stories/requests/request_bai_daozhang.toml",
+          "text": "和他一起看那张假符：纸一样，笔法不一样。",
+          "track": "request_bai_daozhang"
+        }
+      ],
+      "values": [
+        "",
+        ""
+      ]
+    }
+  ],
+  "practices": {
+    "what": "U02 工作包 4 新增的战斗评价练习（家乡与学院都能排），名称是功能性占位、描述留空，正式名称与一句活动卡描述由 Claude 写。",
+    "file": "data/worlds/terra16/upbringing/common_practices.toml",
+    "style": "名称 2–6 字；描述一两句、写练的是什么和它的辛苦或乐趣，口吻同 common_activities.toml 的既有活动；不写数值。中文；英文本轮不写。",
+    "count": 6,
+    "items": [
+      {
+        "key": "gunnery_drill",
+        "trains": "炮术（主）、统率（副）；技能 火器",
+        "name_placeholder": "操炮练习",
+        "name": "",
+        "description": ""
+      },
+      {
+        "key": "command_drill",
+        "trains": "统率（主）、意志（副）",
+        "name_placeholder": "号令练习",
+        "name": "",
+        "description": ""
+      },
+      {
+        "key": "watch_keeping",
+        "trains": "航海（主）、感知（副）；技能 操帆",
+        "name_placeholder": "船上值更",
+        "name": "",
+        "description": ""
+      }
+    ]
+  }
+}

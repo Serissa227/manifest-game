@@ -1,0 +1,282 @@
+# 请托：三十年前的赎金（request_sayyida_al_hurra）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：赛义达·胡拉（sayyida_al_hurra，女，1485 生、约 1561 卒），得土安的旧女主，1542 年后被女婿夺位，退居舍夫沙万；cast 在 cast/historical_02_islamic.toml。
+# 类型：信（letter）。四条线：offer（报价）→ handover（休达送信）→ reply（带回半张收条）、reply_bare（没带收条）、reply_face（她不下山，回一封信）。终点 done / failed。
+#   结构说明：past_clerk 成功进 reply（收条在手），失败进 reply_bare；to_son 也进 reply_bare，两个变体只改正文；read_pt 进 reply_face，回信走 letter 效果。
+#   每个结账章的两个选项各设一面终局旗标（done 或 partial）。
+# 报价：V 到访（auto=true）。offer 章 at=tetouan，family=c13_offer_tetouan、冷却 20 天；deadline=1560-10-31，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1557-03-01 至 1560-10-31；之后的章节只要她还活着（alive）。
+# 依据·史实背景：赛义达·胡拉（阿伊莎）1515—42 统治得土安，与海雷丁联手，掳人赎金是得土安的财源；1542 年后被女婿夺位，退居舍夫沙万，约 1561 年卒。赎俘的案子是虚构的，只写一户人家。
+# 依据·原创：休达那户老寡妇与她的儿子、那张发黄的收条、赎金的账、两半收条的撕口、书记代笔的几封信。
+# 依赖：港口 tetouan、ceuta（ports_north_africa.toml）；技能 lang_portuguese（skills.toml）；人物 sayyida_al_hurra。B10b：无需改名。主线门禁：无（她不是主线人物）。
+# 日程：cast 日程写她 1553—1560 在 chefchaouen_city（court）。本条写她下山到得土安临港的宅子住着，与日程不符；整合时若要一致，由 B10b 调整日程，本文件不改。
+# C7：无 C7 线。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_sayyida_al_hurra_read_public、_left_to_son（reply_bare 的两个变体，只改正文）。
+# 设的旗标：_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_believed（past_clerk 成功）、_read_public（past_clerk 失败）、_want_face（read_pt）、_left_to_son（to_son）、_done / _partial（终局）、_late（超时，终局）。
+# 秘密：她没有原谅谁，这是心里的事，正文不说破。赎金到底退给了谁，正文不下结论；见闻不写这一层。
+# 口头禅：被夺位的事只说一句固定的话，全轨道只在 reply 章的最好结局里用一次。
+# 报酬：现金最多 3650；好感最多 13（2+3+8）；名声 +5；摩洛哥声望 +3；回忆 mem-request_sayyida_al_hurra-reply（只在 reply 的最好结局给）。reply_face 的回信是 letter 效果，每封 ≤300 字。
+# 回忆插画清单：
+#   mem-request_sayyida_al_hurra-reply：灯下两张发黄的收条，撕口对在一起，窗外是临港的白墙和卸货的吊索。
+
+[[tracks]]
+key = "request_sayyida_al_hurra"
+name = "三十年前的赎金"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sayyida_al_hurra"]
+
+# 一、老妇人下山：她在得土安临港的宅子里见你，先问是谁引荐的。
+[[tracks.chapters]]
+key = "offer"
+title = "老妇人下山"
+text = "舍夫沙万的老妇人下了一趟山，在得土安临港的宅子里见你，先问是谁引荐的。你报了名字，她没有点头，只让书记把一桩旧事念给你听：三十年前，休达有个葡萄牙水手被掳到得土安，家里凑了赎金送来，人却死在地牢里。那家人至今说她吞了钱。书记念到一半停下，她接过信，在末尾按了戒指：“钱是退回去了的。我要他们知道这一句。”"
+speaker = "sayyida_al_hurra"
+mood = "sad"
+at = "tetouan"
+when = [
+  { kind = "date", from = [1557, 3, 1], to = [1560, 10, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1560, 10, 31]
+timeout = { next = "failed" }
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下这封信，送到休达那户人家。"
+next = "handover"
+reply = "她把信递给你，手很稳：“他们若骂，你听着。骂完了，问他们一句信不信。”"
+effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = 2 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_want"
+text = "接下，但先问：您要他们怎么回？"
+next = "handover"
+reply = "“不要他们的谢。”她看着窗外的港口，“只要他们家里，别再拿我的名字吓孩子。”"
+news = "得土安临港的人说，舍夫沙万来的老妇人这回不要谢，只求休达那家别再拿她的名字吓孩子。"
+effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = 2 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "葡萄牙人的城，我这一趟不进。"
+next = "failed"
+reply = "她点头，像是早料到，让书记把信收回匣子：“那就再放三十年。”"
+effects = [
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_declined" },
+]
+
+# 二、休达的老屋：要塞书记先盘问，老寡妇听说是“那个女人”的信，先啐了一口。
+[[tracks.chapters]]
+key = "handover"
+title = "休达的老屋"
+text = "休达要塞的书记见船从得土安来，非要先看你带了什么。那封信在你怀里压了一路，角已经卷了。那户人家只剩一个老寡妇，是当年那个水手的嫂子；她的儿子在要塞里当差。信封上没有封蜡，只压着一枚戒指印，印子很深。老寡妇听说是“那个女人”的信，先啐了一口，然后说：“念。”"
+news = "休达的一户葡萄牙老人家，收到一封从得土安来的信，信上按着一枚戒指印。"
+speaker = "captain"
+mood = "tense"
+at = "ceuta"
+objectives = [{ kind = "at", at = "ceuta", text = "到休达去" }]
+when = [
+  { kind = "alive", person = "sayyida_al_hurra", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = -3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_late" },
+  { kind = "letter", person = "sayyida_al_hurra", text = "得土安宅子的书记代笔：夫人已回舍夫沙万。休达的信不必送了。夫人说这件事等了三十年，再等也一样。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "past_clerk"
+text = "先应付要塞书记的盘问，再把信送到老寡妇手里。"
+next = "reply"
+reply = "书记问了三遍你去得土安做什么，最后放你走。老寡妇让儿子把信念了两遍，第二遍她自己在默念。她从柜子底下翻出半张发黄的纸——当年赎金的收条——让你带回去。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = 3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_believed" },
+]
+fail = { next = "reply_bare", news = "休达要塞的书记当众念了一封得土安来的信，一户老人家站在门口听完，关上了门。", effects = [
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_read_public" },
+] }
+
+[[tracks.chapters.choices]]
+key = "read_pt"
+text = "自己用葡萄牙话一字一字念给老寡妇听。"
+next = "reply_face"
+reply = "你念到“钱是退回去了的”，老寡妇打断你：“退给谁了？”你答不上来。她说：“那就叫她自己来说。”"
+requires = [
+  # U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+  { kind = "skill", skill = "lang_portuguese", ge = 60, hard = true },
+]
+hint = "信是译好的，可你的葡萄牙话念不顺那些长句。"
+effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = 3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_want_face" },
+]
+
+[[tracks.chapters.choices]]
+key = "to_son"
+text = "在教堂门口把信交给她的儿子，让他自己决定。"
+next = "reply_bare"
+reply = "儿子把信揣进怀里，说他会念给母亲听，也可能不念。他问你得土安的城门还是不是老样子——他小时候被大人吓唬过。"
+effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = 2 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_left_to_son" },
+]
+
+# 三之一、灯下的收条：你带回了老寡妇给的半张收条。她看了很久，和自己那一半对上了口子。
+[[tracks.chapters]]
+key = "reply"
+title = "灯下的收条"
+text = "你回到得土安，她还在临港的宅子里，像是专门等这一趟。你听她问完休达的事，她叫人上茶，自己一口没喝。那半张发黄的收条你放在桌上，纸角卷着，还带着老寡妇手心里的潮气。她没有伸手去拿。窗外的港口里有船在卸货，吊索一下一下地响。书记站在门边，手里还捏着一支没盖帽的墨水笔。桌角放着一只旧匣子，盖子开着，里面的纸叠得很整齐。"
+news = "得土安的船工说，那老太太在灯下把两半旧纸对上了口子，第二天就回舍夫沙万去了。"
+speaker = "sayyida_al_hurra"
+mood = "sad"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "回得土安去" }]
+when = [
+  { kind = "alive", person = "sayyida_al_hurra", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = -3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_late" },
+  { kind = "letter", person = "sayyida_al_hurra", text = "赛义达·胡拉（书记代笔）：我回山里了。休达的回话若还在你那里，就替我收着；我不必知道了。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "word_for_word"
+text = "把那户人家的话一字不改地转述，连那口唾沫也说。"
+next = "done"
+reply = "她听到唾沫那一句，反而点了点头。她拿起收条，走到窗边对着光看了很久，又从匣子里取出自己那一半，两张纸的口子慢慢对上了。“那是真主的安排。”她说，然后把两半都交给你：“烧了吧。”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "sayyida_al_hurra", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "morocco", value = 3 },
+  { kind = "memory", memory = "mem-request_sayyida_al_hurra-reply", title = "两半收条" },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "round_off"
+text = "把硬话说软一点：他们收下了，没说什么。"
+next = "done"
+reply = "她看了你一眼，没有追问。“远来的客人心软。”她让书记照付，送你到门口时说，“他们说了什么，我猜得到。”"
+news = "得土安的人说，舍夫沙万下来的老太太听完休达的回话，没多问，转身又上了山。"
+effects = [
+  { kind = "cash", value = 2200 },
+  { kind = "affinity", person = "sayyida_al_hurra", value = 4 },
+  { kind = "fame", value = 5 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_partial" },
+]
+
+# 三之二、关上的门：书记当众念了信，门口的人听完就关了门；或者儿子把信揣进了怀里。
+[[tracks.chapters]]
+key = "reply_bare"
+title = "关上的门"
+text = "你回到得土安时天已经黑了，她还在临港的宅子里。你的鞋上还沾着休达的灰。你把那边的事照实说了一遍，从书记念信说到门口那一声关门。她没接话，叫人添了一回茶，茶凉了也没喝。问你吃过没有，你说没有，她就让人端来一碟枣。窗外有一车糖正往仓库里推。"
+news = "得土安临港的脚夫说，休达那边关了门，老太太听完连茶都没碰，第二天就回了山。"
+speaker = "captain"
+mood = "tense"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "回得土安去" }]
+when = [
+  { kind = "alive", person = "sayyida_al_hurra", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = -3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_late" },
+  { kind = "letter", person = "sayyida_al_hurra", text = "赛义达·胡拉（书记代笔）：休达的事你说过了，我不必再听一遍。宅子里的灯，我叫人熄了。" },
+] }
+
+[[tracks.chapters.variants]]
+key = "v1_public"
+when = [{ kind = "flag", flag = "c13_request_sayyida_al_hurra_read_public" }]
+text = "你回到得土安时天已经黑了，她还在临港的宅子里。你的鞋上还沾着休达的灰。休达要塞的书记当众念了那封信，门口的老寡妇听完，关上了门。你把这话原样说了。她没接话，叫人添了一回茶，茶凉了也没喝。问你吃过没有，你说没有，她就让人端来一碟枣。窗外有人在数盐包。"
+
+[[tracks.chapters.variants]]
+key = "v2_son"
+when = [{ kind = "flag", flag = "c13_request_sayyida_al_hurra_left_to_son" }]
+text = "你回到得土安时天已经黑了，她还在临港的宅子里。你的鞋上还沾着休达的灰。信是你交给老寡妇的儿子的，他说会念给母亲听，也可能不念。你把这话照实说了。她没接话，叫人添了一回茶，茶凉了也没喝。问你吃过没有，你说没有，她就让人端来一碟枣。窗外的码头上在搬麻袋。"
+
+[[tracks.chapters.choices]]
+key = "bare_full"
+text = "只说那家人的原话，不替他们加一个字。"
+next = "done"
+reply = "她没有生气，只问：“他们认的是那个水手的名字？”你说是。她点了点头，让书记照付全数。她没有说那是谁的钱。"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "sayyida_al_hurra", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "morocco", value = 3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "bare_soft"
+text = "把硬话说软些，只说人家收下了，别的没提。"
+next = "done"
+reply = "“他们收下了，别的没提。”她把这句重复了一遍，像在记账，然后让书记数出一部分。送你到门口时她补一句：“剩下的话，他们自己会说给我听。”"
+effects = [
+  { kind = "cash", value = 2200 },
+  { kind = "affinity", person = "sayyida_al_hurra", value = 4 },
+  { kind = "fame", value = 5 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_partial" },
+]
+
+# 三之三、不再下山：她让书记写回信，回信不长，只有半页。
+[[tracks.chapters]]
+key = "reply_face"
+title = "不再下山"
+text = "你把休达的话照原样带回得土安。那家人要她亲自下山去说。她听完，把茶碗推开：“我不再下山了。”她让书记拿纸笔来，自己口述，书记一句一句写。写完她按上戒指，印子压得很深。书记问要不要把休达的话再念一遍，她摇头，说那家人的字，她认得。信不长，只有半页。"
+news = "得土安的酒馆里有人说，舍夫沙万的老太太口述了一封回信，说不再下山了，印还是那枚戒指。"
+speaker = "sayyida_al_hurra"
+mood = "sad"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "回得土安去" }]
+when = [
+  { kind = "alive", person = "sayyida_al_hurra", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "sayyida_al_hurra", value = -3 },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_late" },
+  { kind = "letter", person = "sayyida_al_hurra", text = "赛义达·胡拉（书记代笔）：半页回信已经封好，没等到你来取。休达那边就不寄了，你不必再送。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "carry_face"
+text = "这封信我带去休达，交到他们手里。"
+next = "done"
+reply = "她把信封好，封口上又按了一次戒指。“交给他们，就说我不下山，话都在纸上。”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "sayyida_al_hurra", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "morocco", value = 3 },
+  { kind = "letter", person = "sayyida_al_hurra", text = "休达那户的主人：三十年前的钱，我说过是退回去了的。这回我不下山，也不再争。这封信写不了更多。若你们要我亲口说，我不会去了。——赛义达·胡拉（书记代笔）" },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "carry_face_soft"
+text = "信我收下，我也替你去说一句话。"
+next = "done"
+reply = "“你说吧。”她把信封起来，叫书记把钱包好。“他们见了你，比见了信更信。”"
+effects = [
+  { kind = "cash", value = 2200 },
+  { kind = "affinity", person = "sayyida_al_hurra", value = 4 },
+  { kind = "fame", value = 5 },
+  { kind = "letter", person = "sayyida_al_hurra", text = "休达那户的主人：送信的人替我说了话，我谢他。钱的事我只说一遍，那就是我说过的那句。我不下山了，也不再写第二封。——赛义达·胡拉（书记代笔）" },
+  { kind = "flag", flag = "c13_request_sayyida_al_hurra_partial" },
+]

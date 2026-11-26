@@ -1,0 +1,2462 @@
+# C11：结社真实试炼；赫尔墨斯七级的材料、行程、检定与失败出口。
+# 正文仅为中文占位；完整出处要点见独立 target 的 copy-needed.json。
+
+[[tracks]]
+key = "c11_contact_hermetic"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "书店里的纸条"
+text = "威尼斯里亚尔托桥边的一家书店，老板把一张折成四折的纸条夹进你买的希腊语字典里。纸上只有一行拉丁文，和一个画了星的圆圈。老板说，那是给常来买书的人看的，看懂了，店后面没有窗的那间屋子，会有人肯见你。"
+choices = [{ key = "listen", text = "收下那张纸条", reply = "你收下纸条，夹进了账本的最后一页。三天后，书店的伙计在你的船舱门口放下一本没有封面的小册，册子里夹着一张威尼斯的街图。", next = "done", effects = [{ kind = "flag", flag = "c11_society_hermetic_known", value = true }], requires = [] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_hermetic_1"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "book_one"
+auto = false
+
+[[tracks.chapters]]
+key = "book_one"
+title = "安特卫普"
+text = "安特卫普的书店里，一本旧版《神秘哲学》夹着两封信，信纸边缘烧焦了一角。写信的人说自己属于一个“同盟”，同盟的人散在各地，只用书信联络。末尾一句：余事不写，因信件危险。"
+choices = [{ key = "hear", text = "买下这两封信", reply = "你付了钱。老板没找零，只用指甲在信纸边上划了一道，划痕正好落在一个字母上。回到船上，你对着烛光看了一夜，那个字母背面显出另一个词。", next = "book_two", effects = [], requires = [] }]
+at = "antwerp"
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 0 }, { kind = "fame", ge = 10 }]
+
+[[tracks.chapters]]
+key = "book_two"
+title = "里斯本"
+text = "里斯本的书店开在圣母教堂后街，柜台后面坐着一位老妇人，账本用拉丁文记。她递来一封写给维尔茨堡的信，信封上印着圣雅各修道院的字样，信里只有一串数字，她说那是某种密钥的开头。"
+choices = [{ key = "hear", text = "替她捎这封信", reply = "你把信贴身收好。离港那天，老妇人站在码头上，手里握着一枚黄铜小圈，没有挥手。", next = "book_three", effects = [], requires = [] }]
+at = "lisbon"
+
+[[tracks.chapters]]
+key = "book_three"
+title = "威尼斯"
+text = "威尼斯的书店老板看了你一眼，递来一张希腊文的请柬。请柬上没有名字，只写着阿尔丁旧印刷所的地址和一个时辰。老板说，席上只说希腊语，听不懂就别去。"
+choices = [{ key = "hear", text = "收下这张请柬", reply = "你把请柬折进袖口。当晚你走进阿尔丁旧印刷所的后院，灯已经点上，桌边的人都抬起头来，用希腊语问你从哪里来。", next = "dinner", effects = [], requires = [] }]
+at = "venice"
+
+[[tracks.chapters]]
+key = "dinner"
+title = "晚宴"
+text = "阿尔丁新学园的会规写在门后的木牌上：席上只说希腊语，违者罚钱。桌上摆着一块铅样、一册菲奇诺的译本和一盏油灯。要坐下，先得带五块铅来，主人说那是铅字的合金，要拿来铸新字。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+choices = [{ key = "learning", text = "用希腊语背出开头", reply = "你用希腊语背出《赫尔墨斯文集》的开头，席上的老人点了点头，把一块铅字样本推到你面前，说明天会有人来取。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_1_done", value = true }], requires = [{ kind = "skill", skill = "lang_greek", ge = 1, hard = true }, { kind = "read", work = "corpus_hermeticum" }], check = { attr = "learning", base = 60, per = 5 }, fail = { next = "study", effects = [] } }, { key = "eloquence", text = "用希腊语说一段俏皮话", reply = "你用希腊语讲了一段俏皮话，满桌笑成一团。有人当场让出一把椅子，又从怀里掏出一册旧册子，拍在你面前的桌上。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_1_done", value = true }], requires = [{ kind = "skill", skill = "lang_greek", ge = 1, hard = true }, { kind = "read", work = "corpus_hermeticum" }], check = { attr = "eloquence", base = 60, per = 5 }, fail = { next = "study", effects = [] } }]
+at = "venice"
+objectives = [{ kind = "goods", good = "lead", qty = 5, at = "venice" }]
+
+[[tracks.chapters]]
+key = "study"
+title = "补习"
+text = "晚宴上你的希腊语卡住了。席上的人没有嘲笑，只把你的名字记进一本小册，说等你把会规抄完、过了七天再来。威尼斯的客栈里，桌上堆着菲奇诺的译本，油灯烧到半夜，你一条一条地念。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+choices = [{ key = "finish", text = "抄下会规，照着念熟", reply = "你把会规一字一字抄完，又照着念了七遍。第七天清早，有人敲门，把你的请柬又递了一次，这回上面写着一个新的时辰。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_1_done", value = true }], requires = [{ kind = "skill", skill = "lang_greek", ge = 1, hard = true }, { kind = "read", work = "corpus_hermeticum" }] }]
+at = "venice"
+objectives = [{ kind = "wait", days = 7 }]
+
+[[tracks]]
+key = "c11_trial_hermetic_2"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "tin"
+auto = false
+
+[[tracks.chapters]]
+key = "tin"
+title = "锡的来路"
+text = "圈子要的是锡，不问从哪里来。康沃尔的锡从普利茅斯上船，马六甲的锡要在港栈里现买，两条路都能到威尼斯，只是价钱和路上的日子各不相同。"
+choices = [{ key = "cornwall", text = "在普利茅斯买下康沃尔的锡", reply = "康沃尔的锡装上了一条英格兰船，锭子上还带着矿坑里的泥。船长说，这一批够圈子用了，路上颠簸久了，锡要用布包紧。", next = "cipher", effects = [], requires = [{ kind = "at", at = "plymouth" }] }, { key = "malacca", text = "在马六甲的货栈买锡", reply = "马六甲的货栈里堆着一排排灰白的锭子，掌柜把价钱压到了圈子能接受的数目。锡装进木箱，箱上贴了一张没有字的纸条。", next = "cipher", effects = [], requires = [{ kind = "at", at = "malacca" }] }]
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 1 }, { kind = "fame", ge = 20 }]
+
+[[tracks.chapters]]
+key = "cipher"
+title = "写密信"
+text = "信纸用威尼斯的粗麻纸，字要写在两行之间的空隙里，再按《隐写术》的表把每个字母挪到第几格。维尔茨堡的人只认得这一套次序。威尼斯的货栈里要先备齐十锭锡，信和锡一同上路。"
+choices = [{ key = "write", text = "照隐写术写下密信", reply = "密信写成了，表面只是一封讲生意的家书，字缝里却藏着另一套话。你把它折好，收进贴身的口袋。", next = "deliver", effects = [], requires = [{ kind = "read", work = "trithemius_steganographia" }] }]
+at = "venice"
+objectives = [{ kind = "goods", good = "tin", qty = 10, at = "venice" }]
+
+[[tracks.chapters]]
+key = "deliver"
+title = "汉堡的转递"
+text = "汉堡的信使行当里有人肯替你转递。密信要在半年之内送到维尔茨堡，送到了，那边会回一个圈子的记号。逾期就得补交费用，信使只看日子，不看人情。"
+choices = [{ key = "finish", text = "把密信交给信使", reply = "信使把密信缝进账册的封皮，夹在一队去南方的驿车里。过了几天，维尔茨堡那边回来一句暗语，只有照着次序读的人才认得。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_2_done", value = true }], requires = [] }]
+at = "hamburg"
+deadline_days = 180
+timeout = { next = "late", effects = [] }
+
+[[tracks.chapters]]
+key = "late"
+title = "误了期限"
+text = "信过了期，汉堡的信使不肯轻易收。他说要等满一周，让你照《隐写术》把密钥重新对一遍，再付清转递的银子。这一周里，别离开汉堡。"
+choices = [{ key = "finish", text = "补交转递的费用。", reply = "银子数清放在桌上，信使把密信收进了袖口。他说下一班驿车赶得上，只是下一次不能再误期。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_2_done", value = true }, { kind = "cash", value = -100 }], requires = [{ kind = "read", work = "trithemius_steganographia" }, { kind = "cash", ge = 100 }] }]
+at = "hamburg"
+objectives = [{ kind = "wait", days = 7 }]
+
+[[tracks]]
+key = "c11_trial_hermetic_3"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "stone"
+auto = false
+
+[[tracks.chapters]]
+key = "stone"
+title = "天降石的来路"
+text = "天降的石头有两处可找。恩西斯海姆的那块挂在教堂里，看得见，却要先过守教堂人的眼；克雷马的落在麦田里，得先找到那片田。两处随你挑，圈子只要一块。"
+choices = [{ key = "ensisheim", text = "去恩西斯海姆的教堂看那块石", reply = "教堂的老人带你进了侧廊，那块黑石挂在铁链上，表面有一道被火燎过的亮纹。你把它的样子画进小册，也记下了它挂的高度。", next = "ensisheim", effects = [], requires = [] }, { key = "crema", text = "去克雷马打听那场雨", reply = "克雷马的人还记得那一夜的雨，有人说石头落在谁家的田里，谁家的狗叫了一宿。你把地名和几个人的名字记下，答应天亮就去找那片田。", next = "crema", effects = [], requires = [] }]
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 2 }, { kind = "fame", ge = 30 }]
+
+[[tracks.chapters]]
+key = "ensisheim"
+title = "恩西斯海姆的石"
+text = "恩西斯海姆的陨石在 1492 年挂进了教堂，据说马克西米利安一世把它当作天意。石头如今还挂在那里，要先看清它，把它的来历报给圈子，才算数。"
+choices = [{ key = "bring", text = "交出恩西斯海姆的碎块", reply = "碎块是从挂石的铁链底下扫来的石屑，装进一只铅盒，封口的蜡上印着圈子的小星。守教堂的老人问你是不是来买天意的，你没有答。", next = "battle", effects = [{ kind = "item", item = "fallen_stone", qty = -1 }], requires = [{ kind = "item", item = "fallen_stone", qty = 1 }] }]
+at = "venice"
+objectives = [{ kind = "discovery", discovery = "fall_ensisheim", reported = true }]
+
+[[tracks.chapters]]
+key = "crema"
+title = "克雷马的雨"
+text = "克雷马的陨石雨下在 1511 年。听说石头落进麦田，老农挖出来卖给了铁匠。得先找到那片田，把它报给当地的官府，圈子才认这块石头的来历。"
+choices = [{ key = "bring", text = "交出克雷马的碎块", reply = "碎块交上去，圈子的人用一把小秤称过，分毫不差地记进账里。那片麦田的名字，也抄进了圈子的册子。", next = "battle", effects = [{ kind = "item", item = "fallen_stone", qty = -1 }], requires = [{ kind = "item", item = "fallen_stone", qty = 1 }] }]
+at = "venice"
+objectives = [{ kind = "discovery", discovery = "fall_crema", reported = true }]
+
+[[tracks.chapters]]
+key = "battle"
+title = "海上的胜绩"
+text = "石头的事说完了，圈子还要看你的手。威尼斯的海面上，龙骑士团的船常在夜里出没；赢下一场海战或决斗，圈子才肯把这一级记在你的名下。"
+choices = [{ key = "finish", text = "赢下一场海战或决斗", reply = "海上那一场打得很短，龙骑士团的船挂着红十字退了。圈子的人在威尼斯的码头上替你记了一笔，没有人说多余的话。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_3_done", value = true }], requires = [] }]
+at = "venice"
+objectives = [{ kind = "battle", wins = 1 }]
+
+[[tracks]]
+key = "c11_trial_hermetic_4"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "copper"
+auto = false
+
+[[tracks.chapters]]
+key = "copper"
+title = "精铜的来路"
+text = "精铜要从日本或瑞典来。堺港的商人能备齐十锭，价钱压得低；斯德哥尔摩的铜行背后是法伦的矿场，铜纯，运到威尼斯却要绕过半个欧罗巴。你选哪一处，就在哪里把铜买下。"
+choices = [{ key = "japan", text = "在堺港买下精铜", reply = "堺港的铜商把铜锭摆在门板上，一锭一锭敲给你听，声音清脆。他说这些铜从山里的矿上来，在库里放了一冬。", next = "mediate", effects = [], requires = [{ kind = "at", at = "sakai" }] }, { key = "sweden", text = "在斯德哥尔摩买下精铜", reply = "斯德哥尔摩的铜行在港边搭了一座棚，铜锭上压着一面盾，盾里三顶王冠。北方来的水手说，这铜比南边的都硬，敲起来有回声。", next = "mediate", effects = [], requires = [{ kind = "at", at = "stockholm" }] }]
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 3 }, { kind = "fame", ge = 40 }]
+
+[[tracks.chapters]]
+key = "mediate"
+title = "讲和的请托"
+text = "面具铺的塞西莉亚托人递话：伊洛娜前些日子在码头上说了她的不是，两人为一件说不清的旧事闹翻，如今谁也不肯先开口。她想找个中间人去讲明白。伊洛娜只在夜里的酒馆露面，你得找对地方。"
+choices = [{ key = "mediate", text = "出面替两人讲和", reply = "你在两人中间坐了一个时辰。塞西莉亚说得急，伊洛娜只听，不接话，最后端起酒杯，说了一句你听不懂的方言。两人的脸色都松了些。", next = "bring", effects = [{ kind = "affinity", person = "cecilia", value = 1 }, { kind = "affinity", person = "ilona", value = 1 }], requires = [{ kind = "skill", skill = "negotiation", ge = 1 }, { kind = "affinity", person = "cecilia", ge = 4 }, { kind = "affinity", person = "ilona", ge = 4 }] }]
+at = "venice"
+
+[[tracks.chapters]]
+key = "bring"
+title = "交付精铜"
+text = "讲和之后，圈子要的铜就该交了。十锭精铜要在威尼斯的货栈里验过成色，交付的人站在库房门口，看着铜锭一块块上秤。签字之前，别让铜离开你的视线。"
+choices = [{ key = "finish", text = "把精铜交给圈子", reply = "秤杆平了，记账的人在册子上添了一行字，墨还是湿的。威尼斯的圈子里，从此有人在会上替你说话。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_4_done", value = true }], requires = [] }]
+at = "venice"
+objectives = [{ kind = "goods", good = "copper", qty = 10, at = "venice" }]
+
+[[tracks]]
+key = "c11_trial_hermetic_5"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "mercury"
+auto = false
+
+[[tracks.chapters]]
+key = "mercury"
+title = "阿尔马登的水银"
+text = "托莱多的旧书店里，老板压低嗓子说，阿尔马登的水银装在皮袋里，封着王室的印，过了塞维利亚就不归圈子的人管了。他把一张发黄的商路单推到柜台上。"
+choices = [{ key = "route", text = "沿骡队的路线去打听", reply = "骡夫认得圈子的暗记，一路替你打听下来：三条路线，两处接货的人。皮袋封着王室的印，过关时最好不要多问。", next = "deliver", effects = [], requires = [] }]
+at = "toledo"
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 4 }, { kind = "fame", ge = 50 }]
+
+[[tracks.chapters]]
+key = "deliver"
+title = "运往亚历山大"
+text = "五袋水银沿海路运到亚历山大，港栈的掌柜先看封印，再把每袋掂一掂，嫌其中一袋轻了些。港口的风带着烤面包和海盐的味道，货栈的门一扇扇关上。"
+choices = [{ key = "deliver", text = "交付五袋水银", reply = "掌柜点清五袋，封印一个不少，在账册上记了一笔。账上只写了圈子的暗记，没有写你的名字。", next = "riddle", effects = [], requires = [] }]
+at = "alexandria"
+objectives = [{ kind = "goods", good = "mercury", qty = 5, at = "alexandria" }]
+
+[[tracks.chapters]]
+key = "riddle"
+title = "地下的风"
+text = "《造化之秘》里，一尊石像立在墓道尽头，脚下刻着“在我脚下掘地”。地下的风一起就灭灯，书上说要把灯放进透明的器皿，火才能留住。石板就在火照不到的地方。"
+choices = [{ key = "cover", text = "照着书里的话下去", reply = "你照书里的路走下墓道，石像脚下的土果然松软。风把灯吹灭两回，第三回你把灯放进透明的玻璃罩里，石板露出了一角。", next = "weigh", effects = [], requires = [{ kind = "read", work = "creation" }] }]
+at = "cairo"
+
+[[tracks.chapters]]
+key = "weigh"
+title = "石板上的字"
+text = "石板的原文要有人一句句比过。圈子里的人给了两个去处：威尼斯那间没有窗的屋子，或者布拉格旧城一家酒馆的地窖，那里的玛格达莱娜有一本拉丁通行本，页边写满了她自己的校语，比对要收钱。"
+choices = [{ key = "prague", text = "去布拉格的地窖里比对", reply = "地窖里一股炭灰味。玛格达莱娜把石板的拓片铺在酒桶盖上，和她那本通行本逐行对着念。念到第三行，她停下，说有个字抄错了，笔画收得太快，像是赶工的人写的。她把这一处记进账里，下面一行是你该付的灯油钱。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_5_done", value = true }], requires = [{ kind = "at", at = "prague" }, { kind = "at", at = "prague", person = "magdalena" }] }, { key = "venice", text = "在威尼斯的暗室里比对", reply = "暗室的灯罩下，圈子里一位老人借来一块磨过的水晶，把石板上的刻痕看了又看。他说刻字的人用刀，通行本是拿笔誊的，两种字形本来就不该混在一起。他把结论写进小本，石板的原文算是认了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_5_done", value = true }], requires = [{ kind = "at", at = "venice" }] }]
+
+[[tracks]]
+key = "c11_trial_hermetic_6"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "silver"
+auto = false
+
+[[tracks.chapters]]
+key = "silver"
+title = "银从何来"
+text = "圈子要收一批白银入账，得先选定来源。波托西的银从高山的矿场驮下来，成色足，价钱也高。石见的银出自日本的山里，灰吹法是从朝鲜传过去的，银子里还带着一股炭火味。"
+choices = [{ key = "potosi", text = "在波托西的银市买进银块", reply = "银市的掮客把一块银锭摆上秤，秤杆压得很低。他说矿工一锤一锤从山里凿出来，成色不掺假。你把银锭的重量记在纸上，回头好向圈子里交代。", next = "trust", effects = [], requires = [{ kind = "at", at = "potosi" }] }, { key = "iwami", text = "在平户买下石见银", reply = "平户的商馆里，石见银装在小袋里，袋口贴着纸条，写着灰吹的日子。商人只收你的钱，不问你要拿它去做什么。这一袋你亲手收进了船舱。", next = "trust", effects = [], requires = [{ kind = "at", at = "hirado" }] }]
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 5 }, { kind = "fame", ge = 60 }]
+
+[[tracks.chapters]]
+key = "trust"
+title = "威尼斯的银锭"
+text = "威尼斯那间没有窗的屋子，在一家玻璃作坊的楼上。你雇了一条驳船把银锭从丽多运进城，码头上没人多看一眼。圈子里一位老人等在楼梯口，看你把银锭一块块码上桌，码完了问，这些银子够不够买一卷海图。"
+choices = [{ key = "finish", text = "在威尼斯把五块银锭交出", reply = "老人接过银锭，一块一块敲过，声音清脆。他从柜里取出一册旧账，在空白页上写下你的名字，墨还没干就合上了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_6_done", value = true }], requires = [] }]
+at = "venice"
+objectives = [{ kind = "goods", good = "silver_ingot", qty = 5, at = "venice" }]
+
+[[tracks]]
+key = "c11_trial_hermetic_7"
+name = "赫尔墨斯圈子"
+kind = "request"
+start = "black"
+auto = false
+
+[[tracks.chapters]]
+key = "black"
+title = "黑化之炉"
+text = "三步可以在威尼斯圈子自己的玻璃炉上走，也可以去布拉格，玛格达莱娜的炉子安在酒馆底下，楼上的脚步声一直落到炉边。七件印记按次序摆好，铅与银的合金装进封死的瓶子，瓶口只留一根细管出气。火一大，瓶底先裂，玛格达莱娜说烧坏了她照样记账，炭钱照样要收。"
+choices = [{ key = "prague", text = "在布拉格的地窖里点火", reply = "炉火一点着，瓶底先泛出灰，再慢慢沉成黑。玛格达莱娜在墙上的账里添了一行，写了颜色和时辰，没写好坏。", next = "white", effects = [], requires = [{ kind = "at", at = "prague" }, { kind = "at", at = "prague", person = "magdalena" }, { kind = "item", item = "emerald_mark_tides", qty = 1 }, { kind = "item", item = "emerald_mark_genoa", qty = 1 }, { kind = "item", item = "emerald_mark_toledo", qty = 1 }, { kind = "item", item = "emerald_mark_cortes", qty = 1 }, { kind = "item", item = "emerald_mark_seal", qty = 1 }, { kind = "item", item = "emerald_mark_solomon", qty = 1 }, { kind = "item", item = "emerald_mark_buddha", qty = 1 }] }, { key = "venice", text = "借威尼斯玻璃炉的余火", reply = "穆拉诺的玻璃炉还烫着，印记的拓片被热气烘得发软，你用一块铜镇纸压住它。黑泥翻上来的时候，炉边的学徒吓得后退了一步。", next = "white", effects = [], requires = [{ kind = "at", at = "venice" }, { kind = "item", item = "emerald_mark_tides", qty = 1 }, { kind = "item", item = "emerald_mark_genoa", qty = 1 }, { kind = "item", item = "emerald_mark_toledo", qty = 1 }, { kind = "item", item = "emerald_mark_cortes", qty = 1 }, { kind = "item", item = "emerald_mark_seal", qty = 1 }, { kind = "item", item = "emerald_mark_solomon", qty = 1 }, { kind = "item", item = "emerald_mark_buddha", qty = 1 }] }]
+when = [{ kind = "date", from = [1563, 8, 25] }, { kind = "society", society = "hermetic", ge = 6 }, { kind = "fame", ge = 70 }]
+
+[[tracks.chapters]]
+key = "white"
+title = "白化待七日"
+text = "黑泥瓶要在炉边放满七日，灰白的霜才会从瓶底慢慢起来。看炉的人立下一条规矩：每天早上看一眼，不许开瓶，也不许提前问。七日未满，门外有人来催也不开。"
+choices = [{ key = "prague", text = "七日后在布拉格开瓶", reply = "酒馆老板下来催过两回房钱，玛格达莱娜没有应。第七日的清早，瓶底白得像刚洗过的骨粉，她把瓶子换到另一只小炉上。", next = "red", effects = [], requires = [{ kind = "at", at = "prague" }, { kind = "at", at = "prague", person = "magdalena" }] }, { key = "venice", text = "七日后在威尼斯换瓶", reply = "玻璃市场的吵闹隔着窗户传进来，瓶里的白泥在日光下亮得发青。看炉的学徒把它倒进一只细口的杯，杯沿留下一圈白痕，他用指甲刮了刮，没刮掉。", next = "red", effects = [], requires = [{ kind = "at", at = "venice" }] }]
+objectives = [{ kind = "wait", days = 7 }]
+
+[[tracks.chapters]]
+key = "red"
+title = "大功业"
+text = "白泥的七日已经放满，颜色从瓶口的边缘慢慢渗出一圈红。这一步最怕手抖，炉火要稳。看炉的人揭开瓶口的布，剩下的，要你自己守着烧。"
+choices = [{ key = "prague", text = "在布拉格的地窖里红化", reply = "炉门开了一道缝，红光照到墙上，那里一道道刻着她烧坏过的炉数。瓶底那圈红慢慢铺满了瓶身，玛格达莱娜称了一回，在账上写下分量，旁边又添一笔炭钱。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_7_done", value = true }], requires = [{ kind = "at", at = "prague" }, { kind = "at", at = "prague", person = "magdalena" }] }, { key = "venice", text = "在威尼斯的玻璃炉里红化", reply = "玻璃炉的火一加猛，瓶子里透出红来，像熔了的铜。看炉的老人把瓶子贴在耳边听了一听，说里头有水在走，这一步成了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hermetic_7_done", value = true }], requires = [{ kind = "at", at = "venice" }] }]
+objectives = [{ kind = "wait", days = 7 }]
+
+[[tracks]]
+key = "c11_contact_santa_maria"
+name = "西班牙圣母骑士团"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "西班牙圣母骑士团"
+text = "塔里法的码头上，一个老水手把黑袍红斗篷的边角搭在臂上，问你是不是从北边来的。他说海峡上原本有一支骑士团，如今人少得很，名册还在，名字后面画着十字，画着圆圈，还有空着的。"
+choices = [{ key = "listen", text = "接过旧名册，翻开看看", reply = "老水手把名册往你手里一塞，指着其中一页上的星徽，说这支分团还在，人不多，都在等人回来认旗。你记下了星徽的样子，他满意地走了。", next = "done", effects = [{ kind = "flag", flag = "c11_society_santa_maria_known", value = true }], requires = [] }]
+at = "tarifa"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_santa_maria_1"
+name = "西班牙圣母骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "金星学徒"
+text = "学徒要在塔里法的旧城堡里，把金星缝上红斗篷的左襟，针脚要密。缝完在城门前站满一夜，守着海峡。入会的五十杜卡特要先交给兄弟，钱不退。"
+choices = [{ key = "finish", text = "交五十杜卡特，缝上金星", reply = "金星缝在左襟上，针脚歪了一处，老骑士没有拆。钱落进了钱箱，箱子上的锁是旧的，锁孔里有锈。天亮前你还站在城门口，名册上添了一行字，墨还没干。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_santa_maria_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "santa_maria", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "tarifa"
+
+[[tracks]]
+key = "c11_trial_santa_maria_2"
+name = "西班牙圣母骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "旧海图同伴"
+text = "同伴要照着分团留下的旧海图走一趟：从塔里法出发，沿海岸到拉科鲁尼亚，每个港口都要留下一个签名。先在城门口交五十杜卡特作份子，海图才交到你手里。"
+choices = [{ key = "finish", text = "交五十杜卡特，领下旧海图", reply = "五十杜卡特交了出去，兄弟把旧海图折成一块塞进你怀里。图上的港口一个个标着小圈，头一个签名要在塔里法的码头上留。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_santa_maria_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "santa_maria", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "tarifa"
+
+[[tracks]]
+key = "c11_contact_christ"
+name = "基督骑士团"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "基督骑士团"
+text = "里斯本的码头上，一位托马尔来的修士在看卡拉维尔船的帆，帆上的红十字洗得发白。他问你有没有读过王国的海图，又说读过的人都要守口如瓶。"
+choices = [{ key = "listen", text = "听他把话说完", reply = "修士说骑士团的团长之位早已并入王室，早年的总督是王子，如今只剩账房替它管着。他把一张海图的边角折起来给你看，说这些都不外传。", next = "done", effects = [{ kind = "flag", flag = "c11_society_christ_known", value = true }], requires = [] }]
+at = "lisbon"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_christ_1"
+name = "基督骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "抄本学徒"
+text = "学徒要抄一份托马尔修道院里的海图，原件不许带出门。抄本要在里斯本的修会房里交上，入会的五十杜卡特同时交给管账的修士。抄完在祭台前把誓词背一遍。"
+choices = [{ key = "finish", text = "交上抄本和五十杜卡特", reply = "管账的修士翻了翻抄本，对着光看了一遍，只说了一句：字迹认得。五十杜卡特收进了账房的抽屉，誓词由你自己背完。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_christ_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "christ", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "lisbon"
+
+[[tracks]]
+key = "c11_trial_christ_2"
+name = "基督骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "押船同伴"
+text = "同伴要替修会押一船通行证去果阿。途中不许在任何一座岛上停靠，船上的人不许问箱里是什么。到了果阿，要交回一份完整的航线记录。押船的五十杜卡特先在里斯本交上。"
+choices = [{ key = "finish", text = "交五十杜卡特，领下押船的差事", reply = "箱子封着蜡，搬上船时没人说话。五十杜卡特收进了修会的账，船离开里斯本，码头上的修士只点点头，说航线记录到果阿再交。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_christ_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "christ", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "lisbon"
+
+[[tracks]]
+key = "c11_contact_hospital"
+name = "医院骑士团"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "医院骑士团"
+text = "马耳他的救济所门口，一位黑袍上缝着白十字的骑士在搬担架，靴子上沾着海盐。他看见你从港口上来，问你要不要搭把手，担架上躺着一个发烧的水手。"
+choices = [{ key = "listen", text = "搭把手，抬到病床上", reply = "担架上的水手烧得厉害，你和骑士一起把他抬进病房。骑士说这一夜救济所记住了你，往后再来，门口不用问话。", next = "done", effects = [{ kind = "flag", flag = "c11_society_hospital_known", value = true }], requires = [] }]
+at = "malta"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_hospital_1"
+name = "医院骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "赎单"
+text = "马耳他的救济所里，床位总是不够。司库要你连着七天照看伤员，换布、喂水，夜里记下谁咽了气。第七天傍晚，一个妇人跪在门廊上，说丈夫被海盗抓走，赎价二十五杜卡特，她凑不齐。司库把赎单推到你面前，说骑士团的账上没有这一笔，只有你的钱袋里有。"
+choices = [{ key = "finish", text = "替被俘的人付赎金", reply = "二十五杜卡特从你的钱袋交给了司库。赎单上写着被俘渔夫的名字，你的名字写在最下面，是替付的人。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hospital_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "hospital", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "malta"
+
+[[tracks]]
+key = "c11_contact_dragon"
+name = "龙骑士团"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "龙骑士团"
+text = "瓦尔纳的码头上，白天撑着黑绸伞的人站在货栈门口，对外商说话，声音不高，句句像在算账。一个男人把伞柄转过来，递给你一枚胸针：一条龙，尾巴绕着脖子成了一个环，背上裂开的地方渗出一个红十字。他问你要不要替人跑一趟夜路，报酬从不先说。"
+choices = [{ key = "listen", text = "收下胸针，听他说完", reply = "你收下了那枚胸针。撑伞的男人说，夜里再来，他会告诉你该去哪座城。胸针在你掌心里一直是温的。", next = "done", effects = [{ kind = "flag", flag = "c11_society_dragon_known", value = true }], requires = [] }]
+at = "varna"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_dragon_1"
+name = "龙骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里的信"
+text = "夜里的掮客在瓦尔纳一间货栈的后屋等你，屋里不点灯，只开了一扇小窗。他要你把一封信从特尔戈维什泰送到锡比乌，路上不许点灯，也不许回头看。先交押金二十五杜卡特，信送到以后才有人来取收条。"
+choices = [{ key = "finish", text = "收下信，押上二十五杜卡特", reply = "押金交给了掮客，他把一封蜡封的信塞进你的外套。信封上没有字，封蜡压着一条绕颈的龙。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_dragon_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "dragon", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "varna"
+
+[[tracks]]
+key = "c11_contact_benandanti"
+name = "本南丹蒂"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "本南丹蒂"
+text = "威尼斯的鱼市上，一个弗留利来的农夫看你一眼，问你是不是带着胎膜出生。他说这种人的灵魂在四季斋日的星期四夜里会离开身子，拿着茴香秆去和恶行者打一场。打赢了，麦子就长得高。旁边卖鳗鱼的女人低声说，城里有人去宗教裁判所报了他们的名字。"
+choices = [{ key = "listen", text = "问他夜里的战斗", reply = "你问起夜里的战斗，农夫说出了茴香秆与高粱秆的分法，然后把话头收住，不肯再讲。你记下了他手上的老茧。", next = "done", effects = [{ kind = "flag", flag = "c11_society_benandanti_known", value = true }], requires = [] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_benandanti_1"
+name = "本南丹蒂"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "麦田的夜"
+text = "船把你送到弗留利的河岸，农夫们在麦田边等着。四季斋日的星期四夜里，你要守到天亮，和拿茴香秆的人一起赶走恶行者。进田前先交五十杜卡特，给看田的老妇人，她说这是夜里的酒钱。"
+choices = [{ key = "finish", text = "付钱，领一束茴香秆", reply = "五十杜卡特付给了村里的老妇人，她从门后抽出一把茴香秆和一把高粱秆，说夜里要分开拿，不能让它们碰在一起。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_benandanti_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "benandanti", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "venice"
+
+[[tracks]]
+key = "c11_trial_benandanti_2"
+name = "本南丹蒂"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "带胎膜的孩子"
+text = "威尼斯的窄巷里，一个女人抱着刚出生的孩子哭。她说孩子是带着胎膜生下来的，城里的人都说这样的孩子夜里会出去。农夫们托人带话，今晚恰好是四季斋日的星期四，要一个同伴替她守这一夜。出门前交五十杜卡特，由传话的人转给产婆。"
+choices = [{ key = "finish", text = "替孩子守完这一夜", reply = "五十杜卡特交给了接生的产婆。孩子的呼吸在天亮前平稳下来，母亲把脸埋进被子里，终于睡着了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_benandanti_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "benandanti", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "venice"
+
+[[tracks]]
+key = "c11_contact_good_society"
+name = "东方夫人的\"好会\""
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "夜里的敲门"
+text = "威尼斯药铺的后门，一位老妇递给你一包干草药，说是“好会”的人托她带的。她问你家里有没有病倒的牲口，又说整洁的人家夜里会有人来敲门。她的手很凉，指甲缝里却是新鲜的草汁。"
+choices = [{ key = "listen", text = "接过草药包", reply = "你接过那包草药。老妇说，好会的人从不走正门，夜里遇到门闩，她们会自己开。包草药的绳子是绿色的，你记住了它。", next = "done", effects = [{ kind = "flag", flag = "c11_society_good_society_known", value = true }], requires = [] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_good_society_1"
+name = "东方夫人的\"好会\""
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "牲口的夜"
+text = "会友给了你一个地址，在米兰郊外的一户人家。你要带一剂药剂过去，替病倒的牲口祝福。天亮时它要能站起来，站不起来，会友就不再认你。"
+choices = [{ key = "finish", text = "拿药剂去祝福牲口", reply = "药剂用掉了，你把它倒进牲口的水槽，念了三遍祝词。天亮前它站了起来，户主红着眼谢你，会友却没有露面。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_good_society_1_done", value = true }, { kind = "item", item = "herbal_draught", qty = -1 }], requires = [{ kind = "society", society = "good_society", ge = 0 }, { kind = "item", item = "herbal_draught", qty = 1 }, { kind = "fame", ge = 10 }] }]
+at = "venice"
+
+[[tracks]]
+key = "c11_trial_good_society_2"
+name = "东方夫人的\"好会\""
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "伦巴第的夜路"
+text = "宗教裁判所的人明天就到村里来。会友说，有一位被指为女巫的妇人必须在那之前离开伦巴第，路上不许停留。她坐在灶边不说话，只问你的鞋子合不合脚。路上你要把药剂交给她，她说夜里喝一口就能睡。"
+choices = [{ key = "finish", text = "趁夜把妇人送出伦巴第", reply = "被指为女巫的妇人换上你的斗篷，从后门上了一辆运奶酪的车。你交给她的药剂，她在车上喝了一口就睡了过去，车轮声远了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_good_society_2_done", value = true }, { kind = "item", item = "herbal_draught", qty = -1 }], requires = [{ kind = "society", society = "good_society", ge = 1 }, { kind = "item", item = "herbal_draught", qty = 1 }, { kind = "fame", ge = 20 }] }]
+at = "venice"
+
+[[tracks]]
+key = "c11_contact_lilith_daughters"
+name = "莉莉丝的女儿们"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "沿海的夜鸟"
+text = "热那亚的盐堆旁，码头的灯早熄了一半。一个女人解开头发披在肩上，面前摆着几块白面包，正卖给赶夜船的水手。港里人都叫她们沿海的夜鸟。她抬头看你，说你的影子比别人的长一截，要小心。"
+choices = [{ key = "listen", text = "接过盐，不回头", reply = "你接过盐，走下码头时一声没应。女人说，夜里身后若有人叫你的名字，那多半是海浪在替她说话。你手心里留着一撮盐，咸得发苦。", next = "done", effects = [{ kind = "flag", flag = "c11_society_lilith_daughters_known", value = true }], requires = [] }]
+at = "genoa"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_lilith_daughters_1"
+name = "莉莉丝的女儿们"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "黑布木箱"
+text = "热那亚港口的夜里，只有一盏灯挂在栈桥的桩子上。掮客把一只包着黑布的木箱放在石台上，说箱子很沉，不许打开，要送到约定的人手里。押金二十五杜卡特，先交，后拿。黑布上有一股海藻和烧过的蜡的味道。"
+choices = [{ key = "finish", text = "接过木箱，押上二十五杜卡特", reply = "二十五杜卡特压在灯下的托盘里。木箱比看上去沉，里头轻轻响了一声，你没有打开。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_lilith_daughters_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "lilith_daughters", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "genoa"
+
+[[tracks]]
+key = "c11_contact_inquisition"
+name = "宗教裁判所"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "宗教裁判所"
+text = "塞维利亚旧城的石阶上，异端法庭的书记递给你一张名单。名字都有，有几个划了红线，有几个只写了地址。他的袖口沾着墨渍，说话时眼睛不看你，只看你的手。他说最近有个商人会来找你，问你愿不愿意替他把名字记下来。"
+choices = [{ key = "listen", text = "看清那条红线", reply = "书记把名单收进袖子里，只说了一句：这个城里的墙，比人的耳朵还多。你记住了那条红线的颜色。", next = "done", effects = [{ kind = "flag", flag = "c11_society_inquisition_known", value = true }], requires = [] }]
+at = "seville"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_inquisition_1"
+name = "宗教裁判所"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "门外的早晨"
+text = "法庭门外的石阶上站了一个早晨。进去的人低着头，出来的人大多不说话，有的人在石阶上停下来，扶着墙吐气。书记让你把每一个被传唤的名字记在纸上，写清时辰，交给他。进门前先交二十五杜卡特，看门人收的名目是门钱。"
+choices = [{ key = "finish", text = "站一早晨，记下名字", reply = "二十五杜卡特交给了看门人，他把钱收进围裙里，一句话也没说。你的纸上记满了十一个名字，时辰都写在旁边。书记收下了纸，看了一眼你的袖口，只点了点头。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_inquisition_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "inquisition", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "seville"
+
+[[tracks]]
+key = "c11_contact_alumbrados"
+name = "光照派"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "光照派"
+text = "塞维利亚的一间布店后屋里，几个人围着一盏灯坐着，谁也不念经。一位织工说，祷告的时候她看见一道光从胸口出来，光里有一条路。城里的修士不喜欢这样的话，宗教裁判所的人却很爱听。她请你坐下，不问你的来历。"
+choices = [{ key = "listen", text = "坐下，听她讲光", reply = "你坐了下来。织工没有问你的名字，只说光是从里面来的，不必用别人的嘴去问。你把这句话记在了心里。", next = "done", effects = [{ kind = "flag", flag = "c11_society_alumbrados_known", value = true }], requires = [] }]
+at = "seville"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_alumbrados_1"
+name = "光照派"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "暗室的异象"
+text = "暗室里没有窗，只点一盏灯。会里的人要你交上二十五杜卡特，当面把一条异象背给他们听。托莱多敕令里的那些句子不许提，只说你自己看见的。木匣放在桌角，里头已有好几枚银币，叠得很整齐。"
+choices = [{ key = "finish", text = "交钱，背出一条异象", reply = "二十五杜卡特放进了木匣。你背了一段自己看见的异象，说有一条白色的路通到海边；屋里的人点了头，没有人笑。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_alumbrados_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "alumbrados", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "seville"
+
+[[tracks]]
+key = "c11_contact_vehm"
+name = "威斯特伐利亚的秘密法庭"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "威斯特伐利亚的秘密法庭"
+text = "汉堡的一扇木门上钉着一张传票，纸是新的，钉子却是旧的。上面写着你的名字和一个日子，没有署名。木匠说，这种东西他只在老人嘴里听过：威斯特伐利亚的林子里，从前有自由伯爵露天开庭，案子由知情者办，口令和文书只传给自己人。他师傅还说，自由伯爵的卷宗至今没有烧光。"
+choices = [{ key = "listen", text = "记下这个名字。", reply = "你没有撕下那张纸，只把上面的名字和那个日子记在心里。从这以后，汉堡的木匠见了你，会先看一眼门框。", next = "done", effects = [{ kind = "flag", flag = "c11_society_vehm_known", value = true }], requires = [] }]
+at = "hamburg"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_vehm_1"
+name = "威斯特伐利亚的秘密法庭"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "林中的口令"
+text = "林子里天还没亮，几棵橡树底下站着几个人，谁也不报名字。知情者先把口令念完，一字一顿，念得很慢，像在数数。念完了，才轮到你把名字写在纸上，纸上没有落款，也没有别人的名字。"
+choices = [{ key = "finish", text = "交钱，把名字写上。", reply = "二十五杜卡特交进知情者的手里，他把你的名字念了一遍，又低声把口令再说给你听。你走出林子时，天已经亮了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_vehm_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "vehm", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "hamburg"
+
+[[tracks]]
+key = "c11_contact_golden_fleece"
+name = "金羊毛骑士团"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "金羊毛骑士团"
+text = "巴塞罗那主教座堂的诗班席上，挂着一圈骑士的纹章，每一枚下面都有一个名字。一个管钥匙的老人说，这个团是一位公爵在一百多年前立的，里头坐的都是王公和他们的亲信。问到开会的事，他只摇头，说钟声一响，诗班席上就没有外人了。"
+choices = [{ key = "listen", text = "记下纹章的样子。", reply = "你看清了纹章的样子，记在本子的空页上。诗班席的木雕上刻着同样的羊毛，骑士们在那里议过什么事，席上的人才知道。", next = "done", effects = [{ kind = "flag", flag = "c11_society_golden_fleece_known", value = true }], requires = [] }]
+at = "barcelona"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_golden_fleece_1"
+name = "金羊毛骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "诗班席下"
+text = "诗班席下没有灯，只有一扇高窗透进来的光。捐箱设在圣坛边上，谁肯出钱，谁就能靠近席位。管事的人不多说话，只等你把钱放进去，然后要你把纹章下面那句拉丁格言念给他听，声音要稳。"
+choices = [{ key = "finish", text = "交钱，念出那句话。", reply = "二十五杜卡特落进捐箱，声音很轻。你念出纹章上的那句话，席上一个老人点了点头，把你的名字记进了本子。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_golden_fleece_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "golden_fleece", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "barcelona"
+
+[[tracks]]
+key = "c11_contact_family_of_love"
+name = "爱之家"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "爱之家"
+text = "安特卫普的印刷作坊，每到周日就关得早。城里人都知道，作坊里的几个人照常进教堂，唱的也是本地的圣歌，只在回家后多念一段。亨德里克·尼克拉斯的名字很少有人说出口，书架上却留着他们的小册子，字要凑近了才看得清。"
+choices = [{ key = "listen", text = "记下这本书的版式。", reply = "你把那本书的版式记下了：纸是本地的，字很小，书页边上没有印刷商的名字。这种书不卖给生人，要买，得先认得卖书的人。", next = "done", effects = [{ kind = "flag", flag = "c11_society_family_of_love_known", value = true }], requires = [] }]
+at = "antwerp"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_family_of_love_1"
+name = "爱之家"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "印坊的错页"
+text = "作坊里挂着一幅刚印好的地图，墨色还没干透。会里的人要你当众交五十杜卡特，然后指出图上的一处错误。你看了半天，才指着河口说，这条河被画反了方向。"
+choices = [{ key = "finish", text = "交五十杜卡特，指出错处。", reply = "五十杜卡特交给了账房，账房没有点数。你指出的那处错误被人用刀刮去一层，重新画上了正确的河道。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_family_of_love_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "family_of_love", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_trial_family_of_love_2"
+name = "爱之家"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "抄名册"
+text = "会里的人把一本旧名册摊在桌上，纸边已经发黄。你要在一天之内把它抄完，字要和原本一模一样，不许多一笔，也不许少一个名字。坐在窗边低头写，抄错一行，就要从头再来。"
+choices = [{ key = "finish", text = "交五十杜卡特，抄名册。", reply = "五十杜卡特入了账。你抄下的名册只有名字，没有住址，抄完的草稿当场烧掉，灰撒进了作坊的炉子。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_family_of_love_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "family_of_love", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_contact_mendes_network"
+name = "门德斯家族的逃亡网络"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "门德斯家族的逃亡网络"
+text = "安特卫普的一家香料行后院，有人把一张纸铺在桌上，手指从安特卫普划到威尼斯，又划向东边。问话的人不说自己是谁，只说这一家人从伊比利亚来，如今在别处做生意，要找走过这条路的人。"
+choices = [{ key = "listen", text = "记下这条路线。", reply = "你记下了那条路线：安特卫普，翻过阿尔卑斯山，到威尼斯与费拉拉，再往东去伊斯坦布尔。几个驿站的名字你没有写下来，只在心里念了一遍。", next = "done", effects = [{ kind = "flag", flag = "c11_society_mendes_network_known", value = true }], requires = [] }]
+at = "antwerp"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_mendes_network_1"
+name = "门德斯家族的逃亡网络"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里送信"
+text = "汇兑行后院的井边，一个伙计守着一只木箱。箱里装着几封信和几张汇票，都用细绳扎着。接信的人要替这一家人把钱款也带到下一站，还要有人担保，才轮得到你。"
+choices = [{ key = "finish", text = "交钱，接下这封信。", reply = "二十五杜卡特放进汇兑行的抽屉。那封没有署名的信你接在手里，签了收据，夜里就动身。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_mendes_network_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "mendes_network", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_contact_ransom_orders"
+name = "赎俘的修会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "赎俘的修会"
+text = "门房让你在门口站了一个时辰，才慢慢开口。今年的捐册已经满了，明年的还没开。他说，修会替人赎回来的，多半是水手和商人的家眷，救一个人，要先凑够一船的钱。"
+choices = [{ key = "listen", text = "把规矩背下来。", reply = "修会的规矩贴在门边的木板上：先要王室许可，再去募捐，带金币和布匹渡海，讲价，最后付赎金与规费。", next = "done", effects = [{ kind = "flag", flag = "c11_society_ransom_orders_known", value = true }], requires = [] }]
+at = "barcelona"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_ransom_orders_1"
+name = "赎俘的修会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "门前的收据"
+text = "修道院门前站着两个修士，一个管钱，一个管名册。你报上要赎的人的名字，修士翻开名册，让你看前面一页的几行。钱要当面交，不许托人转手，交完才能拿到收据。"
+choices = [{ key = "finish", text = "交钱，领收据。", reply = "门房把二十五杜卡特点了两遍，装进布袋。收据递过来，纸上写明了讲定的赎金数目，末尾还有一行小字，要船到之日才算数。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_ransom_orders_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "ransom_orders", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "barcelona"
+
+[[tracks]]
+key = "c11_contact_rosicrucian"
+name = "玫瑰十字会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "玫瑰十字会"
+text = "安特卫普的书摊上，有一册手抄的小书，纸是旧的，封面上画着两个拉丁字母，外面一个圈。书里说，一个德意志人少年时在东方游历，回来后与七个人立下约定：只给人治病，分文不取；不穿固定的衣服；每年一次聚会，来不了的人要写信说明。书的末页说，墓门上写着：一百二十年后我将开启。"
+choices = [{ key = "listen", text = "记下这个印记。", reply = "你把那个印记记下来：两个拉丁字母，外面画着一个圈。抄书的人说，见过这个印记的人，都在港口的病床边出现过，不收钱。你谢过他，转身走了。", next = "done", effects = [{ kind = "flag", flag = "c11_society_rosicrucian_known", value = true }], requires = [] }]
+at = "antwerp"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_rosicrucian_1"
+name = "玫瑰十字会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "守夜"
+text = "安特卫普城里的一间小屋，炉子快灭了，孩子的母亲坐在床边发抖。行医的人让你把药拿来，药要先给孩子，然后由你守着，一直守到天亮，中途不能离开屋子。"
+choices = [{ key = "finish", text = "把手里的药交出去。", reply = "那一剂药你交了出去，烧得发红的孩子喝下半碗，天亮时额头凉了。行医的人在册子上记下你的名字，连谢字也没提。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_rosicrucian_1_done", value = true }, { kind = "item", item = "herbal_draught", qty = -1 }], requires = [{ kind = "society", society = "rosicrucian", ge = 0 }, { kind = "item", item = "herbal_draught", qty = 1 }, { kind = "fame", ge = 10 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_trial_rosicrucian_2"
+name = "玫瑰十字会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里换药"
+text = "伤兵躺在仓库的草堆上，腿上裹着脏布，已经两天没人来看。会里的人把你派过去，说这一次不用钱，只用药和手。夜里得有人醒着，每隔一个时辰换一次布，换到天色发白为止。"
+choices = [{ key = "finish", text = "拿药，替伤兵换药。", reply = "药剂用在伤兵的伤口上，纱布换了三次，血才止住。同伴们守了一夜，天亮时你的名字已经挪到了第二页。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_rosicrucian_2_done", value = true }, { kind = "item", item = "herbal_draught", qty = -1 }], requires = [{ kind = "society", society = "rosicrucian", ge = 1 }, { kind = "item", item = "herbal_draught", qty = 1 }, { kind = "fame", ge = 20 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_contact_stonemasons"
+name = "石匠的工棚与\"旧训\""
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "石匠的工棚与“旧训”"
+text = "汉堡一座教堂的工地上，石匠的工棚里挂着一块刻了记号的石头。来访的人要先站在门外，等里头的人出来问候，握手要照老规矩来。工棚里的人说，德意志石匠的总章程是十五世纪中叶订下的，斯特拉斯堡的工棚最大。英格兰的老石匠讲一个旧训：学问曾刻在两块石上，大理石不着火，砖不沉水。"
+choices = [{ key = "listen", text = "记下这个记号。", reply = "你记下了石匠的记号，老师傅又教你握手的几个讲究，问候的话要说对了才算数。他说：平面怎么变成立面，那是自家人的事，外行听不得。你点头，没有追问。", next = "done", effects = [{ kind = "flag", flag = "c11_society_stonemasons_known", value = true }], requires = [] }]
+at = "hamburg"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_stonemasons_1"
+name = "石匠的工棚与\"旧训\""
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "来访仪式"
+text = "汉堡石料场的棚子里，凿子声停了一下。老师傅问你从哪座城来，又低头看了看你的手。雷根斯堡订下的总章程钉在门柱上，斯特拉斯堡的那一间排在最前面。想进这一行，先要走完来访的礼，再由师傅决定你能不能碰石头。"
+choices = [{ key = "finish", text = "照规矩行礼，交出入会的钱。", reply = "问候的话说对了，师傅伸手与你握了一次。二十五杜卡特收进工棚的箱子，今天只教到这一步。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_stonemasons_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "stonemasons", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "hamburg"
+
+[[tracks]]
+key = "c11_contact_montesa"
+name = "蒙特萨骑士团"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "蒙特萨骑士团"
+text = "瓦伦西亚港外的炮台上，红十字的旗子一天到晚不落。骑士们值勤时只问船的吃水和去向，别的一概不问。港里一个晒得黑红的老水手凑过来，压着嗓子说，骑士团的库房里锁着一份圣殿骑士的旧档，里头提到一块石头，据他说是守着圣杯的那一块。"
+choices = [{ key = "listen", text = "听老水手把话说完。", reply = "老水手讲完便笑了，说那份旧档他只在库房门口见过，字是什么，他也不知道。你记下了他的名字，骑士团的门房也记下了你的脸。", next = "done", effects = [{ kind = "flag", flag = "c11_society_montesa_known", value = true }], requires = [] }]
+at = "valencia"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_montesa_1"
+name = "蒙特萨骑士团"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "守堂夜"
+text = "骑士营的旧骑士堂里，墙上挂着一面磨白了的红十字盾。营里的老骑士说，骑士团只护海，不护王位，这是圣殿留下的规矩。想进门，要先替营里守一夜堂，守完再听一段旧档。"
+choices = [{ key = "finish", text = "交出二十五杜卡特，留下守夜。", reply = "守完夜，老骑士把旧档的抄件推到你面前，只念了第一行就合上了。二十五杜卡特充了堂里的修缮钱。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_montesa_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "montesa", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "valencia"
+
+[[tracks]]
+key = "c11_contact_common_life"
+name = "共同生活弟兄会与姊妹会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "共同生活弟兄会与姊妹会"
+text = "阿姆斯特丹运河边有一间不起眼的抄书房，窗帘拉了一半，里头的人低着头抄经，很少抬头。代芬特尔的学校出来的人说话都爱夹一句拉丁文。有人把一卷新抄的书递给你，说这是弟兄们手里的东西，卖不卖，要看你肯不肯替他们多抄几页。"
+choices = [{ key = "listen", text = "接下那卷抄本，翻几页看看。", reply = "抄本的字迹整齐得像印出来的，页边写着一行小字，是每天的功课。你翻到底，抄书的人已经去了后院，没有回头。", next = "done", effects = [{ kind = "flag", flag = "c11_society_common_life_known", value = true }], requires = [] }]
+at = "amsterdam"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_common_life_1"
+name = "共同生活弟兄会与姊妹会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "晚课"
+text = "代芬特尔来的老抄书人在阿姆斯特丹的宿舍里收徒。这里不发誓，财产交公，夜里点一盏灯抄书，抄到天亮。新来的人要先陪一场晚课，听孩子们念语法，再决定能不能进抄书房。"
+choices = [{ key = "finish", text = "交出灯油钱，留下陪晚课。", reply = "孩子们念到一半，老抄书人把灯芯挑亮，说你的字可以拿去抄。灯油钱二十五杜卡特，她亲手记在页边。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_common_life_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "common_life", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "amsterdam"
+
+[[tracks]]
+key = "c11_contact_beguines"
+name = "贝居安会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "贝居安会"
+text = "安特卫普城墙里的一排小屋，门口的石阶擦得发亮。贝居安的姊妹白天纺纱、看护病人，夜里围墙的门一关，外头的人就进不来了。一个提着篮子的姊妹停在你面前，问你是不是来还一笔旧债。"
+choices = [{ key = "listen", text = "跟她进门，听她把话说完。", reply = "姊妹把篮子交给你，里面是一卷纺好的线，线头上系着一张小纸条，写着一个你还没听过的名字。她把话说完，又叮嘱你把纸条收好，别让人看见。", next = "done", effects = [{ kind = "flag", flag = "c11_society_beguines_known", value = true }], requires = [] }]
+at = "antwerp"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_beguines_1"
+name = "贝居安会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "纺车间"
+text = "围墙里的小院，几十架纺车整天转着。院长是个寡言的老姊妹，她说贝居安只守个人的誓，离开与留下都由自己定。想在这里有一席位，先要纺够一整束线，再把线挂到洗衣间的木架上，一根断头也不许有。"
+choices = [{ key = "finish", text = "交上纺车的钱，坐下来纺线。", reply = "线纺得匀，老姊妹拍了拍你的手背，说你的手适合做这个。二十五杜卡特充了院里的粮，线头都收进了篮子。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_beguines_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "beguines", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_contact_ursulines"
+name = "乌尔苏拉会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "乌尔苏拉会"
+text = "威尼斯一户做玻璃的人家，厨房桌上摊着一本字母表。一个穿灰裙的女人正教两个女孩拼读，她不住修院，也不穿会服，自称从布雷西亚来，那里的女人教女孩认字，已经教了许多年。她问你会不会写自己的名字。"
+choices = [{ key = "listen", text = "坐下来，把名字写给她看。", reply = "你写下名字，她在旁边画了个小圈，说这就算入册了。两个女孩抬头看你，又低下头去念字母。", next = "done", effects = [{ kind = "flag", flag = "c11_society_ursulines_known", value = true }], requires = [] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_ursulines_1"
+name = "乌尔苏拉会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜读"
+text = "乌尔苏拉的女人在威尼斯各家轮流借住，每户只住几个月。新入会的人要先在一户人家里住满一个晚上，替病床边的老妇人读完一本祷书，不许漏字，也不许跳过注释。读书的声音由院长听，她会把错的地方一个个指给你看。"
+choices = [{ key = "finish", text = "交出二十五杜卡特，留下来读。", reply = "祷书读到天亮，老妇人睡着了，醒来说你的声音像她女儿。二十五杜卡特压在床头的小柜上，算作这一户的灯油。书里的字，你一个也没跳过。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_ursulines_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "ursulines", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "venice"
+
+[[tracks]]
+key = "c11_contact_secrets_academy"
+name = "秘密学院"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "秘密学院"
+text = "那不勒斯城里一座废弃的学园，墙上还留着蓬塔诺的名字。学园关门以后，有几个人照旧在地下室里生火蒸馏，说要把配方一条条拿去试。他们不叫自己学院，问起来只说来看看这水有没有用。一个戴眼镜的人递给你一只玻璃瓶，瓶底沉着一层白色的沙。"
+choices = [{ key = "listen", text = "接过瓶子，凑近灯看沉淀。", reply = "沉淀在灯下泛着细细的光，戴眼镜的人说那是他们上个月试出来的。他没有说配方的名字，只让你看完，又把瓶子接了回去。", next = "done", effects = [{ kind = "flag", flag = "c11_society_secrets_academy_known", value = true }], requires = [] }]
+at = "naples"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_secrets_academy_1"
+name = "秘密学院"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "三遍提取"
+text = "新来的人要先在地下室里把一味草药的提取做三遍，每遍的分量都记进本子。成功的记一笔，失败的也要记，不许撕页。炭与玻璃器皿要自己付钱，二十五杜卡特交给管炉的人。"
+choices = [{ key = "finish", text = "交出炭钱，拿起蒸馏器。", reply = "三遍的数字都写进了本子，有一遍的水比别人清。你的名字被添在册子最后一行，炭钱二十五杜卡特收进了抽屉。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_secrets_academy_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "secrets_academy", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "naples"
+
+[[tracks]]
+key = "c11_contact_scuole_grandi"
+name = "威尼斯的大会堂"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "威尼斯的大会堂"
+text = "威尼斯的圣洛克会堂还在动工，脚手架立到了二楼，石匠的锤子从早响到晚。会堂的理事站在门口，手里一本捐款册，册上一排排名字用红墨水勾着。有人问他们救济的是谁，他们只说嫁妆和棺材，这两样城里总有人要。"
+choices = [{ key = "listen", text = "走近册子，看看捐款的名字。", reply = "册子上的名字大多是绸缎商与补锅匠，偶尔夹着一个女人的名字，只写了洗衣的行当。理事合上册子，说明天来领一张会徽。", next = "done", effects = [{ kind = "flag", flag = "c11_society_scuole_grandi_known", value = true }], requires = [] }]
+at = "venice"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_scuole_grandi_1"
+name = "威尼斯的大会堂"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "点名"
+text = "疫病的消息从帕多瓦传来，会堂的理事决定在三个教区设施粥的桌子。领东西的人要先报名，报上的名字要和册子对得上。桌子边坐着一个老账房，他说谁的名字漏了，谁就得等下一周。"
+choices = [{ key = "finish", text = "交登记费，站到点名的桌边。", reply = "点名的桌子一直排到天黑，老账房把对不上的名字挨个写在纸条上，交给你去跑腿。二十五杜卡特的登记费，他当场数了两遍。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_scuole_grandi_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "scuole_grandi", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "venice"
+
+[[tracks]]
+key = "c11_contact_san_giovanni"
+name = "斩首圣约翰会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "斩首圣约翰会"
+text = "奇维塔韦基亚的码头上，一船囚犯刚被押下跳板，披黑斗篷的人跟在后头。他们是罗马来的佛罗伦萨人，遇到行刑的日子就陪在死囚身边，直到刀落下为止。有人问他们图什么，他们说一年里总有一个人能被赦免。"
+choices = [{ key = "listen", text = "留下来听他们怎么求赦。", reply = "黑斗篷的人说，求赦的文书要在行刑前一天送到红衣主教的案头，晚一刻也不行。他把一张折起来的纸放进你手里，纸角已经磨毛了。", next = "done", effects = [{ kind = "flag", flag = "c11_society_san_giovanni_known", value = true }], requires = [] }]
+at = "civitavecchia"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_san_giovanni_1"
+name = "斩首圣约翰会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "陪夜"
+text = "行刑前夜，囚室外的长凳上坐满了黑斗篷的人。会里的老人说，陪夜的人不许替死囚求情，只能把话记下来。明天一早，这些话要念给死囚的家人听，念错一个字就得重来。"
+choices = [{ key = "finish", text = "交上二十五杜卡特，坐下陪夜。", reply = "天快亮时你把最后一句话记完，纸上的字歪了几处，那人自己看了一遍，说这样就行。二十五杜卡特交给了管钱的老人，他在账上画了一道细线。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_san_giovanni_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "san_giovanni", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "civitavecchia"
+
+[[tracks]]
+key = "c11_contact_rhetoric"
+name = "修辞会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "修辞会"
+text = "安特卫普圣母大教堂后面有一间厅，墙上挂满各行会的纹章。一排诗人与演员坐在长凳上，互相拿格言比试，输的人要请大家喝一杯。有个穿蓝呢外套的人朝你招手，问你会不会押韵。据说低地的城市每年比一次“地方珍宝”，输了的城要拿出一件银器赔罪。"
+choices = [{ key = "listen", text = "问他们的格言是什么", reply = "格言是一句佛兰芒话，领头的人逐字念给你听，末了说这句话在哪座城都换不得一个字。你把它抄在袖口里的纸条上，抄得很小。", next = "done", effects = [{ kind = "flag", flag = "c11_society_rhetoric_known", value = true }], requires = [] }]
+at = "antwerp"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_rhetoric_1"
+name = "修辞会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "入会的比试"
+text = "紫罗兰会每年有一场入会的比试。新人要在厅中央站定，朗诵一句本会的格言，四周的诗人挑毛病，挑得越细越好。厅里的人说，入会的银子是拿去修屋顶的，格言说得好才算数。你的袖口还留着上次那张纸条的墨痕。"
+choices = [{ key = "finish", text = "朗诵格言，交二十五杜卡特", reply = "格言念得不差，厅里有人拍了桌子。你交出二十五杜卡特作入场的银子，书记在名册上落下你的名字，没有收据，只有一个点头。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_rhetoric_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "rhetoric", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "antwerp"
+
+[[tracks]]
+key = "c11_contact_bergen_kontor"
+name = "卑尔根商站的\"游戏\""
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "卑尔根商站的“游戏”"
+text = "卑尔根的汉萨商站有一条窄巷，两边的木屋被烟熏得发黑，门楣上挂着一块旧木牌，画着一条干鳕鱼。学徒入行要过“游戏”，老商人先不说规矩，只问你怕不怕烟、喝不喝酒。巷子深处传来一阵笑声，像是有人在水边被推下去了。"
+choices = [{ key = "listen", text = "问清入行的规矩", reply = "老商人没有直说规矩，只让你去码头上找一个学徒。学徒的脸上还有烟灰，他说：先学会不眨眼，再学会不咳嗽，剩下的到了水边再讲。", next = "done", effects = [{ kind = "flag", flag = "c11_society_bergen_kontor_known", value = true }], requires = [] }]
+at = "bergen"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_bergen_kontor_1"
+name = "卑尔根商站的\"游戏\""
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "水边的规矩"
+text = "圣灵降临节后的第二个星期三，商站的学徒要在水边过“水戏”。码头上站满看热闹的老人，石阶滑，石缝里长着绿苔。入行的钱要先交给老商人，你攥着那袋银子，听有人在背后喊你脱靴子。"
+choices = [{ key = "finish", text = "下水，交二十五杜卡特", reply = "水很冷，你被众人推下去，又拉上来，一碗烫酒塞进手里。老商人数过二十五杜卡特，说你的骨头够硬，从今往后可以在商站里走动了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_bergen_kontor_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "bergen_kontor", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "bergen"
+
+[[tracks]]
+key = "c11_contact_griffarins"
+name = "里昂的印刷职工"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "里昂的印刷职工"
+text = "马赛港边有一间印坊，墨味和鱼腥混在一起。印刷工从里昂来，说话带着罗讷河的口音。门框上钉着一枚铅字，字母已经磨平了。老工人说，十几年前里昂的印刷工也停过一次工，明面上为的是工钱，背后有没有人拉线，他不肯往下讲。"
+choices = [{ key = "listen", text = "问那次停工的事", reply = "学徒压低声音，只说了一个词：格里法兰。他把话头掐断，改问你懂不懂拼版。你记住了这个名字，以后在印坊里听到的话，都会多一层意思。", next = "done", effects = [{ kind = "flag", flag = "c11_society_griffarins_known", value = true }], requires = [] }]
+at = "marseille"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_griffarins_1"
+name = "里昂的印刷职工"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "样页的错字"
+text = "马赛印坊的后屋里，行首把一卷样页摊在案上，上面印的是一整段祷文，错字藏在两行之间。学徒们说这是试炼：校得出来，就能进账房；校不出来，就去搬纸。灯油快烧干了，你坐下来，先付纸墨的银子。"
+choices = [{ key = "finish", text = "校完样页，付二十五杜卡特", reply = "错字一共七个，你一个不漏地圈了出来。行首看完，把二十五杜卡特收进抽屉，只说：明早去账房，别迟到。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_griffarins_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "griffarins", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "marseille"
+
+[[tracks]]
+key = "c11_contact_taifa_rais"
+name = "阿尔及尔的船长圈"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "阿尔及尔的船长圈"
+text = "阿尔及尔的码头上，船长们一年到头都在岸上打赌。有人在酒馆门口摆一张桌子，桌上是几张海图和一小堆银币，谁都可以来押一把。缠头巾的老船长看见你的袍子，问你是哪一条船的。"
+choices = [{ key = "listen", text = "问他们在赌什么", reply = "老船长说，赌的是下一季的风向：哪一方的快船先回港，哪一方就得请客。你记下了这句玩笑背后的规矩，知道在这里提船名要先看人的脸色。", next = "done", effects = [{ kind = "flag", flag = "c11_society_taifa_rais_known", value = true }], requires = [] }]
+at = "algiers"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_taifa_rais_1"
+name = "阿尔及尔的船长圈"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "船上的分账"
+text = "出海前要先交五十杜卡特的份子钱，船长才让你上船。快船在外海截住一艘热那亚商船，货舱里的布匹、蜡和几箱胡椒很快被搬空。回港后船长当众摊开清单，按船上的老规矩分账：船东一份，水手一份，伤员一份，剩下的归掌旗的人。"
+choices = [{ key = "finish", text = "交份子钱，随船出海", reply = "快船在外海追上一条商船，回港时你的清单写满了两页。船长看完一遍没挑毛病，只让你在那一页底下签上自己的名字。五十杜卡特的份子钱，就算是入这一行的本钱。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_taifa_rais_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "taifa_rais", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "algiers"
+
+[[tracks]]
+key = "c11_trial_taifa_rais_2"
+name = "阿尔及尔的船长圈"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "押船的赌局"
+text = "押船的赌局在港口的一间棚子里摆开。老船长把单据压在碗底，猜中下一季风向的人，能拿走这一船的分成；猜错的要当众认输，还要替对方的水手买一顿饭。大家只看你敢不敢把名字写在最上面。"
+choices = [{ key = "finish", text = "押上一船货的单据", reply = "你把一船货的单据压进碗底，风向说对了一半。老船长笑着替你把另一半也认了，当众喊你一声同伴，赌金却照旧从你的账上扣走。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_taifa_rais_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "taifa_rais", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "algiers"
+
+[[tracks]]
+key = "c11_contact_shadhili"
+name = "沙兹利的咖啡守夜"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "沙兹利的咖啡守夜"
+text = "摩卡港的咖啡馆没有窗，只有高处的一排小孔透进海风。也门来的苏菲在夜里围坐，喝一种黑色的热水，说能醒神，能念经到天亮。掌柜是个老人，见你进来，先端上一小杯，然后问你是不是来守夜的。"
+choices = [{ key = "listen", text = "喝下那杯苦水", reply = "咖啡苦得发涩，你喝到一半才发现身边的人都在看你的手。掌柜点头，说你可以在夜里来坐，不用付钱，只要把听到的话记在心里。", next = "done", effects = [{ kind = "flag", flag = "c11_society_shadhili_known", value = true }], requires = [] }]
+at = "mocha"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_shadhili_1"
+name = "沙兹利的咖啡守夜"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "守到天亮"
+text = "屋里只点一盏灯，守夜的人围成一圈，每人轮流讲一段从港口听来的话。进屋的油灯钱是二十五杜卡特，掌柜当场记账。你要熬到天亮，把进出的人说过的每一句都记住，漏掉一句，这一趟就算白坐。"
+choices = [{ key = "finish", text = "交钱入座，守完一夜", reply = "天亮前守夜人一条条地问，你答出了九成。掌柜收下你的二十五杜卡特，把你的名字写进守夜的名册，末了给你续上一杯黑水。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_shadhili_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "shadhili", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "mocha"
+
+[[tracks]]
+key = "c11_contact_khalwati"
+name = "哈尔瓦提"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "哈尔瓦提"
+text = "伊斯坦布尔城外的一座小院，墙刷着白灰，门口放着一只陶罐，里头是用过的梦话纸条。哈尔瓦提的人住在这里，不许大声说话，他们在闭关，也替人解梦。一个瘦削的修行人从门缝里看你，问你昨夜做没做梦。"
+choices = [{ key = "listen", text = "说一个昨夜的梦", reply = "你说了一个关于港口的梦，修行人没有笑，把它记在一张纸上，封进那只陶罐。他说梦会自己找到解它的人，你以后再来，他会告诉你梦里的船是谁的。", next = "done", effects = [{ kind = "flag", flag = "c11_society_khalwati_known", value = true }], requires = [] }]
+at = "istanbul"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_khalwati_1"
+name = "哈尔瓦提"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "闭关一夜"
+text = "静室只有一张毯子和一盏灯，门从外头锁上。香料钱是二十五杜卡特，门口的人先收了才开锁。你要在里面熬一夜，醒来时把梦里的话原样写下，写不全的地方空着，不许补。"
+choices = [{ key = "finish", text = "交香料钱，进静室", reply = "梦碎成几截，你只记得灯芯烧得很慢。天亮后你照着记得的写下几行，空着的地方没有补。长老读完，圈出其中一个词，说这就是你要的解方。二十五杜卡特落进了香盒底。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_khalwati_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "khalwati", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "istanbul"
+
+[[tracks]]
+key = "c11_contact_mevlevi_naqshbandi"
+name = "梅夫拉维与纳格什班迪"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "梅夫拉维与纳格什班迪"
+text = "加拉塔的坡道上，外商的仓库一排排靠着海。道堂的门开在窄巷里，门口有一位戴高帽的修士，长袍宽大，转起来像一朵花。巷子里飘着香料与烤面包的味道，外国商人在这里谈价钱，也在这里听一支乐曲。"
+choices = [{ key = "listen", text = "在门边站一会儿", reply = "修士们一圈一圈地转，衣摆扬起，像是要把屋里的尘土都甩出去。领头的人看你一眼，没有请你进去，只让你以后每周五来门边站一会儿。", next = "done", effects = [{ kind = "flag", flag = "c11_society_mevlevi_naqshbandi_known", value = true }], requires = [] }]
+at = "istanbul"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_mevlevi_naqshbandi_1"
+name = "梅夫拉维与纳格什班迪"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "道堂的守门"
+text = "诵念的声音从半夜响到天亮。长老把一个封了印的信袋交给你，要你在日出前送进宫门旁的门房，途中不许打开。进门守夜的人每位二十五杜卡特，道堂的人说这钱不算贿赂，只算香油。"
+choices = [{ key = "finish", text = "交座位钱，守到天亮", reply = "诵念停时天已发白，你把信袋贴身收好，穿过半个城送到宫门的门房手里。门房没有看你，只签了个字。二十五杜卡特的座位钱，道堂收了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_mevlevi_naqshbandi_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "mevlevi_naqshbandi", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "istanbul"
+
+[[tracks]]
+key = "c11_contact_bektashi"
+name = "拜克塔什"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "拜克塔什"
+text = "营房门口的石阶上坐着一个修士，没穿军服，头上戴一顶长毡帽。兵丁们排队从他面前过，他不问话，只看人的脸，看完往人群里指一下。有个兵把钱袋递过去，他摇头，说：“你的脸还没有说完。”"
+choices = [{ key = "listen", text = "上前问他是哪一派的", reply = "修士说他是拜克塔什的人，这一派的修士都不娶。他在你脸上停了一息，说：“你会再来。”你把这个名字记下，往后在营门外打听，就有人替你指路。", next = "done", effects = [{ kind = "flag", flag = "c11_society_bektashi_known", value = true }], requires = [] }]
+at = "istanbul"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_bektashi_1"
+name = "拜克塔什"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "营门读脸"
+text = "修士让你站到营门口，身边那个新兵低着头。他脸上有一道新伤，眼神却躲着人，像是在想家里的事，又像是在想别的。你要读准他这几日心里装着什么，读错了，钱就白交了。"
+choices = [{ key = "finish", text = "交钱，替兵丁读脸色", reply = "你说准了那个兵是为家里的信发愁。修士点头，收下二十五杜卡特，在营门口的名册上替你记了一笔。从这一天起，门口的修士见了你会先看脸。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_bektashi_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "bektashi", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "istanbul"
+
+[[tracks]]
+key = "c11_contact_hurufi_nuqtavi"
+name = "胡鲁菲与努克塔维"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "胡鲁菲与努克塔维"
+text = "霍尔木兹的码头边，一个抄书匠在纸上写你的名字，每个字母都画成一张小人脸。他把写满的纸折成四折，塞进袖口，见你盯着看，就说：“字母是有脸的，你名字里有几张是笑着的？”"
+choices = [{ key = "listen", text = "让他念一念我的名字", reply = "他念着你的名字，把每个字母的脸一张张指给你看，说第三张是个会坏你事的人。他没有收你的钱，只说这派叫胡鲁菲，也叫努克塔维。这派的人不爱报自己的名字，你记住了。", next = "done", effects = [{ kind = "flag", flag = "c11_society_hurufi_nuqtavi_known", value = true }], requires = [] }]
+at = "hormuz_port"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_hurufi_nuqtavi_1"
+name = "胡鲁菲与努克塔维"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "三张脸"
+text = "抄书匠把三张纸摊在桌上，每张都写着一个陌生人的名字，字母排成一行，脸画在字母的肚子里。他不说哪张是谁，只拿指节敲桌子，等你开口。你要按字母把三张脸和三个人一一对上号。"
+choices = [{ key = "finish", text = "交钱，按字母对脸", reply = "三张脸都对上了。抄书匠数过二十五杜卡特，把一张叠过的纸递给你，纸上写着一处住址，是城里一家卖药的铺子。他说，引见的人就在那里等，你说准了，才算进了门。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hurufi_nuqtavi_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "hurufi_nuqtavi", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "hormuz_port"
+
+[[tracks]]
+key = "c11_contact_jazuli"
+name = "贾祖利教团与萨阿德家族"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "贾祖利教团与萨阿德家族"
+text = "萨莱港的旧仓房里，一个苦行的教徒把手按在一只铜盒上，说里面是贾祖利的一根指骨。盒子不许打开，他让每个进港的商人隔着盒子摸一下，摸过的货才算平安。门外的海风把帆布吹得啪啪响。"
+choices = [{ key = "listen", text = "问这盒子从哪里来", reply = "他说几十年前，马拉喀什的陵墓里起过一次大迁移，遗骨被一路抬进城。他把铜盒合上，说：“摸过圣骨的手，就算认得我们了。”贾祖利与萨阿德两个名字，你都收进了心里。", next = "done", effects = [{ kind = "flag", flag = "c11_society_jazuli_known", value = true }], requires = [] }]
+at = "sale"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_jazuli_1"
+name = "贾祖利教团与萨阿德家族"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "守陵一夜"
+text = "守陵人在港口的仓房里等你，袍子洗得发白。他说马拉喀什的陵寝外要守一夜，你不许睡，也不许靠墙。夜里墙那边会有人低声念诵，你要把每一句都记下，天亮前原样带回港口。"
+choices = [{ key = "finish", text = "交钱，应下守夜的差事", reply = "守陵人收了二十五杜卡特，替你应下守夜的差事。天亮时你把守陵人的话原样背给他听，一字不差。他点点头，把一枚没有字的铜牌放进你手里，说这是进陵寝的凭据。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_jazuli_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "jazuli", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "sale"
+
+[[tracks]]
+key = "c11_contact_qizilbash"
+name = "红头军"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "红头军"
+text = "霍尔木兹的客栈里，几个从波斯来的水手戴着十二褶的红帽子，帽檐压得很低。他们不喝酒，银杯里是凉的玫瑰水，每人饮一口，说一句伊斯玛仪的名字，然后才看你。"
+choices = [{ key = "listen", text = "接过银杯，饮一口", reply = "你饮了一口，他们收回银杯，说你是可以信的人。在奥斯曼的船上，红帽子要藏进包袱；在霍尔木兹，码头上的人会替你挡一阵闲话。红头军三个字，你在心里默念了两遍。", next = "done", effects = [{ kind = "flag", flag = "c11_society_qizilbash_known", value = true }], requires = [] }]
+at = "hormuz_port"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_qizilbash_1"
+name = "红头军"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "带信过峡"
+text = "红帽信使在码头边的骆驼棚里，一包用油布裹好的东西搁在桌上，包上没有字。他说海峡的关吏会翻包，问起就答藏红花。香料的名字你要记准，错一个字，这包东西就到不了对岸。"
+choices = [{ key = "finish", text = "交钱，接下那包信", reply = "桌上的二十五杜卡特一数，信使才把那包东西推过来。关吏翻了包，问里面是什么，你说是藏红花，他捏一撮闻了闻，没有拆油布。过了峡，对岸的人只说了一个字：“好。”", next = "done", effects = [{ kind = "flag", flag = "c11_trial_qizilbash_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "qizilbash", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "hormuz_port"
+
+[[tracks]]
+key = "c11_contact_morisco_network"
+name = "摩里斯科人的秘密网络"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "摩里斯科人的秘密网络"
+text = "得土安的一间小书铺，后屋的木架上摆着一排用阿拉伯字母抄的西班牙话的书。书页边上画着护符和数字，老人说这些是家里人从格拉纳达带出来的。门后挂着一把旧铁钥匙，锈得发黑。"
+choices = [{ key = "listen", text = "问这钥匙开的是哪扇门", reply = "老人说那扇门早就拆了，钥匙却还要挂着。他在一本薄册子上落下你的名字，说往后渡海的船上，会有人认得你。这一网的名字，你从他嘴里听了一遍：摩里斯科人的秘密网络。", next = "done", effects = [{ kind = "flag", flag = "c11_society_morisco_network_known", value = true }], requires = [] }]
+at = "tetouan"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_morisco_network_1"
+name = "摩里斯科人的秘密网络"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "送书到丹吉尔"
+text = "书铺老人把一卷用布包好的抄本放在柜台上，布角缝着一小块绿布。他说这是一家人的家传，要送到丹吉尔城里，交到收信的人手里。路上不许翻开看，书页里有几行字是给远方的人看的，不是给你看的。"
+choices = [{ key = "finish", text = "付钱，接下这卷书", reply = "付过二十五杜卡特，书被裹进油布，一路没有翻开。到丹吉尔，收书的人接过去，只点了点头，低声说了一句：“格拉纳达的水还在。”你知道这是对上了暗语。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_morisco_network_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "morisco_network", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "tetouan"
+
+[[tracks]]
+key = "c11_contact_kunjali"
+name = "昆贾利·马拉卡尔一族"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "昆贾利·马拉卡尔一族"
+text = "卡利卡特的港口，一排细长的快船靠在木桩旁，船头刷着红漆。船上的人穿白布短衫，说话时总眯着眼看海面。码头上有个老船长在数桨，数到第七把就停下，回头问你：“葡萄牙人的船，你见过没有？”"
+choices = [{ key = "listen", text = "说没见过，请他讲讲", reply = "老船长讲了葡萄牙船的高舷和炮窗，讲得像在背账。他说卡利卡特的快船队最缺会认旗号的人，你若肯学，他就替你记一笔。昆贾利这个名字，老船长让你念了两遍，才肯点头。", next = "done", effects = [{ kind = "flag", flag = "c11_society_kunjali_known", value = true }], requires = [] }]
+at = "calicut_port"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_kunjali_1"
+name = "昆贾利·马拉卡尔一族"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "外海巡哨"
+text = "快船队的头领在港口的棚子里摊开一张海图，图上用红笔画着三条航线。他说要随一队船在外海巡一趟，看清葡萄牙船的旗号，回港报航向。出港的号角响过三遍，桨就要下水了。"
+choices = [{ key = "finish", text = "交钱，登上快船", reply = "二十五杜卡特交到棚子的账房手里，你随快船出了港。在外海你看见一面带十字的葡萄牙旗，把旗号记在心里。回港时你把航向报给头领，他用红笔在图上画了一圈，说这一趟你算是上了船。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_kunjali_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "kunjali", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "calicut_port"
+
+[[tracks]]
+key = "c11_contact_ahi"
+name = "阿希兄弟会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "阿希兄弟会"
+text = "伊斯坦布尔的一间铁匠铺，傍晚收工时匠人们排成一队，把当天挣来的钱放进一只木匣，交给门口坐着的首领。匠人们腰上系着布带，头上戴白羊毛帽，见你是外地人，就端出一碗冰果子露。"
+choices = [{ key = "listen", text = "接过果子露，一口喝下", reply = "你喝了一口冰凉的果子露，首领问你打哪里来，你答了。他说兄弟会收的是手上有活、肚里有数的人。阿希，就是我的兄弟，他说这话时没有笑。阿希兄弟会的名字，连同那句话，你一并收下了。", next = "done", effects = [{ kind = "flag", flag = "c11_society_ahi_known", value = true }], requires = [] }]
+at = "istanbul"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_ahi_1"
+name = "阿希兄弟会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "替木匠做工"
+text = "木匠的作坊在城墙外，他让你先去拉风箱，再磨刨子，活儿一样也不许少。兄弟会的人站在一边看，不帮忙，也不说话。傍晚收了工，木匠数出工钱，首领走过来，问你挣的钱够不够吃一顿饭。"
+choices = [{ key = "finish", text = "交上五十杜卡特", reply = "首领接过五十杜卡特，没有数，只把一条布带递给你，让你系在腰上。木匠在作坊门口朝你摆手，说下回还可以来做工。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_ahi_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "ahi", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "istanbul"
+
+[[tracks]]
+key = "c11_trial_ahi_2"
+name = "阿希兄弟会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "护送驮队"
+text = "驮队今晚要出城，走北边的山口。兄弟会的同伴们腰挂长刀、头戴白羊毛帽，一人牵着一头驮骡。领队问你敢不敢在最后一段走夜路。你要和他们一起护住驮队，人和货都得在天亮前到驿站。"
+choices = [{ key = "finish", text = "交钱，随驮队出城", reply = "五十杜卡特交出去，你跟着驮队出了城。天亮时人和货都到了驿站，同伴们拍拍你的肩，说从今天起，住处和护卫都替你留着。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_ahi_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "ahi", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "istanbul"
+
+[[tracks]]
+key = "c11_contact_safed"
+name = "萨费德的\"同伴\""
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "萨费德的“同伴”"
+text = "贝鲁特码头边的毛货栈里，一个从萨费德上来的织工把灰呢摊在案上，让你摸接缝。他问你会不会希伯来语，答“会”或“不会”都行，只是进了这间屋，就只许说这一种话。旁边的人不抬头，手里的线却停了。"
+choices = [{ key = "listen", text = "先听他说下去", reply = "你没有追问，只把灰呢的接缝看完。织工点了点头，在账页背面记下你的船号，说这一笔算是认下了你。", next = "done", effects = [{ kind = "flag", flag = "c11_society_safed_known", value = true }], requires = [] }]
+at = "beirut"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_safed_1"
+name = "萨费德的\"同伴\""
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "星期五的回顾"
+text = "星期五傍晚，你和一位同伴在毛货栈楼上对坐，油灯挂在梁下。每人要把这一周自己做错的事说给对方听，话不能绕弯。轮到你时，屋里静得能听见楼下的织机。被规劝的人，三天里不许替自己分辩。"
+choices = [{ key = "finish", text = "说出这一周的错", reply = "你把这一周的错一条条说完，没有找借口。二十五杜卡特搁在油灯边，对面的同伴说这是油灯钱，事情就算过去了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_safed_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "safed", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "beirut"
+
+[[tracks]]
+key = "c11_contact_anjudan"
+name = "安朱丹的伊玛目与沙·塔希尔"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "伊玛目与沙·塔希尔"
+text = "果阿的一间学馆里，一位波斯来的先生正对着星图修正一张旧表。他说自己在安朱丹跟一位老先生学过看星，那位老先生手里的念珠比学馆的算盘还旧。讲到托勒密的时候，他忽然停下，把星图卷了起来，不肯再往下说。"
+choices = [{ key = "listen", text = "请他讲讲安朱丹", reply = "他说安朱丹的事只能讲半句，另半句要到果阿的屋顶上去问门人。他在图角上写下一个名字，这条门路要从星象里走。", next = "done", effects = [{ kind = "flag", flag = "c11_society_anjudan_known", value = true }], requires = [] }]
+at = "goa"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_anjudan_1"
+name = "安朱丹的伊玛目与沙·塔希尔"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里看星"
+text = "果阿的屋顶上没有灯，门人让你躺在石板上看了一整夜星。月离哪一颗星最近，要在心里记下来，天亮前用指节量给他看。量得不准，门人不骂人，只把你的手推回去，让你再量。"
+choices = [{ key = "finish", text = "交出记下的距离", reply = "天亮时门人对着你的数字点了头，又核了一遍，说那颗星你没有记错。二十五杜卡特放在石板上，他收得很快，像是早就算好了数目。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_anjudan_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "anjudan", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "goa"
+
+[[tracks]]
+key = "c11_contact_druze"
+name = "德鲁兹"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "知者与不知者"
+text = "贝鲁特城外的丝市上，一个山里来的老人替人验丝，手指一捻就知道成色。他的村子在舒夫，早年被大马士革来的兵烧过一回。他问你是“知者”还是“不知者”，语气像开玩笑，眼睛却没有笑。"
+choices = [{ key = "listen", text = "问他山里的规矩", reply = "老人说星期四的聚会在静修所，门只为“知者”开。他用指甲在你袖口上划了一道记号，你这才知道，自己已经被算进了“不知者”的名单。", next = "done", effects = [{ kind = "flag", flag = "c11_society_druze_known", value = true }], requires = [] }]
+at = "beirut"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_druze_1"
+name = "德鲁兹"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "星期四的静室"
+text = "星期四下午，静修所里坐满了人，没有一个人开口。你要坐到散会，不问，也不答。窗外的驴队从街上过去，铃声一阵一阵地响。快到黄昏时，长者才抬起眼，点了你的名字。"
+choices = [{ key = "finish", text = "在静修所坐到散会", reply = "你一直坐到散会，没有开口，也没有走神。长者递过一张写满字的纸，你放在桌上的二十五杜卡特，他没有看一眼。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_druze_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "druze", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "beirut"
+
+[[tracks]]
+key = "c11_contact_yazidi"
+name = "雅兹迪"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "拉利什的路"
+text = "巴士拉的骡市上，一个从摩苏尔北边山里下来的人卖羊毛，价钱给得很死，一文也不让。他话少，只问你去没去过拉利什。你说没去过，他便摇头，说那条路被抢过太多次，向导只带认得的人。"
+choices = [{ key = "listen", text = "请他引见向导", reply = "他在羊皮上记下你的船号，收进怀里，说会托人在拉利什山脚替你引见向导。这一记先认下，山里的人才肯让你上路。", next = "done", effects = [{ kind = "flag", flag = "c11_society_yazidi_known", value = true }], requires = [] }]
+at = "basra"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_yazidi_1"
+name = "雅兹迪"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "山道上的水"
+text = "向导领着你翻过一段山道，路上没人问你的来历。山里的人要你背水、抱孩子，一道坡接一道坡地走。到了山脚，向导停下，抬手指着山坳里的一片白墙，说那边的墓你不去，也不必回头看。"
+choices = [{ key = "finish", text = "背着水走完山道", reply = "你背着水走完最后一段坡，孩子在背上睡熟了。向导回头看了你一眼，收下二十五杜卡特，说是路钱，然后让你转身下山。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_yazidi_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "yazidi", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "basra"
+
+[[tracks]]
+key = "c11_contact_mandaean"
+name = "曼达人"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "河湾上的约翰"
+text = "河湾上的几个人穿着白袍，在水边念一段很长的经文，念到一半，有人停下来看你的鞋。年纪最大的那位问你是不是从果阿来的，说葡萄牙人写过一封信，把他们当成了约翰的人。"
+choices = [{ key = "listen", text = "听他讲那封信", reply = "老人讲完了那封信的来龙去脉，没有评论信上的话。你记住了“约翰”二字，也记住了白袍人说这二字时的口气。下一回再来，河边会先有人迎你。", next = "done", effects = [{ kind = "flag", flag = "c11_society_mandaean_known", value = true }], requires = [] }]
+at = "basra"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_mandaean_1"
+name = "曼达人"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里的讲述"
+text = "夜里河边点起一盏灯，讲的人一段接一段地说约翰的事，声音很慢。讲到葡萄牙人来信的那一段，你要坐着听完，不能插嘴，也不能替信上的人辩白。旁边的孩子把脚伸进水里，没有人叫他上来。"
+choices = [{ key = "finish", text = "听完整段不插嘴", reply = "你一直听到最后，没有开口。讲的人把一条芦苇编的护符带塞进你手里，收下你的二十五杜卡特，只说河边的水会记得。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_mandaean_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "mandaean", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "basra"
+
+[[tracks]]
+key = "c11_contact_fez_seekers"
+name = "非斯的秘术行当"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "寻宝行会的人"
+text = "得土安的清真寺台阶下，黄昏时几个人正争炼金能不能把铅变成金，声音越吵越大。一个穿旧长袍的人从旁边走过，停下来说他是寻宝行会的人，行会推他来问你会不会按规矩挖宝。他问完，站在台阶边等你开口。"
+choices = [{ key = "listen", text = "问行会的规矩", reply = "他把规矩讲了三条：挖到的东西先报给领事；领事认过字，东西才算谁的；行会里不许私下卖给炼金的人。你把这三条记在袖口的布里，回船时还在默念。", next = "done", effects = [{ kind = "flag", flag = "c11_society_fez_seekers_known", value = true }], requires = [] }]
+at = "tetouan"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_fez_seekers_1"
+name = "非斯的秘术行当"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "画圆转字母"
+text = "学院的地坪上，一位卡巴拉人已经用白垩粉画好一个大圆，圆里分出一圈一圈的字母。他让你站进圆中，拨动一只字母轮，一个字母一个字母报出来。报准一回，他才点头；报错了，就用脚把圆抹去半边，让你从头来。"
+choices = [{ key = "finish", text = "替卡巴拉人转字母轮", reply = "你报准了第一轮，卡巴拉人在石板上记下一个符号。二十五杜卡特塞进石板的缺口，卡巴拉人没有道谢，只把你的名字写进了行里的册子。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_fez_seekers_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "fez_seekers", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "tetouan"
+
+[[tracks]]
+key = "c11_contact_white_lotus"
+name = "白莲教"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "雨夜纸莲"
+text = "雨夜收了货，月港的仓前只剩几盏风灯。一个吃长斋的苏州牙人替你扛了半包布，临走往你手心塞了一朵指甲大的纸莲，压低声音说：“客官哪天想听听弥勒的事，来我铺子后头坐坐。”话没说完，人已钻进雨里。"
+choices = [{ key = "listen", text = "收下纸莲，记住他的铺子", reply = "纸莲叠得一丝不差。次日你向码头的老脚夫打听，他嘴一抿：那是白莲社的记号，《大明律》上点了名，为首的要绞。你没再问，只把那间铺子的招牌记在了心里。", next = "done", effects = [{ kind = "flag", flag = "c11_society_white_lotus_known", value = true }], requires = [] }]
+at = "yuegang"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_white_lotus_1"
+name = "白莲教"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "后堂拜香"
+text = "斋堂开在纸马铺的后院，门缝里不见一点灯。引路人先搜了你的袖子，才放你进去：红纸上写着弥勒二字，三炷香插在米碗里，几个穿粗布的人垂手立着，谁也不看谁的脸。夜聚晓散，律条上这四个字说的就是这样的屋子。引路人只伸出手，要五十金币的香钱，不立字据。"
+choices = [{ key = "finish", text = "奉上五十金币，跪下拜香", reply = "钱在他手里没数就收进了袖子。三炷香燃到一半，引路人凑近你耳边，念了一句八个字的口诀，要你只在心里默念。天亮前你被送出后门，腕内多了个香头烫的红点，三日才褪。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_white_lotus_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "white_lotus", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "yuegang"
+
+[[tracks]]
+key = "c11_trial_white_lotus_2"
+name = "白莲教"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "替人上路"
+text = "满了一个月，苏州牙人又约你去铺子后头。一户四口的江南人缩在灶间，男人脸上有官差的鞭痕，说要北上丰州，投板升的同乡。牙人叹气：“萧芹没念塌的城，听说还有人想再念一回。这趟路费该是同伴们凑的，你若想做同伴，先垫上这一笔，五十金币。”"
+choices = [{ key = "finish", text = "替这一家付足盘缠", reply = "你数出五十金币，牙人没有道谢，只把一张折了三折的红纸撕成两半，一半塞进你手里，一半给了那家男人。“北边有人认这半张纸，也认你。”从这夜起，你是白莲社里的同伴了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_white_lotus_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "white_lotus", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "yuegang"
+
+[[tracks]]
+key = "c11_contact_luo_teaching"
+name = "罗教"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "河边的庵"
+text = "三江口退了潮，杭州运河上下来的船挤满了河岸。一个杭州口音的老舵工拉住你的袖子：“河边那间庵里有粥，不要钱。出门的人，头顶三尺都是罗祖。”庵门是两扇旧船板，里头一圈水手盘腿坐着，对着墙上一幅旧像低声念卷。"
+choices = [{ key = "listen", text = "跟他进去喝碗粥", reply = "粥稀得照见人影，咸菜倒咸得实在。老舵工一边喝，一边问你的船在哪个码头歇、缺不缺人手，口气像在摸底。临走时，屋角有人悄悄记下了你的船号。", next = "done", effects = [{ kind = "flag", flag = "c11_society_luo_teaching_known", value = true }], requires = [] }]
+at = "ningbo"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_luo_teaching_1"
+name = "罗教"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "陶罐里的香火"
+text = "后屋的灶还温着，供桌上的罗祖像被烟熏得发黄，桌下压着一只缺口的陶罐。老舵工把船板门闩上，才开口盘你：哪条河上的人，谁引你进的门，船上有几根桅。入庵的人都要放二十五金币的香火钱，灶火不能断。"
+choices = [{ key = "finish", text = "放下二十五金币，答他的话", reply = "你一条条答了，钱落进陶罐，响得干脆。老舵工这才笑出一口黄牙，指着后屋的草铺：官差敲前门，你就往这边穿，出去是河，河上有人撑篙等着。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_luo_teaching_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "luo_teaching", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "ningbo"
+
+[[tracks]]
+key = "c11_contact_mingjiao"
+name = "明教"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "光佛石匠"
+text = "天刚亮，月港潮水边的石匠铺还没开。老石匠对着东边的日头拜了三拜，不烧香，只在石头上搁一盏小油灯。他察觉你在看，咧嘴说：“月港的月字，不是白叫的。”又说他是晋江草庵那边来的，庵里盘坐的石像乡里叫光佛，官家的律条里另有个名字，叫明尊教。"
+choices = [{ key = "listen", text = "问他草庵在哪里", reply = "他用沾着石粉的手指在潮湿的石板上画了条线：到晋江，华表山脚下一座小庵，佛就刻在岩壁里。“去看，没人拦你。只是别说是我指的路。”临了他嘟囔了一句二宗三际，你没听懂，却记下了。", next = "done", effects = [{ kind = "flag", flag = "c11_society_mingjiao_known", value = true }], requires = [] }]
+at = "yuegang"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_mingjiao_1"
+name = "明教"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "碟里的灯油"
+text = "月港后巷的尽头，补网的老妇人问你，晋江草庵里那尊披发宽袍的石像，你可曾见过。你说只听人讲过。她点点头，不再说话，把一只空陶碟推到你脚边。碟子要添灯油，二十五金币，不记名，不给回条。"
+choices = [{ key = "finish", text = "往碟里添灯油", reply = "你把钱搁在碟沿，老妇人转身舀来灯油添满，又拿灯芯压了压，油面浮起一圈亮。她看你一眼，端着碟子退进暗处。此后月港有几扇门，你叩两下就有人应。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_mingjiao_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "mingjiao", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "yuegang"
+
+[[tracks]]
+key = "c11_contact_jinyi_dongchang"
+name = "锦衣卫与东厂"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "码头的茶客"
+text = "天津卫的码头上漕船泊成一片。茶摊对面坐着两个穿便服的人，靴子却是簇新的，一面喝茶，一面把你的船名、舱里的货、水手的人数默记了一遍。你付了钱起身，摊主凑过来，低声说那是北镇抚司的人。"
+choices = [{ key = "listen", text = "听摊主往下说", reply = "摊主说，锦衣卫管诏狱，东厂的档头是宦官手下，番子比苍蝇还多。陆都督当年从卫辉行宫的火里把皇上背出来，这里人人会讲。你把茶钱压在碗底，没敢回头。", next = "done", effects = [{ kind = "flag", flag = "c11_society_jinyi_dongchang_known", value = true }], requires = [] }]
+at = "tianjin"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_jinyi_dongchang_1"
+name = "锦衣卫与东厂"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "百户的核桃"
+text = "天津卫衙署后院的廊下，一位百户一边剥核桃一边说话，眼皮不抬，腰牌翻在里面。你的船在海河口停过几回、卸过什么，他记得比你的账房还清。他不要货，只要一份茶敬，二十五金币，写在簿子上叫“茶敬”。"
+choices = [{ key = "finish", text = "递上茶敬", reply = "百户把茶敬拢进袖里，核桃壳扫进簸箕。他说往后在天津卫有人问起你，会有一句现成的话：“是认得的。”这句话抵得上半条船的货。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_jinyi_dongchang_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "jinyi_dongchang", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "tianjin"
+
+[[tracks]]
+key = "c11_contact_longhu"
+name = "龙虎山与宫廷的方士"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "旧书铺的道士"
+text = "甬江边一家旧书铺里，一个穿青布道袍的人在翻一捆发霉的科仪抄本，指缝里留着朱砂渍。伙计说他是从龙虎山下来的，要一路买到云南、四川去，收旧经，也收旧法器。他问你船上有没有朱砂和桃木。"
+choices = [{ key = "listen", text = "同他攀谈几句", reply = "他自称正一的弟子，说朝廷如今不许叫天师，只称嗣教真人，口气有些冷。又说西苑里画符的方士缺沉香龙脑，龙虎山下来访经的人缺旧书，海外来的货讯，他们都愿听。", next = "done", effects = [{ kind = "flag", flag = "c11_society_longhu_known", value = true }], requires = [] }]
+at = "ningbo"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_longhu_1"
+name = "龙虎山与宫廷的方士"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "记名的簿子"
+text = "宁波城里的道观，灯下摆着一本厚簿子。道士说正一的箓要拜师受，你还不够格，但可以先记名，日后同龙虎山的人往来，也算有个凭据。香火钱二十五金币，当面添进功德箱。"
+choices = [{ key = "finish", text = "添香火，记名", reply = "道士用朱笔把你的名字写进簿子最末一格，吹干，合上。他说龙虎山的人路过宁波，翻到这一页，会知道簿上有这么一位客人。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_longhu_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "longhu", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "ningbo"
+
+[[tracks]]
+key = "c11_contact_iga_koga"
+name = "伊贺惣国一揆与甲贺郡中惣"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "背柴篓的人"
+text = "堺的南庄，一个背柴篓的汉子在你的货摊前站了半晌，问的却不是价钱：你从哪条水路来，船上几个人，几时走。你反问他是哪里人，他只说伊贺。旁边的老掌柜等他走远才压低声音：伊贺的地侍不归哪个大名管，各家立了掟书，有事一起议；甲贺那头更怪，议不拢就抽签。要打听什么，要人夜里进哪座城，都可以找他们——只是别想单雇一个人。"
+choices = [{ key = "listen", text = "托掌柜捎话进山", reply = "老掌柜应下了，说伊贺人每月来南庄的炭铺换盐，到时替你递句话。半个月后，柴篓汉子又在摊前出现，这回报了名字。你后来才晓得，那名字是借来的。", next = "done", effects = [{ kind = "flag", flag = "c11_society_iga_koga_known", value = true }], requires = [] }]
+at = "sakai"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_iga_koga_1"
+name = "伊贺惣国一揆与甲贺郡中惣"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "神前抽签"
+text = "使者约你到堺的一座寺里。屋里坐着三个人，一个是伊贺口音，两个是甲贺口音，谁也不先开口。要雇他们，先得把定钱放在席上，由他们带回去请诸家合议；合议不成，就在神前抽签。年长的那位慢慢说，当年笠置城那把火，也是这样议出来的。"
+choices = [{ key = "finish", text = "把定钱放在席上", reply = "三个人把钱包进一块旧布，谁也没数。过了十来天，一个挑炭的少年来到你的船边，说签抽中了：往后在堺要人手、要消息，就去南庄那家炭铺打招呼。他走时，脚尖专拣别人的脚印踩。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_iga_koga_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "iga_koga", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "sakai"
+
+[[tracks]]
+key = "c11_contact_saika_negoro"
+name = "杂贺众与根来众"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "火绳的气味"
+text = "堺的码头上，一条纪伊来的船卸下的不是鱼干，是一箱箱用油纸裹着的铁筒。搬货的汉子指头上都有火绳烫出的黄茧。领头的剃着光头，腰里却佩着长刀，自称根来寺的行人，说寺里早年派人去种子岛求过铳，如今纪伊乡下种田的人，农闲时都在练放。杂贺的船头在旁边插话：要买铳，要雇会放的人，都行，只要钱是真的。"
+choices = [{ key = "listen", text = "请他们放一响听听", reply = "僧人叫一个十来岁的孩子装药、压弹、点火绳。一声响过，五十步外的木板裂开一道缝，码头上的鸥鸟全飞了起来。杂贺的船头把一块刻着自己名字的木牌塞给你：下回要货，拿这个到铳匠铺来找他。", next = "done", effects = [{ kind = "flag", flag = "c11_society_saika_negoro_known", value = true }], requires = [] }]
+at = "sakai"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_saika_negoro_1"
+name = "杂贺众与根来众"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "后院试铳"
+text = "杂贺的船头在堺一家铳匠铺的后院等你。案上摆着一挺新打的铳，铳身还带着锉痕。照他们的规矩，头一回打交道的人要先出钱买下它，当着众人的面试放；万一炸了，钱照付，伤自己担着。根来的行人僧在一旁捻着念珠，说这一试，看的是你的胆，也是铳匠的手。"
+choices = [{ key = "finish", text = "付钱买下，当场试放", reply = "你点着火绳，扣下扳机，腮帮子被铳床震得发麻。铳没炸，靶上多了个焦黑的洞。船头大笑，把铳收了回去，说试过不炸的铳，能多卖一成。钱是不退的，可从今往后，纪伊人的账本上有了你的名字。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_saika_negoro_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "saika_negoro", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "sakai"
+
+[[tracks]]
+key = "c11_contact_hongwanji"
+name = "本愿寺与一向一揆"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "念佛的船客"
+text = "从堺往大坂的船上，一半的客人在念佛。挑担的、打铁的、种田的，口里都是同一句南无阿弥陀佛。邻座的老妇说，她们是去石山御坊送恳志的。当年山科的寺被一把火烧了，宗主搬到大坂的高坡上，围起了壕沟与土垒，寺内町比堺的有些町还热闹。加贺那边更了不得，她笑着说，那里的国是百姓自己拿着的。"
+choices = [{ key = "listen", text = "随老妇去寺内町", reply = "石山的坂道上挤满了人，寺门前卖念珠、卖斋饭、卖草鞋的摊子一路排到壕沟边。老妇把你领到一位坊官面前，说这是个好心的船主。坊官打量了你的衣着，没问你信不信，只说堺北庄也有门徒的道场，每逢二十八日夜里聚讲，想来便来。", next = "done", effects = [{ kind = "flag", flag = "c11_society_hongwanji_known", value = true }], requires = [] }]
+at = "sakai"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_hongwanji_1"
+name = "本愿寺与一向一揆"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "门徒的恳志"
+text = "堺北庄有一间染坊，后屋改作了门徒的道场，每逢二十八日夜里聚一回讲。灯下坐满了染工、船夫和卖鱼的妇人，一位老门徒展开莲如上人的御文，念到“朝有红颜，夕成白骨”，满屋的人跟着低声念佛。念完，一只漆箱从前排传到后排，要送往石山的恳志都投在里面。石山下来的坊官在一旁研墨，等着记名。"
+choices = [{ key = "finish", text = "把恳志投进漆箱", reply = "铜钱落进箱底，响了一声。坊官问了你的名字和船名，一笔记下，排在一个卖鱼妇人的后面。散会时，老门徒把一串念珠塞到你手里：“往后在堺，门徒开的铺子认得这串珠子。”", next = "done", effects = [{ kind = "flag", flag = "c11_trial_hongwanji_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "hongwanji", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "sakai"
+
+[[tracks]]
+key = "c11_contact_murakami"
+name = "三岛村上水军"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "潮里来的小早"
+text = "能岛小得像一块礁，四面的潮水却快得能把船打横。你的船刚靠近，岩后就划出两条小早，桨手赤着膊，船头竖一面白旗，上面写着一个大大的“上”字。领头的汉子站在船舷上喊：过这片海，按帆数交钱；不交的，回头去走外海，潮水会替我们送客。"
+choices = [{ key = "listen", text = "落帆，问清他们的规矩", reply = "汉子跳上你的船，数了数帆，掰着指头报了个数，又指指那面旗：交过帆别钱的船，岛上发这样一面旗，挂在桅上，来岛、因岛的人见了都不拦。这回他放你过去，叫你下次带钱来——岛上的人记船记得比记人清楚。", next = "done", effects = [{ kind = "flag", flag = "c11_society_murakami_known", value = true }], requires = [] }]
+at = "noshima"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_murakami_1"
+name = "三岛村上水军"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "上字旗"
+text = "这回你带着钱来，船停在能岛外的急流边，岛上划出一条小船引你靠岸，领你上了岛顶的城寨。寨子围着木栅，栅上晾着渔网和刚洗过的旗。管账的是个缺了两颗门牙的老人，算盘打得飞快，把你的船名、帆数、常走的水路一一问过，才从柜里取出一面新旗，墨迹还没干透，“上”字旁边画着当主的花押。"
+choices = [{ key = "finish", text = "付清帆别钱，领旗", reply = "老人收了钱，在账上画了一道，把旗折成四折交给你：挂在主桅上，丢了不补；借给别家的船，往后就别再来。出岛时潮正急，一条巡哨的小早远远望见你的旗，竟在前头替你引了一段水路。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_murakami_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "murakami", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "noshima"
+
+[[tracks]]
+key = "c11_contact_noro"
+name = "琉球的神女"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "那霸的祝女"
+text = "那霸港的船上，一位上了年纪的祝女替出海的水手系红线，念的词里夹着古歌。她问你船上有没有供过神，你答没有，她便把一根线绕在你的桅杆上，不说话，只看天色。"
+choices = [{ key = "listen", text = "让她替船系线", reply = "老祝女绕完最后一圈，把线头塞进舱板的缝里，念了一句船名。她没有收钱，只在你的账本上画了一个小圈。", next = "done", effects = [{ kind = "flag", flag = "c11_society_noro_known", value = true }], requires = [] }]
+at = "naha"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_noro_1"
+name = "琉球的神女"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "斋场的古歌"
+text = "斋场御岳的石阶上，祝女们一句一句地唱古歌，唱的是王府的先人与海上的风。你坐在末席，要跟着唱完整首，词不能漏，调也不能跑。唱错一个词，领唱的人就停下来，让你从头再来。"
+choices = [{ key = "finish", text = "跟着唱完整首古歌", reply = "你从头唱到尾，没有漏一个词。领唱的祝女点了点头，把你递上的二十五杜卡特放进石缝的香炉里，香灰很快盖住了铜色。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_noro_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "noro", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "naha"
+
+[[tracks]]
+key = "c11_contact_jurchen_shamans"
+name = "女真的萨满与堂子"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "腰铃响过集市"
+text = "牛庄的集上，一个女真老妇拿貂皮换了你的盐，转身时腰间的铜铃响了一路。通事说那是萨满，城外河湾的林子里有她们的堂子，外乡人不许进，连马都要拴在林子外面。"
+choices = [{ key = "listen", text = "请通事讲讲萨满", reply = "通事压低嗓子，讲起一个老故事：从前有个女萨满下阴间，把一个孩子的魂要了回来，阎王的人拦她，她踩着鼓点硬闯过去。听的人个个点头，像在说自家亲戚。", next = "done", effects = [{ kind = "flag", flag = "c11_society_jurchen_shamans_known", value = true }], requires = [] }]
+at = "niuzhuang"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_jurchen_shamans_1"
+name = "女真的萨满与堂子"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "冻土上的脚步"
+text = "堂子外的树桩前，老萨满叫你把靴子脱了，赤脚站在冻土上。她说神要先听见脚步声才肯睁眼。供品得客人自己备：烧酒、黄米、一头猪，折成二十五金币，由通事去集上买来。"
+choices = [{ key = "finish", text = "备供品，赤脚站冻土", reply = "鼓声起来时你没敢抬头。老萨满绕着你走了三圈，铃声落在肩上，像一串冰凌。她用女真话说了一句，通事译出来：“腿是外乡的，脚印算咱们的。”", next = "done", effects = [{ kind = "flag", flag = "c11_trial_jurchen_shamans_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "jurchen_shamans", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "niuzhuang"
+
+[[tracks]]
+key = "c11_contact_kokin_denju"
+name = "古今传授"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "封着的箱子"
+text = "堺一户纳屋的连歌会散了，客人都去吃茶，主人单留下你，看一只旧漆箱。箱口贴着几道封纸，纸色早已发黄。他说这是肖柏法师住在堺时传下的东西：古今集里最难解的几处字句写成切纸，封在里头，几十年没人敢拆。“三木三鸟。”他念了这四个字，便不肯往下说了。"
+choices = [{ key = "listen", text = "问三木三鸟指的是什么", reply = "主人笑了，说他也只知道这四个字。真懂的人一辈子只说给一两个人听，口传之外还要切纸为凭。见你还盯着那只箱子，他又说：先把古今集从头读熟，懂得假名的歌怎样断句，再来找他，他替你引见一位老先生。", next = "done", effects = [{ kind = "flag", flag = "c11_society_kokin_denju_known", value = true }], requires = [] }]
+at = "sakai"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_kokin_denju_1"
+name = "古今传授"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "呼子鸟"
+text = "连歌会上你接了一句下句，宗匠没说好坏，只叫你隔天去寺町的后巷。那里住着一位老先生，屋里只有一张书案、一部古今集和一盆不开花的兰草。他不问来历，翻到春歌上卷，指着一首里的“呼子鸟”，问你这是什么鸟。院里正有鸟在叫。一旁的童子小声告诉你，上一个来求教的人一口气报了三种鸟名，当天就被请了出去。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+choices = [{ key = "finish", text = "以一首歌作答，不报鸟名", reply = "你提笔写了一首，只说山里有声音在唤人，却看不见是谁。老先生读了两遍，没说对也没说错，从袖里取出一张折好的纸，用米糊封了口：“这是第一张切纸。一个月里别拆，也别给人看。”你把它夹进古今集，回去的路上总觉得书比来时重。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_kokin_denju_1_done", value = true }], requires = [{ kind = "society", society = "kokin_denju", ge = 0 }, { kind = "skill", skill = "poetry", ge = 1 }, { kind = "fame", ge = 10 }, { kind = "skill", skill = "poetry", ge = 1 }, { kind = "skill", skill = "lang_japanese", ge = 1, hard = true }] }]
+at = "sakai"
+
+[[tracks]]
+key = "c11_trial_kokin_denju_2"
+name = "古今传授"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "灯下的口传"
+text = "一个月后，你把那张没拆过的切纸原样带回寺町。老先生验过封口，把你领到里屋一只贴满封纸的书箱前，叫你对着它坐一夜，又叫童子去巷口守着。天将亮时，他点起一盏灯，拆开切纸，纸上只有短短一行；真正要传的，他凑到你耳边压低声音说了一遍，说完就把纸凑到灯上烧了。你得当场复诵，一个字也不能错，错了，这一段就到此为止。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+choices = [{ key = "finish", text = "在灯下一字不差地复诵", reply = "你复诵完，老先生闭着眼听，末了点一点头，又念了假名序里的一句：歌不用力，能动天地。他说海上起风的时候，就把心里那首歌对着风念出来，看不见的鬼神听得懂。灯盏里的纸灰还冒着烟，他把它倒进了院里的兰盆。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_kokin_denju_2_done", value = true }], requires = [{ kind = "society", society = "kokin_denju", ge = 1 }, { kind = "skill", skill = "poetry", ge = 1 }, { kind = "fame", ge = 20 }, { kind = "skill", skill = "poetry", ge = 1 }, { kind = "skill", skill = "lang_japanese", ge = 1, hard = true }] }]
+at = "sakai"
+
+[[tracks]]
+key = "c11_contact_sanyi"
+name = "三一教"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "石埕上的挑夫"
+text = "月港西街的石埕上，一个挑夫盘腿坐着，背对着来往的人潮，说是在“艮背”治腰痛。旁边的方巾书生递来一张纸，上头画着三个圈叠在一起。他说先生在莆田讲学，收的徒弟不少，有些人是跟着先生去埋过尸骨的。"
+choices = [{ key = "listen", text = "接过那张纸细听", reply = "书生说，儒讲心，释讲空，道讲气，先生说三条路走到头是同一间屋。挑夫插嘴：“反正我的腰是好了。”书生瞪他一眼。你把纸折好，收进袖里。", next = "done", effects = [{ kind = "flag", flag = "c11_society_sanyi_known", value = true }], requires = [] }]
+at = "yuegang"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_sanyi_1"
+name = "三一教"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "最后一个坑"
+text = "潮水退后，月港外的滩涂上留下几具没人认的尸首。三一教的弟子在沙地里挖坑，草席和石灰都不够了。书生站在坑沿，望着你的钱袋，没有开口。二十五金币，够买一车。"
+choices = [{ key = "finish", text = "出钱买席与石灰", reply = "草席卷好，石灰撒下。书生在最后一个坑边站了许久，回头说先生总讲：人死了，也还是个人。他递给你一块小木牌，朝里一面刻着几道浅痕。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_sanyi_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "sanyi", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "yuegang"
+
+[[tracks]]
+key = "c11_contact_huangtian"
+name = "黄天道"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "车马店的老兵"
+text = "天津卫的车马店里，宣府来的贩马人烤着手，说起老家边墙根下有位独眼的老兵，当过戍卒，如今不拿刀，改拿香。逃荒的、被军头欺压的、领不到饷的，都往他那里去。"
+choices = [{ key = "listen", text = "问那老兵是谁", reply = "贩马人说那老兵姓李，一只眼听说是被箭射瞎的，立了个教，叫黄天道。他怕你多问，把话头岔到马价上去，再也不肯提那人住在哪儿。", next = "done", effects = [{ kind = "flag", flag = "c11_society_huangtian_known", value = true }], requires = [] }]
+at = "tianjin"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_huangtian_1"
+name = "黄天道"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "门框上的名字"
+text = "贩马人领你到城外一间土屋，墙上没有神像，只贴着一张黄纸。屋里几个口音各异的汉子，有的缺了手指，有的拄着拐。他们不问你信不信，只问你肯不肯替北边来的逃户买一车粮，二十五金币。"
+choices = [{ key = "finish", text = "出钱买粮，分给逃户", reply = "粮车进了屋后的院子，没人道谢。一个缺了耳朵的汉子拿炭条把你的名字写在门框背面。贩马人说，往后宣府来的客人，先问门框上有没有名字。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_huangtian_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "huangtian", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "tianjin"
+
+[[tracks]]
+key = "c11_contact_kage_ryu"
+name = "阴流"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "海滩上的木刀"
+text = "鹿儿岛的海滩上，一个瘦老头每天天亮就对着海挥木刀，脚步忽进忽退，像只在礁石间蹿跳的猴子。码头的人说他年轻时在明国的海上混过，回来就再不提。问他练的是什么，他说是阴流，从日向鹈户的岩屋里传出来——开山的爱洲先生在洞里参笼，出来便会了。至于洞里有猿神教刀的说法，他只是笑。"
+choices = [{ key = "listen", text = "请老人再演一遍步法", reply = "老头把木刀换到左手，慢慢走了一遍，一步一停，告诉你这一式叫猿飞，那一式叫猿回。走完，他把木刀往沙里一插：要学，先备好束脩，再来他家门口。说罢便去码头帮人卸鱼，像什么也没说过。", next = "done", effects = [{ kind = "flag", flag = "c11_society_kage_ryu_known", value = true }], requires = [] }]
+at = "kagoshima"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_kage_ryu_1"
+name = "阴流"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "起请文"
+text = "你带着束脩来到老头的屋前。他没叫你跪，先递来一张印满乌鸦的熊野牛王纸，要你在背面写誓：所学不传外人，不向同门拔刀，违者受神罚。写完，又递过一根针，要你在名字下面按一点血。屋檐下挂着两把磨得发亮的木刀，其中一把是给你的；不过他说，摸刀之前，门里的人头一夜都得在海边的岩屋里过。"
+choices = [{ key = "finish", text = "奉上束脩，按血立誓", reply = "老头收下钱，把起请文供在神龛前，天黑后领你进了海边的岩屋，叫你面朝石壁坐到天亮。潮水一夜往洞里灌，冷得牙齿打战。出洞时他把木刀扔给你，只说一句：眼睛别看刀，看人的肩。往后在萨摩碰上使阴流的人，说出猿回两个字，他们就知道你是谁的门下。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_kage_ryu_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "kage_ryu", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "kagoshima"
+
+[[tracks]]
+key = "c11_contact_tachikawa"
+name = "立川流"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "醍醐来的僧"
+text = "堺的一间小庵里，借住着一位从醍醐来的真言僧，整日抄经。隔壁的商人拉住你，压着嗓子说：别去，那和尚是立川流的，听说半夜供着骷髅。那僧人却自己开了门，手上还沾着墨，说这些话出自骂他们的人写的书，传了快三百年，越传越像真的。"
+choices = [{ key = "listen", text = "进庵看他抄的经", reply = "庵里只有经卷、砚台和一盏油灯，墙上挂着一张血脉图，从弘法大师一路画下来，到他这一代墨色最新。他不辩解，只把刚抄好的一页递给你看，字写得很端正。送你出门时他说：想来就来，只是别在隔壁商人面前提这个名字，不然他卖你的米要多算两成。", next = "done", effects = [{ kind = "flag", flag = "c11_society_tachikawa_known", value = true }], requires = [] }]
+at = "sakai"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_tachikawa_1"
+name = "立川流"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "奥书上的名字"
+text = "那僧人这回有事相托。醍醐的经藏在应仁之乱的兵火里烧掉了不少，他要把手头的圣教重抄送回去，缺纸墨钱，也缺一双手。他把一卷烧焦了边的旧本摊在案上，焦痕一直卷进经文里，有几行只剩半个字。你若肯出钱，这一卷就由你来抄。抄成了，卷末要写奥书：谁抄的，谁施的纸墨。"
+choices = [{ key = "finish", text = "出纸墨钱，亲手抄一卷", reply = "你把钱放在案头，僧人合掌受了，当夜就裁纸研墨。你一笔一笔抄了七天，抄到的是供养诸尊的次第、真言的念法、护摩的火该怎样添，没有一个字说到骷髅。抄完，他让你在奥书里写下自己的名字，既是书写人，也是施主。三个月后有短笺捎来：醍醐的老僧读了这卷经，问抄经的是什么人。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_tachikawa_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "tachikawa", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "sakai"
+
+[[tracks]]
+key = "c11_contact_pochteca"
+name = "波奇特卡"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "码头上的老商人"
+text = "维拉克鲁斯的码头上，一位穿旧棉布斗篷的老商人在卸货时盯着你船上的一只木箱，看的是木料的纹路。他说他家几代人替城里的神庙跑远路，如今只剩他一个人记得路。说话的时候，他的眼睛始终落在货堆上，不看你的脸。"
+choices = [{ key = "listen", text = "问他的路线", reply = "老商人在你的账本背面画出一条不走官道的路线，只画了一半，另一半他用手掌盖住了。他让你记住，这条路上的每一个名字只能说一次。", next = "done", effects = [{ kind = "flag", flag = "c11_society_pochteca_known", value = true }], requires = [] }]
+at = "veracruz"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_pochteca_1"
+name = "波奇特卡"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "背路名"
+text = "韦拉克鲁斯的码头上，西班牙人的税吏数着箱子，没人留意靠海那间旧仓库。门口坐着一个老人，腿上摊着一张染了颜色的兽皮。他说，墨西加的商人过去走路不靠马，靠的是背篓与口令。想做学徒，先要背得出三条路的名字，再交上五十金币的份子。钱不退，名字也不进西班牙人的税册。"
+choices = [{ key = "finish", text = "交五十金币，过这一关", reply = "木签上刻了一道缺口，老人收下五十金币，把签子递回你手里。仓库的门在身后合上，你的名字记进了行会的账册，那笔钱算作入会的份子。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_pochteca_1_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "pochteca", ge = 0 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 10 }] }]
+at = "veracruz"
+
+[[tracks]]
+key = "c11_trial_pochteca_2"
+name = "波奇特卡"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里过关"
+text = "同伴的试炼在夜里。税吏的灯笼沿着码头一盏盏点过去，你要带一队背篓的脚夫穿过关卡，装成从南边来的香料贩子。领队的老人不许你换衣裳，只许你换口音。口音对了，税吏的眼睛会先从你身上滑过去。"
+choices = [{ key = "finish", text = "交五十金币，押队过关", reply = "脚夫们一路没有回头，税吏只瞥了一眼你手里的香料袋，挥手放行。你在关门前把五十金币交给了关上的人，那人数过，点了点头。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_pochteca_2_done", value = true }, { kind = "cash", value = -50 }], requires = [{ kind = "society", society = "pochteca", ge = 1 }, { kind = "cash", ge = 50 }, { kind = "fame", ge = 20 }] }]
+at = "veracruz"
+
+[[tracks]]
+key = "c11_contact_maya_priests"
+name = "玛雅的祭司与预言者"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "豆子与日子"
+text = "科苏梅尔岛的海风里带着烟味。海边小庙前，一位老人用二十粒豆子摆出一个方阵，嘴里数着日子。他是日之人，懂得从一个日子数到另一个日子。旁边的姑娘闭着眼坐着，忽然开口说话，声音不是她自己的。老人说，那是神借她的嘴，来的人要自己决定信不信。历本大多记在人的脑子里，写在树皮纸上的，只在祭司手里传。"
+choices = [{ key = "listen", text = "留下来听完", reply = "你在庙前坐到日头偏西，老人把豆子收进一只陶罐，在一片木板上刻下你的名字和出生的日子，只刻一行，不许抄给别人。", next = "done", effects = [{ kind = "flag", flag = "c11_society_maya_priests_known", value = true }], requires = [] }]
+at = "cozumel"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_maya_priests_1"
+name = "玛雅的祭司与预言者"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "择吉日"
+text = "出航前要择一个吉日。日之人在席上铺开二十个日名的方阵，让你说出想去的港口与要运的货，再按历法一格一格地数下去。数完了，他不替你选，只把两个日子摆在面前，哪一天走，要你自己认。这一回占算的工钱是二十五金币。"
+choices = [{ key = "finish", text = "交二十五金币，问两个吉日", reply = "日之人收下二十五金币，把两个吉日写在树皮纸上，递到你面前。你挑了靠后的那一天，他看了一眼，没有说好，也没有说不好。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_maya_priests_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "maya_priests", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "cozumel"
+
+[[tracks]]
+key = "c11_contact_benin_bronze"
+name = "贝宁的铜匠行会"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "伊贡街的铜"
+text = "伊贡街的作坊里，铜锤敲击的声音一下接一下，像在数拍子。门口挂着一只葡萄牙人的铜手镯，手镯上的刻纹被磨得发亮。守门的老匠人说，宫里的铜板都从这条街出去，只为奥巴一人铸，铸成了还要当面验。他问你是不是从海边那头来，说手镯是船上的人换来的，那些人管这叫换铜。"
+choices = [{ key = "listen", text = "坐下来看他们铸", reply = "你看着一块铜板从泥模里倒出来，热气扑在脸上。老匠人把铜板翻过来看了看，只说这一块是给宫里的。他记下了你的样子，说下次来不必敲门。", next = "done", effects = [{ kind = "flag", flag = "c11_society_benin_bronze_known", value = true }], requires = [] }]
+at = "ughaton"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_benin_bronze_1"
+name = "贝宁的铜匠行会"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "验手镯"
+text = "铜匠行会不收生手。想进门，先要替作坊验一批从葡萄牙船上卸下的铜手镯。手镯有真有假，假的掺了别的金属，敲起来声音发闷。你要用手掂，用牙咬，用小锤子敲，三样都过了，老匠人才肯打开铸模的木箱让你看。验铜的工钱照规矩先付。"
+choices = [{ key = "finish", text = "交二十五金币，开始验铜", reply = "二十五金币交给了作坊的管事，他收钱时没有看你，只看了看你手上的茧。你验出了三只假手镯，老匠人把它们熔掉，说熔掉的铜不算浪费。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_benin_bronze_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "benin_bronze", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "ughaton"
+
+[[tracks]]
+key = "c11_contact_shona_mediums"
+name = "绍纳的灵媒"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "石上的话"
+text = "索法拉港的内陆商队在海边歇脚，脚夫们腰间挂着小葫芦。他们说要进山的人，先得到灵媒那里讨一场雨。灵媒坐在一块大石头上，说的话被旁人一句句记下，传给远处的首领。一个老人指着石头下面说，那里埋着的是祖灵的声音。姆洪多罗的话从来不由一个人说完，要等石上的人换过几口气，才算完。"
+choices = [{ key = "listen", text = "在石头边坐下听", reply = "灵媒抬起头，看了你很久，说祖灵认得你鞋上的尘土，那是从南边山里带来的。她没有许你一场雨，只说下次来，要先带一把土来。", next = "done", effects = [{ kind = "flag", flag = "c11_society_shona_mediums_known", value = true }], requires = [] }]
+at = "sofala"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_shona_mediums_1"
+name = "绍纳的灵媒"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "掌心的土"
+text = "要进山开矿，或随商队去内陆，先得祖灵点头。许可不写在纸上，只能由灵媒说出来。灵媒请你坐在石边，把一把土放在掌心，问你从哪里来，家里几口人，欠了谁的东西。答错一句，她就停下，让你把土埋回去。答对了，她说出一个地名，那就是你能去的地方。"
+choices = [{ key = "finish", text = "交二十五金币，请她问话", reply = "灵媒没有去碰那二十五金币，只把土撒在脚边。她说了一个河谷的名字，那里的水可以喝，地下的东西不许挖。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_shona_mediums_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "shona_mediums", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "sofala"
+
+[[tracks]]
+key = "c11_contact_debtera"
+name = "埃塞俄比亚的教会学者"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "羊皮上的字"
+text = "马萨瓦城外的小院里，一位学者坐在草席上，膝头摊着一张羊皮，上面用红墨水写满吉兹语的祷文，四角画着眼睛与天使。他没有受过圣职，只会读书写字，乡里人却都叫他先生。他叫你进屋，说有人病了，被邪灵缠住，白天不肯吃饭，夜里说胡话。他不收钱，只请你替他把羊皮的一角按住，免得风吹乱了字。"
+choices = [{ key = "listen", text = "按住羊皮，听他念", reply = "你按住羊皮一角，学者念完一段祷文，屋里的风停了。他在羊皮上添了一只小眼睛，说这一张可以送去病人的母亲那里，挂在床头。", next = "done", effects = [{ kind = "flag", flag = "c11_society_debtera_known", value = true }], requires = [] }]
+at = "massawa"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_debtera_1"
+name = "埃塞俄比亚的教会学者"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "抄一卷经"
+text = "学者要你替他抄一卷护身的经。羊皮是他自己鞣的，墨要自己调，红的用红土，黑的用烟灰。字要一笔不差地写进四角的圆圈里，中间画一双眼睛，眼睛要朝外。抄完的经卷要挂在病人家的门楣上，三天之内不许摘下。这笔抄工的钱，学者只收二十五金币。"
+choices = [{ key = "finish", text = "交二十五金币，动笔抄经", reply = "学者看了你的字，只改了一个笔画，钱压在草席底下。羊皮卷起来，用红绳扎紧，交到你手里，说这一卷是你自己写的。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_debtera_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "debtera", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "massawa"
+
+[[tracks]]
+key = "c11_contact_orang_laut"
+name = "奥朗劳特"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "船屋的人"
+text = "柔佛旧都港外的水面上，停着一片小船，船上住的全是一家人，锅灶与孩子都在舱里。他们以海为田，替苏丹巡海，看见海盗的帆就敲锣。一个划船的老人把桨横在膝上，问你要不要去看看苏丹的旗子，他说那旗子只在涨潮时才升起来。"
+choices = [{ key = "listen", text = "上船看看", reply = "你上了一条窄船，船底有水在动。老人指着远处一片低矮的岛，说那里住着他们的人，夜里点灯，灯的数目就是海上的消息。", next = "done", effects = [{ kind = "flag", flag = "c11_society_orang_laut_known", value = true }], requires = [] }]
+at = "johor_port"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_orang_laut_1"
+name = "奥朗劳特"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "礁石之间"
+text = "进廖内群岛的水路，要有人领船。领航的人住在船屋里，认旗子，也认熟人。你替一条商船领路，从柔佛旧都港出发，穿过礁石与浅滩，在第二个岛的北口下锚。途中若有海盗的小船靠近，先认出他们的旗，再决定是放他们过去，还是让他们替你挡住后面的船。"
+choices = [{ key = "finish", text = "交二十五金币，接下领航", reply = "船屋的老人收下二十五金币，把一根细绳绑在你的手腕上，说这是水路的凭据。船出了港，你在礁石之间领了半个时辰，海盗的小船远远绕开了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_orang_laut_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "orang_laut", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "johor_port"
+
+[[tracks]]
+key = "c11_contact_bissu"
+name = "布吉的比修祭司"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "白粉与长矛"
+text = "望加锡的王宫外，有人穿着不分男女的衣裳，缠着头巾，脸上抹着白粉，手里捧着一柄旧长矛。他们是比修，守着王家的神物，主持国王加冕时的仪式。一个年轻的比修看你走近，没有躲开，只说王宫里的器物不用来卖，要卖的都是别处的东西。"
+choices = [{ key = "listen", text = "向他行礼，听他说完", reply = "你照他们的规矩行了礼，比修没有笑，只把长矛轻轻移开，让你看见王器上刻着的一排小字。他说这些字要等加冕那天才念，今天只许看。", next = "done", effects = [{ kind = "flag", flag = "c11_society_bissu_known", value = true }], requires = [] }]
+at = "makassar"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_bissu_1"
+name = "布吉的比修祭司"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "陶碗里的米"
+text = "想靠近王器，要先在比修面前说明来意，然后守一夜斋。斋戒的人不吃肉，不喝酒，手里要一直捧着一只陶碗，碗里放着三粒米。天亮时比修会来查碗，米还在，才算过关。过关的人可以远远看一眼王器，但不能伸手。这一夜的供养，要照数交上。"
+choices = [{ key = "finish", text = "交二十五金币，守一夜斋", reply = "二十五金币放在供桌上，比修把它推到一边，没有去数。陶碗里的三粒米还在，比修点点头，说你今夜没有伸过手。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_bissu_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "bissu", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "makassar"
+
+[[tracks]]
+key = "c11_contact_babaylan"
+name = "巴巴兰"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "失魂的人"
+text = "宿务的一间竹屋里，几位女人围着草席坐着，席上躺着一个年轻人，眼睛睁着，却不看人。女灵媒把手按在他额上，轻轻唱着，说他的魂丢在了海边。屋外有人等着，有人来求降灵，也有人来问船几时回港。女灵媒看见你，问你有没有丢过什么东西。"
+choices = [{ key = "listen", text = "在门边等着听", reply = "女灵媒没有请你进去，只让你在门边站着，听她唱完一段。年轻人的眼睛慢慢合上，她说魂在海风里找到了回来的路，只是路上还带着一句没说完的话。", next = "done", effects = [{ kind = "flag", flag = "c11_society_babaylan_known", value = true }], requires = [] }]
+at = "cebu"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_babaylan_1"
+name = "巴巴兰"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "招魂的一夜"
+text = "宿务港外有一排竹屋，巴巴兰住在最靠海的那间。屋里挂着一串贝壳，墙角的木箱上摆着椰子酒与槟榔。她问你有没有要说的人，你说不出口，她便替你把那个名字念了一遍。"
+choices = [{ key = "finish", text = "交上二十五金币，请她开坛", reply = "灵媒收下金币，把一小束干艾叶放进陶碗里点燃，没有多说一句。她说你的名字已经传到了屋后的亡魂那里，往来的门开了。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_babaylan_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "babaylan", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "cebu"
+
+[[tracks]]
+key = "c11_contact_star_navigators"
+name = "波利尼西亚的星航者"
+kind = "request"
+start = "contact"
+auto = true
+
+[[tracks.chapters]]
+key = "contact"
+title = "波利尼西亚的星航者"
+text = "塔希提的岸边，几位老人每晚在礁石上背诵星名。那是他们的海图，没有纸，全在嘴里。一个孩子跟着念，念错一个，就被老人拍一下后脑勺。你来得不是时候，他们却让你坐在最外面听。"
+choices = [{ key = "listen", text = "坐下来听他们讲星径", reply = "老人朝你挪开半边礁石，让出一块干的地方。他说了一串星名，又让你从头念，你念到第三颗就卡住了，他也不生气，只把次序再说一遍。", next = "done", effects = [{ kind = "flag", flag = "c11_society_star_navigators_known", value = true }], requires = [] }]
+at = "tahiti"
+when = [{ kind = "age", ge = 16 }, { kind = "fame", ge = 5 }]
+
+[[tracks]]
+key = "c11_trial_star_navigators_1"
+name = "波利尼西亚的星航者"
+kind = "request"
+start = "trial"
+auto = false
+
+[[tracks.chapters]]
+key = "trial"
+title = "夜里出礁"
+text = "星航者的试炼没有考场。老人们在夜里划船出礁，要你指出北边哪颗星沉下去时，哪座岛还在船尾。答错了，便只能坐在岸上看别人出海。"
+choices = [{ key = "finish", text = "交上谢礼，应下这一问", reply = "一位老星航者把刻着刻痕的椰壳递给你，上面的线条你看不懂，他却说你记得住。你留下的金币没有人去数，他叫人分给了岸上没有船的人家。", next = "done", effects = [{ kind = "flag", flag = "c11_trial_star_navigators_1_done", value = true }, { kind = "cash", value = -25 }], requires = [{ kind = "society", society = "star_navigators", ge = 0 }, { kind = "cash", ge = 25 }, { kind = "fame", ge = 10 }] }]
+at = "tahiti"
+
+[[tracks]]
+key = "c11_suspicion_spain"
+name = "辖区盘问"
+kind = "request"
+start = "hearing"
+auto = false
+
+[[tracks.chapters]]
+key = "hearing"
+title = "塞维利亚的盘问"
+text = "宗教裁判所的书记在塞维利亚城里的一间旧屋里等你。桌上摊着一叠纸，写着你上个月在港口见过的人，连对方穿的是哪种靴子都记了下来。书记不急着开口，先让你闻一闻桌上的蜡味。"
+choices = [{ key = "explain", text = "说只做过香料与布的买卖", reply = "书记把你的回答逐字抄进案卷，抄完在纸角画了一个小十字。他说今天的话够了，可下一次到塞维利亚港，名单上不会只有你一个人的名字。", next = "done", effects = [{ kind = "flag", flag = "c11_suspicion_spain_resolved", value = true }], requires = [] }]
+
+[[tracks]]
+key = "c11_suspicion_portugal"
+name = "辖区盘问"
+kind = "request"
+start = "hearing"
+auto = false
+
+[[tracks.chapters]]
+key = "hearing"
+title = "里斯本的宗教裁判所"
+text = "里斯本的宗教裁判所设在一座旧宫殿里，走廊的窗子钉着铁条。审你的是个瘦削的修士，他把一张葡萄牙的海图摊在桌上，指着图上一块空白：这块地方你去过，还是听人说过？"
+choices = [{ key = "explain", text = "说只听人提过，不谈海图", reply = "里斯本的修士看完你的答话，把它和另一份供词放在一起对照，对照完才点头。他说海图的事今天不问了，只提醒你少在码头上说拉丁文。", next = "done", effects = [{ kind = "flag", flag = "c11_suspicion_portugal_resolved", value = true }], requires = [] }]
+
+[[tracks]]
+key = "c11_suspicion_papal_states"
+name = "辖区盘问"
+kind = "request"
+start = "hearing"
+auto = false
+
+[[tracks.chapters]]
+key = "hearing"
+title = "罗马的客栈"
+text = "教廷附近的客栈里设着案，案上有两只蜡封的木盒，一只装着你寄出去的药材单子，一只装着你替一个妇人写的字条。执事官一边翻，一边问那妇人夜里是不是常来敲门。"
+choices = [{ key = "explain", text = "说只为病人配过一味草药", reply = "罗马的执事官记下你的话，递给你一张盖了印的纸，说凭它可以在城外的葡萄园里住三个月，不许进城。纸上的印已经旧了，边角卷得发黄。", next = "done", effects = [{ kind = "flag", flag = "c11_suspicion_papal_states_resolved", value = true }], requires = [] }]
+
+[[tracks]]
+key = "c11_suspicion_ottoman"
+name = "辖区盘问"
+kind = "request"
+start = "hearing"
+auto = false
+
+[[tracks.chapters]]
+key = "hearing"
+title = "地毯上的审问"
+text = "伊斯坦布尔的法官在一间铺着地毯的屋子里审你。翻译站在他身后，把你的话压低了说。案上摊着一张画满人脸的纸，每只眼睛都标着一个字母，法官问，这是谁给你的。"
+choices = [{ key = "explain", text = "说是商队账房给的，不认得他", reply = "法官把案卷收进柜子里，没有判决，只说下一次要带着保人来。翻译把这句话原样讲了两遍，好让你听清。", next = "done", effects = [{ kind = "flag", flag = "c11_suspicion_ottoman_resolved", value = true }], requires = [] }]
+
+[[tracks]]
+key = "c11_suspicion_safavid"
+name = "辖区盘问"
+kind = "request"
+start = "hearing"
+auto = false
+
+[[tracks.chapters]]
+key = "hearing"
+title = "宫门前的行囊"
+text = "加兹温的宫门外，检查的人把你的行囊倒在石板上，一件一件翻。他们找到一枚没有刻字的铜牌，又找到一小团红色的线。问话的是个穿黑袍的毛拉，他问你，线是系在谁的手腕上的。"
+choices = [{ key = "explain", text = "低头认错，说是误交了朋友", reply = "总督的书记把你的回答念给在场的人听，念到安朱丹那一段，屋里的人都低下了头。书记说这份案子先压着，等从安朱丹回来的使者到了再议。", next = "done", effects = [{ kind = "flag", flag = "c11_suspicion_safavid_resolved", value = true }], requires = [] }]
+
+[[tracks]]
+key = "c11_suspicion_ming"
+name = "辖区盘问"
+kind = "request"
+start = "hearing"
+auto = false
+
+[[tracks.chapters]]
+key = "hearing"
+title = "巡检司问话"
+text = "巡检司的差役把你请进后堂，案上摊着簿子。主事官头也不抬，问你近来同哪些烧香的人走得近，同谁画过符，同谁请过神。《大明律》里有一条专禁书符咒水、扶鸾祷圣，他说这条他背得熟。"
+choices = [{ key = "explain", text = "说明只为买卖", reply = "你把货单摊在案上，说那些人不过是买主。官吏用指甲敲着桌沿，听完，合上簿子：“海上来的客人，不懂本朝的规矩。这回记下，下回按律。”", next = "done", effects = [{ kind = "flag", flag = "c11_suspicion_ming_resolved", value = true }], requires = [] }]

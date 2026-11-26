@@ -1,0 +1,220 @@
+# 请托：一千枚小贝（request_aishath）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：阿伊莎图（aishath，1533-07-22 生，女），马累的贝币商人；cast 在 cast/story_indian_ocean.toml。
+# 类型：送货（deliver），五章：offer（报价）、deliver（交米，货款在这一章另付）、deliver_silver（说了“我要银子”的那一路交米）、settle（结账）、settle_silver（银子路上的结账，只剩一个选项）。交货章有 90 天期限，超时走 failed。
+#   结构说明：原先 settle 的 keep_shell 靠旗标 _cowrie 门禁、silver 变体，审计机器人会报“准备后条件仍不满足”；改为 accept_silver 直接走 deliver_silver → settle_silver（没有 keep_shell），settle 里不再有旗标门禁。
+# 报价：T 当面（auto=false）。人物按日程在马累（male）的贝币仓，玩家用 ask:request_aishath 启动；offer 章不写 at，objectives 为在港里找到她。
+#       窗口 1575-01-01 至 1590-06-30；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+#       普通章不写 window（window 只与 stage/default 搭配），窗口以 when 里的 date 条件表达。
+# 依据·史实背景：1558—73 年葡萄牙人占领马累（史实，正文只写“走了以后”“那些年”，不写月份）；马尔代夫的贝币（宝贝）是印度洋的钱；米从南印度运来。
+# 依据·原创：阿伊莎图、三十袋米的这一单、货款的那一筐小贝、仓里最上层那枚最小的白贝。
+# 依赖：港口 male（ports_india.toml）；货物 rice（goods/05_terra_trade.toml）；人物 aishath。B10b：无需改名。主线门禁：无（阿伊莎图不是主线人物）。
+# C7：不写拉迪卡，不写珠链；本文件不读也不设任何 c7_ 旗标。
+# 读写旗标：写 c13_request_aishath_accepted（接下）、_cowrie（接下且收贝币）、_silver（接下但要银子，走 deliver_silver；这两面现在只设不读）、_declined（终局）、_late（终局）、_done（终局）。不读外部旗标。
+# 秘密：cast 里没有写秘密，本请托不处理，见闻也不写。
+# 口头禅：“谁说贝币是零碎钱，我就不跟谁做生意”只在 offer 说一次。
+# 报酬：现金最多 900（settle）+ 450（deliver，货款）；好感最多 +16；名声 +2；回忆 mem-request_aishath-settle。小贝只写在正文，不发物品。
+# 回忆插画 mem-request_aishath-settle：贝币仓最上层，一枚特别小的白贝立在木板上，背后是晒着椰叶的潟湖。
+# 写法说明（相对于 C13d 任务单的调整）：
+#   1. 普通章没有 window/default，交货与结账的窗口写成 when 的 date 条件。
+#   2. 交货章的正文不写 news，每个选项各带自己的 news；超时没有 news，就不会沿用交货的见闻（见闻 fallback 到章节 news）。
+#   3. “银子路上只留 return_shell”用 next 分流实现：accept_silver 走 deliver_silver，再走 settle_silver（只有一个选项）；variant 只能换文字，不能换选项，选项 requires 本轨道旗标又会被审计机器人判为走不通。
+#   4. 超时来信里的“定钱”改成“应下的那句话”：银子那条路上没有给过定钱。
+#   5. 检定失败的分支 news 同时是玩家看到的结果文字（引擎如此），所以失败分支的 news 写成一句见闻。
+
+[[tracks]]
+key = "request_aishath"
+name = "一千枚小贝"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["aishath"]
+
+# 一、零碎钱：马累的贝币仓门口。阿伊莎图要三十袋米，拿贝币付。
+[[tracks.chapters]]
+key = "offer"
+title = "零碎钱"
+text = "马累的贝币仓重新开门了，门口的木台上摆着几只竹筐，筐里的小贝排得整整齐齐。葡萄牙人走了，岛上的米却不够吃。阿伊莎图坐在台子边，一枚一枚过着手里的贝，头也不抬：“三十袋米。科钦来的船，纳加帕蒂南来的船，哪家的都行。”她把最后一枚拨进筐里，才抬起眼睛：“米钱，我拿贝币付。”然后她说：“谁说贝币是零碎钱，我就不跟谁做生意。”说完，她看着你，等你开口。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "aishath", text = "在港里找到她" }]
+when = [
+  { kind = "date", from = [1575, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept_cowrie"
+text = "说：贝币就是钱，我收。"
+next = "deliver"
+reply = "她笑了，从仓里抓出一把小贝放在你手心，一枚一枚数给你听。数到第七枚，她停下来：“这是定钱。你说了贝是钱，这一把就记在你名下了。仓门开着，你什么时候来，贝都在这儿。”"
+effects = [
+  { kind = "affinity", person = "aishath", value = 3 },
+  { kind = "flag", flag = "c13_request_aishath_accepted" },
+  { kind = "flag", flag = "c13_request_aishath_cowrie" },
+]
+
+[[tracks.chapters.choices]]
+key = "accept_silver"
+text = "说：米我运，可我要银子。"
+next = "deliver_silver"
+reply = "她不笑了：“那你就拿银子去买别人的米。”她把手里的贝全拨回了筐里，哗啦一声。过了一会儿，她还是点了头：“这一回，看在米的份上。”"
+effects = [
+  { kind = "affinity", person = "aishath", value = 1 },
+  { kind = "flag", flag = "c13_request_aishath_accepted" },
+  { kind = "flag", flag = "c13_request_aishath_silver" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "今年你不往马累运米。"
+next = "failed"
+reply = "她点点头，接着数她的贝，一枚也没数错。你转身要走，她在后头补了一句：“哪年想做生意，贝币仓还开着。”"
+effects = [{ kind = "flag", flag = "c13_request_aishath_declined" }]
+
+# 二、一筐小贝：三十袋米卸在贝币仓门口。货款是一筐小贝，要你自己数。
+[[tracks.chapters]]
+key = "deliver"
+title = "一筐小贝"
+text = "三十袋米卸在贝币仓门口，岛上的人排成一条长队，等着分米。阿伊莎图让人一袋一袋称，每称一袋，就在木板上画一道。称完了，她拍拍手，叫人从里屋抬出一只竹筐，筐里的小贝压得抬筐的两个人直喘气。“这是货款。”她把筐往你面前推了推，“要你自己数。数对了，就是你的。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "goods", good = "rice", qty = 30, at = "male", text = "三十袋米运到马累" }]
+when = [
+  { kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aishath", value = true },
+]
+at = "male"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "aishath", value = -5 }, { kind = "flag", flag = "c13_request_aishath_late" }, { kind = "letter", person = "aishath", text = "米从科钦来了，不是你的船。你应下的那句话，我替你收着。" }] }
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "坐下来，一枚一枚数。"
+next = "settle"
+check = { attr = "numeracy", base = 35, per = 6 }
+fail = { next = "settle", news = "马累的贝币仓门口，送米的船长数乱了两回，女商人在旁边替他数完，一枚也没少。", effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "aishath", value = -2 }] }
+reply = "你数了一个下午，数对了。她把最后一枚拨进你手里，说你是这几年头一个肯坐下来数的外乡人，别的船长都是叫人数的。"
+news = "马累的贝币仓门口卸了三十袋米，女商人让送米的船长自己坐下来数了一下午的贝。"
+effects = [
+  { kind = "cash", value = 450 },
+  { kind = "affinity", person = "aishath", value = 5 },
+]
+
+[[tracks.chapters.choices]]
+key = "weigh"
+text = "说按分量称，不用数。"
+next = "settle"
+reply = "她皱了皱眉，还是让人称了。称完她说：“分量是对的。可你少知道了一件事，每一枚都有人摸过。”"
+news = "马累的贝币仓门口卸了三十袋米，女商人没让船长数贝，只叫人称了分量。"
+effects = [
+  { kind = "cash", value = 450 },
+  { kind = "affinity", person = "aishath", value = 2 },
+]
+
+# 二之二、银子的秤：offer 里说“我要银子”走到这里。货款不是一筐小贝，是一包碎银，要当面称。
+[[tracks.chapters]]
+key = "deliver_silver"
+title = "银子的秤"
+text = "三十袋米卸在贝币仓门口，岛上的人排成一条长队，等着分米。阿伊莎图让人一袋一袋称，每称一袋，就在木板上画一道。称完了，她没叫人抬竹筐，只叫人从里屋拿出一杆小铁秤和一包碎银。“你要银子，”她把秤盘推到你面前，“那就按银子的规矩，一钱一钱称，称错了算我的。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "goods", good = "rice", qty = 30, at = "male", text = "把三十袋米运进马累的贝币仓" }]
+when = [
+  { kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aishath", value = true },
+]
+at = "male"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "aishath", value = -5 }, { kind = "flag", flag = "c13_request_aishath_late" }, { kind = "letter", person = "aishath", text = "米从科钦来了，不是你的船。你要的那份银子，我替你封在柜里。" }] }
+
+[[tracks.chapters.choices]]
+key = "check_scale"
+text = "拿自己的小秤，把银子重称一遍。"
+next = "settle_silver"
+check = { attr = "numeracy", base = 35, per = 6 }
+fail = { next = "settle_silver", news = "马累的贝币仓门口，送米的船长的小秤差了半钱，女商人在旁边拿自己的秤替他称平。", effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "aishath", value = -2 }] }
+reply = "你掏出自己的小秤，一钱一钱重称了一遍，和她称的分毫不差。她哼了一声，把秤盘收回去：“你这个人，不信别人的秤。”可她把剩下的银子推过来的时候，推得比刚才爽快。"
+news = "马累的贝币仓门口，女商人让送米的船长拿自己的小秤，把她称好的银子又称了一遍。"
+effects = [
+  { kind = "cash", value = 450 },
+  { kind = "affinity", person = "aishath", value = 5 },
+]
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "不称了，收下。"
+next = "settle_silver"
+reply = "她看了你一眼，没劝，把银子装进布袋，扎口时多绕了一圈：“不称的人，我也记着。”"
+news = "马累的贝币仓门口卸了三十袋米，女商人称出银子，送米的船长连秤都没看就收下了。"
+effects = [
+  { kind = "cash", value = 450 },
+  { kind = "affinity", person = "aishath", value = 2 },
+]
+
+# 三、最小的那一枚：米分完了，她请你喝一碗椰子水，把一枚最小的白贝放在你面前。
+[[tracks.chapters]]
+key = "settle"
+title = "最小的那一枚"
+text = "米分完了，阿伊莎图请你在贝币仓里喝了一碗椰子水。仓里很暗，木架一层层摞到房梁，每层都码着按捆扎好的小贝。她从最底下一捆里挑出一枚特别小、特别白的贝，放在你面前。“我数过的贝里，这是最小的一枚。”她的手指在它旁边停了一下，“不算钱，算记号。”说完她把手收回去，又去摆正木架上的小贝。外头码头上有人吆喝着抬米，椰子水的甜味混着潮气。"
+speaker = "captain"
+mood = "tender"
+at = "male"
+when = [
+  { kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aishath", value = true },
+]
+news = "马累贝币仓里最上面一层放着一枚特别小的白贝，女商人说那是看门的。"
+
+[[tracks.chapters.choices]]
+key = "keep_shell"
+text = "收下那枚贝。"
+next = "done"
+reply = "“以后拿它来，我先卖米给你。”她把那枚贝放进你手心，报酬也一并数清了：一半银子，一半是她手心里攥热的小贝，一枚不差。"
+news = "马累的贝币仓里，女商人把一枚最小的白贝交给了外乡船长，说那是以后买米的记号。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "aishath", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_aishath_done" },
+  { kind = "memory", memory = "mem-request_aishath-settle", title = "最小的那一枚" },
+]
+
+[[tracks.chapters.choices]]
+key = "return_shell"
+text = "说它太小了，留给她的仓吧。"
+next = "done"
+reply = "她点点头，伸手把那枚贝挪回仓里最上面那一层。“好，那它就看着门。这一层的贝，谁来都得先看它一眼。”钱照付，数得清清楚楚。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "aishath", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_aishath_done" },
+]
+
+# 三之二、看门的那一枚：银子路上的结账。她付的全是银子，那枚小贝没有拿出来，只剩一个选项。
+[[tracks.chapters]]
+key = "settle_silver"
+title = "看门的那一枚"
+text = "阿伊莎图请你在贝币仓里喝了一碗椰子水。这回报酬她全付了银子，付得干脆，一枚小贝也没掺进来。最上面一层，那枚特别小、特别白的贝还在木架上，她没去拿，只说：“那一枚看门用的。”外头码头上有人吆喝着抬米，她听了一会儿，才把目光收回来。她问你船是从哪个港口来的，问完就没再提那枚贝。"
+speaker = "captain"
+mood = "tender"
+at = "male"
+when = [
+  { kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "aishath", value = true },
+]
+news = "马累的贝币仓里，木架最上层立着一枚小白贝，女商人说那是看门的，不当钱使。"
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "指指架子最上层，说：留着看门吧。"
+next = "done"
+reply = "她顺着你的手看过去，没有动。“看门的，不卖。”她把银子数出来，一钱不差，数完又看了架子最上层一眼。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "aishath", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_aishath_done" },
+]

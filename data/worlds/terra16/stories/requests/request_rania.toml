@@ -1,0 +1,172 @@
+# 请托：翻得开的五箱书（request_rania）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-24，Claude 执笔。
+# 人物：拉妮娅 rania（1540-12-07 生，女），哈德拉毛商人的女儿，书船上管账；谁念半句诗她都抢着接（cast/classmates_ship.toml）。
+# 类型：送货（deliver）。章节：offer 摩卡的书贩抬价 → deliver 当着买主翻开（吉达，书船的账房接货）→ settle 下半句 或 settle_half 只卖了一半。
+# 报价：到访（V）。auto=true，offer 章 at=mocha（她从扎比德下到港口），family=c13_offer_mocha，冷却 20 天。
+#       窗口 1563-01-01 至 1574-06-30（写在 offer 的 when 里，deadline 为 1574-06-30）；交货期限 120 天，最晚 1574 年 10 月收尾。
+# 身份档 1（小商）：现金基数 900，低风险 ×1.0，工钱 900；货款 2000 另付（五箱书按基准价 × 1.25，取整后的数目）。
+# 依据（史实背景）：红海的书籍贸易，开罗、扎比德、汉志之间的抄本流通；朝觐季吉达的书摊。正文只写码头与书摊的日常，不写具体书名与版本。
+# 依据（原创）：拉妮娅、她的书船与账房（叙事人物，不建 cast）、大马士革来的老学者、那一本缺了一叠的经注、摩卡码头的书贩、航路诗的半句。
+# 待核：朝觐季吉达书摊的摆法与买主的来历为推想，正文用传闻口吻。
+# 秘密：cast 中的 secret 永远不在本文件写出，不进正文、见闻与回忆标题；不写与任何同学的关系。
+# 读写的旗标：offer 的 variant 读 bond_rania（C 级，由 bond_rania 设）；只设 c13_request_rania_* 旗标（accepted / declined / half / partial / done / late）；不读也不设 c7_ 旗标；无主线门禁。
+# 结构：variants 只能换文字、不能换效果，所以“只卖了一半”单开 settle_half 章（when 不设门禁，只由 deliver 的检定失败进入）。
+# 依赖：商品 books（terra16 goods/04_overseas_crafts.toml）；技能 lang_arabic（skills.toml）；检定属性 commerce；港口 mocha、jeddah（ports_red_sea_gulf.toml）。
+# 回忆插画清单：
+#   mem-request_rania-settle：摩卡码头的收货台上，一本诗集摊开，一行下半句押错了韵，页边一只手正划掉又重写。
+
+[[tracks]]
+key = "request_rania"
+name = "翻得开的五箱书"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["rania"]
+
+# 报价：摩卡码头，书贩抬价，她丢下书贩跑过来托你运五箱书到吉达。
+[[tracks.chapters]]
+key = "offer"
+title = "摩卡的书贩抬价"
+text = "摩卡码头上，哈德拉毛来的拉妮娅正跟一个书贩吵价，嗓门盖过了卸货的号子。书贩把一摞抄本往箱盖上一拍，说这个价是看在她急的份上。她看见你，丢下那摞书跑过来，裙角还沾着麻绳的毛屑。“船长，你正好。我的书船下个月往吉达开，这家伙把价抬了一倍。你从别处给我运五箱书过去，交给书船上的账房。”她把一张单子塞进你手里，单子背面画着一只歪歪扭扭的箱子。“每一本都要能当着买主翻开。缺页的不要，缺一页也不要。吉达的买主，一半是朝觐路上的学者，他们翻书比我还狠。”"
+at = "mocha"
+cast = ["rania"]
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "at", at = "mocha", text = "到摩卡码头，找正在吵价的她" }]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1574, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "rania", ge = 18 },
+]
+family = "c13_offer_mocha"
+family_cooldown_days = 20
+deadline = [1574, 6, 30]
+timeout = { next = "failed" }
+
+# 变体：与她的羁绊到 C 级以上，她先念半句航路诗，让你接下半句。其余不变。
+[[tracks.chapters.variants]]
+key = "bond_turn"
+when = [{ kind = "bond", person = "rania", level = "C" }]
+text = "摩卡码头上，哈德拉毛来的拉妮娅正跟一个书贩吵价，嗓门盖过了卸货的号子。书贩把一摞抄本往箱盖上一拍，说这个价是看在她急的份上。她看见你，丢下那摞书跑过来，裙角还沾着麻绳的毛屑，一边跑一边念了半句：“海风先认得船，”跑到跟前站住，眼睛看着你。“下半句你来。”她把一张单子塞进你手里，单子背面画着一只歪歪扭扭的箱子。“船长，你正好。我的书船下个月往吉达开，这家伙把价抬了一倍。你从别处给我运五箱书过去，交给书船上的账房。每一本都要能当着买主翻开。缺页的不要，缺一页也不要。吉达的买主，一半是朝觐路上的学者，他们翻书比我还狠。”"
+
+# 接下、问诗集、回绝。
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，五箱书运到吉达。"
+next = "deliver"
+reply = "她把书单又抄了一份塞过来。每一类书后面都写着“要能翻开”，最后一行写着“诗集多要一些”。"
+effects = [{ kind = "affinity", person = "rania", value = 2 }, { kind = "flag", flag = "c13_request_rania_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_poems"
+text = "接下，问她：诗集为什么要多？"
+next = "deliver"
+reply = "“学者买经注，学者的学生买诗集。”她说完，又补一句，“学生比学者多。”说着把这一行在单子上划了个圈。"
+effects = [{ kind = "affinity", person = "rania", value = 2 }, { kind = "flag", flag = "c13_request_rania_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "书箱太沉，我的舱位放不下。"
+next = "failed"
+reply = "她回头接着跟书贩吵价，吵得比刚才还凶。"
+effects = [{ kind = "flag", flag = "c13_request_rania_declined" }]
+
+# 交货：吉达港口，书船的账房开箱，老学者翻到第三箱停住了。五箱书不论选哪个都扣货。
+[[tracks.chapters]]
+key = "deliver"
+title = "当着买主翻开"
+text = "吉达港口，拉妮娅书船上的账房一箱一箱开箱，箱盖上还留着摩卡的火漆。一个从大马士革来的老学者站在旁边，袍子洗得发白，随手抽出一本就翻。翻到第三箱，他的手停住了。那是一本经注，书脊上的线还新，中间却少了一叠。“这里断了，”他把书举到你眼前，“虫子咬不出这么齐的口子。”账房的脸色一下白了。拉妮娅说过缺页的不要，可货已经卸在码头上，五个箱子的盖子全开着。"
+at = "jeddah"
+cast = ["rania"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "goods", good = "books", qty = 5, at = "jeddah", text = "五箱书运到吉达码头" }]
+when = [
+  { kind = "alive", person = "rania", value = true },
+  { kind = "date", from = [1563, 1, 1], to = [1575, 8, 24] },
+]
+news = "吉达港口的书船边，一个从大马士革来的老学者把五箱书一本本翻了个遍，翻到第三箱停住了。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "rania", text = "书船等不及开走了，摩卡的书我还是照高价买了。缺页的也有。——拉妮娅" }, { kind = "affinity", person = "rania", value = -3 }, { kind = "flag", flag = "c13_request_rania_late" }] }
+
+[[tracks.chapters.choices]]
+key = "check_all"
+text = "当着老学者，把五箱书一本一本翻过去，缺页的单拣出来。"
+next = "settle"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "settle_half", effects = [{ kind = "affinity", person = "rania", value = -2 }, { kind = "flag", flag = "c13_request_rania_half" }], news = "吉达港口的书船边，老学者等得不耐烦，拿起帽子走了，只买走了一半的书。" }
+reply = "五箱书只有那一本缺页。老学者一本本看我翻完，点点头，五箱全要了。"
+effects = [{ kind = "affinity", person = "rania", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "read_gap"
+text = "细看缺的是哪一段，告诉老学者另一本里是怎么写的。"
+next = "settle"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60, hard = true }]
+hint = "那一段经注的文字太古，你读不顺。"
+reply = "缺的是一段注释。我在账房的另一本里找到了同一段，念给他听。老学者说这本缺页的他也买，回去自己补，“补过的书，读的人才认真”。"
+effects = [{ kind = "affinity", person = "rania", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "pull_it"
+text = "把缺页的那本抽出来，其余的照常卖。"
+next = "settle"
+reply = "账房把那本缺页的书压到箱底。老学者翻完其余的书，一箱一箱都要了，只是没再多问。"
+effects = [{ kind = "affinity", person = "rania", value = 2 }]
+
+# 结算（全部卖出）：摩卡的码头上，她听你讲吉达的事，最后把账算给你。你念半句诗，她接不住，抢着接。
+[[tracks.chapters]]
+key = "settle"
+title = "下半句"
+text = "摩卡的码头上，拉妮娅听你讲吉达的事。讲到老学者一本本翻书，她笑得前仰后合，手里的算盘珠子拨乱了一片；讲到那本缺页的经注，她又板起脸。“箱子是谁封的？”她问，没等回答就自己算起账来：货款，工钱，吉达的脚力，一笔一笔写在单子背面。算完，她把数目推过来。你顺口念了半句在吉达书摊上听来的诗：“书箱压着潮水走，”她一把抓住你的手：“别停！下半句我来接。”"
+at = "mocha"
+cast = ["rania"]
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "at", at = "mocha", text = "回摩卡，找她算账" }]
+when = [
+  { kind = "alive", person = "rania", value = true },
+  { kind = "date", from = [1563, 1, 1], to = [1575, 8, 24] },
+]
+news = "摩卡的码头上，哈德拉毛商人的女儿抢着接一句吉达书摊上的诗，接没接上，码头上的人争了半天。"
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "停下，让她接。"
+next = "done"
+reply = "她接了，接得一点也不妙，韵都押错了，自己笑得说不出话。笑完了，她把一本诗集塞给我，说是书船上的样书，“让你以后念完整的”。她付了钱。"
+# 工钱 900 与货款 2000 分开两条效果。
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 2000 }, { kind = "affinity", person = "rania", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_rania_done" }, { kind = "memory", memory = "mem-request_rania-settle", title = "押错了韵的下半句" }]
+
+[[tracks.chapters.choices]]
+key = "finish_it"
+text = "不停，自己把下半句念完。"
+next = "done"
+reply = "她瞪着我，说这是她接诗以来头一回被人抢了。她付了钱，又说下回我念上半句，她一定接得比原诗好。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 2000 }, { kind = "affinity", person = "rania", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_rania_done" }, { kind = "memory", memory = "mem-request_rania-settle", title = "押错了韵的下半句" }]
+
+# 结算（只卖了一半）：检定失败后进入。货款照付，工钱只给一半，终局旗标为 partial。
+[[tracks.chapters]]
+key = "settle_half"
+title = "只卖了一半"
+text = "摩卡的码头上，拉妮娅听你讲吉达的事，只听到一半就停了笔。老学者只买了一半，其余的书被吉达的书贩压价拖走了。她没有笑。她把书单对着码头的光举起来，单子上的墨洇了一小块。账单铺在桌上，她一笔一笔往下看，看到工钱那一行，把笔搁在纸上。“货款照付，”她说，“工钱只给一半。你别这个表情，又不是你的错。”"
+at = "mocha"
+cast = ["rania"]
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "at", at = "mocha", text = "回摩卡，把吉达的账交给她" }]
+news = "摩卡的码头上，哈德拉毛商人的女儿听完吉达的账，半天没说话，只把书单又看了一遍。"
+
+[[tracks.chapters.choices]]
+key = "tell_it_all"
+text = "从头说给她听，缺页的事、老学者的话、只买了一半的缘故。"
+next = "done"
+reply = "她听完，把工钱那一行划掉，在下面写了一个数，比原来的一半多了一点。“缺页的是账房的事，可箱子是我让你运的。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "cash", value = 2000 }, { kind = "affinity", person = "rania", value = 4 }, { kind = "flag", flag = "c13_request_rania_partial" }]
+
+[[tracks.chapters.choices]]
+key = "take_half"
+text = "这一半我收下，别的不提。"
+next = "done"
+reply = "她没有再算，把钱数点给你，一张一张放在桌上。“下回的书，你自己先翻一遍。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "cash", value = 2000 }, { kind = "affinity", person = "rania", value = 3 }, { kind = "flag", flag = "c13_request_rania_partial" }]

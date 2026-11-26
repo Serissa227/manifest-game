@@ -1,0 +1,702 @@
+# C10：结构、引用、史实与玩法参数；显示正文均为待Claude替换的短占位。
+# 仅知年份／月份的条目在窗口末结算；不得把结算末日写成考证日期。
+
+[[ports]]
+port = "st_nicholas"
+state = "dormant"
+
+[[ports]]
+port = "macao"
+state = "dormant"
+
+[[ports]]
+port = "acapulco"
+state = "dormant"
+
+[[ports]]
+port = "st_augustine"
+state = "dormant"
+
+[[ports]]
+port = "manila"
+state = "dormant"
+
+[[ports]]
+port = "luanda"
+state = "dormant"
+
+# H01；事实上下文：钱塞勒抵白海并赴莫斯科；威洛比两船覆没；1555年莫斯科公司获特许。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h01_northeast_passage"
+ripple_budget = 2000  # 涟漪预算（万分点）：结局出来后 30 日内，模型可据此写至多两条余波事件，倍率按 |倍率−1| 计费；离线不触发。
+title = "东北航路"
+summary = "英格兰人想绕过北角，找一条通往东方的北路。威洛比的两条船冻在拉普兰的海湾里，钱塞勒却到了白海的圣尼古拉，又坐雪橇进了莫斯科。沿途的税卡只认银子与货单。"
+region = "圣尼古拉锚地"
+date = [1555, 12, 31]
+history = { date = [1555, 12, 31], outcome = "muscovy_trade_begins" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "英格兰王国", faction = "england", port = "st_nicholas" },
+  { key = "opposition", name = "俄罗斯沙皇国", faction = "moscovy" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "muscovy_trade_begins", when = ">= -9223372036854775808", default = true, news = "圣尼古拉锚地的酒馆里，英格兰水手说伦敦那边已拿到了特许。往后他们的呢绒与铁器可以直接卸在港口，不必再走陆路。", chronicle = "1555年，伦敦的莫斯科公司获得特许，英格兰的船从此直入圣尼古拉。", effects = [{ kind = "flag", flag = "h01_northeast_passage_muscovy_trade_begins" }, { kind = "port_state", port = "st_nicholas", state = "open" }] },
+]
+window = [[1553, 5, 1], [1555, 12, 31]]
+
+# H01-news；事实上下文：家庭新闻关联h01_northeast_passage；来源人物thomas_gresham，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1553_northeast_passage_news"
+ripple_budget = 2000
+title = "东北航路见闻"
+summary = "孩子在安特卫普的交易所里，托马斯·格雷沙姆压低嗓子说：北边的消息都是水手酒后讲的，据说钱塞勒的船已抛锚在白海，威洛比的船却没了音讯。"
+region = "圣尼古拉锚地"
+date = [1553, 8, 31]
+history = { date = [1553, 8, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "英格兰王国", faction = "england", port = "st_nicholas" },
+  { key = "opposition", name = "俄罗斯沙皇国", faction = "moscovy" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "从白海回来的英格兰水手在圣尼古拉锚地的栈桥上说，钱塞勒要去莫斯科见沙皇。威洛比的船，至今没人见过。", chronicle = "1553年夏，钱塞勒的船抵白海；威洛比的船下落未明。", effects = [{ kind = "flag", flag = "n_1553_northeast_passage_news_news_received" }] },
+]
+window = [[1553, 8, 1], [1553, 8, 31]]
+
+# H02；事实上下文：玛丽一世即位后于1554年与腓力成婚；不把1558年死亡提前。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h02_mary_philip_marriage"
+ripple_budget = 2000
+title = "玛丽与腓力的婚姻"
+summary = "玛丽一世1553年登上英格兰王位，议会与伦敦的商人就为她的婚事争个不休。西班牙的王子要来，英格兰的羊毛与关税往哪里去，谁也说不准。"
+region = "伦敦"
+date = [1554, 7, 25]
+history = { date = [1554, 7, 25], outcome = "royal_marriage" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "英格兰王国", faction = "england", port = "london" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "royal_marriage", when = ">= -9223372036854775808", default = true, news = "伦敦的酒馆里都在说，女王已在温彻斯特与西班牙的腓力成了婚。商人们算着，这一桩婚事值多少羊毛。", chronicle = "1554年7月25日，英格兰女王玛丽与腓力王子在温彻斯特成婚。", effects = [{ kind = "flag", flag = "h02_mary_philip_marriage_royal_marriage" }] },
+]
+window = [[1553, 7, 1], [1554, 7, 25]]
+
+# H02-news；事实上下文：家庭新闻关联h02_mary_philip_marriage；来源人物mary_i，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1554_mary_philip_marriage_news"
+ripple_budget = 2000
+title = "玛丽与腓力的婚姻见闻"
+summary = "孩子在宫门外的候见室里，听女王的侍女转述女王的话：婚礼已在温彻斯特办完，腓力王子就住在宫里，往后的事，女王说要亲自定。"
+region = "伦敦"
+date = [1554, 7, 31]
+history = { date = [1554, 7, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "英格兰王国", faction = "england", port = "london" },
+  { key = "opposition", name = "西班牙诸王国", faction = "spain" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "伦敦的码头上，西班牙的商人已开始打听英格兰羊毛的价钱。消息说，婚事一成，安特卫普的银子就要往伦敦流。", chronicle = "1554年7月，伦敦传出女王婚讯，英格兰与西班牙结成亲家。", effects = [{ kind = "flag", flag = "n_1554_mary_philip_marriage_news_news_received" }] },
+]
+window = [[1554, 7, 1], [1554, 7, 31]]
+
+# H03；事实上下文：1554年1月是瓦塔斯借奥斯曼复位，萨阿德于9月再取非斯；设计表标题与1月日期不能合成一次萨阿德胜利。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h03_fez_restoration"
+ripple_budget = 2000
+title = "非斯的王朝更替"
+summary = "非斯的城里，瓦塔斯家的苏丹借奥斯曼的兵回来，在宫里坐了几个月。萨阿德家族的人马从南边压上来，要把这座老城连同城里的经学先生一并收到手里。"
+region = "萨累"
+date = [1554, 9, 30]
+history = { date = [1554, 9, 30], outcome = "saadian_rule_restored" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "萨阿德摩洛哥", faction = "morocco", port = "sale" },
+  { key = "opposition", name = "瓦塔斯王朝", faction = "wattasid" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "saadian_rule_restored", when = ">= -9223372036854775808", default = true, news = "萨累港的酒馆里有人说，萨阿德的人马在塔德拉打垮了瓦塔斯的苏丹，非斯的城门已经换了旗。", chronicle = "1554年9月，萨阿德王朝重新入主非斯，瓦塔斯的苏丹战死于塔德拉。", effects = [{ kind = "flag", flag = "h03_fez_restoration_saadian_rule_restored" }] },
+]
+window = [[1554, 1, 1], [1554, 9, 30]]
+
+# H03-news；事实上下文：家庭新闻关联h03_fez_restoration；来源人物ahmad_al_manjur，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1554_fez_restoration_news"
+ripple_budget = 2000
+title = "非斯的王朝更替见闻"
+summary = "孩子在卡拉维因的讲堂里，艾哈迈德·曼朱尔先生合上书卷，说城外逃进来的人讲，宫里的旗子已经换了。先生们都在等城门开。"
+region = "萨累"
+date = [1554, 9, 30]
+history = { date = [1554, 9, 30], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "萨阿德摩洛哥", faction = "morocco", port = "sale" },
+  { key = "opposition", name = "瓦塔斯王朝", faction = "wattasid" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "萨累港的船老大说，萨阿德的旗子已经插上非斯的城楼，城外的瓦塔斯兵丢了粮草。", chronicle = "1554年9月，萨阿德的旗帜在非斯城头重新升起，瓦塔斯的旧部四散。", effects = [{ kind = "flag", flag = "n_1554_fez_restoration_news_news_received" }] },
+]
+window = [[1554, 9, 1], [1554, 9, 30]]
+
+# H04；事实上下文：奥斯曼舰队在印度洋遭风暴，残部至古吉拉特；1557年成《列国之镜》。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h04_seydi_ali_shipwreck"
+ripple_budget = 2000
+title = "西迪·阿里·雷斯的海难"
+summary = "奥斯曼的舰队在印度洋遇上风暴，大半船只被打散。残船漂进古吉拉特的港湾，提督带着余部改走陆路，想回伊斯坦布尔。葡萄牙人的巡逻船在海上四处游弋。"
+region = "苏拉特"
+date = [1554, 12, 31]
+history = { date = [1554, 12, 31], outcome = "fleet_scattered" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "奥斯曼帝国", faction = "ottoman", port = "surat" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "fleet_scattered", when = ">= -9223372036854775808", default = true, news = "苏拉特的码头上有人传，奥斯曼的几条船被风吹到了古吉拉特的滩头，船上的人正等着陆路的消息。", chronicle = "1554年，奥斯曼舰队在印度洋遇风，残部漂至古吉拉特。", effects = [{ kind = "flag", flag = "h04_seydi_ali_shipwreck_fleet_scattered" }] },
+]
+window = [[1554, 1, 1], [1554, 12, 31]]
+
+# H04-news；事实上下文：家庭新闻关联h04_seydi_ali_shipwreck；来源人物seydi_ali_reis，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1554_seydi_ali_shipwreck_news"
+ripple_budget = 2000
+title = "西迪·阿里·雷斯的海难见闻"
+summary = "孩子在苏拉特听人转述西迪·阿里·雷斯的说法：舰队在海上被风打散，他已经数不清还剩几条船。"
+region = "苏拉特"
+date = [1554, 12, 31]
+history = { date = [1554, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "奥斯曼帝国", faction = "ottoman", port = "surat" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "苏拉特的货栈里，印度商人一边称胡椒一边议论，奥斯曼的老提督带着余部，已往西北的陆路去了。", chronicle = "1554年冬，奥斯曼的提督离开古吉拉特，改走陆路西返。", effects = [{ kind = "flag", flag = "n_1554_seydi_ali_shipwreck_news_news_received" }] },
+]
+window = [[1554, 12, 1], [1554, 12, 31]]
+
+# H05；事实上下文：江浙沿岸受袭，胡宗宪统筹招抚与剿捕；王直据五岛、平户。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h05_jiajing_coastal_raids"
+ripple_budget = 2000
+title = "嘉靖倭患"
+summary = "嘉靖三十二年，王直引着倭人连舰数百，蔽海而来，浙东浙西同时告警。三十四年，一股倭寇流劫千里，竟逼到南京城下。三十五年胡宗宪总督东南，剿与抚两手并用，宁波的海面时开时闭。"
+region = "宁波"
+date = [1556, 12, 31]
+history = { date = [1556, 12, 31], outcome = "coastal_war_continues" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "ningbo" },
+  { key = "opposition", name = "王直船队", faction = "wang_zhi" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "coastal_war_continues", when = ">= -9223372036854775808", default = true, news = "宁波的船老大们都在说：徐海投了水，胡总督却还在往五岛派人。骂倭寇的嘴没合上，夜里装货出港的船照旧走。", chronicle = "嘉靖三十五年，胡宗宪总督东南，徐海败死，倭患未平。", effects = [{ kind = "flag", flag = "h05_jiajing_coastal_raids_coastal_war_continues" }] },
+]
+window = [[1553, 1, 1], [1556, 12, 31]]
+
+# H05-news；事实上下文：家庭新闻关联h05_jiajing_coastal_raids；来源人物hu_zongxian，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1555_jiajing_coastal_raids_news"
+ripple_budget = 2000
+title = "嘉靖倭患见闻"
+summary = "入秋，倭寇杀到南京城下的消息传开了。浙江的胡宗宪在席上把军报讲了一遍，句句是兵额与粮饷，没有一句惊慌，孩子在席边听着。"
+region = "宁波"
+date = [1555, 8, 31]
+history = { date = [1555, 8, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "ningbo" },
+  { key = "opposition", name = "王直船队", faction = "wang_zhi" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "宁波的茶坊里，客人说起南京还直摇头：不过六七十个倭寇，红衣黄盖，一路杀伤近四千人，城里的兵竟不敢出来。", chronicle = "嘉靖三十四年秋，倭寇六七十人自浙入江南，直逼南京大安德门。", effects = [{ kind = "flag", flag = "n_1555_jiajing_coastal_raids_news_news_received" }] },
+]
+window = [[1555, 8, 1], [1555, 8, 31]]
+
+# H06；事实上下文：毛利元就袭破陶晴贤；按研究P换算日。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h06_itsukushima"
+ripple_budget = 2000
+title = "严岛之战"
+summary = "天文二十四年秋，陶晴贤领周防、长门的兵乘五百艘船渡海，围住严岛的宫尾城。毛利元就趁一夜暴风雨把人马运上岛，天亮时从博奕尾的山背杀向塔之冈的陶家本阵。能岛村上家的船就泊在自家岛边，据说一条也没有动。"
+region = "能岛"
+date = [1555, 10, 16]
+history = { date = [1555, 10, 16], outcome = "mori_victory" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "毛利氏", faction = "mori", port = "noshima" },
+  { key = "opposition", name = "大内氏", faction = "ouchi" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "mori_victory", when = ">= -9223372036854775808", default = true, news = "从严岛逃回来的渔船说，陶家的兵抢着上船，挤翻了好几条，淹死的比砍死的多。陶晴贤逃到大江浦找不到船，就在海边自尽了。能岛的酒馆里，半天没人接话。", chronicle = "天文二十四年十月朔，毛利元就袭陶晴贤于安艺严岛，陶军溃，晴贤自尽。", effects = [{ kind = "flag", flag = "h06_itsukushima_mori_victory" }] },
+]
+window = [[1555, 9, 1], [1555, 10, 16]]
+
+# H06-news；事实上下文：家庭新闻关联h06_itsukushima；来源人物mori_motonari，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1555_itsukushima_news"
+ripple_budget = 2000
+title = "严岛之战见闻"
+summary = "严岛的胜报是从毛利元就那边放出来的：书信一封封发往各家，送信的人一路添油加醋，到能岛时已经说成元就早算准了那夜的风。孩子们听到的，是转过三四道手的说法。"
+region = "能岛"
+date = [1555, 10, 31]
+history = { date = [1555, 10, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md"]
+sides = [
+  { key = "support", name = "毛利氏", faction = "mori", port = "noshima" },
+  { key = "opposition", name = "大内氏", faction = "ouchi" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "能岛码头上有人念着从安艺传来的书信：陶晴贤的首级已经验过，来岛的船也赶去出了力。念完，他瞟了一眼前些日子往陶营里送过信的那几家。", chronicle = "天文二十四年十月，严岛之捷传至能岛，岛中曾附陶氏者皆惧。", effects = [{ kind = "flag", flag = "n_1555_itsukushima_news_news_received" }] },
+]
+window = [[1555, 10, 1], [1555, 10, 31]]
+
+# H07；事实上下文：承认帝国天主教与路德派诸侯的宗教安排，不泛称承认所有新教派。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h07_augsburg_peace"
+ripple_budget = 2000
+title = "奥格斯堡和约"
+summary = "奥格斯堡的帝国议会拖了大半年，最后定下：诸侯信哪派，他的领地就信哪派。路德派的诸侯因此有了名分，加尔文派与再洗礼派仍然不在内。"
+region = "汉堡"
+date = [1555, 9, 25]
+history = { date = [1555, 9, 25], outcome = "lutheran_settlement" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "神圣罗马帝国", faction = "holy_roman_empire", port = "hamburg" },
+  { key = "opposition", name = "教宗国", faction = "papal_states" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "lutheran_settlement", when = ">= -9223372036854775808", default = true, news = "汉堡的港口里，汉萨的商人说，奥格斯堡的和约已经签了，路德派的诸侯从此不必再躲。", chronicle = "1555年9月25日，奥格斯堡和约定案，帝国承认路德派诸侯的信仰。", effects = [{ kind = "flag", flag = "h07_augsburg_peace_lutheran_settlement" }] },
+]
+window = [[1555, 2, 1], [1555, 9, 25]]
+
+# H07-news；事实上下文：家庭新闻关联h07_augsburg_peace；来源人物christophe_plantin，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1555_augsburg_peace_news"
+ripple_budget = 2000
+title = "奥格斯堡和约见闻"
+summary = "孩子跟着克里斯托夫·普朗坦上了印刷所的楼梯，见他一边翻看新印的样张，一边说奥格斯堡那边的和约一定，北德的书商就要重新算账。"
+region = "汉堡"
+date = [1555, 9, 30]
+history = { date = [1555, 9, 30], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "神圣罗马帝国", faction = "holy_roman_empire", port = "hamburg" },
+  { key = "opposition", name = "教宗国", faction = "papal_states" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "汉堡的书商在码头上叫卖和约的单页，单页上印着诸侯的名字，两边都说自己赢了。", chronicle = "1555年9月，奥格斯堡的和约文本传至北德各城。", effects = [{ kind = "flag", flag = "n_1555_augsburg_peace_news_news_received" }] },
+]
+window = [[1555, 9, 1], [1555, 9, 30]]
+
+# H08；事实上下文：1555年尼德兰、1556年西班牙退位；帝位交接另有程序，不误写同日完成。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h08_charles_abdication"
+ripple_budget = 2000
+title = "查理五世退位"
+summary = "查理五世先在布鲁塞尔把尼德兰交给儿子，1556年又把西班牙的王冠交出去。帝冠的事要等诸侯另议，安特卫普的商人却只盯着银船什么时候到。"
+region = "安特卫普"
+date = [1556, 1, 16]
+history = { date = [1556, 1, 16], outcome = "philip_inherits" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "西班牙诸王国", faction = "spain", port = "antwerp" },
+  { key = "opposition", name = "神圣罗马帝国", faction = "holy_roman_empire" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "philip_inherits", when = ">= -9223372036854775808", default = true, news = "安特卫普的兑换铺里，热那亚人打听西班牙的汇票会不会照付。有人说老皇帝已在布鲁塞尔把西班牙的王冠交给了腓力。", chronicle = "1556年1月16日，查理五世在布鲁塞尔退出西班牙王位，王冠交给腓力。", effects = [{ kind = "flag", flag = "h08_charles_abdication_philip_inherits" }] },
+]
+window = [[1555, 10, 25], [1556, 1, 16]]
+
+# H08-news；事实上下文：家庭新闻关联h08_charles_abdication；来源人物charles_v，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1556_charles_abdication_news"
+ripple_budget = 2000
+title = "查理五世退位见闻"
+summary = "孩子从一个老侍从嘴里听来查理五世的话：他想回西班牙，去一个僻静的修道院住下，不再管王国里的账。"
+region = "安特卫普"
+date = [1556, 1, 31]
+history = { date = [1556, 1, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "西班牙诸王国", faction = "spain", port = "antwerp" },
+  { key = "opposition", name = "神圣罗马帝国", faction = "holy_roman_empire" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "安特卫普的酒馆里传言，老皇帝不再过问西班牙的事，腓力的名字已经登上了港口的税簿。", chronicle = "1556年1月，西班牙的王位易主，腓力成了新王。", effects = [{ kind = "flag", flag = "n_1556_charles_abdication_news_news_received" }] },
+]
+window = [[1556, 1, 1], [1556, 1, 31]]
+
+# H09；事实上下文：阿克巴与拜拉姆汗击败希穆，胡马雍当年坠楼身亡。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h09_second_panipat"
+ripple_budget = 2000
+title = "第二次帕尼帕特"
+summary = "胡马雍夺回德里还不到一年，年初就从楼梯上摔了下去。希穆趁朝中无主，在德里自立为王，年少的阿克巴只能靠拜拉姆汗撑着，要把北印度从希穆手里夺回来。"
+region = "苏拉特"
+date = [1556, 11, 5]
+history = { date = [1556, 11, 5], outcome = "mughal_restoration" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "莫卧儿王朝", faction = "mughal", port = "surat" },
+  { key = "opposition", name = "苏尔王朝", faction = "sur" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "mughal_restoration", when = ">= -9223372036854775808", default = true, news = "苏拉特的商馆里传言，希穆骑着战象冲阵，被一支箭射中了眼睛，象背上的人被拖下来捆走了。", chronicle = "1556年11月5日，莫卧儿军在帕尼帕特击败希穆，德里归于阿克巴。", effects = [{ kind = "flag", flag = "h09_second_panipat_mughal_restoration" }] },
+]
+window = [[1556, 1, 1], [1556, 11, 5]]
+
+# H09-news；事实上下文：家庭新闻关联h09_second_panipat；来源人物akbar，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1556_second_panipat_news"
+ripple_budget = 2000
+title = "第二次帕尼帕特见闻"
+summary = "苏拉特的布市上，一个从德里来的布商把阿克巴的话学给孩子听：德里已经夺回来了，希穆的旗子是他的人从阵上挑下来的。"
+region = "苏拉特"
+date = [1556, 11, 30]
+history = { date = [1556, 11, 30], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "莫卧儿王朝", faction = "mughal", port = "surat" },
+  { key = "opposition", name = "苏尔王朝", faction = "sur" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "苏拉特的客商说，莫卧儿的骑兵从两翼包抄过来，希穆的大军一天之内就散了。", chronicle = "1556年11月，希穆的大军在帕尼帕特溃散，阿克巴的旗子重新插上德里。", effects = [{ kind = "flag", flag = "n_1556_second_panipat_news_news_received" }] },
+]
+window = [[1556, 11, 1], [1556, 11, 30]]
+
+# H10；事实上下文：华县地震，伤亡数字不当精确人口统计；北方赈济需求。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h10_shaanxi_earthquake"
+ripple_budget = 2000
+title = "陕西大地震"
+summary = "嘉靖三十四年十二月十二日夜，陕西华州一带地大震，山西、河南同时震动，城郭官衙一夜倒平；告老在家的前南京兵部尚书韩邦奇也没逃出来。天津卫的漕粮码头上，管事的先算起赈济的粮从哪里调。"
+region = "天津"
+date = [1556, 1, 23]
+history = { date = [1556, 1, 23], outcome = "earthquake_relief_needed" }
+basis = "historical"
+sources = ["《明世宗实录》嘉靖三十四年十二月", "docs/research/terra16/P_eastasia_1540.md §8"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "earthquake_relief_needed", when = ">= -9223372036854775808", default = true, news = "陕西逃荒的客商流落到天津卫，说华州一夜塌平，外头传死了八十万，他自己只肯说数不清。码头上的脚夫不问死伤，先问北边的粮价还涨不涨。", chronicle = "嘉靖三十四年十二月十二日夜，陕西华州大震，山西河南皆震，压死官民不可胜数。", effects = [{ kind = "flag", flag = "h10_shaanxi_earthquake_earthquake_relief_needed" }] },
+]
+window = [[1556, 1, 23], [1556, 1, 23]]
+
+# H10-news；事实上下文：家庭新闻关联h10_shaanxi_earthquake；来源人物hai_rui，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1556_shaanxi_earthquake_news"
+ripple_budget = 2000
+title = "陕西大地震见闻"
+summary = "开了春，陕西大震的消息才传到福建。南平教谕海瑞把誊抄的邸报摊在案上，读到赈济一节停住，对旁边听着的孩子说：银子要过三道手，到灾民嘴里还剩几粒米。"
+region = "天津"
+date = [1556, 2, 28]
+history = { date = [1556, 2, 28], outcome = "news_received" }
+basis = "historical"
+sources = ["《明世宗实录》嘉靖三十四年十二月", "docs/research/terra16/P_eastasia_1540.md §8"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "tianjin" },
+  { key = "opposition", name = "大明", faction = "ming" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "天津卫的酒馆里，陕西的大震已经议论了半个月：逃荒的人拖家带口往东走，赈济的旨意早下了，粮却只见文书不见车。", chronicle = "嘉靖三十五年春，陕西震灾之报遍传南北，朝廷下诏赈恤。", effects = [{ kind = "flag", flag = "n_1556_shaanxi_earthquake_news_news_received" }] },
+]
+window = [[1556, 2, 1], [1556, 2, 28]]
+
+# H11；事实上下文：诺查丹玛斯1555年里昂首版；预言不改变历史事件的确定性规则。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h11_prophecies_printed"
+ripple_budget = 2000
+title = "《预言集》出版"
+summary = "诺查丹玛斯的《预言集》1555年在里昂印成，四行诗的小册子一本本卖。有人说书里的句子能对上将来的大事，也有人骂他是江湖骗子。"
+region = "马赛"
+date = [1555, 12, 31]
+history = { date = [1555, 12, 31], outcome = "prophecies_published" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "法兰西王国", faction = "france", port = "marseille" },
+  { key = "opposition", name = "法兰西王国", faction = "france" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "prophecies_published", when = ">= -9223372036854775808", default = true, news = "马赛的书摊上，一本没装订的《预言集》被人翻得卷了边，水手们争着念里面的四行诗。", chronicle = "1555年，诺查丹玛斯的《预言集》在里昂首次印行。", effects = [{ kind = "flag", flag = "h11_prophecies_printed_prophecies_published" }] },
+]
+window = [[1555, 1, 1], [1555, 12, 31]]
+
+# H11-news；事实上下文：家庭新闻关联h11_prophecies_printed；来源人物nostradamus，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1555_prophecies_printed_news"
+ripple_budget = 2000
+title = "《预言集》出版见闻"
+summary = "孩子在马赛的书铺里，听掌柜学萨隆的医生诺查丹玛斯托信使带的话：《预言集》已在里昂印成，买书的人排成了队。"
+region = "马赛"
+date = [1555, 12, 31]
+history = { date = [1555, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "法兰西王国", faction = "france", port = "marseille" },
+  { key = "opposition", name = "法兰西王国", faction = "france" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "马赛的船主们在码头上议论，听说书里有几句提到海上的大灾，里昂的印书匠已经把新书运下了河。", chronicle = "1555年12月，里昂的《预言集》转运到马赛的书铺。", effects = [{ kind = "flag", flag = "n_1555_prophecies_printed_news_news_received" }] },
+]
+window = [[1555, 12, 1], [1555, 12, 31]]
+
+# H12；事实上下文：劳塔罗指挥马普切击败瓦尔迪维亚；不虚构人物库没有的参战者引用。
+# 日期精度：day；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h12_tucapel"
+ripple_budget = 2000
+title = "图卡佩尔之战"
+summary = "西班牙人的智利总督瓦尔迪维亚带兵深入南部，要在马普切人的土地上立下城镇。马普切的首领劳塔罗在图卡佩尔把西班牙人围住，秘鲁的援兵还隔着很远的路。"
+region = "康塞普西翁（彭科）"
+date = [1553, 12, 25]
+history = { date = [1553, 12, 25], outcome = "valdivia_killed" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "马普切诸部", faction = "mapuche", port = "concepcion" },
+  { key = "opposition", name = "秘鲁副王辖区", faction = "peru" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "valdivia_killed", when = ">= -9223372036854775808", default = true, news = "康塞普西翁（彭科）的客栈里有人说，瓦尔迪维亚死在图卡佩尔，秘鲁的人马还没有赶到。", chronicle = "1553年12月25日，马普切人在图卡佩尔杀死瓦尔迪维亚，西班牙人在智利南部的推进受挫。", effects = [{ kind = "flag", flag = "h12_tucapel_valdivia_killed" }] },
+]
+window = [[1553, 12, 1], [1553, 12, 25]]
+
+# H12-news；事实上下文：家庭新闻关联h12_tucapel；来源人物hans_staden，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1554_tucapel_news"
+ripple_budget = 2000
+title = "图卡佩尔之战见闻"
+summary = "图卡佩尔的败报顺着海岸传到彭科。马普切人的劳塔罗在图卡佩尔打垮了西班牙人，总督瓦尔迪维亚被杀。孩子从汉斯·施塔登嘴里听来这场败仗，施塔登自己也是转述的。"
+region = "康塞普西翁（彭科）"
+date = [1554, 1, 31]
+history = { date = [1554, 1, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/Q_world_1540.md"]
+sides = [
+  { key = "support", name = "马普切诸部", faction = "mapuche", port = "concepcion" },
+  { key = "opposition", name = "秘鲁副王辖区", faction = "peru" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "康塞普西翁（彭科）的码头上，从南边来的渔船说图卡佩尔打了一场大仗，西班牙人的旗子倒在泥里。谁死了几个，船上的人也说不清。", chronicle = "1554年1月，图卡佩尔的败报传到彭科，瓦尔迪维亚已死。", effects = [{ kind = "flag", flag = "n_1554_tucapel_news_news_received" }] },
+]
+window = [[1554, 1, 1], [1554, 1, 31]]
+
+# H13；事实上下文：1554索萨与汪柏纳税互市约定；1557葡人定居澳门通说，年月待核。
+# 日期精度：year；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h13_guangzhou_agreement"
+ripple_budget = 2000
+title = "广州的约定"
+summary = "嘉靖三十三年，葡萄牙船长索萨与广东海道副使汪柏口头议定：番船照章纳税，便可入市。广州城里的人讲，葡人借口货物受潮要晾晒，在濠镜澳海边搭起篷屋，越搭越多，到嘉靖三十六年前后成了聚落。"
+region = "广州"
+date = [1557, 12, 31]
+history = { date = [1557, 12, 31], outcome = "macao_settlement" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md", "J. M. Braga, The First Sino-Portuguese Treaty Made by Leonel de Souza in 1554；澳门文化局"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "guangzhou" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "macao_settlement", when = ">= -9223372036854775808", default = true, news = "往来广州的番船主说，濠镜澳海边的篷屋一年多似一年，海道衙门睁只眼闭只眼，税银却照收；还有人嘀咕，每年另有一笔私下的孝敬。", chronicle = "嘉靖三十六年前后，葡萄牙人入居濠镜澳，照章纳税互市。", effects = [{ kind = "flag", flag = "h13_guangzhou_agreement_macao_settlement" }, { kind = "port_state", port = "macao", state = "open" }] },
+]
+window = [[1554, 1, 1], [1557, 12, 31]]
+
+# H13-news；事实上下文：家庭新闻关联h13_guangzhou_agreement；来源人物galeote_pereira，转述并非该人物亲眼所见。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "n_1554_guangzhou_agreement_news"
+ripple_budget = 2000
+title = "广州的约定见闻"
+summary = "佩雷拉在中国坐过牢，讲这一桩先声明：他没亲耳听见，是索萨手下的人传的话——纳够税银，番船便能进港买卖。他摇着头补一句：中国的官点头容易，翻脸更快。"
+region = "广州"
+date = [1554, 12, 31]
+history = { date = [1554, 12, 31], outcome = "news_received" }
+basis = "historical"
+sources = ["docs/TERRA16.md §10", "docs/research/terra16/P_eastasia_1540.md", "J. M. Braga, The First Sino-Portuguese Treaty Made by Leonel de Souza in 1554；澳门文化局"]
+sides = [
+  { key = "support", name = "大明", faction = "ming", port = "guangzhou" },
+  { key = "opposition", name = "葡萄牙王国", faction = "portugal" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "news_received", when = ">= -9223372036854775808", default = true, news = "广州码头上几个佛郎机水手嚷着：船长与海道老爷说定了，纳了税就能卖货，往后不用半夜偷偷靠岸。本地的牙行听了，将信将疑。", chronicle = "嘉靖三十三年，葡萄牙人与广东海道口头议定，纳税入市。", effects = [{ kind = "flag", flag = "n_1554_guangzhou_agreement_news_news_received" }] },
+]
+window = [[1554, 12, 1], [1554, 12, 31]]
+
+# H09；事实上下文：1556年1月坠楼后去世，与11月第二次帕尼帕特分开；具体日待核。
+# 日期精度：month；研究笔记P/Q的当地纪年；仅知年月者在窗口末结算，末日不是考证出的发生日。
+[[events]]
+key = "h09_humayun_death"
+ripple_budget = 2000
+title = "胡马雍之死"
+summary = "德里的书楼石阶上，胡马雍踩空摔下，伤重而死。十三岁的阿克巴远在旁遮普，宫里的人等他回来继位，拜拉姆汗替他撑着朝政。"
+region = "苏拉特"
+date = [1556, 1, 31]
+history = { date = [1556, 1, 31], outcome = "humayun_dies" }
+basis = "historical"
+sources = ["docs/research/terra16/Q_world_1540.md", "docs/TERRA16.md §11"]
+sides = [
+  { key = "support", name = "莫卧儿王朝", faction = "mughal", port = "surat" },
+  { key = "opposition", name = "苏尔王朝", faction = "sur" },
+]
+balance = -25
+roll = 0
+diminish = 50
+levers = []
+outcomes = [
+  { key = "humayun_dies", when = ">= -9223372036854775808", default = true, news = "苏拉特的码头上都在说，德里的皇帝胡马雍从书楼的石阶上摔下来，伤重不治。说这话的水手只听人转述，没见过德里。", chronicle = "1556年1月，莫卧儿皇帝胡马雍坠楼身亡于德里。", effects = [{ kind = "flag", flag = "h09_humayun_death_humayun_dies" }] },
+]
+window = [[1556, 1, 1], [1556, 1, 31]]
+

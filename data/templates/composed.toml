@@ -1,0 +1,413 @@
+# 离线组合事件原型：未配置 LLM、超出预算或网络失败时，由生成器按权重挑一个原型，
+# 确定性地挑选目标（地点、商品、海区、势力）并在范围内取参数，组合出一个事件；同样要经过裁决与内核校验。
+#
+# 可用变量：{loc} 地点、{good} 商品（第一条涉及商品的效果所选的商品）、{region} 海区、
+#           {faction_a} {faction_b} 势力、{date} 日期（航海历）、
+#           {colony} 殖民地名（殖民地效果）、{discovery} 发现物名（发现物传闻，{region} 为传闻所指的大致海区）。
+# 生成器的挑选规则：
+#   - 同一原型里所有涉及地点的效果共用一个地点；涉及商品的效果从 goods 中挑当地交易的商品（goods 为空表示当地任意商品）；
+#   - 同时有地点与海区效果时，海区取该港口所在的海区；
+#   - 关系类效果与关税效果共用势力 faction_a。
+#   - 殖民地效果（colony_*）从现有的殖民地中挑一个，{loc} 是它所在的殖民点；colony_output 的 buildings 列出候选建筑
+#     （"all" 表示全部建筑；与该殖民地已建成的产出建筑取交集；不写表示任一座产出建筑或全部）。没有殖民地时原型不会出现；
+#   - 占领殖民点（site_claim）挑一对可以占领的（势力, 殖民点），{faction_a} 为该势力、{loc} 为该殖民点；
+#   - 发现物传闻（discovery_rumor）挑一件可以流传传闻的发现物（玩家名声够、尚未发现），{loc} 是传出消息的港口；
+#   - 殖民点上的效果不能与港口、城市的地点效果放进同一个原型；殖民地效果与占领殖民点也不能混用。
+# 参数范围必须落在 data/effects.toml 的边界内，且各效果取最大幅度时 |mult − 1| 之和不超过总强度预算
+# （cargo test 会检查）；mult 范围不能跨过 1，delta 范围不能包含 0。
+# 叙事 = 史料出处（sources 中挑一句）+ 叙事句（narratives 中挑一句），总长不超过 effects.toml 的 max_text_chars。
+
+# 史料出处：放在叙事前面，营造编年史的口吻
+sources = [
+  "据{loc}港务厅的档案记载，",
+  "《维斯塔海商旅志》载：",
+  "{date}，",
+  "据商会往来的信札所述，",
+  "码头告示栏上贴出了新的告示：",
+  "后世的史家在笔记中写道：",
+]
+
+# ───────────────────────────── 城市与港口 ─────────────────────────────
+
+[[archetypes]]
+key = "dock_fire"
+weight = 3
+titles = ["{loc}码头大火", "{loc}焦油仓夜火"]
+narratives = [
+  "{loc}的焦油仓在深夜起火，火借海风烧穿了半条码头街，修船的木料一夜之间变得奇货可居。",
+  "一场大火吞没了{loc}的旧货栈，工匠们忙着重建，城中生产大受拖累。",
+]
+effects = [
+  { effect = "location_supply", mult = [0.65, 0.85], days = [20, 45] },
+  { effect = "demand_shift", goods = ["timber", "planks", "rope", "sailcloth"], mult = [1.2, 1.5], days = [30, 60] },
+]
+
+[[archetypes]]
+key = "plague"
+weight = 2
+titles = ["{loc}热病蔓延", "{loc}闭门防疫"]
+narratives = [
+  "从外洋归来的船带来了热病，{loc}的市政厅下令闭门防疫，街市冷清，药铺前却排起了长队。",
+  "{loc}城中热病流行，行会暂停了集市，人们只肯为{good}掏钱。",
+]
+effects = [
+  { effect = "location_demand", mult = [0.7, 0.85], days = [20, 45] },
+  { effect = "location_supply", mult = [0.8, 0.9], days = [20, 45] },
+  { effect = "demand_shift", goods = ["herbs", "medicine", "quinine"], mult = [1.3, 1.5], days = [20, 45] },
+]
+
+[[archetypes]]
+key = "saints_festival"
+weight = 3
+titles = ["{loc}航海节", "{loc}守护圣人节"]
+narratives = [
+  "{loc}迎来一年一度的航海节，彩旗挂满桅杆，酒馆通宵不打烊，{good}成了人人争购的节礼。",
+  "为纪念三百年前在此登岸的阿尔坎舰队，{loc}举行盛大的游行，四乡的人涌进城里采买。",
+]
+effects = [
+  { effect = "location_demand", mult = [1.15, 1.35], days = [10, 25] },
+  { effect = "popularity", goods = ["wine", "candy", "tobacco", "cocoa", "tea", "rum", "chocolate", "cigars", "coffee"], days = [15, 30] },
+]
+
+[[archetypes]]
+key = "earthquake"
+weight = 1
+titles = ["{loc}地动", "{loc}震后重建"]
+narratives = [
+  "一场地动震塌了{loc}的防波堤和几座仓库，港务官估计要数月才能修复。",
+  "大地在黎明时分颤抖，{loc}的钟楼倒了一半，城中作坊纷纷停工。",
+]
+effects = [
+  { effect = "development", delta = [-5, -2] },
+  { effect = "location_supply", mult = [0.7, 0.85], days = [20, 40] },
+]
+
+[[archetypes]]
+key = "arcan_ruins"
+weight = 2
+titles = ["{loc}郊外发现古迹", "阿尔坎遗迹出土"]
+narratives = [
+  "挖渠的工人在{loc}城外掘出了阿尔坎帝国时代的石柱与铭文，学者与收藏家蜂拥而至，城里一时热闹非凡。",
+  "{loc}近郊的沙丘下露出一座阿尔坎神庙的穹顶，港口因此多了许多慕名而来的访客。",
+]
+effects = [
+  { effect = "location_demand", mult = [1.1, 1.3], days = [15, 30] },
+  { effect = "development", delta = [2, 5] },
+  { effect = "popularity", goods = ["amber", "coral", "pearl", "wine", "furniture", "relics", "jewelry", "porcelain"], days = [15, 30] },
+]
+
+[[archetypes]]
+key = "harbor_works"
+weight = 2
+titles = ["{loc}扩建码头", "{loc}新防波堤竣工"]
+narratives = [
+  "{loc}的议会拨款疏浚航道、加建泊位，工程所需的{good}被大量收购。",
+  "新防波堤在{loc}落成，港务长宣称今后再大的船也能靠岸。",
+]
+effects = [
+  { effect = "development", delta = [2, 5] },
+  { effect = "demand_shift", goods = ["timber", "planks", "pig_iron", "ironware", "rope", "sailcloth", "brass"], mult = [1.2, 1.5], days = [20, 45] },
+]
+
+# ───────────────────────────── 物产 ─────────────────────────────
+
+[[archetypes]]
+key = "good_year"
+weight = 3
+titles = ["{good}丰年", "丰收之年"]
+narratives = [
+  "春雨及时、秋阳充足，各地的{good}收成都比往年好得多，{loc}的集市上堆满了新货。",
+  "老农们说这是十年未见的好年景，{good}价格应声回落，{loc}的百姓也舍得花钱了。",
+]
+effects = [
+  { effect = "good_supply", goods = ["grain", "grapes", "sugarcane", "cotton", "tea", "maize", "potato", "coffee", "flax"], mult = [1.15, 1.4], days = [40, 80] },
+  { effect = "location_demand", mult = [1.1, 1.25], days = [10, 25] },
+]
+
+[[archetypes]]
+key = "blight"
+weight = 2
+titles = ["{good}枯萎病", "田间的灰霉"]
+narratives = [
+  "一种灰白色的霉斑在田间蔓延，{good}大片枯死，{loc}的粮商开始囤货观望。",
+  "连月阴雨之后，{good}的收成锐减，{loc}街头已有人抱怨物价。",
+]
+effects = [
+  { effect = "good_supply", goods = ["grain", "grapes", "cotton", "sugarcane", "tea", "cocoons", "maize", "potato", "coffee", "vanilla"], mult = [0.65, 0.85], days = [40, 90] },
+  { effect = "location_demand", mult = [0.8, 0.92], days = [20, 40] },
+]
+
+[[archetypes]]
+key = "mine_collapse"
+weight = 2
+titles = ["{loc}矿坑塌方", "{loc}矿难"]
+narratives = [
+  "{loc}山里的老矿坑塌了一段巷道，{good}的出产骤减，矿主们正急着收购坑木加固。",
+  "矿工行会为塌方中的死难者罢工三日，{loc}的{good}一时断了来源。",
+]
+effects = [
+  { effect = "supply_shift", goods = ["iron_ore", "copper_ore", "sulfur", "saltpeter", "gold_ore", "silver_ore", "kaolin", "quartz_sand"], mult = [0.5, 0.75], days = [30, 75] },
+  { effect = "demand_shift", goods = ["timber", "planks"], mult = [1.1, 1.3], days = [20, 45] },
+]
+
+[[archetypes]]
+key = "new_vein"
+weight = 2
+titles = ["{loc}发现新矿脉", "{loc}的富矿"]
+narratives = [
+  "探矿人在{loc}附近找到一条罕见的富矿脉，{good}的产量节节攀升，城里新开了好几家客栈。",
+  "{loc}的矿主挖到了古人废弃的矿道，里面的{good}成色极佳。",
+]
+effects = [
+  { effect = "supply_shift", goods = ["iron_ore", "copper_ore", "amber", "sulfur", "saltpeter", "gold_ore", "silver_ore", "gems", "star_crystal"], mult = [1.3, 1.7], days = [45, 90] },
+  { effect = "development", delta = [2, 4] },
+]
+
+[[archetypes]]
+key = "fish_run"
+weight = 2
+titles = ["{loc}渔汛", "银鳞涌入{loc}"]
+narratives = [
+  "成群的银鳞鱼在{loc}外海翻涌，渔船满载而归，盐场也跟着昼夜开工。",
+  "老渔夫说这是阿尔坎古历里记载过的“银潮”，{loc}的码头上鱼腥味飘了整整一个月。",
+]
+effects = [
+  { effect = "supply_shift", goods = ["fish", "salt", "whale_oil"], mult = [1.3, 1.6], days = [20, 45] },
+  { effect = "location_demand", mult = [1.05, 1.2], days = [10, 20] },
+]
+
+[[archetypes]]
+key = "court_fashion"
+weight = 2
+titles = ["宫廷新风尚", "{good}风靡上流社会"]
+narratives = [
+  "一位王妃在舞会上佩戴的{good}引得贵妇们争相效仿，各地商人连夜收货，{loc}更是一货难求。",
+  "诗人们在沙龙里赞美{good}的光泽，于是从内海到外洋，人人都想拥有一件。",
+]
+effects = [
+  { effect = "good_demand", goods = ["silk", "brocade", "pearl", "coral", "amber", "fur", "wine", "candy", "garments", "jewelry", "scarlet_cloth", "porcelain", "chocolate", "vanilla", "crystal_lamp"], mult = [1.15, 1.4], days = [30, 75] },
+  { effect = "popularity", goods = ["silk", "brocade", "pearl", "coral", "amber", "fur", "wine", "candy", "garments", "jewelry", "scarlet_cloth", "porcelain", "chocolate", "vanilla", "crystal_lamp"], days = [15, 30] },
+]
+
+[[archetypes]]
+key = "guild_innovation"
+weight = 1
+titles = ["工匠行会的新工艺", "新式织机传开"]
+narratives = [
+  "{loc}的工匠行会公开了一种新式水力织机的图样，各地作坊争相仿造，成品也更受欢迎了。",
+  "一位从东方归来的工匠带回了新的冶炼法，行会师傅们说这能省下三成炭火。",
+]
+effects = [
+  { effect = "industry_efficiency", mult = [1.08, 1.2], days = [60, 150] },
+  { effect = "good_demand", goods = ["cloth", "ironware", "furniture", "garments", "glass", "brass", "instruments"], mult = [1.1, 1.3], days = [30, 60] },
+]
+
+[[archetypes]]
+key = "bank_panic"
+weight = 1
+titles = ["钱庄挤兑", "{loc}银根吃紧"]
+narratives = [
+  "一家老牌钱庄的东家携款潜逃，{loc}的储户连夜排队取钱，各家银行随即收紧了放贷。",
+  "传言说王室要赖掉战争借款，放贷人纷纷抬高利息，{loc}的买卖也跟着冷清下来。",
+]
+effects = [
+  { effect = "interest_shift", mult = [1.1, 1.25], days = [45, 90] },
+  { effect = "location_demand", mult = [0.85, 0.95], days = [15, 30] },
+]
+
+# ───────────────────────────── 海上 ─────────────────────────────
+
+[[archetypes]]
+key = "storm_front"
+weight = 3
+titles = ["{region}风暴季", "黑云压向{region}"]
+narratives = [
+  "老水手看着天边的铁灰色云墙直摇头：{region}的风暴季提前来了，{loc}的船只大多留港避风。",
+  "接连几场风暴扫过{region}，{loc}的灯塔守夜人说他从没见过这么高的浪。",
+]
+effects = [
+  { effect = "region_storm", mult = [1.4, 1.8], days = [25, 50] },
+  { effect = "location_supply", mult = [0.85, 0.95], days = [15, 30] },
+]
+
+[[archetypes]]
+key = "calm_seas"
+weight = 2
+titles = ["{region}风平浪静", "晴好的航海季"]
+narratives = [
+  "今年{region}的季风格外温顺，领航员们都说这是出海的好时节。",
+  "星象师宣称“巨人之门”的潮汐进入了百年一遇的平静期，{region}的船队纷纷扬帆。",
+]
+effects = [
+  { effect = "region_storm", mult = [0.55, 0.8], days = [25, 60] },
+]
+
+[[archetypes]]
+key = "privateers"
+weight = 2
+titles = ["{region}私掠船出没", "挂黑旗的快船"]
+narratives = [
+  "{region}上出现了挂黑旗的快船，据说它们持有{faction_a}签发的私掠委任状，{faction_b}的使节为此当庭抗议。",
+  "几艘商船在{region}失踪，水手们在酒馆里低声议论：是{faction_a}默许的私掠者干的。",
+]
+effects = [
+  { effect = "region_pirates", mult = [1.4, 1.8], days = [30, 60] },
+  { effect = "relation_shift", delta = [-10, -4] },
+]
+
+[[archetypes]]
+key = "naval_patrol"
+weight = 2
+titles = ["{faction_a}舰队巡海", "{region}清剿海盗"]
+narratives = [
+  "{faction_a}的巡航舰队开进{region}，焚毁了两处海盗窝点；为此加征的军费摊到了关税上。",
+  "{faction_a}海军在{region}悬赏捉拿海盗头目，商船总算可以放心夜航了。",
+]
+effects = [
+  { effect = "region_pirates", mult = [0.45, 0.7], days = [30, 75] },
+  { effect = "faction_tax", mult = [1.05, 1.15], days = [30, 60] },
+]
+
+# ───────────────────────────── 列国 ─────────────────────────────
+
+[[archetypes]]
+key = "royal_wedding"
+weight = 1
+titles = ["{faction_a}与{faction_b}联姻", "王室婚礼"]
+narratives = [
+  "{faction_a}的王子迎娶{faction_b}的公主，两国宣布互减关税以示友好，港口里挂满了两国的旗帜。",
+  "一场盛大的王室婚礼让{faction_a}与{faction_b}握手言欢，使节们在宴席上许诺开放更多商港。",
+]
+effects = [
+  { effect = "relation_shift", delta = [8, 20] },
+  { effect = "faction_tax", mult = [0.8, 0.92], days = [45, 90] },
+]
+
+[[archetypes]]
+key = "border_dispute"
+weight = 2
+titles = ["{faction_a}与{faction_b}边境纠纷", "界碑之争"]
+narratives = [
+  "一块阿尔坎时代的界碑被人挪动了位置，{faction_a}与{faction_b}各执一词，{faction_a}随即对往来商船加征关税。",
+  "{faction_b}的巡逻队扣押了{faction_a}的渔船，两国使节唇枪舌剑，海关也变得苛刻起来。",
+]
+effects = [
+  { effect = "relation_shift", delta = [-12, -5] },
+  { effect = "faction_tax", mult = [1.1, 1.25], days = [30, 60] },
+]
+
+[[archetypes]]
+key = "trade_charter"
+weight = 1
+titles = ["{faction_a}颁布通商特许状", "自由港敕令"]
+narratives = [
+  "{faction_a}的议会颁布通商特许状，外国商船在其港口只需缴纳半数的锚泊费。",
+  "为了与新大陆的贸易，{faction_a}宣布减免香料与布匹的关税，商人们奔走相告。",
+]
+effects = [
+  { effect = "faction_tax", mult = [0.75, 0.9], days = [60, 120] },
+]
+
+# ───────────────────────────── 新大陆的殖民地（殖民扩展追加）─────────────────────────────
+# 殖民地都属于玩家：负面效果的幅度保持温和（effects.toml 另有硬上限，新殖民地与困境中的殖民地不受负面效果）。
+
+[[archetypes]]
+key = "colony_bumper_harvest"
+weight = 2
+titles = ["{colony}大丰收", "{loc}的金色秋天"]
+narratives = [
+  "开垦第二年的土地终于回报了汗水，{colony}的谷仓堆得冒了尖，拓荒者们在栅栏里点起篝火跳舞。",
+  "新大陆的阳光与雨水恰到好处，{colony}的田垄一眼望不到头，连老农都说故乡没见过这样的收成。",
+]
+effects = [
+  { effect = "colony_output", buildings = ["farm", "plantation", "fishery"], mult = [1.15, 1.35], days = [30, 60] },
+  { effect = "colony_morale", delta = [3, 8] },
+]
+
+[[archetypes]]
+key = "colony_pests"
+weight = 1
+titles = ["{colony}田间虫害", "{loc}的青翅甲虫"]
+narratives = [
+  "一群从未见过的青翅甲虫落进了{colony}的田里，拓荒者们连夜点火熏赶，收成还是折了一截。",
+  "{loc}连下了半个月的雨，田垄里的根茎烂了不少，好在谷仓里还有余粮。",
+]
+effects = [
+  { effect = "colony_output", buildings = ["farm", "plantation"], mult = [0.8, 0.9], days = [20, 40] },
+]
+
+[[archetypes]]
+key = "colony_artisans"
+weight = 2
+titles = ["工匠抵达{colony}", "{colony}来了新师傅"]
+narratives = [
+  "一船从旧世界来的木匠、铁匠与酿酒师在{loc}上岸，{colony}的工棚里从此叮当不息。",
+  "行会的学徒们听说新大陆缺手艺人，结伴渡过晨星洋，{colony}的作坊一下子热闹起来。",
+]
+effects = [
+  { effect = "colony_output", buildings = ["all"], mult = [1.1, 1.25], days = [45, 90] },
+]
+
+[[archetypes]]
+key = "colony_migrant_wave"
+weight = 2
+titles = ["移民涌向{colony}", "{colony}的新面孔"]
+narratives = [
+  "旧世界的饥荒迫使许多农户变卖家产，传单上说{colony}有地可耕，于是一船又一船的移民驶向{loc}。",
+  "一位游方牧师在内海各港宣讲新大陆的富饶，听众里不少人当场报名，前往{colony}开荒。",
+]
+effects = [
+  { effect = "colony_growth", mult = [1.2, 1.5], days = [45, 90] },
+  { effect = "colony_morale", delta = [2, 6] },
+]
+
+[[archetypes]]
+key = "colony_fever_rumor"
+weight = 1
+titles = ["{colony}热病谣言", "{loc}的瘴气传闻"]
+narratives = [
+  "内海的码头上传言{loc}一带瘴气弥漫、热病横行，想去{colony}的移民纷纷退了船票。",
+  "一封寄错了地址的家书把{colony}写得十分凄凉，谣言传开，移民代理人的生意一落千丈。",
+]
+effects = [
+  { effect = "colony_growth", mult = [0.75, 0.9], days = [30, 60] },
+  { effect = "colony_morale", delta = [-6, -2] },
+]
+
+[[archetypes]]
+key = "colony_founders_day"
+weight = 1
+titles = ["{colony}开拓纪念日", "{colony}的篝火之夜"]
+narratives = [
+  "{colony}的居民在栅栏前竖起纪念第一批拓荒者的木碑，礼拜堂的钟敲了整整一个时辰。",
+  "一艘补给船带来了故乡的家书与一桶陈酿，{colony}的人们围着篝火读信，读着读着就唱起了歌。",
+]
+effects = [
+  { effect = "colony_morale", delta = [5, 10] },
+]
+
+# ───────────────────────────── 殖民竞赛与探险（殖民扩展追加）─────────────────────────────
+
+[[archetypes]]
+key = "rival_flag"
+weight = 1
+titles = ["{faction_a}在{loc}插旗", "{loc}易主"]
+narratives = [
+  "{faction_a}的一支小舰队抢先驶入{loc}，在海岬上竖起了王旗与界碑，宣布这里归其所有。",
+  "据说{faction_a}的总督连夜签发了特许状，一队拓荒者赶在别人之前登上了{loc}的海滩。",
+]
+effects = [
+  { effect = "site_claim" },
+]
+
+[[archetypes]]
+key = "sailors_tale"
+weight = 2
+titles = ["酒馆里的传说", "老水手的海图"]
+narratives = [
+  "{loc}酒馆里一位独眼老水手喝多了，拍着桌子说他年轻时在{region}见过{discovery}，只是再也找不到回去的路。",
+  "一张被海水泡皱的旧海图在{loc}的旧货摊上转手，图角潦草地写着“{discovery}”，墨迹指向{region}。",
+]
+effects = [
+  { effect = "discovery_rumor" },
+]

@@ -1,0 +1,237 @@
+# 三箱大理石（request_per_afan_de_ribera）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：佩尔·阿凡·德·里韦拉（per_afan_de_ribera，1509-01-01 生，1571 年卒，男），1559—1571 年那不勒斯副王（阿尔卡拉公爵、第二代塔里法侯爵）；cast：cast/historical_01_europe.toml。
+# 类型：复合（mixed）。五章：offer（报价）、storm（海上风暴）、customs（塞维利亚税关）、turn（彼拉多之家签收）、settle（副王的回信）。
+# 报价：L（来信）。窗口 1559-06-01 至 1570-12-31，出面的是那不勒斯副王府的古物书记（代理人，不进 cast），speaker 省略；auto=true。
+#   offer 写 family=c13_offer_naples、冷却 20 天，名声门槛 {kind="fame", ge=5}；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实背景：佩尔·阿凡 1559—71 年任那不勒斯副王，收藏罗马古物运回塞维利亚的侯爵府；“彼拉多之家”即塞维利亚的那座侯爵府，今存古像。
+#   三尊像写成一尊雅典娜、一尊谷神、一尊无头的着托加袍男像。古像的出土地不编；书记与管家都只写身份。
+# 依据·原创：押运的船与东南风、塞维利亚税吏的石料税、签收时稻草里的皮口袋与二十几枚罗马铜币、管家的话、梅诺卡的港湾。
+# 报酬：现金 cash 3650（turn 的 list 与 write 成功）、2200（quiet 与 write 失败）；pay 支付 300 打点税吏；唯一奖励 ancient_coin（只在 list 一支给）；
+#   名声 +5（只在 list 与 write 成功）；声望 spain +2；好感正向合计最多 18（看箱 2、海上办成 3、税关 license 3、签收 list 8、回信 2）；
+#   回忆 mem-request_per_afan_de_ribera-turn「稻草里的铜币」。货款另付：本次是押运，不付货款（goods_reimburse=0）。
+# 读的旗标：c13_main_noel（turn 的 noel 与 both 变体，只换正文；both 同时读 chipped，按 key 排序先于 chipped 与 noel 取用）。不读 c7_ 旗标；不设 c7_ 旗标。
+# 设的旗标：accepted（offer 的 inspect 与 sign 设）；declined（offer 回绝，终局）；checked（offer 开箱看过，storm 的 checked 变体读）；
+#   chipped（storm 的 hold 失败，turn 的 chipped 变体读）；slow（storm 的 shelter，customs 的 slow 变体读）；late（customs 超时，终局）；
+#   listed / asked / quiet（turn 的三条分支，settle 的三个变体各读一面）；done 与 partial（终局，都在 turn 的选项里设，settle 只换文字）。
+# 终局旗标只设一面：done 在 turn 的 list、write 成功里设；partial 在 quiet 与 write 失败里设。settle 的两个选项不设终局旗标。
+# 招牌话：“石头比人老实，它不会改口。”只在 offer 正文里由书记念信时出现一次。
+# 依赖：港口 naples（ports_west_med.toml）、seville（ports_iberia.toml）；势力 spain（factions/01_iberia.toml）；物品 ancient_coin（items/items_curio_02.toml）；
+#   技能 negotiation（skills.toml）；属性 seamanship / commerce / stewardship / eloquence。无需 B10b 改名。
+# 秘密：cast 里没有单列秘密；侍童在府里的事只在 turn 的 noel 变体里由管家一句话带到，不展开，不进见闻。
+# 写法注意：检定失败时结果文字取 fail 分支的 news（引擎如此），所以每个检定的 fail 都写了一句见闻式的结果。
+# 回忆插画清单：
+#   mem-request_per_afan_de_ribera-turn「稻草里的铜币」：侯爵府院子里三尊白像立着，稻草堆上摊着一只皮口袋，口袋口敞着，一枚铜币滚进石板缝里。
+
+[[tracks]]
+key = "request_per_afan_de_ribera"
+name = "三箱大理石"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["per_afan_de_ribera"]
+
+# 一、报价：那不勒斯码头上，书记拿着清单请你看箱子。
+[[tracks.chapters]]
+key = "offer"
+title = "封箱之前"
+text = "那不勒斯码头上并排放着三只钉死的松木箱，箱板上用红漆写着“塞维利亚，侯爵府”。副王府的古物书记拿着清单，一行一行念：雅典娜一尊，谷神一尊，还有一尊无头的着托加袍的男像。副王本人不出面，只在信里说话。封条是新的，蜡上印着副王府的徽记。书记把信纸抖平，念了其中一句：“石头比人老实，它不会改口。”信脚下还有一行拉丁文，书记没有译：“Saxa loquuntur.”然后请你在封箱之前看一眼，箱子一封上，就只能照清单上的数记账了。"
+mood = "mystic"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1559, 6, 1], to = [1570, 12, 31] }, { kind = "alive", person = "per_afan_de_ribera", value = true }, { kind = "fame", ge = 5 }]
+at = "naples"
+deadline = [1570, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_naples"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "inspect"
+text = "撬开箱盖，跟书记对着清单再看一遍"
+next = "storm"
+check = { attr = "stewardship", base = 35, per = 6 }
+fail = { next = "storm", effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 2 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_accepted" }], news = "那不勒斯码头上，副王府的书记开了两只箱子，天就黑了。第三只没开，书记说，反正封条是副王府的。" }
+effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 2 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_accepted" }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_checked" }]
+reply = "我把谷神的底座翻过来，底下有一道旧裂。书记把它写进了清单，又让人在裂口上垫了一层麻布。"
+news = "那不勒斯码头上，有人替副王府的古像查了箱，谷神的底座上找到一道旧裂，记进了清单。"
+
+[[tracks.chapters.choices]]
+key = "sign"
+text = "不开箱，照清单签字装船"
+next = "storm"
+effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 2 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_accepted" }]
+reply = "书记把清单的副本折好交给我，又把笔递过来。"
+news = "那不勒斯码头上，副王府的古物书记把三只松木箱签给了一条去塞维利亚的船，箱子没有开。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：大理石太沉，舱位留给别的货"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_declined" }]
+reply = "书记叹口气，去码头另一头找热那亚人的船。"
+news = "那不勒斯码头上，副王府的书记找不到肯押三尊大理石像的船，最后去了热那亚人那边。"
+
+# 二、海上：过了撒丁岛，三只箱子在底舱里吱呀作响。
+[[tracks.chapters]]
+key = "storm"
+title = "东南风"
+text = "过了撒丁岛，东南风一下子起来，船身横着挨浪。底舱里三只箱子吱呀作响，绑箱的绳子磨出了毛。我下去把手贴在最沉的那只箱板上，能摸到里面石头一下一下撞着木板。水手长跑下来，站在舱口问我：要不要把它推下海。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "per_afan_de_ribera", value = true }]
+objectives = [{ kind = "wait", days = 8 }]
+
+[[tracks.chapters.variants]]
+key = "checked"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_checked" }]
+text = "过了撒丁岛，东南风一下子起来，船身横着挨浪。底舱里三只箱子吱呀作响。我在那不勒斯的码头上开过箱子，知道谷神的底座上有一道旧裂，先一步下了舱，把手贴在谷神那只箱板上。水手长跟在后面，问要不要把最沉的那只推下海。"
+
+[[tracks.chapters.choices]]
+key = "hold"
+text = "加绳子，把箱子楔死在龙骨上，硬扛过去"
+next = "customs"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "customs", effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = -2 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_chipped" }], news = "撒丁岛外那夜风大，一条往西班牙去的船底舱裂了一只箱子，里面一尊无头的石像磕掉了手肘。" }
+effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 3 }]
+reply = "我让人加了绳子，把三只箱子楔死在龙骨上，一整夜没人合眼。天亮时三只箱子都还在原地。"
+
+[[tracks.chapters.choices]]
+key = "shelter"
+text = "掉头躲进梅诺卡的港湾，等风过去"
+next = "customs"
+effects = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_slow" }]
+reply = "我们掉头进了梅诺卡的港湾，在那里等了五天。风停时，箱子一只也没动。"
+
+# 三、税关：塞维利亚的税吏要开箱估价。
+[[tracks.chapters]]
+key = "customs"
+title = "照石料抽税"
+text = "塞维利亚的税吏要开箱估价，说大理石也是石料，照石料抽税。三只箱子一开，像要从头再包一遍。我把副王府的通行文书摊在桌上，税吏只看箱子，手指敲着箱板。税吏的书记在旁边记账，笔尖划过纸面的声音很响，押船的水手蹲在箱边，嘴里念着副王府的名字，像是在给自己壮胆。"
+speaker = "captain"
+at = "seville"
+mood = "tense"
+when = [{ kind = "alive", person = "per_afan_de_ribera", value = true }]
+objectives = [{ kind = "at", at = "seville", text = "在塞维利亚港" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = -3 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_late" }, { kind = "letter", person = "per_afan_de_ribera", text = "副王府书记代笔：等不到你，三箱石像已改由别的船运走。这件事到此为止，不必再来塞维利亚的税关找人。" }] }
+
+[[tracks.chapters.variants]]
+key = "slow"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_slow" }]
+text = "塞维利亚的税吏要开箱估价，说大理石也是石料，照石料抽税。我们晚到了五天，税册已经换了新的一本，税吏翻到新的一页，说要先开箱。我把副王府的通行文书摊在桌上，他只看箱子。"
+
+[[tracks.chapters.choices]]
+key = "license"
+text = "拿出副王府的通行文书，跟他讲豁免的条款"
+next = "turn"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "文书上那几条豁免，我念不清楚，念岔了反倒坏事。"
+effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 3 }]
+reply = "税吏把文书翻了两遍，挥手放行。"
+news = "塞维利亚的税关里，一个税吏放过了一船石像，文书上的豁免条款他念得一字不差。"
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "塞一点钱，请他只看一箱"
+next = "turn"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "身上的现钱不够塞进税吏手里的数。"
+effects = [{ kind = "cash", value = -300 }]
+reply = "他只撬开雅典娜那一箱，看了一眼就钉回去。"
+news = "塞维利亚港的税关，一个税吏收了钱，只撬开一只箱子，说石头不值得多看。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟他算一笔账：开箱弄坏了像，赔的是侯爵的东西"
+next = "turn"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "turn", effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = -2 }], news = "塞维利亚税关里，三只大理石箱全部撬开，一个下午才钉回去，税吏的脸色很难看。" }
+effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 2 }]
+reply = "税吏想了想侯爵府的门第，在单子上写了“免验”。"
+news = "塞维利亚税关的单子上，侯爵府那三只大理石箱注了“免验”，税吏还替门第说了句好话。"
+
+# 四、签收：彼拉多之家的院子，稻草底下一只皮口袋。
+[[tracks.chapters]]
+key = "turn"
+title = "稻草底下的口袋"
+text = "“彼拉多之家”的院子里，管家拿着收据等我签字。他一页一页对着清单念，念到“三尊”时停了一下。三尊像立起来以后，我在最后一只箱子的稻草底下摸到一只皮口袋，里面是二十几枚罗马铜币，清单上没有。管家也看见了。"
+speaker = "captain"
+at = "seville"
+mood = "mystic"
+when = [{ kind = "alive", person = "per_afan_de_ribera", value = true }]
+
+[[tracks.chapters.variants]]
+key = "chipped"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_chipped" }]
+text = "“彼拉多之家”的院子里，管家先看了那块磕掉的手肘，叹了口气，才拿着收据等我签字。三尊像立起来以后，我在最后一只箱子的稻草底下摸到一只皮口袋，里面是二十几枚罗马铜币，清单上没有。管家也看见了。"
+
+[[tracks.chapters.variants]]
+key = "noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "“彼拉多之家”的院子里，管家盯着我看了半晌，认出是府里从前的那个侍童，只说了一句：“长高了。”然后才拿着收据等我签字。三尊像立起来以后，我在最后一只箱子的稻草底下摸到一只皮口袋，里面是二十几枚罗马铜币，清单上没有。管家也看见了。"
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_chipped" }, { kind = "flag", flag = "c13_main_noel" }]
+text = "“彼拉多之家”的院子里，管家盯着我看了半晌，认出是府里从前的那个侍童，只说了一句：“长高了。”然后先看了那块磕掉的手肘，叹了口气，才拿着收据等我签字。三尊像立起来以后，我在最后一只箱子的稻草底下摸到一只皮口袋，里面是二十几枚罗马铜币，清单上没有。管家也看见了。"
+
+[[tracks.chapters.choices]]
+key = "list"
+text = "把口袋写进收据，原样交给管家"
+next = "settle"
+effects = [{ kind = "cash", value = 3650 }, { kind = "item", item = "ancient_coin", qty = 1 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "affinity", person = "per_afan_de_ribera", value = 8 }, { kind = "memory", memory = "mem-request_per_afan_de_ribera-turn", title = "稻草里的铜币" }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_listed" }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_done" }]
+reply = "管家添了一行字，数了两遍，又从里面挑出一枚放进我手心：“侯爵吩咐过，押运的人该有一枚。”"
+news = "塞维利亚的彼拉多之家，管家把稻草里的一袋罗马铜币写进了收据，院子里的人都看见了。"
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "只签三尊像，口袋私下递给管家"
+next = "settle"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "per_afan_de_ribera", value = 2 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_quiet" }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_partial" }]
+reply = "管家把口袋揣进袖子，收据上只有三行。"
+news = "塞维利亚的彼拉多之家，三尊石像立进了院子，管家的袖子鼓了一块，收据上只有三行字。"
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "请管家写信问那不勒斯：这口袋是谁放的"
+next = "settle"
+check = { attr = "eloquence", base = 35, per = 6 }
+fail = { next = "settle", effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "per_afan_de_ribera", value = 1 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_quiet" }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_partial" }], news = "彼拉多之家的管家想问一句，被府里的人挡回去：这是府里的事，不劳外人。口袋收下了，收据只写三行。" }
+effects = [{ kind = "cash", value = 3650 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "affinity", person = "per_afan_de_ribera", value = 5 }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_asked" }, { kind = "flag", flag = "c13_request_per_afan_de_ribera_done" }]
+reply = "管家答应写一封信去那不勒斯，问清口袋是谁放的。收据照旧，钱也照付。"
+news = "塞维利亚的彼拉多之家，管家要写信去那不勒斯，问那袋罗马铜币是谁放的。"
+
+# 五、回信：两个月后，副王的亲笔信。
+[[tracks.chapters]]
+key = "settle"
+title = "副王的回信"
+text = "两个月后，那不勒斯来了一封副王的亲笔信，没有抬头，只有正文。信里他问：“以后还走不走那不勒斯？”"
+mood = "tender"
+when = [{ kind = "alive", person = "per_afan_de_ribera", value = true }]
+objectives = [{ kind = "wait", days = 60 }]
+
+[[tracks.chapters.variants]]
+key = "v1_listed"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_listed" }]
+text = "两个月后，那不勒斯来了一封副王的亲笔信。信上说，那袋铜币是古物书记顺手塞进箱子的，正好补进他的钱币柜：“那几枚我让人一个个看过，成色都不差。古物书记做事细。”末了他问你以后还走不走那不勒斯。"
+
+[[tracks.chapters.variants]]
+key = "v2_asked"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_asked" }]
+text = "两个月后，那不勒斯来了一封副王的亲笔信。管家问的那件事，他答得很快，一页纸答了三条，口气里有一点高兴：“管家问得仔细，我喜欢这样的人。那袋铜币是我让人放的，押船的人本该有一枚。”末了他问你以后还走不走那不勒斯。"
+
+[[tracks.chapters.variants]]
+key = "v3_quiet"
+when = [{ kind = "flag", flag = "c13_request_per_afan_de_ribera_quiet" }]
+text = "两个月后，那不勒斯来了一封副王的亲笔信。信的开头他问的只有一件事：“三尊像立在院子哪一边？”信上没有别的话。末了他才问你以后还走不走那不勒斯。"
+
+[[tracks.chapters.choices]]
+key = "yes"
+text = "回信说还会去那不勒斯"
+next = "done"
+effects = [{ kind = "affinity", person = "per_afan_de_ribera", value = 2 }]
+reply = "下一封信是古物书记写的，开了一张新清单。"
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不回信"
+next = "done"
+reply = "信收进箱底。"

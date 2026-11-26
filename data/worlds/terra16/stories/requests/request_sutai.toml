@@ -1,0 +1,232 @@
+# 请托：交给长老的粮（request_sutai）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：苏泰太后（sutai，生年不详，女），察哈尔林丹汗的遗孀、额哲的母亲；势力 chahar，身份档 3。cast：cast/historical_09_liaodong.toml。
+# 类型：送货（deliver）。四章：offer（报价）→ deliver（河岸上的官，交货）→ settle（结谢礼，粮由长老拉走）或 settle_taken（结谢礼，粮过了官手）；
+#       没有 stage 章，因此没有 window 与 default。brief 规划三章；settle 按“清白／被扣”拆成两章（用 next 路由，不在选项上读自己设的旗标）。
+# 报价：L（来信／代理人）。太后在沈阳不下港口，出面的是她帐下的老宰桑与一位通事；auto=true，offer 在牛庄（niuzhuang）；
+#       offer 写 family=c13_offer_niuzhuang、冷却 20 天；deadline 为窗口止日（1580-09-30），timeout 直接 failed，不写见闻。
+# 窗口：太后的日程只有 1580 年。offer 1580-03-01..09-30；交货绝对期限 1580-11-30（辽东湾封冻）；settle 期限 1580-12-31。
+# 依据·史实：察哈尔部归附后金（1635）→ 本世界线平移为 1580（TERRA16 §10.5，整体提前约 55 年）；辽东湾的封冻期在十二月到次年二三月；
+#       砖茶是蒙古人的日用，缺不得；牛庄是辽河口的谷物与盐、鱼的集散地。
+# 依据·辽东战役链：只写人、书、粮与家信；不运兵器、火药、火炮、铁料，不传会改变战局的军情；
+#       请托的效果只有现金、好感、旗标、名声、少量声望与回忆，不改战役变量，不给 jianzhou 加声望。
+# 依据·原创：老宰桑与通事（不具名，不新建 cast）、马尾穗子、打结的毛绳、三位长老、金国的小官与木牌、牛庄河岸上的空车。
+#       全篇一字不提那方印、林丹汗的狂妄与“投降”；额哲只写“孩子”。
+# 秘密：cast 里苏泰的印信一项本请托不碰。tea 选项的“明年的约”不设旗标、不开新轨道，只是一句话。
+# 待核：无（正文一律用传闻口吻，没有引用原文）。
+# 商品：稻米 rice 三十袋 + 茶 tea 八箱，运到牛庄（货款在 deliver 章付，所有选项都付；goods 目标章回应任一选项都会扣货）。
+#       米在釜山、鹿儿岛、府内等港有，茶在月港、福州、澳门有——offer 正文里点了这几处地名，牛庄只卖谷物、盐、鱼、木材。
+# 技能：lang_mongolian（skills.toml 已有）；检定属性 eloquence。
+# 读的旗标：无（本请托没有 gate_main，变体也不读 c13_main_*）。
+# 设的旗标：c13_request_sutai_accepted / declined / clean / taken / late / done / partial。
+#       终局旗标每条路径只设一面（declined / late / done / partial）；分支旗标 accepted、clean、taken 共三面，clean 与 taken 只设不读。
+#       不设 c7_ 旗标；不写 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 来信：全轨道两封——deliver 超时一封（brief 要求）、settle 超时一封；settle_taken 超时只设旗标，不再写信。
+# 报酬：货款 1050（deliver 给一次）；谢礼最多 3650（settle 给一次，被扣的路径 1800）；好感最多 +13；声望 chahar +3；名声 +5；回忆一张。不发物品。
+# 依赖：港口 niuzhuang（ports_east_asia.toml）；货物 rice、tea；人物 sutai；势力 chahar。无需 B10b 改名。
+# 缺省走向（玩家什么也不做）：offer 到 1580-09-30 超时，走 failed，无见闻、不扣钱。
+# 回忆插画清单：
+#   mem-request_sutai-settle「雪地帐子间的砖茶」：雪地里一排毡帐，帐门前的粗布上摆着一块掰开的砖茶，旁边放着一条打满结的毛绳。
+
+[[tracks]]
+key = "request_sutai"
+name = "交给长老的粮"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sutai"]
+
+# 一、报价：牛庄河岸。老宰桑牵着两匹瘦马，通事替他说话。
+[[tracks.chapters]]
+key = "offer"
+title = "马尾的穗子"
+text = "牛庄的河岸上，我的船刚系好缆，一个老蒙古人牵着两匹瘦马站在跳板头，一匹马正啃着缆桩上的草绳。他是察哈尔太后帐下的宰桑，身边跟着一个说汉话的通事。马鞍上挂着一串马尾编的穗子，梢上的毛磨得发白。通事替他开口：“太后的部众，帐子搭在沈阳城外的雪地里，多是妇人、老人和孩子。粮撑不过冬天，砖茶一块也没有了。”老宰桑看着我的船，又说了一句，通事照译：“太后说：粮交给长老，不交给任何一边的官。官手里过一道，帐子就少一顶。”他要三十袋稻米、八箱茶，十一月底河口冻住以前送到这里。牛庄的市上只有谷子、盐和鱼：米得去釜山、鹿儿岛那一带找，茶要到月港、福州或澳门。"
+when = [
+  { kind = "date", from = [1580, 3, 1] },
+  { kind = "age", ge = 17 },
+  { kind = "fame", ge = 30 },
+]
+at = "niuzhuang"
+mood = "sad"
+deadline = [1580, 9, 30]
+family = "c13_offer_niuzhuang"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：三十袋米、八箱茶，十一月底以前运到牛庄"
+next = "deliver"
+reply = "老宰桑解下马鞍上的一条穗子，踮起脚系在我的桅杆上，系得很紧。“长老们认这个。”通事说，又添了一句：河口十一月底结冰，冰上走得了车，走不了船，过了日子，粮运到了也进不了河。"
+effects = [
+  { kind = "affinity", person = "sutai", value = 2 },
+  { kind = "flag", flag = "c13_request_sutai_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这一趟跑不开"
+next = "failed"
+reply = "老宰桑没有争。他把缰绳在手腕上绕了两圈，牵着马走了，马蹄踩在河滩的泥里，一步一个浅坑。走出十几步，他回过头，又看了一眼我的船，看的是吃水线。"
+effects = [{ kind = "flag", flag = "c13_request_sutai_declined" }]
+
+# 二、交货：货卸上河岸，三位长老带着空车等着，金国的小官也来了。
+[[tracks.chapters]]
+key = "deliver"
+title = "河岸上的官"
+text = "米袋和茶箱一件件卸上河岸。三位察哈尔的长老已经等在那里，身后拉来几辆空车，车辕上的毛皮磨得发亮。他们一眼就看见了我桅上那条马尾穗子，谁也没说话。我刚数完二十袋米，一个金国的小官带着四个兵从土路上走过来，手里拿着一块刻满道道的木牌。“归附的部众，粮草一律由官里登记分发。”他说得很熟，像说过很多遍，“货先放这儿，数目登了，再按帐子配。”最年长的长老压低嗓门，用蒙古话对同伴说了一句，我只听懂“帐子”两个字。三个人都看着我，没有一个人看小官。"
+when = [{ kind = "alive", person = "sutai", value = true }]
+objectives = [
+  { kind = "goods", good = "rice", qty = 30, at = "niuzhuang", text = "三十袋米运到牛庄" },
+  { kind = "goods", good = "tea", qty = 8, at = "niuzhuang", text = "八箱茶运到牛庄" },
+]
+at = "niuzhuang"
+speaker = "captain"
+mood = "tense"
+deadline = [1580, 11, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_sutai_late" },
+  { kind = "letter", person = "sutai", text = "通事代笔。河口冻了，船进不来，三位长老在岸上白等了一个月。粮的事，明年再说——明年还在的帐子，再说。" },
+]
+
+[[tracks.chapters.choices]]
+key = "elders"
+text = "跟小官周旋：这是商货，登个数就让长老拉走"
+next = "settle"
+reply = "我把小官拉到木牌的另一头，说这些货是我从海上运来的，船钱货钱都有账，他想登，我陪他一袋一袋数。他的拇指在木牌的刻痕上蹭来蹭去，几个兵的目光落在茶箱上。数到最后一箱，他抬头看了一眼长老们的空车，在木牌上刻下一道，朝岸边挥了挥手。三位长老的车一辆接一辆倒到跳板前，米袋上了车，一袋不少。"
+news = "牛庄河岸上，一个船长跟金国的小官周旋了小半个时辰，米和茶登了数，被察哈尔的长老们拉走了。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "cash", value = 1050 },
+  { kind = "affinity", person = "sutai", value = 3 },
+  { kind = "flag", flag = "c13_request_sutai_clean" },
+]
+
+[tracks.chapters.choices.fail]
+next = "settle_taken"
+news = "牛庄河岸上，金国的小官扣下了三成粮，说官里也是替你们分，长老们站在空车旁看着。"
+effects = [
+  { kind = "cash", value = 1050 },
+  { kind = "flag", flag = "c13_request_sutai_taken" },
+]
+
+[[tracks.chapters.choices]]
+key = "mongol"
+text = "用蒙古话跟长老们当场按帐数分"
+next = "settle"
+reply = "我蹲下来，用蒙古话问最年长的那位：几顶帐子，几口人。他愣了一下，报出数来，另两位帮着补。我们就在岸上按帐子分，一袋米压一道草绳，一块块砖茶掰开，按帐子摆成一排，赶车的人念着帐主的名字。小官喘着气赶到岸边时，车已经上了土路，岸上只剩几根草绳。"
+news = "牛庄河岸上，一个船长用蒙古话跟察哈尔的长老们按帐子分了粮，金国的小官赶到时，车已经上了土路。"
+requires = [{ kind = "skill", skill = "lang_mongolian", ge = 60 }]
+hint = "长老们压低嗓门说的蒙古话，你只听得懂“帐子”一个词。"
+effects = [
+  { kind = "cash", value = 1050 },
+  { kind = "affinity", person = "sutai", value = 3 },
+  { kind = "flag", flag = "c13_request_sutai_clean" },
+]
+
+[[tracks.chapters.choices]]
+key = "official"
+text = "交给官里登记，免得惹事"
+next = "settle_taken"
+reply = "小官把木牌翻到没刻过的一面，兵们开始往他们自己的车上搬。长老们没说话，赶着空车走了。最年长的那位走过我的船边，抬头看了一眼桅上的穗子，脚步没停。"
+news = "牛庄河岸上，一船米和茶全交给了金国的小官登记，察哈尔的长老们赶着空车走了。"
+effects = [
+  { kind = "cash", value = 1050 },
+  { kind = "affinity", person = "sutai", value = -2 },
+  { kind = "flag", flag = "c13_request_sutai_taken" },
+]
+
+# 三、结谢礼（粮由长老拉走）：二十天后，老宰桑带着打了结的毛绳回来。
+[[tracks.chapters]]
+key = "settle"
+title = "帐子之间"
+text = "二十天后，老宰桑又牵着那两匹马来了，通事跟在后头。马胖了一点，肋条不那么数得清了。他先把一条毛绳递过来，绳上一个结一顶帐子，他一个个点给我看，从头点到尾，没有漏的。通事开口：“帐子一顶没少。太后收了这份粮，也叫人看见她收了。在沈阳，被人看见，也是一种凭据。”老宰桑把一只沉甸甸的布袋放在跳板上，等我说话。"
+when = [{ kind = "alive", person = "sutai", value = true }]
+objectives = [
+  { kind = "wait", days = 20 },
+  { kind = "at", at = "niuzhuang" },
+]
+at = "niuzhuang"
+speaker = "captain"
+mood = "tender"
+news = "牛庄河口有条船给察哈尔的帐子送了米和茶，粮是长老们自己拉走的。"
+deadline = [1580, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_sutai_late" },
+  { kind = "letter", person = "sutai", text = "通事代笔。粮收下了，帐子都在。河口封了冻，宰桑等不到你，把穗子留在牛庄的鱼行里托人转交。太后说，欠下的情，开春再算。" },
+]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下谢礼"
+next = "done"
+reply = "老宰桑把马尾穗子从桅上解下来，换了一条新的，新穗子的毛色浅些，是刚剪的。旧的那条他卷起来塞进怀里，对通事说了句话。通事笑了：“他说，旧的拿回去给长老们看，看它跑过了哪些港口。”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "sutai", value = 8 },
+  { kind = "reputation", faction = "chahar", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "memory", memory = "mem-request_sutai-settle", title = "雪地帐子间的砖茶" },
+  { kind = "flag", flag = "c13_request_sutai_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "tea"
+text = "谢礼不要，换明年开春再送一船茶的约"
+next = "done"
+reply = "通事译完，老宰桑想了很久，手在布袋口上按了一按，又松开。他说，太后从不许她兑现不了的约，今天这一条，他替她许了。他把布袋收回袖子，把毛绳留在跳板上，要我挂在舱里：开春来接茶的人，数一数结，就知道要备几顶帐子的份。"
+effects = [
+  { kind = "affinity", person = "sutai", value = 8 },
+  { kind = "reputation", faction = "chahar", value = 3 },
+  { kind = "fame", value = 5 },
+  { kind = "memory", memory = "mem-request_sutai-settle", title = "雪地帐子间的砖茶" },
+  { kind = "flag", flag = "c13_request_sutai_done" },
+]
+
+# 三·二、结谢礼（粮过了官手）：二十天后，毛绳上的结一个没少，可粮少了一截。
+[[tracks.chapters]]
+key = "settle_taken"
+title = "少了一截"
+text = "二十天后，老宰桑又牵着那两匹马来了，通事跟在后头。马还是瘦的。他递过来一条毛绳，绳上一个结一顶帐子，点到末尾，一顶没少，可点得很慢，有几个结，手指要停一停。通事开口：“帐子都在。粮过了官里的手，到帐子里的比卸上岸的少了一截，茶只够头两个月。太后还是叫人看见她收了，这就够她在沈阳站得住。”老宰桑把一只扁一些的布袋放在跳板上，没有看我，看着那两匹马。"
+when = [{ kind = "alive", person = "sutai", value = true }]
+objectives = [
+  { kind = "wait", days = 20 },
+  { kind = "at", at = "niuzhuang" },
+]
+at = "niuzhuang"
+speaker = "captain"
+mood = "sad"
+news = "牛庄河口有条船给察哈尔的帐子送了米和茶，粮过了官里的手，到帐子里的比卸下的少了一截。"
+deadline = [1580, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sutai_late" }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下谢礼"
+next = "done"
+reply = "老宰桑把马尾穗子从桅上解下来，换了一条新的。他一句话没说，只拍了拍我的胳膊，拍了两下，力气不小。通事在旁边低声补了一句：新穗子是昨晚编的，编到半夜。"
+effects = [
+  { kind = "cash", value = 1800 },
+  { kind = "affinity", person = "sutai", value = 4 },
+  { kind = "flag", flag = "c13_request_sutai_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "tea"
+text = "谢礼不收，只约明年开春再送一船茶"
+next = "done"
+reply = "老宰桑看了很久那只空了半边的茶箱，才开口，通事译得很慢：“太后不许她兑现不了的约。这一条，他先替太后许了。明年的船，他们自己来接。”他把毛绳留在跳板上，绳头系了个活扣。"
+effects = [
+  { kind = "affinity", person = "sutai", value = 6 },
+  { kind = "flag", flag = "c13_request_sutai_partial" },
+]

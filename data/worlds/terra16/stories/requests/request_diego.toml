@@ -1,0 +1,154 @@
+# 请托：港外的私掠船（request_diego）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：迭戈（diego，1540-02-22 生，男），塔里法侯爵府的侍童，侍童里剑术第一，家里穷得只剩一个姓；1559 年起在哈瓦那当军官。cast：cast/classmates_seville.toml；势力 spain；身份档 1。
+# 类型：打一仗（fight）。四章：offer（报价）、battle（海上一仗）、after（城堡工地边，打了仗的收尾）、after_lured（引进浅滩、没打仗的收尾）；done / failed 为终点。
+# 报价：T（当面）。人物按日程在哈瓦那卫所；auto=false，玩家用 ask:request_diego 启动；offer 不写 at，目标为在哈瓦那找到人。窗口 1571-01-01 至 1590-06-30（同学重逢之后开放）。
+# 进行中：battle 章 deadline_days=90，到期走 failed，来一封信，好感 -3，旗标 _late；after 与 after_lured 是普通章，可以一直等。
+# 依据·史实背景：1555 年法国人焚掠哈瓦那；拉富埃尔萨城堡 1558—1577 年间修建；加勒比的船队在哈瓦那集结回航；截西班牙船的私掠船是法国与英格兰的常客。私掠船是叙事人物，不写船名、船长名，只写它挂的国旗。
+# 依据·原创：迭戈的两条船、城堡工地、退潮与浅滩、护手、回信、被押进港的船。
+# 读的旗标：bond diego 至少 C（offer 的 variants，只读 C7 的重逢结果；不写 noel_unveiled 的任何事）。
+# 设的旗标：c13_request_diego_accepted（四条接法里接下的都设，检定失败的分支也设）、_lured（引进浅滩或算潮成功）、_fought（打了一仗）、_declined（回绝）、_late（超时）、_done（收尾）。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 1600、好感最多 +13、名声 +1、回忆一条（打仗收尾为 mem-request_diego-after；引进浅滩收尾为 mem-request_diego-after_lured，二者只会得到其一）。护手是正文里的物件，不发物品。
+# 依赖：港口 havana；技能 tide_reading（skills.toml）；属性 seamanship、arms；人物 diego。无需 B10b 改名，无主线门禁。
+# 秘密：马上套环那一场不写，洛伦索与套环一概不提；见闻里不写他的私事，也不写他手上的伤怎么来的以外的话。
+# 回忆插画清单：
+#   mem-request_diego-after「缠着布的手」：哈瓦那城堡工地边，石墩上摊着赏钱，迭戈的左手缠着布，布上渗着一点褐色。
+#   mem-request_diego-after_lured「押进港的船」：浅滩里降下的私掠船被拖进哈瓦那港，迭戈站在工地边，手上没有伤。
+
+[[tracks]]
+key = "request_diego"
+name = "港外的私掠船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["diego"]
+
+# 一、等落单的船：哈瓦那城堡工地边，他冷着脸看海。
+[[tracks.chapters]]
+key = "offer"
+title = "等落单的船"
+text = "迭戈站在哈瓦那城堡工地边，背着搬石头的人，冷着脸看海。港外那条法国私掠船专等船队集结前落单的商船，已经截了两条。他受命去追，手下的两条船太慢，追不上。他没转头，眼底下青着，像几夜没睡，腰上的剑还没解下来。他只说：“你的船快。打一仗，或者——”他抬手指向港口东边的一片浅滩，“把它引进那里。我在礁后面等。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "diego", text = "在哈瓦那的卫所找到他" }]
+when = [{ kind = "date", from = [1571, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "diego", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "diego", level = "C" }]
+text = "迭戈站在哈瓦那城堡工地边，见你走过来，先皱了皱眉。“左脚，别让我提醒第二次。”他说完才转向海，“港外那条法国私掠船，专等落单的商船，已经截了两条。我的两条船太慢，追不上它。你的船快。打一仗，或者——”他抬手指向港口东边的一片浅滩，“把它引进那里。我在礁后面等。”"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "接下，出海跟它打一仗。"
+next = "battle"
+reply = "他点点头，转身去调他的两条船。走出几步，他又回过头：“别死在海上。”停了停，又补一句，“我是说，别让它跑了。”你应了一声，他已经走远了。"
+effects = [{ kind = "affinity", person = "diego", value = 2 }, { kind = "flag", flag = "c13_request_diego_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "lure"
+text = "接下，挂上商旗，装成落单的商船。"
+next = "after_lured"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "你挂着商船的旗在港外晃了两天。第三天它追上来，一路追进了浅滩，搁在那里动弹不得。迭戈的两条船从礁后面出来，没放几炮，它就降了。他站在礁石边看着被拖走的船，没有说话。"
+effects = [{ kind = "affinity", person = "diego", value = 3 }, { kind = "flag", flag = "c13_request_diego_accepted" }, { kind = "flag", flag = "c13_request_diego_lured" }]
+fail = { next = "battle", effects = [{ kind = "affinity", person = "diego", value = -2 }, { kind = "flag", flag = "c13_request_diego_accepted" }], news = "哈瓦那港外，一条挂商旗的船在海上晃了两天，那条法国私掠船没上当，绕过去追上来，卫所的两条船只好迎上去。" }
+
+[[tracks.chapters.choices]]
+key = "tide_trap"
+text = "接下，算准退潮，在它进港的那夜困住它。"
+next = "after_lured"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "哈瓦那的潮差太小，你算不出它会在哪一刻搁浅"
+reply = "退潮那一刻，私掠船的龙骨擦上了水道里的沙，帆还鼓着，船身已经卡死在沙里。迭戈的人连夜围了上去，火把一直烧到天亮。他站在岸上，一句话也没说，只把手里的绳子递给了你。"
+effects = [{ kind = "affinity", person = "diego", value = 3 }, { kind = "flag", flag = "c13_request_diego_accepted" }, { kind = "flag", flag = "c13_request_diego_lured" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "私掠船的事，是卫所的差事。"
+next = "failed"
+reply = "“那就看着。”他冷冷地说，转身走了，一步也没停。他的两条船还停在港里，桅杆上挂着没收起的旗，风一吹就抖。你没有追上去，也没有回头。"
+effects = [{ kind = "flag", flag = "c13_request_diego_declined" }]
+
+# 二、港外的帆：私掠船出港，迭戈的船追不上，你打退了它。
+[[tracks.chapters]]
+key = "battle"
+title = "港外的帆"
+text = "港外的晨光里，私掠船的帆一张张升起来，船身压得低，跑得快。迭戈的两条船跟在你后面，很快就被它甩开了一截。他在旗舰上扯着嗓子喊：“别追太近，它船尾有炮！”你的船靠近时，它一侧的炮窗开了，烟散开以后，它的主帆已经破了一个大洞。你打退的那条船掉头往北去了。迭戈在后面骂了一句：“慢成这样，还好意思跟。”骂的是他自己的船。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "diego", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在海上打赢一场" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "diego", value = -3 }, { kind = "flag", flag = "c13_request_diego_late" }, { kind = "letter", person = "diego", text = "那条船走了。我的人追了三天，没追上。你的船，下回别让我等。——迭戈" }] }
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "不追远，回港报信，让船队早一天集结。"
+next = "after"
+reply = "你没再追，掉头回港报信。船队第二天一早就集结完了，那年再没有商船落单。迭戈的两条船跟在后面进港，他站在船头看了你一眼，只说了一个字：“嗯。”"
+news = "哈瓦那港外，一条法国私掠船被人打退了，帆上破了个大洞，掉头往北逃了。"
+effects = [{ kind = "affinity", person = "diego", value = 3 }, { kind = "flag", flag = "c13_request_diego_fought" }]
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "追到海峡口，看它往哪儿去。"
+next = "after"
+check = { attr = "arms", base = 20, per = 7 }
+reply = "你追到佛罗里达海峡口，看它往北走远了，才回头。迭戈的船在后面慢慢收帆。他问：“追到海峡口了？”你说是。他点了点头，没再问第二句，只把帽子摘下来，抖了抖上面的海水。"
+news = "哈瓦那的水手说，有一条船一路追到了佛罗里达海峡口，那条法国私掠船往北跑远了，破了的帆还没补。"
+effects = [{ kind = "affinity", person = "diego", value = 3 }, { kind = "flag", flag = "c13_request_diego_fought" }]
+fail = { next = "after", effects = [{ kind = "affinity", person = "diego", value = -2 }, { kind = "flag", flag = "c13_request_diego_fought" }], news = "哈瓦那的船坞里，一条船的船舷上多了个炮洞，船主说是追法国私掠船时挨的，追丢了。" }
+
+# 三、城堡工地边：赏钱、护手，他手上缠着布。打了仗的收尾。
+[[tracks.chapters]]
+key = "after"
+title = "城堡工地边"
+text = "迭戈在城堡工地边把赏钱数给你，数得很快，一枚也没有少。身后的工匠正把石块往墙上抬，墙上还留着昨夜的白灰。他的左手缠着布，布上渗着一点褐色。他说是追私掠船时被缆绳勒的，你看了一眼，他把手往袖子里缩了缩。“看什么看？练你的去。”他说完，从腰上解下一样东西，是一把旧剑的护手，铜的，磨得发亮。“剑断了，护手还能用。”他把护手往你这边推了推，“拿着。”"
+at = "havana"
+speaker = "captain"
+mood = "tense"
+news = "哈瓦那的城堡工地边，卫所的军官当着工匠的面，给一个船长数了赏钱。卫所的人说，迭戈的手还缠着布。"
+objectives = [{ kind = "at", at = "havana", text = "在哈瓦那" }, { kind = "person", person = "diego", text = "找到迭戈" }]
+when = [{ kind = "alive", person = "diego", value = true }]
+
+[[tracks.chapters.choices]]
+key = "take_guard"
+text = "收下护手。"
+next = "done"
+reply = "你把护手接过来。他说，上面刻着他赢过的每一场，每一道都是他自己刻的。“别数，数到天黑也数不完。”说完他转身去点人，背影还是那么僵。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "diego", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_diego_done" }, { kind = "memory", memory = "mem-request_diego-after", title = "缠着布的手" }]
+
+[[tracks.chapters.choices]]
+key = "bandage"
+text = "不收，先替他把手上的布重新缠好。"
+next = "done"
+reply = "他瞪了你一眼，没躲。你把布一圈圈缠紧，缠到他手指发白才停。缠完，他把赏钱又往前推了推：“护手先放我这儿，下回赢了再给你。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "diego", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_diego_done" }, { kind = "memory", memory = "mem-request_diego-after", title = "缠着布的手" }]
+
+# 四、浅滩里降下的船：没打仗，私掠船是被困住降的。收尾的话与打仗的不同。
+[[tracks.chapters]]
+key = "after_lured"
+title = "浅滩里降下的船"
+text = "没有打仗。那条私掠船是被困在浅滩里降的，船被拖进港，搁在城堡工地对面的码头边上。船上的炮已经卸下来，一门门摆在码头的石头上，工匠们绕着走。迭戈在工地边把赏钱数给你，手上没有伤。“不打也是赢。”他说，语气还是冷的。他从腰上解下一把旧剑的护手，铜的，磨得发亮，推了过来。你看他身后被押走的私掠船，他回过头：“看什么看？练你的去。”"
+at = "havana"
+speaker = "captain"
+mood = "tense"
+news = "哈瓦那的码头上，一条法国私掠船被押进了港，船上的炮卸了一地。浅滩里困住它的，据说是个船长。"
+objectives = [{ kind = "at", at = "havana", text = "在哈瓦那" }, { kind = "person", person = "diego", text = "找到迭戈" }]
+when = [{ kind = "alive", person = "diego", value = true }]
+
+[[tracks.chapters.choices]]
+key = "take_guard"
+text = "收下护手。"
+next = "done"
+reply = "护手在手里沉了一下。他没再开口，只看了一眼押船的人，点点头。护手上的刻痕有新有旧，有些已经磨得看不清了。他转身走了，没回头。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "diego", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_diego_done" }, { kind = "memory", memory = "mem-request_diego-after_lured", title = "押进港的船" }]
+
+[[tracks.chapters.choices]]
+key = "ask_ship"
+text = "不收，先问那条船怎么处置。"
+next = "done"
+reply = "“归卫所。炮拆下来，人关进城堡里，等总督府来审。”他说这话时没看船，看的是城堡的墙。“护手你还是拿着。船的事，别再问了。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "diego", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_diego_done" }, { kind = "memory", memory = "mem-request_diego-after_lured", title = "押进港的船" }]

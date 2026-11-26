@@ -1,0 +1,157 @@
+# 请托：一季的潜水（request_sisa_mullu）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：西萨·穆柳（sisa_mullu，1540-04-01 生，女），海菊蛤商人的女儿，钦查的学院同学；势力 peru，身份档 1。cast：cast/classmates_custom_chincha_rafts.toml。
+# 类型：去某处（go）。四章：offer（报价）、arrive（画圈的那一天）、report（一块木板）、report_partial（只记了一季的木板）。
+#   brief 写的是三章。report_partial 是多出来的一章：变体只能改文字，不能改报酬，所以“只记了一季”的分支用 next 进这一章，现金与终局旗标各自写在它的选项里。
+# 报价：V（到访）。人物从钦查下到卡亚俄港口，auto=true。offer 写 at=callao，when 为 1564-01-01 至 1580-06-30 的日期窗口与年龄门槛，deadline 为 1580-06-30，timeout 直接 failed，不写见闻。family c13_offer_callao，冷却 20 天。
+# 进行中：arrive 在通贝斯的岸上蹲满一个月（wait 30）才出现，deadline_days=120，超时走 failed，来信一封，好感 -3，旗标 _late。
+# 依据·史实背景：海菊蛤是安第斯沿海最贵的壳，自古从厄瓜多尔、通贝斯一带的暖水湾潜采，再南运。西班牙人来后，这门买卖仍由沿海的采壳人做。潜采的季节与深度是传闻口吻，待核。
+# 依据·原创：钦查的价目墙、西萨的木板与炭条、通贝斯的头人、年轻的采壳人、报价时的那只秤。
+# 秘密：收着的旧海菊蛤不写，见闻也不写。口头禅只在 report 章用一次。
+# 读的旗标：bond sisa_mullu C（offer 的变体，只读 C7 的重逢结果）。不读任何 c7_ 旗标，不设 c7_ 旗标。
+# 设的旗标：c13_request_sisa_mullu_accepted（offer 接下）、_declined（offer 回绝）、_full（arrive 问到整年的数）、_short（arrive 只记了一季）、_late（arrive 超时）、_done（report 收尾）、_partial（report_partial 收尾）。
+# 不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 1250（report 全年）、只记一季 750（report_partial）；好感最多 +13；名声 +1；技能 diving +20（只给一次）；回忆 mem-request_sisa_mullu-report。
+# 依赖：港口 callao、tumbes（ports_americas.toml）；技能 diving（skills.toml）；属性 eloquence；人物 sisa_mullu。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_sisa_mullu-report「立在墙边的木板」：货栈墙边立着一块画满道道的木板，最后一道旁边画着一个圈。
+
+[[tracks]]
+key = "request_sisa_mullu"
+name = "一季的潜水"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sisa_mullu"]
+
+# 一、价目墙的第一行：卡亚俄的货栈，她翻海菊蛤，问这筐壳是潜了几回才有的。
+[[tracks.chapters]]
+key = "offer"
+title = "价目墙的第一行"
+text = "卡亚俄的货栈里，西萨把一筐海菊蛤倒在桌上，一只一只翻过去，翻到底才抬头问卖主：“这筐壳，是潜了几回才有的？”卖主答不上来，只说壳是好壳。她没接话，又拿起一只。“我要在钦查的换货集上立一面价目墙，”她说，“每种壳的价钱后面写明采它要潜几回，一年里淹死过几个人。北边的海湾，没人去数过。今年有家秤压了分量，我当面就说了，说完还要人家当众再称一遍，所以我走不开。你去通贝斯，蹲在岸上一季，替我数。”"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "在卡亚俄的货栈找到西萨" }]
+when = [{ kind = "date", from = [1564, 1, 1], to = [1580, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "sisa_mullu", ge = 18 }]
+deadline = [1580, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_callao"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "sisa_mullu", level = "C" }]
+text = "卡亚俄的货栈里，西萨见你进门，先抓起你的手翻过来看，掌心，指节，一样不漏。“你的手没泡过水，这回泡一泡。”她把一筐海菊蛤推到你面前，一只一只翻过去，翻到底才抬头问卖主：“这筐壳，是潜了几回才有的？”卖主答不上来，只说壳是好壳。她没接话，又拿起一只。“我要在钦查的换货集上立一面价目墙，”她说，“每种壳的价钱后面写明采它要潜几回，一年里淹死过几个人。北边的海湾，没人去数过。今年有家秤压了分量，我当面就说了，说完还要人家当众再称一遍，所以我走不开。你去通贝斯，蹲在岸上一季，替我数。”"
+
+[[tracks.chapters.choices]]
+key = "go_count"
+text = "接下，去通贝斯岸上数一季的潜水。"
+next = "arrive"
+reply = "她给我一块刮平的木板和一截炭条，手指在板边敲了两下：一回潜水画一道，上不来的人，画个圈，别图省事。"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "flag", flag = "c13_request_sisa_mullu_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "接下，先问她：价目墙上写死人数，买主会不会不买了？"
+next = "arrive"
+reply = "“不买，就让他们自己去潜。”她说完又软了一点，说她要的是价钱里算上人命，不拿来吓唬人。买主看了数，自己会掂量。"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "flag", flag = "c13_request_sisa_mullu_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "蹲一季太久，我的船等不了。"
+next = "failed"
+reply = "她没有再劝，把那截炭条收回围裙口袋。“那我明年自己去，蹲一季。今年的价目墙先空着一行，你别管它。”"
+effects = [{ kind = "flag", flag = "c13_request_sisa_mullu_declined" }]
+
+# 二、画圈的那一天：通贝斯的海湾，一个年轻的采壳人下去以后很久没有上来。
+[[tracks.chapters]]
+key = "arrive"
+title = "画圈的那一天"
+text = "通贝斯的海湾水色发绿。采壳人腰上系着石头沉下去，上来时手里攥着带刺的红壳。你每见一回上来，就在木板上画一道，画满一面换一面。头人坐在礁石上，指着北边最深的那片礁说：“三个人下去，有一个耳朵会坏。”蹲满一个月的那天早上，一个年轻的采壳人下去以后，很久没有上来。拉绳的人把绳子绷得直直的，岸上没有人说话。"
+speaker = "captain"
+mood = "sad"
+at = "tumbes"
+objectives = [{ kind = "at", at = "tumbes", text = "在通贝斯的岸上" }, { kind = "wait", days = 30, text = "蹲满一个月" }]
+when = [{ kind = "alive", person = "sisa_mullu", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "sisa_mullu", value = -3 }, { kind = "flag", flag = "c13_request_sisa_mullu_late" }, { kind = "letter", person = "sisa_mullu", text = "「通贝斯的数，我托北来的筏子问了，只问到一半。价目墙上那一行，我先写了个问号。——西萨」" }], news = "通贝斯的采壳湾，说好来数一季潜水的那个外乡船长没有露面，岸上的木板一道也没画。" }
+news = "通贝斯的采壳湾，有个外乡的船长在岸上蹲了一个月，木板画满了一块又一块。"
+
+[[tracks.chapters.choices]]
+key = "dive_after"
+text = "跟着下去找他。"
+next = "report"
+requires = [{ kind = "skill", skill = "diving", ge = 60 }]
+hint = "你憋一口气，还沉不到他们一半深"
+reply = "我摸着他腰上的绳子，把他拖了上来。他呛了一肚子水，活了。头人当晚把那片礁的深浅、一年下去几回，一五一十讲给我听。"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }, { kind = "flag", flag = "c13_request_sisa_mullu_full" }]
+
+[[tracks.chapters.choices]]
+key = "ask_headman"
+text = "不下水，守着岸，请头人把一年的数讲给我听。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "头人说那孩子被别人拖上来了。他把一年下去几回、哪片礁淹过人，一样一样掰着手指讲，我画了满满一板。"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 3 }, { kind = "flag", flag = "c13_request_sisa_mullu_full" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "sisa_mullu", value = -2 }, { kind = "flag", flag = "c13_request_sisa_mullu_short" }], news = "通贝斯的头人替一个外乡船长讲了一季的潜水，前几年的死伤，他摇着头说记不清了。" }
+
+[[tracks.chapters.choices]]
+key = "just_mark"
+text = "照西萨说的，在木板上画一个圈，接着数。"
+next = "report_partial"
+reply = "那孩子后来被拖上来了，咳了很久。我在圈外补了一道，板上记的只有这一季，前几年的数，我没去问。"
+effects = [{ kind = "affinity", person = "sisa_mullu", value = 2 }, { kind = "flag", flag = "c13_request_sisa_mullu_short" }]
+
+# 三、一块木板：货栈墙边，她把板子立起来数，数到那个圈。全年的数，加价一成。
+[[tracks.chapters]]
+key = "report"
+title = "一块木板"
+text = "西萨把那块画满道道的木板立在货栈墙边，一道一道数过去。木板的边角被手摸得发亮。每个圈旁边都记着下去的是谁，哪一回上来得晚，哪一回要人拖。门框上挂着那杆秤，秤杆上有一道新刻的线。她没有抬头，只把炭条别到耳朵后面。数到那个圈，她的手指停住了。“好看的壳，先数人家潜了几回，再谈价。”她说。“今年收壳，加一成。”说着就要在收价的单子上添笔，卖主已经嚷起来，问凭什么。"
+speaker = "captain"
+mood = "tender"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "回卡亚俄的货栈，把木板交给西萨" }]
+when = [{ kind = "alive", person = "sisa_mullu", value = true }]
+news = "卡亚俄的货栈墙边立着一块画满道道的木板，海菊蛤的收价涨了一成。"
+
+[[tracks.chapters.choices]]
+key = "back_her"
+text = "站在她旁边，替她把木板上的数念给卖主们听。"
+next = "done"
+reply = "卖主们听到那个圈，不嚷了，有一个还掏出自己的炭条，把数记在收价单的背面。她付了钱，又教我认那片礁的壳和别处的壳有什么不同：刺长一点，红深一点，摸上去是凉的。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "sisa_mullu", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "diving", value = 20 }, { kind = "memory", memory = "mem-request_sisa_mullu-report", title = "立在墙边的木板" }, { kind = "flag", flag = "c13_request_sisa_mullu_done" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "劝她别一下子加一成，先加一半，明年再说。"
+next = "done"
+reply = "她瞪了我一眼，还是照我说的加了一半，说剩下那一半她记着。她付了钱，付的时候数得很慢，像是在心里又数了一遍那个圈。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "sisa_mullu", value = 5 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "diving", value = 20 }, { kind = "memory", memory = "mem-request_sisa_mullu-report", title = "立在墙边的木板" }, { kind = "flag", flag = "c13_request_sisa_mullu_done" }]
+news = "卡亚俄的货栈墙边立着一块画满道道的木板，海菊蛤的收价涨了一半，剩下的一半她说先记着。"
+
+# 四、只记了一季的木板：板上前几年是空的，她只加半成。
+[[tracks.chapters]]
+key = "report_partial"
+title = "只记了一季的木板"
+text = "西萨把那块木板立在货栈墙边，从头数到尾。只有一季。板上的道道排到一半就断了，前几年的那一面干干净净。货栈的门开着，风把门口晾着的鱼干吹得直晃。她的袖口沾着海水的盐白，一直没有擦掉。“就这一季？”她问。你点了头。她把收价的单子拿过来，笔尖悬在纸上，卖主已经嚷起来，问她今年到底加不加。"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "回卡亚俄的货栈，把木板交给西萨" }]
+when = [{ kind = "alive", person = "sisa_mullu", value = true }]
+news = "卡亚俄的货栈墙边立着一块只记了一季的木板，海菊蛤的收价涨了半成。"
+
+[[tracks.chapters.choices]]
+key = "back_her"
+text = "站在她旁边，把这一季的数念给卖主们听。"
+next = "done"
+reply = "卖主们听见板上只有一季，嘀咕了几句，还是认了她的半成。她付了钱，把那一季的数抄进自己的本子，说前几年的数她自己去北边补，不用我再跑一趟。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "sisa_mullu", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "diving", value = 20 }, { kind = "memory", memory = "mem-request_sisa_mullu-report", title = "立在墙边的木板" }, { kind = "flag", flag = "c13_request_sisa_mullu_partial" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "劝她先别加，等北边的数到了再说。"
+next = "done"
+reply = "她不听，还是加了半成，说板上只有一季，半成是她自己定的。她付了钱，回头又看了那个圈一眼，把木板靠回墙边，没有再动。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "sisa_mullu", value = 5 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "diving", value = 20 }, { kind = "memory", memory = "mem-request_sisa_mullu-report", title = "立在墙边的木板" }, { kind = "flag", flag = "c13_request_sisa_mullu_partial" }]

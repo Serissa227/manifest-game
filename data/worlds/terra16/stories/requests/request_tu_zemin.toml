@@ -1,0 +1,165 @@
+# C13d 人物的请托：船引的条陈（L 来信／代理人模式，说服某人，3 章）
+# 人物：涂泽民（生卒不详），福建巡抚都御史，驻节福州，cast 的 tu_zemin（historical）。
+# 报价模式 L：求见门槛（名声 50）过高，由巡抚衙门的书吏出面传召，书吏只写身份、不起名、不新建 cast；hearing 章涂泽民本人在堂上说话（cast = tu_zemin）。
+# 窗口：报价 1567-02-01 至 1567-12-31（offer 的 deadline 为窗口止日，timeout 不写见闻）；回话章限期 30 天；结算章先等 15 天，限期 120 天。
+#   报价章 family = c13_offer_fuzhou，冷却 20 天；名声门槛 25（按 brief）；对林晚灯关闭（c13_main_lin_wandeng = false 才出现）。
+# 依据：史实——隆庆元年（1567）月港开海，据说福建巡抚涂泽民奏请准贩东西二洋、唯独日本不许（晚出记述，正文只用“传说”口吻，不写开海的结果，不写日本贸易被允许）。
+#   原创——传帖、书吏、案头的算盘、堂下几位不具名的大户、条陈里的一行字、那只布袋。
+#   待核：涂泽民是否亲自当堂问过船主、上疏的月份（正文不提具体日子）；大户不起名，记恨只写成打听，没有后续惩罚。
+#   与 C7 的关系：月港诸事（小蛮出洋、秦沈的账、周砚重逢）在月港，本轨道在福州，不碰；不写爱情，不设 c7_ 旗标。
+# 读写旗标：读 c13_main_lin_wandeng（由林晚灯主线设，尚未写）；
+#   写 c13_request_tu_zemin_accepted（接下）/ declined / done / partial / late（终局各一面），
+#   分支 c13_request_tu_zemin_thin（回话只被记了两句）与 _noticed（行规一条被他亲自记下）。
+# 旗标门禁改成 next 分流：回话被记得薄（thin）时 talk／accounts 的检定失败直接走 result_thin（取代 result 里的 thin 变体与 take_thin 的 requires），因为审计机器人对“选项 requires 本轨道旗标”报准备失败；章数由 3 变 4。
+# 依赖：无 B10b 改名（fuzhou 已在港口表）；tu_zemin 的日程只有 1567 年，本请托不用 person 目标。
+# 回忆插画：mem-request_tu_zemin-result——福州巡抚衙门大堂，案头一把算盘，堂下坐着几个穿素缎的大户。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_tu_zemin"
+name = "船引的条陈"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["tu_zemin"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "衙门的传帖"
+text = "福州城里的船行门口，一夜之间贴出一张巡抚衙门的传帖：凡跑过南洋的船主，到衙门回话——船引怎么领，税银怎么纳，吕宋去得去不得，一条一条问。街上传说，涂巡抚递了本子上京，想把海禁松一松。纸角的浆糊还没干，书吏已经挤过看热闹的人，找到你的船，翻开簿子，指甲点在其中一行：“你的名字在这儿。明日卯时，巡抚亲自问。”他看了一眼左右，把声音压低：“堂上还坐着几位本地的大户。他们的船往哪边开，福州人没有不知道的。”"
+mood = "tense"
+at = "fuzhou"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1567, 2, 1], to = [1567, 12, 31] }, { kind = "fame", ge = 25 }, { kind = "flag", flag = "c13_main_lin_wandeng", value = false }]
+deadline = [1567, 12, 31]
+family = "c13_offer_fuzhou"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "go"
+text = "去回话"
+reply = "书吏蘸了蘸笔，把你的船名写进簿子，墨迹还湿就合上了：“卯时，走侧门。巡抚不爱等人。”"
+next = "hearing"
+effects = [{ kind = "flag", flag = "c13_request_tu_zemin_accepted" }, { kind = "affinity", person = "tu_zemin", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "去，先问书吏：说错了怎么办"
+reply = "书吏想了想，把笔别到耳后：“说错了不要紧，说多了要紧。巡抚问一句，你答一句；他没问的，咽下去。”他又瞄了一眼衙门的方向，“那几位的事，更不用你提。”"
+next = "hearing"
+effects = [{ kind = "flag", flag = "c13_request_tu_zemin_accepted" }, { kind = "affinity", person = "tu_zemin", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不去"
+reply = "书吏把你的船名划掉，笔锋很快，头也没抬，转身往隔壁那条船走去。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tu_zemin_declined" }]
+
+[[tracks.chapters]]
+key = "hearing"
+title = "堂上的算盘"
+text = "巡抚衙门的大堂不深，案头一把算盘，珠子被手磨得发亮。涂泽民没让你跪，也没让你坐，只叫书吏把纸铺开。“一条船出洋，本钱几何？回来能纳多少税？船引发几张，才够福州的船主走正路？”他问一条，你答一条，书吏记一条。问到你跑过哪几处，你说了吕宋、暹罗，他的拇指没停：“日本呢？”你刚张口，他抬手截住：“不必答。日本不许去，去了按通番论，本院只讲这一句。”堂下左首坐着几个穿素缎的人，其中一个咳嗽了一声，没有人去看他。涂泽民低头拨了一颗珠：“若是开了海，饷银是朝廷的体面；出了事，就是船主不守法。本院可以保你，也可以不保。你要本院怎么记？”"
+speaker = "tu_zemin"
+mood = "tense"
+at = "fuzhou"
+cast = ["tu_zemin"]
+when = [{ kind = "alive", person = "tu_zemin", value = true }]
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tu_zemin_late" }, { kind = "affinity", person = "tu_zemin", value = -3 }, { kind = "letter", person = "tu_zemin", text = "巡抚衙门书吏代笔：问话的日子已过，你没有来。别的船主的话都录完了，条陈照常拟了，没有再等。" }]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "照实说：船引要多，税要轻，人才肯走正路"
+reply = "你说，引发得少，人就去买别人的旗号；税抽得重，货就在外洋卸了，不进福州的港。涂泽民没有打断，等你说完才问：“税轻，轻到多少，船主肯把货运回福州来卸？”你报了个数。他在算盘上拨了一珠：“记下。”书吏的笔沙沙地响了很久。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+effects = [{ kind = "affinity", person = "tu_zemin", value = 3 }]
+news = "福州巡抚衙门里，涂巡抚一条一条问跑南洋的船主，有个船长答得干脆，书吏记了满满一页。"
+fail = { next = "result_thin", effects = [{ kind = "flag", flag = "c13_request_tu_zemin_thin" }, { kind = "affinity", person = "tu_zemin", value = -2 }], news = "福州巡抚衙门的大堂上，有个跑南洋的船主讲了一大篇，涂巡抚嫌是空话，只让书吏记了两句。" }
+
+[[tracks.chapters.choices]]
+key = "accounts"
+text = "拿你的账给他算一条船的本利"
+reply = "你把账本摊在案角，一舱一舱念给他：船价，水手的口粮，压舱的瓷，回程那一舱苏木和胡椒。他把你的数一个个拨进算盘，拨完抬头看了你一眼：“利薄，税就不能厚。”叫书吏照抄。"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "result"
+effects = [{ kind = "affinity", person = "tu_zemin", value = 3 }]
+news = "福州巡抚衙门的大堂上，有个船主把一条船的本利摊开来算，涂巡抚拨完算盘，叫书吏照抄在条陈上。"
+fail = { next = "result_thin", effects = [{ kind = "flag", flag = "c13_request_tu_zemin_thin" }], news = "福州巡抚衙门的大堂上，有个船主把本利算得太细，涂巡抚听烦了，摆摆手，叫书吏只记个总数。" }
+
+[[tracks.chapters.choices]]
+key = "rules"
+text = "按行规讲：保结、船引、回港验货"
+reply = "你讲保结：五条船一结，一条出事，四条连坐；又讲回港验货，舱里与货单对不上的，船引收回。涂泽民让你停下，亲自提笔，写完问：“收回之后，船主怎么活？”你答，罚过再领。他点了一下头。堂下那个咳嗽的人，脸色不太好看。"
+hint = "行里保结、验货的那几道规矩，你还讲不周全。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+next = "result"
+effects = [{ kind = "affinity", person = "tu_zemin", value = 3 }, { kind = "flag", flag = "c13_request_tu_zemin_noticed" }]
+news = "福州巡抚衙门的大堂上，有个船主讲到回港验货，涂巡抚亲自提笔记了，堂下的大户脸色不太好看。"
+
+[[tracks.chapters]]
+key = "result"
+title = "条陈上的一行字"
+text = "十几天后，书吏到船行找你，提着一只小布袋，袖口还沾着墨。“条陈已经拜发了。”他把布袋放在柜台上，没解开，“巡抚说，几个船主的话，他都誊清了，往北京去。”走到门口，他又回过头，声音比进门时低：“那天堂下坐着的一位，打听过你的船名。不是衙门问的。”"
+speaker = "captain"
+mood = "cheerful"
+at = "fuzhou"
+when = [{ kind = "alive", person = "tu_zemin", value = true }, { kind = "flag", flag = "c13_request_tu_zemin_thin", value = false }]
+objectives = [{ kind = "wait", days = 15 }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "cash", value = 1300 }, { kind = "flag", flag = "c13_request_tu_zemin_partial" }, { kind = "letter", person = "tu_zemin", text = "巡抚衙门书吏代笔：赏银久不见你来取，不便再留，已寄在船行柜上，随信附上。条陈早已拜发。" }]
+
+[[tracks.chapters.variants]]
+key = "noticed"
+when = [{ kind = "flag", flag = "c13_request_tu_zemin_noticed", value = true }]
+text = "十几天后，书吏到船行找你，提着布袋，袖口还沾着墨。“条陈已经拜发了。”他把布袋放在柜台上，没解开，“回港验货那一条，巡抚是自己抄进去的。”走到门口，他回过头：“你讲那一条的时候，堂下有位脸色不好看，打听过你的船名。不是衙门问的。”"
+mood = "tense"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下赏银"
+reply = "书吏解开布袋，又从袖里取出一页抄件给你看：条陈里有一行，写的正是你说的那几句，没写你的名字。“不写名字，是为你好。”他把抄件折起来收走，“衙门的纸，不外借。”"
+next = "done"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "tu_zemin", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ming", value = 3 }, { kind = "memory", memory = "mem-request_tu_zemin-result", title = "巡抚堂上的算盘" }, { kind = "flag", flag = "c13_request_tu_zemin_done" }]
+news = "福州巡抚衙门问了一圈跑南洋的船主，涂巡抚把话誊成条陈，听说已经拜发，往北京去了。"
+
+[[tracks.chapters.choices]]
+key = "worry"
+text = "问书吏：那位打听我做什么"
+reply = "书吏笑笑，解开布袋，一锭一锭数给你：“做买卖的人，总要知道谁在巡抚面前说过话。往后码头上遇见，他们的人会多看你一眼，也就这样。”赏银一锭不少。"
+next = "done"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "tu_zemin", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ming", value = 3 }, { kind = "memory", memory = "mem-request_tu_zemin-result", title = "巡抚堂上的算盘" }, { kind = "flag", flag = "c13_request_tu_zemin_done" }]
+news = "福州巡抚衙门里，涂巡抚把问来的南洋船主的话誊成条陈，听说已经拜发，往北京去了。"
+
+# 四·二、回话只被记了两句：同样十几天后，布袋是轻的。
+[[tracks.chapters]]
+key = "result_thin"
+title = "条陈里的短短几行"
+text = "十几天后，书吏到船行找你，布袋放上柜台，只有轻轻的一声。“条陈已经拜发了。”他说，“那天你的话，巡抚只让记了短短几行。”走到门口，他回过头，声音压低：“堂下坐着的一位，打听过你的船名。不是衙门问的。”"
+speaker = "captain"
+mood = "tense"
+at = "fuzhou"
+when = [{ kind = "alive", person = "tu_zemin", value = true }, { kind = "flag", flag = "c13_request_tu_zemin_thin", value = true }]
+objectives = [{ kind = "wait", days = 15 }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "cash", value = 1300 }, { kind = "flag", flag = "c13_request_tu_zemin_partial" }, { kind = "letter", person = "tu_zemin", text = "巡抚衙门书吏代笔：赏银久不见你来取，已寄在船行柜上，那袋比原先说的轻些，随信附上。条陈早已拜发。" }]
+
+[[tracks.chapters.choices]]
+key = "take_thin"
+text = "收下那只轻些的布袋"
+reply = "你掂了掂，赏银薄了些。书吏摸摸鼻子，又数了一遍给你看：“巡抚记的人多，你是记住了的。”这句话他说得很快，没看你的眼睛。"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "tu_zemin", value = 4 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "flag", flag = "c13_request_tu_zemin_partial" }]
+news = "福州巡抚衙门问了几个跑南洋的船主，条陈已经拜发；有个船主的话只记了几行，赏银也薄。"

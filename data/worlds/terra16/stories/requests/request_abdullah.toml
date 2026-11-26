@@ -1,0 +1,134 @@
+# 请托：吊得起一个人的绳（request_abdullah）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：阿卜杜拉（abdullah，1540-02-13 生，男），巴林采珠人之子，学院同学（船上学堂）；势力 ottoman，身份档 1。cast：cast/classmates_ship.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（试绳，交货）、settle（结账）；没有 stage 章，因此没有 window 与 default。
+# 报价：V（到访）。人物住在巴林近旁，下到巴林港口（bahrain），auto=true；窗口 1561-10-01 至 1590-06-30（同学重逢 1561 之后开放）。
+#       offer 写 family=c13_offer_bahrain、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=90，超时走 failed，来信一封，好感 -3，旗标 _late；settle 是普通章，可以一直等。
+# 依据·史实背景：波斯湾的采珠季在夏天；潜水人腰上系石坠下潜，船上拉绳的人凭绳子把人拉上来；海底昏过去的事年年有。
+# 依据·原创：阿卜杜拉的采珠船、去年昏过去的那个潜水人、头一颗歪了的珠子、试绳时的海流。
+# 秘密：借据与旧债一概不写，归 C7 bond_abdullah；他识字的事不进正文，见闻也不写。打哈欠只是他的习惯。
+# 读的旗标：bond abdullah 至少 C（offer 的 variants，只读 C7 的重逢结果）。
+# 设的旗标：c13_request_abdullah_accepted（offer 两条接法）、_asked（offer 接下并问了潜水人的事）、_declined（offer 回绝）、_tested（deliver 下水或吊绳成功）、_dived（deliver 跟他一起下水）、_untested（deliver 吊绳检定失败，settle 读它换一句话）、_late（deliver 超时）、_pearl_diver（settle 把珠子给了潜水人）、_done（settle 两条收尾）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 900 + 货款 1450（settle 给一次）、好感最多 +13、名声 +1、回忆 mem-request_abdullah-settle。珍珠是正文里的物件，不发物品。
+# 依赖：港口 bahrain（ports_red_sea_gulf.toml）；货物 medicine、rope（goods/04_overseas_crafts.toml）；技能 diving、属性 stewardship；人物 abdullah。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_abdullah-settle「歪了的头一颗珠子」：采珠船的甲板上，一根新缆绳垂进水里；收船后的栈桥边，船主手心里托着一颗歪了的珠子。
+
+[[tracks]]
+key = "request_abdullah"
+name = "吊得起一个人的绳"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["abdullah"]
+
+# 一、海底昏过去的人：巴林港口，他坐在船帮上，赤着脚。
+[[tracks.chapters]]
+key = "offer"
+title = "海底昏过去的人"
+text = "阿卜杜拉坐在采珠船的船帮上，赤着脚，脚踝上一圈绳子勒出的白印。去年他的船上有个潜水人在海底昏了过去，拉绳的人拉了三回才拉上来。绳子还断过一回，断口是他用手指比给我看的，齐齐的。“今年不想再有这种事。”他说，“你运五箱药剂、十卷缆绳来。缆绳要能吊起一个人，吊起来不断。”话说完他打了个哈欠，摆摆手：“不是困，昨晚守船。”"
+speaker = "captain"
+mood = "sad"
+at = "bahrain"
+when = [{ kind = "date", from = [1561, 10, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "abdullah", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_bahrain"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "abdullah", level = "C" }]
+text = "阿卜杜拉坐在采珠船的船帮上，见你走近，先深深吸了一大口气，数到三十才吐出来，冲你扬了扬下巴。“老规矩，你吸一口，我数，数到三十再吐。”他赤着脚，脚踝上一圈绳子勒出的白印还没褪。去年他的船上有个潜水人在海底昏了过去，拉绳的人拉了三回才拉上来。“今年不想再有这种事。你运五箱药剂、十卷缆绳来，缆绳要能吊起一个人。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，五箱药剂、十卷缆绳，运到巴林。"
+next = "deliver"
+reply = "他把绳子该多粗比划给我看，比的是自己的手腕，比了两回才定下来。“比这个粗一圈。细了吊不住人。”他说完，把手腕伸过来让我看，皮肤上还留着昨天的绳印。"
+effects = [{ kind = "affinity", person = "abdullah", value = 2 }, { kind = "flag", flag = "c13_request_abdullah_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_diver"
+text = "接下，先问：去年昏过去的那个人，后来呢？"
+next = "deliver"
+reply = "“活了，今年还下。”他说那人醒过来，第一句话是问珠子捞上来没有。捞上来了，两颗，都不大。“采珠的人都这样。”他说这话时没看我，看的是海。那人后来又下去了，船上没有一个人敢叫他别下。"
+effects = [{ kind = "affinity", person = "abdullah", value = 2 }, { kind = "flag", flag = "c13_request_abdullah_accepted" }, { kind = "flag", flag = "c13_request_abdullah_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "采珠季的货，等别的船吧。"
+next = "failed"
+reply = "“那我把旧绳子再搓一道。”他说完，两手背到身后，转身去了船尾。拉绳的人跟过去，一人拎着一卷旧绳，绳头都是黑的。他走到船尾才回头看了我一眼，没说话。"
+effects = [{ kind = "flag", flag = "c13_request_abdullah_declined" }]
+
+# 二、试绳：药箱搬进船舱，他要亲自下水，让拉绳的人拉他上来。
+[[tracks.chapters]]
+key = "deliver"
+title = "海流里的试绳"
+text = "药箱搬进船舱，缆绳一卷卷摊在甲板上。阿卜杜拉抓起一根，往自己腰上一系：“多大点事，一口气的事。”他要亲自下水，让拉绳的人拉他上来，试试绳子吊不吊得住。“拉的时候别松。”他对拉绳的人说，又回头看了一眼海面。系好了他才想起来，今天的海流比往常急。他把绳头在手里攥了攥，那个结是他自己打的，打得很紧，还是没有改主意。"
+speaker = "captain"
+mood = "tense"
+at = "bahrain"
+when = [{ kind = "alive", person = "abdullah", value = true }]
+objectives = [{ kind = "goods", good = "medicine", qty = 5, at = "bahrain", text = "五箱药剂" }, { kind = "goods", good = "rope", qty = 10, at = "bahrain", text = "十卷缆绳" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "abdullah", value = -3 }, { kind = "flag", flag = "c13_request_abdullah_late" }, { kind = "letter", person = "abdullah", text = "采珠季开了，我用了旧绳子，搓了两道。今年没人昏，运气好。——阿卜杜拉" }], news = "巴林的采珠船开了采珠季，船主等不到新缆绳，用的是旧绳，搓了两道，倒也没出事。" }
+news = "巴林的采珠船上，船主腰上系着新缆绳亲自下了一回水，上来时脸都白了，说海流比往常急。"
+
+[[tracks.chapters.choices]]
+key = "dive_with"
+text = "跟他一起下去，在海底看着绳子。"
+next = "settle"
+requires = [{ kind = "skill", skill = "diving", ge = 60 }]
+hint = "你憋不住那么久，沉到一半就得上来"
+reply = "海底的流把我们推得歪歪斜斜。我抓着他的绳子，看它在礁石上磨了两下，没有断。水从鼻子里往外冒，呛得我眼前发黑。上头的人一拉，我们两个一起上来了。他吐出一口水，说：“这绳行。”"
+effects = [{ kind = "affinity", person = "abdullah", value = 3 }, { kind = "flag", flag = "c13_request_abdullah_tested" }, { kind = "flag", flag = "c13_request_abdullah_dived" }]
+
+[[tracks.chapters.choices]]
+key = "haul_test"
+text = "不让他下水，在甲板上拿压舱石吊绳子，一卷一卷试。"
+next = "settle"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "两块压舱石绑在一起，当一个人的分量，一卷一卷吊上去。吊住一卷，他就在旁边的木板上划一道，划到天色暗下来。他有点失望，说：“我本来想下去的。”"
+news = "巴林的采珠船上，船主不肯下水，让人拿压舱石把新缆绳一卷卷吊了个遍，吊住了才肯收工。"
+effects = [{ kind = "affinity", person = "abdullah", value = 3 }, { kind = "flag", flag = "c13_request_abdullah_tested" }]
+fail = { next = "settle", effects = [{ kind = "affinity", person = "abdullah", value = -2 }, { kind = "flag", flag = "c13_request_abdullah_untested" }], news = "巴林的采珠船上，新缆绳吊到第八卷天就黑了，船主说剩下两卷明天再试，收了工。" }
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "让他下去，我在船上盯着拉绳的人。"
+next = "settle"
+reply = "他下去了。拉绳的人一刻也不敢松，我也盯着水面上的绳子。他上来时脸白得像纸，说海流真急，绳子吊住了。他在甲板上坐了半天，手里还攥着那截绳头，才抬头冲我笑。"
+effects = [{ kind = "affinity", person = "abdullah", value = 2 }]
+
+# 三、第一颗珠子：采珠季的头一天，船下了海，傍晚收船，没有人昏过去。
+[[tracks.chapters]]
+key = "settle"
+title = "第一颗珠子"
+text = "采珠季的头一天，阿卜杜拉的船下了海，新缆绳一根根垂进水里，绷得直直的。傍晚收船，船上没有人昏过去。拉绳的人把绳子一卷卷收回甲板，手上磨出了血印，嘴里却在笑。岸上有人喊他的名字，他没应，先把最后一卷绳收完，坐在栈桥的木墩上，脚踝上那圈白印晒得发红。他把货款和工钱付给你，又从一只小布袋里倒出今天的头一颗珠子，不大，有点歪。“头一颗珠子，按规矩要送人。”他说，“送给让今年没人昏过去的人。”"
+speaker = "captain"
+mood = "cheerful"
+at = "bahrain"
+when = [{ kind = "alive", person = "abdullah", value = true }]
+news = "巴林的采珠船开了采珠季，头一天傍晚收船，船上没有人昏在海底。拉绳的人说，新缆绳吊得住人。"
+
+[[tracks.chapters.variants]]
+key = "untested"
+when = [{ kind = "flag", flag = "c13_request_abdullah_untested" }]
+text = "采珠季的头一天，阿卜杜拉的船下了海，新缆绳一根根垂进水里，绷得直直的。有两卷绳没经你的手吊过，是他第二天一早自己在船尾吊的，吊住了，也没等你来看。傍晚收船，船上没有人昏过去。拉绳的人把绳子一卷卷收回甲板，手上磨出了血印，嘴里却在笑。他把货款和工钱付给你，又从一只小布袋里倒出今天的头一颗珠子，不大，有点歪。“头一颗珠子，按规矩要送人。”他说，“送给让今年没人昏过去的人。”"
+
+[[tracks.chapters.choices]]
+key = "take_pearl"
+text = "收下那颗珠子。"
+next = "done"
+reply = "他把珠子放在我手心，还带着他的体温。“歪的珠子不值钱。”他说，“可它是今年的头一颗，别拿去卖了。”他说完，把布袋口系紧，塞回我手里。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 1450 }, { kind = "affinity", person = "abdullah", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_abdullah-settle", title = "歪了的头一颗珠子" }, { kind = "flag", flag = "c13_request_abdullah_done" }]
+
+[[tracks.chapters.choices]]
+key = "give_diver"
+text = "说珠子该给去年昏过去的那个潜水人。"
+next = "done"
+reply = "他愣了一下，大笑，说那人今年捞上来的头一颗也是这么歪。他把珠子给了那人，那人攥着珠子，冲我点了点头。他付钱的时候数得很慢，每数一个数就看那人一眼。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 1450 }, { kind = "affinity", person = "abdullah", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_abdullah-settle", title = "歪了的头一颗珠子" }, { kind = "flag", flag = "c13_request_abdullah_done" }, { kind = "flag", flag = "c13_request_abdullah_pearl_diver" }]

@@ -1,0 +1,3461 @@
+# C12：海区经纬创作源，供 mapgen 栅格化；不是旧版 world/regions.toml 的像素矩形。
+# 整数角分：areas 的每项为[西,南,东,北]，左闭右开、下闭上开；180度接缝拆成两段。
+# 全域分区含陆地，mapgen先按海岸掩膜取海格。海区之间严格不重叠；边界是游戏近似，非IHO法定海界。
+# navigation 子表逐字段符合B4 parse_navigation；整合时原样序列化为 navigation.toml。A3不会自动读取本子表。
+# 方向均为去向：0北/1东北/2东/3东南/4南/5西南/6西/7西北；风的来向显示时加180度。
+# 强度为游戏档：0无，1—3弱，4—6中，7—9强，10上限；不是蒲福级或节。流速0—3同为游戏档。
+# weather、fog_bp均按1—12月；storm_bp、pirate_bp、fog_bp为基点。概率是首次设计值，不是史料的实测日频率。
+# pirate_bp保留0：C12不按纬度编造海盗分布，后续势力与事件数据另行给出。
+# 气候仅用现代平均作近似，不倒推出1553逐日天气；封冻按无破冰能力帆船关航抽象。
+# 雾与音乐仍为内容字段，B4没有雾概率入口；请勿声称当前引擎已经消费。
+schema_version = 1
+bounds_arcmin = [-10800, -3600, 10800, 4320]
+boundary = "west_south_inclusive"
+
+[sources.design]
+name = "本地规格与史料脉络"
+url = "docs/TERRA16.md §3.2；docs/research/terra16/F_world.md；Q_world_1540.md"
+status = "规格；不是现代观测"
+
+[sources.pilot]
+name = "NGA Atlas of Pilot Charts资料入口"
+url = "https://msi.nga.mil/Publications/APC"
+status = "后续逐格校准参考索引；本次未取得月图，不作为已读取的数值出处"
+
+[sources.circulation]
+name = "英国气象局全球环流"
+url = "https://weather.metoffice.gov.uk/learn-about/weather/atmosphere/global-circulation-patterns"
+status = "多年平均风带的定性近似；月强度档为游戏设计"
+
+[sources.currents]
+name = "NOAA主要海洋流系"
+url = "https://www.noaa.gov/jetstream/ocean/circulations/jetstream-max-major-ocean-currents"
+status = "现代流系主方向近似；未将图逐格数字化"
+
+[sources.roaring]
+name = "NOAA咆哮西风带"
+url = "https://oceanservice.noaa.gov/facts/roaring-forties.html"
+status = "南纬40—60度西风定性近似"
+
+[sources.trades]
+name = "NOAA 信风说明"
+url = "https://oceanservice.noaa.gov/facts/tradewinds.html"
+status = "现代气候定性近似"
+
+[sources.monsoon]
+name = "NWS 季风说明"
+url = "https://www.weather.gov/twc/Monsooninfo"
+status = "现代一月/七月主导风向近似"
+
+[sources.indian_current]
+name = "Beal等，印度洋季风流观测研究"
+url = "https://www.aoml.noaa.gov/phod/docs/Beal_2013.pdf"
+status = "现代月均与季均的定性近似"
+
+[sources.imd]
+name = "IMD 北印度洋气旋气候"
+url = "https://rsmcnewdelhi.imd.gov.in/landfall.php"
+status = "现代气旋季节近似；不是每天遇灾的实测概率"
+
+[sources.hko]
+name = "香港天文台季风与气旋气候"
+url = "https://www.hko.gov.hk/en/publica/gen_pub/sms.htm"
+status = "现代季风近似；台风高发7—10月另见rm003"
+
+[sources.hko_typhoon]
+name = "香港天文台一般气候状况"
+url = "https://my.weather.gov.hk/en/publica/rm/files/rm003.pdf"
+status = "现代台风季近似"
+
+[sources.hurricanes]
+name = "NHC 热带气旋气候"
+url = "https://www.nhc.noaa.gov/climo/"
+status = "现代飓风季近似"
+
+[sources.gulf_stream]
+name = "NOAA 湾流与流速"
+url = "https://oceanservice.noaa.gov/facts/gulfstreamspeed.html"
+status = "现代洋流主干定性近似"
+
+[sources.agulhas]
+name = "NOAA 厄加勒斯回折与流场"
+url = "https://www.aoml.noaa.gov/phod/altimetry/cvar/agu/"
+status = "现代洋流定性近似"
+
+[sources.cape]
+name = "南非气象局WeatherSmart 2023"
+url = "https://www.weathersa.co.za/Documents/Corporate/WeatherSmart_News_202310_UpdatedJan2025_03042025083712.pdf"
+status = "现代开普冬季冷锋与夏季东南风近似"
+
+[sources.baltic_ice]
+name = "芬兰气象研究所波罗的海冰季"
+url = "https://en.ilmatieteenlaitos.fi/ice-season-in-the-baltic-sea"
+status = "现代平均冰季近似；关闭整区是游戏抽象"
+
+[sources.canadian_ice]
+name = "加拿大冰务局1991—2020东岸冰气候"
+url = "https://www.canada.ca/en/environment-climate-change/services/ice-forecasts-observations/latest-conditions/climatology/ice-climate-normals/canadian-east-coast-waters.html"
+status = "现代冰季与拉布拉多流近似"
+
+[sources.canadian_fog]
+name = "加拿大区域环境评估：能见度"
+url = "https://iaac-aeic.gc.ca/050/documents/p84343/153393E.pdf"
+status = "现代大浅滩雾气候近似"
+
+[sources.okhotsk_ice]
+name = "日本气象厅鄂霍次克海平年海冰"
+url = "https://www.data.jma.go.jp/kaiyou/db/seaice/okhotsk/okhotsk_normal.html"
+status = "1991—2020平年近似；不是1553年的实况"
+
+[sources.arctic_ice]
+name = "挪威气象研究所北极海冰资料"
+url = "https://www.met.no/en/Sea-and-High-North-areas"
+status = "现代冰区背景；白海合区关闭月份按规格保守取值"
+
+[sources.med_winds]
+name = "英国气象局地方风名称"
+url = "https://weather.metoffice.gov.uk/learn-about/weather/types-of-weather/wind/wind-names"
+status = "布拉风与梅尔泰米的现代定性近似"
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "northwest_pacific"
+name = "西北太平洋"
+climate = "temperate"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6000, 1800, 7200, 1980],
+  [9300, 1800, 10800, 2220],
+  [6000, 1980, 7080, 2100],
+  [5940, 2100, 7080, 2220],
+  [5940, 2220, 7020, 2280],
+  [8580, 2220, 10800, 2700],
+  [5700, 2280, 7020, 2400],
+  [5700, 2400, 7140, 2475],
+  [7380, 2400, 7560, 2520],
+  [5520, 2475, 7140, 2520],
+  [5520, 2520, 7560, 3120],
+  [9900, 2700, 10800, 3720],
+  [5700, 3120, 8100, 3360],
+  [5940, 3360, 8100, 3480],
+  [6000, 3480, 8100, 3720],
+  [6000, 3720, 10800, 4320],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "northeast_pacific"
+name = "东北太平洋"
+climate = "temperate"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [-10800, 1800, -6000, 4320],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "north_pacific_trades"
+name = "北太平洋信风带"
+climate = "tropical"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-10800, 600, -6000, 1800],
+  [9000, 600, 10800, 1500],
+  [7200, 720, 7380, 900],
+  [6000, 900, 6300, 1500],
+  [7260, 900, 7380, 1320],
+  [7320, 1320, 7380, 1500],
+  [6000, 1500, 7020, 1560],
+  [8580, 1500, 10800, 1800],
+  [6000, 1560, 7200, 1800],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "central_pacific"
+name = "太平洋中部"
+climate = "tropical"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-7200, -600, -6000, -300],
+  [8100, -600, 10200, -300],
+  [-10800, -300, -6000, 600],
+  [8100, -300, 10800, 300],
+  [9000, 300, 10800, 600],
+]
+
+[[regions]]
+# 出处：circulation, currents, roaring；现代平均近似。
+key = "south_pacific"
+name = "南太平洋"
+climate = "temperate"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents", "roaring"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-10800, -3600, -4920, -3120],
+  [8100, -3600, 10800, -3000],
+  [-10800, -3120, -4200, -2700],
+  [8100, -3000, 8520, -2100],
+  [10200, -3000, 10800, -2100],
+  [-10800, -2700, -6000, -2100],
+]
+
+[[regions]]
+# 出处：circulation, currents, roaring；现代平均近似。南缘咆哮西风；北缘用副热带过渡，不表示整区一直是同一强风。
+key = "south_indian_ocean"
+name = "南印度洋"
+climate = "temperate"
+music = "indian"
+hidden = false
+sources = ["circulation", "currents", "roaring"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1200, -3600, 8100, -2520],
+  [2280, -2520, 8100, -2100],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。将原南太平洋大区的低纬信风从高纬西风分开，避免全洋盆误用西风。
+key = "south_pacific_trades"
+name = "南太平洋信风海域"
+climate = "tropical"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-10800, -2100, -6000, -1800],
+  [8100, -2100, 8520, -1500],
+  [10200, -2100, 10800, -1800],
+  [-7200, -1800, -6000, -600],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。南赤道流与东南信风；西风带保持在更南的南印度洋区。
+key = "south_indian_trades"
+name = "南印度洋信风海域"
+climate = "tropical"
+music = "indian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [2280, -2100, 8100, -1500],
+  [1200, -2040, 1320, -1500],
+  [1200, -1500, 1920, -600],
+  [3900, -1500, 6720, -600],
+  [1200, -600, 2100, 0],
+  [3900, -600, 6000, -60],
+  [6960, -180, 7440, 0],
+  [3900, -60, 4020, 0],
+  [4440, -60, 6000, 0],
+  [1320, 0, 1920, 240],
+  [1500, 240, 1800, 360],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "madagascar_east"
+name = "马达加斯加以东"
+climate = "tropical"
+music = "indian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 3, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [2700, -1500, 3900, -600],
+  [3120, -600, 3900, 0],
+]
+
+[[regions]]
+# 出处：monsoon, indian_current, imd；现代平均近似。
+key = "arabian_sea"
+name = "阿拉伯海"
+climate = "tropical"
+music = "arabic"
+hidden = false
+sources = ["monsoon", "indian_current", "imd"]
+storm_months = [5, 10, 11]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1920, 0, 2100, 240],
+  [3120, 0, 4020, 300],
+  [1800, 240, 2100, 300],
+  [1800, 300, 4020, 360],
+  [1740, 360, 4020, 480],
+  [1920, 480, 4320, 600],
+  [1920, 600, 2580, 720],
+  [3120, 600, 4320, 960],
+  [4680, 600, 4800, 1200],
+  [2100, 720, 2580, 750],
+  [2640, 960, 4320, 1200],
+  [2640, 1200, 3960, 1380],
+  [4440, 1200, 4800, 1560],
+  [3480, 1380, 3960, 1560],
+  [3480, 1560, 4800, 1860],
+  [2160, 1800, 2640, 1860],
+  [2160, 1860, 4800, 2220],
+  [2280, 2220, 4800, 2280],
+  [2700, 2280, 4800, 2460],
+  [3120, 2460, 4800, 2760],
+]
+
+[[regions]]
+# 出处：monsoon, imd；现代平均近似。
+key = "bengal_bay"
+name = "孟加拉湾"
+climate = "tropical"
+# music 原为 "indian"（配乐的数据接线，2026-10-11）：写 bengal → 《雨季的船歌》；原来靠前端按停泊的港口细分才放得到，现在直接写明。
+music = "bengal"
+hidden = false
+sources = ["monsoon", "imd"]
+storm_months = [5, 10, 11]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [5040, 0, 5700, 240],
+  [5040, 240, 5520, 600],
+  [4800, 600, 5520, 1320],
+  [4800, 1320, 6000, 2100],
+  [4800, 2100, 5940, 2280],
+  [4800, 2280, 5700, 2475],
+  [4800, 2475, 5520, 2760],
+]
+
+[[regions]]
+# 出处：circulation, currents, roaring；现代平均近似。
+key = "south_atlantic"
+name = "南大西洋"
+climate = "temperate"
+music = "atlantic"
+hidden = false
+sources = ["circulation", "currents", "roaring"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-2700, -3600, 1200, -2520],
+  [-2700, -2520, 600, -2100],
+  [-4200, -2280, -3900, -2100],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "south_atlantic_trades"
+name = "南大西洋信风海域"
+climate = "tropical"
+music = "atlantic"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4200, -2100, -3900, -1800],
+  [-2700, -2100, 600, -2040],
+  [-2700, -2040, 0, -1800],
+  [-4200, -1800, -3600, -600],
+  [-1800, -1800, 0, -600],
+]
+
+[[regions]]
+# 出处：trades, currents；现代平均近似。赤道辐合带是弱风和雷雨带，非永久静风；表中保留流。
+key = "equatorial_atlantic"
+name = "赤道大西洋"
+climate = "tropical"
+music = "atlantic"
+hidden = false
+sources = ["trades", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4200, -600, -3600, -300],
+  [-1800, -600, 0, -300],
+  [-4200, -300, -900, 0],
+  [900, -300, 1200, 0],
+  [-4500, 0, -900, 600],
+  [900, 0, 1320, 240],
+  [900, 240, 1500, 360],
+  [900, 360, 1620, 480],
+  [900, 480, 1560, 600],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "sargasso"
+name = "马尾藻海"
+climate = "temperate"
+music = "atlantic"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-6000, 600, -5400, 1080],
+  [-3300, 600, -2100, 1380],
+  [-4320, 1380, -2100, 1800],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。副热带高压夏季弱风，冬季仍可遇西风风暴。
+key = "azores"
+name = "亚速尔海"
+climate = "temperate"
+music = "iberian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-2100, 1500, -1980, 1980],
+  [-2100, 1980, -1500, 2100],
+  [-2100, 2100, -900, 2580],
+  [-2100, 2580, -720, 2880],
+  [-2100, 2880, -540, 3000],
+  [-2100, 3000, -600, 3060],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "cape_verde"
+name = "佛得角海"
+climate = "tropical"
+# music 原为 "atlantic"（配乐的数据接线，2026-10-11）：写 west_africa → 《赤道的长浪》；非洲西岸的乐器领奏。
+music = "west_africa"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-2100, 600, 1500, 1200],
+  [-2100, 1200, -1500, 1500],
+  [-360, 1200, 1500, 1320],
+  [-360, 1320, 1320, 1380],
+  [-360, 1380, 1260, 1500],
+  [-360, 1500, 900, 1560],
+  [-180, 1560, 420, 1800],
+]
+
+[[regions]]
+# 出处：gulf_stream, circulation；现代平均近似。
+key = "gulf_stream"
+name = "湾流"
+climate = "temperate"
+music = "atlantic"
+hidden = false
+sources = ["gulf_stream", "circulation"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4320, 1800, -2100, 1860],
+  [-6000, 1860, -2100, 2400],
+  [-6000, 2400, -3420, 2700],
+  [-2580, 2400, -2100, 3120],
+  [-6000, 2700, -4080, 3120],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "iceland_sea"
+name = "冰岛海"
+climate = "temperate"
+# music 原为 "north"（配乐的数据接线，2026-10-11）：写 arctic → 《白海的北风》；冰岛海也是最北的海路，北方的地方乐器领奏。
+music = "arctic"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [-2100, 3060, -600, 3120],
+  [-2700, 3120, -600, 4320],
+]
+
+[[regions]]
+# 出处：canadian_ice；现代平均近似。封冻为帆船航季的保守抽象，主要约束陆架与沿岸；不声称盆地中央全部结冰。
+key = "labrador"
+name = "拉布拉多海"
+climate = "cold"
+music = "north"
+hidden = false
+sources = ["canadian_ice"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [-6000, 3120, -2700, 4320],
+]
+
+[[regions]]
+# 出处：gulf_stream, circulation；现代平均近似。
+key = "norwegian_sea"
+name = "挪威海"
+climate = "temperate"
+# music 原为 "north"（配乐的数据接线，2026-10-11）：写 norwegian_sea → 《白海的北风》；卑尔根的鳕鱼干船走的海。
+music = "norwegian_sea"
+hidden = false
+sources = ["gulf_stream", "circulation"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-600, 3480, 720, 3660],
+  [-600, 3660, 1020, 4020],
+  [1680, 3660, 2100, 4020],
+  [-600, 4020, 2100, 4320],
+]
+
+[[regions]]
+# 出处：circulation, arctic_ice；现代平均近似。合并区按规格设保守冬航关闭；挪威暖流区划入挪威海，不把北角航线一起封死。
+key = "white_barents"
+name = "白海与巴伦支海"
+climate = "cold"
+# music 原为 "north"（配乐的数据接线，2026-10-11）：写 white_sea → 《白海的北风》；绕北角去白海的英格兰商船走的海。
+music = "white_sea"
+hidden = false
+sources = ["circulation", "arctic_ice"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [3120, 2760, 5520, 3060],
+  [2700, 3060, 5520, 3120],
+  [2700, 3120, 5700, 3180],
+  [2280, 3180, 5700, 3360],
+  [2100, 3360, 5940, 3480],
+  [2100, 3480, 6000, 4320],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "north_sea"
+name = "北海"
+climate = "temperate"
+# music 原为 "north"（配乐的数据接线，2026-10-11）：写 north_sea → 《柯克船的号子》；汉萨柯克船的海，与波罗的海同一首。
+music = "north_sea"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-540, 2880, -360, 3000],
+  [120, 2880, 900, 3060],
+  [-600, 3000, -360, 3060],
+  [-600, 3060, -540, 3360],
+  [-180, 3060, 900, 3120],
+  [-180, 3120, 720, 3360],
+  [-600, 3360, 720, 3480],
+]
+
+[[regions]]
+# 出处：baltic_ice；现代平均近似。主体海区不全年季节性封死；湾内港口可另设局地封冻。
+key = "baltic"
+name = "波罗的海"
+climate = "temperate"
+music = "hansa"
+hidden = false
+sources = ["baltic_ice"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [900, 3000, 2100, 3060],
+  [900, 3060, 2280, 3120],
+  [720, 3120, 2280, 3360],
+  [720, 3360, 2100, 3660],
+]
+
+[[regions]]
+# 出处：baltic_ice；现代平均近似。
+key = "bothnia"
+name = "波的尼亚湾"
+climate = "cold"
+music = "hansa"
+hidden = false
+sources = ["baltic_ice"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1020, 3660, 1680, 4020],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。潮流以残余流近似，不能替代逐时潮汐。
+key = "english_channel"
+name = "英吉利海峡"
+climate = "temperate"
+# music 原为 "north"（配乐的数据接线，2026-10-11）：写 north_sea → 《柯克船的号子》；照北海。
+music = "north_sea"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [0, 2760, 420, 2880],
+  [-360, 2880, 120, 3060],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "irish_sea"
+name = "爱尔兰海"
+climate = "temperate"
+music = "north"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-540, 3060, -180, 3360],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。冬季西风与风暴增强；北界同英吉利海峡接合。
+key = "biscay"
+name = "比斯开湾"
+climate = "temperate"
+music = "iberian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 10, 11, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-360, 2475, 0, 2580],
+  [-720, 2580, 0, 2700],
+  [-720, 2700, 120, 2760],
+  [-720, 2760, 0, 2880],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "iberia"
+name = "伊比利亚外海"
+climate = "temperate"
+music = "iberian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-900, 2100, -360, 2400],
+  [-900, 2400, -180, 2475],
+  [-900, 2475, -360, 2580],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。隐藏海域；方位为TERRA16 §8的游戏设定，雾异常不是气象史料。
+key = "dark_sea"
+name = "黑暗之海"
+climate = "temperate"
+music = "dark_sea"
+hidden = true
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000]
+areas = [
+  [-1980, 1500, -1500, 1980],
+]
+
+[[regions]]
+# 出处：canadian_fog, canadian_ice；现代平均近似。
+key = "grand_banks"
+name = "大浅滩"
+climate = "temperate"
+music = "north"
+hidden = false
+sources = ["canadian_fog", "canadian_ice"]
+storm_months = []
+fog_bp = [1000, 1100, 1500, 2200, 3200, 4200, 4500, 4000, 2800, 1800, 1300, 1100]
+areas = [
+  [-3420, 2400, -2580, 3120],
+]
+
+[[regions]]
+# 出处：canadian_ice；现代平均近似。
+key = "st_lawrence"
+name = "圣劳伦斯湾"
+climate = "temperate"
+music = "north"
+hidden = false
+sources = ["canadian_ice"]
+storm_months = []
+fog_bp = [1000, 1100, 1500, 2200, 3200, 4200, 4500, 4000, 2800, 1800, 1300, 1100]
+areas = [
+  [-4080, 2700, -3420, 3120],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "levant"
+name = "黎凡特海"
+climate = "temperate"
+music = "levant"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+# B5b：东界至36度，覆盖黎巴嫩海岸；与阿拉伯海仅同步调整共边，保持无重叠分区。
+areas = [
+  [1500, 1200, 1560, 1320],
+  [1320, 1320, 1680, 1380],
+  [1260, 1380, 1740, 1500],
+  [1500, 1500, 1800, 1800],
+  [1500, 1800, 2160, 2070],
+  [1740, 2070, 2160, 2220],
+  [1740, 2220, 2280, 2280],
+  [1920, 2280, 2100, 2400],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "libyan_sea"
+name = "利比亚海"
+climate = "temperate"
+music = "mediterranean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [900, 1500, 1500, 1560],
+  [720, 1560, 1500, 1800],
+  [900, 1800, 1500, 2070],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。表层大西洋水向东入海；海峡东西风按月平均，非潮汐时刻表。
+key = "alboran"
+name = "阿尔沃兰海"
+climate = "temperate"
+music = "iberian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-180, 1800, 0, 1980],
+  [-360, 1980, 0, 2400],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "balearic"
+name = "巴利阿里海"
+climate = "temperate"
+music = "mediterranean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [0, 1800, 420, 1980],
+  [0, 1980, 540, 2400],
+  [-180, 2400, 540, 2475],
+  [0, 2475, 540, 2520],
+  [0, 2520, 420, 2700],
+  [120, 2700, 420, 2760],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "ligurian"
+name = "利古里亚海"
+climate = "temperate"
+music = "mediterranean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [420, 2520, 660, 2640],
+  [420, 2640, 720, 2880],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "tyrrhenian"
+name = "第勒尼安海"
+climate = "temperate"
+music = "mediterranean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [540, 2280, 900, 2400],
+  [540, 2400, 720, 2520],
+  [660, 2520, 720, 2640],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "sicily_strait"
+name = "西西里海峡"
+climate = "temperate"
+music = "mediterranean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [420, 1560, 720, 1800],
+  [420, 1800, 900, 1980],
+  [540, 1980, 900, 2280],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "ionian"
+name = "爱奥尼亚海"
+climate = "temperate"
+music = "mediterranean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [900, 2070, 1320, 2400],
+  [1260, 2400, 1320, 2460],
+]
+
+[[regions]]
+# 出处：med_winds；现代平均近似。冬季布拉风由东北吹向西南；沿岸回流用东北岸向西北的分量近似。
+key = "adriatic"
+name = "亚得里亚海"
+climate = "temperate"
+music = "adriatic"
+hidden = false
+sources = ["med_winds"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [720, 2400, 1260, 2460],
+  [720, 2460, 1320, 2580],
+  [720, 2580, 1500, 2880],
+  [900, 2880, 1320, 3000],
+]
+
+[[regions]]
+# 出处：med_winds；现代平均近似。
+key = "aegean"
+name = "爱琴海"
+climate = "temperate"
+music = "levant"
+hidden = false
+sources = ["med_winds"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1320, 2070, 1740, 2280],
+  [1320, 2280, 1800, 2400],
+  [1320, 2400, 1560, 2520],
+  [1320, 2520, 1500, 2580],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "black_sea"
+name = "黑海"
+climate = "temperate"
+music = "levant"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 10, 11, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [2100, 2280, 2700, 2400],
+  [1800, 2400, 2700, 2460],
+  [1800, 2460, 3120, 2475],
+  [1620, 2475, 3120, 2520],
+  [1560, 2520, 3120, 2580],
+  [1500, 2580, 3120, 2880],
+  [1320, 2880, 3120, 3000],
+  [2100, 3000, 3120, 3060],
+  [2280, 3060, 2700, 3180],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "marmara"
+name = "马尔马拉海"
+climate = "temperate"
+music = "levant"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1800, 2280, 1920, 2400],
+  [1560, 2400, 1800, 2475],
+  [1560, 2475, 1620, 2520],
+  [1500, 2520, 1560, 2580],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "canaries"
+name = "加那利海流"
+climate = "tropical"
+music = "iberian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [-1500, 1200, -360, 1560],
+  [-1500, 1560, -180, 1980],
+  [-1500, 1980, -360, 2100],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "guinea_gulf"
+name = "几内亚湾"
+climate = "tropical"
+# music 原为 "atlantic"（配乐的数据接线，2026-10-11）：写 west_africa → 《赤道的长浪》；非洲西岸的乐器领奏。
+music = "west_africa"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-900, -300, 900, 600],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "angola"
+name = "安哥拉海"
+climate = "tropical"
+# music 原为 "atlantic"（配乐的数据接线，2026-10-11）：写 west_africa → 《赤道的长浪》；第二遍往南走刚果与安哥拉的海岸。
+music = "west_africa"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [0, -1020, 1200, -300],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "benguela"
+name = "本格拉海流"
+climate = "tropical"
+# music 原为 "atlantic"（配乐的数据接线，2026-10-11）：写 west_africa → 《赤道的长浪》；第二遍往南走刚果与安哥拉的海岸。
+music = "west_africa"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [0, -2040, 1200, -1020],
+]
+
+[[regions]]
+# 出处：cape, agulhas；现代平均近似。
+key = "cape_good_hope"
+name = "好望角"
+climate = "temperate"
+music = "atlantic"
+hidden = false
+sources = ["cape", "agulhas"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [600, -2520, 1320, -2040],
+]
+
+[[regions]]
+# 出处：agulhas, roaring；现代平均近似。沿东岸流向西南；逆流遇西风时巨浪风险提高，回折不是整个洋盆的同向流。
+key = "agulhas"
+name = "厄加勒斯海流"
+climate = "temperate"
+music = "indian"
+hidden = false
+sources = ["agulhas", "roaring"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1320, -2520, 2280, -1500],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "mozambique_channel"
+name = "莫桑比克海峡"
+climate = "tropical"
+music = "indian"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 3, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1920, -1500, 2700, -600],
+]
+
+[[regions]]
+# 出处：monsoon, indian_current；现代平均近似。东非沿岸流基本向北；北端索马里季节逆转不能推广到基尔瓦。
+key = "swahili"
+name = "斯瓦希里海"
+climate = "tropical"
+music = "indian"
+hidden = false
+sources = ["monsoon", "indian_current"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [2100, -600, 3120, 300],
+]
+
+[[regions]]
+# 出处：circulation, monsoon；现代平均近似。北部全年以北风为主；一张海区表以北部主航道为代表，南部冬季东南风需后续细分。
+key = "red_sea"
+name = "红海"
+climate = "temperate"
+music = "arabic"
+hidden = false
+sources = ["circulation", "monsoon"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [1620, 360, 1740, 480],
+  [1560, 480, 1920, 600],
+  [1500, 600, 1920, 720],
+  [1500, 720, 2100, 750],
+  [1500, 750, 2580, 960],
+  [1500, 960, 2640, 1200],
+  [1560, 1200, 2640, 1320],
+  [1680, 1320, 2640, 1380],
+  [1740, 1380, 2640, 1500],
+  [1800, 1500, 2640, 1800],
+]
+
+[[regions]]
+# 出处：monsoon, indian_current；现代平均近似。
+key = "aden"
+name = "亚丁湾"
+climate = "tropical"
+music = "arabic"
+hidden = false
+sources = ["monsoon", "indian_current"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [2580, 600, 3120, 960],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。西北沙马风吹向东南；霍尔木兹表层入流仅取弱流，出入双层流不在本档表达。
+key = "persian_gulf"
+name = "波斯湾"
+climate = "temperate"
+music = "arabic"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [2640, 1380, 3480, 1860],
+]
+
+[[regions]]
+# 出处：monsoon, indian_current, imd；现代平均近似。
+key = "gujarat"
+name = "古吉拉特海"
+climate = "tropical"
+# music 原为 "indian"（配乐的数据接线，2026-10-11）：写 indian_coast → 《雨季的船歌》；原来靠前端按停泊的港口细分才放得到，现在直接写明。
+music = "indian_coast"
+hidden = false
+sources = ["monsoon", "indian_current", "imd"]
+storm_months = [5, 10, 11]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [3960, 1200, 4440, 1560],
+]
+
+[[regions]]
+# 出处：monsoon, indian_current；现代平均近似。
+key = "malabar"
+name = "马拉巴尔海"
+climate = "tropical"
+# music 原为 "indian"（配乐的数据接线，2026-10-11）：写 malabar → 《雨季的船歌》；原来靠前端按停泊的港口细分才放得到，现在直接写明。
+music = "malabar"
+hidden = false
+sources = ["monsoon", "indian_current"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [4320, 480, 4440, 600],
+  [4320, 600, 4680, 1200],
+]
+
+[[regions]]
+# 出处：indian_current, monsoon；现代平均近似。
+key = "maldives"
+name = "马尔代夫海"
+climate = "tropical"
+music = "indian"
+hidden = false
+sources = ["indian_current", "monsoon"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [4020, -60, 4440, 480],
+]
+
+[[regions]]
+# 出处：indian_current, imd；现代平均近似。
+key = "ceylon"
+name = "锡兰海"
+climate = "tropical"
+# music 原为 "indian"（配乐的数据接线，2026-10-11）：写 ceylon → 《雨季的船歌》；原来靠前端按停泊的港口细分才放得到，现在直接写明。
+music = "ceylon"
+hidden = false
+sources = ["indian_current", "imd"]
+storm_months = [5, 10, 11]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [4440, 0, 5040, 600],
+]
+
+[[regions]]
+# 出处：monsoon, imd；现代平均近似。
+key = "andaman"
+name = "安达曼海"
+climate = "tropical"
+music = "indian"
+hidden = false
+sources = ["monsoon", "imd"]
+storm_months = [5, 10, 11]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [5520, 240, 5700, 360],
+  [5520, 360, 5940, 900],
+  [5520, 900, 6000, 1320],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "south_china_south"
+name = "南海南部"
+climate = "tropical"
+music = "southeast_asia"
+hidden = false
+sources = ["hko"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6240, 0, 6960, 360],
+  [6300, 360, 7020, 720],
+  [6300, 720, 7200, 900],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "south_china_north"
+name = "南海北部"
+climate = "tropical"
+music = "china"
+hidden = false
+sources = ["hko"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6300, 900, 7260, 1020],
+  [6600, 1020, 7260, 1320],
+  [6600, 1320, 7020, 1380],
+  [6300, 1380, 7020, 1500],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "java_sea"
+name = "爪哇海"
+climate = "tropical"
+music = "nusantara"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 3, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6000, -600, 6960, 0],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "banda"
+name = "班达海"
+climate = "tropical"
+music = "nusantara"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6960, -600, 8100, -180],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "moluccas"
+name = "摩鹿加海"
+climate = "tropical"
+music = "nusantara"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7440, -180, 8100, 300],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "celebes"
+name = "苏拉威西海"
+climate = "tropical"
+music = "nusantara"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6960, 0, 7440, 300],
+  [6960, 300, 7380, 360],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "sulu"
+name = "苏禄海"
+climate = "tropical"
+# music 原为 "southeast_asia"（配乐的数据接线，2026-10-11）：写 sulu → 《苏禄海的锣》；库林唐锣乐领奏。
+music = "sulu"
+hidden = false
+sources = ["hko"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7020, 360, 7380, 720],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "siam_gulf"
+name = "暹罗湾"
+climate = "tropical"
+music = "southeast_asia"
+hidden = false
+sources = ["hko"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [5940, 360, 6300, 900],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "tonkin"
+name = "北部湾"
+climate = "tropical"
+music = "china"
+hidden = false
+sources = ["hko"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6300, 1020, 6600, 1380],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。受季风调制的残余流向西北；狭口潮流换向另由潮汐模块处理。
+key = "malacca"
+name = "马六甲海峡"
+climate = "tropical"
+music = "southeast_asia"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [5700, 0, 6240, 360],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "timor_arafura"
+name = "帝汶与阿拉弗拉海"
+climate = "tropical"
+music = "nusantara"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 3, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [6720, -1500, 8520, -600],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "philippine_sea"
+name = "菲律宾海"
+climate = "tropical"
+# music 原为 "southeast_asia"（配乐的数据接线，2026-10-11）：写 philippines → 《苏禄海的锣》；菲律宾群岛外侧的海。
+music = "philippines"
+hidden = false
+sources = ["hko"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7380, 300, 9000, 1500],
+]
+
+[[regions]]
+# 出处：hko, currents；现代平均近似。
+key = "east_china_sea"
+name = "东海"
+climate = "temperate"
+# music 原为 "china"（配乐的数据接线，2026-10-11）：写 east_china_sea → 《东海的季风》；台湾海峡、南海北部、北部湾仍写 china。
+music = "east_china_sea"
+hidden = false
+sources = ["hko", "currents"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7320, 1500, 7800, 1560],
+  [7200, 1560, 7800, 1980],
+]
+
+[[regions]]
+# 出处：hko；现代平均近似。
+key = "taiwan_strait"
+name = "台湾海峡"
+climate = "tropical"
+music = "china"
+hidden = false
+sources = ["hko"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7020, 1320, 7320, 1560],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "yellow_sea"
+name = "黄海"
+climate = "temperate"
+# music 原为 "china"（配乐的数据接线，2026-10-11）：写 east_china_sea → 《东海的季风》；照东海。
+music = "east_china_sea"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [1000, 1100, 1500, 2200, 3200, 4200, 4500, 4000, 2800, 1800, 1300, 1100]
+areas = [
+  [7080, 1980, 7560, 2220],
+  [7320, 2220, 7560, 2400],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "bohai"
+name = "渤海与庙岛群岛"
+climate = "temperate"
+# music 原为 "china"（配乐的数据接线，2026-10-11）：写 east_china_sea → 《东海的季风》；照东海。
+music = "east_china_sea"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7020, 2220, 7320, 2400],
+]
+
+[[regions]]
+# 出处：design；现代平均近似。12—2月关闭按TERRA16 §3.2的设计；不把现代单年冰况当1553逐日记录。
+key = "liaodong_bay"
+name = "辽东湾"
+climate = "temperate"
+# music 原为 "china"（配乐的数据接线，2026-10-11）：写 east_china_sea → 《东海的季风》；照东海。
+music = "east_china_sea"
+hidden = false
+sources = ["design"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7140, 2400, 7380, 2520],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "japan_sea"
+name = "日本海"
+climate = "temperate"
+music = "japan"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7560, 1980, 7800, 2100],
+  [7560, 2100, 8580, 2700],
+  [7560, 2700, 8100, 3120],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。取台湾以东至日本南岸的黑潮主干与延伸带；不把整个西北太平洋都揭开。
+key = "kuroshio"
+name = "黑潮"
+climate = "temperate"
+music = "japan"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [7, 8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7800, 1500, 8580, 1800],
+  [7800, 1800, 9300, 1980],
+  [8130, 1980, 9300, 2100],
+  [8580, 2100, 9300, 2220],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。急流强度用二档残余代表；月均东向不代表每次潮汐都向东。
+key = "seto_inland"
+name = "濑户内海"
+climate = "temperate"
+music = "japan"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [7800, 1980, 8130, 2100],
+]
+
+[[regions]]
+# 出处：okhotsk_ice；现代平均近似。为无破冰能力帆船设保守关航月；夏季融冰，不表示所有冬日全海冰封。
+key = "okhotsk"
+name = "鄂霍次克海"
+climate = "cold"
+music = "japan"
+hidden = false
+sources = ["okhotsk_ice"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [8100, 2700, 9900, 3720],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "polynesia"
+name = "波利尼西亚"
+climate = "tropical"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 3, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-10800, -1800, -7200, -300],
+  [10200, -1800, 10800, -300],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "peru_current"
+name = "秘鲁寒流"
+climate = "tropical"
+music = "andean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [800, 900, 1000, 1400, 1800, 2200, 2400, 2200, 1800, 1400, 1000, 900]
+areas = [
+  [-6000, -2700, -4200, 0],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。冬季地峡北风喷流向南；夏季转西南来风。
+key = "panama_gulf"
+name = "巴拿马湾"
+climate = "temperate"
+music = "andean"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-6000, 0, -4500, 600],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "coral_tasman"
+name = "珊瑚海与塔斯曼海"
+climate = "temperate"
+music = "pacific"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = [1, 2, 3, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [8520, -3000, 10200, -600],
+]
+
+[[regions]]
+# 出处：hurricanes, pilot；现代平均近似。
+key = "east_caribbean"
+name = "东加勒比"
+climate = "tropical"
+music = "caribbean"
+hidden = false
+sources = ["hurricanes", "pilot"]
+storm_months = [8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4500, 600, -3300, 1380],
+]
+
+[[regions]]
+# 出处：hurricanes, pilot；现代平均近似。
+key = "west_caribbean"
+name = "西加勒比"
+climate = "tropical"
+music = "yucatan"
+hidden = false
+sources = ["hurricanes", "pilot"]
+storm_months = [8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-5400, 600, -4500, 1080],
+  [-5220, 1080, -4500, 1380],
+]
+
+[[regions]]
+# 出处：hurricanes, pilot；现代平均近似。
+key = "mexico_gulf"
+name = "墨西哥湾"
+climate = "tropical"
+music = "yucatan"
+hidden = false
+sources = ["hurricanes", "pilot"]
+storm_months = [8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-6000, 1080, -5220, 1380],
+  [-6000, 1380, -4920, 1860],
+]
+
+[[regions]]
+# 出处：gulf_stream, hurricanes；现代平均近似。
+key = "bahamas_florida"
+name = "巴哈马与佛罗里达海峡"
+climate = "tropical"
+music = "caribbean"
+hidden = false
+sources = ["gulf_stream", "hurricanes"]
+storm_months = [8, 9, 10]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4920, 1380, -4320, 1860],
+]
+
+[[regions]]
+# 出处：circulation, currents；现代平均近似。
+key = "brazil_current"
+name = "巴西海流"
+climate = "tropical"
+# music 原为 "atlantic"（配乐的数据接线，2026-10-11）：写 brazil → 《巴西海流》；图皮人划独木舟的歌。
+music = "brazil"
+hidden = false
+sources = ["circulation", "currents"]
+storm_months = []
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-3600, -1800, -1800, -300],
+]
+
+[[regions]]
+# 出处：circulation, currents, roaring；现代平均近似。
+key = "la_plata"
+name = "拉普拉塔"
+climate = "temperate"
+music = "atlantic"
+hidden = false
+sources = ["circulation", "currents", "roaring"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-3900, -2280, -2700, -1800],
+]
+
+[[regions]]
+# 出处：circulation, currents, roaring；现代平均近似。
+key = "patagonia"
+name = "巴塔哥尼亚"
+climate = "temperate"
+music = "atlantic"
+hidden = false
+sources = ["circulation", "currents", "roaring"]
+storm_months = [5, 6, 7, 8, 9]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4200, -3120, -2700, -2280],
+]
+
+[[regions]]
+# 出处：circulation, currents, roaring；现代平均近似。全年风暴带；局部峡道风潮需地图海峡规则，不能从月均断定平安。
+key = "cape_horn"
+name = "合恩角与麦哲伦"
+climate = "temperate"
+music = "andean"
+hidden = false
+sources = ["circulation", "currents", "roaring"]
+storm_months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+fog_bp = [400, 450, 600, 700, 700, 650, 600, 550, 550, 600, 500, 450]
+areas = [
+  [-4920, -3600, -2700, -3120],
+]
+
+[navigation.projection]
+kind = "equirect"
+west = -10800
+north = 4320
+arcmin_per_cell = 20
+lat_scale = true
+
+[navigation.regions.northwest_pacific]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.northeast_pacific]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.north_pacific_trades]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.central_pacific]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_pacific]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_indian_ocean]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_pacific_trades]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_indian_trades]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.madagascar_east]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.arabian_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 650, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.bengal_bay]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 650, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_atlantic]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_atlantic_trades]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.equatorial_atlantic]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 6, wind_strength = 1, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.sargasso]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 150, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 150, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 1400, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.azores]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 2, current_dir = 2, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 2, current_dir = 2, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 1, current_dir = 2, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 1, current_dir = 2, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 1, current_dir = 2, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 2, current_dir = 2, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.cape_verde]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.gulf_stream]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 3, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 3, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 3, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 1, current_strength = 3, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 3, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 3, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 3, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 1, current_strength = 3, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 3, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 3, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.iceland_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.labrador]
+south = false
+frozen_months = [1, 2, 3, 4, 12]
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.norwegian_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.white_barents]
+south = false
+frozen_months = [1, 2, 3, 4, 12]
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 6, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 7, current_dir = 6, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 6, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.north_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 1, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 1, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 1, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 1, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.baltic]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.bothnia]
+south = false
+frozen_months = [1, 2, 3, 4, 12]
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.english_channel]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.irish_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.biscay]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1800, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1600, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 1300, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1900, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.iberia]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.dark_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 1, current_dir = 6, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.grand_banks]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.st_lawrence]
+south = false
+frozen_months = [1, 2, 3]
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.levant]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 1, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 1, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 1, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.libyan_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.alboran]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 6, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 6, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 6, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 6, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 6, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.balearic]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 5, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 5, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 5, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 5, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.ligurian]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.tyrrhenian]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.sicily_strait]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 2, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.ionian]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.adriatic]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 7, current_dir = 7, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 7, current_dir = 7, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 6, current_dir = 7, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 4, current_dir = 7, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 3, current_dir = 7, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 3, current_dir = 7, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 3, current_dir = 7, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 3, current_dir = 7, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 7, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 6, current_dir = 7, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 7, current_dir = 7, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.aegean]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 4, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.black_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 1, wind_strength = 7, current_dir = 6, current_strength = 1, storm_bp = 1800, pirate_bp = 0 }, # 1月
+  { wind_dir = 1, wind_strength = 7, current_dir = 6, current_strength = 1, storm_bp = 1600, pirate_bp = 0 }, # 2月
+  { wind_dir = 1, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 3月
+  { wind_dir = 1, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 1300, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 11月
+  { wind_dir = 1, wind_strength = 7, current_dir = 6, current_strength = 1, storm_bp = 1900, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.marmara]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 4, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 4, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 4, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 4, wind_strength = 3, current_dir = 5, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 4, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 6, current_dir = 5, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 7, current_dir = 5, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 7, current_dir = 5, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 6, current_dir = 5, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 4, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 4, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 4, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.canaries]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.guinea_gulf]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 6, wind_strength = 1, current_dir = 2, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 1, current_dir = 2, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 6, wind_strength = 1, current_dir = 2, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 6, wind_strength = 1, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 1, current_dir = 2, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 6, wind_strength = 1, current_dir = 2, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.angola]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.benguela]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.cape_good_hope]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.agulhas]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 3, current_dir = 5, current_strength = 3, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 3, current_dir = 5, current_strength = 3, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 4, current_dir = 5, current_strength = 3, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 5, current_strength = 3, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 5, current_strength = 3, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 5, current_strength = 3, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 5, current_strength = 3, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 5, current_strength = 3, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 5, current_strength = 3, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 5, current_strength = 3, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 4, current_dir = 5, current_strength = 3, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 3, current_dir = 5, current_strength = 3, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.mozambique_channel]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.swahili]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 0, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.red_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 4, wind_strength = 6, current_dir = 7, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 4, wind_strength = 6, current_dir = 7, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 4, wind_strength = 6, current_dir = 7, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 4, wind_strength = 6, current_dir = 7, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 4, wind_strength = 5, current_dir = 7, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.aden]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 0, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.persian_gulf]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 6, current_dir = 3, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 7, current_dir = 3, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 7, current_dir = 3, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 6, current_dir = 3, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 4, current_dir = 3, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.gujarat]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 0, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.malabar]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 0, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 0, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.maldives]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 3, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 3, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.ceylon]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 2, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 2, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 3, storm_bp = 600, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 2, current_strength = 3, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 6, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.andaman]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 4, current_strength = 0, storm_bp = 650, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_china_south]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.south_china_north]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.java_sea]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 1400, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 1200, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 2, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 150, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 1, storm_bp = 150, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 1200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.banda]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.moluccas]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 2, current_dir = 4, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 2, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.celebes]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.sulu]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.siam_gulf]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 4, current_strength = 0, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.tonkin]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 5, current_strength = 0, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 1, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 5, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 5, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 5, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.malacca]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 7, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 7, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 7, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 7, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 7, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 7, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 7, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.timor_arafura]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 2, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 2, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.philippine_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.east_china_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.taiwan_strait]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 6, wind_strength = 2, current_dir = 0, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 6, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.yellow_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 0, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 0, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 0, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 0, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 0, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.bohai]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.liaodong_bay]
+south = false
+frozen_months = [1, 2, 12]
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.japan_sea]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 1, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 1, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.kuroshio]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 1, current_strength = 3, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 3, storm_bp = 200, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 250, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 1, current_strength = 3, storm_bp = 300, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 1, current_strength = 3, storm_bp = 400, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 850, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 1500, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 1, current_strength = 3, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 1, current_strength = 3, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 1, current_strength = 3, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 1, current_strength = 3, storm_bp = 350, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.seto_inland]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 0, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 0, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 0, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 0, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 0, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 4, wind_strength = 4, current_dir = 2, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 2, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 2, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.okhotsk]
+south = false
+frozen_months = [1, 2, 3, 4, 12]
+weather = [
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 1月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 900, pirate_bp = 0 }, # 2月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 4月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 6月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 7月
+  { wind_dir = 3, wind_strength = 3, current_dir = 4, current_strength = 2, storm_bp = 220, pirate_bp = 0 }, # 8月
+  { wind_dir = 3, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 450, pirate_bp = 0 }, # 9月
+  { wind_dir = 3, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 10月
+  { wind_dir = 3, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 950, pirate_bp = 0 }, # 11月
+  { wind_dir = 3, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.polynesia]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.peru_current]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.panama_gulf]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 4, wind_strength = 6, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 4, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 1, wind_strength = 4, current_dir = 4, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 1, wind_strength = 3, current_dir = 4, current_strength = 1, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 4, wind_strength = 5, current_dir = 4, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.coral_tasman]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 4, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 1200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.east_caribbean]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 6, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 6, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.west_caribbean]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 150, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 180, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 1400, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 7, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 7, current_strength = 2, storm_bp = 200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.mexico_gulf]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 150, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 150, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 180, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 250, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 1400, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 2, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 2, current_strength = 1, storm_bp = 200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.bahamas_florida]
+south = false
+frozen_months = []
+weather = [
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 3, storm_bp = 180, pirate_bp = 0 }, # 1月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 3, storm_bp = 150, pirate_bp = 0 }, # 2月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 3, storm_bp = 150, pirate_bp = 0 }, # 3月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 180, pirate_bp = 0 }, # 4月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 250, pirate_bp = 0 }, # 5月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 750, pirate_bp = 0 }, # 7月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 1400, pirate_bp = 0 }, # 8月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 1800, pirate_bp = 0 }, # 9月
+  { wind_dir = 5, wind_strength = 4, current_dir = 0, current_strength = 3, storm_bp = 1500, pirate_bp = 0 }, # 10月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 3, storm_bp = 650, pirate_bp = 0 }, # 11月
+  { wind_dir = 5, wind_strength = 5, current_dir = 0, current_strength = 3, storm_bp = 200, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.brazil_current]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 1月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 2月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 300, pirate_bp = 0 }, # 3月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 400, pirate_bp = 0 }, # 4月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 5月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 6月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 7月
+  { wind_dir = 7, wind_strength = 6, current_dir = 4, current_strength = 2, storm_bp = 650, pirate_bp = 0 }, # 8月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 9月
+  { wind_dir = 7, wind_strength = 5, current_dir = 4, current_strength = 2, storm_bp = 500, pirate_bp = 0 }, # 10月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 350, pirate_bp = 0 }, # 11月
+  { wind_dir = 7, wind_strength = 4, current_dir = 4, current_strength = 2, storm_bp = 250, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.la_plata]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 3, current_dir = 3, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 3, current_dir = 3, current_strength = 1, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 4, current_dir = 3, current_strength = 1, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 3, current_strength = 1, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 3, current_strength = 1, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 3, current_strength = 1, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 3, current_strength = 1, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 3, current_strength = 1, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 3, current_strength = 1, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 4, current_dir = 3, current_strength = 1, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 3, current_dir = 3, current_strength = 1, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.patagonia]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 550, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 1100, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 1700, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 1900, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 2000, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 7, current_dir = 0, current_strength = 2, storm_bp = 1800, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 6, current_dir = 0, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 5, current_dir = 0, current_strength = 2, storm_bp = 1000, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 4, current_dir = 0, current_strength = 2, storm_bp = 750, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 3, current_dir = 0, current_strength = 2, storm_bp = 600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.regions.cape_horn]
+south = true
+frozen_months = []
+weather = [
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 1月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1500, pirate_bp = 0 }, # 2月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1700, pirate_bp = 0 }, # 3月
+  { wind_dir = 2, wind_strength = 8, current_dir = 2, current_strength = 2, storm_bp = 1900, pirate_bp = 0 }, # 4月
+  { wind_dir = 2, wind_strength = 8, current_dir = 2, current_strength = 2, storm_bp = 2100, pirate_bp = 0 }, # 5月
+  { wind_dir = 2, wind_strength = 9, current_dir = 2, current_strength = 2, storm_bp = 2300, pirate_bp = 0 }, # 6月
+  { wind_dir = 2, wind_strength = 9, current_dir = 2, current_strength = 2, storm_bp = 2400, pirate_bp = 0 }, # 7月
+  { wind_dir = 2, wind_strength = 9, current_dir = 2, current_strength = 2, storm_bp = 2300, pirate_bp = 0 }, # 8月
+  { wind_dir = 2, wind_strength = 8, current_dir = 2, current_strength = 2, storm_bp = 2100, pirate_bp = 0 }, # 9月
+  { wind_dir = 2, wind_strength = 8, current_dir = 2, current_strength = 2, storm_bp = 1900, pirate_bp = 0 }, # 10月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1700, pirate_bp = 0 }, # 11月
+  { wind_dir = 2, wind_strength = 7, current_dir = 2, current_strength = 2, storm_bp = 1600, pirate_bp = 0 }, # 12月
+]
+
+[navigation.frozen_ports]
+# C2港口key；湾内关航近似，来源canadian_ice/baltic_ice/design。
+st_nicholas = [1, 2, 3, 4, 12]
+arkhangelsk = [1, 2, 3, 4, 12]
+niuzhuang = [1, 2, 12]
+red_bay = [1, 2, 3, 4]
+narva = [1, 2, 3]
+riga = [1, 2, 3]
+stockholm = [1, 2, 3]
+# B9：锚地在gulf_stream矩形，但出海口经st_lawrence冰区；仅1—3月封港。
+tadoussac = [1, 2, 3]
+
+[[knowledge_groups]]
+key = "japan_inland"
+name = "日本内海"
+regions = ["seto_inland"]
+clip_arcmin = [7740, 1920, 8160, 2100]
+
+[[knowledge_groups]]
+key = "japan_south"
+name = "日本南海路"
+regions = ["kuroshio", "seto_inland"]
+clip_arcmin = [7800, 1740, 8520, 2100]
+
+[[knowledge_groups]]
+key = "kyushu"
+name = "九州、五岛与朝鲜南岸"
+regions = ["east_china_sea", "japan_sea", "seto_inland"]
+clip_arcmin = [7500, 1740, 7920, 2160]
+
+[[knowledge_groups]]
+key = "ryukyu"
+name = "琉球"
+regions = ["east_china_sea", "kuroshio", "taiwan_strait"]
+clip_arcmin = [7260, 1440, 7920, 1800]
+
+[[knowledge_groups]]
+key = "west_mediterranean"
+name = "西地中海"
+regions = ["alboran", "balearic", "ligurian", "tyrrhenian", "sicily_strait"]
+clip_arcmin = [-360, 1800, 960, 2760]
+
+[[knowledge_groups]]
+key = "east_africa"
+name = "东非"
+regions = ["swahili", "mozambique_channel", "aden"]
+clip_arcmin = [1920, -1500, 3120, 960]
+
+[[knowledge_groups]]
+key = "pattani"
+name = "北大年近海"
+regions = ["siam_gulf", "south_china_south"]
+clip_arcmin = [6000, 300, 6240, 540]
+
+[[knowledge_groups]]
+key = "yucatan"
+name = "尤卡坦沿岸"
+regions = ["west_caribbean", "mexico_gulf"]
+clip_arcmin = [-5520, 1080, -5100, 1440]
+
+[[knowledge_groups]]
+key = "mexico_gulf_south"
+name = "墨西哥湾南部"
+regions = ["mexico_gulf"]
+clip_arcmin = [-5880, 1080, -5100, 1500]
+
+[[knowledge_groups]]
+key = "honduras_bay"
+name = "洪都拉斯湾"
+regions = ["west_caribbean"]
+clip_arcmin = [-5340, 900, -4980, 1140]
+
+[[knowledge_groups]]
+key = "gibraltar"
+name = "直布罗陀海峡"
+regions = ["alboran", "iberia"]
+clip_arcmin = [-420, 2100, -240, 2220]
+
+[[knowledge_groups]]
+key = "morocco_atlantic"
+name = "摩洛哥大西洋岸"
+regions = ["canaries", "iberia"]
+clip_arcmin = [-720, 1680, -360, 2160]
+
+[[knowledge_groups]]
+key = "north_africa"
+name = "北非近海"
+regions = ["alboran", "balearic", "sicily_strait", "libyan_sea"]
+clip_arcmin = [-360, 1800, 1320, 2280]
+
+[[knowledge_groups]]
+key = "andalusia"
+name = "安达卢西亚近海"
+regions = ["iberia", "alboran"]
+clip_arcmin = [-540, 2100, 0, 2280]
+
+[[knowledge_groups]]
+key = "oman"
+name = "阿曼近海"
+regions = ["persian_gulf", "arabian_sea"]
+clip_arcmin = [3240, 1080, 3720, 1620]
+
+[[knowledge_groups]]
+key = "caribbean_route"
+name = "通往加勒比的航线"
+regions = ["canaries", "cape_verde", "sargasso", "east_caribbean"]
+clip_arcmin = [-4200, 900, -900, 1800]
+
+[[knowledge_groups]]
+key = "portugal"
+name = "葡萄牙与马德拉"
+regions = ["iberia", "canaries"]
+clip_arcmin = [-1080, 1800, -360, 2580]
+
+[[knowledge_groups]]
+key = "guinea_route"
+name = "几内亚航线"
+regions = ["canaries", "cape_verde", "guinea_gulf"]
+clip_arcmin = [-1200, 0, 300, 1920]
+
+[[knowledge_groups]]
+key = "east_mediterranean"
+name = "东地中海"
+regions = ["ionian", "aegean", "levant", "libyan_sea"]
+clip_arcmin = [900, 1500, 2100, 2460]
+
+[[knowledge_groups]]
+key = "korea"
+name = "朝鲜与对马"
+regions = ["yellow_sea", "japan_sea", "east_china_sea"]
+clip_arcmin = [7380, 1920, 7860, 2280]
+
+[[knowledge_groups]]
+key = "fuzhou"
+name = "福州近海"
+regions = ["taiwan_strait", "east_china_sea"]
+clip_arcmin = [7080, 1440, 7380, 1680]
+
+[[knowledge_groups]]
+key = "luzon_visayas"
+name = "吕宋与米沙鄢"
+regions = ["south_china_south", "south_china_north", "sulu", "philippine_sea"]
+clip_arcmin = [7020, 420, 7680, 1200]

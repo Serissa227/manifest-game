@@ -1,0 +1,205 @@
+# 请托：错了十年的一个字（request_kim_munyeong）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：金文永（kim_munyeong，1540-09-07 生，男），釜山倭馆的译官学徒；cast 在 cast/classmates_custom_busan_interpreter.toml。
+# 类型：送信（letter）。主线三章：offer（许与准，报价）→ handover（严原的通事，对马）→ reply（一字不差，回釜山，带的是口信）；
+#   带回回信的分支走 report（两边各一个字，回釜山）。终点 done / failed。
+# 报价：T 当面（auto=false，玩家“问请托”启动，topic ask:request_kim_munyeong）。offer 章不写 at，objectives 为 person 目标“到釜山浦的倭馆通事房找他”。
+#   offer 的 deadline 为窗口止日 1586-06-30，timeout next=failed，不写见闻（没人知道这件事没成）。
+# 窗口：offer 以 when 的 date 条件表达 1566-01-01..1586-06-30；handover 到期 90 天（deadline_days），when 另带 1566-01-01..1587-08-24 的 date；
+#   reply / report 没有 default：when 写 date 1566-01-01..1587-08-24（brief 的窗口，写成条件）加 alive；窗口之后不再出现，无缺省结算（普通章的窗口没有 window 字段可写）。
+# 依据·史实背景：釜山倭馆与对马之间的书契往来；书契用汉文，措辞上的一字之差会变成礼数上的事。对马的宗氏通事替对马传话。
+#   “许”译成“准”这件事是原创，只是一个译字的错，不牵涉任何真实的外交结果。严原的通事是叙事人物，不进 cast，正文不写名字。
+# 依据·原创：金文永的通事房旧案、底稿上的“许”字、袖口里侧的生词、严原通事的沉默、回信上那一个字。
+# 依赖：港口 busan、tsushima（ports_east_asia.toml）；技能 lang_japanese、court_etiquette（skills.toml）；人物 kim_munyeong。
+#   B10b：无需改名。主线门禁：无（金文永不是主线人物）。
+# C7：不写尹海梨，不替他带任何私信，不写他的成亲与通信；本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：bond kim_munyeong 至少 C（offer 的 variant，只改开场，“只说一遍”的口气）。
+# 设的旗标：c13_request_kim_munyeong_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_plain（handover 原样交信）、
+#   _saved（handover 替他说话，两条接法，带回回信，走 report）、_late（超时，终局）、_done（终局）、_partial（终局）。
+# 分支说明：handover 的 add_word / bow_it 不带门槛地进 report，由 report 章自己的两个选项结账；reply 章只留不加门槛的选项。
+#   理由：这条轨道的 saved 旗标在 handover 设，按旗标门槛写在 reply 上，会出现“准备后条件仍不满足”；改走 next 分流。
+# 秘密：一封难译的家信，誊了三遍，压在铺盖底下，一份也没交出去。本文件一个字也不碰，见闻不写。
+# 口头禅：“请把原话，一字不差地再说一遍。”只在 reply 与 report 两章各出现一次，两章互斥，一局只会听到一次。
+# 报酬：现金最多 900（折中 500）；好感最多 +13；名声 +2；回忆 mem-request_kim_munyeong-reply（只给 report 章的 read_reply）。
+# 回忆插画清单：
+#   mem-request_kim_munyeong-reply：一张译稿的底页，页边的“许”字被红笔圈起，旁边是一只袖口，墨迹洗过几水，仍留着几个小字。
+
+[[tracks]]
+key = "request_kim_munyeong"
+name = "错了十年的一个字"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kim_munyeong"]
+
+# 一、许与准：通事房的旧案前，他翻到一页底稿，“许”译成了“准”。
+[[tracks.chapters]]
+key = "offer"
+title = "许与准"
+text = "金文永站在通事房的旧案前，手里是十年前书契的底稿。翻到一页，他的手指停住了。底稿上写的是“许”，译过去成了“准”。“对马那边照这个字办了十年。”他说。他已经重译了一份说明，墨迹还没干透，要送去对马严原的通事手里。“说明白，也别让人丢了面子。”他把纸折成两折，收进袖子。袖口里侧写满了生词，洗过几水，还看得出来。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "kim_munyeong", text = "到釜山浦的倭馆通事房找他" }]
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1586, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "kim_munyeong", ge = 18 },
+]
+deadline = [1586, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "kim_munyeong", level = "C" }]
+text = "金文永站在通事房的旧案前，见你进门，先把门口的凳子让开。“你来得正好。”他翻到一页，手指停住。底稿上写的是“许”，译过去成了“准”。“对马那边照这个字办了十年。你记得住，我只说一遍。”他已经重译了一份说明，要送去对马严原的通事手里。“说明白，也别让人丢了面子。”"
+
+[[tracks.chapters.choices]]
+key = "carry_it"
+text = "接下，把说明送去严原。"
+next = "handover"
+reply = "他把信封了两道，把要说的话一句一句教给我，末了让我从头复述。"
+effects = [
+  { kind = "affinity", person = "kim_munyeong", value = 2 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "why_me"
+text = "接下，问他：为什么不走倭馆自己的船？"
+next = "handover"
+reply = "“自家的船送去，就成了公文。”他把信递给我，“你送去，是一个朋友带的话。”"
+effects = [
+  { kind = "affinity", person = "kim_munyeong", value = 2 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "两国之间的事，我不敢掺和。"
+next = "failed"
+reply = "他点头，说他理解，把底稿收回了袖子里，没有再提。"
+effects = [{ kind = "flag", flag = "c13_request_kim_munyeong_declined" }]
+
+# 二、严原的通事：信交到对马的通事手里，他问你，是对马认错，还是釜山认错。
+[[tracks.chapters]]
+key = "handover"
+title = "严原的通事"
+text = "严原的通事是个中年人，接过信，先看封口，再看字。他读到“许”字那一行，脸色沉了下去。十年来，他的上司就是照“准”字去跟宗家交代的。他把信放在桌上，没有收起来，只问你：“釜山那边，是要对马认错，还是要自己认错？”屋里的人都看着你，等你开口。"
+news = "严原的酒棚里都在传，釜山来的通事捎了一封信，为的是十年前书契里的一个字。"
+speaker = "captain"
+mood = "tense"
+at = "tsushima"
+objectives = [{ kind = "at", at = "tsushima", text = "到对马的严原去" }]
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1587, 8, 24] },
+  { kind = "alive", person = "kim_munyeong", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "letter", person = "kim_munyeong", text = "那封说明，我托倭馆的船送去了。成了公文，也就成了公事。" }, { kind = "affinity", person = "kim_munyeong", value = -3 }, { kind = "flag", flag = "c13_request_kim_munyeong_late" }] }
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "原样交信，什么也不加。"
+next = "reply"
+reply = "他把信收进袖子，说会转呈。送我出门时，他没有笑。"
+effects = [
+  { kind = "affinity", person = "kim_munyeong", value = 2 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_plain" },
+]
+
+[[tracks.chapters.choices]]
+key = "add_word"
+text = "替金文永说一句：错在译的人，不在读的人。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_japanese", ge = 60 }]
+hint = "这句话的分寸你拿不准。倭语里哪个词能替人担下错，哪个词只会让人更难堪，你还分不清。"
+reply = "他听完沉默了一会儿，说那就是两边的通事一起错了十年，“这样上司的面子都保得住”。他写了一封回信，让我带回去。"
+effects = [
+  { kind = "affinity", person = "kim_munyeong", value = 3 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_saved" },
+]
+
+[[tracks.chapters.choices]]
+key = "bow_it"
+text = "照两边的礼数，先替釜山的通事行礼致歉，再交信。"
+next = "report"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "礼数的次序你只学了一半。先行礼，还是先交信，两边的规矩说法不一。"
+reply = "他还了礼，比我的还深一分。他说釜山有这样讲礼的通事，十年的错也就是一个字的事。他写了回信。"
+effects = [
+  { kind = "affinity", person = "kim_munyeong", value = 3 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_saved" },
+]
+
+# 三之一、一字不差：只带了口信回来，回信没有拿到。他问你是不是只有这一句。
+[[tracks.chapters]]
+key = "reply"
+title = "一字不差"
+text = "金文永听你转述严原通事的话，听到一半就打断了你。“请把原话，一字不差地再说一遍。”你又说了一遍，说到“会转呈”，他拿笔在袖口里侧记下。“只有这一句？”他问。你点头。他把笔搁回砚边，没有再问，只说剩下的要等下一封书契才知道。袖口里侧又多了一行，墨迹还是洗不掉。"
+news = "釜山浦倭馆的通事房里，有个年轻通事听完对马的回话，只在袖口里记了一句“会转呈”。"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "kim_munyeong", text = "回釜山浦的倭馆通事房" }]
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1587, 8, 24] },
+  { kind = "alive", person = "kim_munyeong", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "just_words"
+text = "照实说：严原的通事只说了会转呈。"
+next = "done"
+reply = "他点头，把那句“会转呈”也记在袖口里，说剩下的要等对马的回话。钱照付了，少了一半。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "kim_munyeong", value = 4 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "say_more"
+text = "把严原通事的脸色也讲给他听。"
+next = "done"
+reply = "“脸色沉，说明他看见了那个字。”金文永说，“看见了，才转得动。”钱照付，他把这句也记进了袖口。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "kim_munyeong", value = 5 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_partial" },
+]
+
+# 三之二、两边各一个字：回信带回来了。他朝你伸手，等你把回信交出去。
+[[tracks.chapters]]
+key = "report"
+title = "两边各一个字"
+text = "金文永的笔停在半空，听你转述严原通事的话。听到一半，他放下笔，打断了你。“请把原话，一字不差地再说一遍。”你说完，他朝你伸出手，手心朝上。“回信呢？”你怀里揣着那封回信，用汉文写的，字写得很稳。他的手没有收回去。通事房里的人都停了笔，看着你们两个。"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "kim_munyeong", text = "回釜山浦的倭馆通事房" }]
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1587, 8, 24] },
+  { kind = "alive", person = "kim_munyeong", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "read_reply"
+text = "把回信交给他。"
+next = "done"
+reply = "他接过去读完，笑出了声，十年来第一次。两边各错一个字，正好扯平。他把回信和那份底稿夹在一起，说以后教学徒，就从这两个字教起。"
+news = "釜山浦倭馆的通事房里，有个年轻通事笑出了声，同屋的人说十年没听他这么笑过。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "kim_munyeong", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_done" },
+  { kind = "memory", memory = "mem-request_kim_munyeong-reply", title = "袖口里的两个字" },
+]
+
+[[tracks.chapters.choices]]
+key = "just_words"
+text = "只把严原通事的话转给他，回信先不拿出来。"
+next = "done"
+reply = "他的手还伸着，没有追问回信。他把那句“会转呈”也记在袖口里，说回信你先留着，等对马的回话一并看。钱照付了，只付一半。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "kim_munyeong", value = 4 },
+  { kind = "flag", flag = "c13_request_kim_munyeong_partial" },
+]

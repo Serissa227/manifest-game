@@ -1,0 +1,205 @@
+# 请托：当铺里的茶入（request_naya_sayo）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：纳屋小夜（naya_sayo，1534-04-13 生，女），堺的茶家女儿，家里做铁炮与火药的买卖，茶室靠这门生意养着；势力 sakai，身份档 2，低风险。cast：cast/story_eastasia.toml。
+# 类型：说服某人（persuade）。任务单写三章（offer / persuade / result），文件里是五章：
+#   offer（转过谁的手）→ persuade（京都的客人，土仓的掌柜）→ result（多一段来历）；垫利钱的一路 persuade → result_paid（外人的钱先还）→ result；
+#   拿名单的检定失败 persuade → result_partial（空着的壁龛）。
+#   多出两章是引擎的限制：变体只能改文字、不能改效果，而垫过利钱的要多还 300，所以 pay_interest 先走 result_paid（火药钱先到一半，她先还利钱：收下 +300，
+#   或让她拿去给茶入缝新仕覆，好感 +2），再进 result，result 的变体 v1_paid 读 _paid 只改文字；这样回忆只在 result 的两个选项里出现。
+#   拿名单的检定失败“降为折中”，报酬与好感都不同，fail.next 走 result_partial，那一章自带两个无 requires 的选项。所有选项都不拿本轨道设的旗标作 requires。
+# 报价：T（当面）。小夜按日程在堺（sakai，venue=market）。auto=false，玩家“问请托”（ask:request_naya_sayo）启动；offer 不写 at，objectives 为在港里找到她。
+#   offer 的 deadline 为窗口止日 1567-06-30，timeout 直接 failed，不写见闻。
+# 窗口：报价 1559-01-01 至 1567-06-30；之后的章节 1559-01-01 至 1567-12-31（写作 when 的日期条件，不是 window）。
+#   persuade 进行中 deadline_days=30（当期就在这个月底），超时走 failed，小夜来信一封，好感 -5，旗标 _late。
+#   result 与 result_paid 各等 30 天（火药船的钱分两回到），result_partial 等 25 天（宽限的一个月）；最晚的路径（6-30 报价 + 30 + 30 + 30）也在 1567-12-31 以前。
+# 依据·史实背景：堺由会合众自治，茶道在町众之间盛行，茶器以“经过谁的手”论身价；町里的土仓（放贷兼收质物的仓）收茶器作押；堺的商家经营铁炮与火药。
+# 依据·原创：纳屋家的这只茶入（不写名物的真名，不发物品）、历代主人的名单（京都五条的药铺、博多的船头、北庄酒屋的寡妇、天文十一年下雪的茶会）、
+#   土仓的掌柜与当账、京都的客人、账上错写的“连歌师”、小夜母亲留下的竹花入。
+# 待核：无（天文十一年即 1542 年，正文只作小夜的记录）。
+# 秘密：cast 里百地枫的事不写；本轨道只写铁炮钱养茶室这一公开的人设，小夜照 persona 一提到火药就把话转回茶。不写伊贺，不写真鹤。
+# 读的旗标：c13_request_naya_sayo_asked（persuade 的变体 v1_asked）、_paid（result 的变体 v1_paid），都只改文字。不读 c7_ 旗标；C7 的小夜×枫（1568 起）与小夜×真鹤（1573 起）都在本轨道之后。
+# 设的旗标：分支——c13_request_naya_sayo_accepted（offer 接下）、_asked（offer 先问了估价）、_kept（persuade 谈下了期限）、_paid（persuade 垫了利钱）；
+#   终局每条路只设一面——_declined（offer 回绝）、_late（persuade 超时）、_done（result）、_partial（result_partial，任务单之外，降级的折中）。
+# 依赖：港口 sakai（ports_east_asia.toml）；技能 negotiation（skills.toml）；属性 eloquence；人物 naya_sayo。无需 B10b 改名，无主线门禁（gate_main 与 variant_main 为空）。
+# 回忆插画清单：
+#   mem-request_naya_sayo-result「赎回的茶入点的第一碗茶」：矮门的茶室里，榻榻米上摊着一张写满名字的旧纸，末尾一行墨还没干，旁边一只肩上挂着釉痕的茶入和一碗刚点好的茶。
+
+[[tracks]]
+key = "request_naya_sayo"
+name = "当铺里的茶入"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["naya_sayo"]
+
+# 一、转过谁的手：小夜在茶室里用一只寻常的茶碗点茶，先讲押出去的茶入经过谁的手，最后才讲钱。
+[[tracks.chapters]]
+key = "offer"
+title = "转过谁的手"
+text = "纳屋家的茶室在町屋深处，门矮，进去得低头。小夜点了一碗茶推过来，碗是寻常的黑釉，碗沿磨得发白。“好的那只不在家，押在町里的土仓。”我问要我做什么，她没答，先讲那只茶入：头一个主人是京都五条的药铺，第二个是博多的船头，第三个是北庄一家酒屋的寡妇，天文十一年冬天的茶会上用过一回，那天下雪。一个不落。讲完了，她才说家里垫了一船火药的钱，船还没回来，当期就在这个月底，钱还差一截。说到火药，她伸手把茶筅摆正，话又转回了茶：“茶先喝完，再谈要不要卖。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "naya_sayo", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1559, 1, 1], to = [1567, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1567, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去土仓，替她把茶入的事谈下来。"
+next = "persuade"
+reply = "她从袖子里抽出一张折好的纸推过来。纸上是那只茶入历代主人的名字，一行一行，墨色深浅不一，是不同年份添上去的。“当铺的账上要是写错了一个，您就指给他看。”她又替我续了半碗，自己那碗一直没动。"
+effects = [{ kind = "affinity", person = "naya_sayo", value = 2 }, { kind = "flag", flag = "c13_request_naya_sayo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "先问：这只茶入，当铺估了多少？"
+next = "persuade"
+reply = "她说了一个数，说得很平，像在说别人家的东西。那个数比我想的低得多。“价钱是他们定的，来历是我记的。”她把一张折好的纸推过来，上面一行行是历代主人的名字。“您去的时候带着，掌柜要是只跟您讲价钱，就拿这个跟他讲。”"
+effects = [{ kind = "affinity", person = "naya_sayo", value = 2 }, { kind = "flag", flag = "c13_request_naya_sayo_accepted" }, { kind = "flag", flag = "c13_request_naya_sayo_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "茶器的事我不懂，不插手。"
+next = "failed"
+reply = "她点点头，一句也没再说，把我喝空的茶碗收走，在水屋里洗得很仔细，洗完又拿布把碗沿那圈磨白的地方擦了一遍。我起身出门，又低了一回头，那道门还是那么矮。"
+effects = [{ kind = "flag", flag = "c13_request_naya_sayo_declined" }]
+
+# 二、京都的客人：町东的土仓，掌柜把茶入请出来看了一眼又收回去，说京都有人出了更高的价。
+[[tracks.chapters]]
+key = "persuade"
+title = "京都的客人"
+text = "土仓在町的东边，墙抹得很厚，门口挂着字号的木牌。掌柜认得纳屋的当票，从里间捧出一只桐木箱，解了绳，把茶入连着仕覆请出来给我看了一眼——肩上一道釉流下来，停在半腰——又收了回去，绳结打得比解开以前还紧。“京都有位客人前天来看过，出的价比纳屋当的高。我们做土仓的，不跟钱过不去。”他翻开当账，指着月底那一格：“过了这一天，它就不姓纳屋了。”"
+speaker = "captain"
+mood = "tense"
+at = "sakai"
+when = [{ kind = "date", from = [1559, 1, 1], to = [1567, 12, 31] }, { kind = "alive", person = "naya_sayo", value = true }]
+deadline_days = 30
+news = "堺町东的土仓里押着纳屋家一只茶入，听说京都有人出了高价，掌柜这些天把它锁在里间，谁来也不给看。"
+timeout = { next = "failed", news = "堺町东的土仓过了当期，把纳屋家押的那只茶入卖给了京都来的客人，掌柜逢人就说，这是土仓的规矩。", effects = [{ kind = "letter", person = "naya_sayo", text = "期限过了，茶入去了京都。来历我照样记着，记到它下一个主人。——小夜" }, { kind = "affinity", person = "naya_sayo", value = -5 }, { kind = "flag", flag = "c13_request_naya_sayo_late" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_naya_sayo_asked" }]
+text = "土仓在町的东边，墙抹得很厚，门口挂着字号的木牌。掌柜认得纳屋的当票，从里间捧出一只桐木箱，解了绳，把茶入连着仕覆请出来给我看了一眼——肩上一道釉流下来，停在半腰——又收了回去。“京都有位客人前天来看过，出的价比纳屋当的高出将近一半。”我想起小夜报那个数时，眼睛一直看着茶筅，没看我。掌柜翻开当账，指着月底那一格：“我们做土仓的，不跟钱过不去。过了这一天，它就不姓纳屋了。”"
+
+[[tracks.chapters.choices]]
+key = "extend"
+text = "跟掌柜谈：再宽三个月，利钱照算。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "跟土仓讨宽限，要会算利钱的人开口；我一开口，就会被他的算盘压回来。"
+next = "result"
+reply = "掌柜拨了半天算盘，珠子响一阵停一阵。末了他在当票背面写了“再宽三月”，又添一行小字：这三个月里，不给京都的客人看。“利钱照算，一文不让。”他把当票推回来，“纳屋家的人懂我们的规矩，您回去这么跟她说就行。”"
+effects = [{ kind = "affinity", person = "naya_sayo", value = 3 }, { kind = "flag", flag = "c13_request_naya_sayo_kept" }]
+news = "堺町东的土仓答应纳屋家再宽三个月，说是一个外乡船长坐在柜台前拨了半天算盘谈下来的。"
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "拿出小夜的名单，指给他看：当账把第三个主人写错了。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+reply = "掌柜对着名单看了很久。当账上第三个主人写的是京都的一位连歌师，名单上写的是北庄酒屋的寡妇，连那场下雪的茶会都记着。他脸色变了：京都的客人看中的，正是那位连歌师的名头，这桩买卖要是拿错的来历做成，传出去，堺的土仓就没人敢收茶器了。他把那一行划掉，照名单重写，期限也往后挪了三个月。"
+effects = [{ kind = "affinity", person = "naya_sayo", value = 5 }, { kind = "flag", flag = "c13_request_naya_sayo_kept" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "naya_sayo", value = -2 }], news = "堺町东的土仓掌柜对着一张茶入的名单看了半天，不认账上写错，只答应纳屋家再宽一个月。" }
+news = "堺的一家土仓里，一只押了半年的茶入差点卖去京都，有个外乡船长指出账上的来历写错了。"
+
+[[tracks.chapters.choices]]
+key = "pay_interest"
+text = "先替纳屋把这一期的利钱垫上。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "身上的现钱，垫不起这一期的利钱。"
+next = "result_paid"
+reply = "掌柜收了钱，一枚一枚数过，在当票背面写了新的期限，盖上店印。递回来时他多看了我一眼：“替人家垫利钱的外人，我在这柜台后面坐了二十年，头一回见。”他没问我图什么，捧着桐木箱又进了里间。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "naya_sayo", value = 3 }, { kind = "flag", flag = "c13_request_naya_sayo_kept" }, { kind = "flag", flag = "c13_request_naya_sayo_paid" }]
+news = "堺町东的土仓里，有个外乡船长替纳屋家垫了一期利钱，掌柜说他坐柜二十年，头一回见这样的外人。"
+
+# 三′、外人的钱先还：垫过利钱的那一路。火药船的钱先到一半，小夜先把我垫的利钱包好推回来，土仓的等后一半。
+[[tracks.chapters]]
+key = "result_paid"
+title = "外人的钱先还"
+text = "一个多月后，火药船的钱先到了一半。小夜请我进茶室，先不点茶，把一个纸包推到我面前，是我替她垫给土仓的利钱，用纸绳捆了两道，一文不少。“外人的钱先还，土仓的等后一半。”她说这话时没看纸包，看的是壁龛里那枝刚插上的山茶。我问她，家里正短着钱，何必急这一包。她把纸包又往前推了一寸：“记不清欠谁的人家，茶室开不长。”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "wait", days = 30, text = "等火药船回港" }, { kind = "person", person = "naya_sayo", text = "到茶室找她" }]
+when = [{ kind = "date", from = [1559, 1, 1], to = [1567, 12, 31] }, { kind = "alive", person = "naya_sayo", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take_back"
+text = "收下纸包，免得她心里搁着。"
+next = "result"
+news = "堺的纳屋家火药钱刚回来一半，就先把一个外乡船长垫的利钱包好还了，土仓那边倒还等着。"
+reply = "我把纸包收进怀里。她这才松开一直按在膝上的手，起身去烧水，水屋里传来舀水的声音。“后一半到了，我再请您来。”她在门口回头，“那时候用的就是那只了。”"
+effects = [{ kind = "cash", value = 300 }]
+
+[[tracks.chapters.choices]]
+key = "new_bag"
+text = "不收，留着等茶入赎回来，给它缝个新仕覆。"
+next = "result"
+news = "堺的纳屋家火药钱刚回来一半，就先把一个外乡船长垫的利钱包好还了，土仓那边倒还等着。"
+reply = "她看了我好一会儿，没再推，把纸包收进袖子。“旧仕覆的绳磨断过两回，是该换了。”过了几天，她托人捎话到船上：新仕覆用的是茶色的绢，绳结照旧打法，只是比旧的紧一些。"
+effects = [{ kind = "affinity", person = "naya_sayo", value = 2 }]
+
+# 三、多一段来历：火药船的钱回来了，小夜赎回茶入，用它点茶，问我名单末尾那一行要不要写上我的名字。
+[[tracks.chapters]]
+key = "result"
+title = "多一段来历"
+text = "一个多月后，那船火药的钱回来了。小夜自己去了一趟土仓，把桐木箱抱回茶室，一路没让下人碰。她解开仕覆，用这只茶入点了一碗茶请我——茶粉从窄窄的口里倒出来，她拿茶杓刮了两下，刮得很轻。我喝完，她把那张写满主人名字的纸摊在榻榻米上，在末尾添了一行，笔尖停在名字该落的地方。“这一行，”她抬眼看我，“要不要写上您的名字？”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "wait", days = 30, text = "等火药钱回来" }, { kind = "person", person = "naya_sayo", text = "到茶室找她" }]
+when = [{ kind = "date", from = [1559, 1, 1], to = [1567, 12, 31] }, { kind = "alive", person = "naya_sayo", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_paid"
+when = [{ kind = "flag", flag = "c13_request_naya_sayo_paid" }]
+text = "火药钱的后一半也到了。小夜这回谁也没叫，自己去土仓把本钱和剩下的利钱付清，抱着桐木箱回来，一路没让下人碰。她解开仕覆，用这只茶入点了一碗茶请我，茶杓在口沿上轻轻磕了一下。我喝完，她把那张主人名单摊在榻榻米上，在最后添了一行，笔停在名字的位置上，没往下写。“这一行，”她抬眼看我，“要写您吗？”"
+
+[[tracks.chapters.choices]]
+key = "no_name"
+text = "不必写，茶入不是我的。"
+next = "done"
+news = "堺的纳屋家把押出去的茶入赎回来了，听说头一碗茶请的是个外乡船长。"
+reply = "她想了想，在那一行写了“某年，赎回”，没写名字，搁下笔吹了吹墨。“那它就多了一段没人知道的来历。”她把纸折好，压在茶入的桐木箱底下。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "naya_sayo", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_naya_sayo_done" }, { kind = "memory", memory = "mem-request_naya_sayo-result", title = "赎回的茶入点的第一碗茶" }]
+
+[[tracks.chapters.choices]]
+key = "write_name"
+text = "写上，也算我跟它有过一段。"
+next = "done"
+news = "堺的纳屋家把押出去的茶入赎回来了，听说头一碗茶请的是个外乡船长。"
+reply = "她写了，一笔一画写得很工整，比前面几行都慢。写完她却把纸折起来，收进了袖子，没放回箱底。“这一段，只给我自己看。”她把茶入装回仕覆，绳结打了两遍。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "naya_sayo", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_naya_sayo_done" }, { kind = "memory", memory = "mem-request_naya_sayo-result", title = "赎回的茶入点的第一碗茶" }]
+
+# 三″、只宽了一个月：掌柜不认名单，火药船只回来一半的钱；小夜拿母亲的竹花入换回了茶入，壁龛空着。
+[[tracks.chapters]]
+key = "result_partial"
+title = "空着的壁龛"
+text = "掌柜不认那张名单，只肯再宽一个月。一个月过去，火药船只回来一半的钱。到期前三天，小夜从家里的仓里取出一只竹花入，是她母亲生前插花用的，竹节上有一道细裂，她自己抱着去了土仓，把茶入换了回来。茶室里她照样点茶请我，用的是赎回来的那只，壁龛里却什么也没插。“花入押着，等船那一半回来再赎。”她说，“茶入等不得，京都的客人不等人。”"
+speaker = "captain"
+mood = "sad"
+at = "sakai"
+objectives = [{ kind = "wait", days = 25, text = "等宽限的一个月过去" }, { kind = "person", person = "naya_sayo", text = "到茶室找她" }]
+when = [{ kind = "date", from = [1559, 1, 1], to = [1567, 12, 31] }, { kind = "alive", person = "naya_sayo", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take_pay"
+text = "收下她给的那一份。"
+next = "done"
+news = "堺的纳屋家赶在当期前赎回了茶入，听说是拿家里一只旧竹花入押进土仓换的，茶室的壁龛这些天一直空着。"
+reply = "她把钱用纸包好推过来，包得方方正正。“您替我去土仓说过一回话，这一份是该给的。”她看了一眼空着的壁龛，“花入的事您别惦记，那一半的钱回来，我自己去赎。”"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "naya_sayo", value = 4 }, { kind = "flag", flag = "c13_request_naya_sayo_partial" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_pay"
+text = "钱我不要了，拿去早点把花入赎回来。"
+next = "done"
+news = "堺的纳屋家赶在当期前赎回了茶入，听说是拿家里一只旧竹花入押进土仓换的，茶室的壁龛这些天一直空着。"
+reply = "她看了我好一会儿，才把纸包收回去。“那花入回来的那天，它的来历里就多一行：有个船长替它付过一回当钱。”她另取了一张纸，裁得和茶入那张名单一样大，头一行写上“竹花入，母亲遗物”，第二行先空着，用指甲轻轻划了一道印。"
+effects = [{ kind = "affinity", person = "naya_sayo", value = 6 }, { kind = "flag", flag = "c13_request_naya_sayo_partial" }]

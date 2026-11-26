@@ -1,0 +1,185 @@
+# C13d 请托：门楣上的记号（request_esther）。中文，Claude 写。
+# 人物：埃丝特 esther（1539-06-11 生，女；塞法迪商人家的女儿，生在阿尔及尔，势力 algiers，身份档 2；cast 在 cast/classmates_fez.toml）。
+# 类型：去某处（go）；3 章，offer → arrive → report；没有 stage 章。
+# 报价：当面（T）。人物在伊斯坦布尔（istanbul）的商号柜台，auto=false，玩家“问请托”（ask:request_esther）启动。offer 章不写 at，objectives 为 person esther。
+# 窗口：报价 1570-01-01 至 1577-06-30；马拉加查看与结账到 1578-08-24。
+# 进行中：arrive 章 deadline_days=150；超时走 failed，埃丝特寄一封信，好感 -3。offer 章到 1577-06-30 仍未接，走 failed，不写见闻。
+# 地点：伊斯坦布尔 istanbul（报价与结账）；马拉加老城 malaga（只看门，不进门，不问人——这是她给你的规矩，她本人不去）。
+# 依据：史实背景，1492 年塞法迪人被逐出西班牙；马拉加的老犹太区早已改作他用；1568—1571 年阿尔普哈拉斯的摩里斯科人起事，1570 年以后格拉纳达一带的摩里斯科人被迁散，街上空屋多的写法放在 arrive 章的 variant 里。
+#   门楣上的记号（一只鸟，又像一个结）与那张安达卢西亚旧欠据是原创；记号不写成宗教符号，不写宗教裁判所。
+# 读的旗标（只读，不设）：bond esther（C 级，offer 章 variant，老同学的口气）；c7_tie_esther_zaynab_together（offer 章 variant，柜台上压着一封非斯来的信，不提名）。
+# 设的旗标：c13_request_esther_accepted / declined / match / history / rough / late / done / partial。
+# 路线：sketch 检定成功设 match 并走 report_match（自己的两个选项，不靠旗标挡选项）；其余走 report。
+# 依赖：B10b 日程：classmates_fez.toml 里埃丝特的日程只写到 1556 年，1570—1577 年在伊斯坦布尔的日程要补（offer 章的 person 目标依赖它）。主线旗标：无。
+# 秘密：母亲说漏的老家地名与那张旧欠据的来处，只在 report 章的 debt 选项（情谊 ≥ 30）里由她说出；见闻与来信不写。
+# 回忆插画：mem-request_esther-report，发黄的旧欠据背面，细墨线画着门楣：一只鸟，又像一个结。
+
+[[tracks]]
+key = "request_esther"
+name = "门楣上的记号"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["esther"]
+
+# 一、说漏的几个词：1570 年起，埃丝特在伊斯坦布尔的商号柜台，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "说漏的几个词"
+text = "埃丝特先把你的路费一枚一枚数出来。杜卡特、阿克切在她嘴里换着念，念得像唱歌，数完推到一边：“路费先留出来，人才走得成。”然后才说事。母亲从不肯说老家在哪儿，可这些年说漏过几个词：一座城，一条往下坡走的街，一口井，门楣上一个小记号。她把这几个词抄在账本最后一页，拼出来，是马拉加。“我只要你看一眼。那条街还在不在，门楣上有没有这个记号。只看，不进门，不问人。”"
+speaker = "captain"
+mood = "tense"
+cast = ["esther"]
+when = [{ kind = "date", from = [1570, 1, 1], to = [1577, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "esther", ge = 18 }]
+objectives = [{ kind = "person", person = "esther", text = "在港里找到她" }]
+deadline = [1577, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "v1_old_friend_letter"
+when = [{ kind = "bond", person = "esther", level = "C" }, { kind = "flag", flag = "c7_tie_esther_zaynab_together" }]
+text = "埃丝特先给你倒了一杯，杯沿还是那只缺了口的，说：“老规矩，你先坐。”然后把你的路费一枚一枚数出来，杜卡特、阿克切在她嘴里换着念，念得像唱歌，数完推到一边：“路费先留出来，人才走得成。”柜台上压着一封非斯来的信，她没让你看，把它往账本底下抽了抽。然后才说事。母亲从不肯说老家在哪儿，可这些年说漏过几个词：一座城，一条往下坡走的街，一口井，门楣上一个小记号。她把这几个词抄在账本最后一页，拼出来，是马拉加。“只看，不进门，不问人。”"
+
+[[tracks.chapters.variants]]
+key = "v2_old_friend"
+when = [{ kind = "bond", person = "esther", level = "C" }]
+text = "埃丝特先给你倒了一杯，杯沿还是那只缺了口的，说：“老规矩，你先坐。”然后把你的路费一枚一枚数出来，杜卡特、阿克切在她嘴里换着念，念得像唱歌，数完推到一边：“路费先留出来，人才走得成。”然后才说事。母亲从不肯说老家在哪儿，可这些年说漏过几个词：一座城，一条往下坡走的街，一口井，门楣上一个小记号。她把这几个词抄在账本最后一页，拼出来，是马拉加。“只看，不进门，不问人。”"
+
+[[tracks.chapters.variants]]
+key = "v3_letter"
+when = [{ kind = "flag", flag = "c7_tie_esther_zaynab_together" }]
+text = "埃丝特先把你的路费一枚一枚数出来。杜卡特、阿克切在她嘴里换着念，念得像唱歌，数完推到一边：“路费先留出来，人才走得成。”柜台上压着一封非斯来的信，她没让你看，把它往账本底下抽了抽。然后才说事。母亲从不肯说老家在哪儿，可这些年说漏过几个词：一座城，一条往下坡走的街，一口井，门楣上一个小记号。她把这几个词抄在账本最后一页，拼出来，是马拉加。“我只要你看一眼。那条街还在不在，门楣上有没有这个记号。只看，不进门，不问人。”"
+
+[[tracks.chapters.choices]]
+key = "go_malaga"
+text = "接下，去马拉加找那条街。"
+next = "arrive"
+reply = "她把那个记号描在一张纸上，描得很小，说“像一只鸟，又像一个结”。纸折成四折塞进你手里，她又把账本合上。"
+effects = [{ kind = "affinity", person = "esther", value = 2 }, { kind = "flag", flag = "c13_request_esther_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_mother"
+text = "接下，先问：你母亲知道你要去找吗？"
+next = "arrive"
+reply = "“不知道。”她说母亲知道了，会把账本烧了。“所以只看，不进门。”她说这话时没有抬头，笔尖在纸上停了很久。"
+effects = [{ kind = "affinity", person = "esther", value = 2 }, { kind = "flag", flag = "c13_request_esther_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "西班牙的港口，我不想去惹事。"
+next = "failed"
+reply = "她把路费推回钱匣，说那就先把这一页夹着，“账不会跑”。合上账本时，那一页的边露在外头，她没有去压它。"
+effects = [{ kind = "flag", flag = "c13_request_esther_declined" }]
+
+# 二、往下坡走的街：你到马拉加老城，照她的几个词找那扇门。
+[[tracks.chapters]]
+key = "arrive"
+title = "往下坡走的街"
+text = "马拉加的老城窄，两边的墙几乎能伸手碰到。埃丝特那几个词一条条对下来：一口井在街口，街往下走，门一扇扇数过去，第七还是第八扇，她没写准。你在第七扇门前停住。门楣上真有一个小记号，像一只鸟，又像一个结。可它被人用灰泥抹过，只露出半边。"
+speaker = "captain"
+mood = "mystic"
+cast = ["esther"]
+at = "malaga"
+when = [{ kind = "alive", person = "esther", value = true }, { kind = "date", from = [1570, 1, 1], to = [1578, 8, 24] }]
+objectives = [{ kind = "at", at = "malaga", text = "到马拉加老城去" }]
+deadline_days = 150
+news = "马拉加老城一条往下坡走的街上，有个外乡人对着一扇旧门看了一阵，门楣上的灰泥抹得很新。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "esther", value = -3 }, { kind = "flag", flag = "c13_request_esther_late" }, { kind = "letter", person = "esther", text = "马拉加的事，我托一个去西班牙的商人看了。他找到了三条往下坡走的街，不知道是哪一条。——埃丝特" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_empty"
+when = [{ kind = "date", from = [1570, 11, 1], to = [1572, 12, 31] }]
+text = "马拉加老城窄，两边的墙几乎能伸手碰到，有几扇门敞着，屋里空得能听见回声。埃丝特那几个词一条条对下来：一口井在街口，街往下走，门一扇扇数过去，第七还是第八扇，她没写准。你在第七扇门前停住。门楣上真有一个小记号，像一只鸟，又像一个结。可它被人用灰泥抹过，只露出半边。有个路过的小贩压低了声音，说这一带的人家前些日子刚被迁走，没再多讲。"
+
+[[tracks.chapters.choices]]
+key = "ask_neighbor"
+text = "用卡斯蒂利亚话跟街口打水的老妇人搭话，问这家原来住的是谁。"
+requires = [{ kind = "skill", skill = "lang_spanish", ge = 60 }]
+hint = "你的话一出口，老妇人就听出是外乡人，提起水桶就走，不肯多说。"
+next = "report"
+reply = "老妇人说这家换过好几回主人，最早的那家人“很早以前就走了，走得很急”。她说她母亲讲过，那家人走前把门楣上的东西抹了，“怕人认出来”。"
+effects = [{ kind = "affinity", person = "esther", value = 3 }, { kind = "flag", flag = "c13_request_esther_history" }]
+
+[[tracks.chapters.choices]]
+key = "sketch"
+text = "不问人，照她说的只看：在街对面把那半边记号细细描下来。"
+check = { attr = "eloquence", base = 35, per = 6 }
+next = "report_match"
+reply = "半个时辰里没有人出来问你。灰泥下露出的那半边，跟她描给你的纸上那一半，一笔不差。"
+effects = [{ kind = "affinity", person = "esther", value = 3 }, { kind = "flag", flag = "c13_request_esther_match" }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "esther", value = -2 }, { kind = "flag", flag = "c13_request_esther_rough" }], news = "马拉加老城的一条下坡街上，一个外乡人被屋里的妇人隔窗喝问，描了一半就收了纸。" }
+
+[[tracks.chapters.choices]]
+key = "just_look"
+text = "看一眼，记住门的样子就走。"
+next = "report"
+reply = "我数了门，看了记号，记住了街口那口井的样子。没停多久，走的时候有人在窗口看了一眼。"
+effects = [{ kind = "affinity", person = "esther", value = 2 }]
+
+# 三、旧欠据：你回伊斯坦布尔，把看到的说给埃丝特听。
+[[tracks.chapters]]
+key = "report"
+title = "旧欠据"
+text = "埃丝特听你讲完那条街、那口井、那扇门，从账本最后一页底下抽出一张发黄的纸，纸角上画着同一个记号。纸的边上烧过一角，字是西班牙文的旧体，数字写得很大。她没碰那个记号，只用指甲沿着它的边划了一圈。隔壁的学徒在打算盘，珠子一响，她就把纸摊开，又折起来，像在等你问。"
+news = "伊斯坦布尔一家塞法迪商号的柜台后面，老板的女儿对着账本最后一页看了很久，才把账合上。"
+speaker = "captain"
+mood = "tender"
+at = "istanbul"
+cast = ["esther"]
+when = [{ kind = "alive", person = "esther", value = true }, { kind = "date", from = [1570, 1, 1], to = [1578, 8, 24] }]
+objectives = [{ kind = "person", person = "esther", text = "回伊斯坦布尔，找到埃丝特" }]
+
+[[tracks.chapters.variants]]
+key = "v1_history"
+when = [{ kind = "flag", flag = "c13_request_esther_history" }]
+text = "埃丝特听你讲完那条街、那口井、那扇门。听到“走得很急，怕人认出来”那一句，她的手在柜台上按了一下。她从账本最后一页底下抽出一张发黄的纸，纸角上画着同一个记号。纸的边上烧过一角，字是西班牙文的旧体，数字写得很大。她没碰那个记号，只用指甲沿着它的边划了一圈。隔壁的学徒在打算盘，她说：“原来他们也抹过。”然后把纸摊开，又折起来，像在等你问。"
+
+[[tracks.chapters.variants]]
+key = "v2_rough"
+when = [{ kind = "flag", flag = "c13_request_esther_rough" }]
+text = "埃丝特听你讲完那条街、那口井。你说那扇门只描了个大概，还被屋里的妇人隔窗问过，她没笑。她从账本最后一页底下抽出一张发黄的纸，纸角上画着同一个记号。纸的边上烧过一角，字是西班牙文的旧体，数字写得很大。她没碰那个记号，只用指甲沿着它的边划了一圈，然后把纸摊开，又折起来，像在等你问。"
+
+[[tracks.chapters.choices]]
+key = "debt"
+text = "等她自己说这张纸是什么。"
+requires = [{ kind = "affinity", person = "esther", ge = 30 }]
+hint = "她又把纸折起来了，你们还没熟到能等这一句。"
+next = "done"
+reply = "她说这是一张安达卢西亚的旧欠据，八十年前，那家人借给邻居一笔钱，走得急，没讨回来。欠据上的记号，就是门楣上那个。母亲漏过的那座城，就写在第一行。她不打算去讨，说：“八十年了，讨的不是钱。”她把门楣的样子画在欠据背面，付了钱，又多付了一份路费，说这一份是给下一趟的。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "esther", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_esther_done" }, { kind = "memory", memory = "mem-request_esther-report", title = "欠据背面的门楣" }]
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "不问那张纸，只说门还在。"
+next = "done"
+reply = "她点点头，把纸收回去，付了一半的钱，说剩下的，等她自己想好要不要知道。"
+effects = [{ kind = "cash", value = 1200 }, { kind = "affinity", person = "esther", value = 4 }, { kind = "flag", flag = "c13_request_esther_partial" }]
+
+# 三之二、两个半边：描了半边记号的那一路（sketch 检定成功）。走 next，不靠旗标挡选项。
+[[tracks.chapters]]
+key = "report_match"
+title = "两个半边"
+text = "你讲完那条街、那口井、那扇门，把描回来的那张小图从袖里抽出来，放在柜台上。埃丝特没问你是怎么描的。她从账本最后一页底下抽出一张发黄的纸，纸角上画着同一个记号，边上烧过一角。她把那张小图往纸角挪了挪，停在半寸外，像在等你自己去比。"
+news = "伊斯坦布尔一家塞法迪商号的柜台上，老板的女儿拿一张小图对着账本最后一页比了又比。"
+speaker = "captain"
+mood = "tender"
+at = "istanbul"
+cast = ["esther"]
+when = [{ kind = "alive", person = "esther", value = true }, { kind = "date", from = [1570, 1, 1], to = [1578, 8, 24] }]
+objectives = [{ kind = "person", person = "esther", text = "带着描回来的记号，回伊斯坦布尔找埃丝特" }]
+
+[[tracks.chapters.choices]]
+key = "match"
+text = "把描回来的半边记号放在纸角旁边比一比。"
+next = "done"
+reply = "两个半边对上了。她看了很久，说“那就是了”，把描的那张夹进账本，跟那张纸夹在一起。她付了钱。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "esther", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_esther_done" }, { kind = "memory", memory = "mem-request_esther-report", title = "欠据背面的门楣" }]
+
+[[tracks.chapters.choices]]
+key = "leave_it_match"
+text = "不比了，只说门还在，那张小图你自己留着。"
+next = "done"
+reply = "她把小图推回来，说“留着，你也看过那扇门”。付了一半的钱，说剩下的，等她想好要不要跟那扇门对一对。"
+effects = [{ kind = "cash", value = 1200 }, { kind = "affinity", person = "esther", value = 4 }, { kind = "flag", flag = "c13_request_esther_partial" }]

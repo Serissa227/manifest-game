@@ -1,0 +1,267 @@
+# 请托：海峡口那颗星（request_wen_xingcha）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：温星槎（wen_xingcha，1498-07-07 生，女），月港的老火长，祖父在宝船上掌过罗盘；势力 ming，身份档 1。cast：cast/story_eastasia.toml。
+# 类型：去某处（go）。五章：offer（报价）→ arrive（马六甲海峡口量星）→ report / report_north / report_rough（回月港报数，按量法分三章）。
+#       brief 写三章，这里拆成五章：brief 里 report 的两个好结局要求旗标 measured / north，而这两面旗标由 arrive 的不同选项设置，
+#       同一轨道里不能拿自己在别的路径上设的旗标去挡选项（关卡审计会报“准备后条件仍不满足”），所以按 next 分流：
+#       牵星板与天文航法各走自己的一章，凭眼力估的数走 report_rough（只有折中结局）。没有 stage 章，因此没有 window 与 default。
+# 报价：当面（T）。auto=false，玩家在月港找到她、“问请托”（ask:request_wen_xingcha）启动；offer 章不写 at，目标是找到她。
+#       offer deadline 为窗口止日 1590-06-30，timeout 直接 failed，不写见闻。
+# 进行中：arrive 章 deadline_days=300（跨洋），超时走 failed，来信一封（好感 -3，旗标 _late）；report 三章是普通章，可以一直等。
+# 依据：
+#   史实传统——宝船队的“过洋牵星图”以“指”与“角”记星的高度（一指约四角；本世界线里“半指”即两角），用牵星板量；
+#             1567 年月港开海，私船改领船引。图上星名（北辰、华盖等）沿用传统写法。
+#   原创——温星槎祖父留下的那一份图、海峡口那一格的数、抄纸上的墨点、“此处泊的是浅船”、图边添的一行小字。
+#   不碰——图的最后一页：不展开、不描述页上画了什么，也不说她信不信它（那一页归林晚灯的线与她本人的秘密）；
+#          C7 温星槎×秦红缨的线（1555—67）：本轨道从 1568 年起，不写秦红缨。她“不谈情”，请托里没有任何恋爱成分。
+# 口头禅：“别急着问西洋之西，先把眼前的星认全。”全轨道只在 offer 的 ask_last 回复里用一次（最要紧的地方）。
+#         “还行”是她唯一的夸奖，只给 report 里照实说的那条路，用一次。
+# 读写的旗标：只读 c13_main_lin_wandeng（offer 的 variants：“小晚”、补课；由林晚灯主线设，还没有时按普通口气，故正文对所有主角都说得通）；不读、不设任何 c7_ 旗标。
+#   写 c13_request_wen_xingcha_accepted / _declined（offer）；_measured / _north（arrive：牵星板与天文航法两条路）；
+#   _guess_off（arrive 凭眼力检定失败，report_rough 的变体读它）；_late（arrive 超时）；_done（report 与 report_north 的好结局）；_partial（折中结局）。
+# 报酬：现金最多 1250（折中 700，只在 report 三章的结局给一次）、好感最多 +13（接下 +2、量星 +3、好结局 +8）、名声 +2（折中 +1）、
+#       天文航法 astral_navigation +20（只在好结局）、回忆 mem-request_wen_xingcha-report。没有物品奖励；牵星板只查持有、不扣。
+# 依赖：港口 yuegang、malacca；人物 wen_xingcha；物品 kamal_board（items/items_instrument_01.toml）；技能 astral_navigation（skills.toml）；检定属性 seamanship。无需 B10b 改名。
+# 回忆插画：mem-request_wen_xingcha-report：月港码头的石墩上，老火长在膝头摊开的牵星图边添一行小字，末折仍折着。
+
+[[tracks]]
+key = "request_wen_xingcha"
+name = "海峡口那颗星"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["wen_xingcha"]
+
+# 一、压在手掌下的一页：月港码头的石墩上，她只翻到倒数第二折。
+[[tracks.chapters]]
+key = "offer"
+title = "压在手掌下的一页"
+text = "月港码头的石墩上，温星槎把牵星图摊在膝头，一折一折往后翻，折痕处的纸已经磨得起毛。翻到倒数第二折，她停了，最后一页还折着，压在手掌底下。她用另一只手戳着马六甲海峡口那一格，指甲缝里是槟榔渍。“华盖星，几指几角，我祖父写的数。我量过两回，两回都对不上。”她朝石缝里啐了一口红的，“这条腿去不了那么远了。你挑个晴夜，替我量一回，回来告诉我，是他错了，还是我错了。”"
+speaker = "captain"
+mood = "mystic"
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "wen_xingcha", text = "在月港码头找到温星槎" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_wandeng"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng" }]
+text = "月港码头的石墩上，温星槎把牵星图摊在膝头，一折一折往后翻。你刚走近，她眼睛没离开那张图：“小晚，过来。当年学牵星，数你学得最慢，量一回要问我三回对不对。”她戳着马六甲海峡口那一格，最后一页压在另一只手掌底下。“华盖星，几指几角，我祖父写的数，我自己量过两回，两回都对不上。你替我去海峡口挑个晴夜量一回，算补课。回来告诉我，是他错了，还是我错了。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应在海峡口替她量一次。"
+next = "arrive"
+reply = "她从袖里摸出一张纸，把那一格抄在上头，字小得要凑近了才认得出，指数旁边点了一个墨点。“量出来的数，写在这个点边上，别写别处。”她把纸塞进你手里，又补一句，“晴夜才量，阴天量的，老婆子不认。”"
+effects = [
+  { kind = "affinity", person = "wen_xingcha", value = 2 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_last"
+text = "问她：最后一页，不给我看一眼？"
+next = "arrive"
+reply = "“那一页你用不着。”她说得很快，手掌压得更紧了，纸角在指缝里鼓起来。“别急着问西洋之西，先把眼前的星认全。去量海峡口就行。”她另拿一张纸，把那一格抄上去，指数旁边点了一个墨点，抄完也不看你，直接递过来。"
+effects = [
+  { kind = "affinity", person = "wen_xingcha", value = 2 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "今年我不下南洋，这一趟去不了。"
+next = "failed"
+reply = "她把图一折一折收好，收到最后一折，手才从上头移开。“行。”她往石缝里又吐了一口，“老婆子再等等，海峡口的星又跑不了。”"
+effects = [{ kind = "flag", flag = "c13_request_wen_xingcha_declined" }]
+
+# 二、差了半指：马六甲海峡口，晴夜，船停在浅水外头。
+[[tracks.chapters]]
+key = "arrive"
+title = "差了半指"
+text = "马六甲海峡口，晴夜。船泊在浅水外头，桅灯一盏一盏熄了，只剩船舷拍水的声音，风里有泥腥气，混着岸上烂果子的甜味。华盖星挂得很低，低到快要蹭着对岸黑沉沉的林子。你展开那张抄纸，借舱口一点火折子的光找到墨点，她祖父写的数就在点边上，一笔一笔很细。该量了。"
+speaker = "captain"
+mood = "mystic"
+night = true
+at = "malacca"
+when = [{ kind = "alive", person = "wen_xingcha", value = true }]
+deadline_days = 300
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "wen_xingcha", value = -3 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_late" },
+  { kind = "letter", person = "wen_xingcha", text = "后生，你没去海峡口。那半指，老婆子再等下一个人去量。图我收回箱子里了，别来问。——温星槎" },
+] }
+news = "马六甲海峡口有条船熄了桅灯，在浅水外停了一夜，船上的人对着一颗低低的星比了又比。"
+
+[[tracks.chapters.choices]]
+key = "kamal"
+text = "用牵星板，一指一指量三回，取中间那个数。"
+requires = [{ kind = "item", item = "kamal_board", qty = 1 }]
+hint = "你手边没有牵星板，三回一个数的量法做不成。"
+next = "report"
+reply = "你咬住绳头，把板子推到眼前，星贴着上沿，海面贴着下沿。三回量出来的数都差半指，差得一模一样，不多一丝也不少一丝。你把数写在墨点旁边，又记下这一夜的潮和风：涨潮末了，西南风，很轻。"
+effects = [
+  { kind = "affinity", person = "wen_xingcha", value = 3 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_measured" },
+]
+
+[[tracks.chapters.choices]]
+key = "astro"
+text = "换一个法子，用推算纬度的办法再量一遍。"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "对着那颗低星，你心里没有一套推纬度的算法。"
+next = "report_north"
+reply = "你先不看祖父的数，从星的高低倒推这里的纬度，再拿纬度去对图上那一格。两个法子落下来，都是半指上下。你把抄纸翻过来想了一会儿：宝船吃水深，当年的船不会泊在你这条浅船泊的地方，也许比你泊得更靠北，往海峡里头多走了一段。你把两个数都写在墨点旁边，底下添了一句：此处泊的是浅船。"
+effects = [
+  { kind = "affinity", person = "wen_xingcha", value = 3 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_measured" },
+  { kind = "flag", flag = "c13_request_wen_xingcha_north" },
+]
+
+[[tracks.chapters.choices]]
+key = "eyeball"
+text = "不拿板子，凭眼力估一个数。"
+check = { attr = "seamanship", base = 5, per = 8 }
+next = "report_rough"
+reply = "你把手臂伸直，拇指和食指张开，一指一指往星的上头数，数了两遍。估出来的数也差半指，可你说不上这个数是量出来的，还是你想让它是这个数。你把它写在墨点旁边，写得很轻。"
+effects = [{ kind = "affinity", person = "wen_xingcha", value = 1 }]
+fail = { next = "report_rough", effects = [
+  { kind = "affinity", person = "wen_xingcha", value = -2 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_guess_off" },
+], news = "马六甲海峡口有条船熄了桅灯停了一夜，船上的人伸着手臂比了又比，天亮时还在摇头。" }
+
+# 三、他错了，也是他教的：回月港，石墩上，她问你。（牵星板量的三回）
+[[tracks.chapters]]
+key = "report"
+title = "他错了，也是他教的"
+text = "傍晚的月港码头，卖鱼的在石墩那头刮鳞，一片一片往海里弹。温星槎听你报数，听到“差半指”，腮帮子里嚼着的槟榔停了。她没接抄纸，先叫你把那一夜的潮和风再说一遍，听完才伸手。牵星图在她膝头展到海峡口那一格，她盯着看，看得石墩边的挑夫换了两趟肩。“三回，一模一样？”“三回。”最后一页还折着，压在她的手肘底下。“照实说，后生。”"
+speaker = "captain"
+mood = "tender"
+at = "yuegang"
+when = [{ kind = "alive", person = "wen_xingcha", value = true }]
+objectives = [{ kind = "person", person = "wen_xingcha", text = "回月港，把数报给温星槎" }]
+news = "月港的老火长在她祖父的牵星图边上添了一行小字，听说是一个后生替她去海峡口量的。"
+
+[[tracks.chapters.choices]]
+key = "tell_true"
+text = "照实说：三回都差半指，是图上的数错了。"
+next = "done"
+reply = "她从耳后摸出一支小笔，舔了舔，在那一格旁边添了一行小字，比祖父的字还小：后人复量，差半指。添完她把笔放下，吹了吹墨。“他错了，也是他教我的。”她停了停，没看你，“还行。”"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "wen_xingcha", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "skill", skill = "astral_navigation", value = 20 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_done" },
+  { kind = "memory", memory = "mem-request_wen_xingcha-report", title = "图边添的一行小字" },
+]
+
+[[tracks.chapters.choices]]
+key = "not_sure"
+text = "说你量得没把握，不敢下结论。"
+next = "done"
+reply = "她点点头，把牵星图一折一折收起来，收得很慢。“不敢下结论的人，比乱下结论的强一点。”她拍拍膝头，“三回一个数，你也不敢？罢了。半指差不差，老婆子留着，等下一个去量的人。”"
+news = "月港的老火长听了一个后生从海峡口带回的数，没往牵星图上添字，只说再等一个人去量。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "wen_xingcha", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_partial" },
+]
+
+# 三′、此处泊的是浅船：回月港，石墩上，她问你。（量星又推了纬度）
+[[tracks.chapters]]
+key = "report_north"
+title = "此处泊的是浅船"
+text = "傍晚的月港码头，卖鱼的在石墩那头刮鳞，一片一片往海里弹。温星槎听你报完两个数，又听你说那条浅船泊的地方。她嚼槟榔的腮帮子停了，伸手把抄纸要过去，指甲在你添的那一句“此处泊的是浅船”底下掐出一道印。牵星图在她膝头展到海峡口那一格，最后一页还折着，压在手肘底下。“两个法子，都是半指。”她没抬头，“你怎么讲？”"
+speaker = "captain"
+mood = "tender"
+at = "yuegang"
+when = [{ kind = "alive", person = "wen_xingcha", value = true }]
+objectives = [{ kind = "person", person = "wen_xingcha", text = "回月港，把两个数和那句话报给温星槎" }]
+news = "月港的老火长往祖父的牵星图边添了一行小字，替她去海峡口的后生还多说了一句，当年的船泊得靠北。"
+
+[[tracks.chapters.choices]]
+key = "north"
+text = "说：也许没人错，是你祖父那年泊得更靠北。"
+next = "done"
+reply = "她第一次笑了，露出被槟榔染黑的牙。“这话我爱听。”可她还是摸出小笔，在图边写上“差半指”，写得比祖父的字还小。“后人知道差，比不知道强。泊在哪儿，留给下一个去量的人问吧。”"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "wen_xingcha", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "skill", skill = "astral_navigation", value = 20 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_done" },
+  { kind = "memory", memory = "mem-request_wen_xingcha-report", title = "图边添的一行小字" },
+]
+
+[[tracks.chapters.choices]]
+key = "tell_true"
+text = "照实说：两个法子都差半指，图上的数错了。"
+next = "done"
+reply = "她抬眼，嚼着槟榔把你从头看到脚。“泊处不同，你也敢说他错？”小笔还是落下去了，在那一格旁边添一行：后人复量，差半指。“敢说的，老婆子不拦。”添完，她把“此处泊的是浅船”那一句也抄在了下面。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "wen_xingcha", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "skill", skill = "astral_navigation", value = 20 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_done" },
+  { kind = "memory", memory = "mem-request_wen_xingcha-report", title = "图边添的一行小字" },
+]
+
+[[tracks.chapters.choices]]
+key = "not_sure"
+text = "说两个法子都差半指，可你不敢断定谁错。"
+next = "done"
+reply = "“两个法子都量了，还不敢？”她哼了一声，把抄纸折成四折，塞进图的夹层里。“也好，嘴上不添乱，也算一样本事。‘浅船’那句我留着，下一个人去量的时候，老婆子拿出来给他看。”"
+news = "月港的老火长把一个后生从海峡口带回的两个数折进了图的夹层，没添字，说再等人去量。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "wen_xingcha", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_partial" },
+]
+
+# 三″、估出来的数：回月港，石墩上，她问你。（凭眼力）
+[[tracks.chapters]]
+key = "report_rough"
+title = "估出来的数"
+text = "傍晚的月港码头，卖鱼的在石墩那头刮鳞，一片一片往海里弹。温星槎听你说“大概是半指”，听到“大概”两个字，把槟榔吐进了石缝。她拿过抄纸，你写在墨点边上的数很轻，轻得像怕被谁看见，她把纸举到眼前，又举远。牵星图在她膝头展着，最后一页还折着，压在手肘底下。“估的？”她问，“拿什么估的？”"
+speaker = "captain"
+mood = "tender"
+at = "yuegang"
+when = [{ kind = "alive", person = "wen_xingcha", value = true }]
+objectives = [{ kind = "person", person = "wen_xingcha", text = "回月港，把估的数报给温星槎" }]
+news = "月港的老火长听一个后生报了个海峡口的大概数，没往牵星图上添字。"
+
+[[tracks.chapters.variants]]
+key = "v1_off"
+when = [{ kind = "flag", flag = "c13_request_wen_xingcha_guess_off" }]
+text = "傍晚的月港码头，卖鱼的在石墩那头刮鳞，一片一片往海里弹。温星槎听你说“大概是半指吧”，把槟榔吐进了石缝。抄纸上，墨点边上的数涂了又改，改了又涂，已经认不出原来写的是几。牵星图在她膝头展着，最后一页还折着，压在手肘底下。“估的？”她问，“估了几回？”"
+
+[[tracks.chapters.choices]]
+key = "say_near"
+text = "把估的数说给她，讲明是凭眼力估的。"
+next = "done"
+reply = "她从耳后摸出一截炭条，在墨点边上记了你的数，记得很轻，轻得一抹就掉。“估的数，不上墨。”她吹了吹炭灰，“先放着。下一个人拿板子量了，老婆子再看你估差了几分。”"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "wen_xingcha", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "not_sure"
+text = "说这数是估的，没把握，别往图上添。"
+next = "done"
+reply = "她把牵星图合上，拿手掌拍了拍封面，半天才开口。“没把握，墨点边上就别写数。”她把抄纸还给你，纸角被她捏出一道印子，“这张你带着。下回再下南洋，带块板子去，别拿手比。”"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "wen_xingcha", value = 2 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_wen_xingcha_partial" },
+]

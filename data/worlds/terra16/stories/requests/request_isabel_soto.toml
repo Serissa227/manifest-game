@@ -1,0 +1,218 @@
+# C13d 请托：从海上看过去的哈瓦那（request_isabel_soto）。中文，Claude 写。
+# 人物：伊莎贝尔·德·索托 isabel_soto（1541-03-25 生，女；塞维利亚领航考官的孙女，画海岸比谁都准，领不到执照）。cast 在 cast/classmates_seville.toml，日程 1557—1590 在塞维利亚的菜市场（seville / market）。
+# 类型：去某处（gs）。章节：offer（报价）→ arrive（哈瓦那港外，三条路）→ 两种收尾。
+#       report 收尾是量过礁或画过岬角侧影的一路（有 profile 旗标，才有“两个名字”）；report_partial 是只照旧图进港的一路（没有 profile，没有“两个名字”）。
+#       结构说明：原设计 arrive 三个选项都走 report，其中“两个名字”要求 profile 旗标。按“同一轨道设的旗标不用来挡另一条路”的办法，收尾分成两章，各自两到三个选项。
+#       超时（arrive 240 天）走 failed，寄一封信，不写见闻。
+# 报价：当面（T）。auto=false，玩家“问请托”（ask:request_isabel_soto）启动；offer 章不写 at，目标是在塞维利亚找到她。
+#       窗口 1566-01-01 至 1574-12-31（写在 when 的 date 里）；offer 的 deadline 为窗口止日，timeout 为 failed，不写见闻。
+#       普通章不写 window，窗口以 when 的 date 条件表达（window 只与 stage/default 搭配）。
+# 依据·史实背景：塞维利亚贸易总署的标准海图（padrón real）靠领航员回报修订；哈瓦那 1558—1577 年修拉富埃尔萨城堡，入口东岸的岬角上有瞭望台。城堡只作风景，不写军事测绘。
+# 依据·原创：伊莎贝尔、她手上的墨、三张岸形草图、量礁的那一次、图角的署名之争、订图的船长（只在offer里提到，不出场）。
+# 依赖：港口 seville（ports_iberia.toml）、havana（ports_americas.toml）；人物 isabel_soto；技能 cartography、tide_reading（skills.toml）；检定属性 seamanship。B10b：无需改名。主线门禁：无。
+# C7：不写莱昂诺尔、佩德罗、诺埃尔；不写当年的署名。bond 等级只作为 offer 的 variant 条件（C 级以上换一段开场），不读任何 c7_ 旗标，不设任何 c7_ 旗标。
+# 秘密（cast 里的 secret）：永不写进正文与见闻。本请托的署名之争只在她和玩家之间，只谈这一张新图。
+# 写的旗标：c13_request_isabel_soto_accepted（接下，offer 两条接法都设）、_declined（回绝，终局）、_profile（量了岸形或礁）、_done（终局）、_partial（终局：只署自己的名字）、_late（超时，终局）。
+# 读的旗标：无。profile 只由 arrive 章的两个选项设置、且只通向 report，所以 report 里的“两个名字”选项不写 requires（照“同一轨道设的旗标不用来挡选项”的办法，靠 next 分章）；profile 旗标留给以后的变体读取。
+# 回忆插画 mem-request_isabel_soto-report：图角上的两个名字。一张新图的图角，一个名字写得很大，下面一行小字；桌上摊着旧图与量好的数，墨渍从指尖蹭到纸边。
+# 口头禅“谁画的？画错了。”只在 report 章用一次。
+
+[[tracks]]
+key = "request_isabel_soto"
+name = "从海上看过去的哈瓦那"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["isabel_soto"]
+
+# 一、上不了船的画图人：塞维利亚的菜市场，她接了一张哈瓦那港的图。
+[[tracks.chapters]]
+key = "offer"
+title = "上不了船的画图人"
+text = "塞维利亚的菜市场边上，伊莎贝尔趴在一张木桌上画图，手指上的墨一块一块的。桌角压着一封订单：一位船长要哈瓦那港口的图。“他要一张从海上看过去的图。”她拿笔尖点着纸，“岬角像什么，城堡在哪，入口有多宽。船长认港口，就认这个侧影。”她把笔一丢，抬起头，“可我上不了船。领航执照轮不到我，你知道的。”说完，她把一张白纸拍在你面前：“你去看，我来画。图上署谁的名，等你回来再吵。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1574, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "isabel_soto", ge = 18 },
+]
+objectives = [{ kind = "person", person = "isabel_soto", text = "在塞维利亚的菜市场找到她" }]
+deadline = [1574, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "isabel_soto", level = "C" }]
+text = "塞维利亚的菜市场边上，伊莎贝尔趴在木桌上画图，看见你，把笔往耳朵上一夹，没有起身。“哈瓦那的港口。订图的船长要从海上看过去的样子：岬角，城堡，入口的宽。”她用笔尖点着纸，“我上不了船。你的船，我来画路——这回是真的路。”她把白纸拍到你面前，“你去看，我来画。图上署谁的名，等你回来再吵。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，去哈瓦那看岸形、量入口。"
+next = "arrive"
+reply = "她在纸上画了一道横线当海面，又在线上点了一个点当船，说：“你看见的，从左到右，一样一样记，别跳。”"
+effects = [
+  { kind = "affinity", person = "isabel_soto", value = 2 },
+  { kind = "flag", flag = "c13_request_isabel_soto_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_name"
+text = "接下，先说清楚：署名的事现在就吵。"
+next = "arrive"
+reply = "“现在吵，你就不去了。”她把笔塞进你手里，笔杆上立刻蹭了一道墨。“回来再吵，先把数带来。空手回来，图角我一个人署。”"
+effects = [
+  { kind = "affinity", person = "isabel_soto", value = 2 },
+  { kind = "flag", flag = "c13_request_isabel_soto_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一年我不去西印度，哈瓦那太远。"
+next = "failed"
+reply = "她哼了一声，把白纸收回去，抽出一张旧图摊开。“那就照旧图画。旧图错了，我改得起。”"
+effects = [{ kind = "flag", flag = "c13_request_isabel_soto_declined" }]
+
+# 二、岬角的侧影：船在哈瓦那港外，你从左到右看岸，量入口，记礁的深浅。
+[[tracks.chapters]]
+key = "arrive"
+title = "岬角的侧影"
+text = "船在哈瓦那港外的海上停住。你照她说的，从左到右看岸：一片低岸，一座岬角，岬角顶上一座瞭望台，再往里是入口。入口里面，城墙才砌到一半，石工的木架还搭在墙头上。舵手拿旧图对了半天，忽然叫出声来：“入口比图上窄，东边那片礁比图上浅。照着旧图的水深走，大船要擦底。”"
+speaker = "captain"
+mood = "mystic"
+at = "havana"
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1576, 2, 24] },
+  { kind = "alive", person = "isabel_soto", value = true },
+]
+objectives = [{ kind = "at", at = "havana", text = "到哈瓦那港外" }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "isabel_soto", value = -3 }, { kind = "flag", flag = "c13_request_isabel_soto_late" }, { kind = "letter", person = "isabel_soto", text = "订图的船长等不及，拿旧图走了。我在图角写了一句：入口小心。——伊莎贝尔" }] }
+
+[[tracks.chapters.choices]]
+key = "draw_profile"
+text = "照她说的从左到右，把岸形一笔笔画下来，量入口的宽。"
+next = "report"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你画的岬角，怎么看都不像你眼前那一座"
+reply = "你画了三张，一张比一张像。入口的宽用两次方位角量出来，跟旧图差了一截。"
+news = "哈瓦那港外，有条船在海上停了半天，船上的人对着岸一笔笔地画，画到日头偏西。"
+effects = [
+  { kind = "affinity", person = "isabel_soto", value = 3 },
+  { kind = "flag", flag = "c13_request_isabel_soto_profile" },
+]
+
+[[tracks.chapters.choices]]
+key = "sound_reef"
+text = "放小船下去，把入口那片礁的深浅量出来。"
+next = "report"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "这里潮差小，可你还是算不准几时最浅"
+reply = "你挑最浅的时辰量了礁，比旧图上浅了一人深。数和时辰都记在本子上。"
+news = "哈瓦那入口东边的礁，有人放小船下去，挑最浅的时辰量了水深，量完一行行记进本子里。"
+effects = [
+  { kind = "affinity", person = "isabel_soto", value = 3 },
+  { kind = "flag", flag = "c13_request_isabel_soto_profile" },
+]
+
+[[tracks.chapters.choices]]
+key = "sail_in"
+text = "照着旧图开进港，凭手感记哪里不对。"
+next = "report_partial"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "你照旧图进港，在入口处觉得水道窄了，礁也近了。几处“旧图不对”记在纸边上。"
+news = "哈瓦那入口比旧图窄，一条船照着旧图开进去，进港时一直盯着两岸的礁。"
+effects = [{ kind = "affinity", person = "isabel_soto", value = 3 }]
+fail = { next = "report_partial", news = "哈瓦那入口的礁边擦了一下，那条船量了一半就赶紧进港，记下的数也只有一半。", effects = [{ kind = "affinity", person = "isabel_soto", value = -2 }] }
+
+# 三之一、署谁的名（量过礁或画过侧影的一路）：她照你的数画新图，图角只能署一个名。
+[[tracks.chapters]]
+key = "report"
+title = "署谁的名"
+text = "伊莎贝尔把你带回来的东西一样样铺开：纸上的岸形，或是记着时辰的礁深，哪样有就用哪样。她先拿起桌上的旧图，眯着眼看了一会儿：“谁画的？画错了。”然后她照你的数，一笔一笔画新图。画到入口，她把旧图的宽划掉，在旁边写上新的。她举到窗口看了一遍，指甲在入口那道线上划了划：“这道还是歪。”然后她把笔一放：“好了，吵吧。图角只能署一个名。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1576, 2, 24] },
+  { kind = "alive", person = "isabel_soto", value = true },
+]
+objectives = [{ kind = "person", person = "isabel_soto", text = "回塞维利亚，在菜市场找到她" }]
+news = "塞维利亚菜市场边上有人说，画图的那个姑娘画出了新的哈瓦那港图，入口比旧图窄了一截，图角的名字还在吵。"
+
+[[tracks.chapters.choices]]
+key = "her_name"
+text = "说署她的名，量的人写在下面。"
+next = "done"
+reply = "她盯着你看了很久，在图角写下自己的名字，写得很大；名字下面一行小字：“实测：某船长。”钱一分不差，她又教你岬角的侧影该怎么画才像。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "isabel_soto", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_isabel_soto_done" },
+  { kind = "memory", memory = "mem-request_isabel_soto-report", title = "图角上的两个名字" },
+]
+
+[[tracks.chapters.choices]]
+key = "both_names"
+text = "说两个名字并排写，谁也不在下面。"
+next = "done"
+reply = "“总署不收两个名字的图。”她嘴上这么说，还是把两个名字并排写了，一样大。“总署不收，船长收。”钱照付，又教你岸形的画法。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "isabel_soto", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_isabel_soto_done" },
+  { kind = "memory", memory = "mem-request_isabel_soto-report", title = "图角上的两个名字" },
+]
+
+[[tracks.chapters.choices]]
+key = "my_name"
+text = "说署我的名，总署认船长的名字。"
+next = "done"
+reply = "她脸色一沉，照写了，写完把笔扔在桌上，付了一半的钱，说剩下一半，等你哪天承认这张图是她画的。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "isabel_soto", value = 2 },
+  { kind = "flag", flag = "c13_request_isabel_soto_partial" },
+]
+
+# 三之二、半张图的名字（只照旧图进港的一路）：量得不全，图还是要画，名字还是要署。
+[[tracks.chapters]]
+key = "report_partial"
+title = "半张图的名字"
+text = "伊莎贝尔把你带回来的东西铺开。没量全，纸边上只记着几处“旧图不对”。她用指头点着那几行字念了一遍，又看你一眼：“记得倒清楚。”然后把旧图翻过去，在背面画起新的岸线。“这点我能用。”她画到入口，把旧图的宽划掉，写上一个她自己算出来的数。画完，她把笔搁下：“图角只能署一个名。你挑吧。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1566, 1, 1], to = [1576, 2, 24] },
+  { kind = "alive", person = "isabel_soto", value = true },
+]
+objectives = [{ kind = "person", person = "isabel_soto", text = "带着纸边那几行字，回菜市场找她" }]
+news = "塞维利亚菜市场边的画桌上，一张量得不全的哈瓦那港图摊着，图角的名字还在吵。"
+
+[[tracks.chapters.choices]]
+key = "her_name"
+text = "说署她的名，量得不全的人写在下面。"
+next = "done"
+reply = "她看着纸边上那几行“旧图不对”，半晌才在图角写下自己的名字。字写得很大，下面一行小字：“实测：某船长。”钱一分不差，她又教你岸形该怎么画。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "isabel_soto", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "flag", flag = "c13_request_isabel_soto_done" },
+  { kind = "memory", memory = "mem-request_isabel_soto-report", title = "图角上的两个名字" },
+]
+
+[[tracks.chapters.choices]]
+key = "my_name"
+text = "说署我的名，缺的数我以后补上。"
+next = "done"
+reply = "她没说话，照写了，笔尖在纸上戳出一个小坑。付了一半的钱，说剩下一半，等你把另一半的数补上，再来拿。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "isabel_soto", value = 2 },
+  { kind = "flag", flag = "c13_request_isabel_soto_partial" },
+]

@@ -1,0 +1,187 @@
+# 请托：海峡两岸的名字（request_lorenzo）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：洛伦索（lorenzo，1540-04-01 生，男），摩里斯科人家的孩子，侯爵府的侍童，在马拉加的码头上替人递信；势力 spain，身份档 1。cast：cast/classmates_seville.toml。
+# 类型：送信（letter）。任务单写的是三章，实际是五章：offer（报价）、handover（送到得土安，问名字）、reply_seven（送到七家，当面结账，可以讲那些名字）、reply（托管事的人送回信，当面结账）、reply_few（只认出三家，只送到三家）。
+#   多出的几章是引擎的限制：请托不能用本轨道在别的分支上设的旗标做 requires，所以“送到七家”“托人转交”“只送到三家”各自走 next 到自己的终局章；variants 只能改文字，改不了报酬。
+# 报价：V（到访）。洛伦索从格拉纳达下到马拉加的港口（malaga），auto=true；窗口 1570-01-01 至 1590-06-30；offer 写 family=c13_offer_malaga，冷却 20 天；玩家满 17 岁、洛伦索满 18 岁。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：handover 章 deadline_days=90，超时走 failed，来信一封，好感 -3，旗标 _late。reply、reply_seven、reply_few 是普通章，可以一直等。
+#   handover 没有 stage，所以不写 default；超时的结果由 timeout 承担。
+# 依据·史实背景：1568—1571 年阿尔普哈拉斯起义以后，格拉纳达的摩里斯科人被迁散到卡斯蒂利亚各地，也有人渡海去了北非（得土安）；海峡两岸的家人靠商船与赎俘修士带信。迁散只作背景，不写起义的战事。
+# 依据·原创：八封信与七家的数目，老人一家家用原来的名字喊门的办法，街坊替不在的人写回的新名字，卖枣子的老太太。
+# 待核：卡斯蒂利亚话的名字与阿拉伯话原名之间的对应，正文只写传闻口吻。
+# 秘密：夜里读母亲留下的阿拉伯文，正文里他不碰阿拉伯字；见闻一律不写。信封背面的小字是玩家读的（read_names 要 lang_arabic ≥ 60），不是洛伦索读的。
+# 读的旗标：bond lorenzo ≥ C（offer 的变体，只读）。不设任何 c7_ 旗标；不写迭戈与诺埃尔（C7），不写“念名字给岸上的家人”（归 bond_lorenzo）。
+# 设的旗标：c13_request_lorenzo_accepted（offer 接下）、_declined（offer 回绝）、_seven（送到七家；本轨道内不读，留给之后的变体）、_few（只送到三家）、_late（handover 超时）、_done（reply_seven 与 reply 终局）、_partial（reply_few 终局）。
+# 不用 relation / tie / bond / heart 效果；bond 只作条件读取。
+# 报酬：工钱最多 1250（只送到三家 700）；好感最多 +13（接下 +2、送到七家 +3、讲述 +8）；名声 +1；回忆 mem-request_lorenzo-reply。无物品奖励。
+#   名声与回忆按任务单写在各条终局上；reply_few 的变体只改工钱与终局旗标。
+# 依赖：港口 malaga（ports_iberia.toml）、tetouan（ports_north_africa.toml）；技能 lang_arabic（skills.toml）；属性 eloquence；人物 lorenzo。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_lorenzo-reply「只写一个名字的回信」：马拉加的码头上，一封回信背面只写着一个名字，洛伦索把它举到光里，看了很久。
+
+[[tracks]]
+key = "request_lorenzo"
+name = "海峡两岸的名字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["lorenzo"]
+
+# 一、一包家信：马拉加的码头上，洛伦索从山路下来，第一句就是猜你的来处。
+[[tracks.chapters]]
+key = "offer"
+title = "一包家信"
+text = "马拉加的码头上，一个穿旧呢子外套的年轻人从山路上下来，老远就朝我招手。他先笑，笑完说：“让我猜猜，你是打哪儿来的？”没等我答，他自己点了点头：“打海边来的，不是打城里。”说完才把手里的布包往我怀里一塞。包里是一叠信，每封的信封上都写着名字。阿尔普哈拉斯以后，格拉纳达的人家散了，有的被赶去卡斯蒂利亚的村子，有的渡海去了得土安。“这是这边的人写给那边的。”他说，“回信要带回来。有的回信只有一个名字，那也是回信。”"
+speaker = "captain"
+mood = "sad"
+at = "malaga"
+objectives = [{ kind = "at", at = "malaga", text = "在马拉加的码头上" }]
+when = [{ kind = "date", from = [1570, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "lorenzo", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_malaga"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "lorenzo", level = "C" }]
+text = "马拉加的码头上，那个穿旧呢子外套的年轻人一眼看见我，先笑：“让我猜猜，你是打哪儿来的？”没等我答，他已经点了头：“打海边来的，不是打城里。”他又摆摆手：“这回不用猜了。”然后才把布包往我怀里一塞。包里的信，每封都是格拉纳达的人写给得土安那边的。“回信要带回来。有的回信只有一个名字，那也是回信。”"
+
+[[tracks.chapters.choices]]
+key = "take_packet"
+text = "接下，把信送到得土安，带回回信。"
+next = "handover"
+reply = "他把信一封封数给我，每封的收信人都念一遍，用的是卡斯蒂利亚话的名字。“那边的人，叫法不一样，你到了问。”"
+effects = [{ kind = "affinity", person = "lorenzo", value = 2 }, { kind = "flag", flag = "c13_request_lorenzo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_him"
+text = "接下。问他：这里面有他自己家的信吗？"
+next = "handover"
+reply = "他笑了笑，说：“你猜。”把布包系紧递回给我，没再说别的。"
+effects = [{ kind = "affinity", person = "lorenzo", value = 2 }, { kind = "flag", flag = "c13_request_lorenzo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一带查得严，我不想惹麻烦。"
+next = "failed"
+reply = "他点点头，没有恼。“那就等修士的船。修士的船，没人查。”"
+effects = [{ kind = "flag", flag = "c13_request_lorenzo_declined" }]
+
+# 二、另一种叫法：得土安的安达卢斯人街区，信上的名字在这里不认得。
+[[tracks.chapters]]
+key = "handover"
+title = "另一种叫法"
+text = "得土安的安达卢斯人街区，巷子窄得两个人要侧着身子才过得去。门楣上还留着格拉纳达的花样，石头被手摸得发亮。码头上他说：“这是这边的人写给那边的。”又说：“回信要带回来。”我拿着信一家家问，卡斯蒂利亚话的名字，这里的人摇头，有的关上了门。问到第五家，一个老人从门后探出半张脸，看了看我手里的信封，说：“这里的人到了这边，都换回了原来的名字。你得知道他们原来叫什么。”我把信封一封封递过去，他接过来，眯着眼看背面，看完又回头朝门里喊了一声。“先在这儿等着。”"
+speaker = "captain"
+mood = "sad"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "在得土安" }]
+when = [{ kind = "alive", person = "lorenzo", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "lorenzo", value = -3 }, { kind = "flag", flag = "c13_request_lorenzo_late" }, { kind = "letter", person = "lorenzo", text = "信我托修士的船带去了。回信来了三封，有一封只有一个名字。——洛伦索" }] }
+news = "得土安的安达卢斯人街区，有人拿着一包马拉加来的信，一家家用原来的名字去问。"
+
+[[tracks.chapters.choices]]
+key = "read_names"
+text = "看信封背面写信人用阿拉伯字母补写的小字，照着去问。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60, hard = true }]
+hint = "信封背面有几行小字，你一个也认不出"
+next = "reply_seven"
+reply = "信封背面果然有小字，写的是原来的名字。照着它一家家问下来，八封里有七封找到了人，第八封的人家没找到。"
+effects = [{ kind = "affinity", person = "lorenzo", value = 3 }, { kind = "flag", flag = "c13_request_lorenzo_seven" }]
+
+[[tracks.chapters.choices]]
+key = "ask_elder"
+text = "请那个老人帮忙，一个名字一个名字地对。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply_seven"
+reply = "老人领着我走了一下午，每到一家门口，就用原来的名字喊一声。八封信，送到了七封。"
+effects = [{ kind = "affinity", person = "lorenzo", value = 3 }, { kind = "flag", flag = "c13_request_lorenzo_seven" }]
+fail = { next = "reply_few", effects = [{ kind = "affinity", person = "lorenzo", value = -2 }, { kind = "flag", flag = "c13_request_lorenzo_few" }] }
+
+[[tracks.chapters.choices]]
+key = "leave_at_mosque"
+text = "把信留在街区清真寺门口，托管事的人转交。"
+next = "reply"
+reply = "管事的人收了信，说会一家家送去。回信过了几天才陆续送来，其中一封只写了一个名字。"
+effects = [{ kind = "affinity", person = "lorenzo", value = 2 }]
+
+# 三a、只有一个名字的回信（送到七家）：洛伦索看着那封只写了名字的回信，玩家替他一家家问过。
+[[tracks.chapters]]
+key = "reply_seven"
+title = "只有一个名字的回信"
+text = "马拉加的码头上，洛伦索又下到港口来接我。回信是一包，用绳子捆着，我递过去，他一封一封看信封，看得很慢。看到其中一封，他停住了：信封上只写了一个名字，别的什么也没有。那是第八封信的回信。收信的人没找到，街坊替那个人写了一个名字回来，是他在那边新起的名字。洛伦索把那一封举到光里看了很久，才说：“说明他还在。”"
+speaker = "captain"
+mood = "tender"
+at = "malaga"
+objectives = [{ kind = "at", at = "malaga", text = "在马拉加，等洛伦索再下到港口" }]
+when = [{ kind = "alive", person = "lorenzo", value = true }]
+news = "马拉加的码头上，一包从得土安带回来的信，被人一封一封地看了很久。"
+
+[[tracks.chapters.choices]]
+key = "tell_story"
+text = "把那八封信一家家去问的事讲给他听。"
+next = "done"
+reply = "他听着，笑了，说那些名字他小时候在家里也听过。他付了钱，说这一包他要分好几天送，“一天送完，太快了。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lorenzo", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lorenzo_done" }, { kind = "memory", memory = "mem-request_lorenzo-reply", title = "只写一个名字的回信" }]
+
+[[tracks.chapters.choices]]
+key = "hand_over"
+text = "把回信交给他，不多说。"
+next = "done"
+reply = "他点点头，把回信收进怀里，付了钱。“下一包信，还找你。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lorenzo", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lorenzo_done" }, { kind = "memory", memory = "mem-request_lorenzo-reply", title = "只写一个名字的回信" }]
+
+# 三b、托人转回的回信（托管事的人送来）：玩家没有替他问过门，这一章只问那封信的来历。
+[[tracks.chapters]]
+key = "reply"
+title = "托人转回的回信"
+text = "马拉加的码头上，洛伦索在岸边等我。管事的人托商船捎来一包回信，粗绳外头还裹着一层油布。他拆开看，翻到一封时手停住了：信封上只有一个名字。是第八封信的回信。那个人已经不在原来的屋子里，街坊替他写了一个新名字回来。信封角上沾着一点糖霜，另附一张纸条，写着收到的日子，没有落款。洛伦索把它对着太阳看了很久，末了说：“那就是还在。”"
+speaker = "captain"
+mood = "tender"
+at = "malaga"
+objectives = [{ kind = "at", at = "malaga", text = "在马拉加的港口" }]
+when = [{ kind = "alive", person = "lorenzo", value = true }]
+news = "马拉加的码头上，一包从得土安转回来的信里，有一封只写着一个名字，那年轻人看了很久。"
+
+[[tracks.chapters.choices]]
+key = "ask_who"
+text = "问他：那封只写名字的信，是谁替他写的？"
+next = "done"
+reply = "“街坊。”他说得很快，又慢下来，“管事的人说，是个卖枣子的老太太，一个字一个字描的。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lorenzo", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lorenzo_done" }, { kind = "memory", memory = "mem-request_lorenzo-reply", title = "只写一个名字的回信" }]
+
+[[tracks.chapters.choices]]
+key = "hand_over"
+text = "把这一包回信递给他。"
+next = "done"
+reply = "他一封封收进怀里，付了钱。“剩下的那几封，我自己去找。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lorenzo", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lorenzo_done" }, { kind = "memory", memory = "mem-request_lorenzo-reply", title = "只写一个名字的回信" }]
+
+# 三c、五封信重新包好：只送到三家，工钱比说好的少，终局旗标是 partial。
+[[tracks.chapters]]
+key = "reply_few"
+title = "五封信重新包好"
+text = "马拉加的码头上，我把回信交给洛伦索。这一趟只送到了三家。老人认出了三家的门，在每扇门前站一站，屋里应了，才敢把信递进去。剩下五封的信封没人认得，原样带了回来。洛伦索一封封抽出来看，每封都停一下，然后把五封重新包好，系紧了绳子，最上面那一封，他又压回了最底下。“下一趟再试。”他说，不知是对那五封信说，还是对我。"
+speaker = "captain"
+mood = "sad"
+at = "malaga"
+objectives = [{ kind = "at", at = "malaga", text = "在马拉加，回信还在他手里" }]
+when = [{ kind = "alive", person = "lorenzo", value = true }]
+news = "马拉加的码头上，一包从得土安带回来的信只送到了三家，剩下的五封原样包好，又带了回来。"
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "三家的回信交给他，其余的我替他收着。"
+next = "done"
+reply = "他把回信收进怀里，付的钱比说好的少了一截。“那五封，下一趟我再去问。”"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "lorenzo", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lorenzo_partial" }, { kind = "memory", memory = "mem-request_lorenzo-reply", title = "只写一个名字的回信" }]
+
+[[tracks.chapters.choices]]
+key = "tell_few"
+text = "把老人一家家喊门、只认出三家的事讲给他听。"
+next = "done"
+reply = "他听着，把那三家的回信单独抽出来放到最上面。“先送这三家。”说完才去数钱。"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "lorenzo", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lorenzo_partial" }, { kind = "memory", memory = "mem-request_lorenzo-reply", title = "只写一个名字的回信" }]

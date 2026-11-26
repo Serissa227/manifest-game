@@ -1,0 +1,171 @@
+# 请托：多算的一年（request_mayta_qipu）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude 执笔。
+# 人物：迈塔·基普 mayta_qipu（1540-03-25 生，男），钦查筏商人家的儿子，学院同学（cast/classmates_custom_chincha_rafts.toml）。
+# 类型：说服某人（persuade）。章节：offer 报价 → persuade 书记听绳（三条路）→ result 改过的一行；argue 检定失败走 result_partial 推了一季。
+# 报价：到访（V）。auto=true；offer 在卡亚俄（callao），窗口 1576-01-01 至 1590-06-30，到期走 failed，不写见闻。family c13_offer_callao，冷却 20 天。
+# 身份档 1（匠人、小商、年轻的同学）：现金基数 900，中档 ×1.4 = 1250；推了一季的结局 700（brief 的数字）。
+# 依据（史实）：1570—75 年托莱多大巡查与集村、贡额重定，只作背景；正文写“新册子”“巡查的人走后”，不写总督。待核的年份一律用传闻口吻。
+# 依据（原创）：卡亚俄港务处的书记（叙事人物，不起名、不建 cast）；结绳账；替病了的邻户代交的那一结；“改过的一行”。
+# 依赖：无改名依赖（mayta_qipu、callao 现成）；技能 quipu、lang_quechua 与属性 eloquence 现成。
+# 读写的旗标：读 c7_tie_new_mayta_qipu_ika_together（只读，offer 的 variant）；读 bond_mayta_qipu 的 C 级（offer 的 variant）；只设 c13_request_mayta_qipu_*；不设 c7_ 旗标。
+# 秘密：夜里对着墙练习（cast secret）。本请托只让玩家看见他讲得顺，persuade 章一句“像是讲过许多遍”带过；见闻不写。
+# 回忆插画清单：
+#   mem-request_mayta_qipu-result：书记桌边，一根新结的细绳压在改过的那一行册子上。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；persuade 六十天内没有回应，走 timeout，迈塔来一封信；result 没有期限，可以一直等。
+# 结构说明：persuade 与 result 不设 window，窗口由 when 的日期承担，persuade 的缺省由 timeout 承担（window 与 default 是成对的，这里不用 window）。检定失败的分支 next 到 result_partial，不靠互斥旗标门禁。
+# 目标说明（checker 改）：persuade 的目标只留 at=callao，不写 person 目标——迈塔的日程在钦查（chincha，1564—1590），person 目标跟着日程走，会与“在卡亚俄”互相打架；他下到卡亚俄只在正文里陪着去。
+# 旗标：终局 done / partial / declined / late；分支 accepted、list、delay。
+
+[[tracks]]
+key = "request_mayta_qipu"
+name = "多算的一年"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["mayta_qipu"]
+
+# offer · 1576—1590 · 卡亚俄码头：一根主绳，几十根细绳
+[[tracks.chapters]]
+key = "offer"
+title = "绳上的一年"
+text = "卡亚俄的码头边，迈塔蹲在一根褐色的主绳前头，几十根细绳垂下来，每一根都打着结。钦查的筏户今年交贡，书记的新册子上写着欠了一年。可绳子上那一年早就交清了，结打在那里，一个不少。他的手指摸过一个结，停住了。“纸上的字能改，结改不了。”他说，“书记只认纸，绳子说的话，他听不见。”“明天他要扣我两只筏子抵贡。你陪我去，我念，你替我说成他听得懂的话。”"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "在卡亚俄的码头" }]
+when = [{ kind = "date", from = [1576, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "mayta_qipu", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_callao"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "go_with"
+text = "接下，明天陪他去书记那里。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "flag", flag = "c13_request_mayta_qipu_accepted" }]
+reply = "他把绳子一圈一圈收好，收到最后一根，摸了摸上面那个结，说“这是去年的鱼干”。收完他说，明天一早在码头等。"
+
+[[tracks.chapters.choices]]
+key = "count_first"
+text = "接下，先请他把这一年从头数给我听一遍。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }, { kind = "flag", flag = "c13_request_mayta_qipu_accepted" }]
+reply = "他数得很慢，一个结一个结地数，数完了抬头看我，像是在等我数错。我没数错，他才点头，又从头数了一遍，数给自己听。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "劝他认下官府的册子，就此算了。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_mayta_qipu_declined" }]
+reply = "他没说话，把绳子一根根收进麻布袋，收的时候一根也没数。袋口扎了个死结，他把袋子往肩上一甩，走到码头尽头才回头看了一眼港务处的窗口。"
+
+[[tracks.chapters.variants]]
+key = "v1_both"
+when = [{ kind = "flag", flag = "c7_tie_new_mayta_qipu_ika_together", value = true }, { kind = "bond", person = "mayta_qipu", level = "C" }]
+text = "卡亚俄的码头边，迈塔蹲在一根褐色的主绳前头。他一看见你，就把一截绳头直接塞到你手里：“你学过的，自己摸。”腰上另挂着一根绳，他说：“阿里卡的账，另算。”钦查的筏户今年交贡，书记的新册子上写着欠了一年。可绳子上那一年早就交清了，一个结不少。“纸上的字能改，结改不了。书记只认纸，绳子说的话，他听不见。”“明天他要扣我两只筏子抵贡。你陪我去，我念，你替我说成他听得懂的话。”"
+
+[[tracks.chapters.variants]]
+key = "v2_ika"
+when = [{ kind = "flag", flag = "c7_tie_new_mayta_qipu_ika_together", value = true }]
+text = "卡亚俄的码头边，迈塔蹲在一根褐色的主绳前头，几十根细绳垂下来，每一根都打着结。钦查的筏户今年交贡，书记的新册子上写着欠了一年。可绳子上那一年早就交清了，结打在那里，一个不少。他腰上另挂了一根绳，说：“阿里卡的账，另算。”“纸上的字能改，结改不了。书记只认纸，绳子说的话，他听不见。”“明天他要扣我两只筏子抵贡。你陪我去，我念，你替我说成他听得懂的话。”"
+
+[[tracks.chapters.variants]]
+key = "v3_bond"
+when = [{ kind = "bond", person = "mayta_qipu", level = "C" }]
+text = "卡亚俄的码头边，迈塔蹲在一根褐色的主绳前头，几十根细绳垂下来，每一根都打着结。他一看见你，就把一截绳头直接塞到你手里：“你学过的，自己摸。”钦查的筏户今年交贡，书记的新册子上写着欠了一年。可绳子上那一年早就交清了，一个结不少。“纸上的字能改，结改不了。书记只认纸，绳子说的话，他听不见。”“明天他要扣我两只筏子抵贡。你陪我去，我念，你替我说成他听得懂的话。”"
+
+# persuade · 1576—1590 · 卡亚俄港务处：书记的桌子，新册子，一根主绳
+[[tracks.chapters]]
+key = "persuade"
+title = "书记听绳"
+text = "书记的桌子上摊着新册子，墨还是新的。他认字，不认结。迈塔把主绳挂在桌边，从第一根数起：“先数结，再装货，不能倒过来。”他讲得出奇地顺，哪一结是鱼干，哪一结是棉布，哪一结是替病了的邻户代交，一句也不卡，像是讲过许多遍。“数到哪一结，你就记到哪一行，别跳。”书记听到一半，把笔搁下了。“绳子没错，我信。可我不能拿一根绳去跟上头对账。”他指了指册子，“上头要的是纸。”"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "在卡亚俄的港务处" }]
+when = [{ kind = "alive", person = "mayta_qipu", value = true }, { kind = "date", from = [1576, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "mayta_qipu", text = "书记扣了两只筏子抵贡。筏户们说再打一年鱼就赎得回来。绳子上我添了一个结，是这件事。——迈塔" }, { kind = "affinity", person = "mayta_qipu", value = -3 }, { kind = "flag", flag = "c13_request_mayta_qipu_late" }] }
+
+[[tracks.chapters.choices]]
+key = "translate_knots"
+text = "照着绳结一条条替他译成数，写成一张书记能交上去的清单。"
+next = "result"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "quipu", ge = 60, hard = true }]
+hint = "那些结的位置你看得懂一半，另一半说不出是几。"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }, { kind = "flag", flag = "c13_request_mayta_qipu_list" }]
+reply = "我一结一结地念，书记一行一行地记。记到替邻户代交的那一结，他停下笔，说这一笔册子上也漏了。清单写完，正好是那一年。"
+news = "卡亚俄港务处的书记桌边挂了一下午的结绳，一个外港的人把结一条条译成了数。"
+
+[[tracks.chapters.choices]]
+key = "in_quechua"
+text = "请迈塔用克丘亚语讲，我当场译给书记，一句不添。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_quechua", ge = 60 }]
+hint = "迈塔的话你只听得懂几个词。"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }, { kind = "flag", flag = "c13_request_mayta_qipu_list" }]
+reply = "迈塔讲一句，我译一句。书记听着听着，把笔放下了，说他母亲那边的人也用绳子记账，他小时候见过。说完他问迈塔，那个结该怎么念。"
+news = "卡亚俄港务处里，书记听一个钦查的筏户用克丘亚话讲账，听到一半把笔放了下来。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟书记讲道理：册子是巡查的人赶出来的，错一年不稀奇。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "mayta_qipu", value = -2 }, { kind = "flag", flag = "c13_request_mayta_qipu_delay" }], news = "卡亚俄港务处里，一个外来的船长跟书记讲了半天道理，扣船的日子还是往后推了一季。" }
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }, { kind = "flag", flag = "c13_request_mayta_qipu_list" }]
+reply = "书记想了想，说他去问问抄册子的人。第二天他回话：抄错了一行，把前年的欠数抄到了去年。他问我，那根绳子还在不在。"
+news = "卡亚俄港务处的书记答应去问抄册子的人，钦查的筏户在门外等了一下午。"
+
+# result · 1576—1590 · 卡亚俄港务处：改过的那一行，新结
+[[tracks.chapters]]
+key = "result"
+title = "改过的一行"
+text = "书记在新册子上划掉一行，旁边重写了一行，字写得很小。迈塔不识字，把册子推到我面前，手指压在那一行上：“念。”我念完，他没说话，从绳子末端解下一根空细绳，打了一个新结。“这一结不记鱼干，”他说，“记的是书记改了一行。以后谁再来查，绳子上有。”他把结拉紧，拉了两遍，像是怕松了又要数一遍。书记站在桌子另一头，没有过来看那根绳。"
+speaker = "captain"
+mood = "cheerful"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "回到卡亚俄港务处" }]
+when = [{ kind = "alive", person = "mayta_qipu", value = true }, { kind = "date", from = [1576, 1, 1], to = [1590, 12, 31] }]
+news = "卡亚俄港务处的书记在新册子上改了一行，钦查的筏户少交了一年的贡。"
+
+[[tracks.chapters.choices]]
+key = "ask_knot"
+text = "问他：这个结，别人看得懂吗？"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "mayta_qipu", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "quipu", value = 20 }, { kind = "flag", flag = "c13_request_mayta_qipu_done" }, { kind = "memory", memory = "mem-request_mayta_qipu-result", title = "书记桌边的新结" }]
+reply = "“看不懂，就来问我。”他把那根绳系回主绳上，付了钱，又把一小截打着结的细绳递给我，说是钦查的规矩，替人办成了事，要给人一个结。"
+
+[[tracks.chapters.choices]]
+key = "copy_paper"
+text = "劝他也留一张书记写的字据，绳子和纸各一份。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "mayta_qipu", value = 7 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "quipu", value = 20 }, { kind = "flag", flag = "c13_request_mayta_qipu_done" }, { kind = "memory", memory = "mem-request_mayta_qipu-result", title = "书记桌边的新结" }]
+reply = "他想了很久，收下了字据，折成一小块，塞进装绳子的麻布袋里，说纸也算一个结。他付钱的时候数了两遍，数完才把钱推过来。"
+
+# result_partial · 1576—1590 · 卡亚俄港务处：册子没改，只推了一季（argue 检定失败走到这里）
+[[tracks.chapters]]
+key = "result_partial"
+title = "推了一季"
+text = "书记没改册子，只在扣船的日子上添了一笔，往后推了一季。迈塔听完，在那根空细绳上又打了一个结，比别的结小一圈。“这是推了一季。”他说，“不是改。下一季，筏子还在。”他把绳子收回麻布袋，没有再看那份册子。回去的路上我问过他一次，他只说：“推了一季，还是我的筏子。”"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+objectives = [{ kind = "at", at = "callao", text = "回到卡亚俄港务处" }]
+when = [{ kind = "alive", person = "mayta_qipu", value = true }, { kind = "date", from = [1576, 1, 1], to = [1590, 12, 31] }]
+news = "卡亚俄港务处的书记没改册子，只把扣船的日子推了一季，筏户们还得多打一季鱼。"
+
+[[tracks.chapters.choices]]
+key = "ask_next"
+text = "问他：这一季的账，要不要我替你再盯一次？"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "mayta_qipu", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mayta_qipu_partial" }]
+reply = "“盯一次，就是白跑一趟。”他把绳子往肩上一搭，“我自己数。”他没让我插手，只把那一季的账单独打了一个结。"
+
+[[tracks.chapters.choices]]
+key = "copy_paper_partial"
+text = "劝他留一张书记写的字据，下一季照着它数。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "mayta_qipu", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mayta_qipu_partial" }]
+reply = "他收下字据，折成一小块塞进麻布袋，说这回纸跟绳子分开装，免得一起潮了，分不清哪样是哪样。袋子沉了一点。"

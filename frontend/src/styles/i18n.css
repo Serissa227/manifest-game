@@ -1,0 +1,156 @@
+/* 多语言（EXPANSION.md §12）：双行名字与英文界面的排版微调。
+ *
+ * - 双行名字（components/BiName.tsx）：中文界面在专名下方加一小行英文原名（约 65% 字号、颜色更淡）。
+ *   只有真的出现两行时（.bi-name-two）才改变排版；一行时就是普通的行内文字，不影响原有布局。
+ * - 英文界面：<html lang="en">（由 i18n/locale.ts 同步）。这里的规则都挂在 :root[lang="en"] 下，中文界面的布局一点不变。
+ *   英文通常比中文长：换成拉丁字体、收紧为中文设计的大字距，并给容易溢出的地方（顶栏、速度按钮、命令栏、窗口标题、
+ *   表格列头、对话框按钮）加上不换行与省略号；被截断的地方组件里都有悬停提示（title）给出全称。
+ */
+
+:root {
+  /* 拉丁字母的字体：双行名字的英文小行、英文界面 */
+  --font-latin: Georgia, "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+}
+
+/* ── 双行名字 ─────────────────────────────────────────── */
+.bi-name-two {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  min-width: 0;
+  line-height: 1.15;
+}
+.bi-name-two > .bi-name-main,
+.bi-name-two > .bi-name-sub {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bi-name-sub {
+  margin-top: 1px;
+  font-family: var(--font-latin);
+  font-size: 0.65em;
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+  opacity: 0.72;
+  text-shadow: none;
+  text-transform: none;
+}
+
+/* ── 英文界面：字体 ───────────────────────────────────── */
+:root[lang="en"] {
+  --font-ui: "Segoe UI", "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+  --font-title: Georgia, "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+}
+
+/* ── 英文界面：为中文设计的大字距收紧 ──────────────────── */
+:root[lang="en"] :is(
+    .gw-plaque,
+    .outcome-ribbon strong,
+    .app.boot h1,
+    .boot-tagline,
+    .chart-win-title h3,
+    .chart-group-title,
+    .pn-colonies .colony-name,
+    .pn-colonies .colony-found-title,
+    .pn-explore .ex-title,
+    .pn-explore .ex-fame-label,
+    .pn-explore .ex-seal,
+    .pn-explore .ex-unknown .ex-card-name,
+    .pn-battle-modal .pn-battle-title,
+    .pn .pn-ledger .statement .head th,
+    .pn .pn-scroll h4,
+    .pn .pn-board-title,
+    .scene-depart,
+    .scene-sign-name,
+    .contract-title,
+    .scene-found-sign,
+    .title-name-zh,
+    .title-tagline,
+    .title-menu-item,
+    .ts-plaque h2,
+    .ts-heading,
+    .ts-nameplate,
+    .ts-field-label,
+    .ts-btn,
+    .ts-btn-go,
+    .title-era-year,
+    .outcome-chip-btn
+  ) {
+  letter-spacing: 0.02em;
+}
+
+/* ── 英文界面：容易溢出的地方 ─────────────────────────── */
+/* 顶栏：数值与标签不换行，放不下时省略（标签在 title 里有全称） */
+:root[lang="en"] .hud-stat-label,
+:root[lang="en"] .hud-where,
+:root[lang="en"] .hud-rank {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+:root[lang="en"] .hud-stats {
+  column-gap: 14px;
+}
+/* 速度按钮与存档按钮：英文字号略小一点 */
+:root[lang="en"] .hud button {
+  font-size: 12px;
+}
+/* 命令栏：按钮宽度固定，标签放不下时省略（按钮的名称与悬停提示仍是全称） */
+:root[lang="en"] .cmdbar .cmd {
+  max-width: 88px;
+}
+:root[lang="en"] .cmd-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 表格列头：不换行，放不下时省略 */
+:root[lang="en"] th {
+  white-space: nowrap;
+}
+/* 对话框与表单的按钮：不把一个词拆成两行 */
+:root[lang="en"] :is(.chart-confirm, .pn-battle-modal, .colony-found, .ts-window) button {
+  white-space: nowrap;
+}
+/* 启航前的汇总：英文标签（Background、Attributes）比两个汉字宽得多，标签列放宽、字距收紧；
+   窄屏（≤ 640 像素）标签本来就单独一行，不动 */
+:root[lang="en"] .cw-summary dt {
+  letter-spacing: 0.02em;
+}
+@media (min-width: 641px) {
+  :root[lang="en"] .cw-summary-row {
+    grid-template-columns: 7em minmax(0, 1fr) auto;
+  }
+}
+
+/* ── 标题画面的语言下拉（左下，页脚上方） ─────────────── */
+.title-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #d6cbb8;
+  background: #1a1423b3;
+  box-shadow: 0 0 0 2px #2b1b17;
+  text-shadow: 1px 1px 0 #1a1423;
+}
+/* 语言下拉与音乐开关同一行，整行推到左栏底部 */
+.title-controls {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.title-controls + .title-footer {
+  margin-top: 0;
+}
+.title-lang select {
+  font: inherit;
+  padding: 1px 4px;
+}

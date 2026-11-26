@@ -1,0 +1,299 @@
+# 寰宇·行情事件（封闭集合）——第九批 S01。事件导演（AI 或离线模板）只能从这里挑事件、在范围内填参数；效果由内核计算。
+# 不引入经典世界的地名与人物（B10b）；航海士由 C6 的 mate 定义接入，交易所另由内容包登记。
+#
+# 写法与经典世界的 data/events.toml 相同：
+#   effect         good_supply / good_demand（某商品在所有地方的产量 / 需求）、supply_shift / demand_shift（某地某商品）、
+#                  location_supply / location_demand（某地全部商品）、popularity（某地某商品流行）、region_storm（海区风暴）、
+#                  relation_shift（两势力关系）、faction_tax（势力交易税）、development（发展度）、interest_shift（利率）、
+#                  industry_efficiency（产业效率）。寰宇各海区的海盗基准概率都是 0，region_pirates 在这里不起作用，没有用它。
+#   mult / days / delta   系数、持续天数、变化量的范围；goods 限定可用的商品；port_only 表示地点必须是港口；
+#   cooldown_days / max_per_year   同一类事件两次之间至少隔几天、每年最多几次。
+# 寰宇另多三个限定（不写就是任意）：让事件按真实的由头落在对应的地方。
+#   locs     = ["地点 key", …]   只在这些地点发生（带地点的效果）
+#   regions  = ["海区 key", …]   只在这些海区发生（region_storm）
+#   factions = ["势力 key", …]   只针对这些势力（faction_tax、relation_shift）
+# 带地点又带商品的事件：goods 里每一种都要在 locs 的至少一处有市场（数据校验会查）；
+# supply_shift 乘的是产量，所以 locs 只写出产那种货的地方。
+# key 只允许追加；name 与 description 可以随意改。每条上方写明“史实 → 本世界线”。
+
+# ───────────────────────── 风与海 ─────────────────────────
+
+# 史实：印度洋的西南季风每年五六月间起风，迟到或中断的年份，西海岸的胡椒、靛青与稻田一并歉收。
+#       → 本世界线：按整季减产写，落在季风区出产的几种货上。
+[[events]]
+key = "monsoon_late"
+name = "季风误期"
+description = "西南季风迟了一个多月才到。印度沿岸的田地开了裂，胡椒藤、靛青与肉桂林都跟着歉收。"
+effect = "good_supply"
+cooldown_days = 300
+max_per_year = 1
+goods = ["spice", "indigo", "cardamom", "ginger", "cinnamon"]
+mult = [0.6, 0.85]
+days = [40, 100]
+
+# 史实：季风盛期阿拉伯海与孟加拉湾风浪最大，葡人的印度航线与古吉拉特的商船都按“关海”的日子停航。
+#       → 本世界线照此。
+[[events]]
+key = "monsoon_gales"
+name = "季风大浪"
+description = "这一季的季风来得又早又猛，出海的船十条里有两三条折了桅杆回来。老领航人说，该“关海”了。"
+effect = "region_storm"
+cooldown_days = 180
+max_per_year = 2
+regions = ["arabian_sea", "bengal_bay", "malabar", "gujarat", "ceylon", "maldives"]
+mult = [1.5, 2.5]
+days = [30, 75]
+
+# 史实：闽粤舟人称夏秋的大风为“飓”，一年连着来几场的年份，船多不敢出洋（《岭表录异》以来历代都有记载）。
+#       → 本世界线照此。
+[[events]]
+key = "typhoon_run"
+name = "飓风连发"
+description = "入夏以来，南边的海上一场风接着一场风。渔户把船拖上了滩，行商的在庙里求签，问哪一天才出得了洋。"
+effect = "region_storm"
+cooldown_days = 180
+max_per_year = 2
+regions = ["philippine_sea", "taiwan_strait", "east_china_sea", "south_china_north", "kuroshio"]
+mult = [1.5, 2.5]
+days = [30, 75]
+
+# 史实：加勒比海的飓风季在夏秋；西班牙的船队照例赶在八月之前离开哈瓦那，迟走的年份屡有整队覆没的事（1554 年帕德雷岛沉船）。
+#       → 本世界线照此。
+[[events]]
+key = "storm_year"
+name = "风暴之年"
+description = "岛上的老人说，今年的海鸟回来得太早。从小安的列斯到佛罗里达海峡，没有一个月是太平的。"
+effect = "region_storm"
+cooldown_days = 180
+max_per_year = 2
+regions = ["east_caribbean", "west_caribbean", "mexico_gulf", "bahamas_florida"]
+mult = [1.5, 2.5]
+days = [30, 75]
+
+# ───────────────────────── 收成 ─────────────────────────
+
+# 史实：蝗灾在十六世纪的华北、黎凡特与北非都是常事，嘉靖年间的方志几乎年年有“飞蝗蔽天”。
+#       → 本世界线：按一年的谷物与麻棉减产写，不指定哪一处。
+[[events]]
+key = "locust_swarm"
+name = "蝗灾"
+description = "飞蝗过处，田里只剩下秆子。各处的粮价一天一个样，连麻和棉花也被啃得七零八落。"
+effect = "good_supply"
+cooldown_days = 300
+max_per_year = 1
+goods = ["grain", "rice", "cotton", "flax", "hemp"]
+mult = [0.55, 0.85]
+days = [30, 90]
+
+# 史实：胡椒藤怕涝也怕旱，马拉巴尔与苏门答腊的产量年年不同；里斯本的胡椒价跟着印度的收成走。
+#       → 本世界线：落在某一处出产胡椒的港口。
+[[events]]
+key = "pepper_blight"
+name = "胡椒歉收"
+description = "山里的胡椒藤今年挂果稀稀拉拉。收胡椒的人在码头上等了半个月，只等来往年三成的货。"
+effect = "supply_shift"
+cooldown_days = 240
+max_per_year = 1
+goods = ["spice"]
+locs = ["calicut_port", "cochin_port", "goa", "bhatkal", "aceh_port", "banten_port", "pattani", "johor_port"]
+mult = [0.5, 0.8]
+days = [45, 120]
+
+# 史实：江南蚕月最怕倒春寒，桑芽一冻，头蚕就收不上来；湖丝的价钱牵动着日本与吕宋的银子。
+#       → 本世界线：落在出产生丝的宁波、广州。
+[[events]]
+key = "silkworm_blight"
+name = "春蚕歉收"
+description = "一场倒春寒冻坏了桑芽，养蚕的人家把蚕匾一张张倒进了河里。今年的新丝，只有往年的一半。"
+effect = "supply_shift"
+cooldown_days = 300
+max_per_year = 1
+goods = ["raw_silk", "cocoons"]
+locs = ["ningbo", "guangzhou"]
+mult = [0.55, 0.85]
+days = [40, 100]
+
+# 史实：十六世纪中叶的蔗糖出自马德拉、加那利、圣多美，随后是巴西与伊斯帕尼奥拉；榨季好的年份，安特卫普的糖价应声而落。
+#       → 本世界线：落在某一处产糖的岛或港。
+[[events]]
+key = "sugar_bumper"
+name = "蔗糖丰年"
+description = "今年的甘蔗又粗又甜，榨房的牛日夜不歇，糖块在栈房里一直码到了屋梁。"
+effect = "supply_shift"
+cooldown_days = 180
+max_per_year = 2
+goods = ["sugar"]
+locs = ["funchal", "sao_tome", "las_palmas", "ribeira_grande", "olinda", "salvador", "santo_domingo", "havana"]
+mult = [1.3, 1.8]
+days = [40, 90]
+
+# 史实：鲱鱼群的来去没有定准，来得多的年份，一季捕到的鱼抵得上平常两季；北海与波罗的海诸城的税册都记着这样的丰年。
+#       → 本世界线：落在某一处出产咸鱼的北方港口。
+[[events]]
+key = "herring_run"
+name = "鲱鱼汛"
+description = "鲱鱼群今年来得又早又密，渔船回港时吃水压到了舷边。腌鱼的桶不够用，箍桶匠的工钱涨了一倍。"
+effect = "supply_shift"
+cooldown_days = 180
+max_per_year = 2
+goods = ["fish"]
+locs = ["amsterdam", "flushing", "hamburg", "bergen", "copenhagen", "bristol", "galway"]
+mult = [1.4, 2.0]
+days = [30, 60]
+
+# 史实：景德镇的御器厂遇到“钦限”的大单，官搭民烧，民窑的好匠人与好窑位都被占去，市面上的细瓷立刻见少。
+#       → 本世界线：落在景德镇与出瓷器的几个口岸。月港在 1567 年开海之前、澳门在葡人入居（1557 年前后）之前都是休眠的港口
+#       （没有市场，带商品的事件落不上去），开了以后才轮得到它们。
+[[events]]
+key = "kiln_sealed"
+name = "瓷窑封火"
+description = "御器厂催烧一批钦限的器皿，民窑的把桩师傅全被叫了去。镇上大半的窑封了火，瓷行的掌柜只说两个字：没货。"
+effect = "supply_shift"
+cooldown_days = 240
+max_per_year = 1
+goods = ["porcelain"]
+locs = ["jingdezhen", "guangzhou", "yuegang", "macao"]
+mult = [0.5, 0.8]
+days = [40, 100]
+
+# ───────────────────────── 船期与集市 ─────────────────────────
+
+# 史实：从美洲返航的印度船队在塞维利亚卸下白银，满城的物价跟着上涨；1550 年代每年一至两支，1564 年起定为两支船队之制。
+#       → 本世界线：船队到港的那一阵，塞维利亚与加的斯百货皆贵。
+[[events]]
+key = "treasure_fleet"
+name = "白银船队到港"
+description = "印度船队进了河口。银箱一车一车拉进贸易署，水手、债主与各国的商人挤满了街巷，什么东西都有人抢着买。"
+effect = "location_demand"
+cooldown_days = 300
+max_per_year = 1
+locs = ["seville", "cadiz"]
+mult = [1.15, 1.4]
+days = [20, 45]
+port_only = true
+
+# 史实：葡萄牙的印度航线每年夏天有船返抵里斯本，印度商馆一开仓，胡椒的行情立刻走低。
+#       → 本世界线：落在里斯本的胡椒上。
+[[events]]
+key = "spice_fleet_home"
+name = "香料船归港"
+description = "从印度回来的大船进了特茹河，印度商馆的仓门一连开了几天。城里的胡椒多得论堆卖，买家都在等更低的价。"
+effect = "demand_shift"
+cooldown_days = 300
+max_per_year = 1
+goods = ["spice"]
+locs = ["lisbon"]
+mult = [0.6, 0.85]
+days = [30, 60]
+
+# 史实：明朝的朝贡贸易定有贡期与口岸：宁波通日本，福州通琉球，广州通占城、暹罗与西洋诸国；
+#       贡船到港，随船的货物许在会同馆外开市数日。→ 本世界线照此。
+[[events]]
+key = "tribute_ships"
+name = "贡船到港"
+description = "贡使的船进了港，市舶司的官员忙着点验方物。随船带来的货许在馆外开市，四乡的商人闻讯都赶了来。"
+effect = "location_demand"
+cooldown_days = 180
+max_per_year = 2
+locs = ["ningbo", "fuzhou", "guangzhou"]
+mult = [1.15, 1.4]
+days = [20, 45]
+port_only = true
+
+# 史实：1550 年起葡萄牙人的船几乎每年到平户，1551 年起也到丰后的府内；“南蛮船”一到，九州的商人与各家大名的使者云集。
+#       → 本世界线照此。
+[[events]]
+key = "nanban_ship"
+name = "南蛮船到港"
+description = "一条黑漆漆的大船下了锚，船上的人红发高鼻。生丝、铁炮与玻璃器一样样摆了出来，各家的买办连夜赶到港町。"
+effect = "location_demand"
+cooldown_days = 240
+max_per_year = 1
+locs = ["hirado", "funai"]
+mult = [1.2, 1.5]
+days = [20, 45]
+port_only = true
+
+# 史实：朝觐的月份，吉达与红海口诸港聚起各地来的香客与商队，是一年里最大的集市。
+#       → 本世界线照此。
+[[events]]
+key = "pilgrim_market"
+name = "朝觐季的集市"
+description = "朝觐的人从四面八方聚到了港口，等船的、等驼队的、顺路做买卖的，把集市挤得水泄不通。"
+effect = "location_demand"
+cooldown_days = 300
+max_per_year = 1
+locs = ["jeddah", "mocha", "aden", "suez"]
+mult = [1.15, 1.4]
+days = [20, 45]
+port_only = true
+
+# 史实：安特卫普每年有两次大集（圣灵降临节集与圣巴夫节集），连同贝亨奥普佐姆的两次，合称布拉班特四集，各国的账目都约在集期结算。
+#       → 本世界线照此。
+[[events]]
+key = "brabant_fair"
+name = "布拉班特大集"
+description = "集期到了。英格兰的呢绒、南德意志的铜、葡萄牙的香料都赶在这几个星期成交，城里连马厩都住满了客商。"
+effect = "location_demand"
+cooldown_days = 150
+max_per_year = 2
+locs = ["antwerp"]
+mult = [1.15, 1.35]
+days = [20, 40]
+port_only = true
+
+# 史实：1556–57 年西欧连年歉收，尼德兰、英格兰与伊比利亚争购波罗的海的黑麦，但泽的粮价与运粮船的数目都创了新高。
+#       → 本世界线：落在波罗的海的粮港与阿姆斯特丹的谷物上。
+[[events]]
+key = "baltic_grain_rush"
+name = "抢运北方的粮"
+description = "南边歉收的消息传来，买粮的船一条接一条地开进港。粮栈的门前排起了队，掌柜们一天改三回价。"
+effect = "demand_shift"
+cooldown_days = 240
+max_per_year = 1
+goods = ["grain"]
+locs = ["danzig", "lubeck", "copenhagen", "amsterdam"]
+mult = [1.3, 1.8]
+days = [30, 75]
+
+# ───────────────────────── 官府与时疫 ─────────────────────────
+
+# 史实：嘉靖朝倭患一紧，沿海便严申海禁、增设巡哨，番货的抽分与各样规费跟着加重（朱纨 1547–49、胡宗宪 1556 前后）。
+#       → 本世界线：按大明各口岸的交易税加重一阵来写。
+[[events]]
+key = "sea_ban_tightened"
+name = "海禁收紧"
+description = "巡海道新添了兵船，各口岸贴出告示：番货抽分加倍，无引之船一律扣留。牙行的门口冷清了许多。"
+effect = "faction_tax"
+cooldown_days = 300
+max_per_year = 1
+factions = ["ming"]
+mult = [1.25, 1.6]
+days = [60, 150]
+
+# 史实：十六世纪的大港隔几年就有一场瘟疫：威尼斯 1555–57 年、伊斯坦布尔与亚历山大几乎年年、伦敦 1563 年。
+#       疫起则封港，船只在锚地候验，市面一落千丈。→ 本世界线：落在某一座大港。
+[[events]]
+key = "plague_closure"
+name = "大疫封港"
+description = "城里起了瘟疫。防疫的官员封了码头，来船一律在锚地候验；街上的铺子十家关了七家，没有人还有心思买东西。"
+effect = "location_demand"
+cooldown_days = 240
+max_per_year = 1
+locs = ["venice", "genoa", "naples", "messina", "marseille", "istanbul", "alexandria", "smyrna", "tunis", "algiers",
+  "lisbon", "seville", "london", "antwerp", "hamburg", "danzig"]
+mult = [0.55, 0.85]
+days = [30, 75]
+port_only = true
+
+# 史实：1557 年腓力二世宣布停付短期债款，改发长期年金（西班牙王室的第一次“破产”），安特卫普与热那亚的银根骤然收紧。
+#       → 本世界线：按各处借贷的利息上浮一阵来写。
+[[events]]
+key = "crown_default"
+name = "王室停兑"
+description = "王室的司库宣布：到期的借款一概不付现银，改发年金。放债的大商号一夜之间手头吃紧，各处的利息应声而涨。"
+effect = "interest_shift"
+cooldown_days = 360
+max_per_year = 1
+mult = [1.2, 1.6]
+days = [60, 180]

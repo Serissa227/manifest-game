@@ -1,0 +1,247 @@
+# C13d 请托：远航的绳（request_kusi_wayna）。中文，Claude 写。
+# 人物：库西·瓦伊纳 kusi_wayna（1505-09-23 生，男）：印加的结绳记事官，从钦查下到卡亚俄的集市，只信绳上的数，不信纸上的数。
+# 类型：混合（mixed）；6 章：offer → pickup → voyage → compare 或 compare_drift（海流分支，按 next 分流）→ epilogue；终点 done / failed。
+#   brief 原为 5 章；compare 的“照海流说”选项需要 drift 旗标，而 drift 由 voyage 的两条路设置，按规则改为 next 分流，故加一章 compare_drift。
+# 报价：到访（V），报价港 callao，auto = true；offer 章 when 为 1557-06-01..1582-06-30 且主角满 17；family c13_offer_callao，冷却 20 天。
+# 进行中：pickup 章 120 天限期，超时走 failed 并寄信，不写见闻；voyage 章 300 天限期，超时同上。
+# 地点：卡亚俄 callao（报价与对账）；阿里卡 arica（取绳与收尾）；远航目标 discovery wonder_galapagos，正文只写“黑石头的岛、比人还大的龟”。
+# 依据：史实背景，图帕克·尤潘基远航大海的传说（萨缅托·德·甘博亚记录，史实中的传说）；1560—70 年代追查偶像的风气只作影子，不写机构名。
+#   库西、远航的绳、阿里卡的驼队、绳上的结与数、船夫的儿子，全部原创。
+# 读的旗标：无。不读 c7_ 旗标；不写瓦伊蕾（C7 的 1583—86 年线在本轨道窗口之后）。
+# 设的旗标：c13_request_kusi_wayna_accepted（offer 接下的两条）/ declined（回绝）/ done（最好结局）/ partial（折中）/ late（超时）；
+#   分支旗标 drift（voyage 的海流或量星，只用于 compare_drift 的分流）/ cut（pickup 的检定失败，书记剪断底下那根垂绳，compare 两章读它换文字）。
+# 依赖：cast/story_americas.toml 的 kusi_wayna 与日程（1557 起在卡亚俄）；ports_americas.toml 的 callao、arica；
+#   discoveries_wonder 的 wonder_galapagos；skills.toml 的 quipu、tide_reading、astral_navigation。
+# 秘密：比尔卡班巴托他记的那份账全轨道不写；compare 章只写一根压在别的绳底下的短绳，他说“那根是别人的账”，不解释。
+#   伊卡拆过远航绳的事属于伊卡，本轨道不碰远航绳上任何一个结的来历。
+# 回忆插画清单：
+#   mem-request_kusi_wayna-compare：席子上摊着一捆旧绳和一本航海日志，两样并排，绳尾新打的结压着一页纸角。
+
+[[tracks]]
+key = "request_kusi_wayna"
+name = "远航的绳"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kusi_wayna"]
+
+# 一、冒烟的岛：1557—1582 年间，主角在卡亚俄靠港，库西来问。
+[[tracks.chapters]]
+key = "offer"
+title = "冒烟的岛"
+text = "卡亚俄集市的角落，库西·瓦伊纳把一捆旧绳摊在膝上，一根一根理。理到一根，就用拇指捻一下，捻完才放回去。他从钦查的山谷下来，脚上是驼队的皮鞋，身边没有人。他没抬头就开了口：“图帕克·尤潘基远航大海的那串绳，还在库斯科一户亲戚家里。绳上记着往西几天，能见到冒烟的岛。”亲戚不敢走王家大道，要跟着运银的驼队，下到阿里卡。“你去接。接到了，照绳上的日数往西开一趟。回来以后，我们一个结一个结地对。”"
+speaker = "kusi_wayna"
+mood = "mystic"
+at = "callao"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1582, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1582, 6, 30]
+family = "c13_offer_callao"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去阿里卡接绳，再照着它往西开。"
+next = "pickup"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 2 }, { kind = "flag", flag = "c13_request_kusi_wayna_accepted" }]
+reply = "他把膝上那捆旧绳卷好，从里面抽出一根短绳系在你的手腕上：“到阿里卡给他看这个，他就知道是我。”"
+
+[[tracks.chapters.choices]]
+key = "ask_cord"
+text = "先问：绳上记的是日子，还是话？"
+next = "pickup"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 2 }, { kind = "flag", flag = "c13_request_kusi_wayna_accepted" }]
+reply = "“日子。话会走样，日子不会。”他从绳里抽出一根短绳，系在你腕上，“岛的名字没记，记名字的绳早烧了。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "往西开空海的事，你不接。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kusi_wayna_declined" }]
+reply = "他把绳卷好，不再看你，像这桩买卖从没开过口。"
+
+# 二、驼鞍底下的布包：到阿里卡取绳。书记查货，三条路。
+[[tracks.chapters]]
+key = "pickup"
+title = "驼鞍底下的布包"
+text = "阿里卡码头上，驼队刚卸完货。一个赶驼的汉子认出你腕上的短绳，从驼鞍底下抽出一个布包，外面裹着麻，里面一层层都是绳。码头的书记正挨个翻驼队的包，要查有没有“拜偶像的东西”。汉子的手按在布包上，不肯松。“库西说，腕上有绳的，就是自己人。”书记走过来，伸手要解那捆麻。"
+news = "阿里卡码头上，书记翻驼队的包翻到一捆绳，最后让一个外乡船长把它带走了。"
+speaker = "captain"
+mood = "tense"
+at = "arica"
+when = [{ kind = "alive", person = "kusi_wayna", value = true }, { kind = "date", from = [1557, 6, 1], to = [1582, 12, 31] }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+news = "阿里卡码头上，一个赶驼的汉子等了一个月，驼队又翻山回去了，说是在等一个外乡船长。"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = -3 }, { kind = "flag", flag = "c13_request_kusi_wayna_late" }, { kind = "letter", person = "kusi_wayna", text = "驼队在阿里卡等了你一个月，又回山里去了。绳在亲戚家，一个结也没少。" }]
+
+[[tracks.chapters.choices]]
+key = "talk_ledger"
+text = "说这是商队的货账，船长要的。"
+next = "voyage"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 3 }]
+reply = "书记翻开布包看了几眼，满眼的结，嘴里念叨着“记账的东西我不管”。"
+fail = { next = "voyage", effects = [{ kind = "affinity", person = "kusi_wayna", value = -2 }, { kind = "flag", flag = "c13_request_kusi_wayna_cut" }], news = "阿里卡码头上，书记扣了一捆驼队的绳一夜，第二天还回来，绳尾少了一截。" }
+
+[[tracks.chapters.choices]]
+key = "read_numbers"
+text = "当着书记的面，照结念出几笔数。"
+next = "voyage"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "quipu", ge = 60, hard = true }]
+hint = "结上的数你念不顺。要在绳边上坐过几个月，才念得出这种数。"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 5 }]
+reply = "你一个结一个结念：三百，四十，又是七。书记跟着记了两行，嫌慢，把册子合上了。赶驼的汉子看你的眼神变了。"
+
+[[tracks.chapters.choices]]
+key = "pay_fee"
+text = "替驼队交一笔“验货钱”。"
+next = "voyage"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋里的钱不够书记要的数。书记看了看你的袋子，摇头。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "kusi_wayna", value = 3 }]
+reply = "书记收了钱，在驼队的单子上画了个勾。汉子把布包塞进你怀里，一句话也没说就牵着驼走了。"
+
+# 三、晚了两天的岛：照绳上的日数往西北开。
+[[tracks.chapters]]
+key = "voyage"
+title = "晚了两天的岛"
+text = "照绳上的日数，从卡亚俄往西北开。第十天，海上什么也没有，只有一群一群的鸟从头顶过去，都朝北飞。第十二天黄昏，海平线上起了一缕烟，船靠上了一座黑石头的岛。岸边趴着比人还大的龟，一动不动。绳上记的是第十日，你的船上记的是第十二天。岛是真的，差了两天，要从日志里找原因。"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "alive", person = "kusi_wayna", value = true }, { kind = "date", from = [1557, 6, 1], to = [1582, 12, 31] }]
+objectives = [{ kind = "discovery", discovery = "wonder_galapagos", text = "照绳上的日数往西北开，找到冒烟的岛" }]
+deadline_days = 300
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = -3 }, { kind = "flag", flag = "c13_request_kusi_wayna_late" }, { kind = "letter", person = "kusi_wayna", text = "你没往西开。绳我收回来了，下回给愿意开的人。" }]
+
+[[tracks.chapters.choices]]
+key = "log_drift"
+text = "照实记下：晚两天，海流把船往北推了。"
+next = "compare_drift"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "每天的海流和船头偏了几度，你记不下来，记下来也对不上。水手说，这要在潮水里练过。"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 3 }, { kind = "flag", flag = "c13_request_kusi_wayna_drift" }]
+reply = "你把每天的海流和船头偏了几度都记下来，记到第十二天，晚的那两天正好对上。"
+
+[[tracks.chapters.choices]]
+key = "star_fix"
+text = "夜里量一次星，算出岛到底在哪。"
+next = "compare_drift"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "星子在海上摇来摇去，你量不稳地平线。量星的活，要熬过很多个夜。"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 3 }, { kind = "flag", flag = "c13_request_kusi_wayna_drift" }]
+reply = "你量出的纬度跟绳上第三根垂绳的结数差不多，晚到的两天，像是出发的地方不一样。"
+
+[[tracks.chapters.choices]]
+key = "just_count"
+text = "只记下：第十二天，看见岛。"
+next = "compare"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 1 }]
+reply = "你在日志上写了一行，把绳卷好，一路没再拆开。"
+
+# 四、对账的席子：卡亚俄集市，库西和一个船夫的儿子对绳与日志。
+[[tracks.chapters]]
+key = "compare"
+title = "对账的席子"
+text = "库西把绳和你的航海日志并排摊在卡亚俄集市的席子上。身边坐着一个船夫的儿子，十四五岁，是他挑来学结的，手指头上还沾着鱼腥。他一个结一个结地问，你一天一天地答。他手里还有一根短绳，压在别的绳底下。你伸手去够，他按住了：“那根是别人的账。”说到第十二天，你张口报了个整数，他抬手止住你：“别报整数。报整数的，不是懒，就是在撒谎。”"
+news = "卡亚俄集市上，一个结绳的老人和一个船长对着一捆绳和一本日志，从早上对到黄昏。"
+speaker = "captain"
+mood = "cheerful"
+at = "callao"
+when = [{ kind = "alive", person = "kusi_wayna", value = true }, { kind = "date", from = [1557, 6, 1], to = [1582, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "cut"
+when = [{ kind = "flag", flag = "c13_request_kusi_wayna_cut" }]
+text = "库西把绳和你的航海日志并排摊在卡亚俄集市的席子上。最底下那根垂绳断了，断口是新的。他先摸到那里，摸了很久，说：“剪掉的那几天，我记得。”然后才开始一个结一个结地问。身边坐着船夫的儿子，手指头上还沾着鱼腥。他手里还有一根短绳，压在别的绳底下，你伸手去够，他按住了：“那根是别人的账。”说到第十二天，你张口报了个整数，他把日志往回推了一页，没有说话。"
+
+[[tracks.chapters.choices]]
+key = "hours"
+text = "改口：第十一天又大半天，黄昏前一个时辰。"
+next = "epilogue"
+check = { attr = "numeracy", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "kusi_wayna", value = 8 }, { kind = "fame", value = 4 }, { kind = "skill", skill = "quipu", value = 30 }, { kind = "flag", flag = "c13_request_kusi_wayna_done" }, { kind = "memory", memory = "mem-request_kusi_wayna-compare", title = "席子上的两种账" }]
+reply = "他点点头，叫孩子在新绳上打了一个结，结比别的松一点：“这是你那半天。”"
+fail = { next = "epilogue", effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "kusi_wayna", value = 2 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_kusi_wayna_partial" }], news = "卡亚俄集市上，一个船长改了三回日子，结绳的老人叫孩子记下“船长说不准”。" }
+
+[[tracks.chapters.choices]]
+key = "let_rest"
+text = "说你记不清了，把日志留给他们自己对。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "kusi_wayna", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_kusi_wayna_partial" }]
+news = "卡亚俄集市上，一个船长说自己记不清了，把日志推给结绳的老人，老人没收。"
+reply = "他没生气，只把日志推回给你，说纸上的数他不收。那孩子偷偷把第十二天抄在了手背上。"
+
+# 四之二、海流支线：量星或记海流的人，在同一张席子上把晚的两天讲清。
+[[tracks.chapters]]
+key = "compare_drift"
+title = "晚的两天是海流"
+text = "卡亚俄集市的席子上，库西把绳和你的航海日志并排摆开。船夫的儿子挨着他坐，手指摸着绳上的结。你先说海流，说每天船头偏了几度，他一个结一个结地跟。说到第十二天，他的手停在第三根垂绳上，摸了两遍，把那根的结数念给孩子听。然后他抬起头，问：“晚的那两天，是绳错了，还是你的船在水里走了？”"
+news = "卡亚俄集市上，一个结绳的老人让船夫的儿子摸着一根垂绳，听船长讲了一下午的海流。"
+speaker = "captain"
+mood = "cheerful"
+at = "callao"
+when = [{ kind = "alive", person = "kusi_wayna", value = true }, { kind = "date", from = [1557, 6, 1], to = [1582, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "cut"
+when = [{ kind = "flag", flag = "c13_request_kusi_wayna_cut" }]
+text = "卡亚俄集市的席子上，库西把绳和你的航海日志并排摆开。最底下那根垂绳断了，断口是新的。他先摸到那里，摸了很久，说：“剪掉的那几天，我记得。”船夫的儿子挨着他坐，手指摸着绳上的结。你先说海流，说每天船头偏了几度，他一个结一个结地跟。说到第十二天，他的手停在第三根垂绳上，把那根的结数念给孩子听。然后他抬起头，问：“晚的那两天，是绳错了，还是你的船在水里走了？”"
+
+[[tracks.chapters.choices]]
+key = "current"
+text = "告诉他：晚的两天是海流推的，绳没错。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "kusi_wayna", value = 8 }, { kind = "fame", value = 4 }, { kind = "skill", skill = "quipu", value = 30 }, { kind = "flag", flag = "c13_request_kusi_wayna_done" }, { kind = "memory", memory = "mem-request_kusi_wayna-compare", title = "席子上的两种账" }]
+reply = "他听完，把孩子叫近一点，让他摸绳上第三根垂绳：“记住，这根绳是从岸上数起的，你的船是从水里数起的。”他第一次笑出声。"
+
+[[tracks.chapters.choices]]
+key = "hours"
+text = "改口：第十一天又大半天，黄昏前一个时辰。"
+next = "epilogue"
+check = { attr = "numeracy", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "kusi_wayna", value = 8 }, { kind = "fame", value = 4 }, { kind = "skill", skill = "quipu", value = 30 }, { kind = "flag", flag = "c13_request_kusi_wayna_done" }, { kind = "memory", memory = "mem-request_kusi_wayna-compare", title = "席子上的两种账" }]
+news = "卡亚俄集市上，船长改口说第十一天还有大半天，结绳的老人在新绳上打了个松结。"
+reply = "他把你的日志翻回到第十一天，用指头点了点，叫孩子在新绳上打一个松结：“海里的半天，也算你的。”"
+fail = { next = "epilogue", effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "kusi_wayna", value = 2 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_kusi_wayna_partial" }], news = "卡亚俄集市上，一个船长算海流算到天黑，结绳的老人嫌他算得慢，把那捆绳收了起来。" }
+
+[[tracks.chapters.choices]]
+key = "let_rest"
+text = "说你记不清了，把日志留给他们自己对。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "kusi_wayna", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_kusi_wayna_partial" }]
+news = "卡亚俄集市上，一个船长把海流的账推给船夫的儿子，说你们自己算，席子上的绳却没人肯解。"
+reply = "他翻了几页海流的记号，没说收，把日志递给了那孩子。那孩子用指甲在手背上划了两道，划的是晚的那两天。"
+
+# 五、多出来的那根绳：回阿里卡，汉子问绳上新添的一根。
+[[tracks.chapters]]
+key = "epilogue"
+title = "多出来的那根绳"
+text = "下一回到阿里卡，那个赶驼的汉子已经在码头等着，骡子在边上嚼着干草，要把远航的绳带回山里。他把绳一层一层摊开给你看，手上的动作比上回慢。绳上多了一根新垂绳，是库西添的，结打得很密，比别的都短。汉子的指头按在那根上，说库西打这个结的时候，只说了一句：“这一根，回来的人再数。”汉子问你：“这根记的是什么？”"
+speaker = "captain"
+mood = "tender"
+at = "arica"
+news = "阿里卡码头上，赶驼的汉子把一捆绳摊在骡背上，说库西在上头添了一根新垂绳，结打得很密。"
+when = [{ kind = "alive", person = "kusi_wayna", value = true }, { kind = "date", from = [1557, 6, 1], to = [1582, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "tell_days"
+text = "告诉他：那是这一趟的日子，从卡亚俄数起。"
+next = "done"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 2 }]
+reply = "汉子把新垂绳缠在手指上绕了三圈，说回去以后，绳是要传给下一个人的。"
+
+[[tracks.chapters.choices]]
+key = "say_nothing"
+text = "说你也不知道，让他去问库西。"
+next = "done"
+effects = [{ kind = "affinity", person = "kusi_wayna", value = 1 }]
+reply = "汉子笑了，说库西要是肯说，早在山里就说完了，用不着等你来问。"

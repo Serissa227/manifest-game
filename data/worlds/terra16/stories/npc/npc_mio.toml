@@ -1,0 +1,567 @@
+# NPC 线：一条澪——一条家的船（故事 2.0，A5 / E37 契约）
+# 标签：NPC 线（澪不是玩家主角时才跑）。玩家在交汇旁轨里是“我”，不写玩家的性别、外貌与出身；脊轨是下田、堺、平户码头上的街谈巷议。
+# 轨道：npc_mio（脊轨，auto，rumor 六章，门槛章 s00 写身份）+ 交汇旁轨 npc_mio_pass、_goto、_court、_tides（s00 打开）、_watari（s01 打开）、_kizugawa（s02 打开）、_embassy（s03 打开）、_edict（s04 打开）；旁轨 auto=false，每条一章，有 at、有期限，超时静默失败。
+# 依据：史实——土佐一条兼定 1568 年伊予之败、1574 年出奔丰后、受洗、1575 年渡川（四万十川）之战、流亡伊予户岛、1585 年死于户岛；1557 年前后王直的船队在平户；能岛村上家卖过所旗、收帆别钱；1578 年第二次木津川口九鬼家的大船；1581 年京都马揃与信长身边的弥助；1582 年天正遣欧使节自长崎出发；1588 年海贼停止令；长府忌宫的满珠、干珠两岛与海上遥拜。
+#   原创——澪的过所旗生意与草席摊、平户木桶上的谈价与木印假旗、茶屋楼上改书状、遥拜图的摹本、渡川前夜的借贷、木津川口那一夜的两边、弥助托的信与小铜铃、平户空旗杆的小早、“看潮的婆婆”。
+#   兼定的姐姐、乳母家的过所旗都是原创人物线上的事；伊东满所与澪的亲缘照主线（妹妹阿喜多的婆家）只说“婆家那边的孩子”。
+# 待核（正文一律传闻或人物口吻）：兼定受洗与渡川的确切月份；户岛上木十字的说法；马揃那天弥助与澪的相遇（原创）；会院邮包的季节。
+# 日程（cast 已登记）：1557—1575 中村（内陆，不可达：场面放在下田，正文写她从中村顺流下来或来下田办事）；1576—1582 能岛；1583—1590 平户。npc_mio_edict 的 ryukyu 选项把她改到那霸，到 1590-12-31。
+# 口吻与秘密：澪话短、爱抢话、好胜，谈旗钱寸步不让，先问“吃水几尺”再说价；京都腔只在 m3 宫里的事上露一下。口头禅“旗钱，先付。”只在 m1_pass 用一次；“再来一局。”只在 s05 的 rival 变体用一次。
+#   NPC 线永远不揭开父亲之死与补陀落的志向；见闻里不写任何秘密；弥助与巴拉卡的往事不点破，信的内容不写。
+# 恋爱：不用 heart / relation / tie / bond 效果；招募（m8 join）只是请一位航海士上船。历史人物只写史料里的友情与合作；伊东满所十三岁，只写送行。
+# 读的共享旗标：c12_voyage_mio（=false，澪不是玩家）、upbringing_graduated；c13_main_lin_wandeng（=false，m2 排除林晚灯）；c13_main_baraka（=false，m7 排除巴拉卡；s03 照跑，它是 main_baraka c05_yasuke_letter 的信源）；h44_shimanto_ichijo_holds_hata（C10，s02、s04 变体）；item chart_japan_inland（m4）。
+# 设的旗标：c13_npc_mio（s00）；c13_npc_mio_pass（m1 → m6 变体）；c13_mark_tides（m4，印记一局只发一次）；c13_npc_mio_watari_help（m5 → s02 变体；C10 可作 H44 杠杆钥匙）；c13_npc_mio_rival（m6 → s05 变体）；c13_npc_mio_yasuke_letter（s03 → main_baraka c05_yasuke_letter 的变体）；c13_npc_mio_mate / _ryukyu（m8 → s05 变体；_mate 另由 main_noel_roster r3 的变体读）。
+# 结尾的优先级：s05 变体 mate > ryukyu > rival > 缺省。引擎按变体 key 的字母序取第一个满足的（mate < rival < ryukyu），所以 rival 变体的条件里加了 c13_npc_mio_ryukyu=false，保证她去了那霸时显示 ryukyu。
+#   s02 的变体：both（守住幡多 + 借过东西）< held < helped，按字母序先取 both，两件事都发生时两句都在。
+# 整合：upbringing_graduated 由引擎在结业时设（core upbringing/graduation.rs），故事里没有设置者，审计报“旗标没有来源”；须在 runtime_links 登记为引擎旗标或让校验认它，门槛不改。
+# 等待的包：A8 / C11（第七级试炼读 emerald_mark_tides；mark_tides 发现物的许可流程定了以后，m4 可以加 discovery 目标）；A9（门槛章可加 protagonist 条件排除澪，届时 auto 改 false）；C10（h44_shimanto_ichijo_holds_hata 的 key 表；H44 杠杆可选读 c13_npc_mio_watari_help）。
+# HIST 占位清单：h44_shimanto_ichijo_holds_hata（s02 变体：一条家守住幡多；s04 变体：兼定死在中村）。
+# 回忆插画清单（mem-* 与画面描述）：
+#   mem-npc_mio_tides「两座岛的摹本」：能岛关所的案上，炭笔描的两座小岛与白幡祭船，角上一个小小的“澪”字。
+
+[[tracks]]
+key = "npc_mio"
+name = "一条家的船"
+kind = "request"
+start = "s00_gate"
+auto = true
+
+[[tracks.chapters]]
+key = "s00_gate"
+title = "下田的姬君"
+text = "正月里，下田河口的鱼干摊前围着一圈人，说的都是御所那位大姬君：从京里回来了，开春要驾一条小早出河口，替能岛卖旗，替大名跑官位。卖鱼干的老汉把一串鲷鱼干挂上绳子，说她拨算盘比街口算命的掐指头还快。“一条家那位姬君，旗钱一文不让，”他压低了嗓子，“可谁家的船出了事，她头一个去捞。”"
+stage = "rumor"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "shimoda_tosa"
+cast = ["mio"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_mio", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "下田的鱼干摊上都在说，御所的大姬君开春要驾小早出海，替能岛卖旗，算旗钱比算命的还快。"
+
+[tracks.chapters.default]
+next = "s01_iyo"
+effects = [{ kind = "flag", flag = "c13_npc_mio" }, { kind = "start_track", track = "npc_mio_pass" }, { kind = "start_track", track = "npc_mio_goto" }, { kind = "start_track", track = "npc_mio_court" }, { kind = "start_track", track = "npc_mio_tides" }]
+
+[[tracks.chapters]]
+key = "s01_iyo"
+title = "一条家的船少了"
+text = "这一年从下田出港的一条家的船，比往年少了一半。殿下在伊予吃了败仗，回来的船上躺满了伤兵。大姬君把自己的小早借给几个家在宿毛的伤兵，让他们划回去见老娘，她自己在栈桥底下蹲了一整个夏天，跟船匠一块儿敲钉子、刮船底，两只手泡得全是桐油味。有人问那条小早几时还回来，栈桥上的船匠替她答了：“姬君说，船是借出去的，又不是送出去的。”"
+stage = "rumor"
+window = [[1568, 6, 1], [1568, 12, 31]]
+at = "shimoda_tosa"
+cast = ["mio", "ichijo_kanesada"]
+mood = "sad"
+news = "下田的栈桥上说，一条家的大姬君把小早借给伊予回来的伤兵，自己蹲在岸上修了一夏天的船。"
+
+[tracks.chapters.default]
+next = "s02_watari"
+effects = [{ kind = "start_track", track = "npc_mio_watari" }]
+
+[[tracks.chapters]]
+key = "s02_watari"
+title = "渡川口的小早"
+text = "渡川一仗打完，一条家的兵散了，殿下渡海去了伊予的户岛。下田的人说，开仗那天，大姬君的小早在河口横了一整天，水里漂着谁就捞谁，捞上来的有穿一条家号衣的，也有背着酢浆草旗印的。河口的渔夫说：“她捞人不看旗。捞上来的长宗我部的兵，后来还给她磕了头。”开春，她把小早撑出河口，往能岛去了。"
+stage = "rumor"
+window = [[1575, 11, 1], [1576, 2, 28]]
+at = "shimoda_tosa"
+cast = ["mio", "ichijo_kanesada", "chosokabe_motochika"]
+mood = "sad"
+news = "渡川一仗以后，一条家的大姬君把船开去了能岛，下田的人说，河口那一天是她的船在捞人。"
+
+[tracks.chapters.default]
+next = "s03_letter"
+effects = [{ kind = "start_track", track = "npc_mio_kizugawa" }]
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "flag", flag = "h44_shimanto_ichijo_holds_hata" }, { kind = "flag", flag = "c13_npc_mio_watari_help" }]
+text = "渡川一仗打完，长宗我部的人马退回了河东，一条家守住了幡多，殿下回了中村。下田的人说，开仗那天，大姬君的小早在河口横了一整天，水里漂着谁就捞谁。河口的渔夫说：“她捞人不看旗。捞上来的长宗我部的兵，后来还给她磕了头。”渔夫还说，开仗前一夜她上过一条远来的船；那天河口用上的东西，有那条船的一份。家里刚打赢，开春她还是把小早撑去了能岛。有人问她走什么，她说：“土佐的事有弟弟，内海的事得有人。”"
+
+[[tracks.chapters.variants]]
+key = "held"
+when = [{ kind = "flag", flag = "h44_shimanto_ichijo_holds_hata" }]
+text = "渡川一仗打完，长宗我部的人马退回了河东，一条家守住了幡多，殿下回了中村。下田的人说，开仗那天，大姬君的小早在河口横了一整天，水里漂着谁就捞谁。河口的渔夫说：“她捞人不看旗。捞上来的长宗我部的兵，后来还给她磕了头。”家里刚打赢，开春她还是把小早撑去了能岛。有人问她走什么，她说：“土佐的事有弟弟，内海的事得有人。”"
+
+[[tracks.chapters.variants]]
+key = "helped"
+when = [{ kind = "flag", flag = "c13_npc_mio_watari_help" }]
+text = "渡川一仗打完，一条家的兵散了，殿下渡海去了伊予的户岛。下田的人说，开仗那天，大姬君的小早在河口横了一整天，水里漂着谁就捞谁，两家的号衣都有。河口的渔夫说：“她捞人不看旗。捞上来的长宗我部的兵，后来还给她磕了头。”渔夫还说，开仗前一夜，她上过一条远来的船，下来时脚步快得像跑；那天河口用上的东西，有那条船的一份。开春，她把小早撑去了能岛。"
+
+[[tracks.chapters]]
+key = "s03_letter"
+title = "弥助的信"
+text = "从堺上京看马揃的人回来，在茶屋里讲了好几天：信长身边那个高个子的南蛮家臣，站在人堆里，旁人才到他肩膀，散场以后在柳树底下拦住了一条家的姬君，托她带一封信，带去很远的地方——东非一个叫基尔瓦的港口，交给一个金商的儿子。姬君问基尔瓦在哪边，那人朝西南指了指，手臂伸得笔直。她当场拿油纸把信裹了三层。茶屋老板说：“那个高个子说，信走一年两年都行，那边的人会等。”"
+stage = "rumor"
+window = [[1581, 4, 1], [1581, 9, 30]]
+at = "sakai"
+cast = ["mio", "yasuke"]
+mood = "cheerful"
+news = "堺的人说，信长身边那个高个子的南蛮家臣，托一条家的姬君带一封信去东非。"
+
+[tracks.chapters.default]
+next = "s04_tojima"
+effects = [{ kind = "flag", flag = "c13_npc_mio_yasuke_letter" }, { kind = "start_track", track = "npc_mio_embassy" }]
+
+[[tracks.chapters]]
+key = "s04_tojima"
+title = "户岛的木十字"
+text = "宇和海来的渔船捎来消息：户岛上的一条殿过世了。岛上的渔家不会念南蛮的经，就照他活着时比划过的样子，削了两根木头钉成十字，插在坟头。他的姐姐从平户赶回土佐，还是晚了三天。那天夜里，她在下田河口的沙洲上点了一盏灯，自己坐在旁边的船上守着。下田的老船夫说：“灯放在沙洲上，潮来了两回都没带走。”天亮，灯油烧干了，她才撑船走了。"
+stage = "rumor"
+window = [[1585, 7, 15], [1585, 12, 31]]
+at = "shimoda_tosa"
+cast = ["mio", "ichijo_kanesada"]
+mood = "sad"
+news = "下田河口的沙洲上亮了一夜的灯，是一条家的姬君从平户赶回来，给过世的弟弟点的。"
+
+[tracks.chapters.default]
+next = "s05_after"
+effects = [{ kind = "start_track", track = "npc_mio_edict" }]
+
+[[tracks.chapters.variants]]
+key = "held"
+when = [{ kind = "flag", flag = "h44_shimanto_ichijo_holds_hata" }]
+text = "中村顺流下来的船捎来消息：一条殿死在御所里了。那天河上撑渡船的，篙头都缠了一截白布。他的姐姐从平户赶回土佐，还是晚了三天。那天夜里，她在下田河口的沙洲上点了一盏灯，自己坐在旁边的船上守着。下田的老船夫说：“灯放在沙洲上，潮来了两回都没带走。”天亮，灯油烧干了，她才撑船走了。"
+
+[[tracks.chapters]]
+key = "s05_after"
+title = "旗以后"
+text = "关白殿下的停止令下来以后，能岛的过所旗就不作数了。平户的人说，一条家那位老姬君从此不挂旗，船照样出海，早上出去，傍晚回来，回来就坐在码头的石墩上看潮。码头上的孩子们都管她叫“看潮的婆婆”，一群跟在她后头学认浪。一个孩子学着她的口气，背着手说：“看潮的婆婆说，旗会旧，潮不会旧。”"
+stage = "rumor"
+window = [[1589, 6, 1], [1590, 6, 30]]
+at = "hirado"
+cast = ["mio"]
+mood = "tender"
+news = "平户的人说，一条家的老姬君不挂旗了，船照样出海，孩子们管她叫看潮的婆婆。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "mate"
+when = [{ kind = "flag", flag = "c13_npc_mio_mate" }]
+text = "关白殿下的停止令下来以后，能岛的过所旗就不作数了。平户的孩子们好些日子没见那位一条家的老姬君坐在码头上看潮，跑去问大人。码头上的人朝港外一指，指的是你的船：她如今在那条船上替你看潮。孩子们追到栈桥尽头，只看见桅顶上系着一截红白的绳子，在风里一甩一甩。一个孩子冲着帆喊：“看潮的婆婆，回来教我们认浪！”"
+
+[[tracks.chapters.variants]]
+key = "rival"
+when = [{ kind = "flag", flag = "c13_npc_mio_rival" }, { kind = "flag", flag = "c13_npc_mio_ryukyu", value = false }]
+text = "关白殿下的停止令下来以后，能岛的过所旗就不作数了。平户的人说，一条家那位老姬君从此不挂旗，船照样出海，回来就坐在码头的石墩上看潮。孩子们管她叫“看潮的婆婆”，背着手学她的口气：“旗会旧，潮不会旧。”她记性好得很：木津川口那一夜，九鬼那边有条外来的船，炮口一整夜对着她的小早，那条船的样子她到今天还记得。有人跟她提起，她把扇子在手心里一敲：“下回海上见了——再来一局。”"
+
+[[tracks.chapters.variants]]
+key = "ryukyu"
+when = [{ kind = "flag", flag = "c13_npc_mio_ryukyu" }]
+text = "关白殿下的停止令下来以后，能岛的过所旗就不作数了。那位一条家的老姬君去了那霸，那边的海还认得旧旗。琉球的船每回来平户，都捎来她一两句话，有一回只有一句：“那霸的潮比下田的软。”码头上的孩子们没去过下田，也没去过那霸，天天争哪边的潮软，争到滚在沙滩上打成一团。"
+
+
+[[tracks]]
+key = "npc_mio_pass"
+name = "一面过所旗"
+kind = "request"
+start = "m1_pass"
+auto = false
+
+[[tracks.chapters]]
+key = "m1_pass"
+title = "一面过所旗"
+text = "下田的栈桥上铺着一张草席，几面叠好的旗压在一块圆石头底下，旗角露出半方能岛的印。一条家的姬君盘腿坐在席子后头，扇子插在腰带里，左手拨算盘，右手捏着一条晒干的鲷鱼，咬一口，拨一珠。我的船要进濑户内海，来岛那段水道，不挂这面旗的船十条要被拦下九条。我开口问价，她没抬头：“吃水几尺？”我报了数。她这才看了我的船一眼，从桅顶看到水线，把算盘往前一推：“行，过得去。旗钱，先付。”旁边一条大商船的船主也挤过来问，她摆摆手：“你那船进来岛要搁浅，给你旗也是送你上礁。不卖。”船主骂骂咧咧走了，她接着啃鱼干。我问能不能便宜些，她总算笑了：“砍价？可以。砍一句，我加一句。”"
+at = "shimoda_tosa"
+speaker = "mio"
+mood = "cheerful"
+cast = ["mio"]
+when = [{ kind = "date", from = [1557, 3, 1] }]
+deadline = [1560, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "照她的价付钱，买一面能岛的旗"
+requires = [{ kind = "cash", ge = 800 }]
+hint = "钱袋里不够一面旗的钱。"
+next = "done"
+effects = [{ kind = "cash", value = -800 }, { kind = "flag", flag = "c13_npc_mio_pass" }, { kind = "affinity", person = "mio", value = 6 }, { kind = "reputation", faction = "murakami", value = 2 }]
+reply = "铜钱在她指缝里哗哗地过，我自己还没数到一半，她已经报出了数，把旗塞进我怀里。“来岛的潮午后转向，转向前一刻别进水道，进了就是跟潮打架。”她又拿起一个小本子：“往哪儿去？说一声，我替能岛记一笔。”我说了。她在本子上记下一个港名，写字比拨算盘还快。"
+news = "下田的栈桥上，一条家的姬君摆着草席卖过所旗，先问人家船吃水几尺，再说价。"
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "跟她砍价：我一路替能岛带海上的消息"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你连砍价的本钱都没有。"
+check = { attr = "eloquence", base = 5, per = 8 }
+next = "done"
+effects = [{ kind = "cash", value = -500 }, { kind = "flag", flag = "c13_npc_mio_pass" }, { kind = "affinity", person = "mio", value = 8 }]
+reply = "我把这一路要经过的港口一个一个数给她听：哪里听得到大明船的风声，哪里有人卖假旗，哪里的关所换了人。她瞪着我，瞪了半天，忽然笑出声来，从算盘上拨掉几珠。“少收你一截。”她把旗往我手里一拍，“消息要是假的，下回加倍。”"
+news = "下田的栈桥上，有个外来的船头靠一肚子海上的消息，从一条家的姬君手里砍下了一截旗钱。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = 2 }], news = "下田的栈桥上，一个外来的船头跟一条家的姬君砍了半个时辰旗钱，她把旗一收：“今天不卖了，明天再来比。”" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不买了，绕外海走"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = -2 }]
+reply = "她耸耸肩，又咬了一口鱼干：“外海的浪，比旗钱贵。”我走出去十几步，还听见她跟下一个船头报价，一文也没让。等我的船出了河口，她在栈桥上冲我晃了晃那条鱼干，不知是送行还是看笑话。"
+news = "下田的栈桥上，有条外来的船嫌一条家姬君的旗贵，要绕外海；她说外海的浪比旗钱贵。"
+
+
+[[tracks]]
+key = "npc_mio_goto"
+name = "平户的旗钱"
+kind = "request"
+start = "m2_goto"
+auto = false
+
+[[tracks.chapters]]
+key = "m2_goto"
+title = "平户的旗钱"
+text = "平户的码头上，唐船的桅杆密得像竹林。王直船队的火长们排成一溜，挨个走到一只倒扣的木桶跟前——一条家的姬君就坐在桶上，身边摞着一叠能岛的旗，一面一面地谈。“太贵，”一个火长说，“我去找别家。”她把扇子啪地一合：“内海里没有别家。”另一个火长从怀里掏出一面旗抖开，说是在伊予滩上买的，价钱只有她的一半。几个火长都凑过去看。她只瞄了一眼那方印。“木头刻的印，过来岛的时候会被认出来。到时候别说是我卖的。”火长们你看我、我看你，队伍松了。码头那头有人提着一盏红灯笼看热闹，没有走近。我站在木桶边，离她三步远。"
+at = "hirado"
+speaker = "mio"
+mood = "tense"
+cast = ["mio"]
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "flag", flag = "c13_main_lin_wandeng", value = false }]
+deadline = [1557, 9, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "help"
+text = "替她跟火长们讲明白：木印的旗过不了来岛"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 8 }, { kind = "cash", value = 300 }, { kind = "reputation", faction = "murakami", value = 1 }]
+reply = "我把来岛关所验旗的门道讲给火长们听：石印压出来的边是齐的，木印的边起毛，浸了海水还会晕开。一个火长把假旗凑到太阳底下看了半天，骂了一句，回去排队，后面的人跟着排了回来。天黑前她收完最后一面旗钱，从钱串上撸下一截丢给我：“站桶边的钱。”"
+news = "平户的码头上，一条家的姬君坐在木桶上跟王直的火长们一面一面谈旗钱，谈到天黑。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = 3 }], news = "平户码头上，一个外来的船头替一条家的姬君劝王直的火长，没人听；倒是姬君自己三句话又把人拉回来排队。" }
+
+[[tracks.chapters.choices]]
+key = "undercut"
+text = "抢她的生意：我手里的旗，比她便宜两成"
+check = { attr = "intrigue", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "mio", value = -8 }]
+reply = "价一报出去，有几条唐船的火长跟着我走了。她从木桶上站起来，看着我，看了很久，没骂。“行，”她说，“记住你了。”说完坐回桶上，接着谈下一条船，嗓门比刚才还大。傍晚我的船出港，她还站在码头上，扇子一下一下敲着手心，一直看着我的帆。"
+news = "平户的码头上，有个外来的船头当着一条家姬君的面压价抢旗钱，拉走了几条唐船。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = -10 }], news = "平户的码头上，火长们拿着一个外来船头卖的旗去找一条家的姬君验，她当着众人说：这旗过不了来岛。" }
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "不插嘴，在一旁看她谈完"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 2 }]
+reply = "她从晌午谈到点灯，嗓子哑了，一文没让。最后一个火长把钱拍在桶面上走了，她才伸了个懒腰，冲我扬了扬下巴：“看够了？看够了就付钱。”我问付什么钱。她拿扇子在我胸口一点：“看我做买卖的钱。今天先赊着。”"
+news = "平户的码头上，一条家的姬君跟王直的火长们谈旗钱，一个外来的船头在边上看了一整天。"
+
+
+[[tracks]]
+key = "npc_mio_court"
+name = "女房奉书"
+kind = "request"
+start = "m3_court"
+auto = false
+
+[[tracks.chapters]]
+key = "m3_court"
+title = "宫里的门路"
+text = "堺一间茶屋的二楼，一条家的姬君换了一身宫里的小袖，跪坐在矮几前，拿朱笔改一份书状——九州一个小大名求官位的，改得满纸是红。送书状来的家老在一旁直擦汗。“这一句搁在这里，宫里的人读了要掩着嘴笑的，”她的话忽然软了半截，尾音拖着京里的调子，“再谦一些，才像样呢。”说完自己先皱了皱鼻子，换回土佐话：“朝廷的门路跟内海的水道一个样，哪里浅、哪里有礁，我都知道。”她把书状推给家老，这才抬头看我：“你要见的是哪一位？”我说了。她把朱笔在砚边掭了掭，才报了价。“帖子是我写，门是宫里开。写错一个字，你就在门外站一天。”"
+at = "sakai"
+speaker = "mio"
+mood = "cheerful"
+cast = ["mio"]
+when = [{ kind = "date", from = [1561, 1, 1] }]
+deadline = [1566, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "出她的价，托她写一份求见的帖子递进宫"
+requires = [{ kind = "cash", ge = 1200 }]
+hint = "她的价，你现在付不起。"
+next = "done"
+effects = [{ kind = "cash", value = -1200 }, { kind = "item", item = "court_invitation", qty = 1 }, { kind = "affinity", person = "mio", value = 4 }, { kind = "reputation", faction = "imperial_court", value = 3 }]
+reply = "她收了钱，这回没数，说宫里的钱不当着人数。三天后，茶屋的小厮送来一张折好的引见帖，纸是厚厚的鸟子纸，右下角折起一个小角，角上用细字写着约见的时辰。小厮说姬君交代了：早到半个时辰，在门外别咳嗽。"
+news = "堺的茶屋楼上，一条家的姬君替九州的大名改求官位的书状，改得满纸是红。"
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "照宫里的规矩自己写一份求见，请她过目"
+check = { attr = "etiquette", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "item", item = "court_invitation", qty = 1 }, { kind = "affinity", person = "mio", value = 6 }, { kind = "reputation", faction = "imperial_court", value = 2 }]
+reply = "她拿着我的帖子从头看到尾，朱笔悬在半空，只落下去两回，改了两个字。“这份可以递。”她把墨吹干，折好，在背面添了一行小字：“添上我的名字，门开得快些。”还给我的时候又叮嘱一句：“字是你的，名是我的，见了面别说漏嘴。”"
+news = "堺的茶屋楼上，一条家的姬君看了一个外来船头自己写的求见帖，只改了两个字。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = 2 }], news = "堺的茶屋楼上，一个外来的船头自己写求见帖，被一条家的姬君改得通篇是红；她说钱本该收的，这回算她请客上课。" }
+
+[[tracks.chapters.choices]]
+key = "errand"
+text = "替她把一封女房奉书捎去府内"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 6 }, { kind = "reputation", faction = "otomo", value = 2 }, { kind = "cash", value = 300 }]
+reply = "她从漆匣里取出一封细长的信，信封上的字一行行往下淌，像水。“不许折，不许沾潮。交给大友家管文书的那位老人，别人伸手也别给。”我把信搁在船舱最干的地方，上面盖了一层油布。到了府内，老人拆信以前先洗了手，读完从袖子里摸出一包路费塞给我，说是信里交代的。"
+news = "堺来的船替一条家的姬君捎了一封女房奉书到府内，一路搁在舱里最干的地方，没折过一道。"
+
+
+[[tracks]]
+key = "npc_mio_tides"
+name = "两座岛的摹本"
+kind = "request"
+start = "m4_tides"
+auto = false
+
+[[tracks.chapters]]
+key = "m4_tides"
+title = "两座岛的摹本"
+text = "能岛的关所建在礁上，潮水在城脚下打着转，看久了眼晕。一条家的姬君是来领新一季的旗的，领完没走，在关所的案上摊开一张纸：炭笔描的两座小岛，一大一小，中间一条祭船，船头挂着白幡，纸边结着一圈白白的盐花。她说是那年随长府忌宫的祭礼在海上遥拜时描的，船晃得厉害，她是趴在船舷上画的。我说起有人在各处找“翠玉”的印记。她的手按到了图上，没收，也没松。“岛不许登，图可以描。描一份给你，可你得说清楚拿去做什么。”她看着我，“满珠唤潮来，干珠叫潮退——你要它做什么？”我照实答了。她从发髻里抽出一截炭笔，在指间转了两圈，还没往纸上落。"
+at = "noshima"
+speaker = "mio"
+mood = "mystic"
+cast = ["mio"]
+when = [{ kind = "date", from = [1566, 10, 1] }, { kind = "flag", flag = "c13_mark_tides", value = false }]
+deadline = [1582, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "请她把这张遥拜图描一份给我"
+requires = [{ kind = "affinity", person = "mio", ge = 30 }, { kind = "flag", flag = "c13_mark_tides", value = false }]
+hint = "这张图，她还不放心交到你手里。"
+next = "done"
+effects = [{ kind = "item", item = "emerald_mark_tides", qty = 1 }, { kind = "flag", flag = "c13_mark_tides" }, { kind = "affinity", person = "mio", value = 4 }, { kind = "memory", memory = "mem-npc_mio_tides", title = "两座岛的摹本" }]
+reply = "她描得很慢。城脚下的潮转了一圈又一圈，她的笔一下也没快过：两座岛的轮廓，祭船停在哪里，白幡朝哪边飘，都跟原图一样。描完，她在纸角添了一个“澪”字，小得像一粒芝麻，吹掉炭灰递给我：“丢了别来找我要第二张。”"
+news = "能岛的关所里，一条家的姬君给一个远来的船长描了一张两座小岛的图，描了一下午。"
+
+[[tracks.chapters.choices]]
+key = "trade"
+text = "拿我的内海潮路图，换她描一份"
+requires = [{ kind = "item", item = "chart_japan_inland", qty = 1 }, { kind = "flag", flag = "c13_mark_tides", value = false }]
+hint = "你手里没有一张能跟她换的潮路图。"
+next = "done"
+effects = [{ kind = "item", item = "chart_japan_inland", qty = -1 }, { kind = "item", item = "emerald_mark_tides", qty = 1 }, { kind = "flag", flag = "c13_mark_tides" }, { kind = "affinity", person = "mio", value = 6 }, { kind = "memory", memory = "mem-npc_mio_tides", title = "两座岛的摹本" }]
+reply = "她把我的潮路图摊开，手指顺着水道一路划过去，划到三处停下：“这里错了。这里也错了。这块礁早让人凿平了。”划到来岛那一段，她不说话了，看了很久。“图是旧的，来岛这段批得对。值。”她把潮路图卷起来夹在胳膊底下，这才动笔描那两座岛。"
+news = "能岛关所的人说，一条家的姬君拿两座小岛的图换了一张内海潮路图，还当场挑出三处错。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "不要图，只听她讲那两座岛"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 5 }]
+reply = "她把图卷了起来，讲那一年的祭礼：潮在两座岛中间忽然翻了向，祭船横了过来，眼看要翻，她的小早从侧面顶了上去，船舷撞得咚的一声。她讲得眉飞色舞，比划船怎么横、浪怎么拍，扇子差点甩进城脚下的潮里。讲完她瞥了我一眼：“图你不要？那你就记着这一回。”"
+news = "能岛的关所里，一条家的姬君对着一个外来的船长，把祭船差点翻掉的事从头说到尾，扇子都差点甩进潮里。"
+
+
+[[tracks]]
+key = "npc_mio_watari"
+name = "渡川前夜"
+kind = "request"
+start = "m5_watari"
+auto = false
+
+[[tracks.chapters]]
+key = "m5_watari"
+title = "渡川前夜"
+text = "夏末，四万十川的水涨得黄浊浊的，一个劲往河口外推，沙洲淹得只剩一道白线。一条家的姬君没等跳板放稳就上了我的船，衣摆上全是泥，头发拿一根红白的绳子胡乱扎着，扎歪了也不管。她的弟弟在丰后受了洗，要借大友的兵打回土佐，她要替他封住这个河口。“船不够，人不够，火药更不够。”她叉着腰，一样一样数，“借船，借人。火药，有多少借多少。”没有一句客气话。她喘了口气，又补了一句：“输了，我一样一样还你。赢了——”她咬了咬嘴唇，“赢了也还。”这一仗跟我没有关系。可她站在我的甲板上，鞋底的泥印了一路。对岸的山上，有人在点火堆，一堆，又一堆。"
+at = "shimoda_tosa"
+speaker = "mio"
+mood = "tense"
+cast = ["mio"]
+when = [{ kind = "date", from = [1575, 6, 1] }]
+deadline = [1575, 10, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "lend_money"
+text = "把买火药的钱借给她"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "你拿不出这么一笔钱。"
+next = "done"
+effects = [{ kind = "cash", value = -1500 }, { kind = "flag", flag = "c13_npc_mio_watari_help" }, { kind = "affinity", person = "mio", value = 10 }, { kind = "reputation", faction = "ichijo", value = 3 }, { kind = "reputation", faction = "chosokabe", value = -2 }]
+reply = "她接过钱袋，在手里掂了掂，没解开，也没说谢，转身就跳回了自己的小早。第二天一早，她的船上换了一捆捆新火绳，白得扎眼，绳头一律冲着上游。我那只空钱袋叠成了一小块，跟扇子一起插在她腰带里。"
+news = "渡川开战以前，下田河口有人看见一条家的大姬君跳上一条外来的船，下来时腰带里多了一只钱袋。"
+
+[[tracks.chapters.choices]]
+key = "read_tide"
+text = "陪她蹲在沙洲边，替她看一夜河口的潮"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_mio_watari_help" }, { kind = "affinity", person = "mio", value = 8 }]
+reply = "我们在沙洲边蹲了一夜，蚊子咬得人想跳河。天亮前潮退到最低，我指给她看对岸那道颜色最浅的水线——人走过去，水只到腰。她的脸一下子白了。“这条路，对岸的人要是知道……”话没说完，她抓起一根竹竿，蹚水去沙洲上插标记。"
+news = "渡川开战以前，下田河口的沙洲边，一条家的大姬君跟一个外来的船长蹲着看了一夜潮。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = 3 }], news = "下田河口的沙洲边，一个外来的船长替一条家的大姬君看潮，看错了一刻；她摆摆手说算了，她自己看。" }
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "这一仗，我不掺和"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = -3 }, { kind = "reputation", faction = "chosokabe", value = 1 }]
+reply = "她点了点头，没再开口，跳回自己的小早，竹篙在我船舷上一撑，船就荡开了。她没回头，脑后那根红白的绳子甩了一下。那一夜河口的火把一直亮着，她的嗓门隔着水传过来，喊人搬桶，一直喊到后半夜。"
+news = "渡川开战以前，一条家的大姬君上了一条外来的船借东西，空着手下来，头也没回。"
+
+
+[[tracks]]
+key = "npc_mio_kizugawa"
+name = "九鬼大船那一夜"
+kind = "request"
+start = "m6_kizugawa"
+auto = false
+
+[[tracks.chapters]]
+key = "m6_kizugawa"
+title = "九鬼大船那一夜"
+text = "初冬的堺，天黑得早。木津川口横着九鬼家的六条大船，船楼比岸上的寺塔还高，一排灯笼把河面照得发亮。能岛的小早泊在湾外的暗处，一条挨一条，船舱里码着一筐筐焙烙，拿稻草隔着。白天，织田家的买办来我船上坐过，银子摆了一桌，只要我的船夜里横在湾口，替九鬼挡住能岛的小早。天黑以后，一条家的姬君摸上了我的船，一身黑衣，脸上抹了灶灰。“今夜涨潮。焙烙够不着大船的船舷，得贴上去扔——敢不敢？”我没答。她瞥了一眼桌上还没收走的两只茶碗，大概也猜到白天有人来过。“你站哪边都行，”她说，“站定了就别换。海上换边的人，两边都不收。”"
+at = "sakai"
+speaker = "mio"
+mood = "tense"
+night = true
+cast = ["mio", "kuki_yoshitaka", "murakami_takeyoshi"]
+when = [{ kind = "date", from = [1578, 11, 1] }]
+deadline = [1578, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "her_side"
+text = "跟她的小早一起，夜里去摸大船"
+check = { attr = "command", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 10 }, { kind = "reputation", faction = "murakami", value = 3 }, { kind = "reputation", faction = "oda", value = -3 }, { kind = "fame", value = 2 }]
+reply = "我把船横在大船的炮口和她的小早之间，大船那一侧的炮全冲我来了，船板被打穿两处。她的小早贴着大船的船腹钻过去，一筐焙烙甩上了船楼。帆烧起来的时候，整个河口都亮了。天亮时大船还横在河口，可有一条光秃秃地只剩桅杆。她站在自己的船头，脸上的灶灰让烟熏得更黑了，冲我咧嘴一笑，牙白得晃眼。"
+news = "木津川口那一夜，有条外来的船替一条家的小早挡炮，九鬼家一条大船的帆烧了个精光。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = 5 }], news = "木津川口那一夜，还没贴近九鬼的大船，船楼上就开了火；一条家的小早和一条外来的船一起退了回来，姬君说下回再来。" }
+
+[[tracks.chapters.choices]]
+key = "oda_side"
+text = "收织田的银子，用炮把她的小早挡在湾外"
+check = { attr = "gunnery", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "reputation", faction = "oda", value = 4 }, { kind = "affinity", person = "mio", value = -12 }, { kind = "flag", flag = "c13_npc_mio_rival" }]
+reply = "我的炮一整夜没歇，把能岛的小早压在湾口外，一条也没让它们靠近大船。她的船试了三回，三回都被我打了回去。天亮时，她的小早从我船边擦过去，近得能看清她脸上的灶灰。她没看我。"
+news = "木津川口那一夜，有条外来的船跟一条家的小早站在两边，堺的人押了一晚上的注。"
+fail = { next = "done", effects = [{ kind = "reputation", faction = "oda", value = 1 }, { kind = "affinity", person = "mio", value = -8 }, { kind = "flag", flag = "c13_npc_mio_rival" }], news = "木津川口那一夜，有条外来的船替九鬼挡湾口，炮打偏了；一条家的小早从它船边钻过去，姬君还冲那条船喊了一句什么。" }
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "这一夜不出海"
+next = "done"
+effects = []
+reply = "我在堺的码头上站了一夜。河口那边的火光一阵亮一阵暗，炮声隔一会儿闷闷地滚过来一声。天亮时风把烟吹上了岸，有焦木头的味道，也有硝的味道。火里是谁的船，我一条也认不出。回到舱里，白天那两只茶碗还在桌上，买办那一碗，茶一口没动，早凉透了。"
+news = "木津川口那一夜，堺的码头上站满了看火光的人，有条外来的船泊在岸边，一夜没动。"
+
+[[tracks.chapters.variants]]
+key = "pass"
+when = [{ kind = "flag", flag = "c13_npc_mio_pass" }]
+text = "初冬的堺，天黑得早。木津川口横着九鬼家的六条大船，船楼比岸上的寺塔还高，一排灯笼把河面照得发亮。能岛的小早泊在湾外的暗处，船舱里码着一筐筐焙烙。白天，织田家的买办来我船上坐过，银子摆了一桌，只要我的船夜里横在湾口，替九鬼挡住能岛的小早。天黑以后，一条家的姬君摸上了我的船，一身黑衣，脸上抹了灶灰。她先抬头看了看我的桅顶：“你船上那面旗，是我卖的。今夜别让它丢脸。”又转过脸来：“今夜涨潮。焙烙够不着大船的船舷，得贴上去扔——敢不敢？”我没答。她瞥了一眼桌上的两只茶碗。“你站哪边都行，”她说，“站定了就别换。海上换边的人，两边都不收。”"
+
+
+[[tracks]]
+key = "npc_mio_embassy"
+name = "往西去的信"
+kind = "request"
+start = "m7_embassy"
+auto = false
+
+[[tracks.chapters]]
+key = "m7_embassy"
+title = "往西去的信"
+text = "长崎的冬天，湾里那条黑船一直等不来北风，水手天天爬上桅顶看云。码头上排着一溜木箱，是要跟船去罗马的几个少年的。领头的那个叫满所，是一条家的姬君妹妹婆家那边的孩子，十三岁，站在木箱旁边，脸冻得通红。有人问他怕不怕海，他把下巴抬得高高的：“不怕。我是去见教宗的。”说完偷偷看了一眼湾里的浪。姬君替他把领口掖好，转过身，从袖子里摸出一个油纸包，包了三层，边角已经磨软了。“那个高个子托我带去东非的。葡萄牙人说随从的信不算信。”她把纸包在手心里按了按，“我说，名字就是名字。”她问我往不往西去。我问信里写了什么。“一个人的旧名字。”她说，“替人捎名字的事，我不想交给不认识的人。”"
+at = "nagasaki"
+speaker = "mio"
+mood = "tender"
+cast = ["mio", "ito_mancio"]
+when = [{ kind = "date", from = [1581, 10, 1] }, { kind = "flag", flag = "c13_main_baraka", value = false }]
+deadline = [1582, 2, 19]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "把信收下，往西去的时候替她捎到"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 6 }, { kind = "fame", value = 1 }]
+reply = "她把纸包放到我手里，手没马上松开。然后从扇匣里取出一只小铜铃，铃舌拿红线拴着，说是那个高个子挂在她船上的。“一起带去。信会受潮，铃不会。”满所在一旁看着，没听懂，也跟着郑重地点了点头。"
+news = "长崎的码头上，一条家的姬君把一封要去东非的信托给了一条往西去的船，还搭上一只小铜铃。"
+
+[[tracks.chapters.choices]]
+key = "mailbag"
+text = "带她去会院，托耶稣会的邮包寄走"
+check = { attr = "etiquette", base = 35, per = 6 }
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 4 }, { kind = "reputation", faction = "jesuits", value = 2 }]
+reply = "会院的门房起先只让我们在廊下等。我照规矩递了名帖，说明来意，范礼安神父的书记员才出来，接过油纸包翻来覆去看了一遍，在一本厚册子上记了一行，写下收信的港口和托信人的名字。姬君凑过去看那行字，看了很久，才说：“写对了。”"
+news = "长崎会院的书记员收下了一条家姬君的一封信，在册子上记了一行：寄往东非的基尔瓦。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "mio", value = 1 }], news = "长崎会院的书记员说这一季的邮包满了，一条家的姬君咬着嘴唇，把那封去东非的信又揣回了袖子里。" }
+
+[[tracks.chapters.choices]]
+key = "berth"
+text = "先跟她凑钱，给少年们的通事买下一个铺位"
+requires = [{ kind = "cash", ge = 800 }]
+hint = "你手里的钱不够一个铺位。"
+next = "done"
+effects = [{ kind = "cash", value = -800 }, { kind = "affinity", person = "mio", value = 6 }, { kind = "reputation", faction = "jesuits", value = 3 }]
+reply = "黑船的船长说铺位早满了，通事只能睡在货舱口。我们把钱摆上桌，他才从水手那里挪出一个铺来。开船那天，满所站在跳板上，转身冲我们鞠了一个很深的躬，深得帽子都掉进了水里。信的事，姬君把纸包揣回袖子：“我另想办法。”"
+news = "长崎的黑船开船前，一条家的姬君跟一个外来的船长凑钱，替少年们的通事买下了一个铺位。"
+
+
+[[tracks]]
+key = "npc_mio_edict"
+name = "旗不作数以后"
+kind = "request"
+start = "m8_edict"
+auto = false
+
+[[tracks.chapters]]
+key = "m8_edict"
+title = "旗不作数以后"
+text = "平户的码头上，每一根拴船柱都贴着同一张告示，糨糊还没干透，被海风掀起一个角。告示上的字不多，意思只有一条：旗钱从此不许收了。一条家的姬君坐在她那条小早的船头，旗杆空着，杆顶只剩一截绳头。她四十八九了，鬓角有了白丝，束发的红白绳子换过一根新的，还是那两个颜色。我的船靠过来，她站起身，手搭在眉上，像在下田的栈桥上问了几十年那样喊过来：“吃水几尺？”我报了数。她自己先笑了：“我问惯了，改不掉。”她跳上栈桥，走到我的船边，摸了摸船舷，又抬头看我的桅杆。“这辈子替别人挂了几百面旗，”她说，“没上过别人的船。”说完，她就那么看着我。"
+at = "hirado"
+speaker = "mio"
+mood = "tender"
+cast = ["mio"]
+when = [{ kind = "date", from = [1588, 8, 1] }]
+deadline = [1589, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "join"
+text = "请她上我的船：旗挂不成了，我的桅杆还空着"
+requires = [{ kind = "affinity", person = "mio", ge = 60 }]
+hint = "她还不肯把舵交给别人的船。"
+next = "done"
+effects = [{ kind = "join", person = "mio" }, { kind = "flag", flag = "c13_npc_mio_mate" }]
+reply = "她没答话，解下发间那根红白的绳子，踩着船舷爬上我的桅，在桅顶打了一个结，扯了两下，系得死紧。下来的时候头发散了一肩，她也不管，拍了拍手上的灰：“这就算挂了旗。舵你掌，潮我看。”"
+news = "平户的人说，一条家的老姬君上了一条外来的船，把束发的红白绳子系在了人家的桅顶上。"
+
+[[tracks.chapters.choices]]
+key = "ryukyu"
+text = "送她去那霸：琉球的海，还认得旧旗"
+next = "done"
+effects = [{ kind = "schedule", person = "mio", at = "naha", until = [1590, 12, 31] }, { kind = "flag", flag = "c13_npc_mio_ryukyu" }, { kind = "affinity", person = "mio", value = 4 }]
+reply = "一路往南，她没怎么说话，天天坐在船尾看水的颜色一点一点变蓝。到了那霸，她踩上码头的石阶，回头看港里那些挂着各色旗的船，拴船柱上干干净净，一张告示也没有。“这边的潮软，”她说，“适合老了的人。”说完自己哼了一声，“我可没说我老。”"
+news = "那霸的码头上来了一个土佐口音的老姬君，说这边的潮软，天天坐在石阶上看船挂旗。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "劝她留在平户，教人认潮"
+next = "done"
+effects = [{ kind = "affinity", person = "mio", value = 2 }, { kind = "skill", skill = "tide_reading", value = 10 }]
+reply = "她想了想，说那就先教你。她拉我坐在栈桥边上，指着港里的水：哪里的潮先转，哪里起白浪是底下有礁，哪一片发暗的是河里冲出来的淡水。她教了我一个下午，最后叹了口气：“你比我小时候笨。”第二天一早，她又坐在栈桥上等我。"
+news = "平户的栈桥上，一条家的老姬君拉着一个外来的船长认了一下午的潮，说这学生比她小时候笨。"

@@ -1,0 +1,171 @@
+# 请托：全城最准的星盘（request_pedro_luna）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：佩德罗·卢纳（pedro_luna，1540-05-13 生，男），塞维利亚星盘工匠家的学徒，学院同学（自创）；势力 spain，身份档 1。cast：cast/classmates_custom_seville_pilot.toml。
+# 类型：去某处（go）。四章：offer（报价）、arrive（去加那利，每天中午量星）、report（回到塞维利亚交本子）、report_signed（本子上有老领航签名的那一版，单独一章，见下）。
+# 报价：T（当面）。人物按日程在塞维利亚的星盘作坊，auto=false，玩家用 ask:request_pedro_luna 启动；offer 不写 at，objectives 为 person。
+#       窗口 1566-01-01 至 1575-06-30（同学重逢 1562 之后开放）；offer 设 deadline=1575-06-30，timeout 直接 failed，不写见闻。
+# 进行中：arrive 写 deadline_days=120，超时走 failed，来信一封，好感 -3，旗标 _late；report 与 report_signed 都是普通章，可以一直等。
+# 分流说明：当着老领航量星（sight_check）的分支单独进 report_signed，只有那一章有“劝他把本子拿去给总署的考官看”；不在同一轨道上用 requires 读自己设置的旗标。
+# 依据·史实背景：塞维利亚贸易总署的领航考试与标准海图，星盘在总署验过才准上船；加那利群岛是出大洋前的最后一段，港口在拉斯帕尔马斯。
+# 依据·原创：佩德罗、他的星盘与刻度表、墙上两只星盘、港里的老领航、每天中午的本子。
+# 秘密：怕远海（岸一沉下去就喘不上气），只在 report 与 report_signed 的 confess 选项（requires 情谊 ≥ 30）里由他自己说出；见闻与来信不写。
+# 读的旗标：无。offer 的 variant 读 bond pedro_luna ≥ C（重逢之后的老同学口气）；report 的 variant 读 c13_request_pedro_luna_shaky。
+# 设的旗标：c13_request_pedro_luna_accepted（offer 接下）、_asked（offer 接下并问了）、_declined（offer 回绝）、_signed（arrive 当着老领航量星）、_shaky（arrive 晃船量星检定失败）、_late（arrive 超时）、_done（终局）、_confessed（confess）、_partial（hang_it）。
+# 不设任何 c7_ 旗标；不用 relation / tie / heart 效果。
+# 报酬：现金最多 900（挂回墙上 600）；好感最多 +13；名声 +1；唯一奖励 portuguese_astrolabe_master（只给一次）；回忆 mem-request_pedro_luna-report。
+# 依赖：港口 seville（ports_iberia.toml）、las_palmas（ports_atlantic_islands_west_africa.toml）；技能 astral_navigation（skills.toml）、属性 seamanship；人物 pedro_luna；物品 portuguese_astrolabe_master（items_instrument_01.toml）。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_pedro_luna-report「墙上的两只星盘」：书房的墙上挂着两只星盘，一只是师傅收着的旧葡萄牙铜器，一只是新做的，刻度都对着北。
+
+[[tracks]]
+key = "request_pedro_luna"
+name = "全城最准的星盘"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["pedro_luna"]
+
+# 一、没出过海的星盘：塞维利亚的星盘作坊，他把新做的星盘放在你手里。
+[[tracks.chapters]]
+key = "offer"
+title = "没出过海的星盘"
+text = "佩德罗把一只新星盘放在我手里，铜还亮着，刻度一格一格细得像头发丝。他拿指甲去量刻线，嘴里没停：“这是全城最准的一只，每一格我都对过三遍。”总署的领航考试只认名匠的戳，学徒做的，考官连看都不看。“纬度不看姓氏。”他说这话时没抬头。我问他为什么不自己带去量一回，他低头去擦星盘，擦了很久，才说：“作坊离不开人。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1575, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "pedro_luna", ge = 18 }]
+objectives = [{ kind = "person", person = "pedro_luna", text = "在塞维利亚的星盘作坊找到他" }]
+deadline = [1575, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "pedro_luna", level = "C" }]
+text = "佩德罗从抽屉里翻出一张折了三道的刻度表，拍在桌上。“上回说等你回来校，这回是真的。”他把一只新星盘放进我手里，铜还亮着，刻度细得像头发丝。“全城最准的一只，每一格我都对过三遍。总署的考官只认名匠的戳，学徒的不认。”他说完低头去擦星盘，擦了很久，才说：“作坊离不开人。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，带它去加那利，每天中午量一次。"
+next = "arrive"
+reply = "他把一个小本子递给我，每页画好了格子：日子、船位、读数。“量不准不要紧，照实写。”他说，把星盘放进我的箱子，压在最上面，合上箱盖前又打开看了一眼。"
+effects = [{ kind = "affinity", person = "pedro_luna", value = 2 }, { kind = "flag", flag = "c13_request_pedro_luna_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "接下，再问一句：真不想自己去看看它准不准？"
+next = "arrive"
+reply = "他笑了一下，说：“你看和我看，读数是一样的。”然后把星盘包进一块旧绒布里递给我，手指在布角上停了停才松开。"
+effects = [{ kind = "affinity", person = "pedro_luna", value = 2 }, { kind = "flag", flag = "c13_request_pedro_luna_accepted" }, { kind = "flag", flag = "c13_request_pedro_luna_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "总署的考官，我说不上话。"
+next = "failed"
+reply = "他没再说什么，把星盘挂回墙上，跟一排名匠的星盘挂在一起。隔着半间屋，我分不出哪只是他的。他说：“挂在这儿也一样准。”"
+effects = [{ kind = "flag", flag = "c13_request_pedro_luna_declined" }]
+
+# 二、中午的太阳：一路每天量一回，到拉斯帕尔马斯，港里的老领航看见了星盘。
+[[tracks.chapters]]
+key = "arrive"
+title = "中午的太阳"
+text = "出了瓜达尔基维尔河口，每天中午我都拿出那只星盘，对着太阳量一回，照实记一行。头几天风大，本子的格子被海水洇开，第一页上佩德罗的字还在：“洇了的格子，照样认得。”到拉斯帕尔马斯那天，读数和港口的已知纬度一比，差得极小。港里一个老领航拿过去自己量了一回，咂着嘴说：“这比我用了二十年的那只还准。”他把星盘递回来，又看了一阵，说：“这只该在海上，不该挂在墙上。”我把这句话记在本子最后一页，然后他问：“卖不卖？开个价。”"
+speaker = "captain"
+mood = "cheerful"
+at = "las_palmas"
+when = [{ kind = "alive", person = "pedro_luna", value = true }]
+objectives = [{ kind = "at", at = "las_palmas", text = "到拉斯帕尔马斯" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "pedro_luna", value = -3 }, { kind = "flag", flag = "c13_request_pedro_luna_late" }, { kind = "letter", person = "pedro_luna", text = "星盘托一个去加那利的船长带去了。他回来说读数还行，本子没记。——佩德罗" }] }
+
+[[tracks.chapters.choices]]
+key = "sight_check"
+text = "当着老领航，再量一回星，把两只星盘的读数都记下。"
+next = "report_signed"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "星盘你拿得稳，可北极星的读法你没学过"
+reply = "夜里我们俩一起量北极星。老领航的那只差了小半度，佩德罗的这只几乎没差。老领航在我的本子上签了名，说：“这一页，给总署的考官看。”"
+news = "拉斯帕尔马斯的一个老领航，说塞维利亚有个学徒做的星盘比他用了二十年的还准，还在港里当众量了一回星。"
+effects = [{ kind = "affinity", person = "pedro_luna", value = 3 }, { kind = "flag", flag = "c13_request_pedro_luna_signed" }]
+
+[[tracks.chapters.choices]]
+key = "hold_steady"
+text = "在晃得厉害的船上再量一回，看它稳不稳。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "我顶着浪量了三回，每回记一行，手指冻得拿不住笔。老领航接过去，对着灯看了半天，点了点头，又翻回第一页去。"
+news = "拉斯帕尔马斯港里，一个塞维利亚来的船长在晃得厉害的船上量星，三回读数只差一格。"
+effects = [{ kind = "affinity", person = "pedro_luna", value = 3 }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "pedro_luna", value = -2 }, { kind = "flag", flag = "c13_request_pedro_luna_shaky" }], news = "拉斯帕尔马斯港里有人说，一个塞维利亚来的船长在晃船上量星，读数晃得厉害，只能写作风浪中不准。" }
+
+[[tracks.chapters.choices]]
+key = "just_log"
+text = "不卖，也不再量，照实把这一路的读数带回去。"
+next = "report"
+reply = "我把星盘收回箱子里，说这一路的读数都在本子上，够用了。老领航有点失望，还给我的时候说了声可惜。"
+news = "拉斯帕尔马斯港里，一个老领航想买塞维利亚来的星盘，那船长没卖，老领航却说这东西该在海上。"
+effects = [{ kind = "affinity", person = "pedro_luna", value = 2 }]
+
+# 三、岸沉下去的时候：回到塞维利亚，本子交到他手里。
+[[tracks.chapters]]
+key = "report"
+title = "岸沉下去的时候"
+text = "佩德罗把本子一页页翻过去，读数一行行对上他的刻度，对得上的地方，他就用笔尖在页边点一个小点。作坊的窗户开着，外头运橄榄油的车压过石板路，他一点没听见。翻到最后一页，他的手停住了：那一行是港里老领航说的话。他看了两遍，说：“我知道。”顿了顿，又说：“可我不敢。”他抬头看我，像在等我问，手里的绒布却一直在擦星盘。"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "pedro_luna", value = true }]
+objectives = [{ kind = "person", person = "pedro_luna", text = "在塞维利亚的星盘作坊找到他" }]
+
+[[tracks.chapters.variants]]
+key = "v1_shaky"
+when = [{ kind = "flag", flag = "c13_request_pedro_luna_shaky", value = true }]
+text = "佩德罗把本子一页页翻过去，读数一行行对上他的刻度。有三行写着“风浪中不准”，字迹被海水洇开了，他对着窗口看了很久，才认出那是什么数，那几页他翻得最慢。翻到最后一页，他的手停住了：那一行是港里老领航说的话。他看了两遍，说：“我知道。”顿了顿，又说：“可我不敢。”他抬头看我，像在等我问，手里的绒布却一直在擦星盘。"
+
+[[tracks.chapters.choices]]
+key = "confess"
+text = "不催他，等他自己说。"
+next = "done"
+requires = [{ kind = "affinity", person = "pedro_luna", ge = 30 }]
+hint = "他又低头擦星盘了，你们还没熟到能等这一句"
+reply = "他说：“岸一沉到水平线下，我就喘不上气。第一次跟船出河口就这样，从没跟师傅说过。”他把手从绒布上拿开，说：“所以我做最准的星盘，给敢出海的人用。”然后他把师傅收着的那只葡萄牙老星盘塞给我，说师傅说过，星盘要跟着出海的人。他付了钱。"
+news = "塞维利亚一家星盘作坊的学徒，把师傅收着的葡萄牙老星盘送给了一个船长，说星盘要跟着出海的人。"
+effects = [{ kind = "cash", value = 900 }, { kind = "item", item = "portuguese_astrolabe_master", qty = 1 }, { kind = "affinity", person = "pedro_luna", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_pedro_luna_done" }, { kind = "flag", flag = "c13_request_pedro_luna_confessed" }, { kind = "memory", memory = "mem-request_pedro_luna-report", title = "墙上的两只星盘" }]
+
+[[tracks.chapters.choices]]
+key = "hang_it"
+text = "说本子他留着，星盘挂回墙上也好。"
+next = "done"
+reply = "他把星盘挂回墙上，挂的时候先用袖子把星盘擦了一遍。本子却没挂，压在绒布底下。他付了钱，数得很慢，说：“等哪天，等哪天。”"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "pedro_luna", value = 3 }, { kind = "flag", flag = "c13_request_pedro_luna_partial" }]
+
+# 三之二、签了名的那一版：只有当着老领航量过星的本子走到这一章。
+[[tracks.chapters]]
+key = "report_signed"
+title = "签了名的那一页"
+text = "佩德罗把本子一页页翻过去，读数一行行对上他的刻度。最后一页上，老领航的签名还是新的，墨迹压在纸上发亮，签名下面是那一行话。他的手停在那里，指尖从签名摸到那一行，又摸回来，墨迹蹭在指腹上，他也没擦。他说：“我知道。”顿了顿，又说：“可我不敢。”他抬起头看我一眼，又低下去，手里的绒布一直在擦星盘。"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "pedro_luna", value = true }]
+objectives = [{ kind = "person", person = "pedro_luna", text = "在塞维利亚的星盘作坊找到他" }]
+
+[[tracks.chapters.choices]]
+key = "confess"
+text = "不催他，等他把签名那页翻完，自己开口。"
+next = "done"
+requires = [{ kind = "affinity", person = "pedro_luna", ge = 30 }]
+hint = "他把签名那页翻来翻去，你们还没熟到能等他开口"
+reply = "他把本子压在手底下，半天才说：“岸一沉下去，我就觉得喘不上气。这事我没跟师傅提过。”他看了一眼最后一页上的签名，说：“这个签名，我倒不怕给人看。”接着他走到柜子最里层，取出师傅收着的那只葡萄牙老星盘，放进我手里。师傅留过话：星盘跟着出海的人走。他付了钱。"
+news = "塞维利亚的星盘作坊里，学徒拿出师傅压箱底的葡萄牙老星盘，送给了要去加那利的船长。"
+effects = [{ kind = "cash", value = 900 }, { kind = "item", item = "portuguese_astrolabe_master", qty = 1 }, { kind = "affinity", person = "pedro_luna", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_pedro_luna_done" }, { kind = "flag", flag = "c13_request_pedro_luna_confessed" }, { kind = "memory", memory = "mem-request_pedro_luna-report", title = "墙上的两只星盘" }]
+
+[[tracks.chapters.choices]]
+key = "to_examiner"
+text = "劝他把本子拿去给总署的考官看。"
+next = "done"
+reply = "他攥着本子去了总署，在门口等了半天，回来时星盘上多了一个总署的戳。他说师傅那只葡萄牙老星盘该换个主人了，塞到我手里。他付了钱，说：“总署的戳，比我的名字好使。”"
+news = "塞维利亚一家星盘作坊里，一只学徒做的星盘盖上了总署的戳，说是拿去加那利量过一回星。"
+effects = [{ kind = "cash", value = 900 }, { kind = "item", item = "portuguese_astrolabe_master", qty = 1 }, { kind = "affinity", person = "pedro_luna", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_pedro_luna_done" }, { kind = "memory", memory = "mem-request_pedro_luna-report", title = "墙上的两只星盘" }]
+
+[[tracks.chapters.choices]]
+key = "hang_it"
+text = "说本子先留在他这儿，星盘挂回墙上也行。"
+next = "done"
+reply = "他把星盘挂回墙上，本子压在最上面，签名朝下，像怕被谁看见。签名那一页，他看了又看，才压下去。他付了钱，说：“等我把这页看熟了。”"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "pedro_luna", value = 3 }, { kind = "flag", flag = "c13_request_pedro_luna_partial" }]

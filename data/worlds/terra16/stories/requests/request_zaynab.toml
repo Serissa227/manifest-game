@@ -1,0 +1,210 @@
+# 请托：税单上少了的一行（request_zaynab）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：宰娜卜（zaynab，1537-05-06 生，女），撒哈拉盐队的女首领；cast 在 cast/story_islamic.toml。
+#   本文件里她不出场，只由盐队的管账人（代理人，不进 cast，正文不写名字）带话。
+# 类型：说服（persuade）。三章：offer（报价）、persuade（对税单）。收尾分三章，各走各的路：
+#   result（照账念，最好的结局）、result_paid（替盐队垫过钱）、result_half（吵到一半）。终点 done / failed。
+#   结构说明：三条收尾各自一章，选项门禁只用技能与现金，不读本轨道在别的路上设的旗标；persuade 的检定失败转入 result_half。
+# 报价：L 来信／代理人（auto=true）。offer 章 at=sale，family=c13_offer_sale、冷却 20 天；
+#   deadline 为窗口止日 1568-12-31，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1561-01-01 至 1568-12-31；persuade 进入后 30 天期限；
+#   三个收尾章 1561-01-01 至 1568-12-31，且要求 alive zaynab。
+# 依据·史实背景：萨阿德王朝（16 世纪）与撒哈拉的盐金商路（盐从北边的矿区南运，金子从廷巴克图一带北来）；萨累是大西洋岸的港口。
+#   “双份过路钱”是叙事，不指具体税率。
+# 依据·原创：宰娜卜的驼队与口头禅、盐队的管账人、税单上被刮过的那一行、大账、收据木匣、金砂布角上的记号。
+# 依赖：港口 sale（ports_north_africa.toml）；技能 lang_arabic（skills.toml）；属性 eloquence（B10b 之前按现有六项）；人物 zaynab。主线门禁：无。
+# C7：不写埃丝特，不写非斯，不写恋爱与心动（她是纯 GL，此线只有职业关系）；不读也不设任何 c7_ 旗标。
+# 读的旗标：无。
+# 设的旗标：c13_request_zaynab_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_fixed（persuade 的两种成功）、
+#   _paid（persuade 垫钱）、_late（超时，终局）、_done（终局）、_partial（终局：result_paid 与 result_half 共用一面）。
+# 秘密：cast 没写秘密；本请托不碰，见闻里不写她的私事。
+# 口头禅：“骆驼先喝水，人等着。”全轨道只在 offer 由管账人转述一次。
+# 报酬：现金最多 1250（照账念的）；垫过钱的 1050、吵到一半的 700；好感最多 +13；名声 +2（照账念的）；回忆 mem-request_zaynab-result（只给 result 章）。
+# 回忆插画 mem-request_zaynab-result：摊开的一本大账，一行被刮过的字旁边，有人用炭笔画了一只小小的骆驼。
+
+[[tracks]]
+key = "request_zaynab"
+name = "税单上少了的一行"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["zaynab"]
+
+# 一、她数得清：管账人在骆驼场找到你，替宰娜卜带话。
+[[tracks.chapters]]
+key = "offer"
+title = "她数得清"
+text = "盐队的管账人在萨累的骆驼场找到你，身上还带着过税关时的灰。他先说骆驼：“她说，骆驼先喝水，人等着。”王朝的税吏要盐队交双份的过路钱。税单念给宰娜卜听，她没接纸，只听了一遍，就说少了一行。“她认得星，不认得字，可她数得清。”她每回到歇脚处，先看骆驼，再看人，最后才谈金子。这回她来不了，要你去跟税吏对一对单子。"
+mood = "tense"
+at = "sale"
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1568, 12, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1568, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_sale"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，去跟税吏对单子。"
+next = "persuade"
+reply = "管账人把税单递过来。单子上有一处被刮过的痕迹，纸面起了毛。“她说少的那一行，就在这里。”"
+effects = [
+  { kind = "affinity", person = "zaynab", value = 2 },
+  { kind = "flag", flag = "c13_request_zaynab_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_line"
+text = "问他：少了的那一行，写的是什么？"
+next = "persuade"
+reply = "“去年已经交过的钱。”管账人笑了，“她记得。骆驼背上驮了几袋盐，她也记得。”"
+effects = [
+  { kind = "affinity", person = "zaynab", value = 2 },
+  { kind = "flag", flag = "c13_request_zaynab_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "王朝的税，我不碰。"
+next = "failed"
+reply = "管账人点点头，把税单收回去，叹了口气。骆驼场那边有人在喊水，他听见了，起身就走。"
+effects = [{ kind = "flag", flag = "c13_request_zaynab_declined" }]
+
+# 二、翻得很快的大账：税吏守着账本，三条路都在这一章。
+[[tracks.chapters]]
+key = "persuade"
+title = "翻得很快的大账"
+text = "税吏坐在骆驼场边的帐篷里，面前摊着一本大账，账页边上全是墨点。管账人站在你身后，抱着收据的木匣。税吏说税单是照账抄的，没少什么。“王朝的税，一个字一个字都在账上。”他说完，手掌压住账页，不让你碰。你看见他的指甲缝里有墨。他把大账翻开给你看，翻得很快，一页也没停。"
+speaker = "captain"
+mood = "tense"
+at = "sale"
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1568, 12, 31] },
+  { kind = "alive", person = "zaynab", value = true },
+]
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "zaynab", value = -3 }, { kind = "flag", flag = "c13_request_zaynab_late" }, { kind = "letter", person = "zaynab", text = "（管账人代笔）盐队交了双份走了。首领说，这一行，她记在骆驼的鞍子上。" }] }
+
+[[tracks.chapters.choices]]
+key = "arabic"
+text = "接过大账，一行一行念，念到去年那一页停下。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60, hard = true }]
+hint = "账是阿拉伯文的，你念得慢，税吏的手已经翻过去了。"
+next = "result"
+reply = "去年那一页清清楚楚写着盐队交过的钱。税吏的脸红了，说是抄账的人漏了，他把双份改成了单份。"
+news = "萨累的骆驼场边，盐队的过路税单被人逐行对了一遍，税吏把双份改成了单份。"
+effects = [
+  { kind = "affinity", person = "zaynab", value = 3 },
+  { kind = "flag", flag = "c13_request_zaynab_fixed" },
+]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说：去年交过的，盐队的管账人有收据。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+reply = "管账人把收据摊开，一张一张压平。税吏看了半天，说那就照单份收。"
+news = "萨累的税帐前，盐队掏出去年的收据摊在桌上，税吏看了半天，说那就照单份收。"
+effects = [
+  { kind = "affinity", person = "zaynab", value = 3 },
+  { kind = "flag", flag = "c13_request_zaynab_fixed" },
+]
+fail = { next = "result_half", news = "萨累的骆驼场上，税吏只肯把双份减去一半，盐队这一季还是多交了一截。", effects = [{ kind = "affinity", person = "zaynab", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "不吵了，替盐队垫上差的那一份。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上的现钱，凑不齐那一份。"
+next = "result_paid"
+reply = "税吏收了钱，在税单上盖了印。管账人看着你，没说话，把收据折好，收进怀里。"
+news = "萨累的税棚里，一个外乡人替盐队垫了过路钱，税吏收下，在税单上盖了印。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "zaynab", value = 2 },
+  { kind = "flag", flag = "c13_request_zaynab_paid" },
+]
+
+# 三之一、照账念的：税吏认了账，盐队又到萨累，宰娜卜问那一行是怎么找出来的。
+[[tracks.chapters]]
+key = "result"
+title = "她数的跟纸上的一样"
+text = "几个月后，盐队又到萨累。管账人从驼背上卸下一只木匣，匣里是宰娜卜的话，还有一小袋金砂，用旧麻布包着，布角绣了个歪歪扭扭的记号。他没急着开口，等你把木匣打开。“首领问，那一行，你是怎么找出来的。”"
+speaker = "captain"
+mood = "tender"
+at = "sale"
+objectives = [{ kind = "wait", days = 90, text = "过三个月，盐队再到萨累" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1568, 12, 31] },
+  { kind = "alive", person = "zaynab", value = true },
+]
+news = "萨累的骆驼场上，撒哈拉来的盐队这一季只交了单份的过路钱，管账人说是首领记得清。"
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "让他转告：照账一行一行念的，她记得的那一行，账上也有。"
+next = "done"
+reply = "管账人笑了，说首领听了会高兴：她数的，跟纸上写的一样。他把金砂交给你，说这是首领给的，不是盐队的钱。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "zaynab", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_zaynab_done" },
+  { kind = "memory", memory = "mem-request_zaynab-result", title = "税单上被刮过的那一行" },
+]
+
+# 三之二、垫过的钱：你替盐队垫了一份，管账人来还钱，收据背面有刻痕。
+[[tracks.chapters]]
+key = "result_paid"
+title = "垫过的钱"
+text = "几个月后，盐队又到萨累。管账人找到你的时候，手里拿着那张收据，收据的一角被折了又展，展了又折。他没提税吏，也没提单子，只说首领让他把钱还给你。收据背面刻着一排细细的刻痕，一道一道，是她让人刻的。"
+speaker = "captain"
+mood = "tender"
+at = "sale"
+objectives = [{ kind = "wait", days = 90, text = "盐队三个月后再到萨累" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1568, 12, 31] },
+  { kind = "alive", person = "zaynab", value = true },
+]
+news = "萨累的骆驼场上，盐队这一季的过路钱有人垫了一份，管账人说，首领记着。"
+
+[[tracks.chapters.choices]]
+key = "paid_way"
+text = "让他转告：吵不过，替盐队垫了钱。"
+next = "done"
+reply = "管账人把你垫的钱还给你，又添了一笔：“首领说，垫钱的人她记着。可下回，要把那一行找出来。”"
+effects = [
+  { kind = "cash", value = 1050 },
+  { kind = "affinity", person = "zaynab", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_zaynab_partial" },
+]
+
+# 三之三、吵到一半：税吏只减了一半，盐队仍多交了一截。
+[[tracks.chapters]]
+key = "result_half"
+title = "吵到一半"
+text = "几个月后，盐队又到萨累。税吏那一季只肯把双份减去一半，盐队还是多交了一截。管账人带来宰娜卜的话和一小袋金砂，袋口系得很松。他说得很快，像是怕你多想。“首领说，这一行，她只记了一半。”"
+speaker = "captain"
+mood = "tense"
+at = "sale"
+objectives = [{ kind = "wait", days = 90, text = "等盐队下一趟再来" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1568, 12, 31] },
+  { kind = "alive", person = "zaynab", value = true },
+]
+news = "萨累的人都说，盐队那一季的过路钱只减了一半，管账人说首领记得清。"
+
+[[tracks.chapters.choices]]
+key = "half_way"
+text = "让他转告：吵到一半，税吏松了口。"
+next = "done"
+reply = "管账人点点头，没有笑。他把金砂往你这边推了推，又收回去一点。“首领说，这一半，她也记着。”"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "zaynab", value = 4 },
+  { kind = "flag", flag = "c13_request_zaynab_partial" },
+]

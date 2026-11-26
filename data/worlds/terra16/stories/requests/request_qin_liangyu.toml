@@ -1,0 +1,152 @@
+# 请托：带给弟弟的家信（request_qin_liangyu）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：秦良玉（qin_liangyu，1519-01-01 生，女），石砫的女将军，丈夫死后接过白杆兵（本世界线提前约 55 年）；势力 shizhu，身份档 3。cast：cast/historical_09_liaodong.toml。
+# 类型：送信（letter）。三章主线 offer（报价）、handover（送到山海关）、reply（带回回信、说伤势）；
+#       reply 因旗标分流拆成 reply（回信写满一页）与 reply_short（只有“平安”两个字）两章，各有两个收尾选项，所以文件里实际是四章加终点 done / failed。没有 stage 章，没有 window 与 default。
+# 报价：V（到访）。来信模式的报价港是宁波（石砫的粮船顺长江下来，在长江口一带交卸；brief 把原表的广州改成宁波）；出面的是随粮船下来的老兵老冉，她本人不在场，只在信与转述里说话。
+#       auto=true，窗口 1566-09-01 至 1573-06-30（避开 1574 己巳之变）；offer 写 family=c13_offer_ningbo、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 送到：山海关海口（弟弟在关上伤兵营整补），再回宁波交回信。handover 与两个 reply 章各 deadline_days=180，超时走 failed，各带好感 -3 与旗标 _late。
+# 依据·史实平移：秦邦屏战死浑河（1621 → 本世界线 1566-03），秦民屏负伤（史实）。正文只写“哥哥在浑河边没了”这一句背景，不写浑河之战的场面；
+#       “他没退”是她全轨道唯一要紧的一句，由老冉转述一次，放在 offer，后面不再出现。
+# 依据·原创：老冉（独臂的老白杆兵，名字与伤是原创）；裹布的白蜡木长杆兼扁担、信挂在杆头的钩上；一包竹箬扎的茶；伤兵营里的医官；用油布包三层的回信；老冉腰上记事的麻绳结。
+# 依据·辽东战役链（TERRA16 §10.5）：只写人、书、粮与家信；不运兵器、火药、火炮、铁料，不传会改变战局的军情；不改任何战役变量，请托的效果只有现金、好感、旗标、名声、少量声望与回忆，不给 jianzhou 加声望。茶是叙事里的一包，不是货物，不发物品。
+# 秘密：丈夫的事不碰，不写；她不收任何人的银子，谢礼由石砫的粮船公账付，正文不写数字。
+# 读的旗标：reply 的 variants 读 _doctor（回信纸角沾着药膏黄印）。
+# 设的旗标：c13_request_qin_liangyu_accepted（offer 接下）、_declined（offer 回绝）、_full（回信写满一页）、_short（回信只有“平安”两个字）、_doctor（请医官换药）、_done（reply 照实说）、_partial（只说平安）、_late（超时）。
+#       分支旗标 _full / _short / _doctor 三面，终局旗标 _done / _partial / _declined / _late 各走各路。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 3650（最好的收尾给一次；折中 1800）、好感最多 +13、声望 ming +2、名声 +5、回忆 mem-request_qin_liangyu-reply。letter 两封：handover 超时 1 封（≤120 字）、reply 最好收尾 1 封（≤300 字）。
+# 依赖：港口 ningbo、shanhaiguan（ports_east_asia.toml）；势力 ming；人物 qin_liangyu。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_qin_liangyu-reply「山海关的一句平安」：宁波码头的跳板边，独臂的老兵把油布包着的回信塞进怀里，肩上斜靠着裹布的白蜡木长杆，杆头的钩子空着；脚边是一卷打了结的麻绳。
+
+[[tracks]]
+key = "request_qin_liangyu"
+name = "带给弟弟的家信"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["qin_liangyu"]
+
+# 一、白蜡木的矛杆：宁波码头，独臂的老兵扛着一根裹布的长杆。
+[[tracks.chapters]]
+key = "offer"
+title = "白蜡木的矛杆"
+text = "石砫来的粮船正在宁波卸米。跳板边蹲着一个独臂的老兵，右肩上斜靠着一根裹了布的白蜡木长杆，杆头的钩子从布缝里露出一点黑铁，钩上系着一页折得很小的信，旁边吊着一包用竹箬扎紧的茶。“老冉，白杆兵。”他说，“信是将军给她弟弟的，人在山海关。我走旱路，脚底要磨穿；海上的船到得快些。”我问起将军的哥哥。他把杆子换到右肩，半晌没出声，才说：“将军提过一回。她说，‘他没退。’”再没有下文。接着说：“不用你带话。回来时带一句平安，够了。”"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "date", from = [1566, 9, 1] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 20 }]
+deadline = [1573, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下信和茶，送到山海关"
+next = "handover"
+reply = "老冉用仅有的那只手解钩上的结，解得很慢，不肯让我帮。信和茶都交到我手里，他才说：“将军的信只有一页，茶有一斤。一页也好，一斤也好，都别少。”他把空了的杆子重新扛稳，钩子朝天。"
+effects = [{ kind = "affinity", person = "qin_liangyu", value = 2 }, { kind = "flag", flag = "c13_request_qin_liangyu_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "北边去不了，另托别人吧"
+next = "failed"
+reply = "老冉把信重新挂回钩上，茶包系紧，布缠了两圈。“那我走旱路。”他说，没有多一个字。杆头的钩子在码头的人群里晃了几下，往城门那边去了。"
+effects = [{ kind = "flag", flag = "c13_request_qin_liangyu_declined" }]
+
+# 二、关上的伤兵营：山海关海口，秦家的小弟坐在地铺上，腿上的布发黑。
+[[tracks.chapters]]
+key = "handover"
+title = "关上的伤兵营"
+text = "山海关海口的伤兵营搭在城墙根下，一排草棚，药味压过了海腥。守门的兵一听“石砫”两个字，转身就往里跑。秦民屏靠着棚柱坐在地铺上，左腿缠的布已经发黑。他一看见那包茶就坐直了，接过去在鼻子底下闻了很久。信读得极慢，一行一行，读完折好，塞进胸口。“姐姐只写了一页。”他说，“我写不了那么长。”他让人拿来纸笔，写了两个字，笔停在那里，不动了。"
+speaker = "captain"
+mood = "sad"
+at = "shanhaiguan"
+objectives = [{ kind = "at", at = "shanhaiguan", text = "把家信送到山海关" }]
+when = [{ kind = "alive", person = "qin_liangyu", value = true }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "qin_liangyu", value = -3 }, { kind = "flag", flag = "c13_request_qin_liangyu_late" }, { kind = "letter", person = "qin_liangyu", text = "信我托了驿递，他回了两个字：平安。茶不必再送，你自己留着。海上辛苦，石砫记下了。——秦良玉" }], news = "山海关伤兵营里，秦家小弟收到了姐姐托驿递来的信，提笔回了两个字就搁下了。" }
+news = "山海关海口的伤兵营里，秦家的小弟读完了石砫来的家信，守门的兵说，他把那包茶抱了一整个下午。"
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "陪他坐着说话，等他把回信写完"
+next = "reply"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "我没问腿，问的是关上的伙食，同棚的人，煮不烂的高粱米。他有时答一句，有时只点头，笔动得很慢。等墨干了，他把纸折好递给我：“姐姐认得我的字。”"
+effects = [{ kind = "affinity", person = "qin_liangyu", value = 3 }, { kind = "flag", flag = "c13_request_qin_liangyu_full" }]
+fail = { next = "reply_short", effects = [{ kind = "flag", flag = "c13_request_qin_liangyu_short" }], news = "山海关伤兵营里，秦家小弟只给姐姐回了两个字，送信的客人在棚口坐了半晌才走。" }
+
+[[tracks.chapters.choices]]
+key = "doctor"
+text = "请营里的医官给他换药"
+next = "reply"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "身上凑不出请医官的钱"
+reply = "营里的医官是个矮胖的老头。揭开旧布时，旁边的兵别过了脸，秦民屏一声没吭，只把拳头攥在膝上。换完药，新布是白的，他靠着棚柱喘了一会儿，回头要纸，一页字写到纸角，左手压着纸边，药膏的黄印按了上去，他没有擦。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "qin_liangyu", value = 3 }, { kind = "flag", flag = "c13_request_qin_liangyu_full" }, { kind = "flag", flag = "c13_request_qin_liangyu_doctor" }]
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "交了信就走，不打扰他"
+next = "reply_short"
+reply = "他点点头，把茶包抱在怀里，没有留我。走到营门，守门的兵追上来，塞给我一张叠成方块的纸，说是里头那位托他送出来的。我没有当场打开，后来在船上才看：只有“平安”两个字。"
+effects = [{ kind = "flag", flag = "c13_request_qin_liangyu_short" }]
+
+# 三、一句平安（回信写满一页）：回宁波，老冉还在等下一趟粮船。
+[[tracks.chapters]]
+key = "reply"
+title = "一句平安"
+text = "回到宁波，老冉还蹲在那块跳板边，等下一趟粮船。杆子靠在缆桩上，钩上空着。回信是满满一页，递过去时纸角翻开了，末一行看得见：“兄长那一仗，我在他左边。”老冉没有低头看，一把按住，铺开一块油布，包了一层、两层、三层，每个折角都压得平平的。“将军会在帐里一个人看。”他把包塞进怀里，手掌在胸口压了压，这才看向我，“他呢？”"
+mood = "sad"
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "回宁波，把回信交给等着的老冉" }]
+when = [{ kind = "alive", person = "qin_liangyu", value = true }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "qin_liangyu", value = -3 }, { kind = "flag", flag = "c13_request_qin_liangyu_late" }], news = "宁波码头上，石砫的粮船开走了，独臂的白杆兵没等到山海关的回信，杆头的钩子上空空的。" }
+news = "宁波码头上有个独臂的白杆兵等了一个多月，等到了山海关来的一封家信。"
+
+[[tracks.chapters.variants]]
+key = "v1_doctor"
+when = [{ kind = "flag", flag = "c13_request_qin_liangyu_doctor" }]
+text = "回到宁波，老冉还蹲在那块跳板边，等下一趟粮船。杆子靠在缆桩上，钩上空着。回信是满满一页，递过去时纸角翻开了，末一行看得见：“兄长那一仗，我在他左边。”纸边沾着一点药膏的黄印，老冉凑近闻了闻，没问，一把按住，铺开一块油布，包了一层、两层、三层，每个折角都压得平平的。“将军会在帐里一个人看。”他把包塞进怀里，手掌在胸口压了压，这才看向我，“他呢？”"
+
+[[tracks.chapters.choices]]
+key = "report"
+text = "把他腿上的伤势照实告诉老冉"
+next = "done"
+reply = "老冉听我说完那条腿和换下来的那块发黑的旧布，一个字没插嘴。过了一会儿，他从腰上解下一根麻绳，在上头打了个结，打得很紧。“将军会知道的。”他说，“她问起来，我一个字一个字背给她听。”"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "qin_liangyu", value = 8 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_qin_liangyu-reply", title = "山海关的一句平安" }, { kind = "flag", flag = "c13_request_qin_liangyu_done" }, { kind = "letter", person = "qin_liangyu", text = "收到。茶他喝了没有？石砫的粮船下一趟仍走宁波，船上的人认得你的船。你办的事，石砫公账记着，不必推辞。——秦良玉" }]
+
+[[tracks.chapters.choices]]
+key = "spare"
+text = "只说他平安，别的不提"
+next = "done"
+reply = "老冉看了我一眼，那一眼很长。“将军最恨人瞒她。”他说。可他还是从怀里摸出半截炭笔，把“平安”两个字记在手背上，写得很用力，像怕自己走到半路忘了。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "qin_liangyu", value = 2 }, { kind = "flag", flag = "c13_request_qin_liangyu_partial" }]
+
+# 三之二、只有两个字（回信只有“平安”）：回宁波，老冉掂了掂那张纸。
+[[tracks.chapters]]
+key = "reply_short"
+title = "两个字的回信"
+text = "粮船还没到，老冉仍守着跳板边的老地方。我把那张折成方块的纸递过去，他在手心里掂了掂，打开看了一眼，又叠回去。只有两个字。他没说什么，用油布包了一层，塞进怀里，然后望着我，等我往下说。“就这些？”他问。"
+mood = "sad"
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "回宁波，把那张两个字的纸交给老冉" }]
+when = [{ kind = "alive", person = "qin_liangyu", value = true }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "qin_liangyu", value = -3 }, { kind = "flag", flag = "c13_request_qin_liangyu_late" }], news = "石砫的粮船在宁波卸空了米，装上空篓走了，老冉扛着杆子最后一个上的船，到底没等到从山海关回来的人。" }
+news = "宁波码头上有个独臂的白杆兵等了一个多月，等到了山海关捎回来的两个字。"
+
+[[tracks.chapters.choices]]
+key = "report"
+text = "老冉再问，就把那条腿的伤照实讲给他"
+next = "done"
+reply = "老冉听完，把怀里的包掏出来，拆开，在原来那层油布外头又加了一层。“海上潮。”他说，把包按回胸口，朝我点了一下头。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "qin_liangyu", value = 4 }, { kind = "flag", flag = "c13_request_qin_liangyu_partial" }]
+
+[[tracks.chapters.choices]]
+key = "spare"
+text = "答他：人是平安的，别的没什么好讲"
+next = "done"
+reply = "老冉点点头，没再问。他把那张纸贴身放好，转身去数船上卸下来的米袋，数得比平日慢，数到一半停了一下，才又接着往下数。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "qin_liangyu", value = 2 }, { kind = "flag", flag = "c13_request_qin_liangyu_partial" }]

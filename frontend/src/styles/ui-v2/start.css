@@ -1,0 +1,2791 @@
+/* 新界面（试用）——开局：标题、读档、开局向导（剧本卡、外貌、生日、姓名、身世 / 属性、启航）、第九批的世界与主角名册、
+ * 补建身世的对话框、船长卡，以及开机画面（docs/UI-REDESIGN.md 第 8 节第 1 组）。
+ * 每一条规则都以 :root[data-ui="v2"] 开头（媒体查询里的也一样），动画名以 v2- 开头；只用 base.css 的令牌。
+ *
+ * 做法（“海图室”）：
+ * - 标题画面的像素港湾照旧铺满；左栏的字改成平面的黄铜字与宋体，菜单是一块深色的小面板（选中的一项左边一道黄铜线）；
+ * - 右边的窗口是纸面：12 px 圆角、细边、浮起的阴影，标题靠左（宋体），标题与步骤条下一道双细线（印刷海图的边框）；
+ * - 剧本、外貌、星座、身世选项都是“一件东西一张卡”：纸底细边 8 px 圆角，选中的描深黄铜边 + 浅黄铜的光圈；
+ * - 主按钮（下一步 / 开始新游戏）黄铜底，其余是次要按钮；第一步没有“上一步”可按时不显示它（手机上不再白占半个底栏）；
+ * - 手机：底栏贴底、整宽，“开始新游戏”不折行；
+ * - 字号：正文 14 px（手机 15 px），说明不小于 12 px；颜色对比按第 6 节的表（AA）。
+ *
+ * 范围：.ts-btn、.ts-empty、.ts-hint 这些类别的画面组也在用（行囊、历史、养成、人物……），这里只在开局画面（.title-screen）
+ * 与补建身世（.cw-retro-backdrop）里改，不动别处。船长卡 .cw-card 是本组的组件，游戏里顶栏头像的悬停卡也用它，一起换。
+ */
+
+/* ═════════════════════════ 1. 标题画面：左栏 ═════════════════════════ */
+:root[data-ui="v2"] .title-screen {
+  color: var(--v2-on-night);
+  font-family: var(--v2-font-ui);
+}
+/* 标题一块的背后一团极淡的夜色：字压在黄昏的云上也读得清（只是渐变，不是框） */
+:root[data-ui="v2"] .title-logo {
+  background: radial-gradient(ellipse 60% 55% at 50% 60%, rgba(11, 21, 34, 0.5), rgba(11, 21, 34, 0.22) 55%, rgba(11, 21, 34, 0) 75%);
+}
+/* 英文大字：平面的黄铜色（不再是四阶渐变 + 像素描边），一层柔和的投影让它从黄昏的天空里浮出来。
+ * 这是游戏的字标（当一张图用，不是正文的字体）：自带一组拉丁衬线字、字号随屏宽伸缩，不走令牌——
+ * 宋体令牌在 Windows 上落到宋体 / SimSun，拉丁字母又细又散，72 px 的字标撑不住（DECISIONS 2026-10-12 开局组的复审一节） */
+:root[data-ui="v2"] .title-name {
+  gap: 12px;
+}
+:root[data-ui="v2"] .title-name-en {
+  padding: 0 0 2px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
+  font-size: clamp(44px, 5vw, 72px);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--v2-brass-hi);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  filter: none;
+  text-shadow:
+    0 2px 0 rgba(11, 21, 34, 0.7),
+    0 6px 24px rgba(11, 21, 34, 0.65);
+}
+/* 中文副标：宋体，两边各一道双细线（海图标题框的写法），不再是红缎带 */
+:root[data-ui="v2"] .title-name-zh {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  color: var(--v2-on-night);
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-shadow: 0 1px 10px rgba(11, 21, 34, 0.85);
+}
+:root[data-ui="v2"] .title-name-zh::before,
+:root[data-ui="v2"] .title-name-zh::after {
+  position: static;
+  flex: none;
+  width: 40px;
+  height: 4px;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--v2-brass);
+  border-bottom: 1px solid var(--v2-brass);
+  clip-path: none;
+}
+/* 字距会在最后一个字后面多留 0.5em：左边的线补上同样的距离，两边对称 */
+:root[data-ui="v2"] .title-name-zh::before {
+  margin-right: 0.5em;
+}
+:root[data-ui="v2"] .title-tagline {
+  margin: 12px 0 0;
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  color: var(--v2-on-night);
+  text-shadow:
+    0 1px 2px rgba(11, 21, 34, 0.9),
+    0 0 12px rgba(11, 21, 34, 0.7);
+}
+:root[data-ui="v2"] .title-era {
+  gap: 6px;
+  margin-top: 12px;
+}
+:root[data-ui="v2"] .title-era-year {
+  padding: 3px 14px;
+  font-family: var(--v2-font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--v2-brass-hi);
+  border-top: 3px double rgba(200, 146, 46, 0.75);
+  border-bottom: 3px double rgba(200, 146, 46, 0.75);
+  text-shadow: 0 1px 8px rgba(11, 21, 34, 0.9);
+}
+:root[data-ui="v2"] .title-era-lore {
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.6;
+  color: var(--v2-on-night);
+  text-shadow:
+    0 1px 2px rgba(11, 21, 34, 0.95),
+    0 0 10px rgba(11, 21, 34, 0.8);
+}
+
+/* 主菜单：深色小面板；每项 48 px 高，宋体；选中的一项黄铜色字、左边一道黄铜线（不再用像素小箭头） */
+:root[data-ui="v2"] .title-menu {
+  gap: 2px;
+  min-width: 248px;
+  margin-top: 14px;
+  padding: 6px;
+  background: rgba(17, 31, 49, 0.94);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .title-menu-item {
+  position: relative;
+  justify-content: flex-start;
+  gap: 0;
+  min-height: 48px;
+  padding: 0 18px 0 22px;
+  font-family: var(--v2-font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: var(--v2-on-night);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .title-menu-item:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .title-menu-item.is-active,
+:root[data-ui="v2"] .title-menu-item.is-active:hover:not(:disabled) {
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-3);
+}
+:root[data-ui="v2"] .title-menu-item.is-active::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 8px;
+  width: 3px;
+  background: var(--v2-brass-hi);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .title-menu-item:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .title-menu-cursor {
+  display: none;
+}
+/* “继续”（11-03）：两行——“继续”与是哪一局的小字 */
+:root[data-ui="v2"] .title-menu-continue {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+:root[data-ui="v2"] .title-menu-note {
+  padding-left: 0;
+  font-family: var(--v2-font-ui);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .title-wait {
+  font-family: var(--v2-font-ui);
+  color: var(--v2-on-night);
+  text-shadow: 0 1px 2px rgba(11, 21, 34, 0.95);
+}
+
+/* 左下一行：语言、音乐——同一种深色的幽灵按钮 */
+:root[data-ui="v2"] .title-controls {
+  gap: 8px;
+}
+:root[data-ui="v2"] .title-lang,
+:root[data-ui="v2"] .title-controls .music-toggle {
+  min-height: 36px;
+  padding: 0 10px;
+  font-family: var(--v2-font-ui);
+  font-size: 13px;
+  color: var(--v2-on-night);
+  background: rgba(17, 31, 49, 0.94);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .title-controls .music-toggle:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .title-controls .music-toggle:focus-visible,
+:root[data-ui="v2"] .title-lang select:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .title-lang-label {
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .title-lang select {
+  min-height: 28px;
+  padding: 0 6px;
+  font-size: 13px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+}
+/* 页脚压在像素海面上（手机上是粉色的浪）：衬一条深色的半透明底，字才读得清 */
+:root[data-ui="v2"] .title-footer {
+  padding: 3px 12px;
+  font-size: 12px;
+  color: var(--v2-on-night-2);
+  background: rgba(11, 21, 34, 0.72);
+  border-radius: var(--v2-r-pill);
+  text-shadow: none;
+}
+
+/* ═════════════════════════ 3. 窗口：纸面、标题、步骤条、正文、底栏 ═════════════════════════ */
+:root[data-ui="v2"] .title-screen .ts-window,
+:root[data-ui="v2"] .cw-retro.ts-window {
+  --text: var(--v2-ink);
+  --muted: var(--v2-ink-2);
+  --heading: var(--v2-ink);
+  --line: var(--v2-line);
+  --line-strong: var(--v2-line-strong);
+  --accent: var(--v2-seal);
+  margin-top: 16px;
+  /* 不裁剪（overflow 保持 visible）：标题栏与底栏自己带圆角，不露出窗口的圆角之外。
+   * 也不能用 hidden：那会让窗口自己成为滚动容器，手机上贴底的按钮栏就不再贴着屏幕下沿 */
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  background-image: none;
+  border: 1px solid rgba(12, 18, 28, 0.55);
+  border-image: none;
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-2);
+  image-rendering: auto;
+}
+/* 标题：靠左、宋体；下面一道双细线（有步骤条时线画在步骤条下面，标题与步骤条是一整块） */
+:root[data-ui="v2"] .title-screen .ts-plaque,
+:root[data-ui="v2"] .cw-retro .ts-plaque {
+  flex: none;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  margin: 0;
+  padding: 10px 14px 10px 20px;
+  background: var(--v2-paper-1);
+  border-bottom: 3px double var(--v2-line-strong);
+  /* 窗口不裁剪：标题栏自己的上角跟着窗口圆（12 px 减去 1 px 的边） */
+  border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+}
+:root[data-ui="v2"] .cw-retro .ts-plaque {
+  border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+}
+:root[data-ui="v2"] .title-screen .ts-plaque:has(~ .ts-form > .cw-stepper),
+:root[data-ui="v2"] .cw-retro .ts-plaque:has(~ .ts-form > .cw-stepper) {
+  min-height: 0;
+  padding-bottom: 4px;
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .title-screen .ts-plaque h2,
+:root[data-ui="v2"] .cw-retro .ts-plaque h2 {
+  margin: 0;
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  color: var(--v2-ink);
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* 步骤条：编号是小圆（当前黄铜底、走过的浅黄铜底深黄铜字、没到的空心），步骤名 13 px；整条是标题栏的下半 */
+:root[data-ui="v2"] .title-screen .cw-stepper,
+:root[data-ui="v2"] .cw-retro .cw-stepper {
+  padding: 0 14px 8px;
+  background: var(--v2-paper-1);
+  border-bottom: 3px double var(--v2-line-strong);
+}
+/* 桌面：各步靠左排成一行（原来每步平分整行，两三步时隔得老远），两步之间一小段细线 */
+:root[data-ui="v2"] .cw-stepper ol {
+  gap: 22px;
+}
+:root[data-ui="v2"] .cw-stepper li {
+  flex: 0 1 auto;
+}
+:root[data-ui="v2"] .cw-stepper li + li::before {
+  top: 50%;
+  left: -18px;
+  width: 14px;
+  height: 1px;
+  background: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .cw-stepper li.is-past + li::before,
+:root[data-ui="v2"] .cw-stepper li.is-past + li.is-current::before {
+  background: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cw-stepper-btn {
+  justify-content: flex-start;
+  min-height: 34px;
+  gap: 6px;
+  padding: 0 6px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .cw-stepper-btn:hover:not(:disabled) {
+  background: var(--v2-paper-sunk);
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-stepper-btn:disabled {
+  color: #8e8170;
+  background: transparent;
+}
+:root[data-ui="v2"] .cw-stepper-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 0;
+}
+:root[data-ui="v2"] .cw-stepper-n {
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v2-ink-3);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: 50%;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-stepper li.is-past .cw-stepper-n {
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-stepper li.is-past .cw-stepper-btn:not(:disabled):hover .cw-stepper-label {
+  color: var(--v2-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-ui="v2"] .cw-stepper li.is-current .cw-stepper-n {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+  box-shadow: 0 0 0 3px rgba(227, 176, 86, 0.3);
+}
+:root[data-ui="v2"] .cw-stepper li.is-current .cw-stepper-label {
+  color: var(--v2-ink);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .cw-stepper-label {
+  letter-spacing: 0.02em;
+}
+
+/* 正文：撑满窗口剩下的高度，底栏总在窗口的下沿（原来内容少时，底栏下面还露出一截空的窗口） */
+:root[data-ui="v2"] .title-screen .ts-window > .ts-form,
+:root[data-ui="v2"] .title-screen .ts-window > .ts-body,
+:root[data-ui="v2"] .title-screen .ts-form > .ts-body {
+  flex: 1 1 auto;
+}
+:root[data-ui="v2"] .title-screen .ts-body,
+:root[data-ui="v2"] .cw-retro .ts-body {
+  padding: 16px 20px 18px;
+}
+/* 读档没有存档时，上面那句“选择一个存档……”与空状态说的相反：不显示 */
+:root[data-ui="v2"] .title-screen .ts-body:has(> .v2-empty) > .ts-lead {
+  display: none;
+}
+:root[data-ui="v2"] .title-screen .ts-heading,
+:root[data-ui="v2"] .cw-retro .ts-heading {
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 4px 0 12px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .title-screen .ts-heading::before,
+:root[data-ui="v2"] .cw-retro .ts-heading::before {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .title-screen .ts-heading::after,
+:root[data-ui="v2"] .cw-retro .ts-heading::after {
+  height: 1px;
+  background: var(--v2-line);
+}
+:root[data-ui="v2"] .title-screen .ts-lead,
+:root[data-ui="v2"] .cw-retro .ts-lead {
+  margin: 0 0 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .title-screen .ts-hint,
+:root[data-ui="v2"] .cw-retro .ts-hint {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .title-screen .ts-hint.is-warn,
+:root[data-ui="v2"] .cw-retro .ts-hint.is-warn {
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .title-screen .ts-field > label,
+:root[data-ui="v2"] .title-screen .ts-field-label,
+:root[data-ui="v2"] .cw-retro .ts-field-label {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+}
+
+/* 底栏：纸色、上面一道细线；左边是“某某船长将从某港启航”，右边是导航 */
+:root[data-ui="v2"] .title-screen .ts-launch,
+:root[data-ui="v2"] .cw-retro .ts-launch {
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--v2-paper-1);
+  border-top: 1px solid var(--v2-line);
+  border-radius: 0 0 11px 11px;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-retro .ts-launch {
+  border-radius: 0 0 15px 15px;
+}
+:root[data-ui="v2"] .title-screen .ts-voyage-line {
+  font-size: var(--v2-fs-md);
+  font-style: normal;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .title-screen .ts-launch-row,
+:root[data-ui="v2"] .cw-retro .ts-launch-row {
+  gap: 12px;
+}
+:root[data-ui="v2"] .title-screen .cw-nav,
+:root[data-ui="v2"] .cw-retro .cw-nav {
+  gap: 8px;
+}
+/* 第一步没有“上一步”可按：不显示（不白占地方）；“换个世界”这类可以按的照常显示 */
+:root[data-ui="v2"] .title-screen .cw-nav > .ts-btn:disabled:not(.ts-btn-next):not(.ts-btn-go),
+:root[data-ui="v2"] .cw-retro .cw-nav > .ts-btn:disabled:not(.ts-btn-next):not(.ts-btn-go) {
+  display: none;
+}
+/* 随机种子：v1 在底栏；新界面放在启航一步的正文里（StartScreen / WorldStart 的 .ts-seed-block），带一句说明 */
+:root[data-ui="v2"] .title-screen .ts-seed {
+  flex: 1 1 260px;
+  gap: 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .title-screen .ts-seed .ts-input {
+  max-width: 220px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .title-screen .ts-seed-block {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .title-screen .ts-seed-block .ts-hint {
+  margin: 6px 0 0;
+}
+
+/* ═════════════════════════ 4. 按钮与输入框（只在开局画面与补建身世里） ═════════════════════════ */
+:root[data-ui="v2"] .title-screen .ts-btn,
+:root[data-ui="v2"] .cw-retro .ts-btn {
+  top: 0;
+  min-height: var(--v2-h-md);
+  padding: 0 14px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .title-screen .ts-btn:hover:not(:disabled),
+:root[data-ui="v2"] .cw-retro .ts-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .title-screen .ts-btn:active:not(:disabled),
+:root[data-ui="v2"] .cw-retro .ts-btn:active:not(:disabled) {
+  top: 0;
+  background: var(--v2-paper-sunk);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .title-screen .ts-btn:disabled,
+:root[data-ui="v2"] .cw-retro .ts-btn:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+  filter: none;
+  opacity: 1;
+}
+:root[data-ui="v2"] .title-screen .ts-btn:focus-visible,
+:root[data-ui="v2"] .cw-retro .ts-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .title-screen .ts-btn-small,
+:root[data-ui="v2"] .cw-retro .ts-btn-small {
+  min-height: var(--v2-h-sm);
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+}
+/* 主按钮：下一步、开始新游戏、补立身世 */
+:root[data-ui="v2"] .title-screen .ts-btn-next,
+:root[data-ui="v2"] .title-screen .ts-btn-go,
+:root[data-ui="v2"] .cw-retro .ts-btn-next,
+:root[data-ui="v2"] .cw-retro .ts-btn-go {
+  min-width: 7em;
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .title-screen .ts-btn-next:hover:not(:disabled),
+:root[data-ui="v2"] .title-screen .ts-btn-go:hover:not(:disabled),
+:root[data-ui="v2"] .cw-retro .ts-btn-next:hover:not(:disabled),
+:root[data-ui="v2"] .cw-retro .ts-btn-go:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .title-screen .ts-btn-next:disabled,
+:root[data-ui="v2"] .title-screen .ts-btn-go:disabled,
+:root[data-ui="v2"] .cw-retro .ts-btn-next:disabled,
+:root[data-ui="v2"] .cw-retro .ts-btn-go:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-sunk);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .title-screen .ts-btn-go,
+:root[data-ui="v2"] .cw-retro .ts-btn-go {
+  min-height: var(--v2-h-lg);
+  padding: 0 24px;
+  font-size: var(--v2-fs-lg);
+  letter-spacing: 0.08em;
+}
+/* ◀ ▶ 与 − +：像素小箭头换成字形（按钮的读屏名照旧在 aria-label 上） */
+:root[data-ui="v2"] .title-screen .ts-btn-arrow,
+:root[data-ui="v2"] .cw-retro .ts-btn-arrow {
+  min-width: var(--v2-h-md);
+  padding: 0 8px;
+  font-size: 18px;
+  line-height: 1;
+}
+:root[data-ui="v2"] .cw-look-nav .ts-btn-arrow canvas {
+  display: none;
+}
+:root[data-ui="v2"] .cw-look-nav .ts-btn-arrow:first-child::before {
+  content: "‹";
+  font-size: 22px;
+}
+:root[data-ui="v2"] .cw-look-nav .ts-btn-arrow:nth-child(2)::before {
+  content: "›";
+  font-size: 22px;
+}
+:root[data-ui="v2"] .title-screen .cw-step-btn,
+:root[data-ui="v2"] .cw-retro .cw-step-btn {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  font-size: 18px;
+}
+
+:root[data-ui="v2"] .title-screen .ts-input,
+:root[data-ui="v2"] .cw-retro .ts-input {
+  min-height: 38px;
+  padding: 0 10px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  border-radius: var(--v2-r-sm);
+  box-shadow: inset 0 1px 1px rgba(36, 28, 21, 0.06);
+}
+:root[data-ui="v2"] .title-screen .ts-input::placeholder {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .title-screen .ts-input:focus,
+:root[data-ui="v2"] .cw-retro .ts-input:focus {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .title-screen .ts-input[aria-invalid="true"] {
+  border-color: var(--v2-seal);
+  box-shadow: inset 0 0 0 1px var(--v2-seal);
+}
+
+/* ═════════════════════════ 5. 剧本卡片 ═════════════════════════ */
+:root[data-ui="v2"] .title-screen .ts-cards {
+  gap: 12px;
+}
+:root[data-ui="v2"] .ts-card {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  transition:
+    border-color var(--v2-dur-1) var(--v2-ease),
+    box-shadow var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .ts-card:hover {
+  border-color: var(--v2-ink-3);
+  transform: none;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ts-card.is-selected,
+:root[data-ui="v2"] .ts-card.is-recommended.is-selected {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    0 0 0 1px var(--v2-brass-ink),
+    0 0 0 5px rgba(227, 176, 86, 0.35);
+}
+:root[data-ui="v2"] .ts-card:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 6px;
+}
+:root[data-ui="v2"] .ts-card-art {
+  background: var(--v2-night-3);
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+/* “已选”：印章红的小签 */
+:root[data-ui="v2"] .ts-card-seal {
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: 0 1px 2px rgba(36, 28, 21, 0.3);
+}
+:root[data-ui="v2"] .ts-card-body {
+  gap: 4px;
+  padding: 10px 12px 12px;
+}
+:root[data-ui="v2"] .ts-card-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ts-card-desc {
+  font-size: var(--v2-fs-md);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ts-facts {
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 8px;
+  font-size: var(--v2-fs-sm);
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ts-fact-k {
+  width: 3.6em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ts-fact-v {
+  font-weight: 500;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ts-fact-until {
+  font-size: 12px;
+  color: var(--v2-ink-3);
+}
+
+/* 分组：推荐选择 / 自由开局 */
+:root[data-ui="v2"] .ts-group + .ts-group {
+  margin-top: 20px;
+}
+:root[data-ui="v2"] .ts-group-head {
+  gap: 4px 10px;
+  margin: 0 0 10px;
+}
+:root[data-ui="v2"] .ts-group-head strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ts-group-head small {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-ink-3);
+}
+/* 组名前不再加“★”：上面的分节标题已经有黄铜小菱形，两层记号叠在一起显得碎；推荐角色的卡片自己带“推荐”小签 */
+:root[data-ui="v2"] .ts-group.is-recommended .ts-group-head strong::before {
+  content: none;
+}
+
+/* 推荐角色：横排——头像（带衬边的插图）在左，名字、一句话、故事线与开局事实在右（原来一张头像占满整个窗口宽） */
+:root[data-ui="v2"] .ts-cards-hero {
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+:root[data-ui="v2"] .ts-card.is-recommended {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  align-items: start;
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-strong);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ts-card.is-recommended:hover {
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ts-card.is-recommended .ts-card-body {
+  display: contents;
+}
+:root[data-ui="v2"] .ts-card.is-recommended .ts-card-body > * {
+  grid-column: 2;
+  margin-left: 16px;
+  margin-right: 14px;
+}
+:root[data-ui="v2"] .ts-card.is-recommended .ts-hero-name {
+  margin-top: 14px;
+}
+:root[data-ui="v2"] .ts-card.is-recommended .ts-facts {
+  margin-bottom: 14px;
+}
+:root[data-ui="v2"] .ts-hero-art {
+  grid-column: 1;
+  grid-row: 1 / span 5;
+  align-self: stretch;
+  margin: 10px 0 10px 10px;
+  padding: 4px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ts-hero-art .portrait-art,
+:root[data-ui="v2"] .ts-hero-art .portrait-fallback {
+  border-radius: var(--v2-r-xs);
+}
+/* “推荐”：黄铜小签，压在头像左上角 */
+:root[data-ui="v2"] .ts-card-badge {
+  top: 16px;
+  left: 16px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: 0 1px 2px rgba(36, 28, 21, 0.3);
+}
+/* “已选定”压在头像的右下角（左上角是“推荐”） */
+:root[data-ui="v2"] .ts-card.is-recommended .ts-card-seal {
+  top: auto;
+  right: 8px;
+  bottom: 8px;
+  left: auto;
+}
+:root[data-ui="v2"] .ts-hero-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ts-hero-tagline {
+  margin-top: 4px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ts-hero-story {
+  justify-self: start;
+  align-self: start;
+  margin-top: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ts-hero-bio {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--v2-ink);
+}
+
+/* ═════════════════════════ 6. 外貌与姓名 ═════════════════════════ */
+:root[data-ui="v2"] .ts-look-count {
+  color: var(--v2-ink-3);
+  font-weight: 500;
+}
+:root[data-ui="v2"] .ts-looks {
+  grid-template-columns: repeat(auto-fill, 58px);
+  gap: 6px;
+  margin: 6px 0 4px;
+}
+:root[data-ui="v2"] .ts-look {
+  width: 58px;
+  height: 58px;
+  overflow: hidden;
+  background: var(--v2-night-3);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  transition: box-shadow var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .ts-look:hover {
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ts-look.is-selected {
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    0 0 0 1px var(--v2-brass-ink),
+    0 0 0 4px rgba(227, 176, 86, 0.45);
+}
+:root[data-ui="v2"] .ts-look:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 5px;
+}
+:root[data-ui="v2"] .ts-look .portrait-art,
+:root[data-ui="v2"] .ts-look .portrait-fallback {
+  width: 56px !important;
+  height: 56px !important;
+}
+:root[data-ui="v2"] .cw-look-nav {
+  gap: 6px;
+}
+:root[data-ui="v2"] .title-screen .ts-field-row {
+  gap: 8px;
+}
+
+/* ═════════════════════════ 7. 生日、星座与年龄 ═════════════════════════ */
+:root[data-ui="v2"] .cw-signs {
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 8px;
+  margin: 4px 0 14px;
+}
+:root[data-ui="v2"] .cw-sign {
+  gap: 2px;
+  padding: 8px 9px;
+  line-height: 1.35;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .cw-sign:hover {
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-sign.is-selected {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    0 0 0 1px var(--v2-brass-ink),
+    0 0 0 4px rgba(227, 176, 86, 0.35);
+}
+:root[data-ui="v2"] .cw-sign:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 5px;
+}
+:root[data-ui="v2"] .cw-sign-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cw-sign-dates {
+  font-size: 12px;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-sign-bonus {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .cw-bd-row {
+  gap: 10px 16px;
+  margin-bottom: 12px;
+}
+:root[data-ui="v2"] .cw-bd-date .ts-input {
+  min-height: 36px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .cw-age {
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .cw-age-slider {
+  accent-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cw-age-slider:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 3px;
+}
+:root[data-ui="v2"] .cw-bd-age-value {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .title-screen .cw-age-chip,
+:root[data-ui="v2"] .cw-retro .cw-age-chip {
+  min-width: 3em;
+  padding: 0 8px;
+  letter-spacing: 0;
+}
+:root[data-ui="v2"] .title-screen .cw-age-chip[aria-pressed="true"],
+:root[data-ui="v2"] .cw-retro .cw-age-chip[aria-pressed="true"] {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cw-age-born {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+/* 星座卡：深色的小夜空卡（星座名宋体、黄铜色） */
+:root[data-ui="v2"] .cw-sign-card {
+  padding: 14px 16px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .cw-sign-card-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-hi);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .cw-sign-card-dates {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .cw-sign-card-desc {
+  margin: 6px 0 8px;
+  font-style: normal;
+  line-height: 1.65;
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .cw-sign-card-perks {
+  gap: 4px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .cw-sign-card-perks li::before {
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .cw-born {
+  margin-top: 10px;
+  padding-top: 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+  border-top: 1px solid var(--v2-night-line);
+}
+
+/* ═════════════════════════ 8. 身世问答 ═════════════════════════ */
+:root[data-ui="v2"] .cw-q-head {
+  gap: 12px;
+  margin-bottom: 4px;
+}
+:root[data-ui="v2"] .cw-q-dots {
+  gap: 6px;
+}
+:root[data-ui="v2"] .cw-q-dots li {
+  width: 10px;
+  height: 10px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .cw-q-dots li.is-done {
+  background: var(--v2-brass-ink);
+  border-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cw-q-dots li.is-current {
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+  box-shadow: 0 0 0 3px rgba(227, 176, 86, 0.3);
+}
+:root[data-ui="v2"] .cw-q-count {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* 问题本身（同时是 .ts-lead）：比说明大一号、深一档 */
+:root[data-ui="v2"] .ts-lead.cw-q-prompt {
+  margin: 6px 0 12px;
+  font-size: 15px;
+  font-style: normal;
+  color: var(--v2-ink);
+}
+/* 选项：整行可点的白卡（同剧情的选项）；选中的描深黄铜边、左边一道黄铜线 */
+:root[data-ui="v2"] .cw-options {
+  gap: 8px;
+}
+:root[data-ui="v2"] .cw-option {
+  gap: 6px;
+  padding: 10px 14px 11px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  transition: border-color var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .cw-option:hover {
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .cw-option.is-selected {
+  background: var(--v2-paper-1);
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    inset 3px 0 0 var(--v2-brass-ink),
+    0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cw-option:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 3px;
+}
+:root[data-ui="v2"] .cw-opt-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cw-opt-tags {
+  gap: 6px;
+}
+:root[data-ui="v2"] .cw-tag {
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--v2-sea);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .cw-tag.is-effect {
+  color: #4d3407;
+  background: #f6e6c2;
+}
+:root[data-ui="v2"] .cw-opt-text {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-style: normal;
+  line-height: var(--v2-lh-read);
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: 0 var(--v2-r-md) var(--v2-r-md) 0;
+}
+
+/* ═════════════════════════ 9. 属性 ═════════════════════════ */
+:root[data-ui="v2"] .cw-at-bar {
+  gap: 8px;
+  margin-bottom: 10px;
+}
+/* 剩余点数：还有没分的是印章红的圆签，分完了是黄铜底 */
+:root[data-ui="v2"] .cw-left {
+  padding: 3px 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .cw-left.is-done {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+}
+/* 属性是列表的行（第 4 节的行内操作），不是一项一张卡：细线分隔；宽屏上一行之内左边名字与说明、右边 − 格子 读数 +，
+ * 效果整宽写在下面一行——经典世界的六项连同算学的提示在 1600×1000 的窗口里不用滚动就看全（“下一步”要分完点才能按）。
+ * 手机上控件放不进同一行，排成三行（见“较窄的窗口与手机”一节） */
+:root[data-ui="v2"] .cw-attr-list {
+  gap: 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .cw-attr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "head ctrl"
+    "fx fx";
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 1px;
+  padding: 6px 4px 7px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+  border-radius: 0;
+}
+/* 只读的一项（组里没有自由点数）：没有 − +，读数靠右与能加点的行对齐 */
+:root[data-ui="v2"] .cw-attr.is-fixed {
+  background: transparent;
+}
+:root[data-ui="v2"] .cw-attr-head {
+  grid-area: head;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 0;
+}
+:root[data-ui="v2"] .cw-attr-head strong {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cw-attr-desc {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-attr-ctrl {
+  grid-area: ctrl;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 0;
+}
+:root[data-ui="v2"] .cw-attr-num {
+  min-width: 1.5em;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+}
+/* 取值范围宽的组（0–100）画横条：在按内容定宽的一列里给它一个固定的宽度（与十个格子差不多），不缩成最小宽度 */
+:root[data-ui="v2"] .cw-attr-ctrl .cw-attr-meter {
+  flex: none;
+  width: 160px;
+  max-width: none;
+}
+:root[data-ui="v2"] .cw-attr-fx {
+  grid-area: fx;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-sea);
+}
+/* 格子：身世与星座的点（墨色）、自由分配的点（黄铜）、上限以内的空格、以后才能长的格子（斜纹） */
+:root[data-ui="v2"] .cw-pips {
+  gap: 3px;
+}
+:root[data-ui="v2"] .cw-pips i {
+  width: 9px;
+  height: 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: 2px;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-pips i.is-bg {
+  background: var(--v2-ink-2);
+  border-color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .cw-pips i.is-alloc {
+  background: var(--v2-brass-hi);
+  border-color: var(--v2-brass-ink);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-pips i.is-later {
+  background: repeating-linear-gradient(135deg, var(--v2-paper-sunk) 0 2px, var(--v2-paper-2) 2px 4px);
+  border-style: dashed;
+  border-color: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .cw-attr-ctrl .cw-pips i {
+  width: 14px;
+  height: 16px;
+  border-radius: 3px;
+}
+:root[data-ui="v2"] .cw-attr-meter {
+  height: 8px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .cw-attr-meter i {
+  background: var(--v2-ink-2);
+  border-radius: var(--v2-r-pill);
+}
+/* 算学的奇才：深色的小夜空卡 */
+:root[data-ui="v2"] .cw-numeracy-tip {
+  margin-top: 10px;
+}
+:root[data-ui="v2"] .cw-genius {
+  margin-top: 12px;
+  padding: 10px 14px 14px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-genius legend {
+  padding: 2px 10px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .cw-genius-lead {
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .cw-genius-list {
+  gap: 6px;
+}
+:root[data-ui="v2"] .cw-genius-item {
+  padding: 8px 10px;
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .cw-genius-item small {
+  font-size: 12px;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .cw-genius-item span {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .cw-genius-item.is-selected {
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .cw-genius-item:has(input:focus-visible) {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+
+/* 属性分组的世界：每组一个可以折叠的标题（组名、规则、本组剩余点数），手机上组多时上面一排组名切换 */
+:root[data-ui="v2"] .cw-attrs-grouped .cw-group {
+  margin-top: 12px;
+}
+:root[data-ui="v2"] .cw-group-head {
+  gap: 2px 10px;
+  min-height: 40px;
+  margin: 0 0 8px;
+  padding: 6px 12px;
+  font-family: var(--v2-font-ui);
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .cw-group-toggle:hover:not(:disabled) {
+  background: var(--v2-paper-sunk);
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-group-toggle:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .cw-group-caret {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-group-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+:root[data-ui="v2"] .cw-group-rule {
+  font-size: 12px;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-group-left {
+  padding: 1px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .cw-group-left.is-done {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .cw-group-tabs {
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+:root[data-ui="v2"] .cw-group-tab {
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-group-tab.is-on,
+:root[data-ui="v2"] .cw-group-tab.is-on:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .cw-group-badge {
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+
+/* ═════════════════════════ 10. 启航前的汇总、行情情报 ═════════════════════════ */
+:root[data-ui="v2"] .cw-summary {
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .cw-summary-row {
+  gap: 10px;
+  padding: 10px 14px;
+}
+:root[data-ui="v2"] .cw-summary-row + .cw-summary-row {
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .cw-summary dt {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-summary dd {
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+/* “改生日”等：海蓝色的文字按钮，就在这一行的右边（鼠标的点按目标至少 28 px 高，第 3.4 节） */
+:root[data-ui="v2"] .cw-edit {
+  min-height: var(--v2-h-sm);
+  padding: 0 6px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  color: var(--v2-sea);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+  text-decoration: none;
+}
+:root[data-ui="v2"] .cw-edit:hover:not(:disabled) {
+  color: var(--v2-sea);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  box-shadow: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-ui="v2"] .cw-edit:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .cw-card-sign {
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-1);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .cw-info {
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 14px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .cw-info legend {
+  padding: 0 6px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .cw-info-opt {
+  column-gap: 10px;
+}
+:root[data-ui="v2"] .cw-info-name {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cw-info-opt small {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+
+/* ═════════════════════════ 11. 船长卡（向导侧栏、补建身世，以及游戏里顶栏头像的悬停卡） ═════════════════════════ */
+:root[data-ui="v2"] .cw-layout {
+  /* 船长卡 204 px：雷达图的轴名约 12–13 px；左边的星座卡排三列，“10月24日–11月22日”不折行 */
+  grid-template-columns: minmax(0, 1fr) 204px;
+  gap: 20px;
+}
+:root[data-ui="v2"] .cw-card {
+  gap: 8px;
+  padding: 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .hud-card-pop .cw-card {
+  box-shadow: var(--v2-shadow-3);
+}
+/* 悬停卡里“还没有立下身世”的一句、补建的说明与“补建身世”（旧存档没有档案时，这是卡里唯一的动作）。
+ * 卡在顶栏（.hud）里：顶栏的按钮缺省是深色底上的幽灵按钮（shell.css 的 .hud button，浅字、透明底、无边框），
+ * 放到纸面的卡上几乎看不见——这里改回纸面的次要按钮（墨色字、纸底、细边）；选择器多带一层 .hud 与标签名，压过 shell.css 那几条 */
+:root[data-ui="v2"] .hud-card-pop .cw-card-none {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hud-card-pop .ts-hint {
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .hud .hud-card-pop button.ts-btn {
+  top: 0;
+  align-self: flex-start;
+  min-height: var(--v2-h-md);
+  padding: 0 14px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud .hud-card-pop button.ts-btn:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: #fff;
+  border-color: var(--v2-ink-3);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .hud .hud-card-pop button.ts-btn:active:not(:disabled) {
+  top: 0;
+  background: var(--v2-paper-sunk);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud .hud-card-pop button.ts-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+/* 开局向导与补建身世的船长卡在手机上可以收起（v2-card-fold，见“较窄的窗口与手机”一节）；宽屏上一直整张显示，“详情”键不出现 */
+:root[data-ui="v2"] .v2-card-toggle {
+  display: none;
+}
+/* 头像：书页插图式的细框 + 衬边 */
+:root[data-ui="v2"] .cw-card-portrait {
+  padding: 4px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-image: none;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .cw-card-portrait .portrait-art,
+:root[data-ui="v2"] .cw-card-portrait .portrait-fallback,
+:root[data-ui="v2"] .cw-card-portrait canvas {
+  border-radius: var(--v2-r-xs);
+}
+/* 名牌：宋体的名字（不再是木牌） */
+:root[data-ui="v2"] .cw-card-name.ts-nameplate {
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .cw-card-born {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .cw-card-bg {
+  gap: 3px;
+  padding-top: 8px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .cw-card-bg li {
+  padding-left: 14px;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .cw-card-bg li::before {
+  top: 0.62em;
+  left: 2px;
+  width: 5px;
+  height: 5px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .cw-card-bg li.is-empty {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .cw-card-attrs {
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .cw-attr-name {
+  color: var(--v2-ink-2);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .cw-card-methods {
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 0;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .cw-card-groups {
+  padding-top: 8px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .cw-card-tabs {
+  gap: 4px;
+  margin-bottom: 6px;
+  padding: 3px;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .cw-card-tab {
+  min-height: var(--v2-h-sm);
+  padding: 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-card-tab:hover:not(:disabled) {
+  background: rgba(255, 253, 248, 0.6);
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cw-card-tab.is-on,
+:root[data-ui="v2"] .cw-card-tab.is-on:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  box-shadow: var(--v2-shadow-1);
+}
+/* 雷达图：细线刻度，身世的底子墨色、加点后的黄铜色；轴名放大一号（原来缩到 10 px 左右） */
+:root[data-ui="v2"] .cw-radar-ring {
+  stroke: var(--v2-line);
+}
+:root[data-ui="v2"] .cw-radar-rim {
+  fill: var(--v2-paper-2);
+  stroke: var(--v2-line-strong);
+  stroke-width: 1;
+}
+:root[data-ui="v2"] .cw-radar-axis {
+  stroke: var(--v2-line);
+}
+:root[data-ui="v2"] .cw-radar-base {
+  fill: rgba(89, 73, 56, 0.28);
+  stroke: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .cw-radar-value {
+  fill: rgba(227, 176, 86, 0.5);
+  stroke: var(--v2-brass-ink);
+  stroke-width: 1.5;
+}
+:root[data-ui="v2"] .cw-radar-dot {
+  fill: var(--v2-brass-ink);
+  stroke: none;
+}
+:root[data-ui="v2"] .cw-radar-label {
+  font-family: var(--v2-font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .cw-radar-num {
+  fill: var(--v2-ink);
+}
+:root[data-ui="v2"] .cw-card-bar {
+  height: 8px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .cw-card-bar i {
+  background: var(--v2-ink-2);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .cw-card-ratings {
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .cw-card-ratings li {
+  padding: 1px 8px;
+  font-size: 12px;
+  background: #f6e6c2;
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .cw-rating-name {
+  color: #4d3407;
+  font-weight: 500;
+}
+:root[data-ui="v2"] .cw-rating-value {
+  color: var(--v2-ink);
+}
+
+/* ═════════════════════════ 12. 读取存档 ═════════════════════════ */
+:root[data-ui="v2"] .ts-saves {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ts-save-row {
+  align-items: center;
+  gap: 8px;
+}
+:root[data-ui="v2"] .title-screen .ts-save {
+  min-height: 0;
+  gap: 14px;
+  padding: 8px 12px 8px 8px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .title-screen .ts-save:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-brass);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .title-screen .ts-save:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+/* 头像格子固定 64 px（手机 52 px）：有船长的头像与旧存档的日志徽记一样大，文字左边对齐 */
+:root[data-ui="v2"] .ts-save-face {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  background: var(--v2-night-3);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ts-save-face > * {
+  width: 100% !important;
+  height: 100% !important;
+}
+:root[data-ui="v2"] .ts-save-text {
+  gap: 3px;
+}
+:root[data-ui="v2"] .ts-save-slot {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ts-save-captain {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ts-save-detail {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+/* 行尾的“›”：一直看得见（不只悬停时），说明整行点了就读档 */
+:root[data-ui="v2"] .ts-save-go {
+  visibility: visible;
+  margin-right: 2px;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ts-save-go canvas {
+  display: none;
+}
+:root[data-ui="v2"] .ts-save-go::before {
+  content: "›";
+  font-size: var(--v2-fs-2xl);
+  line-height: 1;
+}
+:root[data-ui="v2"] .title-screen .ts-save:hover:not(:disabled) .ts-save-go {
+  color: var(--v2-brass-ink);
+}
+/* 删除：安静的印章红文字按钮，悬停才有底色 */
+:root[data-ui="v2"] .title-screen .ts-save-del {
+  align-self: center;
+  min-height: var(--v2-h-md);
+  padding: 0 12px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-seal);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .title-screen .ts-save-del:hover:not(:disabled) {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: rgba(163, 48, 42, 0.28);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .title-screen .ts-save-del:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+
+/* ═════════════════════════ 13. 第九批：世界、剧本、主角名册与自创 ═════════════════════════ */
+:root[data-ui="v2"] .ws-chip {
+  padding: 1px 8px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ws-stars {
+  color: var(--v2-brass-ink);
+}
+/* 没点亮的星也带信息（五颗里的几颗）：用控件描边的颜色，在纸面上过 3:1（WCAG 1.4.11），不用更淡的装饰线色 */
+:root[data-ui="v2"] .ws-stars-off {
+  color: var(--v2-line-control);
+}
+/* 世界、剧本、模板：一件东西一张卡 */
+:root[data-ui="v2"] .ws-world,
+:root[data-ui="v2"] .ws-scenario,
+:root[data-ui="v2"] .ws-template {
+  min-height: 0;
+  gap: 6px;
+  padding: 14px 16px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 400;
+  line-height: var(--v2-lh);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ws-world:hover:not(:disabled),
+:root[data-ui="v2"] .ws-scenario:hover:not(:disabled),
+:root[data-ui="v2"] .ws-template:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-ink-3);
+  transform: none;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ws-world.is-selected,
+:root[data-ui="v2"] .ws-scenario.is-selected,
+:root[data-ui="v2"] .ws-template.is-selected,
+:root[data-ui="v2"] .ws-world.is-selected:hover:not(:disabled),
+:root[data-ui="v2"] .ws-scenario.is-selected:hover:not(:disabled),
+:root[data-ui="v2"] .ws-template.is-selected:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    0 0 0 1px var(--v2-brass-ink),
+    0 0 0 5px rgba(227, 176, 86, 0.35);
+}
+:root[data-ui="v2"] .ws-world:focus-visible,
+:root[data-ui="v2"] .ws-scenario:focus-visible,
+:root[data-ui="v2"] .ws-template:focus-visible,
+:root[data-ui="v2"] .ws-tile:focus-visible,
+:root[data-ui="v2"] .ws-age:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 4px;
+}
+:root[data-ui="v2"] .ws-world-name,
+:root[data-ui="v2"] .ws-scenario-name,
+:root[data-ui="v2"] .ws-template-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ws-template-name {
+  font-size: var(--v2-fs-lg);
+}
+:root[data-ui="v2"] .ws-world-name small {
+  font-size: 12px;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-world-tagline {
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ws-world-desc,
+:root[data-ui="v2"] .ws-scenario-desc,
+:root[data-ui="v2"] .ws-template-line {
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ws-template-home {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ws-world-facts,
+:root[data-ui="v2"] .ws-scenario-facts,
+:root[data-ui="v2"] .ws-template-foot {
+  margin-top: 4px;
+  padding-top: 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ws-template-known {
+  font-size: 12px;
+}
+
+/* 主角名册：一排脸是一条深色的小夜空带；选中的黄铜框 */
+:root[data-ui="v2"] .ws-strip {
+  /* 按脸的多少收宽（X02：两三位时不再是一整条大半空着的深色带） */
+  width: fit-content;
+  max-width: 100%;
+  gap: 6px;
+  padding: 8px;
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-lg);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ws-tile {
+  min-height: 0;
+  gap: 4px;
+  padding: 8px 4px 6px;
+  font-family: var(--v2-font-ui);
+  color: var(--v2-on-night);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ws-tile:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ws-tile.is-selected,
+:root[data-ui="v2"] .ws-tile.is-selected:hover:not(:disabled) {
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass-hi);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ws-tile:focus-visible {
+  outline-color: var(--v2-focus-night);
+}
+:root[data-ui="v2"] .ws-tile-face {
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ws-tile.is-selected .ws-tile-face {
+  border-color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ws-tile-name {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ws-tile-region {
+  font-size: 12px;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .ws-tile-plus {
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-0);
+  border: 1px dashed var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+/* 大头像与小传 */
+:root[data-ui="v2"] .ws-detail {
+  gap: 24px;
+  margin-top: 16px;
+}
+:root[data-ui="v2"] .ws-big {
+  padding: 5px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+/* 年龄段：分段控件（选中的一段白底浮起） */
+:root[data-ui="v2"] .ws-ages {
+  gap: 2px;
+  padding: 3px;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ws-age {
+  min-height: 40px;
+  min-width: 72px;
+  padding: 2px 10px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ws-age:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: rgba(255, 253, 248, 0.6);
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ws-age small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-age.is-on,
+:root[data-ui="v2"] .ws-age.is-on:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ws-age.is-on small {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-3xl);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ws-name-en {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-region {
+  margin-bottom: 12px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-tagline {
+  margin: 0 0 14px;
+  padding: 8px 14px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  line-height: 1.75;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: 0 var(--v2-r-md) var(--v2-r-md) 0;
+}
+:root[data-ui="v2"] .ws-tags {
+  gap: 6px;
+  margin-bottom: 14px;
+}
+:root[data-ui="v2"] .ws-facts {
+  gap: 0 24px;
+}
+:root[data-ui="v2"] .ws-facts > div {
+  grid-template-columns: 4.6em minmax(0, 1fr);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ws-facts dt {
+  font-size: var(--v2-fs-sm);
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-facts dd {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ws-bonds {
+  margin-top: 16px;
+}
+:root[data-ui="v2"] .ws-bonds h5 {
+  margin-bottom: 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-bonds ul {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ws-bonds li {
+  gap: 6px;
+  padding: 3px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ws-bond-name {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ws-bond-kind {
+  font-size: 12px;
+  color: var(--v2-ink-3);
+}
+/* 自创：姓名、性别与生日——表单整体靠左：每一项上面是小标题，下面是控件；性别的两个单选横排，生日的月、日两个下拉横排
+ *（旧样式的 .ts-field 是纵向的 flex：单选竖着排，生日的标题与两个下拉在一列里居中，与靠左的姓名对不齐） */
+:root[data-ui="v2"] .ws-custom {
+  gap: 16px;
+}
+:root[data-ui="v2"] .ws-custom .ts-field {
+  gap: 6px;
+}
+:root[data-ui="v2"] .ws-gender {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 0;
+}
+:root[data-ui="v2"] .ws-gender legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+:root[data-ui="v2"] .ws-birthday {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: 8px;
+  row-gap: 6px;
+}
+:root[data-ui="v2"] .ws-birthday .ts-field-label {
+  flex: 1 0 100%;
+}
+:root[data-ui="v2"] .ws-radio {
+  gap: 8px;
+  min-height: var(--v2-h-sm);
+  /* 两个单选之间的距离写在标签上：fieldset 做弹性容器时 gap 不一定传到它里面那一层匿名的盒子 */
+  padding-right: 16px;
+  font-size: 15px;
+  color: var(--v2-ink);
+  cursor: pointer;
+}
+:root[data-ui="v2"] .ws-radio input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+:root[data-ui="v2"] .ws-birthday select {
+  min-width: 88px;
+  min-height: 36px;
+  padding: 0 8px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  border-radius: var(--v2-r-sm);
+}
+/* 启航：一句“谁、从哪个剧本、哪一年出发”，下面是开关 */
+:root[data-ui="v2"] .ws-confirm .ts-lead {
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ws-check {
+  gap: 10px;
+  margin: 8px 0;
+  padding: 10px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  cursor: pointer;
+}
+:root[data-ui="v2"] .ws-check span {
+  gap: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ws-check small {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ws-check:has(input:checked) {
+  border-color: var(--v2-brass);
+}
+
+/* ═════════════════════════ 14. 补建身世（游戏里的对话框） ═════════════════════════ */
+:root[data-ui="v2"] .cw-retro-backdrop {
+  background: rgba(6, 11, 20, 0.66);
+}
+:root[data-ui="v2"] .cw-retro.ts-window {
+  margin: 0;
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+/* “取消”后面的 Esc 小键帽（触屏上 feedback.css 把它藏起来） */
+:root[data-ui="v2"] .cw-retro .ts-btn .v2-kbd {
+  margin-left: 8px;
+}
+/* 底栏一行：左边“取消”，右边“上一步 / 下一步”（这一行要撑满底栏，导航才靠得到右边） */
+:root[data-ui="v2"] .cw-retro .ts-launch-row {
+  flex: 1 1 auto;
+}
+
+/* ═════════════════════════ 15. 开机画面 ═════════════════════════ */
+/* 深海蓝底上一层极淡的经纬网格（海图），顶上一团稍亮的蓝 */
+:root[data-ui="v2"] .app.boot {
+  color: var(--v2-on-night);
+  background-color: var(--v2-night-0);
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(35, 56, 90, 0.7), transparent 70%), linear-gradient(rgba(226, 190, 120, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(226, 190, 120, 0.045) 1px, transparent 1px);
+  background-size:
+    auto,
+    64px 64px,
+    64px 64px;
+}
+:root[data-ui="v2"] .app.boot h1 {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--v2-on-night);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .boot-tagline {
+  font-size: var(--v2-fs-sm);
+  letter-spacing: 0.4em;
+  color: var(--v2-on-night-2);
+}
+/* 载入中：字下面一条细细的黄铜光，来回扫（减少动态效果时静止） */
+:root[data-ui="v2"] .boot-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  font-size: var(--v2-fs-md);
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-hi);
+  animation: none;
+}
+:root[data-ui="v2"] .boot-loading::after {
+  content: "";
+  width: 160px;
+  height: 3px;
+  background:
+    linear-gradient(90deg, transparent, var(--v2-brass-hi), transparent) 0 0 / 40% 100% no-repeat,
+    var(--v2-night-3);
+  border-radius: var(--v2-r-pill);
+  animation: v2-boot-sweep 1.4s var(--v2-ease) infinite;
+}
+@keyframes v2-boot-sweep {
+  from {
+    background-position:
+      -70% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      170% 0,
+      0 0;
+  }
+}
+/* ═════════════════════════ 16. 较窄的窗口与手机 ═════════════════════════ */
+/* 单栏（宽 ≤ 1000）：船长卡不吸顶 */
+@media (max-width: 1000px) {
+  :root[data-ui="v2"] .title-menu {
+    min-width: 0;
+  }
+  :root[data-ui="v2"] .title-menu-item {
+    justify-content: center;
+    padding: 0 12px;
+  }
+}
+/* 船长卡放到上面横排（≤ 640，与 v1 相同的断点）：头像在左，名字、生辰在右 */
+@media (max-width: 640px) {
+  :root[data-ui="v2"] .cw-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  :root[data-ui="v2"] .cw-card {
+    column-gap: 12px;
+    padding: 12px;
+  }
+  :root[data-ui="v2"] .cw-card-portrait {
+    padding: 3px;
+  }
+  /* 开局向导与补建身世的船长卡（v2-card-fold）：缺省收成一行——小头像、名字、生辰与星座，右边一个“详情”键；
+   * 这一步要选的、要分点的留在第一屏（原来整张卡连同页签与雷达图占掉第一屏的大半，按组分配时一行 − + 都看不到）。
+   * 点“详情”展开整张卡（属性、雷达图、评价、奇才之法），再点收起。游戏里顶栏的悬停卡不收 */
+  :root[data-ui="v2"] .cw-card.v2-card-fold {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    row-gap: 2px;
+    padding: 10px;
+  }
+  :root[data-ui="v2"] .v2-card-fold > .cw-card-portrait {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    align-self: start;
+  }
+  /* 头像右边：上一行是名字（占到卡片右沿），下一行是生辰与星座、“详情”键在它右边——
+   * 名字与“详情”不挤在同一行，“某某某·某某 船长”不必折成两行 */
+  :root[data-ui="v2"] .v2-card-fold > .cw-card-name {
+    grid-row: 1;
+    grid-column: 2 / -1;
+    margin: 0;
+  }
+  :root[data-ui="v2"] .v2-card-fold > .cw-card-born {
+    grid-row: 2;
+    grid-column: 2;
+    margin: 0;
+  }
+  /* 名字与生辰靠左（整张卡时居中在头像下面；收成一行时跟在头像右边）；名字只在空格处折行（“某某 / 船长”，不拆成“船 / 长”） */
+  :root[data-ui="v2"] .v2-card-fold > .cw-card-name {
+    align-self: end;
+    font-size: 15px;
+    text-align: left;
+    white-space: normal;
+    word-break: keep-all;
+  }
+  :root[data-ui="v2"] .v2-card-fold > .cw-card-born {
+    align-self: center;
+    justify-content: flex-start;
+  }
+  :root[data-ui="v2"] .v2-card-fold > .v2-card-toggle {
+    grid-row: 2;
+    grid-column: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: var(--v2-h-touch);
+    min-height: var(--v2-h-touch);
+    padding: 0 12px;
+    font-size: var(--v2-fs-sm);
+    font-weight: 600;
+    color: var(--v2-ink-2);
+    background: var(--v2-paper-2);
+    border: 1px solid var(--v2-line-strong);
+    border-radius: var(--v2-r-sm);
+    box-shadow: none;
+  }
+  /* 小箭头：收着朝下，展开朝上 */
+  :root[data-ui="v2"] .v2-card-toggle::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+  }
+  :root[data-ui="v2"] .v2-card-fold.is-open > .v2-card-toggle::after {
+    transform: translateY(2px) rotate(-135deg);
+  }
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-portrait img,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-portrait canvas,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-portrait .portrait-art,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-portrait .portrait-fallback {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-bg,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-attrs,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-groups,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-ratings,
+  :root[data-ui="v2"] .v2-card-fold:not(.is-open) > .cw-card-methods {
+    display: none;
+  }
+  :root[data-ui="v2"] .v2-card-fold.is-open > .cw-card-attrs,
+  :root[data-ui="v2"] .v2-card-fold.is-open > .cw-card-groups,
+  :root[data-ui="v2"] .v2-card-fold.is-open > .cw-card-ratings,
+  :root[data-ui="v2"] .v2-card-fold.is-open > .cw-card-methods {
+    grid-column: 1 / -1;
+  }
+  /* 推荐角色的卡片：头像 96 px 在左、名字与一句话在右，开局事实整宽排在下面 */
+  :root[data-ui="v2"] .ts-cards-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .ts-card.is-recommended {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .ts-hero-art {
+    grid-row: 1 / span 3;
+    align-self: start;
+    margin: 10px 0 0 10px;
+    padding: 3px;
+  }
+  :root[data-ui="v2"] .ts-card.is-recommended .ts-card-body > * {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  :root[data-ui="v2"] .ts-card.is-recommended .ts-card-body > .ts-facts {
+    grid-column: 1 / -1;
+  }
+  :root[data-ui="v2"] .ts-card-badge {
+    top: 14px;
+    left: 14px;
+  }
+  :root[data-ui="v2"] .ts-hero-name {
+    font-size: var(--v2-fs-xl);
+  }
+  /* 汇总：标签与“改……”同一行（标签在左、按钮在右），值整宽排在下面——不再是“标签 / 值 + 按钮”中间空出一大截 */
+  :root[data-ui="v2"] .cw-summary-row {
+    row-gap: 2px;
+    align-items: center;
+  }
+  :root[data-ui="v2"] .cw-summary dt {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  :root[data-ui="v2"] .cw-summary-row > .cw-edit {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  :root[data-ui="v2"] .cw-summary dd {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  /* 有“改……”的一行：按钮本身 44 px 高，上边距收一点，标签不显得飘 */
+  :root[data-ui="v2"] .cw-summary-row:has(> .cw-edit) {
+    padding-top: 2px;
+  }
+}
+@media (max-width: 719px), (max-height: 499px) {
+  /* 正文 15 px */
+  :root[data-ui="v2"] .title-screen .ts-window,
+  :root[data-ui="v2"] .cw-retro.ts-window {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .title-screen .ts-lead,
+  :root[data-ui="v2"] .ts-card-desc,
+  :root[data-ui="v2"] .ts-hero-tagline,
+  :root[data-ui="v2"] .cw-summary dd,
+  :root[data-ui="v2"] .ws-world-desc,
+  :root[data-ui="v2"] .ws-scenario-desc,
+  :root[data-ui="v2"] .ws-template-line,
+  :root[data-ui="v2"] .ws-facts dd,
+  :root[data-ui="v2"] .ts-save-captain {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ts-facts,
+  :root[data-ui="v2"] .cw-attr-desc,
+  :root[data-ui="v2"] .cw-attr-fx,
+  :root[data-ui="v2"] .ts-save-detail,
+  :root[data-ui="v2"] .cw-info-opt small {
+    font-size: 14px;
+  }
+  /* 标题收紧：第一屏看得到菜单 */
+  :root[data-ui="v2"] .title-name-en {
+    font-size: 40px;
+  }
+  :root[data-ui="v2"] .title-name-zh {
+    font-size: 16px;
+    gap: 10px;
+  }
+  :root[data-ui="v2"] .title-name-zh::before,
+  :root[data-ui="v2"] .title-name-zh::after {
+    width: 28px;
+  }
+  :root[data-ui="v2"] .title-tagline {
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  :root[data-ui="v2"] .title-era-year {
+    font-size: 14px;
+  }
+  :root[data-ui="v2"] .title-menu {
+    margin-top: 6px;
+    padding: 4px;
+  }
+  :root[data-ui="v2"] .title-menu-item {
+    min-height: var(--v2-h-touch);
+    padding: 0 8px;
+    font-size: var(--v2-fs-lg);
+    letter-spacing: 0.14em;
+  }
+  :root[data-ui="v2"] .title-menu-item.is-active::before {
+    top: auto;
+    right: 30%;
+    bottom: 5px;
+    left: 30%;
+    width: auto;
+    height: 3px;
+  }
+  /* 语言、音乐：触屏 44 px */
+  :root[data-ui="v2"] .title-lang,
+  :root[data-ui="v2"] .title-controls .music-toggle {
+    min-width: var(--v2-h-touch);
+    min-height: var(--v2-h-touch);
+  }
+  /* 语言下拉：下拉框本身就是 44 px 的点按目标（外面那一圈收掉边框与内边距，深色的幽灵按钮样子画在下拉框上） */
+  :root[data-ui="v2"] .title-lang {
+    padding: 0;
+    background: transparent;
+    border: 0;
+  }
+  :root[data-ui="v2"] .title-lang select {
+    min-height: var(--v2-h-touch);
+    padding: 0 10px;
+    font-size: 16px;
+    background: rgba(17, 31, 49, 0.94);
+    border-radius: var(--v2-r-sm);
+  }
+  /* 船长卡的分组页签（资质 / 本领 / 品行）、按组分配的页签、读档空状态的“开始新的航程”：触屏 44 px */
+  :root[data-ui="v2"] .cw-card .cw-card-tab,
+  :root[data-ui="v2"] .cw-group-tab,
+  :root[data-ui="v2"] .title-screen .v2-empty-action {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .cw-card .cw-card-tab {
+    font-size: var(--v2-fs-sm);
+  }
+  :root[data-ui="v2"] .title-screen .v2-empty-action {
+    padding: 0 20px;
+    font-size: var(--v2-fs-lg);
+  }
+  /* 读档页下面只留 16 px。
+   * 带底栏的窗口贴着屏幕下沿（竖屏时撑满滚动区，见下面“手机竖屏”一节）：底边不画、下角不圆；横屏两栏另有一节改回完整的框 */
+  :root[data-ui="v2"] .title-screen .ts-window {
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+  :root[data-ui="v2"] .title-screen .ts-window:has(.ts-launch) {
+    margin-bottom: 0;
+    border-bottom-width: 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+  }
+  :root[data-ui="v2"] .title-screen .ts-plaque {
+    min-height: 52px;
+    padding: 4px 8px 4px 16px;
+  }
+  :root[data-ui="v2"] .title-screen .ts-body {
+    padding: 14px 14px 16px;
+  }
+  :root[data-ui="v2"] .title-screen .cw-stepper {
+    padding: 0 8px 6px;
+  }
+  /* 手机：步骤名只给读屏（下面的小标题就是这一步的名字），各步平分整行，圆与圆之间一道细线连起来 */
+  :root[data-ui="v2"] .cw-stepper ol {
+    gap: 0;
+  }
+  :root[data-ui="v2"] .cw-stepper li,
+  :root[data-ui="v2"] .cw-stepper li.is-current {
+    flex: 1 1 0;
+  }
+  :root[data-ui="v2"] .cw-stepper li + li::before {
+    left: calc(-50% + 17px);
+    width: calc(100% - 34px);
+  }
+  :root[data-ui="v2"] .cw-stepper-btn {
+    justify-content: center;
+    min-height: var(--v2-h-touch);
+    padding: 0 2px;
+  }
+  :root[data-ui="v2"] .cw-stepper-n {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+  /* 底栏贴着屏幕下沿、整宽：没有“上一步”时主按钮占满；“开始新游戏”不折行 */
+  :root[data-ui="v2"] .title-screen .ts-launch {
+    gap: 6px;
+    padding: 10px 12px calc(10px + var(--safe-bottom));
+    background: var(--v2-paper-1);
+    background-image: none;
+    border-top: 1px solid var(--v2-line);
+    border-radius: 0;
+    box-shadow: 0 -10px 18px -10px rgba(11, 21, 34, 0.35);
+  }
+  :root[data-ui="v2"] .title-screen .ts-launch-row {
+    gap: 8px;
+  }
+  :root[data-ui="v2"] .title-screen .ts-launch .cw-nav {
+    flex: 1 1 auto;
+    margin-left: 0;
+  }
+  :root[data-ui="v2"] .title-screen .ts-launch .cw-nav .ts-btn {
+    flex: 0 0 auto;
+    min-width: 96px;
+    min-height: 48px;
+    font-size: var(--v2-fs-lg);
+  }
+  :root[data-ui="v2"] .title-screen .ts-launch .cw-nav .ts-btn-next,
+  :root[data-ui="v2"] .title-screen .ts-launch .cw-nav .ts-btn-go {
+    flex: 1 1 auto;
+    letter-spacing: 0.06em;
+  }
+  /* “某某船长将从某港启航”只在启航一步写（其余各步底栏只放按钮，少占一行） */
+  :root[data-ui="v2"] .title-screen .ts-form:not(:has(.ts-btn-go)) .ts-voyage-line {
+    display: none;
+  }
+  :root[data-ui="v2"] .title-screen .ts-voyage-line {
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .title-screen .ts-seed .ts-input {
+    max-width: none;
+    font-size: 16px;
+  }
+  /* 触屏：选项的小按钮与 − + 至少 44 px（游戏里顶栏悬停卡的“补建身世”也是） */
+  :root[data-ui="v2"] .title-screen .ts-btn,
+  :root[data-ui="v2"] .cw-retro .ts-btn,
+  :root[data-ui="v2"] .title-screen .cw-step-btn,
+  :root[data-ui="v2"] .cw-retro .cw-step-btn,
+  :root[data-ui="v2"] .hud .hud-card-pop button.ts-btn {
+    min-width: var(--v2-h-touch);
+    min-height: var(--v2-h-touch);
+  }
+  /* 属性的行：44 px 的 − + 放不进名字那一行——名字与说明、− 格子 读数 +、效果各占一行（仍是细线分隔的列表行） */
+  :root[data-ui="v2"] .cw-attr {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "ctrl"
+      "fx";
+    row-gap: 4px;
+    padding: 8px 2px 9px;
+  }
+  :root[data-ui="v2"] .cw-attr-ctrl {
+    justify-content: flex-start;
+  }
+  /* 自创主角的性别：整行都是点按目标，44 px 高 */
+  :root[data-ui="v2"] .ws-radio {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .ws-radio input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+  :root[data-ui="v2"] .title-screen .ts-input,
+  :root[data-ui="v2"] .cw-retro .ts-input {
+    min-height: var(--v2-h-touch);
+    font-size: 16px;
+  }
+  :root[data-ui="v2"] .ts-looks {
+    grid-template-columns: repeat(auto-fill, 52px);
+    justify-content: space-between;
+  }
+  :root[data-ui="v2"] .ts-look {
+    width: 52px;
+    height: 52px;
+  }
+  :root[data-ui="v2"] .ts-look .portrait-art,
+  :root[data-ui="v2"] .ts-look .portrait-fallback {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  /* 读档：删除键在行尾，触屏 44 px */
+  :root[data-ui="v2"] .title-screen .ts-save-del {
+    min-height: var(--v2-h-touch);
+    padding: 0 10px;
+  }
+  :root[data-ui="v2"] .ts-save-face {
+    width: 52px;
+    height: 52px;
+  }
+  /* 行尾的“›”在手机上省掉：整张卡片一看就能点，把宽度让给存档的说明（删除键还在行尾） */
+  :root[data-ui="v2"] .ts-save-go {
+    display: none;
+  }
+  :root[data-ui="v2"] .title-screen .ts-save {
+    gap: 12px;
+    padding: 8px 10px 8px 8px;
+  }
+  /* 名册：一排脸横着滑，右边渐隐，提示还有 */
+  :root[data-ui="v2"] .ws-strip {
+    padding: 6px;
+    -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent);
+    mask-image: linear-gradient(90deg, #000 86%, transparent);
+  }
+  :root[data-ui="v2"] .ws-ages {
+    align-self: stretch;
+  }
+  :root[data-ui="v2"] .ws-age {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .ws-check {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .ws-birthday select {
+    min-height: var(--v2-h-touch);
+    font-size: 16px;
+  }
+  /* 汇总里的“改……”：手指点得到 */
+  :root[data-ui="v2"] .cw-edit {
+    min-height: var(--v2-h-touch);
+    padding: 0 8px;
+  }
+  /* 补建身世：从底部升起的整宽抽屉 */
+  :root[data-ui="v2"] .cw-retro-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .cw-retro.ts-window {
+    width: 100%;
+    max-height: calc(var(--vh100) - 24px - var(--safe-top));
+    border-width: 1px 0 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+  }
+  :root[data-ui="v2"] .cw-retro .ts-launch {
+    padding: 10px 12px calc(10px + var(--safe-bottom));
+    border-radius: 0;
+  }
+  /* 底栏：“取消”与“上一步”收着，主按钮占满剩下的宽度（同开局向导） */
+  :root[data-ui="v2"] .cw-retro .ts-launch-row {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  :root[data-ui="v2"] .cw-retro .ts-launch .cw-nav {
+    flex: 1 1 auto;
+  }
+  :root[data-ui="v2"] .cw-retro .ts-launch .ts-btn {
+    flex: 0 0 auto;
+    min-height: 48px;
+    font-size: var(--v2-fs-lg);
+  }
+  :root[data-ui="v2"] .cw-retro .ts-launch .cw-nav .ts-btn-next,
+  :root[data-ui="v2"] .cw-retro .ts-launch .cw-nav .ts-btn-go {
+    flex: 1 1 auto;
+  }
+  /* 船长卡的雷达图：手机上收小一点，别把要分点的属性挤出第一屏 */
+  :root[data-ui="v2"] .cw-card .cw-radar {
+    max-width: 180px;
+  }
+}
+/* 手机竖屏（单栏）：带底栏的窗口撑满滚动区剩下的高度——内容少的一步（第九批名册收起左栏后的模板、启航……）
+ * 窗口也一直伸到屏幕下沿，底栏真的贴底；原来窗口停在半屏，下沿没有边框、是方角，浮在像素海上像被截断。
+ * 滚动区（.title-ui）底部没有内边距：最后一行 minmax(内容高, 1fr)，内容多时照旧按内容高、整页滚动 */
+@media (max-width: 719px) {
+  :root[data-ui="v2"] .title-ui:has(> .ts-window .ts-launch) {
+    grid-template-rows: max-content minmax(max-content, 1fr);
+  }
+  :root[data-ui="v2"] .title-ui[data-wide]:has(> .ts-window .ts-launch) {
+    grid-template-rows: minmax(max-content, 1fr);
+  }
+  :root[data-ui="v2"] .title-screen .ts-window:has(.ts-launch) {
+    align-self: stretch;
+  }
+}
+/* 手机横屏（矮、两栏）：窗口不碰屏幕下沿（下面留着滚动区的内边距），底栏在窗口里、不贴底——
+ * 窗口照常是完整的圆角细框，底栏的下角跟着窗口圆，也不要向上的投影 */
+@media (max-height: 499px) and (min-width: 720px) {
+  :root[data-ui="v2"] .title-screen .ts-window:has(.ts-launch) {
+    border-bottom-width: 1px;
+    border-radius: var(--v2-r-lg);
+  }
+  :root[data-ui="v2"] .title-screen .ts-launch {
+    border-radius: 0 0 11px 11px;
+    box-shadow: none;
+  }
+}
+
+/* ═════════════════════════ 17. 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .cw-retro.ts-window,
+  :root[data-ui="v2"] .boot-loading::after {
+    animation: none;
+  }
+  :root[data-ui="v2"] .ts-card,
+  :root[data-ui="v2"] .ts-look,
+  :root[data-ui="v2"] .cw-option {
+    transition: none;
+  }
+}
+
+/* FE2：手机宽度下“继续”的小字（哪一局）单独一行，不跟着菜单的大字距撑开，超长打省略号，不压别的键 */
+@media (max-width: 719px) {
+  /* 经典样式给“继续”写了 flex-wrap: wrap，与这里的竖排一起会在固定高度里折成两列（小字跑到右上角）：不折 */
+  :root[data-ui="v2"] .title-menu-continue {
+    flex-wrap: nowrap;
+    align-items: stretch;
+    min-width: 0;
+    height: auto;
+    letter-spacing: 0.1em;
+  }
+  :root[data-ui="v2"] .title-menu-continue > span {
+    text-align: center;
+  }
+  :root[data-ui="v2"] .title-menu-note {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0;
+    line-height: 1.3;
+  }
+}

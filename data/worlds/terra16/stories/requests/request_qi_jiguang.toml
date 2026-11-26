@@ -1,0 +1,301 @@
+# C13d 人物的请托：烽堠与兵书（故事 2.0，A5 / E37 契约）
+# 类型：mixed（复合），6 章：offer（校场报价）→ deliver（栈房验货）→ survey（澳门沿岸数墩台）→ report / report_soldier（总兵府听回话；survey 里写了老兵的走 report_soldier）→ manual（兵书的一页）；终点 done / failed。
+# 人物：戚继光（qi_jiguang，号南塘，1528 年生，cast 里月日不详，生年按 1528-01-01 记；1588 年卒）。1583—84 年在广州任总兵。
+# 报价：T 当面。广州总兵府的校场，交谈话题 ask:request_qi_jiguang 启动；求见门槛（名声 40 或明声望 20）由 cast 的 audience 判定，本文件不写。offer 章不写 at。
+# 窗口：offer 1583-03-01 至 1584-12-31（cast 日程里他在广州的两年）；deliver 限期 150 天，survey 限期 90 天，report 与 report_soldier 限期 1585-03-31；manual 不设期限（玩家就在总兵府里，接着上一章发生）。
+# 依据·史实：1582 年张居正去世，1583 年戚继光调任广东总兵；他在广东把《纪效新书》删改成十四卷本（1584 年前后）。琉球的硫磺本就多从进贡船上来（那霸），宁波出铁器。
+#   戚继光在北边（蓟镇）与浙闽的兵书、鸳鸯阵、敌台，见 cast 的 persona；本请托只写他在广州修沿海烽堠、改兵书这两件小事。
+#   正文不写他被调离的缘由，也不写朝中的旧账与人情往来（cast 的 secret），只让他在 offer 里咳两声。
+# 依据·原创：香山沿岸塌了的墩台、渔民供的小妈祖、两年没领饷的老兵吴长贵（原创人名，不冒用史料）、军需官、书吏、烧硫磺看火色的验货法、
+#   “上风下风”替“左右翼”、“打锣”替“击鼓”这两处水手的叫法。澳门城墙上看船的葡萄牙人只作远景。
+# 待核：无（正文一律用传闻口吻，没有引用原文）。
+# 商品：硫磺 sulfur 二十担 + 铁器 ironware 十件，运到广州（货款在 deliver 章付）。不运火器；jixiao_ms 是保留物品，不发。
+# 读的旗标：c13_main_lin_wandeng（offer 的变体；主线第一章设，未设时不出现）；自己设的 rough 在 report 的变体里读；clean 与 soldier 只设不读。
+# 写的旗标：c13_request_qi_jiguang_accepted / declined / clean / rough / soldier / late / done / partial。每条轨道只设一面终局旗标。
+# 不设 c7_ 旗标；不写 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 依赖：guangzhou、macao 是现有港口，不需要 B10b 改名；report 的 person 目标跟着戚继光的日程走（他 1585 年不在广州，所以 report 的限期止于 1585-03-31，到期走 timeout）。
+# 缺省走向：不接则 failed；offer 到期 failed（不写见闻）；deliver 迟到 150 天 failed（好感 -3，来信）；survey 迟到 90 天 failed（好感 -3，来信）；report 迟到 failed（好感 -3）。
+# 写作注：引擎的 fail 分支没有回复字段，检定失败时玩家看到的就是 fail 分支的见闻，所以三处失败的经过都写在 fail 的 news 里。
+# 与 brief 的不同：①report 章的标题改为“灯下的纸”（走“只记塌了的”的玩家只带回两张）；②brief 让“替老兵求饷”在同一章里用旗标 soldier 把门，
+#   审计的机器人走不到那面旗标，会报“准备后条件仍不满足”，所以改成 survey 里写了老兵的直接走 report_soldier 章，那一章不用旗标挡选项（旗标 soldier 仍照设，作记录）；
+#   ③report（没写老兵）里补了第二个选项 mazu，免得一章只有一个选项；④survey 超时也给一封来信（决定文件要求每个超时都有信）。
+# 回忆插画清单：
+#   mem-request_qi_jiguang-manual：灯下的总兵案头，一页墨迹未干的兵书被划掉大半，旁边压着几张记烽堠的纸。
+
+[[tracks]]
+key = "request_qi_jiguang"
+name = "烽堠与兵书"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["qi_jiguang"]
+
+# 一、报价：1583-03 至 1584-12，广州总兵府的校场。老将军刚操完一阵，要修沿海的烽堠。
+[[tracks.chapters]]
+key = "offer"
+title = "满身是土的总兵"
+text = "广州总兵府的校场上刚操完一阵，沙土还没落尽。戚继光从队列那头走过来，战袍下摆全是泥，咳了两声，像把一句没说的话咽了回去。“你这一路，走了几天？”你报了日子，他点点头，打量你，像打量一杆没校过的秤。他要修沿香山海岸的烽堠：琉球的硫磺二十担，做号火；宁波的铁器十件，换墩台的门，补守墩人的锅。“账要清。”他说，“以次充好的，在我营里是要掉脑袋的。”"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1583, 3, 1], to = [1584, 12, 31] },
+  { kind = "alive", person = "qi_jiguang", value = true },
+]
+objectives = [{ kind = "person", person = "qi_jiguang", text = "在港里找到他" }]
+cast = ["qi_jiguang"]
+speaker = "qi_jiguang"
+mood = "tense"
+deadline = [1584, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "wandeng"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng", value = true }]
+text = "广州总兵府的校场上刚操完一阵，沙土还没落尽。戚继光从队列那头走过来，走到半路停住，眯起眼睛把你看了一遍。“月港的。”他说，“福建那几年，码头上见过。”他咳了两声，“又见面了，还活着就好。”话头一转，他要修沿香山海岸的烽堠：琉球的硫磺二十担，做号火；宁波的铁器十件，换墩台的门，补守墩人的锅。“账要清。以次充好的，在我营里是要掉脑袋的。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：硫磺二十担、铁器十件，运来广州"
+next = "deliver"
+reply = "他叫书吏把单子抄给你。单子上连铁锅要几口、硫磺要几成干都写了，末尾空着一格，留给“实收”。他又补一句：“船到了先报，别等我来问。”"
+effects = [{ kind = "affinity", person = "qi_jiguang", value = 2 }, { kind = "flag", flag = "c13_request_qi_jiguang_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，顺口问他为什么不走官府采买"
+next = "deliver"
+reply = "“官府的硫磺，一半是土。”他说得很平，“去年点号火，三座墩台没点着，守墩的人把火媒吹到脸黑，也只冒烟。”他又咳了一声，不往下讲，只催书吏抄单子。"
+effects = [{ kind = "affinity", person = "qi_jiguang", value = 2 }, { kind = "flag", flag = "c13_request_qi_jiguang_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这趟你跑不开"
+next = "failed"
+reply = "他点点头，转身去看下一阵操练，没再看你。“船长不得空，我就找别的船。”校场那头，鼓又响了，队列重新排开，脚步声把他的背影盖住了。"
+effects = [{ kind = "flag", flag = "c13_request_qi_jiguang_declined" }]
+
+# 二、交货：栈房里验货。先烧后秤，账上差了半担。
+[[tracks.chapters]]
+key = "deliver"
+title = "烧一撮硫磺"
+text = "军需官在栈房门口摆了一块铁片，捏起一撮你运来的硫磺放上去点火，不看你，只看火色，又凑近闻烟味。“总兵有话在先，先烧后秤，有一样不对，整批退回。”硫磺过了关，十件铁器一件件上秤，秤杆翘起来又压下去。军需官翻到账簿末页，手指停在一行字上：“船长报的是二十担，秤上是十九担半。”"
+when = [{ kind = "alive", person = "qi_jiguang", value = true }]
+objectives = [
+  { kind = "goods", good = "sulfur", qty = 20, at = "guangzhou", text = "二十担硫磺运到广州" },
+  { kind = "goods", good = "ironware", qty = 10, at = "guangzhou", text = "十件铁器运到广州" },
+]
+at = "guangzhou"
+speaker = "captain"
+mood = "tense"
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_qi_jiguang_late" },
+  { kind = "affinity", person = "qi_jiguang", value = -3 },
+  { kind = "letter", person = "qi_jiguang", text = "书吏代总兵笔：硫磺已另从官仓调了，二十担里有几担是土，总兵没说。总兵只问一句：你是不是遇上了风？下回开船，先差人报个信。" },
+]
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "把那霸的过秤单一笔一笔算给他看"
+next = "survey"
+reply = "你从那霸的过秤单算起，算到装船，算到入舱，最后差的半担，是舱里受潮蒸掉的水。军需官把账簿合上，没话说了。门外烧过硫磺的铁片还烫着，他拿脚尖把它拨到一边。"
+check = { attr = "stewardship", base = 20, per = 7 }
+news = "广州总兵府的栈房里，军需官烧完硫磺要查账，船长把那霸的过秤单从头算起，差的半担算成了舱里蒸掉的水。"
+effects = [{ kind = "cash", value = 1950 }, { kind = "affinity", person = "qi_jiguang", value = 3 }, { kind = "flag", flag = "c13_request_qi_jiguang_clean" }]
+fail = { next = "survey", effects = [{ kind = "cash", value = 1950 }, { kind = "affinity", person = "qi_jiguang", value = -2 }], news = "广州总兵府的栈房里，军需官烧完硫磺翻账，差的半担船长说不清，军需官提笔在旁边记了“待查”两个字。" }
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "让他自己点，你只签字"
+next = "survey"
+reply = "他点了三遍，一遍比一遍慢，在账上写下“实收”，把差的半担记成损耗。写完抬头看你一眼，什么也没问，只把笔在砚边刮了刮。"
+news = "广州总兵府的栈房里，军需官把一船硫磺和铁器点了三遍，在账上写了“实收”，差的半担记作损耗。"
+effects = [{ kind = "cash", value = 1950 }]
+
+# 三、勘察：沿香山往澳门，数沿岸的墩台。
+[[tracks.chapters]]
+key = "survey"
+title = "塌了的墩台"
+text = "沿香山的海岸往澳门走，山头上的墩台你一座座数过去：有的塌了半边，砖缝里长了草；有的被渔民占了，台上供着一尊巴掌大的妈祖，香灰积了一指厚。最靠近澳门的一座，还有个白发老兵守着。“两年没领饷了。”他说，“台上的柴，是我自己砍的。”他指指台顶码得整整齐齐的一垛。远处澳门的城墙上，有个戴铁盔的人扶着垛口，一直朝你的船这边望。"
+when = [{ kind = "alive", person = "qi_jiguang", value = true }]
+objectives = [{ kind = "at", at = "macao", text = "去澳门沿岸看墩台" }]
+at = "macao"
+speaker = "captain"
+mood = "sad"
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_qi_jiguang_late" },
+  { kind = "affinity", person = "qi_jiguang", value = -3 },
+  { kind = "letter", person = "qi_jiguang", text = "书吏代总兵笔：香山的墩台，总兵已差了自己的哨探去数。硫磺与铁器的账早已结清，不必再提。总兵说，他修墩台，不等船，也不等人。" },
+]
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "一座一座记下，连塌了几块砖都写"
+next = "report"
+reply = "你记满了三张纸：一共几座，塌在哪一面，离水几里，台顶还剩几块砖。最后一座你是爬上去数的，砖缝里躲着一只寄居蟹，吓了你一跳。"
+check = { attr = "numeracy", base = 35, per = 6 }
+news = "香山沿岸的海边，有个船长一座座数着烽堠走到澳门，城墙上戴铁盔的葡萄牙人扶着垛口望了他半天。"
+effects = [{ kind = "affinity", person = "qi_jiguang", value = 3 }]
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_qi_jiguang_rough" }], news = "澳门外的山头上，一个船长数墩台数到一半就乱了，回头才发现漏记了两座，只好照记得的写。" }
+
+[[tracks.chapters.choices]]
+key = "soldier"
+text = "把那个老兵的事也写进去"
+next = "report_soldier"
+reply = "老兵听说你要写他，挺直了背，报出自己的名字和营头：吴长贵，香山哨，第三队。你一个字一个字写下来，他一直盯着你的笔尖。"
+news = "澳门外最靠海的烽堠上，一个两年没领饷的白发老兵，听说有人要把他写进纸里，挺直了背报名字。"
+effects = [{ kind = "affinity", person = "qi_jiguang", value = 3 }, { kind = "flag", flag = "c13_request_qi_jiguang_soldier" }]
+
+[[tracks.chapters.choices]]
+key = "brief"
+text = "只记塌了的"
+next = "report"
+reply = "两张纸，干干净净：塌了几座，哪一面朝海。你收起笔，老兵一直站在台边，没问你有没有写他，只把那垛柴又码齐了一遍。"
+news = "澳门外的海岸上，有个船长只记了塌了的墩台，守墩的白发老兵站在台边，看着他收起笔走了。"
+
+# 四、回话：总兵府的偏厅，灯下看你记的纸。
+[[tracks.chapters]]
+key = "report"
+title = "灯下的纸"
+text = "总兵府的偏厅里只点了一盏灯，案角搁着一只凉透的茶碗。戚继光把你记的纸摊在案上，看一行，用指头点一下，点到哪里，嘴里就念一个数：几座，塌哪面，离水几里。看到那座供着妈祖的墩台，他哼了一声：“守墩的人跑了，渔民倒替我守着。”他抬起头，等你把没写在纸上的话说完。"
+when = [{ kind = "alive", person = "qi_jiguang", value = true }]
+objectives = [{ kind = "person", person = "qi_jiguang", text = "回总兵府见他" }]
+cast = ["qi_jiguang"]
+at = "guangzhou"
+speaker = "qi_jiguang"
+mood = "tense"
+deadline = [1585, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_qi_jiguang_late" },
+  { kind = "affinity", person = "qi_jiguang", value = -3 },
+]
+
+[[tracks.chapters.variants]]
+key = "rough"
+when = [{ kind = "flag", flag = "c13_request_qi_jiguang_rough", value = true }]
+text = "总兵府的偏厅里只点了一盏灯，案角搁着一只凉透的茶碗。戚继光把你记的纸摊在案上，看一行，用指头点一下，点到第七座，指头停了。“山头上我自己数过，九座。”他抬起头，声音平得像在念军令，“你漏了两座。”再往下，他看到那座供着妈祖的墩台，哼了一声：“守墩的人跑了，渔民倒替我守着。”他把纸推回你面前，等你说话。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照实说，不添不减"
+next = "manual"
+reply = "他把纸叠整齐，压在砚台下：“明日派人去，塌了的先补。”他又问：“离水几里？”你答了，他点点头，像是在心里又算了一遍。"
+news = "广州总兵府的偏厅里，老将军听船长回完话，说明日就派人去修香山塌了的墩台，一座也不落下。"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "qi_jiguang", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "mazu"
+text = "替渔民说一句：台上那位，别拆"
+next = "manual"
+reply = "他沉默了一息：“拆它做什么。”他提笔在纸角添了几个字，是给工匠的：墩台补好，神龛原样留着，只把香炉挪到背风的一面。"
+news = "广州总兵府的偏厅里，老将军听船长提起香山渔民供的小妈祖，批了一条：墩台补好，神龛原样留着。"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "qi_jiguang", value = 3 }]
+
+# 四·二、回话（记了老兵）：同一盏灯，他的指头停在纸上的一个名字上。
+[[tracks.chapters]]
+key = "report_soldier"
+title = "纸上的名字"
+text = "总兵府的偏厅里只点了一盏灯，案角搁着一只凉透的茶碗。戚继光把你记的纸摊在案上，看一行，用指头点一下，嘴里念着数。看到那座供着妈祖的墩台，他哼了一声：“守墩的人跑了，渔民倒替我守着。”再往下翻，他的指头停住了。纸上有个名字：吴长贵，香山哨，第三队。“两年？”他问。他没抬头，指头还按在那个名字上。"
+when = [{ kind = "alive", person = "qi_jiguang", value = true }]
+objectives = [{ kind = "person", person = "qi_jiguang", text = "回总兵府见他" }]
+cast = ["qi_jiguang"]
+at = "guangzhou"
+speaker = "qi_jiguang"
+mood = "tense"
+deadline = [1585, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_qi_jiguang_late" },
+  { kind = "affinity", person = "qi_jiguang", value = -3 },
+]
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "只回纸上记的，不多说"
+next = "manual"
+reply = "他把纸叠整齐，压在砚台下：“明日派人去，塌了的先补。”那个名字叠在最里面，他没再提。"
+news = "广州总兵府的偏厅里，老将军听船长回完话，说明日就派人去修香山的墩台，只是没提守墩老兵的饷。"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "qi_jiguang", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "plead"
+text = "替那个老兵求一句饷"
+next = "manual"
+reply = "他叫来书吏，当场写了一道补饷的条子，用了印，又添一句：“守墩的柴，往后由营里出。”书吏问补几个月，他说：“两年，一个月不少。”"
+news = "广州总兵府里，老将军当场给香山一个守墩的白发老兵写了补饷的条子，连墩台上烧的柴也改由营里出。"
+effects = [{ kind = "cash", value = 2000 }, { kind = "affinity", person = "qi_jiguang", value = 5 }]
+
+# 五、兵书：他没放你走，案头一页刚改过的兵书，问海上的人读不读得懂。
+[[tracks.chapters]]
+key = "manual"
+title = "海上的人读得懂吗"
+text = "他没放你走。窗外校场上收操的梆子刚响过，他从案头抽出一页刚改过的兵书，墨还没干，写的是船上怎么分哨、怎么传号：左翼右翼，击鼓为号，依次而进。字写得极小，一行挤着一行，纸边有三处墨团，是划了又写、写了又划的。“我在北边写的那一套，”他把笔蘸饱，“拿到海上来，水手读得懂吗？”他没等你想好，就把笔递了过来。"
+when = [{ kind = "alive", person = "qi_jiguang", value = true }]
+objectives = [{ kind = "person", person = "qi_jiguang", text = "留在总兵府里" }]
+cast = ["qi_jiguang"]
+at = "guangzhou"
+speaker = "qi_jiguang"
+mood = "cheerful"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "说实话：字太多，水手看不懂"
+next = "done"
+reply = "他愣了一下，大笑，提笔把一整段删成三行：“封侯非我意——可兵书写成这样，我自己都看不下去。”他从墙上取下一把长刀，连鞘递给你：“海上用不着我的字，用得着这个。”"
+check = { attr = "eloquence", base = 20, per = 7 }
+news = "广州总兵府里，老将军把自己新改的一页兵书删成了三行，说是船上来的人教他的。"
+effects = [
+  { kind = "cash", value = 1650 },
+  { kind = "affinity", person = "qi_jiguang", value = 8 },
+  { kind = "item", item = "qi_long_sword", qty = 1 },
+  { kind = "fame", value = 7 },
+  { kind = "reputation", faction = "ming", value = 3 },
+  { kind = "memory", memory = "mem-request_qi_jiguang-manual", title = "总兵案头未干的一页" },
+  { kind = "flag", flag = "c13_request_qi_jiguang_done" },
+]
+fail = { next = "done", effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "qi_jiguang", value = -2 }, { kind = "flag", flag = "c13_request_qi_jiguang_partial" }], news = "广州总兵府里，一个船长说老将军的兵书水手看不懂，老将军皱着眉听完，说他只会挑毛病，把那页收了回去。" }
+
+[[tracks.chapters.choices]]
+key = "sea_words"
+text = "照水手的叫法，改两个词"
+requires = [{ kind = "attr", attr = "seamanship", ge = 6 }]
+hint = "水手嘴里的叫法你说不准，改了也是白改。"
+next = "done"
+reply = "你说船上的人分不清左右，分得清风往哪边吹，把“左右翼”改成“上风下风”，把“击鼓”改成“打锣”。他看了半天，在旁边批了个“可”，从墙上取下一把长刀给你。"
+news = "广州总兵府里，老将军把兵书上的“左右翼”改成了“上风下风”，击鼓改成打锣，说是船上来的人给的叫法。"
+effects = [
+  { kind = "cash", value = 1650 },
+  { kind = "affinity", person = "qi_jiguang", value = 8 },
+  { kind = "item", item = "qi_long_sword", qty = 1 },
+  { kind = "fame", value = 7 },
+  { kind = "reputation", faction = "ming", value = 3 },
+  { kind = "memory", memory = "mem-request_qi_jiguang-manual", title = "总兵案头未干的一页" },
+  { kind = "flag", flag = "c13_request_qi_jiguang_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "polite"
+text = "说读得懂"
+next = "done"
+reply = "他看了你一眼，把那页收回去：“你们船上的人，也学会说客气话了。”他用指甲把纸边那处墨团刮了刮，没再让你碰笔。"
+news = "广州总兵府里，老将军问船上来的人兵书读不读得懂，对方说读得懂，老将军笑了一声，没再问。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "qi_jiguang", value = 4 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "ming", value = 2 },
+  { kind = "flag", flag = "c13_request_qi_jiguang_partial" },
+]

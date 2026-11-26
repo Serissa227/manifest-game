@@ -1,0 +1,183 @@
+# 请托：第一箱镜片（request_marietta_filo）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：玛丽埃塔·菲洛（marietta_filo，1540-08-22 生，女），穆拉诺卖玻璃珠人家的女儿，白天替母亲穿珠子，夜里磨镜片；势力 venice，身份档 1。cast：cast/classmates_custom_murano_glass.toml。
+# 类型：押运（escort）。三章加收尾：offer（报价）、arrive（亚历山大港的集市）、report（小本子）；另有 report_half、report_effaced 两条收尾，由 arrive 的 next 直接分流。
+#       结构与简报略有出入：简报的 report 只有一章、yes_clear 门控 sold、tell_effaced 门控 effaced，而 sold 与 effaced 都是 arrive 在同一轨道内设的旗标，按规则不能这样门控，所以按结果分到三个收尾章，每章 2 个选项。
+# 报价：T（当面）。auto=false，玩家用 ask:request_marietta_filo 启动；offer 不写 at，人物日程在穆拉诺，objectives 为 person。港口 venice（ports_east_med.toml）。
+#       offer 的窗口 1563-01-01 至 1565-12-31，deadline 为窗口止日，timeout 直接 failed，不写见闻。
+#       同学重逢（bond_marietta_filo，1562）之后开放，对所有主角一样；offer 的变体读 bond ≥ C，换成老同学的口气。
+# 进行中：arrive 章 deadline_days=120（跨一片海），超时走 failed，来信一封，好感 -3，旗标 _late。report / report_half / report_effaced 都是普通章，没有 default，可以一直等。
+# 章节没有 stage，所以没有 window 与 default；窗口只写在上面的说明里。
+# 依据·史实背景：威尼斯不许穆拉诺的匠人外流，人不能走，货可以走；眼镜片在地中海的集市上是稀罕货，买主多是懂得看字与抄经的人。
+# 依据·原创：玛丽埃塔、她的小本子与格子、木箱里垫的稻草、磨坏的镜片、开罗来的眼镜贩子（未命名的叙事人物，不新建 cast）。不写禁令的刑罚。
+# 秘密：她想在镜片上刻自己的记号，不刻父亲的。正文只写“箱子从她自己的门出去”，不点破她父亲知不知道；见闻一律不写记号的来历。
+# 读的旗标：bond marietta_filo ≥ C（offer 的变体）。不读也不设任何 c7_ 旗标；与莱拉、伊斯坦布尔、灯坊不相干，正文不写。
+# 设的旗标：c13_request_marietta_filo_accepted（offer 两条接法）、_declined（offer 回绝）、_sold（arrive 的 sell_by_piece 成功与 bad_lens）、_half（sell_by_piece 检定失败）、_effaced（arrive 的 sell_whole）、
+#       _done（report 两条收尾）、_partial（report_half 与 report_effaced 的收尾）、_late（arrive 超时）。每条只设一面终局旗标。
+# 不用 relation / tie / bond / heart 效果；不写恋爱、心动。bond 只出现在变体的条件里。
+# 报酬：现金最多 1250（report 的 yes_clear 与 plain_sold 各给一次；半箱与整箱收尾分别给 700 与 1250）；好感最多 +13；名声 +1；回忆 mem-request_marietta_filo-report。
+#       箱子是叙事里的货，不发物品，不用 goods 目标。
+# 依赖：港口 venice（ports_east_med.toml）、alexandria（ports_north_africa.toml）；人物 marietta_filo（cast/classmates_custom_murano_glass.toml）。无需 B10b 改名；技能与物品均不用。
+# 检定：arrive 的 sell_by_piece 用 commerce，一般（base 20 / per 7），失败走 report_half。
+# 回忆插画清单：
+#   mem-request_marietta_filo-report「刻在工桌边的记号」：穆拉诺的工桌边，一个小记号刻在玻璃的边上，旁边摆着一片最不坏的镜片，灯下能看清划痕的深浅。
+
+[[tracks]]
+key = "request_marietta_filo"
+name = "第一箱镜片"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["marietta_filo"]
+
+# 一、一个小记号：穆拉诺的后屋，木箱推到你面前。
+[[tracks.chapters]]
+key = "offer"
+title = "一个小记号"
+text = "她把一只木箱推到你面前。箱里垫着稻草，一层层码着磨好的镜片，每一片边上都刻着一个小得要凑近才看得见的记号。“匠人走不得，货走得。”玛丽埃塔说，手上没停，把一片镜片翻过来对着窗口。箱子从她自己的门出去，运到亚历山大港的集市上，替她卖。她从围裙口袋里掏出一个小本子，前几页已经画好了格子：“每卖一片，记一行。卖给谁，多少钱，他看清了没有。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "marietta_filo", text = "在穆拉诺卖玻璃珠的铺子后屋找到她" }]
+when = [{ kind = "date", from = [1563, 1, 1], to = [1565, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "marietta_filo", ge = 18 }]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "marietta_filo", level = "C" }]
+text = "她先把一片镜片放在你眼前，隔着一个指头的距离。“看我，看得清吗？”你说看得清，她才把它收回去。木箱随后推到你面前，箱里垫着稻草，一层层码着磨好的镜片，每一片边上都刻着一个小得要凑近才看得见的记号。“匠人走不得，货走得。”玛丽埃塔说，手上没停。箱子从她自己的门出去，运到亚历山大港的集市上，替她卖。她从围裙口袋里掏出那个小本子，前几页已经画好了格子：“每卖一片，记一行。卖给谁，多少钱，他看清了没有。”"
+
+[[tracks.chapters.choices]]
+key = "take_crate"
+text = "接下，运到亚历山大港，一片一片卖。"
+next = "arrive"
+reply = "她把箱盖钉上，钉到最后一颗钉子，停了停，又拔出来，往稻草里塞了一片磨坏的镜片。“给买主比的。”她说，“让他看看什么是看不清。”"
+effects = [{ kind = "affinity", person = "marietta_filo", value = 2 }, { kind = "flag", flag = "c13_request_marietta_filo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "接下，先问她：底价多少？"
+next = "arrive"
+reply = "她在本子第一页写了一个数，又划掉，写了一个小一点的。“别让他们觉得是女人磨的就压价。”她说完，低头去钉箱子，钉子一颗一颗敲得很稳。"
+effects = [{ kind = "affinity", person = "marietta_filo", value = 2 }, { kind = "flag", flag = "c13_request_marietta_filo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "镜片太娇贵，我的船颠。"
+next = "failed"
+reply = "她点点头，把箱子推回床底下。“那就再磨一箱。”她说，“磨到不怕颠。”说完她把一片镜片捡起来，对着窗口看了看，搁回窗台上。窗台的光很亮，镜片边上的划痕一道道都看得见。"
+effects = [{ kind = "flag", flag = "c13_request_marietta_filo_declined" }]
+
+# 二、亚历山大港的集市：贩子看得清，却说看不清。
+[[tracks.chapters]]
+key = "arrive"
+title = "眼镜贩子"
+text = "亚历山大港的集市上，一个从开罗来的眼镜贩子拿起一片镜片，对着太阳看了看，又对着自己的手指看，眼睛却一直停在镜片边上那个小记号上。“看不清。”他说。你想起玛丽埃塔被人催的时候总说的那句：“再磨一圈，别急着说看不清。”本子上还写着：“他看清了没有。”贩子又拿起一片，这回他抬起头，说：“整箱我全要。把边上的记号磨掉，刻我自己的。”"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+objectives = [{ kind = "at", at = "alexandria", text = "到亚历山大港的集市" }]
+when = [{ kind = "alive", person = "marietta_filo", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "marietta_filo", value = -3 }, { kind = "flag", flag = "c13_request_marietta_filo_late" }, { kind = "letter", person = "marietta_filo", text = "箱子我托一条去亚历山大港的船带去了，卖给谁、卖了多少，没人记。——玛丽埃塔" }] }
+news = "亚历山大港的集市上，一个开罗来的眼镜贩子对着一片威尼斯镜片看了半天，说看不清。卖镜片的人一句话没争。"
+
+[[tracks.chapters.choices]]
+key = "sell_by_piece"
+text = "不卖整箱，一片一片照本子上的底价卖，每片都留着记号。"
+next = "report"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "一个下午卖掉了大半箱。书记、老学者，还有给清真寺抄经的人，都买了几片。开罗来的那个人最后也买走三片，说回去要自己对着太阳再看。本子记满了三页，每一行后面都写着“看清了”。"
+effects = [{ kind = "affinity", person = "marietta_filo", value = 3 }, { kind = "flag", flag = "c13_request_marietta_filo_sold" }]
+fail = { next = "report_half", effects = [{ kind = "affinity", person = "marietta_filo", value = -2 }, { kind = "flag", flag = "c13_request_marietta_filo_half" }], news = "亚历山大港的集市上，一箱穆拉诺的镜片一个下午卖了一半，买主是开罗来的书记与老学者，另一半原样装回了船上。" }
+
+[[tracks.chapters.choices]]
+key = "bad_lens"
+text = "从箱里挑一片磨坏的镜片，拿给贩子比，让他自己说哪片看得清。"
+next = "report"
+reply = "他对着两片看了半天，承认了。他出了个公道价，买下整箱，不再提磨掉记号的事。本子上我记了一行：卖给开罗的眼镜贩子，整箱，他看清了。"
+effects = [{ kind = "affinity", person = "marietta_filo", value = 3 }, { kind = "flag", flag = "c13_request_marietta_filo_sold" }]
+
+[[tracks.chapters.choices]]
+key = "sell_whole"
+text = "收他的整箱价，记号的事随他。"
+next = "report_effaced"
+reply = "他当场付了钱，比一片片卖多出一截。本子上只有一行，后面那一栏我不知道该写什么。"
+effects = [{ kind = "affinity", person = "marietta_filo", value = 1 }, { kind = "flag", flag = "c13_request_marietta_filo_effaced" }]
+
+# 三a、小本子：卖掉的那几行，一行一行地看。
+[[tracks.chapters]]
+key = "report"
+title = "小本子"
+text = "玛丽埃塔接过小本子，一行一行地看，看得很慢。每一行后面都有一个人名，一个数。她用指甲在格子边上轻轻划过去，划到哪里就停一停，像是在对每个名字点头。看完一页，她说：“每一行都在这儿。”看到最后一行，她抬起头问你：“那个说看不清的人，后来看清了吗？”"
+speaker = "captain"
+mood = "tender"
+at = "venice"
+objectives = [{ kind = "person", person = "marietta_filo", text = "在穆拉诺找到她" }]
+when = [{ kind = "alive", person = "marietta_filo", value = true }]
+news = "穆拉诺卖玻璃珠的人家，女儿磨的镜片头一回运到亚历山大港去卖，满港都说那箱子不一般。"
+
+[[tracks.chapters.choices]]
+key = "yes_clear"
+text = "照实说：他看清了，记号也还在。"
+next = "done"
+reply = "她没笑。她把那个小记号又刻了一遍，刻在她的工桌边上，比镜片边上的刻得深。她付了钱，又从磨坏的镜片里挑了一片最不坏的，说留个念想。“它替我卖了一箱。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "marietta_filo", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_marietta_filo_done" }, { kind = "memory", memory = "mem-request_marietta_filo-report", title = "刻在工桌边的记号" }]
+
+[[tracks.chapters.choices]]
+key = "plain_sold"
+text = "照实说：卖了，钱和本子都在这儿，别的不多说。"
+next = "done"
+reply = "她数钱数得很快，数完了才翻到本子的最后一页。“三页。”她说，把本子合上，“够了。”她没有再问那个人的事，把本子收进围裙口袋。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "marietta_filo", value = 3 }, { kind = "flag", flag = "c13_request_marietta_filo_done" }]
+
+# 三b、半箱：只卖了一半，剩下的原样带回。
+[[tracks.chapters]]
+key = "report_half"
+title = "剩下的半箱"
+news = "亚历山大港回来的水手说，穆拉诺那箱镜片没卖完，半箱又原样搬回了船上，搬箱的脚夫嘟囔了一路。"
+text = "玛丽埃塔看见你把木箱搬回来，箱子轻了一半。她先不问钱，一片片擦过带回来的镜片。擦到边上的记号，指尖停一停，再放回箱里，稻草一层层铺平。“这些等下一个看得清的人。”她说。“卖掉的那几行，写清楚就行。”本子上只有前几行记了字，后面的格子空着。她等你开口。"
+speaker = "captain"
+mood = "sad"
+at = "venice"
+objectives = [{ kind = "person", person = "marietta_filo", text = "在穆拉诺找到她" }]
+when = [{ kind = "alive", person = "marietta_filo", value = true }]
+
+[[tracks.chapters.choices]]
+key = "half_tell"
+text = "照实说：只卖了一半，剩下的原样带回来了。"
+next = "done"
+reply = "她听完，点了点头，只说了一句：“一半也是看清了的。”她付了钱，从箱底翻出那片磨坏的镜片，夹进本子的最后一页。"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "marietta_filo", value = 2 }, { kind = "flag", flag = "c13_request_marietta_filo_partial" }]
+
+[[tracks.chapters.choices]]
+key = "half_promise"
+text = "照实说，并告诉她，下一箱我替你找买主。"
+next = "done"
+reply = "“找买主你不用管。”她说，“你把船开到亚历山大港去就行。”她把本子翻回第一页，看了看格子，又翻回来，把它收进围裙口袋，手还按在口袋上。"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "marietta_filo", value = 3 }, { kind = "flag", flag = "c13_request_marietta_filo_partial" }]
+
+# 三c、那一栏：整箱卖了，本子上只有一行。
+[[tracks.chapters]]
+key = "report_effaced"
+title = "那一栏"
+news = "亚历山大港回来的商人说，一箱穆拉诺的镜片被开罗来的贩子整箱包了去，价钱比一片片卖的高出一截。"
+text = "玛丽埃塔接过小本子，本子上只有一行。她看了很久，没有翻到下一页。“整箱？”她问。你说是整箱，记号的事随他。她没有生气，把本子合上，手指在封皮上压了一下，压得很重，又慢慢松开。工桌边上有几道旧的划痕，深浅不一，灯一照就看得出来。“那一栏，我自己来填。”"
+speaker = "captain"
+mood = "sad"
+at = "venice"
+objectives = [{ kind = "person", person = "marietta_filo", text = "在穆拉诺找到她" }]
+when = [{ kind = "alive", person = "marietta_filo", value = true }]
+
+[[tracks.chapters.choices]]
+key = "tell_effaced"
+text = "照实说：整箱卖了，记号要被磨掉。"
+next = "done"
+reply = "她听完，过了很久才说：“也好，至少它们在开罗有人用。”她付钱付得很仔细，一枚一枚数，数完还拿起一枚对着灯看。“下一箱，我会刻得深一点。”她说，“那个人磨不掉。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "marietta_filo", value = 2 }, { kind = "flag", flag = "c13_request_marietta_filo_partial" }]
+
+[[tracks.chapters.choices]]
+key = "hide_effaced"
+text = "只说整箱卖了，钱在这，记号的事不提。"
+next = "done"
+reply = "她把钱收进箱底，没有再问记号的事。本子翻回第一页，又翻到最后，看了一会儿，才夹回工具袋里。她没有道谢，只把箱盖轻轻合上，那一下很轻。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "flag", flag = "c13_request_marietta_filo_partial" }]

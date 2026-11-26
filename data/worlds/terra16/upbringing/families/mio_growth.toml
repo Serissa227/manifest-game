@@ -1,0 +1,747 @@
+# 第九批 养成内容·一条澪（Claude 写）：新手旬（B1）、家乡玩伴（B2）、千鸟的来信、八朔竞渡（B5）、第一次远足（B7）、“小早操舵”练习。
+# 关键事件 00–05 的三岔改写与失败后续（c9_mio_setback_00—05）在 mio_events.toml；新人物千鸟在 mio_persons.toml。
+#
+# 接线（不进 event_gates，不占每旬的抽签槽）：
+#   - c9_mio_newcomer 是 auto 轨道，章节只认 c9_family_mio 与日期；别的出身没有这个旗标，永远不会出现。
+#   - 其余轨道都是 auto = false，由新手旬各节的选项 start_track 启动（汐的线从上旬起，千鸟、远足、竞渡从下旬起）。
+#   - 这些轨道日期一到、人在下田就出现，先后次序是确定的；章节都写了日期上限，
+#     跳过养成后结业资本会补上 c9_family_mio，上限保证它们不会在成年期冒出来。
+#   - 汐 1553 年在人物卡里没有日程；新手旬上旬用 schedule 效果把她放在下田栈桥到 1554-01-09（澪上京前一天）。
+#     鹰丸同理，八朔竞渡的预告把他放在下田到 1554-01-09（与 bond_takamaru c2“在下田的叔叔家过秋”、b1 一致）。
+#
+# 两位家乡玩伴：
+#   - 汐（ushio，现有人物）：家乡期 4 段（打死的结、子之星、台风夜、汐的包袱）；进京后由 bond_ushio 接手，
+#     她的“书信”是千鸟第一封来信的回信里，她抢过笔自己添的一行（不写内容，不点破她夜里描字的秘密）。
+#     不写冷泉雪，不碰 pair_ushio_reizei_yuki；家乡期只写乳姐妹的情分，不加心动。
+#   - 千鸟（chidori，新人物）：新手旬下旬相识 + 3 段（沙上的名字、海女小屋的火、两个字），进京后 2 封来信。
+#     她的秘密（母亲是在七寻底下没上来的）只留伏笔：水练时她停在六寻；海女小屋里有人提起她娘，屋里静下来；第二封信末尾只有一个“七”。
+#   - 鹰丸：不加新章，c1 竞渡、c2 破小早、b1 潮时表与学院期的书信 b2 都由 bond_takamaru 写；本文件只在竞渡输了时让他在岸上笑、扔一捆槙皮。
+#
+# 八朔竞渡与 bond_takamaru c1 的分工：c1 是七月大潮那一场（澪坐渔家的船、输他两个船身，二人的“第一次竞渡”）；
+#   本文件的八朔竞渡只许下田本浦的船下场，外浦的鹰丸只在岸上看，所以不算二人之间的比赛，a1“第二次竞渡”的说法不变。
+#   八朔（朔日大潮）在河口竞渡、赢家把新米供进水神祠，是原创的地方风俗；朔日是大潮、八朔是旧历八月初一，属实。
+#   当天的“抢深水”掷读潮（练“潮流竞渡练习”会直接抬高成功率），“贴回流”掷航海；赢了解锁“小早操舵”。
+#   输了或不抢的，冬至大潮还有一回（掷航海，或请汐领桨）。
+#
+# 远足：c9_mio_first_outing 以引擎旗标 outing_permission（ENGINE_FLAGS，U03 在家乡期满一段时间后发放）为条件，once，只走一次。
+#
+# 门槛与检定：按 1553 年的中位估的初值，属性检定 1 级约五成；全部“待 U02 校准”。
+"format_version" = 1
+
+# ───────────────────────── 活动：小早操舵（八朔竞渡赢了、或冬至那回过了才解锁）─────────────────────────
+# 数值照同家族的“潮流竞渡练习”（航海 4—7、疲劳 6）与通用训练（主项 5—9、副项 2—4、疲劳 10）取中：航海 4—7、统率 2—4、疲劳 8。数值待 U02 校准。
+[[activities]]
+key = "c9_mio_kobaya_helm"
+name = "小早操舵"
+description = "站在阿濑那条小早的船尾掌舵、喊号子。八支橹跟着号子走，顺风时扯起一面小帆。号子早一拍、晚一拍，船都要在河口打转。"
+kind = "training"
+stage = "any"
+scene = "river_kobaya_shimanto"
+unlock = { flag = "c9_mio_kobaya_helm" }
+age = [12, 17]
+gains = { seamanship = [4, 7], command = [2, 4] }
+skills = [{ skill = "rigging", xp = 12 }]
+fatigue = 8
+mood = 1
+events = ["c9_mio_rare_*"]
+risk = { failure_bp = 1800, attr = "seamanship", per = 100 }
+failure = { gains_pct = 60, income_pct = 0, mood = -1, extra_fatigue = 2 }
+where = { at = "shimoda_tosa" }
+
+# ───────────────────────── B1 新手旬：1553 年 1 月上、中、下旬三节 ─────────────────────────
+# 上旬认识一屋子的人、自己定早上归谁；中旬头一回拿到零用钱（钱由引擎按月发，本节不发钱）、头一回自己排一个月的日子；
+# 下旬头一回一个人出门，在礁石边认识千鸟。上旬启动汐的线，下旬启动千鸟、远足、八朔竞渡。
+[[tracks]]
+key = "c9_mio_newcomer"
+name = "一条澪·新手旬"
+kind = "encounter"
+start = "family"
+auto = true
+academy = true
+
+# U07：开场介绍（mio_intro.toml）最后一幕已经交代了铺头那张排日子的纸、每月一串钱和第六天自己排；
+#   这一章与下一章删去重复的排课交代，“三格”改成纸上的“第六行”，选项、效果不动。
+[[tracks.chapters]]
+key = "family"
+title = "一屋子的人"
+text = "看完潮回来，屋里已经挤满了。阿濑的屋子本来就小，母亲带来的三只账箱占了半面墙，黑檀念珠挂在箱角上。汐把炭盆往门边挪，被阿濑一脚又踢了回去。母亲指着我铺头那张纸，在“字”旁边添了一个“早”。阿濑在灶边插嘴：“早上？早上是看潮的时候。潮不等人。”母亲没抬头：“字也不等人。”两个人都不说话了，一齐看我。汐在门边冲我挤眼睛。兼定从京里寄来的信还压在砚台底下，他在信里抱怨，本家的人早上都起得很晚。"
+at = "shimoda_tosa"
+cast = ["ase", "mio_mother", "ushio"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 1, 2], to = [1553, 1, 31] }]
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "早上归阿濑，去河口看潮"
+reply = "母亲把纸上那个“早”字划了，改成“晚”：“那就点灯写。”第二天天没亮，阿濑就掀开了我的被子，汐已经蹲在门口穿草鞋。我们三个踩着霜走到栈桥，水还是黑的。阿濑说今天只看一件事：哪一道水先回头。"
+next = "purse"
+effects = [{ kind = "affinity", person = "ase", value = 5 }, { kind = "affinity", person = "ushio", value = 2 }, { kind = "growth", attr = "seamanship", value = 2 }, { kind = "schedule", person = "ushio", at = "shimoda_tosa", venue = "dock", until = [1554, 1, 9] }, { kind = "start_track", track = "c9_mio_ushio_home" }]
+
+[[tracks.chapters.choices]]
+key = "ink"
+text = "早上归母亲，先把字写好"
+reply = "阿濑哼了一声，把蓑衣挂回墙上。母亲替我磨墨，墨条在砚台里一圈一圈地走，她说墨要磨到照得见人，字才立得住。我写了三张假名，窗外传来汐踩着沙子跑远的声音。写到第四张，手腕不抖了。"
+next = "purse"
+effects = [{ kind = "affinity", person = "mio_mother", value = 5 }, { kind = "growth", attr = "learning", value = 2 }, { kind = "schedule", person = "ushio", at = "shimoda_tosa", venue = "dock", until = [1554, 1, 9] }, { kind = "start_track", track = "c9_mio_ushio_home" }]
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "潮退前去河口，涨潮回来磨墨"
+reply = "母亲和阿濑对看了一眼，谁也没说好，谁也没说不好。头三天我两头跑，鞋底的沙掉进砚台，墨里咯吱咯吱地响。第四天早上，母亲把砚台搬到了朝河口的那扇窗下：“这样近些。”阿濑隔着窗喊：“潮回头了！”"
+next = "purse"
+effects = [{ kind = "affinity", person = "ase", value = 2 }, { kind = "affinity", person = "mio_mother", value = 2 }, { kind = "growth", attr = "resolve", value = 2 }, { kind = "schedule", person = "ushio", at = "shimoda_tosa", venue = "dock", until = [1554, 1, 9] }, { kind = "start_track", track = "c9_mio_ushio_home" }]
+
+[[tracks.chapters]]
+key = "purse"
+title = "一串钱，一张纸"
+text = "到了中旬，母亲把我叫到账箱前，从袖子里摸出一串铜钱，拿细麻绳穿着，放进我手心：“买什么、给谁，自己记。”那串钱比我想的沉。汐从门缝里探进半个脑袋，眼睛盯着那根麻绳。阿濑在门外补网，隔着门说了一句：“第六行排的时候，给潮留半天。”"
+at = "shimoda_tosa"
+cast = ["mio_mother", "ase", "ushio"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 1, 11], to = [1553, 2, 10] }]
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "先把钱数记在纸头"
+reply = "我在纸的顶上添了一行小字：今日收钱一串，用去零文。母亲看了，拨过一颗念珠：“账从零记起，好。”头一个第六天我排得满满的，一刻也没留给歇着。母亲拿过笔，在那一行末尾添了一个“歇”。"
+next = "shore"
+effects = [{ kind = "affinity", person = "mio_mother", value = 3 }, { kind = "growth", attr = "numeracy", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "share"
+text = "褪下几文，给汐买一块米饼"
+reply = "我从麻绳上褪下几文，拉着汐跑到市上，买了一块烤得焦黄的米饼，掰成两半。汐嘴上说“我又不是姬君，用不着你请”，手却接得很快。回去以后，我在纸头记了一笔：米饼一块，两个人吃。母亲看见了，没说什么，只把“两个人吃”那几个字小声念了一遍。"
+next = "shore"
+effects = [{ kind = "affinity", person = "ushio", value = 5 }, { kind = "affinity", person = "mio_mother", value = 1 }]
+
+[[tracks.chapters.choices]]
+key = "blank"
+text = "留一格空着，不排"
+reply = "第六行我只排了半天，后半天空着。母亲问空着做什么。我说还不知道，想留给还不知道的事。她看了我一会儿，把笔递回来：“那就在空处写上‘不知道’，到时候回来补。”汐在门外笑出了声。"
+next = "shore"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "growth", attr = "sensibility", value = 2 }]
+
+[[tracks.chapters]]
+key = "shore"
+title = "礁石那边的口哨"
+text = "下旬，阿濑头一回准我一个人出门，只交代了两句：别过沙洲，别下水。我沿着河口往东走。退潮以后礁石都露了出来，一块一块挂着海藻，脚底滑得站不稳。走到第三块大礁石，听见那边有人吹口哨：一声长，又一声长，像海鸟叫，可调子分明是人吹的。我爬上去看，底下的水洼里蹲着一个女孩，跟我差不多高，头发硬得像晒干的海草，正把石缝里的石莼一把一把扯进竹篓。她抬头看见我，又吹了一声，这回是冲着我吹的。“公家的？”她说，“你脚下那块石头，潮一回头就淹。”"
+at = "shimoda_tosa"
+cast = ["chidori"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 1, 21], to = [1553, 2, 20] }]
+
+[[tracks.chapters.choices]]
+key = "whistle"
+text = "问她口哨是怎么吹的"
+reply = "她叫千鸟，是河口老海女阿德婆婆的孙女。她说这口哨不是吹着玩的：潜下去憋着的那口气，上来不能一下子吐，要从牙缝里慢慢送出去，送出声来，胸口才不疼。她教我嘬起嘴，我吹了十几回，只吹出噗噗的气声。她笑得蹲在水洼里起不来，笑完了，又认认真真地吹了一遍给我听。潮回头的时候，她拉着我的手跳下礁石，跑得比我快。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 6 }, { kind = "flag", flag = "c9_mio_met_chidori" }, { kind = "start_track", track = "c9_mio_chidori_home" }, { kind = "start_track", track = "c9_mio_first_outing" }, { kind = "start_track", track = "c9_mio_hassaku_race" }]
+
+[[tracks.chapters.choices]]
+key = "seabed"
+text = "问她水底下是什么样子"
+reply = "她叫千鸟，跟着阿德婆婆过日子，婆婆是河口的老海女，她爹在堺的船坞做工。我问水底下什么样子，她想了半天，说：“冷，然后亮，然后又冷。”我没听懂。她把一块湿漉漉的石头塞进我手里，石头底下粘着一只小小的海螺：“这个，就是底下的样子。”我把海螺揣回去，放在砚台边上。夜里它爬走了，第二天在墙角找着。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 4 }, { kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "c9_mio_met_chidori" }, { kind = "start_track", track = "c9_mio_chidori_home" }, { kind = "start_track", track = "c9_mio_first_outing" }, { kind = "start_track", track = "c9_mio_hassaku_race" }]
+
+[[tracks.chapters.choices]]
+key = "ushio"
+text = "拉她回栈桥去见汐"
+reply = "她叫千鸟，说汐她认得，“阿濑家那个凶丫头”。我拉着她回到栈桥，汐正在晾网，两个人隔着网眼互相瞪了半天。汐说：“你家婆婆的鲍鱼，去年少给我娘一个。”千鸟说：“你娘的秤，去年也少给我婆婆一两。”说完两个人都笑了。我站在中间，觉得自己好像什么都不知道。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 3 }, { kind = "affinity", person = "ushio", value = 2 }, { kind = "flag", flag = "c9_mio_met_chidori" }, { kind = "start_track", track = "c9_mio_chidori_home" }, { kind = "start_track", track = "c9_mio_first_outing" }, { kind = "start_track", track = "c9_mio_hassaku_race" }]
+
+# ───────────────────────── B7 第一次远足：outing_permission 有了才进；once，做过一次就不再进 ─────────────────────────
+# 三个选项对着家乡远足图的三个点：潮边松林（感知）、退潮石洞（意志）、旧烽台（学识，图上第一步叫“半行刻字”）。
+[[tracks]]
+key = "c9_mio_first_outing"
+name = "一条澪·第一次远足"
+kind = "encounter"
+start = "outing"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "outing"
+title = "过了沙洲"
+text = "能自己出门以后，头一个大退潮的早上，汐天不亮就把草鞋系好了，千鸟背着她那只空竹篓在门口等。我们趁着退潮踩过沙洲，水只没到脚踝，冷得人直吸气。上了对岸，松林里一股松脂味，海风一吹，松针沙沙地响。千鸟指着礁石底下一个黑乎乎的洞口，说潮再退一点就能钻进去。汐指着山顶那座塌了一半的烽台，说那是早先防海贼用的，说完她自己先笑了。三个人站在松林边上，谁也没先迈步。"
+at = "shimoda_tosa"
+cast = ["ushio", "chidori"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "flag", flag = "outing_permission" }, { kind = "date", from = [1553, 2, 1], to = [1553, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "pines"
+text = "钻进松林，跟千鸟认草"
+reply = "千鸟认得松根底下的每一样草：这个煮了治肚子疼，那个只有鹿吃。她说婆婆的眼睛不好了，草都是她来采。我跟在后头，把她说的名字一样一样记在怀纸上，记到第十样，纸被松脂粘住了。回去的路上，汐抢过那张纸看，看了半天，说：“你写的是草，还是写的千鸟？”"
+next = "done"
+effects = [{ kind = "growth", attr = "perception", value = 3 }, { kind = "affinity", person = "chidori", value = 2 }, { kind = "affinity", person = "ushio", value = 1 }]
+
+[[tracks.chapters.choices]]
+key = "cave"
+text = "等潮再退，钻那个石洞"
+reply = "洞口矮，得弯着腰进去。里头的水声跟外头不一样，嗡嗡的，像有人在很远的地方说话。千鸟走在最前头，汐走在最后，我在中间，谁也不许回头。走到洞底，石壁上有一道一道白色的线，千鸟说那是每年最大的潮留下的。最高的一道，比我的头还高。出来的时候潮已经开始涨了，我们是跑出来的。"
+next = "done"
+effects = [{ kind = "growth", attr = "resolve", value = 3 }, { kind = "affinity", person = "chidori", value = 1 }, { kind = "affinity", person = "ushio", value = 1 }]
+
+[[tracks.chapters.choices]]
+key = "beacon"
+text = "爬上山顶的旧烽台"
+reply = "烽台塌了一半，石头缝里长着野蔷薇。从上面往下看，四万十川黄黄的一道伸进海里，在河口散开，跟青色的海水拧在一起，像两股没编完的绳。汐说，这样看，潮往哪边走，一眼就明白了。千鸟没上来，她说她怕高，坐在半山腰等我们。下山时我回头看了一眼，烽台的石头上刻着半行字，被风吹得认不全。"
+next = "done"
+effects = [{ kind = "growth", attr = "learning", value = 2 }, { kind = "growth", attr = "seamanship", value = 1 }, { kind = "affinity", person = "ushio", value = 2 }]
+
+# ───────────────────────── B2 家乡玩伴·汐：家乡期四段（2 月、5 月、9 月、冬月）─────────────────────────
+# 种下她“要一面自己挣的过所旗”的心愿；屋顶看星（她喜欢星）；台风夜阿濑的肩伤犯了，两个人顶上；上京前她决定扮作侍女跟去。
+# 只写乳姐妹的情分，不加心动；不提冷泉雪；“先看看脚下”“等着，潮会转的”留给 bond_ushio，这里不用。
+[[tracks]]
+key = "c9_mio_ushio_home"
+name = "汐·家乡的一年"
+kind = "encounter"
+start = "knots"
+auto = false
+academy = true
+cast = ["ushio"]
+
+[[tracks.chapters]]
+key = "knots"
+title = "打死的结"
+text = "能岛的关船在河口泊了一夜，船上的水夫隔着栈桥冲汐喊“收帆别钱的丫头”，喊完一船人都笑。汐没回嘴。夜里她不睡，坐在铺边就着月光打结：一根旧缆绳，打一个结，抽紧，再打一个，结摞着结，硬得像拳头。我们从小睡一个铺，她背对着我的时候，我就知道她在生气。我爬过去，坐到她旁边。她没看我，手上又抽紧了一个：“我以后要一面自己的旗。不是村上家的，是我自己挣的。谁见了都得让水。”"
+at = "shimoda_tosa"
+cast = ["ushio"]
+mood = "tender"
+night = true
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 2, 11], to = [1553, 3, 31] }]
+
+[[tracks.chapters.choices]]
+key = "tie"
+text = "陪她一起打，打到天亮"
+reply = "我捡起绳子的另一头，学她的样子绕、穿、抽。她嫌我打得松，拆了重来，拆到第五个，开始教我：这个结拴船，潮再大也不脱；这个结一扯就开，是给自己留的退路。天快亮的时候，绳子打满了，她把那一串结挂在我脖子上，沉甸甸的。“丑死了，”她说，“明天拆。”第二天她没拆。"
+next = "stars"
+effects = [{ kind = "affinity", person = "ushio", value = 6 }, { kind = "skill", skill = "knotwork", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "说：那面旗上的字，我替你写"
+reply = "汐的手停了一下。过了好半天，她把绳子往铺上一扔：“我自己的旗，我自己写。”说完她背过身去躺下了。我以为她生气了，可半夜醒来，她的手搭在我的被子上，跟小时候一样。"
+next = "stars"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "untie"
+text = "把她打死的结一个个解开"
+reply = "我抢过那根绳子，用指甲一个一个地抠。她打得太紧，抠到第三个，指甲劈了。汐瞪着我：“你解它干什么？”“解开了，明天还能用。”她看着我的手指，忽然笑了，把绳子拿回去一扯，剩下的结全开了。原来她打的都是活结。"
+next = "stars"
+effects = [{ kind = "affinity", person = "ushio", value = 4 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters]]
+key = "stars"
+title = "子之星"
+text = "五月的夜里闷热，汐拉我上了屋顶。茅草扎人，我们躺在上头，底下阿濑在打鼾，河口的水声一阵近一阵远。汐举起一只手，攥成拳头，对着北边的天：“能岛的老船头不用星盘，用这个。”她说北边那颗不动的星，岛上叫子之星，子就是正北；拳头摞几个能顶到它，就知道船走到了多北。她数给我听，一拳、两拳，数到一半停下来：“哪天我把船开得够远，它就该低到海里去了。”"
+at = "shimoda_tosa"
+cast = ["ushio"]
+mood = "tender"
+night = true
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 5, 1], to = [1553, 6, 30] }]
+
+[[tracks.chapters.choices]]
+key = "fist"
+text = "学她用拳头量星"
+reply = "我的拳头比她的小，量出来的数总比她多一个。她握住我的手腕往上抬，说胳膊要伸直，眼睛别眨。我们量了一遍又一遍，量到星都斜了。下屋顶的时候，她小声说：“这个别跟阿濑讲，她说女孩子夜里不睡要长不高。”"
+next = "storm"
+effects = [{ kind = "affinity", person = "ushio", value = 5 }, { kind = "growth", attr = "astronomy", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "poem"
+text = "给那颗星作一首歌"
+reply = "我念了上句，说北边那颗星像一枚钉子，把天钉在海上。汐翻了个白眼：“歌能当针路用？”可我念下句的时候，她没出声，一直等我念完。她说：“再念一遍。”我又念了一遍。她说：“钉子那句，改成缆桩。”我改了，确实好些。"
+next = "storm"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }, { kind = "skill", skill = "poetry", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "问她为什么夜里睡不着"
+reply = "汐不说话，过了一会儿才指指底下：“阿濑的肩膀。一下雨，她夜里就翻身，她一翻身，我就醒。”我从来没听见过阿濑翻身。汐说：“你睡得沉，从小就是。”那天夜里我们没再看星。下去以后，我把自己的被子叠起来，垫在了阿濑的右肩底下。"
+next = "storm"
+effects = [{ kind = "affinity", person = "ushio", value = 4 }, { kind = "affinity", person = "ase", value = 3 }]
+
+[[tracks.chapters]]
+key = "storm"
+title = "台风夜"
+text = "九月底起了大风。天黑前，河口的水就涨过了栈桥的第三根桩，泊着的渔船一条撞一条，咚咚地响。阿濑要去加缆，刚抬起胳膊，脸就白了，右肩垂下来，桨也握不住。“汐，姬君，”她咬着牙说，“缆绳在网棚里。”风把雨横着往人脸上抽。渔家的几个孩子已经跑来了，站在栈桥头，等着有人告诉他们先拴哪一条。汐看着我，我也看着她。"
+at = "shimoda_tosa"
+cast = ["ushio", "ase"]
+mood = "tense"
+night = true
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 9, 21], to = [1553, 10, 31] }]
+
+[[tracks.chapters.choices]]
+key = "command"
+text = "我来喊号，汐来打结"
+reply = "我站到栈桥头上，按船的大小一条条点：大的先拴，系在石桩上；小的拖上岸，翻过来扣着。汐跟在后头打结，她打一个，我喊下一条。喊到后来嗓子哑了，就拿手指。天亮时风停了，河口漂着断桨和碎草席，我们的船一条没丢。渔家的孩子们回去说，姬君喊起号来，比阿濑还凶。"
+next = "goes"
+effects = [{ kind = "growth", attr = "command", value = 4 }, { kind = "affinity", person = "ushio", value = 4 }, { kind = "fame", value = 1 }]
+
+[[tracks.chapters.choices]]
+key = "follow"
+text = "让汐来指挥，我听她的"
+reply = "“你来。”我说。汐愣了一下，接着就喊开了，带着濑户内的口音，又快又急，渔家的孩子们一句也没听漏。我跟着她拖缆、压船、递绳头，手掌磨破了也没吭声。天亮的时候，她坐在湿透的网堆上，半天没说话，后来说：“原来我喊，他们也听。”"
+next = "goes"
+effects = [{ kind = "affinity", person = "ushio", value = 7 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ase"
+text = "先把阿濑扶回屋里"
+reply = "我把阿濑架回屋里，用热盐包敷她的肩膀。她骂我多事，要自己出去，我按着不让动。等我再跑回栈桥，汐带着孩子们已经拴好了大半，可最外头那条小船的缆断了，船翻着肚皮漂出了河口。天亮后阿濑看着空出来的那根桩，什么也没说，只把盐包又往肩上按了按。"
+next = "goes"
+effects = [{ kind = "affinity", person = "ase", value = 5 }, { kind = "affinity", person = "ushio", value = 2 }]
+
+[[tracks.chapters]]
+key = "goes"
+title = "汐的包袱"
+text = "要上京的消息传开以后，汐有好几天不跟我说话。冬月里的一个晚上，我看见阿濑在灯下缝一件素色的小袖，针脚又密又直，袖子比我的短一截。“汐的。”阿濑头也不抬，“侍女穿的。宫里的规矩她一样不会，我教不了，得你母亲教。”汐从外头进来，把一个扎好的包袱往我铺边一扔，里头硬邦邦的，是一卷缆绳。“我认得路，认得潮，”她说，“宫里那些，我学得会就学，学不会，至少能替你挡一挡。”"
+at = "shimoda_tosa"
+cast = ["ushio", "ase"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 12, 11], to = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "说好：到了京里，谁也不许欺负你"
+reply = "汐哼了一声：“谁欺负谁还不一定。”可她把那件小袖拿起来，在身上比了比，比完又叠好，压在包袱最底下。夜里她背对着我睡，睡到一半翻过身来，额头抵着我的肩膀，跟小时候打雷的晚上一样。"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "warn"
+text = "说宫里苦，你不去也行"
+reply = "汐把包袱抢回去，抱在怀里：“你以为我是为你去的？”她说能岛的叔父讲过，京里有往来各国的船主，她要去看看那些人是怎么拿到过所旗的。说完，她又补了一句，声音小了下去：“顺便看着你。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }, { kind = "growth", attr = "resolve", value = 1 }]
+
+[[tracks.chapters.choices]]
+key = "bow"
+text = "拉她去母亲屋里学行礼"
+reply = "母亲看着汐，看了很久，然后站起来，亲手把汐的手按在席子上：“指尖并拢，额头离手一寸。”汐拜下去，背挺得像桅杆。母亲说太直了，宫里的人会以为你要打架。汐咬着嘴唇，又拜了一遍。那天晚上她拜了三十遍，我在旁边陪着拜。最后一遍，母亲说：“可以了。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }, { kind = "affinity", person = "mio_mother", value = 3 }, { kind = "growth", attr = "etiquette", value = 2 }]
+
+# ───────────────────────── B2 家乡玩伴·千鸟：相识（新手旬下旬）之后的三段（3 月、7 月、立冬后）─────────────────────────
+# 教她写自己的名字，她回一枚穿孔的鲍壳（旗标 c9_mio_chidori_shell，水练的“靠关系”一岔读它）；
+# 海女小屋里替她们跟堺商讲干鲍的价（旗标 c9_mio_abalone_trade，母亲家计的“靠关系”一岔读它）；上京前她用炭写澪的名字，约好写信。
+# 伏笔只留不点破：汐在沙上划了什么、听见脚步就抹平；海女小屋里有人提起千鸟的娘，屋里静下来。
+[[tracks]]
+key = "c9_mio_chidori_home"
+name = "千鸟·河口的一年"
+kind = "encounter"
+start = "kana"
+auto = false
+academy = true
+cast = ["chidori"]
+
+[[tracks.chapters]]
+key = "kana"
+title = "沙上的名字"
+text = "三月，堺来的船捎来一封信，是千鸟的爹写的。阿德婆婆认不得字，千鸟也认不得，祖孙俩把信捧到栈桥上来找我。信很短：船坞的活多，今年回不来，钱托船头带了一串，叫千鸟别去深水。我念完，阿德婆婆点点头，说跟去年写的一样。千鸟却蹲在那里不走，拿一根树枝在沙上乱划：“回信，我想自己写。”她划了半天，划出来的东西谁也认不得。汐在不远处补网，没往这边看。"
+at = "shimoda_tosa"
+cast = ["chidori"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 3, 1], to = [1553, 4, 30] }]
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "从她自己的名字教起"
+reply = "我在沙上写了她的名字，三个假名，一个弯，一个拐，一个像小鸟的脚印。她照着划，划歪了，抹掉再划。潮水漫上来一回，冲掉一回，她就往高处挪一步，接着划。到太阳偏西，她在干沙上写出了自己的名字，歪歪扭扭，可认得出来。她看了很久，然后从脖子上解下一枚穿了孔的鲍壳，塞进我手里：“往后你下水，带着它。婆婆认得。”"
+next = "hut"
+effects = [{ kind = "affinity", person = "chidori", value = 6 }, { kind = "growth", attr = "learning", value = 2 }, { kind = "flag", flag = "c9_mio_chidori_shell" }]
+
+[[tracks.chapters.choices]]
+key = "write_for"
+text = "替她把回信写好，念给她听"
+reply = "我照她说的写：婆婆的眼睛不好了，今年的鲍鱼是我潜的，钱收到了，别惦记。写完念给她听，她一句一句地点头。最后她问：“我的名字在哪儿？”我指给她看。她盯着那三个字看了很久，伸手摸了摸，墨还没干，蹭花了一点。"
+next = "hut"
+effects = [{ kind = "affinity", person = "chidori", value = 3 }, { kind = "growth", attr = "eloquence", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "with_ushio"
+text = "招呼汐也一块儿来学"
+reply = "我朝汐招手。汐把网一扔，站起来说：“我去收网。”那张网明明才补了一半。她走远了，我只好接着教千鸟。千鸟学得快，到天黑写会了自己的名字，又从脖子上解下一枚穿了孔的鲍壳给我，说往后我下水带着它。回去的路上，我看见汐坐在网棚底下，拿树枝在地上划着什么，听见我的脚步，一脚就把沙抹平了。"
+next = "hut"
+effects = [{ kind = "affinity", person = "chidori", value = 4 }, { kind = "affinity", person = "ushio", value = -1 }, { kind = "flag", flag = "c9_mio_chidori_shell" }]
+
+[[tracks.chapters]]
+key = "hut"
+title = "海女小屋的火"
+text = "七月，千鸟头一回跟着婆婆们去外海潜鲍。我在岸上等到日头偏西，她们才回来，一个个嘴唇发紫，钻进礁石后头那间茅草小屋，围着火堆烤身子。千鸟招手让我进去。屋里一股海水和松枝烧焦的味道，老海女们一边烤火一边骂今年的水冷，一边把鲍鱼一个个剖开，切成长条，挂在竹竿上晒。阿德婆婆说，这样晒干的鲍，京里的公家逢年过节拿去送礼，堺商收得最贵，可年年压价。有个老海女随口提起千鸟的娘，屋里一下子静了，只剩火堆噼啪地响。千鸟把剖好的鲍肉挂上竹竿，像什么也没听见。"
+at = "shimoda_tosa"
+cast = ["chidori"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 7, 1], to = [1553, 8, 15] }]
+
+[[tracks.chapters.choices]]
+key = "bargain"
+text = "替她们跟堺商讲干鲍的价"
+reply = "第二天堺商来收货，我坐在阿德婆婆旁边，替她们报数。他一开口就压价，说今年的鲍小。我说今年鲍小，晒干的就少，京里过年要的人可不会少。他看了我一眼，又看了一眼我袖口的家纹，价往上抬了一成。他走以后，老海女们非要塞给我一条干鲍，我不要，千鸟就替我挂在了她脖子上那根绳子旁边：“先存我这儿。”"
+next = "farewell"
+effects = [{ kind = "affinity", person = "chidori", value = 5 }, { kind = "growth", attr = "commerce", value = 3 }, { kind = "flag", flag = "c9_mio_abalone_trade" }]
+
+[[tracks.chapters.choices]]
+key = "dive"
+text = "第二天，跟她下一回水"
+reply = "第二天我把头发紧紧束起，跟她下了水。她在前头，我在后头，到了四寻，她回头看我一眼，指指上面，让我先上。我浮上去吹了一声长口哨，这回吹出声了。她跟着浮上来，也吹了一声，比我的长。我们趴在木桶边喘气，她说：“下回到五寻。”"
+next = "farewell"
+effects = [{ kind = "affinity", person = "chidori", value = 4 }, { kind = "growth", attr = "constitution", value = 2 }, { kind = "skill", skill = "diving", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "坐在火边，听老海女讲南边的海"
+reply = "老海女们讲起足摺外头的海：水是黑的，流得比河还急，往南去的船很少回来。有一年，金刚福寺那边有人坐着一条四面钉死的小船出了海，船上立着写满经文的帆，岸上的人念着经送他走。我听得出神，千鸟在旁边轻轻碰了碰我的胳膊：“她们每年都讲这个。讲完了，就该回家了。”"
+next = "farewell"
+effects = [{ kind = "affinity", person = "chidori", value = 2 }, { kind = "growth", attr = "perception", value = 2 }]
+
+[[tracks.chapters]]
+key = "farewell"
+title = "两个字"
+text = "要上京的事，千鸟是从汐那里听来的。她在栈桥上堵住我，从怀里摸出一块扁平的白石头，上面用烧黑的木炭写着两个假名，一个大一个小，是我的名字。“我练的。”她说，“你到了京里，写信来。我自己念，不用别人念。”石头上的字蹭花了一个角，她用袖子擦了擦，越擦越花。我把石头收进怀里，比母亲给的那串钱还沉。"
+at = "shimoda_tosa"
+cast = ["chidori"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 11, 11], to = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "paper"
+text = "把母亲给的怀纸分她一叠"
+reply = "我回屋拿了一叠怀纸，又找出一块用秃了的墨，一起塞给她。她捧着，不知道往哪儿放，最后塞进了装剖鲍刀的皮套里。“回信写在这上头，”我说，“写错了也不许撕。”她说她不会写错，她会写得很慢。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 5 }, { kind = "start_track", track = "c9_mio_chidori_letters" }]
+
+[[tracks.chapters.choices]]
+key = "drawing"
+text = "约好：每封信都画一张河口"
+reply = "我说字写不出来的地方，就画。河口的潮到哪里了，沙洲挪到哪里了，阿德婆婆的眼睛怎么样了，都画。千鸟想了想，说：“那你也画京里。京里有没有海？”我说没有，京里只有河。她很失望，说那画河也行。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 5 }, { kind = "growth", attr = "sensibility", value = 2 }, { kind = "start_track", track = "c9_mio_chidori_letters" }]
+
+[[tracks.chapters.choices]]
+key = "slow"
+text = "告诉她京里的信走得慢，别等"
+reply = "我说一封信从京里到下田，要换三条船，走一个多月，有时候还会走丢。千鸟点点头，说那她就不等，该潜鲍潜鲍，该晒网晒网，信到了就念，不到就不念。她说得很平常，可转身走的时候，又回过头来补了一句：“丢了的，你再写一封。”"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 2 }, { kind = "growth", attr = "resolve", value = 2 }, { kind = "start_track", track = "c9_mio_chidori_letters" }]
+
+# ───────────────────────── B2 千鸟的来信：学院期两封（1554 年夏前、1555 年春）─────────────────────────
+# 第一封的回信里，汐抢过笔自己添了一行——这是汐在本批里的“书信”（不写那一行的内容）。
+# 第二封末尾单写一个“七”：澪春天在七寻摸过鲍，千鸟在水练时停在六寻；不解释。
+[[tracks]]
+key = "c9_mio_chidori_letters"
+name = "千鸟的来信"
+kind = "encounter"
+start = "first"
+auto = false
+academy = true
+cast = ["chidori"]
+
+[[tracks.chapters]]
+key = "first"
+title = "沙洲画成了一条鱼"
+text = "五月，一封信跟着堺的船进了京，又转了两道手，才送到局里。信是写在我给千鸟的那种怀纸上的，折得方方正正，字大得出格，一个假名占了半张纸。拆开来，画的比写的多：河口画了一道弯，沙洲画成一条鱼，鱼肚子往东挪了一截，旁边点了好几个点，大概是渔船。最底下画着一个圆圈，圈里一个小人，小人旁边写着一个字：五。汐凑过来看，看了半天，指着那条鱼：“沙洲真往东挪了。开春的大水冲的。”"
+at = "kyoto"
+cast = ["chidori"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1554, 5, 1], to = [1554, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "ushio_line"
+text = "回信，让汐也添一句"
+reply = "我照她的样子，写大字，画河。京里的鸭川画成一条细线，宫墙画成一个方框，框里两个小人，一个是我，一个是汐。写完，我把笔递给汐。汐不接，说你替我写。我问写什么。她想了半天：“告诉千鸟，我娘骂人的时候，叫她躲远点。”我照写了。封信之前，汐又把信抽了回去，在最末尾自己添了一行，写完把笔一扔，耳朵红到了脖子根。我没去看她写了什么。"
+next = "second"
+effects = [{ kind = "affinity", person = "chidori", value = 4 }, { kind = "affinity", person = "ushio", value = 3 }, { kind = "letter", person = "chidori", text = "澪：河口的沙往东走了。婆婆的眼睛更不好了，鲍都是我潜的。我到五寻了。堺的人又压价，我照你说的说了，他抬了一点。汐的娘天天在栈桥上骂人，身子好着呢，你告诉汐。我的名字写得好些了没有，你看。千鸟。" }]
+
+[[tracks.chapters.choices]]
+key = "river"
+text = "画一张京里的河寄回去"
+reply = "我画了鸭川：水浅，石头多，夏天有人在河滩上搭凉床。又画了宝镜寺的屋顶，画了局里那棵老梅。画完觉得京里也没什么好画的，就在最后又画了一个下田的河口，比别的都大。"
+next = "second"
+effects = [{ kind = "affinity", person = "chidori", value = 3 }, { kind = "growth", attr = "sensibility", value = 2 }, { kind = "letter", person = "chidori", text = "澪：河口的沙往东走了。婆婆的眼睛更不好了，鲍都是我潜的。我到五寻了。堺的人又压价，我照你说的说了，他抬了一点。汐的娘天天在栈桥上骂人，身子好着呢，你告诉汐。我的名字写得好些了没有，你看。千鸟。" }]
+
+[[tracks.chapters.choices]]
+key = "teach"
+text = "把新学的歌抄大字寄给她"
+reply = "我把一首短歌抄得很大，每个假名旁边画一样她认得的东西：井、炉子、船、鱼。抄完一数，一张纸只够十个字，我又抄了一张。寄出去的信，比收到的厚了一倍。"
+next = "second"
+effects = [{ kind = "affinity", person = "chidori", value = 3 }, { kind = "growth", attr = "learning", value = 2 }, { kind = "letter", person = "chidori", text = "澪：河口的沙往东走了。婆婆的眼睛更不好了，鲍都是我潜的。我到五寻了。堺的人又压价，我照你说的说了，他抬了一点。汐的娘天天在栈桥上骂人，身子好着呢，你告诉汐。我的名字写得好些了没有，你看。千鸟。" }]
+
+[[tracks.chapters]]
+key = "second"
+title = "七"
+text = "开春，千鸟的第二封信到了。这回字多了，画少了，假名一个挨一个，挤得像退潮后礁石上的藤壶。她写阿德婆婆入冬以后不下水了，整天坐在小屋门口剖鲍；写堺的船今年来得早；写汐的娘又骂走了一个想赖帆别钱的船主。信的最后单独占了一行，只有一个字，写得比别的都大，都用力：七。旁边什么也没画。汐看了一眼，问七是什么。我说，大概是七寻。汐说：“七寻的水，冷得人骨头疼。她下去干什么？”我没答，把信叠好，压在了枕头底下。"
+at = "kyoto"
+cast = ["chidori"]
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1555, 2, 1], to = [1555, 7, 31] }]
+
+[[tracks.chapters.choices]]
+key = "summer"
+text = "回信：夏天回去，比一比"
+reply = "我写：夏天回去，比，谁输了谁剖十个鲍。写完又觉得不够，在最后也单写了一行：七寻那里冷，你上来的时候吹一声长的。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 4 }, { kind = "letter", person = "chidori", text = "澪：婆婆不下水了，我一个人潜。堺的船来早了，干鲍卖了好价。汐的娘把一个赖钱的船主骂哭了。夏天你回来不回来？回来就比一比，谁先摸到底。七。千鸟。" }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "在回信末尾问她：七是什么"
+reply = "我在回信末尾问：那个七，是七寻吗？她没有回答。再来的那封信里，信角上画着一只鸟，翅膀张得很开。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 2 }, { kind = "growth", attr = "perception", value = 1 }, { kind = "letter", person = "chidori", text = "澪：婆婆不下水了，我一个人潜。堺的船来早了，干鲍卖了好价。汐的娘把一个赖钱的船主骂哭了。夏天你回来不回来？回来就比一比，谁先摸到底。七。千鸟。" }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把那个“七”剪下来收着"
+reply = "信走得太慢，有的话想等夏天回了下田再当面说。我把那个“七”剪下来，夹进了《伊势物语》里。汐看见了，说你剪人家的信干什么。我说，留着。"
+next = "done"
+effects = [{ kind = "affinity", person = "chidori", value = 1 }, { kind = "growth", attr = "sensibility", value = 1 }, { kind = "letter", person = "chidori", text = "澪：婆婆不下水了，我一个人潜。堺的船来早了，干鲍卖了好价。汐的娘把一个赖钱的船主骂哭了。夏天你回来不回来？回来就比一比，谁先摸到底。七。千鸟。" }]
+
+# ───────────────────────── B5 年度大事：八朔竞渡（预告 → 准备 → 当天；赢了解锁“小早操舵”）─────────────────────────
+# 预告（8 月下旬，八朔前三旬）：找前橹（汐、千鸟或渔家老三），阿濑要我每旬去河口练——玩家把“潮流竞渡练习”排进月程。
+# 准备（9 月上旬）：阿濑看练；当天（八朔 = 本世界 1553-09-18，取节庆表的逐年日期）：
+#   抢深水掷读潮（练得越多越稳）、贴回流掷航海、不抢必定可选。
+#   赢 → 两天后阿濑交出栈桥最里头的小早（helm）；输 → 船底刮上沙脊（lost），岸上那个能岛少年笑、扔一捆槙皮；
+#   输了补船或认错、或不抢的 → 冬至大潮再考一回（winter：掷航海，或汐情谊 ≥ 20 时请她领桨）；冲岸上喊“明年再比”的，阿濑不再提这条船。
+# 检定数值待 U02 校准：读潮 25 + 经验 × 1（练三回约 +36），航海 40 + 级 × 8，冬至那回航海 45 + 级 × 8。
+[[tracks]]
+key = "c9_mio_hassaku_race"
+name = "八朔竞渡"
+kind = "request"
+start = "notice"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "notice"
+title = "八朔的潮"
+text = "夏天的几场竞渡，我都是坐在别人的船上划的，船主说快就快，说慢就慢。八月底，渔家的老头们蹲在栈桥上合计八朔那天的事：朔日潮大，下田本浦的船照老规矩在河口比一场，两人一条船，从东岸绕过河心的黑石再回来，赢的船把新米供进河口的水神祠。外浦的船只许看，不许下场。我在旁边听完，回去找阿濑：“我要自己一条船。”阿濑把补到一半的网放下，盯着我看了很久，说她那条练手的小船可以借我，前橹找谁，我自己去找。“还有三旬。”她说，“每一旬都给我到河口去练，练到手上的泡破了再长、长了再破。”"
+at = "shimoda_tosa"
+cast = ["ase"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 8, 21], to = [1553, 9, 17] }]
+
+[[tracks.chapters.choices]]
+key = "ushio"
+text = "去找汐坐前橹"
+reply = "汐正在网棚底下削桨，听我说完，把刨子一放：“前橹？我划了十年船，你让我坐前头给你出力？”我说那你坐后头掌舵。她想了想，又把刨子拿了起来：“算了，前头就前头。你舵掌歪了，我回头骂你。”"
+next = "drill"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }, { kind = "flag", flag = "c9_mio_race_with_ushio" }, { kind = "schedule", person = "takamaru", at = "shimoda_tosa", venue = "dock", until = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "chidori"
+text = "去找千鸟坐前橹"
+requires = [{ kind = "flag", flag = "c9_mio_met_chidori" }]
+reply = "千鸟说她只会潜水，不会划船。我说潜水的人气长，划到最后不会喘。她想了一会儿，把竹篓往礁石上一放：“那我划。可要是翻了，我游得比你快，先上岸的是我，回头捞不捞你，看我高兴。”"
+next = "drill"
+effects = [{ kind = "affinity", person = "chidori", value = 3 }, { kind = "flag", flag = "c9_mio_race_with_chidori" }, { kind = "schedule", person = "takamaru", at = "shimoda_tosa", venue = "dock", until = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "boy"
+text = "去找渔家的老三"
+reply = "老三是渔家的第三个儿子，夏天竞渡时坐在我旁边那条船上，划起来像不要命。我站在他家门口说要他坐我的前橹，他笑得直不起腰，笑完了问管不管饭。我说管。他说那就划。"
+next = "drill"
+effects = [{ kind = "growth", attr = "command", value = 2 }, { kind = "schedule", person = "takamaru", at = "shimoda_tosa", venue = "dock", until = [1554, 1, 9] }]
+
+[[tracks.chapters]]
+key = "drill"
+title = "手上的泡"
+text = "八朔前半个月，阿濑站在栈桥头看我们练。河心那块黑石头底下，潮一退，白沫就往外翻。老三在前头划得又快又猛，我在后头摇橹，船头老往左偏，一偏，阿濑就在岸上咳嗽一声。练到太阳落山，她把我叫过去，什么也没说，掰开我的手看了看，泡已经破了两回。"
+at = "shimoda_tosa"
+cast = ["ase"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 9, 5], to = [1553, 9, 17] }]
+
+[[tracks.chapters.variants]]
+key = "v_chidori"
+when = [{ kind = "flag", flag = "c9_mio_race_with_chidori" }]
+text = "八朔前半个月，阿濑站在栈桥头看我们练。千鸟划桨像在水里抓东西，一下是一下，可划到河心，她总忍不住往水里看，看底下的石头，船就慢了。我喊她，她说底下有一条鲈鱼，比我的胳膊还长。阿濑在岸上咳嗽了一声。练到太阳落山，阿濑把我叫过去，掰开我的手看了看，泡已经破了两回。"
+
+[[tracks.chapters.variants]]
+key = "v_ushio"
+when = [{ kind = "flag", flag = "c9_mio_race_with_ushio" }]
+text = "八朔前半个月，阿濑站在栈桥头看我们练。汐在前头划，桨下得又深又稳，可她不肯听我的号子，总比我快半拍，船头老往左偏。偏一回，阿濑就在岸上咳嗽一声，汐就回头瞪我一眼。练到太阳落山，阿濑把我叫过去，掰开我的手看了看，泡已经破了两回。她又要看汐的手，汐把手背到身后，不给看。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问阿濑：河心哪一片水先回头"
+reply = "阿濑朝黑石头努努嘴：“石头背后那一片。水先在那里打转，转完了才往回走。转的时候船最好走，也最容易被它拽过去。”她说完就走了。第二天我在岸上蹲了一个早上，数黑石头背后的漩涡，数到第十一个，潮回头了。"
+next = "race"
+effects = [{ kind = "skill", skill = "tide_reading", value = 6 }, { kind = "affinity", person = "ase", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "race_kids"
+text = "先跟渔家的小子们赛一回"
+reply = "我们跟渔家的两条船赛了一回，输了一个船身。回来的路上，他们在后头喊：“姬君，八朔那天别哭！”我没回头，只把橹握得更短了些。"
+next = "race"
+effects = [{ kind = "growth", attr = "seamanship", value = 3 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "上岸看一整天的水"
+reply = "我把船交给前橹，自己上了岸，坐在晒网的竹架底下看了一整天。涨潮时，河面上一道一道的皱纹往上游推；退潮时，皱纹反过来。快到黑石的那一段，皱纹总是先乱、后齐。我把乱的地方画在怀纸上，画了七遍，没有两遍一样。"
+next = "race"
+effects = [{ kind = "growth", attr = "perception", value = 3 }, { kind = "skill", skill = "tide_reading", value = 3 }]
+
+[[tracks.chapters]]
+key = "race"
+title = "八朔竞渡"
+text = "八朔那天天还没亮，河口两岸就站满了人。七条船一字排在东岸，鼓一响，七支前橹一齐砸进水里。头一段顺水，谁都快；快到黑石头的时候，潮正往外退，河心的水鼓起来，像一块绷紧的布。老三在前头喊：“姬君，往哪边？”抢河心那道深水，路最近，也最容易被潮推出去；贴着南岸走，那里有一股回流，慢，可是稳。岸上，阿濑抱着胳膊，一动不动。"
+at = "shimoda_tosa"
+cast = ["ase"]
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 9, 18], to = [1553, 10, 31] }]
+
+[[tracks.chapters.variants]]
+key = "v_chidori"
+when = [{ kind = "flag", flag = "c9_mio_race_with_chidori" }]
+text = "八朔那天天还没亮，河口两岸就站满了人。七条船一字排在东岸，鼓一响，七支前橹一齐砸进水里。头一段顺水，谁都快；快到黑石头的时候，潮正往外退，河心的水鼓起来，像一块绷紧的布。千鸟在前头回过头来，脸上全是水：“往哪边？”抢河心那道深水，路最近，也最容易被潮推出去；贴着南岸走，那里有一股回流，慢，可是稳。岸上，阿濑抱着胳膊，一动不动。"
+
+[[tracks.chapters.variants]]
+key = "v_ushio"
+when = [{ kind = "flag", flag = "c9_mio_race_with_ushio" }]
+text = "八朔那天天还没亮，河口两岸就站满了人。七条船一字排在东岸，鼓一响，七支前橹一齐砸进水里。头一段顺水，谁都快；快到黑石头的时候，潮正往外退，河心的水鼓起来，像一块绷紧的布。汐在前头头也不回：“往哪边？快说！”抢河心那道深水，路最近，也最容易被潮推出去；贴着南岸走，那里有一股回流，慢，可是稳。岸上，阿濑抱着胳膊，一动不动。"
+
+[[tracks.chapters.choices]]
+key = "deep"
+text = "抢河心那道深水"
+check = { attr = "tide_reading", base = 25, per = 1 }
+reply = "我把橹一扳，船头扎进河心。潮在船底下拽，拽得船身发抖，我盯着黑石头背后的漩涡，等它转到第三圈——就是现在。船顺着漩涡甩过石头，像被人推了一把。回程的时候，后头的船还在跟潮较劲。我们第一个碰到东岸的木桩，岸上的人喊成一片。阿濑还是抱着胳膊，可我看见她的嘴角动了一下。"
+next = "helm"
+effects = [{ kind = "flag", flag = "c9_mio_kobaya_helm" }, { kind = "skill", skill = "tide_reading", value = 6 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-c9-mio-hassaku", title = "八朔竞渡" }]
+fail = { next = "lost", effects = [{ kind = "memory", memory = "mem-c9-mio-hassaku", title = "八朔竞渡" }] }
+
+[[tracks.chapters.choices]]
+key = "eddy"
+text = "贴着南岸的回流走"
+check = { attr = "seamanship", base = 40, per = 8 }
+reply = "我把船往南岸一摆，船头钻进那股回流，水一下子变软了，像有人在底下托着。别的船都在河心跟潮死磕，我们贴着岸，一下一下，不快，可一下也没白划。绕过黑石头的时候我们排第三；回到东岸，我们是第一。老渔夫们说，这股回流他们打了一辈子鱼，从没想过拿来比赛。"
+next = "helm"
+effects = [{ kind = "flag", flag = "c9_mio_kobaya_helm" }, { kind = "growth", attr = "seamanship", value = 5 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-c9-mio-hassaku", title = "八朔竞渡" }]
+fail = { next = "lost", effects = [{ kind = "memory", memory = "mem-c9-mio-hassaku", title = "八朔竞渡" }] }
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "不抢，跟在后头稳稳划完"
+reply = "我没抢。船跟在第三条后头，绕过黑石，回到东岸，排第四。岸上没人喊我的名字，也没人笑。阿濑走过来，摸了摸船底，又看了看我的手：“船没坏，人也没丢。”她顿了一下，“冬至那天的大潮，再给你一回。”"
+next = "winter"
+effects = [{ kind = "affinity", person = "ase", value = 2 }, { kind = "growth", attr = "resolve", value = 2 }, { kind = "memory", memory = "mem-c9-mio-hassaku", title = "八朔竞渡" }]
+
+[[tracks.chapters]]
+key = "helm"
+title = "栈桥最里头的小早"
+text = "竞渡过后第三天，阿濑把我领到栈桥最里头。那里拴着一条小早，船板发黑，船舷上刻着能岛的记号，是她当年从岛上撑过来的，平时不许任何人碰。“八支橹，”她说，“渔家的小子们坐两舷，你站船尾。号子你来喊，舵你来掌。喊错了，他们不会告诉你，只会划乱。”她把一根磨得发亮的舵柄塞进我手里，木头是温的，像刚被人握过。"
+at = "shimoda_tosa"
+cast = ["ase"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "wait", days = 2 }, { kind = "date", to = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "chant"
+text = "先学渔家的号子"
+reply = "我在船尾喊，他们在两舷划。头一天我喊得太快，八支橹打成一锅粥；第二天喊得太慢，船在河口原地打转。第三天老三忍不住，替我喊了一遍，我才听明白：号子不是喊给人听的，是喊给水听的。水推船的时候喊，水松手的时候歇。"
+next = "done"
+effects = [{ kind = "growth", attr = "command", value = 3 }, { kind = "growth", attr = "seamanship", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ushio_bow"
+text = "让汐当前橹头"
+reply = "汐坐到最前头，回头看了我一眼：“你喊你的，我划我的。他们看我，不看你。”头一天果然这样，八个人只跟着她的桨走。第二天，我把号子改成跟着她的桨喊，船就直了。阿濑在岸上说：“这才像一条船。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 4 }, { kind = "growth", attr = "command", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "paint"
+text = "先把船底刷一遍新漆"
+reply = "我没急着下水，先把小早翻过来，刮藤壶，补缝，刷了一遍新漆。刷到船尾，看见舵柄底下刻着一个小小的“濑”字，刻得很深，边上已经磨圆了。我没问阿濑，只是刷漆的时候，绕开了那个字。"
+next = "done"
+effects = [{ kind = "affinity", person = "ase", value = 3 }, { kind = "skill", skill = "shipbuilding", value = 6 }]
+
+[[tracks.chapters]]
+key = "lost"
+title = "沙脊"
+text = "差一点。离黑石头还有十来个船身，潮猛地一退，船头偏了。我扳橹扳得太狠，船底在沙脊上刮出一声闷响，像有人在底下咬了一口。等我们把船从沙上推下来，别的船已经绕过了石头。回到东岸，我们是最后一条。船底的板裂了一道细缝，水一丝一丝地往里渗。岸上有人吹了一声口哨，是夏天在船板上刻道的那个能岛少年，他蹲在晒网架上，笑得露出一口白牙。笑完了，他从腰里摸出一小捆槙皮，扔到我脚边：“塞缝用这个。别用你们公家的纸。”"
+at = "shimoda_tosa"
+cast = ["ase", "takamaru"]
+mood = "sad"
+
+[[tracks.chapters.choices]]
+key = "mend"
+text = "跟前橹一起把船拖上岸，自己补"
+reply = "我们把船拖上沙滩，翻过来。槙皮塞进缝里，用锤子一点一点砸实，再抹上油。补到天黑，前橹先回去了，我一个人又敲了一遍。第二天阿濑来看，用指节沿着裂缝敲了一圈，敲完说：“冬至那天的大潮，再给你一回。”"
+next = "winter"
+effects = [{ kind = "skill", skill = "shipbuilding", value = 6 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "apologize"
+text = "去阿濑屋里认错"
+reply = "我跪在阿濑屋里，说船是我刮坏的，不怪前橹。阿濑在补网，半天没抬头。补完一个网眼，她才开口：“船坏了能补。你要是怪前橹，就补不了了。”她把网收起来：“冬至那天的大潮，再给你一回。”"
+next = "winter"
+effects = [{ kind = "affinity", person = "ase", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "shout"
+text = "冲那个能岛少年喊：明年再比"
+reply = "“明年！”我冲着晒网架喊，“明年八朔，你也下场，我们比！”他愣了一下，笑得更厉害了：“外浦的不许下场，你不知道？”我说那我去能岛找你。岸上的人都笑了，可这回笑声里有人在拍手。阿濑在人群后头看着我，什么也没说，后来也没再提那条船的事。"
+next = "done"
+effects = [{ kind = "fame", value = 1 }, { kind = "flag", flag = "c9_mio_race_grudge" }]
+
+[[tracks.chapters]]
+key = "winter"
+title = "冬至的大潮"
+text = "冬至前后的大潮，一年里退得最狠。天还黑着，河口的沙洲整片露了出来，像一条搁浅的鲸。阿濑把我领到栈桥最里头，那里拴着一条小早，船板发黑，船舷上刻着能岛的记号。“八支橹，渔家的小子们坐两舷，你站船尾。”她说，“从这里出河口，绕过沙洲尖回来。回得来，这条船往后归你使。”渔家的孩子们已经在船上了，一个个冻得缩着脖子，等我开口。"
+at = "shimoda_tosa"
+cast = ["ase"]
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_mio" }, { kind = "date", from = [1553, 12, 11], to = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "steer"
+text = "站上船尾，喊号出河口"
+check = { attr = "seamanship", base = 45, per = 8 }
+reply = "我喊第一声的时候，嗓子是抖的；第二声稳了。小早顺着退潮滑出去，沙洲尖上的水翻着白，我把舵往外一推，船头擦着白沫绕了过去。回到栈桥，渔家的孩子们一个个甩着手喊冷。阿濑接过缆绳，拴好，拍了拍船舷：“归你了。”"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_mio_kobaya_helm" }, { kind = "growth", attr = "seamanship", value = 4 }, { kind = "fame", value = 1 }]
+fail = { next = "winter_lost", effects = [] }
+
+[[tracks.chapters.choices]]
+key = "ushio"
+text = "请汐坐到前头领桨"
+requires = [{ kind = "affinity", person = "ushio", ge = 20 }]
+hint = "汐这几天不大理你。这样冷的早上，你叫不动她。"
+reply = "汐坐到最前头，一句话没说，桨先下了水。八支橹跟着她的桨，我跟着八支橹喊号，一前一后，像一个人在划。绕过沙洲尖的时候，她回头看了我一眼，嘴唇冻得发紫，眼睛却在笑。回到栈桥，阿濑看看汐，又看看我：“两个人的船，也是船。归你们了。”"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_mio_kobaya_helm" }, { kind = "growth", attr = "command", value = 3 }, { kind = "affinity", person = "ushio", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这回不去了"
+reply = "我站在栈桥上，看了很久黑沉沉的河口，说：“等我从京里回来。”阿濑没劝，把缆绳又绕了一圈，拴紧了：“它等得起。”"
+next = "done"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters]]
+key = "winter_lost"
+title = "横过来的船"
+text = "号子喊到第五声，前头两支橹先乱了，船身一横，退潮的水立刻顶上来，把小早往沙洲上推。渔家的孩子们慌了，有人喊姬君，有人喊阿濑。是阿濑跳上船尾，一把抢过舵，船才直了回来。回到栈桥，谁也没说话。阿濑把缆绳拴好，背对着我站了一会儿：“等你从京里回来，再说。”"
+at = "shimoda_tosa"
+cast = ["ase"]
+mood = "sad"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "认了，替她把缆绳收好"
+reply = "我把缆绳一圈一圈收好，挂在桩上，收得比她平时还整齐。阿濑看了一眼，没说什么。第二天早上，舵柄上多了一层新油。"
+next = "done"
+effects = [{ kind = "affinity", person = "ase", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "again"
+text = "求她明早再给一回"
+reply = "阿濑摇头：“潮过了，就是过了。”说完，她又补了一句，“下一回大潮，你在京里。到时候去看看京里的河，回来告诉我，它跟这儿的潮有什么不一样。”"
+next = "done"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "growth", attr = "perception", value = 1 }]

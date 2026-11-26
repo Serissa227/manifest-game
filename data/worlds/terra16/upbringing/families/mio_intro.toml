@@ -1,0 +1,366 @@
+# 第十轮 U07：养成期的开场介绍（Claude 写）。
+#
+# 一组轨道 = 一串短幕，幕与幕之间只有“继续”。每一幕只让一个人（或一样东西）站到面前：
+#   - 界面放这一幕 cast 第一个人的立绘；cast 为空的幕是“东西”（河口、一张纸）或还没有人物卡的人，只放场景图。
+#   - 名牌取章节 title：“名字 · 一行身份”，中点前是名字，后面是身份。
+#   - art 是场景键（frontend 的 SCENE_FILES 里现成的图），选和这个人最搭的地方。
+#   - 轨道键以 intro_ 开头，界面按这个前缀认“这是介绍”。
+#
+# 三组：
+#   - intro_mio_home：家乡期第一段的入学事件（mio.toml 的 stages[0].entry_event），开新局、不跳过养成时第 0 天就开始，
+#     排在第一周排课之前。最后一幕的三个选项是澪开口说的第一句话，不改数值，都设家乡期的入学标记 c9_family_mio
+#     （原来由 c9_mio_home_start 第一章设），并照旧开 bond_takamaru；另开 c9_mio_home_start（只剩“寄往月港的信”一章，
+#     U07R 起 2 月以后出，免得第一周连读三段）。原开场的阿濑、母亲两章挪进这里，好感照旧：阿濑、母亲两幕的“继续”各 +5。
+#   - intro_mio_kyoto：京都宫中的入学事件 c9_academy_kyoto_court_enrollment_1554 三个选项各开一次（mio_events.toml）。
+#   - intro_mio_noshima：能岛的入学事件 c9_academy_noshima_boat_school_enrollment_1554 的选项开（pending_events.toml）。
+#
+# 不点破的东西（照 docs/world/voices/japan.md 各人的“秘密”）：
+#   - 母亲的念珠少一颗，只写她拨到空处手停一停，不写那一颗去了哪里、和谁有关。
+#   - 阿濑收网伸左手，不写右肩怎么伤的。
+#   - 千鸟、鹰丸这个冬天不在下田（千鸟在新手旬下旬才遇见，鹰丸夏天竞渡才来），家乡这组不写他们。
+#   - 京都的同窗只写第一眼，不抢各自羁绊线 c1 的初见：雪删的是借经的簿子，不是歌；鞠千代只隔墙听见鞠声，没见着脸
+#     （c1 他从墙头冒出来，才算头一回见）；小督替扇铺的伙计写信，澪在对街听见，没搭话（c1 米铺里才说上话）；
+#     菖在本家收岁暮的礼，挑的是小女房的错，澪在隔扇后头没出去（c1 上臈门前才当面）。阿松婆不写她认得阿濑（能岛三月的来信里才知道）。
+# 走向：本文件只是介绍，不立走向。
+"format_version" = 1
+
+# ───────── 家乡：下田，1553 年 1 月 1 日（旧历腊月）──────────
+[[tracks]]
+"key" = "intro_mio_home"
+"name" = "下田的一家人"
+"kind" = "main"
+"start" = "estuary"
+"auto" = false
+"academy" = true
+
+# 第一幕：河口。这个家靠什么吃饭、眼下的难处。
+[[tracks.chapters]]
+"key" = "estuary"
+"title" = "下田 · 四万十川入海的河口"
+"text" = "四万十川从中村流下来，到下田撞上外海，黄水和青水在沙洲外头搅成一片。中村几座庄子的米顺河运下来，在这里装船去堺，换回绢、纸和铜钱；过路的船在河口外等潮，就在阿濑的栈桥上交帆别钱，那钱归能岛。一入冬河口就浅，装船的脚夫蹲在缆桩上骂沙脊，说它今年又往东挪了。家里使得动的船只有两条：老五郎运米的平底船，阿濑的小船。"
+"at" = "shimoda_tosa"
+"art" = "roof_tosa"
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "mio"
+
+# 第二幕：澪自己。话快、抢话、句里带数；对人用敬语，敬语里带刺。
+[[tracks.chapters]]
+"key" = "mio"
+"title" = "一条澪 · 一条家十二岁的长女"
+"text" = "一条堺船在河口外等了两天潮，船头下来交帆别钱，钱袋还没倒空，我已经报出来了：“三帆，一帆十二文，三十六。您怀里那串不用掏，那是下回的。”船头的手从怀里抽了出来。"
+"at" = "shimoda_tosa"
+"art" = "dock_jp"
+"cast" = ["mio"]
+"speaker" = "captain"
+"mood" = "cheerful"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "ase"
+
+# 第三幕：阿濑。骂得长、翻旧账、骂到一半去干活、夸人只一个字。好感 +5 接原开场 meet_ase 的那一笔。
+[[tracks.chapters]]
+"key" = "ase"
+"title" = "阿濑 · 我那能岛来的乳母"
+"text" = "阿濑在网棚底下补网，梭子不停，眼睛不离河口那道白线。我把三十六文倒进她的钱匣，她就骂开了：人家怀里的钱，轮得到姬君去点？那年宿毛有个丫头多嘴，叫船头一桨拍进水里，捞上来少了两颗门牙，她娘在栈桥上哭了一下午……骂到一半，她起身去收竿子上的网，伸的是左手。回来往我手里塞了半块烤年糕，夸了一个字：“快。”"
+"at" = "shimoda_tosa"
+"art" = "boatshed_tosa"
+"cast" = ["ase"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "ushio"
+"effects" = [{ "kind" = "affinity", "person" = "ase", "value" = 5 }]
+
+# 第四幕：汐。人前憋着，吵到潮的事一口气说完；借娘的话。
+[[tracks.chapters]]
+"key" = "ushio"
+"title" = "汐 · 阿濑的女儿，和我同岁的乳姐妹"
+"text" = "汐蹲在灶前烧火。我说那条堺船明早就走，她拿火钳把柴一戳，一口气说下去：“走不了。这几天小潮，水涨到栈桥第二道绳就停了，那船吃水五尺，过沙洲要到第三道，明早它还得蹲在外头喝风。”说完又补了一句“我娘准这么讲”，低头往灶里添柴。"
+"at" = "shimoda_tosa"
+"art" = "home_tosa"
+"cast" = ["ushio"]
+"speaker" = "captain"
+"mood" = "cheerful"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "mother"
+
+# 第五幕：母亲。慢，说半句，拨一颗珠子就换了话题；拿账岔开。念珠少的那一颗只留着。好感 +5 接原开场 meet_mio_mother。
+[[tracks.chapters]]
+"key" = "mother"
+"title" = "大友夫人 · 我的母亲，管着一条家的粮账"
+"text" = "母亲在书房里对粮账，念一笔，拨一颗念珠。那串黑檀念珠少了一颗，拨到空着的地方，她的手停一停，才往下走。我问开了年学什么，她说：“字。歌也要……”又拨过一颗，说幡多那座庄子少报了两石，叫我明早替她念那一页。"
+"at" = "shimoda_tosa"
+"art" = "study_tosa"
+"cast" = ["mio_mother"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "kanesada"
+"effects" = [{ "kind" = "affinity", "person" = "mio_mother", "value" = 5 }]
+
+# 第六幕：兼定的信。平声，一件一件列，列到第三件想不出来。本家缺米是眼下的难处。
+[[tracks.chapters]]
+"key" = "kanesada"
+"title" = "一条兼定 · 我的弟弟，十岁，一条家当主"
+"text" = "兼定从京都本家寄来的信走了二十三天，字一个个往右倒：“姊上：头一件，本家的人早上起得晚，我先起来，在廊下滑了两回。第二件，房通大人叫我问中村的米几时到，本家的米吃到二月。第三件我还没想好，想好了再写。兼定”我把信拿给母亲，她只看了第二件。"
+"at" = "shimoda_tosa"
+"art" = "garden_tosa"
+"cast" = ["ichijo_kanesada"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "paper"
+
+# 第七幕：铺头的一张纸。一周怎么过（前五行是行动制家乡期的缺省课表：潮、字、潮、字、凫水；第六天自己排；第七天歇），
+# 钱从哪儿来（每月一串零用；家业“替收帆别钱”分几文），几年后要走（阿濑添的“十六，船”）。
+# U07R：纸只写母亲记账的样子，课表细节留给界面；三个选项各接纸上一处（第六行、十六、分几文），回话分给母亲、汐、阿濑。
+# 三个选项是澪的第一句话，都不改数值，都设家乡期的入学标记与日本线的文化旗标，开鹰丸的羁绊与月港那封信。
+[[tracks.chapters]]
+"key" = "paper"
+"title" = "铺头的纸 · 母亲排的这一年"
+"text" = "临睡前，母亲在我铺头贴了一张纸，写法跟她的粮账一样，一天一行：潮，字，潮，字，凫水。第六行空着，再往下是一个“歇”。纸脚另记一笔：每月初一，钱一串；替阿濑收帆别钱，另分。分几文没写。纸角还有一行，字比母亲的大一圈，墨也浓，是阿濑后添的：“十六，船。”"
+"at" = "shimoda_tosa"
+"art" = "home_tosa"
+"night" = true
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "sixth_day"
+"text" = "“潮两天，字两天，母亲排得真匀。第六行我也排潮，三比二。”"
+"reply" = "隔扇那边，母亲拨过一颗念珠：“明早先把幡多那一页念了。”"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_pool_japanese", "value" = true }, { "kind" = "flag", "flag" = "c9_region_japanese", "value" = true }, { "kind" = "start_track", "track" = "bond_takamaru" }, { "kind" = "start_track", "track" = "c9_mio_home_start" }]
+
+[[tracks.chapters.choices]]
+"key" = "years"
+"text" = "“十六还要四年……我六月生的，三年半。”"
+"reply" = "汐在铺那头翻了个身：“纸上没写是谁的船。”"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_pool_japanese", "value" = true }, { "kind" = "flag", "flag" = "c9_region_japanese", "value" = true }, { "kind" = "start_track", "track" = "bond_takamaru" }, { "kind" = "start_track", "track" = "c9_mio_home_start" }]
+
+[[tracks.chapters.choices]]
+"key" = "fee"
+"text" = "“阿濑，几文是几文？一条船三文，一天过五条是十五文，我替你算好了。”"
+"reply" = "灶间那边传过来阿濑的声音：“两文。嫌少找你娘去——找夫人去。”"
+"next" = "done"
+"effects" = [{ "kind" = "flag", "flag" = "c9_family_mio", "value" = true }, { "kind" = "flag", "flag" = "c9_pool_japanese", "value" = true }, { "kind" = "flag", "flag" = "c9_region_japanese", "value" = true }, { "kind" = "start_track", "track" = "bond_takamaru" }, { "kind" = "start_track", "track" = "c9_mio_home_start" }]
+
+# ───────── 京都：一条本家与宫中，1554 年 1 月 10 日（旧历腊月）──────────
+# 入学事件“从这一册补起”之后接着放。宫门开春才进得去，这一组写的是腊月里在本家、三条西家、宝镜寺、室町通、
+# 飞鸟井家墙外见到的人；同窗只写第一眼。国子不单列一幕，在保子那一幕里提到。兼定在第二天的“京都寄住”里出场，这里不写。
+[[tracks]]
+"key" = "intro_mio_kyoto"
+"name" = "京里的人"
+"kind" = "encounter"
+"start" = "yasuko"
+"auto" = false
+"academy" = true
+
+# 保子：长、周到、替人把每一步说出来；代价那一句永远“改日”。1554 年 1 月兼冬还在世，不写遗孀。
+# U07R：入学事件刚交代过老女房与开春进宫，这里不再念课表；先递的小事改成火盆添炭（手炉归第二天“京都寄住”里的兼定）。
+#   “腔调不急”是她要澪变的头一处，和 bond_ayame c1 菖说的“土佐的口音，往后改”前后接上。
+[[tracks.chapters]]
+"key" = "yasuko"
+"title" = "广桥保子 · 关白兼冬大人的夫人"
+"text" = "夜里，保子大人先叫人往我屋里的火盆添了炭，才隔着帘子开口。她说姬君一定在想，晚到了这些天，老女房要嫌；不嫌，她跟老女房说过了。她在宫里做典侍的姊妹国子，也托过了，开春先看字。三条西大人家的书库，她递过话，姬君去借就是。还有姬君说话的腔调，也不急，一样一样来。我问这些门路往后要还多少。帘子后头她先笑了一声，说改日。"
+"at" = "kyoto"
+"art" = "tsubone_kyoto"
+"cast" = ["hirohashi_yasuko"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "kineda"
+
+# 公条：讲到一半问讲到哪一句；不夸人，只夸注。
+[[tracks.chapters]]
+"key" = "kineda"
+"title" = "三条西公条 · 讲《源氏》的老先生"
+"text" = "三条西家的土仓里一股霉纸味，公条大人坐在书堆中间，替我找《源氏》的帚木。找到了，他翻开讲了两句，抬头问：“讲到哪儿了？”我说第三张背面，第五行。他没理会行数，拿过我的抄本，把页边一条小注念了一遍，说这一条对了，然后从帚木的头一句重新讲起。"
+"at" = "kyoto"
+"art" = "library_kyoto"
+"cast" = ["sanjonishi_kineda"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "tokitsugu"
+
+# 言继：话多、爱笑、什么都记进日记；钱的事他最熟。房通病着，他来送药。
+[[tracks.chapters]]
+"key" = "tokitsugu"
+"title" = "山科言继 · 常来本家的公卿，会配药"
+"text" = "山科大人提着药箱来给房通大人送药，人还在小庭里就笑开了，问我土佐今年鲣鱼几文一条，堺到下田的船钱涨了没有，问一句，往随身那册日记上记一句。我答到第五样，他把笔一停，说宫里漏雨的那间屋子，修的钱到今天还没凑齐，又问中村那边今年出得起几贯。"
+"at" = "kyoto"
+"art" = "tsuboniwa_kyoto"
+"cast" = ["yamashina_tokitsugu"]
+"speaker" = "captain"
+"mood" = "cheerful"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "yuki"
+
+# 雪：删。把你的话删一半说回来。删的是借经的簿子，不碰 bond_reizei_yuki c1 那首歌。
+[[tracks.chapters]]
+"key" = "yuki"
+"title" = "冷泉雪 · 歌道冷泉家的小姐"
+"text" = "宝镜寺抄经，进门先在簿子上写名字。我写：土佐一条家长女一条澪，抄《心经》一卷。旁边伸过来一支笔，把“土佐一条家长女”划了，划得笔直。“一条澪。”那女孩说，“抄一卷。”她自己那一行只有两个字：冷泉。"
+"at" = "kyoto"
+"art" = "temple_kyoto"
+"cast" = ["reizei_yuki"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "kogo"
+
+# 小督：报价，量钱用米。替人写信，不在米铺（米铺是 bond_kogo c1）。
+[[tracks.chapters]]
+"key" = "kogo"
+"title" = "小督 · 宫里最末一等的见习"
+"text" = "室町通的扇铺门口，一个穿见习衣裳的女孩蹲在檐下，替扇铺的小伙计写信，写一行报一个价。我在对街等本家买炭的下人，隔着一条街都听得见：“这一句半升米。‘想你’两个字另算。”小伙计数米数到一半反悔了，她笔一收，那一行就没有下半句。"
+"at" = "kyoto"
+"art" = "incense_kyoto"
+"cast" = ["kogo"]
+"speaker" = "captain"
+"mood" = "cheerful"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "kikuchiyo"
+
+# 鞠千代：鞠一到脚边就换了个人，一被人看就慌。只写隔墙的鞠声与他问外头有人；澪没见着脸，bond_kikuchiyo c1 他从墙头冒出来才算初见。
+[[tracks.chapters]]
+"key" = "kikuchiyo"
+"title" = "鞠千代 · 飞鸟井家的庶子"
+"text" = "飞鸟井家的院墙不高，隔着墙听得见鞠落在鞋面上的声音，我数到四十几下才断。我踮起脚，还没看见什么，墙里先有人问：“谁、谁在外头？”是个少年的嗓子。我没答，顺着墙根走了。走到巷口，墙里的鞠声才又响起来。"
+"at" = "kyoto"
+"art" = "kemari_jp"
+"cast" = ["kikuchiyo"]
+"speaker" = "captain"
+"mood" = "tender"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "ayame"
+
+# 菖：端正，当面挑错，用“您”；袖口只归她。在本家收岁暮的礼，挑的是小女房的错，澪在隔扇后头（当面是 bond_ayame c1 上臈门前）。
+[[tracks.chapters]]
+"key" = "ayame"
+"title" = "大炊御门菖 · 上臈看中的见习"
+"text" = "大炊御门家来本家送岁暮的礼，我在隔扇后头看。跟着来的女儿和我一般大。本家的小女房把回礼递过去，她接了，又原样推回去：“您递反了，有字的一面朝着自己。”小女房翻过来再递，她才收下，理平了左边的袖口，问小女房隔扇后头那一位，是不是土佐来的姬君。"
+"at" = "kyoto"
+"art" = "court_jp"
+"cast" = ["ayame"]
+"speaker" = "captain"
+"mood" = "tense"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "done"
+
+# ───────── 能岛：水路见习处，1554 年 1 月 10 日 ──────────
+# 入学事件“等的是哪一刻”之后接着放。在场的只有鹰丸、又四郎和岛上的人（mio_noshima.toml 文件头）。
+# 阿松婆、番所的老账房没有人物卡，cast 留空，只放场景图；要立绘得先建人物（见 docs/drafts/u07-handoff.md）。
+[[tracks]]
+"key" = "intro_mio_noshima"
+"name" = "岛上的人"
+"kind" = "encounter"
+"start" = "bosun"
+"auto" = false
+"academy" = true
+
+# 又四郎：粗、短，叫见习“小鬼”；嘴上说不救，persona 里是头一个跳下去的人。一周怎么过只说个大概，细的看课表。
+[[tracks.chapters]]
+"key" = "bosun"
+"title" = "又四郎 · 能岛的水手头，见习归他管"
+"text" = "草棚的柱子上钉着一块木板，刻满了道道，是这个月的潮时。又四郎拿桨柄敲着它，说一连五天天亮上船，第六天随你们，别死就行。“看不懂这块板的，夜里别下水。下了也别喊，濑户里喊破了嗓子也没人听见——听见了我也不去。”"
+"at" = "noshima"
+"art" = "shed_noshima"
+"cast" = ["c8_noshima_bosun"]
+"speaker" = "captain"
+"mood" = "tense"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "takamaru"
+
+# 鹰丸：讲村上家就长，讲自己就短；记场次；“一半”只归他。
+[[tracks.chapters]]
+"key" = "takamaru"
+"title" = "村上鹰丸 · 汐的表兄，同一个草棚的见习"
+"text" = "鹰丸在泊位上刮他那条小早的船底，见了我，先拿刮子敲敲船板上那一溜刻痕：第十七场那一道还在，底下又添了三道新的，是跟岛上的人比的。我问这三道赢了几场，他说：“两场半。”接着讲宫洼濑户哪年烧过谁家的船、他爷爷那辈一条船收几百文，带年份带船名，一讲一大串，船底还没刮完一半。"
+"at" = "noshima"
+"art" = "berth_noshima"
+"cast" = ["takamaru"]
+"speaker" = "captain"
+"mood" = "cheerful"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "omatsu"
+
+# 阿松婆：晒网院子里补网的老人。不写她认得阿濑（c9_mio_noshima_family_bond_ase_2 里才知道）。
+[[tracks.chapters]]
+"key" = "omatsu"
+"title" = "阿松婆 · 补网的老婆婆"
+"text" = "晒网的院子里，一个老婆婆坐在网堆上补网，梭子磨得发亮。她不问我是谁家的，先把我的手拉过去，翻过来看了看手掌：“公家的手。”说完递给我一只梭子，指给我网上破的那一格。那一格我补到天黑，她拆了，自己又补了一回。"
+"at" = "noshima"
+"art" = "netyard_noshima"
+"speaker" = "captain"
+"mood" = "tender"
+"figure" = "omatsu_noshima"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "ledger"
+
+# 番所的老账房：记过路船的账。旗账上“下田·濑”那一行留给 mio_noshima_life，这里不提。
+[[tracks.chapters]]
+"key" = "ledger"
+"title" = "番所的老账房 · 过路船的账，他记了三十年"
+"text" = "番所的老账房把我记进见习的册子，问一句写一句：几岁，哪里人，会不会凫水，认不认得字。记到“认得”，他抬头看了我一眼，把册子翻到后头，那里一行一行是过路的船：几根桅，吃水几尺，交了多少。他说认得字的见习，往后这几页也有份。"
+"at" = "noshima"
+"art" = "tidechest_noshima"
+"speaker" = "captain"
+"mood" = "tender"
+"figure" = "old_clerk_noshima"
+
+[[tracks.chapters.choices]]
+"key" = "continue"
+"text" = "继续"
+"next" = "done"

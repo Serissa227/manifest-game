@@ -1,0 +1,260 @@
+# 请托：没有回来的使船（request_mae_sumi）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：真栄澄（mae_sumi，1540-12-16 生，女），那霸祝女亲族的女孩，替出海人家写家书；cast 在 cast/classmates_custom_naha_envoy.toml。
+#   C7 的 tie_new_kogo_mae_sumi（与小督）与 bond_mae_sumi 不在本文件写；不写小督，不写给京都的信。
+# 类型：去某处（go）。五章：offer（报价）、arrive（大城的老掌柜）、trace（北大年的老水手）、report（名簿的落款）、report_partial（半页落款）。终点 done / failed。
+# 报价：当面（auto=false，玩家在那霸问她：ask:request_mae_sumi 启动）。offer 不写 at，objectives 为 person；deadline 为 1574-06-30，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1564-01-01 至 1574-06-30；arrive 进入后 150 天、trace 进入后 90 天的期限；report 与 report_partial 1564-01-01 至 1575-08-24。
+# 依据·史实背景：琉球与暹罗的进贡、贸易往来到 16 世纪中后期渐衰；大城 1569 年被缅军攻陷（只作 arrive 的变体一句）；北大年是南洋的港口。
+# 依据·原创：使船的失踪、名簿、大城商馆的老掌柜、河边卖饭的厨子、北大年补网的老水手、竹梭。使船的年份不写数字。
+# 依赖：港口 naha（ports_east_asia.toml）、ayutthaya_port 与 pattani（ports_southeast_asia.toml）；技能 lang_ryukyuan（skills.toml）；人物 mae_sumi。B10b：无需改名。主线门禁：无。
+# 读的旗标：bond mae_sumi ≥ C（offer 的变体，只改开场）；arrive 的变体只读日期。不读也不设任何 c7_ 旗标。
+# 设的旗标：c13_request_mae_sumi_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_families（offer 问“还有人在等吗”，只被 report 的变体读）、_cook（arrive 认出厨子的两条接法）、_passage（trace 问他要不要搭船，只被 report 的变体读）、_late（arrive 超时，终局）、_done（终局）、_partial（终局）。
+# 分支结构：arrive 的三条接法都进 trace；trace 的两条接法都进 report，超时进 report_partial。report 与 report_partial 的选项都不写 requires，所以不会卡在别的路径设的旗标上。report 的三个变体按 key 字母序写（v1_both、v2_families、v3_passage），同时成立时取 v1_both，只改文字。
+# 秘密：她另抄名字的事一句不写，只写“那条使船的名簿”。见闻不写任何秘密。
+# 口头禅：“回来时，也把故事带回来。”只在 offer 章（及其 bond 变体）送你到码头时说一次。
+# 报酬：现金最多 1250（只带回厨子的话 800）；好感最多 +16；名声 +1；回忆 mem-request_mae_sumi-report。
+# 回忆插画清单：
+#   mem-request_mae_sumi-report「名簿上的落款」：祝女家廊下，名簿摊开，整页的名字底下第一次有了一行落款；页角压着一根补网用的竹梭。
+
+[[tracks]]
+key = "request_mae_sumi"
+name = "没有回来的使船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["mae_sumi"]
+
+# 一、名簿上的一条船：真栄澄在祝女家的廊下等你，名簿翻在那条使船的一页上。
+[[tracks.chapters]]
+key = "offer"
+title = "名簿上的一条船"
+text = "真栄澄在祝女家的廊下等你。膝上摊着一本名簿，翻开的那一页，整页的名字下面都没有落款。“那条使船，十年前去暹罗，出了港就再没消息。”她先问你这一趟的风大不大，又问船上有没有带家书，才说到正事。“那霸半个港口的心事，我都知道。这一页，我写不下去。”她请你去大城，到琉球人常去的商馆里问，把问到的名字一个个带回来。送你到码头时，她说：“回来时，也把故事带回来。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "mae_sumi", text = "在那霸找到她" }]
+when = [
+  { kind = "date", from = [1564, 1, 1], to = [1574, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "mae_sumi", ge = 18 },
+]
+deadline = [1574, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_old_classmate"
+when = [{ kind = "bond", person = "mae_sumi", level = "C" }]
+text = "真栄澄在祝女家的廊下等你。见你走近，她没有先说事，把名簿翻到最后一页，递到你手里。最后一页上写着你的名字，名字旁边一行小字，是她的笔迹：“你也是我记着的人。”她这才问你这一趟的风大不大。“那条使船，十年前去暹罗，出了港就再没消息。那霸半个港口的心事，我都知道。这一页，我写不下去。”她请你去大城，到琉球人常去的商馆里问，把问到的名字一个个带回来。送你到码头时，她说：“回来时，也把故事带回来。”"
+
+[[tracks.chapters.choices]]
+key = "go_siam"
+text = "接下，去大城问那条使船的下落。"
+next = "arrive"
+reply = "她把那一页的名字抄了一份给你，字很小，每个名字旁边注着家住哪条巷子。“船没回来，人总还有家。”她把抄本折好，塞进你的衣袖。"
+effects = [
+  { kind = "affinity", person = "mae_sumi", value = 2 },
+  { kind = "flag", flag = "c13_request_mae_sumi_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_family"
+text = "接下，先问：这些人家里，还有人在等吗？"
+next = "arrive"
+reply = "“有几家等，有几家不等了。”她把等的几家一个个指给你看。不等的那几家，她也要你去说一声，“不等，也该知道”。"
+effects = [
+  { kind = "affinity", person = "mae_sumi", value = 2 },
+  { kind = "flag", flag = "c13_request_mae_sumi_accepted" },
+  { kind = "flag", flag = "c13_request_mae_sumi_families" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "十年了，问不到的。"
+next = "failed"
+reply = "她把名簿合上，说那她就再写一年家书，“问的人多了，总有人知道”。"
+effects = [{ kind = "flag", flag = "c13_request_mae_sumi_declined" }]
+
+# 二、大城的老掌柜：商馆里的旧账，河边卖饭的厨子。
+[[tracks.chapters]]
+key = "arrive"
+title = "商馆的老掌柜"
+text = "大城河边一排排商馆，琉球人常去的那一间，老掌柜还记得那条使船。船出了湄南河口，遇上风，一路漂到南边去了。“听人讲，有几个人上了北大年的岸。”他说这话时没有抬头，只把旧账本压在手底下。“船上的厨子，当年没上那条船。他病在了大城，就留下来，在河边卖饭。”"
+speaker = "captain"
+mood = "mystic"
+at = "ayutthaya_port"
+objectives = [{ kind = "at", at = "ayutthaya_port", text = "到大城去" }]
+when = [
+  { kind = "date", from = [1564, 1, 1], to = [1575, 8, 24] },
+  { kind = "alive", person = "mae_sumi", value = true },
+]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "mae_sumi", value = -3 }, { kind = "flag", flag = "c13_request_mae_sumi_late" }, { kind = "letter", person = "mae_sumi", text = "大城来的商人捎话，说商馆换了人，没人记得那条使船了。名簿那一页，我先不写落款。——真栄澄" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_fallen"
+when = [{ kind = "date", from = [1569, 8, 30] }]
+text = "城破以后，大城河边的商馆空了一半，门口还贴着没揭的封条。琉球人常去的那一间，老掌柜还守着。“城破那年，走了很多人。”他说，“剩下的，都是走不动的。”他还记得那条使船，出了湄南河口，遇上风，一路漂到南边去了。“听人讲，有几个人上了北大年的岸。”河边卖饭的那个厨子还在，他当年没上那条船。"
+
+[[tracks.chapters.choices]]
+key = "find_cook"
+text = "去河边找那个厨子，请他认一认名单。"
+next = "trace"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "厨子老了，一边舀饭一边认，认出了大半。“这个爱喝酒，那个会唱歌。”他说上了北大年岸的有两个，其中一个，他知道叫什么。"
+news = "大城河边卖饭的老厨子，一边舀饭一边认出了一份琉球名单上的大半名字，还说得出谁爱喝酒、谁会唱歌。"
+effects = [
+  { kind = "affinity", person = "mae_sumi", value = 3 },
+  { kind = "flag", flag = "c13_request_mae_sumi_cook" },
+]
+fail = { next = "trace", news = "大城河边卖饭的老厨子，只认出了一份琉球名单上的三个名字，别的他说记不清了。", effects = [{ kind = "affinity", person = "mae_sumi", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "in_ryukyuan"
+text = "用琉球话问厨子，让他照家乡的叫法认人。"
+next = "trace"
+requires = [{ kind = "skill", skill = "lang_ryukyuan", ge = 60 }]
+hint = "厨子的乡音你听不懂，他只好用暹罗话跟你比划。"
+reply = "他听见乡音，愣了一下，把勺子放下了。名单上的人，他一个一个用小名叫出来，叫到最后一个，说那是他表弟。"
+news = "大城河边卖饭的老厨子听见了琉球话，把名单上的人用小名一个个叫出来，最后一个，他说是自己的表弟。"
+effects = [
+  { kind = "affinity", person = "mae_sumi", value = 3 },
+  { kind = "flag", flag = "c13_request_mae_sumi_cook" },
+]
+
+[[tracks.chapters.choices]]
+key = "pay_factor"
+text = "付钱请老掌柜翻商馆的旧账，看那条使船最后买过什么。"
+next = "trace"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "老掌柜看了看你的钱袋，摇了摇头：“账不是白翻的。”"
+reply = "旧账上写着，那条使船临走前买了二十坛水、三袋米，还有一笔“北大年船引”。老掌柜收了钱，把账本推到你面前，手指点在那一行上。"
+news = "大城商馆的旧账上写着，一条琉球使船临走前买了二十坛水，还有一笔北大年的船引。"
+effects = [
+  { kind = "cash", value = -200 },
+  { kind = "affinity", person = "mae_sumi", value = 2 },
+]
+
+# 三、北大年的老水手：港口边补网的人，那条船上活下来的两个人之一。
+[[tracks.chapters]]
+key = "trace"
+title = "北大年的老水手"
+text = "北大年的港口边，一个老水手蹲在网堆里补网，说的话一半是琉球话，一半是马来话。他是那条使船上活下来的两个人之一，另一个前几年死了，葬在这里。“船是在风里散的。”他手没停，“落水的几个，我到现在还记得他们的名字。”他早就想托人往家里捎个话，可这些年没有一条琉球船来过北大年。“你是头一个拿着名单来问的人。”"
+speaker = "captain"
+mood = "sad"
+at = "pattani"
+objectives = [{ kind = "at", at = "pattani", text = "到北大年去" }]
+when = [
+  { kind = "date", from = [1564, 1, 1], to = [1575, 8, 24] },
+  { kind = "alive", person = "mae_sumi", value = true },
+]
+deadline_days = 90
+timeout = { next = "report_partial" }
+
+[[tracks.chapters.choices]]
+key = "take_word"
+text = "请他把船上每个人最后的样子讲一遍，我一个个记下。"
+next = "report"
+reply = "他讲了一个下午：谁在风里落了水，谁上岸后病了，谁跟着一条唐人船走了，不知去向。你在名单上每个名字后面，写下一句他说的话。"
+news = "北大年港口补网的老水手，讲了一个下午，把那条琉球使船上的人一个个说给远来的船长听。"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "offer_passage"
+text = "问他要不要搭我的船回那霸。"
+next = "report"
+reply = "他想了很久，摇头。他的孩子在这里，孙子也在这里。他让你把他补网的一根竹梭带回去，交给他姐姐。"
+news = "北大年港口补网的老水手，托一个远来的船长往那霸带了一根竹梭，说是给他姐姐的。"
+effects = [
+  { kind = "affinity", person = "mae_sumi", value = 3 },
+  { kind = "flag", flag = "c13_request_mae_sumi_passage" },
+]
+
+# 四、名簿的落款：真栄澄听你讲一个名字，她在名字后面写一行。
+[[tracks.chapters]]
+key = "report"
+title = "名簿的落款"
+text = "真栄澄把那一页名簿摊开，听你一个名字一个名字地讲，一遍就记住，一个也没让你重说。讲一个，她在名字后面写一行，写的不是死活，是他们最后去过哪里。“落水的那几个，也写上。”她说。写完最后一行，她在整页底下写了落款。十年来，这一页头一回有了落款。"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "mae_sumi", text = "回那霸，找到她" }]
+when = [
+  { kind = "date", from = [1564, 1, 1], to = [1575, 8, 24] },
+  { kind = "alive", person = "mae_sumi", value = true },
+]
+news = "那霸祝女家的姑娘挨家挨户走了一遍，告诉十年前那条使船上的人家，他们最后去过哪里。"
+
+[[tracks.chapters.variants]]
+key = "v1_both"
+when = [
+  { kind = "flag", flag = "c13_request_mae_sumi_families" },
+  { kind = "flag", flag = "c13_request_mae_sumi_passage" },
+]
+text = "真栄澄把那一页名簿摊开，先把还在等的几家圈了出来。听你讲到北大年，你把那根竹梭放在页角上，说是老水手托你带给他姐姐。她没有收，只说：“那就先压着这一页。”写完最后一行，她在整页底下写了落款，十年来头一回有了落款。"
+
+[[tracks.chapters.variants]]
+key = "v2_families"
+when = [{ kind = "flag", flag = "c13_request_mae_sumi_families" }]
+text = "真栄澄把那一页名簿摊开，先把还在等的几家圈了出来。圈外的那几家，她说不等，也该知道，一家都不许漏。听你一个名字一个名字地讲，讲一个，她在名字后面写一行，写的是他们最后去过哪里。写完，她在整页底下写了落款。"
+
+[[tracks.chapters.variants]]
+key = "v3_passage"
+when = [{ kind = "flag", flag = "c13_request_mae_sumi_passage" }]
+text = "真栄澄把那一页名簿摊开，听你一个名字一个名字地讲。讲到北大年，你把那根竹梭放在页角上，说是老水手托你带给他姐姐。她没有收，只说：“那就先压着这一页。”她在名字后面写一行，写的是他们最后去过哪里。写完，她在整页底下写了落款。"
+
+[[tracks.chapters.choices]]
+key = "tell_all"
+text = "把老水手讲的都告诉她，连落水的那几个也说。"
+next = "done"
+reply = "她没哭，只是写字写得慢了。写完，她说明天一家一家去说，“故事你带回来了，剩下的我去讲”。她付了钱。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "mae_sumi", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_mae_sumi_done" },
+  { kind = "memory", memory = "mem-request_mae_sumi-report", title = "名簿上的落款" },
+]
+
+[[tracks.chapters.choices]]
+key = "tell_cook"
+text = "只说厨子认出来的名字和大城的事。"
+next = "done"
+reply = "她照着记了，没有落款的几个名字后面写了“南去”。她付了钱，说剩下的，等下一个去南边的人。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "mae_sumi", value = 4 },
+  { kind = "flag", flag = "c13_request_mae_sumi_partial" },
+]
+
+# 四之二、半页落款：没去北大年，超时后真栄澄只能照大城的话来写。
+[[tracks.chapters]]
+key = "report_partial"
+title = "半页落款"
+text = "那一页的后半还是空的。北大年那边没有人去过，名簿上那几个名字，十年来照旧没有落款。真栄澄等着你开口，笔还握在手里。“没去过的地方，就别替人家写。”她说，又把笔放下，“只说你知道的。”"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "person", person = "mae_sumi", text = "回那霸，找到她" }]
+when = [
+  { kind = "date", from = [1564, 1, 1], to = [1575, 8, 24] },
+  { kind = "alive", person = "mae_sumi", value = true },
+]
+news = "那霸的祝女家，有人照着一本残缺的名簿，挨家挨户去说十年前那条使船的事。"
+
+[[tracks.chapters.choices]]
+key = "tell_cook"
+text = "把厨子认出的名字和大城的旧账，照实讲给她。"
+next = "done"
+reply = "她照着记了，没有落款的那几个名字，她只在旁边画了一个小圈。她付了钱，说小圈是给北大年留的。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "mae_sumi", value = 4 },
+  { kind = "flag", flag = "c13_request_mae_sumi_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "tell_half"
+text = "北大年那边我没去过，钱不要，只讲大城这一半。"
+next = "done"
+reply = "“这一半也是真的。”她把那几个名字又看了一遍，在北大年那一栏写下一个小小的“未”字。她没收钱，只说：“下回去北大年，替我把那几个名字念一遍。”"
+effects = [
+  { kind = "affinity", person = "mae_sumi", value = 5 },
+  { kind = "flag", flag = "c13_request_mae_sumi_partial" },
+]

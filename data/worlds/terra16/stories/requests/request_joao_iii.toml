@@ -1,0 +1,143 @@
+# 请托：马扎甘的御令（request_joao_iii）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：若昂三世（joao_iii，1502 年 1 月 1 日生——月日据 cast 占位，男），葡萄牙国王，1557 年 6 月 11 日卒（brief 史实）。cast：cast/historical_01_europe.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（马扎甘点货交货）、settle（里斯本结账）。没有 stage 章，因此没有 window 与 default；窗口只写在这里作规划。
+# 报价：L（遗事，legacy=true）。印度商馆的书记出面，offer 不写 speaker；不写 alive 条件（请托人已故）。auto=true，报价港 lisbon，offer 窗口 1557-01-10 至 1557-09-30。
+#       offer 写 family=c13_offer_lisbon、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。名声门槛 1557 年为 0，不写。
+# 进行中：deliver 章 deadline_days=150，超时走 failed、设 c13_request_joao_iii_late，见闻只在玩家到过马扎甘时公开。settle 是普通章，可以一直等。
+# 依据·史实：1557-06-11 若昂三世卒，王后卡塔琳娜摄政；马扎甘是葡萄牙在摩洛哥大西洋岸剩下的要塞之一，本地不产木料与铁器，木料从丰沙尔、波尔多来，铁器从毕尔巴鄂、布里斯托尔、汉堡来。
+# 依据·原创：印度商馆的书记、令状页边国王病中的一行批语、星形城墙下的点货、城外的骑手、摄政府新来的书记、收据背面的日子。国王只通过令状上的批语与令状的本文说话，不另给他台词。
+# 依据·1562 年马扎甘之围不写，要塞的人只说“萨阿德人迟早要来”。不写葬礼、王子与孩子们，不用 letter 效果。
+# 秘密：无单列秘密；孩子夭折、王子去世的事不写。affinity 一律不写（请托人已故）。
+# 读的旗标：无。不读 c7_* 与 c13_main_*。
+# 设的旗标：c13_request_joao_iii_accepted / _declined（offer）、_receipt（deliver，结账的前提）、_survey（deliver 的测量选项，成败都设 receipt）、_late（deliver 超时）、_done / _partial（settle 的终局）。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：货款 1950（交货那一章付，Σ 30×20×1.25 + 10×95×1.25 → 1950）；结账最多 3650（国王在世时递令状，或说服书记）；折中 2600（先领一半）或 1800（说服失败）；名声 +5；声望 portugal +2；回忆 mem-request_joao_iii-settle。无唯一奖励物品。
+# 依赖：港口 lisbon（ports_iberia.toml）、mazagan（ports_north_africa.toml）；货物 timber、ironware（goods/01_staples_raw.toml、goods/02_manufactures.toml）；技能 negotiation（skills.toml）；属性 stewardship、eloquence。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_joao_iii-settle「病中的批语」：商馆柜台上并排两张纸，一张盖着御印，页边一行病中的小字。
+
+[[tracks]]
+key = "request_joao_iii"
+name = "马扎甘的御令"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["joao_iii"]
+
+# 一、码头上的御印令状：印度商馆的书记拦住你，令状是国王病中签的。
+[[tracks.chapters]]
+key = "offer"
+title = "御印的补给令"
+text = "里斯本的码头上，印度商馆的书记拦在你的船前，手里捏着一卷用红绳扎好的令状。纸是御印的，边角被手指磨软了。他不寒暄，展开给你看：马扎甘要塞的补给，木料三十份，铁器十份，用来修炮台，换水门的铰链。“木料要干的，铁器要成件的。”他照着念，念完又看了一眼页边。那里有一行小字，墨色比正文淡，是国王病中亲笔批的：“先运到，再说钱。”书记说，国王的字他只认这几个，别的话他不替任何人传。"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 1, 10], to = [1557, 9, 30] }]
+deadline = [1557, 9, 30]
+timeout = { next = "failed" }
+family = "c13_offer_lisbon"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "after"
+when = [{ kind = "date", from = [1557, 6, 11] }]
+text = "里斯本的码头上，印度商馆的书记还是拦住了你，手里那卷令状换了新的红绳，纸边也更软了。他说这道令是五月签的，那时国王还能坐起来批字。国王已经不在了，王后在摄政，商馆的门却没关。木料三十份，铁器十份，给马扎甘的要塞。页边那行小字，他只指给你看，墨色比正文淡，没有再念。他又说，王家的账向来慢，这回怕要更慢。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去买木料和铁器，运去马扎甘"
+next = "deliver"
+reply = "书记把令状的抄件折好递给你，原件锁回商馆的柜子里。他提醒你，要塞的书记官只看货的成色，次一等的不收。抄件上照抄了令状的日子，他又在旁边添了一行，写的是今天。"
+effects = [{ kind = "flag", flag = "c13_request_joao_iii_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：王家的账向来结得慢"
+next = "failed"
+reply = "书记没有争辩，把令状卷起来，重新用红绳扎好。他说码头上每天都有人这样回绝王家的活，王家的账，里斯本人都知道是怎么结的。说完他把卷子夹在腋下，朝下一艘船走过去。"
+news = "里斯本的码头上，印度商馆的书记拿着一道御印的令状挨船问，问到第三条船，才有人肯听他念完。"
+effects = [{ kind = "flag", flag = "c13_request_joao_iii_declined" }]
+
+# 二、马扎甘的点货：要塞的书记官带兵下来量木料、敲铁器。货款在这里付。
+[[tracks.chapters]]
+key = "deliver"
+title = "马扎甘的点货"
+text = "马扎甘的城墙是星形的，石头发黄，墙根长着海草。要塞的书记官带着两个兵下来点货。木料一根根量，每根都在断面上刻一道记号；铁器一件件敲，清脆的声音一听就知道哪件裂过。城外的平原上有骑手远远地站着，马不动，人也不下来。书记官一边记一边说：“萨阿德人迟早要来。水门的铰链，你们带来了没有？”"
+speaker = "captain"
+mood = "mystic"
+at = "mazagan"
+objectives = [{ kind = "goods", good = "timber", qty = 30, at = "mazagan", text = "三十份木料运到马扎甘" }, { kind = "goods", good = "ironware", qty = 10, at = "mazagan", text = "十份铁器运到马扎甘" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_joao_iii_late" }], news = "马扎甘的要塞等不到里斯本的木料，书记官另从王家的仓库调了一船料，水门的铰链照旧换了。" }
+news = "马扎甘的要塞点货，木料一根根量，铁器一件件敲，码头上的人都看见了，货款当场付清。"
+
+[[tracks.chapters.choices]]
+key = "receipt"
+text = "要一张盖了要塞印的收据"
+next = "settle"
+reply = "书记官盖了印，又在收据背面写了日子，字写得很小，像是怕被人看见。他把收据对折，又对折，塞进你的袖口，说这一路上谁来问，都得先拿这张纸给人看。"
+effects = [{ kind = "cash", value = 1950 }, { kind = "flag", flag = "c13_request_joao_iii_receipt" }]
+
+[[tracks.chapters.choices]]
+key = "survey"
+text = "顺便把城墙哪里缺料记下来，带回给商馆"
+next = "settle"
+reply = "书记官领你上城，一段一段地看。哪一段的石缝里长着草，哪一段的垛口缺了角，你拿炭笔记下来。天色暗得快，他站在后面，一直没有催你。"
+check = { attr = "stewardship", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 1950 }, { kind = "flag", flag = "c13_request_joao_iii_receipt" }, { kind = "flag", flag = "c13_request_joao_iii_survey" }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 1950 }, { kind = "flag", flag = "c13_request_joao_iii_receipt" }] }
+
+# 三、结账：商馆的柜台上，收据与令状并排。国王在世时开票；不在了以后，要重新查。
+[[tracks.chapters]]
+key = "settle"
+title = "商馆的账"
+text = "回到印度商馆，书记把收据和令状并排摆在柜台上。收据背面是你交货那天的日子，令状是国王病中签的，日子写在御印旁边。书记的手指停在印上没有挪开，说国王还在的时候，这张纸能直接开票，柜里的钱随时点。他又说，只要国王还坐得起来，这张纸就算数。他说话慢，每句都要停一停，好像在把每个字都对一遍账。柜台边上站着一个抄账的学徒，正偷偷看那两张纸。"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "flag", flag = "c13_request_joao_iii_receipt" }]
+news = "里斯本的印度商馆，书记把御印的令状和收据摆在柜台上，两张纸看了很久。"
+
+# 变体按 key 字典序取最小的一个匹配项，所以“草图 + 摄政”的 a_after_survey 要排在 after 之前。
+[[tracks.chapters.variants]]
+key = "a_after_survey"
+when = [{ kind = "date", from = [1557, 6, 11] }, { kind = "flag", flag = "c13_request_joao_iii_survey" }]
+text = "回到印度商馆，收据和令状还是并排摆着，柜台后面换了一个人。摄政府那边新调来的书记年轻，话慢，把令状对着窗光看了又看。你画的城墙草图压在令状底下，他抽出来看了看，把缺料的那一段用指甲按了按。“缺的这一段，我们自己也知道。”他说，“可前朝的令，还要等摄政会议过目。”他没有把令状推回来，只让你先等。草图的那一角，他折了一下，又展开。"
+
+[[tracks.chapters.variants]]
+key = "after"
+when = [{ kind = "date", from = [1557, 6, 11] }]
+text = "回到印度商馆，收据和令状还是并排摆着，柜台后面却换了一个人。摄政府那边新调来的书记年轻，话慢，把令状对着窗光看了又看，看的是页边那行小字。他说前朝的令要重新查过才好开票，查的是签令的人还在不在，令上的话还作不作数。国王已经不在了，他说得很客气，却没有把令状推回来。他把收据推回到你面前，让你先等，等多久，他没说。"
+
+[[tracks.chapters.variants]]
+key = "survey"
+when = [{ kind = "flag", flag = "c13_request_joao_iii_survey" }]
+text = "回到印度商馆，书记把收据和令状并排摆在柜台上。你画的城墙草图也摊在边上，他对着草图看，看到缺料的那一段，停下来多看了两眼。收据背面是你交货那天的日子，令状是国王病中签的。他把令状上的御印对着光，说这张纸是国王还在的时候签的，开票不用再问别人。柜台角上堆着下一批的账本，他把草图压在最上面一本上，没有多说，只把草图的一角翻过来看。"
+
+[[tracks.chapters.choices]]
+key = "seal"
+text = "把御印的令状和收据一起递上，照令领钱"
+next = "done"
+requires = [{ kind = "date", to = [1557, 6, 10] }]
+hint = "令状上的人已经不在了，光递纸不够。"
+reply = "书记接过令状和收据，并排压在柜台上，叫人从柜里点钱。钱一包一包摆出来，他数到一半停下，把令状翻到背面又看了一眼，然后接着数。"
+news = "里斯本的印度商馆开了一张御印的票，柜里点了大半天的钱，书记一直没有抬头。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "memory", memory = "mem-request_joao_iii-settle", title = "病中的批语" }, { kind = "flag", flag = "c13_request_joao_iii_done" }]
+
+[[tracks.chapters.choices]]
+key = "persuade"
+text = "跟书记讲：令是国王签的，货是要塞收下的"
+next = "done"
+reply = "你把令状翻到背面，指着收据上要塞的印，把道理讲给书记听。书记一直听着，笔悬在半空，没有落下。你讲完，他又把令状翻回正面，看了看页边那行淡墨的小字。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 3650 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "memory", memory = "mem-request_joao_iii-settle", title = "病中的批语" }, { kind = "flag", flag = "c13_request_joao_iii_done" }]
+news = "里斯本的印度商馆，书记把国王的旧令翻过来看背面，看了很久，还是开了全额的票。"
+fail = { next = "done", effects = [{ kind = "cash", value = 1800 }, { kind = "flag", flag = "c13_request_joao_iii_partial" }], news = "里斯本的印度商馆只肯先付一半货款，余下的书记说要等会议再定，怕是要等到明年。" }
+
+[[tracks.chapters.choices]]
+key = "terms"
+text = "先领一半，余下的写进明年的账，要他签字"
+next = "done"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "你不熟商馆的账期，这张账怎么拆，你说不清楚。"
+reply = "书记把账期写在纸上，一行一行讲给你听，讲完问你有没有异议。你签了字，书记也签了字，又说一句：明年的账，他不一定还坐在这张桌子后面。钱当场付了大半。"
+news = "里斯本的印度商馆，一张半付的票，余下的钱写进了明年的账，书记在纸上签了字。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "flag", flag = "c13_request_joao_iii_partial" }]

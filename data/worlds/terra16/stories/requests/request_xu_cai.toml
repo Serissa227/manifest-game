@@ -1,0 +1,205 @@
+# C13d 请托：多备一份纸（request_xu_cai）。中文，Claude 写。
+# 人物：许采 xu_cai（1540-04-19 生，女；社学教读的女儿，如今在月港海澄县城边开了间小学塾；势力 ming，身份档 1）。
+# 类型：送货（deliver）；4 章，offer → deliver → settle，或陪船户念过契约（旗标 lesson）时走 settle_lesson；两章互斥，没有 stage 章。旗标门禁改成 next 分流（审计机器人不认“选项 requires 本轨道旗标”），brief 里 ask_contract 的 requires 因此落在 settle_lesson 一章。
+# 报价：当面（T）。人物按日程在月港（yuegang，cast 日程 1557-01-01 至 1590-12-31 在 school），auto=false，玩家“问请托”（ask:request_xu_cai）启动。
+# 窗口：报价 1569-01-01 至 1590-06-30（同学重逢与 C7 各章之后；1567 年开海、设海澄县以后）；交货限 60 天；结账章不设期限。
+# 货物：纸张 paper × 20，交到月港；货款另付 20 × 32 × 1.25 = 800（settle 章付），酬金 900，合计与 brief 一致。
+# 依据·史实背景：1567 年隆庆开海，月港设海澄县，船户、水手大批涌来，契约、船引、借据都要识字；民间放债取利极重，借据由牙人经手、按手印为凭。
+#   原创：许采的学塾、墙上写满船户名字的那张纸、粗竹纸、第一个来学塾的船户（不写名字）、牙人的借据（借三两、一年还六两）、洇墨。
+#   牙人不写成恶霸，只是放债的规矩；利息数字是原创。
+# 本条是开海以后她自己的小学塾，写成“学塾”；不写小蛮，不写识字课本的编写，不写土堡里的识字课（C7 的 bond_xu_cai、pair_xu_cai_xiao_man 已写）。
+# 秘密：她早就知道“林兄”的身份——只在 offer 章 variants 读 c7_wandeng_unmasked_known 时写一句“你们都知道的那件事”；kept 时一字不写；见闻不写。
+# 读的旗标（只读，不设）：bond xu_cai ≥ C、c7_wandeng_unmasked_known / c7_wandeng_unmasked_kept（offer 章 variants；用 c7 的旗标兼作“这是林晚灯那一局”的判断，其他主角不会读到灯的话）。
+# 设的旗标：c13_request_xu_cai_accepted / declined / lesson / late / done。
+# 口头禅：“先把自己的名字写会，别人就骗不了你一半。”只在 settle／settle_lesson 的正文里出现（两章互斥，一局只出现一次）。
+# 缺省走向：offer 不在场一直挂着，到 1590-06-30 走 failed（无见闻）；交货章 60 天内不交，走 failed，许采寄一封信，扣 3 点好感；结账章不设期限，等玩家回月港。
+# 依赖：无 B10b 改名；cast 日程与各章 at（yuegang）一致。
+# 回忆插画清单：
+#   mem-request_xu_cai-settle（墙上第一个自己写的名字）：学塾的土墙上钉满了许采替人写的名字，其中一张纸的字歪歪斜斜，盖在最上头；窗下一只竹纸箱，箱沿搭着一叠多备的纸。
+
+[[tracks]]
+key = "request_xu_cai"
+name = "多备一份纸"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["xu_cai"]
+
+# 一、最便宜的纸：1569 年起，人物在学塾里，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "最便宜的纸"
+text = "海澄县城边上，许采的学塾只有一间屋，门槛被船户的草鞋磨得发亮。几张旧桌，一盏油灯，墙上钉着一张纸，写满了名字，横平竖直，一笔不省。她掸掉袖口的竹纸屑，指了指桌上洇成一团的字：“纸不能太好，好纸写坏一张，人就不敢写第二张。二十令，要最便宜的，写得上字就行。”她顿了顿，“每一刀，我都要多备一份。有人写坏了，不能让他因为一张纸就不写了。”"
+speaker = "captain"
+mood = "tender"
+cast = ["xu_cai"]
+when = [
+  { kind = "date", from = [1569, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "xu_cai", ge = 18 },
+  { kind = "alive", person = "xu_cai", value = true },
+]
+objectives = [{ kind = "person", person = "xu_cai", text = "在月港的小学塾找到她" }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "v1_known"
+when = [{ kind = "bond", person = "xu_cai", level = "C" }, { kind = "flag", flag = "c7_wandeng_unmasked_known" }]
+text = "海澄县城边上，许采的学塾只有一间屋，门槛被船户的草鞋磨得发亮。我一进门，她就抬了头：“你还记得那盏灯上的字吗？”不等我答，又低头去翻账，“你们都知道的那件事，我也知道。”墙上钉着一张纸，写满了名字，横平竖直，一笔不省。“纸不能太好，好纸写坏一张，人就不敢写第二张。二十令，要最便宜的，写得上字就行。”她拿手指敲了敲账本，“每一刀，我都要多备一份。有人写坏了，不能让他因为一张纸就不写了。”"
+
+[[tracks.chapters.variants]]
+key = "v2_kept"
+when = [{ kind = "bond", person = "xu_cai", level = "C" }, { kind = "flag", flag = "c7_wandeng_unmasked_kept" }]
+text = "海澄县城边上，许采的学塾只有一间屋，门槛被船户的草鞋磨得发亮。我一进门，她就抬了头：“你还记得那盏灯上的字吗？”我说记得，她笑了一下，指指墙。墙上钉着一张纸，写满了名字，横平竖直，一笔不省。“纸不能太好，好纸写坏一张，人就不敢写第二张。二十令，要最便宜的，写得上字就行。”她拿手指敲了敲账本，“每一刀，我都要多备一份。有人写坏了，不能让他因为一张纸就不写了。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，二十令纸，运到月港。"
+next = "deliver"
+reply = "她从抽屉里抽出一张样纸递给我，是最粗的那种竹纸，纤维一缕一缕看得见。她拿笔尖在角上点了一点，墨洇开一个黑晕。“洇了也认得出来，就行。”"
+effects = [
+  { kind = "affinity", person = "xu_cai", value = 2 },
+  { kind = "flag", flag = "c13_request_xu_cai_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_names"
+text = "接下，问她：墙上那些名字，是谁写的？"
+next = "deliver"
+reply = "“船户的名字，我替他们写的。”她抬头看那面墙，“往后是他们自己写。哪天墙上每个名字都换成本人的笔迹，这面墙就算念完了。”她说得很慢，像在数还差几个。“纸到了直接搬进来，窗下有地方放。”"
+effects = [
+  { kind = "affinity", person = "xu_cai", value = 2 },
+  { kind = "flag", flag = "c13_request_xu_cai_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "纸是小买卖，不值得跑一趟。"
+next = "failed"
+reply = "她点点头，没有挽留。“那就先用旧账本的背面。”她把摊开的账本翻过来，指给我看，背面是一整页没写过字的纸，“背面也能写。”"
+effects = [{ kind = "flag", flag = "c13_request_xu_cai_declined" }]
+
+# 二、一张契约：纸到了学塾，一个船户攥着借据进来。
+[[tracks.chapters]]
+key = "deliver"
+title = "一张契约"
+text = "纸搬进学塾，堆到墙角，许采一刀一刀地点，点到一半，门口的光暗了一下。是个船户，晒得黑，手里攥着一张折了好几折的纸，攥得发潮。牙人让他按了手印的借据，他不认得上面写了什么。“坐。”许采接过来，对着窗口看了一眼，没说话，把它平摊在桌上，推到船户面前，“这一张，就是你的第一课。”"
+at = "yuegang"
+speaker = "captain"
+mood = "tense"
+cast = ["xu_cai"]
+news = "月港海澄县城边的小学塾里，一个船户攥着按了手印的借据进门，坐下来上了他的第一课。"
+when = [{ kind = "alive", person = "xu_cai", value = true }]
+objectives = [{ kind = "goods", good = "paper", qty = 20, at = "yuegang", text = "二十令纸运到月港" }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "xu_cai", value = -3 },
+  { kind = "flag", flag = "c13_request_xu_cai_late" },
+  { kind = "letter", person = "xu_cai", text = "纸我在县城里买了些，贵了一点，也够用。——许采" },
+]
+
+[[tracks.chapters.choices]]
+key = "read_it"
+text = "陪着她，一句一句把契约念给船户听，念到不对的地方停下。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "牙人的契约通篇是行话，你看了两行，就不敢替人念了。"
+next = "settle_lesson"
+reply = "念到利息那一行，船户的脸白了：借三两，一年要还六两。我停下来，没往下念。许采拿最粗的纸把那一行抄了一遍，推过去让他照着描。他描得很慢，描完抬头问：“这个‘息’字，就是我欠的？”"
+effects = [
+  { kind = "affinity", person = "xu_cai", value = 3 },
+  { kind = "flag", flag = "c13_request_xu_cai_lesson" },
+]
+
+[[tracks.chapters.choices]]
+key = "cut_paper"
+text = "把纸裁成小本，先给船户订一本，让他把自己的名字写上。"
+check = { attr = "stewardship", base = 35, per = 6 }
+next = "settle"
+reply = "我借了把切刀，把粗竹纸裁成巴掌大的一摞，拿麻线订了边。裁得齐不齐，许采不看，只拿起第一本递给那个船户，握住他的手，一笔一笔，写下他的名字。他手心全是汗，纸角洇了一小块。"
+effects = [{ kind = "affinity", person = "xu_cai", value = 3 }]
+
+[tracks.chapters.choices.fail]
+next = "settle"
+effects = [{ kind = "affinity", person = "xu_cai", value = 1 }]
+news = "月港海澄县城边的小学塾里，新订的纸本裁歪了几刀，许采说歪的也能写，船户的名字就写在那一本上。"
+
+[[tracks.chapters.choices]]
+key = "just_deliver"
+text = "只交了纸，契约的事让她来。"
+next = "settle"
+reply = "许采把借据重新拿起来，从头念给船户听，念得很慢，每念一句，就用指头点一下那一句。我在一旁把纸码好，一刀一刀，码到边角齐整。"
+effects = [{ kind = "affinity", person = "xu_cai", value = 2 }]
+
+# 三、名字：过几天再去学塾。
+[[tracks.chapters]]
+key = "settle"
+title = "名字"
+text = "过了几天我再去学塾，最前面那张桌子换了人，就是那个船户，坐得笔直，面前摊着一张粗竹纸。他一笔一笔写自己的名字，写到最后一笔，手一抖，拖出个长尾巴。他盯着那张废纸，没吭声。许采从桌边抽出一张新的，轻轻放在旧的上面。“再来。”她说，“先把自己的名字写会，别人就骗不了你一半。”他写了第二张，这一回名字齐整地立在纸上。他拿着它走到墙边，在许采替他写的那一个上面，一点一点，把自己的贴了上去。"
+speaker = "captain"
+mood = "tender"
+cast = ["xu_cai"]
+when = [{ kind = "alive", person = "xu_cai", value = true }, { kind = "flag", flag = "c13_request_xu_cai_lesson", value = false }]
+objectives = [{ kind = "person", person = "xu_cai", text = "回学塾看看她" }]
+
+[[tracks.chapters.choices]]
+key = "watch_wall"
+text = "看着那面墙。"
+next = "done"
+reply = "墙上二十几个名字，横平竖直，只有一个笔画粗了一圈，收笔还留着一点抖，是本人的笔迹。许采站在它旁边看了很久。“这是第一个。”她说，口气像在点名。货款和工钱她一文不少地付了，又从箱底抽出一刀纸，塞进我怀里：“这是多备的那份里剩下的。你船上也有人不识字吧？”"
+news = "月港海澄县城边的小学塾，墙上头一个船户的名字换成了他自己写的，字粗了点，贴得牢牢的。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "xu_cai", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xu_cai_done" },
+  { kind = "memory", memory = "mem-request_xu_cai-settle", title = "墙上第一个自己写的名字" },
+]
+
+# 三·二、名字（念过契约的那一支）：同一间学塾，船户写完名字，旁边多描了一个字。
+[[tracks.chapters]]
+key = "settle_lesson"
+title = "名字"
+text = "过了几天我再去学塾，最前面那张桌子上还是那个船户，面前摊着一张粗竹纸。他写自己的名字，写到最后一笔，手一抖，拖出个长尾巴。他没看废纸，先在旁边描了一个“息”字，描得比名字还重，才抬头看许采。她从桌边抽出一张新的，轻轻放在旧的上面。“再来。”她说，“先把自己的名字写会，别人就骗不了你一半。”他写了第二张，这一回名字齐整地立在纸上。他拿着它走到墙边，在许采替他写的那一个上面，一点一点，把自己的贴了上去。"
+speaker = "captain"
+mood = "tender"
+cast = ["xu_cai"]
+when = [{ kind = "alive", person = "xu_cai", value = true }, { kind = "flag", flag = "c13_request_xu_cai_lesson", value = true }]
+objectives = [{ kind = "person", person = "xu_cai", text = "回学塾看看她" }]
+
+[[tracks.chapters.choices]]
+key = "watch_wall"
+text = "看着那面墙。"
+next = "done"
+reply = "墙上二十几个名字，横平竖直，只有一个笔画粗了一圈，收笔还留着一点抖，是本人的笔迹。船户贴完，退后半步，嘴里还在小声念那个“息”字。许采站在旁边说：“这是第一个。”口气像在点名。货款和工钱她一文不少地付了，又从箱底抽出一刀纸塞进我怀里：“这是多备的那份里剩下的。你船上也有人不识字吧？”"
+news = "月港海澄县城边的小学塾里，头一个船户把自己的名字贴上了墙，贴完还在小声念借据上的一个字。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "xu_cai", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xu_cai_done" },
+  { kind = "memory", memory = "mem-request_xu_cai-settle", title = "墙上第一个自己写的名字" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_contract"
+text = "问她：那张借据，后来怎样了？"
+next = "done"
+reply = "“他认得了，就去找牙人重算。”许采说，“牙人起先不肯，说手印按了就是按了。船户把利息那一行念给他听，一个字不错。牙人愣了半天，说借据一向是这么写的，头一回有人问。改了。”她把该给我的钱数好，推过桌面，“他没恶意，放债就是这个规矩。”"
+news = "月港海澄县城边，有个船户拿学塾里学的字跟牙人重算借据，一行一行念给他听，牙人把利息改了。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "xu_cai", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xu_cai_done" },
+  { kind = "memory", memory = "mem-request_xu_cai-settle", title = "墙上第一个自己写的名字" },
+]

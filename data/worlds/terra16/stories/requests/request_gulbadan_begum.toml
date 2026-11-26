@@ -1,0 +1,139 @@
+# 请托：卖马的老人（request_gulbadan_begum）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：古尔巴丹（gulbadan_begum，1523-01-01 生、1603 卒，女），莫卧儿公主，巴布尔之女、胡马雍之妹；势力 mughal，身份档 3。cast：cast/historical_03_indian_ocean.toml。
+# 类型：说服（persuade）。三章：offer（报价）、persuade（马栏边的老人）、result（她只记他的好）；没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信）。她本人在西克里，不下到港口；出面的是苏拉特的管事（代理人，不新建 cast），auto=true，报价港 surat。
+#       offer 写 family=c13_offer_surat、冷却 20 天；deadline 为窗口止日 1584-12-31，timeout 直接 failed，不写见闻。
+# 窗口：报价 1583-02-01 至 1584-12-31（写在 offer 的 when 里）；后两章不写日期条件，窗口只是预计范围。
+# 进行中：persuade deadline_days=150，超时走 failed，好感 −3，旗标 _late，来信一封；result deadline_days=120，同样处理。
+# 依据·史实：巴布尔之女、胡马雍之妹；1544 年胡马雍流亡波斯；霍尔木兹是向印度出口马匹的大港；古尔巴丹约 1587 年前后写《胡马雍本纪》（动笔年份待核，正文只写“她想把那几年写下来”）。
+# 依据·叙事：老人与红宝石、十匹马、用银子赎回宝石的故事是老人自己的说法，文件头注明叙事；抱孩子的女人只是老人的回忆，不点明是谁。
+# 依据·原创：卖马的老人、霍尔木兹的马栏、管事与一小袋糖、山口那年冬天的那匹母马、回信里的细密画。
+# 秘密：cast 无 secret。朝觐（1576—82）与 1582 年回程的船难一字不写（纳吉玛主线 7）；表里的 variant_main najma 不写。
+# 读的旗标：c13_request_gulbadan_begum_knows_question（persuade 的变体）、_thin（result 的变体）。不读 C7 旗标，不读 c13_main_*（gate_main 为空，主线不挡这条请托）。
+# 设的旗标：c13_request_gulbadan_begum_accepted（offer 两条接法）、_knows_question（offer 接下并问了管事）、_declined（offer 回绝）、
+#   _full（persuade 听完／用波斯话／买马）、_mare（persian）、_thin（listen 检定失败）、_late（超时）、_done（result 收尾）、_softened（leave_out）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金 2600（result 给一次）；莫卧儿细密画（唯一奖励，as_told 一路）；好感最多 2+3+8=13；名声 +5；莫卧儿声望 +3；回忆 mem-request_gulbadan_begum-result。
+#   persuade 的买马花 300，是玩家自己的开销，不计入奖励。正文不写报酬数字。
+# 依赖：港口 surat（ports_india.toml）、hormuz_port（ports_red_sea_gulf.toml）；物品 mughal_miniature（items/items_curio_01.toml）；技能 lang_persian（skills.toml）；属性 eloquence；人物 gulbadan_begum。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_gulbadan_begum-result「雪地里的母马」：巴掌大的一张细密画，雪地里一匹母马，马上一个抱着孩子的女人，马蹄印一路通向画外。
+
+[[tracks]]
+key = "request_gulbadan_begum"
+name = "卖马的老人"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["gulbadan_begum"]
+
+# 一、公主的信：苏拉特的栈桥上，管事捧着信等你。
+[[tracks.chapters]]
+key = "offer"
+title = "公主的信"
+text = "苏拉特的栈桥上，公主派来的管事捧着一封信等你，封口压着莫卧儿的印。信的开头先问你船上的淡水够不够，问完才说正事：她哥哥流亡波斯的那几年，她想一件件写下来。“谁给过一碗水、谁关过门，我都记得。”可有些事她那时太小，没看见。霍尔木兹码头边有个卖马的老人，当年卖过马给哥哥。信上说：“他只对坐在跟前、亲耳听的人讲，你别当面记。”"
+mood = "tender"
+at = "surat"
+when = [{ kind = "date", from = [1583, 2, 1], to = [1584, 12, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 25 }]
+deadline = [1584, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_surat"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去霍尔木兹，坐在老人跟前听。"
+next = "persuade"
+reply = "管事把一小袋印度的糖交给你：“公主说，老人爱甜的。别提是她送的，他一听见‘公主’两个字就要抬价。”"
+effects = [{ kind = "affinity", person = "gulbadan_begum", value = 2 }, { kind = "flag", flag = "c13_request_gulbadan_begum_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_what"
+text = "接下，但先问管事：公主最想知道哪件事？"
+next = "persuade"
+reply = "管事犹豫了一下：“公主想知道，那年冬天在山口，有没有人给过他们一匹好马。她记得有，别人都说没有。”"
+effects = [{ kind = "affinity", person = "gulbadan_begum", value = 2 }, { kind = "flag", flag = "c13_request_gulbadan_begum_accepted" }, { kind = "flag", flag = "c13_request_gulbadan_begum_knows_question" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "霍尔木兹这一季我不去。"
+next = "failed"
+reply = "管事行了礼，把信收回去：“公主会再等。她很会等。”"
+effects = [{ kind = "flag", flag = "c13_request_gulbadan_begum_declined" }]
+
+# 二、马栏边的老人：霍尔木兹的马栏阴凉里，他听见“皇帝”两个字，眼睛就睁开了。
+[[tracks.chapters]]
+key = "persuade"
+title = "马栏边的老人"
+text = "马栏的阴凉里，老人坐在草料堆上，眼睛半闭，嘴里嚼着一根草。你提起四十年前那个流亡的皇帝，他的眼睛就睁开了。“那人拿一块红宝石换了十匹马。”他说，“宝石太贵，马太瘦，我到现在还觉得占了便宜。”说完他又闭上眼，嘴角一动：“后来他的人又回来，用银子把宝石赎回去了，一文没少。”"
+speaker = "captain"
+mood = "tender"
+at = "hormuz_port"
+when = [{ kind = "alive", person = "gulbadan_begum", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "gulbadan_begum", value = -3 }, { kind = "flag", flag = "c13_request_gulbadan_begum_late" }, { kind = "letter", person = "gulbadan_begum", text = "公主的管事：霍尔木兹的老人入冬就病了。公主说，那就照她记得的写。" }] }
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_gulbadan_begum_knows_question" }]
+text = "马栏的阴凉里，老人坐在草料堆上，眼睛半闭。你把公主那句话问出口：山口那年冬天，有没有人给过一匹好马。他嘴里的草停住了，过了好一会儿才开口。“那人拿一块红宝石换了十匹马。”他说，“宝石太贵，马太瘦，我到现在还觉得占了便宜。”说完他又闭上眼：“后来他的人又回来，用银子把宝石赎回去了，一文没少。”"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "坐在他跟前听，一个字不记，等他讲完。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+news = "霍尔木兹码头的马栏边，卖马的老人跟一个外来船长讲了一下午四十年前的事。"
+reply = "他讲了一下午，讲到那年冬天的山口，讲到他自己把最好的一匹母马牵给了一个抱着孩子的女人。你回船上，凭记忆把每一句写下来，写到半夜。"
+effects = [{ kind = "affinity", person = "gulbadan_begum", value = 3 }, { kind = "flag", flag = "c13_request_gulbadan_begum_full" }]
+fail = { next = "result", effects = [{ kind = "flag", flag = "c13_request_gulbadan_begum_thin" }], news = "霍尔木兹的马栏边，老马贩跟外来的船长讲来讲去又讲回马价，一个下午没讲到正事。" }
+
+[[tracks.chapters.choices]]
+key = "persian"
+text = "用他的波斯话陪他讲，不让他换话。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_persian", ge = 60 }]
+news = "霍尔木兹码头的马栏边，外来的船长说一口波斯话，老马贩的话一下子多了起来，连母马的毛色都讲了。"
+hint = "他一开口就是波斯话，你只听懂“马”和“宝石”。"
+reply = "你说的是他家乡的话，他讲得更细，连那匹母马的毛色都讲了。讲完他问你：那个抱孩子的女人，后来怎么样了？"
+effects = [{ kind = "affinity", person = "gulbadan_begum", value = 3 }, { kind = "flag", flag = "c13_request_gulbadan_begum_full" }, { kind = "flag", flag = "c13_request_gulbadan_begum_mare" }]
+
+[[tracks.chapters.choices]]
+key = "buy_colt"
+text = "先买下他最好的一匹小马驹，再听。"
+next = "result"
+requires = [{ kind = "cash", ge = 300 }]
+news = "霍尔木兹码头的马栏边，外来的船长先掏钱买了老马贩最好的一匹小马驹，然后才肯听他讲。"
+hint = "他看了看你的钱袋，又闭上了眼睛。"
+reply = "他收了钱，把小马的缰绳塞到你手里，一边摸着它的鬃毛一边讲。讲到宝石赎回去的那一段，他笑出了声。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "gulbadan_begum", value = 3 }, { kind = "flag", flag = "c13_request_gulbadan_begum_full" }]
+
+# 三、她只记他的好：管事又来了，带着公主的回信，问你红宝石那段要不要写进书里。
+[[tracks.chapters]]
+key = "result"
+title = "她只记他的好"
+text = "你回到苏拉特，管事已经在栈桥上等着，带着公主的回信。信封比上次厚了一倍，边上是她自己缝的。你交上去的那几页，她读了三遍，红宝石那一段读得最久。纸边上有一处墨涂掉的字，她在旁边补了一行小字：“那人一生没欠过谁的钱。”信末她问你：皇帝拿宝石抵了马钱，后来又用银子赎回去的事，要不要写进书里？"
+mood = "tender"
+at = "surat"
+when = [{ kind = "alive", person = "gulbadan_begum", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "gulbadan_begum", value = -3 }, { kind = "flag", flag = "c13_request_gulbadan_begum_late" }, { kind = "letter", person = "gulbadan_begum", text = "公主的管事：公主已经动笔了。你写下的那些若还在，请托苏拉特的商馆转来。" }] }
+[[tracks.chapters.variants]]
+key = "thin"
+when = [{ kind = "flag", flag = "c13_request_gulbadan_begum_thin" }]
+text = "你回到苏拉特，管事已经在栈桥上等着，带着公主的回信。你交回去的纸上，马价记得清楚，别的大多是断的。公主却只抓住了一段：那块红宝石。信末她问你：皇帝拿宝石抵了马钱，后来又用银子赎回去的事，要不要写进书里？"
+
+[[tracks.chapters.choices]]
+key = "as_told"
+text = "照老人说的写：换了，又赎回来了，一文没少。"
+next = "done"
+reply = "回信很长，说帖木儿家的人一辈子都是这样，穷的时候也不肯欠账。“他拿宝石抵账，就得把宝石赎回来。”随信来的是一幅细密画：雪地里一匹母马，马上一个抱孩子的女人。"
+news = "苏拉特港口的人说，公主的管事从一个外来船长手里接过一叠纸，纸上写的是霍尔木兹的马。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "gulbadan_begum", value = 6 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "mughal", value = 3 }, { kind = "item", item = "mughal_miniature", qty = 1 }, { kind = "memory", memory = "mem-request_gulbadan_begum-result", title = "雪地里的母马" }, { kind = "flag", flag = "c13_request_gulbadan_begum_done" }]
+
+[[tracks.chapters.choices]]
+key = "leave_out"
+text = "劝她略去宝石赎回去的那一段。"
+next = "done"
+reply = "她回信说你是个体贴的人，书里就写“皇帝用一块红宝石买了十匹马”。她很高兴，赏钱给得很足。赎回宝石的那一段，就留在霍尔木兹的马栏里了。"
+news = "苏拉特港口的人说，公主的管事接过一叠纸，纸上的皇帝只用一块红宝石买了十匹马。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "gulbadan_begum", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "mughal", value = 3 }, { kind = "flag", flag = "c13_request_gulbadan_begum_done" }, { kind = "flag", flag = "c13_request_gulbadan_begum_softened" }]

@@ -1,0 +1,480 @@
+# NPC 线：诺埃尔·德·卡德纳——海峡的骑士（故事 2.0，A5 / E37 契约）
+# 标签：NPC 线（诺埃尔不是玩家主角时才跑）。
+# 轨道：npc_noel（脊轨，auto，rumor 五章，门槛章 s00 写身份）+ 交汇旁轨 npc_noel_duel、_roster、_malta、_toledo、_algiers、_azores、_join（auto=false，由脊轨 start_track 打开）。
+# 依据：史实——1557 圣康坦之后的圣母骑士团（原创延续）；1565 马耳他之围（H22）；1571 勒班陀（H37，桨座上的划手）；1578 三王之战（H49）；1580—82 亚速尔与科尔武（H53，安格拉奉克拉图院长为王）；1588 无敌舰队（H60）。
+#   原创——塔里法点名、红缎带、名册与七十七个名字、丰沙尔的糖坊与锡星、特里亚纳的绳铺、阿尔及尔三一会门房的赎俘簿、科尔武的石座。
+#   托莱多赫拉克勒斯洞口的刻痕是流传的传说，正文只作老人口述；查探的年份照传说写。
+#   塞万提斯只在变体里作一句，不展开。胡安修士、让·德·拉瓦莱特、克拉图院长的人物与 cast 一致。
+# 待核：托莱多洞口 1546 年的查探是否真有大主教派人（写成老人的说法）；勒班陀划手的锁由谁在哪一夜砍开（写成个别的一件事）。
+# 日程（cast 已登记）：1557—1567 塔里法；1568—1580 阿尔及尔（以赎俘人的身份住在阿尔及尔）；1581—1590 里斯本。
+# 口吻与秘密：诺埃尔是 NPC 时永不揭开性别与来历；全文不用他 / 她 / Sir / Lady / Miss 指诺埃尔，只叫“诺埃尔”或“那位骑士”；外貌只写“讨厌被人盯着脸看”。
+# 恋爱：不用 heart / relation / tie / bond 效果；招募只是请一位航海士上船，不是告白。
+# 读的共享旗标：c12_voyage_noel（=false，诺埃尔不是玩家）、upbringing_graduated、c13_main_tariq（=false，塔里克当玩家时 malta、algiers、azores 排除；toledo 的变体读它为真时）、h22_malta_siege_ottoman_takes_malta、h49_three_kings_sebastian_returns。
+# 设的旗标：c13_npc_noel（s00）；c13_npc_noel_duel_won 与 _roster_asked（d1）；c13_npc_noel_name_found（r1，s04 变体读）；c13_mark_toledo（t1，印记一局只发一次）；c13_npc_noel_ransomed（a1，s03 变体读）；c13_npc_noel_corvo（z1，j1 变体读）；c13_npc_noel_mate（j1 招募，之后各交汇旁轨静默，s04 变体读）。
+# 等待的包：A8（mark_* 发现物的许可流程；印记章目前只发物品）；A9（门槛章可加 protagonist 条件，届时 auto 改 false）；C10（h22_malta_siege_ottoman_takes_malta、h49_three_kings_sebastian_returns 的 key 表）。C11 无。
+# HIST 占位清单：h22_malta_siege_ottoman_takes_malta（s01 变体：马耳他丢了）；h49_three_kings_sebastian_returns（s03 变体：国王从非洲回来了）。
+# 回忆插画清单（mem-* 与画面描述）：
+#   mem-npc_noel_duel-d1「红缎带的线头」：退潮的沙滩上两把剑交错，一根红缎带的线头飘在风里，远处是城堡和金枪鱼网桩。
+#   mem-npc_noel_toledo-t1「一张描下的纸」：绳铺门口的长凳上，一张画满小锁的旧纸，两只手一只按纸一只描，旁边一卷缆绳。
+#   mem-npc_noel_azores-z1「科尔武的石座」：风很大的山顶，一座空石座，系红缎带的骑士背对着坐在石座边，望着西边的海。
+#   mem-npc_noel_join-j1「第七十八个名字」：河边小屋的桌上摊着旧名册，最后一行新添一个名字，红缎带压在页边。
+
+[[tracks]]
+key = "npc_noel"
+name = "海峡的骑士"
+kind = "request"
+start = "s00_gate"
+auto = true
+
+[[tracks.chapters]]
+key = "s00_gate"
+title = "城堡里的点名"
+text = "塔里法城堡里点了名，名册上七十七个名字，只有一个人应了一声。鱼市上的人都看见了：应声的是刚授剑的那位骑士，剑穗上拴着一根红缎带，走起路来一甩一甩。点完名，骑士头一句话是问管事：名册上那些空着的格子，从哪个港口找起？管事回了一句：“从睡醒找起。”"
+stage = "rumor"
+window = [[1557, 1, 24], [1557, 1, 31]]
+at = "tarifa"
+cast = ["noel"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_noel", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "塔里法城堡里念名册，只有一个人应声。那位系红缎带的骑士说，要照着名册满世界找人。"
+
+[tracks.chapters.default]
+next = "s01_malta_rumor"
+effects = [{ kind = "flag", flag = "c13_npc_noel" }, { kind = "start_track", track = "npc_noel_duel" }, { kind = "start_track", track = "npc_noel_roster" }, { kind = "start_track", track = "npc_noel_toledo" }, { kind = "start_track", track = "npc_noel_malta" }]
+
+[[tracks.chapters]]
+key = "s01_malta_rumor"
+title = "围城里出来的名单"
+text = "墨西拿的码头上传开了消息：马耳他的围城散了。跟“小援军”一道进城的人里，有个系红缎带的海峡骑士。那位骑士出城时什么也没抢，只带出一张名单，城墙上死掉的人，一个一个写着家乡。修院的老修士看了一遍，说：“死人也要写家乡，别只写一个数。”"
+stage = "rumor"
+window = [[1565, 9, 10], [1565, 12, 15]]
+at = "messina"
+cast = ["noel"]
+mood = "tense"
+news = "墨西拿的人说，马耳他围城里出来一个海峡骑士，什么都没抢，只带出一张死人的名单。"
+
+[tracks.chapters.default]
+next = "s02_lepanto_rumor"
+effects = [{ kind = "start_track", track = "npc_noel_algiers" }]
+
+[[tracks.chapters.variants]]
+key = "falls"
+when = [{ kind = "flag", flag = "h22_malta_siege_ottoman_takes_malta" }]
+text = "马耳他丢了。逃出来的船上有个系红缎带的海峡骑士，抱着一张名单，上面是城里所有人的名字，活着的、没活着的。修院的老修士看了一遍，什么也没说，把名单收进了箱底，又搬了块石头压在箱盖上。"
+
+[[tracks.chapters]]
+key = "s02_lepanto_rumor"
+title = "桨座底下的骑士"
+text = "舰队回到墨西拿，酒馆里人人讲自己抢了哪面旗。有个从阿尔及尔来的赎俘骑士也上了同盟的船，一面旗都没碰。有人看见，那位骑士蹲在土耳其船的桨座底下，一根一根砍划手脚上的锁，砍了一整夜。一个被放出来的老划手还在念叨：“砍完我的锁，那位骑士说：自己走，别叫我扶。”"
+stage = "rumor"
+window = [[1571, 10, 15], [1572, 1, 31]]
+at = "messina"
+cast = ["noel"]
+mood = "sad"
+news = "墨西拿的酒馆里，人人讲自己抢了哪面旗。只有一个老划手讲，是谁砍开了自己脚上的锁。"
+
+[tracks.chapters.default]
+next = "s03_lisbon_rumor"
+effects = []
+
+[[tracks.chapters]]
+key = "s03_lisbon_rumor"
+title = "问船期的人"
+text = "里斯本换了国王，码头上挂起了西班牙的旗。那位在阿尔及尔住了十几年的赎俘骑士搬进了里斯本，在河边租了一间小屋。骑士逢船就问去亚速尔的船期，说要去科尔武，看一个老人死的地方。问完不走，坐在码头上等，一等就是一下午。河边的船夫说：“像是怕回屋。”"
+stage = "rumor"
+window = [[1581, 3, 1], [1581, 8, 31]]
+at = "lisbon"
+cast = ["noel"]
+mood = "tender"
+news = "里斯本河边新来了一个系红缎带的骑士，逢船就问去亚速尔的船期。"
+
+[tracks.chapters.default]
+next = "s04_strait_rumor"
+effects = [{ kind = "start_track", track = "npc_noel_azores" }, { kind = "start_track", track = "npc_noel_join" }]
+
+[[tracks.chapters.variants]]
+key = "king_back"
+when = [{ kind = "flag", flag = "h49_three_kings_sebastian_returns" }]
+text = "里斯本的国王从非洲回来了，比走时瘦了一圈，码头上挂起的还是西班牙的旗。那位在阿尔及尔住了十几年的赎俘骑士搬进了里斯本，在河边租了一间小屋。骑士逢船就问去亚速尔的船期，说要去科尔武，看一个老人死的地方。问完不走，坐在码头上等，一等就是一下午。河边的船夫说：“像是怕回屋。”"
+
+[[tracks.chapters.variants]]
+key = "ransomed"
+when = [{ kind = "flag", flag = "c13_npc_noel_ransomed" }]
+text = "里斯本换了国王，码头上挂起了西班牙的旗。那位在阿尔及尔住了十几年的赎俘骑士搬进了里斯本，在河边租了一间小屋。骑士逢船就问去亚速尔的船期，说要去科尔武，看一个老人死的地方。问完不走，坐在码头上等，一等就是一下午。河边的船夫说：“像是怕回屋。”骑士在码头上碰见了当年托你赎回来的那个瓦伦西亚人，两个人站着说了很久的话。"
+
+[[tracks.chapters.variants]]
+key = "a_king_ransomed"
+when = [{ kind = "flag", flag = "h49_three_kings_sebastian_returns" }, { kind = "flag", flag = "c13_npc_noel_ransomed" }]
+text = "里斯本的国王从非洲回来了，比走时瘦了一圈，码头上挂起的还是西班牙的旗。那位在阿尔及尔住了十几年的赎俘骑士搬进了里斯本，在河边租了一间小屋。骑士逢船就问去亚速尔的船期，说要去科尔武，看一个老人死的地方。问完不走，坐在码头上等，一等就是一下午。河边的船夫说：“像是怕回屋。”骑士在码头上碰见了当年托你赎回来的那个瓦伦西亚人，两个人站着说了很久的话。"
+
+[[tracks.chapters]]
+key = "s04_strait_rumor"
+title = "没上船的骑士"
+text = "无敌舰队从里斯本出港那天，码头上挤满了送行的人。有人看见那位系红缎带的骑士没上任何一条船，背着名册往南走了，有人说是回塔里法，站到城墙上去看海峡。一个征来的领航员说：“我问骑士去不去，骑士说：海峡总得有人看着。”"
+stage = "rumor"
+window = [[1588, 8, 1], [1588, 12, 31]]
+at = "lisbon"
+cast = ["noel"]
+mood = "sad"
+news = "里斯本码头上，无敌舰队出港那天，有个系红缎带的骑士抱着一本旧名册，一句话没说，看了满河的帆。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_mate"
+when = [{ kind = "flag", flag = "c13_npc_noel_mate" }]
+text = "无敌舰队从里斯本出港那天，码头上挤满了送行的人，你的船也在其中。那位系红缎带的骑士就站在船尾，看着满河的帆，不吭声，只把名册抱得更紧。你问要不要回塔里法看一眼，骑士说：“海峡的事，等船靠了岸再说。”"
+
+[[tracks.chapters.variants]]
+key = "v2_found"
+when = [{ kind = "flag", flag = "c13_npc_noel_name_found" }]
+text = "无敌舰队从里斯本出港那天，码头上挤满了送行的人。有人看见那位系红缎带的骑士没上任何一条船，背着名册往南走了，有人说是回塔里法，站到城墙上去看海峡。一个征来的领航员说：“我问骑士去不去，骑士说：海峡总得有人看着。”丰沙尔那个糖坊的管事也来送行，胸前别着一枚锡星。"
+
+
+[[tracks.chapters.variants]]
+key = "a_mate_found"
+when = [{ kind = "flag", flag = "c13_npc_noel_mate" }, { kind = "flag", flag = "c13_npc_noel_name_found" }]
+text = "无敌舰队从里斯本出港那天，码头上挤满了送行的人，你的船也在其中。那位系红缎带的骑士就站在船尾，看着满河的帆，不吭声，只把名册抱得更紧。你问要不要回塔里法看一眼，骑士说：“海峡的事，等船靠了岸再说。”丰沙尔那个糖坊的管事也来送行，胸前别着一枚锡星。"
+
+
+[[tracks]]
+key = "npc_noel_duel"
+name = "红缎带的决斗"
+kind = "request"
+start = "d1_duel"
+auto = false
+
+[[tracks.chapters]]
+key = "d1_duel"
+title = "退潮的沙滩"
+text = "退潮的时候，塔里法城堡底下露出一大片沙滩，渔夫们蹲在那里收金枪鱼的网桩，木槌一下一下响。你在码头上多看了那位系红缎带的骑士两眼，就两眼。骑士把剑从鞘里抽出一截，又推了回去，冲你扬起下巴：“看够了？看够了就拔剑。看不够也拔。”红缎带被风吹到肩前，骑士一把按住，又说：“塔里法的规矩，盯着人脸看的，先比一场再说话。”旁边一个渔夫小声打赌，赌你撑不过三招。沙滩那头，几个孩子追着退下去的潮水跑，没人管。"
+at = "tarifa"
+speaker = "noel"
+mood = "cheerful"
+cast = ["noel"]
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "flag", flag = "c13_npc_noel_mate", value = false }]
+objectives = [{ kind = "person", person = "noel", text = "在塔里法找到那位系红缎带的骑士" }]
+deadline = [1567, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "duel"
+text = "接下挑战，在退潮的沙滩上比剑"
+next = "done"
+check = { attr = "arms", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "noel", value = 5 }, { kind = "flag", flag = "c13_npc_noel_duel_won" }, { kind = "flag", flag = "c13_npc_noel_roster_asked" }, { kind = "memory", memory = "mem-npc_noel_duel-d1", title = "红缎带的线头" }]
+reply = "成功：你的剑尖挑到了那条红缎带，扯下一根线头。诺埃尔把线头捏在指间看了半天，才说：“剑还行，脚太慢。”顿了顿，又说：“线头送你，算你赢的。”过了一会儿，又问你下回去不去马德拉。名册上有个名字在那边，问不问得到，骑士没说，只说：“你替我去问一句。”"
+news = "塔里法城堡底下的沙滩上，那位系红缎带的骑士又跟外来的船长比了一场剑。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "noel", value = -2 }, { kind = "flag", flag = "c13_npc_noel_roster_asked" }], news = "塔里法城堡底下的沙滩上，有个外来的船长跟那位系红缎带的骑士比剑，三招就坐进了水里。骑士扶都没扶。" }
+
+[[tracks.chapters.choices]]
+key = "apologize"
+text = "收手道歉：不该盯着看"
+next = "done"
+effects = [{ kind = "affinity", person = "noel", value = 3 }, { kind = "flag", flag = "c13_npc_noel_roster_asked" }]
+reply = "诺埃尔愣了一下，把剑插回鞘里。“道歉的人，比拔剑的少见。”骑士说，声音比刚才低了一截。站了一会儿，骑士抬眼看了你一下，马上又别开，问你下回去不去马德拉。“名册上有个名字在那边。去不去，说一声，别绕弯子。”"
+
+[[tracks.chapters.choices]]
+key = "mock"
+text = "回一句比那位骑士更毒的话"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "noel", value = 4 }, { kind = "flag", flag = "c13_npc_noel_roster_asked" }]
+reply = "诺埃尔被噎住了，张着嘴愣了好一会儿，才笑出来。“塔里法很久没人这么跟骑士说话了。”笑完，骑士把剑靠在墙上，又问你下回去不去马德拉，说名册上有个名字在那边，“你嘴这么快，问名字正合适，问不出来就骂。”"
+fail = { next = "done", effects = [{ kind = "affinity", person = "noel", value = -2 }, { kind = "flag", flag = "c13_npc_noel_roster_asked" }], news = "塔里法码头上，有个外来的船长跟那位骑士斗嘴，斗输了，骑士临走还丢下一句：马德拉，记得去。" }
+
+[[tracks]]
+key = "npc_noel_roster"
+name = "丰沙尔的一个名字"
+kind = "request"
+start = "r1_funchal"
+auto = false
+
+[[tracks.chapters]]
+key = "r1_funchal"
+title = "糖坊的锡星"
+text = "丰沙尔的山坡上全是甘蔗，糖坊的烟囱一天到晚冒着白烟。你照着诺埃尔给的那个姓，问到一家糖坊。管事叫若热·塔瓦雷斯，五十来岁，两只手上全是糖浆烫出来的疤。你说明来意，他先问了一句：“是来收债的，还是来还债的？”听你说起塔里法，塔瓦雷斯从脖子上拉出一根绳，绳上拴着一枚锡做的八角星，说是外婆传下来的，外婆的父亲在海峡上当过骑士。“外婆说，海峡上的骑士，名字要一年念一回。我还以为是她编来哄我睡觉的。”名册上那个空格，原来就挂在这个管事的脖子上。"
+at = "funchal"
+mood = "tender"
+cast = ["noel"]
+when = [{ kind = "flag", flag = "c13_npc_noel_roster_asked" }, { kind = "date", from = [1559, 1, 1] }]
+deadline = [1566, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "告诉塔瓦雷斯：名册上有他外曾祖的名字"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_noel_name_found" }, { kind = "affinity", person = "noel", value = 5 }]
+reply = "塔瓦雷斯把锡星攥在手心里，攥了很久，说：“那就够了。”你回到塔里法，把这话转告诺埃尔。那位骑士翻开名册，在那一格画了个圆圈，嘴上说“画歪了”，又描了一遍。合上名册以后，骑士只说了一句：“下回带点糖回来。”"
+news = "丰沙尔一家糖坊的管事脖子上拴着一枚锡星，说是外婆传下来的，外婆的父亲在海峡上当过骑士。"
+
+[[tracks.chapters.choices]]
+key = "letter"
+text = "请塔瓦雷斯写封信，由你亲自捎回塔里法"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_noel_name_found" }, { kind = "affinity", person = "noel", value = 8 }]
+reply = "塔瓦雷斯不会写字，口述，你代笔，只写了三行。信封上按了一个带糖浆的指印。诺埃尔拆信那天把你赶出了屋子，过了一会儿又叫你回来，说外头风大。你在门口听见屋里念了一遍，念到一半停住，念的是那个名字。"
+news = "丰沙尔有个糖坊管事托人带信回塔里法，信封上按着一个带糖浆的指印。"
+
+[[tracks]]
+key = "npc_noel_malta"
+name = "围城的夜路"
+kind = "request"
+start = "m1_kalkara"
+auto = false
+
+[[tracks.chapters]]
+key = "m1_kalkara"
+title = "卡尔卡拉湾的礁石"
+text = "围城的夜里，比尔古东边的卡尔卡拉湾一片漆黑，土耳其人的巡船在湾口来回，桨声能传出半里。诺埃尔的小艇摸到你的船边，艇上压着一盏蒙了布的灯。骑士只说了两个字：“伤兵。”然后又说：“圣安杰洛堡底下有十几个，城里的医院塞满了，得趁夜运去岛北的渔村。小艇太小，要你的船在前面带路。”“带路的人别回头。回头看我，我就把你推下去。”口令是让·德·拉瓦莱特那边批下来的，骑士没说是哪一句。"
+at = "malta"
+speaker = "noel"
+mood = "tense"
+cast = ["noel", "jean_de_valette"]
+when = [{ kind = "date", from = [1565, 5, 18] }, { kind = "flag", flag = "c13_main_tariq", value = false }, { kind = "flag", flag = "c13_npc_noel_mate", value = false }]
+deadline = [1565, 9, 8]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "lead"
+text = "你在前面带路，从礁石缝里穿过去"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "noel", value = 6 }, { kind = "reputation", faction = "hospital", value = 3 }]
+reply = "礁石擦着船底过去，响了一路。天亮时伤兵都上了岸，诺埃尔趴在船头睡着了，怎么叫也叫不醒。醒过来，骑士看了看你的船，说：……你的船，还行。你后来才知道，那十几个人里，有一个的名字就写在名册上。"
+news = "马耳他围城的时候，有人夜里从卡尔卡拉湾往岛北运伤兵，带路的是一条外来的船。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "noel", value = 2 }], news = "马耳他的卡尔卡拉湾里，有两条船夜里往外运伤兵，撞上了礁石，一条船只好掉头。" }
+
+[[tracks.chapters.choices]]
+key = "cover"
+text = "你的船留在湾口，替小艇挡住巡船"
+next = "done"
+check = { attr = "gunnery", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "noel", value = 5 }, { kind = "reputation", faction = "hospital", value = 2 }]
+reply = "你的炮响了两回，巡船退了。小艇从你身后溜出湾口，贴着岸走，一个人也没出声。诺埃尔经过你的船尾时冲你举了举剑，说了一句被炮声盖住的话。后来在岛北的沙滩上你才听清，那句是：“炮打得还行，就是慢。”"
+news = "卡尔卡拉湾口夜里响了两回炮，土耳其人的巡船退了，一条小艇从湾里溜了出来。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "noel", value = 1 }], news = "卡尔卡拉湾口夜里打了一阵炮，巡船没退，一条蒙着灯布的小艇硬冲了出去。" }
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不去：你的船上也有自己的人"
+next = "done"
+effects = [{ kind = "affinity", person = "noel", value = -2 }]
+reply = "诺埃尔没争，也没回头，划着小艇自己走了。天亮以后，你看见那条小艇停在岛北的沙滩上，船底漏了一道缝。骑士蹲在船边，撕下自己的袖子往缝里塞，一句话没有。你站在船尾看了很久，没有出声叫住。"
+
+[[tracks]]
+key = "npc_noel_toledo"
+name = "一张描下的纸"
+kind = "request"
+start = "t1_marks"
+auto = false
+
+[[tracks.chapters]]
+key = "t1_marks"
+title = "二十六把锁"
+text = "特里亚纳的绳铺门口，那位骑士和一个搓缆绳的老人并排坐着，门里麻丝的味道一阵阵往外冒，膝上摊着一张发黄的纸。纸上画满了小锁，一排挨着一排，末尾是一张长腿的桌子。老人说，这是托莱多赫拉克勒斯洞口的刻痕。一五四六年大主教派人去查探，洞口那根绳子是老人搓的。“二十六把锁，最后一把是开着的。撬开它的王，丢了整个西班牙。”那位骑士看见你，把纸往你这边推了推：“描吧。描歪了别怪我，纸是老人的。”"
+at = "seville"
+speaker = "noel"
+mood = "mystic"
+cast = ["noel"]
+when = [{ kind = "date", from = [1561, 1, 1] }, { kind = "affinity", person = "noel", ge = 40 }, { kind = "flag", flag = "c13_mark_toledo", value = false }]
+deadline = [1575, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "接过那张纸，照着描一份"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_mark_toledo", value = false }]
+hint = "这些锁已经有人描过一份了。"
+effects = [{ kind = "item", item = "emerald_mark_toledo", qty = 1 }, { kind = "flag", flag = "c13_mark_toledo" }, { kind = "affinity", person = "noel", value = 3 }, { kind = "memory", memory = "mem-npc_noel_toledo-t1", title = "一张描下的纸" }]
+reply = "你描到第二十六把锁，诺埃尔在旁边说：“开着的，别画成关着。”你改了一笔，又觉得不对，改了回来。描完，纸摸上去是凉的。老人把描好的那张叠了三折，塞进你的袖子里，说：“这一份，你收好。”那位骑士没看你，只把手里的绳子搓得紧了一些。"
+news = "特里亚纳绳铺门口，那位系红缎带的骑士陪着搓绳的老人坐了一下午，膝上摊着一张画满锁的纸。"
+
+[[tracks.chapters.choices]]
+key = "medicine"
+text = "先替老人付清这一冬的药钱，再描"
+next = "done"
+requires = [{ kind = "cash", ge = 300 }, { kind = "flag", flag = "c13_mark_toledo", value = false }]
+hint = "你身上的钱不够，或者这些锁已经有人描过了。"
+effects = [{ kind = "cash", value = -300 }, { kind = "item", item = "emerald_mark_toledo", qty = 1 }, { kind = "flag", flag = "c13_mark_toledo" }, { kind = "affinity", person = "noel", value = 6 }, { kind = "memory", memory = "mem-npc_noel_toledo-t1", title = "一张描下的纸" }]
+reply = "老人数钱数了两遍，把纸推到你面前。诺埃尔没吭声，只把老人手里的绳子接过去，替老人搓了一段，搓得很难看。老人笑着骂了一句：“这样搓，绳子明天就散。”那位骑士把绳子又拿回来，搓得更难看了。"
+news = "特里亚纳绳铺门口，有人替搓绳的老人付清了一冬的药钱，那位系红缎带的骑士在一旁把绳子搓得很难看。"
+
+[[tracks.chapters.choices]]
+key = "look_only"
+text = "只看一眼，不描"
+next = "done"
+effects = [{ kind = "affinity", person = "noel", value = 1 }]
+reply = "你看了很久，把纸推了回去。诺埃尔说：“也好，记性比纸牢。”老人没接纸，只问你要不要尝一块刚煮的鱼干，说这一冬的口粮，就指着这些绳子。你摇了摇头。那位骑士伸手把鱼干掰成小块，放进老人手里。"
+
+[[tracks.chapters.variants]]
+key = "tariq_player"
+when = [{ kind = "flag", flag = "c13_main_tariq" }]
+text = "特里亚纳的绳铺门口，那位骑士和一个搓缆绳的老人并排坐着，门里麻丝的味道一阵阵往外冒，膝上摊着一张发黄的纸。纸上画满了小锁，一排挨着一排，末尾是一张长腿的桌子。老人说，这是托莱多赫拉克勒斯洞口的刻痕。一五四六年大主教派人去查探，洞口那根绳子是老人搓的。“二十六把锁，最后一把是开着的。撬开它的王，丢了整个西班牙。”骑士斜你一眼：八百多年前跟你同名的那个人，打进过托莱多。你今天只许描，别的不许碰。那位骑士把纸往你这边推了推：“描吧。描歪了别怪我，纸是老人的。”"
+
+[[tracks]]
+key = "npc_noel_algiers"
+name = "赎身的价"
+kind = "request"
+start = "a1_ransom"
+auto = false
+
+[[tracks.chapters]]
+key = "a1_ransom"
+title = "三一会的门房"
+text = "阿尔及尔三一会的门房里，胡安修士摊着赎俘簿念价钱，诺埃尔坐在旁边记账。念到的是一个瓦伦西亚渔村的孩子，十四岁，被掳了一年，主人开的价，修士手里的钱只够一半。修士说：“念的时候看着名字，别只盯着钱数。”炭盆快灭了，没人去添，窗外晾着的湿袍子往下滴水。诺埃尔低着头，笔尖在簿子上停了很久，说：“这孩子不在名册上。不在名册上的，也得有人念。”然后抬起头，看了你一眼：“另一半，你出不出？”"
+at = "algiers"
+speaker = "noel"
+mood = "tense"
+cast = ["noel", "fray_juan"]
+when = [{ kind = "date", from = [1568, 1, 1] }, { kind = "flag", flag = "c13_main_tariq", value = false }, { kind = "flag", flag = "c13_npc_noel_mate", value = false }]
+objectives = [{ kind = "person", person = "noel", text = "在阿尔及尔找到那位赎俘的骑士" }]
+deadline = [1580, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "split"
+text = "你出另一半赎金"
+next = "done"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "你的钱箱里，凑不出另一半。"
+effects = [{ kind = "cash", value = -600 }, { kind = "affinity", person = "noel", value = 6 }, { kind = "flag", flag = "c13_npc_noel_ransomed" }]
+reply = "钱过了秤，孩子从院子里被领出来，光着脚。诺埃尔把自己的外套披到孩子肩上，系带打得乱七八糟，说：“外套先借给那孩子穿，到了瓦伦西亚，记得还给我。”孩子低头看着自己的脚，没敢说话。"
+news = "阿尔及尔三一会的门房里，有个外来的船长替一个瓦伦西亚渔村的孩子凑足了赎金。"
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "去跟帕夏的书记讲价，那位骑士在旁边冷着脸"
+next = "done"
+requires = [{ kind = "cash", ge = 300 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+hint = "讲价也得兜里先有钱。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "noel", value = 5 }, { kind = "flag", flag = "c13_npc_noel_ransomed" }]
+reply = "价压下来一截，你出了剩下的。诺埃尔在旁边冷着脸，一直没开口。钱过了秤，骑士才说：“你讲价的样子像金枪鱼贩子。”夸完又补一句：“这回算你有用。”帕夏的书记把账本合上，朝那位骑士看了一眼，骑士把脸转向窗外。"
+news = "阿尔及尔三一会的门房里，有个外来的船长跟帕夏的书记讲价，一截一截压下来。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "noel", value = 2 }], news = "阿尔及尔三一会的门房里，有个外来的船长跟帕夏的书记讲了一下午价，没讲下来。" }
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "不管：阿尔及尔每天都有人被卖"
+next = "done"
+effects = [{ kind = "affinity", person = "noel", value = -3 }]
+reply = "你出门时，诺埃尔没抬头，笔还在簿子上写着。门口的石阶上，你听见胡安修士叹了一口气，说了一句“下一个”。后来你听说那孩子还是赎出去了。钱是那位骑士把剑拿去当铺凑的，剑后来又赎了回去，当铺的人说，赎的时候骑士数钱数得很慢。"
+
+[[tracks.chapters.variants]]
+key = "cervantes"
+when = [{ kind = "date", from = [1575, 10, 1] }]
+text = "阿尔及尔三一会的门房里，胡安修士摊着赎俘簿念价钱，诺埃尔坐在旁边记账。念到的是一个瓦伦西亚渔村的孩子，十四岁，被掳了一年，主人开的价，修士手里的钱只够一半。修士说：“念的时候看着名字，别只盯着钱数。”炭盆快灭了，没人去添，窗外晾着的湿袍子往下滴水。院子当中，一个断了一只手的西班牙士兵正给人讲故事，讲到一半冲那位骑士喊：“骑士，下回也给我压压价。”诺埃尔低着头，笔尖在簿子上停了很久，说：“这孩子不在名册上。不在名册上的，也得有人念。”然后抬起头，看了你一眼：“另一半，你出不出？”"
+
+[[tracks]]
+key = "npc_noel_azores"
+name = "去科尔武的船"
+kind = "request"
+start = "z1_corvo"
+auto = false
+
+[[tracks.chapters]]
+key = "z1_corvo"
+title = "科尔武的石座"
+text = "安格拉的港口炮口朝海，城里人还认克拉图院长做国王。诺埃尔的船在港里搁着，桅杆裂了，修要一个月。港务长在岸上朝你摆手，说：“去科尔武的船，今年没有一条敢走。”那位骑士抱着名册在码头上等你，说要去最西边的科尔武，看一个老人死的地方：骑士团的老团长，二十多年前死在那座岛的山顶上。“不远，就两三天。你要是不去，我就游过去。”码头的木板被海风吹得咯吱响，一条船的帆布在桅杆上拍个不停，没有人去收。"
+at = "angra"
+speaker = "noel"
+mood = "mystic"
+cast = ["noel"]
+when = [{ kind = "date", from = [1581, 3, 1] }, { kind = "affinity", person = "noel", ge = 30 }, { kind = "flag", flag = "c13_main_tariq", value = false }, { kind = "flag", flag = "c13_npc_noel_mate", value = false }]
+deadline = [1583, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "sail"
+text = "载那位骑士去科尔武，冒浪靠岸"
+next = "done"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "noel", value = 8 }, { kind = "flag", flag = "c13_npc_noel_corvo" }, { kind = "memory", memory = "mem-npc_noel_azores-z1", title = "科尔武的石座" }]
+reply = "浪把小艇拍上礁石，两人浑身湿透地爬上山。山顶上只剩一座空石座，那位骑士在石座边坐到天黑，一个字也不说。下山时骑士走在后面，说了一声谢。声音太小，被风吹走了，你装作没听见。"
+news = "安格拉有条外来的船载着那位系红缎带的骑士去了科尔武，听说是去看一个老人死的地方。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "noel", value = 3 }], news = "科尔武岛外的浪太大，有条从安格拉来的船绕了三圈，到天黑也没靠上岸。" }
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "把小艇借给那位骑士，自己留在安格拉"
+next = "done"
+effects = [{ kind = "affinity", person = "noel", value = 4 }, { kind = "flag", flag = "c13_npc_noel_corvo" }]
+reply = "五天以后小艇回来了，船底多了一道刮痕，名册里多夹了一片山顶的草。诺埃尔把小艇还给你，拍了拍船舷，说：“草不送你，刮痕送你。”你想再问一句科尔武的事，骑士已经转身去修那根断桅了。"
+
+[[tracks]]
+key = "npc_noel_join"
+name = "第七十八个名字"
+kind = "request"
+start = "j1_join"
+auto = false
+
+[[tracks.chapters]]
+key = "j1_join"
+title = "名册的最后一行"
+text = "里斯本河边那间小屋里，诺埃尔把名册摊在桌上，翻到最后一页。七十七个名字后面画满了十字和圆圈，最后一行底下还留着一点空。那位骑士说，船卖了，剩下的只有一把剑、一本名册，和一条褪了色的红缎带。“我早上叫不醒。你要是嫌，现在说。”问完就低头看名册，不看你。屋外的河上有船在喊号子，骑士手里的笔停了一下，又落下去，在最后一行写下了你的名字，第七十八个。“先写上，划不划掉以后再说。”"
+at = "lisbon"
+speaker = "noel"
+mood = "tender"
+cast = ["noel"]
+when = [{ kind = "date", from = [1584, 1, 1] }, { kind = "affinity", person = "noel", ge = 40 }, { kind = "flag", flag = "c13_npc_noel_mate", value = false }]
+objectives = [{ kind = "person", person = "noel", text = "在里斯本河边找到那位骑士" }]
+deadline = [1590, 11, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "join"
+text = "请那位骑士上船"
+next = "done"
+requires = [{ kind = "affinity", person = "noel", ge = 60 }]
+hint = "那位骑士还没信你到肯把名册搬上你的船。"
+effects = [{ kind = "join", person = "noel" }, { kind = "flag", flag = "c13_npc_noel_mate" }, { kind = "memory", memory = "mem-npc_noel_join-j1", title = "第七十八个名字" }]
+reply = "诺埃尔把名册合上，抱在怀里，跟你下了河边的台阶。“名字写上去了，可别让我画十字。”上船第一天早上，你敲了三遍钟，骑士才从舱里探出头来，骂了一句，说钟声比浪还难听。你没理，又敲了一遍。"
+news = "里斯本河边那位系红缎带的骑士把自己的船卖了，抱着一本旧名册，上了别人的船。"
+
+[[tracks.chapters.choices]]
+key = "not_now"
+text = "还不是时候：你的船走得太远"
+next = "done"
+effects = [{ kind = "affinity", person = "noel", value = 2 }]
+reply = "诺埃尔说“也好”，把那一行用沙子吸干，没划掉。骑士把红缎带从书页之间抽出来，重新系回剑柄上，说：“哪天船停在里斯本，就来这间屋子敲门。敲三遍，我早上听不见，你就进来。”"
+
+[[tracks.chapters.variants]]
+key = "v1_a_duel_corvo"
+when = [{ kind = "flag", flag = "c13_npc_noel_duel_won" }, { kind = "flag", flag = "c13_npc_noel_corvo" }]
+text = "里斯本河边那间小屋里，诺埃尔把名册摊在桌上，翻到最后一页。七十七个名字后面画满了十字和圆圈，最后一行底下还留着一点空。那位骑士说，船卖了，剩下的只有一把剑、一本名册，和一条褪了色的红缎带。“我早上叫不醒。你要是嫌，现在说。”问完就低头看名册，不看你。屋外的河上有船在喊号子，骑士手里的笔停了一下，又落下去，在最后一行写下了你的名字，第七十八个。“先写上，划不划掉以后再说。”那位骑士看了一眼你衣袋里露出来的那根红线头，说：还留着？名册里还夹着科尔武山顶的那片草，已经干成了一道线。"
+
+[[tracks.chapters.variants]]
+key = "v2_duel_won"
+when = [{ kind = "flag", flag = "c13_npc_noel_duel_won" }]
+text = "里斯本河边那间小屋里，诺埃尔把名册摊在桌上，翻到最后一页。七十七个名字后面画满了十字和圆圈，最后一行底下还留着一点空。那位骑士说，船卖了，剩下的只有一把剑、一本名册，和一条褪了色的红缎带。“我早上叫不醒。你要是嫌，现在说。”问完就低头看名册，不看你。屋外的河上有船在喊号子，骑士手里的笔停了一下，又落下去，在最后一行写下了你的名字，第七十八个。“先写上，划不划掉以后再说。”那位骑士看了一眼你衣袋里露出来的那根红线头，说：还留着？"
+
+[[tracks.chapters.variants]]
+key = "v3_corvo"
+when = [{ kind = "flag", flag = "c13_npc_noel_corvo" }]
+text = "里斯本河边那间小屋里，诺埃尔把名册摊在桌上，翻到最后一页。七十七个名字后面画满了十字和圆圈，最后一行底下还留着一点空。那位骑士说，船卖了，剩下的只有一把剑、一本名册，和一条褪了色的红缎带。“我早上叫不醒。你要是嫌，现在说。”问完就低头看名册，不看你。屋外的河上有船在喊号子，骑士手里的笔停了一下，又落下去，在最后一行写下了你的名字，第七十八个。“先写上，划不划掉以后再说。”名册里还夹着科尔武山顶的那片草，已经干成了一道线。"

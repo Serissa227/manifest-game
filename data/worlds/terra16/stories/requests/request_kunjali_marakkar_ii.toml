@@ -1,0 +1,231 @@
+# C13d 人物的请托（2026-10-24，Claude 写）：故事 2.0 轨道格式，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 人物：昆贾利·马拉卡尔二世（kunjali_marakkar_ii），生年不详（cast 占位 0），卒于 1569 年（cast 写 died 1569，待核）。
+#       扎莫林的海军首领，马拉卡尔家第二代，住卡利卡特。话少、嗓子粗，谈船先问风向、吃水和水手，烧船扣人说得像说潮水。
+# 类型：打一仗（fight）。4 章：offer（报价）→ plan（潮水退之前）→ battle（你打退的那条船）→ after（船坞里的账）。
+#       plan 的 papers（文书）与 feign 检定成功两条路不打仗，直接到 after；engage 直接打，feign 检定失败也走 battle。
+# 报价：T 当面，卡利卡特（calicut_port）。玩家“问请托”（ask:request_kunjali_marakkar_ii）启动，在港里找到他才会有 offer。
+# 窗口：报价 1561-01-01..1568-12-31（offer 的 when 与 deadline）；plan 期限 60 天，battle 期限 30 天，after 期限 90 天。
+# 依据·史实：马拉卡尔家世代任扎莫林的海军统帅，用浅吃水的帕劳快船在河口与回水里打葡萄牙人；葡萄牙人卖“卡塔兹”通行证，
+#       不买的商船当海盗办（史实）。二世的卒年待核，正文只写传闻，不写具体年月。
+# 依据·原创：河口外守了半个月的那条巡船、快船队出港的潮水、盖着印的“迷路文书”、船坞里的椰子酒与旧铁箱、拖回来的葡萄牙小商船。
+# 待核：快船的吃水与船型。正文用行里人的口气带过。
+# 旗标：读的旗标：无（不读 c13_main_* 与 c7_*）。
+#       设的旗标：c13_request_kunjali_marakkar_ii_accepted / declined / chose_fight / chose_decoy / decoyed / fought / rescued / late / done / partial / pact / failed。
+#       不写 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 依赖：calicut_port 是现有港口，他的日程在 cast 里已经是 1553—1568 年在卡利卡特的船坞，不需要 B10b 改名。
+#       1569 年以后他没有日程，after 的人物目标找不到人，走 timeout，这是设计内的。
+# 缺省走向（玩家什么也不做）：offer 到 1568-12-31 超时，走 failed，无见闻；接下后 plan 到期，快船队从北边的浅滩出去，走 failed。
+# 回忆插画清单：
+#   mem-request_kunjali_marakkar_ii-after：卡利卡特船坞里一只旧铁箱，箱盖上扣着一只椰子壳，龙骨边搁着一把量船底的木尺。
+
+[[tracks]]
+key = "request_kunjali_marakkar_ii"
+name = "引开巡船半天"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kunjali_marakkar_ii"]
+
+# 一、报价：1561—1568 年间，卡利卡特的船坞。他蹲在快船的龙骨边，要一条外国船把河口外的巡船引开。
+[[tracks.chapters]]
+key = "offer"
+title = "河口外的巡船"
+text = "卡利卡特的船坞里，昆贾利蹲在一条帕劳快船的龙骨边，用手掌一块一块地摸船底的虫眼。他头也不抬，先问风从哪边来，再问你的船吃水几尺，船上的水手会不会划桨。问完才站起来：“进不了，就别跟我谈打仗。”河口外头，一条葡萄牙巡船守了半个月，船头的灯从天黑亮到天亮。他的快船队出不去。他要一条外国船去把它引开半天：打一仗也行，装成迷路的商船去送一张假文书也行。"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1561, 1, 1], to = [1568, 12, 31] },
+]
+objectives = [{ kind = "person", person = "kunjali_marakkar_ii", text = "在港里找到他" }]
+speaker = "kunjali_marakkar_ii"
+mood = "tense"
+deadline = [1568, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "接下：我去跟巡船打一仗。"
+next = "plan"
+reply = "他站起来，第一次正眼看你：“打完了别追。追出去，就是你一个人的仗了。”"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 2 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_accepted" },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_chose_fight" },
+]
+
+[[tracks.chapters.choices]]
+key = "decoy"
+text = "接下：我装成迷路的商船，把它引走。"
+next = "plan"
+reply = "“文书谁写？”他问。你说你想办法。他点头：“葡萄牙人认字，也认印。印我们有。”"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 2 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_accepted" },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_chose_decoy" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一仗不是我的仗。"
+next = "failed"
+reply = "他重新蹲下去量船底，没再理你。"
+effects = [{ kind = "flag", flag = "c13_request_kunjali_marakkar_ii_declined" }]
+
+# 二、潮水：1561—1569 年间，卡利卡特河口。三条路：正面冲过去、用葡萄牙话补全文书、装成漏水的商船。
+[[tracks.chapters]]
+key = "plan"
+title = "潮水退之前"
+text = "天亮前退潮，快船队要在潮水退尽之前出河口。巡船停在外海一里的地方，船头的灯一直亮着，灯影在水上晃来晃去。昆贾利的人在你的船上放了一张“迷路文书”，盖着葡萄牙人的印。印是真的，字是谁抄的，他们没说。船尾的舵手一直盯着水色，没有人催你。要不要用，看你。"
+when = [{ kind = "alive", person = "kunjali_marakkar_ii", value = true }]
+at = "calicut_port"
+speaker = "captain"
+mood = "tense"
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+news = "卡利卡特河口外，潮水退了又涨，快船队没等到外国船，从北边的浅滩溜了出去。"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = -3 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_late" },
+  { kind = "letter", person = "kunjali_marakkar_ii", text = "昆贾利：潮水不等人。我们换了个法子出去了。你的船，下回进得了河口再说。" },
+]
+
+[[tracks.chapters.variants]]
+key = "decoy"
+when = [{ kind = "flag", flag = "c13_request_kunjali_marakkar_ii_chose_decoy" }]
+text = "天亮前退潮，快船队要在潮水退尽之前出河口。你的船是答应装成商船的那一条：桨收进了舱里，帆放得松松垮垮，像一条满载的、吃水很深的货船。巡船停在外海一里的地方，船头的灯一直亮着。昆贾利的人把那张盖着葡萄牙印的“迷路文书”塞进你手里。"
+
+[[tracks.chapters.choices]]
+key = "engage"
+text = "直接冲过去，跟它打。"
+next = "battle"
+reply = "你的船顶着风冲出去，巡船的灯晃了一下，开始升帆。"
+news = "卡利卡特河口外，一条外国船顶着退潮冲向守在外海的葡萄牙巡船，两边的炮声隔着半个港都听得见。"
+effects = [{ kind = "affinity", person = "kunjali_marakkar_ii", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "papers"
+text = "用葡萄牙话把文书补全，开过去求它带路。"
+next = "after"
+reply = "你在文书上添了几句抱怨风向的话，写得跟真的一样。巡船的军官看完，骂骂咧咧地掉头，领着你往南走了大半天。回头望，河口里的快船一条一条都出去了。"
+news = "卡利卡特河口外，守了半个月的葡萄牙巡船跟着一条外国船往南去了大半天，回来时河口里的快船都不见了。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60, hard = true }]
+hint = "那张文书上的葡萄牙话，你连一句也添不上。"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 3 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_decoyed" },
+]
+
+[[tracks.chapters.choices]]
+key = "feign"
+text = "装成漏水的商船，往外海慢慢漂，引它来追。"
+next = "after"
+reply = "你把帆放得乱七八糟，船身歪着往外漂。巡船果然追了出来，追了半天才发现你根本没漏水。快船队早出去了。"
+news = "卡利卡特河口外，一条船装作漏水往外海漂，守河口的葡萄牙巡船追了半天才上了当，港里的快船早已出去。"
+check = { attr = "seamanship", base = 5, per = 8 }
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 3 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_decoyed" },
+]
+fail = { next = "battle", news = "卡利卡特河口外，一条外国船装作漏水，巡船却不上当，掉头回来守住了河口。" }
+
+# 三、海战：1561—1569 年间，河口外的浅水。你打退的那条船歪着身子退向外海。
+[[tracks.chapters]]
+key = "battle"
+title = "你打退的那条船"
+text = "你和巡船在河口外的浅水里交了火。它吃水深，不敢往里追，只能在外头绕着打。你的炮打断了它的前桅索，帆脚索乱甩，像断了筋的手。炮声在浅水里来回撞，水手们把桨收进船舱，只留两把撑着船身。你打退的那条船歪着身子退向外海，昆贾利的快船队已经一条接一条冲出了河口。"
+objectives = [{ kind = "battle", wins = 1, text = "赢下一场海战" }]
+when = [{ kind = "alive", person = "kunjali_marakkar_ii", value = true }]
+speaker = "captain"
+mood = "tense"
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = -3 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_late" },
+  { kind = "letter", person = "kunjali_marakkar_ii", text = "昆贾利：那条巡船你没打下来。不要紧，它也没打下你。" },
+]
+
+[[tracks.chapters.choices]]
+key = "return"
+text = "收帆，回河口复命。"
+next = "after"
+reply = "你掉头进河口，船坞的人在岸上喊你的船名。"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 3 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_fought" },
+]
+
+[[tracks.chapters.choices]]
+key = "pick_up"
+text = "先把落水的葡萄牙水手捞上来，再回去。"
+next = "after"
+reply = "你捞上来三个人，昆贾利的人看着你，没说话。上岸后他说：“人交给我，换赎金——还是你自己放？”你说放。他想了想：“好，你的船，你的规矩。”"
+effects = [
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 3 },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_fought" },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_rescued" },
+]
+
+# 四、账：1561—1569 年间，卡利卡特的船坞。快船队拖着葡萄牙人的小商船回来了，他问你要钱，还是要别的。
+[[tracks.chapters]]
+key = "after"
+title = "船坞里的账"
+text = "快船队回来了，拖着一条葡萄牙的小商船，桨手们一路喊着号子进的港。船上的葡萄牙货主已经上了岸，缩在仓房的角落里数自己的箱子。昆贾利在船坞里请你喝椰子酒，酒是拿椰子壳舀的，带着一股烟火味。他叫人从屋里抬出一只箱子，放在你脚边。船坞的木板缝里嵌着海沙，有人拿桶水冲了几遍，冲不干净。他把椰子壳往地上一扣，问你要钱，还是要别的。"
+objectives = [{ kind = "person", person = "kunjali_marakkar_ii", text = "在港里找到他" }]
+when = [{ kind = "alive", person = "kunjali_marakkar_ii", value = true }]
+at = "calicut_port"
+speaker = "kunjali_marakkar_ii"
+mood = "tense"
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_partial" },
+  { kind = "letter", person = "kunjali_marakkar_ii", text = "昆贾利：快船队早就出去了，你那一份，我一直记着。什么时候路过河口，来喝一杯。" },
+]
+
+[[tracks.chapters.choices]]
+key = "take_pay"
+text = "要钱。"
+next = "done"
+reply = "钱装在一只旧铁箱里，他踢了一脚箱子：“葡萄牙人的钱，搬上你的船。”"
+news = "卡利卡特的船坞里，马拉卡尔家的统帅把一只葡萄牙人的旧铁箱交给了一个外来的船长，两人喝了一夜椰子酒。"
+effects = [
+  { kind = "cash", value = 4700 },
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 6 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "calicut", value = 4 },
+  { kind = "reputation", faction = "portugal", value = -3 },
+  { kind = "memory", memory = "mem-request_kunjali_marakkar_ii-after", title = "船坞里的椰子酒" },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "pact"
+text = "少要一半钱，换一句话：往后马拉巴尔海上，他的快船不碰我的船。"
+next = "done"
+reply = "他把手伸过来，掌心全是缆绳磨的茧。“我的快船认船，不认旗。这话我记下了。”"
+news = "卡利卡特的船坞里，马拉卡尔家的统帅跟一个外来的船长喝了一夜椰子酒，那船长少要了一半的钱。"
+effects = [
+  { kind = "cash", value = 2350 },
+  { kind = "affinity", person = "kunjali_marakkar_ii", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "calicut", value = 4 },
+  { kind = "reputation", faction = "portugal", value = -3 },
+  { kind = "memory", memory = "mem-request_kunjali_marakkar_ii-after", title = "船坞里的椰子酒" },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_done" },
+  { kind = "flag", flag = "c13_request_kunjali_marakkar_ii_pact" },
+]
+
+# 四（变体）：你在海战里捞上了落水的葡萄牙水手，账房的开场换成他们的事。
+[[tracks.chapters.variants]]
+key = "rescued"
+when = [{ kind = "flag", flag = "c13_request_kunjali_marakkar_ii_rescued" }]
+text = "快船队回来了，拖着一条葡萄牙的小商船，桨手们一路喊着号子进的港。落水的三个葡萄牙水手，你放回了他们自己的小艇，那艇往南划走了，一次也没回头看。昆贾利在船坞里请你喝椰子酒，酒是拿椰子壳舀的，带着一股烟火味。他叫人从屋里抬出一只箱子，放在你脚边。船坞的木板缝里嵌着海沙，有人拿桶水冲了几遍，冲不干净。他把椰子壳往地上一扣，问你要钱，还是要别的。"

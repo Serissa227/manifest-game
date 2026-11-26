@@ -1,0 +1,138 @@
+# C13d 人物的请托：山里打回来的兵（request_qutb_al_din_nahrawali）。中文，Claude 写。
+# 人物：纳赫拉瓦利 qutb_al_din_nahrawali（1511 年生，月日不详，本条按 1 月 1 日占位；1582 年卒；男；麦加哈乃斐派学者、史家；势力 ottoman；身份档 2）。cast 在 cast/historical_02_islamic.toml，历史人物。
+# 类型：去某处（gs），3 章：offer → arrive（摩卡港咖啡摊，听一个兵讲）→ report（吉达，结账）。没有 stage 章。
+# 报价：到访（V）。人物在吉达码头等从伊斯坦布尔来的书，auto=true，offer 章 at=jeddah，正文由他本人说话。family=c13_offer_jeddah，冷却 20 天。
+# 窗口：报价 1570-06-01 至 1575-12-31（offer 的 when 写起点，deadline 写止日，timeout 无见闻）；摩卡的一章限期 90 天，吉达结账一章限期 120 天。
+# 地点：jeddah（报价与结账）；mocha（咖啡摊）。
+# 报酬：身份档 2，中风险 ×1.4，现金 2250（cash_total）；好感最多 13；名声 +3；奥斯曼声望 +2；回忆 mem-request_qutb_al_din_nahrawali-report。没有唯一物品，不给技能经验。
+# 依据（史实）：1567 年也门宰德派起义；1569—71 年锡南帕夏重夺也门；纳赫拉瓦利写了这场战事的书，手里的战报是帕夏府给的。
+# 依据（原创）：木腿的老兵阿米尔；“饿下来的城”的说法；炉边那壶水；稿边新添的那一行小字。都不在史料里，正文只写“山里的城”，不点城名，也不写围城的细节。
+# 不写：纳吉玛主线的题材（也门起义、当面问他）；cast 注释里的旧说法。本条不触及这些。
+# 门禁：offer 的 when 写 c13_main_najma=false（纳吉玛主线的章节由主线决定，本请托对她关闭）。
+# 读的旗标：c13_main_najma（只在 offer 门禁里读）。
+# 设的旗标：c13_request_qutb_al_din_nahrawali_accepted / asked / declined / full / thin / own_words / added_line / done / partial / late。终局只设 done 或 partial 之一。
+# 依赖：港口 jeddah、mocha（ports_red_sea_gulf.toml 已有）；技能 lang_arabic（skills.toml 已有）；检定属性 eloquence（B10b 定 captain 表后统一换算）；人物 qutb_al_din_nahrawali 的 tracks 已含本轨道。
+# 见闻：每条见闻挂在做事的选项上，不挂在章节上。超时（摩卡没去成、吉达没回来）只寄一封来信，不写见闻，免得替没去过的人说故事。
+# 回忆插画清单：
+#   mem-request_qutb_al_din_nahrawali-report：稿子边上新添的一行小字，墨色还新，旁边的字句没有被划掉。
+
+[[tracks]]
+key = "request_qutb_al_din_nahrawali"
+name = "山里打回来的兵"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["qutb_al_din_nahrawali"]
+
+# 一、吉达码头：史家等一箱书，等得无聊，拉你坐下，想要一个跟帕夏从山里打回来的兵的话
+[[tracks.chapters]]
+key = "offer"
+title = "帕夏府的战报"
+text = "吉达码头的货栈前，麦加来的史家坐在一只木箱上，箱盖钉着伊斯坦布尔来的封条，他等得腿都麻了。见你走近，他把手里一叠战报往上一抬：“远客，坐。书要等这箱子，箱子要等船，船要等风。”战报的句子几乎是一个模子，哪一封都写着大获全胜。“帕夏府给的，句句是喜报。我写奥斯曼重夺也门，可我没上过山。锡南帕夏身边的参谋，倒是当面给我讲过几回，我都能背了。”他把战报拍齐，“听说摩卡港的咖啡摊边上，有个跟着帕夏从山里打回来的兵，这会儿正在烧水。”他看着你，眼里有光，“远客，路上的事一件一件说，我好写进书里。”"
+speaker = "qutb_al_din_nahrawali"
+mood = "cheerful"
+at = "jeddah"
+when = [{ kind = "date", from = [1570, 6, 1], to = [1575, 12, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }, { kind = "flag", flag = "c13_main_najma", value = false }]
+deadline = [1575, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_jeddah"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去摩卡把那个兵的话记下来。"
+next = "arrive"
+effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = 2 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_accepted" }]
+reply = "他从袖子里摸出一支好笔，又递来一叠纸：“他说什么写什么。写错字不要紧，写错意思要紧。”他把木箱敲了两下，像是在催船，也像是在催你快去。"
+
+[[tracks.chapters.choices]]
+key = "ask_conflict"
+text = "接下，但先问：要是他的话跟战报对不上呢？"
+next = "arrive"
+effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = 2 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_accepted" }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_asked" }]
+reply = "他捻着胡子想了想：“那就两种说法都写，先写帕夏的。”说完自己也觉得不对，又补一句，“后写的那一种，读的人记得牢。”他自己先笑了，笑得很短。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟顾不上也门。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_declined" }]
+reply = "他有点失望，很快又笑了：“那你下回来，讲讲你去过的地方。”他把战报收进怀里，低头去读自己的稿子，手指在一行字上停了很久。"
+
+# 二、摩卡港咖啡摊：木腿的老兵烧水，说的跟战报不一样
+[[tracks.chapters]]
+key = "arrive"
+title = "烧水的老兵"
+text = "摩卡港的咖啡摊后面，一口黑铁锅架在炭炉上，老兵蹲在炉边，一条腿是木头的，木脚在泥地上戳出两个小坑。他不抬头，只管拨炭：“写书的人来了？他们要的是攻下来的城。”他自报了名字，叫阿米尔，说是在帕夏的队伍里待过。然后他舀起一勺水，浇在炉子上，嗤的一声白烟冒起来。“山里那座城，不是大炮打下来的，是饿下来的。帕夏跟几个部落的长老坐下来谈，谈了两个月。兵逃了一半，剩下的一半，在山路上冻掉了脚趾。”"
+speaker = "captain"
+mood = "tense"
+at = "mocha"
+when = [{ kind = "alive", person = "qutb_al_din_nahrawali", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = -3 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_late" }, { kind = "letter", person = "qutb_al_din_nahrawali", text = "远客，那一章我已经写完了。你若去了摩卡，有什么话，留着下回讲。——纳赫拉瓦利" }] }
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "陪他烧一晚上水，让他自己讲完。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = 3 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_full" }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = -2 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_thin" }], news ="摩卡港咖啡摊上，一个木腿老兵讲到冻脚趾那儿就闭了嘴，烧完一壶水，什么也不肯再说。" }
+reply = "他一直讲到天亮。讲到谈判那天，长老们坐在毯子上吃羊，兵们站在外头，碗里什么也没有。他讲得慢，讲一句，就舀一勺水。天快亮时他站起来，木腿磕在桌角上，咚的一声。“写书的人要是问，就说是一个烧水的说的。”"
+news = "摩卡港咖啡摊后面，一个木腿老兵烧了一夜的水，讲山里的仗讲到天亮。"
+
+[[tracks.chapters.choices]]
+key = "arabic"
+text = "用他山里的话问，照他的原话记。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "他的口音很重，你只听得懂一半。"
+effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = 3 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_full" }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_own_words" }]
+reply = "你记下的是他的原话，连他骂人的那个词也记了。他探头看你写的纸，指着一个字：“这个写得对。山里就是这么叫的。”说完他又骂了一句，你也照样记下。"
+news = "摩卡港咖啡摊上，一个木腿老兵用山里的土话讲仗，一个外来的船长全听懂了，一字不漏记在纸上。"
+
+[[tracks.chapters.choices]]
+key = "pay_stall"
+text = "替他把咖啡摊这个月的炭钱付了，再问。"
+next = "report"
+requires = [{ kind = "cash", ge = 150 }]
+hint = "你掏不出炭钱。"
+effects = [{ kind = "cash", value = -150 }, { kind = "affinity", person = "qutb_al_din_nahrawali", value = 2 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_thin" }]
+reply = "他收了钱，话多起来，可说着说着又往战报上靠，像是怕说错了得罪谁。“城是谈下来的，”他说，停了停，又改口，“是帕夏谈下来的。”"
+news = "摩卡港咖啡摊上，一个外来的船长替木腿老兵付了炭钱，老兵收了钱，话却说得更小心了。"
+
+# 三、吉达码头：史家从麦加下来，读你记下的纸
+[[tracks.chapters]]
+key = "report"
+title = "两种说法"
+text = "你回到吉达的时候，史家已经又从麦加下来了一趟，还坐在码头那张凳子上。你把记下的纸递过去，他一张一张地读。读到“饿下来的”，眉头先皱了起来；读到“谈下来的”，他把纸放在膝上，抬头问你：“这个兵，可靠不可靠？”他的手指压着纸角，没有松开。“他拿过枪，跟你讲的，跟我稿子上的，差了这么远。你说，他有没有骗你？”"
+speaker = "qutb_al_din_nahrawali"
+mood = "tense"
+at = "jeddah"
+when = [{ kind = "alive", person = "qutb_al_din_nahrawali", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "qutb_al_din_nahrawali", value = -3 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_late" }, { kind = "letter", person = "qutb_al_din_nahrawali", text = "远客，那一章已经誊清送去伊斯坦布尔了。下回来，仍请你坐那张凳子。——纳赫拉瓦利" }] }
+
+[[tracks.chapters.choices]]
+key = "stand_by"
+text = "说可靠：他没理由骗一个外人。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "qutb_al_din_nahrawali", value = 8 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "memory", memory = "mem-request_qutb_al_din_nahrawali-report", title = "稿边的一行小字" }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_done" }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_added_line" }]
+reply = "他沉默了很久，提笔在自己的稿子边上添了一行小字：“有人说，城是饿下来的。”“有人说”三个字，他写得很慢。添完他又看了一会儿，没有划掉。"
+news = "吉达码头边，麦加来的史家读完一叠摩卡带来的纸，在自己的稿子边上添了一行字。"
+
+[[tracks.chapters.choices]]
+key = "hand_only"
+text = "只把纸交给他，不加评语。"
+next = "done"
+effects = [{ kind = "cash", value = 1350 }, { kind = "affinity", person = "qutb_al_din_nahrawali", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_partial" }]
+reply = "他没问你怎么看，也没再读。“留着，日后有用。”他把纸叠好收进袖子，手指在稿子那一页的边上停了停。那一章，大概是不会再动了。"
+news = "吉达码头边，麦加来的史家收下一叠摩卡的纸，没有评语，叠好收进了袖子。"
+
+[[tracks.chapters.choices]]
+key = "name_source"
+text = "告诉他老兵的名字和摊子，请他自己派人去问。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "qutb_al_din_nahrawali", value = 6 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "flag", flag = "c13_request_qutb_al_din_nahrawali_done" }]
+reply = "“好，好。”他把阿米尔的名字记在纸角上，“我的学生下个月去摩卡，让他去找这个摊子。”他付你钱的时候格外大方，像是付的是一份线索。"
+news = "吉达码头边，麦加来的史家记下摩卡一个咖啡摊的名字，说下个月派学生去找。"

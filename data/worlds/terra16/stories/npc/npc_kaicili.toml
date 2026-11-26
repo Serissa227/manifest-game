@@ -1,0 +1,444 @@
+# NPC 线：凯奇利·劳特（npc_kaicili）·「特尔纳特的棋手」（故事 2.0，A5 / E37 契约）
+#
+# 标签：C13c NPC 线（玩家不是凯奇利时才跑）。Claude 写（Haiku 5.5，2026-10-24），仅中文。
+# 人物：凯奇利·劳特（kaicili，特尔纳特苏丹的小儿子）。哥哥巴布拉（babullah，史实）。父亲苏丹 1570 年在要塞门口遇刺（H36）。
+# 轨道：
+#   npc_kaicili（脊轨，request，auto，五章见闻）：s00 从吉里回来 → s01 要塞门口 → s02 堡门开了 → s03 苏丹的弟弟不在岛上 → s04 宰相剥丁香。
+#   npc_kaicili_cloves（丁香合同，m1_contract，s00 的 default 开启）
+#   npc_kaicili_buddha（一炷香的抄本，m1_copy，s00 的 default 开启）
+#   npc_kaicili_siege（围城里的米，m1_rice，s01 的 default 开启）
+#   npc_kaicili_manila（马尼拉湾的夜，m1_bay，s01 的 default 开启）
+#   npc_kaicili_drake（英格兰人可信不可信，m1_english，s02 的 default 开启）
+#   npc_kaicili_join（棋盘的另一边，m1_board，s03 的 default 开启）
+# 依据（史实与原创的界线）：
+#   史实：特尔纳特苏丹家与葡萄牙要塞（1570 苏丹在堡门口遇刺，围城五年，1575 交堡）；林凤袭马尼拉（1574）；
+#         德雷克访问特尔纳特（1579）；巴布拉去世（1583，夏）；玉佛 1564 年迁往万象（本世界线，凯奇利随大城的使团去过）。
+#   原创：丁香合同、棋盒底下的棕榈叶、过秤的人、老仆、卖鱼的妇人、七道弯的克里斯、招募与盟友的约定。
+#   待核（正文一律用传闻口吻，不写“待核”）：要塞门口遇刺的确切月份；交堡的确切月份；巴布拉去世的确切月份；
+#         1583 年后凯奇利去了哪里（C11 定；s03 的“往西去了”若改，改成“去了果阿”）。
+# 秘密：心里的刺（劝父亲赴宴的是他）只属 main_kaicili 的 b03，本文件永远不写、不暗示；
+#       本文件只写“谁问起父亲在堡里怎样周旋，他都不评说”。
+# 口头禅：“你的开价，我当班顿的上半句听；下半句怎么对，看你等不等得起。”只在 m1_contract 用原句；
+#         m1_board 的“你的开价，我听完了”是它的变体。
+# 林晚灯：本文件只叫“林晚灯”或“提红灯笼的林家船主”，不用他 / 她，不写身份。
+# 读写的共享旗标：
+#   写：c13_npc_kaicili（s00 的 default）；c13_npc_kaicili_mate、c13_npc_kaicili_ally（m1_board 的招募 / 盟友）；
+#       c13_mark_buddha（m1_copy 的 copy 与 chess_for_it 成功）。
+#   读：c12_voyage_kaicili（为 false）、upbringing_graduated（s00）；c13_main_lin_wandeng（m1_bay，为 false）；
+#       c13_npc_kaicili_mate（各交汇章，为 false）；c13_mark_buddha（m1_copy，为 false）；
+#       mate kaicili（s03、s04 的变体）；c13_npc_kaicili_ally（s04 的变体）。
+# 等待的包：A9（门槛加 protagonist 排除；mate key 与人物 key 的对应）；C10（HIST 代码表）；
+#           C11（s03 的“往西去了”，NPC 主角是否到 1583 会议）；A8（玉佛发现物的许可流程，若要加 discovery 目标）。
+# 历史结果旗标（2026-10-26 由 HIST_* 占位换成 C10 的 key；没设时缺省章节照史实写）：
+#   h36_ternate_revolt_fortress_evacuated_early（s02 的变体 a_early；m1_rice 的 when 也读它，为 false 时不出现）。
+#   C10 没有“海伦获救”与“葡萄牙人守住堡”两种结果，s01 的 rescued、s02 的 b_hold 变体已删。
+# 回忆插画清单：
+#   mem-npc_kaicili_buddha-m1「棋盒底下的叶子」：灯下一张写满字的棕榈叶，旁边一只打开的棋盒，一只手正在抄。
+
+[[tracks]]
+key = "npc_kaicili"
+name = "特尔纳特的棋手"
+kind = "request"
+start = "s00_gate"
+auto = true
+cast = ["kaicili", "babullah"]
+
+# 第一幕：1557 年初，门槛见闻。凯奇利的“我”不出现，只在码头上被人说起。
+[[tracks.chapters]]
+key = "s00_gate"
+title = "苏丹的小儿子"
+text = "特尔纳特的码头上，过秤的人一边称丁香一边说：“苏丹的小儿子凯奇利从吉里念完书回来了。跟他谈价，你开多少他都说好，等你回过神来，丁香已经少了两筐。”旁边卖鱼的人接话，说堡里的葡萄牙人这几天脸色不好看，不知道是为了丁香，还是为了这位王子。"
+stage = "rumor"
+window = [[1557, 2, 20], [1557, 2, 27]]
+at = "ternate_port"
+cast = ["kaicili"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_kaicili", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "特尔纳特的过秤人说，苏丹的小儿子从吉里回来了，跟他谈丁香价，开多少他都说好。"
+
+[tracks.chapters.default]
+next = "s01_gate"
+effects = [{ kind = "flag", flag = "c13_npc_kaicili" }, { kind = "start_track", track = "npc_kaicili_cloves" }, { kind = "start_track", track = "npc_kaicili_buddha" }]
+
+# 第二幕：1570 年，要塞门口。史实：苏丹被请进堡里讲和，在门口遇刺（H36）。两种结果的文字都写在变体里。
+[[tracks.chapters]]
+key = "s01_gate"
+title = "要塞门口"
+text = "要塞门口出了大事。特尔纳特人说，苏丹被请进堡里讲和，卫士被拦在门外，他一个人走到门口，被人刺了一刀，倒在门槛上。巴布拉王子说不强攻，要等堡里的人自己开门。宫里的老仆说：“小王子那天没哭，就一直数那把刀上的弯。”凯奇利腰里还挂着父亲进门前解下的那把克里斯。谁问起父亲在堡里怎样周旋，他都不评说。"
+stage = "rumor"
+window = [[1570, 3, 11], [1570, 5, 31]]
+at = "ternate_port"
+cast = ["kaicili", "babullah"]
+mood = "sad"
+news = "特尔纳特的要塞门口出了大事，岛上的人把堡围了，巴布拉王子说不强攻，要等堡里的人自己开门。"
+
+[tracks.chapters.default]
+next = "s02_fort"
+effects = [{ kind = "start_track", track = "npc_kaicili_siege" }, { kind = "start_track", track = "npc_kaicili_manila" }]
+
+
+# 第二幕：1575 年夏，堡门开了。史实：葡萄牙人交堡离岛（缺省）；变体写提早撤堡的结果。
+[[tracks.chapters]]
+key = "s02_fort"
+title = "堡门开了"
+text = "特尔纳特人说，围了五年，葡萄牙人提着箱子走下台阶上了船，没有一个人受伤。堡门开的那天，苏丹的弟弟凯奇利站在门外，让哥哥先进去。卖鱼的妇人说：“他在门槛外头站到天黑，像在等谁出来。”"
+stage = "rumor"
+window = [[1575, 8, 1], [1575, 10, 31]]
+at = "ternate_port"
+cast = ["kaicili", "babullah"]
+mood = "tender"
+news = "特尔纳特的堡门外这一年聚满了人，听说苏丹的弟弟一直站在门边，站到天黑。"
+
+[tracks.chapters.default]
+next = "s03_brother"
+effects = [{ kind = "start_track", track = "npc_kaicili_drake" }]
+
+[[tracks.chapters.variants]]
+key = "a_early"
+when = [{ kind = "flag", flag = "h36_ternate_revolt_fortress_evacuated_early" }]
+text = "特尔纳特人说，堡早几年就空了，院子里长了草。今年苏丹把宫搬了进去，凯奇利在门槛上坐了一下午。卖鱼的妇人说：“他坐到天黑，像在等谁出来。”"
+
+
+# 第三幕：1583 年夏，巴布拉去世；凯奇利今年春天就不在岛上。“往西去了”只是传闻（C11 定）。
+[[tracks.chapters]]
+key = "s03_brother"
+title = "苏丹的弟弟不在岛上"
+text = "特尔纳特人说，苏丹巴布拉七月走了，葬在先苏丹旁边，儿子赛义德即位。他的弟弟凯奇利今年春天就不在岛上了，有人说他搭葡萄牙人的船往西去了，比果阿还远。老船长说：“他走的时候头巾里插着一枝干丁香，说去看看柱子外面的价。”"
+stage = "rumor"
+window = [[1583, 8, 1], [1583, 12, 31]]
+at = "ternate_port"
+cast = ["kaicili"]
+mood = "sad"
+news = "特尔纳特的苏丹巴布拉去世了，人们说他的弟弟凯奇利今年春天就搭船往西去了，还没回来。"
+
+[tracks.chapters.default]
+next = "s04_end"
+effects = [{ kind = "start_track", track = "npc_kaicili_join" }]
+
+[[tracks.chapters.variants]]
+key = "mate"
+when = [{ kind = "mate", mate = "kaicili" }]
+text = "特尔纳特人说，苏丹巴布拉七月走了，葬在先苏丹旁边，儿子赛义德即位。他的弟弟凯奇利在一条外国船上做事，消息要很久才追得上他。老船长说：“那人走的时候，头巾里插着一枝干丁香。”"
+
+# 结尾：1589 年夏。凯奇利回来做了侄子的宰相，丁香卖给谁、什么价，由他说。
+[[tracks.chapters]]
+key = "s04_end"
+title = "宰相剥丁香"
+text = "特尔纳特人说，凯奇利回来以后做了侄子的宰相，丁香卖给谁、什么价，如今由他说。外来的船主上岸，先去他门口坐。他一边剥丁香一边听，听完笑着说好。港务的书记说：“他只问一句：你等不等得起？”"
+stage = "rumor"
+window = [[1589, 6, 1], [1589, 9, 30]]
+at = "ternate_port"
+cast = ["kaicili"]
+mood = "tender"
+news = "特尔纳特人说，苏丹的叔叔做了宰相，外来的船主上岸先去他门口坐，听他剥着丁香开价。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "a_mate"
+when = [{ kind = "mate", mate = "kaicili" }]
+text = "特尔纳特的码头上，每年西风起的时候，都有一条船托运一筐丁香往外海去。信里只问一句：“凯奇利什么时候回来议事？”港务的书记说：“他没回岛做宰相，他在外来的一条船上，船主就是你。”每年捎来的信，还是只问那一句：“你等不等得起？”"
+
+[[tracks.chapters.variants]]
+key = "b_ally"
+when = [{ kind = "flag", flag = "c13_npc_kaicili_ally" }]
+text = "特尔纳特人说，苏丹的叔叔做了宰相，外来的船主上岸先去他门口坐，听他剥着丁香开价。他说他在海上还有一位盟友，每年给那条船留一筐最好的丁香。港务的书记说：“他只问一句：你等不等得起？”"
+
+# 旁轨：丁香合同（npc_kaicili_cloves）。玩家运布到特尔纳特，与凯奇利对价。一章，普通章，有 at 与期限（人物在港止日）。
+# 不写见闻的超时：timeout 静默 failed；选项各带见闻。
+[[tracks]]
+key = "npc_kaicili_cloves"
+name = "丁香合同"
+kind = "request"
+start = "m1_contract"
+auto = false
+cast = ["kaicili"]
+
+[[tracks.chapters]]
+key = "m1_contract"
+title = "布换丁香"
+text = "特尔纳特宫外的廊下，凯奇利坐在一张矮桌后面，桌上一副棋，一筐丁香。你的二十匹布堆在他脚边，布上的光还没散。他先请你坐：“远道而来，先坐。你的开价，我当班顿的上半句听；下半句怎么对，看你等不等得起。”你开了价，他一句话也没打断，听完，拈起一粒丁香放在棋盘上：“你开的是上半句。”你的船员在廊柱后面小声叫了一句“小王子”，他照旧笑，只是那笑没有往上走。接着他让了一步，步子却压在一个条件上：下回你的船先来特尔纳特，再去蒂多雷。“布是好布。我们岛上说，东西做得用心，买家就不好意思压价。可我是卖家。”"
+speaker = "kaicili"
+mood = "cheerful"
+night = false
+at = "ternate_port"
+cast = ["kaicili"]
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "flag", flag = "c13_npc_kaicili_mate", value = false }]
+deadline = [1590, 12, 31]
+timeout = { next = "failed" }
+objectives = [{ kind = "goods", good = "cloth", qty = 20, at = "ternate_port", text = "运二十匹布到特尔纳特" }]
+
+[[tracks.chapters.variants]]
+key = "cheap"
+when = [{ kind = "price", good = "cloves", at = "ternate_port", le = 150 }]
+text = "今年丁香便宜，他笑着先说了这一句：布得多给几匹才换得到一筐。可你只带了二十匹，那就看你怎么开口。特尔纳特宫外的廊下，凯奇利坐在一张矮桌后面，桌上一副棋，一筐丁香。你的布堆在他脚边。他先请你坐：“远道而来，先坐。你的开价，我当班顿的上半句听；下半句怎么对，看你等不等得起。”你开了价，他一句话也没打断，听完，拈起一粒丁香放在棋盘上：“你开的是上半句。”你的船员在廊柱后面小声叫了一句“小王子”，他照旧笑，只是那笑没有往上走。接着他让了一步，步子却压在一个条件上：下回你的船先来特尔纳特，再去蒂多雷。“布是好布。我们岛上说，东西做得用心，买家就不好意思压价。可我是卖家。”"
+
+[[tracks.chapters.choices]]
+key = "take_price"
+text = "照他开的价成交，不还嘴"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "kaicili", value = 5 }]
+reply = "他亲自把钱数给你，一张一张数过去，数完多放了一小包丁香：“不还价的客人，要多送一点，下回才会再来。”他又摸了摸布边，说这批布拿去做帆套正好，不用裁。你把丁香揣进袖子里，走出廊下的时候，那股甜味还在。"
+news = "特尔纳特宫外，一个外来的船长照苏丹小儿子的价把布卖了，一句嘴也没还。"
+
+[[tracks.chapters.choices]]
+key = "bargain"
+text = "跟他一句一句对价，看谁先松口"
+next = "done"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "kaicili", value = 3 }]
+reply = "你们对了一个下午。茶换了两道，棋子从盒里摆上盘又收回去，他终于笑出声，按你的价成交，还说你是今年第一个让他多想了一会儿的人。收棋的时候他把棋子一粒粒放回盒里：“下回换你来开价，我坐着听。”"
+news = "特尔纳特宫外，外来的船长跟苏丹的小儿子对了一下午的价，最后对出一个两人都笑的价。"
+fail = { next = "done", effects = [{ kind = "cash", value = 1400 }, { kind = "affinity", person = "kaicili", value = 6 }], news = "特尔纳特宫外的廊下，那个外来的船长一直让，最后按凯奇利的价成交。他谢人家肯让，说输得这么客气的，下回也让一步。" }
+
+[[tracks.chapters.choices]]
+key = "tidore_first"
+text = "答应他：下回先来特尔纳特，再去蒂多雷"
+next = "done"
+effects = [{ kind = "cash", value = 2200 }, { kind = "reputation", faction = "ternate", value = 4 }, { kind = "reputation", faction = "tidore", value = -3 }]
+reply = "他点头，在棋盘上把一枚子从海峡这边挪到那边：“记住了。蒂多雷的人问起，你就说特尔纳特的价先到。”他把丁香装进一只新竹篮，篮子上系一根红线，留给下一次来的船做记号。"
+news = "特尔纳特宫外，有个外来的船长应下一个条件：下回先到特尔纳特的码头，再去蒂多雷。"
+
+# 旁轨：一炷香的抄本（npc_kaicili_buddha）。玩家与凯奇利有情谊（≥40）时，他在夜里把玉佛的礼敬样子抄给你。印记 emerald_mark_buddha 一局只发一次（c13_mark_buddha）。
+[[tracks]]
+key = "npc_kaicili_buddha"
+name = "一炷香的抄本"
+kind = "request"
+start = "m1_copy"
+auto = false
+cast = ["kaicili"]
+
+[[tracks.chapters]]
+key = "m1_copy"
+title = "棋盒底下的叶子"
+text = "夜里，他的棋盒底下压着一张棕榈叶，上面只有字，没有画：几拃高，灯下的颜色，两手怎么放。那是他随大城的使团去万象的那一年，在佛前坐了一炷香，一笔一笔记下来的。他没打开棋盒，只把它推到你面前：“佛不卖。这张叶子也不卖。你告诉我，你要它做什么，我就抄给你。”你问那一夜的事，他想了想：“一炷香，就那么长。我那天一个价也没问。”他说那位王只问过他一句：你们的苏丹搬家，带什么走？他到今天还在想。"
+speaker = "kaicili"
+mood = "mystic"
+night = true
+at = "ternate_port"
+cast = ["kaicili"]
+when = [{ kind = "date", from = [1566, 1, 1] }, { kind = "affinity", person = "kaicili", ge = 40 }, { kind = "flag", flag = "c13_npc_kaicili_mate", value = false }]
+deadline = [1580, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "照实告诉他：要拿着它去找另外六件"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_mark_buddha", value = false }]
+hint = "那张叶子的抄本，已经在别人手里了。"
+effects = [{ kind = "item", item = "emerald_mark_buddha", qty = 1 }, { kind = "flag", flag = "c13_mark_buddha" }, { kind = "affinity", person = "kaicili", value = 4 }, { kind = "memory", memory = "mem-npc_kaicili_buddha-m1", title = "棋盒底下的叶子" }]
+reply = "他听完，没问另外六件是什么，点上一盏灯，一个字一个字抄给你。笔尖在棕榈叶上沙沙地响，抄到佛前那只手的位置，他停了一下，又接着抄。抄完把原来那张压回棋盒底下：“它在字里，不在手里。”"
+news = "特尔纳特人说，苏丹的弟弟夜里点灯抄一张棕榈叶，抄的不是经，是佛前怎么坐、怎么放手的字。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "不要抄本，只请他讲那一夜"
+next = "done"
+effects = [{ kind = "affinity", person = "kaicili", value = 8 }]
+reply = "他讲得很慢：酥油灯，刨花味，香里掺的丁香噼啪地响，王在旁边坐下，一句话也不说。讲到一半，他的手去摸棋盒，摸到盒盖又缩回来，像是怕把那张叶子惊动了。讲完他看着你笑：“你是第一个不要叶子的人。”"
+
+[[tracks.chapters.choices]]
+key = "chess_for_it"
+text = "跟他下一盘棋，赢了他就抄给我"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_mark_buddha", value = false }]
+check = { attr = "intellect", base = 5, per = 8 }
+hint = "叶子的抄本早被别人拿走，这盘棋已经没有彩头。"
+effects = [{ kind = "item", item = "emerald_mark_buddha", qty = 1 }, { kind = "flag", flag = "c13_mark_buddha" }, { kind = "affinity", person = "kaicili", value = 6 }]
+reply = "他输了，输得很高兴。抄叶子的时候他一直在笑，一边抄一边把输掉的那盘棋在桌上重新摆了一遍，摆到一半又停下来：“你那一步，我早该想到。”他把那一步又下了一遍，才肯把棕榈叶从盒底抽出来。"
+news = "特尔纳特宫里夜里下了一盘棋，苏丹的小儿子输了，输了还点灯抄一张棕榈叶，给外来的船长。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "kaicili", value = 3 }], news = "特尔纳特宫里那盘棋，苏丹的小儿子赢了，把棕榈叶压回棋盒，说叶子等人下赢他再来拿。" }
+
+# 旁轨：围城里的米（npc_kaicili_siege）。1570 年后围城五年，他请你把米运进堡里。他自己不踏进那道门。
+[[tracks]]
+key = "npc_kaicili_siege"
+name = "围城里的米"
+kind = "request"
+start = "m1_rice"
+auto = false
+cast = ["kaicili", "babullah"]
+
+[[tracks.chapters]]
+key = "m1_rice"
+title = "他不进的那道门"
+text = "围城的堡墙下，营里的火一夜没灭。凯奇利在营门口迎你的米船，先看了舱里的米袋，又看你。他想请你做的事，他自己不肯做：把一半的米送进堡里，给那里的妇孺吃。他发过誓，不踏进父亲出事的那道门。“那道门，我不进。你的船吃水浅，替我走一趟。”他把声音压低：这件事不能让哥哥知道。说完又笑：“哥哥早就知道了，他只是等我自己说。”腰里那把七道弯的克里斯，他说话时一直没有碰它。巴布拉站在营门里，只说了一句：“米是给围城的人吃的。”"
+speaker = "kaicili"
+mood = "tender"
+night = false
+at = "ternate_port"
+cast = ["kaicili", "babullah"]
+when = [{ kind = "date", from = [1570, 6, 1] }, { kind = "flag", flag = "h36_ternate_revolt_fortress_evacuated_early", value = false }, { kind = "flag", flag = "c13_npc_kaicili_mate", value = false }]
+deadline = [1575, 6, 30]
+timeout = { next = "failed" }
+objectives = [{ kind = "goods", good = "rice", qty = 20, at = "ternate_port", text = "运二十担米到特尔纳特" }]
+
+[[tracks.chapters.choices]]
+key = "into_fort"
+text = "替他把一半的米送进堡里"
+next = "done"
+effects = [{ kind = "affinity", person = "kaicili", value = 8 }, { kind = "growth", attr = "honor", value = 300 }, { kind = "reputation", faction = "portugal", value = 3 }]
+reply = "堡里的妇人们站在门后，不敢出来接，最后是一个孩子跑出来，拖走了一袋。孩子的脚上没有鞋，抱着米袋跑回门里，门马上又关上了。你回到营里，他递给你一碗槟榔，什么也没问，只看了一眼你袖口上蹭的灰。"
+news = "特尔纳特的堡墙下，有个外来的船长替苏丹的弟弟把米送进了堡里，营里的人装作没看见。"
+
+[[tracks.chapters.choices]]
+key = "camp_only"
+text = "米全卸进营里，照苏丹的意思"
+next = "done"
+effects = [{ kind = "reputation", faction = "ternate", value = 6 }, { kind = "affinity", person = "babullah", value = 4 }, { kind = "affinity", person = "kaicili", value = 2 }]
+reply = "巴布拉亲自来谢你，两只手握着你的手，握了很久，说米进了营，围城的人就能多撑一个冬天。凯奇利站在后面笑，笑意到不了眼睛。他的手一直按在腰里的克里斯上，没有松开。这一天他没有再说别的话。"
+news = "特尔纳特的围城营里，米全卸进了营，苏丹的弟弟没有说一句话，巴布拉却亲自去谢了那个船长。"
+
+[[tracks.chapters.choices]]
+key = "sell_high"
+text = "米谁出价高，就卖给谁"
+next = "done"
+effects = [{ kind = "cash", value = 1200 }, { kind = "affinity", person = "kaicili", value = -5 }]
+reply = "堡里的人出了高价，营里的人骂你，骂得很难听。凯奇利拦住了要动手的首领，把人推开，对你说：“你开的是你的价。我记下了。”过了两天，他派人送来一小包丁香，没有附信。"
+news = "特尔纳特的围城营里有人把米卖给了堡里，价钱高得吓人，营里的人骂了一夜。"
+
+# 旁轨：城外唐人的老人（npc_kaicili_manila）。1574 年冬林凤袭马尼拉之后，凯奇利的船在湾里运人。排除林晚灯玩家。
+[[tracks]]
+key = "npc_kaicili_manila"
+name = "马尼拉湾的夜"
+kind = "request"
+start = "m1_bay"
+auto = false
+cast = ["kaicili", "lin_wandeng"]
+
+[[tracks.chapters]]
+key = "m1_bay"
+title = "城外唐人的老人"
+text = "林凤那一仗前后的马尼拉湾，夜里的雾压着水面。凯奇利的科拉科拉载过一夜的人，船底还留着人家丢下的包袱，湿漉漉地贴着板子。他看你的船大，请你把城外唐人剩下的老人运去汤都。那边的岸上有一盏红灯笼在等，是月港林家的船主挂的暗号。远处小船上，提红灯笼的林家船主压着嗓子喊：“快点，天亮前城墙上的人要换岗。”凯奇利说：“你的船大，借我一夜。我出不起你的价，可我能告诉你明年丁香的价。”他说他惦记的是这个湾。“湾里的人要是都跑了，丁香卖给谁？”他问完，自己倒先笑了。"
+speaker = "kaicili"
+mood = "tense"
+night = true
+at = "manila"
+cast = ["kaicili", "lin_wandeng"]
+when = [{ kind = "date", from = [1574, 11, 25] }, { kind = "flag", flag = "c13_main_lin_wandeng", value = false }, { kind = "flag", flag = "c13_npc_kaicili_mate", value = false }]
+deadline = [1575, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "ferry"
+text = "开船，认着红灯笼把老人运过河"
+next = "done"
+effects = [{ kind = "affinity", person = "kaicili", value = 6 }, { kind = "affinity", person = "lin_wandeng", value = 4 }, { kind = "growth", attr = "honor", value = 200 }]
+reply = "你跑了三趟，最后一趟天已经发白，岸上那盏红灯笼还挂在树杈上没有收。凯奇利在汤都的岸上数人，数完朝你点头，把一小包丁香塞进你手里：“明年的价，比今年低一成。记着。”"
+news = "马尼拉湾林凤那一仗以后，有个外来的船长和特尔纳特的王子，把城外唐人的老人运去了汤都。"
+
+[[tracks.chapters.choices]]
+key = "help_spain"
+text = "去帮西班牙人守河口，不掺和唐人的事"
+next = "done"
+effects = [{ kind = "reputation", faction = "spain", value = 6 }, { kind = "affinity", person = "kaicili", value = -3 }]
+reply = "城防的人谢了你，还要塞给你一包西班牙的饼干，你没接。对岸的船桨声一下一下远去，直到天亮都没有再近过。凯奇利的船从你的船边划过去，没打招呼，只朝你笑了一下，那一下很短。"
+news = "马尼拉的城防谢了一个外来的船长，他守住了河口，没去运那些唐人的老人。"
+
+[[tracks.chapters.choices]]
+key = "bet"
+text = "跟他打个赌：林凤下一步会去哪里"
+next = "done"
+check = { attr = "perception", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "kaicili", value = 5 }, { kind = "cash", value = 800 }]
+reply = "你说北边，他说南边。半个月后消息传来，林凤果然去了北边的林加延，那是两个人都没先想到的一条河。他把赌注亲自送上你的船，一筐丁香，压得板子吱呀响，他自己又上岸去数了一遍。"
+news = "马尼拉湾的赌局，外来的船长猜中了林凤的去向，凯奇利把赌注亲自送上了船。"
+fail = { next = "done", effects = [{ kind = "affinity", person = "kaicili", value = 2 }], news = "马尼拉湾的赌局，两边都猜错了。凯奇利笑着说这一局和了，丁香各留各的。" }
+
+# 旁轨：英格兰人可信不可信（npc_kaicili_drake）。1579 年德雷克来过特尔纳特，凯奇利在码头上问外来的船长。
+[[tracks]]
+key = "npc_kaicili_drake"
+name = "英格兰人可信不可信"
+kind = "request"
+start = "m1_english"
+auto = false
+cast = ["kaicili", "babullah"]
+
+[[tracks.chapters]]
+key = "m1_english"
+title = "只来一次的船"
+text = "金鹿号走了没几天，港里还有英格兰水手留下的空酒桶，北风一吹，就一下一下撞着码头的石头。凯奇利在码头上拦住你，手里剥着一粒丁香，剥完了又不吃。哥哥托那个英格兰船长带了一枚戒指，给他们的女王。这件事他听了三遍。哥哥只说了一句：“只来一次，也是来过。”凯奇利想问你的是：英格兰人可信不可信？他说他其实已经有了答案，只是想听听别人的价。“不还价的客人，下一回还来不来？你见得多，你说。”"
+speaker = "kaicili"
+mood = "cheerful"
+night = false
+at = "ternate_port"
+cast = ["kaicili", "babullah"]
+when = [{ kind = "date", from = [1579, 11, 10] }, { kind = "flag", flag = "c13_npc_kaicili_mate", value = false }]
+deadline = [1580, 3, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "trust"
+text = "说可信：英格兰人跟西班牙人有仇，会再来"
+next = "done"
+effects = [{ kind = "reputation", faction = "england", value = 4 }, { kind = "affinity", person = "kaicili", value = 3 }]
+reply = "他点头，说那就好，哥哥会高兴。他把剥到一半的丁香放进袖袋，转身走了两步，又回头：“要是他们二十年不来，我就记你一笔。”他说这句话的时候，码头上那些空酒桶还在一下一下撞着石头。"
+news = "特尔纳特码头上，苏丹的弟弟说英格兰人会再来，他哥哥听了会高兴。"
+
+[[tracks.chapters.choices]]
+key = "doubt"
+text = "说不可信：这条船只来一次，靠不住"
+next = "done"
+effects = [{ kind = "affinity", person = "kaicili", value = 6 }]
+reply = "他笑了，笑得很真：“跟我想的一样。可哥哥要的是葡萄牙人知道有人来过，至于他们再来不再来，那是以后的事。”他把剥了一半的丁香放进嘴里，嚼得很响，嚼完才说下一句。他说完又觉得自己说多了，笑着摆摆手。"
+news = "特尔纳特码头上有人说，苏丹的弟弟问外来的船长英格兰人可不可信，船长说只来一次靠不住。"
+
+[[tracks.chapters.choices]]
+key = "trade_news"
+text = "拿你见过的西班牙船期，换他一筐丁香"
+next = "done"
+requires = [{ kind = "reputation", faction = "spain", ge = 10 }]
+hint = "你没在西班牙人的港口待过，说不出他们的船期。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "kaicili", value = 2 }]
+reply = "他听你说马尼拉的船期，一句一句记在心里，还让书记照着念了一遍。最后他亲自给你扛来一筐丁香：“这一筐，是买你这几句话的。”他扛着丁香走到船边，又回头问了一句马尼拉的水深。"
+news = "特尔纳特的码头上，一个外来的船长把马尼拉的船期卖给了苏丹的弟弟，换了一筐丁香。"
+
+# 旁轨：棋盘的另一边（npc_kaicili_join）。1584 年以后，玩家可以请他上船（情谊 ≥60），或请他做岛上的盟友。
+[[tracks]]
+key = "npc_kaicili_join"
+name = "棋盘的另一边"
+kind = "request"
+start = "m1_board"
+auto = false
+cast = ["kaicili"]
+
+[[tracks.chapters]]
+key = "m1_board"
+title = "棋盘的另一边"
+text = "哥哥走了，侄子做了苏丹，凯奇利还在旧堡门外的台阶上剥丁香。堡门敞着，门槛上落了一层海盐，没有人再去扫。你走过去，请他上船。他把一粒丁香放在你手心：“你的开价，我听完了。现在轮到我的下半句。”特尔纳特的丁香往哪里卖，得有人在岛上说，这话他说得很慢。“我上你的船，岛上就少一个开价的人。你拿什么补？”他想看看棋盘的另一边，又放不下门外的台阶。他多半只肯做你的盟友，除非你让他觉得，你的船就是一座岛。"
+speaker = "kaicili"
+mood = "tender"
+night = false
+at = "ternate_port"
+cast = ["kaicili"]
+when = [{ kind = "date", from = [1584, 1, 1] }, { kind = "flag", flag = "c13_npc_kaicili_mate", value = false }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "join"
+text = "请他登船，当你船上的航海士"
+next = "done"
+requires = [{ kind = "affinity", person = "kaicili", ge = 60 }]
+hint = "他笑着听你说完，没接那粒丁香。你们的交情还没到让他离岛的份上。"
+effects = [{ kind = "join", person = "kaicili" }, { kind = "flag", flag = "c13_npc_kaicili_mate" }]
+reply = "他把那把七道弯的克里斯在腰里系紧，回头看了一眼旧堡的门：“走吧。丁香的价，我在船上也照样开。”你们走下台阶的时候，他把那粒丁香放在门槛上，没有人去捡。他说这是给下一个开价的人留的。"
+news = "特尔纳特人说，苏丹的叔叔在旧堡门外的台阶上跟一个外来的船长下了一下午棋，最后上了那条船。"
+
+[[tracks.chapters.choices]]
+key = "ally"
+text = "请他做岛上的盟友：你的船来，他留最好的丁香"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_kaicili_ally" }, { kind = "reputation", faction = "ternate", value = 6 }, { kind = "affinity", person = "kaicili", value = 4 }]
+reply = "他点头，把那粒丁香放回你手心，又替你把手合上：“这一粒是定钱。每年西风起，我给你的船留一筐最好的，装在旧竹篮里，篮口压一片干叶。你的船来不来，码头上的人都会看见。”"
+news = "特尔纳特人说，苏丹的叔叔在海上留了一位盟友，每年给那条船留一筐最好的丁香。"
+
+[[tracks.chapters.choices]]
+key = "one_game"
+text = "不请了，只跟他下一盘棋就走"
+next = "done"
+effects = [{ kind = "affinity", person = "kaicili", value = 4 }]
+reply = "你们在台阶上下了一盘，风把棋子吹得满台阶都是，他一粒粒捡回来，让了你三步，还是赢了。收子的时候他说：“下回来，我让你四步。”棋盘就留在台阶上，等下一个来的船上的人来下。"
+news = "特尔纳特旧堡门外的台阶上，苏丹的叔叔输给了一个外来的船长一盘棋，还笑着让他再来。"

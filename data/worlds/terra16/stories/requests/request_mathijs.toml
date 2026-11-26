@@ -1,0 +1,274 @@
+# C13d 人物的请托：女王的礼服（2026-10-18，Claude 写）。
+# 标签：find（找东西，目标物 venice_carnival_dress）；T 当面（安特卫普紫罗兰修辞学会的排练房，auto=false，玩家“问请托”或 ask:request_mathijs 启动）。
+# 人物：马蒂斯·佩特斯（mathijs，1540-10-01 生），紫罗兰修辞学会的少年演员，专演女角；cast 日程 1554—1590 年全程在安特卫普（1557 年起多在市场），求见门槛低。
+# 窗口：报价 1563-01-01 至 1580-12-31（offer 的 deadline 为窗口止日，到期走 timeout，不写见闻）；handin 与 use 的 when 只写 alive，窗口由 offer 的接受决定。
+# 依据·史实：安特卫普修辞学会（紫罗兰 Violieren）的演出传统，男演员扮女角，街上与广场搭台；威尼斯狂欢节的礼服与面具（items_outfit_01 的 venice_carnival_dress，有 italian 商店）。
+# 依据·原创：马蒂斯的新戏（女王在宫门口等一封信，不写给谁）、裁缝照版画缝的大袖子礼服、学会的司库、台阶上的灯。
+# 待核：16 世纪安特卫普修辞学会的服装置办与司库的权限只用传闻口吻，正文不写具体的账目。
+# 秘密：马蒂斯把想对扬说的话写成台词、藏进没署名的戏里——本请托不碰：新戏的内容只写“女王在宫门口等一封信”，不写给谁、不写扬；见闻一律不写他的心事。
+# 同学：C7 bond_mathijs 的 C 级以上只在 offer 的 variant 里出一句（转圈时挤眼）；C7 pair_mathijs_jan 的 c7_pair_mathijs_jan_together 只在 use 的 variant 里读，写“后台有人替他拎着裙摆”，不写名字。
+# 读的旗标：c7_pair_mathijs_jan_together（use 与 use_half 的 variant，只读）；bond mathijs ≥ C（offer 的 variant）。
+# 设的旗标：c13_request_mathijs_accepted / declined / treasurer / given / guild / half / done / partial。
+# 依赖：无 B10b 改名（antwerp 为现有港口）；无主线门禁（c13_main_<主角> 未设，对所有主角一样）。
+# 实现说明：（a）variants 只能换文字，不能换效果；“司库只付一半”的现金差与“容易谈价”的检定差，用 next 走到各自的章节：先说好的走 handin_agreed（容易检定），谈价失败走 use_half（只付一半）。
+#           引擎审计里互斥的旗标门禁会报“准备后条件仍不满足”，所以不用旗标挡选项。treasurer / half 两面旗标只设不读，留作分支登记。
+#           （b）检定失败的回复取自 fail 分支的 news，所以失败的那一句同时作为见闻写出（安特卫普，不写数字）。
+# 缺省走向：offer 不在港里就一直挂着，到 1580-12-31 走 timeout（马蒂斯另找了人，无见闻）；handin 与 use 没有期限，玩家不交就停在待决队列。
+# 回忆插画清单：
+#   mem-request_mathijs-use（台阶上的女王；use 与 use_half 共用）：大广场的灯一盏盏灭，穿着威尼斯礼服的少年坐在石阶上，裙摆搭在膝头，一只手套放在身边。
+
+[[tracks]]
+key = "request_mathijs"
+name = "女王的礼服"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["mathijs"]
+
+# 接下：1563 年以后，紫罗兰学会的排练房。一件穿不了的礼服，一个不肯让别人替他掏钱的少年。
+[[tracks.chapters]]
+key = "offer"
+title = "裁缝铺的不要"
+text = "安特卫普紫罗兰学会的排练房里，马蒂斯穿着一件袖子大得能装下一只鹅的礼服，站在镜子前转圈。裁缝照着一张版画缝的“威尼斯礼服”，领口的花边歪了，袖口的绸子是染出来的，他转到一半自己先笑场。“你看，这是给女王穿的，女王可不会穿成这样。”新戏的本子压在衣箱上，女王一角由他自己演。他把礼服脱下来，叠得很认真：“我要一件真的，在狂欢节上穿过的。布料会记得那些灯。”"
+mood = "cheerful"
+speaker = "captain"
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1580, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "mathijs", ge = 18 },
+  { kind = "alive", person = "mathijs", value = true },
+]
+objectives = [{ kind = "person", person = "mathijs", text = "在安特卫普的排练房找到他" }]
+deadline = [1580, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "bond"
+when = [{ kind = "bond", person = "mathijs", level = "C" }]
+text = "安特卫普紫罗兰学会的排练房里，马蒂斯穿着一件袖子大得能装下一只鹅的礼服，站在镜子前转圈。转到你跟前，他冲你挤了挤眼，说：“你那年也坐头一排。”裁缝照着一张版画缝的“威尼斯礼服”，领口的花边歪了，袖口的绸子是染出来的，他自己先笑场。“你看，这是给女王穿的，女王可不会穿成这样。”新戏的本子压在衣箱上，女王一角由他自己演。他把礼服脱下来，叠得很认真：“我要一件真的，在狂欢节上穿过的。布料会记得那些灯。”"
+
+[[tracks.chapters.choices]]
+key = "find_one"
+text = "接下，替他找一件真货。"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "mathijs", value = 2 },
+  { kind = "flag", flag = "c13_request_mathijs_accepted" },
+]
+reply = "他把台词本翻开给我看，只看一页：女王站在宫门口，等一封迟到的信。“就是这一页，”他合上本子，“衣服得配得上它。”"
+
+[[tracks.chapters.choices]]
+key = "haggle_first"
+text = "接下，先说好：找到了让学会的司库付钱，别让他自己掏。"
+next = "handin_agreed"
+effects = [
+  { kind = "affinity", person = "mathijs", value = 2 },
+  { kind = "flag", flag = "c13_request_mathijs_accepted" },
+  { kind = "flag", flag = "c13_request_mathijs_treasurer" },
+]
+reply = "“司库是个抠门的老布商，”他说，“你要是说得动他，我给你加一场返场。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "裁缝那件改改也能演。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_mathijs_declined" }]
+reply = "他把那件大袖子的礼服又穿回身上，说那就演一个大袖子的女王，转身进了排练房。"
+
+# 交货：真布料。礼服摊在长桌上，他一穿上，肩膀就沉下去了一寸。司库在门口问钱的事。
+[[tracks.chapters]]
+key = "handin"
+title = "真布料"
+text = "你把礼服摊在排练房的长桌上。马蒂斯没有马上碰，先凑近闻了闻：“有蜡烛的味道，还有运河。”他把袖子一只只理顺，换上，站到镜子前。肩膀自己就沉下去了一寸，下巴收回来，眼神从镜子里往下看。“这一下，台上的人就信了。”门口探进一个灰头发的人，是学会的司库。他眯眼看了看礼服，问：“这件衣服，谁出钱？”"
+mood = "tender"
+speaker = "captain"
+when = [{ kind = "alive", person = "mathijs", value = true }]
+objectives = [
+  { kind = "item", item = "venice_carnival_dress", qty = 1, text = "手里有那件礼服" },
+  { kind = "person", person = "mathijs", text = "把礼服拿给马蒂斯看" },
+]
+
+[[tracks.chapters.choices]]
+key = "give_it"
+text = "把礼服送给他，钱的事不提。"
+next = "use"
+effects = [
+  { kind = "item", item = "venice_carnival_dress", qty = -1 },
+  { kind = "affinity", person = "mathijs", value = 3 },
+  { kind = "flag", flag = "c13_request_mathijs_given" },
+]
+reply = "司库在门口咳了一声，没再问。马蒂斯在镜子前站了很久，最后对着镜子行了一个女王的礼，回头说：“这一场，你坐第一排。”"
+
+[[tracks.chapters.choices]]
+key = "sell_to_guild"
+text = "跟司库谈价，让学会买下这件礼服。"
+next = "use"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "use_half", effects = [{ kind = "item", item = "venice_carnival_dress", qty = -1 }, { kind = "flag", flag = "c13_request_mathijs_half" }, { kind = "affinity", person = "mathijs", value = -2 }], news = "安特卫普的老布商把礼服的衬里翻了三遍，谈到最后，只肯付一半的钱。" }
+effects = [
+  { kind = "item", item = "venice_carnival_dress", qty = -1 },
+  { kind = "affinity", person = "mathijs", value = 3 },
+  { kind = "flag", flag = "c13_request_mathijs_guild" },
+]
+reply = "老布商摸了摸料子，摸到衬里的金线才松口。礼服归了学会的衣箱，马蒂斯说以后每个演女王的人都穿它。"
+
+[[tracks.chapters.choices]]
+key = "tailor_fit"
+text = "掏钱请裁缝把腰身改到合他的身量，衣服送他。"
+next = "use"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "裁缝要先见到现钱，口袋里还不够。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "item", item = "venice_carnival_dress", qty = -1 },
+  { kind = "affinity", person = "mathijs", value = 4 },
+  { kind = "flag", flag = "c13_request_mathijs_given" },
+]
+reply = "裁缝改了两个晚上。第三天他穿上转了一圈，裙摆跟着脚步慢半拍落下，像真的女王。"
+
+# 交货（先说好的）：司库上回已经点过头。礼服一穿上，他的钱匣只开一次。
+[[tracks.chapters]]
+key = "handin_agreed"
+title = "钱匣只开一次"
+text = "礼服摊在排练房的长桌上，马蒂斯隔着一步远看了很久，才伸手去摸衬里。“金线是真的，”他小声说，“灯油的味道也是真的。”他换上，在镜子前慢慢转了半圈，肩膀沉下去一寸，下巴收了回去。门口探进一个灰头发的人，是学会的司库。上回他已经应下由学会出钱，这回只是眯着眼看料子，问：“就是这件？先说好，我的钱匣只开一次。”"
+mood = "tender"
+speaker = "captain"
+when = [{ kind = "alive", person = "mathijs", value = true }]
+objectives = [
+  { kind = "item", item = "venice_carnival_dress", qty = 1, text = "带着礼服去排练房" },
+  { kind = "person", person = "mathijs", text = "在司库面前把礼服交给马蒂斯" },
+]
+
+[[tracks.chapters.choices]]
+key = "give_it"
+text = "把礼服送给他，对司库说不用破费了。"
+next = "use"
+effects = [
+  { kind = "item", item = "venice_carnival_dress", qty = -1 },
+  { kind = "affinity", person = "mathijs", value = 3 },
+  { kind = "flag", flag = "c13_request_mathijs_given" },
+]
+reply = "司库张了张嘴，什么也没说，转身走了。马蒂斯抱着礼服在镜子前站到灯芯结花，才回头说：“这一场，你坐第一排。”"
+
+[[tracks.chapters.choices]]
+key = "sell_to_guild_easy"
+text = "照先前说好的，让司库把礼服收下。"
+next = "use"
+check = { attr = "commerce", base = 35, per = 6 }
+fail = { next = "use_half", effects = [{ kind = "item", item = "venice_carnival_dress", qty = -1 }, { kind = "flag", flag = "c13_request_mathijs_half" }, { kind = "affinity", person = "mathijs", value = -2 }], news = "司库先点了头，安特卫普的老布商还是把礼服的衬里翻了三遍，谈到最后只肯付一半的钱。" }
+effects = [
+  { kind = "item", item = "venice_carnival_dress", qty = -1 },
+  { kind = "affinity", person = "mathijs", value = 3 },
+  { kind = "flag", flag = "c13_request_mathijs_guild" },
+]
+reply = "司库只摸了摸料子，就招手让人去取钱匣。马蒂斯在衣箱前转了一圈，合上箱盖时说：“下一个女王，穿它。”"
+
+[[tracks.chapters.choices]]
+key = "tailor_fit"
+text = "自己掏钱请裁缝把腰身改好，衣服送他，学会的钱不用动。"
+next = "use"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "裁缝要先见到现钱，你的钱袋还不够厚。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "item", item = "venice_carnival_dress", qty = -1 },
+  { kind = "affinity", person = "mathijs", value = 4 },
+  { kind = "flag", flag = "c13_request_mathijs_given" },
+]
+reply = "裁缝把腰身收了两指，袖口也剪短了一截。他穿上在排练房里走了一趟，裙摆跟着脚步慢半拍落下，司库在门口看了一眼，没提钱匣的事。"
+
+# 收尾：宫门口。首演在大广场的台上，散场后他还穿着礼服坐在台阶上。
+[[tracks.chapters]]
+key = "use"
+title = "宫门口"
+text = "首演在大广场搭的台上，灯挂了一圈。马蒂斯演的女王站在宫门口，等一封信。等了整整一幕，信没来，她也没哭，只是把手套脱下来又戴上。台下有人咳嗽，有人小声问旁边：“这一幕怎么这么长？”没人答。散场以后，他还穿着礼服坐在台阶上，裙摆搭在膝头，台下的灯一盏一盏灭。你走上去夸他，他摆摆手：“嘘，这是戏，别当真。”"
+news = "安特卫普大广场上演了一出新戏，演女王的是紫罗兰学会的马蒂斯，礼服据说是从威尼斯来的真货。"
+mood = "tender"
+speaker = "captain"
+night = true
+at = "antwerp"
+when = [{ kind = "alive", person = "mathijs", value = true }]
+objectives = [
+  { kind = "at", at = "antwerp", text = "留在安特卫普" },
+  { kind = "wait", days = 14, text = "等两周，首演在大广场" },
+]
+
+[[tracks.chapters.variants]]
+key = "jan"
+when = [{ kind = "flag", flag = "c7_pair_mathijs_jan_together" }]
+text = "首演在大广场搭的台上，后台有人替他拎着裙摆，灯挂了一圈。马蒂斯演的女王站在宫门口，等一封信。等了整整一幕，信没来，她也没哭，只是把手套脱下来又戴上。台下有人咳嗽，有人小声问旁边：“这一幕怎么这么长？”没人答。散场以后，他还穿着礼服坐在台阶上，裙摆搭在膝头，台下的灯一盏一盏灭。你走上去夸他，他摆摆手：“嘘，这是戏，别当真。”"
+
+[[tracks.chapters.choices]]
+key = "sit_down"
+text = "在台阶上坐下，陪他把灯看灭。"
+next = "done"
+reply = "他没再说话。最后一盏灯灭了，他才起身，把裙摆提起来，说衣服不能沾露水。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "mathijs", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_mathijs_done" },
+  { kind = "memory", memory = "mem-request_mathijs-use", title = "台阶上的女王" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_letter"
+text = "问他：那封信，最后到了没有？"
+next = "done"
+reply = "“下一出再说。”他笑着把手套抖了抖，又戴回手上，“女王等了一幕，不差这一出。”"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "mathijs", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_mathijs_done" },
+  { kind = "memory", memory = "mem-request_mathijs-use", title = "台阶上的女王" },
+]
+
+# 收尾（只付一半）：谈价没谈成，司库的钱匣只开了半边。首演照样在大广场，剩下的拿返场的票抵。
+[[tracks.chapters]]
+key = "use_half"
+title = "抵账的票"
+text = "司库只付了一半的钱，马蒂斯说剩下的拿返场的票抵。首演在大广场搭的台上，灯挂了一圈。马蒂斯演的女王站在宫门口，等一封信。等了整整一幕，信没来，她也没哭，只是把手套脱下来又戴上。台下有人咳嗽，有人小声问旁边：“这一幕怎么这么长？”没人答。散场以后，他还穿着礼服坐在台阶上，裙摆搭在膝头，台下的灯一盏一盏灭。你走上去夸他，他摆摆手：“嘘，这是戏，别当真。”"
+news = "安特卫普大广场的新戏散了场，紫罗兰学会的司库只付了礼服一半的钱，马蒂斯说剩下的拿返场的票抵。"
+mood = "tender"
+speaker = "captain"
+night = true
+at = "antwerp"
+when = [{ kind = "alive", person = "mathijs", value = true }]
+objectives = [
+  { kind = "at", at = "antwerp", text = "留在安特卫普看首演" },
+  { kind = "wait", days = 14, text = "等上两周，等首演开锣" },
+]
+
+[[tracks.chapters.variants]]
+key = "jan"
+when = [{ kind = "flag", flag = "c7_pair_mathijs_jan_together" }]
+text = "司库只付了一半的钱，马蒂斯说剩下的拿返场的票抵。首演在大广场搭的台上，后台有人替他拎着裙摆，灯挂了一圈。马蒂斯演的女王站在宫门口，等一封信。等了整整一幕，信没来，她也没哭，只是把手套脱下来又戴上。台下有人咳嗽，有人小声问旁边：“这一幕怎么这么长？”没人答。散场以后，他还穿着礼服坐在台阶上，裙摆搭在膝头，台下的灯一盏一盏灭。你走上去夸他，他摆摆手：“嘘，这是戏，别当真。”"
+
+[[tracks.chapters.choices]]
+key = "sit_down_partial"
+text = "在台阶上坐下，陪他把灯看灭，钱的事不提。"
+next = "done"
+reply = "他把手套摘下来放在台阶上，只说：“剩下的，记在返场的票上。”最后一盏灯灭了，他才起身，把裙摆兜在手里，说台阶凉，衣服别坐脏了。"
+effects = [
+  { kind = "cash", value = 450 },
+  { kind = "affinity", person = "mathijs", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_mathijs_partial" },
+  { kind = "memory", memory = "mem-request_mathijs-use", title = "台阶上的女王" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_letter_partial"
+text = "问他：钱只付了一半，那封信最后到了没有？"
+next = "done"
+reply = "“信到没到，台上说了算。”他把手套往膝上一搭，笑了笑，“剩下的，等返场的票抵了再说。”"
+effects = [
+  { kind = "cash", value = 450 },
+  { kind = "affinity", person = "mathijs", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_mathijs_partial" },
+  { kind = "memory", memory = "mem-request_mathijs-use", title = "台阶上的女王" },
+]

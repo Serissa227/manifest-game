@@ -1,0 +1,174 @@
+# C13d 请托：寄往钟城的冬衣（request_song_deokbong）。Claude 写（2026-10-25），仅中文，不配英文覆盖。
+# 人物：宋德峰 song_deokbong（1521 年生，1578 年卒，女；潭阳的女诗人，势力 joseon）。cast：cast/historical_08_korea_ryukyu.toml。
+#   丈夫柳希春因 1547 年的壁书案流放极北的钟城（正文只说“那桩案子”）；她独自守家、记账、作诗。
+#   日程 1553—1577 在潭阳（damyang_city），不下釜山；全轨道只在信里说话，出面的是潭阳来的一个老家人（无名，不进 cast）。
+# 类型：送信（letter）。brief 三章 offer → handover → reply；reply 按交出时诗有没有被拆看拆成 reply / reply_read 两章（见“结构说明”），文件里共四章。终点 done / failed。
+# 报价：L（来信）。auto=true，offer 章 at=busan，speaker 省略；family="c13_offer_busan"、family_cooldown_days=20。
+#   规划窗口（不进 TOML，普通章没有 window）：offer 1557-03-01 至 1564-06-30；handover 约 1557-04 至 1564-10；reply 约 1557-10 至 1565-09。
+#   offer 的 deadline 为 1564-06-30，timeout 直接 failed，不写见闻；handover 的 deadline_days=75；reply 的 deadline_days=300。
+#   窗口止于 1564-06-30：1565 年柳希春移配恩津、1567 年宣祖即位后赦还，正文不写到那以后，也不写赦还。
+# 依据·史实：柳希春 1547—1567 年流放（先钟城，1565 年移恩津），1567 年赦还；宋德峰与他隔着千里以诗相赠，事见柳希春《眉岩日记》；
+#   宋德峰持家、记账极细，见 cast 的 persona。
+# 依据·原创：老家人与他捆了三道麻绳的包袱；棉袍的账（棉花三斤四两、青布二丈一尺、白线五团，另两团从旧袍子上拆下）；
+#   北道兵营的押运书吏（无名，不进 cast）与每年沿东岸北上的军布船；缺了半只耳朵的老兵私脚；“寒”抄成“塞”的两个错字；
+#   柳希春回诗里“比京里的皮裘还暖”一句与宋德峰后来那首写海的诗——都是编的，不是两人诗作的原文。
+# 不写的事：玩家与宋德峰之间没有任何暧昧；她的婚姻按史料写，只写她与丈夫的诗、账、冬衣；书吏抄诗不写成坏事，只是她不想。人物无 secret。
+# 招牌话：信里那一句“诗你们念不念都行。冬衣不能晚——北边的雪，不等人读完诗才下。”全轨道只在 offer 正文出现一次。
+# 结构说明：brief 的 reply 要按 sealed / read 拆选项。按本批约定，不用 requires 读本轨道自己设的旗标，改按 next 分章：
+#   handover 的“原封带去”成功、“念一首”“雇私脚”去 reply（设 sealed）；“原封带去”检定失败去 reply_read（设 read）。两章各两个选项，都没有 requires。
+#   检定失败的分支没有回复：书吏拆看、抄诗写进 fail 的见闻与 reply_read 的正文。
+# 报酬（与 brief 一致，每份一次）：最好的结局（reply）现金 900、好感 +8（回赠见闻再 +2）、joseon 声望 +1、名声 +3、回忆一张；
+#   折中（reply_read）现金 500、好感 +4（回赠见闻再 +2）。好感正向合计至多 2+3+8+2=15。唯一奖励物品：无。技能经验：无。
+#   雇私脚的选项先 requires cash ≥ 100，再扣 100。
+# 失败与超时（照 brief，不另加好感惩罚）：handover 超时设 _late 并来一封短信（≤120 字）；reply 超时只设 _late，不来信（冬衣已经送到）。
+# 来信：全轨道两封——handover 超时一封；reply“回赠见闻”一封。一次游戏至多一封。
+# 读的旗标：无。不读也不设任何 c7_ 旗标。
+# 设的旗标（c13_request_song_deokbong_<事件>）：accepted；终局 declined / done / partial / late；分支 sealed、read。
+# 依赖：港口 busan；技能 poetry；势力 joseon；属性 eloquence。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_song_deokbong-reply「账上的最后一行」：釜山码头的石阶上摊着一页账，棉花、布、线一行行记下来，最后一行是船主的名字，旁边搁着一只小木匣。
+
+[[tracks]]
+key = "request_song_deokbong"
+name = "寄往钟城的冬衣"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["song_deokbong"]
+
+# 一、报价：釜山码头，潭阳来的老家人背着一卷诗、一件棉袍、一页账。
+[[tracks.chapters]]
+key = "offer"
+title = "一卷诗、一件棉袍"
+text = "釜山码头的石阶上，一个老家人从天亮等到晌午，背上的包袱捆了三道麻绳。他说从潭阳来，走了九天。包袱解开一角：一卷诗，油纸包着；一件棉袍，絮得极厚，按下去半天才弹回来；还有一页账，字小而密——棉花三斤四两，青布二丈一尺，白线五团，另有两团是从旧袍子上拆下来的，也记上了。夫人的信只有几行：“诗你们念不念都行。冬衣不能晚——北边的雪，不等人读完诗才下。”老家人说，老爷因为那桩案子发配到钟城，一去好些年；驿递到那边要走两个月，夫人不放心。釜山每年有一条运军布的船沿东岸北上，押运的是北道兵营的书吏。夫人托我在釜山找着这个人，看着包袱上了船，赶在入冬以前。"
+mood = "tender"
+at = "busan"
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "age", ge = 17 }]
+deadline = [1564, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_busan"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下包袱，替夫人找那个押运书吏。"
+next = "handover"
+reply = "老家人把那页账叠成四折，塞回包袱里，压在棉袍底下。“夫人交代，账也要一起带去——老爷得知道这件袍子花了多少。”他又说，老爷的信里总说北边的日子过得惯，夫人一个字也不信，回信里一条一条数给他听。说完他把三道麻绳重新勒紧，才把包袱递到我手上，重得往下一沉。"
+effects = [{ kind = "flag", flag = "c13_request_song_deokbong_accepted" }, { kind = "affinity", person = "song_deokbong", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "兵营的船我搭不上话，还是走驿递稳当。"
+next = "failed"
+reply = "老家人没争，把包袱重新捆了三道，背回肩上。“那就走驿递。夫人说过，船主肯不肯，账上都不记欠。”他往驿站那条路去了，走得比来时快，大概是在算两个月以后，钟城下了几场雪。"
+effects = [{ kind = "flag", flag = "c13_request_song_deokbong_declined" }]
+
+# 二、交出：军布船装舱，押运书吏是个爱诗的年轻人，想先听一听。
+[[tracks.chapters]]
+key = "handover"
+title = "押运书吏想先念诗"
+text = "军布船泊在釜山的旧码头，一捆捆青灰的布往舱里递，号子喊得震天。押运的书吏比我想的年轻，袖口沾着墨，账册夹在腋下。一听包袱是潭阳宋夫人的，他眼睛一亮，说夫人的诗他在汉阳抄过两首。随即又压低声音：“寄给钟城那位的东西，过兵营时上头多半要翻。诗里有一个字不妥，谁也担不起。”他盯着那卷油纸，“能不能先念给我听？我心里有数，到了上头也好替夫人说话。”"
+speaker = "captain"
+mood = "tense"
+at = "busan"
+when = [{ kind = "alive", person = "song_deokbong", value = true }]
+objectives = [{ kind = "wait", days = 15, text = "等北上的军布船装舱" }, { kind = "at", at = "busan", text = "在釜山找到押运书吏" }]
+deadline_days = 75
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_song_deokbong_late" }, { kind = "letter", person = "song_deokbong", text = "包袱老家人背回来了，冬衣还是交了驿递，到钟城晚了一个月。他来信说，那几天冻得握不住笔，诗也没写成。账上我记了一笔：潭阳到釜山，往返十八天的盘缠。" }]
+
+[[tracks.chapters.choices]]
+key = "sealed"
+text = "劝他原封带去：夫人的诗，只写给一个人看。"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我说兵营要翻，是兵营的事；押运的先拆了，夫人那页账上就得添一笔，添的是他的名字。他想了一会儿，笑了，把包袱塞进自己行李的最底下，压上两捆军布。“到了钟城，我亲手交。上头要看，叫他们当着我的面拆。”"
+effects = [{ kind = "affinity", person = "song_deokbong", value = 3 }, { kind = "flag", flag = "c13_request_song_deokbong_sealed" }]
+news = "釜山北上的军布船上，押运书吏把一个潭阳来的包袱压在自己行李最底下，说到钟城以前谁也别碰。"
+
+[tracks.chapters.choices.fail]
+next = "reply_read"
+effects = [{ kind = "flag", flag = "c13_request_song_deokbong_read" }]
+news = "釜山北上的军布船上，押运书吏拆开一个潭阳来的包袱，点灯读了半夜的诗，又抄了一首在自己本子上。"
+
+[[tracks.chapters.choices]]
+key = "one"
+text = "我挑一首念给他听，其余的封好。"
+next = "reply"
+requires = [{ kind = "skill", skill = "poetry", ge = 60 }]
+hint = "那几首诗的平仄你拿不准，念走了调，反倒坏事。"
+reply = "我挑了一首写北风的，念得很慢。念完，书吏半天没说话，拿油纸把剩下的几卷包回去，包了两层，又在封口按了自己的指印。“这一首我记住了，不用抄。”他把包袱抱上船，抱得像抱一只刚出炉的瓦罐。"
+effects = [{ kind = "affinity", person = "song_deokbong", value = 3 }, { kind = "flag", flag = "c13_request_song_deokbong_sealed" }]
+news = "釜山码头上有个船主给北道的押运书吏念了一首写北风的诗，书吏听完，把剩下的诗封了两层。"
+
+[[tracks.chapters.choices]]
+key = "private"
+text = "另雇一个私脚跟船北上，包袱不经他的手。"
+next = "reply"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "雇人跟船走一趟北道，你手头的钱不够。"
+reply = "码头上找来的私脚是个老兵，缺了半只耳朵。他说他去过钟城，那地方的雪埋得到窗户，夜里狼在城墙外头叫。他把包袱绑在胸前，说睡觉也不解。书吏站在船舷边看了一会儿，没再提念诗的事，只叮嘱老兵：到了兵营，先来找他。"
+effects = [{ kind = "cash", value = -100 }, { kind = "flag", flag = "c13_request_song_deokbong_sealed" }]
+news = "釜山有个缺了半只耳朵的老兵受雇跟着北上的军布船走，胸前绑着一个潭阳来的包袱，睡觉也不解。"
+
+# 三、收尾（诗原封到了）：老家人第二回到釜山，带来她的信和一页账。
+[[tracks.chapters]]
+key = "reply"
+title = "北边来的回诗"
+text = "老家人第二回到釜山，比上回瘦了一圈，背上的包袱换成了一只小木匣。匣里是宋德峰的信。钟城的回信先到了潭阳：冬衣收到了，那人回了一首诗，夸那件袍子比京里的皮裘还暖。她把这一句照抄给我，底下另起一行：“他从来只夸袍子，不夸缝袍子的人。三斤四两棉花，是我一两一两称的，他倒说得像是天上掉下来的。”信后附着一页账，前头是棉花、布、线，还有老家人路上的茶钱，最后一行写着我的名字，后面没写完。"
+mood = "tender"
+at = "busan"
+when = [{ kind = "alive", person = "song_deokbong", value = true }]
+objectives = [{ kind = "wait", days = 150, text = "等钟城的回信转到潭阳" }, { kind = "at", at = "busan", text = "回到釜山" }]
+news = "釜山北上的军布船捎走过一件潭阳来的棉袍，送给钟城一个流放多年的读书人；听说那边回了一首诗。"
+deadline_days = 300
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_song_deokbong_late" }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下夫人的谢礼。"
+next = "done"
+reply = "老家人把谢礼放到我手里，从怀里摸出一截墨，就着码头的石阶，在账上我名字后面补了三个字：“谢船主”。“夫人交代，船主收下了，才许写这一笔。”他吹干了墨，把账折好放回木匣，扣上铜扣，说回到潭阳，夫人头一件事就是看这一行写得齐不齐。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "song_deokbong", value = 8 }, { kind = "reputation", faction = "joseon", value = 1 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_song_deokbong_done" }, { kind = "memory", memory = "mem-request_song_deokbong-reply", title = "账上的最后一行" }]
+
+[[tracks.chapters.choices]]
+key = "poem"
+text = "说几件海上的见闻，请老家人带回去给夫人写诗。"
+next = "done"
+reply = "我说了对马海峡早上的雾，说了夜里在船边发光的鱼，一网上来，舱底亮了半宿。老家人认真记下，一边记一边念，念错了还要我再说一遍。“夫人最爱听这个。老爷的信里，只有雪。”他把那张纸折好，跟账一起放进木匣。我名字后面那半行，他没动笔，说要留给夫人听完了自己写。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "song_deokbong", value = 10 }, { kind = "reputation", faction = "joseon", value = 1 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_song_deokbong_done" }, { kind = "memory", memory = "mem-request_song_deokbong-reply", title = "账上的最后一行" }, { kind = "letter", person = "song_deokbong", text = "老家人回来，把你说的海念给我听，念了三遍，第三遍把鱼念成了星星。我将错就错，写进了诗：船边一网，捞起半舱星斗。等下一回军布船北上，抄一份捎去钟城，看他这回是夸诗，还是又只夸袍子。账上你那一行，我补齐了：谢船主，说海一回，两不相欠。" }]
+
+# 三′、收尾（诗被拆看过）：冬衣到了，可钟城兵营里先念起了她的诗。
+[[tracks.chapters]]
+key = "reply_read"
+title = "被人念过的诗"
+text = "老家人第二回到釜山，背上的包袱换成了一只小木匣。宋德峰的信里说，冬衣收到了，那人回诗夸袍子比京里的皮裘还暖；她照抄了这一句，添一行：“他从来只夸袍子，不夸缝袍子的人。”往下一段，字就硬了：“钟城兵营里有人念我的诗，念得满营都知道潭阳有个会写诗的女人。抄的那位还抄错了字，两处‘寒’都写成了‘塞’。诗是写给一个人的，如今一营的人替他读了。”信后附着账，最后一行是我的名字，后面跟着半句没写完的话。"
+mood = "tender"
+at = "busan"
+when = [{ kind = "alive", person = "song_deokbong", value = true }]
+objectives = [{ kind = "wait", days = 150, text = "等钟城的回信转到潭阳" }, { kind = "at", at = "busan", text = "回到釜山" }]
+news = "钟城兵营里传着一首潭阳女子写的诗，是釜山北上的押运书吏抄过去的，听说还抄错了两个字。"
+deadline_days = 300
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_song_deokbong_late" }]
+
+[[tracks.chapters.choices]]
+key = "take_read"
+text = "收下谢礼，不替书吏辩解。"
+next = "done"
+reply = "谢礼比我想的薄。老家人把账翻过来，替夫人把我名字后面那半句补完：“谢船主，扣书吏念诗一首。”补完他有些过意不去，搓着手说：“夫人记账就这样，一根线也不让。可袍子是暖的，老爷信里写了。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "song_deokbong", value = 4 }, { kind = "flag", flag = "c13_request_song_deokbong_partial" }]
+
+[[tracks.chapters.choices]]
+key = "poem_read"
+text = "说几件海上的见闻，算是替那首诗赔个不是。"
+next = "done"
+reply = "我说了济州外海的海女，一口气潜下去，浮上来时手里攥着鲍鱼，先吹一声长哨才换气。老家人一句一句记下，记完叹了口气：“夫人会写的。她说过，被人念过的诗她不再改，另写一首新的就是。”他把纸折进木匣，又照夫人走前的交代，拿笔把账上我名字后面那半句划掉了。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "song_deokbong", value = 6 }, { kind = "flag", flag = "c13_request_song_deokbong_partial" }]

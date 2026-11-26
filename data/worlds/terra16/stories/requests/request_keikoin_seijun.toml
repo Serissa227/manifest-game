@@ -1,0 +1,229 @@
+# C13d 请托：迁宫的四十根木（request_keikoin_seijun）。Claude 写（2026-10-25），仅中文。
+# 人物：庆光院清顺 keikoin_seijun（生年不详，女；伊势宇治庆光院第三代住持，临济宗尼僧，1566 年卒）。势力 ise_shrines。
+#   cast：cast/historical_07_japan.toml。cast 没有 secret；“神宫里有人看不惯尼僧经手神事”只作背景——deliver 里热田神官的眼睛在她僧衣上停了停，仅此一笔。
+# 类型：送货（deliver）。三章：offer（报价）→ deliver（在热田岸上数木头、结账）→ settle / settle_donor（一个月后伊势的船捎回信与谢礼；price、fee 进 settle，donate 进 settle_donor）。
+# 报价：V（到访）。她的日程在 ise_city（寺），会过伊势湾到热田；auto=true，at=atsuta（热田，伊势的大凑不在地图上）。
+#   offer：family=c13_offer_atsuta、冷却 20 天；名声门槛 0；窗口 1558-01-15 至 1562-12-31（deadline 为窗口止日，timeout 直接 failed，不写见闻）。
+# 进行中：deliver 限 150 天，超时走 failed（好感 -3、旗标 _late、一封 ≤120 字的来信）；
+#   settle、settle_donor 先等 30 天，之后 120 天内回热田，超时走 failed（好感 -3、旗标 _late、见闻）。
+#   两章的 when 另加 date to=1563-09-30：她 1566 年卒，请托止于 1563 年外宫迁宫以前，信末那句“迁宫那年若在附近，记得来看”才说得通。
+# 依据·史实：外宫的式年迁宫中断一百二十年左右，庆光院清顺四处劝进募款，1563 年（永禄六年）办成（docs/research/terra16/P_eastasia_1540.md；cast sources）。
+#   迁宫本身不写成场面，不写神迹；请托只写木头。热田在伊势湾对岸，正文写“伊势的船接过去”。
+# 依据·原创：页边先记下的船名、堺那家答应十贯还差三贯（settle 抄件里补上“已纳”）、数到二十九数岔了“从头来”、热田神官的浅葱色袍子与岸钱、
+#   “全奉加”三个字、几串麻绳穿的铜钱、劝进帐抄件上写大了的那一行、信纸背面封口前添的一句、只有一句话的窄纸条。
+# 货：timber ×40（府内、小浜、下田、能岛、福州等有；热田不产木）。brief 的目标文字写“四十车”，口头禅与 settle 都按“根”数，正文统一写“四十根”。
+# 货款：40 × 20 × 1.25 = 1000，deliver 的 price 与 fee 付；donate（布施）按 brief 不付货款（goods 目标回应时照样扣货）。
+# 报酬：货款 1000（布施 0）；谢礼 1600（两章的 take）；名声 +3（donate 再 +1）；回忆一张；无物品。
+#   好感：accept +2，deliver 的 donate +5 / fee +3，settle 的 take +8 / give +10。brief 写“至多 +15”，donate + give 照各章的数会到 +17，
+#   所以布施路线单走 settle_donor（不用 requires 读本轨旗标）：take +8、give +8，每条路线都不过 +15。超时 -3（总决定的通则，brief 未写）。
+# 门禁：offer 写日期与玩家 age ≥ 17（她生年不详，不写请托人的年龄门禁）；deliver、settle、settle_donor 写 alive keikoin_seijun。没有 gate_main。
+# 读的旗标：无（布施路线靠 next 分到 settle_donor）。c13_offer_atsuta 是热田各请托共用的冷却家族。
+# 设的旗标：c13_request_keikoin_seijun_accepted（offer 接下）；终局 _declined（offer 回绝）/ _late（deliver、settle 超时）/ _done（settle、settle_donor 各两条）；
+#   分支两面：_paid（deliver 的 price、fee）、_donor（deliver 的 donate）。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 来信全轨道两封：deliver 超时一封（≤120 字）、settle 或 settle_donor 的 take 一封（她的信本身，两条路线互斥）。give 不写来信，回复里写那张纸条。
+# 依赖：港口 atsuta（ports_east_asia.toml）；商品 timber（goods/01_staples_raw.toml）；技能 negotiation（skills.toml）；人物 keikoin_seijun。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_keikoin_seijun-settle「劝进帐上的一行」：热田码头的船舱里，一页工整的劝进帐抄件摊在膝上，最末一行字写得比别的大，旁边一个没解开的布包。
+
+[[tracks]]
+key = "request_keikoin_seijun"
+name = "迁宫的四十根木"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["keikoin_seijun"]
+
+# 一、空着的一行：热田码头，灰衣尼僧坐在木箱上，把劝进帐上还空着的一行指给“我”看。
+[[tracks.chapters]]
+key = "offer"
+title = "空着的一行"
+text = "热田的码头上，一个穿灰衣的尼僧坐在木箱上，膝上摊着一本翻得起了毛边的劝进帐。她叫住我，先问了船名，用细笔记在页边，这才翻到一页，指给我看：那一行还空着。“伊势外宫的正殿，一百多年没换过柱子了。工钱凑得差不多，缺的是木头，四十根好木。”她把上面几行念给我听：堺的哪家答应了十贯，还差三贯；桑名的哪个船头说秋后送米。念到这里她笑了一下，像那人就站在跟前。“名册上写四十，到岸是四十，神宫的木工数出来也得是四十。差一根，我就得去问是谁的心意掉进了海里。”热田不产木。她说木头运到这里就好，伊势的船会接过去。"
+speaker = "keikoin_seijun"
+mood = "cheerful"
+at = "atsuta"
+when = [
+  { kind = "date", from = [1558, 1, 15], to = [1562, 12, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1562, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_atsuta"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：四十根好木，运到热田。"
+next = "deliver"
+reply = "她当场把页边的船名誊进那一行，墨还没干就合上了本子。“下田和小浜的木头直，丰后的也不坏。别拿福州的杉木凑数——”她想了想，“也行，杉木也是木头。”说完把劝进帐抱在怀里，像怕那一行自己跑掉。"
+effects = [
+  { kind = "flag", flag = "c13_request_keikoin_seijun_accepted" },
+  { kind = "affinity", person = "keikoin_seijun", value = 2 },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一程的舱位都满了，下回吧。"
+next = "failed"
+reply = "她没再劝，用指甲在页边那个船名上轻轻划了一道，划得很直。“下回。”她把本子往后翻了一页，那一页也空着好几行。码头上又来了一条船，她已经朝那边招手了。"
+effects = [{ kind = "flag", flag = "c13_request_keikoin_seijun_declined" }]
+
+# 二、数木头：四十根木料卸在热田岸边，伊势的船工一根根数，热田神宫的神官来问岸钱。
+[[tracks.chapters]]
+key = "deliver"
+title = "数木头"
+text = "四十根木料卸在热田的岸边，一字排开，压得沙地陷下去一截。伊势来的两个船工拿麻绳量粗细，一根一根地数，数一根，喊一声。清顺坐在一只倒扣的木桶上，对着劝进帐打钩，嘴里跟着念。数到二十九，船工数岔了，她头也不抬：“从头来。”快数完的时候，热田神宫来了个穿浅葱色袍子的神官，袖着手站在木料边上，眼睛在她的僧衣上停了停，问这批木头是谁家的，岸钱要交多少。清顺的笔停了一下，没看他，先看我。"
+speaker = "captain"
+mood = "cheerful"
+at = "atsuta"
+when = [{ kind = "alive", person = "keikoin_seijun", value = true }]
+objectives = [{ kind = "goods", good = "timber", qty = 40, at = "atsuta", text = "四十根木料运到热田" }]
+deadline_days = 150
+news = "热田的岸边堆了四十根好木，伊势来的船工一根一根地数，一个尼僧坐在木桶上打钩，数岔一根就叫从头来。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "keikoin_seijun", value = -3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_late" },
+  { kind = "letter", person = "keikoin_seijun", text = "四十根木，尾张的一位木商已经布施齐了，柱子等不得人。名册上那一行我没划，替施主留着，下回有别的事，还写在那里。——庆光院 清顺" },
+]
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "照进价跟她把木钱结清。"
+next = "settle"
+reply = "她从箱底取出几串麻绳穿好的铜钱，一串一串点给我，点完又数出一串给那个神官，一句也没争。“施主的心意一文不少，我的心意也一文不少。”她在我那一行后面记上“木四十”，画了一个钩，把钱箱的盖子扣上，掂了掂，轻了不少。"
+effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_paid" },
+]
+
+[[tracks.chapters.choices]]
+key = "donate"
+text = "木头布施给外宫，一文不收。"
+next = "settle_donor"
+news = "热田的人说，有个外来的船长把一船木头整个布施给了伊势外宫，庆光院的尼僧当场在名册上添了三个字。"
+reply = "她看了我一会儿，提笔在我那一行后面添了三个字：“全奉加。”写得很慢，一笔一划。“迁宫那天，这本名册要在正殿前念一遍，一个名字也不落。你的船名，我念得慢一点。”说完她才回过头，把岸钱数给了那个神官。"
+effects = [
+  { kind = "affinity", person = "keikoin_seijun", value = 5 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_donor" },
+]
+
+[[tracks.chapters.choices]]
+key = "fee"
+text = "跟热田的神官说：送去神宫的木头，岸钱就免了吧。"
+next = "settle"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "你摸不清热田神宫的门路，这话开不了口。"
+news = "热田神宫的神官这回没收伊势那批木头的岸钱，码头上的人说，是那个运木的船长拉着他磨了半天。"
+reply = "我请神官借一步说话，从热田和伊势同是神宫说起，说到外宫的柱子一百多年没换。他袖着手沉吟了半天，最后说，神宫与神宫之间，这一回就算了。清顺没插一句嘴。等神官走远，她合上名册，看了我很久，才笑出来：“施主这张嘴，该在名册上另起一行。”她照进价把木钱点给了我，省下的那串岸钱压回了钱箱底下。"
+effects = [
+  { kind = "cash", value = 1000 },
+  { kind = "affinity", person = "keikoin_seijun", value = 3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_paid" },
+]
+
+# 三、名册上的一行：一个月后，伊势来的船捎回清顺的信、劝进帐的抄件与谢礼（price、fee 两条路线）。
+[[tracks.chapters]]
+key = "settle"
+title = "名册上的一行"
+text = "一个月后，伊势来的船靠上热田的码头，船工从怀里摸出一封信，说庆光院的师父交代过，要交到运木的船长手里。信不长：四十根，一根不少，外宫的木工数了三遍。信里夹着一页抄件，是劝进帐上的那一页，一行一行抄得工整，堺的那家后面多了“已纳”两个字。我的那一行在最下面，字比别人的大一点。船工又从舱里搬出一个布包，搁在我脚边，说是谢礼。“师父说，施主不收也行，那就记进名册。”"
+mood = "tender"
+at = "atsuta"
+when = [
+  { kind = "alive", person = "keikoin_seijun", value = true },
+  { kind = "date", to = [1563, 9, 30] },
+]
+objectives = [
+  { kind = "wait", days = 30, text = "等伊势的船捎回音来" },
+  { kind = "at", at = "atsuta", text = "回到热田" },
+]
+deadline_days = 120
+news = "伊势的庆光院又收到一船好木，热田的人说，外宫停了一百多年的迁宫，这回怕是真要办成了。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "keikoin_seijun", value = -3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_late" },
+]
+news = "伊势来的船工在热田码头揣着一封信，等那个运木的船长等了一季，没等着，又揣回了宇治。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下布包，托船工带句谢回去。"
+next = "done"
+reply = "船工点点头，说师父猜到了。我把那页抄件夹进航海日志，信纸翻过来，背面还有一行字，墨色新一些，像是封口前才添上的：“迁宫那年若在附近，记得来看。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "keikoin_seijun", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_done" },
+  { kind = "memory", memory = "mem-request_keikoin_seijun-settle", title = "劝进帐上的一行" },
+  { kind = "letter", person = "keikoin_seijun", text = "施主：四十根木，到了外宫。木工数了三遍，头一遍四十，第二遍四十，第三遍我站在边上看着，还是四十。有两根最直的，木工说要留给正殿的东边。劝进帐那一页抄了一份给施主。施主那一行字写大了，我说是手抖，木工偏说我偏心。堺的那家也纳了，那天在热田施主听见我念他，他后来大约也听说了。谢礼是名册上的钱里分出来的，哪家的钱我记得，施主就不必记了。——庆光院 清顺" },
+]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "谢礼也布施给外宫，记进名册。"
+next = "done"
+news = "热田码头上的人说，那个给伊势外宫运木的船长，连庆光院送来的谢礼都原样布施了，叫她添进了劝进帐。"
+reply = "我把布包推回给船工，请他原样带回去。船工挠了挠头，又把布包扛回了舱里。半个月后，又一条伊势的船捎来一张窄窄的纸条，上面只有一句：“名册上又添一笔。”字挤在纸条最上头，底下空着一大截，像是等着下一笔。"
+effects = [
+  { kind = "affinity", person = "keikoin_seijun", value = 10 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_done" },
+]
+
+# 三′、名册上的一行（布施路线）：木头已经全奉加，谢礼她更要送到。好感照 brief 的上限 +15 收住：take +8、give +8。
+[[tracks.chapters]]
+key = "settle_donor"
+title = "名册上的一行"
+text = "一个月后，伊势来的船靠上热田的码头，船工从怀里摸出一封信，说庆光院的师父交代过，要交到运木的船长手里。信不长：四十根，一根不少，外宫的木工数了三遍。抄件夹在信里，是劝进帐上的那一页，堺的那家后面多了“已纳”两个字。我的那一行在最下面，字比别人的大一点，后面跟着那三个字：“全奉加。”船工又从舱里搬出一个布包，搁在我脚边。“师父说，木钱施主不肯要，谢礼总该收下。实在不收，那就记进名册。”"
+mood = "tender"
+at = "atsuta"
+when = [
+  { kind = "alive", person = "keikoin_seijun", value = true },
+  { kind = "date", to = [1563, 9, 30] },
+]
+objectives = [
+  { kind = "wait", days = 30, text = "等伊势的船捎回音来" },
+  { kind = "at", at = "atsuta", text = "回到热田" },
+]
+deadline_days = 120
+news = "热田的人说，有人白送了伊势外宫一船好木，庆光院的尼僧把名字写进劝进帐，迁宫怕是真要办成了。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "keikoin_seijun", value = -3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_late" },
+]
+news = "伊势来的船工扛着个布包在热田码头等了一季，说要交给白送木头的那个船长，人没等着，布包又扛回了宇治。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "这一回收下，托船工带句谢回去。"
+next = "done"
+reply = "船工松了口气，说师父交代过，木钱施主已经不要了，谢礼要是再推回来，他回去不好交差。我把那页抄件夹进航海日志，信纸翻过来，背面还有一行字，墨色新一些，像是封口前才添上的：“迁宫那年若在附近，记得来看。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "keikoin_seijun", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_done" },
+  { kind = "memory", memory = "mem-request_keikoin_seijun-settle", title = "劝进帐上的一行" },
+  { kind = "letter", person = "keikoin_seijun", text = "施主：木头到了外宫，木工从头数到尾，数了三遍，三遍都是四十，我站在边上看着最后一遍。那三个字是我在热田当着神官写的，写得慢，他看得清楚。正殿东边要用两根最直的，木工问是谁家的木，我说名册上有。谢礼不是木钱，是名册上别家的心意分出来的一点，施主收了，这一页的账才算平。——庆光院 清顺" },
+]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "木头都给了，谢礼也一并布施。"
+next = "done"
+news = "热田码头上的人说，那个白送伊势外宫一船木头的船长，连庆光院回的谢礼都推了回去，又叫她记进了名册。"
+reply = "我把布包推回去。船工苦着脸，说师父料到了，交代过两回都推回来的话，就把布包拆开，一串一串记在我那一行底下。半个月后，伊势的船捎来一张窄纸条，只有一句：“名册上又添一笔。”纸条下半截，她用小字补了一行：全奉加，又一回。"
+effects = [
+  { kind = "affinity", person = "keikoin_seijun", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_keikoin_seijun_done" },
+]

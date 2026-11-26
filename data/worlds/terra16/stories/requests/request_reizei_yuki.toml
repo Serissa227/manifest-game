@@ -1,0 +1,171 @@
+# 请托：删两个字（request_reizei_yuki）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude（Opus）执笔。仅中文。
+# 人物：冷泉雪 reizei_yuki（1540-02-04 生，女），京都冷泉家的小姐，歌道世家出身。cast 见 cast/classmates_kyoto.toml。
+#       雪本人不出场（她在京都），只在信、短笺与来信里说话；出面的是冷泉家的老家仆（叙事人物，不起名、不建 cast）。
+# 类型：说服某人（persuade）。报价：到访（V），auto=true，报价港堺（sakai），family=c13_offer_sakai，冷却 20 天。
+# 窗口：offer 1564-01-01 至 1575-06-30（when 与 deadline；与鞠千代 1576 年起的府内押运错开）。
+#       persuade 期限 90 天（同一海区）；result 与 result_poem 是普通章，不设期限。
+# 章节：offer 一封短信（堺）→ persuade 老人的规矩（府内，三条路）
+#       → result 回信（三条路成功进入）或 result_poem 只带回一首歌（argue 检定失败进入）。
+# 结构：简报写的是三章，result 的“只带回歌”写成变体并改报酬与终局旗标。变体改不了选项效果，
+#       所以照最接近的合法结构拆成第四章 result_poem：argue 失败走 next 进入它，报酬 900、终局旗标 partial。
+#       result 只由设了 allowed 的三条路进入，所以 send_word 不写 requires（简报的 requires allowed 恒成立）。
+#       检定失败时不显示选项的回复，失败的经过由 result_poem 的正文与失败分支的见闻交代。
+#       result 加一个 20 天的 wait：府内的使者把夫人的第一首歌先送到京都，雪读过、写好短笺，老家仆再下到堺。
+#       result_poem 不等：雪临走前写好了“只带回一首歌”时给船长看的短笺；她读过歌以后的话由来信带到（口头禅在信里）。
+# 依据（史实）：战国时京都的公家常下向地方，给武家传授和歌与古典；连歌师往来各国。丰后府内在大友氏治下是九州的大城。
+# 依据（原创）：冷泉家的老家仆、府内那位重臣家的老人与夫人（叙事人物，不起名、不建 cast）、油纸包了两层的信、
+#       老人擦的那把短刀、屏风后的纸响、雪用细笔圈出的两个字、下九州的连歌师。
+# 不写：大友宗麟本人（澪的主线）；府内只写“一位重臣家”。汐（C7 的 pair_ushio_reizei_yuki）一字不提，不送信给汐。
+#       雪的秘密（cast 的 secret）永远不碰，见闻不写。不写恋爱与心动；不用 relation / tie / bond / heart 效果。
+# 读写的旗标：读 bond reizei_yuki 至少 C（offer 的变体，澪的老同学口气，只读）。
+#       设 c13_request_reizei_yuki_accepted / declined / asked / allowed / poem_only / done / partial / late。
+#       终局旗标每条路径只设一面：done（result）、partial（result_poem）、late（persuade 超时）、declined（回绝）；
+#       offer 超时不设旗标、不写见闻。asked 只给 persuade 的变体改一句话。不读、不设任何 c7_ 旗标。
+# 依赖：技能 poetry、court_etiquette（skills.toml）与港口 sakai、funai（ports_east_asia.toml）现成；唯一奖励无物品，
+#       技能奖励 poetry +20；无改名依赖；主线门禁无。
+# 回忆插画清单：
+#   mem-request_reizei_yuki-result：堺的码头上，一张抄得工整的短歌摊在老家仆掌心，两个字旁边各有一个极细的墨圈。
+
+[[tracks]]
+key = "request_reizei_yuki"
+name = "删两个字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["reizei_yuki"]
+
+# offer · 1564 起 · 堺的码头：冷泉家的老家仆捧着一封短信
+[[tracks.chapters]]
+key = "offer"
+title = "一封短信"
+text = "堺的码头上，一位白发的老家仆在等去九州的船。见你下船，他先报了冷泉家的名号，才把手里捧着的信递过来：是小姐写给府内一位夫人的，也写给你。信只有几行，字瘦得像每一笔都掂过分量。丰后府内一位重臣家的夫人，托一位下向的连歌师带话，想跟她学作歌；夫家的老人不许，说武家的女人学歌没用。“请带这封信去府内，见那位老人。说不动，就带一首夫人自己写的歌回来。”最后一行另起，只有六个字：“坏歌也带回来。”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "date", from = [1564, 1, 1], to = [1575, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "reizei_yuki", ge = 18 }]
+deadline = [1575, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take_letter"
+text = "接下信，搭下一趟船去府内。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "reizei_yuki", value = 2 }, { kind = "flag", flag = "c13_request_reizei_yuki_accepted" }]
+reply = "老家仆把信用油纸包了两层，又用细绳扎紧，才放进你手里。他说小姐写这封信，前后删了三回，“最后比头一回短了一半”。他在冷泉家待了四十年，头一回见小姐给不认识的人写信，写完还问他：短了，会不会失礼。"
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "接下信，先问一句：小姐怎么肯收武家的学生？"
+next = "persuade"
+effects = [{ kind = "affinity", person = "reizei_yuki", value = 2 }, { kind = "flag", flag = "c13_request_reizei_yuki_accepted" }, { kind = "flag", flag = "c13_request_reizei_yuki_asked" }]
+reply = "老家仆想了好一会儿，像在替小姐挑字。他说小姐讲过，歌不分公家武家，“只分删得掉的字和删不掉的字”。那位夫人托连歌师捎来的话里有一句歌，只有半首，小姐读了，一个字没改。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "武家的家事，外人插不进去。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_reizei_yuki_declined" }]
+reply = "老家仆把信收回袖子里，按了按，像是怕它飞走。他说不碍事，那他就在堺等下一条去九州的船，船上总有肯捎信的人。说完他朝你行了个礼，礼数一丝不差，转身回了码头边的茶棚。"
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "reizei_yuki", level = "C" }]
+text = "堺的码头上，一位白发的老家仆在等去九州的船。你认得他，学院那几年，他常在门口替小姐撑伞。他把手里捧着的信递过来：是小姐写给府内一位夫人的，也写给你。信头两个字是“中君”，字瘦得像每一笔都掂过分量。丰后府内一位重臣家的夫人，托连歌师带话，想跟她学作歌；夫家的老人不许，说武家的女人学歌没用。“请带这封信去府内，见那位老人。说不动，就带一首夫人自己写的歌回来。”最后一行另起：“坏歌也寄来，你的也是。”"
+
+# persuade · 府内 · 一位重臣家的宅子：老人在廊下擦刀，屏风后有纸响
+[[tracks.chapters]]
+key = "persuade"
+title = "老人的规矩"
+text = "那位重臣的宅子在府内城下的高处，院里晒着刚洗过的马具。老人是夫人的公公，坐在廊下擦一把短刀，听你说完，把雪的信接过去，看了一眼封口的家纹，搁在膝边，没拆。“武家的女人，管家，管账，管孩子。”他把刀翻过来接着擦，“歌是公家人的消遣。京都的小姐闲，我家的媳妇不闲。”屏风后面响了一声纸，很轻，又停了。老人也听见了，没回头，擦刀的布慢了半拍。"
+speaker = "captain"
+mood = "tense"
+at = "funai"
+when = [{ kind = "alive", person = "reizei_yuki", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "reizei_yuki", value = -3 }, { kind = "flag", flag = "c13_request_reizei_yuki_late" }, { kind = "letter", person = "reizei_yuki", text = "府内的事，我另托了一位下九州的连歌师。他去了，老人没拆信。你手里那封，不必送了。——雪" }], news = "府内一位重臣家的老人，听说又收到一封京都冷泉家的信，照旧搁在膝边没拆；屏风后面的夫人，这一季没往京都寄过一首歌。" }
+news = "府内有位重臣家的老人，擦着刀听完一个船长的话，准了屏风后面的夫人往京都寄歌，跟冷泉家学。"
+
+[[tracks.chapters.choices]]
+key = "poem_answer"
+text = "当场作一首歌回他：管家和作歌一样，都要删字。"
+requires = [{ kind = "skill", skill = "poetry", ge = 60 }]
+hint = "你张口想作，三十一个音怎么也凑不齐。"
+next = "result"
+effects = [{ kind = "affinity", person = "reizei_yuki", value = 3 }, { kind = "flag", flag = "c13_request_reizei_yuki_allowed" }]
+reply = "你念完，老人擦刀的手停了。他想了想，说第三句删两个字会更好，说得又快又准，像是年轻时也作过。他把刀收进鞘里，拆开雪的信，读了两遍，朝屏风那边说了一声：“出来吧。”屏风后面的人出来时，手里还捏着一张纸。"
+
+[[tracks.chapters.choices]]
+key = "etiquette"
+text = "照公家的礼数重新递一回信：冷泉家的请托，照冷泉家的规矩收。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "你递信的手势，老人一眼就看出是现学的。"
+next = "result"
+effects = [{ kind = "affinity", person = "reizei_yuki", value = 3 }, { kind = "flag", flag = "c13_request_reizei_yuki_allowed" }]
+reply = "你双手捧信，退后半步再递，袖口压着信封的一角。老人看你的手，又看封口的家纹，沉默了很久。“冷泉家的面子，我得给。”他准了，一个月学两回，歌要先给他看过再寄。屏风后面的纸又响了一声，这回他没装听不见。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他说：媳妇会写歌，往后和京都往来，书信也体面。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+effects = [{ kind = "affinity", person = "reizei_yuki", value = 3 }, { kind = "flag", flag = "c13_request_reizei_yuki_allowed" }]
+fail = { next = "result_poem", effects = [{ kind = "flag", flag = "c13_request_reizei_yuki_poem_only" }], news = "府内一位重臣家的老人到底没准媳妇学歌，倒是屏风后面递出来一张纸，被一个船长揣着带去了堺。" }
+reply = "老人想了很久，刀搁在膝上。“书信体面，是真的。”他说去年给京都写贺信，家里没一个人写得出像样的一句，只好请寺里的和尚代笔。他准了，只是往后家里的信，要媳妇来写。"
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_reizei_yuki_asked" }]
+text = "那位重臣的宅子在府内城下的高处，院里晒着刚洗过的马具。老人是夫人的公公，坐在廊下擦一把短刀，听你说完，把雪的信接过去，看了一眼封口的家纹，搁在膝边，没拆。“武家的女人，管家，管账，管孩子。”他把刀翻过来接着擦，“歌是公家人的消遣。京都的小姐闲，我家的媳妇不闲。”你想起堺的老家仆说的删得掉的字，没急着答。屏风后面响了一声纸，很轻，又停了。老人也听见了，没回头，擦刀的布慢了半拍。"
+
+# result · 堺的码头：老家仆接过老人的回信，拆开雪写给你的短笺
+[[tracks.chapters]]
+key = "result"
+title = "回信"
+text = "老家仆又下到堺，在码头上接过老人的回信，看了看封口，收进怀里。然后他从袖子里取出另一封，说是小姐写给你的，嘱咐要当着你的面拆。府内的使者比你的船先到京都，夫人寄去的第一首歌，小姐已经读过了。短笺只有一行：“删掉两个字，就好了。”下面附着夫人那首歌的原样，是小姐照抄的，写的是府内城下的晚潮。其中两个字旁边，各用极细的笔画了一个圈。没有删。"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "alive", person = "reizei_yuki", value = true }]
+objectives = [{ kind = "wait", days = 20, text = "等府内的第一首歌先到京都" }]
+news = "堺的码头上，冷泉家的老家仆收下一封府内来的回信。听说京都那位小姐收了个丰后的学生，隔着一片海改歌。"
+
+[[tracks.chapters.choices]]
+key = "ask_circle"
+text = "问家仆：小姐为什么只圈、不删？"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "reizei_yuki", value = 8 }, { kind = "fame", value = 2 }, { kind = "skill", skill = "poetry", value = 20 }, { kind = "flag", flag = "c13_request_reizei_yuki_done" }, { kind = "memory", memory = "mem-request_reizei_yuki-result", title = "圈出来的两个字" }]
+reply = "老家仆笑了，皱纹挤到一起。他说小姐讲过，删是先生的事，圈是请学生自己删；圈了还删不掉的，那两个字就该留着。他把小姐的谢礼交给你，又说小姐让你也作一首寄去，“坏歌也寄来”。他说这句话时学着小姐的口气，学得不像，自己先摇了头。"
+
+[[tracks.chapters.choices]]
+key = "send_word"
+text = "托家仆带一句话：夫人的歌，我在府内听她念过。"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "reizei_yuki", value = 7 }, { kind = "fame", value = 2 }, { kind = "skill", skill = "poetry", value = 20 }, { kind = "flag", flag = "c13_request_reizei_yuki_done" }, { kind = "memory", memory = "mem-request_reizei_yuki-result", title = "圈出来的两个字" }]
+reply = "老家仆把这句话低声念了两遍，记下了。他说小姐听了会高兴，只是不会说，多半回一封信，比这句还短。他把小姐的谢礼交给你，收好那张短笺上船前，又折回来问你：夫人念的时候，那两个字念得重不重。"
+
+# result_poem · 堺的码头：老人没准，只带回一首歌
+[[tracks.chapters]]
+key = "result_poem"
+title = "只带回一首歌"
+text = "老人没有松口。你起身告辞，走过屏风边上，底下伸出一只手，递出一张折得极小的纸，边上有一道指甲压出的印子，像是攥了很久。屏风后面一句话也没有，老人坐在廊下，擦刀的布停了停，没拦。到了堺，老家仆已经又下到码头，接过这张纸，没拆。他说小姐的东西他不拆，又从怀里取出一封早写好的短笺：他动身前，小姐交代过，要是只带回一首歌，就给船长看这一封。短笺上一行字：“学不学，歌已经在了。”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+when = [{ kind = "alive", person = "reizei_yuki", value = true }]
+news = "堺的码头上，冷泉家的老家仆从一个船长手里接过一张折得极小的纸，说是丰后一位夫人的歌，没拆就上了京都。"
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "什么也不添，请他把那张纸原样带上京都。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "reizei_yuki", value = 8 }, { kind = "fame", value = 2 }, { kind = "skill", skill = "poetry", value = 20 }, { kind = "flag", flag = "c13_request_reizei_yuki_partial" }, { kind = "memory", memory = "mem-request_reizei_yuki-result", title = "圈出来的两个字" }, { kind = "letter", person = "reizei_yuki", text = "夫人的歌读了。删掉两个字，就好了。我只圈出来，没删，留给她自己删。老人那边，不必再去。——雪" }]
+reply = "老家仆把那张纸包进油纸，包了两层，和来时包信的一样。他把小姐的谢礼交给你，说小姐读了歌会回信，回什么他猜不到。走到跳板边，他又回头说，小姐的信要是回得慢，就是还在删，请船长别急。"
+
+[[tracks.chapters.choices]]
+key = "screen_word"
+text = "托他带一句：屏风后的纸响，老人听见了，没拦。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "reizei_yuki", value = 7 }, { kind = "fame", value = 2 }, { kind = "skill", skill = "poetry", value = 20 }, { kind = "flag", flag = "c13_request_reizei_yuki_partial" }, { kind = "memory", memory = "mem-request_reizei_yuki-result", title = "圈出来的两个字" }, { kind = "letter", person = "reizei_yuki", text = "夫人的歌读了。删掉两个字，就好了。我圈了出来，没删。你带的那句话，我抄在她的歌后面，一个字也没删。——雪" }]
+reply = "老家仆把这句话念了两遍，念到“没拦”停下来，点了点头。他说这一句，小姐会抄下来。他把小姐的谢礼交给你，把那张纸揣进怀里贴身放好，说这一回他走陆路上京，不坐船，怕纸受潮。"

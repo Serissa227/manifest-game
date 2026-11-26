@@ -1,0 +1,146 @@
+# 请托：看完当面烧掉（request_miriam）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：米丽娅姆 miriam（1532-02-24 生，女），后宫替女眷采买、传信的犹太女代理人，宫里叫她“基拉”；势力 ottoman，身份档 1。cast：cast/story_islamic.toml，日程在 istanbul（tavern）。
+# 类型：送信（letter）。信由米丽娅姆交给你，收信的是希俄斯的一位遗孀（叙事人物，不入 cast，正文不起名字）。
+# 报价：T 当面（auto=false），报价港 istanbul。offer 章不写 at，objectives 为“在港里找到她”；玩家用“问请托”（ask:request_miriam）启动。
+# 窗口：报价 1557-06-01 至 1562-12-31（offer 的 deadline 即止日，到期 next=failed，不写见闻）。其余各章的窗口写成 when 里的 date 条件（从 1557-06-01 起）；
+#   handover 进入后 60 天到期（deadline_days=60），走 timeout。简报 reply 的止日 1563-03-31 没有写进条件：reply 没有到期，写进去会让一个待决的收尾在那之后静默消失。
+# 章节：简报写的是三章，文件是四章。引擎的 requires 只能查旗标，不能按“同一轨道上别的分支设过”判断，所以烧了与没烧的两条路按 next 分开：
+#   reply（烧了，一个选项，与简报一致：烧了这一路只有“照实说”可选）与 reply_partial（没烧，两个选项），同 request_ayame 的 report / report_partial 做法。
+#   检定失败的回应不显示（引擎只在失败时用章节正文），所以 persuade 失败时“她不肯，把信收进了怀里”写在 reply_partial 的正文里。
+# 依据·史实背景：后宫的基拉（史实的职位：替女眷采买、替宫里传信的犹太女代理人）；希俄斯 1566 年以前是热那亚马奥纳公司所管，1566 年以后归奥斯曼（简报的遗孀是从前在宫里当过差的人，希俄斯只作为她现在住的地方）。
+# 依据·原创：信与封口的内容、写信人一字不写；封口上那圈细小的齿痕；米丽娅姆膝上的小本子（每一笔差价与封口都记在里面）；希俄斯小院的葡萄架与炉子。
+# 秘密：米丽娅姆的私事（她拆过一封信又封得天衣无缝；她的心朝女人、替亚斯明不平）一律不写。本轨道各章不设见闻（news），简报也要求 handover 与 reply 不写见闻。
+# 读的旗标：无。不读任何 c7_* 或 c13_main_* 旗标；没有主线门禁，没有变体。
+# 设的旗标：c13_request_miriam_accepted（offer 两种接法）、c13_request_miriam_declined（offer 回绝）；分支旗标 c13_request_miriam_burned（handover 烧了）、c13_request_miriam_kept（handover 没烧）；
+#   终局旗标 _late（handover 超时）、_done（reply）、_partial（reply_partial），每条路只设一面。
+# 报酬：现金最多 1250（烧了照实说；没烧照实说 600；撒谎 1250 按简报写）；每份奖励只给一次；好感最多 +8（烧了照实说），检定失败 −2，超时 −3，撒谎 −5；不加名声（密信）；回忆 mem-request_miriam-reply。
+#   超时：好感 −3、来信一封，不罚钱、不扣物品（与简报一致）。
+# 依赖：地点 istanbul、chios（ports_east_med.toml）；技能 court_etiquette（skills.toml）；属性 eloquence；人物 miriam。无 B10b 改名，无主线门禁。
+# 与 C7 的交叉：pair_yasmin_miriam（1566 年起）与 tie_new_fatima_miriam（1563 年起）都在本轨道的窗口以后；本轨道到 1562 年为止，不写亚斯明、法蒂玛。收信人不是埃莱妮。
+# 回忆插画清单：
+#   mem-request_miriam-reply「划掉的那一笔」：伊斯坦布尔大巴扎后屋，米丽娅姆膝上的小本子，一笔被划掉，窗外是晒架上的红椒。
+
+[[tracks]]
+key = "request_miriam"
+name = "看完当面烧掉"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["miriam"]
+
+# 报价：伊斯坦布尔大巴扎的香料铺后屋。她递来一封封得极严的信，要你替她送到希俄斯。
+[[tracks.chapters]]
+key = "offer"
+title = "只记封口"
+text = "伊斯坦布尔大巴扎后头的一间香料铺，米丽娅姆坐在柜台后，膝上摊着一本边角磨毛了的小本子，笔尖上还挂着一滴没干的墨。她没起身，先抬眼看你：“宫里要的货，按宫里的价收。想托我带话？先说给谁，再说值多少。”她把一封信推过来。封口压得极严，蜡印边上有一圈细小的齿痕，像是有人用指甲刮过又压平。收信的是希俄斯的一位遗孀，从前在宫里当过差。“要送到她本人手里，看完当面烧掉。回来的时候，告诉我烧了没有。”她说完，把小本子翻到新的一页，没有写名字。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "miriam", text = "在伊斯坦布尔找到她" }]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1562, 12, 31] }, { kind = "age", ge = 17 }]
+deadline = [1562, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下信，去希俄斯。"
+next = "handover"
+reply = "她把信封翻过来给你看封口：“记住它现在的样子。回来时，我会问你烧之前它是不是还这样。”她说完，用指甲把那圈齿痕又按了一遍，才把信放进你手里，手指在信角上停了停。"
+effects = [{ kind = "affinity", person = "miriam", value = 2 }, { kind = "flag", flag = "c13_request_miriam_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问她：为什么要烧？"
+next = "handover"
+reply = "“因为有人要她烧。”她笑了一下，“这不是我的信，我只记封口。”她把笔搁回砚台上，不再多说。窗外的脚夫吆喝着，把一箱箱香料抬进库房。"
+effects = [{ kind = "affinity", person = "miriam", value = 2 }, { kind = "flag", flag = "c13_request_miriam_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "后宫的信，你不碰。"
+next = "failed"
+reply = "她点点头，把信收回去，在小本子上记了一笔。她没有劝你，也没有骂你，只说：“后宫的信，本来就不是人人接得起的。”"
+effects = [{ kind = "flag", flag = "c13_request_miriam_declined" }]
+
+# 希俄斯的小院：遗孀读完信，没有点火，问你能不能不烧。
+[[tracks.chapters]]
+key = "handover"
+title = "能不能不烧"
+text = "希俄斯港口后面的一座小院，葡萄架底下摆着一把矮凳，架子上的叶子晒得发白。遗孀见你进来，先看那枚封口，看了很久才认出它。她读得很慢，一行一行，手指压着纸边，读到一半停下来，把窗扇又掩上一半。读完了，她没有去点火。炉子就在她脚边，炭是温的。她把信折起来，折得很平，抬头问你：“能不能不烧？”"
+speaker = "captain"
+mood = "tense"
+at = "chios"
+objectives = [{ kind = "at", at = "chios", text = "到希俄斯，找到那座小院" }]
+when = [{ kind = "alive", person = "miriam", value = true }, { kind = "date", from = [1557, 6, 1] }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "miriam", value = -3 }, { kind = "flag", flag = "c13_request_miriam_late" }, { kind = "letter", person = "miriam", text = "信我托了别人。烧没烧，我不知道——这是我头一回不知道一个封口的下落。" }]
+
+[[tracks.chapters.choices]]
+key = "etiquette"
+text = "照宫里的礼数，恭恭敬敬地请她照信里的话办。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "宫里的规矩你只学过皮毛，这一套礼数说出口像是背下来的"
+next = "reply"
+reply = "她听出你懂宫里的规矩，叹了口气，把信放进炉子里，看着它一角一角卷起来，烧成黑灰。她没有回头，只说：“替我告诉她，烧了。”"
+effects = [{ kind = "affinity", person = "miriam", value = 5 }, { kind = "flag", flag = "c13_request_miriam_burned" }]
+
+[[tracks.chapters.choices]]
+key = "persuade"
+text = "跟她说：留着，对写信的人、对她自己都不好。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply"
+reply = "她想了很久，把信烧了，烧完用火钳把灰拨散。拨散以后，她蹲在炉边对着那堆灰看了一会儿，才站起来，拍了拍裙子上的灰屑。"
+effects = [{ kind = "affinity", person = "miriam", value = 3 }, { kind = "flag", flag = "c13_request_miriam_burned" }]
+fail = { next = "reply_partial", effects = [{ kind = "affinity", person = "miriam", value = -2 }, { kind = "flag", flag = "c13_request_miriam_kept" }] }
+
+[[tracks.chapters.choices]]
+key = "let_keep"
+text = "说：留不留，是她的事。"
+next = "reply_partial"
+reply = "她把信收进了怀里，谢了你。炉子里的炭渐渐暗下去，她没有再看它一眼，只说：“送信的人肯说一句不烧，我记着。”"
+effects = [{ kind = "affinity", person = "miriam", value = 1 }, { kind = "flag", flag = "c13_request_miriam_kept" }]
+
+# 回到伊斯坦布尔：信烧了，米丽娅姆要知道烧之前封口的样子，还有烧没烧。
+[[tracks.chapters]]
+key = "reply"
+title = "烧了没有"
+text = "回到伊斯坦布尔，米丽娅姆在大巴扎的香料铺后屋等你。后屋的窗正对一排晒架，架上是刚卸下来的红椒，屋里一股辣味直冲鼻子。她没让你坐，第一句话就问：烧之前，封口还是那个样子吗？你还没答完，她又问了一遍：烧了没有。小本子摊在她膝上，那一页记着你出港的日子，日子旁边还有一小格没填。她的手指在那一格上按了按，像是在等你替它填上一个答案。"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+objectives = [{ kind = "person", person = "miriam", text = "回伊斯坦布尔，当面回话" }]
+when = [{ kind = "alive", person = "miriam", value = true }, { kind = "date", from = [1557, 6, 1] }]
+
+[[tracks.chapters.choices]]
+key = "full"
+text = "照实说：封口没动，看完就烧了，灰也拨散了。"
+next = "done"
+reply = "她点点头，在小本子上把那一笔划掉了，付了你钱，还多添了一点：“多的这一点，是封口的钱。”她把本子合上，压在手边，没有再提封口。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "miriam", value = 8 }, { kind = "flag", flag = "c13_request_miriam_done" }, { kind = "memory", memory = "mem-request_miriam-reply", title = "划掉的那一笔" }]
+
+# 没烧：信在遗孀手里。米丽娅姆先问信在谁手里，她要你照实说。
+[[tracks.chapters]]
+key = "reply_partial"
+title = "信还在她手里"
+text = "希俄斯的葡萄架下，那封信最后没有进炉子，遗孀把它收进了怀里。回到伊斯坦布尔，米丽娅姆在大巴扎的后屋等你。窗外的晒架上还是红椒，屋里的辣味一点没少。你还没坐下，她就问：信在谁手里？她翻开小本子，看了一眼那一页，合上，又翻开。她没有催你，只把小本子的边角捏在指间，等你开口。"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+objectives = [{ kind = "person", person = "miriam", text = "回伊斯坦布尔，告诉她信在谁手里" }]
+when = [{ kind = "alive", person = "miriam", value = true }, { kind = "date", from = [1557, 6, 1] }]
+
+[[tracks.chapters.choices]]
+key = "kept"
+text = "照实说：她没烧，收进了怀里。"
+next = "done"
+reply = "米丽娅姆沉默了一会儿，说照实说的人少。她付了一半的钱，又说，这件事她会自己去收尾，不用你再跑一趟希俄斯。她把本子合上，放进袖子里。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "miriam", value = 4 }, { kind = "flag", flag = "c13_request_miriam_partial" }]
+
+[[tracks.chapters.choices]]
+key = "lie"
+text = "说：烧了。"
+next = "done"
+reply = "她看了你很久，在本子上记了一笔，没划掉。钱照付。她没有问第二遍，也没有说谢谢，只把茶推到你手边，叫你喝完再走。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "miriam", value = -5 }, { kind = "flag", flag = "c13_request_miriam_partial" }, { kind = "letter", person = "miriam", text = "那封信，有人在希俄斯见过。你说烧了，我记下了。" }]

@@ -1,0 +1,186 @@
+# C13d 请托：月桂树的书箱（request_peeter_heyns）。中文，Claude 写。
+# 人物：彼得·海恩斯 peeter_heyns（1537-01-01 生，男；安特卫普“月桂树”女子法语学校的校长，1555 年开办，势力 netherlands，身份档 1，风险高，现金 1600）。
+# 类型：押运／带人（es）；4 章：offer → river → arrive → letter。没有 stage 章，因此没有 window / default。
+# 报价：当面（T）。人物按日程在安特卫普（antwerp），auto=false，玩家“问请托”（ask:request_peeter_heyns）启动；offer 章不写 at。
+# 窗口：报价 1584-01-15 至 1584-11-30（offer 的 deadline 为 1584-11-30，过期走 timeout，不写见闻）；河口 river 的 deadline 为 1584-12-31（过期走 timeout，见闻在安特卫普）；arrive 进入后 90 天；letter 等 60 天。
+# 地点：安特卫普 antwerp（报价与河口）；汉堡 hamburg（到达）。法兰克福与伦敦只在正文里提到，不设章节。
+# 依据：史实背景，1584 年帕尔马的人马围住安特卫普，先夺下斯海尔德河两岸的堡垒，9 月起在河上打桩架浮桥（1585 年 2 月合龙）；城破后新教徒大批北迁，海恩斯 1585 年出走（cast 注明行踪留空）。
+#   本请托只写 1584 年这一船书与三个寄宿的女孩；浮桥只在 1584-09-01 以后的 bridge 变体里提一句；不写 1585 年合龙与燃烧船（归莉芙主线）。
+#   原创：请托本身、三个女孩的样子、河口的军士、汉堡的接应人与教会执事、汉堡码头的人物与地名以外的细节。
+# 读的旗标（只读，不设）：c13_main_lieve（offer 的 lieve 变体，主线接口旗标，由 C13 的主线第一章设）；bond ines_costa / ursula（C 级，offer 的变体，只提一句）。
+# 设的旗标：c13_request_peeter_heyns_accepted / declined / done / partial / late；分支旗标 c13_request_peeter_heyns_detour（河口的夜里被巡船逼回，绕内河）。
+# 依赖：cast/historical_01_europe.toml 的 peeter_heyns（日程 1555-08 至 1584-12，antwerp / trading_house）；技能 lang_german（skills.toml）；检定属性 seamanship / eloquence（captain 表定下后按统一换算）。
+# 报酬：现金最多 1600（自付 500 的 pay 选项，另有 1100 的折中）；名声 +2；好感正向合计不超过 13；无物品、无技能、无势力声望；回忆 mem-request_peeter_heyns-arrive。
+# 秘密：无。生意人的一面（算术习题是他自己编、自己卖的）只作闲笔，写在 offer 的正文里。
+# 口头禅“书箱可以晚到，孩子一天也不能。”全文件只出现一次（offer 的基础正文）；变体不重复。
+# 回忆插画：mem-request_peeter_heyns-arrive，汉堡的码头：三个女孩坐在书箱上，最小的那个抱着布偶，远处是一座陌生的钟楼。
+
+[[tracks]]
+key = "request_peeter_heyns"
+name = "月桂树的书箱"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["peeter_heyns"]
+
+# 一、关门前的书箱：1584 年，人物在“月桂树”，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "关门前的书箱"
+text = "奥古斯丁街的“月桂树”招牌还挂着，教室里的长凳已经叠到了墙边。海恩斯蹲在箱子旁边，一摞摞地码着课本。箱底垫的是学生的习字本，压在最上面的是他自己编的算术习题，扉页上印着价钱，一分也不打算减。城外的营火一夜比一夜多。三个寄宿的女孩坐在凳子上，一个家在伦敦，一个在汉堡，一个在法兰克福，家里的信都到了，要学校把人送过去。“书箱可以晚到，孩子一天也不能。”他拍掉手上的灰，“送到汉堡，那边有人接。往后的路像这摞课本，一本一本往下交，你的船能去吗？”"
+speaker = "peeter_heyns"
+mood = "sad"
+cast = ["peeter_heyns"]
+when = [{ kind = "date", from = [1584, 1, 15], to = [1584, 11, 30] }, { kind = "age", ge = 17 }, { kind = "alive", person = "peeter_heyns", value = true }]
+objectives = [{ kind = "person", person = "peeter_heyns", text = "在“月桂树”找到他" }]
+deadline = [1584, 11, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_lieve"
+when = [{ kind = "flag", flag = "c13_main_lieve" }]
+text = "奥古斯丁街的“月桂树”招牌还挂着，教室里的长凳叠到了墙边。海恩斯从课本堆后面抬起头，一眼就认出了你：第一届的学生。“你的字还是那么斜。”他说着，手里的书没放下。箱底垫的是习字本，压在上面的是他自己编的算术习题，扉页上印着价钱，一分也不打算减。三个寄宿的女孩坐在凳子上，家里的信都到了，要学校把人送过去。他请你把书箱和三个孩子送到汉堡，那边有人接，往后的路由他们去安排。"
+
+[[tracks.chapters.variants]]
+key = "v2_ines"
+when = [{ kind = "bond", person = "ines_costa", level = "C" }]
+text = "奥古斯丁街的“月桂树”招牌还挂着，教室里的长凳叠到了墙边。海恩斯蹲在箱子旁边，一摞摞地码课本。“伊内丝常从里斯本写信来，每回都要提你一句，”他说，“所以这件事我先找你。”箱底垫的是习字本，压在最上面的是他自己编的算术习题，扉页上印着价钱，一分也不打算减。城外的营火一夜比一夜多。三个寄宿的女孩坐在凳子上，家里的信都到了，要学校把人送过去。他请你把书箱和三个孩子送到汉堡，那边有人接，往后的路由他们去安排。"
+
+[[tracks.chapters.variants]]
+key = "v3_ursula"
+when = [{ kind = "bond", person = "ursula", level = "C" }]
+text = "奥古斯丁街的“月桂树”招牌还挂着，教室里的长凳叠到了墙边。海恩斯蹲在箱子旁边，一摞摞地码课本。“乌尔苏拉替学校结过最后一笔账，连账房都夸她，”他说，“所以这一船书，我想交给你最放心。”箱底垫的是习字本，压在最上面的是他自己编的算术习题，扉页上印着价钱，一分也不打算减。城外的营火一夜比一夜多。三个寄宿的女孩坐在凳子上，家里的信都到了，要学校把人送过去。他请你把书箱和三个孩子送到汉堡，那边有人接，往后的路由他们去安排。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，书箱和三个女孩一起送到汉堡。"
+next = "river"
+reply = "海恩斯把三个女孩的名字写在一张卡片上交给你，又写了一张给汉堡接应人的，两张都盖了他那枚月桂树印。"
+effects = [{ kind = "affinity", person = "peeter_heyns", value = 2 }, { kind = "flag", flag = "c13_request_peeter_heyns_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟河口已经不好走了，我不接。"
+next = "failed"
+reply = "海恩斯点点头，把没写完的卡片折起来，说他再去问问别的船。"
+effects = [{ kind = "flag", flag = "c13_request_peeter_heyns_declined" }]
+
+# 二、河口的夜：书箱已经装上船，出斯海尔德河口的法子由你定。
+[[tracks.chapters]]
+key = "river"
+title = "河口的夜"
+text = "斯海尔德河下游两岸的堡垒都换了旗子，夜里河面上的巡船灯一盏接一盏地移，移得很慢，像在数船。书箱已经装上了船，一箱压着一箱，最上面那箱的盖子没钉牢，习字本的边角露在外头。三个女孩挤在箱子中间，最小的那个抱着一只布偶，不肯松手，布偶的一只眼睛已经掉了线。舵手把灯压低，等你开口：这条河口，你打算怎么出去？"
+speaker = "captain"
+mood = "tense"
+cast = ["peeter_heyns"]
+at = "antwerp"
+when = [{ kind = "alive", person = "peeter_heyns", value = true }]
+deadline = [1584, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "peeter_heyns", value = -3 }, { kind = "flag", flag = "c13_request_peeter_heyns_late" }, { kind = "letter", person = "peeter_heyns", text = "河口的事没等到你，我另找了一条船。孩子们平安到了汉堡，书也都在。" }], news = "安特卫普的码头上，一位老校长等了好些日子，最后托人找到一条船，书箱和三个女孩都运走了。" }
+
+[[tracks.chapters.variants]]
+key = "bridge"
+when = [{ kind = "date", from = [1584, 9, 1] }]
+text = "斯海尔德河下游两岸的堡垒都换了旗子，河面上已经打下了一排排木桩，要架浮桥，夜里敲桩的声音隔着水传过来。巡船的灯一盏接一盏地移，移得很慢。书箱已经装上了船，一箱压着一箱，最上面那箱的盖子没钉牢，习字本的边角露在外头。三个女孩挤在箱子中间，最小的那个抱着一只布偶，不肯松手。舵手把灯压低，等你开口：这条河口，你打算怎么出去？"
+
+[[tracks.chapters.choices]]
+key = "night"
+text = "等一个没有月亮的夜里，贴着浅滩溜出去。"
+next = "arrive"
+check = { attr = "seamanship", base = 5, per = 8 }
+reply = "你挑了一个没有月亮的夜里，桨上包了布，船贴着浅滩一寸寸往外挪。女孩们被叫到箱子中间坐好，不许出声，只有那只布偶的耳朵露在外面。"
+news = "斯海尔德河口，有条船挑了个没月亮的夜里贴着浅滩溜了出去，船上装的全是书。"
+effects = [{ kind = "affinity", person = "peeter_heyns", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "peeter_heyns", value = -2 }, { kind = "flag", flag = "c13_request_peeter_heyns_detour" }], news = "斯海尔德河口，巡船的灯照了过来，一条装书的船被逼回城里，第二夜改走泽兰的内河，绕了好几天。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "给守堡的军士塞钱，换一张通行的条子。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "你袋里的钱不够这张条子的价，军士也不愿多等。"
+reply = "你把钱压在条子底下递过去。军士掂了掂，朝船舱里看了一眼，什么也没问，提笔签了名。"
+news = "斯海尔德河口的堡垒里，有个军士收了钱，给一条装书的船签了通行的条子。"
+effects = [{ kind = "cash", value = -500 }, { kind = "affinity", person = "peeter_heyns", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "等巡船换班，跟着商船队白天出去。"
+next = "arrive"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "你把船并进一队运盐的商船，陪着笑等在后面。巡船的人上了船，要查，你就把船东的话一句句说给他们听。"
+news = "斯海尔德河口，一队运盐的商船里混着一条装书的船，白天就出了河口，没人多看一眼。"
+effects = [{ kind = "affinity", person = "peeter_heyns", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "peeter_heyns", value = -1 }], news = "斯海尔德河口，巡船上了一条装书的船，翻乱了箱子，三个女孩帮着捡书，捡了一下午。" }
+
+# 三、汉堡的码头：到了，接应人没来，你得自己找人。
+[[tracks.chapters]]
+key = "arrive"
+title = "汉堡的码头"
+text = "汉堡的码头上，接应人没有来。三个女孩坐在书箱上，看着这座说另一种话的城市：仓库的墙比安特卫普的高，钟楼一响，鸽子就成群地飞起来，运河上的驳船一条挨着一条。码头工头朝这边瞥了一眼，又低头去翻他的货单。卡片上写着接应人的名字和一条街名，可那条街在哪儿，得你开口去问。"
+speaker = "captain"
+mood = "tender"
+cast = ["peeter_heyns"]
+at = "hamburg"
+when = [{ kind = "alive", person = "peeter_heyns", value = true }]
+objectives = [{ kind = "at", at = "hamburg", text = "到汉堡去" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "peeter_heyns", value = -5 }, { kind = "flag", flag = "c13_request_peeter_heyns_late" }, { kind = "letter", person = "peeter_heyns", text = "孩子们后来搭别的船到了，都平安。书箱在码头上压了三个月，一本也没少。" }], news = "汉堡的码头上，一船书箱压了三个月，没人来接，最后有一条船把它们运走了。" }
+
+[[tracks.chapters.variants]]
+key = "detour"
+when = [{ kind = "flag", flag = "c13_request_peeter_heyns_detour" }]
+text = "汉堡的码头上，接应人没有来，比约定的日子晚了好几天。三个女孩是绕着泽兰的内河来的，一路上话都不多，抱着各自的包袱没松过手。她们坐在箱子上，看着这座仓库的墙比安特卫普还高的城市，钟楼一响，鸽子就成群地飞起来。卡片上写着接应人的名字和一条街名，可那条街在哪儿，得你开口去问。"
+
+[[tracks.chapters.choices]]
+key = "german"
+text = "用德意志话去城里，找接应人留的地址。"
+next = "letter"
+requires = [{ kind = "skill", skill = "lang_german", ge = 60 }]
+hint = "你问不清那条街在哪儿，码头上的人只摇头。"
+reply = "你用德意志话一路问过去，问到第三家铁匠铺，才有人指了路。接应人病着，他的妻子赶来，把汉堡家里的那个女孩接走，又替另外两个订好了船和车，说往后的事她会写信告诉海恩斯。"
+news = "汉堡的码头上，一个船长用德意志话问遍了街巷，找到接应人的妻子，三个女孩当天都有了去处。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "fame", value = 2 }, { kind = "affinity", person = "peeter_heyns", value = 5 }, { kind = "memory", memory = "mem-request_peeter_heyns-arrive", title = "书箱上的三个女孩" }, { kind = "flag", flag = "c13_request_peeter_heyns_done" }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "带着孩子去尼德兰人的教会打听。"
+next = "letter"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "你带着三个女孩走进尼德兰人的教会，挨个去问执事。她们替你把尼德兰话的招呼说给人听，一间一间地问下去。"
+news = "汉堡的尼德兰人教会里，一位执事认得那边的接应人，当天就把三个女孩的事安排妥了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "fame", value = 2 }, { kind = "affinity", person = "peeter_heyns", value = 5 }, { kind = "memory", memory = "mem-request_peeter_heyns-arrive", title = "书箱上的三个女孩" }, { kind = "flag", flag = "c13_request_peeter_heyns_done" }]
+fail = { next = "letter", effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "peeter_heyns", value = 2 }, { kind = "flag", flag = "c13_request_peeter_heyns_partial" }], news = "汉堡的尼德兰人教会里，有个船长带着三个女孩问了两天，才找到人。" }
+
+# 四、一张歪歪的纸条：几个月后，人在别处，信辗转到你手里。
+[[tracks.chapters]]
+key = "letter"
+title = "一张歪歪的纸条"
+text = "几个月后，一封信辗转到了你手里，是海恩斯的字，写得比从前急，纸角还溅了几点墨。他说学生们散得像一箱没扣牢盖的书，这本掉在汉堡，那本落在伦敦。他自己也要走了，“月桂树”的招牌带不走，课本带走了，长凳送了人，只剩讲台边那把戒尺，他没舍得扔，装进了箱子。信里还夹着一张纸条，三个女孩合写的，字一个比一个歪，每人写了一行。"
+mood = "tender"
+when = [{ kind = "alive", person = "peeter_heyns", value = true }]
+objectives = [{ kind = "wait", days = 60, text = "等老校长的回信" }]
+
+[[tracks.chapters.variants]]
+key = "detour"
+when = [{ kind = "flag", flag = "c13_request_peeter_heyns_detour" }]
+text = "几个月后，一封信辗转到了你手里，是海恩斯的字。他说书箱在河口绕了一大圈，那几天他睡不着，后来也就不计较了，孩子们平安到了就好。“月桂树”的招牌带不走，课本带走了，长凳送了人，只剩讲台边那把戒尺，他没舍得扔，装进了箱子。信里还夹着一张纸条，三个女孩合写的，字一个比一个歪，每人写了一行。"
+
+[[tracks.chapters.variants]]
+key = "partial"
+when = [{ kind = "flag", flag = "c13_request_peeter_heyns_partial" }]
+text = "几个月后，一封信辗转到了你手里，是海恩斯的字。他说汉堡那两天，三个女孩在客栈里过得很快活，还说那里的面包比学校的好。“月桂树”的招牌带不走，课本带走了，长凳送了人，只剩讲台边那把戒尺，他没舍得扔，装进了箱子。信里还夹着一张纸条，三个女孩合写的，字一个比一个歪，每人写了一行。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把纸条夹进航海日志。"
+next = "done"
+reply = "最歪的那一行，写的是你的船名。"
+effects = [{ kind = "affinity", person = "peeter_heyns", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "回信，告诉他书箱一本没少。"
+next = "done"
+reply = "他的回信是一首押韵的诗，夸的是你的船。末了他还写道，女孩们的字要是再直一点，他就不敢收学费了。"
+effects = [{ kind = "affinity", person = "peeter_heyns", value = 3 }]

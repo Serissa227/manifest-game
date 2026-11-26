@@ -1,0 +1,163 @@
+# 请托：带去圣马洛的羽冠（request_paraguacu）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：帕拉瓜苏（paraguacu，女），图皮南巴酋长的女儿、葡萄牙人卡拉穆鲁的妻子；生卒不详（cast 生年写 0）。1557 年后无日程，属遗事请托：由孙女出面（代理人，不新建 cast），信与回话都经她的口。势力 tupinamba。
+# 类型：送信（letter）。章节：offer（报价）、handover（交信，圣马洛）、reply（回话，萨尔瓦多）、reply_song（用法语念信、学会那支歌之后的回话分支）；终点 done / failed。
+# 报价：L（来信模式）。出面的是孙女，属代理人，写身份，speaker 省略；报价港萨尔瓦多（salvador），auto=true。窗口 1557-06-01 至 1565-12-31；offer 写 family=c13_offer_salvador、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 遗事：引擎没有 legacy 字段，brief 里的 legacy=true 只是标记。本文件不写 alive 条件，offer 的 when 只有年龄与日期。
+# 送达地：saint_malo（原表写 dieppe；她的人设与见面语都说受洗在圣马洛，改用现有港口 key）。
+# 依据·史实（传闻口吻）：图皮南巴女子嫁给葡萄牙人，搭法国船去过海那边；老人们说她在圣马洛受过洗，教名卡塔利娜。受洗的年份、教母与教母的丈夫均未核，正文用“老人们说”“据说”，教母一家不点名。
+# 依据·原创：红羽冠、口述的信、孙女、圣马洛的老寡妇、白衣裳、那支歌、回话、贝壳珠子，以及全部章节的情节。
+# 待核：受洗年份（传说约 1528 年前后）；老寡妇的丈夫是不是当年往西找航路的那位船长（正文不点名）。
+# 秘密：人设无 secret。本文件没有需要隐藏的事，见闻直接写。
+# 读的旗标：无。c7 为 none，不读任何 c7_ 旗标。
+# 设的旗标：c13_request_paraguacu_accepted（offer 接下，两条接法）、_asked（offer 接下并问了信里的话，handover 的 asked 变体读它）、_declined（终局，回绝）、_song（handover 用法语念信，老妇人教唱）、_tired（handover 问当年的事失败，reply 变体读它）、_late（终局，handover 超时）、_done（终局，reply 或 reply_song 当面说完）、_partial（终局，只说送到了，或 reply 超时）。
+# 依赖：港口 salvador（ports_americas.toml）、saint_malo（ports_atlantic_eu.toml）；技能 lang_french（skills.toml）；属性 eloquence；势力 tupinamba（factions/11_americas.toml）；人物 paraguacu（cast/historical_05_americas.toml）。不需要 B10b 改名。cast 的日程只到 1556 年，1557 年后不靠日程。
+# 回忆插画清单：
+#   mem-request_paraguacu-reply「圣马洛窗前的红羽冠」：圣马洛的窄窗前，白发老妇人膝上放着一顶红羽冠，窗外是石头城的墙和海。
+# 整合：只登记本文件；英文覆盖不写（terra16 仅中文）。
+
+[[tracks]]
+key = "request_paraguacu"
+name = "带去圣马洛的羽冠"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["paraguacu"]
+
+# 一、红羽冠：萨尔瓦多的沙滩，孙女捧着羽冠等你。
+[[tracks.chapters]]
+key = "offer"
+title = "红羽冠"
+text = "萨尔瓦多城外的沙滩上，一个混血姑娘捧着棕榈叶包的东西站在浪边，像是等了很久。叶子揭开，里面是一顶红羽毛编的冠，羽毛上还带着林子里的潮气。“我祖母说，”她先用葡萄牙话开口，又换成图皮话说了一遍，“‘我去过海那边，见过圣马洛的石头城。所以别跟我说你们的国王有多大——我知道。’”她把冠托在手心里。“她要这顶冠，和一封口述的信，送去圣马洛，交给那户给过白衣裳的人家。快三十年了。”她停了停，“那户人家还在不在，谁也不知道。”"
+mood = "mystic"
+at = "salvador"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 6, 1], to = [1565, 12, 31] }]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_salvador"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，把羽冠带去圣马洛"
+next = "handover"
+reply = "她把羽冠放进你手里，轻得像什么都没拿。“祖母说，船进了圣马洛，要先把羽冠举给城墙看。”她说这话的时候，认真得很。"
+news = "萨尔瓦多的沙滩上，图皮南巴老夫人的孙女捧着一顶红羽冠找船，要送去法国的圣马洛。"
+effects = [{ kind = "flag", flag = "c13_request_paraguacu_accepted" }, { kind = "affinity", person = "paraguacu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "接下，先问信里写了什么"
+next = "handover"
+reply = "她闭上眼，背了几句。图皮话和葡萄牙话混在一起，你听清的是这几句：祖母谢那件白衣裳，问那家的男主人是不是还往西边去。背完她睁开眼，说这些就够了，别的是祖母的事。"
+news = "萨尔瓦多的沙滩上，有人看见图皮南巴老夫人的孙女把一封口述的信背给船长听，背到一半，自己先笑了。"
+effects = [{ kind = "flag", flag = "c13_request_paraguacu_accepted" }, { kind = "flag", flag = "c13_request_paraguacu_asked" }, { kind = "affinity", person = "paraguacu", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这趟船不去法国"
+next = "failed"
+reply = "她把羽冠包回棕榈叶里，动作不慌不忙。“那就等下一条法国船。”她把叶子系好，“祖母说，她等得起。”说完没有再问你一句。"
+effects = [{ kind = "flag", flag = "c13_request_paraguacu_declined" }]
+
+# 二、石头城里的老妇人：圣马洛，窄房子里的老寡妇认出了那个名字。
+[[tracks.chapters]]
+key = "handover"
+title = "石头城里的老妇人"
+text = "圣马洛的城墙挡着海风，石缝里长着苔。问了半条街，才有人指给你大教堂后面的一栋窄房子：里面住着一位老寡妇，城里人说她丈夫年轻时往西边找过去中国的路，去年才下葬。门开了一道缝，老妇人眯着眼看那顶红羽冠，看了很久，忽然叫出一个名字：“卡塔利娜。”她的手指摸着那些红羽毛。“那个从巴伊亚来的姑娘，还记不记得她教我唱的那支歌？”"
+speaker = "captain"
+mood = "tender"
+at = "saint_malo"
+news = "圣马洛的人说，大教堂后面的窄房子里住着一位老寡妇，她丈夫年轻时往西边找过去中国的路，去年才下葬。"
+objectives = [{ kind = "at", at = "saint_malo", text = "到圣马洛，找大教堂后面的老寡妇" }]
+deadline_days = 400
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "paraguacu", value = -3 }, { kind = "flag", flag = "c13_request_paraguacu_late" }, { kind = "letter", person = "paraguacu", text = "羽冠没送到也不要紧。祖母说，她心里已经送过了。这封信是她的孙女替她写的。" }] }
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_paraguacu_asked" }]
+text = "圣马洛的城墙挡着海风，石缝里长着苔。你在船上已经把信里那几句背熟了，问了半条街，才有人指给你大教堂后面的一栋窄房子：里面住着一位老寡妇，城里人说她丈夫年轻时往西边找过去中国的路，去年才下葬。门开了一道缝，老妇人眯着眼看那顶红羽冠，忽然叫出一个名字：“卡塔利娜。”你把“往西边去”那一句念出来，她的手停在羽毛上，停了很久。“那个从巴伊亚来的姑娘，还记不记得她教我唱的那支歌？”"
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "把羽冠和信原样交给她"
+next = "reply"
+reply = "她把羽冠放在膝上，手一直摸着那些红羽毛。信你没有念，她也没有问。“替我回一句：记得。”她说完，把羽毛一根根抚平。"
+effects = [{ kind = "affinity", person = "paraguacu", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "french"
+text = "把那封口述的信，用法语念给她听"
+next = "reply_song"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_french", ge = 60, hard = true }]
+hint = "这封信要译成法语念，你的法语还串不成整句"
+reply = "你念到“白衣裳”那一句，她笑出了声，然后哼起一支歌，让你一个音一个音记下来带回去。"
+effects = [{ kind = "affinity", person = "paraguacu", value = 5 }, { kind = "flag", flag = "c13_request_paraguacu_song" }]
+
+[[tracks.chapters.choices]]
+key = "ask_more"
+text = "问她当年在圣马洛的事"
+next = "reply"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "她说那年港里来了一条从巴西回来的船，满城的人都去看那个披着羽毛的姑娘。说到一半，她把耳朵凑过来，要你把问话再说一遍。"
+effects = [{ kind = "affinity", person = "paraguacu", value = 3 }]
+fail = { next = "reply", effects = [{ kind = "affinity", person = "paraguacu", value = -2 }, { kind = "flag", flag = "c13_request_paraguacu_tired" }], news = "圣马洛的窄房子里，老寡妇问到一半就累了，耳朵背，只听清了你问的一半，说要歇一歇。" }
+
+# 三、回话：萨尔瓦多的海滩，孙女要你当着亲族的面把话说一遍。
+[[tracks.chapters]]
+key = "reply"
+title = "海滩上的回话"
+text = "萨尔瓦多的海滩上，祖母的孙女在等你，身后站着几个表兄弟，手里拿着一串穿好的贝壳。你把圣马洛那位老寡妇的话一句句告诉她，她听着，中间不插嘴。一个年纪大些的表兄弟在旁边听，嘴唇跟着你的话动，像是要把每个字都记下来。说完了，她才开口：“祖母要你当着亲族的面再说一遍，一句都不能少。”"
+speaker = "captain"
+mood = "tender"
+at = "salvador"
+deadline_days = 400
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_paraguacu_partial" }, { kind = "letter", person = "paraguacu", text = "听说羽冠送到了。祖母说话要当面讲，等你下次来，再把老寡妇的话当着亲族说一遍。这封信是她的孙女替她写的。" }] }
+
+[[tracks.chapters.variants]]
+key = "tired"
+when = [{ kind = "flag", flag = "c13_request_paraguacu_tired" }]
+text = "萨尔瓦多的海滩上，祖母的孙女在等你，身后站着几个表兄弟。你把圣马洛那位老寡妇的话一句句告诉她。说到一半，孙女皱起眉：“她耳朵背，你问的事，她只听清了一半吧？”她没有怪你，只是把话又讲了一遍，慢了许多。说完，她才说：“祖母要你当着亲族的面再说一遍。”"
+
+[[tracks.chapters.choices]]
+key = "repeat"
+text = "当着她的亲族，把回话原样再说一遍"
+next = "done"
+reply = "表兄弟们一个个点头，有人低声用图皮话跟旁边的人说了句什么。孙女把那串贝壳穿的珠子挂在你脖子上，说：“这是家里人才有的。”"
+news = "萨尔瓦多的海滩上，有船长当着图皮南巴的亲族，把一位圣马洛老寡妇的话原样说了一遍。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "paraguacu", value = 8 }, { kind = "reputation", faction = "tupinamba", value = 2 }, { kind = "memory", memory = "mem-request_paraguacu-reply", title = "圣马洛窗前的红羽冠" }, { kind = "flag", flag = "c13_request_paraguacu_done" }]
+
+[[tracks.chapters.choices]]
+key = "short"
+text = "只说东西送到了"
+next = "done"
+reply = "孙女等了一会儿，见你不再说，就点点头。报酬照付，表兄弟们却没再看你。"
+news = "萨尔瓦多的海滩上，有船长只说了一句东西送到了，图皮南巴的表兄弟们转身就走。"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "paraguacu", value = 4 }, { kind = "flag", flag = "c13_request_paraguacu_partial" }]
+
+# 三之二、哼歌的回话：用法语念过信、学会了那支歌的人走这一路。
+[[tracks.chapters]]
+key = "reply_song"
+title = "还记得那支歌"
+text = "海滩上，祖母的孙女和几个表兄弟在等你。你把老寡妇的话说完，又把那支歌的头两句哼给在场的人听，调子是你在圣马洛的窗下记下的。哼到第二句，你的调子走偏了一个音，有人在旁边轻轻把它扳了回来。孙女没听过这支歌，可她身后的老舅舅跟着接了下去，眼睛望着海。“祖母年轻时唱过。”孙女说，“在那边的船上。祖母要你当着亲族的面，把它唱完。”"
+speaker = "captain"
+mood = "mystic"
+at = "salvador"
+deadline_days = 400
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_paraguacu_partial" }, { kind = "letter", person = "paraguacu", text = "听说羽冠送到了，还有那支歌。祖母说，等你下次来，把歌唱给她的亲族听。这封信是她的孙女替她写的。" }] }
+
+[[tracks.chapters.choices]]
+key = "sing"
+text = "把整支歌唱完，唱给她的亲族听"
+next = "done"
+reply = "你唱到最后一句，老舅舅跟着把尾音拖长了，一直拖到海风吹散。孙女没说话，从那串贝壳里解下一颗，塞进你手里。“祖母年轻时也这样唱完。”"
+news = "萨尔瓦多的海滩上，有船长唱完一支圣马洛学来的老调子，图皮南巴的老舅舅跟着把尾音拖长。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "paraguacu", value = 8 }, { kind = "reputation", faction = "tupinamba", value = 2 }, { kind = "memory", memory = "mem-request_paraguacu-reply", title = "圣马洛窗前的红羽冠" }, { kind = "flag", flag = "c13_request_paraguacu_done" }]
+
+[[tracks.chapters.choices]]
+key = "short"
+text = "只说东西送到了，歌不唱"
+next = "done"
+reply = "孙女听完，没有追问，也没有接你的话。报酬照付，只是那串贝壳没有给你。老舅舅小声把那支歌的尾音哼完，一直望着海。"
+news = "萨尔瓦多的海滩上，有船长说完东西送到了就闭了嘴，一支老调子只好由老舅舅一个人哼完。"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "paraguacu", value = 4 }, { kind = "flag", flag = "c13_request_paraguacu_partial" }]

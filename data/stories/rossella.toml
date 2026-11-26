@@ -1,0 +1,146 @@
+# 推荐角色罗塞拉·萨利纳的故事线“盐与潮”（剧本 scenarios/05_rossella.toml）。
+# 可以随意改文字与数值；章节按顺序推进，key 只允许追加、不要改名、删除或重排（存档按顺序记下走到了第几章）。
+#
+# 每一章在上一章回应之后、它的触发条件（when）全部满足的那一天出现，等玩家回应，不会过期。
+# when：day（开局第几天之后）、wait（距上一章几天）、docked（有舰队停在这些港口之一）、at_sea（有舰队在这些海区航行）、
+#       cash / net_worth / fame / ships（达到）、sighted（这处发现物已被发现）、flag / not_flag（故事标记）。
+# hint 是这一章出现之前、故事面板上给玩家的提示；speaker 与选项的写法见 stories/encounters.toml 的说明。
+#
+# 世界观只写只言片语：潮盐、倒过来的城、“那一夜之前海先退了三里”。
+
+key = "rossella"
+name = "盐与潮"
+
+[[chapters]]
+key = "farewell"
+title = "出港的那天早上"
+hint = "开始航行，故事就开始了。"
+speaker = "portrait:keeper-mediterranean-market-c"
+speaker_name = "盐婆婆"
+text = "天还没亮，蒙特萨尔的盐田上起了雾。母亲往你怀里塞了一包盐渍橄榄，八个弟妹排成一排，最小的那个还没睡醒。盐婆婆把一枚磨得发亮的盐晶挂在你脖子上：“盐是海留给岸上的信。拿着它，海就认得你。”你想说“我、我还没准备好”，可父亲已经替你解开了缆绳。"
+[[chapters.choices]]
+text = "攥紧盐晶，答应一定平安回来。"
+reply = "你把盐晶攥在手心里，攥得指节发白。船员们看着这位要哭不哭的新船长，不知怎么都笑了——笑完了，一个个都去把缆绳收得整整齐齐。"
+effects = [{ kind = "morale", value = 10 }, { kind = "flag", flag = "rossella_amulet" }]
+[[chapters.choices]]
+text = "（小声）……我能不能不去。"
+reply = "没人听见。或者说，所有人都装作没听见。盐婆婆拍拍你的手背，顺手往你袖口里塞了几枚攒了很多年的银币：“去吧。霉运会先你一步上船，可你总能从它底下爬出来。”"
+effects = [{ kind = "cash", value = 300 }]
+
+[[chapters]]
+key = "first_bill"
+title = "红蜡封的信"
+hint = "在海上跑一阵买卖，靠港时留意家里的来信。"
+speaker = "portrait:keeper-mediterranean-bank-a"
+speaker_name = "佩德雷拉老爷"
+when = { wait = 20, docked = [] }
+text = "港口的信差找到你，递来一封盖着红蜡的信——是维拉马雷的盐商佩德雷拉老爷。你家欠他的那笔旧账，他说“念在老交情”，只要先付两千金币的利息，余下的可以宽限些日子。信的末尾写着：“令祖母身体可好？当年她熬的潮盐，如今再也买不到了。”你把信读了三遍，每读一遍，手就抖得更厉害一点。"
+[[chapters.choices]]
+text = "马上付清利息。"
+cost = 2000
+reply = "你把钱交给信差，像交出去一块肉。佩德雷拉的回信只有一句：“萨利纳家的人，向来守信。”"
+effects = [{ kind = "reputation", faction = "cuilan", value = 5 }, { kind = "flag", flag = "rossella_paid" }]
+[[chapters.choices]]
+text = "写信求他再宽限些日子。"
+check = { attr = "eloquence", base = 30, per = 8 }
+reply = "你写了整整四页，涂改了十一处。佩德雷拉居然回信说：“利息免了。你的字，比你爷爷的好看。”"
+effects = [{ kind = "fame", value = 2 }]
+fail_reply = "信寄出去之后石沉大海。你一连几晚都梦见盐田被人收走，醒来时枕头是湿的。"
+fail = [{ kind = "morale", value = -5 }]
+
+[[chapters]]
+key = "bad_luck"
+title = "霉运先上了船"
+hint = "出海吧，霉运总会找上门来。"
+speaker = "captain"
+when = { wait = 15, at_sea = [] }
+text = "那天什么都不对：早饭的饼里有虫，桅杆上的滑轮卡死，风向一日三变。到了夜里，船底传来一声闷响——漏水了。水手们还在找灯，你已经钻进了底舱：手比脑子快，快得你自己都害怕。等你满身是水地爬出来，漏洞已经塞住了，手里还攥着一枚从船板缝里抠出来的旧钱币。"
+[[chapters.choices]]
+text = "先顾船，把大家叫起来把船底再查一遍。"
+check = { attr = "seamanship", base = 40, per = 6 }
+reply = "你们在天亮前又找到两处渗水的地方。从那天起，船员们看你的眼神不一样了——还是觉得你胆小，可胆小得很可靠。"
+effects = [{ kind = "repair", value = 30 }, { kind = "morale", value = 8 }, { kind = "flag", flag = "rossella_coin" }]
+fail_reply = "你们折腾到天亮，还是有一处没找到，只好一路舀着水进港。那枚钱币一直揣在你怀里，硌得生疼。"
+fail = [{ kind = "damage", value = 3 }, { kind = "flag", flag = "rossella_coin" }]
+[[chapters.choices]]
+text = "借着灯，看看那枚钱币。"
+reply = "钱币正面是一顶海冠；背面是一座倒过来的城，城下画着波浪，像是从水底往上看。边上刻着一圈帝国文字，你一个字也不认得。你把它和盐晶挂在了一起。"
+effects = [{ kind = "morale", value = 4 }, { kind = "flag", flag = "rossella_coin" }]
+
+[[chapters]]
+key = "tide_salt"
+title = "潮盐"
+hint = "回蒙特萨尔看看家里人。"
+speaker = "portrait:keeper-mediterranean-market-c"
+speaker_name = "盐婆婆"
+when = { wait = 30, docked = ["liuwan"] }
+text = "回到蒙特萨尔，弟妹们抢着爬上你的船，盐婆婆坐在门口晒太阳。你把钱币拿给她看，她眯着眼看了很久：“倒过来的城啊……我奶奶的奶奶说过，咱家祖上替帝国熬过‘潮盐’——大潮那一夜从海里捞起来的盐，专门送进阿尔坎尼斯的宫里。后来城沉了，就再也没人来收。”她把钱币塞回你手心，压低了声音：“她还说，那一夜之前，海先退了三里。像是在给谁让路。”"
+[[chapters.choices]]
+text = "把这一趟赚的钱分一半给家里。"
+cost = 3000
+reply = "母亲数钱数到一半就哭了。父亲什么也没说，第二天一早爬上屋顶，把漏了三年的那块补好了。"
+effects = [{ kind = "morale", value = 10 }, { kind = "reputation", faction = "cuilan", value = 3 }, { kind = "flag", flag = "rossella_family" }]
+[[chapters.choices]]
+text = "带最小的弟弟皮诺上船，让他当个见习水手。"
+reply = "“我不小了！”皮诺挺起胸膛，个头还不到桅杆的一半。你偷偷在他的铺位上多放了一条毯子，又叮嘱水手长别让他爬高。"
+effects = [{ kind = "crew", value = 1 }, { kind = "morale", value = 6 }, { kind = "flag", flag = "rossella_brother" }]
+[[chapters.choices]]
+text = "什么也不说，陪盐婆婆晒一下午太阳。"
+reply = "那天下午，谁也没提债的事。海风一阵一阵地吹过盐田，把晒好的盐吹成了细细的白浪。"
+effects = [{ kind = "morale", value = 14 }]
+
+[[chapters]]
+key = "inverted_city"
+title = "倒过来的城"
+hint = "去拉玛塔岛，找人认一认那枚钱币。"
+speaker = "portrait:keeper-islands-market-c"
+speaker_name = "古物摊的老头"
+when = { wait = 20, docked = ["dengta"], flag = "rossella_coin" }
+text = "拉玛塔岛的古物摊子上，一个缺了门牙的老头一看见你的钱币就站了起来：“潮冠币！沉城之夜的前一年铸的——背面是‘水下的都城’。”他压低声音，“可你知道怪在哪儿吗？铸它的时候，城还好好地在岸上。铸币的人，早就把它画在水底下了。”他出五千金币要买。"
+[[chapters.choices]]
+text = "卖给他。"
+reply = "老头把钱币用丝帕包了三层，揣进最里面的口袋。你数着金币，心里却空了一小块。"
+effects = [{ kind = "cash", value = 5000 }]
+[[chapters.choices]]
+text = "不卖。请他再多说一点。"
+reply = "老头叹了口气，在你的海图上点了一个地方：“哈拉半岛外面那圈环礁。晴天往下看，你会看见它——跟这枚钱上画的一模一样。”他顿了顿，“别在大潮的夜里去。”"
+effects = [{ kind = "reveal", discovery = "sunken_arcanis" }, { kind = "fame", value = 4 }, { kind = "flag", flag = "rossella_kept_coin" }]
+
+[[chapters]]
+key = "the_debt"
+title = "还债"
+hint = "攒够本钱（净资产 50000、手上现金 13000），去维拉马雷找佩德雷拉老爷，把家里的旧账还清。"
+speaker = "portrait:keeper-mediterranean-bank-a"
+speaker_name = "佩德雷拉老爷"
+when = { wait = 20, docked = ["chenggang"], net_worth = 50000, cash = 13000 }
+text = "佩德雷拉老爷的账房在维拉马雷最高的那条街上。你在门口转了七圈，才敢敲门。老人比信里还老，账本比他还老。“萨利纳家的债，连本带利，一万两千金币。”他从眼镜上方看着你，顿了顿，“你奶奶当年熬的潮盐，我父亲收过一回。那之后，我再没见过那么白的盐。”"
+[[chapters.choices]]
+text = "连本带利，一次还清。"
+cost = 12000
+reply = "你把钱袋放在桌上，手终于不抖了。老人撕掉借据，从抽屉深处取出一小包用油纸包着的盐：“这是那一回留下的最后一点潮盐。它是你家的，还给你。”"
+effects = [{ kind = "fame", value = 15 }, { kind = "reputation", faction = "cuilan", value = 10 }, { kind = "flag", flag = "rossella_debt_paid" }]
+[[chapters.choices]]
+text = "（深吸一口气）……能不能免掉利息？"
+cost = 10000
+check = { attr = "eloquence", base = 35, per = 7 }
+reply = "老人盯着你看了很久，忽然笑了：“你奶奶当年也是这么跟我父亲说话的——声音在抖，眼睛可一点也不躲。”他收下本金，撕掉了借据。"
+effects = [{ kind = "fame", value = 10 }, { kind = "reputation", faction = "cuilan", value = 6 }, { kind = "flag", flag = "rossella_debt_paid" }]
+fail_reply = "“规矩就是规矩。”老人把利息一笔一笔算给你听。你红着脸补上了两千金币，他收钱的时候，嘴角好像动了一下。"
+fail = [{ kind = "cash", value = -2000 }, { kind = "fame", value = 8 }, { kind = "flag", flag = "rossella_debt_paid" }]
+
+[[chapters]]
+key = "salt_and_tide"
+title = "盐与潮"
+hint = "债还清了，回蒙特萨尔吧。"
+speaker = "portrait:keeper-mediterranean-market-c"
+speaker_name = "盐婆婆"
+when = { wait = 30, docked = ["liuwan"] }
+text = "你回到蒙特萨尔的时候，盐田正在收盐。弟妹们喊你“船长姐姐”，喊得整条街都听得见。盐婆婆把那一小撮潮盐撒进了今年的第一口盐锅：“盐是海留给岸上的信。现在，轮到你给海写回信了。”那天夜里涨了大潮。你贴着地听了很久——没有钟声，只有海，一下一下，像在数你的心跳。"
+[[chapters.choices]]
+text = "“我还会出海的。”"
+reply = "罗塞拉·萨利纳的故事到这里告一段落。海还很大，她还是很胆小——可她已经不会逃了。"
+effects = [{ kind = "fame", value = 10 }, { kind = "morale", value = 10 }]
+[[chapters.choices]]
+text = "“……我想先睡三天。”"
+reply = "你真的睡了三天。第四天早上，你第一个爬起来检查缆绳。——罗塞拉·萨利纳的故事到这里告一段落。"
+effects = [{ kind = "morale", value = 20 }]

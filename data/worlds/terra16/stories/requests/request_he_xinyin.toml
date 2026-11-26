@@ -1,0 +1,163 @@
+# 请托：不能开的箱子（request_he_xinyin）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：何心隐（梁汝元，he_xinyin，1517 年生，男），泰州学派的游走讲学人，此时落脚武昌；势力 ming，身份档 2。cast：cast/historical_06_ming.toml。
+# 类型：押运／带人（escort）。三条主线章 offer（报价）、passage（出港前的盘查）、arrive（送到），外加一章 arrive_partial（盘查失败走的支线收尾，免得 arrive 里用同轨道旗标当门禁）。没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信）。何心隐本人不出场，只在信里说话；出面的是他的学生（不起名，不新建 cast），在宁波码头（ningbo）；窗口 1577-06-01 至 1578-12-31（brief 里的窗口只是规划用的出现区间，普通章不写）。
+#       offer 写 family=c13_offer_ningbo、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：passage 章 deadline_days=30，超时走 failed（学生代笔来信一封，好感 -3，旗标 _late）；arrive 与 arrive_partial 章 deadline_days=90，超时同样走 failed（来信一封，好感 -3，旗标 _late）。
+# 依据·史实背景：张居正当国，1579 年诏毁天下书院、禁讲学；何心隐 1579 年被捕，死于狱中（fate 事件 academy_suppression，由时间线 L24 决定）。本请托只写书稿，不决定他的结局，不写被捕与死，不写“最后一封信”。巡检司、弓兵、查“妖书”是明代的盘查办法。
+# 依据·原创：樟木箱与铜钉、学生脚上的草鞋、福州染坊后屋的蓝手指老人（不起名）、箱里那一页“朋友”的话。人设里扶乩倒严的传闻与“不承认也不否认”，本请托一字不碰；箱里的长篇讲章也不编，只露一页。
+# 秘密：不碰。见闻只写“宁波来的一只樟木箱，说是药材”，不提书稿、讲会与何心隐的名字。
+# 读的旗标：本轨道内部的分支一律靠 next 走，不拿同轨道旗标当选项门禁；只有 arrive 的 variant 读 _late_run（只改一段文字）。
+# 设的旗标：c13_request_he_xinyin_accepted（offer 两条接法）、_asked（offer 接下并问了箱子）、_declined（offer 回绝，终局）、_pried（passage 劝说失败被撬了一角）、_late_run（passage 趁潮失败被追，晚到）、_late（passage／arrive 超时）、_partial（arrive_partial 两条收尾）、_done（arrive 两条收尾，终局）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。何心隐在 C7 里没有线。
+# 报酬：现金最多 1600（只在 arrive 给一次；缺了几页只给 1100）、好感最多 +13（接下 2 + 路上 3 + 送到 8）、名声 0（禁书的请托）、无声望、无物品、无技能。回忆 mem-request_he_xinyin-arrive（送到最好的两条）。
+# 依赖：港口 ningbo（ports_east_asia.toml）、fuzhou；属性 eloquence、seamanship；人物 he_xinyin；offer 的名声门槛 5（窗口起年 1577，封顶规则内）。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_he_xinyin-arrive「染坊后屋的樟木箱」：福州染坊后屋，靛蓝的布一排排垂下来；手指染蓝的老人把一只樟木箱推进布堆后面。
+
+[[tracks]]
+key = "request_he_xinyin"
+name = "不能开的箱子"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["he_xinyin"]
+
+# 一、钉死的樟木箱：宁波码头，学生守着箱子，手里是武昌来的信。
+[[tracks.chapters]]
+key = "offer"
+title = "钉死的樟木箱"
+text = "宁波码头上，一个戴方巾的年轻人守着一只樟木箱，脚上却是草鞋，后跟磨破了，渗着血。箱盖上的铜钉一颗挨一颗，钉帽擦得发亮。他从怀里摸出一封信，纸角卷了边，武昌来的：“朋友来了！四海之内，肯坐下来讲学的都是朋友。讲会的风声一天紧似一天，书稿不好放在一处。这一箱，劳你送去福州，那边有人等。”年轻人是何先生的学生。他把手按在箱盖上，像按着一只要跳起来的猫：“先生交代，这箱子不能开。”"
+mood = "mystic"
+at = "ningbo"
+when = [{ kind = "date", from = [1577, 6, 1], to = [1578, 12, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+deadline = [1578, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，箱子运去福州。"
+next = "passage"
+reply = "他长长吐出一口气，肩膀一下子垮了下来。一张纸条从鞋底的夹层里抽出来，折得只有指甲盖大，上面是福州一家染坊的字号和巷名，被手汗洇开了一角。“别记在别处，”他说，“记在脑子里，到了就烧。”"
+effects = [{ kind = "flag", flag = "c13_request_he_xinyin_accepted" }, { kind = "affinity", person = "he_xinyin", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "接下，先问箱子里是什么。"
+next = "passage"
+reply = "“我也不知道。”他说，“先生说，不知道的人才说得清。”他看的是箱角的铜钉，不是我。“路上有人问，您就这么答，一个字不用编。”说完他才想起来，把染坊的字号和巷名写在一张小纸条上塞给我，手心全是汗。"
+effects = [{ kind = "flag", flag = "c13_request_he_xinyin_accepted" }, { kind = "flag", flag = "c13_request_he_xinyin_asked" }, { kind = "affinity", person = "he_xinyin", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟出港的船不稳，换别人吧。"
+next = "failed"
+reply = "他点点头，没争。“那就雇脚夫翻山走，慢是慢点。”他弯下腰试了试箱子的分量，放下，朝码头边的脚夫棚招手，自己走在前面。走出十几步，他才回头，冲我拱了拱手。"
+effects = [{ kind = "flag", flag = "c13_request_he_xinyin_declined" }]
+
+# 二、巡检的铁钎：出港前盘查，铁钎戳到樟木箱。
+[[tracks.chapters]]
+key = "passage"
+title = "巡检的铁钎"
+text = "出港前，巡检司的人上船查货，说近来有人私运妖书，箱笼一律要开。巡检自己站在栈桥上剔牙，弓兵拿铁钎在舱里挨个戳：米袋，木桶，船板的缝。戳到那只樟木箱，铁钎停住了。弓兵往上喊了一声。巡检慢吞吞踏上跳板，下到舱里，用指节敲了敲箱盖，一声闷响。“药材不用钉铜钉，”他说，“开。”弓兵扭头上岸取撬棍去了。"
+speaker = "captain"
+mood = "tense"
+at = "ningbo"
+when = [{ kind = "alive", person = "he_xinyin", value = true }]
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "he_xinyin", value = -3 }, { kind = "flag", flag = "c13_request_he_xinyin_late" }, { kind = "letter", person = "he_xinyin", text = "箱子改走了山路。先生说，路远些，书不会走丢。——代笔的学生" }], news = "宁波码头上，戴方巾的年轻人雇脚夫抬走了一只樟木箱，说船等不来，改走山路，草鞋后跟还在渗血。" }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "说这是药材，钉死是怕受潮，开了就废。"
+next = "arrive"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "“药材。”我说，“钉死是怕走了药性，一开就潮，潮了就废。”巡检俯下身，鼻子贴着箱缝闻了一口，樟脑的冲味顶得他直皱眉。他朝回来的弓兵摆摆手，撬棍没用上。下跳板前他嘟囔了一句：“药材倒值得钉铜钉。”"
+news = "宁波码头，巡检司上船查妖书，铁钎戳到一只钉死的樟木箱就停了手，闻过樟脑味，说是药材，放了行。"
+effects = [{ kind = "affinity", person = "he_xinyin", value = 3 }]
+fail = { next = "arrive_partial", effects = [{ kind = "flag", flag = "c13_request_he_xinyin_pried" }, { kind = "affinity", person = "he_xinyin", value = -2 }], news = "宁波码头，巡检司的弓兵用撬棍撬开一只樟木箱的角，抽走几页纸，船主咬定是旧账簿，也就放了行。" }
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "指着桩上的水痕：再不走，船要坐三天滩。"
+next = "arrive"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "我没接他的话，抬手指向桩子上的水痕。“再过半炷香，这条水道就退干了，”我说，“船要么现在走，要么在滩上坐三天。”这是实话，舵手已经在解缆了。巡检看看水，看看跳板，一脚踏回栈桥，嘴里骂着什么。巡船在港口里划到一半，被我们的帆甩在了后头。"
+news = "宁波港趁落潮出了一条船，巡检司的人刚踏回栈桥，缆绳已经甩进水里，巡船追到港口中间就落了后。"
+effects = [{ kind = "affinity", person = "he_xinyin", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "flag", flag = "c13_request_he_xinyin_late_run" }], news = "宁波港外，一条趁潮溜走的船被巡船追进了一处荒湾，躲了十几天才敢再出海。" }
+
+[[tracks.chapters.choices]]
+key = "tea"
+text = "给巡检塞一包茶钱。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋太瘪，凑不出一包像样的茶钱"
+reply = "我把一包茶钱放进他手心，他没低头看，掌心一合，指节在箱盖上点了一下，转身敲的是旁边的木桶。“樟木，”他对弓兵说，“香得很，下一舱。”撬棍原路送回了岸上。"
+news = "宁波码头，巡检司上船查妖书，在一只樟木箱前敲了敲，收下茶钱，说樟木香，下一舱。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "he_xinyin", value = 3 }]
+
+# 三、染坊后屋：福州，蓝手指的老人，请你当着他的面开一页。
+[[tracks.chapters]]
+key = "arrive"
+title = "染坊后屋"
+text = "福州城里一家染坊，后屋晾着一排排靛蓝的布，从梁上垂到地面，风过时像水在走。一个手指染得发蓝的老人迎出来，先看那只樟木箱，再看我。他用蓝手指敲了敲箱盖，侧耳听了听。“一箱子纸，”他说，“沉得很实。箱子放我这儿，没人会往布堆后面翻。”他递过来一根搅染缸的木棍，棍头削扁了。“只是我替人收着东西，总想知道收的是什么。劳你当着我的面，撬开一角，让我看一页。一页就够了。”"
+speaker = "captain"
+mood = "tender"
+at = "fuzhou"
+when = [{ kind = "alive", person = "he_xinyin", value = true }]
+objectives = [{ kind = "at", at = "fuzhou", text = "把樟木箱送到福州的染坊" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "he_xinyin", value = -3 }, { kind = "flag", flag = "c13_request_he_xinyin_late" }, { kind = "letter", person = "he_xinyin", text = "箱子没到福州。先生来信，让我们另抄一份，一人抄一卷，抄完分开放。——代笔的学生" }], news = "福州一家染坊的后屋，等一只宁波来的樟木箱等了几个月，老板每天傍晚还往码头望一眼。" }
+
+[[tracks.chapters.variants]]
+key = "late_run"
+when = [{ kind = "flag", flag = "c13_request_he_xinyin_late_run" }]
+text = "我晚到了十几天。福州城里一家染坊，后屋晾着一排排靛蓝的布，从梁上垂到地面，换过一茬了。一个手指染得发蓝的老人站在门口，手里的布角拧成了绳。他先看那只樟木箱，再看我，一句也没问路上的事。他用蓝手指敲了敲箱盖，侧耳听了听。“一箱子纸，”他说，“沉得很实。”他递过来一根搅染缸的木棍，棍头削扁了。“我替人收着东西，总想知道收的是什么。劳你当着我的面，撬开一角，让我看一页。一页就够了。”"
+
+[[tracks.chapters.choices]]
+key = "sealed"
+text = "把箱子交给他，我不看。"
+next = "done"
+reply = "老人的蓝手指在木棍上停了停，把木棍收回袖子里，转身把箱子推进布堆后面，又拉下两匹靛蓝的布盖住。“不看也好，”他说，“问起来，我们两个都说不知道。”他往我手里放了一只钱袋，沉甸甸的，还带着染缸边的潮气。"
+news = "福州城里一家染坊，前日收了宁波来的一只樟木箱，说是药材，伙计抬进后屋，叫人别往布堆后面翻。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "he_xinyin", value = 8 }, { kind = "memory", memory = "mem-request_he_xinyin-arrive", title = "染坊后屋的樟木箱" }, { kind = "flag", flag = "c13_request_he_xinyin_done" }]
+
+[[tracks.chapters.choices]]
+key = "one_page"
+text = "撬开一角，抽一页念给他听。"
+next = "done"
+reply = "木棍削扁的一头插进箱盖的缝，我往下压，铜钉吱的一声拔起半寸。樟脑味冲出来，底下是一叠麻纸，线装的边叫汗浸黄了。我抽出最上面一页，在窗边念：“君臣有位，父子有序，夫妇有别，兄弟有分，唯朋友无位无序，你坐下，我也坐下。天下的人，都可以是朋友。”老人听完，一个字没评，把那一页按原来的折痕折好塞回去，用手掌把那颗铜钉一下一下拍回原位。“一页够了。”他说。"
+news = "福州一家染坊的后屋，白天传出拔钉子又敲钉子的响动，樟脑味飘到了巷口，染坊说是晒药材。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "he_xinyin", value = 6 }, { kind = "memory", memory = "mem-request_he_xinyin-arrive", title = "染坊后屋的樟木箱" }, { kind = "flag", flag = "c13_request_he_xinyin_done" }]
+
+# 三（支线）、箱角的缝：宁波被撬过一角，抽走了几页。
+[[tracks.chapters]]
+key = "arrive_partial"
+title = "箱角的缝"
+text = "染坊后屋的靛蓝布垂着，我先看见的却是箱角那道缝：宁波的弓兵用撬棍撬开一角，抽走了几页，我只好咬定那是旧账簿。缝口的铜钉有一颗是我在船上拿铁钉顶替的，钉得歪歪斜斜。手指染得发蓝的老人从布堆里走出来，蓝手指顺着那道缝摸了一圈，没出声。"
+speaker = "captain"
+mood = "sad"
+at = "fuzhou"
+when = [{ kind = "alive", person = "he_xinyin", value = true }]
+objectives = [{ kind = "at", at = "fuzhou", text = "把樟木箱送到福州的染坊" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "he_xinyin", value = -3 }, { kind = "flag", flag = "c13_request_he_xinyin_late" }, { kind = "letter", person = "he_xinyin", text = "箱子没到福州，缺了页的那一箱也没有消息。先生来信，让我们另抄一份，一人抄一卷，抄完分开放。——代笔的学生" }], news = "福州一家染坊的后屋，留着一块堆箱子的空地，等一只宁波来的樟木箱等了几个月，没等到。" }
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "照实说：路上被撬过一角，少了几页。"
+next = "done"
+reply = "老人叹了口气：“少几页，总比全烧了好。”他又用手指按了按那道缝，找来一条靛蓝的布条，结结实实缠了两圈，当封条。“宁波的巡检认得出铜钉，认不出一条蓝布。”"
+news = "福州一家染坊收了宁波来的一只樟木箱，箱角缠着一条靛蓝的布，说是药材，怕受潮。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "he_xinyin", value = 4 }, { kind = "flag", flag = "c13_request_he_xinyin_partial" }]
+
+[[tracks.chapters.choices]]
+key = "hide"
+text = "什么也不说，交了箱子就走。"
+next = "done"
+reply = "我转身走到门口，老人的声音追上来：“铜钉里夹着一颗铁的。”他没有问，像是在报一个数。我站住了，他又说：“少几页，我认。不肯说的人，我不认。”他把钱数给我，一枚一枚，数得很慢。"
+news = "福州城里一家染坊收了宁波来的一只樟木箱，送箱子的人放下就走，老板站在门口看了好一阵。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "he_xinyin", value = 1 }, { kind = "flag", flag = "c13_request_he_xinyin_partial" }]

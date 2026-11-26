@@ -1,0 +1,139 @@
+# 请托：罗马人的藏宝图（request_musa）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：穆萨（musa，1540-05-04 生，男），寻宝行会“领事”的儿子，学院同学（非斯）；势力 morocco，身份档 1。cast：cast/classmates_fez.toml。
+# 类型：找东西（find）。三章：offer（报价）、handin（交古钱、对图）、dig（城墙根下，挖碑）；没有 stage 章，因此没有 window 与 default。
+# 报价：V（到访）。穆萨随行会的人下到得土安港口（tetouan），auto=true；窗口 1562-01-01 至 1577-06-30（同学重逢 1561 之后开放）。
+#       offer 写 family=c13_offer_tetouan、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：handin 与 dig 都是普通章，没有期限，穆萨活着就等得到。handin 的 item 目标只查持有；give_coin 的 item -1 由选项自己扣。
+# 依据·史实背景：丹吉尔 1471—1661 年是葡萄牙人的据点；城外有罗马时代的旧墙基与碑石；摩洛哥人在城外挖东西，葡萄牙守军会来问。古钱是意大利古董铺的货（items_curio_02.toml 的 ancient_coin）。
+# 依据·原创：藏宝图是新画的皮子、图角的钱、穆萨的行会与“老规矩”、碑石上罗马母亲的那句话、守兵那一场。
+# 秘密：怕黑、手心出汗一概不写。整条请托在白天、城墙根下的露天土里，不写地窖、洞、夜里下井。见闻不写秘密。
+#       “回非斯告诉一个人”不写名字，不写金匠铺（C7 pair_musa_yaqub、bond_musa 归 C7）。
+# 读的旗标：bond musa ≥ C（offer 的 v1_bond 变体，只读 C7 的结果）。不读 c13_main_*（穆萨不在主线门禁里）。
+# 设的旗标：c13_request_musa_accepted（offer 两条接法）、_declined（offer 回绝）、_doubted（doubt_map 的分支旗标，handin 的 v1_doubted 变体读它）；handin 的 _coin_given（送出古钱）、_read（念出拉丁字）；
+#       终局只设一面：_done（dig 两条成功）、_partial（dig 检定失败，碑石被扣）；_rubbing（碑石被扣、只拓一张字，read_stone 同设）。
+# 选项回复：story2 的选项只有一句 reply，fail 分支没有单独的回复，所以 stand_ground 的回复写成成败都说得通；失败的后果由 fail 的见闻交代。
+# 窗口：handin 与 dig 的窗口（1562-01-01 至 1578-08-24）写进各章 when 的 date 条件，普通章没有 window 字段。
+# 依赖：港口 tetouan、tangier（ports_north_africa.toml）；古钱 ancient_coin（items_curio_02.toml，意大利古董铺有卖）；技能 lang_latin（skills.toml）；属性 arms（captain.toml）；人物 musa。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_musa-dig「城墙根下的半块碑」：丹吉尔城外的旧墙根，锄头边露出半截刻字的碑石，穆萨抱着它坐在土堆上，笑得像抱着一箱金子。
+
+[[tracks]]
+key = "request_musa"
+name = "罗马人的藏宝图"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["musa"]
+
+# 一、图上画的那枚钱：得土安港口，穆萨把皮子摊在缆桩上。
+[[tracks.chapters]]
+key = "offer"
+title = "图上画的那枚钱"
+text = "得土安的港口，穆萨把一张皮子摊在缆桩上，四角压着铜钉。图角画着一枚钱，钱上是一个戴桂冠的人头。“罗马人的藏宝图。”他拍着皮子，声音大得半条码头都听得见，“图上画的就是这枚钱。你替我找一枚真正的罗马古钱来，跟图上一对，就知道这张图是真的。”你低头看那皮子，边角还是白的，连一点黄斑都没有。他咧嘴一笑：“图是新画的，宝是旧的。”"
+speaker = "captain"
+mood = "cheerful"
+at = "tetouan"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1577, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "musa", ge = 18 }]
+objectives = [{ kind = "at", at = "tetouan", text = "在得土安的港口" }]
+deadline = [1577, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "find_coin"
+text = "接下，替他找一枚真正的罗马古钱。"
+next = "handin"
+reply = "他把图上那枚钱的样子描在一张纸上给我，人头画得歪歪扭扭。“大概就是这个样子，差不多就行。”他把纸折好塞给你，“真的假的，等钱到了再吵。”"
+effects = [{ kind = "affinity", person = "musa", value = 2 }, { kind = "flag", flag = "c13_request_musa_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "doubt_map"
+text = "接下，先说清楚：多半是张假图。"
+next = "handin"
+reply = "“假图也得找真钱来证明它是假的。”他一点不恼，把图卷起来塞进怀里。“万一是真的呢。”他拍拍胸口，又像是拍给那张皮子听的。"
+effects = [{ kind = "affinity", person = "musa", value = 2 }, { kind = "flag", flag = "c13_request_musa_accepted" }, { kind = "flag", flag = "c13_request_musa_doubted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "藏宝图的事，我不掺和。"
+next = "failed"
+reply = "他耸耸肩，说那宝就归他一个人了。“你别后悔。”他把皮子卷好夹在腋下，走出两步又回过头来，“挖出来可别眼红。”"
+effects = [{ kind = "flag", flag = "c13_request_musa_declined" }]
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "musa", level = "C" }]
+text = "得土安的港口，穆萨一见你就把皮子塞过来，四角的铜钉还带着他手心的热气。图角画着一枚钱，钱上是一个戴桂冠的人头。“老规矩，图你先看。”他拍着皮子，声音大得半条码头都听得见，“挖到金子算你一半。你替我找一枚真正的罗马古钱来，跟图上一对，就知道这张图是真的。”你低头看那皮子，边角还是白的，连一点黄斑都没有。他咧嘴一笑：“图是新画的，宝是旧的。”"
+
+# 二、人头对人头：古钱摆在图角上，他眯着眼看了半天。
+[[tracks.chapters]]
+key = "handin"
+title = "人头对人头"
+text = "穆萨把古钱放在图角上，人头对人头，眯着眼看了半天。“像，又不太像。”他拿指甲去比，“图上的人头朝左，这枚朝右。罗马人刻头像也不让人省事。”他把钱翻过来，背面有一道城墙的纹样，缺了几个齿。他一拍大腿：“图上画的不是钱，是城墙！丹吉尔城外的旧墙根，我早说那地方有东西。”"
+speaker = "captain"
+mood = "cheerful"
+at = "tetouan"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1578, 8, 24] }, { kind = "alive", person = "musa", value = true }]
+objectives = [{ kind = "at", at = "tetouan", text = "在得土安的港口" }, { kind = "item", item = "ancient_coin", qty = 1, text = "一枚古钱" }]
+news = "得土安的港口，寻宝行会领事家的儿子拿着一枚古钱对着一张图看了一下午。"
+
+[[tracks.chapters.choices]]
+key = "give_coin"
+text = "把古钱送给他，算入伙。"
+next = "dig"
+reply = "他把古钱揣进怀里，拍了拍，说这是他的护身符。“挖不到宝，这枚钱也算没白跑一趟。”他说完又掏出来看了一眼，才肯放回去。"
+effects = [{ kind = "item", item = "ancient_coin", qty = -1 }, { kind = "affinity", person = "musa", value = 3 }, { kind = "flag", flag = "c13_request_musa_coin_given" }]
+
+[[tracks.chapters.choices]]
+key = "read_legend"
+text = "细看钱上的拉丁字，替他念出来。"
+next = "dig"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "钱上的字磨平了，你一个也认不出"
+reply = "钱背面的字是一座城的名字，罗马人管丹吉尔叫的那个。穆萨听了，抱着图在院子里转了一圈，嘴里反复念着那个名字。转完了，他把古钱又塞回你手里。“这枚你替我拿着，去丹吉尔要用。”"
+effects = [{ kind = "affinity", person = "musa", value = 3 }, { kind = "flag", flag = "c13_request_musa_read" }]
+
+[[tracks.chapters.choices]]
+key = "lend_coin"
+text = "钱借他看，看完收回。"
+next = "dig"
+reply = "他看了一下午，把钱上的每道纹都描在图背面，描得满纸都是线。傍晚才依依不舍地还给你。“明天还要看，你别走远。”"
+effects = [{ kind = "affinity", person = "musa", value = 2 }]
+
+[[tracks.chapters.variants]]
+key = "v1_doubted"
+when = [{ kind = "flag", flag = "c13_request_musa_doubted" }]
+text = "穆萨把古钱放在图角上，眯着眼看了半天。“你不是说这图是假的吗？”他一边看一边乐，“假的也得让我看完。”人头朝左还是朝右，他拿指甲去比，比了又比。他把钱翻过来，背面有一道城墙的纹样，缺了几个齿。他一拍大腿：“图上画的不是钱，是城墙！丹吉尔城外的旧墙根，我早说那地方有东西。”"
+
+# 三、城墙根下：丹吉尔城外，他挥着锄头，挖到的是半块碑。
+[[tracks.chapters]]
+key = "dig"
+title = "城墙根下"
+text = "丹吉尔城外的旧墙根，太阳晒得土发白。穆萨挥着锄头，一边挖一边讲笑话：“罗马人埋东西，倒比我讲笑话还费劲。”讲到第三个，他把锄头一扬：“这回真有宝，至少有我。”锄头下去，碰到了硬东西。挖出来的是一块碑石，半截，刻着拉丁字。城头上的葡萄牙守军看见了，两个兵正往这边走。"
+speaker = "captain"
+mood = "cheerful"
+at = "tangier"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1578, 8, 24] }, { kind = "alive", person = "musa", value = true }]
+objectives = [{ kind = "at", at = "tangier", text = "在丹吉尔城外" }]
+news = "丹吉尔城外的旧墙根下，有人挖出了半块刻着拉丁字的碑石，城头的葡萄牙兵也走了过来。"
+
+[[tracks.chapters.choices]]
+key = "stand_ground"
+text = "挡在前面，跟守兵说我们只挖了块石头，石头他们可以看。"
+next = "done"
+check = { attr = "arms", base = 35, per = 6 }
+reply = "守兵问什么，我就答什么：石头是挖出来的，墙根的地是谁的，谁也说不清。守兵的眼睛在那块石头和我腰上的刀之间来回看。穆萨躲在我身后，手里攥着碑石的一角，难得一句笑话也没说。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "musa", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_musa_done" }, { kind = "memory", memory = "mem-request_musa-dig", title = "城墙根下的半块碑" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "musa", value = 2 }, { kind = "flag", flag = "c13_request_musa_partial" }, { kind = "flag", flag = "c13_request_musa_rubbing" }], news = "丹吉尔城外的旧墙根下，挖出的碑石被葡萄牙守兵扣了，穆萨只拓下一张字，说：“字比石头轻。”" }
+
+[[tracks.chapters.choices]]
+key = "read_stone"
+text = "趁守兵还没到，把碑上的字念出来。"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "碑上的字你只认得一个“城”"
+reply = "碑上写的是一个罗马人给他母亲立的石，说她在这座城里活了六十年。穆萨听完，好半天没说笑话。守兵到了，他把碑石让给了他们，只拓了一张字。他说这一张，他要回非斯告诉一个人。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "musa", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_musa_done" }, { kind = "flag", flag = "c13_request_musa_rubbing" }, { kind = "memory", memory = "mem-request_musa-dig", title = "城墙根下的半块碑" }]

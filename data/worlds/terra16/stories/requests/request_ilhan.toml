@@ -1,0 +1,262 @@
+# 请托：父亲的分期（request_ilhan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：伊尔汗（ilhan，1539-03-07 生，男），禁卫军老兵之子，在亚历山大港总督府当书记；cast 在 cast/classmates_cairo.toml。
+# 类型：说服（persuade）。报价 V 到访（auto=true）：伊尔汗从近旁下到亚历山大港；offer 章 at=alexandria，family=c13_offer_alexandria、冷却 20 天。
+#   章节：offer（报价）、persuade（谷仓门口）、result（契据上的名字，谈成或分期，由 pay_first 或 negotiate/talk 的路线分开）、
+#   result_owes（先付了头一期的收尾）、result_partial（检定失败，只分六期）。终点 done / failed。
+#   结构说明：brief 写了三章。引擎的规则是“已设旗标不能在同一轨道另一条路径上用 requires 卡”，而“先付”的 owes 旗标与
+#   return_loan 的门禁同在 result 章，所以按 next 分出 result_owes；失败的六期路线同理分出 result_partial。变体（variant）只改文字，
+#   现金与旗标不同，也必须走另一章。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1563-01-01 至 1588-12-31，deadline 1588-12-31，timeout 直接 failed、不写见闻；
+#   persuade 与各收尾章 1563-01-01 至 1590-02-24。
+# 依据·史实背景：奥斯曼埃及的禁卫军（老兵的军饷与借贷）、亚历山大港的谷仓与谷船、总督府的书记。谷商是叙事人物，不进 cast，正文不写名字。
+# 依据·原创：伊尔汗、他父亲（不写名字）、谷商与谷仓门口的念珠、契据上的落款、钱袋上歪歪扭扭的补缝。
+# 依赖：港口 alexandria（ports 表）；技能 negotiation（skills.toml）；人物 ilhan。B10b：无需改名。主线门禁：无（伊尔汗不是主线人物）。
+# C7：不写萨利赫，不写水位尺，不写学院里的占座与柱子；请托从 1563 年起。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：bond ilhan 至少 C（offer 的 v1_bond_c 变体，只改开场的一句话）。
+# 设的旗标：c13_request_ilhan_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_failed（offer 超时，终局）、
+#   _terms（谈成分期，四条路线都设）、_owes（先付头一期）、_hard（检定失败，六期）、_done（终局）、_partial（终局，六期的收尾）。
+# 秘密：不进正文与见闻。正文不点破他在学院里的任何事。
+# 口头禅：伊尔汗的那句“顺路”只在 persuade 章用一次（见该章正文）；其余章节不再出现。
+# 报酬：现金最多 900（先付 400 再收 900，净得 500；或先付后两清只收 500）；好感最多 +14；名声 +2；回忆 mem-request_ilhan-result。
+#   分期的六期路线：现金 600（或不收钱，好感 +4，不加名声）；不给回忆之外的物品。
+# 回忆插画 mem-request_ilhan-result：木箱上搁着一只旧钱袋，缝口是新补的、针脚歪歪扭扭；旁边一角契据露在枕头边，落款是老兵的名字。
+
+[[tracks]]
+key = "request_ilhan"
+name = "父亲的分期"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ilhan"]
+
+# 一、总督府的名头：伊尔汗在码头上拦住你，借据的事说得又快又急。
+[[tracks.chapters]]
+key = "offer"
+title = "总督府的名头"
+text = "伊尔汗在亚历山大港的码头上拦住你，衣领浆得笔挺，话说得又快又急。他父亲是禁卫军的老兵，当年在港里押谷船时借过一笔钱，利上加利，滚了好几年。前两天谷商上门，把借据往桌上一拍：“令郎在总督府当书记，这点钱算什么。”“我不拿我爹的威风压人，”伊尔汗说，“也不拿我自己的。一年还清，我爹的脸和我的名字都别沾上。你去跟谷商谈分期。”"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+objectives = [{ kind = "at", at = "alexandria", text = "到亚历山大港去" }]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1588, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "ilhan", ge = 18 },
+]
+deadline = [1588, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_ilhan_failed" }] }
+family = "c13_offer_alexandria"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "ilhan", level = "C" }]
+text = "伊尔汗在码头上拦住你，开口先挖苦一句：“船上的人都这么黑吗？”衣领照旧浆得笔挺。他父亲是禁卫军的老兵，当年在港里押谷船时借过一笔钱，利上加利，滚了好几年。前两天谷商上门，把借据往桌上一拍：“令郎在总督府当书记，这点钱算什么。”“我不拿我爹的威风压人，”伊尔汗说，“也不拿我自己的。一年还清，我爹的脸和我的名字都别沾上。你去跟谷商谈分期。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，替他去跟谷商谈分期。"
+next = "persuade"
+reply = "他把父亲的借据抄了一份给我，字写得漂亮极了。“这是在总督府练出来的，”他说，“不是给这种纸用的。”"
+effects = [
+  { kind = "affinity", person = "ilhan", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "why_not_you"
+text = "接下，问他为什么不自己去。"
+next = "persuade"
+reply = "“我去了，他就会说总督府的人来了。”伊尔汗顿了顿，“你去，他只会说一个船长来了。”"
+effects = [
+  { kind = "affinity", person = "ilhan", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这是你家的债，自己跟父亲商量去。"
+next = "failed"
+reply = "他笑了一声，说跟他父亲商量，就等于跟一门炮商量。他整了整衣领，转身走了。"
+effects = [{ kind = "flag", flag = "c13_request_ilhan_declined" }]
+
+# 二、谷仓门口：谷商在仓门口等你，伊尔汗站在街对面，假装在看一艘船。
+[[tracks.chapters]]
+key = "persuade"
+title = "谷仓门口"
+text = "谷商在仓门口等你，手里捻着一串念珠，说老兵的债拖了五年，早就不是当初那笔数。“一次还清，少一文也不行。”他说，“不然我就去总督府，问问令郎。”你刚要开口，就看见街对面站着伊尔汗，假装在看一艘船，眼睛却往这边瞟。他见你望过去，把领子又理了一遍：“我只是顺路，别多想。”"
+news = "亚历山大港谷仓门口，一个老兵的债谈成了分期，契据是总督府一个年轻书记写的。"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+objectives = [{ kind = "at", at = "alexandria", text = "到亚历山大港去" }]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 2, 24] },
+  { kind = "alive", person = "ilhan", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "negotiate"
+text = "按市面上的规矩跟他谈：分十二期，利钱停在今天。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "你说不清利钱该停在哪一天，谷商一句话就把你堵了回来。"
+reply = "谷商算了半天，点了头。伊尔汗过了街，用他那手好字当场写了分期的契据，落款写的是他父亲的名字，不是他自己的。"
+effects = [
+  { kind = "affinity", person = "ilhan", value = 3 },
+  { kind = "flag", flag = "c13_request_ilhan_terms" },
+]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟他讲：逼一个老兵的儿子去总督府，你自己的生意也不好做。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "谷商的念珠停了。“那就分期。”他说，“按月还，一期都不许少。少一期，总督府的门我照样去敲。”"
+effects = [
+  { kind = "affinity", person = "ilhan", value = 3 },
+  { kind = "flag", flag = "c13_request_ilhan_terms" },
+]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "ilhan", value = -2 }, { kind = "flag", flag = "c13_request_ilhan_hard" }, { kind = "flag", flag = "c13_request_ilhan_terms" }] }
+
+[[tracks.chapters.choices]]
+key = "pay_first"
+text = "先替他付头一期，让谷商看见诚意。"
+next = "result_owes"
+requires = [{ kind = "cash", ge = 400 }]
+hint = "你身上凑不出这一期的钱。"
+reply = "谷商把钱数了两遍，答应了分期。伊尔汗过了街，脸涨得通红，说这钱他会还，“一个铜子也不少”。"
+effects = [
+  { kind = "cash", value = -400 },
+  { kind = "affinity", person = "ilhan", value = 3 },
+  { kind = "flag", flag = "c13_request_ilhan_terms" },
+  { kind = "flag", flag = "c13_request_ilhan_owes" },
+]
+
+# 三、契据上的名字：一个月后伊尔汗又下到港口，父亲收到了契据。
+[[tracks.chapters]]
+key = "result"
+title = "契据上的名字"
+text = "一个月后，伊尔汗又下到港口，脸上还带着气。父亲收到了契据，把他骂了一顿，骂完把那张纸压进了枕头底下。“嘴上骂，夜里还拿出来看。”他说，眼睛看着别处。他从袖子里掏出一只钱袋，搁在木箱上。钱袋是旧的，缝口却是新补的，针脚歪歪扭扭。“我爹让我来的。”他说完，耳根先红了。“这是谢你的。”他又补了一句，“谢你没把我的名头拿出来说。”"
+news = "亚历山大港的人说，禁卫军一个老兵的儿子替父亲还债，没用自己在总督府的名头。"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+objectives = [
+  { kind = "at", at = "alexandria", text = "到亚历山大港去" },
+  { kind = "wait", days = 30, text = "等一个月" },
+]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 2, 24] },
+  { kind = "alive", person = "ilhan", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下，替我问候老兵。"
+next = "done"
+reply = "他说父亲让他转一句话：“船长要是哪天缺人押船，禁卫军的老骨头还能用。”他说完自己先笑了。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "ilhan", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_done" },
+  { kind = "memory", memory = "mem-request_ilhan-result", title = "枕头底下的契据" },
+]
+
+[[tracks.chapters.choices]]
+key = "refuse_money"
+text = "钱不收，你拿回去。"
+next = "done"
+reply = "他愣了一下，把钱袋收回袖子里。“我爹要是知道，又得骂我一顿。”他说，却没有真生气，又补一句：“你这人，比我爹还不爱说话。”"
+effects = [
+  { kind = "affinity", person = "ilhan", value = 9 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_done" },
+  { kind = "memory", memory = "mem-request_ilhan-result", title = "枕头底下的契据" },
+]
+
+# 三之二、先付的那一期：你替他垫过一期，他这回是来还的。
+[[tracks.chapters]]
+key = "result_owes"
+title = "还这一期"
+text = "一个月后，伊尔汗又下到港口，手里攥着一只钱袋。父亲收到了契据，骂他骂得半条街都听得见，骂完把那张纸压进了枕头底下。“你替我垫的那一期，我今天一并还你。”他说得很快，像是怕自己反悔。他把钱袋搁在木箱上，又把手收回去，攥成了拳，袋口的线头还是白的。“是我爹催我来的。”他说完，把脸转向了码头，那边正有人往船上扛谷包。"
+news = "亚历山大港的货栈里传，老兵的债拖了五年，头一期是一个跑船的船长替他垫的。"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+objectives = [
+  { kind = "at", at = "alexandria", text = "到亚历山大港去" },
+  { kind = "wait", days = 30, text = "等一个月" },
+]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 2, 24] },
+  { kind = "alive", person = "ilhan", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "accept_owes"
+text = "收下他还的这一期，替我问候老兵。"
+next = "done"
+reply = "他说父亲让他转一句话：“垫的那一期，老子记着。”他说完，把袋口又系紧了，没敢看你。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "ilhan", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_done" },
+  { kind = "memory", memory = "mem-request_ilhan-result", title = "枕头底下的契据" },
+]
+
+[[tracks.chapters.choices]]
+key = "return_loan"
+text = "收下，连替他垫的那一期也一并算清。"
+next = "done"
+reply = "他瞪着我，钱袋在两只手之间换了三回，最后数出几枚银币放回我手里：“这回算你赢。”"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "ilhan", value = 9 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_done" },
+  { kind = "memory", memory = "mem-request_ilhan-result", title = "枕头底下的契据" },
+]
+
+# 三之三、六期：谈判时谷商只肯分六期，契据压在枕头底下，父亲卖了一匹马。
+[[tracks.chapters]]
+key = "result_partial"
+title = "六期的契据"
+text = "伊尔汗下到港口，比上一回瘦了一圈，靴子上还沾着马厩里的草。分期谈成了六期，一期也不许拖，父亲为此得卖掉一匹马，是他当年骑过的那匹灰马。父亲收到了契据，没骂，只把它压进了枕头底下。伊尔汗把钱袋搁在木箱上，手指按着袋口，一直没松开。“马是我爹自己牵去卖的。”他说，“还跟买马的人讲了半天价，一个子儿没让。”"
+news = "亚历山大港的码头上说，禁卫军一个老兵的债分了六期还，他家卖掉了一匹马。"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+objectives = [
+  { kind = "at", at = "alexandria", text = "到亚历山大港去" },
+  { kind = "wait", days = 30, text = "等一个月" },
+]
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1590, 2, 24] },
+  { kind = "alive", person = "ilhan", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "accept_partial"
+text = "收下六期里的这一期，替我问候老兵。"
+next = "done"
+reply = "“我爹说，马卖了，人还能走路。”伊尔汗说完，没笑，把钱袋口松开又系紧。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "ilhan", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ilhan_partial" },
+  { kind = "memory", memory = "mem-request_ilhan-result", title = "枕头底下的契据" },
+]
+
+[[tracks.chapters.choices]]
+key = "refuse_partial"
+text = "钱不收，六期让他自己还。"
+next = "done"
+reply = "他把钱袋往回推了推，又推回自己怀里。“六期就六期，我自己一期一期还。”他说得很硬。"
+effects = [
+  { kind = "affinity", person = "ilhan", value = 4 },
+  { kind = "flag", flag = "c13_request_ilhan_partial" },
+]

@@ -1,0 +1,271 @@
+# 请托：能付到哪一步（request_bianca_mare）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：比安卡·马雷（bianca_mare，1510-10-19 生，女），热那亚的寡妇银行家，只在掌灯以后见客；cast 在 cast/story_europe.toml。
+# 类型：说服（persuade）。六章：offer（掌灯以后）、persuade（造了一半的船）；persuade 的三条路各自转入自己的结算章：report_half（一半是实数）、report_list（写满名字的纸）、report_warn（先结了工钱）；检定失败转入 report_name（一个名字）。终点 done / failed。
+#   结构说明：结算章只经 next 进入，选项不 requires 任何别的分支设下的旗标；检定失败由 persuade 的 fail 分支转入 report_name，它自己的两个选项结账（现金 1200，折中）。
+# 报价：T 当面（auto=false），启动用 ask:request_bianca_mare。offer 章不写 at，objectives 为在港里找到她；offer deadline 1574-06-30，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1557-06-01 至 1574-06-30；persuade 1557-06-01 至 1574-12-30，进入后 90 天期限；结算章 1557-06-01 至 1574-12-30。
+# 依据·史实背景：热那亚银行家的世纪——西班牙王室的借款由热那亚人的放贷网转手；那不勒斯的船坞要先付木料与工钱，船才下得了水。比安卡是原创人物。
+# 依据·原创：比安卡的账房与灯座、借据、那不勒斯船坞里造了一半的加莱船、造船匠与他的名单、三十个工匠。
+# 依赖：港口 genoa、naples（ports_west_med.toml）；技能 negotiation（skills.toml）；人物 bianca_mare。B10b：无需改名。主线门禁：无（比安卡不是主线人物）。
+# C7：tie_new_ursula_bianca_mare 那条线在安特卫普，本请托只在热那亚与那不勒斯，不写乌尔苏拉，不写安特卫普；本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：无。
+# 设的旗标：c13_request_bianca_mare_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_half（谈成一半）、_list（检定成功，写下名单）、_warned（通风报信）、_late（超时，终局）、_done（终局：一半、名单、一个名字）、_partial（通风报信，终局）。
+# 检定失败（press 的 fail）只转入 report_name、不设旗标：分支旗标只有 _half、_list、_warned 三面，合乎“至多三面”。
+# 秘密（cast persona）：她替人收账的来路。正文、见闻与来信一律不写，只写她收账时的样子。
+# 口头禅：招呼语“请坐。灯够亮吗？”与“签字以前，你可以慢慢想清楚，自己已经欠了谁。”只在 offer 章用一次，全轨道不再重复。
+# 报酬：现金最多 2250（谈成一半或写下名单 2250；一个名字 1200；通风报信只给路费 300）；好感最多 +13（通风报信时合计 −5）；名声 +3；回忆 mem-request_bianca_mare-result（只给 report_half 的第一条选项）。
+# 回忆插画 mem-request_bianca_mare-result：灯座上压着一张借据，灯芯挑得很亮，借据旁边是一张写满名字的纸。
+
+[[tracks]]
+key = "request_bianca_mare"
+name = "能付到哪一步"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["bianca_mare"]
+
+# 一、掌灯以后：比安卡把借据推过来。
+[[tracks.chapters]]
+key = "offer"
+title = "掌灯以后"
+text = "热那亚的账房只在掌灯以后开门。比安卡坐在灯座后头，把一张借据推到你面前，借款人是那不勒斯的一个造船匠，欠了三年。“请坐。灯够亮吗？”她没等你答，手指压着纸角，“签字以前，你可以慢慢想清楚，自己已经欠了谁。”她要的不是把钱全讨回来。“去看看他能付到哪一步。付不出的那一截，换成另一样东西：他还欠着谁，欠多少，一个一个写下来。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "bianca_mare", text = "在港里找到她" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1574, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1574, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去那不勒斯。"
+next = "persuade"
+reply = "她把借据折好交给你，说：“他要是哭，你就等他哭完。”"
+effects = [
+  { kind = "affinity", person = "bianca_mare", value = 2 },
+  { kind = "flag", flag = "c13_request_bianca_mare_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_list"
+text = "接下。先问她：那张名单要做什么？"
+next = "persuade"
+reply = "她看了你一眼，笑得很淡：“银行家知道谁欠谁，才知道谁快撑不住了。这是利息。”"
+effects = [
+  { kind = "affinity", person = "bianca_mare", value = 2 },
+  { kind = "flag", flag = "c13_request_bianca_mare_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "讨债的事，我不做。"
+next = "failed"
+reply = "她把借据收回去，压在灯座底下：“那就等下一个肯去的人。”"
+effects = [{ kind = "flag", flag = "c13_request_bianca_mare_declined" }]
+
+# 二、造了一半的船：那不勒斯的船坞。三条路各自转入自己的结算章。
+[[tracks.chapters]]
+key = "persuade"
+title = "造了一半的船"
+text = "那不勒斯的船坞里，一条加莱船造了一半，肋骨露在风里。造船匠看了借据，脸色灰下去。“西班牙人订的船钱，一直没付。”他说，“木料商、铁匠，还有三十个工匠，工钱已经欠了一整个冬天。”他从工棚的柜子里拿出一本账，翻到夹着布条的一页，按在桌上。“名单在这里。交出去，那些人就要找上门。”"
+speaker = "captain"
+mood = "tense"
+at = "naples"
+objectives = [{ kind = "at", at = "naples", text = "到那不勒斯去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1574, 12, 30] },
+  { kind = "alive", person = "bianca_mare", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "bianca_mare", value = -3 }, { kind = "flag", flag = "c13_request_bianca_mare_late" }, { kind = "letter", person = "bianca_mare", text = "那不勒斯那笔，我另找人去了。他付到了哪一步，你就不必知道了。" }] }
+news = "那不勒斯的船坞里，一条造了一半的加莱船旁边，热那亚来的人跟造船匠谈了一下午的账。"
+
+[[tracks.chapters.choices]]
+key = "collect"
+text = "跟他谈一个能付的数，名单不要了。"
+next = "report_half"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "这种讲价你还没学会，一开口，他就把名单往回收。"
+reply = "你们谈到了借款的一半，分三期付，名单他留着。他说这一半他付得起，付完能把船造完。"
+effects = [
+  { kind = "affinity", person = "bianca_mare", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_half" },
+]
+
+[[tracks.chapters.choices]]
+key = "press"
+text = "照她的意思：能付的付，付不出的写名单。"
+next = "report_list"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report_name", effects = [{ kind = "affinity", person = "bianca_mare", value = -2 }] }
+reply = "他付了三分之一，抖着手一个一个写下四个名字，头一个是木料商。"
+effects = [
+  { kind = "affinity", person = "bianca_mare", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_list" },
+]
+
+[[tracks.chapters.choices]]
+key = "warn"
+text = "悄悄告诉他：名单交出去，那些人都会找上门，先去结工匠的账。"
+next = "report_warn"
+reply = "他愣了很久，说谢谢你。他什么也没付，第二天就把三十个工匠的工钱先结了。"
+effects = [
+  { kind = "affinity", person = "bianca_mare", value = -2 },
+  { kind = "flag", flag = "c13_request_bianca_mare_warned" },
+]
+
+# 三之一、一半是实数：谈成了一半，名单没要。
+[[tracks.chapters]]
+key = "report_half"
+title = "一半是实数"
+text = "掌灯以后，比安卡听你说完，手指在灯座上敲了两下。一半，三期付，每一期都在季末。造船匠的名单还锁在他自己的账本里。她没有打断你，只在听到“三期”的时候把灯芯拨暗了一点。“他能付到哪一步？”她问。你把数又说了一遍：一半，三期，船能下水。她停了很久，又问：“那份名单呢？”"
+news = "热那亚那位只在掌灯以后见客的寡妇银行家，那不勒斯的一笔旧债收回来一半。"
+speaker = "captain"
+mood = "tense"
+at = "genoa"
+objectives = [{ kind = "at", at = "genoa", text = "回热那亚去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1574, 12, 30] },
+  { kind = "alive", person = "bianca_mare", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "report_half_plain"
+text = "照实说：一半，三期，名单没要。"
+next = "done"
+reply = "她点点头：“一半是实数，名单是虚数。你替我拿了实数。”她付了你酬金，没再提名单。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "bianca_mare", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_done" },
+  { kind = "memory", memory = "mem-request_bianca_mare-result", title = "灯座上敲了两下" },
+]
+
+[[tracks.chapters.choices]]
+key = "report_half_keep"
+text = "说：名单在他的账本里，让他自己留着。"
+next = "done"
+reply = "“那就让它留在他那里。”她说，“账本是他的，欠的人也是他的。”她付了钱，手指在灯座上又敲了一下。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "bianca_mare", value = 6 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_done" },
+]
+
+# 三之二、写满名字的纸：三分之一的钱，四个名字。
+[[tracks.chapters]]
+key = "report_list"
+title = "写满名字的纸"
+text = "掌灯以后，那张纸摊在灯座边上。四个名字，木料商的写在最前头，后面是铁匠，再后面是两个工头。比安卡一个一个看过去，看到第三个，手指停了一下，又往下看。“他付了三分之一。”你说，“三十个工匠的工钱还欠着，木料商的料款也没有清。”她没有抬头。“三分之一，是他肯付的。这四个名字，是他肯写的。”她把纸角抚平，灯芯挑亮了一些。"
+news = "热那亚的脚夫说，比安卡的灯下添了一张写满名字的纸，那不勒斯的造船匠把账还了三分之一。"
+speaker = "captain"
+mood = "tense"
+at = "genoa"
+objectives = [{ kind = "at", at = "genoa", text = "回热那亚去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1574, 12, 30] },
+  { kind = "alive", person = "bianca_mare", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "report_list_hand"
+text = "把钱和名单一起交给她。"
+next = "done"
+reply = "她把名单看了一遍，折起来放进抽屉，锁上。她付了你酬金，比你想的多一点：“利息里有你的一份。”"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "bianca_mare", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "report_list_keep"
+text = "说：名单先留在你这里，等他把钱付完。"
+next = "done"
+reply = "“那就你替我留着。”她说，“付完的那天，它就没用了。”她付了钱，没有去拿那张纸。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "bianca_mare", value = 6 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_done" },
+]
+
+# 三之三、一个名字：检定失败的折中。只写了木料商一个人的名字，钱一文没付。
+[[tracks.chapters]]
+key = "report_name"
+title = "一个名字"
+text = "那不勒斯的造船匠只写了一个名字。木料商的，字抖得厉害，墨都洇开了。钱一文没付，三十个工匠的名字，他一个也没写。你把那张纸放在灯座上，比安卡看了很久。“一个名字。”她说，“工匠呢？”你说他没有提，也没有付。她把纸翻过来，背面是干净的，她没有提笔。"
+news = "那不勒斯的造船匠只写了一个名字，一文钱没付，热那亚的银行家把那张纸收进了抽屉。"
+speaker = "captain"
+mood = "tense"
+at = "genoa"
+objectives = [{ kind = "at", at = "genoa", text = "回热那亚去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1574, 12, 30] },
+  { kind = "alive", person = "bianca_mare", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "name_plain"
+text = "照实说：他只写了一个名字，一文没付。"
+next = "done"
+reply = "“一个名字，也是一笔账。”她说，把那张纸收进抽屉，付了钱，数得比平时慢。"
+effects = [
+  { kind = "cash", value = 1200 },
+  { kind = "affinity", person = "bianca_mare", value = 4 },
+  { kind = "flag", flag = "c13_request_bianca_mare_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "name_defend"
+text = "替他说句好话：他不是不想付，是三十个工匠压着他。"
+next = "done"
+reply = "“我知道。”她说，“所以我才只要一个名字。”她付了钱，没再提那三十个工匠。"
+effects = [
+  { kind = "cash", value = 1200 },
+  { kind = "affinity", person = "bianca_mare", value = 3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_done" },
+]
+
+# 三之四、先结了工钱：你去提醒了他，他没交名单。
+[[tracks.chapters]]
+key = "report_warn"
+title = "先结了工钱"
+text = "掌灯以后，你把话说完，比安卡没有问那不勒斯的船。她先问的是工匠们。“他先结了？”你说他先结了三十个工匠的工钱，那张名单没交。她把手指从灯座上收回来，放进袖子里。“我要的是那张名单，不是他的工匠。”你分不清她是在气你，还是在算账。她往灯里添了一点油，像是要把你的脸看清楚。"
+news = "热那亚的书铺里有人说，那不勒斯的造船匠先把三十个工匠的工钱结了，寡妇银行家没收到他的名单。"
+speaker = "captain"
+mood = "sad"
+at = "genoa"
+objectives = [{ kind = "at", at = "genoa", text = "回热那亚去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1574, 12, 30] },
+  { kind = "alive", person = "bianca_mare", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "warn_plain"
+text = "照实说：你去提醒了他，他先把工匠的工钱结了。"
+next = "done"
+reply = "她沉默了一会儿，说你替他通了风，这一笔她记下了。她付了你一点路费，说下回不必来了。"
+effects = [
+  { kind = "cash", value = 300 },
+  { kind = "affinity", person = "bianca_mare", value = -3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "warn_silent"
+text = "只说：他什么也没付，你也没要名单。"
+next = "done"
+reply = "她看了你很久，没有追问。路费付了，她把借据从灯座底下抽出来，又压了回去：“下回不必来了。”"
+effects = [
+  { kind = "cash", value = 300 },
+  { kind = "affinity", person = "bianca_mare", value = -3 },
+  { kind = "flag", flag = "c13_request_bianca_mare_partial" },
+]

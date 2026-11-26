@@ -1,0 +1,539 @@
+/* 新界面（试用）——共用的反馈组件（components/feedback/；docs/UI-REDESIGN.md 第 4、9 节）：
+ * 就地错误（.v2-inline-error）、空状态与“下一步”（.v2-empty）、快捷键小键帽（.v2-kbd、.v2-keys）、确认对话框（.v2-confirm）、
+ * 载入中（.v2-loading、.v2-loading-block 与骨架细条 .v2-skeleton）、按需加载失败（.v2-load-failed）、全部快捷键（.v2-shortcuts）。
+ * 这些类只在 v2 下才会出现在 DOM 里（v1 时组件画原来的样子或什么都不画）；各画面不要重写它们，需要的变体加在这里。
+ * 对比度（WCAG AA）：印章红字 / 浅红底 5.65、次要字 / 浅红底 ≥ 6、说明字 / 纸面 ≥ 5.2、深色底上的错误字 12.7（见第 6 节）。
+ */
+
+/* 读屏专用的文字：看不见、念得出（小键帽的完整键名） */
+:root[data-ui="v2"] .v2-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ═════════════════════════ 就地错误 ═════════════════════════ */
+/* 出错：印章红的浅底、左边一道印章红，“!”小圆标；为什么（印章红、半粗）在上，怎么办（次要字）在下，补救按钮在右 */
+:root[data-ui="v2"] .v2-inline-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink);
+  text-align: left;
+  background: #f8e3dc;
+  border: 1px solid rgba(163, 48, 42, 0.28);
+  border-left: 3px solid var(--v2-seal);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .v2-inline-error-mark {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 1;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .v2-inline-error-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+:root[data-ui="v2"] .v2-inline-error-reason {
+  margin: 0;
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .v2-inline-error-fix {
+  margin: 2px 0 0;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .v2-inline-error-action {
+  flex: none;
+  align-self: center;
+}
+/* 做不了的原因（不是出错）：没有底色，只一道细线，“!”是空心的 */
+:root[data-ui="v2"] .v2-inline-error.is-blocked {
+  padding: 4px 0 4px 10px;
+  background: transparent;
+  border-color: transparent;
+  border-left-color: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .v2-inline-error.is-blocked .v2-inline-error-mark {
+  color: var(--v2-seal);
+  background: transparent;
+  border: 1px solid currentColor;
+}
+:root[data-ui="v2"] .v2-inline-error.is-blocked .v2-inline-error-reason {
+  font-weight: 500;
+}
+/* 放在列表行里：紧凑一些 */
+:root[data-ui="v2"] .v2-inline-error.is-compact {
+  gap: 8px;
+  margin: 4px 0;
+  padding: 6px 10px;
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .v2-inline-error.is-compact .v2-inline-error-mark {
+  width: 16px;
+  height: 16px;
+  margin-top: 0;
+}
+/* 深色底上（账台、舞台浮层） */
+:root[data-ui="v2"] .v2-inline-error.on-night {
+  color: var(--v2-on-night);
+  background: rgba(194, 69, 58, 0.18);
+  border-color: rgba(242, 145, 127, 0.35);
+  border-left-color: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .v2-inline-error.on-night .v2-inline-error-reason {
+  color: #ffd9d2;
+}
+:root[data-ui="v2"] .v2-inline-error.on-night .v2-inline-error-fix {
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .v2-inline-error.on-night.is-blocked {
+  background: transparent;
+  border-color: transparent;
+  border-left-color: var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .v2-inline-error.on-night.is-blocked .v2-inline-error-mark {
+  color: #ffd9d2;
+}
+
+/* ═════════════════════════ 空状态 ═════════════════════════ */
+/* 浅底虚线框、居中：一句话说为什么空，下面一个主按钮做下一步 */
+:root[data-ui="v2"] .v2-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+  padding: 24px 16px 20px;
+  text-align: center;
+  background: rgba(255, 253, 248, 0.5);
+  border: 1px dashed var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .v2-empty-icon {
+  display: inline-flex;
+  margin-bottom: 2px;
+  opacity: 0.85;
+}
+:root[data-ui="v2"] .v2-empty-text {
+  max-width: 32em;
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .v2-empty-hint {
+  max-width: 32em;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .v2-empty-action {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* 小节里的一小块空状态（还没有借款、仓库空、还没有建筑……；EmptyState 的 className="is-compact"）：
+   小一号、靠左、只一道淡虚线，不抢整页空状态的戏；“下一步”是小号的主按钮 */
+:root[data-ui="v2"] .v2-empty.is-compact {
+  align-items: flex-start;
+  gap: 2px;
+  margin: 4px 0;
+  padding: 10px 12px;
+  text-align: left;
+  background: transparent;
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .v2-empty.is-compact .v2-empty-text {
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .v2-empty.is-compact .v2-empty-hint {
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .v2-empty.is-compact .v2-empty-action {
+  min-height: var(--v2-h-sm);
+  margin-top: 6px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+}
+
+/* 触屏上“下一步”与补救按钮至少 44 px 高（各画面不必各自再补） */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .v2-empty-action,
+  :root[data-ui="v2"] .v2-empty.is-compact .v2-empty-action,
+  :root[data-ui="v2"] .v2-inline-error-action {
+    min-height: var(--v2-h-touch);
+    padding: 0 16px;
+  }
+}
+
+/* ═════════════════════════ 载入中 ═════════════════════════ */
+/* 一行安静的说明：前面一颗缓缓明灭的黄铜小点 */
+:root[data-ui="v2"] .v2-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .v2-loading::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--v2-brass);
+  border-radius: 50%;
+  animation: v2-loading-pulse 1.2s ease-in-out infinite;
+}
+@keyframes v2-loading-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* 功能窗口、列表还在路上（feedback/Loading.tsx）：说明 + 三道长短不一的骨架细条，像几行字——不画虚线框（那是“空”的意思） */
+:root[data-ui="v2"] .v2-loading-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0;
+  padding: 4px 0;
+}
+:root[data-ui="v2"] .v2-loading-block .v2-loading {
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .v2-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+:root[data-ui="v2"] .v2-skeleton-line {
+  display: block;
+  width: 92%;
+  height: 12px;
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-sm);
+  animation: v2-skeleton-breathe 1.6s ease-in-out infinite;
+}
+:root[data-ui="v2"] .v2-skeleton-line:nth-child(2) {
+  width: 76%;
+  animation-delay: 0.15s;
+}
+:root[data-ui="v2"] .v2-skeleton-line:nth-child(3n) {
+  width: 54%;
+  animation-delay: 0.3s;
+}
+@keyframes v2-skeleton-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ═════════════════════════ 按需加载失败 ═════════════════════════ */
+/* 功能窗口里：就是一条就地错误（shell/LoadBoundary.tsx） */
+:root[data-ui="v2"] .v2-load-failed {
+  margin: 8px 0;
+}
+:root[data-ui="v2"] .v2-load-failed .v2-inline-error {
+  margin: 0;
+}
+/* 整屏的界面（主界面、养成主界面）没能载入：深色底的正中一张纸卡，不再是左上角的一行光秃秃的字 */
+:root[data-ui="v2"] .v2-load-failed.is-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: calc(16px + var(--safe-top, 0px)) calc(16px + var(--safe-right, 0px)) calc(16px + var(--safe-bottom, 0px)) calc(16px + var(--safe-left, 0px));
+  background: var(--v2-night-0);
+}
+:root[data-ui="v2"] .v2-load-failed-card {
+  width: min(460px, 100%);
+  padding: 16px;
+  background: var(--v2-paper-0);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+/* 窄屏：“重试”换到下面一行、整宽，拇指够得着 */
+@media (max-width: 479px) {
+  :root[data-ui="v2"] .v2-load-failed-card .v2-inline-error {
+    flex-wrap: wrap;
+  }
+  /* “!”与文字留在第一行（文字占去“!”以外的整行），按钮换到下面 */
+  :root[data-ui="v2"] .v2-load-failed-card .v2-inline-error-text {
+    flex: 1 1 calc(100% - 28px);
+  }
+  :root[data-ui="v2"] .v2-load-failed-card .v2-inline-error-action {
+    flex: 1 1 100%;
+    min-height: var(--v2-h-touch);
+  }
+}
+
+/* ═════════════════════════ 快捷键 ═════════════════════════ */
+/* 小键帽：纸底、1 px 描边（底边 2 px，像一颗键）、3 px 圆角，12 px 字 */
+:root[data-ui="v2"] .v2-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1;
+  color: var(--v2-ink-2);
+  white-space: nowrap;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  border-bottom-width: 2px;
+  border-radius: var(--v2-r-xs);
+}
+/* 按钮里的小键帽：跟在字后面，颜色随按钮 */
+:root[data-ui="v2"] button .v2-kbd,
+:root[data-ui="v2"] .btn .v2-kbd {
+  margin-left: 2px;
+  color: inherit;
+  background: rgba(255, 253, 248, 0.6);
+  border-color: currentColor;
+  opacity: 0.8;
+}
+/* 一组提示：键帽 + 做什么，一条一条横排 */
+:root[data-ui="v2"] .v2-keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.4;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .v2-keys-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+:root[data-ui="v2"] .v2-keys-combo {
+  display: inline-flex;
+  gap: 2px;
+}
+/* 深色底上（账台、顶栏、提示） */
+:root[data-ui="v2"] .v2-keys.on-night {
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .v2-keys.on-night .v2-kbd {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line-strong);
+}
+/* 触屏上没有键盘：不显示 */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .v2-keys,
+  :root[data-ui="v2"] .v2-kbd {
+    display: none;
+  }
+}
+
+/* ═════════════════════════ 确认对话框 ═════════════════════════ */
+/* 桌面：居中的纸卡（16 px 圆角、深阴影、遮罩 66%），标题宋体，主按钮在右、写清动作 */
+:root[data-ui="v2"] .modal.v2-confirm-backdrop {
+  background: rgba(6, 11, 20, 0.66);
+}
+:root[data-ui="v2"] .modal-body.v2-confirm {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(440px, 100%);
+  padding: 22px 24px 18px;
+  border-radius: var(--v2-r-lg);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .modal-body.v2-confirm:focus {
+  outline: none;
+}
+:root[data-ui="v2"] .v2-confirm-grip {
+  display: none;
+}
+:root[data-ui="v2"] .v2-confirm-title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+  border: 0;
+}
+:root[data-ui="v2"] .v2-confirm-body {
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .v2-confirm-body p {
+  margin: 0 0 6px;
+}
+:root[data-ui="v2"] .v2-confirm .v2-inline-error {
+  margin: 0;
+}
+:root[data-ui="v2"] .v2-confirm-actions {
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+/* 全部快捷键（feedback/ShortcutHelp.tsx）：确认对话框同一张纸卡，宽一些；分组两栏，每条“键帽 | 做什么”，细线分隔 */
+:root[data-ui="v2"] .modal-body.v2-confirm.v2-shortcuts {
+  width: min(760px, 100%);
+  max-width: min(760px, calc(100vw - 32px));
+  max-height: calc(var(--vh100, 100vh) - 48px);
+  overflow-y: auto;
+}
+:root[data-ui="v2"] .v2-shortcuts-lead {
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .v2-shortcuts-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 28px;
+}
+:root[data-ui="v2"] .v2-shortcuts-group h3 {
+  margin: 10px 0 2px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .v2-shortcuts-group dl {
+  margin: 0;
+}
+:root[data-ui="v2"] .v2-shortcuts-row {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .v2-shortcuts-row:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .v2-shortcuts-row dt {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+:root[data-ui="v2"] .v2-shortcuts-alt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+:root[data-ui="v2"] .v2-shortcuts-sep {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .v2-shortcuts-row dd {
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.4;
+  color: var(--v2-ink);
+}
+@media (max-width: 719px) {
+  :root[data-ui="v2"] .v2-shortcuts-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* 触屏上没有键盘（小键帽也不显示）：不出现 */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .v2-shortcuts-backdrop {
+    display: none;
+  }
+}
+
+/* 手机：从底部升起、整宽、上角圆；按钮整宽竖排，“取消”在最下面（拇指最近），主按钮在它上面 */
+@media (max-width: 719px) {
+  :root[data-ui="v2"] .modal.v2-confirm-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .modal-body.v2-confirm {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(var(--vh100, 100vh) - 24px - var(--safe-top, 0px));
+    padding: 24px 18px calc(16px + var(--safe-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+  }
+  :root[data-ui="v2"] .v2-confirm-grip {
+    display: block;
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    background: var(--v2-line-strong);
+    border-radius: var(--v2-r-pill);
+  }
+  :root[data-ui="v2"] .v2-confirm-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  :root[data-ui="v2"] .v2-confirm-actions .btn {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .modal-body.v2-confirm,
+  :root[data-ui="v2"] .v2-load-failed-card,
+  :root[data-ui="v2"] .v2-skeleton-line {
+    animation: none;
+  }
+  :root[data-ui="v2"] .v2-loading::before {
+    animation: none;
+    opacity: 0.8;
+  }
+}

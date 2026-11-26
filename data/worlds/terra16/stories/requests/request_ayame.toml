@@ -1,0 +1,186 @@
+# 请托：送她回家（request_ayame）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：大炊御门菖（ayame，1540-03-07 生，女），大炊御门家的姬君，上臈一心要栽培的人；势力 imperial_court，身份档 2。cast：cast/classmates_kyoto.toml。
+# 类型：押运／带人（escort）。任务单写的是三章，文件里是四章：offer（报价，堺）、arrive（热田，送到家门口）、report（堺，女孩被叫进门吃饭）、report_partial（堺，女孩进了门却没得一句好话）。
+#   多出一章是引擎的限制：任务单的 report 章靠变体把“没有 c13_request_ayame_welcomed”的结局改成工钱 1000、终局旗标 _partial，
+#   可变体只改文字、不改玩法，所以 arrive 里设了 welcomed 的两条路（与父亲说话检定成功、照宫里的礼数）走 next 到 report，
+#   其余两条（与父亲说话检定失败、买米饴）走 next 到 report_partial；两章各有两个选项，选项意思相同，回应按结局各写一份。
+#   买米饴那条路任务单的回应写的是“没骂出口”，与“挨了骂”的变体对不上：这里另设分支旗标 c13_request_ayame_gift，
+#   report_partial 读它换一段文字（父亲没骂，也没说一句话）；检定失败那条用本章的正文（当着街坊骂了一句）。
+# 报价：V（到访）。菖借着替宫里办事从京都下到堺（sakai），auto=true；窗口 1572-01-01 至 1590-06-30；offer 写 family=c13_offer_sakai，冷却 20 天；
+#   玩家满 17 岁、菖满 18 岁；名声门槛 0。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：arrive 章 deadline_days=60（堺到热田同一片海），超时走 failed，菖来信一封，好感 -3，旗标 _late；超时另写一条见闻（不写的话会套用本章“进了门”的见闻）。
+#   与父亲说话的检定失败没有回应文字（引擎在失败时不显示 reply），失败的结果写在 fail 的 news 里：父亲当着街坊骂了一句才让她进门。
+#   report 与 report_partial 是普通章，可以一直等；菖本人不上船，回话时“又从京都下到堺”，所以只写 at = "sakai"，不写 person 目标。
+# 依据·史实背景：宫中女房的规矩；见习（下级女官）犯了错要被退回家，退回是很重的羞辱。热田是热田神宫的门前町，参拜的人多，街上多卖草鞋、斗笠与饴。
+# 依据·原创：见习阿杏（十五岁上下，热田门前町卖草鞋斗笠的铺子家的女儿）、打碎的那只御用茶碗、菖写给她父母的信与信封背面添的一行小字、包着点心的手巾、门前町的米饴。
+#   任务单的梗概写“送回堺的家”，场景、关键章与修正都写热田；以热田为准。
+#   阿杏未成年：只写晕船、想家、怕挨骂；不写危险，不写恋爱。
+# 秘密：菖那首赢了歌会的恋歌的来历——永远不碰。正文不写小督、代笔、歌会、澪；“当年一个人教她的”不点名。见闻一律不写。
+# 读的旗标：bond ayame ≥ C（offer 的变体，只读）；c13_request_ayame_asked（arrive 的变体，本轨道 offer 设，只改文字）；
+#   c13_request_ayame_gift（report_partial 的变体，本轨道 arrive 设，只改文字）。不设任何 c7_ 旗标。
+# 设的旗标：c13_request_ayame_accepted（offer 两种接法）、_declined（offer 回绝）、
+#   分支旗标 _asked（问了茶碗的事）、_welcomed（父亲叫她进门吃饭）、_gift（买了米饴），共三面；
+#   终局旗标 _late（arrive 超时）、_done（report）、_partial（report_partial），每条路只设一面。
+# 不用 relation / tie / bond / heart 效果；bond 只作条件读取。
+# 报酬：工钱最多 1600（女孩挨了骂或没得好话 1000），每条终局一次；好感最多 +13（接下 +2、送到 +3、最好的结局 +8）；检定失败 -2；超时 -3；名声 +2；
+#   回忆 mem-request_ayame-report。买米饴另花 100（先查现钱）。无物品奖励。
+# 依赖：港口 sakai、atsuta（ports_east_asia.toml）；技能 court_etiquette（skills.toml）；属性 eloquence；人物 ayame。无需 B10b 改名，无主线门禁。
+# 与 C7 的交叉：tie_new_ayame_kogo（与小督，1557—1571 京都）、bond_ayame（澪，重逢 1561）都在 1572 年以前；本轨道 1572 年起，不写小督、澪。
+# 回忆插画清单：
+#   mem-request_ayame-report「理平的袖口」：堺的客店二楼，窗下跪坐的菖低头把自己的袖口按平，矮几上一只茶碗，窗外是堺港的帆。
+
+[[tracks]]
+key = "request_ayame"
+name = "送她回家"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ayame"]
+
+# 一、担了一半：堺的客店里，菖替哭肿了眼的见习理平袖口，托你把她送回热田。
+[[tracks.chapters]]
+key = "offer"
+title = "担了一半"
+text = "堺，大小路边一间客店的二楼。菖坐在窗下，宫里的衣裳，一道褶也没有。她身边跪着一个十五岁上下的女孩，叫阿杏，眼睛哭肿了，两只袖口都被眼泪揉得发皱。菖说，阿杏在宫里当见习，前些日子打碎了一只御用的茶碗。这罪她替担了一半，另一半担不住，孩子要被退回热田的家。“走海路，悄悄送回去。门前町的人，不必看见宫里的轿子。”阿杏一张口，眼泪又下来了。菖把她的手拉过来，袖口一折一折理平，压了压：“袖口理好了，再开口。”阿杏吸了吸鼻子，真的不哭了。菖这才从怀里取出一封信，说是写给孩子父母的。“信里一个字也没骂人。骂人的话，宫里已经说够了。”"
+speaker = "captain"
+mood = "tense"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "在堺的港里" }]
+when = [{ kind = "date", from = [1572, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "ayame", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "ayame", level = "C" }]
+text = "堺，大小路边一间客店的二楼。我一进门，菖先不说话，看了看我的袖口，起身伸手替我扯平了一边，才坐回窗下。她身边跪着一个十五岁上下的女孩，叫阿杏，眼睛哭肿了，两只袖口都被眼泪揉得发皱。菖说，阿杏在宫里当见习，前些日子打碎了一只御用的茶碗。这罪她替担了一半，另一半担不住，孩子要被退回热田的家。“走海路，悄悄送回去。门前町的人，不必看见宫里的轿子。”阿杏一张口，眼泪又下来了。菖把她的手拉过来，袖口一折一折理平，压了压：“袖口理好了，再开口。”阿杏吸了吸鼻子，真的不哭了。菖这才从怀里取出一封信，说是写给孩子父母的。“信里一个字也没骂人。骂人的话，宫里已经说够了。”"
+
+[[tracks.chapters.choices]]
+key = "take_her"
+text = "接下，送她回热田的家。"
+next = "arrive"
+reply = "菖把信交给我。信封上的字端端正正，“热田门前町”几个字写得比别的都大，大概是怕船上的人认不清。她又从袖子里取出一块手巾，里头包着几块点心，塞进阿杏手里：“船上饿了吃。吐了，也拿它擦。”阿杏攥着手巾，点了点头。"
+effects = [{ kind = "affinity", person = "ayame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_bowl"
+text = "接下。先问一句：那只茶碗，真是她一个人打碎的？"
+next = "arrive"
+reply = "菖看了我一眼。“碎了就是碎了。”可她把信从我手里拿了回去，叫店里的人送来笔砚，在信封背面添了一行小字，写得极小，我没看清。墨吹干了，她才重新交给我，又把一块包着点心的手巾塞给阿杏，说船上饿了吃。"
+effects = [{ kind = "affinity", person = "ayame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_accepted" }, { kind = "flag", flag = "c13_request_ayame_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宫里的事，我不好插手。"
+next = "failed"
+reply = "菖点点头，没有不高兴。“那我再另想办法。”她把一块包着点心的手巾给阿杏系在腰上，结打得端端正正，又替她把衣领掖好。我下楼时，听见她在楼上叫店里的人去问，这几天有没有往伊势湾去的船。"
+effects = [{ kind = "flag", flag = "c13_request_ayame_declined" }]
+
+# 二、热田的门口：一路晕船想家，到了门前町，阿杏攥着手巾站在门槛外不敢进。
+[[tracks.chapters]]
+key = "arrive"
+title = "热田的门口"
+text = "从堺出来，阿杏吐了两回，一回在纪伊的外海，一回过了伊势湾的口子。夜里她不睡，抱着膝坐在船尾看月亮，问我宫里的人会不会很快就把她忘了。到了热田，门前町一条街都是给参拜神宫的人开的铺子，她家卖草鞋和斗笠，屋檐下挂满了新编的草鞋。宫里退人的知会比船先到了一步，她父亲已经站在门口，脸色铁青。阿杏站在门槛外头，不敢进去，也不敢走，手里攥着菖给的那块手巾，攥得指节发白。"
+speaker = "captain"
+mood = "tender"
+at = "atsuta"
+objectives = [{ kind = "at", at = "atsuta", text = "把她送到热田" }]
+when = [{ kind = "alive", person = "ayame", value = true }]
+deadline_days = 60
+news = "热田门前町卖草鞋斗笠的那家铺子，从京都宫里回来的女儿进了门，送她来的是一条外乡船。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "ayame", value = -3 }, { kind = "flag", flag = "c13_request_ayame_late" }, { kind = "letter", person = "ayame", text = "女孩我托宫里下向的人送回去了。她父亲骂了她。——菖" }]
+news = "热田门前町卖草鞋斗笠的那家铺子，女儿被宫里下来的人送回家，进门那天，父亲当着一条街骂了她。"
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_ayame_asked" }]
+text = "从堺出来，阿杏吐了两回，一回在纪伊的外海，一回过了伊势湾的口子。夜里她不睡，抱着膝坐在船尾看月亮，问我宫里的人会不会很快就把她忘了。她几次看我手里那封信的背面，看那行小字，什么也没问。到了热田，门前町一条街都是给参拜神宫的人开的铺子，她家卖草鞋和斗笠，屋檐下挂满了新编的草鞋。宫里退人的知会比船先到了一步，她父亲已经站在门口，脸色铁青。阿杏站在门槛外头，不敢进去，也不敢走，手里攥着菖给的那块手巾，攥得指节发白。"
+
+[[tracks.chapters.choices]]
+key = "speak_father"
+text = "先进去跟她父亲说话，把菖的信郑重递上。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "report"
+reply = "我跨进门，双手把信递上去，说这是宫里一位姬君写的，孩子的事，都在里头。父亲站着读，读到一半，在门框边上坐了下来。读完，他脸上那股青色退了，回头朝门外喊了一声：“进来吃饭。”阿杏愣了好一会儿，才跨过门槛。"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }, { kind = "flag", flag = "c13_request_ayame_welcomed" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "ayame", value = -2 }], news = "热田门前町卖草鞋斗笠的那家铺子，京都回来的女儿站在门口，父亲读完一封信，当着街坊骂了她一句，才叫她进门。" }
+
+[[tracks.chapters.choices]]
+key = "court_manner"
+text = "照宫里的礼数，替菖向她父母致意，再递信。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "宫里的礼你只学过皮毛，做出来像是在演戏"
+next = "report"
+reply = "我在门口行的是宫里的礼，替菖向两位致意。父亲吓了一跳，慌忙弯腰还礼，母亲从里屋跑出来，在他身后跪下还礼。信读完，母亲没说话，起身一把把阿杏搂进了屋里，屋檐下的草鞋被碰得晃了好一阵。"
+effects = [{ kind = "affinity", person = "ayame", value = 3 }, { kind = "flag", flag = "c13_request_ayame_welcomed" }]
+
+[[tracks.chapters.choices]]
+key = "small_gift"
+text = "先替她买一盒门前町的米饴，让她自己捧着进门。"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "身上剩的那几文，饴屋的伙计看了只是摇头。"
+next = "report_partial"
+reply = "我在街口的饴屋买了一盒米饴，用纸包好，放进阿杏手里。她捧着盒子跨进门，把信搁在盒盖上。父亲看看米饴，又看看信，张了张嘴，那句骂人的话到底没骂出口，只侧过身，让她进了里屋。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "ayame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_gift" }]
+
+# 三、回话：堺的客店里，菖听完热田的事，说另一半的罪她打算全担下来。
+[[tracks.chapters]]
+key = "report"
+title = "回话"
+text = "堺，还是那间客店的二楼。菖又从京都下来了，坐在原来的窗下，衣裳还是一道褶也没有。我把热田的事从头讲给她听：船上吐的那两回，船尾的月亮，门前町屋檐下那一排草鞋。讲到阿杏跨进门槛、屋里给她摆上了饭碗，菖一直挺着的肩，松了一点。她端起茶碗，没有喝，又放下了。“宫里已经有人问起另一半的罪了。”她说得很慢，“我打算全担下来。”我还没开口，她先把自己的袖口按平了。“规矩就是规矩。可规矩没说不许人替。”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "回到堺" }]
+when = [{ kind = "alive", person = "ayame", value = true }]
+news = "堺的一间客店里，宫里来的一位姬君把一件差事办完了。店里的女佣说，她听人回话时，袖口一直按得平平的。"
+
+[[tracks.chapters.choices]]
+key = "praise"
+text = "说她这套规矩，比宫里那些人的都硬。"
+next = "done"
+reply = "她理了理袖口，说这套规矩是当年一个人教她的。“输了也不许乱。”她叫人把工钱包好推给我，又想起什么似的，添了一句：“替我带句话给那孩子。手巾不用还了。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "ayame", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_done" }, { kind = "memory", memory = "mem-request_ayame-report", title = "理平的袖口" }]
+
+[[tracks.chapters.choices]]
+key = "worry"
+text = "劝她别全担，宫里的人会记她一笔。"
+next = "done"
+reply = "她摇了摇头。“记一笔，就记一笔。”她低头看了看自己的两只袖口，又抬起眼来，“我的袖口还理得平。”说完叫店里的人把工钱拿来，数也没数，就推到了我这边。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "ayame", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_done" }, { kind = "memory", memory = "mem-request_ayame-report", title = "理平的袖口" }]
+
+# 三′、回话：阿杏进了门，却没得一句好话；菖沉默了一会儿，仍打算把另一半的罪全担下来。
+[[tracks.chapters]]
+key = "report_partial"
+title = "回家了，就好"
+text = "堺，还是那间客店的二楼。菖又从京都下来了，坐在原来的窗下。我把热田的事从头讲给她听：船上吐的那两回，船尾的月亮，门前町屋檐下那一排草鞋。讲到她父亲当着街坊骂了阿杏一句，才让她进门，菖没有打断，听完沉默了一会儿。“回家了，就好。”她把茶碗转了半圈，又转回来。“宫里已经有人问起另一半的罪了。我打算全担下来。”我还没开口，她先把自己的袖口按平了。“规矩就是规矩。可规矩没说不许人替。”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "回到堺" }]
+when = [{ kind = "alive", person = "ayame", value = true }]
+news = "堺的一间客店里，宫里来的一位姬君听完一条热田回来的船捎的话，把茶碗转了半圈，坐了很久才叫人结账。"
+
+[[tracks.chapters.variants]]
+key = "gift"
+when = [{ kind = "flag", flag = "c13_request_ayame_gift" }]
+text = "堺，还是那间客店的二楼。菖又从京都下来了，坐在原来的窗下。我把热田的事从头讲给她听：船上吐的那两回，船尾的月亮，门前町屋檐下那一排草鞋。讲到阿杏捧着一盒米饴进门，她父亲那句骂没骂出口，可也没跟她说一句话，菖没有打断，听完沉默了一会儿。“回家了，就好。”她把茶碗转了半圈，又转回来。“宫里已经有人问起另一半的罪了。我打算全担下来。”我还没开口，她先把自己的袖口按平了。“规矩就是规矩。可规矩没说不许人替。”"
+
+[[tracks.chapters.choices]]
+key = "praise"
+text = "说她这套规矩硬，硬得替那孩子一路撑到了家门口。"
+next = "done"
+reply = "她理了理袖口，说这套规矩是当年一个人教她的。“输了也不许乱。那孩子回了家，也不许乱。”她叫人把工钱推给我，停了一下，又添一句：“替我带句话给她，手巾不用还了。”"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "ayame", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_partial" }, { kind = "memory", memory = "mem-request_ayame-report", title = "理平的袖口" }]
+
+[[tracks.chapters.choices]]
+key = "worry"
+text = "劝她别全担：孩子已经受了委屈，她再担，宫里也不会松口。"
+next = "done"
+reply = "她摇了摇头。“那孩子在自家门口受的委屈，我也该受。宫里记一笔，就记一笔。”她低头看了看袖口，“我的袖口还理得平。”工钱推过来时，她的手在钱袋上多按了一下，才收回去。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "ayame", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ayame_partial" }, { kind = "memory", memory = "mem-request_ayame-report", title = "理平的袖口" }]

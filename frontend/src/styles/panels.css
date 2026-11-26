@@ -1,0 +1,1484 @@
+/* 各功能面板的样式（舰队、航海士、海战、商队、产业、报表、情报、期货、设置、调试、遭遇海盗对话框）。
+   面板放在外壳窗口的羊皮纸内容区（.parchment）里：深棕文字、纸色卡片、木框与黄铜点缀。
+   文字色优先取外壳在 .parchment 里定义的 --text / --muted / --heading / --up / --down，保证与全局主题一致。
+   选择器一律以 .pn（面板根）或 .pn-battle-modal 开头，避免与全局样式冲突。 */
+
+.pn,
+.pn-battle-modal .pn-battle-body {
+  --pn-ink: var(--text, #2b1b17);
+  --pn-ink2: #5c3a21;
+  --pn-muted: var(--muted, #6b4f33);
+  --pn-card: #f3e3c3;
+  --pn-well: #ead5ab;
+  --pn-hi: #fffaf0;
+  --pn-edge: #7d5f36;
+  --pn-edge-soft: #b8955f;
+  --pn-wood: #8a5a32;
+  --pn-wood-lt: #b8804a;
+  --pn-wood-dk: #3b2416;
+  --pn-gold: #dca434;
+  --pn-gold-lt: #f5d66b;
+  --pn-gold-dk: #a86b1c;
+  --pn-red: #8c1f28;
+  --pn-green: #24522d;
+  --pn-teal: #15656f;
+  --pn-shadow: 3px 3px 0 rgba(43, 27, 23, 0.28);
+  color: var(--pn-ink);
+}
+
+/* ── 通用：文字、图标、分节标题、卡片 ── */
+.pn .sub,
+.pn .empty,
+.pn small {
+  color: var(--pn-muted);
+}
+.pn .up {
+  color: var(--up, var(--pn-green));
+}
+.pn .down {
+  color: var(--down, var(--pn-red));
+}
+.pn .pn-icon {
+  flex: none;
+  vertical-align: -3px;
+  margin-right: 4px;
+}
+/* 分节标题：外壳给 h3 配了麻绳分隔线；这里只让像素图标与文字对齐，并加一点纸色高光 */
+.pn .pn-section > .pn-h {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--heading, var(--pn-ink));
+  text-shadow: 1px 1px 0 var(--pn-hi);
+}
+.pn .pn-section > .pn-h > .pn-icon {
+  margin-right: 4px;
+}
+.pn .pn-h4 {
+  display: flex;
+  align-items: center;
+  margin: 8px 0 4px;
+  font-size: 13px;
+  color: var(--pn-ink2);
+}
+.pn .pn-card,
+.pn-battle-modal .pn-card {
+  background: var(--pn-card);
+  color: var(--pn-ink);
+  border: 2px solid var(--pn-edge);
+  border-radius: 0;
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    inset -1px -1px 0 var(--pn-edge-soft),
+    var(--pn-shadow);
+  padding: 8px 10px;
+  margin: 8px 0;
+}
+.pn .pn-note {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  font-size: 12px;
+  color: var(--pn-muted);
+}
+.pn .pn-chip {
+  font-style: normal;
+  font-size: 11px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border: 1px solid currentColor;
+}
+.pn .pn-chip.bad {
+  color: var(--pn-red);
+  background: rgba(236, 106, 92, 0.15);
+}
+.pn .pn-level {
+  display: inline-block;
+  padding: 2px 6px;
+  font: bold 12px/1 "Consolas", "Microsoft YaHei", monospace;
+  color: #fff3b0;
+  background: #23305e;
+  border: 1px solid #141c3a;
+  box-shadow:
+    inset 1px 1px 0 #34488a,
+    1px 1px 0 rgba(43, 27, 23, 0.4);
+  text-shadow: 1px 1px 0 #141c3a;
+}
+.pn .pn-level.small {
+  padding: 1px 4px;
+  font-size: 11px;
+}
+
+/* ── 状态条：像素风的分段条 ── */
+.pn .pn-bar {
+  position: relative;
+  display: inline-block;
+  flex: 1;
+  min-width: 48px;
+  height: 10px;
+  vertical-align: middle;
+  background: #3b2416;
+  border: 1px solid var(--pn-ink);
+  box-shadow: 0 1px 0 var(--pn-hi);
+  --bar: var(--pn-gold);
+}
+.pn .pn-bar > i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--bar);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 250, 240, 0.4),
+    inset 0 -2px 0 rgba(26, 20, 35, 0.3);
+}
+.pn .pn-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 7px, rgba(43, 27, 23, 0.5) 7px 8px);
+  pointer-events: none;
+}
+.pn .pn-bar > b {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--pn-red);
+  z-index: 1;
+}
+.pn .pn-tone-hp.ok {
+  --bar: #6aad48;
+}
+.pn .pn-tone-hp.warn {
+  --bar: #f5b94d;
+}
+.pn .pn-tone-hp.bad {
+  --bar: #ec6a5c;
+}
+.pn .pn-tone-cargo {
+  --bar: #b8804a;
+}
+.pn .pn-tone-food {
+  --bar: #e0b85a;
+}
+.pn .pn-tone-water {
+  --bar: #4fd0c4;
+}
+.pn .pn-tone-morale {
+  --bar: #ec6a5c;
+}
+.pn .pn-tone-crew {
+  --bar: #6a8ad8;
+}
+.pn .pn-tone-nav {
+  --bar: #2f86b8;
+}
+.pn .pn-tone-trade {
+  --bar: #dca434;
+}
+.pn .pn-tone-combat {
+  --bar: #c8373a;
+}
+.pn .pn-tone-mgmt {
+  --bar: #8a64b0;
+}
+.pn .pn-tone-loyal {
+  --bar: #e2789a;
+}
+
+.pn .pn-stat {
+  display: grid;
+  grid-template-columns: 16px minmax(10em, auto) minmax(60px, 1fr);
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  font-size: 13px;
+}
+.pn .pn-stat .pn-icon {
+  margin: 0;
+}
+.pn .pn-stat-text {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 头像画框 ── */
+.pn .pn-portrait,
+.pn-battle-modal .pn-portrait {
+  display: inline-block;
+  flex: none;
+  line-height: 0;
+  padding: 3px;
+  background: var(--pn-wood);
+  border: 1px solid var(--pn-ink);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-wood-lt),
+    inset -1px -1px 0 var(--pn-wood-dk),
+    2px 2px 0 rgba(43, 27, 23, 0.3);
+}
+.pn .pn-portrait.gold {
+  background: var(--pn-gold);
+  box-shadow:
+    inset 1px 1px 0 #fff3b0,
+    inset -1px -1px 0 var(--pn-gold-dk),
+    2px 2px 0 rgba(43, 27, 23, 0.3);
+}
+.pn-battle-modal .pn-portrait.iron {
+  background: #62627a;
+  box-shadow:
+    inset 1px 1px 0 #9a9ab0,
+    inset -1px -1px 0 #1e1e26,
+    2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* ── 舰队 ── */
+.pn .pn-fleet-card {
+  padding-top: 0;
+}
+.pn .pn-captain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -10px 8px;
+  padding: 8px 10px;
+  color: var(--pn-gold-lt);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 5px, rgba(26, 20, 35, 0.18) 5px 6px),
+    linear-gradient(#6b4226, #5c3a21);
+  border-bottom: 2px solid var(--pn-ink);
+  box-shadow: inset 0 1px 0 var(--pn-wood-lt);
+}
+.pn .pn-captain-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.pn .pn-captain-title {
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-shadow:
+    1px 1px 0 #1a1423,
+    2px 2px 0 rgba(26, 20, 35, 0.4);
+}
+.pn .pn-captain-sub {
+  font-size: 12px;
+  color: #efd98c;
+}
+.pn .pn-ribbon {
+  padding: 1px 12px 1px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff3b0;
+  background: var(--pn-red);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 50%, 100% 100%, 0 100%);
+  text-shadow: 1px 1px 0 #4a1018;
+}
+.pn .pn-fleet-card:not(.flagship) {
+  padding-top: 8px;
+}
+.pn .pn-skippers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0;
+}
+.pn .pn-skipper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 10px;
+  font-weight: bold;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-fleet-where {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  font-weight: bold;
+}
+.pn .pn-fleet-view {
+  box-sizing: content-box;
+  margin: 6px 0 8px;
+  background: #6f95d6;
+  border: 2px solid var(--pn-ink);
+  box-shadow:
+    0 0 0 2px var(--pn-wood),
+    0 0 0 3px var(--pn-ink),
+    var(--pn-shadow);
+}
+.pn .pn-fleet-stage {
+  width: 100%;
+  height: 100%;
+}
+.pn .pn-ships {
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 6px;
+  padding: 0;
+}
+.pn .pn-ship {
+  display: grid;
+  grid-template-columns: 52px minmax(7em, auto) minmax(60px, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 8px;
+  padding: 4px 8px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-ship-art {
+  grid-row: span 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  line-height: 0;
+}
+.pn .pn-ship-name {
+  font-weight: bold;
+}
+.pn .pn-ship-stats {
+  grid-column: 2 / span 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  font-size: 12px;
+  color: var(--pn-ink2);
+}
+.pn .pn-ship-stats > span {
+  display: inline-flex;
+  align-items: center;
+}
+.pn .pn-stats {
+  padding: 4px 8px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-goods {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 4px 0;
+  padding: 0;
+}
+.pn .pn-goods li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.pn .pn-good-icon {
+  flex: none;
+}
+.pn .pn-sail-preview {
+  font-weight: bold;
+}
+
+/* ── 招募船员（舰队页、酒馆；一键补足） ── */
+.crew-hire-row {
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0;
+}
+.crew-hire-note {
+  margin: 2px 0;
+  font-size: 12px;
+}
+.crew-short {
+  margin: 2px 0;
+  font-weight: bold;
+}
+.tv-crew-fleet {
+  padding: 4px 0 6px;
+  border-bottom: 1px dashed var(--parchment-deep, #c9a66b);
+}
+.tv-crew-line {
+  font-weight: bold;
+}
+.tv-crew-custom {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+.tv-crew-custom-btns {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── 航海士 ── */
+.pn .pn-help {
+  font-size: 12px;
+}
+.pn .pn-mate {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+}
+.pn .pn-mate-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.pn .pn-mate-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.pn .pn-mate-name {
+  font-size: 16px;
+  text-shadow: 1px 1px 0 var(--pn-hi);
+}
+.pn .pn-role {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px 1px 4px;
+  font-size: 12px;
+  font-weight: bold;
+  background: #efd98c;
+  border: 1px solid var(--pn-edge);
+  box-shadow: 1px 1px 0 rgba(43, 27, 23, 0.25);
+}
+.pn .pn-role-captain {
+  background: #a8c8ec;
+}
+.pn .pn-role-accountant {
+  background: #e0dde6;
+}
+.pn .pn-role-trader {
+  background: #f5d66b;
+}
+.pn .pn-role-caravan {
+  background: #f0cf96;
+}
+.pn .pn-role-industry {
+  background: #a9d86a;
+}
+.pn .pn-abilities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px 14px;
+  margin: 6px 0;
+}
+.pn .pn-ability {
+  display: grid;
+  grid-template-columns: 2.6em minmax(40px, 1fr) 2em;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+.pn .pn-ability-label {
+  color: var(--pn-muted);
+}
+.pn .pn-ability-v {
+  text-align: right;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+.pn .pn-mate-pay {
+  display: grid;
+  grid-template-columns: auto minmax(60px, 1fr);
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.pn .pn-mate-pay > span {
+  display: inline-flex;
+  align-items: center;
+}
+.pn .pn-bio {
+  margin: 6px 0;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--pn-ink2);
+  background: var(--pn-well);
+  border-left: 3px solid var(--pn-edge-soft);
+}
+.pn .pn-recruits {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.pn .pn-recruit {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+}
+.pn .pn-recruit-main {
+  flex: 1;
+  min-width: 0;
+}
+.pn .pn-recruit-at,
+.pn .pn-recruit-cost {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--pn-ink2);
+}
+.pn .pn-recruit .pn-abilities {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+}
+
+/* ── 战术海战 ── */
+.pn .pn-battle-head {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+.pn .pn-wind-icon {
+  margin-left: 6px;
+}
+.pn .pn-hexframe {
+  line-height: 0;
+  background: #123a66;
+  border: 3px solid var(--pn-wood);
+  box-shadow:
+    inset 0 0 0 1px var(--pn-wood-dk),
+    0 0 0 1px var(--pn-ink),
+    var(--pn-shadow);
+}
+.pn .pn-px,
+.pn-battle-modal .pn-px {
+  image-rendering: pixelated;
+}
+.pn-tactical .pn-hexmap .hex {
+  fill: #1d5b92;
+  stroke: #0b1f3a;
+  stroke-width: 1.2;
+  stroke-opacity: 0.55;
+}
+.pn-tactical .pn-hexmap .hex.reach {
+  fill: rgba(245, 214, 107, 0.28);
+  stroke: #f5d66b;
+  stroke-width: 1.6;
+  stroke-opacity: 1;
+  cursor: pointer;
+}
+.pn-tactical .pn-hexmap .hex.reach:hover {
+  fill: rgba(245, 214, 107, 0.5);
+}
+.pn-tactical .pn-hexmap .unit {
+  cursor: pointer;
+}
+.pn-tactical .pn-hexmap .pn-unit-ring {
+  stroke-width: 1.5;
+}
+.pn-tactical .pn-hexmap .unit.mine .pn-unit-ring {
+  fill: rgba(245, 214, 107, 0.22);
+  stroke: #f5d66b;
+}
+.pn-tactical .pn-hexmap .unit.enemy .pn-unit-ring {
+  fill: rgba(200, 55, 58, 0.22);
+  stroke: #ec6a5c;
+}
+.pn-tactical .pn-hexmap .unit.mine.selected .pn-unit-ring {
+  stroke: #fffaf0;
+  stroke-width: 2.5;
+  stroke-dasharray: 5 3;
+  animation: pn-march 1s linear infinite;
+}
+.pn-tactical .pn-hexmap .unit.enemy.target .pn-unit-ring {
+  stroke: #fff3b0;
+  stroke-width: 2.5;
+  stroke-dasharray: 3 3;
+  cursor: crosshair;
+  animation: pn-march 0.6s linear infinite;
+}
+.pn-tactical .pn-hexmap .unit.enemy.target {
+  cursor: crosshair;
+}
+@keyframes pn-march {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+.pn-tactical .pn-hexmap .pn-unit-bow {
+  stroke: #1a1423;
+  stroke-width: 1;
+}
+.pn-tactical .pn-hexmap .unit.mine .pn-unit-bow {
+  fill: #f5d66b;
+}
+.pn-tactical .pn-hexmap .unit.enemy .pn-unit-bow {
+  fill: #ec6a5c;
+}
+.pn-tactical .pn-hexmap .pn-unit-hp-bg {
+  fill: #1a1423;
+}
+.pn-tactical .pn-hexmap .pn-unit-hp.ok {
+  fill: #6aad48;
+}
+.pn-tactical .pn-hexmap .pn-unit-hp.warn {
+  fill: #f5b94d;
+}
+.pn-tactical .pn-hexmap .pn-unit-hp.bad {
+  fill: #ec6a5c;
+}
+.pn-tactical .pn-hexmap .unit text.pn-unit-id {
+  fill: #fffaf0;
+  font-size: 10px;
+  font-weight: bold;
+  stroke: #1a1423;
+  stroke-width: 2.5;
+  paint-order: stroke;
+  pointer-events: none;
+}
+.pn .pn-units {
+  margin: 8px 0;
+  padding: 4px 8px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-units .pn-unit-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 80px;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  font-size: 13px;
+}
+.pn .pn-units .pn-unit-row.mine {
+  color: var(--pn-ink);
+}
+.pn .pn-units .pn-unit-row.enemy {
+  color: var(--pn-red);
+}
+.pn .pn-units .pn-unit-row.gone {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+.pn .pn-units .pn-unit-row .pn-bar {
+  min-width: 0;
+}
+.pn .pn-unit-art {
+  display: inline-flex;
+  justify-content: center;
+  width: 26px;
+  line-height: 0;
+}
+.pn .pn-orders-label {
+  font-weight: bold;
+}
+.pn .pn-glyph {
+  margin-right: 3px;
+  font-weight: bold;
+}
+.pn .pn-battle-log {
+  max-height: 180px;
+  overflow: auto;
+  margin: 8px 0;
+  padding: 4px 8px 4px 28px;
+  font-size: 13px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+
+/* ── 遭遇海盗对话框 ── */
+.pn-battle-modal {
+  background: rgba(11, 15, 36, 0.62);
+}
+.pn-battle-modal .pn-battle-body {
+  max-width: 580px;
+  padding: 14px 18px;
+  color: var(--pn-ink);
+  background: #e2c796;
+  border: 4px solid var(--pn-wood-dk);
+  border-radius: 0;
+  box-shadow:
+    inset 0 0 0 2px var(--pn-wood),
+    inset 0 0 0 3px var(--pn-wood-lt),
+    6px 6px 0 rgba(0, 0, 0, 0.5);
+}
+.pn-battle-modal .pn-battle-title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 3px;
+  color: var(--pn-red);
+  text-shadow:
+    1px 1px 0 var(--pn-hi),
+    2px 2px 0 rgba(43, 27, 23, 0.3);
+}
+.pn-battle-modal .pn-encounter {
+  margin: 8px 0;
+}
+.pn-battle-modal .pn-encounter-art {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+.pn-battle-modal .pn-encounter-leader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+.pn-battle-modal .pn-encounter-leader figcaption {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--pn-red);
+}
+.pn-battle-modal .pn-encounter-ship {
+  line-height: 0;
+  border: 2px solid var(--pn-ink);
+  box-shadow: 2px 2px 0 rgba(43, 27, 23, 0.35);
+}
+.pn-battle-modal .pn-encounter-line {
+  font-weight: bold;
+}
+.pn-battle-modal .sub {
+  color: var(--pn-muted);
+}
+
+/* ── 商队 ── */
+.pn .pn-train {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 2px;
+}
+.pn .pn-train-more {
+  align-self: center;
+  margin-left: 4px;
+  font-weight: bold;
+}
+.pn .pn-animal-pick,
+.pn .pn-caravan-road {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px 14px;
+  margin: 6px 0;
+  padding: 6px 10px 4px;
+  /* 一条土路：上面是田野，下面是路面 */
+  background: linear-gradient(to bottom, #a9d86a33 0 60%, #dba66e 60% 88%, #c08050 88%);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-animal-info {
+  align-self: center;
+  padding: 1px 6px;
+  font-size: 12px;
+  background: rgba(255, 250, 240, 0.75);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-caravan-head {
+  font-weight: bold;
+}
+.pn .pn-caravan-where {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+.pn .pn-leg-progress {
+  position: relative;
+  display: block;
+  height: 6px;
+  margin: 2px 0 6px;
+  background: repeating-linear-gradient(90deg, #8c5a36 0 6px, transparent 6px 10px);
+}
+.pn .pn-leg-progress > i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--pn-gold);
+  border-right: 3px solid var(--pn-red);
+}
+.pn .pn-route {
+  padding: 6px 10px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-route-summary {
+  margin: 0 0 6px;
+  font-weight: bold;
+}
+.pn .pn-legs {
+  list-style: none;
+  margin: 0 0 0 8px;
+  padding: 0 0 0 14px;
+  border-left: 3px dashed #8c5a36;
+  font-size: 13px;
+}
+.pn .pn-legs li {
+  position: relative;
+  margin: 3px 0;
+}
+.pn .pn-legs li::before {
+  content: "";
+  position: absolute;
+  left: -21px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  background: var(--pn-gold);
+  border: 2px solid var(--pn-ink);
+}
+.pn .pn-legs li.risky::before {
+  background: #ec6a5c;
+}
+
+/* ── 产业 ── */
+.pn .pn-works {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+}
+.pn .pn-works.stalled {
+  background: repeating-linear-gradient(-45deg, var(--pn-card) 0 10px, #ecd7ad 10px 20px);
+}
+.pn .pn-works-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: start;
+  gap: 4px;
+  padding: 6px;
+  line-height: 0;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+  box-shadow: inset 1px 1px 0 rgba(43, 27, 23, 0.15);
+}
+.pn .pn-works-icon .pn-level {
+  line-height: 1;
+}
+.pn .pn-works-head {
+  font-size: 14px;
+}
+.pn .pn-stamp {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 0 6px;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--pn-red);
+  background: rgba(255, 250, 240, 0.6);
+  border: 2px solid var(--pn-red);
+  transform: rotate(-6deg);
+}
+.pn .pn-recipe,
+.pn .pn-stock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0;
+}
+.pn .pn-recipe-name {
+  font-weight: bold;
+  margin-right: 4px;
+}
+.pn .pn-goods-inline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.pn .pn-good-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px 1px 2px;
+  font-size: 12px;
+  background: var(--pn-hi);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-none {
+  padding: 1px 6px;
+  font-size: 12px;
+  color: var(--pn-muted);
+  border: 1px dashed var(--pn-edge-soft);
+}
+.pn .pn-arrow {
+  margin: 0 4px;
+  font-weight: bold;
+  color: var(--pn-muted);
+}
+.pn .pn-pnl {
+  font-weight: bold;
+  font-size: 13px;
+}
+.pn .pn-build {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.pn .pn-build-form {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 报表：账簿 ── */
+.pn .pn-chart-frame {
+  padding: 6px 6px 2px;
+  background: #fbf3dc;
+  border: 2px solid var(--pn-edge);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    var(--pn-shadow);
+}
+.pn .pn-period {
+  margin: 6px 0;
+}
+.pn .pn-ledger .statement {
+  background:
+    linear-gradient(90deg, transparent 0 22px, rgba(200, 55, 58, 0.55) 22px 23px, transparent 23px),
+    #fbf3dc;
+  border: 1px solid var(--pn-edge-soft);
+  box-shadow: var(--pn-shadow);
+  font-size: 13px;
+}
+.pn .pn-ledger .statement td,
+.pn .pn-ledger .statement th {
+  padding: 3px 8px 3px 30px;
+  border-bottom: 1px solid rgba(29, 91, 146, 0.22);
+  color: var(--pn-ink);
+}
+.pn .pn-ledger .statement .head th {
+  color: var(--pn-red);
+  letter-spacing: 2px;
+  background: rgba(200, 55, 58, 0.08);
+  text-shadow: none;
+  border-bottom: 1px solid rgba(200, 55, 58, 0.45);
+}
+.pn .pn-ledger .statement .total td {
+  font-weight: bold;
+  border-top: 1px solid var(--pn-ink);
+  border-bottom: 3px double var(--pn-ink);
+}
+.pn .pn-ledger .statement .num {
+  font-family: "Consolas", "Microsoft YaHei", monospace;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.pn .pn-ledger .statement .num.up {
+  color: var(--pn-green);
+}
+.pn .pn-ledger .statement .num.down {
+  color: var(--pn-red);
+}
+.pn .pn-ledger .statement tbody tr {
+  cursor: default;
+}
+
+/* ── 情报：告示板、事件、航海日志、编年史 ── */
+.pn .pn-board-notes {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 10px 10px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(26, 20, 35, 0.16) 11px 12px),
+    #8a5a32;
+  border: 3px solid var(--pn-wood-dk);
+  box-shadow: inset 0 0 0 1px var(--pn-wood-lt);
+}
+.pn .pn-notice {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  padding: 12px 10px 8px;
+  background: #fbf3dc;
+  border: 1px solid var(--pn-edge-soft);
+  box-shadow: 2px 3px 0 rgba(26, 20, 35, 0.4);
+}
+.pn .pn-notice.pn-src-official {
+  background: var(--pn-hi);
+  border-color: var(--pn-gold);
+  box-shadow:
+    inset 0 0 0 2px #f5d66b88,
+    2px 3px 0 rgba(26, 20, 35, 0.4);
+}
+.pn .pn-notice.pn-src-tavern {
+  background: #ecd7ad;
+}
+.pn .pn-tack {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  margin-left: -7px;
+}
+.pn .pn-notice-head {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.pn .pn-notice-text {
+  grid-column: 1;
+  line-height: 1.5;
+}
+.pn .pn-seal {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+.pn .pn-events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pn .pn-event {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  padding: 4px 8px;
+  background: var(--pn-card);
+  border: 1px solid var(--pn-edge-soft);
+  border-left: 4px solid var(--pn-gold);
+  cursor: help;
+}
+.pn .pn-logbook {
+  max-height: 280px;
+  overflow: auto;
+  margin: 4px 0;
+  padding: 0 10px;
+  list-style: none;
+  font-size: 13px;
+  line-height: 22px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 21px, rgba(29, 91, 146, 0.2) 21px 22px),
+    #fbf3dc;
+  background-attachment: local;
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-logbook li.mine {
+  color: var(--pn-teal);
+  font-weight: bold;
+}
+.pn .pn-scroll {
+  margin: 8px 0;
+  padding: 6px 16px;
+  background: #fbf3dc;
+  border-top: 6px solid var(--pn-wood);
+  border-bottom: 6px solid var(--pn-wood);
+  box-shadow:
+    0 -1px 0 var(--pn-ink),
+    0 1px 0 var(--pn-ink),
+    var(--pn-shadow);
+}
+.pn .pn-scroll h4 {
+  margin: 4px 0;
+  text-align: center;
+  color: var(--pn-red);
+  letter-spacing: 4px;
+}
+.pn .pn-scroll p {
+  line-height: 1.7;
+  text-indent: 2em;
+}
+
+/* ── 期货：行情板 ── */
+.pn .pn-account.pn-call {
+  border-color: var(--pn-red);
+  background: #f3dcc3;
+}
+.pn .pn-account-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.pn .pn-account-head .pn-icon {
+  margin: 0;
+}
+.pn .pn-account-kv {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 6px 0;
+}
+.pn .pn-account-kv > div {
+  padding: 3px 8px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-account-kv dt {
+  font-size: 11px;
+  color: var(--pn-muted);
+}
+.pn .pn-account-kv dd {
+  margin: 0;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+.pn .pn-account .pn-bar {
+  display: block;
+  margin: 8px 0 4px;
+}
+.pn .pn-call-flag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 6px;
+  color: #fff3b0;
+  background: var(--pn-red);
+  border: 1px solid #4a1018;
+  animation: pn-blink 1.2s steps(2, jump-none) infinite;
+}
+@keyframes pn-blink {
+  50% {
+    background: #c8373a;
+  }
+}
+.pn .pn-board {
+  overflow-x: auto;
+  padding: 4px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, 0.025) 3px 4px),
+    #1f2533;
+  border: 4px solid var(--pn-wood);
+  box-shadow:
+    inset 0 0 0 2px #34405a,
+    0 0 0 1px var(--pn-ink),
+    var(--pn-shadow);
+}
+.pn .pn-board-title {
+  width: max-content;
+  margin: 0 auto 4px;
+  padding: 1px 14px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: var(--pn-ink);
+  background: var(--pn-gold);
+  border: 1px solid var(--pn-gold-dk);
+  box-shadow:
+    inset 1px 1px 0 #fff3b0,
+    inset -1px -1px 0 var(--pn-gold-dk);
+}
+.pn .pn-board .pn-quotes {
+  color: #e0dde6;
+  font-family: "Consolas", "Microsoft YaHei", monospace;
+  font-size: 12px;
+  background: transparent;
+  border: 0;
+}
+.pn .pn-board .pn-quotes th {
+  color: #f5d66b;
+  font-weight: normal;
+  background: transparent;
+  text-shadow: none;
+  border-bottom: 1px solid #4f6282;
+  white-space: nowrap;
+}
+.pn .pn-board .pn-quotes td {
+  border-bottom: 1px dashed #34405a;
+  color: #e0dde6;
+  background-color: transparent;
+}
+.pn .pn-board .pn-quotes tbody tr:hover > td {
+  background-color: #34405a;
+}
+.pn .pn-board .pn-quotes tr.selected > td {
+  background-color: #4f6282;
+}
+.pn .pn-board .pn-quotes tr.selected > td:first-child {
+  box-shadow: inset 4px 0 0 #f5d66b;
+}
+.pn .pn-board .pn-quotes .pn-quote-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 11em;
+}
+.pn .pn-board .pn-quotes td.pn-pos {
+  min-width: 10em;
+}
+.pn .pn-board .pn-quotes .pn-quote-text {
+  display: flex;
+  flex-direction: column;
+}
+.pn .pn-board .pn-quotes .pn-quote-text b {
+  color: #fffaf0;
+}
+.pn .pn-board .pn-quotes .pn-quote-text small {
+  color: #aabdd6;
+  font-size: 11px;
+}
+.pn .pn-board .pn-quotes td.num {
+  white-space: nowrap;
+}
+.pn .pn-board .pn-quotes td.pn-bid {
+  color: #a9d86a;
+}
+.pn .pn-board .pn-quotes td.pn-ask {
+  color: #f7a898;
+}
+.pn .pn-board .pn-quotes td.pn-mark {
+  color: #fff3b0;
+  font-weight: bold;
+}
+.pn .pn-board .pn-quotes td.pn-pos.up {
+  color: #a9d86a;
+}
+.pn .pn-board .pn-quotes td.pn-pos.down {
+  color: #f7a898;
+}
+.pn .pn-trend-arrow {
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+.pn .pn-ticket {
+  padding: 2px 10px 8px;
+  background: var(--pn-card);
+  border: 2px dashed var(--pn-edge);
+}
+.pn .pn-delivery {
+  display: flex;
+  align-items: center;
+}
+
+/* ── 设置 ── */
+.pn .pn-form {
+  margin: 10px 0;
+  padding: 2px 10px 8px;
+  background: var(--pn-card);
+  border: 2px solid var(--pn-edge);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    var(--pn-shadow);
+}
+.pn .pn-form > .pn-h {
+  margin-top: 6px;
+}
+.pn .pn-fieldset {
+  margin: 6px 0;
+  padding: 4px 8px 6px;
+  border: 1px dashed var(--pn-edge-soft);
+}
+.pn .pn-fieldset legend {
+  padding: 0 4px;
+  color: var(--pn-muted);
+  font-size: 12px;
+}
+.pn .pn-keyrow {
+  padding: 4px 6px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-savebar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px dashed var(--pn-edge-soft);
+}
+
+/* ── 调试 ── */
+.pn .pn-debug-kv code {
+  padding: 1px 4px;
+  word-break: break-all;
+  color: #a9d86a;
+  background: #1f2533;
+}
+.pn .pn-audit {
+  padding-left: 22px;
+}
+.pn .pn-audit pre {
+  padding: 4px 8px;
+  background: #fbf3dc;
+  border-left: 3px solid var(--pn-edge-soft);
+}
+
+/* 窄窗口：两列变一列 */
+@media (max-width: 520px) {
+  .pn .pn-abilities {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pn .pn-stat {
+    grid-template-columns: 16px minmax(0, 1fr);
+  }
+  .pn .pn-stat .pn-bar {
+    grid-column: 2;
+  }
+}
+
+/* ── 航海士：高等级航海士的名声门槛与直接招募 ── */
+.pn .pn-recruit-fame {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 2px;
+  padding: 0 5px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--pn-gold-dk);
+  border: 1px solid currentColor;
+}
+.pn .pn-recruit-fame.short {
+  color: var(--pn-red);
+  background: rgba(236, 106, 92, 0.12);
+}
+.pn .pn-fame-short {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--pn-red);
+}
+.pn .pn-recruit-hire {
+  margin: 6px 0 0;
+}
+
+/* ── 情报：大事记（组合事件卡片）──
+   像一张钉在告示板上的公报：标题、起止日期、引号体叙事、逐条效果、来源与状态标签。 */
+.pn .pn-ce-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pn .pn-ce {
+  padding: 8px 12px 10px;
+  background: #fbf3dc;
+  border: 2px solid var(--pn-edge);
+  border-top: 5px solid var(--pn-red);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    var(--pn-shadow);
+}
+.pn .pn-ce.is-ended {
+  background: #efe3c6;
+  border-top-color: var(--pn-edge-soft);
+  color: var(--pn-ink2);
+}
+.pn .pn-ce-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+.pn .pn-ce-title {
+  flex: 1 1 auto;
+  margin: 0;
+  font: bold 16px/1.3 "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Songti SC", "SimSun", serif;
+  letter-spacing: 0.08em;
+  color: var(--pn-ink);
+}
+.pn .pn-ce-tag {
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: bold;
+  border: 1px solid currentColor;
+}
+.pn .pn-ce-src-ai {
+  color: var(--pn-teal);
+}
+.pn .pn-ce-src-template {
+  color: var(--pn-wood);
+}
+.pn .pn-ce-live {
+  color: var(--pn-hi);
+  background: var(--pn-green);
+  border-color: var(--pn-green);
+}
+.pn .pn-ce-over {
+  color: var(--pn-muted);
+}
+.pn .pn-ce-span {
+  display: flex;
+  align-items: center;
+  margin: 3px 0;
+  font-size: 12px;
+  color: var(--pn-muted);
+}
+.pn .pn-ce-narrative {
+  margin: 6px 0;
+  padding: 4px 12px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Songti SC", "SimSun", serif;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--pn-ink2);
+  background: var(--pn-well);
+  border-left: 3px solid var(--pn-red);
+}
+.pn .pn-ce-effects {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.pn .pn-ce-effect {
+  display: grid;
+  grid-template-columns: minmax(7em, auto) minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 2px 6px;
+  border-bottom: 1px dotted var(--pn-edge-soft);
+}
+.pn .pn-ce-label {
+  font-weight: bold;
+  color: var(--pn-wood);
+}
+.pn .pn-ce-text {
+  color: var(--pn-ink);
+}
+
+/* ── 设置：结构化输出与 AI 组合事件说明 ── */
+.pn .pn-structured {
+  margin: 6px 0 2px;
+  padding: 4px 6px;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn .pn-st-help {
+  margin: 2px 0 4px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.pn .pn-st-intro {
+  margin: 4px 0 6px;
+  line-height: 1.7;
+}
+.pn .pn-st-steps,
+.pn .pn-st-vocab {
+  margin: 2px 0 6px;
+  padding-left: 22px;
+  line-height: 1.7;
+  font-size: 13px;
+}
+.pn .pn-st-vocab {
+  list-style: square;
+}
+
+@media (max-width: 520px) {
+  .pn .pn-ce-effect {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+/* 船名旁的“传说之船”小签（components/panels/LegendShipTag.tsx） */
+.legend-ship-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 18px;
+  letter-spacing: 1px;
+  vertical-align: 1px;
+  color: #f5f0fa;
+  background: #5a3a7e;
+  border: 1px solid #1b1524;
+  box-shadow:
+    inset 1px 1px 0 #8a64b0,
+    0 0 6px rgba(190, 170, 235, 0.7);
+  cursor: help;
+}

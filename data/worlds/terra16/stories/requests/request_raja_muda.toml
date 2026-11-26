@@ -1,0 +1,187 @@
+# 请托：海峡口的巡船（request_raja_muda）。Claude 写（C13d，2026-10-25），仅中文；寰宇先只做中文，不写英文覆盖。
+# 人物：拉惹·穆达（raja_muda，1540-09-16 生，男）。柔佛流亡王廷的王子，来吉里时只带一只箱子和一长串称号。cast：cast/classmates_giri.toml；身份档 2。
+# 类型：打一仗（fight）。三章：offer（报价）、battle（截船的帆）、after（长长的称号）；没有 stage 章。
+#       offer 有三条不打的路：绕小岛（seamanship 一般，失败回头迎战）、读潮（tide_reading ≥ 60，直接进 after）、回绝（failed）。
+# 报价：当面（T）。auto=false，玩家“问请托”（ask:request_raja_muda）启动；offer 不写 at，目标是在格雷西克找到他（他的日程整段在格雷西克）。
+#       offer 写 deadline=1586-06-30，timeout 走 failed，不写见闻。
+# 窗口：报价 1576-01-01 至 1586-06-30；battle 与 after 的 when 写 1576-01-01 至 1587-08-24（非 stage 章不写 window，窗口写进 when）。
+# 进行中：battle 章 deadline_days=120，超时 failed，附一封来信（好感 -3，旗标 _late）。after 章是普通章，在格雷西克可以一直等。
+# 依据·史实背景：柔佛与葡萄牙人长年交战，1570—80 年代柔佛、亚齐、葡萄牙三方互攻；葡萄牙巡船在马六甲海峡截柔佛的船。
+#       柔佛王廷召回随从与文书，他本人留在吉里（“王子暂留吉里”是叙事里的口信）。巡船与船长都不对应史上某一条船或某一个人。
+# 依据·原创：长串称号、海图上的马六甲、三条船与几箱文书、“论起来，马六甲本该是我家的。”（offer 的 variants 与正文只用一次，放在指马六甲的那一句）、
+#       绕岛时“巡船的帆在远处晃了两回”。battle 正文只写“你打退的那条船”，不写对手的船名与船长名。
+# 不写：达昂（他的心事、他的请托）；班顿相关的对歌；城门下的约定；1587 年柔佛城破。他羡慕达昂的心事永远不写，见闻也不写。
+# 读的旗标：bond raja_muda（offer 的 variant，好感之外的情分，≥ C 时换成老相识的口气）。不设任何 c7_ 旗标。
+# 写的旗标：c13_request_raja_muda_accepted（offer 三条接法，检定失败也设）、_declined（终局，回绝）、_slipped（绕岛或读潮成功，after 读它换一句）、
+#       _fought（battle 的两个选项），_late（battle 超时，终局）、_done（after 的两个收尾，终局）。每条只设一面终局旗标。
+# 报酬：现金最多 2900（after 的收尾各给一次）；好感最多 +13（接下 +2，办成 +3，收尾 +8）；名声 +2（身份档 2 的最好结局）；回忆 mem-request_raja_muda-after。无物品、无技能。
+# 依赖：港口 gresik（after 的 at）；人物 raja_muda；技能 tide_reading（skills.toml）；检定属性 seamanship、arms。不涉及 B10b 改名。
+#       非主线人物，不写 c13_main_ 门禁。
+# 回忆插画：mem-request_raja_muda-after：格雷西克的寓所，海图的四角压着茶壶与靴子，一页折起来的文书压在马六甲上。
+
+[[tracks]]
+key = "request_raja_muda"
+name = "海峡口的巡船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["raja_muda"]
+
+# 一、暂留吉里：格雷西克的寓所，海图铺在地上。
+[[tracks.chapters]]
+key = "offer"
+title = "暂留吉里"
+text = "格雷西克的寓所里，拉惹·穆达把一张海图铺在地上，四角用茶壶和靴子压着。他的手指从吉里一路划过海峡，停在马六甲上：“论起来，马六甲本该是我家的。”柔佛王廷召他的随从回去，三条船，人和几箱文书都装好了。王廷的口信却只有一句：王子暂留吉里。海峡南口有一条葡萄牙巡船，专截柔佛的船。窗外的码头上，卸货的苦力在喊价。他把手指收回来，拍了拍图纸：“替我的船队开一条路。打也行，绕也行，人到就行。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1576, 1, 1], to = [1586, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "raja_muda", ge = 18 },
+]
+objectives = [{ kind = "person", person = "raja_muda", text = "在格雷西克的寓所找到他" }]
+deadline = [1586, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_old_acquaintance"
+when = [{ kind = "bond", person = "raja_muda", level = "C" }]
+text = "格雷西克的寓所里，拉惹·穆达把一张海图铺在地上。你进门的时候，他先报了一长串称号，报到一半停住，斜眼看你，等你接下去。你接上了，他才笑着把手指按上海图，从吉里一路划过海峡，停在马六甲上：“论起来，马六甲本该是我家的。”柔佛王廷召他的随从回去，三条船，人和几箱文书都装好了。王廷的口信却只有一句：王子暂留吉里。海峡南口有一条葡萄牙巡船，专截柔佛的船。“替我的船队开一条路。打也行，绕也行，人到就行。”"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "接下：迎着那条巡船打过去，替船队开路。"
+next = "battle"
+reply = "他把一长串称号念了一遍，念到“先导”两个字，就封我做船队的先导，念完了自己也笑了。三条船跟在我后面出了港，他的随从在船尾挥着旗。"
+effects = [
+  { kind = "affinity", person = "raja_muda", value = 2 },
+  { kind = "flag", flag = "c13_request_raja_muda_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "islands"
+text = "接下：带船队从小岛之间绕过去，不跟巡船照面。"
+next = "after"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "我带着三条船在小岛之间穿了三天，白天不敢升满帆。巡船的帆在远处晃了两回，没朝我们这边来。船队到了柔佛河口，舵手还在小声数着礁石的名字。"
+effects = [
+  { kind = "affinity", person = "raja_muda", value = 3 },
+  { kind = "flag", flag = "c13_request_raja_muda_accepted" },
+  { kind = "flag", flag = "c13_request_raja_muda_slipped" },
+]
+fail = { next = "battle", news = "柔佛的三条船想从海峡口的小岛之间绕过去，绕到一半被葡萄牙巡船看见，只好掉头硬顶。", effects = [
+  { kind = "flag", flag = "c13_request_raja_muda_accepted" },
+] }
+
+[[tracks.chapters.choices]]
+key = "tide_pass"
+text = "接下：等夜里大潮，从巡船不敢进的浅水道过去。"
+next = "after"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "海峡口的潮你算不准，算错了船就搁在浅滩上。"
+reply = "大潮那夜，我让三条船贴着浅滩一条接一条过去，船底擦着沙，没有一条搁上。他的随从在船头一尺一尺地报水深。巡船停在深水里，什么也没看见。"
+effects = [
+  { kind = "affinity", person = "raja_muda", value = 3 },
+  { kind = "flag", flag = "c13_request_raja_muda_accepted" },
+  { kind = "flag", flag = "c13_request_raja_muda_slipped" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "跟葡萄牙人的巡船作对，我不干。"
+next = "failed"
+reply = "他没生气，把海图一卷夹在腋下，说那就等风向变。“王子等得起。”他说完，楼上传来他念称号的声音，念到一半就断了。"
+effects = [{ kind = "flag", flag = "c13_request_raja_muda_declined" }]
+
+# 二、截船的帆：打退的那条船逃了，柔佛的三条船都在身后。
+[[tracks.chapters]]
+key = "battle"
+title = "截船的帆"
+text = "葡萄牙巡船的帆在海峡口的晨雾里出来了，比柔佛的三条船都大。你让三条船退到你的船后面，迎上去。两边的炮声停了，你打退的那条船先掉了头，往马六甲的方向逃去，帆影很快没进雾里，船尾还拖着一截断了的缆。柔佛的三条船都在你身后。桅顶上的人数完了，朝甲板喊了一声：“一个不少。”拉惹·穆达的船从后面靠过来，他站在船头，把一长串称号喊了半截，又咽了回去，只问：“都在？”他点点头，又说：“回去的路还长。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1576, 1, 1], to = [1587, 8, 24] },
+  { kind = "alive", person = "raja_muda", value = true },
+]
+objectives = [{ kind = "battle", wins = 1, text = "进入本章以后赢一场海战，不限地点" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "raja_muda", value = -3 },
+  { kind = "flag", flag = "c13_request_raja_muda_late" },
+  { kind = "letter", person = "raja_muda", text = "船队等不到风，又回了吉里。随从们说王子的信使会再来。——拉惹·穆达" },
+] }
+
+[[tracks.chapters.choices]]
+key = "escort_on"
+text = "不追，护着三条船一路到柔佛河口。"
+next = "after"
+reply = "三条船进了柔佛河口，河岸上有人敲锣。领头的老随从上了我的船，握着我的手说了很久的谢，说要把这一仗写进王廷的文书里。"
+news = "马六甲海峡南口的晨雾里，一条葡萄牙巡船被人打退，掉头往马六甲去了；三条柔佛的船护着人和文书，进了河口。"
+effects = [
+  { kind = "affinity", person = "raja_muda", value = 3 },
+  { kind = "flag", flag = "c13_request_raja_muda_fought" },
+]
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "追上去，把它赶回马六甲的炮台下面。"
+next = "after"
+check = { attr = "arms", base = 20, per = 7 }
+reply = "我追着它出了海峡口，一直追到马六甲炮台的影子就在前面，炮台上有人朝我们挥了挥旗，我才勒住了帆。拉惹·穆达在后面喊了一声，我没回头。"
+news = "马六甲海峡南口，一条葡萄牙巡船被人一路赶到炮台的射程边上，柔佛的三条船则早已进了河口。"
+effects = [
+  { kind = "affinity", person = "raja_muda", value = 3 },
+  { kind = "flag", flag = "c13_request_raja_muda_fought" },
+]
+fail = { next = "after", effects = [
+  { kind = "affinity", person = "raja_muda", value = -2 },
+  { kind = "flag", flag = "c13_request_raja_muda_fought" },
+], news = "马六甲海峡南口，有个船长追那条葡萄牙巡船追丢了，还挨了一炮；等他回头，柔佛的三条船已经自己进了河口。" }
+
+# 三、长长的称号：格雷西克，王廷的文书与一个称号。
+[[tracks.chapters]]
+key = "after"
+title = "长长的称号"
+text = "柔佛的文书先到了格雷西克。拉惹·穆达听你讲完，从一卷文书里抽出一页，上面是王廷写给他的话，很短，他念了两遍。门口站着他的老随从，手里还捧着一只没打开的箱子，没有进来。“我本想跟船队一起回去。王廷说暂留，我就暂留。”他把页子折起来，压在海图上，海图的一角卷了起来，他弯腰重新压好，“王子的事，都是别人替我定的。”说完这句，他把文书收起来，换了一副口气，清清嗓子，要赏你一个称号。"
+speaker = "captain"
+mood = "tender"
+at = "gresik"
+when = [
+  { kind = "date", from = [1576, 1, 1], to = [1587, 8, 24] },
+  { kind = "alive", person = "raja_muda", value = true },
+]
+objectives = [{ kind = "person", person = "raja_muda", text = "回格雷西克找他" }]
+
+[[tracks.chapters.variants]]
+key = "v1_slipped"
+when = [{ kind = "flag", flag = "c13_request_raja_muda_slipped" }]
+text = "柔佛的文书先到了格雷西克。拉惹·穆达听你讲完，没打仗，船队是悄悄绕过去的，他愣了一下，然后笑了。他从一卷文书里抽出一页，王廷写给他的话，很短，他念了两遍。门口站着他的老随从，手里捧着一只没打开的箱子，没有进来。“我本想跟船队一起回去。王廷说暂留，我就暂留。”他把页子折起来，压在海图上，海图的一角卷了起来，他弯腰重新压好，“王子的事，都是别人替我定的。可绕过去也是开路。”说完这句，他换了一副口气，要赏你一个称号。"
+
+[[tracks.chapters.choices]]
+key = "accept_title"
+text = "笑着收下那个称号。"
+next = "done"
+reply = "他念了一长串，念到最后几个字，是“开海峡之路的朋友”。念完他把那页纸折起来放进我手里，付了钱，说称号不值钱，这句是真的。"
+news = "格雷西克的柔佛王子，在寓所里给一个替他开过海峡的船长念了一长串称号，念到一半自己先笑了。"
+effects = [
+  { kind = "cash", value = 2900 },
+  { kind = "affinity", person = "raja_muda", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_raja_muda_done" },
+  { kind = "memory", memory = "mem-request_raja_muda-after", title = "念了两遍的文书" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline_title"
+text = "说称号就免了，钱照付就行。"
+next = "done"
+reply = "他愣了一下，大笑，说吉里的人都抢着要他的称号，只有我不要。他付了钱，把那一长串称号写在一张纸上塞给我，“不要也得拿着”。"
+news = "格雷西克的柔佛王子，请一个替他开过海峡的船长收下一长串称号，船长不要，他就把称号写成一张纸硬塞过去。"
+effects = [
+  { kind = "cash", value = 2900 },
+  { kind = "affinity", person = "raja_muda", value = 7 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_raja_muda_done" },
+  { kind = "memory", memory = "mem-request_raja_muda-after", title = "念了两遍的文书" },
+]

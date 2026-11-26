@@ -1,0 +1,511 @@
+/* 第九批：历史的天平（时间线、战役链、编年史）与秘闻（结社、秘术、信仰与思想、传说之船、秘境）——components/history/。 */
+
+.hs-panel,
+.sc-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hs-panel > .ub-tabs {
+  align-items: center;
+}
+.hs-deviation {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #5c2a14;
+}
+.hs-events,
+.sc-list,
+.sc-spells,
+.sc-ships,
+.sc-realms {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hs-event {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #fffaf080;
+  border: 2px solid var(--line);
+  border-left: 6px solid #7d5f36;
+}
+.hs-event--active {
+  border-left-color: #a3242f;
+}
+.hs-event--resolved {
+  opacity: 0.85;
+}
+.hs-event-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+}
+.hs-event-head h4 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 18px;
+}
+.hs-when {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.hs-when b {
+  color: var(--down);
+}
+.hs-region {
+  font-size: 12px;
+  color: #2e5a86;
+}
+.hs-summary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 天平：两边是双方，中间一根条，按情报画一个区间 */
+.hs-balance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.hs-side {
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid #7d5f36;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hs-side-a {
+  text-align: right;
+}
+.hs-scale {
+  position: relative;
+  height: 18px;
+  background: linear-gradient(90deg, #2e5a8633, #fffaf080 50%, #a3242f33);
+  border: 2px solid #2b1b17;
+}
+.hs-scale-mid {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: #2b1b17;
+}
+.hs-scale-range {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  background: #dca434;
+  border: 1px solid #2b1b17;
+}
+.hs-known-rough {
+  background: repeating-linear-gradient(45deg, #dca434 0 4px, #f5d66b 4px 8px);
+}
+.hs-scale-fog {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+.hs-outcome {
+  margin: 0;
+  padding: 6px 8px;
+  font-size: 13px;
+  background: #f3e3c3;
+  border-left: 3px solid #7d5f36;
+}
+.hs-outcome.is-changed {
+  border-left-color: #dca434;
+  background: #f5d66b33;
+}
+.hs-history {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 杠杆 */
+.hs-levers {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hs-lever {
+  display: grid;
+  gap: 3px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+}
+.hs-lever.is-blocked {
+  opacity: 0.7;
+}
+.hs-lever-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 13px;
+}
+.hs-lever-side {
+  padding: 0 5px;
+  font-size: 11px;
+  color: #fffaf0;
+  background: #7d5f36;
+}
+.hs-lever-label {
+  font-weight: 700;
+}
+.hs-lever-where {
+  color: #2e5a86;
+}
+.hs-lever-bar {
+  position: relative;
+  display: block;
+  height: 8px;
+  background: #2b1b1722;
+  border: 1px solid var(--line);
+}
+.hs-lever-all,
+.hs-lever-yours {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+.hs-lever-all {
+  background: #b8955f;
+}
+.hs-lever-yours {
+  background: #4f9a5b;
+}
+.hs-lever-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.hs-lever-do {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.hs-lever-do input[type="number"] {
+  width: 6em;
+  font: inherit;
+}
+.hs-lever-do select {
+  font: inherit;
+}
+.hs-donate {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+}
+.hs-why {
+  margin: 0;
+  padding: 6px 10px 6px 26px;
+  font-size: 12px;
+  color: #5c2a14;
+  background: #a3242f12;
+  border-left: 3px solid #a3242f;
+}
+
+/* 战役链 */
+.hs-campaign {
+  display: grid;
+  gap: 8px;
+}
+.hs-inertia,
+.hs-outlook {
+  margin: 0;
+  font-size: 13px;
+}
+.hs-outlook {
+  font-weight: 700;
+  color: #5c2a14;
+}
+.hs-vars {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hs-var {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-top: 4px solid #a3242f;
+}
+.hs-var--idea {
+  border-top-color: #2e5a86;
+}
+.hs-var-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  margin: 0 0 4px;
+  font-size: 12px;
+}
+.hs-spark {
+  display: block;
+  width: 100%;
+  height: 48px;
+  background: #fffaf060;
+}
+.hs-drift {
+  fill: none;
+  stroke: #7d5f36;
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+.hs-now {
+  fill: #dca43466;
+  stroke: #a86b1c;
+}
+.hs-gates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+.hs-chain {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+}
+.hs-chain small {
+  margin-left: 8px;
+  color: var(--muted);
+}
+.hs-chain-out {
+  color: #5c2a14 !important;
+}
+.hs-chronicle {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hs-chronicle li {
+  display: grid;
+  grid-template-columns: 8em minmax(0, 1fr);
+  gap: 2px 10px;
+  font-size: 13px;
+}
+.hs-chronicle li .hs-history {
+  grid-column: 2;
+}
+.hs-chronicle li.is-changed span:first-of-type {
+  font-weight: 700;
+}
+/* 年度回顾：多段文字保留换行，与逐条记录隔开一点 */
+.hs-chronicle li.hs-annual {
+  padding: 6px 0;
+  border-top: 1px dashed var(--muted);
+}
+.hs-chronicle li.hs-annual span {
+  white-space: pre-line;
+}
+
+/* 秘闻 */
+.sc-suspicion {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 4px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.sc-meter {
+  display: block;
+  height: 6px;
+  background: #2b1b1722;
+  border: 1px solid var(--line);
+}
+.sc-meter span {
+  display: block;
+  height: 100%;
+  background: #a3242f;
+}
+.sc-card,
+.sc-spell,
+.sc-ship,
+.sc-realm {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: #fffaf060;
+}
+.sc-card--rumor,
+.sc-ship--rumor,
+.sc-realm--unknown {
+  opacity: 0.75;
+}
+/* 传说之船与秘境的题图（384×168 的像素画，缩放时保持硬边） */
+.sc-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+  border: 1px solid var(--line);
+}
+.sc-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0;
+}
+.sc-known,
+.sc-seat,
+.sc-active,
+.sc-cost {
+  font-size: 12px;
+  color: var(--muted);
+}
+.sc-ranks {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: 12px;
+}
+.sc-ranks li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+}
+.sc-ranks li.is-done {
+  color: var(--muted);
+}
+.sc-ranks li.is-current {
+  font-weight: 700;
+}
+.sc-rank-reward {
+  color: #1e6b34;
+}
+.sc-trial {
+  margin: 0;
+  font-size: 13px;
+  color: #5c2a14;
+}
+.sc-rel,
+.sc-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 0;
+  font-size: 12px;
+}
+/* 任选钥匙前面的“任一样即可”：比钥匙本身淡一档 */
+.sc-keys-any {
+  font-size: inherit;
+  color: #6b4f33;
+}
+.sc-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.sc-schools,
+.sc-shares,
+.sc-modes,
+.sc-traits,
+.sc-rules {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.sc-shares li {
+  display: grid;
+  grid-template-columns: 7em minmax(0, 1fr) 2.5em 3em;
+  align-items: center;
+  gap: 6px;
+}
+.sc-shares .sc-meter span {
+  background: #2e5a86;
+}
+.sc-modes li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.sc-modes li.is-blocked {
+  opacity: 0.7;
+}
+.sc-mode-label {
+  font-weight: 700;
+}
+.sc-mode-needs {
+  font-size: 12px;
+  color: var(--muted);
+}
+.sc-traits li b {
+  color: #5c2a14;
+}
+.sc-rules {
+  padding-left: 18px;
+  list-style: disc;
+  color: #5c2a14;
+}
+
+@media (max-width: 760px) {
+  .hs-balance {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .hs-scale {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .hs-chronicle li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hs-chronicle li .hs-history {
+    grid-column: 1;
+  }
+}
+
+/* 第九批 I10：时间线的叙事（AI 打开时） */
+.hs-narration {
+  margin: 6px 0;
+  padding-left: 10px;
+  border-left: 2px solid color-mix(in srgb, var(--ink, #3a2a1a) 30%, transparent);
+  font-style: italic;
+}
+.hs-narration p {
+  margin: 2px 0;
+}

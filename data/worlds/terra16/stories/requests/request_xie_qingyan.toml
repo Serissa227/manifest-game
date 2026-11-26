@@ -1,0 +1,218 @@
+# 请托：口供里多出的两个字（request_xie_qingyan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：谢清晏（xie_qingyan，1532-10-16 生，男），宁波市舶司的通事，堂上吵得最凶时请两边各再说一遍；势力 ming。cast：cast/story_eastasia.toml。
+# 类型：说服某人（persuade）。四章：offer（报价）、persuade（堂上）、result（改判，两个收尾选项）、result_partial（检定失败的折中收尾）；没有 stage 章。
+#       brief 写的是三章；多出的 result_partial 是引擎的要求：plead 检定失败时报酬降为折中（现金 700），
+#       而 result 的选项不能再用“只有成功的那支才有的旗标”做门禁（会让机器人在失败支上报“准备后条件仍不满足”），所以失败的那支单开一章，选项里不设门禁。
+#       brief 里 keep_pot 的 requires heard 已去掉：result 只有三条成功支会到，heard 一定已设，门禁没有意义。
+# 报价：T（当面）。人物按日程在宁波（ningbo）酒馆，auto=false，玩家“问请托”（ask:request_xie_qingyan）启动；offer 不写 at，objectives 为“在港里找到他”。
+#       窗口 1557-06-01 至 1590-06-30；offer 写 deadline=1590-06-30，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：persuade 在宁波，deadline_days=30，超时走 failed，来信一封（好感 -5，旗标 _late）；result 与 result_partial 是普通章，可以一直等。
+#       persuade 的三条解法：eloquence 难检定（失败走折中）、技能门槛（lang_japanese ≥ 60）、花钱（保银 300，先 requires 现金）。
+# 依据·史实背景：嘉靖年间浙江沿海的海禁与倭寇案，宁波市舶司审问被扣的日本船水手，口供要靠通事转译；通事译错一个字，案子的性质就变了。
+#       本请托只借这个背景，没有写任何真实案件。
+# 依据·原创：谢清晏本人、那页抄本里多出的“行劫”两个字、十一个水手与最前头的老水手、缺口的铁锅、市舶司后门的钉子。
+#       “慢些，少一个字也可能要命”是他的口头禅，全轨道只在 persuade 用一次；“慢一点，就少死几个人”只在 offer 用一次。
+#       他的招呼语（“足下从海上来……”）不照抄进正文，只留“足下”的称呼。
+# 秘密：cast 的 secret（倭话的来历）本请托不碰，也不写；不设、不读 c7_ 旗标；刑场与斩首不写，“论斩”只在 offer 出现一次。
+# 读写的旗标：
+#       写 c13_request_xie_qingyan_accepted（offer 的 accept 与 ask_proof）、_declined（回绝，直接 failed）、
+#           _heard（persuade 的 plead 成功、japanese、bond）、_bond（分支旗标：交了保银，只给 result 的 variant 读）、
+#           _partial（分支旗标：plead 检定失败，进 result_partial）、_late（persuade 超时）、
+#           _petition（分支旗标：折中支里递呈文那一条，只写不读）、
+#           _done（result 与 result_partial 的收尾都设，终局）。
+#       终局旗标在各条路径上只设一面（declined / late / done）。
+#       读：只读自己的 _bond（result 的 variant v1_bond）；_heard 在本文件里只写不读，留给别的文件看。
+# 依赖：港口 ningbo；人物 xie_qingyan；技能 lang_japanese（skills.toml）；检定属性 eloquence（captain 表定下来后统一换算）。
+#       不依赖 B10b 改名；无主线门禁：谢清晏不在 TERRA16 §12 的主线人物里，没有 c13_main_<主角> 条件。
+# 回忆插画：mem-request_xie_qingyan-result：宁波市舶司后门的墙边，一只缺口的铁锅挂在钉子上，锅底烧得发白，通事踮着脚把它挂正，船长在一旁看着。
+
+[[tracks]]
+key = "request_xie_qingyan"
+name = "口供里多出的两个字"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["xie_qingyan"]
+
+# 一、报价：酒馆里，一页口供抄本。
+[[tracks.chapters]]
+key = "offer"
+title = "遇风漂到此处"
+text = "宁波码头边的小酒馆里，谢清晏面前的茶凉透了，一口没动。他把一页口供抄本推到你手边，墨色发乌，是一路抄下来的。“足下看这一行。”他的指甲点着“行劫”两个字。前一个通事把日本水手那句“遇风漂到此处”，译成了“遇风到此行劫”。一船十一个人，本是漂来的，如今要按倭寇论斩。明日辰时再审。“我人微言轻，堂上轮不到我开口。”他停了停，“我只求主审的老爷让两边各再说一遍。慢一点，就少死几个人。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "xie_qingyan", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应明天跟他去堂上，替他说话。"
+next = "persuade"
+reply = "他把抄本叠成四折，塞进袖子，说明日辰时开堂，他站在左边第二个位置。起身时碰翻了茶碗，茶淌了一桌，他看着它淌，说了声“失礼”，没去擦。"
+effects = [
+  { kind = "affinity", person = "xie_qingyan", value = 2 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_proof"
+text = "问他：凭什么说这些人没行劫？"
+next = "persuade"
+reply = "“他们船上没有刀，只有锅。”他从袖里摸出另一张纸，是水手被扣时衙役清点的船物：锅三口，断桅一根，米半袋。他想了想，又补一句：“当然，锅也能打人。所以才要再说一遍。”"
+effects = [
+  { kind = "affinity", person = "xie_qingyan", value = 2 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "倭寇的案子，你不碰。"
+next = "failed"
+reply = "他没劝，把抄本收回去，一折一折叠好，说那他一个人去站。茶钱他放在桌上，一文不多，一文不少。"
+effects = [{ kind = "flag", flag = "c13_request_xie_qingyan_declined" }]
+
+# 二、堂上：官说口供已画了押。
+[[tracks.chapters]]
+key = "persuade"
+title = "画了押的口供"
+text = "市舶司的堂上，主审的老爷拍了一回惊堂木。十一个日本水手跪成一排，最前头那个年纪最大，额头几乎抵着砖地，一次也没抬过；最末一个还是半大孩子，一直在数砖缝。谢清晏站在左边第二个位置，捧着那页口供，对你极轻地说：“慢些，少一个字也可能要命。”你才往前走了半步，老爷已经看过来：口供画了押，纸上有那个老水手按的指印，一个外乡船长，凭什么插话？"
+speaker = "captain"
+mood = "tense"
+at = "ningbo"
+when = [{ kind = "alive", person = "xie_qingyan", value = true }]
+deadline_days = 30
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "xie_qingyan", value = -5 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_late" },
+  { kind = "letter", person = "xie_qingyan", text = "足下没来，案子照原样结了。十一个人里，最小的那个被留下做了杂役，其余的人去了哪里，我问不到。那页抄本我还收着。" },
+] }
+
+[[tracks.chapters.choices]]
+key = "plead"
+text = "说：画押的人不识字，念给他听的是错的那一句。"
+next = "result"
+check = { attr = "eloquence", base = 5, per = 8 }
+reply = "老爷沉吟了半晌，把惊堂木搁下，命书吏把口供从头重念一遍，又让谢清晏照原话再译。念到那一句，老水手第一次抬起头，说了一长串话，声音哑得像锈住的绞盘。谢清晏译得很慢，一个字一个字地放下去：遇风，断桅，漂了九天，米只剩半袋。书吏的笔在“行劫”上顿了顿，划掉了。"
+news = "宁波审一船日本水手的堂上，有个外乡船长插了话，主审的官准两边各再说了一遍。"
+effects = [
+  { kind = "affinity", person = "xie_qingyan", value = 3 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_heard" },
+]
+fail = { next = "result_partial", effects = [
+  { kind = "affinity", person = "xie_qingyan", value = -2 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_partial" },
+], news = "宁波审一船日本水手的堂上，有个外乡船长插话没压住，官只准重问了最前头那个老水手。" }
+
+[[tracks.chapters.choices]]
+key = "japanese"
+text = "当堂用日本话问那个老水手：你们是怎么到这里来的？"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_japanese", ge = 60 }]
+hint = "你的日本话还撑不起一场问话。"
+reply = "你用日本话开口，堂上先静了一下，老爷皱起眉，却没拦。老水手猛地抬起头，盯着你看了很久，才从遇风、断桅说起，说到漂了九天。你问一句，他答一句，谢清晏在旁边译给堂上，两边的话，一个字也没差。老爷挥了挥手，书吏提笔把“行劫”划去了。"
+news = "宁波审一船日本水手的堂上，有个外乡船长当堂说了日本话，老水手把漂来的经过从头说了一遍。"
+effects = [
+  { kind = "affinity", person = "xie_qingyan", value = 5 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_heard" },
+]
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "替他们交一笔保银，请官把案子缓一缓、重新取供。"
+next = "result"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上凑不出这笔保银。"
+reply = "老爷让书吏收了保银，在案卷上批了一行：另取口供，三日后再审。十一个人被押回牢里，老水手经过你身边时脚步没停，也没抬头。谢清晏出了衙门才开口：“缓一缓，就是活路。”他把手笼进袖子，发现自己的手在抖。"
+news = "宁波审一船日本水手的堂上，有个外乡船长交了保银，官把案子缓了三日，另取口供。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "xie_qingyan", value = 3 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_heard" },
+  { kind = "flag", flag = "c13_request_xie_qingyan_bond" },
+]
+
+# 三、改判：一只缺口的铁锅。
+[[tracks.chapters]]
+key = "result"
+title = "缺口的铁锅"
+text = "十天后，案子改判：遇风漂来，船没收，人押解出境。谢清晏去码头送那十一个人上船，回来时站在市舶司后门，怀里抱着一只铁锅，锅沿缺了一块，锅底烧得发白。是老水手临上船时塞给他的。他推了回去，老人摇头，只把锅按在他胸口，鞠了一躬。押解的船要等下午的潮才开。“通事收了东西，往后译的话就没人信了。”他低头看那个缺口，“可这是他们煮了九天饭的锅。”"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+when = [{ kind = "alive", person = "xie_qingyan", value = true }]
+objectives = [{ kind = "person", person = "xie_qingyan", text = "去后门找谢清晏" }]
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "flag", flag = "c13_request_xie_qingyan_bond", value = true }]
+text = "比寻常多拖了十天，案子才改判：遇风漂来，船没收，人押解出境。你交的保银被衙门拿去顶了押解路上的口粮。谢清晏说，这十天里，最小的那个学会了几句宁波话，见了狱卒就喊“老爷”。他去码头送人上船，回来时站在市舶司后门，怀里抱着一只铁锅，锅沿缺了一块，是老水手塞的。押解的船要等下午的潮才开。“通事收了东西，往后译的话就没人信了。”他低头看那个缺口，“可这是他们煮了九天饭的锅。”"
+
+[[tracks.chapters.choices]]
+key = "keep_pot"
+text = "劝他收下：锅是人家的心意。"
+next = "done"
+reply = "他踮起脚，把锅挂在市舶司后门的一颗钉子上，缺口朝外，退后两步看正了没有。“挂在明处，就不算私收。以后谁来问这桩案子，我就指给他看。”他回身把一只沉甸甸的钱袋塞进你手里：“少死十一个，我今年够了。”"
+news = "宁波那桩日本水手的案子改判了，人押解出境，市舶司后门的钉子上多挂了一只铁锅。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "xie_qingyan", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "memory", memory = "mem-request_xie_qingyan-result", title = "后门钉子上的铁锅" },
+  { kind = "flag", flag = "c13_request_xie_qingyan_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "return_pot"
+text = "劝他把锅还回去：他们出境路上用得着。"
+next = "done"
+reply = "他抱着锅想了一会儿，转身就往码头跑，长衫下摆提在手里，跑得不好看。回来时锅不在了，眼眶是红的。“老人哭了。”他说，“问他缘故，他摆摆手，我也不知道。”钱袋是他从袖里掏出来的，湿了一角。"
+news = "宁波那桩日本水手的案子改判了，人押解出境，通事谢清晏抱着一只铁锅追到码头，又把它还了回去。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "xie_qingyan", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_done" },
+]
+
+# 四、折中：只问了最前头那一个，案子改了一半。
+[[tracks.chapters]]
+key = "result_partial"
+title = "后院的四个人"
+text = "过了七天，案子只改了一半：老水手和同船六个人，官认作遇风漂来，押解出境；另外四个，要等杭州来的文书，仍关在市舶司的后院。谢清晏从码头回来，怀里抱着一只铁锅，锅沿缺了一块，锅底烧得发白。老水手临上船塞给他的，比划着，是留给后院那四个人的。后院的门有兵守着，他一个通事，进不去。他站在后门口，把锅抱了又抱：“足下，这件事我一个人办不成。”"
+speaker = "captain"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "alive", person = "xie_qingyan", value = true }]
+objectives = [{ kind = "person", person = "xie_qingyan", text = "去市舶司后门，陪谢清晏想办法" }]
+
+[[tracks.chapters.choices]]
+key = "hand_pot"
+text = "陪他去后院，用你的船牌把锅递进去。"
+next = "done"
+reply = "守门的兵看了你的船牌，又看了看那只锅，让开半步。后院里四个人挤在一张草席上，最小的那个先伸出手，把锅抱到怀里，锅沿的缺口正好硌在他肋下，他也没松开。"
+news = "宁波日本水手的案子只改了一半，七个人押解出境，另四个还关在市舶司后院，有人给他们送了一只铁锅进去。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "xie_qingyan", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "petition"
+text = "劝他先递一份呈文，请官把那四个人提出来再问一回。"
+next = "done"
+reply = "他摇头：呈文已经写了三稿，每一稿都被书吏退回来，批的是“口供已定”。他把第三稿垫在锅上摊开，请你看哪里还能改。你指了一个字，“恳请”改作“具禀”。他改了，等墨干，叠好收进袖子，锅仍抱在怀里。"
+news = "宁波日本水手的案子只改了一半，七个人押解出境，另四个还关在市舶司后院，通事谢清晏正在递呈文。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "xie_qingyan", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_xie_qingyan_petition" },
+  { kind = "flag", flag = "c13_request_xie_qingyan_done" },
+]

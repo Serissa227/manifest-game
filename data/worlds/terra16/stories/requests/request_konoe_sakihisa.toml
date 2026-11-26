@@ -1,0 +1,185 @@
+# 请托：改了七遍的信（request_konoe_sakihisa）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：近卫前久（konoe_sakihisa，1536 年生，男），五摄家之首，做过关白；1575 年下到萨摩，替九州诸家调停。势力 imperial_court。cast：cast/historical_07_japan.toml。
+# 类型：送信（letter）。章节：offer（鹰与雨）、handover（府内的家老）、reply（放鹰回来的人，宗麟亲笔的一支）、reply_polite（同一场面，家老回客气话的一支）；终点 done / failed。
+#   brief 写的是三章、reply 两个选项按 direct / polite 拆。为了不用 requires 去读本轨道在别的分支上设的旗标，handover 按结果分路：
+#   上包转呈与多说一句成功的走 reply，原样交与多说一句失败的走 reply_polite；两章各两个选项，场面相同、正文与回复各写各的。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_konoe_sakihisa）启动；offer 不写 at，objective 为 person（日程 1575 全年在 kagoshima）。
+#   offer 的 when 只照 brief 写日期起点与玩家年龄；求见门槛由 cast 的 audience（fame 50、imperial_court 25）在交谈时把关，本文件不另加。
+#   offer 的 deadline=1575-09-30，timeout 直接 failed，不写见闻。
+# 进行中：handover 写死 at=funai，deadline=1575-11-30，超时 failed、旗标 _late、一封来信（≤120 字）。
+#   reply 与 reply_polite 不写 at（person 目标跟着日程回鹿儿岛），deadline=1575-12-31（1576 年起他不在日程上，找不到人），超时 failed、旗标 _late、一封来信。
+#   普通章（无 stage）不写 window 与 default；brief 的 window 只是规划用的出现区间。
+# 依据·史实：1575 年近卫前久下向萨摩，调停岛津与大友、伊东诸家（《公卿补任》等）；大友宗麟此时居臼杵，府内是大友家的港。
+#   本文件只写调停这一封信，不写 1578 年耳川之战，不写托他下向的人，也不写他与长尾景虎的血书誓约。
+# 依据·原创：七天的雨与没放成的鹰；压废稿的放鹰皮手套；那一句“梅开得早、赶得上插秧”；受潮的上包；家老的空文匣；宗麟的几行亲笔与“这一封他读完了”的口信；家老回信的七句客气话。
+# 检定失败的结果：引擎在失败时显示 fail 分支的 news（选项 reply 只在成功时显示），所以每个 fail.news 都写成带地名、说清发生了什么的闲话。
+#   reply 的 face 失败，brief 写“同 verbatim 但 affinity 不加”：这里取“好感一点不加”（现金、声望、名声、回忆照给），让这一问真有得失；reply_polite 的 face 失败同理。
+# 秘密：cast 无 secret。见闻不写任何人的秘密。
+# 设的旗标：c13_request_konoe_sakihisa_accepted（offer 两条接法，含 ask 的成败）、_declined（offer 回绝，终局 failed）；
+#   分支旗标 _heard（ask 成功；reply 与 reply_polite 的变体读）、_direct（handover 走 reply 的两条路）、_polite（handover 走 reply_polite 的两条路）；
+#   终局 _done（reply 的全部结局）、_partial（reply_polite 的全部结局）、_late（三处超时）。每条路径只设一面终局旗标。
+# 读的旗标：_heard（变体，只改正文）；c13_main_mio（handover 的变体，只换一句；由澪的主线第一章设，尚未写）。不读也不设任何 c7_ 旗标。
+# 报酬：现金 3650（reply）或 1800（reply_polite），各给一次；近卫好感至多 +16（ask 成功 3、handover 3、reply 的 face 成功 10）；
+#   imperial_court 声望 +2、名声 +5、回忆一张，只在 reply 的结局给。无物品、无技能经验。
+# 依赖：港口 kagoshima、funai（ports_east_asia.toml）；技能 court_etiquette（skills.toml，门槛 60）；势力 imperial_court；人物 konoe_sakihisa。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_konoe_sakihisa-reply「沾着羽毛的回信」：雨后的廊下，公卿袖口沾着灰羽，把几行字的回信折好按进怀里，鹰在侍从手上抖翅。
+
+[[tracks]]
+key = "request_konoe_sakihisa"
+name = "改了七遍的信"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["konoe_sakihisa"]
+
+# 一、鹰与雨：鹿儿岛连下七天雨，鹰放不出去，前关白把第七遍的信递过来。
+[[tracks.chapters]]
+key = "offer"
+title = "鹰与雨"
+text = "鹿儿岛连下了七天雨。前久的鹰蹲在廊下的架子上，羽毛蓬着，一回也没放出去；他自己在廊下来回走，木板踩得吱吱响。“我从京里一路下来，东国的马骑过，西国的大名见过一大半，就没见过这样下个没完的雨。”他从案上抽出一封叠好的信，是给丰后大友宗麟的，劝他别跟岛津结仇。案上还压着六张废稿，压纸的是一只放鹰用的皮手套。“改了七遍。信里每一句都有人要挑。挑来挑去，只剩一句客气话——这句我留着，别的你替我扔进海里也行。”他把信递过来：“送到府内。大友家回什么，你原样带回来，一个字也别改。”"
+speaker = "konoe_sakihisa"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "konoe_sakihisa", text = "在鹿儿岛找到前关白" }]
+when = [{ kind = "date", from = [1575, 2, 1] }, { kind = "age", ge = 17 }]
+deadline = [1575, 9, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下信，往府内去"
+next = "handover"
+reply = "他把信往我手里一按，又抬头看了一眼檐角，雨还在往下淌。“回来时我要是出去放鹰了，你就在门口等。等不及也得等。”说完他走回架子前，伸出一根手指去理鹰背上那几根蓬起来的羽毛。"
+effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_accepted" }, { kind = "affinity", person = "konoe_sakihisa", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "先问一句：信里到底写了什么"
+next = "handover"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "他笑起来，把信从我手里抽回去，也不拆，背着念：“丰后的梅开得早，萨摩的也不晚。愿两边的田，今年都赶得上插秧。”念完又塞回来。“插秧的时候，谁也不出兵。宗麟读得懂这一句。”他拍拍我的胳膊，“你听过了，算半个使者。”"
+effects = [{ kind = "affinity", person = "konoe_sakihisa", value = 3 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_heard" }, { kind = "flag", flag = "c13_request_konoe_sakihisa_accepted" }]
+fail = { next = "handover", effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_accepted" }], news = "鹿儿岛那位前关白，有个船主问他信里写了什么，他嫌人家多嘴，一个字没答，把信塞进人家怀里拍了两下，回头看鹰去了。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不往丰后去"
+next = "failed"
+reply = "他耸耸肩，也不劝，转身朝廊外喊：“还有哪条船往丰后去？”侍从撑着伞跑下台阶，去码头找别的船主。他回到案前，把那封信在手里掂了掂，又压回皮手套底下，跟六张废稿放在一处。"
+effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_declined" }]
+
+# 二、府内的家老：宗麟在臼杵，家老伸手要信，先看。
+[[tracks.chapters]]
+key = "handover"
+title = "府内的家老"
+text = "府内的大友家宅邸，接见我的是一位五十来岁的家老，膝前摆着一只空文匣。宗麟本人在臼杵，他说主公近来忙，书信一概先由他过目。我把信从油纸里取出来，上包在船上受了潮，边角软了，封口那个前关白的花押倒还清清楚楚。家老打量了我一眼，伸手要信，手指已经搭上了上包的折角。"
+speaker = "captain"
+mood = "tense"
+at = "funai"
+objectives = [{ kind = "at", at = "funai", text = "把信送到府内" }]
+when = [{ kind = "alive", person = "konoe_sakihisa", value = true }]
+deadline = [1575, 11, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_late" }, { kind = "letter", person = "konoe_sakihisa", text = "你迟迟不到府内，信我另托了一条去丰后的船。大友家照样回了一纸客气话，我读了三遍，没读出一个字的意思。你手里那封留着吧，封口有我的花押，拿去哪家都换得来一顿酒。" }] }
+
+[[tracks.chapters.variants]]
+key = "mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "府内的大友家宅邸，接见我的是一位五十来岁的家老，膝前摆着一只空文匣。宗麟本人在臼杵，他说主公近来忙，书信一概先由他过目。我把信从油纸里取出来，上包在船上受了潮，边角软了，封口那个前关白的花押倒还清清楚楚。家老抬头看清了我的脸，脸色一变，认出这是主公的外甥女，可还是伸手要信，手指搭上了上包的折角。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "按原样交给家老"
+next = "reply_polite"
+reply = "我把信交过去。家老拆了上包，读了两遍，起身去了隔壁。约莫一炷香的工夫，他捧着一纸回信出来，折得方方正正，字写得极规矩。“主公近来忙，”他又说了一遍，“前关白的好意，丰后记下了。”他把回信放进我手里，那只文匣还是空的。"
+effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_polite" }]
+news = "府内的大友家宅邸收下了萨摩来的一封公卿书信，家老当场回了一纸，客气得谁也挑不出错。"
+
+[[tracks.chapters.choices]]
+key = "form"
+text = "照公家的作法，请家老原封转呈臼杵"
+next = "reply"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "公家给大名的信，上包该怎么折、封口该朝哪边，你说不上来"
+reply = "我请家老稍等，当着他的面把受潮的上包抚平，礼纸重新衬好，两头照公家给大名的规矩往背面折，花押正对着收信人的名字。家老看着那几道折痕，伸出来的手缩了回去——这样包的信，只有收信的人拆得。当夜就有人骑马去了臼杵。三天后，臼杵送回宗麟的亲笔，只有几行，家老另外转了一句口信。"
+effects = [{ kind = "affinity", person = "konoe_sakihisa", value = 3 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_direct" }]
+news = "府内的家老不敢拆一封折法讲究的公卿书信，连夜派人骑马送去了臼杵，三天后臼杵回了信。"
+
+[[tracks.chapters.choices]]
+key = "word"
+text = "替前关白多说一句：这回是真心的"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我说，这封信改了七遍，前关白自己都背得出，这回是真心的。家老沉吟半晌，把信放进那只空文匣，没有拆。“这句话，我替你带去臼杵。”他亲自走了一趟。五天后他回来，带着宗麟的亲笔，只有几行，另有一句口信要我原话转告。"
+effects = [{ kind = "affinity", person = "konoe_sakihisa", value = 3 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_direct" }]
+news = "府内的大友家老听一个船主替萨摩的前关白说情，沉吟半晌，捧着文匣亲自去了臼杵。"
+fail = { next = "reply_polite", effects = [{ kind = "affinity", person = "konoe_sakihisa", value = -2 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_polite" }], news = "府内的大友家宅邸里，家老当着船主冷了脸：“公卿的真心在京里值钱，在丰后不值。”拆了信，回一纸客气话就打发了。" }
+
+# 三、放鹰回来的人（宗麟亲笔的一支）：雨停了，他读几行字，读完不笑了。
+[[tracks.chapters]]
+key = "reply"
+title = "放鹰回来的人"
+text = "雨停了。前久刚放鹰回来，鹰还蹲在他的皮手套上，袖口沾着几根灰羽。他接过臼杵来的回信，站着就拆，是宗麟的亲笔，只有几行。他读一句，笑一声；再读一句，又笑一声。读到末一行，他不笑了，把信照原来的折痕折好，放进怀里，隔着衣服按了一按。“末尾写着，余下的话由来人口述。”他把鹰交给侍从，回头看我：“家老把这封信交到你手里的时候，脸是什么样的？”"
+speaker = "konoe_sakihisa"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "konoe_sakihisa", text = "回鹿儿岛复命" }]
+when = [{ kind = "alive", person = "konoe_sakihisa", value = true }]
+deadline = [1575, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_late" }, { kind = "letter", person = "konoe_sakihisa", text = "我在鹿儿岛等到年底，没等到你。臼杵的回信你揣着也好，扔了也好，宗麟的意思我从别人嘴里听了个大概。只是家老的脸色，没人讲给我听。" }] }
+
+[[tracks.chapters.variants]]
+key = "heard"
+when = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_heard" }]
+text = "雨停了。前久刚放鹰回来，鹰还蹲在他的皮手套上，袖口沾着几根灰羽。他接过臼杵来的回信，站着就拆，是宗麟的亲笔，只有几行。他读一句，笑一声；再读一句，又笑一声。读到末一行，他不笑了，冲我扬了扬下巴：“插秧那一句，他回了。”他把信照原来的折痕折好，放进怀里，隔着衣服按了一按。“末尾写着，余下的话由来人口述。家老把信交给你的时候，脸是什么样的？”"
+
+[[tracks.chapters.choices]]
+key = "verbatim"
+text = "把家老转的口信，一字不改说给他"
+next = "done"
+reply = "我照家老的原话说：“主公说，前关白的信，这一封他读完了。”前久愣了一下，跟着大笑，笑得侍从手上的鹰扑了两下翅膀。“好。你比我的家臣老实——他们会替我把难听的话磨圆。”他又隔着衣服按了按怀里的信，说明日要是还晴，他再去放鹰。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "konoe_sakihisa", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_done" }, { kind = "memory", memory = "mem-request_konoe_sakihisa-reply", title = "沾着羽毛的回信" }]
+news = "鹿儿岛那位京里来的前关白，收到丰后的回信，读完揣进怀里，当天雨一停，又带着鹰出去了。"
+
+[[tracks.chapters.choices]]
+key = "face"
+text = "先说说家老捧着这封信时的脸色"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "我学家老捧信的样子：两手托着上包，眼睛不敢往封口上落，像端着一碗烫手的汤。前久笑得直拍膝盖。“这一段我回京要讲给人听，讲上十遍。”笑够了，他拍拍怀里的信：“这几行，丰后只有宗麟和我读过。家老那张脸，满府内的人都瞧见了——这才好用。”"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "konoe_sakihisa", value = 10 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_done" }, { kind = "memory", memory = "mem-request_konoe_sakihisa-reply", title = "沾着羽毛的回信" }]
+news = "鹿儿岛的前关白听一个船主学丰后家老捧信的样子，笑得惊了鹰，说回京要讲给人听。"
+fail = { next = "done", effects = [{ kind = "cash", value = 3650 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_done" }, { kind = "memory", memory = "mem-request_konoe_sakihisa-reply", title = "沾着羽毛的回信" }], news = "鹿儿岛那位前关白听船主讲丰后家老的脸色，听到一半就摆手，说添油加醋的话他在京里听够了，回信倒是收进了怀里。" }
+
+# 三之二、放鹰回来的人（家老回客气话的一支）：他读一句笑一声，笑了七回。
+[[tracks.chapters]]
+key = "reply_polite"
+title = "七句客气话"
+text = "雨停了。前久刚放鹰回来，袖口沾着几根灰羽，鹰在侍从手上抖着翅膀。他接过府内来的回信，是家老的笔迹。他读一句，笑一声，一路读下去，笑了七回：问候、天气、主公安好、府内安好、来使辛苦、改日再叙、恕不尽言。读完他把信往案上一丢，正好落在那六张废稿上头。“七句，句句挑不出错。”他抬头看我，“家老读我的信时，脸是什么样的？”"
+speaker = "konoe_sakihisa"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "konoe_sakihisa", text = "回鹿儿岛复命" }]
+when = [{ kind = "alive", person = "konoe_sakihisa", value = true }]
+deadline = [1575, 12, 31]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_late" }, { kind = "letter", person = "konoe_sakihisa", text = "我在鹿儿岛等到年底，没等到你。府内回的那一纸，我闭着眼也猜得出写了些什么，你留着垫茶碗吧。" }] }
+
+[[tracks.chapters.variants]]
+key = "heard"
+when = [{ kind = "flag", flag = "c13_request_konoe_sakihisa_heard" }]
+text = "雨停了。前久刚放鹰回来，袖口沾着几根灰羽，鹰在侍从手上抖着翅膀。他接过府内来的回信，是家老的笔迹。他读一句，笑一声，一路读下去，笑了七回：问候、天气、主公安好、府内安好、来使辛苦、改日再叙、恕不尽言。读完他把信往案上一丢，正好落在那六张废稿上头。“插秧那一句，一个字也没回。”他抬头看我，“家老读我的信时，脸是什么样的？”"
+
+[[tracks.chapters.choices]]
+key = "verbatim"
+text = "把家老当面说的话也一字不改说给他"
+next = "done"
+reply = "我把家老当面的话也照搬了，连那句“主公近来忙”都没漏。前久听完点点头：“七句客气话，换我一句客气话。这买卖不亏，也不赚。”他从案上拣起回信，压到皮手套底下，跟六张废稿叠在一处，又问侍从，明天的风从哪边来。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "konoe_sakihisa", value = 4 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_partial" }]
+news = "鹿儿岛那位前关白读丰后的回信，读一句笑一声，读完把信压在一叠废纸上，又出去放鹰了。"
+
+[[tracks.chapters.choices]]
+key = "face"
+text = "说说家老看见花押的那一下"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "我说家老读信时眉头一直没动，只在看见封口的花押时动了一下，像被针扎了。前久大笑：“这比回信有用。”他把那纸客气话折成小小的一方，往袖子里一塞：“丰后还认得近卫家的花押。认得，就好办。”"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "konoe_sakihisa", value = 6 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_partial" }]
+news = "鹿儿岛的前关白听人说丰后的家老看见他的花押皱了一下眉，高兴了一整天，晚饭多喝了两杯。"
+fail = { next = "done", effects = [{ kind = "cash", value = 1800 }, { kind = "flag", flag = "c13_request_konoe_sakihisa_partial" }], news = "鹿儿岛的前关白嫌一个船主把丰后家老的脸色讲得太花，说他添油加醋，挥手让侍从把船钱结了送客。" }

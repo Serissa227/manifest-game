@@ -1,0 +1,1926 @@
+/* 新界面（试用）——港口的其余设施（第二阶段第 2 组，docs/UI-REDESIGN.md 第 8 节）：
+ * 造船厂（在售的船、在港舰队的修理 / 卖船 / 改造）、酒馆（招募船员、航海士人物卡、传闻、议价、海图）、商会委托书、银行、期货交易所的入口、
+ * 仓库与装卸台、港口投资、势力办事处、道具店、拍卖会；另有交易所底部账台的快捷键、舰队页的购买补给与各处的一键补员。
+ *
+ * 做法（第 4 节的组件规范）：
+ * - 一件东西一行（账页式的列表：白底、细线分隔、圆角 8），常用的操作放在行内最右；只有“一件东西需要成块”时才用卡片（船、航海士、委托书、拍品）。
+ * - 主按钮每一处最多一个（买船、招募、承接 / 交付、出价、搬运）；一键操作（全部 →、够 N 天、道具店的“买 / 卖”）是浅黄铜底；不可用时原因写在旁边。
+ * - 像素图（船、头像、物品图标）是插图：细框 + 衬边，不再是木框。
+ * - 正文桌面 14 px、手机 15 px；说明 12–13 px，没有 10–11 px 的字。
+ * 每一条规则以 :root[data-ui="v2"] 开头；只用 base.css 的令牌（个别浅黄铜底色与交易所的一键按钮相同）。
+ */
+
+/* ═════════════════════════ 0. 港口窗口的内容区 ═════════════════════════ */
+:root[data-ui="v2"] .port > .tab-body {
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+}
+/* 不能用的主按钮要灰掉：base.css 里 .btn.primary 与禁用样式特异度相同、排在后面，会把灰掉的主按钮画成可用的黄铜色
+   （钱不够的“买入组建新舰队”、没调数量的“购买补给”看着像能点）。交易所在 market.css 里单独修过；这里修本组的几处。 */
+:root[data-ui="v2"] .port .btn.primary:disabled,
+:root[data-ui="v2"] .sp-desk .btn.primary:disabled,
+:root[data-ui="v2"] .crew-hire .btn.primary:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+
+/* 不小于 12 px：人名下面那一小行英文原名（i18n.css 写的是父级字号的 0.65 倍，16 px 的名字下只有 10.4 px）与掌柜的头衔。
+   港口窗口里都有：掌柜、酒馆的情报贩子、办事处的君主、在售的船、航海士卡 */
+:root[data-ui="v2"] .port .bi-name-sub {
+  font-size: max(var(--v2-fs-xs), 0.65em);
+}
+:root[data-ui="v2"] .port .keeper-name small {
+  font-size: var(--v2-fs-xs);
+}
+
+/* 读屏专用：看得见的地方已经写了同样的字（如改造的下拉框旁就是“改造”按钮） */
+:root[data-ui="v2"] .sy-refit .field > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 键值账页（银行、港口投资、势力办事处）：左边浅色的名目、右边数值，细线分隔 */
+:root[data-ui="v2"] .port .tab-body .kv {
+  grid-template-columns: minmax(7.5em, max-content) minmax(0, 1fr);
+  gap: 0;
+  margin: 4px 0 16px;
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .port .tab-body .kv dt,
+:root[data-ui="v2"] .port .tab-body .kv dd {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .port .tab-body .kv dt {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border-right: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .port .tab-body .kv dd {
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .port .tab-body .kv dt:last-of-type,
+:root[data-ui="v2"] .port .tab-body .kv dd:last-of-type {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .port .tab-body .kv dd .btn {
+  font-weight: 500;
+}
+
+/* 一键操作（全部 →、够 N 天、道具店的买 / 卖）：与交易所的“买满 / 全卖”同一个样子 */
+:root[data-ui="v2"] .btn.small.tr-all,
+:root[data-ui="v2"] .sp-presets .btn.small,
+:root[data-ui="v2"] .it-offer .ts-btn {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .btn.small.tr-all:hover:not(:disabled),
+:root[data-ui="v2"] .sp-presets .btn.small:hover:not(:disabled),
+:root[data-ui="v2"] .it-offer .ts-btn:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .btn.small.tr-all:disabled,
+:root[data-ui="v2"] .sp-presets .btn.small:disabled,
+:root[data-ui="v2"] .it-offer .ts-btn:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .btn.small.tr-all,
+  :root[data-ui="v2"] .sp-presets .btn.small,
+  :root[data-ui="v2"] .it-offer .ts-btn {
+    min-height: var(--v2-h-touch);
+    padding: 0 14px;
+  }
+}
+
+/* 能力条（航海士、船型）：6 px 的圆头细条，颜色分四种（航海海蓝、贸易黄铜、战斗印章红、管理绿） */
+:root[data-ui="v2"] .mate-card .stats,
+:root[data-ui="v2"] .ship-card .stats {
+  gap: 6px 18px;
+  margin: 10px 0;
+}
+:root[data-ui="v2"] .mate-card .stat,
+:root[data-ui="v2"] .ship-card .stat {
+  grid-template-columns: 3em minmax(0, 1fr) auto;
+  gap: 8px;
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .mate-card .stat-name,
+:root[data-ui="v2"] .ship-card .stat-name {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mate-card .stat-val,
+:root[data-ui="v2"] .ship-card .stat-val {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .mate-card .stat-bar,
+:root[data-ui="v2"] .ship-card .stat-bar {
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .mate-card .stat-bar i,
+:root[data-ui="v2"] .ship-card .stat-bar i {
+  border-radius: var(--v2-r-pill);
+  background: var(--v2-brass);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .mate-card .stat-nav .stat-bar i,
+:root[data-ui="v2"] .ship-card .stat-nav .stat-bar i {
+  background: var(--v2-sea);
+}
+:root[data-ui="v2"] .mate-card .stat-combat .stat-bar i,
+:root[data-ui="v2"] .ship-card .stat-combat .stat-bar i {
+  background: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .mate-card .stat-mgmt .stat-bar i,
+:root[data-ui="v2"] .ship-card .stat-mgmt .stat-bar i {
+  background: var(--v2-up);
+}
+
+/* ═════════════════════════ 1. 造船厂 ═════════════════════════ */
+/* 在售的船：一船一张卡，船画在上（窄）或在左（宽），名字、帆装、价钱、四项性能条，买船的两个按钮在卡片最下 */
+:root[data-ui="v2"] .ship-offers {
+  container: syo / inline-size;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+:root[data-ui="v2"] .ship-card {
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ship-art {
+  min-height: 112px;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ship-info {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px 14px;
+}
+:root[data-ui="v2"] .ship-head {
+  gap: 4px 10px;
+}
+:root[data-ui="v2"] .ship-head strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink);
+  letter-spacing: 0.04em;
+}
+:root[data-ui="v2"] .ship-head .tag {
+  margin: 0;
+}
+:root[data-ui="v2"] .ship-price {
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ship-info > .row {
+  gap: 8px;
+  margin: auto 0 0;
+  padding-top: 4px;
+}
+:root[data-ui="v2"] .ship-info > .row .btn {
+  flex: 1 1 auto;
+}
+:root[data-ui="v2"] .sy-short {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+/* 宽的窗口里：船画在左边，一张卡矮一半，一屏多看几艘 */
+@container syo (min-width: 560px) {
+  :root[data-ui="v2"] .ship-card {
+    flex-direction: row;
+  }
+  :root[data-ui="v2"] .ship-art {
+    flex: none;
+    width: 200px;
+    min-height: 0;
+    border-bottom: 0;
+    border-right: 1px solid var(--v2-line-strong);
+  }
+  :root[data-ui="v2"] .ship-info {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* 在港舰队：修理、每艘船一行（名字、耐久、载货量；卖船与改造在行内最右） */
+:root[data-ui="v2"] .shipyard .section > .btn {
+  margin-bottom: 4px;
+}
+:root[data-ui="v2"] .sy-ships {
+  margin: 8px 0 0;
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .sy-ship {
+  gap: 8px 12px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .sy-ship:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .sy-ship-name {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .sy-ship-name strong {
+  margin-right: 2px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sy-ship-acts,
+:root[data-ui="v2"] .sy-refit {
+  gap: 8px;
+}
+:root[data-ui="v2"] .sy-ship .btn,
+:root[data-ui="v2"] .sy-refit select {
+  min-height: var(--v2-h-md);
+}
+:root[data-ui="v2"] .sy-why {
+  font-size: var(--v2-fs-sm);
+  font-style: normal;
+  color: var(--v2-seal);
+}
+
+/* ═════════════════════════ 2. 酒馆 ═════════════════════════ */
+/* 招募船员：每支在港的舰队一块（人数与不足的提示在上，一键补员的按钮在下——按钮上写着人数与花费，放在右边会把左边挤成三行）；
+   下面一条“按人数”的加减 */
+:root[data-ui="v2"] .tv-crew > .sub {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .tv-crew-fleet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "line"
+    "note"
+    "hire";
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .tv-crew-line {
+  grid-area: line;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .tv-crew-fleet > .crew-short {
+  grid-area: note;
+  margin: 0;
+}
+:root[data-ui="v2"] .tv-crew-fleet > .crew-hire {
+  grid-area: hire;
+  margin-top: 4px;
+}
+:root[data-ui="v2"] .tv-crew-fleet .crew-hire-row,
+:root[data-ui="v2"] .tv-crew-fleet .crew-hire-note {
+  margin: 0;
+}
+/* “按人数”一条是能用的操作：实线细框的浅底带（虚线框留给空状态，第 4 节），比上面一队一块的纸卡平一层（不带投影） */
+:root[data-ui="v2"] .tv-crew-custom {
+  gap: 8px 12px;
+  margin: 4px 0 0;
+  padding: 10px 12px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .tv-crew-by {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .tv-crew-custom-btns {
+  gap: 6px;
+}
+
+/* 一键补员（舰队页、酒馆、出港确认框、港口名牌下共用） */
+:root[data-ui="v2"] .crew-hire-row {
+  gap: 8px;
+}
+:root[data-ui="v2"] .crew-hire-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .crew-short {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+/* 港口名牌下“船员不足”的小卡：与名牌同一种纸卡（原来在新界面里没有底色，字直接压在街景上） */
+:root[data-ui="v2"] .scene-crew {
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(248, 243, 233, 0.96);
+  border: 1px solid rgba(12, 18, 28, 0.45);
+  border-left: 3px solid var(--v2-seal);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .scene-crew-text {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-seal);
+}
+
+/* 航海士人物卡：插图式的头像（细框 + 衬边）、等级小签、名字（宋体）、四项能力条、月薪与忠诚、小传；招募是卡片里唯一的主按钮 */
+:root[data-ui="v2"] .mate-cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
+}
+:root[data-ui="v2"] .mate-card {
+  gap: 16px;
+  margin: 0;
+  padding: 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .mate-portrait {
+  padding: 0;
+  margin: 4px;
+  background: var(--v2-paper-sunk);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-md);
+  box-shadow:
+    0 0 0 3px var(--v2-paper-2),
+    0 0 0 4px var(--v2-line);
+}
+:root[data-ui="v2"] .mate-portrait .portrait-art,
+:root[data-ui="v2"] .mate-portrait canvas {
+  border-radius: calc(var(--v2-r-md) - 1px);
+}
+:root[data-ui="v2"] .mate-lv {
+  right: -8px;
+  bottom: -8px;
+  padding: 1px 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 1px solid #a87a24;
+  border-radius: var(--v2-r-xs);
+  box-shadow: 0 0 0 2px var(--v2-paper-2);
+}
+:root[data-ui="v2"] .mate-info {
+  display: flex;
+  flex-direction: column;
+}
+:root[data-ui="v2"] .mate-head {
+  gap: 2px 10px;
+}
+:root[data-ui="v2"] .mate-head strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink);
+  letter-spacing: 0.04em;
+}
+:root[data-ui="v2"] .mate-head .sub,
+:root[data-ui="v2"] .mate-info > .sub {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mate-info > .sub {
+  margin: 0;
+}
+:root[data-ui="v2"] .mate-bio {
+  margin: 8px 0 10px;
+  padding-left: 10px;
+  font-size: var(--v2-fs-md);
+  font-style: normal;
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-line);
+}
+:root[data-ui="v2"] .mate-genius {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .mate-fame {
+  align-self: flex-start;
+  gap: 4px;
+  margin: 0 0 6px;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .mate-fame.short {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: rgba(163, 48, 42, 0.4);
+}
+:root[data-ui="v2"] .mate-fame-short {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .mate-info > .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* 传闻：情报贩子坐在上面；奇才的去向、商会的展望、新闻各是一张便笺上的几行 */
+:root[data-ui="v2"] .tv-news {
+  gap: 10px;
+}
+:root[data-ui="v2"] .tv-news > .cast-row .cast-frame,
+:root[data-ui="v2"] .of-ruler .cast-frame {
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-sm);
+  box-shadow:
+    0 0 0 2px var(--v2-paper-0),
+    0 0 0 3px var(--v2-line);
+}
+:root[data-ui="v2"] .tv-news > .cast-row,
+:root[data-ui="v2"] .of-ruler {
+  gap: 12px;
+  margin: 2px 0 4px 3px;
+}
+:root[data-ui="v2"] .of-ruler {
+  margin-bottom: 12px;
+}
+:root[data-ui="v2"] .tv-news > .cast-row .cast-text strong,
+:root[data-ui="v2"] .of-ruler .cast-text strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .tv-news > .cast-row .cast-text small,
+:root[data-ui="v2"] .of-ruler .cast-text small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .tv-genius {
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+  background: #fbf0d6;
+  border: 1px solid var(--v2-line-strong);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+}
+/* 账页式的列表：白底、细线分隔、圆角 8（商会展望、新闻、海图、外交、贷款） */
+:root[data-ui="v2"] .tv-outlooks,
+:root[data-ui="v2"] .tv-news .news,
+:root[data-ui="v2"] .tv-charts,
+:root[data-ui="v2"] .of-relations,
+:root[data-ui="v2"] .bk-loans {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .tv-outlooks li,
+:root[data-ui="v2"] .tv-news .news li {
+  gap: 8px;
+  padding: 9px 12px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .tv-outlooks li:last-child,
+:root[data-ui="v2"] .tv-news .news li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .tv-news .news:empty {
+  display: none;
+}
+:root[data-ui="v2"] .tv-charts li,
+:root[data-ui="v2"] .of-relations li,
+:root[data-ui="v2"] .bk-loans li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-height: 48px;
+  margin: 0;
+  padding: 6px 12px;
+  font-size: var(--v2-fs-md);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .tv-charts li:last-child,
+:root[data-ui="v2"] .of-relations li:last-child,
+:root[data-ui="v2"] .bk-loans li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .tv-charts li > .btn,
+:root[data-ui="v2"] .tv-charts li > .tag,
+:root[data-ui="v2"] .bk-loans li > .btn {
+  margin-left: auto;
+}
+
+/* 议价：一行输入 + “说”；掌柜的回答是一张纸条；以前说过的话是一小段记录 */
+:root[data-ui="v2"] .tv-bargain {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+:root[data-ui="v2"] .tv-bargain input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* 输入框下面一行小字：能试的说法（输入框里只放短提示，手机上不被截断） */
+:root[data-ui="v2"] .tv-bargain-hint {
+  margin: 6px 0 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .reply {
+  margin: 8px 0;
+  padding: 10px 14px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .dialogs {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+:root[data-ui="v2"] .dialogs li {
+  padding: 6px 0;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .dialogs li:last-child {
+  border-bottom: 0;
+}
+
+/* ═════════════════════════ 3. 商会：委托书 ═════════════════════════ */
+/* 一份委托一张纸：编号（宋体）与状态签在上，货物与去处一句话，报酬（绿）、违约金、期限三格，发布方与印章在下，承接 / 交付在右下 */
+:root[data-ui="v2"] .contracts {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 12px;
+}
+:root[data-ui="v2"] .contract-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .contract-card.status-mine {
+  background: var(--v2-paper-2);
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    inset 3px 0 0 var(--v2-brass),
+    var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .contract-head {
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .contract-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  letter-spacing: 0.08em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .contract-head .tag {
+  margin: 0;
+}
+:root[data-ui="v2"] .contract-head .tag.hot {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .contract-body {
+  gap: 12px;
+}
+:root[data-ui="v2"] .contract-body p {
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .contract-terms {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  gap: 2px 12px;
+  margin: 12px 0;
+  padding: 8px 10px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .contract-terms dt {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .contract-terms dd {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .contract-terms dd.reward {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .contract-foot {
+  gap: 8px 12px;
+  margin-top: auto;
+}
+:root[data-ui="v2"] .contract-issuer {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+/* 发布方的印章：纯装饰（aria-hidden，旁边已写“发布：…”）；宋体只用 ≥ 16 px，框随字放大到 40 px；不再半透明 */
+:root[data-ui="v2"] .contract-seal {
+  width: 40px;
+  height: 40px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  border-width: 2px;
+  border-radius: var(--v2-r-xs);
+  opacity: 1;
+}
+:root[data-ui="v2"] .contract-actions {
+  gap: 8px;
+}
+
+/* ═════════════════════════ 4. 银行 ═════════════════════════ */
+/* 账页（存款、信用、额度、利率）在上；下面一张“柜台”：金额与期限、快捷金额，三个按钮写清动作与金额；贷款一笔一行，还款在行内 */
+:root[data-ui="v2"] .bk-desk {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding: 12px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .bk-desk-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 16px;
+}
+:root[data-ui="v2"] .bk-desk .field,
+:root[data-ui="v2"] .iv-desk .field,
+:root[data-ui="v2"] .wh-row .field {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+}
+:root[data-ui="v2"] .bk-desk .field > span,
+:root[data-ui="v2"] .iv-desk .field > span,
+:root[data-ui="v2"] .wh-row .field > span {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .bk-desk input,
+:root[data-ui="v2"] .iv-desk input {
+  width: 9em;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .bk-quick,
+:root[data-ui="v2"] .iv-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+:root[data-ui="v2"] .bk-quick .btn,
+:root[data-ui="v2"] .iv-quick .btn {
+  min-height: var(--v2-h-sm);
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .bk-quick .btn[aria-pressed="true"],
+:root[data-ui="v2"] .iv-quick .btn[aria-pressed="true"] {
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border-color: #b3852f;
+}
+:root[data-ui="v2"] .bk-desk > .row {
+  gap: 8px;
+  margin: 0;
+}
+:root[data-ui="v2"] .bk-loans li .tag.hot {
+  margin: 0;
+}
+:root[data-ui="v2"] [data-testid="bank"] .section .empty,
+:root[data-ui="v2"] .bk-none {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: var(--v2-fs-sm);
+  text-align: left;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 1px dashed var(--v2-line);
+}
+
+/* ═════════════════════════ 5. 期货交易所的入口 ═════════════════════════ */
+:root[data-ui="v2"] .ex-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 14px 16px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ex-link > p {
+  margin: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink);
+}
+
+/* ═════════════════════════ 6. 仓库与装卸台 ═════════════════════════ */
+/* 仓库的容量：一张卡，装载条在上；租用、买下各一行（数量 · 花费 · 按钮） */
+:root[data-ui="v2"] .wh-cap {
+  margin: 0 0 8px;
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .wh-cap-line {
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .wh-cap > .sub {
+  margin: 0 0 4px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .wh-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .wh-row + .wh-row {
+  margin-top: 10px;
+}
+:root[data-ui="v2"] .wh-row .field input[type="number"] {
+  width: 104px;
+  min-height: var(--v2-h-md);
+}
+:root[data-ui="v2"] .wh-cost {
+  align-self: end;
+  line-height: var(--v2-h-md);
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .wh-cost.warn {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+/* 纸面上的装载条：浅色的槽、黄铜色的已装 */
+:root[data-ui="v2"] .wh .load-bar,
+:root[data-ui="v2"] .tr-head .load-bar {
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .wh .load-now,
+:root[data-ui="v2"] .tr-head .load-now {
+  background: var(--v2-brass);
+}
+:root[data-ui="v2"] .wh .load-add,
+:root[data-ui="v2"] .tr-head .load-add {
+  background: repeating-linear-gradient(135deg, var(--v2-brass) 0 3px, rgba(200, 146, 46, 0.35) 3px 6px);
+}
+:root[data-ui="v2"] .wh .load-free,
+:root[data-ui="v2"] .tr-head .load-free {
+  background: rgba(200, 146, 46, 0.18);
+  outline: 1px dashed var(--v2-brass);
+}
+:root[data-ui="v2"] .wh .load-bar.over .load-add,
+:root[data-ui="v2"] .tr-head .load-bar.over .load-add {
+  background: repeating-linear-gradient(135deg, var(--v2-seal-hi) 0 3px, rgba(194, 69, 58, 0.3) 3px 6px);
+}
+
+/* 装卸台：两边各一张账页（谁、装了多少，每种货一行：加减与一键“全部 →”），中间一个对调键；调好的数量在底下的深色账台上一次搬完 */
+:root[data-ui="v2"] .tr-sides {
+  gap: 10px;
+}
+:root[data-ui="v2"] .tr-side {
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .tr-head {
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--v2-paper-1);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .tr-head .field > span {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .tr-head select {
+  min-height: var(--v2-h-md);
+}
+:root[data-ui="v2"] .tr-load {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .tr-after {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .tr-after.bad {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .tr-row {
+  gap: 6px 10px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .tr-row:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .tr-row.staged {
+  background: #fbf0d6;
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .tr-good {
+  gap: 6px;
+}
+:root[data-ui="v2"] .tr-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .tr-qty {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .tr-empty {
+  margin: 10px 12px;
+  padding: 12px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .tr-swap {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+}
+/* 合计条贴在窗口底部（与交易所的账台一样）：手机上两边上下叠放时，调完上面一边不用划到底才看见“搬运” */
+:root[data-ui="v2"] .tr-foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  gap: 8px 12px;
+  margin-top: 10px;
+  padding: 10px 12px 10px 14px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .tr-sum {
+  gap: 2px 16px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .tr-foot .btn:not(.primary) {
+  color: var(--v2-on-night);
+  background: transparent;
+  border-color: var(--v2-night-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .tr-foot .btn:not(.primary):hover:not(:disabled) {
+  background: var(--v2-night-2);
+}
+:root[data-ui="v2"] .tr-foot .btn:focus-visible {
+  outline-color: var(--v2-focus-night);
+}
+
+/* ═════════════════════════ 7. 港口投资、势力办事处 ═════════════════════════ */
+:root[data-ui="v2"] .iv-desk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+  margin: 0 0 8px;
+  padding: 12px 14px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .iv-desk > .sub {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .of-war {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border: 1px solid rgba(163, 48, 42, 0.28);
+  border-left: 3px solid var(--v2-seal);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .of-relations .cast-frame {
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-xs);
+  box-shadow: none;
+}
+
+/* ═════════════════════════ 8. 道具店 ═════════════════════════ */
+/* 店名与换货日在上；货架是一张账页：图标、名字、价钱，一键“买”在行内最右，买不了的原因写在这一行下面；选中的一件在下面展开明细 */
+:root[data-ui="v2"] .it-shop {
+  gap: 12px;
+}
+:root[data-ui="v2"] .it-shop .it-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .it-shop .it-restock {
+  margin: 0;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* “卖掉身上的东西”：与各处的分节标题一样——黄铜小菱形 + 文字 + 一条细线（base.css 的 .section > h3） */
+:root[data-ui="v2"] .it-shop .it-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 -4px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .it-shop .it-sub::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .it-shop .it-sub::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 16px;
+  height: 1px;
+  margin-left: 4px;
+  background: var(--v2-line);
+}
+:root[data-ui="v2"] .it-offers {
+  gap: 0;
+  overflow: hidden;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .it-offer {
+  gap: 2px 10px;
+  padding: 6px 12px 6px 6px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .it-offer:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .it-offer-main {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 48px;
+  padding: 4px 8px 4px 6px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-offer-main:hover:not(:disabled) {
+  background: var(--v2-paper-1);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .it-offer-main[aria-pressed="true"] {
+  background: #fbf0d6;
+  border-color: #b3852f;
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .it-offer.is-blocked .it-offer-main {
+  opacity: 1;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .it-offer-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .it-offer-price {
+  font-size: var(--v2-fs-lg);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .it-offer .it-why,
+:root[data-ui="v2"] .au-panel .it-why {
+  padding: 0 0 4px 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .it-shop .it-detail,
+:root[data-ui="v2"] .au-more .it-detail {
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left-width: 4px;
+  border-radius: var(--v2-r-md);
+}
+/* 图标角上的数量小标：不小于 12 px（行囊里的同一个小标归舰队组） */
+:root[data-ui="v2"] .it-shop .it-qty,
+:root[data-ui="v2"] .au-panel .it-qty {
+  padding: 0 4px;
+  font-size: var(--v2-fs-xs);
+}
+/* 稀有度小签：浅色字压在中等饱和的底色上不到 4.5 : 1，精良、稀有两种的底色改用令牌里的深绿、海蓝（只在道具店与拍卖会） */
+:root[data-ui="v2"] .it-shop .it-rarity-tag,
+:root[data-ui="v2"] .au-panel .it-rarity-tag {
+  color: var(--v2-paper-2);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .it-shop .it-rarity-tag.it-rarity-2,
+:root[data-ui="v2"] .au-panel .it-rarity-tag.it-rarity-2 {
+  background: var(--v2-up);
+}
+:root[data-ui="v2"] .it-shop .it-rarity-tag.it-rarity-3,
+:root[data-ui="v2"] .au-panel .it-rarity-tag.it-rarity-3 {
+  background: var(--v2-sea);
+}
+:root[data-ui="v2"] .it-shop .it-rarity-tag.it-rarity-4,
+:root[data-ui="v2"] .au-panel .it-rarity-tag.it-rarity-4 {
+  color: var(--v2-ink);
+}
+
+/* ═════════════════════════ 9. 拍卖会 ═════════════════════════ */
+/* 左边是场次（选中的浅黄铜），右边是拍卖厅：一件拍品一张卡（竞价中的描黄铜边）；出价一行：数额、主按钮“出价 n”、放弃 */
+:root[data-ui="v2"] .au-panel {
+  gap: 16px;
+}
+:root[data-ui="v2"] .au-list {
+  gap: 6px;
+}
+/* 港口窗口（中号，约 600 px）里左右两栏太挤：场次排成一行在上，拍卖厅占满整宽（从日历打开的拍卖会不受影响） */
+:root[data-ui="v2"] .port .au-panel {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+:root[data-ui="v2"] .port .au-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+:root[data-ui="v2"] .port .au-list > li {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .port .au-list .au-item {
+  height: 100%;
+}
+:root[data-ui="v2"] .au-item {
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 0;
+  padding: 10px 12px;
+  text-align: left;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .au-item.is-on,
+:root[data-ui="v2"] .au-item.is-on:hover:not(:disabled) {
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .au-item-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .au-item-when,
+:root[data-ui="v2"] .au-item-headline {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .au-room {
+  gap: 12px;
+}
+:root[data-ui="v2"] .au-room > .it-lead {
+  padding: 8px 12px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  border-left: 3px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .au-lots {
+  gap: 12px;
+}
+:root[data-ui="v2"] .au-lot {
+  gap: 10px;
+  padding: 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .au-lot--bidding {
+  border-color: var(--v2-brass-ink);
+  box-shadow:
+    inset 0 0 0 1px var(--v2-brass-ink),
+    var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .au-lot--sold,
+:root[data-ui="v2"] .au-lot--passed {
+  opacity: 1;
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .au-lot-head {
+  gap: 12px;
+}
+:root[data-ui="v2"] .au-lot-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .au-lot-price {
+  gap: 2px 12px;
+  margin-top: 4px;
+  font-size: var(--v2-fs-md);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .au-panel .is-good {
+  font-weight: 600;
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .au-panel .is-cost {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .au-lot-status {
+  align-self: start;
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .au-lot--bidding .au-lot-status {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .au-bidders {
+  gap: 8px 14px;
+}
+:root[data-ui="v2"] .au-bidder {
+  gap: 0 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .au-bidder-face {
+  overflow: hidden;
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .au-bidder small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 已经退出的出价人：字换成浅一级的墨色、照旧有删除线，头像褪色（不再整行半透明——名字的对比度会掉到 AA 以下） */
+:root[data-ui="v2"] .au-bidder.is-out {
+  color: var(--v2-ink-3);
+  opacity: 1;
+}
+:root[data-ui="v2"] .au-bidder.is-out .au-bidder-face {
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+:root[data-ui="v2"] .au-inspect {
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .au-bid {
+  gap: 8px 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .au-bid label {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .au-bid input {
+  width: 9em;
+  padding: 0 10px;
+  font-size: var(--v2-fs-md);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--v2-line-control);
+}
+:root[data-ui="v2"] .au-bid label + .ts-btn {
+  align-self: flex-end;
+}
+:root[data-ui="v2"] .au-bid > .ts-btn {
+  align-self: flex-end;
+}
+:root[data-ui="v2"] .au-min {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .au-won {
+  gap: 2px 10px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .au-after {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .au-more summary {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .au-log {
+  margin: 0;
+  padding: 10px 12px 10px 30px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.7;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+
+/* 道具店、拍卖会里的像素按钮换成新按钮：次要按钮（鉴定、放弃），出价是主按钮 */
+:root[data-ui="v2"] .au-panel .ts-btn,
+:root[data-ui="v2"] .au-panel .ts-btn-small {
+  top: 0;
+  min-height: var(--v2-h-md);
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .au-panel .ts-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .au-panel .ts-btn:active:not(:disabled) {
+  top: 0;
+  background: var(--v2-paper-sunk);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .au-panel .ts-btn:focus-visible,
+:root[data-ui="v2"] .it-shop .ts-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .au-panel .ts-btn:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .au-panel .ts-btn-go {
+  min-height: var(--v2-h-md);
+  padding: 0 18px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+}
+:root[data-ui="v2"] .au-panel .ts-btn-go:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+
+/* ═════════════════════════ 10. 舰队页的购买补给 ═════════════════════════ */
+:root[data-ui="v2"] .sp-desk {
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .sp-rows {
+  gap: 10px 18px;
+  margin: 0 0 8px;
+}
+:root[data-ui="v2"] .sp-row {
+  gap: 8px;
+}
+:root[data-ui="v2"] .sp-label {
+  min-width: 2.5em;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sp-presets {
+  gap: 6px;
+}
+:root[data-ui="v2"] .sp-note {
+  margin: 0 0 10px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .sp-note.warn {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+/* V01：最上面一行“船上粮 X / 水 Y，够 N 天”；一键补给（补到 10 / 30 天）在加减框之前，买不了的原因紧跟在按钮下面；最后一行小字说明一份够几人吃 */
+:root[data-ui="v2"] .sp-have {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .sp-quick {
+  margin: 0 0 10px;
+}
+:root[data-ui="v2"] .sp-quick .sp-presets {
+  display: flex;
+  flex-wrap: wrap;
+}
+/* 按钮上的两段：“补到 10 天”“· 约 9 金币”，各自不折行 */
+:root[data-ui="v2"] .sp-preset-days,
+:root[data-ui="v2"] .sp-preset-cost {
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .sp-preset-cost::before {
+  content: " · ";
+  white-space: pre;
+}
+:root[data-ui="v2"] .sp-block {
+  margin: 6px 0 0;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .sp-help {
+  margin: 10px 0 0;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.6;
+  color: var(--v2-ink-3);
+}
+
+/* ═════════════════════════ 11. 交易所底部的账台：快捷键 ═════════════════════════ */
+/* 成交单空着时：现金与装载一行，快捷键另起一行（并排时快捷键把现金挤成三四行） */
+:root[data-ui="v2"] .mk-cart .v2-keys.mk-keys {
+  justify-content: flex-start;
+  margin: 0;
+  padding-top: 8px;
+  white-space: normal;
+  border-top: 1px solid var(--v2-night-line);
+}
+@media (hover: hover) and (pointer: fine) {
+  :root[data-ui="v2"] .mk-cart:not(.open) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "status"
+      "keys";
+  }
+}
+
+/* ═════════════════════════ 12. 空状态 ═════════════════════════ */
+:root[data-ui="v2"] .port .tab-body .v2-empty {
+  margin: 8px 0 12px;
+}
+/* 道具店、拍卖会“正在载入……”：一行安静的说明 */
+:root[data-ui="v2"] .port .tab-body > .ts-empty {
+  margin: 12px 0;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+
+/* ═════════════════════════ 13. 城镇：市况、人口与需求、城镇工坊（port/Town.tsx） ═════════════════════════ */
+/* 市况小签（港口窗口标题下、港口投资的“城镇”）：令牌色的浅底圆签——繁荣 = 黄铜、过剩 = 海蓝、萧条 = 次要墨色、饥荒 = 印章红；
+   字与底的对比 ≥ 5.6（brass-ink / #f6e6c2 5.9、sea / #e3edf5 6.3、ink-2 / paper-sunk 6.4、seal / #f8e3dc 5.7） */
+:root[data-ui="v2"] .tag.cond {
+  padding: 1px 8px;
+  font-style: normal;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .tag.cond-boom {
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+  border-color: rgba(122, 82, 16, 0.35);
+}
+:root[data-ui="v2"] .tag.cond-glut {
+  color: var(--v2-sea);
+  background: #e3edf5;
+  border-color: rgba(31, 90, 138, 0.3);
+}
+:root[data-ui="v2"] .tag.cond-depression {
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-color: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .tag.cond-famine {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-color: rgba(163, 48, 42, 0.3);
+}
+/* 港口投资的“城镇”：账页里的说明小一号、换到下一行（不小于 12 px）；增减幅半粗 */
+:root[data-ui="v2"] .port .tab-body .town-kv dd small {
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .port .tab-body .town-kv dd .sub {
+  flex: 1 1 100%;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .port .tab-body .town-kv dd small.up,
+:root[data-ui="v2"] .port .tab-body .town-kv dd small.down {
+  font-weight: 600;
+}
+:root[data-ui="v2"] [data-testid="town-section"] > .sub,
+:root[data-ui="v2"] [data-testid="workshops"] > .sub {
+  margin: 4px 0 8px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-ink-3);
+}
+/* 三层需求的满足度：名目 | 6 px 圆头的黄铜细条（纸面下凹的槽）| 百分数——与装载、情谊同一种进度 */
+:root[data-ui="v2"] .town-needs-title {
+  margin: 12px 0 6px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .town-needs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .town-needs li {
+  grid-template-columns: 5em minmax(60px, 1fr) 3.5em;
+  gap: 12px;
+  margin: 0;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .town-need-name {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .town-needs .num {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .town-meter {
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .town-meter > span {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+/* 交易所下面的城镇工坊：一张账页，一座工坊一行（配方半粗，产能与今天的产量是 12 px 的说明），细线分隔 */
+:root[data-ui="v2"] .workshops {
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .workshops li {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .workshops li:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .ws-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ws-head .tag {
+  margin-left: 0;
+  font-weight: 500;
+}
+:root[data-ui="v2"] .workshops li > .sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═════════════════════════ 14. 港口街景：殖民的告示牌、热点的焦点环（PortScene.tsx） ═════════════════════════ */
+/* 无主之地的“在此建立殖民地”：与“出港”同一种平面的黄铜主按钮（1 px 边、浮起的阴影），不再是像素斜面牌匾，也不再上下晃；
+   告示牌下的木桩留着（像素插图的一部分），换成细线与夜色 */
+:root[data-ui="v2"] .scene-found-sign {
+  gap: 8px;
+  min-height: var(--v2-h-lg);
+  padding: 0 18px 0 10px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 1px solid #8f6418;
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  text-shadow: none;
+  animation: none;
+}
+:root[data-ui="v2"] .scene-found-sign::after {
+  width: 4px;
+  height: 14px;
+  margin-left: -2px;
+  background: var(--v2-night-1);
+  border: 0;
+  border-radius: 0 0 1px 1px;
+}
+:root[data-ui="v2"] .scene-found:hover .scene-found-sign,
+:root[data-ui="v2"] .scene-found:focus-visible .scene-found-sign {
+  background: #eabd68;
+}
+:root[data-ui="v2"] .scene-found:active .scene-found-sign {
+  transform: translateY(1px);
+  box-shadow: var(--v2-shadow-1);
+}
+/* 街景上的热点（建筑、殖民建筑、无主之地）：全界面统一的焦点环——深色底上 2 px 亮黄铜，不再是金色虚线 */
+:root[data-ui="v2"] .scene-hotspot:focus-visible,
+:root[data-ui="v2"] .scene-found:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+/* 手机上名牌的小字不小于 12 px（compact.css 写的是 11 px） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .scene-sign-sub {
+  font-size: var(--v2-fs-xs);
+}
+
+/* ═════════════════════════ 手机与触屏 ═════════════════════════ */
+/* 手机与矮屏的设施分页（compact.css 排成一行左右滑动，那里的规则特异度更高，盖过 market.css 的 v2 样式）：
+   不要 3 px 的黄铜条（描边一律 1 px，双线只在窗口标题下），底下一条 1 px 细线、与掌柜隔开 12 px；
+   分页条两边伸到窗口边（滑动时小签从屏幕边缘进出），第一个小签与正文的 14 px 边距对齐，细线只画在正文宽度里（背景不随内容滚动） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .port > .tabbar,
+:root[data-ui="v2"] .app.game[data-layout="short"] .port > .tabbar {
+  margin-left: -14px;
+  margin-right: -14px;
+  padding: 4px 14px 12px;
+  scroll-padding-inline: 14px;
+  border-bottom: 0;
+  box-shadow: none;
+  background: linear-gradient(var(--v2-line), var(--v2-line)) 14px 100% / calc(100% - 28px) 1px no-repeat;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .port > .tab-body,
+:root[data-ui="v2"] .app.game[data-layout="short"] .port > .tab-body {
+  font-size: 15px;
+}
+/* 手机：航海士的头像小一号、能力条单列；补员、招募、买船、补给的按钮整行（拇指好按） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .mate-portrait .portrait-art,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .mate-portrait canvas {
+  width: 88px !important;
+  height: 88px !important;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .mate-card {
+  gap: 14px;
+  padding: 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .mate-card .stats {
+  grid-template-columns: minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .tv-crew-fleet .crew-hire-row .btn,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .mate-info > .btn,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .ship-info > .row .btn {
+  flex: 1 1 100%;
+  align-self: stretch;
+}
+/* 补给的柜台是块级的（不是 flex），主按钮用宽度撑满；投资的金额框与主按钮各占一行（快捷金额夹在中间） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sp-desk > .btn {
+  width: 100%;
+}
+/* 一键补给的两个按钮各占一半：天数在上、钱数在下（钱数长时也不把窗口撑出横向滚动） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sp-desk .sp-quick .sp-presets .btn.small {
+  display: inline-flex;
+  flex: 1 1 calc(50% - 3px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+  padding: 6px 8px;
+  line-height: 1.3;
+  white-space: normal;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sp-desk .sp-preset-days,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sp-desk .sp-preset-cost {
+  display: block;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sp-desk .sp-preset-cost {
+  font-size: var(--v2-fs-xs);
+  font-weight: 500;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sp-desk .sp-preset-cost::before {
+  content: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .iv-desk > .field,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .iv-desk > .btn {
+  flex: 1 1 100%;
+}
+/* 手机：存、取、借三个按钮两两一行（借款整行），不留一个孤零零的在第二行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .bk-desk > .row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .bk-desk > .row > .btn:last-child {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .bk-desk input,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .iv-desk input {
+  width: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .bk-desk-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* 手机：出价一行——数额整行，“出价”与“放弃”并排（出价宽一些）；改造的下拉框撑满 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .au-bid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .au-bid > label,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .au-bid > .au-min {
+  grid-column: 1 / -1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .au-bid input {
+  width: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .au-bid > .ts-btn {
+  align-self: stretch;
+}
+/* 手机：装卸台的合计条——合计一行，“清空”与“搬运”一行、“搬运”撑满（同交易所的账台） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .tr-sum {
+  flex: 1 1 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .tr-foot .btn.primary {
+  flex: 1 1 auto;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sy-ship-acts {
+  flex: 1 1 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sy-refit {
+  flex: 1 1 100%;
+  flex-wrap: nowrap;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sy-refit > .field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .sy-refit select {
+  width: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .wh-row {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .wh-row > .btn {
+  grid-column: 1 / -1;
+}
+/* 手机：委托书的条件两列——报酬、违约金并排，截止一格占整行（三等分时“第 40 天（剩 28 天）”会断在括号里） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: none;
+  grid-auto-flow: row;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms > dt:nth-of-type(1) {
+  grid-area: 1 / 1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms > dd:nth-of-type(1) {
+  grid-area: 2 / 1;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms > dt:nth-of-type(2) {
+  grid-area: 1 / 2;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms > dd:nth-of-type(2) {
+  grid-area: 2 / 2;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms > dt:nth-of-type(3) {
+  grid-area: 3 / 1 / auto / -1;
+  margin-top: 4px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .contract-terms > dd:nth-of-type(3) {
+  grid-area: 4 / 1 / auto / -1;
+}
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .sy-ship .btn,
+  :root[data-ui="v2"] .sy-refit select,
+  :root[data-ui="v2"] .au-panel .ts-btn,
+  :root[data-ui="v2"] .au-bid input,
+  :root[data-ui="v2"] .bk-quick .btn,
+  :root[data-ui="v2"] .iv-quick .btn,
+  :root[data-ui="v2"] .tr-head select,
+  :root[data-ui="v2"] .tr-swap {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .tr-swap {
+    width: var(--v2-h-touch);
+    height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .au-bid input,
+  :root[data-ui="v2"] .bk-desk input,
+  :root[data-ui="v2"] .iv-desk input,
+  :root[data-ui="v2"] .wh-row input,
+  :root[data-ui="v2"] .tv-bargain input {
+    font-size: var(--v2-fs-lg);
+  }
+  /* 触屏下限 44 px（第 3.4、4 节）：港口的设施分页；本组各设施页里的按钮、输入框、下拉框（交易所那一页的货物列表归地基，
+     这里只管它底部的账台）；舰队页的补给、各处的一键补员、港口名牌下“船员不足”的小卡、装卸台的合计条 */
+  :root[data-ui="v2"] .port > .tabbar .tab,
+  :root[data-ui="v2"] .port > .tab-body > :not(.market) .btn,
+  :root[data-ui="v2"] .port > .tab-body > :not(.market) select,
+  :root[data-ui="v2"] .port > .tab-body > :not(.market) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(.qty-input),
+  :root[data-ui="v2"] .sp-desk .btn,
+  :root[data-ui="v2"] .crew-hire .btn,
+  :root[data-ui="v2"] .scene-crew .btn,
+  :root[data-ui="v2"] .tr-foot .btn,
+  :root[data-ui="v2"] .mk-cart .btn {
+    min-height: var(--v2-h-touch);
+  }
+  /* 仓库一行里输入框旁的花费：与 44 px 的输入框对齐 */
+  :root[data-ui="v2"] .wh-cost {
+    line-height: var(--v2-h-touch);
+  }
+}

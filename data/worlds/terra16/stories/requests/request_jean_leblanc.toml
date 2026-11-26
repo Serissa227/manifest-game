@@ -1,0 +1,157 @@
+# 请托：河边那块地（request_jean_leblanc）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：让·勒布朗（jean_leblanc，1533-10-01 生，男），诺曼底来的法国通事，住在图皮南巴人村里；势力 tupinamba，身份档 1（通事，替两边翻话）。cast：cast/story_americas.toml。
+# 类型：说服某人（persuade）。四章：offer（报价）、persuade（写到河边，在萨尔瓦多海关楼）、report（照实说给首领听，写进了地契）、report_partial（只写到“暂缓”）。
+# 报价：T（当面）。人物按日程在 salvador（dock，1561—1590）；auto=false，玩家“问请托”启动（界面用 ask:request_jean_leblanc）；offer 不写 at，objectives 为“在港里找到他”。
+#       窗口 1561-01-01 至 1590-06-30；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：persuade 章 deadline_days=120，超时走 failed，来信一封，好感 -3，旗标 _late。report 与 report_partial 是普通章，可以一直等。
+# 结构：三条分支都以 next 走，没有任何选项被本轨道自己设的旗标门禁。文书写成的那一路去 report，检定失败的那一路去 report_partial，各自有自己的选项。
+# 依据·史实背景：1550—60 年代巴伊亚甘蔗园的扩张与赐地（sesmaria）；葡萄牙文的赐地文书由总督府的书记办理，四至写到哪条河为止，就是哪块地的界。
+# 依据·原创：图皮南巴人的村子与河岸、晒鱼的架子、刻满缺口的木桩（一年一道）、勒布朗“先听主人开口”的习惯、首领与书记两人的台词。
+# 秘密：cast 没写秘密；本请托不写皮埃尔（C7 的 pair_jean_leblanc_pierre_cardon 不读不写），不写奴役交易、掳人。见闻不泄露任何人的私事。
+# 读的旗标：无（不读 C7 的旗标，也不读 c7_*）。
+# 设的旗标：c13_request_jean_leblanc_accepted（offer 接下，两条接法）、_asked（offer 接下并问了上游的事，persuade 的变体读它）、_declined（offer 回绝）、_written（persuade 写成了约）、_late（persuade 超时）、_done（report 照原话说，最好的结局）、_partial（report 或 report_partial 的折中结局）。
+#       每条轨道只设一面终局旗标：_done / _partial / _declined / _late 四选一。
+# 报酬：现金最多 1250（折中 750；花 400 请书记誊写的一路最多 850）、好感最多 +15、名声 +2、回忆 mem-request_jean_leblanc-report。无物品奖励，无技能、海图奖励。
+# 依赖：港口 salvador（ports_americas.toml，已存在，无需改名）；技能 lang_portuguese（skills.toml）；属性 eloquence（captain.toml）；人物 jean_leblanc（cast 已有日程）。
+# 回忆插画清单：
+#   mem-request_jean_leblanc-report「插回河岸的木桩」：河岸边，一根刻满缺口的木桩插回土里，插得很深，村里的人围在旁边看。
+
+[[tracks]]
+key = "request_jean_leblanc"
+name = "河边那块地"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["jean_leblanc"]
+
+# 一、一年一道缺口：巴伊亚的港口，勒布朗领你去村子，首领先开口，他才翻。
+[[tracks.chapters]]
+key = "offer"
+title = "一年一道缺口"
+text = "勒布朗领你出了港，沿河走了半天，村子藏在一片灌木后头。老首领先开口，勒布朗就站在一边，等他说完了才翻，一句不多，一句不少。葡萄牙人的甘蔗园往这边挪了三回，这回看上的是村子晒鱼的那段河岸。首领从屋檐下拿出一根木桩，上面刻满缺口，一年一道，是当年两边约好的。勒布朗翻过来：“他说，这根桩在总督府不算数。要算数，得写进赐地的文书里。”他自己又补了一句：“话我只能带到，签字的不是我。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "jean_leblanc", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去一趟总督府，把桩上的约写进地契。"
+next = "persuade"
+reply = "首领把木桩交到你手上，勒布朗替他补了一句：“他说，桩比人走得慢，你别走太快。”"
+effects = [{ kind = "affinity", person = "jean_leblanc", value = 2 }, { kind = "flag", flag = "c13_request_jean_leblanc_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_move"
+text = "先问：写不进去的话，村子肯不肯往上游搬？"
+next = "persuade"
+reply = "勒布朗先等首领说完才翻，翻得很短：“他说，上游有别人的鱼。”他自己又加了一句，不是翻的：“你先去试试。”"
+effects = [{ kind = "affinity", person = "jean_leblanc", value = 2 }, { kind = "flag", flag = "c13_request_jean_leblanc_accepted" }, { kind = "flag", flag = "c13_request_jean_leblanc_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "地契的事，我插不上手。"
+next = "failed"
+reply = "勒布朗点点头，把木桩还给首领，什么也没翻。"
+effects = [{ kind = "flag", flag = "c13_request_jean_leblanc_declined" }]
+
+# 二、写到河边：萨尔瓦多海关楼，书记把赐地文书摊开，四至写到“河”为止。
+[[tracks.chapters]]
+key = "persuade"
+title = "写到河边"
+text = "海关楼里的书记把赐地文书摊开，甘蔗园主的名字写在最上头。四至写得很宽，从海边的盐田一路写到“河”。勒布朗在一旁替你看着书记的笔，每写一个字，他都把那个字在嘴里滚一遍。木桩在你手里，书记扫了一眼，数出二十三道缺口。他头也不抬：“文书只认文书，不认木头。”"
+speaker = "captain"
+mood = "tense"
+at = "salvador"
+when = [{ kind = "alive", person = "jean_leblanc", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "jean_leblanc", text = "你没来。地契照原样批了，村里在往上游看地方。首领说，桩子他留着。" }, { kind = "affinity", person = "jean_leblanc", value = -3 }, { kind = "flag", flag = "c13_request_jean_leblanc_late" }] }
+
+[[tracks.chapters.variants]]
+key = "asked"
+when = [{ kind = "flag", flag = "c13_request_jean_leblanc_asked" }]
+text = "海关楼里的书记把赐地文书摊开，甘蔗园主的名字写在最上头。上游的事你已经问过了，这回勒布朗不提上游，只把四至一行行指给你看。写到“河”的地方，字写得很宽。木桩在你手里，书记扫了一眼，数出二十三道缺口。他说：“文书只认文书，不认木头。”"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他讲：写到河边，要出人命，总督府也不想要这个。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "书记叹了口气，在四至那一行“河”字前面添了几个字：留出晒鱼的岸。添完他把笔一扔：“这几个字，将来有人要我解释。”"
+effects = [{ kind = "affinity", person = "jean_leblanc", value = 3 }, { kind = "flag", flag = "c13_request_jean_leblanc_written" }]
+news = "萨尔瓦多海关楼里，一个外乡船长拿着一根刻满缺口的木桩，跟书记争了一下午地契上的一个字。"
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "jean_leblanc", value = -2 }], news = "萨尔瓦多海关楼里，书记只肯在地契背面添上“河岸暂缓”四个字，外乡船长没占到便宜。" }
+
+[[tracks.chapters.choices]]
+key = "read_portuguese"
+text = "照原文，一个词一个词指给他看：写的是“到河”，没写“过河岸”。"
+next = "report"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60, hard = true }]
+hint = "你的葡萄牙文还认不全文书里那几个拐弯的词"
+reply = "书记把文书拿近了看，看了很久，承认这一句可以照字面办。他在边上补了一行注：晒鱼的岸不在其内。"
+effects = [{ kind = "affinity", person = "jean_leblanc", value = 5 }, { kind = "flag", flag = "c13_request_jean_leblanc_written" }]
+news = "萨尔瓦多海关楼里，一个外乡船长拿着赐地文书的原文，一个词一个词跟书记对，书记最后认了字面。"
+
+[[tracks.chapters.choices]]
+key = "fee"
+text = "交一笔誊写费，请他重抄一份带注的。"
+next = "report"
+requires = [{ kind = "cash", ge = 400 }]
+hint = "身上的现钱不够这笔誊写费"
+reply = "书记收了钱，重抄了一份，注写得很小。勒布朗后来说，钱写进去的字，钱也能抹掉。"
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "jean_leblanc", value = 3 }, { kind = "flag", flag = "c13_request_jean_leblanc_written" }]
+news = "萨尔瓦多海关楼里，一个外乡船长掏钱请书记把地契重抄一份，书记的注写得很小，旁人凑近了才看清。"
+
+# 三之一、管到下一个书记：写成了约，勒布朗来码头找你，首领要听原话。
+[[tracks.chapters]]
+key = "report"
+title = "管到下一个书记"
+text = "勒布朗来码头找你，手里还是那根木桩，桩顶新削了一道，比别的缺口深。地契批下来了，四至里多了一行字。他说，首领想知道那几个字是怎么写的，要你自己说给首领听，他来翻。他站在栈桥边，等你开口。"
+speaker = "captain"
+mood = "tender"
+at = "salvador"
+when = [{ kind = "alive", person = "jean_leblanc", value = true }]
+
+[[tracks.chapters.choices]]
+key = "tell_exact"
+text = "照文书的原话，一个字不改地说。"
+next = "done"
+reply = "首领听完，问那几个字能管几年。勒布朗翻过来，又翻回去，最后说：“他说，管到下一个书记。”他把木桩插回河岸，插得很深。"
+news = "萨尔瓦多港上有人说，巴伊亚河边那个图皮南巴村子，晒鱼的岸写进了地契，村里人把旧木桩插回了岸上。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "jean_leblanc", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_jean_leblanc-report", title = "插回河岸的木桩" }, { kind = "flag", flag = "c13_request_jean_leblanc_done" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "把话说得好听些：地契认了，岸是你们的。"
+next = "done"
+reply = "勒布朗没有照翻。他先看了首领一眼，才把原话一个字一个字翻过去，翻完自己笑了：“我嘛，只管把你的话说得好听些。这一句，好听不了。”"
+news = "萨尔瓦多港上有人说，巴伊亚河边的图皮南巴村子，地契上多了几个字，岸的事却还没说清。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "jean_leblanc", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jean_leblanc_partial" }]
+
+# 三之二、河岸暂缓：检定没过，书记只在背面添了四个字，写进正文的是“暂缓”。
+[[tracks.chapters]]
+key = "report_partial"
+title = "河岸暂缓"
+text = "书记在地契背面添了四个字：河岸暂缓。他不肯写进正文，说背面的字只算一句交代，不算约。勒布朗站在门边，手里还攥着那根木桩。首领在村里等回话。他看看书记，又看看你，等你先开口。"
+speaker = "captain"
+mood = "tense"
+at = "salvador"
+when = [{ kind = "alive", person = "jean_leblanc", value = true }]
+news = "萨尔瓦多港上有人说，巴伊亚河边的图皮南巴村子，地契上没写进那条岸，村里人只好往上游找地方。"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实翻：河岸只是暂缓，没写进约。"
+next = "done"
+reply = "勒布朗翻得很慢，一个字也没添。首领听完，沉默了很久，伸手摸了摸木桩上最深的那道缺口：“暂缓，也算一年。”他让村里人把晒鱼的架子往上游挪了半尺。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "jean_leblanc", value = 3 }, { kind = "flag", flag = "c13_request_jean_leblanc_partial" }]
+
+[[tracks.chapters.choices]]
+key = "soften_partial"
+text = "把话说得好听些：地契认了，岸是你们的。"
+next = "done"
+reply = "勒布朗把话翻了，翻得圆滑，首领点了头。可他翻完没看首领，看的是你。“这话是你说的。”他说，“我只翻了一半。”"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "jean_leblanc", value = 1 }, { kind = "flag", flag = "c13_request_jean_leblanc_partial" }]

@@ -1,0 +1,163 @@
+# C13d 人物的请托：王直——石缝里的针路图（找东西，3 章；故事 2.0，A5 / E37 契约）
+# 人物：王直（汪直，wang_zhi，生年不详；徽州歙县人，号五峰，平户与五岛的大船主）。1557 年受招抚回国，1558 年起关在杭州按察司的牢里，1560-01-22 被斩（由 fate 事件 wang_zhi_execution 管，本文件不写）。
+# 类型：找东西（fd）。取一只藏在废港妈祖庙台阶下的油布筒，再把里头的针路图交出去——交给谁，才是这条请托真正的选择。
+# 报价模式 L（来信／代理人）：王直本人在牢里，不出场；杭州按察司牢里的厨子在宁波码头的面摊上带口信（厨子不入 cast、不起名）。
+#   offer 章 at=ningbo，auto=true，family=c13_offer_ningbo（冷却 20 天）；两条主线都写他，所以 when 里读 c13_main_lin_wandeng 与 c13_main_mio，两者必须为假才出现。
+# 窗口：offer 1558-03-01..1559-11-30（deadline 为窗口止日，timeout 直接 failed，不写见闻）；retrieve 进章后 90 天；handin 进章后 120 天（超时：图留在玩家手里，走 done）。
+# 报酬：现金最多 2900（交给他的人／照描一份）／1500（交总督府的书办）；唯一奖励 chart_ryukyu（照描、自己留、超时没人来取，三条路至多拿一次）；
+#   好感正向合计 ≤ 13（接下 +2，取图 +3，交图 +8）；名声 0（密信）；ming 声望 +2（仅 official）；wang_zhi 势力 key 是王直的船队，不写声望；回忆一条。
+# 回忆插画：mem-request_wang_zhi-handin（画面：宁波面摊的油灯下，一整张桑皮纸摊开，岛名连成一线，旁边挤着密密的小字）。
+# 依据——史实：王直 1557 年受招抚，1558 年起被押在杭州，1560-01-22 斩于杭州；双屿港 1548 年被朱纨捣毁，此后是废港。
+#   原创：废港妈祖庙第三级台阶下的油布筒、桑皮纸针路图、牢里的厨子、五岛来取图的汉子（不起名、不写成王直的义子）、总督府的书办。
+#   不写：王直受审与被斩、招抚的真假、沿海烧杀的账；不碰他的秘密；不提 C7 的任何人。
+# 旗标：读——c13_main_lin_wandeng、c13_main_mio（offer 门禁，由两位主角的主线设置，尚未写）。
+#   写——c13_request_wang_zhi_accepted / declined（报价）；noted、wine（取图失败的分支，只由 handin 的变体读取）；
+#   done / partial / betrayed / late（终局；done、partial、betrayed 在 handin 三条路里互斥；late 只由两处超时设置）。
+# 依赖：ningbo、shuangyu 都是现有港口，无 B10b 改名；cast 的 wang_zhi 日程（1558–1559 在杭州）不用 person 目标，不依赖。
+# 英文覆盖：不写（本批仅中文）。
+
+[[tracks]]
+key = "request_wang_zhi"
+name = "石缝里的针路图"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["wang_zhi"]
+
+# 报价：面摊上的口信。王直的招牌话只在这里用一次，是厨子学来的。
+[[tracks.chapters]]
+key = "offer"
+title = "牢饭里的口信"
+text = "宁波码头的面摊，一个系围裙的人端着碗坐到你对面，袖口沾着灶灰。他说他在杭州按察司的牢里做饭，里头关着的王直，人人叫他老船主，两顿饭顿顿吃得下，就是嫌盐少。“他让我带话，不是给官的。”厨子把筷子横在碗上，压低嗓子学那个声气：“双屿废港，妈祖庙，第三级台阶底下有道缝，缝里塞着一只油布筒。我画了半辈子的针路都在里头，浙江到琉球，到五岛，哪里看山，哪里落针。”厨子停了停：“交给五岛来的人。海上风浪大，船翻了也寻常，图不能只留在一个地方。”你问那人什么时候来。厨子摇头，老船主没说。"
+mood = "mystic"
+at = "ningbo"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1558, 3, 1], to = [1559, 11, 30] }, { kind = "flag", flag = "c13_main_lin_wandeng", value = false }, { kind = "flag", flag = "c13_main_mio", value = false }]
+deadline = [1559, 11, 30]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去双屿把油布筒取出来"
+reply = "厨子把几文面钱压在碗底，起身前又问了三样：“你的船吃水几尺？几个水手？这几天吹什么风？”你一样一样答了。他点点头：“老船主就爱问这三样，说答得顺的人，路上不会乱。”"
+next = "retrieve"
+effects = [{ kind = "flag", flag = "c13_request_wang_zhi_accepted" }, { kind = "affinity", person = "wang_zhi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，先问：为什么不交给官府"
+reply = "厨子嗤了一声，筷子在碗沿上敲了两下：“官府要的是他的头，不是他的图。图交上去，锁进库里，没人看得懂。五岛的火长认得上头每一个记号。”说完他把面钱压在碗底，没再多讲。"
+next = "retrieve"
+effects = [{ kind = "flag", flag = "c13_request_wang_zhi_accepted" }, { kind = "affinity", person = "wang_zhi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "不接：这种事我不沾"
+reply = "厨子把剩下的面吃完，汤也喝干，碗往桌上一扣。他走的时候没回头，围裙角被码头的风吹得啪啪响。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_wang_zhi_declined" }]
+
+# 取图：第三级台阶。落潮的礁石、哨船，三种出法各有各的风险。
+[[tracks.chapters]]
+key = "retrieve"
+title = "第三级台阶"
+text = "落潮的时候，双屿废港的礁石一块块冒出水面，黑的，挂着藤壶。妈祖庙只剩半截墙，三级台阶还在，第三级底下果然有道缝，宽不过两指。我趴下去摸，指尖碰到油布，拽了三回才拽出来，筒口封着蜡，蜡上按着一个拇指印，比我的大一圈。刚把筒塞进怀里，海面上传来桨声。一条水师的哨船贴着岛划过来，船头的兵在喊：“那条船，什么货？靠过来查！”"
+speaker = "captain"
+mood = "tense"
+at = "shuangyu"
+when = [{ kind = "alive", person = "wang_zhi", value = true }]
+objectives = [{ kind = "at", at = "shuangyu", text = "到双屿废港的妈祖庙，取台阶下的油布筒" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_wang_zhi_late" }, { kind = "affinity", person = "wang_zhi", value = -3 }, { kind = "letter", person = "wang_zhi", text = "杭州那边再没有话带出来了。台阶底下的东西，要么烂在缝里，要么叫潮水带走。面摊上说过的话，就当我没说过。" }]
+
+[[tracks.chapters.choices]]
+key = "reef"
+text = "趁落潮，从暗礁之间穿出去"
+reply = "我让水手把帆落下一半，船贴着礁走，桨手拿篙子一路探水。哨船吃水深，在外圈停了桨，船头的兵骂了几句，眼看着我们从两块礁石的窄口里溜了出去。"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "handin"
+effects = [{ kind = "affinity", person = "wang_zhi", value = 3 }]
+fail = { next = "handin", effects = [{ kind = "flag", flag = "c13_request_wang_zhi_noted" }], news = "双屿废港外，水师的哨船追着一条船翻了一遍舱，什么也没翻出来，只记下了船名。" }
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "等涨潮的那一刻再走"
+hint = "这片滩涨潮是哪一刻，你说不准。差一刻，船就搁在礁上。"
+reply = "我把船泊在礁后，数着礁石上的水痕等。水漫过那块最高的黑礁，整片暗礁一下子没进水里，海面平得像从没有过。哨船在外头转了两圈，看不出我们是从哪条缝出去的。"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+next = "handin"
+effects = [{ kind = "affinity", person = "wang_zhi", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "face"
+text = "停船，等他们靠过来"
+reply = "我站在船头，手按着刀。哨船靠过来，船头的兵看了看我身后那一排水手的胳膊，又看了看自己的桨手，喊了两句“例行查问”，划走了。"
+check = { attr = "arms", base = 20, per = 7 }
+next = "handin"
+effects = [{ kind = "affinity", person = "wang_zhi", value = 3 }]
+fail = { next = "handin", effects = [{ kind = "flag", flag = "c13_request_wang_zhi_noted" }, { kind = "flag", flag = "c13_request_wang_zhi_wine" }], news = "双屿废港外，水师哨船拦下一条船搜了半天，只拿走两坛酒，兵丁在船头就开了封。" }
+
+# 交图：油灯下的桑皮纸。交给谁，各走各的终局。
+[[tracks.chapters]]
+key = "handin"
+title = "交给谁"
+text = "面摊的油灯下，厨子旁边多了个人，皮肤晒得黝黑，一开口是五岛的腔调。他开口先问老船主吃不吃得下饭。“顿顿两碗，”厨子说，“还问我今天吹什么风。”那人点点头，这才看向我怀里的油布筒。蜡封剖开，一整张桑皮纸摊在桌上，岛名一个连一个，旁边挤着小字，注着更数和针位，墨色深浅不一，是几十年里一笔一笔添上去的。我正要开口，码头那头有人吆喝，总督府的一个书办挨船打听：“有没有从双屿回来的船？”"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+when = [{ kind = "alive", person = "wang_zhi", value = true }]
+objectives = [{ kind = "at", at = "ningbo", text = "回宁波的面摊，把图交出去" }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "item", item = "chart_ryukyu", qty = 1 }, { kind = "flag", flag = "c13_request_wang_zhi_late" }, { kind = "letter", person = "wang_zhi", text = "五岛的船没有来。图你先收着，筒口的蜡别拆，潮气进去，这张图就废了。" }]
+
+# 取图时被哨船记了船名，翻过舱：书办手里的册子上有这一行。
+[[tracks.chapters.variants]]
+key = "v1_wine"
+when = [{ kind = "flag", flag = "c13_request_wang_zhi_wine" }]
+text = "面摊的油灯下，厨子旁边多了个人，皮肤晒得黝黑，一开口是五岛的腔调。他开口先问老船主吃不吃得下饭。“顿顿两碗，”厨子说，“还问我今天吹什么风。”那人点点头，这才看向我怀里的油布筒。蜡封剖开，一整张桑皮纸摊在桌上，岛名一个连一个，旁边挤着小字，注着更数和针位。我正要开口，码头那头有人吆喝，总督府的一个书办挨船打听。他手里捏着哨船送来的单子，上头写着我的船名，后面一行是缴获：酒两坛。"
+
+[[tracks.chapters.variants]]
+key = "v2_noted"
+when = [{ kind = "flag", flag = "c13_request_wang_zhi_noted" }]
+text = "面摊的油灯下，厨子旁边多了个人，皮肤晒得黝黑，一开口是五岛的腔调。他开口先问老船主吃不吃得下饭。“顿顿两碗，”厨子说，“还问我今天吹什么风。”那人点点头，这才看向我怀里的油布筒。蜡封剖开，一整张桑皮纸摊在桌上，岛名一个连一个，旁边挤着小字，注着更数和针位。我正要开口，码头那头有人吆喝，总督府的一个书办挨船打听。他翻着册子，哨船昨天送来一页，页上记着我的船名。"
+
+[[tracks.chapters.choices]]
+key = "to_crew"
+text = "把图交给五岛来的人"
+reply = "汉子把图卷好，用蜡重新封了筒口，对着杭州的方向拜了一拜：“老船主说，好风送来的人，不会白跑。”他从怀里摸出一只沉甸甸的布包放在桌上，没有数。厨子低头去收碗，收得很慢。"
+next = "done"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "wang_zhi", value = 8 }, { kind = "memory", memory = "mem-request_wang_zhi-handin", title = "桑皮纸上的针路" }, { kind = "flag", flag = "c13_request_wang_zhi_done" }]
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "照着描一份，原图交给他们"
+hint = "桑皮纸上那些蝇头小字，你的笔跟不上。针位描走了样，就等于没描。"
+reply = "我借了面摊后头的小屋，描了一夜，汉子守着灯芯，每剪一次，就把一处针位念出来让我对。天亮时他收走原图，我留下一份一模一样的，连纸边的虫蛀都描了进去。他把布包推过来，压得桌面一沉。"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+next = "done"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "wang_zhi", value = 8 }, { kind = "item", item = "chart_ryukyu", qty = 1 }, { kind = "memory", memory = "mem-request_wang_zhi-handin", title = "桑皮纸上的针路" }, { kind = "flag", flag = "c13_request_wang_zhi_done" }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "自己留着，不交"
+reply = "汉子盯着我看了很久，起身走了，连茶也没喝。厨子叹了口气，把剩下的半碗茶倒在地上：“老船主早料到会有这一出，没让我多说一个字。”"
+next = "done"
+effects = [{ kind = "item", item = "chart_ryukyu", qty = 1 }, { kind = "affinity", person = "wang_zhi", value = -5 }, { kind = "flag", flag = "c13_request_wang_zhi_partial" }]
+
+[[tracks.chapters.choices]]
+key = "official"
+text = "交给总督府的书办"
+reply = "书办眉开眼笑，把图拢进袖里，说总督一定记你一功，银子明天送到船上。我再回头，面摊上的两个人已经不见了，桌上的面还冒着热气。"
+news = "宁波码头上有人把一张画满岛名的针路图交给了总督府的书办，书办当晚就捧着进了衙门，是谁送的，没人说得清。"
+next = "done"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "wang_zhi", value = -10 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "flag", flag = "c13_request_wang_zhi_betrayed" }]

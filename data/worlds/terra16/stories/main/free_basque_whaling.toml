@@ -1,0 +1,255 @@
+# 巴斯克捕鲸人之子·个人小线（free_basque_whaling，自由船长模板 custom_basque_whaling）
+#
+# 标签：巴斯克捕鲸人之子·个人小线。家乡港 bilbao。“我”不写性别、外貌、肤色与身高，不写名字；speaker = "captain" 时说话的是“我”，
+#   别人称呼“船长”“某家的孩子”。正文里不用他 / 她指“我”。
+# 依据：史实——红湾（拉布拉多）的巴斯克捕鲸站、炼油灶与红瓦棚屋（瓦从巴斯克运来）；圣约翰斯港先到先占的晒鱼滩规矩与港主；
+#   1576—77 年红湾的冬天被冰困住的人（本线只写冰来早了、留下过冬的人，不写死人）；1588 年比斯开的捕鲸船被王室征调（H60 无敌舰队，只写船坞与印记）。
+#   原创——马钦师傅（c8_basque_harpooner）与奥昌达婶（c8_basque_herbalist）借用 upbringing_mentors 里的导师身份，只借口吻；
+#   不肯走的老水手、解缆小刀、船头的刻痕、独眼的布列塔尼船长、毕尔巴鄂的船坞与内尔维翁河边的芦苇，是为游戏补全的。
+#   待核（传闻口吻，正文不下断言）：红湾的炼油灶在 1557 年夏天是否已经全部开工；圣约翰斯港的分滩规矩在 1561 年是否仍按先到先占执行。
+# 轨道：free_basque_whaling（kind = main，auto = true，start = a00_gate）。a00_gate 的 when 是 c12_voyage_custom_basque_whaling；default 设 c13_free_basque_whaling。
+# 本文件设置的旗标：c13_free_basque_whaling（a00 default）；c13_free_basque_whaling_knife_left（b01 的“小刀”选项）。
+# 读取的旗标：c12_voyage_custom_basque_whaling（a00 门槛）；c13_free_basque_whaling_knife_left（c01 的 v1_knife 变体）。
+# 本线没有 HIST_ 占位旗标；不读任何 c13_request_* 旗标（尚无来源）。
+# 等待的包：A9（门槛章可再加 protagonist 条件，整合时由 A9 决定）。
+# 回避：C7 的 1565 圣胡安号沉没、1566 伤员回来（马丁×埃莱内）；C13d 的马丁桶板请托与埃莱内草药书请托；C7 的 1559 圣约翰斯冬天；鲸油桶的漏油母题（马里翁×贝尔纳特）。
+# 回忆插画清单（mem-* 键、标题与画面，画面不超过 60 字）：
+#   mem-free_basque_whaling-a01 红湾的第一头鲸：灰冷的海湾里，一条小艇贴着鲸的背，船头的人举着鱼叉，远处岛上冒着炼油的黑烟。
+#   mem-free_basque_whaling-b01 冰来早了的海湾：结了薄冰的红湾，一条吃水很深的船慢慢挤出湾口，岸上留下的人举着手。
+#   mem-free_basque_whaling-c01 打上王印的捕鲸船：毕尔巴鄂的船坞，一排捕鲸船的船头被刷上王室的印记，鱼叉手们站在河边看。
+#   mem-free_basque_whaling-c01b 藏在河上游的船：内尔维翁河上游的芦苇丛里，一条捕鲸船盖着帆布，船头的刻痕露在外面。
+# 线索：船头的刻痕一季一道；第一道由马钦师傅刻（a00 见闻）；最后那一道由红湾不肯走的老水手刻（c01 揭开）。
+# 英文覆盖：无（terra16 先出中文，见 2026-10-18 决定）。
+
+[[tracks]]
+key = "free_basque_whaling"
+name = "冰封以前"
+kind = "main"
+start = "a00_gate"
+auto = true
+cast = ["c8_basque_harpooner", "c8_basque_herbalist"]
+
+# A00：门槛见闻。选中别的主角、或“我”没选这个模板时，窗口一过这条线静默结束，什么也不留下。
+[[tracks.chapters]]
+key = "a00_gate"
+title = "去大湾的季节"
+text = "正月的毕尔巴鄂，内尔维翁河边的船坞里，刷沥青的味道飘满了半条街。今年要去大湾的船比往年多，酒馆里的鱼叉手们比谁的鱼叉磨得亮。一个老鱼叉手端着酒杯，对邻桌的人说：“冰来之前回家。这句话，红湾的每块石头都听过。”话是这么说的。可码头上有人看见，马钦师傅拿凿子在一条新船的船头刻下第一道记号，刻得比谁家的都深。"
+stage = "rumor"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "bilbao"
+cast = ["c8_basque_harpooner"]
+mood = "tender"
+news = "毕尔巴鄂的人说，今年去大湾捕鲸的船比往年多，老鱼叉手那家的孩子也要带一条船去，老头在船头刻了第一道记号。"
+when = [{ kind = "flag", flag = "c12_voyage_custom_basque_whaling" }]
+
+[tracks.chapters.default]
+next = "a01_redbay"
+effects = [{ kind = "flag", flag = "c13_free_basque_whaling" }]
+
+# A01：第一头鲸。有三个选项，检定各不相同；超时（十一月十日前没有回应）按期限走，老师傅写信来。
+[[tracks.chapters]]
+key = "a01_redbay"
+title = "第一头鲸"
+text = "夏天的红湾，海湾里的岛上冒着炼油灶的黑烟，岸边搭着红瓦的棚子，瓦是从巴斯克一船一船运来的。鲸从海峡里游进来，喷出的水柱在冷风里像一面面白旗。马钦师傅把一支鱼叉塞进“我”手里，朝小艇的方向偏了偏头。头一回，掷不掷由“我”。艇尾的人已经在划桨，炼油的那边有人喊：“别磨蹭，油等着烧。”“我”的手心全是汗，麻绳的柄滑得抓不住。鲸翻过身的那一刻，“我”看见了它的眼睛，比小艇的船头还大。“别看眼睛。”马钦师傅在身后说，“看它往哪边沉。”我没说出口：它也在看我。"
+at = "red_bay"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1557, 6, 15] }]
+deadline = [1557, 11, 10]
+
+[tracks.chapters.timeout]
+next = "a02_stjohns"
+effects = [{ kind = "letter", person = "c8_basque_harpooner", text = "你没赶上今年的季节。冰来得早，别人的船也回来了一半。明年早点走，别等鲸来找你。——马钦" }]
+
+[[tracks.chapters.choices]]
+key = "harpoon"
+text = "上小艇，掷这一支鱼叉。"
+next = "a02_stjohns"
+effects = [{ kind = "fame", value = 1 }, { kind = "memory", memory = "mem-free_basque_whaling-a01", title = "红湾的第一头鲸" }]
+reply = "鱼叉扎进鲸背的那一下，小艇被拖着走了半里，浪一直往船舷上扑。马钦师傅在后面笑出了声，笑完才喊人去收绳。回到岸上，炼油的人拿木勺敲着铁锅的边，替“我”记下了第一头鲸。"
+news = "红湾的人说，今年头一头鲸是被一条新船的鱼叉钉住的，小艇拖着走了半里，老鱼叉手笑得差点落水。"
+check = { attr = "might", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "a02_stjohns"
+news = "红湾的人说，一条新船的鱼叉擦着鲸背滑进了水里，老鱼叉手没骂人，把自己的那支递了过去。"
+
+[[tracks.chapters.choices]]
+key = "tryworks"
+text = "守炼油灶，熬一季的油。"
+next = "a02_stjohns"
+effects = [{ kind = "cash", value = 900 }]
+reply = "“我”守着灶熬了一夏天的油，火大了就压，火小了就添。木勺柄磨出一道白印，手上烫出的泡到冬天才消。油一罐一罐运上船，炼油的人尝了一口，说这一季没白烧。"
+news = "红湾的炼油灶今年熬出的油清亮，岸上的人说，守灶的那个新来的，手上烫得全是泡。"
+check = { attr = "stewardship", base = 35, per = 6 }
+
+[tracks.chapters.choices.fail]
+next = "a02_stjohns"
+effects = [{ kind = "cash", value = 400 }]
+news = "红湾的灶火烧得太旺，守灶的新手熬糊了两锅，油发了黑，只能便宜卖给了法国来的船。"
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "爬上山头，替小艇数鲸、看冰。"
+next = "a02_stjohns"
+effects = [{ kind = "chart", region = "labrador" }]
+reply = "“我”在山头画了一张海峡的图，哪里有鲸、哪里的水早结冰，都标上了小字。“我”把图拿到小艇上，马钦师傅只看了一眼：“这张图上没有这个湾。”“我”说：“是我给它起的名字。”马钦师傅把图折起来，揣进了自己怀里。"
+news = "红湾的人说，有个新来的小艇手爬上山头画了一张海峡的图，哪里有鲸、哪里早结冰，全标在上面了。"
+check = { attr = "perception", base = 35, per = 6 }
+
+[tracks.chapters.choices.fail]
+next = "a02_stjohns"
+news = "红湾的雾连着三天没散，山头上有人差点踩空摔下崖去，什么也没画下来。"
+
+# A02：谁先到谁占滩。圣约翰斯港，春天。布列塔尼船长开价，“我”可以拿盐换，可以争，也可以定规矩。
+[[tracks.chapters]]
+key = "a02_stjohns"
+title = "谁先到谁占滩"
+text = "春天的圣约翰斯港，海湾窄得像一只口袋，布列塔尼人、诺曼人、葡萄牙人、巴斯克人的渔船挤在里面，桅杆密得像冬天的芦苇。规矩很简单：谁先进港，谁先挑晒鱼的滩；先到的船长当这一季的港主。今年“我”的船第二个进港，第一个是一条布列塔尼的船，船长是个独眼，正站在最好的那块滩上，拿脚踩着标桩。“滩是我的。”他说，“盐是你的。鳕鱼不管谁的，晒干了才值钱。”他的眼睛往“我”的船舱里瞟，瞟的是那几袋盐。只要盐够，这块滩他肯让。我想，要的不过是一块能把鳕鱼晒干的地方。"
+at = "st_johns"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1561, 5, 1] }]
+deadline = [1561, 10, 31]
+
+[tracks.chapters.timeout]
+next = "b01_ice"
+news = "圣约翰斯港的人说，那条巴斯克船没等到分滩就走了，最好的几块滩被布列塔尼人占去了。"
+
+[[tracks.chapters.choices]]
+key = "claim"
+text = "跟他争最好的那块滩。"
+next = "b01_ice"
+effects = [{ kind = "cash", value = 1000 }]
+reply = "“我”的水手在滩上插了桨当界桩，布列塔尼人把脚从标桩上挪开，骂了一句，笑着走了。鳕鱼铺上滩的那天，晒架排成了一长溜，海风从港口灌进来，鱼干得又快又白。"
+news = "圣约翰斯港的人说，一条巴斯克船把桨插在最好的那块滩上，布列塔尼的独眼船长骂得很响。"
+check = { attr = "command", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "b01_ice"
+effects = [{ kind = "cash", value = 400 }]
+news = "圣约翰斯港的人说，巴斯克船和布列塔尼船为一块滩争了三天，最后各让一步，巴斯克船分到一块背阴的地。"
+
+[[tracks.chapters.choices]]
+key = "salt"
+text = "用船上的盐换他的滩。"
+next = "b01_ice"
+effects = [{ kind = "cash", value = 600 }, { kind = "reputation", faction = "france", value = 1 }]
+reply = "盐卸下来的时候，独眼船长抓起一把尝了，皱着眉说巴斯克的盐比他们的苦。嘴上不饶人，手却已经在数盐袋了。他还是把滩让了出来。标桩拔起来的时候，他啐了一口，说下一季还来，到时候盐要比今年的甜。"
+news = "圣约翰斯港的人说，巴斯克船拿盐换了布列塔尼人的好滩，独眼船长尝了一口，说苦。"
+
+[[tracks.chapters.choices]]
+key = "judge"
+text = "替港里的船主们定一个分滩的规矩。"
+next = "b01_ice"
+effects = [{ kind = "fame", value = 1 }, { kind = "reputation", faction = "france", value = 1 }]
+reply = "“我”定的规矩是按船的长短分滩，长船先挑。诺曼人嫌麻烦，葡萄牙人拿绳子量了半天船，港里的船主们吵了一下午，最后都点了头。后来几年，港里的人还照着这个分，只是没人再记得是谁先提的。"
+news = "圣约翰斯港的船主们吵了一下午，定了一条新规矩：按船的长短分滩，长船先挑。"
+check = { attr = "eloquence", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "b01_ice"
+news = "圣约翰斯港的船主们吵到天黑，谁也不肯改规矩，晒鱼的滩还是按先到先占来分。"
+
+# B01：冰来早了。红湾，十月。“我”的船能走，但装多了人就走不了；留下的人里有教“我”看冰的老水手。
+[[tracks.chapters]]
+key = "b01_ice"
+title = "冰来早了"
+text = "十月初，红湾的海面一夜之间结了一层薄冰，比往年早了一个月。一条大船的舵卡在冰里，船上的人决定留下过冬，等开春再说。岸上炼油灶的烟停了，人们把口粮和凿冰的铁钎一样样往棚子里搬。“我”的船还能走，舱里还有地方，可装多了人，过海峡时吃水太深，舷边就只剩一掌高。冰在一点点往湾口长，像有人在水面上铺一张白布。那个教“我”看冰的老水手蹲在舱口，手里拿一截绳，慢慢地打着结。“我这把骨头，冻不坏。”他说，“你把年轻的带走。”我想，冰来之前回家。今年冰先来了。"
+at = "red_bay"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1576, 7, 1] }]
+deadline = [1576, 10, 20]
+
+[tracks.chapters.timeout]
+next = "c01_levy"
+news = "红湾的人说，冰封住了湾口，留下的人数着木柴过冬，这个冬天没有船能出去了。"
+
+[[tracks.chapters.choices]]
+key = "overload"
+text = "多带十个人回家，船吃水深也走。"
+next = "c01_levy"
+effects = [{ kind = "fame", value = 2 }, { kind = "memory", memory = "mem-free_basque_whaling-b01", title = "冰来早了的海湾" }]
+reply = "过海峡时，甲板上挤满了人，没人说话，只听得见冰撞船壳的声音。舵手的手一直是湿的。出了湾口回头看，红湾的岸上只剩几缕黑烟，炼油灶大概是最后一次生火。到了开阔水面，舵手才把手从舵柄上松开，手指僵得拿不住东西。"
+news = "红湾来的人说，一条船吃水很深地挤出了湾口，甲板上站满了人，一路没人说话。"
+check = { attr = "seamanship", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "c01_levy"
+news = "红湾来的人说，一条巴斯克船过海峡时扔掉了一半的油罐，人却一个也没少。"
+
+[[tracks.chapters.choices]]
+key = "knife"
+text = "把口粮分一半留下，连那把解缆小刀一起。"
+next = "c01_levy"
+effects = [{ kind = "item", item = "rigging_knife", qty = -1 }, { kind = "flag", flag = "c13_free_basque_whaling_knife_left" }, { kind = "reputation", faction = "spain", value = 1 }]
+reply = "老水手接过小刀，翻过来看刀柄上的旧刻痕，说开春还给你，刻痕他替你添一道。“我”把口粮一袋袋搬下船，老水手在冰边上帮着数。数到最后一袋，他把袋口一扎，说：够了，这把骨头吃得少。"
+news = "红湾的冰边上，一条船把一半的口粮留给了过冬的人，那个老水手收下了一把小刀。"
+requires = [{ kind = "item", item = "rigging_knife", qty = 1 }]
+hint = "你身上没有那把解缆小刀。"
+
+[[tracks.chapters.choices]]
+key = "persuade"
+text = "劝他们全都弃船，挤上“我”的船。"
+next = "c01_levy"
+effects = [{ kind = "fame", value = 1 }]
+reply = "留下的人一个个上了“我”的船，最后一个是那个老水手。他站在舷边，手里仍捏着那截绳，回头看了一眼冰里的大船。开春以后，那条船的桅杆还露在冰上，断了一截，桅杆顶上的旗早就没了。"
+news = "红湾的冰里困着一条大船，船上的人后来一个不剩，挤上了一条小些的船。"
+check = { attr = "eloquence", base = 5, per = 8 }
+
+[tracks.chapters.choices.fail]
+next = "c01_levy"
+news = "红湾来的人说，冰里的大船没人肯下，船在人在，那个老水手摇着头没上船。"
+
+# C01：国王要的船。毕尔巴鄂，秋天。终章：名单上“我”的船名后面写着“捕鲸船，可装炮”。
+[[tracks.chapters]]
+key = "c01_levy"
+title = "国王要的船"
+text = "秋天，国王的人到了毕尔巴鄂。船坞里最大的几条捕鲸船一条条被刷上王室的印，要去里斯本，跟大舰队走。巴斯克的鱼叉手们站在内尔维翁河边看，有人骂，有人一句也不说。奥昌达婶站在木棚门口，手里还攥着醋水的盆。今年没有船去红湾了，鲸油的价一夜之间涨了一倍。名单是书记念的。念到“我”的船名，他停了停，又读了一遍：“捕鲸船，可装炮。”“捕鲸的船结实，装得下炮。陛下需要结实的船。”书记把笔在纸上敲了敲。奥昌达婶慢悠悠地回了一句：“鲸不会等你打完仗。”“我”走到船头，数那些刻痕。一季一道，一道压着一道往下刻，数到最下面那一道，才想起来那道不是我刻的。是红湾结冰的那几天，那个不肯走的老水手替我刻的。"
+at = "bilbao"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1587, 9, 1] }]
+deadline = [1588, 4, 30]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "c8_basque_herbalist", text = "国王的人来过了，船坞里的大船都拉走了，说是去里斯本。今年的红湾，连一条船也不会去了。你要是还在海上，先别急着回毕尔巴鄂。——奥昌达" }]
+
+[[tracks.chapters.choices]]
+key = "go"
+text = "跟雷卡尔德的比斯开分队去。"
+next = "done"
+effects = [{ kind = "reputation", faction = "spain", value = 3 }, { kind = "memory", memory = "mem-free_basque_whaling-c01", title = "打上王印的捕鲸船" }]
+reply = "“我”的船在里斯本装了炮，炮口比鱼叉低。装炮的木匠问船头那些刻痕要不要磨掉，“我”说留着，木匠嘟囔着绕开了它们。日志的最后一页，“我”写：今年不去红湾。写完又在页边画了一道刻痕的样子，画得很细。"
+news = "毕尔巴鄂的人说，打了王印的捕鲸船开去了里斯本，河边的老鱼叉手们站到最后，没人挥手。"
+
+[[tracks.chapters.choices]]
+key = "hide"
+text = "把船藏进内尔维翁河上游。"
+next = "done"
+effects = [{ kind = "memory", memory = "mem-free_basque_whaling-c01b", title = "藏在河上游的船" }]
+reply = "船在芦苇里藏了一个冬天，盖着帆布，只有船头的刻痕露在外面，夜里被河风吹得发白。开春，“我”把帆布掀开，把船开出了芦苇。下水那天，船头的刻痕又多了一道，是“我”自己刻的。"
+news = "毕尔巴鄂的人说，有一条捕鲸船躲进了内尔维翁河上游的芦苇丛，王室的人翻遍了河湾也没找着。"
+check = { attr = "intrigue", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "done"
+effects = [{ kind = "reputation", faction = "spain", value = -2 }]
+news = "国王的人顺着内尔维翁河一路找到了芦苇丛，罚了一笔钱，船还是被拉走了。"
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "出钱雇人顶替，船留下。"
+next = "done"
+effects = [{ kind = "cash", value = -2000 }]
+reply = "顶替的是个年轻的船主，他说想去英格兰看看。“我”把契约签完，钱交到他手里。王室的名单上，“我”的船名被划掉，他那条船的名字补了上去。船还留在河边，船头的刻痕一道也没少。“我”后来再也没见过他。"
+news = "毕尔巴鄂的人说，一个年轻的船主替人顶了王室的差事，说是要去英格兰看看。"
+requires = [{ kind = "cash", ge = 2000 }]
+hint = "你手里的钱凑不齐雇人的价，这笔账你先算一算。"
+
+[[tracks.chapters.variants]]
+key = "v1_knife"
+when = [{ kind = "flag", flag = "c13_free_basque_whaling_knife_left" }]
+text = "秋天，国王的人到了毕尔巴鄂。船坞里最大的几条捕鲸船一条条被刷上王室的印，要去里斯本，跟大舰队走。巴斯克的鱼叉手们站在内尔维翁河边看，有人骂，有人一句也不说。奥昌达婶站在木棚门口，手里还攥着醋水的盆。今年没有船去红湾了，鲸油的价一夜之间涨了一倍。名单是书记念的。念到“我”的船名，他停了停，又读了一遍：“捕鲸船，可装炮。”“捕鲸的船结实，装得下炮。陛下需要结实的船。”书记把笔在纸上敲了敲。奥昌达婶慢悠悠地回了一句：“鲸不会等你打完仗。”“我”走到船头，数那些刻痕。一季一道，一道压着一道往下刻，数到最下面那一道，才想起来那道不是我刻的。是红湾结冰的那几天，那个不肯走的老水手替我刻的。红湾来的人捎来老水手的口信：刀他留着，刀柄上多了一道“我”没刻过的痕，等“我”去取。"

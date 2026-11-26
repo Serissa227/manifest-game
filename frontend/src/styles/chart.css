@@ -1,0 +1,627 @@
+/* 航海图与航行状态的样式：木框 + 羊皮纸的小窗、出航确认框、航行状态与选择目的地的提示条。
+   颜色取自 art/palette.ts（木材、羊皮纸、金色），与像素美术统一。
+   按钮沿用外壳主题（styles.css 的 @layer shell-theme）的像素木按钮，这里只补充尺寸与红色的主按钮；
+   外壳给 .legend / .loc-list / .loc 的默认深色条样式在小窗里逐项改回羊皮纸配色。 */
+.chart-view {
+  --cw-wood-dark: #3b2416;
+  --cw-wood: #5c3a21;
+  --cw-wood-mid: #8a5a32;
+  --cw-wood-light: #b8804a;
+  --cw-paper: #f3e3c3;
+  --cw-parchment: #e2c796;
+  --cw-parchment-dark: #b8955f;
+  --cw-ink: #2b1b17;
+  --cw-gold: #f5d66b;
+  --cw-red: #c8373a;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  overflow: hidden;
+  background: #0b1f3a;
+}
+.chart-view .map-canvas {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+.chart-view .map-canvas canvas {
+  image-rendering: pixelated;
+}
+.chart-fail {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--cw-ink, #2b1b17);
+  background: #f3e3c3;
+  border: 3px solid #5c3a21;
+  box-shadow: 0 0 0 1px #1a1423, 3px 3px 0 #1a142399;
+}
+
+/* —— 带木框的小窗 —— */
+.chart-win {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  --text: #2b1b17;
+  --muted: #6b4f33;
+  color: #2b1b17;
+  background-color: #f3e3c3;
+  background-image: var(--ui-parchment, radial-gradient(#e2c79666 1px, transparent 1px));
+  background-size: auto;
+  border: 3px solid #5c3a21;
+  outline: 1px solid #1a1423;
+  box-shadow:
+    inset 0 0 0 1px #b8804a,
+    4px 4px 0 #1a142380;
+}
+.chart-win-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 6px 3px 10px;
+  background: #6b4426;
+  border-bottom: 2px solid #3b2416;
+  box-shadow: inset 0 1px 0 #b8804a;
+}
+.chart-win-title h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #fff3b0;
+  text-shadow: 1px 1px 0 #1a1423;
+}
+.chart-win-toggle {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 4px;
+  line-height: 1;
+  font-weight: bold;
+}
+.chart-win-body {
+  min-height: 0;
+  overflow: auto;
+  padding: 6px 8px;
+}
+.chart-win.collapsed {
+  box-shadow:
+    inset 0 0 0 1px #b8804a,
+    3px 3px 0 #1a142380;
+}
+
+/* 左侧栏：航行状态、地点、图例自上而下排列，只占舞台上半部分（左下角是外壳的航海日志，右侧是功能窗口） */
+.chart-side {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  left: 10px;
+  width: 244px;
+  max-width: calc(100% - 20px);
+  max-height: calc(56% - 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+.chart-side > .chart-win {
+  position: relative;
+  flex: none;
+  min-height: 0;
+}
+.chart-side > .chart-places-win,
+.chart-side > .chart-legend-win {
+  flex: 0 1 auto;
+}
+/* 图例加了天况标记与夜间灯火后变长：矮窗口里收缩成至少四行、内容区滚动，不再伸出左侧栏 */
+.chart-side > .chart-legend-win:not(.collapsed) {
+  min-height: 124px;
+}
+.chart-side .chart-win-body {
+  flex: 1 1 auto;
+}
+
+/* 图例 */
+.chart-view .chart-legend {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 4px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: #2b1b17;
+  background: none;
+  border: 0;
+}
+.chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.chart-legend-icon {
+  flex: none;
+  max-height: 20px;
+  width: auto !important;
+  object-fit: contain;
+}
+
+/* 地点列表 */
+.chart-places-win .chart-win-body {
+  padding: 4px;
+}
+.chart-view .chart-loc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  background: none;
+}
+/* 列表里的一组地点（港口、内陆城市；殖民点按现状分组）：小标题 + 两列按钮 */
+.chart-loc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.chart-subgroup-title {
+  margin: 2px 2px 0;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  color: #7d5f36;
+}
+.chart-loc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+/* 查找地点：羊皮纸输入框 */
+.chart-filter {
+  margin: 0 0 4px;
+}
+.chart-filter input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 2px 6px;
+  font-size: 12px;
+  color: #2b1b17;
+  background: #fffaf0;
+  border: 1px solid #7d5f36;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 0 #b8955f;
+}
+.chart-filter input:focus-visible {
+  outline: 2px solid #f5d66b;
+  outline-offset: 0;
+}
+.chart-filter-empty {
+  margin: 4px 2px;
+}
+.chart-view .chart-loc-list .loc {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 2px 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: left;
+  text-shadow: none;
+  color: #2b1b17;
+  background: #e2c796;
+  border: 1px solid #7d5f36;
+  border-radius: 0;
+  box-shadow: inset 1px 1px 0 #fffaf0, inset -1px -1px 0 #b8955f;
+  cursor: pointer;
+}
+.chart-view .chart-loc-list .loc:hover {
+  background: #f3e3c3;
+}
+.chart-view .chart-loc-list .loc:active {
+  transform: translateY(1px);
+  box-shadow: inset 1px 1px 0 #b8955f;
+}
+.chart-view .chart-loc-list .loc.active {
+  color: #1a1423;
+  background: #f5d66b;
+  border-color: #6b4312;
+}
+.chart-view .chart-loc-list .loc.unknown {
+  color: #7d5f36;
+  font-style: italic;
+}
+.chart-view.picking .chart-loc-list .loc.pickable {
+  border-color: #c8373a;
+  animation: chart-pick-pulse 1.2s steps(2) infinite;
+}
+.chart-view.picking .chart-loc-list .loc:not(.pickable) {
+  opacity: 0.55;
+}
+@keyframes chart-pick-pulse {
+  50% {
+    background: #fff3b0;
+  }
+}
+.chart-loc-icon {
+  flex: none;
+  width: 19px !important;
+  height: 20px !important;
+}
+/* 地点分组：“未开拓之地”（殖民点）另起一组，标题是一条带金色菱形的羊皮纸分隔线 */
+.chart-group-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 2px 4px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #5c3a21;
+}
+.chart-group-title::before,
+.chart-group-title::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 0;
+  border-top: 1px solid #b8955f;
+  border-bottom: 1px solid #fffaf0;
+}
+.chart-group-title::before {
+  flex: 0 0 8px;
+}
+.chart-view .chart-site-list .loc {
+  background: #e9d6ac;
+  border-style: dashed;
+}
+.chart-view .chart-site-list .loc.active {
+  background: #f5d66b;
+  border-style: solid;
+}
+/* 我的殖民地：实线深金边；被占领与他人的殖民地：底色更暗 */
+.chart-view .chart-site-list .group-mine .loc {
+  border-style: solid;
+  border-color: #6b4312;
+}
+.chart-view .chart-site-list .group-claimed .loc,
+.chart-view .chart-site-list .group-other .loc {
+  background: #d9c49a;
+}
+.chart-loc-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* —— 按钮：外壳主题的像素木按钮 + 红色主按钮 —— */
+.chart-btn {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.chart-btn.primary:not(:disabled) {
+  color: #fff3b0;
+  background: #8c1f28;
+  box-shadow:
+    inset 2px 2px 0 #c8373a,
+    inset -2px -2px 0 #4a1018,
+    0 2px 0 #1a1423;
+}
+.chart-btn.primary:hover:not(:disabled) {
+  background: #a82a33;
+}
+
+/* —— 出航确认框 —— */
+/* 确认框停在下方正中，海图中间的规划航线（白色点线）仍然看得见 */
+.chart-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  /* 靠右的功能窗口打开时，确认框居中在没被挡住的部分 */
+  right: var(--stage-cover-right, 0px);
+  z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18px;
+  background: #0b0f2433;
+}
+.chart-dialog {
+  position: relative;
+  width: min(420px, calc(100% - 24px));
+  max-height: calc(100% - 24px);
+}
+.chart-dialog-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  padding: 10px 12px 4px;
+  overflow: auto;
+}
+.chart-dialog-body > p {
+  grid-column: 1 / -1;
+  margin: 2px 0;
+}
+.chart-dialog-art {
+  grid-row: span 1;
+  align-self: start;
+  padding: 6px;
+  background: #1d5b92;
+  border: 2px solid #7d5f36;
+  box-shadow: inset 0 0 0 1px #0b1f3a;
+}
+.chart-dialog-art canvas {
+  display: block;
+}
+.chart-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 12px 10px;
+}
+.chart-kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  margin: 0;
+  align-content: start;
+  font-size: 13px;
+}
+.chart-kv dt {
+  color: #7d5f36;
+}
+.chart-kv dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+.chart-dest-name {
+  font-size: 15px;
+  text-shadow: 1px 1px 0 #fffaf0;
+}
+.chart-faction {
+  color: #7d5f36;
+  font-size: 12px;
+}
+.chart-tag {
+  padding: 0 5px;
+  font-size: 11px;
+  color: #fff3b0;
+  background: #15656f;
+  border: 1px solid #0d3b45;
+}
+.chart-tag.warn {
+  background: #8c1f28;
+  border-color: #4a1018;
+}
+/* 殖民点的现状：未开拓（青绿）、被占领 / 他人所有（暗红）、我的殖民地（金） */
+.chart-tag.site-claimed,
+.chart-tag.site-other {
+  background: #8c1f28;
+  border-color: #4a1018;
+}
+.chart-tag.site-mine {
+  color: #2b1b17;
+  background: #f5d66b;
+  border-color: #6b4312;
+}
+.chart-warn {
+  color: #8c1f28;
+  font-weight: bold;
+}
+.chart-note {
+  color: #5c3a21;
+  font-size: 12px;
+}
+/* 出港确认框：船员不足的提示与一键补到最低人数 */
+.chart-crew {
+  margin: 4px 0;
+}
+.chart-crew .chart-warn {
+  margin: 0 0 4px;
+}
+.chart-crew .crew-hire-note {
+  color: #5c3a21;
+}
+
+/* —— 航行状态（左侧栏顶部；单独渲染时浮在左上角） —— */
+.voyage-hud {
+  position: relative;
+}
+.voyage-hud.floating {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  width: 244px;
+}
+.voyage-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 8px 0;
+}
+.voyage-vignette {
+  display: block;
+  width: 216px;
+  height: 90px;
+  image-rendering: pixelated;
+  border: 2px solid #3b2416;
+  box-shadow: inset 0 0 0 1px #b8804a;
+  align-self: center;
+}
+.voyage-kv {
+  font-size: 12px;
+  gap: 2px 10px;
+}
+.voyage-eta {
+  color: #7d5f36;
+  font-size: 11px;
+}
+.voyage-hud .chart-dialog-actions {
+  padding: 6px 8px 8px;
+}
+.voyage-meter {
+  display: inline-block;
+  width: 60px;
+  height: 8px;
+  background: #3b2416;
+  border: 1px solid #1a1423;
+  box-shadow: inset 0 1px 0 #1a1423;
+}
+.voyage-meter > span {
+  display: block;
+  height: 100%;
+  background: #6aad48;
+  box-shadow: inset 0 1px 0 #a9d86a;
+}
+.voyage-hud .chart-warn .voyage-meter > span {
+  background: #c8373a;
+  box-shadow: inset 0 1px 0 #ec6a5c;
+}
+/* 收起时只剩一行：目的地 · 还需几天（粮水、士气告急时带红标） */
+.voyage-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+  padding: 5px 8px 2px;
+  font-size: 12px;
+}
+.voyage-summary strong {
+  font-size: 14px;
+}
+/* 本次航程的新发现：有发现时带图标、金色字 */
+.voyage-found {
+  color: #6b4312;
+  font-weight: bold;
+}
+.voyage-found-icon {
+  flex: none;
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/* —— 选择目的地的提示条（上方居中） —— */
+.voyage-pick {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 4;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: calc(100% - 20px);
+  padding: 6px 8px 6px 14px;
+  color: #fff3b0;
+  background: #5c3a21;
+  border: 2px solid #f5d66b;
+  outline: 1px solid #1a1423;
+  box-shadow: 4px 4px 0 #1a142380;
+  animation: voyage-pick-in 0.25s steps(3);
+}
+.voyage-pick > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.voyage-pick strong {
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #1a1423;
+}
+.voyage-pick span {
+  font-size: 11px;
+  color: #e2c796;
+}
+.voyage-pick .chart-btn {
+  flex: none;
+  white-space: nowrap;
+}
+@keyframes voyage-pick-in {
+  from {
+    transform: translate(-50%, -12px);
+    opacity: 0;
+  }
+}
+
+/* 窄屏：左侧栏变窄，地点改为单列 */
+@media (max-width: 900px) {
+  .chart-side {
+    width: 190px;
+  }
+  .voyage-vignette {
+    width: 144px;
+    height: 60px;
+  }
+  .chart-loc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 缩放按钮（网页自适应）：右上角一竖排，避开靠右的功能窗口；触屏上也可以双指缩放 */
+.chart-zoom {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  right: calc(var(--stage-cover-right, 0px) + 10px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.chart-view .chart-zoom-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+}
+@media (pointer: coarse) {
+  .chart-view .chart-zoom-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .chart-win-toggle {
+    min-width: 40px;
+  }
+}
+
+/* 悬停别家船队时的信息卡（FleetHoverCard）：羊皮纸小卡，跟着标记，不接收指针事件 */
+.chart-view .chart-fleet-card {
+  position: absolute;
+  z-index: 6;
+  max-width: 240px;
+  padding: 6px 8px;
+  color: var(--cw-ink);
+  background: var(--cw-paper);
+  border: 2px solid var(--cw-wood);
+  box-shadow:
+    inset 1px 1px 0 #fff6e0,
+    2px 2px 0 rgba(20, 12, 8, 0.45);
+  pointer-events: none;
+  --muted: #6b4f33;
+}
+.chart-view .chart-fleet-card-head {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--cw-wood);
+}

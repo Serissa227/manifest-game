@@ -1,0 +1,822 @@
+# 自由船长·主干（main_free）
+# 2026-11-01 接回登记：亚特兰蒂斯补章 main_free_atlantis 与本线同批登记；c04_after 的 when 加 c13_main_free_atlantis_over，由补章的结局与 c03_dark_sea 的掉头 / 缺席分支设。
+#
+# 标签：自由船长（玩家自创）。“我”不写性别、外貌、肤色与身高，不写名字；speaker = "captain" 时说话的是“我”；别人称呼“船长”。
+# 依据：史实——1563 年木星与土星会合（秘史：七级试炼对外人开放，这里只写书店里的低语）；1572 年仙后座新星（第谷记下的那颗）；
+#   1577 年大彗星；1583 年圣克鲁斯侯爵拿下特塞拉岛（H53）；1583 年十王的会议（H56，这里只写“回来的人”）。
+#   秘史与原创：赫尔墨斯的书、黑暗之海的雾退了一圈、无桨的船，为游戏补全。
+# 轨道：main_free（auto = true，start = a00_gate）。门槛章 a00_gate 的 when 要求九位主角的 c12_voyage_<key> 全为 false，且 upbringing_graduated；
+#   default 设 c13_main_free。
+# 模板变体：a01、a02、c01 按 c12_voyage_custom_<模板> 取变体。变体按 key 的字母序取第一个满足的（v00a 至 v00d 的特例优先于 v01 至 v12），只改正文。
+# 本文件设置的旗标：c13_main_free；c13_main_free_act2、_act3；_keepsake；_stance_open / _close / _hand；_crossed / _turned_back / _absent / _fog_seen；
+#   _hermes_heard、_new_star、_comet_chase、_logbook、_apprentice、_last_voyage；_done 与 _end_home / _end_sea / _end_passed；
+#   方向 c13_free_course_trade / _explore / _arms / _letters；c13_free_keepsake_left。
+# 结构：c05 的“收徒弟”选项 next 到 c06_handover（交船章，passed 不设门槛）；c06_epilogue 只留回港与留海两个落点。
+# 读取的旗标（由别的文件设）：c12_voyage_*（门槛与模板变体）；c13_free_<地区>_a_*（a04 变体，地区章）；
+#   c13_free_seville_pilot_father_known / _quadrant_given、c13_free_basque_whaling_knife_left、c13_free_istanbul_shipyard_receipt_given（c01 变体，模板小线）；
+#   atlantis_council_met（C11，c04 变体）。
+# 等待的包：A8（E59 赫尔墨斯入口；E63 翠玉录能否穿过黑暗之海，外港是否可达，c03 的 cross 选项由它定）；A9（自创主角的身份条件）；
+#   C11（十王会议读 keepsake、stance、crossed，atlantis_council_met 在 c04 变体中读）。本文件没有 HIST_ 占位旗标。
+# 回忆插画清单（mem-* 键与画面，各不超过 60 字）：
+#   mem-main_free-a02 压在海图下的信：船舱的桌上摊着海图，一角压着一封拆开的信，油灯照着封蜡上的沥青。
+#   mem-main_free-a03 书店里的那场争论：窄小的书店，柜台上摊着星历，书商和船长隔着烛台各指着一颗星。
+#   mem-main_free-a04 家乡的码头：十年后的家乡码头，船还没靠稳，岸上有人举手认出了船上的旗。
+#   mem-main_free-a04b 岸上的一季：港口小客栈的窗边，船长看着自己的船由别人带出港，手里还拿着航海日志。
+#   mem-main_free-b01 不动的那颗星：夜里的甲板，船长举着十字测天仪对着仙后座，旁边的水手提着灯。
+#   mem-main_free-b02 彗星最后的尾巴：正月的夜空，一道淡下去的彗尾斜挂在西南，船上的人都仰着头。
+#   mem-main_free-c03 雾里那条无桨的船：灰白的雾墙前，一条没有帆没有桨的船慢慢滑过海草，船长站在船头看。
+#   mem-main_free-c04 这一年的日志：船舱里，船长在航海日志上写满一页，又在页边画了一道雾。
+#   mem-main_free-c05 第一课：甲板上，船长把十字测天仪交到一个少年手里，教他对准地平线。
+
+[[tracks]]
+key = "main_free"
+name = "自由船长"
+kind = "main"
+start = "a00_gate"
+auto = true
+
+# A00：门槛见闻。选中别的主角时这条线静默结束，什么也不留下。
+[[tracks.chapters]]
+key = "a00_gate"
+title = "出港簿上的新名字"
+text = "正月初的里斯本，港务所门口排着等盖章的船主，冻得直跺脚。王室档案馆的戈伊斯老馆长拄着拐杖上了台阶，要查旧簿子。书记替他搬出一摞出港登记，老人翻到今年那一页，眯着眼数了半天，嘀咕道：“这一页的名字，比去年一整本还多。”他把那一页折了个角，说：“这些名字，过几年都要来我这儿找自己的船。”"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "lisbon"
+stage = "rumor"
+mood = "cheerful"
+cast = ["damiao_de_gois"]
+news = "里斯本港务所的书记说，今年来登记出港的年轻船长比往年多，档案馆的戈伊斯老先生还把那一页折了角。"
+when = [{ kind = "flag", flag = "c12_voyage_mio", value = false }, { kind = "flag", flag = "c12_voyage_lieve", value = false }, { kind = "flag", flag = "c12_voyage_najma", value = false }, { kind = "flag", flag = "c12_voyage_lin_wandeng", value = false }, { kind = "flag", flag = "c12_voyage_ix_nikte", value = false }, { kind = "flag", flag = "c12_voyage_noel", value = false }, { kind = "flag", flag = "c12_voyage_tariq", value = false }, { kind = "flag", flag = "c12_voyage_kaicili", value = false }, { kind = "flag", flag = "c12_voyage_baraka", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+
+[tracks.chapters.default]
+next = "a01_first_wind"
+effects = [{ kind = "flag", flag = "c13_main_free" }]
+
+# A01：起锚。基础正文是没有模板时的样子；12 个模板变体各换家乡画面与送行的人。
+[[tracks.chapters]]
+key = "a01_first_wind"
+title = "起锚那天"
+text = "起锚的那个早上，缆绳一松，船身往下一沉。岸上站着送行的人，一个挨一个，越来越小。送行的人里有个人喊：“到了就写信！”我站在船尾没有挥手，手里攥着出港的文书，纸角被汗浸软了。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+when = [{ kind = "date", from = [1557, 1, 7] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1557, 3, 31]
+
+[[tracks.chapters.choices]]
+key = "trade"
+text = "先把舱装满，哪里的货便宜就往哪里去"
+next = "a02_mentor_letter"
+effects = [{ kind = "flag", flag = "c13_free_course_trade" }, { kind = "skill", skill = "negotiation", value = 20 }]
+reply = "第一个陌生的港口，我站在货栈里压价，压到对方把算盘推回来，叹了口气才停。舱装满了，船也比预计沉下去两寸。水手们说，船长在岸上算账，跟在船上一样狠。"
+
+[[tracks.chapters.choices]]
+key = "explore"
+text = "去海图上还画不全的海，自己量一段岸线"
+next = "a02_mentor_letter"
+effects = [{ kind = "flag", flag = "c13_free_course_explore" }, { kind = "skill", skill = "cartography", value = 20 }]
+reply = "我把新买的海图铺在舱板上，在边角添上第一条自己量出来的海岸线。墨还没干，一个浪从舷窗打进来，湿了一角。那段线糊成一片灰，我没有擦，就让它那样留着。"
+
+[[tracks.chapters.choices]]
+key = "arms"
+text = "凭本事挣名声：海上的事，打得过才算数"
+next = "a02_mentor_letter"
+effects = [{ kind = "flag", flag = "c13_free_course_arms" }, { kind = "fame", value = 1 }]
+reply = "第一次有船远远看见我的旗，就转了舵。甲板上的水手笑成一片，我没笑，只把旗杆上的结又打了一遍。"
+
+[tracks.chapters.timeout]
+next = "a02_mentor_letter"
+effects = [{ kind = "flag", flag = "c13_free_course_trade" }]
+
+[[tracks.chapters.variants]]
+key = "v01_seville_pilot"
+when = [{ kind = "flag", flag = "c12_voyage_custom_seville_pilot" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。塞维利亚特里亚纳那一侧的码头上，瓜达尔基维尔河水是黄的，几只驳船挤在岸边。老考官巴列斯特罗斯站在贸易总署的台阶上不肯下来，只抬了一下帽檐，隔着人群说了一句：“罗经别乱打。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v02_murano_glass"
+when = [{ kind = "flag", flag = "c12_voyage_custom_murano_glass" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。潟湖起了雾，穆拉诺的炉火在雾里发红。当玻璃师傅的父亲从人群里挤过来，把一小块还温着的碎玻璃塞进我手心，什么也没说。岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v03_lisbon_medicine"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lisbon_medicine" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。里斯本贝伦的塔在退潮的滩上投下一截影子。当医生的父亲把药箱钥匙交到我手里，说：“药房的门，你知道在哪。”说完就背过身去。二楼的窗里亮着一盏灯，祖母没下楼。岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v04_lubeck_accounts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lubeck_accounts" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。吕贝克特拉沃河口，城里七座尖塔排成一线。卡塔琳学校的先生递来一本还没写字的账簿：“第一页你自己记。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v05_basque_whaling"
+when = [{ kind = "flag", flag = "c12_voyage_custom_basque_whaling" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。毕尔巴鄂的内尔维翁河边堆着一排排鲸油桶，味道冲得人眼睛发酸。鱼叉手师傅蹲在船头，用刀刻下第一道记号，边刻边骂：“刻一道，回来看一道。”姨妈从人群后面塞来一包晒干的药草。岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v06_istanbul_shipyard"
+when = [{ kind = "flag", flag = "c12_voyage_custom_istanbul_shipyard" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。金角湾兵工厂的船台一排排斜进水里。船匠师傅拍了拍龙骨，说：“船是骨头，人是皮，皮给风吹烂了，骨头还在。”咖啡馆的法蒂玛夫人隔着水喊了一句，叫我回来讲给她听。岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v07_fez_scholar"
+when = [{ kind = "flag", flag = "c12_voyage_custom_fez_scholar" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。丹吉尔的码头上，葡萄牙港务官把我的书箱翻了半天，一本一本抖开。非斯的先生没来，托赶骡的人捎来一张纸，上面只写了一处经文的出处。赶骡的人说：“先生说，这一处你要自己翻。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v08_cambay_broker"
+when = [{ kind = "flag", flag = "c12_voyage_custom_cambay_broker" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。坎贝湾退了潮，船搁在泥滩上等水。当经纪人的父亲把一袋算筹系在我腰上，一根一根拍平了，叮嘱：“先过秤，再谈价。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v09_busan_interpreter"
+when = [{ kind = "flag", flag = "c12_voyage_custom_busan_interpreter" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。釜山浦倭馆的木栅外，对马来的船挂着宗氏的旗。司译院的先生拿出一张书契的样纸，叫我临走前再念一遍。我念到一半，他摆摆手：“够了，你的话，到了那边再说。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v10_naha_envoy"
+when = [{ kind = "flag", flag = "c12_voyage_custom_naha_envoy" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。那霸港里进贡船正在装硫磺，黄得刺眼。当正使的父亲一边点礼单一边挥手，祝女在船头洒了一把海水，说：“替你压浪。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v11_tondo_datu"
+when = [{ kind = "flag", flag = "c12_voyage_custom_tondo_datu" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。汤都的河口，福建的戎克船和文莱的帆挤在一处。家学先生坐在竹屋的檐下，用手指在沙上画潮，画完一道抹掉一道，抬头对我说：“潮会来，你记得下一回。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+[[tracks.chapters.variants]]
+key = "v12_chincha_rafts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_chincha_rafts" }]
+text = "起锚的那个早上，缆绳一松，船身往下一沉。卡亚俄的海滩上停着钦查来的巴尔萨木筏，浪一推一推的。老结绳官库西把一根打了三个结的绳系在桅上，拍了拍：“一个结一季，别解开。”岸越来越小，我站在船尾没有挥手。岸沉下去的时候，我才想起来，第一个港口还没定。这一辈子要往哪边去，我想在看不见岸以前定下来。"
+
+# A02：老师的第一封信。信的部分由模板变体给出；请托只指人与事，不写报酬。
+[[tracks.chapters]]
+key = "a02_mentor_letter"
+title = "老师的第一封信"
+text = "一封信从家里追来，转了两三个港口才到我手里，封蜡上沾着别的船的沥青。我拆信时船正顶着西风，纸被吹得哗哗响。字写得很慢，一笔一划，像写的人怕自己写错。信末老师问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+when = [{ kind = "date", from = [1557, 6, 1] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1558, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "errand"
+text = "照信里说的，去那几个港口找人"
+next = "a03_conjunction"
+effects = [{ kind = "skill", skill = "negotiation", value = 20 }]
+reply = "我把信里的名字抄在海图背面，按港口的先后排好。有两个地方我从没靠过，名字却熟得像邻居。我没说去不去，船头已经转向了第一个港口的方向。"
+
+[[tracks.chapters.choices]]
+key = "letters"
+text = "改道：照老师的路去读书、去求见"
+next = "a03_conjunction"
+effects = [{ kind = "flag", flag = "c13_free_course_letters" }, { kind = "flag", flag = "c13_free_course_trade", value = false }, { kind = "flag", flag = "c13_free_course_explore", value = false }, { kind = "flag", flag = "c13_free_course_arms", value = false }, { kind = "skill", skill = "calligraphy", value = 20 }]
+reply = "我的回信只写了一行，把原来定下的方向划掉。那天夜里我在舱里点着灯读书，读到天亮，灯油添了两回。天亮时大副来敲门，问今天还出不出港。我说不出，他就站在门口等，等到我把灯吹了。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把信压在海图底下，照原来的打算走"
+next = "a03_conjunction"
+effects = [{ kind = "memory", memory = "mem-main_free-a02", title = "压在海图下的信" }]
+reply = "信一直压在海图底下。后来每次换图，我都要先把它挪开，看一眼，再压回去。水手们以为那是家信，我没有解释。"
+
+[tracks.chapters.timeout]
+next = "a03_conjunction"
+
+[[tracks.chapters.variants]]
+key = "v01_seville_pilot"
+when = [{ kind = "flag", flag = "c12_voyage_custom_seville_pilot" }]
+text = "一封信转了两三个港口才到我手里，是巴列斯特罗斯写的，字像他的脾气，一笔比一笔硬。领航总长查韦斯要一件刻度没磨平的仪器，老梅迪纳要人去加那利夜里看罗经。两个老头都不肯先开口求人，就叫我去。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v02_murano_glass"
+when = [{ kind = "flag", flag = "c12_voyage_custom_murano_glass" }]
+text = "一封信是父亲口述、学徒代写的，字写得东倒西歪。里亚尔托后头那家面具铺的老板娘要人跑一趟拉古萨，车马钱她照付。炉子上的事不用我管，信里写得清清楚楚。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v03_lisbon_medicine"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lisbon_medicine" }]
+text = "信是父亲写的，夹着一张药方。王室档案馆的戈伊斯老馆长在找一份被人借走不还的航海报告，托我留意。信末只添了一句：周五别在外面过夜，不解释。我把药方折好收进袖子，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v04_lubeck_accounts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lubeck_accounts" }]
+text = "信是先生写的。伦敦钢院的老会计、卑尔根商站的掌柜，都缺一个记得住数的人。先生写：账要记，人情也要记。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v05_basque_whaling"
+when = [{ kind = "flag", flag = "c12_voyage_custom_basque_whaling" }]
+text = "信是姨妈托神父代写的，字歪歪扭扭。拉罗谢尔的盐又涨了，师傅的膝盖逢雨就疼。村里谁家缺人手，信里一个个点了名。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v06_istanbul_shipyard"
+when = [{ kind = "flag", flag = "c12_voyage_custom_istanbul_shipyard" }]
+text = "这回来的是法蒂玛夫人的咖啡馆捎来的一句口信，由一个跑船的人带到。加拉塔那位格拉西亚夫人要船去拉古萨接人，画坊的亚斯明要上好的靛蓝。口信说完，那人又补了一句：夫人问：“书还读不读。”我把这句话记在海图背面，没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v07_fez_scholar"
+when = [{ kind = "flag", flag = "c12_voyage_custom_fez_scholar" }]
+text = "信是先生写的，引了三处出处，一处比一处绕。舍夫沙万那位老女主人下山来了一趟，非斯的讲师曼朱尔想看一本基督徒印的拉丁文《医典》。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v08_cambay_broker"
+when = [{ kind = "flag", flag = "c12_voyage_custom_cambay_broker" }]
+text = "信是父亲写的，一半是账。第乌的通行证官换人了，霍尔木兹的马价跌了。末尾叮嘱：别替不认识的人做保。信末又问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v09_busan_interpreter"
+when = [{ kind = "flag", flag = "c12_voyage_custom_busan_interpreter" }]
+text = "信是先生写的，楷书一笔不苟。一位女诗人要把冬衣送去北边，汉城的金尚宪大人要找一处烧不着的地方存书。先生写：字要练下去。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v10_naha_envoy"
+when = [{ kind = "flag", flag = "c12_voyage_custom_naha_envoy" }]
+text = "信是父亲写的。福州柔远驿的驿丞换了人，下一趟进贡船要早一个月备礼。祝女托他在信背面写了一句祝福，字很大，像怕我看不见。信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v11_tondo_datu"
+when = [{ kind = "flag", flag = "c12_voyage_custom_tondo_datu" }]
+text = "信是先生托福建船主带来的。文莱的港务官问起汤都今年的瓷器，马尼拉湾那边的拉惹家也有话要传。先生在信末问了一句：“书还读不读。”我把信折起来，压在海图底下，半天没有抬头。"
+
+[[tracks.chapters.variants]]
+key = "v12_chincha_rafts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_chincha_rafts" }]
+text = "这回来的是库西托筏户带来的一根绳。筏户替他念：有一串老绳的事，要等我回卡亚俄再说。绳上打了三个结，他说，我到了就知道该怎么解。我把绳系在床头，半天没有抬头。"
+
+# A03：书店里的低语。没有 at：这是一段回想，不写“我走进某港”。
+[[tracks.chapters]]
+key = "a03_conjunction"
+title = "书店里的低语"
+text = "那是木星与土星靠在一起的那几夜。我在一家小书店里待了半个下午，只为买一张纸。店很窄，柜台上摊着一本新印的星历，页角被翻卷了。书商见我总盯着那一页看，就把声音压低：“城里有一本赫尔墨斯的书，只有十几行字。抄来抄去，每一手都不一样，你说怪不怪？”我问在哪里能看到。他摇摇头，把星历合上，又翻开。我想弄明白的是，那两颗星有什么好吵的。书商忽然不说了，抬眼看我，没有赶人，只问了一句：“你的船往西走过多远？”"
+when = [{ kind = "date", from = [1563, 8, 25] }]
+speaker = "captain"
+mood = "mystic"
+deadline = [1564, 8, 31]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "留下来，问那本书的下落"
+next = "a04_ten_years"
+effects = [{ kind = "flag", flag = "c13_main_free_hermes_heard" }]
+reply = "书商只给了一个暗号似的问法，叫我到别的港口的书店再问一遍。我把那句话记在簿子最后一页，用的是铅笔，怕墨水洇开。"
+
+[[tracks.chapters.choices]]
+key = "almanac"
+text = "买一本斯特夫勒的新历书就走"
+next = "a04_ten_years"
+requires = [{ kind = "cash", ge = 300 }]
+effects = [{ kind = "cash", value = -300 }, { kind = "item", item = "almanach_ulm", qty = 1 }]
+reply = "星历的纸很新，有一页印错了月相，书商用红笔改过，改得很小心。我把它塞进海图箱，那页错的月相我没有撕。"
+hint = "你摸了摸钱袋，这本书今天买不起。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟书商争那两颗星到底预兆什么"
+next = "a04_ten_years"
+check = { attr = "learning", base = 20, per = 7 }
+effects = [{ kind = "fame", value = 1 }, { kind = "memory", memory = "mem-main_free-a03", title = "书店里的那场争论" }]
+reply = "争到打烊，书商说我是第一个拿航海日志跟他争星象的人。第二天港里就有人认得我，说我是跟书店老板吵了一下午的船长。"
+fail = { next = "a04_ten_years", news = "城里那家窄小的书店，老板跟一个船长吵了半个下午的星象，最后把星历合上：等你在海上量过一整夜，再来跟我争。" }
+
+[tracks.chapters.timeout]
+next = "a04_ten_years"
+
+# A04：出海十年。变体各加一句，取自地区章留下的旗标（只取一片海）。
+[[tracks.chapters]]
+key = "a04_ten_years"
+title = "出海十年"
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+when = [{ kind = "date", from = [1567, 1, 2] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1567, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "home"
+text = "回家乡港一趟，把这些年的事说给家里听"
+next = "b01_new_star"
+effects = [{ kind = "flag", flag = "c13_main_free_act2" }, { kind = "memory", memory = "mem-main_free-a04", title = "家乡的码头" }]
+reply = "家乡的码头变了：添了一座新仓库，港务官换了一个。送我出港的那个人还站在老地方，手里拿着一根烟斗。我把日志摊在桌上，一页一页念给他听。他听到一半就不说话了，只说：你的字比走的时候小了。"
+
+[[tracks.chapters.choices]]
+key = "further"
+text = "继续往远处走，下一张海图再大一点"
+next = "b01_new_star"
+effects = [{ kind = "flag", flag = "c13_main_free_act2" }, { kind = "skill", skill = "rigging", value = 20 }]
+reply = "我把新买的大海图钉在舱壁上，旧图卷起来塞进箱底。水手们说，船长的箱子越来越像书店，我没理，只把钉子又敲紧了一下。"
+
+[[tracks.chapters.choices]]
+key = "rest"
+text = "把船交给大副，自己在岸上歇一季"
+next = "b01_new_star"
+effects = [{ kind = "flag", flag = "c13_main_free_act2" }, { kind = "memory", memory = "mem-main_free-a04b", title = "岸上的一季" }]
+reply = "我在岸上第三天就坐不住了，每天去码头看别人的船进出。大副回来那天，船上多了一块我没见过的补丁，补得很粗，他说是在风里撞的。"
+
+[tracks.chapters.timeout]
+next = "b01_new_star"
+effects = [{ kind = "flag", flag = "c13_main_free_act2" }]
+
+[[tracks.chapters.variants]]
+key = "v1_east_asia"
+when = [{ kind = "flag", flag = "c13_free_east_asia_a_rain" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。有一页的边角写着一个时辰，热田的神官还记得我在那里报过雨。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+[[tracks.chapters.variants]]
+key = "v2_east_asia_trade"
+when = [{ kind = "flag", flag = "c13_free_east_asia_a_oda" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。热田的商人把我的名字写在了给织田家的运货单上。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+[[tracks.chapters.variants]]
+key = "v3_southeast"
+when = [{ kind = "flag", flag = "c13_free_southeast_asia_a_sailed" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。我跟着乌尔达内塔的船走过太平洋的北边，到阿卡普尔科时，水手们是爬着下船的。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+[[tracks.chapters.variants]]
+key = "v4_indian"
+when = [{ kind = "flag", flag = "c13_free_indian_ocean_a_delivered" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。巴特卡尔的马贩子还说起那趟上山的马队。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+[[tracks.chapters.variants]]
+key = "v5_med"
+when = [{ kind = "flag", flag = "c13_free_mediterranean_a_mahona" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。热那亚有一户人家，每年复活节都给我写一封信，说的都是希俄斯的玛蒂克树。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+[[tracks.chapters.variants]]
+key = "v6_atlantic"
+when = [{ kind = "flag", flag = "c13_free_atlantic_europe_a_refugees" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。迪耶普逃出来的那一家，在英格兰开了一间小印书坊。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+[[tracks.chapters.variants]]
+key = "v7_americas"
+when = [{ kind = "flag", flag = "c13_free_americas_a_evacuated" }]
+text = "新年的第二天，我翻开第一本航海日志。第一页的墨已经发褐，页边有一小块盐渍，是那年第一场风留下的。我一页一页往后翻：哪一页沾过盐，哪一页夹着一片干叶子，哪一页的字歪得厉害，是在晃动的舱里写的。卡罗琳堡撤出来的孩子里，有一个后来在哈瓦那当了领航。大副站在舱门口，问：“船长，今年还往远处走吗？水手们想知道，要不要先跟家里打个招呼。”我没有马上回答，只说：“先看看海图。”翻到最后一页，我才发现，日志上记得最多的是人名，货倒没记住几样。"
+
+# B01：仙后座的新星。夜里的事，没有 at。
+[[tracks.chapters]]
+key = "b01_new_star"
+title = "仙后座的新星"
+text = "十一月的一个晴夜，值夜的水手把我叫上甲板。仙后座的 W 旁边多了一颗星，比金星还亮，也不闪。老水手说：“这是凶兆。天上多一颗，地上就少一个人。船长，绕开它走吧。”年轻的说：“是好兆，赌它明晚还在不在。”有个从亚速尔回来的渔夫抽着烟，说：“西边的雾退了一圈。”我站在船头看了那颗星很久，心里想：它不动，会动的才吓人。到了第二夜，它还在，位置一点没动。不是彗星，也不是流星。"
+when = [{ kind = "date", from = [1572, 11, 11] }]
+speaker = "captain"
+mood = "mystic"
+night = true
+deadline = [1573, 4, 30]
+
+[[tracks.chapters.choices]]
+key = "measure"
+text = "连着几夜量它的高度，记下它在哪两颗星之间"
+next = "b02_comet"
+check = { attr = "astronomy", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_main_free_new_star" }, { kind = "skill", skill = "astral_navigation", value = 20 }]
+reply = "我量了七夜，七夜的数一样。把它记在两颗暗星中间，画上图，旁边写上夜数。后来有人说，北边一个丹麦人也这么记。夜里冷，水手替我把灯罩擦了七遍，第七遍时他说：“它还在。”"
+fail = { next = "b02_comet", effects = [{ kind = "memory", memory = "mem-main_free-b01", title = "不动的那颗星" }], news = "港里的人说，那几夜云厚，有个船长只量成了一夜星，回港还在码头上骂天，说那个数字他要描粗了留着。" }
+
+[[tracks.chapters.choices]]
+key = "tavern"
+text = "靠港以后在酒馆里讲给人听"
+next = "b02_comet"
+effects = [{ kind = "fame", value = 1 }]
+reply = "酒馆里一半人不信，一半人请我喝酒。第二天有个书商找上门，问能不能把我说的印成小册子。我说先把星的位置画对了再说。有个老船工一直没说话，等人散了才凑过来，问那颗星是不是也照到了北边的冰上。"
+
+[[tracks.chapters.choices]]
+key = "ignore"
+text = "照常看北极星，不去管它"
+next = "b02_comet"
+effects = []
+reply = "我照旧量北极星定纬度，每晚两次，记在日志的同一栏里。新星亮了一年多，船一次也没偏过航，只是大副夜里总要抬头看一眼。"
+
+[tracks.chapters.timeout]
+next = "b02_comet"
+
+[[tracks.chapters.variants]]
+key = "v1_hermes"
+when = [{ kind = "flag", flag = "c13_main_free_hermes_heard" }]
+text = "十一月的一个晴夜，值夜的水手把我叫上甲板。仙后座的 W 旁边多了一颗星，比金星还亮，也不闪。老水手说：“这是凶兆。天上多一颗，地上就少一个人。船长，绕开它走吧。”年轻的说：“是好兆，赌它明晚还在不在。”有个从亚速尔回来的渔夫抽着烟，说：“西边的雾退了一圈。”我想起九年前书店里那个书商的话，他说，天上出了新东西，就再去问他。我站在船头看了那颗星很久，心里想：它不动，会动的才吓人。到了第二夜，它还在，位置一点没动。不是彗星，也不是流星。"
+
+# B02：没有桨手的船。消息由酒馆传来，一章只写这一种。
+[[tracks.chapters]]
+key = "b02_comet"
+title = "没有桨手的船"
+text = "去年冬天那颗大彗星的尾巴，到正月还挂在西南的天上，一夜比一夜淡。消息是酒馆里传出来的，一句一句转到我耳朵里。掌柜一边擦杯子，一边说：“别听他的，他前天在这儿喝翻了一整桌。”港里来了一条亚速尔回来的渔船，船主喝醉了，逢人就讲：“彗星最亮那几夜，我在特塞拉岛以西看见过一条船。没有桨，没有帆，就那么走，在无风的海草上走。船上没有人，走得却很稳，像有人在水底下推。”我心里想：他说的那片海，我的图上还空着。不对，是还没画。"
+when = [{ kind = "date", from = [1578, 1, 2] }]
+speaker = "captain"
+mood = "mystic"
+night = true
+deadline = [1578, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "记下他说的方位，等风顺了去亚速尔看看"
+next = "c01_keepsake"
+effects = [{ kind = "flag", flag = "c13_main_free_act3" }, { kind = "flag", flag = "c13_main_free_comet_chase" }]
+reply = "我请船主又喝了一杯，把他说的方位画在一张油纸上，标出彗尾指的那一角。船主第二天酒醒了，说什么也不肯再讲，只叫我别让他看见那张图。油纸我折了四折，压在海图最底下。那个方位离我这些年走过的航线只隔着几天的风，我每晚都想拿出来看一眼。"
+
+[[tracks.chapters.choices]]
+key = "note"
+text = "把彗尾指的方向记进日志就算了"
+next = "c01_keepsake"
+effects = [{ kind = "flag", flag = "c13_main_free_act3" }, { kind = "memory", memory = "mem-main_free-b02", title = "彗星最后的尾巴" }]
+reply = "日志那一页我画了彗尾，也画了那个醉汉的手势，两手一上一下，像在按一样东西。画完我把页角折起来，没有再翻。后来有个水手凑过来问那是什么，我说是个醉鬼的手势。他说，醉鬼有时也说得准。"
+
+[[tracks.chapters.choices]]
+key = "sell"
+text = "把彗星画成一张星图卖给港里的书商"
+next = "c01_keepsake"
+effects = [{ kind = "flag", flag = "c13_main_free_act3" }, { kind = "cash", value = 500 }]
+reply = "书商把星图印成单张，彗尾画得比真的还长。落款上的名字被印错了一个字母，他说无所谓，印得出来就有人买。印出来的第三天，码头上有个孩子拿着一张跑来跑去，喊：“有船没有桨！”"
+
+[tracks.chapters.timeout]
+next = "c01_keepsake"
+effects = [{ kind = "flag", flag = "c13_main_free_act3" }]
+
+# C01：从家里带出来的东西。召请之前的一夜；信物的变体只改写物件那一段。
+[[tracks.chapters]]
+key = "c01_keepsake"
+title = "从家里带出来的东西"
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海那年从家里带出来的那样东西。它裹着好几层油布，揭开时一股旧木头的气味冲上来。我把它放在灯下看，磨损的地方，上面的记号，边角的裂，一样一样都对得上。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+when = [{ kind = "date", from = [1582, 6, 1] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1582, 8, 31]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "把它包好，放进随身的箱子，带去西边"
+next = "c02_summons"
+effects = [{ kind = "flag", flag = "c13_main_free_keepsake" }]
+reply = "我用油布包了三层，系在床头。大副问是什么宝贝，我说是家里的东西，他就没再问。夜里船一晃，它就在床头碰一下木板，我醒过来两次，每次都先摸一摸油布。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "把它留给一个要留在岸上的人"
+next = "c02_summons"
+effects = [{ kind = "flag", flag = "c13_free_keepsake_left" }]
+reply = "我把它交给码头上的老朋友，说等回来再拿。那人接过去，拿手按了按，说：回来我还你。我走出十几步，回头看了一眼，他还站在码头上，把东西举在手里对着太阳看。"
+
+[[tracks.chapters.choices]]
+key = "reckon"
+text = "对着它，把出海那年的航线重新算一遍再带走"
+next = "c02_summons"
+check = { attr = "learning", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_main_free_keepsake" }, { kind = "skill", skill = "cartography", value = 20 }]
+reply = "我用它和旧日志把第一年的航线重画了一遍，发现当年量错了半度。难怪那一趟多走了两天，原来不是风的错。那半度我用铅笔在图上画了一条细线，画完对着灯看了很久。"
+fail = { next = "c02_summons", effects = [{ kind = "flag", flag = "c13_main_free_keepsake" }], news = "港里的人说，有个船长在灯下把出海那年的航线算到半夜，有一段怎么也对不上，最后还是把东西包好带走了。" }
+
+[tracks.chapters.timeout]
+next = "c02_summons"
+
+[[tracks.chapters.variants]]
+key = "v00a_seville_given"
+when = [{ kind = "flag", flag = "c13_free_seville_pilot_quadrant_given" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出一张封了二十多年的考题纸。蜡已经拆了，题还在。那件象限仪早送给了考领航的孤儿，我带上的是这张纸。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v00b_seville_father"
+when = [{ kind = "flag", flag = "c13_free_seville_pilot_father_known" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出那件象限仪。背面有一个记号，我在修道院的登记簿上见过，是父亲刻的。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v00c_istanbul_given"
+when = [{ kind = "flag", flag = "c13_free_istanbul_shipyard_receipt_given" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出师傅量船用的那根打了结的绳。交接凭记已经交到塞利姆手里，凭记交出去了，量法还在。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v00d_basque_knife"
+when = [{ kind = "flag", flag = "c13_free_basque_whaling_knife_left" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出一张船头刻痕的拓片。解缆小刀留在了红湾那个过冬的老水手手里，拓片上的刻痕一道一道，每一道都是一个季节。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v01_seville_pilot"
+when = [{ kind = "flag", flag = "c12_voyage_custom_seville_pilot" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海那年从家里带出来的那样东西：象限仪。铜边磨亮了一圈，背面刻着一个我一直没认出来的记号。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v02_murano_glass"
+when = [{ kind = "flag", flag = "c12_voyage_custom_murano_glass" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海那年父亲塞给我的威尼斯玻璃杯。对着太阳看，杯底有一个小气泡。父亲当年说过：这只不卖。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v03_lisbon_medicine"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lisbon_medicine" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出祖母配的一小瓶药剂。蜡封上压着一个只有家里人认得的记号，这么多年我一直没打开。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v04_lubeck_accounts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_lubeck_accounts" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出账房学徒的印记，一枚磨圆了角的铜印，印面是汉萨的鹰。我在第一本账簿的第一页盖过它。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v05_basque_whaling"
+when = [{ kind = "flag", flag = "c12_voyage_custom_basque_whaling" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海时师傅给的解缆小刀。师傅在刀柄上刻过一道记号，后来我每过一季就添一道。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v06_istanbul_shipyard"
+when = [{ kind = "flag", flag = "c12_voyage_custom_istanbul_shipyard" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出船匠的交接凭记，一块刻着船台编号的木牌。师傅说过，拿着它的人，船台就认谁。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v07_fez_scholar"
+when = [{ kind = "flag", flag = "c12_voyage_custom_fez_scholar" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海时带的手订的簿子。前面是先生抄给我的出处，后面记满了港口的名字。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v08_cambay_broker"
+when = [{ kind = "flag", flag = "c12_voyage_custom_cambay_broker" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出父亲系在我腰上的那袋算筹。竹签磨得发亮，少了两根，一直没补。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v09_busan_interpreter"
+when = [{ kind = "flag", flag = "c12_voyage_custom_busan_interpreter" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海时带的手订的簿子。第一页是先生写的十个女真字，后面是我一路记下的话。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v10_naha_envoy"
+when = [{ kind = "flag", flag = "c12_voyage_custom_naha_envoy" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出岛间通行凭记，一块盖着王府朱印的木札。这些年进过多少个港，木札上就多了多少道刻痕。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v11_tondo_datu"
+when = [{ kind = "flag", flag = "c12_voyage_custom_tondo_datu" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出家里的算账筹袋，袋口缝着汤都大督家的纹样。先生说过，筹子数得清的人，潮也数得清。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+[[tracks.chapters.variants]]
+key = "v12_chincha_rafts"
+when = [{ kind = "flag", flag = "c12_voyage_custom_chincha_rafts" }]
+text = "闷热的夜里，我收拾舱底的箱子，翻出出海前自己编的结绳，库西教的打法。一个结一季，结已经打到了绳尾。最近三个港口里，三个不相干的人说过同一句话，一字不差：“明年夏天，亚速尔以西。”我心里想：三个港口，三个人，说的是一样的话。我拿着它，坐到天快亮。天亮时大副来敲门，问：“船长，今天还出港吗？”"
+
+# C02：明年夏天，亚速尔以西。召请；超时的缺省立场是 open。
+[[tracks.chapters]]
+key = "c02_summons"
+title = "明年夏天，亚速尔以西"
+text = "一封没有署名的短信，夹在一包新到的海图里。纸是好纸，字是拉丁文，只有一行：“柱子以西，雾会在双鱼的夏天开一道缝。”同一个月，港里的人都在说，圣克鲁斯侯爵的舰队要再去特塞拉岛。我把纸翻过来，背面没有字，只有一个压得很深的印子，像是戒指压出来的。大副凑过来看了一眼，说：“船长，那边要打仗。我们去，是去做生意，还是去看热闹？”我心里想：雾那边要是真有一座城，它该不该让人看见？我没有回答，把那张纸放在灯下，看了很久。"
+when = [{ kind = "date", from = [1582, 9, 1] }]
+speaker = "captain"
+mood = "mystic"
+deadline = [1583, 2, 28]
+
+[[tracks.chapters.choices]]
+key = "open"
+text = "让雾散开：那边的城该跟这边的世界通商"
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_free_stance_open" }]
+reply = "我在日志上写：海是走出来的。船员听说要往亚速尔去，有人高兴，有人摇头。摇头的那个转身去检查了一遍缆绳。当晚我把这一行念给大副听，他没说好，也没说不好，只问：“走出去以后，回不回得来？”"
+
+[[tracks.chapters.choices]]
+key = "close"
+text = "雾里有雾里的人：替他们把门关上"
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_free_stance_close" }]
+reply = "我想起出海那年，家乡有个人说过：有些门开了就关不上，要先想好谁守着。我决定去看一眼，看完替那边保密。那人的原话我记不全了，只记得他说话时手里在削一根木签。我把那根木签的样子画进了日志，旁边什么也没写。"
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "交给守得住的一方，别让人抢"
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_free_stance_hand" }]
+reply = "我在纸上列了几个名字：赫尔墨斯的书商、骑士团、奥斯曼的舰队。一个一个划掉，最后留下一个没写出来。划到最后，纸上只剩一道横线。我把纸折起来，夹进海图里，没有交给任何人。"
+
+[tracks.chapters.timeout]
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_free_stance_open" }]
+
+[[tracks.chapters.variants]]
+key = "v1_keepsake"
+when = [{ kind = "flag", flag = "c13_main_free_keepsake" }]
+text = "一封没有署名的短信，夹在一包新到的海图里。纸是好纸，字是拉丁文，只有一行：“柱子以西，雾会在双鱼的夏天开一道缝。”同一个月，港里的人都在说，圣克鲁斯侯爵的舰队要再去特塞拉岛。我把纸翻过来，背面没有字，只有一个压得很深的印子，像是戒指压出来的。大副凑过来看了一眼，说：“船长，那边要打仗。我们去，是去做生意，还是去看热闹？”我心里想：雾那边要是真有一座城，它该不该让人看见？我没有回答，把那张纸放在灯下，看了很久。读信时，我的手按在那只包着家里东西的油布包上。"
+
+[[tracks.chapters.variants]]
+key = "v2_left"
+when = [{ kind = "flag", flag = "c13_free_keepsake_left" }]
+text = "一封没有署名的短信，夹在一包新到的海图里。纸是好纸，字是拉丁文，只有一行：“柱子以西，雾会在双鱼的夏天开一道缝。”同一个月，港里的人都在说，圣克鲁斯侯爵的舰队要再去特塞拉岛。我把纸翻过来，背面没有字，只有一个压得很深的印子，像是戒指压出来的。大副凑过来看了一眼，说：“船长，那边要打仗。我们去，是去做生意，还是去看热闹？”我心里想：雾那边要是真有一座城，它该不该让人看见？我没有回答，把那张纸放在灯下，看了很久。我想起家里那样东西留在了岸上，有点后悔，又觉得留得对。"
+
+[[tracks.chapters.variants]]
+key = "v3_hermes"
+when = [{ kind = "flag", flag = "c13_main_free_hermes_heard" }]
+text = "一封没有署名的短信，夹在一包新到的海图里。纸是好纸，字是拉丁文，只有一行：“柱子以西，雾会在双鱼的夏天开一道缝。”同一个月，港里的人都在说，圣克鲁斯侯爵的舰队要再去特塞拉岛。我把纸翻过来，背面没有字，只有一个压得很深的印子，像是戒指压出来的。大副凑过来看了一眼，说：“船长，那边要打仗。我们去，是去做生意，还是去看热闹？”我心里想：雾那边要是真有一座城，它该不该让人看见？我没有回答，把那张纸放在灯下，看了很久。信纸的折法，跟二十年前那个书商教的暗号一样。"
+
+# C03：黑暗之海的边上。安格拉的 stage 章：window、default、at、cast、news 齐全；没有 when。
+[[tracks.chapters]]
+key = "c03_dark_sea"
+title = "黑暗之海的边上"
+text = "安格拉港外挤满了船：圣克鲁斯侯爵的舰队、法国人的残船、来看热闹的商船，桅杆密得像一片林子。往西一天，海草多起来，风停了，罗经的针抖个不停。雾的边上漂着一只皮筏，筏上坐着一个老修士，手里一本本子，一页记见闻，一页记疑问。他不靠近，也不走开。本子被风吹得一页一页翻，他用手按着。远处侯爵的旗舰上有人喊：“哪条船？报上名来！”老修士隔着海草喊：“你带着那片抄到一半的纸吗？没有的话，海草会把你送回去，像送走别人一样。”我心里想：罗经不准了，可星还准。"
+stage = "involve"
+window = [[1583, 4, 1], [1583, 9, 30]]
+at = "angra"
+cast = ["alvaro_de_bazan", "drifter_brendan"]
+speaker = "captain"
+mood = "mystic"
+news = "安格拉的人说，侯爵的舰队打下特塞拉岛那年夏天，西边的海草一直长到港口外，罗经一个月都不准。"
+
+[[tracks.chapters.choices]]
+key = "cross"
+text = "拿出那片抄着翠玉录的纸，往雾里开"
+next = "c04_after"
+requires = [{ kind = "item", item = "tabula_smaragdina", qty = 1 }]
+effects = [{ kind = "flag", flag = "c13_main_free_crossed" }]
+reply = "雾从船头分开一道缝，像有人掀开帘子。我没有回头去数安格拉的灯，只看着前面那道缝。那道缝两边的海草是灰白的，像被人一根一根梳过。我把纸摊在舵台上，手按着它，直到安格拉的灯全看不见了。"
+hint = "你身上没有那片抄到一半的纸。老修士摇了摇头，海草在船头合拢。"
+
+[[tracks.chapters.choices]]
+key = "turn_back"
+text = "掉头，这一趟不是我的年份"
+next = "c04_after"
+effects = [{ kind = "flag", flag = "c13_main_free_turned_back" }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+reply = "我下令掉头，海草放开了船。回到安格拉，侯爵的人盘问了半天，最后只抄走了我航海日志的一页。他们抄的是这一年的风向，我记得很清楚。盘问的人没有问我为什么掉头，我也没有说。"
+
+[[tracks.chapters.choices]]
+key = "follow"
+text = "照五年前记下的方位，再往雾里靠一程"
+next = "c04_after"
+requires = [{ kind = "flag", flag = "c13_main_free_comet_chase" }]
+check = { attr = "seamanship", base = 5, per = 8 }
+effects = [{ kind = "flag", flag = "c13_main_free_turned_back" }, { kind = "flag", flag = "c13_main_free_fog_seen" }, { kind = "memory", memory = "mem-main_free-c03", title = "雾里那条无桨的船" }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+reply = "我看见了那条没有桨手的船。它离我只有两箭远，船身灰白，帆一张也没有。然后雾合上了。船头没有人，只有一截断了的缆绳挂在栏杆上，在风里轻轻晃。"
+fail = { next = "c04_after", effects = [{ kind = "flag", flag = "c13_main_free_turned_back" }, { kind = "flag", flag = "c13_main_free_atlantis_over" }], news = "安格拉的人说，有条船往雾边上靠，海草缠住了舵，等解开时雾已经退回原处，船长只记下了一个方位。" }
+hint = "你没有记过那条无桨船的方位，雾里分不出东西。"
+
+[tracks.chapters.default]
+next = "c04_after"
+effects = [{ kind = "flag", flag = "c13_main_free_absent" }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+
+[[tracks.chapters.variants]]
+key = "v1_new_star"
+when = [{ kind = "flag", flag = "c13_main_free_new_star" }]
+text = "安格拉港外挤满了船：圣克鲁斯侯爵的舰队、法国人的残船、来看热闹的商船，桅杆密得像一片林子。往西一天，海草多起来，风停了，罗经的针抖个不停。雾的边上漂着一只皮筏，筏上坐着一个老修士，手里一本本子，一页记见闻，一页记疑问。他不靠近，也不走开。本子被风吹得一页一页翻，他用手按着。远处侯爵的旗舰上有人喊：“哪条船？报上名来！”雾顶上那片天里，我认出了十一年前量过的那颗新星的位置。它早已暗了，位置还在。老修士隔着海草喊：“你带着那片抄到一半的纸吗？没有的话，海草会把你送回去，像送走别人一样。”我心里想：罗经不准了，可星还准。"
+
+# C04：回来的人。亚速尔的消息从酒馆传来。
+[[tracks.chapters]]
+key = "c04_after"
+title = "回来的人"
+text = "前些日子，酒馆里有人冲我举杯：“往西去的那几条船，回来的人都不爱说话，你是不是也去了？”我没答。角落里有个人在讲故事，把那条船讲成了有桨的，我知道它没有。秋天，亚速尔的消息一条条传到各港口：侯爵回里斯本领赏，法国人的残船去了拉罗谢尔。掌柜擦着杯子，说：“去的人不少，回来的，连船都不愿意多看一眼。”雾没有开。回来的人，不说话。"
+when = [{ kind = "date", from = [1583, 10, 1] }, { kind = "flag", flag = "c13_main_free_atlantis_over" }]
+speaker = "captain"
+mood = "mystic"
+deadline = [1584, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "log"
+text = "把这一年写进航海日志，一个字也不改"
+next = "c05_world_after"
+effects = [{ kind = "memory", memory = "mem-main_free-c04", title = "这一年的日志" }]
+reply = "这一页我写得很慢，一个港口一个港口地写，写到安格拉就停了。写完我把日志锁进箱子，钥匙在手里转了几圈，最后还是放回了贴身的口袋。"
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "把看见的画成一张没人会信的海图"
+next = "c05_world_after"
+effects = [{ kind = "skill", skill = "cartography", value = 20 }]
+reply = "海图上那一角我只画了海草的边线，一个字也没写。拿给港里的书商看，他翻来覆去看了半天，说这种图卖不掉。我说，本来就不卖，留着给船上的人看。"
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "在酒馆里讲出来，信不信由他们"
+next = "c05_world_after"
+effects = [{ kind = "fame", value = 1 }]
+reply = "一半人笑，一半人沉默。沉默的那一半后来一个个走过来，问那条船到底什么样。讲错细节的那个人散场后找到我，问能不能跟着船出一趟海，他说他记得住风向。"
+
+[tracks.chapters.timeout]
+next = "c05_world_after"
+
+[[tracks.chapters.variants]]
+key = "v1_council"
+when = [{ kind = "flag", flag = "atlantis_council_met" }]
+text = "前些日子，酒馆里有人冲我举杯：“往西去的那几条船，回来的人都不爱说话，你是不是也去了？”我没答。角落里有个人在讲故事，把那条船讲成了有桨的，我知道它没有。秋天，亚速尔的消息一条条传到各港口：侯爵回里斯本领赏，法国人的残船去了拉罗谢尔。掌柜擦着杯子，说：“去的人不少，回来的，连船都不愿意多看一眼。”雾没有开。回来的人里有一个，在雾那边的一场会议上见过那些坐着的人，开口只说了一句：审判的是外面的世界。"
+
+[[tracks.chapters.variants]]
+key = "v2_crossed"
+when = [{ kind = "flag", flag = "c13_main_free_crossed" }]
+text = "前些日子，酒馆里有人冲我举杯：“往西去的那几条船，回来的人都不爱说话，你是不是也去了？”我没答。角落里有个人在讲故事，把那条船讲成了有桨的，我知道它没有。秋天，亚速尔的消息一条条传到各港口：侯爵回里斯本领赏，法国人的残船去了拉罗谢尔。掌柜擦着杯子，说：“去的人不少，回来的，连船都不愿意多看一眼。”雾没有开。我就是那几个回来不开口的人之一，酒馆里有人认出了我的船。"
+
+[[tracks.chapters.variants]]
+key = "v3_fog"
+when = [{ kind = "flag", flag = "c13_main_free_fog_seen" }]
+text = "前些日子，酒馆里有人冲我举杯：“往西去的那几条船，回来的人都不爱说话，你是不是也去了？”我没答。角落里有个人在讲故事，把那条船讲成了有桨的，我知道它没有。秋天，亚速尔的消息一条条传到各港口：侯爵回里斯本领赏，法国人的残船去了拉罗谢尔。掌柜擦着杯子，说：“去的人不少，回来的，连船都不愿意多看一眼。”雾没有开。我见过那条无桨的船。酒馆里的故事里也有它，只是讲成了鬼船。"
+
+[[tracks.chapters.variants]]
+key = "v4_back"
+when = [{ kind = "flag", flag = "c13_main_free_turned_back" }]
+text = "前些日子，酒馆里有人冲我举杯：“往西去的那几条船，回来的人都不爱说话，你是不是也去了？”我没答。角落里有个人在讲故事，把那条船讲成了有桨的，我知道它没有。秋天，亚速尔的消息一条条传到各港口：侯爵回里斯本领赏，法国人的残船去了拉罗谢尔。掌柜擦着杯子，说：“去的人不少，回来的，连船都不愿意多看一眼。”雾没有开。我是掉头回来的。听别人讲雾里的事，我心里比谁都清楚那片海草的颜色。"
+
+# C05：那以后的世界。
+[[tracks.chapters]]
+key = "c05_world_after"
+title = "那以后的世界"
+text = "新年，我把这些年的航海日志一本本摆在桌上，十几本，书脊一样高。窗外是冬天，有人在街上赶车，车轮声一直传到屋里。翻到第一本，我认不出自己当年的字了。第一行写的是风向，第二行写着一个人的名字，名字旁边画了一个圈。当年送我出港的人说过：“字写歪了也要写完。”大副站在门口，手里拎着一包刚买的墨：“船长，这些本子要是丢了，可就没人知道我们去过哪儿了。”"
+when = [{ kind = "date", from = [1586, 1, 1] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1588, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "logbook"
+text = "把这些年写成一本航海记，交给印书的人"
+next = "c06_epilogue"
+effects = [{ kind = "flag", flag = "c13_main_free_logbook" }, { kind = "fame", value = 2 }]
+reply = "印书的人要我删掉三章，说出去没人信的那几章。我只删了一章，留下的两章，他读了一遍，没有再说什么。他把稿子翻到最后，问这一页有没有人能作证。我说有，都在船上，一个都没走。"
+
+[[tracks.chapters.choices]]
+key = "apprentice"
+text = "收一个徒弟，把认风认星的本事教给他"
+next = "c06_handover"
+effects = [{ kind = "flag", flag = "c13_main_free_apprentice" }, { kind = "memory", memory = "mem-main_free-c05", title = "第一课" }]
+reply = "徒弟第一夜就把北极星认错了，第二夜没认错。我没夸他，只把十字测天仪递过去，让他自己对准地平线。他对了三次才停下来，手心全是汗，抬头问：“船长，这回对了吗？”我说，你自己看。"
+
+[[tracks.chapters.choices]]
+key = "last_voyage"
+text = "再出海一次，去一个从没去过的港口"
+next = "c06_epilogue"
+effects = [{ kind = "flag", flag = "c13_main_free_last_voyage" }, { kind = "skill", skill = "rigging", value = 20 }]
+reply = "我挑了海图上一个从没靠过的港口。水手们听说要去那里，有人回家写了遗嘱，又笑着回来了，说是陪船长走一趟。出港那天，码头上的人都来送，没有一个人说“别去了”。"
+
+[tracks.chapters.timeout]
+next = "c06_epilogue"
+
+[[tracks.chapters.variants]]
+key = "v1_letters"
+when = [{ kind = "flag", flag = "c13_free_course_letters" }]
+text = "新年，我把这些年的航海日志一本本摆在桌上，十几本，书脊一样高。窗外是冬天，有人在街上赶车，车轮声一直传到屋里。翻到第一本，我认不出自己当年的字了。第一行写的是风向，第二行写着一个人的名字，名字旁边画了一个圈。当年送我出港的人说过：“字写歪了也要写完。”这些年我读过的书比装过的货多，最常想起的是第一次在船舱里读书读到天亮。大副站在门口，手里拎着一包刚买的墨：“船长，这些本子要是丢了，可就没人知道我们去过哪儿了。”"
+
+[[tracks.chapters.variants]]
+key = "v2_explore"
+when = [{ kind = "flag", flag = "c13_free_course_explore" }]
+text = "新年，我把这些年的航海日志一本本摆在桌上，十几本，书脊一样高。窗外是冬天，有人在街上赶车，车轮声一直传到屋里。翻到第一本，我认不出自己当年的字了。第一行写的是风向，第二行写着一个人的名字，名字旁边画了一个圈。当年送我出港的人说过：“字写歪了也要写完。”这些年我画过的海岸，有三段后来印进了别人的海图，名字不是我的。大副站在门口，手里拎着一包刚买的墨：“船长，这些本子要是丢了，可就没人知道我们去过哪儿了。”"
+
+[[tracks.chapters.variants]]
+key = "v3_arms"
+when = [{ kind = "flag", flag = "c13_free_course_arms" }]
+text = "新年，我把这些年的航海日志一本本摆在桌上，十几本，书脊一样高。窗外是冬天，有人在街上赶车，车轮声一直传到屋里。翻到第一本，我认不出自己当年的字了。第一行写的是风向，第二行写着一个人的名字，名字旁边画了一个圈。当年送我出港的人说过：“字写歪了也要写完。”这些年我打过的仗，记得最清楚的是一次没开炮就散了的对峙，赢的那几场反倒模糊了。大副站在门口，手里拎着一包刚买的墨：“船长，这些本子要是丢了，可就没人知道我们去过哪儿了。”"
+
+[[tracks.chapters.variants]]
+key = "v4_trade"
+when = [{ kind = "flag", flag = "c13_free_course_trade" }]
+text = "新年，我把这些年的航海日志一本本摆在桌上，十几本，书脊一样高。窗外是冬天，有人在街上赶车，车轮声一直传到屋里。翻到第一本，我认不出自己当年的字了。第一行写的是风向，第二行写着一个人的名字，名字旁边画了一个圈。当年送我出港的人说过：“字写歪了也要写完。”这些年我压过的价，最得意的一笔后来才知道是对方让的。大副站在门口，手里拎着一包刚买的墨：“船长，这些本子要是丢了，可就没人知道我们去过哪儿了。”"
+
+# C06 交船：收过徒弟的那条线先在这里交船。passed 不设门槛，只由 c05 收徒弟的选项 next 进来，不读同一轨道上别的选项设的旗标。
+[[tracks.chapters]]
+key = "c06_handover"
+title = "交船"
+text = "冬天，徒弟已经能独自量星了，夜里替我值更，报出来的数再没错过。那天夜里他把最后一页的墨磨好，递到我手里，说：“船长，该您写了。”我接过笔，没有马上写。他替我把灯芯挑亮了一点，动作有些生，挑过了又退回来。窗外港口的灯一盏盏亮起来，码头上有人喊：“收缆！”桌上的航海日志摆成一排。这条船接下来往哪边开，该由谁站在船尾，我心里其实已经有数，只是还没想好怎么说出口。"
+when = [{ kind = "date", from = [1589, 1, 1] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1590, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "passed"
+text = "把船交给徒弟，看着他起锚"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_free_done" }, { kind = "flag", flag = "c13_main_free_end_passed" }]
+reply = "徒弟起锚的时候回头看了一眼，又转回去看前面的水道。我没有挥手，只把帽子按了按。他第一次站在船尾，手还在抖，我没有去扶。后来他在第一个夜里给我寄来一封信，信上只写了一个港口的名字，和一个数，那是他量的星高。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "船还留在我手里，最后一页我自己写完"
+next = "c06_epilogue"
+effects = []
+reply = "徒弟还留在船上，我把这条船继续攥在自己手里。他问我为什么不放手，我说：“最后一页还没写完。”明年的第一个港口还没有定，我想，还能再想一年。"
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_free_done" }, { kind = "flag", flag = "c13_main_free_end_sea" }]
+
+# C06：最后一页。收尾；超时的缺省落点是 end_sea。
+[[tracks.chapters]]
+key = "c06_epilogue"
+title = "最后一页"
+text = "冬天，最后一本航海日志还剩一页。我坐在屋里，把三十多年的事想了一遍：第一个港口，我在岸上站得太久，忘了当时是几点起的锚；第一封信，拆的时候船正顶着风，纸被吹得哗哗响；那片雾，我见过它退开一圈，也见过它合上。想到哪里就停一下，不急着往下写。信纸已经软了，我还是把它从箱底翻出来，又看了一遍。楼下有人问：“船长，今晚还上船吗？”我说：“等写完这一行。”门口又有人喊：“船长，潮水到了。”桌上的灯芯短了，我没有剪。墙边摆着这些年的日志，一本挨着一本。我提笔，在最后一页上写下一个港口的名字。笔尖停了一下，墨滴在纸上。"
+when = [{ kind = "date", from = [1589, 1, 1] }]
+speaker = "captain"
+mood = "tender"
+deadline = [1590, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "home"
+text = "回到出海的那个港口，在码头边住下"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_free_done" }, { kind = "flag", flag = "c13_main_free_end_home" }]
+reply = "家乡码头上，有年轻的船主来问路。我给他们看日志，不收钱。他们看了一会儿，问我第一个港口是哪里。我说，你们走了就知道。有个年轻人把日志翻到第一页，看了很久，说那个风向他认得，是这个码头每年春天都有的风。"
+
+[[tracks.chapters.choices]]
+key = "sea"
+text = "一直留在海上，船到哪里，家就在哪里"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_free_done" }, { kind = "flag", flag = "c13_main_free_end_sea" }]
+reply = "我换了一条小一点的船，照旧每年出港。港务所的书记已经不用问我名字了，见了我，直接递上登记簿。登记簿上我签的名字一年比一年潦草，书记却每次都替我把日期写端正。"
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_free_done" }, { kind = "flag", flag = "c13_main_free_end_sea" }]
+
+[[tracks.chapters.variants]]
+key = "v1_logbook"
+when = [{ kind = "flag", flag = "c13_main_free_logbook" }]
+text = "冬天，最后一本航海日志还剩一页。我坐在屋里，把三十多年的事想了一遍：第一个港口，我在岸上站得太久，忘了当时是几点起的锚；第一封信，拆的时候船正顶着风，纸被吹得哗哗响；那片雾，我见过它退开一圈，也见过它合上。那本航海记印出来了，书店里有人拿着它来问我，书里的某个港口是不是真的。想到哪里就停一下，不急着往下写。信纸已经软了，我还是把它从箱底翻出来，又看了一遍。楼下有人问：“船长，今晚还上船吗？”我说：“等写完这一行。”门口又有人喊：“船长，潮水到了。”桌上的灯芯短了，我没有剪。墙边摆着这些年的日志，一本挨着一本。我提笔，在最后一页上写下一个港口的名字。笔尖停了一下，墨滴在纸上。"
+
+[[tracks.chapters.variants]]
+key = "v2_apprentice"
+when = [{ kind = "flag", flag = "c13_main_free_apprentice" }]
+text = "冬天，最后一本航海日志还剩一页。我坐在屋里，把三十多年的事想了一遍：第一个港口，我在岸上站得太久，忘了当时是几点起的锚；第一封信，拆的时候船正顶着风，纸被吹得哗哗响；那片雾，我见过它退开一圈，也见过它合上。徒弟已经能独自量星了，夜里替我值更。想到哪里就停一下，不急着往下写。信纸已经软了，我还是把它从箱底翻出来，又看了一遍。楼下有人问：“船长，今晚还上船吗？”我说：“等写完这一行。”门口又有人喊：“船长，潮水到了。”桌上的灯芯短了，我没有剪。墙边摆着这些年的日志，一本挨着一本。我提笔，在最后一页上写下一个港口的名字。笔尖停了一下，墨滴在纸上。"
+
+[[tracks.chapters.variants]]
+key = "v3_last"
+when = [{ kind = "flag", flag = "c13_main_free_last_voyage" }]
+text = "冬天，最后一本航海日志还剩一页。我坐在屋里，把三十多年的事想了一遍：第一个港口，我在岸上站得太久，忘了当时是几点起的锚；第一封信，拆的时候船正顶着风，纸被吹得哗哗响；那片雾，我见过它退开一圈，也见过它合上。最后那一趟去的港口，没人听说过我，我在那里又当了一回生人。想到哪里就停一下，不急着往下写。信纸已经软了，我还是把它从箱底翻出来，又看了一遍。楼下有人问：“船长，今晚还上船吗？”我说：“等写完这一行。”门口又有人喊：“船长，潮水到了。”桌上的灯芯短了，我没有剪。墙边摆着这些年的日志，一本挨着一本。我提笔，在最后一页上写下一个港口的名字。笔尖停了一下，墨滴在纸上。"

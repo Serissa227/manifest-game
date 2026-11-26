@@ -1,0 +1,178 @@
+# 名册上的一页（request_sophie_lemaire）——请托线，类型：去某处（kind=go），报价模式 V 到访（auto=true，offer 章 at=amsterdam，family=c13_offer_amsterdam，冷却 20 天）。
+# 人物：索菲·勒梅尔（sophie_lemaire，1541-11-04 生），里尔来的难民之女；1567 年以后替逃出来的人一户一户记名字。cast 见 cast/classmates_antwerp.toml。
+# 时间：报价 1569-01-01—1580-12-31（amsterdam，她从埃姆登下来），到 1580-12-31 仍没来就走 timeout；arrive 伦敦（london）奥斯丁会堂的执事房，150 天期限；report 回阿姆斯特丹。
+#       没有窗口章节（window）：期限与 timeout 已经给出去处，不再用窗口默认分支（它会与同日的 timeout 冲突）。
+# 依据（史实）：1567 年阿尔瓦公爵到布鲁塞尔以后，低地新教徒大批流亡埃姆登与伦敦；伦敦奥斯丁会堂的荷兰人教会 1550 年起供低地新教徒礼拜；
+#       1572 年海上乞丐夺取布里尔，正文只作“听说那个儿子上了海上乞丐的船”的背景。
+# 原创：德布鲁克一家、索菲手里的名册与抄法、执事房的橡木柜与捐款簿、父亲的落葬与作保的织工、埃姆登的母亲。
+# 待核：伦敦荷兰人教会登记的具体做法（正文只写执事开柜、抄那一行，不写官方名册的格式）；执事的英语与柜子的位置为推想。
+# 结构：report（抄全了，flag full）与 report_partial（只抄到半行，flag partial_copy；或执事只说了口信，flag hearsay）用 flag full 分开。
+#       引擎按路线检查每个选项的 requires，所以 tell_all 与 soften 只放在 full 的 report 里，hearsay 只放在 report_partial 里；report_partial 只剩这一个选项。
+#       report_partial 的 partial_copy 变体只换正文（捐款的路线只看得到父亲那一行）。
+# 读写的旗标：只写 c13_request_sophie_lemaire_accepted / declined / full / partial_copy / hearsay / partial / done / late；不读也不设任何 c7_ 旗标。
+#       bond_sophie_lemaire 的 1568 年伦敦重逢、诗社花名册与 pair_ines_costa_sophie_lemaire 的线都不在本文件里出现。
+# 依赖：sophie_lemaire 的日程 1567 年起写 emden。本请托让她在阿姆斯特丹码头出现（到访），整合方需确认报价窗口内她会下到港口，
+#       并与 bond_sophie_lemaire 注记的 1568 年起改在伦敦 的日程衔接。技能 lang_english（skills.toml）；检定属性 eloquence。
+#       不依赖主线旗标（kind=go 的请托，没有 c13_main 门禁）。
+# 秘密：索菲随身的旧书与书里的内容永远不写，见闻与回忆标题也不写。
+# 回忆插画清单：
+#   mem-request_sophie_lemaire-report：鱼市小桌上补全的一页纸，纸角压着厚名册，一只手在最后一行写字。
+
+[[tracks]]
+key = "request_sophie_lemaire"
+name = "名册上的一页"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sophie_lemaire"]
+
+# 报价：1569 年起，阿姆斯特丹鱼市边的小桌。名册里一户逃出来的人家，只抄了一半。
+[[tracks.chapters]]
+key = "offer"
+title = "德布鲁克家"
+text = "鱼市边上摆着一张小桌，桌腿底下垫着两块碎砖，免得在石板上晃。索菲坐在桌后，面前压着一本厚得翻不动的名册。每一页写着一户流亡人家：从哪条街出来，哪天走的，落脚在哪儿。鱼贩的刀一下一下剁在案板上，她没抬头，手指停在一页只写了一半的纸上。“德布鲁克家。父亲去了伦敦。儿子听说上了海上乞丐的船。母亲还在埃姆登等。”她说完才抬眼，没有叹气，也没有请你喝酒。“伦敦奥斯丁会堂的荷兰人教会，有一本登记的册子。我要那一行字：登记的日子、住址、谁作的保，一样都别漏。”"
+at = "amsterdam"
+cast = ["sophie_lemaire"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "amsterdam", text = "到阿姆斯特丹鱼市，找索菲的小桌" }]
+when = [
+  { kind = "date", from = [1569, 1, 1], to = [1580, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "sophie_lemaire", ge = 18 },
+]
+family = "c13_offer_amsterdam"
+family_cooldown_days = 20
+deadline = [1580, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_turn_register"
+when = [{ kind = "bond", person = "sophie_lemaire", level = "C" }]
+text = "鱼市边上摆着一张小桌，桌腿底下垫着两块碎砖，免得在石板上晃。索菲坐在桌后，面前压着一本厚得翻不动的名册。每一页写着一户流亡人家：从哪条街出来，哪天走的，落脚在哪儿。鱼贩的刀一下一下剁在案板上。她看见你走近，把名册转过来朝着你，手指按在一页只写了一半的纸上。“德布鲁克家。父亲去了伦敦。儿子听说上了海上乞丐的船。母亲还在埃姆登等。”她点着那一行，“你认字快，你来看这一行。登记的日子、住址、谁作的保，一样都别漏。”"
+
+[[tracks.chapters.choices]]
+key = "go_london"
+text = "接下，去伦敦把那一页抄回来。"
+next = "arrive"
+reply = "她撕下一张没写字的纸给我，左边已经画好了栏目，右边空着。她说抄的时候，连墨点也要照着点。"
+effects = [{ kind = "affinity", person = "sophie_lemaire", value = 2 }, { kind = "flag", flag = "c13_request_sophie_lemaire_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_son"
+text = "接下，顺便问她：那个儿子，要不要也打听？"
+next = "arrive"
+reply = "她摇了摇头。海上的事她记不了，“记了也是听来的”。她只要纸上写过的东西。"
+effects = [{ kind = "affinity", person = "sophie_lemaire", value = 2 }, { kind = "flag", flag = "c13_request_sophie_lemaire_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "伦敦太远，这一季去不了。"
+next = "failed"
+reply = "她点点头，在那一页的页边写了个小小的“待”字，合上了名册。"
+effects = [{ kind = "flag", flag = "c13_request_sophie_lemaire_declined" }]
+
+# 进行：1569 年起，伦敦奥斯丁会堂旁的执事房。执事手边压着一本捐款簿；150 天内没到，就是迟到。
+[[tracks.chapters]]
+key = "arrive"
+title = "教会的柜子"
+text = "奥斯丁会堂旁边的执事房，窗子朝着一个小院，墙根下长着青苔。那只橡木柜靠墙立着，锁得很结实。执事是个谨慎的老人，头发全白，手指上有墨迹。他听我说完，眼睛先看我的手，又看我的脸。“官差来查过我们几回了，”他说，“外港来的人，我不随便开柜。”他把一本今年的捐款簿压在柜钥匙上，手掌没有挪开。"
+at = "london"
+cast = ["sophie_lemaire"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "london", text = "到伦敦奥斯丁会堂旁边的执事房" }]
+when = [{ kind = "alive", person = "sophie_lemaire", value = true }]
+deadline_days = 150
+news = "伦敦的荷兰人教会开了一回名册柜子，一个外港的船长抄了一页回去，说是给阿姆斯特丹一个记名字的女人。"
+timeout = { next = "failed", effects = [{ kind = "letter", person = "sophie_lemaire", text = "伦敦那一页，我托了另一条船。名册上我写的是“未到”，不是“未找到”。" }, { kind = "affinity", person = "sophie_lemaire", value = -3 }, { kind = "flag", flag = "c13_request_sophie_lemaire_late" }], news = "伦敦奥斯丁会堂的执事房，那只橡木柜今年一直锁着，执事说外港来的人没有一个再上门。" }
+
+[[tracks.chapters.choices]]
+key = "speak_english"
+text = "用英语说明来意，请他当面开柜，我只抄那一行。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_english", ge = 60 }]
+hint = "你的英语还不够用来讲这种事，他听一句就能听出来。"
+reply = "他看我抄完那一行，又翻到后面一页，指着一个名字：父亲两年前在这里落了葬，作保的是一个织工。我把它也抄上了。"
+effects = [{ kind = "affinity", person = "sophie_lemaire", value = 3 }, { kind = "flag", flag = "c13_request_sophie_lemaire_full" }]
+
+[[tracks.chapters.choices]]
+key = "persuade_deacon"
+text = "讲索菲在阿姆斯特丹记的那本名册，求他通融。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "sophie_lemaire", value = -2 }, { kind = "flag", flag = "c13_request_sophie_lemaire_hearsay" }], news = "伦敦奥斯丁会堂的执事不肯开柜，只把一个住址念给来求他的人听。" }
+reply = "他沉吟半晌，开了柜，让我当着他的面抄。抄到住址那一栏，他说那人已经不在那里了。"
+effects = [{ kind = "affinity", person = "sophie_lemaire", value = 3 }, { kind = "flag", flag = "c13_request_sophie_lemaire_full" }]
+
+[[tracks.chapters.choices]]
+key = "donate"
+text = "往捐款簿上记一笔，请他开柜。"
+next = "report_partial"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "捐款簿上的数目不小，你钱袋里的钱还凑不齐一笔。"
+reply = "他记下捐款，开了柜，却只让我看父亲那一行，后面的不许翻。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "sophie_lemaire", value = 2 }, { kind = "flag", flag = "c13_request_sophie_lemaire_partial_copy" }]
+news = "奥斯丁会堂的捐款簿上添了一笔外港的钱，橡木柜开了，只许看一行。"
+
+# 收尾（抄全了）：回到阿姆斯特丹鱼市的小桌，抄回来的那一行，念不念由玩家定。
+[[tracks.chapters]]
+key = "report"
+title = "补全的一行"
+text = "鱼市边上的小桌还在原处。那张抄来的纸摊在名册旁边，索菲一栏一栏往下对。我照纸上的话说，父亲登记在三月十二。她手里那封旧信上写的是二月十二，差了整整一个月。她抬起头：“你上回可不是这么说的。”我还没开口，她又摇了摇头：“你别往心里去，是那封信写错了。”纸的最后一行，写着父亲两年前在伦敦落了葬，作保的是一个织工。埃姆登还有一位母亲在等。这一行念不念，由你定。"
+at = "amsterdam"
+cast = ["sophie_lemaire"]
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "at", at = "amsterdam", text = "回阿姆斯特丹，到鱼市的小桌边找她" }]
+when = [
+  { kind = "alive", person = "sophie_lemaire", value = true },
+  { kind = "flag", flag = "c13_request_sophie_lemaire_full" },
+]
+news = "阿姆斯特丹鱼市边那张记名字的小桌上，名册又补全了一页，记的人是个从里尔来的女人。"
+
+[[tracks.chapters.choices]]
+key = "tell_all"
+text = "照纸上写的都告诉她，落葬那一行也念。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_request_sophie_lemaire_full" }]
+hint = "伦敦名册上那一页你没抄全，念不出落葬那一行。"
+reply = "她把那一行一字一字誊进名册，墨干了才合上。她说她自己去埃姆登，“这种事不能写信”。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "sophie_lemaire", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_sophie_lemaire_done" }, { kind = "memory", memory = "mem-request_sophie_lemaire-report", title = "鱼市边补全的一行" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "先只说父亲的住址与登记的日子，落葬那一行让她自己看。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_request_sophie_lemaire_full" }]
+hint = "名册那一页没抄全，父亲的住址和登记的日子你都说不准。"
+reply = "她自己翻到那一行，看了很久，说谢谢你没念出来。她在页边添了一个小十字。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "sophie_lemaire", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_sophie_lemaire_done" }, { kind = "memory", memory = "mem-request_sophie_lemaire-report", title = "鱼市边补全的一行" }]
+
+# 收尾（只抄到半行，或执事只说了口信）：同一间鱼市的小桌，纸是断的。
+[[tracks.chapters]]
+key = "report_partial"
+title = "半行铅笔字"
+text = "你走到鱼市的小桌前，先说执事没开柜，只肯口头告诉你父亲的住址。她的笔停在名册上，一个字也没有写。“他说了什么？”我把他的话一句一句说给她听，说到住址那一栏，她把笔拿起来，又放下。“他记得的，是哪一年的事？”我说他没说。她没有生气，起身去隔壁的摊子要了两杯水，一杯推到我面前，然后对着那一页的空栏看了很久。"
+at = "amsterdam"
+cast = ["sophie_lemaire"]
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "at", at = "amsterdam", text = "回阿姆斯特丹，把没抄成的事告诉鱼市小桌边的她" }]
+when = [
+  { kind = "alive", person = "sophie_lemaire", value = true },
+  { kind = "flag", flag = "c13_request_sophie_lemaire_full", value = false },
+]
+news = "阿姆斯特丹鱼市的小桌上，记名字的那个女人用铅笔在页边添了几笔，名册上那一页还缺一行。"
+
+[[tracks.chapters.variants]]
+key = "partial_copy"
+when = [{ kind = "flag", flag = "c13_request_sophie_lemaire_partial_copy" }]
+text = "你把纸摊开，她只扫了一眼，就知道纸是断的：父亲的名字和登记的日子都在，后面的一截空着。“后面呢？”我说执事不许翻，只让我看那一行。她把纸翻过来看背面，什么也没有，又翻回去，用指甲在那一行上轻轻划了一道。“那一行的日子，和我手里这封信对不上。”她把信压在纸上，“后面的，我以后再想办法。”"
+
+[[tracks.chapters.choices]]
+key = "hearsay"
+text = "把抄到的、听到的都告诉她，说明没能抄全。"
+next = "done"
+reply = "她把我说的写在页边，用的是铅笔，没用墨。“听来的，先用铅笔。”她付了一半的钱，说剩下的等有人抄全了再来。"
+effects = [{ kind = "cash", value = 650 }, { kind = "affinity", person = "sophie_lemaire", value = 4 }, { kind = "flag", flag = "c13_request_sophie_lemaire_partial" }]

@@ -1,0 +1,134 @@
+# C13d 请托：一块木板的度数（request_pedro_nunes）。中文，Claude 写。
+# 人物：佩德罗·努内斯 pedro_nunes（1502 年生，1578 年卒）。国王的首席宇宙志学者，在科英布拉教数学，给王室子弟讲过天球。
+# 类型：找东西（fd）；offer → handin → use → done / failed，共 3 章，没有 stage 章。
+# 报价：V 到访（auto=true）。offer 章 at=porto，他从科英布拉下到波尔图码头买外国书，在码头上见面；family c13_offer_porto，冷却 20 天。
+#       名声门槛：1557 年为 0，不写 fame 条件。deadline 1577-12-31，timeout 直接 failed，不写见闻。
+# 窗口（非 stage 章，引擎不写 window，此处记预计范围）：offer 1557-03-01..1577-12-31；handin 1557-04..1578-06；use 1557-05..1578-08（收到信之后等 35 天）。
+# 报酬：身份档 2、低风险，现金 1600（表里 cash_total）。唯一奖励 nunes_lisbon（他自己的《天球论》，只当一本书）。
+#       技能 astral_navigation +30；名声 +3；声望 portugal +2；好感正向合计不超过 15。
+# 依据（史实）：努内斯 1529 年起任王室宇宙志学者；1537 年《天球论》提出恒向线，说按一个罗盘方位一直走，船走的是绕向极点的螺旋线（史实，正文只写他对这件事的执着）。
+# 依据（原创）：本请托；阿拉伯领航员的牵星板只当一件仪器，不写人名；杜罗河口夜里量北极星；绳结换算成度数的那张表；上船量完北极星时他说的那句口头禅，全轨道只在 handin 上船成功的回复里出现一次。
+# 不写：伊本·马吉德（归纳吉玛主线）；阿拉伯领航员的名字；努内斯的家世（不写，也不暗示）；水手笑他没出过远洋的事只由他自己提起一句。
+# 旗标：设置 accepted / declined（报价）；aboard（handin 上船的两个结果都设，use 章换附言）；marks（念记号）；done（终局，只设一次）。
+#       读取：aboard / marks（use 章的 variants，只换文字）。不读 c7_* 与主线旗标；不设 c7_* 旗标。
+# 依赖：港口 porto 在 ports_iberia.toml；物品 kamal_board（items/items_instrument_01.toml，有 shop）；nunes_lisbon（items/books_04_navigation.toml）；
+#       技能 astral_navigation、lang_arabic（skills.toml）；人物 pedro_nunes 的 tracks 需含 request_pedro_nunes（整合方登记）。
+# 回忆插画清单：
+#   mem-request_pedro_nunes-handin：画面是杜罗河口的夜里，或码头灯下，一位黑袍老人扶着船舷，把一块小木板举到北极星下，绳上的结数得发亮。
+# 英文覆盖：不写（本批仅中文）。
+
+[[tracks]]
+key = "request_pedro_nunes"
+name = "一块木板的度数"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["pedro_nunes"]
+
+# 报价：码头上的黑袍老人，翻着外国书，问一块木板能不能量出纬度。
+[[tracks.chapters]]
+key = "offer"
+title = "科英布拉来的书箱"
+text = "杜罗河口的码头上，一个穿黑袍的老人蹲在刚卸下的书箱旁边，一本一本翻扉页，翻完往箱里放。他抬头看见你，开口就问：“你跑过东边的海？印度洋上那些领航员不用星盘，只凭一块木板和一根打结的绳子，怎么量得出纬度？所以我要一块真的牵星板，还要看人用一次。”他把书压在膝上，又补了一句：“你们跑船的背后笑我没出过远洋，笑吧，书是我读的。”"
+mood = "mystic"
+at = "porto"
+family = "c13_offer_porto"
+family_cooldown_days = 20
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1577, 12, 31] }, { kind = "alive", person = "pedro_nunes", value = true }]
+deadline = [1577, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：从阿拉伯人的港口带一块来"
+reply = "他把一张写满算式的纸夹进你的航海日志，又在纸角上添了一行小字：“绳上的结，记下是几个。一个也不许估。”"
+next = "handin"
+effects = [{ kind = "affinity", person = "pedro_nunes", value = 2 }, { kind = "flag", flag = "c13_request_pedro_nunes_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这回不接，我的船不往东"
+reply = "他已经翻到下一本书了，头也没抬，只把书脊上的灰拍掉。“那就算了。所以下一个来的人，最好先会数数。”"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_pedro_nunes_declined" }]
+
+# 交板：牵星板在他手里翻来覆去。三种接法，分别决定木板的去处。
+[[tracks.chapters]]
+key = "handin"
+title = "天黑以后的跳板"
+text = "他接过牵星板，翻来覆去地看，数绳上的结，又用自己的尺去量木板的宽，量完在小本子上记一行。绳头上的结有大有小，他一个一个数，数错了就从头来。天擦黑的时候，他忽然抬头：“所以，能不能带我上船？就在河口，量一次北极星。”说完，他看了一眼码头边晃荡的跳板，把尺子插回袖子里，没提钱的事。"
+speaker = "captain"
+mood = "mystic"
+at = "porto"
+when = [{ kind = "alive", person = "pedro_nunes", value = true }]
+objectives = [{ kind = "item", item = "kamal_board", qty = 1, text = "带一块牵星板" }]
+
+[[tracks.chapters.choices]]
+key = "aboard"
+text = "扶他上船，在河口的锚地量一次"
+reply = "他扶着船舷站稳，把木板举到眼前，嘴里一格一格地数着绳上的结。船晃得厉害，他的手一直没松开栏杆。数完他抬眼看星，报出了度数，然后说：“由此可知，木板也会说话，只要有人替它把度数念出来。”"
+next = "use"
+check = { attr = "seamanship", base = 35, per = 6 }
+effects = [{ kind = "item", item = "kamal_board", qty = -1 }, { kind = "affinity", person = "pedro_nunes", value = 5 }, { kind = "flag", flag = "c13_request_pedro_nunes_aboard" }, { kind = "memory", memory = "mem-request_pedro_nunes-handin", title = "河口的北极星" }]
+news = "夜里的杜罗河口，科英布拉来的一个老学者扶着船舷，举着一块牵星板对北极星看，看完不肯上岸。"
+fail = { next = "use", effects = [{ kind = "item", item = "kamal_board", qty = -1 }, { kind = "affinity", person = "pedro_nunes", value = 1 }, { kind = "flag", flag = "c13_request_pedro_nunes_aboard" }], news = "杜罗河口的船上，一个黑袍老学者刚念完一个数，船一晃就扶着栏杆要上岸，脸白得像纸。" }
+
+[[tracks.chapters.choices]]
+key = "arabic"
+text = "在码头上替他念板上刻的阿拉伯记号"
+reply = "他把每个记号抄在算式旁边，一边抄一边跟着念出声，念错一个就停下来，让你从头再念一遍。抄完才发现天已经黑了，他把灯往自己这边挪了挪。"
+next = "use"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60, hard = true }]
+hint = "板边那几行刻记，你一个也认不出来。"
+effects = [{ kind = "item", item = "kamal_board", qty = -1 }, { kind = "affinity", person = "pedro_nunes", value = 4 }, { kind = "flag", flag = "c13_request_pedro_nunes_marks" }, { kind = "memory", memory = "mem-request_pedro_nunes-handin", title = "河口的北极星" }]
+news = "波尔图码头上，有人替一位科英布拉来的老学者念木板上的阿拉伯记号，一格一格念到天黑。"
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "只把木板交给他"
+reply = "他把木板夹进书里，合上书，又打开看了一眼，确认木板没有滑出来。“回去慢慢算。不算完，我不写回信。”"
+next = "use"
+effects = [{ kind = "item", item = "kamal_board", qty = -1 }, { kind = "affinity", person = "pedro_nunes", value = 1 }]
+news = "波尔图码头上，一块牵星板被夹进科英布拉来的老学者的书里，他提着书箱就往城里走。"
+
+# 结果：一张表，三行数。附言按前一章的做法换：上过船的、念过记号的、只收板的，各有一句。
+[[tracks.chapters]]
+key = "use"
+title = "科英布拉的小包"
+text = "一个多月后，科英布拉寄到波尔图港务处一封信，还有一个小包。信是他亲笔写的，字很小，一行一行排得整整齐齐。信里夹着一张表，绳上的结都换成了度数，每一行后面写着是哪个港口的北极星。表后面他附了一句：“木板没有告诉我什么，这张表是凑的，我知道。”小包里是他的书，没有题字。"
+mood = "tense"
+at = "porto"
+when = [{ kind = "alive", person = "pedro_nunes", value = true }]
+objectives = [{ kind = "wait", days = 35 }, { kind = "at", at = "porto" }]
+
+[[tracks.chapters.variants]]
+key = "aboard"
+when = [{ kind = "flag", flag = "c13_request_pedro_nunes_aboard", value = true }]
+text = "一个多月后，科英布拉寄到波尔图港务处一封信，还有一个小包。信是他亲笔写的，字很小，一行一行排得整整齐齐。信里夹着一张表，绳上的结都换成了度数，每一行后面写着是哪个港口的北极星。表后面他附了一句，字写得比表上的都大：“那一夜的北极星，比书上的低。”小包里是他的书，没有题字。"
+
+[[tracks.chapters.variants]]
+key = "marks"
+when = [{ kind = "flag", flag = "c13_request_pedro_nunes_marks", value = true }]
+text = "一个多月后，科英布拉寄到波尔图港务处一封信，还有一个小包。信是他亲笔写的，字很小，一行一行排得整整齐齐。信里夹着一张表，绳上的结都换成了度数，每一行后面写着是哪个港口的北极星。表后面他附了一句：“那些记号比我的表还早。刻在木板上的字，我学过的哪一种都老。”小包里是他的书，没有题字。"
+
+[[tracks.chapters.choices]]
+key = "table"
+text = "把那张表抄进自己的航海日志"
+reply = "抄完你发现，第三行他改过一次，改了又用笔尖划掉，划得很轻，划掉的数底下还能认出原来的字。你照着抄了下来，没有问为什么。"
+next = "done"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "nunes_lisbon", qty = 1 }, { kind = "skill", skill = "astral_navigation", value = 30 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "affinity", person = "pedro_nunes", value = 5 }, { kind = "flag", flag = "c13_request_pedro_nunes_done" }]
+news = "波尔图港务处的人说，科英布拉来的那张星表被一个船长抄进了航海日志，抄完才发现第三行改过。"
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "回信，告诉他东边的领航员怎么念这张表"
+reply = "你把东边领航员念绳结的法子写满三页，一条条对着他的表注出来，哪一个结先数、哪一面朝北，都写清楚。封好交给港务处的邮差，邮差问你要不要回执，你说不用。"
+next = "done"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "你也说不清那几个结该怎么换。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "item", item = "nunes_lisbon", qty = 1 }, { kind = "skill", skill = "astral_navigation", value = 30 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "affinity", person = "pedro_nunes", value = 8 }, { kind = "letter", person = "pedro_nunes", text = "所以你是对的。" }, { kind = "flag", flag = "c13_request_pedro_nunes_done" }]
+news = "波尔图的邮差说，一位船长寄了三页信去科英布拉，信里讲东边的领航员怎么念绳结，科英布拉那边回了一行字。"

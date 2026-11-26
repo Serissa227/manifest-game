@@ -1,0 +1,262 @@
+# 海区。按文件顺序取第一个包含该格的矩形；每个海格都必须属于某个海区。
+# rect = [x0, y0, x1, y1]（含端点）。四季天气：wind 为风的去向（N NE E SE S SW W NW），wind_strength 0–10；
+# current 为洋流去向，current_strength 0–3；storm、pirate 为每日风暴与海盗遭遇概率（例如 0.002 即 0.2%）。
+# key 只允许追加（存档按顺序引用）；name 可以随意改。
+# climate（可选）为气候，决定每日天况的季节频率（见 rules.toml [weather]）：temperate 温和、cold 寒冷（冬季下雪）、
+#   arid 干燥（少雨少雾）、tropical 热带（夏秋多暴风雨）。不写时按海区中心的行号推断（rules.toml [weather] latitude_bands）：
+#   有 seas.txt 时取该海区实际海面的外接矩形的中心，否则取 rect 的中心。与推断不符的海区（按沿岸的植被与设定）在下面写明。
+# 每天的风向、风力围绕这里的季节值变化（一天最多转 45°），storm 越高的海区与季节，海图上的暴风雨也越多。
+# 前 12 个海区覆盖旧世界的内海“维斯塔海”（x 0–239、y 0–119），矩形不要改动；
+# 其后的海区只覆盖扩展出的新格（x ≥ 240 或 y ≥ 120）：巨人之门、外洋“晨星洋”、新大陆阿斯特里亚沿海与瑶华群岛。
+# 外洋的风：北部常年吹向东（从旧世界去新大陆顺风），南部常年吹向西（回程顺风）。
+# mark 为 seas.txt 里代表本海区的字符（EXPANSION.md §10.3）：seas.txt 沿海岸线把海格分给各海区，
+# 没有该文件或未标注的海格仍按 rect 矩形归属（矩形保留作回退）。mark 由 `cargo xtask worldgen` 自动补齐，追加新海区时顺延。
+
+[[regions]]
+key = "frost_west"
+name = "白鲸海"
+rect = [0, 0, 59, 39]
+mark = "a"
+spring = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+summer = { wind = "NE", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+autumn = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+winter = { wind = "E", wind_strength = 7, current = "E", current_strength = 1, storm = 0.006, pirate = 0.0008 }
+
+[[regions]]
+key = "icespring"
+name = "伊斯布伦海"
+rect = [60, 0, 119, 39]
+mark = "b"
+spring = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+summer = { wind = "NE", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+autumn = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+winter = { wind = "E", wind_strength = 7, current = "E", current_strength = 1, storm = 0.006, pirate = 0.0008 }
+
+[[regions]]
+key = "pine_sea"
+name = "法尔克海"
+rect = [120, 0, 179, 39]
+mark = "c"
+spring = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+summer = { wind = "NE", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+autumn = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+winter = { wind = "E", wind_strength = 7, current = "E", current_strength = 1, storm = 0.006, pirate = 0.0008 }
+
+[[regions]]
+key = "north_watch"
+name = "守望海"
+rect = [180, 0, 239, 39]
+mark = "d"
+spring = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+summer = { wind = "NE", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+autumn = { wind = "E", wind_strength = 5, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+winter = { wind = "E", wind_strength = 7, current = "E", current_strength = 1, storm = 0.006, pirate = 0.0008 }
+
+[[regions]]
+key = "cuilan_sea"
+name = "埃斯佩兰海"
+rect = [0, 40, 59, 79]
+mark = "e"
+spring = { wind = "NE", wind_strength = 4, current = "N", current_strength = 1, storm = 0.0015, pirate = 0.0012 }
+summer = { wind = "NE", wind_strength = 5, current = "N", current_strength = 1, storm = 0.004, pirate = 0.0012 }
+autumn = { wind = "SW", wind_strength = 4, current = "S", current_strength = 1, storm = 0.0015, pirate = 0.0012 }
+winter = { wind = "SW", wind_strength = 5, current = "S", current_strength = 1, storm = 0.0015, pirate = 0.0012 }
+
+[[regions]]
+key = "lighthouse"
+name = "拉玛塔海"
+rect = [60, 40, 119, 79]
+mark = "f"
+spring = { wind = "NE", wind_strength = 4, current = "N", current_strength = 1, storm = 0.0015, pirate = 0.0025 }
+summer = { wind = "NE", wind_strength = 5, current = "N", current_strength = 1, storm = 0.004, pirate = 0.0025 }
+autumn = { wind = "SW", wind_strength = 4, current = "S", current_strength = 1, storm = 0.0015, pirate = 0.0025 }
+winter = { wind = "SW", wind_strength = 5, current = "S", current_strength = 1, storm = 0.0015, pirate = 0.0025 }
+
+[[regions]]
+key = "tide_sea"
+name = "马纳瓦海"
+rect = [120, 40, 179, 79]
+mark = "g"
+spring = { wind = "NE", wind_strength = 4, current = "N", current_strength = 2, storm = 0.0015, pirate = 0.0025 }
+summer = { wind = "NE", wind_strength = 5, current = "N", current_strength = 2, storm = 0.004, pirate = 0.0025 }
+autumn = { wind = "SW", wind_strength = 4, current = "S", current_strength = 2, storm = 0.0015, pirate = 0.0025 }
+winter = { wind = "SW", wind_strength = 5, current = "S", current_strength = 2, storm = 0.0015, pirate = 0.0025 }
+
+[[regions]]
+key = "golden_sea"
+name = "范德兰海"
+rect = [180, 40, 239, 79]
+mark = "h"
+spring = { wind = "NE", wind_strength = 4, current = "N", current_strength = 1, storm = 0.0015, pirate = 0.0012 }
+summer = { wind = "NE", wind_strength = 5, current = "N", current_strength = 1, storm = 0.004, pirate = 0.0012 }
+autumn = { wind = "SW", wind_strength = 4, current = "S", current_strength = 1, storm = 0.0015, pirate = 0.0012 }
+winter = { wind = "SW", wind_strength = 5, current = "S", current_strength = 1, storm = 0.0015, pirate = 0.0012 }
+
+[[regions]]
+key = "fog_cape"
+name = "布鲁玛海"
+rect = [0, 80, 59, 119]
+mark = "i"
+climate = "temperate"      # 布鲁玛（“雾”）湾口终年多雾，沿岸是地中海式灌丛，按温和气候（纬度推断为干燥）
+spring = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0014 }
+summer = { wind = "W", wind_strength = 6, current = "W", current_strength = 1, storm = 0.005, pirate = 0.0014 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0014 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0014 }
+
+[[regions]]
+key = "sand_gate"
+name = "巴布拉姆海"
+rect = [60, 80, 119, 119]
+mark = "j"
+spring = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0022 }
+summer = { wind = "W", wind_strength = 6, current = "W", current_strength = 1, storm = 0.005, pirate = 0.0022 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0022 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0022 }
+
+[[regions]]
+key = "flame_bay"
+name = "哈拉海"
+rect = [120, 80, 179, 119]
+mark = "k"
+spring = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0022 }
+summer = { wind = "W", wind_strength = 6, current = "W", current_strength = 1, storm = 0.005, pirate = 0.0022 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0022 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0022 }
+
+[[regions]]
+key = "camel_sea"
+name = "贾马尔海"
+rect = [180, 80, 239, 119]
+mark = "l"
+spring = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0014 }
+summer = { wind = "W", wind_strength = 6, current = "W", current_strength = 1, storm = 0.005, pirate = 0.0014 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0014 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0015, pirate = 0.0014 }
+
+# ── 扩展区域（航海历 1462 年以后才有人航行的海域）──
+
+# 巨人之门：海峡两岸各立着一尊半毁的阿尔坎巨像；水道窄、潮流急，春夏向外洋泄流，秋冬倒灌回内海。
+[[regions]]
+key = "giants_gate"
+name = "巨人之门"
+rect = [240, 90, 269, 124]
+mark = "m"
+spring = { wind = "E", wind_strength = 5, current = "E", current_strength = 2, storm = 0.003, pirate = 0.0025 }
+summer = { wind = "E", wind_strength = 6, current = "E", current_strength = 2, storm = 0.004, pirate = 0.0025 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 2, storm = 0.003, pirate = 0.0025 }
+winter = { wind = "W", wind_strength = 6, current = "W", current_strength = 2, storm = 0.004, pirate = 0.0025 }
+
+# 霜语海：晨星洋最北端，冰原与峡湾之间；西风带终年把船推向东方，冬季风暴凶猛。
+[[regions]]
+key = "frost_reach"
+name = "霜语海"
+rect = [240, 0, 399, 23]
+mark = "n"
+spring = { wind = "E", wind_strength = 7, current = "E", current_strength = 1, storm = 0.003, pirate = 0.0008 }
+summer = { wind = "E", wind_strength = 6, current = "E", current_strength = 1, storm = 0.002, pirate = 0.0008 }
+autumn = { wind = "E", wind_strength = 7, current = "E", current_strength = 1, storm = 0.004, pirate = 0.0008 }
+winter = { wind = "E", wind_strength = 8, current = "E", current_strength = 1, storm = 0.009, pirate = 0.0008 }
+
+# 晨光海：从旧世界东岸到晨光湾的北部航道，去新大陆最顺风的一段。
+[[regions]]
+key = "dawn_sea"
+name = "晨光海"
+rect = [240, 24, 399, 54]
+mark = "o"
+climate = "temperate"      # 北纬约 51°，西风带的海洋性海岸，沿岸七成是阔叶林与草甸，冬季少雪（纬度推断为寒冷）
+spring = { wind = "E", wind_strength = 6, current = "SE", current_strength = 1, storm = 0.0025, pirate = 0.0018 }
+summer = { wind = "E", wind_strength = 5, current = "SE", current_strength = 1, storm = 0.002, pirate = 0.0018 }
+autumn = { wind = "E", wind_strength = 6, current = "SE", current_strength = 1, storm = 0.003, pirate = 0.0018 }
+winter = { wind = "E", wind_strength = 7, current = "SE", current_strength = 1, storm = 0.007, pirate = 0.0018 }
+
+# 银雾海：银雾湾与附近海岸；清晨浓雾不散，走私船与海盗常在雾中出没。
+[[regions]]
+key = "silvermist"
+name = "银雾海"
+rect = [300, 55, 399, 94]
+mark = "p"
+spring = { wind = "NE", wind_strength = 4, current = "N", current_strength = 1, storm = 0.0025, pirate = 0.003 }
+summer = { wind = "E", wind_strength = 4, current = "N", current_strength = 1, storm = 0.006, pirate = 0.003 }
+autumn = { wind = "NE", wind_strength = 5, current = "N", current_strength = 1, storm = 0.003, pirate = 0.003 }
+winter = { wind = "SW", wind_strength = 5, current = "S", current_strength = 1, storm = 0.003, pirate = 0.003 }
+
+# 翡翠海：翡翠湾一带的暖水海域；夏季是飓风季，海盗也最猖獗。
+[[regions]]
+key = "emerald"
+name = "翡翠海"
+rect = [300, 95, 399, 134]
+mark = "q"
+climate = "tropical"      # 暖水海域，湾头是雨林与红树林，夏季是飓风季（纬度推断为干燥）
+spring = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.003, pirate = 0.0032 }
+summer = { wind = "W", wind_strength = 6, current = "W", current_strength = 1, storm = 0.008, pirate = 0.0032 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.004, pirate = 0.0032 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0025, pirate = 0.0032 }
+
+# 赤礁海：新大陆东南沿岸，赤色珊瑚礁密布，沉船与海盗巢穴都多。
+[[regions]]
+key = "red_reef"
+name = "赤礁海"
+rect = [300, 135, 399, 169]
+mark = "r"
+spring = { wind = "W", wind_strength = 6, current = "SW", current_strength = 1, storm = 0.003, pirate = 0.0035 }
+summer = { wind = "W", wind_strength = 6, current = "SW", current_strength = 1, storm = 0.008, pirate = 0.0035 }
+autumn = { wind = "W", wind_strength = 6, current = "SW", current_strength = 1, storm = 0.004, pirate = 0.0035 }
+winter = { wind = "W", wind_strength = 5, current = "SW", current_strength = 1, storm = 0.003, pirate = 0.0035 }
+
+# 晨星洋：巨人之门外的大洋；风向随季节反转，春夏偏东、秋冬偏西。
+[[regions]]
+key = "morningstar"
+name = "晨星洋"
+rect = [240, 55, 299, 134]
+mark = "s"
+climate = "temperate"      # 开阔大洋（北纬约 48–20°），按温和气候（纬度推断为干燥）
+spring = { wind = "E", wind_strength = 5, current = "S", current_strength = 1, storm = 0.003, pirate = 0.002 }
+summer = { wind = "SE", wind_strength = 5, current = "S", current_strength = 1, storm = 0.006, pirate = 0.002 }
+autumn = { wind = "W", wind_strength = 5, current = "S", current_strength = 1, storm = 0.003, pirate = 0.002 }
+winter = { wind = "W", wind_strength = 6, current = "S", current_strength = 1, storm = 0.004, pirate = 0.002 }
+
+# 孤灯海：晨星洋南部，东岚岛与新大陆之间；信风吹向西方，是回航旧世界的捷径。
+[[regions]]
+key = "lonely_sea"
+name = "孤灯海"
+rect = [255, 135, 299, 169]
+mark = "t"
+spring = { wind = "W", wind_strength = 6, current = "W", current_strength = 2, storm = 0.003, pirate = 0.0028 }
+summer = { wind = "W", wind_strength = 6, current = "W", current_strength = 2, storm = 0.007, pirate = 0.0028 }
+autumn = { wind = "W", wind_strength = 6, current = "W", current_strength = 2, storm = 0.003, pirate = 0.0028 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 2, storm = 0.0025, pirate = 0.0028 }
+
+# 瑶华海：瑶华本岛周围的季风海：夏季风吹向北，冬季风吹向南，夏末多台风。
+[[regions]]
+key = "yaohua_sea"
+name = "瑶华海"
+rect = [175, 120, 254, 169]
+mark = "u"
+spring = { wind = "NE", wind_strength = 4, current = "W", current_strength = 1, storm = 0.0025, pirate = 0.0025 }
+summer = { wind = "N", wind_strength = 6, current = "W", current_strength = 1, storm = 0.007, pirate = 0.0025 }
+autumn = { wind = "SW", wind_strength = 4, current = "W", current_strength = 1, storm = 0.003, pirate = 0.0025 }
+winter = { wind = "S", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0025, pirate = 0.0025 }
+
+# 云屿海：南大陆荒岸与云屿之间的海峡，礁石多、水浅。
+[[regions]]
+key = "yunyu_sea"
+name = "云屿海"
+rect = [100, 120, 174, 169]
+mark = "v"
+spring = { wind = "W", wind_strength = 4, current = "W", current_strength = 1, storm = 0.0025, pirate = 0.002 }
+summer = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.006, pirate = 0.002 }
+autumn = { wind = "W", wind_strength = 4, current = "W", current_strength = 1, storm = 0.0025, pirate = 0.002 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.0025, pirate = 0.002 }
+
+# 南荒海：卡迪尔西南、月山以南的一小片海湾（北纬约 13°，大部分是陆地），岸上是雨林、稀树草原与红树林。
+# 回退矩形 [0, 120, 99, 169] 还罩着埃斯佩兰以西外海的几格（与图内其他海域不相连）。
+[[regions]]
+key = "south_waste"
+name = "南荒海"
+rect = [0, 120, 99, 169]
+mark = "w"
+climate = "tropical"      # 第五批地理：沿岸是雨林与稀树草原（第四批按旧地理的荒凉沙岸写作干燥）
+spring = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.002, pirate = 0.001 }
+summer = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.004, pirate = 0.001 }
+autumn = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.002, pirate = 0.001 }
+winter = { wind = "W", wind_strength = 5, current = "W", current_strength = 1, storm = 0.002, pirate = 0.001 }

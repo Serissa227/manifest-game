@@ -1,0 +1,257 @@
+# 请托：三年的旧账（request_ursula）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-18，Claude（Opus）执笔。
+# 人物：乌尔苏拉 ursula（1540-08-22 生，女），富格尔商行驻安特卫普代理人的女儿，学院同学（cast/classmates_antwerp.toml）。
+# 类型：说服某人（persuade）。章节：offer 未结 → approach 空麻袋 → persuade 三条路（看清麻袋时走 persuade_seen）→ 终章：result 结清日（期票）、result_share 半个日子（股契）、result_pepper 十五袋胡椒。
+# 结构说明：分支靠 next 走到各自的章节，不靠互斥的旗标门禁（引擎审计里互斥门禁会报“准备后条件仍不满足”）。approach 的 check_sacks 成功走 persuade_seen，那里的 take_pepper_seen 用“容易”检定；其余走 persuade，take_pepper 用“一般”检定。终章按纸的种类分开：期票走 result，股契（以及胡椒检定失败后的股契）走 result_share，胡椒走 result_pepper。
+# 报价：当面（T）。auto=false，玩家在安特卫普找到她（ask:request_ursula）。窗口 1563-02-01 至 1574-12-31；进行中的章节 deadline_days 150，全部终局落在 1576 年 2 月以前。
+# 身份档 2（富商、学者、官员）：现金基数 1600，中档 ×1.4 = 2250。期票路线 2250，股契路线 1350，胡椒路线 2250 报酬加 2250 货款。
+# 依据（史实）：1557 年西班牙王室停付，安特卫普交易所的汇票与期票（只作口吻里的背景）；里斯本的王室胡椒专卖与印度船期，印度商馆（Casa da Índia）的船期册（传闻口吻，正文不写具体年月）。
+# 依据（原创）：里斯本新街的香料商（叙事人物，不起全名、不建 cast）；仓里那排鼓起的麻袋；期票与船股契；结清日那一行空格；十五袋胡椒，最后一袋轻了半磅。
+# 待核：王室汇票在安特卫普的折价；印度商馆船期册的登记方式。正文一律用传闻口吻。
+# 秘密：父亲借她的名义藏了一笔坏账（cast secret）。本请托不碰，正文不暗示，见闻不写。
+# 读写的旗标：读 bond_ursula 的 C 级（offer 的 variant，由羁绊线设）；只设 c13_request_ursula_*；ship_real 与 prefers_goods 只在 persuade 的变体里读；不读任何 c7_ 旗标，不设 c7_ 旗标。
+# 依赖：无改名依赖（ursula、lisbon、antwerp 现成）；技能 negotiation 现成。唯一奖励 counting_tokens 已由 C7 的 bond_esther（A2）与 bond_hinrik_korn 发出，整合时去重（2026-10-24），本请托不再发物品。
+# 回忆插画清单：
+#   mem-request_ursula-result：烛光下，期票上那行红字后面填上了日子。
+#   mem-request_ursula-result_pepper：码头上的秤杆，十五袋胡椒，最后一袋轻了半磅。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；approach、结清日超时，她另托了人，或者这笔账被记成了坏账，各给一封来信；persuade 没有期限，可以一直等。
+# 旗标：终局 done / partial / late；分支 accepted / declined、prefers_goods、saw_pepper、ship_real、bill、share、pepper。
+
+[[tracks]]
+key = "request_ursula"
+name = "三年的旧账"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ursula"]
+
+# offer · 1563 起 · 安特卫普的账房：一本旧账，一行红字；她列出三条路
+[[tracks.chapters]]
+key = "offer"
+title = "未结"
+text = "安特卫普，乌尔苏拉的账房。她把一本三年前的旧账本拍在桌上，指着其中一行红字。“里斯本新街的香料商，三年前赊了我一批铜器，到现在一个斯图弗都没还。来信只说，船还在印度。”我低头看那行字。数目算不上大，她却把账本摊得很开，像是要人当面看清楚。她接着给我列了三条路：拿胡椒抵，拿他船上的股份抵，或者让他重立一张期票，找个靠得住的人作保。“钱不是最要紧的。”她把算筹拨到一边，“交易所里已经有人拿这笔账笑我。”末了她合上账本：“我没输，账还没结呢。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "ursula", text = "在安特卫普她的账房里找到她" }]
+when = [{ kind = "date", from = [1563, 2, 1], to = [1574, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "ursula", ge = 18 }]
+deadline = [1574, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，去里斯本当面跟他算。"
+next = "approach"
+effects = [{ kind = "affinity", person = "ursula", value = 2 }, { kind = "flag", flag = "c13_request_ursula_accepted" }]
+reply = "她当场抄了一份账目给我，连利钱算到哪一天都写好了。最后一行空着，写着“结清日：＿＿”。“去了就把日子填上。”我把账目折进外衣的内袋，纸角硌着胸口，一路都能摸到。"
+
+[[tracks.chapters.choices]]
+key = "ask_which"
+text = "接下，先问她：三条路里，她最想要哪一条？"
+next = "approach"
+effects = [{ kind = "affinity", person = "ursula", value = 2 }, { kind = "flag", flag = "c13_request_ursula_accepted" }, { kind = "flag", flag = "c13_request_ursula_prefers_goods" }]
+reply = "“哪条他真会兑，我就要哪条。”她想了想，又补了一句，“胡椒要拿现货，别收他仓里的单子。”我把这句记在账纸边上，她看见了，没说什么。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "三年的旧账，劝她认了。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ursula_declined" }]
+reply = "她把账本合上：“认了？那叫输。”她没有再看我，把那本账推到桌子里侧，叫伙计送客。伙计替我开门时，她的算筹还在桌上排着，一颗一颗，排的仍是那一行。"
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "ursula", level = "C" }]
+text = "乌尔苏拉把账本推过来，手指压在一行红字上，不等我开口就说：“里斯本新街那个香料商，三年前赊了我一批铜器，到现在一个斯图弗都没还。来信只说船还在印度。你来挑错。”口气跟学院里比算题一个样，只是这回她没有笑。她给我列了三条路：拿胡椒抵，拿他船上的股份抵，或者让他重立期票，找个靠得住的人作保。末了她合上账本：“钱不算大，可交易所里已经有人拿这笔账笑我。我没输，账还没结呢。”"
+
+# approach · 1563—1576 · 新街的香料仓：一排鼓起来的麻袋
+[[tracks.chapters]]
+key = "approach"
+title = "空麻袋"
+text = "新街的香料仓里堆满了空麻袋，一摞一摞顶到房梁。香料商迎出来，脸上是一副愁容。“王室的胡椒合同拖着不结，”他说，“我的船还压在果阿。谁都欠谁，你说是不是？”临走前乌尔苏拉交代过：“先别喝他的酒，他喝得比谁都快。”我还是坐了下来，接过他倒的酒。他绝口不提铜器的事，说话时眼睛却总往仓库最里头瞟。那里有一排麻袋是鼓的，他挪了挪身子，正好挡住。"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "date", from = [1563, 2, 1], to = [1576, 2, 24] }, { kind = "alive", person = "ursula", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "ursula", text = "里斯本那边我另托了人。这笔账，不劳你了。" }, { kind = "affinity", person = "ursula", value = -3 }, { kind = "flag", flag = "c13_request_ursula_late" }] }
+
+[[tracks.chapters.choices]]
+key = "check_sacks"
+text = "借口找地方坐，去摸一摸最里头那排麻袋。"
+next = "persuade_seen"
+check = { attr = "commerce", base = 35, per = 6 }
+fail = { next = "persuade", effects = [{ kind = "affinity", person = "ursula", value = -2 }], news = "里斯本新街的香料仓门口，一个伙计拦住了外港来的船长，麻袋只许看一眼上头的印记。" }
+effects = [{ kind = "affinity", person = "ursula", value = 3 }, { kind = "flag", flag = "c13_request_ursula_saw_pepper" }]
+reply = "是胡椒，晒得干透，至少十几袋，袋口扎着他自己的麻绳。我回到桌边，他的酒杯停在半空。“你摸它做什么？”他问，声音比刚才低。"
+news = "听说里斯本新街的香料仓里，一个外港的船长借口找座位，摸到了最里头那排麻袋，香料商的酒杯停在半空。"
+
+[[tracks.chapters.choices]]
+key = "check_ship"
+text = "去印度商馆门口打听，他的船是不是真的压在果阿。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "ursula", value = 3 }, { kind = "flag", flag = "c13_request_ursula_ship_real" }]
+reply = "商馆的书记翻了船期册，手指点着一行字：那条船上个月就回了港，货卸在王室仓库，只是胡椒钱还没结给他。他没说谎，只是没说全。我在门口站了一会儿，才想起该回去见他。"
+news = "里斯本印度商馆门口有人说，外港船长问起新街香料商的船，书记翻了船期册，那条船上个月就回了港。"
+
+# persuade · 1563—1576 · 新街的香料仓：他拿不出现钱，只拿得出船股（没有看清麻袋时走到这里）
+[[tracks.chapters]]
+key = "persuade"
+title = "三条路"
+text = "第二回见面，香料商把账目摊在桌上，承认欠着，只是“现钱一个也拿不出”。“王室的钱停了，我拿什么还？”他拍着账纸，“船股是有的，等下一趟船回来才值钱。”三条路在我手里，他手上只剩一个拖字。乌尔苏拉的话我记着：“他若拿股份抵，就问船期；他若拿单子抵，就数袋子。”"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "date", from = [1563, 2, 1], to = [1576, 2, 24] }, { kind = "alive", person = "ursula", value = true }]
+
+[[tracks.chapters.choices]]
+key = "new_bill"
+text = "让他重立一张期票，请交易所里认得的银行家作保。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "他说出几个保人的名字，你不知道哪个在交易所里真说得上话。"
+effects = [{ kind = "affinity", person = "ursula", value = 3 }, { kind = "flag", flag = "c13_request_ursula_bill" }]
+reply = "他擦着汗签了字，笔尖把纸戳破了一角。保人的印章压在他名字旁边，印泥还是湿的。我把期票折好收进内袋，这张纸拿到安特卫普的交易所，能直接兑现。"
+news = "里斯本新街的香料商在仓里重立了一张期票，保人是谁，街上的人说法不一，外港的船长把它折好带走了。"
+
+[[tracks.chapters.choices]]
+key = "take_pepper"
+text = "照市价拿他那十五袋胡椒抵债，我亲自运去安特卫普。"
+next = "result_pepper"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "result_share", effects = [{ kind = "flag", flag = "c13_request_ursula_share" }, { kind = "affinity", person = "ursula", value = -2 }], news = "听说里斯本新街的香料商只肯按王室的官价折算胡椒，抵不够数，外港的船长收下了一张船股的契书。" }
+effects = [{ kind = "affinity", person = "ursula", value = 3 }, { kind = "flag", flag = "c13_request_ursula_pepper" }]
+reply = "他心疼得直咂嘴，还是写了提货单。十五袋胡椒，我可以在这里买齐，也可以用自己的船装走，到了安特卫普交到她手里才算数，这一点他说得很清楚。"
+news = "里斯本新街的香料仓里，十五袋胡椒按市价写了提货单，外港的船长要亲自运去安特卫普。"
+
+[[tracks.chapters.choices]]
+key = "take_share"
+text = "收下他的船股，回去让乌尔苏拉自己掂量。"
+next = "result_share"
+effects = [{ kind = "flag", flag = "c13_request_ursula_share" }]
+reply = "他高高兴兴地写了股契，像是卸下一块石头，末了还替我倒了一杯酒。我知道这张纸要等一年才知道值不值钱，折好以后放进了箱子最底下。"
+news = "听说里斯本新街的香料商把船股写进一张股契，交给外港的船长，说等那条船回来再算。"
+
+[[tracks.chapters.variants]]
+key = "v1_ship"
+when = [{ kind = "flag", flag = "c13_request_ursula_ship_real" }]
+text = "第二回见面，香料商还没坐稳就先开口说船：“船上个月就回了港，你是去商馆问过的吧。”他把账目摊在桌上，承认欠着，现钱却一个也拿不出。“货在王室的仓库里，钱要等王室结，结了我才拿得到。”他拍着账纸，“船股是有的，可要等这条船的货卖完，才有钱分。”三条路在我手里，他手上只剩一个拖字。"
+
+[[tracks.chapters.variants]]
+key = "v2_goods"
+when = [{ kind = "flag", flag = "c13_request_ursula_prefers_goods" }]
+text = "第二回见面，香料商把账目摊在桌上，承认欠着，只是“现钱一个也拿不出”。他顺手推过来两张仓单，都是他自己写的。“王室的钱停了，我拿什么还？”他拍着账纸，“船是有的，等下一趟才回得了港。”我没有去碰那两张单子，她要的是现货，我心里只惦记着仓里那些袋子。"
+
+# persuade_seen · 1563—1576 · 同一间仓：船长已经看清了最里头那排麻袋
+[[tracks.chapters]]
+key = "persuade_seen"
+title = "十几袋"
+text = "这回他没先倒酒。账目摊开，他承认欠着，现钱却一个也拿不出。他知道我摸过那排麻袋，也就不再装。“那些是我的货，可王室的钱停了，我一文也抽不出来。”他把账纸翻过来，“股份我可以给，船要等下一趟才回港。”三条路在我手里，那十几袋胡椒的口子还扎着麻绳，结打得很紧。"
+speaker = "captain"
+mood = "tense"
+at = "lisbon"
+when = [{ kind = "date", from = [1563, 2, 1], to = [1576, 2, 24] }, { kind = "alive", person = "ursula", value = true }, { kind = "flag", flag = "c13_request_ursula_saw_pepper" }]
+
+[[tracks.chapters.choices]]
+key = "new_bill"
+text = "让他重立期票，找个交易所里说得上话的人作保。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "他报出几个保人的名字，哪个真说得上话，哪个只挂个名，你分不太清。"
+effects = [{ kind = "affinity", person = "ursula", value = 3 }, { kind = "flag", flag = "c13_request_ursula_bill" }]
+reply = "他签字时手抖得厉害，最后一笔拖出一道长尾。保人的印章压在旁边，印泥还没干透。那十几袋胡椒我一袋也没提，这张纸拿到安特卫普的交易所，能直接兑现。"
+news = "里斯本新街的香料仓里，外港的船长没提那十几袋胡椒，只把香料商重立的期票折好带走了。"
+
+[[tracks.chapters.choices]]
+key = "take_pepper_seen"
+text = "照我看见的那十几袋，按市价拿他的胡椒抵债。"
+next = "result_pepper"
+check = { attr = "commerce", base = 35, per = 6 }
+fail = { next = "result_share", effects = [{ kind = "flag", flag = "c13_request_ursula_share" }, { kind = "affinity", person = "ursula", value = -2 }], news = "里斯本新街的香料仓里有人说，那排麻袋的数再多也换不来现钱，外港的船长收下了一张船股的契书。" }
+effects = [{ kind = "affinity", person = "ursula", value = 3 }, { kind = "flag", flag = "c13_request_ursula_pepper" }]
+reply = "我把那排麻袋的数报给他听，一袋不差。他的脸色变了，咬着牙写了提货单。这十五袋要我自己的船来装，货进了安特卫普的仓，他才算交清。"
+news = "里斯本新街的香料仓里，船长一口报出最里头那排麻袋的数，香料商咬牙写了十五袋胡椒的提货单。"
+
+[[tracks.chapters.choices]]
+key = "take_share"
+text = "这张股契我收下，回去交给乌尔苏拉。"
+next = "result_share"
+effects = [{ kind = "flag", flag = "c13_request_ursula_share" }]
+reply = "他看了我一眼，没再提那十几袋，写股契时手却稳了不少，还问我水手的工钱要不要先给。这张纸要等船回来才作数，我把它叠成四折，压在箱子最底下。"
+news = "里斯本新街的香料仓里，香料商没再提那十几袋胡椒，把船股写成股契交给了外港的船长。"
+
+[[tracks.chapters.variants]]
+key = "goods"
+when = [{ kind = "flag", flag = "c13_request_ursula_prefers_goods" }]
+text = "这回他没先倒酒。账目摊开，他承认欠着，现钱却一个也拿不出。他顺手推过来两张仓单，都是他自己写的。他仓里那排麻袋我亲眼看过，单子上写的却是另一个数。“那些麻袋是我的，可王室的钱停了，我拿什么还？”他拍着账纸。我没有去碰那两张单子，那排麻袋的数在我脑子里记得清楚。"
+
+# result · 1563—1576 · 安特卫普的账房：期票
+[[tracks.chapters]]
+key = "result"
+title = "结清日"
+text = "安特卫普的账房里点着两盏灯。乌尔苏拉把我带回来的期票平放在烛光下，看了很久，像在验一枚假币。“三年了，”她说，“就差这一张纸。”我站在桌边，听她的算筹在桌面上一颗一颗地响。“纸对了，就照规矩办。”她的手指停在那一行红字上，没有落笔，烛花在灯罩里轻轻炸了一下。窗外有人在喊船期，喊的是果阿。乌尔苏拉听见了，手没有停。"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "ursula", text = "回安特卫普她的账房" }]
+when = [{ kind = "date", from = [1563, 2, 1], to = [1576, 2, 24] }, { kind = "alive", person = "ursula", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "ursula", text = "期票我等不到了，交易所的人已经替我把这笔账记成了坏账。" }, { kind = "affinity", person = "ursula", value = -3 }, { kind = "flag", flag = "c13_request_ursula_late" }] }
+
+[[tracks.chapters.choices]]
+key = "hand_bill"
+text = "把期票交给她。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_request_ursula_bill" }]
+hint = "你手里没有重立的期票，这张纸交不出去。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "ursula", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ursula_done" }, { kind = "memory", memory = "mem-request_ursula-result", title = "填上的结清日" }]
+reply = "她当场在“结清日”后面写上日期，写日子时笔尖没有抖，写完才吹了吹纸面。“下回你自己的账，别让它拖到第三年。”她把账本合上，合得很轻。"
+news = "安特卫普交易所里有人说，富格尔代理人家的女儿把一笔三年的旧账收回来了，那行红字总算添了日子。"
+
+# result_share · 1563—1576 · 安特卫普的账房：股契，要等船回来才作数
+[[tracks.chapters]]
+key = "result_share"
+title = "半个日子"
+text = "安特卫普的账房天黑得早，灯芯已经结了花。乌尔苏拉的手指沿着股契上的船名一个字一个字划过去，翻到背面，又把船的吨位念了一遍，像是要把纸上的每个数都背下来。“要等船回来才作数，”她说，“这个我认。”“那条船哪天能回来？”她问，“你替我记下来。”算筹被她推到一边，那一行红字还空着，她又看了一遍日期，看得比先前更慢，笔却没有动。"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "ursula", text = "带着股契回安特卫普她的账房" }]
+when = [{ kind = "date", from = [1563, 2, 1], to = [1576, 2, 24] }, { kind = "alive", person = "ursula", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "ursula", text = "这张股契我等不到了，交易所的人已经替我把这笔账记成了坏账。" }, { kind = "affinity", person = "ursula", value = -3 }, { kind = "flag", flag = "c13_request_ursula_late" }] }
+
+[[tracks.chapters.choices]]
+key = "hand_share"
+text = "把股契交给她，说清这张纸要等一年。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_request_ursula_share" }]
+hint = "你没收下那张船股的契书，手里没有能交的纸。"
+effects = [{ kind = "cash", value = 1350 }, { kind = "affinity", person = "ursula", value = 4 }, { kind = "flag", flag = "c13_request_ursula_partial" }]
+reply = "她看了股契，没写结清日，只在旁边添了一个小小的“半”字。“没结清。不过这回，他跑不掉了。”她把股契收进抽屉，那个“半”字朝外，没有再添别的。"
+news = "安特卫普交易所里有人说，富格尔代理人家的女儿收回了一张股契，三年的旧账旁边只添了一个“半”字。"
+
+# result_pepper · 1563—1576 · 安特卫普码头：十五袋胡椒过秤（与 result、result_share 并列，只从 take_pepper 或 take_pepper_seen 走到）
+[[tracks.chapters]]
+key = "result_pepper"
+title = "十五袋胡椒"
+text = "十五袋胡椒在安特卫普的码头上过秤。乌尔苏拉亲自守着秤杆，一袋一袋报数，我在旁边看她的笔。“十五袋，”她说，“一袋都不能少算。”秤到最后一袋，秤杆往上翘了一点，她一格一格地对过刻度，笔停在半空。那一袋轻了半磅。“轻了就是轻了，”她说，“路上的潮气不归我算。”货款的数目她先用铅笔在纸角算了一遍，再用墨水誊到单子上。"
+speaker = "captain"
+mood = "cheerful"
+at = "antwerp"
+objectives = [{ kind = "goods", good = "spice", qty = 15, at = "antwerp", text = "把十五袋胡椒运到安特卫普" }]
+when = [{ kind = "date", from = [1563, 2, 1], to = [1576, 2, 24] }, { kind = "alive", person = "ursula", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "ursula", text = "胡椒没到，提货单我替你退了。这笔账，我另想法子。" }, { kind = "affinity", person = "ursula", value = -3 }, { kind = "flag", flag = "c13_request_ursula_late" }] }
+
+[[tracks.chapters.choices]]
+key = "let_it_go"
+text = "那半磅算我的，别记了。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "cash", value = 2250 }, { kind = "affinity", person = "ursula", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ursula_done" }, { kind = "memory", memory = "mem-request_ursula-result_pepper", title = "秤杆上的十五袋" }]
+reply = "她把那半磅照样记上，在旁边写下“船长补”，又划掉了“补”字。“这回两边都对上了。”她叫伙计把秤杆收起来，自己没再看那一袋。"
+news = "安特卫普码头上，十五袋里斯本胡椒秤完，最后一袋轻了半磅，账房小姐把那半磅照样记上。"
+
+[[tracks.chapters.choices]]
+key = "weigh_again"
+text = "请她再秤一遍，路上受了潮也说不定。"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "cash", value = 2250 }, { kind = "affinity", person = "ursula", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ursula_done" }, { kind = "memory", memory = "mem-request_ursula-result_pepper", title = "秤杆上的十五袋" }]
+reply = "第二遍秤足了，是袋子吸了潮。她只笑了一下，说这才叫结账，把货款推了过来。伙计们在码头上哄笑，她已经低头擦起了秤杆。"
+news = "安特卫普码头上，一位账房小姐亲自守着秤杆，把十五袋里斯本胡椒秤了两遍。"

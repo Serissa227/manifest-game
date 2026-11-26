@@ -1,0 +1,182 @@
+# 请托：海峡口的加莱船（request_babullah）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：巴布拉（babullah，男），特尔纳特的苏丹（海伦之子，凯奇利·巴布）；生年不详（cast 里 born 为 0 占位，待核），1583 年卒；势力 ternate，身份档 3（王侯）。cast：cast/historical_03_indian_ocean.toml。
+# 类型：打一仗（fight）。五章：offer（报价）、deliver（交货）、battle（海战）、after（结账，打过或引开的一路）、after_partial（没打、只送了枪的一路）。没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信／代理人）。苏丹求见门槛高，由他的战将在特尔纳特港出面，写身份、不新建 cast；auto=true，at=ternate_port。offer 写 family=c13_offer_ternate_port、冷却 20 天；deadline 为 1578-06-30，timeout 直接 failed，不写见闻。
+# 启动条件：玩家 17 岁以上；日期 1576-01-01 至 1578-06-30；声望（fame）≥30；c13_main_kaicili 为假（凯奇利主线门禁，由主线设置，尚未写入）。
+# 进行中：deliver 章 deadline_days=300，超时走 failed（好感 −3，旗标 _late，来信一封）；battle 章 deadline_days=60，超时走 after_partial 并设 no_fight；after 与 after_partial 各 deadline_days=90，超时 failed。
+# 分流：不用 requires 去卡同一轨道里设过的旗标。交货章选“不打”（leave）与海战超时都进 after_partial；打过（return / tow_boat）或引开（lure 成功）进 after。两章各有自己的两个选项。
+#       deliver 三个选项都扣走货、都付 2600；lure 检定失败照付 2600 后去 battle，不再另付。
+# 依据·史实背景：1575 年葡萄牙人交出特尔纳特的堡、离岛（史实）；1578 年葡萄牙人在蒂多雷另筑新堡（史实）；巴布拉 1583 年卒（史实）。苏丹要火绳枪而欧洲人不卖，日本商人的枪经北边流到南洋（叙事）。
+# 依据·原创：战将的转述、加莱船每天拦运粮船的做法、海上的小艇与两个伤兵、王宫里摊开的经书与木箱里的银币。
+# 不写：德雷克与 1579 年的事；persona 里烧村子的口气（本条只写枪、船与运粮）；凯奇利家族的事（主线 kaicili）。
+# 读的旗标：c13_main_kaicili（offer 门禁，主线设置，尚未写入）。
+# 设的旗标：c13_request_babullah_accepted（offer 两条接法）、_declined（offer 回绝）、_lured（lure 成功）、_no_fight（deliver 的 leave；battle 超时）、_fought（return / tow_boat）、_mercy（tow_boat）、_done（after 的最好结局）、_partial（after 的折中与 after_partial 的两条）、_late（各章超时）。
+# 不设 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：货款 2600（交货章，每条路一次）；报酬 4700（after 最好结局）或 2350（折中，after 与 after_partial 各一条）；好感合计不超过 16；名声 +5（最好与折中的一条）；特尔纳特声望 +4 / +2、葡萄牙声望 −2；回忆 mem-request_babullah-after。
+# 依赖：港口 ternate_port（ports_southeast_asia.toml）；货物 arquebus（6 支，叙事里说“北边来的铁炮”，数据里的卖处待整合时核）；属性 seamanship；人物 babullah；势力 ternate、portugal。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_babullah-after「经书旁的苏丹」：王宫的殿内，苏丹膝上摊着一本经书，一旁的木箱里码着付清的银币，窗口能看见海峡口的帆。
+
+[[tracks]]
+key = "request_babullah"
+name = "海峡口的加莱船"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["babullah"]
+
+# 一、战将的话：葡萄牙人离了岛，苏丹的战将在码头上替主人传话。
+[[tracks.chapters]]
+key = "offer"
+title = "战将的话"
+text = "葡萄牙人把堡交了，船一艘一艘离了岛。特尔纳特的码头上人人都在笑，只有苏丹的战将没笑。他站在栈桥尽头，木板被海水泡得发黑，他一步也不挪。手里捏着一张火绳枪的单子，上面写着六支。葡萄牙人不肯卖，北边的日本商人卖。他盯着你的船舷看了很久，像在数船上有几门炮。然后他把苏丹的一句话原样转给你，一个字也没改：“你站哪一边？”"
+mood = "tense"
+at = "ternate_port"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1576, 1, 1], to = [1578, 6, 30] }, { kind = "fame", ge = 30 }, { kind = "flag", flag = "c13_main_kaicili", value = false }]
+deadline = [1578, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_ternate_port"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：带火绳枪来。"
+next = "deliver"
+reply = "战将把单子折成一方，塞进袖子。“苏丹不听许诺。枪到了，再说别的。”他说完，又看了一眼你的船，像是已经在算它能装多少箱，船上挂的是哪家的旗，他也认得清清楚楚。"
+effects = [{ kind = "affinity", person = "babullah", value = 2 }, { kind = "flag", flag = "c13_request_babullah_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_where"
+text = "接下，但问：去哪儿买？"
+next = "deliver"
+reply = "“往北。”他用指头在栈桥的湿木板上划了一道，“堺。那边的枪便宜，打得也准。路远，你自己算。”他收回手，指尖沾着木板上的水。"
+effects = [{ kind = "affinity", person = "babullah", value = 2 }, { kind = "flag", flag = "c13_request_babullah_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "军火的买卖，我不做。"
+next = "failed"
+reply = "战将没说话，转身走了。鞋底踩在栈桥上，一步比一步响，走到岸边，他都没有回头看一眼你的船。苏丹那边，你知道他会记下这一句。"
+effects = [{ kind = "flag", flag = "c13_request_babullah_declined" }]
+
+# 二、交货：枪卸上码头，验过六支；海峡口来了一条加莱船。三条路都扣走货、都付 2600。
+[[tracks.chapters]]
+key = "deliver"
+title = "海峡口的影子"
+text = "你的船进港前一天，就在海峡口看见一条葡萄牙加莱船，从蒂多雷那边来，在那里转悠，桨一起一落，船身矮得几乎贴着水。枪卸上码头，战将一支一支验过，验到第六支，朝海峡口看了一眼，又放下。“那条船每天都来，拦岛上的运粮船。”他说，“苏丹说，粮船进不来，岛上撑不过这个月。你的船大，能不能把它赶走？”"
+speaker = "captain"
+mood = "tense"
+at = "ternate_port"
+when = [{ kind = "alive", person = "babullah", value = true }]
+objectives = [{ kind = "goods", good = "arquebus", qty = 6, at = "ternate_port", text = "把火绳枪（6）运到特尔纳特" }]
+news = "特尔纳特的码头上有人说，北边来的火绳枪卸了岸，战将拿着单子对，对到第六支。"
+deadline_days = 300
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "babullah", value = -3 }, { kind = "flag", flag = "c13_request_babullah_late" }, { kind = "letter", person = "babullah", text = "你的枪迟了。枪从别处来了，苏丹说，许诺他不记，迟到他记。" }] }
+
+[[tracks.chapters.choices]]
+key = "agree_fight"
+text = "答应：我去把它打走。"
+next = "battle"
+reply = "战将拍了拍你的船舷，拍得很重，像是在给船鼓劲。“打完别追到蒂多雷去。那边的事，苏丹自己算。”他说完，转身去清点枪架，一支也没漏。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "babullah", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "lure"
+text = "答应，但不打：装成运粮船，把它引到外海去。"
+next = "after"
+reply = "你把船压得很低，装出满载粮船的样子，慢慢往外海走。加莱船追了出来，追了大半天，岛上的运粮船趁机全进了港。你的桨手一直在问，要不要回头。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "babullah", value = 3 }, { kind = "flag", flag = "c13_request_babullah_lured" }]
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "battle", effects = [{ kind = "cash", value = 2600 }], news = "海峡口外，有艘外来的商船装成满载的粮船想引走加莱船，加莱船不上当。" }
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "枪交了，那条船不归我管。"
+next = "after_partial"
+reply = "战将抬了抬手，叫人把枪一支支抬进库房。他没有道谢，也没有骂人。库房的门关上以后，他对着海峡口站了一会儿，才转身往王宫去，走得不快。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "flag", flag = "c13_request_babullah_no_fight" }]
+
+# 三、海战：只数进入本章以后赢下的一场海战，不认对手是谁。
+[[tracks.chapters]]
+key = "battle"
+title = "你打退的那条加莱船"
+text = "你和加莱船在海峡口交了火。它的桨手划得很快，船身太矮，挨了你两轮炮就往蒂多雷那边退。退的时候丢下一条小艇，艇上坐着两个伤兵，一个腿上扎着布条，另一个一直在喊水。岛上的运粮船从你身后一条一条进了港。加莱船的桨一停，海面上只剩下炮烟和被打碎的木板。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "babullah", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "赢下一场海战" }]
+deadline_days = 60
+timeout = { next = "after_partial", effects = [{ kind = "flag", flag = "c13_request_babullah_no_fight" }] }
+
+[[tracks.chapters.choices]]
+key = "return"
+text = "收帆回港。"
+next = "after"
+reply = "码头上有人敲起了鼓，鼓声一直敲到你的船靠稳。战将站在栈桥上没动，等最后一条粮船进了港，才转过身来：“苏丹在王宫等你。”他身后的人一个个低下头，没有人先开口。"
+effects = [{ kind = "affinity", person = "babullah", value = 3 }, { kind = "flag", flag = "c13_request_babullah_fought" }]
+
+[[tracks.chapters.choices]]
+key = "tow_boat"
+text = "把小艇拖到蒂多雷的海滩，伤兵一起送上岸。"
+next = "after"
+reply = "你把小艇拖到蒂多雷的海滩边，伤兵被人抬下去，你就掉头走了。回到特尔纳特，战将问你送去了什么，你照实说了。他看了你很久，说：“苏丹会问你为什么。”"
+effects = [{ kind = "affinity", person = "babullah", value = 2 }, { kind = "flag", flag = "c13_request_babullah_fought" }, { kind = "flag", flag = "c13_request_babullah_mercy" }]
+
+# 四、打过或引开的一路：苏丹在王宫里算账。
+[[tracks.chapters]]
+key = "after"
+title = "苏丹记下的账"
+text = "苏丹在王宫里见你，身边放着一本经书，书角被手指磨得发毛。他先问枪：“枪在哪一箱？验过几支？”再问海峡口的那条船还在不在。他一边问，一边让人把银币从木箱里抬出来，称也不称，手指在经书边上停了一下。殿里的香烧到一半，他没有让人续上。木箱空下一只，脚边堆起的银袋口都系着特尔纳特的红绳。“你为什么来？许诺就不必说了。”"
+speaker = "babullah"
+mood = "tense"
+at = "ternate_port"
+when = [{ kind = "alive", person = "babullah", value = true }]
+news = "特尔纳特的王宫里有人说，苏丹今天见了那个替他运枪、又在海峡口赶过加莱船的外来船长。"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "babullah", value = -3 }, { kind = "flag", flag = "c13_request_babullah_late" }, { kind = "letter", person = "babullah", text = "苏丹等过你。他说，账记着，人不来，账也不销。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_mercy"
+when = [{ kind = "flag", flag = "c13_request_babullah_mercy" }]
+text = "苏丹在王宫里见你，身边放着一本经书，书角被手指磨得发毛。他没先问枪，先问小艇：“那两个伤兵，送上岸了？”你说送上了，他把经书翻过一页，没有抬头。小艇上的人，他问了两遍，第二遍的声音比第一遍低。然后他才问枪，一边问，一边让人把银币从木箱里抬出来。“你为什么来？许诺就不必说了。”"
+
+[[tracks.chapters.choices]]
+key = "paid_fought"
+text = "照实说：为了钱，也为了那条船不该拦运粮船。"
+next = "done"
+reply = "他点了点头：“说实话的人，我记得。”他让人把银袋一只只数过，数得很慢，又把经书合上，“下回来，带米，不带许诺。米比枪难运，你要自己算。”"
+effects = [{ kind = "cash", value = 4700 }, { kind = "affinity", person = "babullah", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ternate", value = 4 }, { kind = "reputation", faction = "portugal", value = -2 }, { kind = "memory", memory = "mem-request_babullah-after", title = "经书旁的苏丹" }, { kind = "flag", flag = "c13_request_babullah_done" }]
+
+[[tracks.chapters.choices]]
+key = "paid_fought_short"
+text = "照实说：枪送到了，那条船的事我不多提。"
+next = "done"
+reply = "“打了就是打了，你不提，我也知道。”他让人只付了一半。“另一半留着，下回算。”他把经书翻回刚才的那一页，没有再看你。"
+effects = [{ kind = "cash", value = 2350 }, { kind = "affinity", person = "babullah", value = 2 }, { kind = "reputation", faction = "ternate", value = 2 }, { kind = "flag", flag = "c13_request_babullah_partial" }]
+
+# 五、没打、只送了枪的一路：苏丹问的是那条船，不是枪。
+[[tracks.chapters]]
+key = "after_partial"
+title = "只算枪的账"
+text = "苏丹还是在王宫里见你，经书摊在膝上，没有合上。枪验过了，一支不少，他拿起一支，对着窗口看了看枪口，没有说好坏。殿外有人在搬箱子，木箱碰着石阶，一下一下地响。你站在门边，没有坐，也没有往前走。他问得很慢：海峡口的那条船，还在不在？你说，你没去打它。他没有生气，也没有笑，把经书翻过一页：“那条船不归你管，是不是？”"
+speaker = "babullah"
+mood = "tense"
+at = "ternate_port"
+when = [{ kind = "alive", person = "babullah", value = true }]
+news = "特尔纳特的码头上有人说，苏丹见了那个替他运枪的外来船长，船长在海峡口却没动手。"
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "babullah", value = -3 }, { kind = "flag", flag = "c13_request_babullah_late" }, { kind = "letter", person = "babullah", text = "苏丹没有再等你。枪的账他记清了，另一半的赏，留给了送枪来的别人。" }] }
+
+[[tracks.chapters.choices]]
+key = "paid_partial"
+text = "照实说：枪送到了，船我没管。"
+next = "done"
+reply = "他看了你一会儿：“枪是好枪。”赏钱付了一半，他把另一半的袋子推到你这边，“另一半，是留给赶走那条船的人的。下回有这样的人，我再找他。”"
+effects = [{ kind = "cash", value = 2350 }, { kind = "affinity", person = "babullah", value = 3 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ternate", value = 2 }, { kind = "flag", flag = "c13_request_babullah_partial" }]
+
+[[tracks.chapters.choices]]
+key = "paid_quiet"
+text = "只收那一半，别的不多说。"
+next = "done"
+reply = "他听了，没有追问。“好。”他把另一半的袋子推到一边，手指在经书的页角上敲了两下，“枪的事就到这里。你回去吧，海峡口的风要变了。”"
+effects = [{ kind = "cash", value = 2350 }, { kind = "affinity", person = "babullah", value = 2 }, { kind = "reputation", faction = "ternate", value = 2 }, { kind = "flag", flag = "c13_request_babullah_partial" }]

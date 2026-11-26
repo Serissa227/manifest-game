@@ -1,0 +1,1052 @@
+/* 网页自适应：游戏外壳在平板与手机上的紧凑布局（决定见 docs/DECISIONS.md“网页自适应”）。
+ * .app.game 的 data-layout 由 hooks/useViewport.ts 给出：
+ * - tablet（宽 < 1180）：顶栏一行（次要信息收进“菜单”），命令栏一行、放不下的收进“更多”；竖放的平板上功能窗口铺满舞台；
+ * - phone（宽 < 720，手机竖屏）：顶栏一行（头像、现金与目标细进度、时刻、暂停与倍速、菜单），
+ *   底部导航（舞台切换、三个常用功能页、更多），功能窗口是整页的；
+ * - short（高 < 500，手机横屏）：同上，但导航竖在左侧，舞台多留高度。
+ * 木板、黄铜栏杆与羊皮纸的外观照旧，只改尺寸与排布；刘海屏的安全区（--safe-*）在 viewport.css 里定义。 */
+
+/* ───────────── 整体排布 ───────────── */
+.app.game[data-layout="short"] {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    "hud hud"
+    "nav main";
+}
+.app.game[data-layout="short"] > .hud {
+  grid-area: hud;
+}
+.app.game[data-layout="short"] > .shell-main {
+  grid-area: main;
+}
+.app.game[data-layout="short"] > .cmdbar {
+  grid-area: nav;
+}
+/* 手机上功能窗口盖满舞台：舞台上的浮动按钮不必再避开它 */
+.app.game[data-layout="phone"] .shell-main,
+.app.game[data-layout="short"] .shell-main {
+  --stage-cover-right: 0px;
+}
+
+/* ───────────── 紧凑顶栏 ───────────── */
+.hud.hud-compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: calc(5px + var(--safe-top)) calc(10px + var(--safe-right)) 17px calc(10px + var(--safe-left));
+}
+.hud-compact .hud-captain {
+  flex: none;
+  gap: 8px;
+}
+/* 头像：细画框收窄；按钮本身不留内边距（顶栏按钮的通用内边距会把它撑宽） */
+.hud-compact .hud-portrait-btn {
+  padding: 0;
+  min-height: 0;
+}
+.hud-compact .hud-portrait {
+  width: 52px;
+  height: 52px;
+  border-width: 4px;
+  border-image-width: 4px;
+}
+.app.game[data-layout="phone"] .hud-compact .hud-portrait,
+.app.game[data-layout="short"] .hud-compact .hud-portrait {
+  width: 44px;
+  height: 44px;
+}
+/* 紧凑顶栏不写姓名与所在港（船长卡与港口名牌上都有），把宽度留给数字 */
+.hud-compact .hud-id {
+  display: none;
+}
+/* 船长卡：手机上贴着屏幕左右，太高时自己滚动 */
+.hud-compact .hud-card-pop {
+  max-height: calc(var(--vh100) - 90px - var(--safe-top));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* 数字：现金（下面一条细细的目标进度）、净资产，平板上另有名声与殖民地 */
+.hud-compact .hud-stats {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  overflow: hidden;
+}
+.hud-compact .hud-stat {
+  flex: none;
+}
+.hud-compact .hud-cash {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 4px;
+  row-gap: 3px;
+}
+.hud-compact .hud-cash .hud-stat-label {
+  grid-row: 1;
+}
+.hud-compact .hud-cash .hud-stat-value {
+  grid-row: 1;
+  font-size: 16px;
+}
+.hud-compact .hud-cash .hud-stat-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.hud-goal.hud-goal-mini {
+  grid-column: 1 / -1;
+  display: block;
+  height: 5px;
+  min-width: 64px;
+  background: var(--wood-0);
+  border: 1px solid var(--ink-deep);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.45);
+}
+.hud-goal-mini .hud-bar-fill {
+  height: 100%;
+  background: var(--gold-2);
+  box-shadow: inset 0 1px 0 var(--gold-4);
+}
+/* 平板：宽度不够时先藏名声、殖民地，再藏净资产（都在“菜单”里） */
+@media (max-width: 1099px) {
+  .hud-compact .hud-fame,
+  .hud-compact .hud-colonies {
+    display: none;
+  }
+}
+@media (max-width: 859px) {
+  .hud-compact .hud-net {
+    display: none;
+  }
+}
+
+/* 时间：平板上日期牌与时刻一行、倍速一行；手机上时刻与短日期两行，旁边是暂停与倍速 */
+.hud-compact .hud-time {
+  flex: none;
+  gap: 3px;
+}
+.hud-clock-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.hud-clock-row .hud-date {
+  height: 28px;
+  border-width: 6px 14px;
+  border-image-width: 6px 14px;
+  font-size: 13px;
+}
+.hud-clock-row .hud-now {
+  gap: 6px;
+}
+.app.game[data-layout="phone"] .hud-compact .hud-time {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.hud-clock-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.15;
+  color: var(--paper);
+  text-shadow: 1px 1px 0 var(--ink-deep);
+  white-space: nowrap;
+}
+.hud-clock-mini .hud-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.hud-clock-mini .hud-clock-time {
+  font-size: 15px;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+}
+.hud-date.hud-date-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-image: none;
+  background: none;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: normal;
+  line-height: 1.2;
+  text-shadow: 1px 1px 0 var(--ink-deep);
+}
+.hud-date-mini .shell-icon {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* 倍速：平板上整排（按钮加大到手指点得准）；手机上是“暂停”与当前倍速两个键 */
+.hud-compact .speed button {
+  min-height: 34px;
+}
+.speed-pill {
+  position: relative;
+  gap: 3px;
+}
+.hud .speed-pill .speed-pause,
+.hud .speed-pill .speed-now {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
+}
+.hud .speed-pill .speed-now {
+  min-width: 46px;
+  font-weight: 700;
+}
+.hud .speed-pill .speed-now.is-paused {
+  color: var(--muted);
+}
+/* 在港暂停：当前倍速键换成“在港”（点它去旅店） */
+.hud .speed-pill .speed-held {
+  height: 40px;
+  margin-left: 0;
+  padding: 0 8px;
+}
+.speed-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 45;
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  gap: 5px;
+  padding: 8px;
+  background-color: var(--wood-1);
+  background-image: var(--ui-planks, none);
+  background-size: 96px 32px;
+  border: 2px solid var(--ink-deep);
+  box-shadow:
+    inset 0 0 0 2px var(--wood-2),
+    0 6px 0 rgba(11, 15, 36, 0.45),
+    0 10px 24px rgba(0, 0, 0, 0.45);
+  animation: speed-menu-in 140ms steps(3, end) both;
+}
+.speed-menu::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 18px;
+  border: 7px solid transparent;
+  border-top: 0;
+  border-bottom-color: var(--ink-deep);
+}
+.hud .speed-menu button {
+  height: 42px;
+  min-width: 0;
+  padding: 0;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.hud .speed-menu .speed-step {
+  grid-column: span 3;
+  gap: 4px;
+  font-size: 14px;
+}
+@keyframes speed-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 触屏（平板，以及桌面布局的大平板）：整排的倍速按钮也放大到 40 px */
+@media (pointer: coarse) {
+  .hud .speed .speed-pause,
+  .hud .speed .speed-n,
+  .hud .speed .speed-step {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* 菜单按钮：有待报告的发现或殖民地断粮时带一个小红点 */
+.hud-menu-btn {
+  position: relative;
+  flex: none;
+  min-width: 40px;
+  height: 40px;
+  gap: 6px;
+}
+.hud.hud-compact .hud-menu-btn {
+  padding: 0 10px;
+  font-size: 14px;
+  min-height: 40px;
+}
+.app.game[data-layout="phone"] .hud.hud-compact .hud-menu-btn {
+  width: 44px;
+  padding: 0;
+}
+.hud-menu-btn.has-alert::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  background: var(--red-2);
+  border: 2px solid var(--ink-deep);
+  box-shadow: inset 1px 1px 0 var(--red-3);
+}
+
+/* 手机竖屏：顶栏一行放五样东西，间距收紧 */
+.app.game[data-layout="phone"] .hud.hud-compact {
+  gap: 8px;
+  padding-left: calc(8px + var(--safe-left));
+  padding-right: calc(8px + var(--safe-right));
+}
+.app.game[data-layout="phone"] .hud-compact .hud-time {
+  gap: 6px;
+}
+.app.game[data-layout="phone"] .hud .speed-pill .speed-now {
+  min-width: 42px;
+}
+.app.game[data-layout="phone"] .hud.hud-compact .hud-menu-btn {
+  width: 42px;
+}
+
+/* 手机横屏：顶栏更矮 */
+.app.game[data-layout="short"] .hud.hud-compact {
+  padding-top: calc(3px + var(--safe-top));
+  padding-bottom: 15px;
+}
+
+/* ───────────── 抽屉（Sheet）：底部滑出的羊皮纸面板，或顶栏右侧的下拉面板 ───────────── */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  background: rgba(8, 8, 14, 0.5);
+  animation: sheet-fade 0.18s ease-out both;
+}
+.sheet-backdrop.sheet-at-bottom {
+  align-items: flex-end;
+  justify-content: center;
+}
+.sheet-backdrop.sheet-at-top-right {
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: calc(64px + var(--safe-top)) calc(10px + var(--safe-right)) 10px 10px;
+  background: rgba(8, 8, 14, 0.28);
+}
+.sheet-backdrop.sheet-at-left {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+.sheet {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: var(--ui-parchment, none);
+  background-size: 192px 192px;
+  outline: none;
+  box-shadow:
+    0 -4px 0 rgba(11, 15, 36, 0.35),
+    0 -12px 32px rgba(0, 0, 0, 0.5);
+}
+.sheet-at-bottom .sheet {
+  width: min(560px, 100%);
+  max-height: min(84%, calc(var(--vh100) - 40px - var(--safe-top)));
+  padding-bottom: var(--safe-bottom);
+  border-top: 3px solid var(--ink-deep);
+  animation: sheet-up 0.22s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+.sheet-at-top-right .sheet {
+  width: min(420px, 100%);
+  max-height: 100%;
+  border: 3px solid var(--wood-1);
+  outline: 2px solid var(--ink-deep);
+  box-shadow:
+    inset 0 0 0 1px var(--wood-3),
+    0 8px 0 rgba(11, 15, 36, 0.35),
+    0 14px 32px rgba(0, 0, 0, 0.5);
+  animation: sheet-drop 0.16s steps(4, end) both;
+}
+.sheet-at-left .sheet {
+  width: min(360px, calc(100% - 48px));
+  max-height: 100%;
+  padding-left: var(--safe-left);
+  border-right: 3px solid var(--ink-deep);
+  animation: sheet-in-left 0.22s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+.sheet-head {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 56px 8px 14px;
+  background-color: var(--wood-1);
+  background-image: var(--ui-planks, none);
+  background-size: 96px 32px;
+  border-bottom: 2px solid var(--ink);
+  box-shadow: 0 2px 0 var(--wood-0);
+  image-rendering: pixelated;
+}
+.sheet-grip {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 36px;
+  height: 4px;
+  margin-left: -18px;
+  background: var(--wood-3);
+  box-shadow: 0 1px 0 var(--ink-deep);
+}
+.sheet h2.sheet-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 17px;
+  letter-spacing: 2px;
+  color: var(--gold-3);
+  text-shadow: 1px 1px 0 var(--ink-deep);
+}
+.sheet-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--red-1);
+  box-shadow:
+    inset 2px 2px 0 var(--red-2),
+    inset -2px -2px 0 var(--red-0),
+    0 2px 0 var(--ink-deep);
+}
+.sheet-close:hover:not(:disabled) {
+  background: var(--red-2);
+}
+.sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px 14px 14px;
+  box-shadow: inset 0 0 22px rgba(125, 95, 54, 0.3);
+}
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes sheet-drop {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes sheet-in-left {
+  from {
+    transform: translateX(-40px);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* 顶栏菜单的内容 */
+.hud-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hud-menu-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--heading);
+}
+.hud-menu-section h3::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 0;
+  border-top: 1px solid var(--parchment-dark);
+  border-bottom: 1px solid var(--white);
+}
+.hud-menu-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 12px;
+  margin: 0;
+}
+.hud-menu-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  padding: 5px 8px;
+  background: rgba(255, 250, 240, 0.5);
+  border: 1px solid var(--line);
+}
+.hud-menu-stat dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.hud-menu-stat dd {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.hud-menu-stat.is-warn dd,
+.hud-menu-colonies .is-warn {
+  color: var(--down);
+}
+.hud-menu-colonies {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.hud-menu .hud-discovery {
+  margin-top: 6px;
+}
+.hud-menu-goal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.hud-menu-goal-text {
+  flex: 1 1 12em;
+  min-width: 0;
+}
+.hud-menu-goal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 100%;
+}
+.hud-menu-goal-bar .hud-bar {
+  flex: 1 1 auto;
+  max-width: none;
+  height: 12px;
+  background: var(--wood-0);
+  border: 2px solid var(--ink-deep);
+}
+.hud-menu-goal-bar .hud-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--gold-2);
+  box-shadow:
+    inset 0 2px 0 var(--gold-4),
+    inset 0 -2px 0 var(--gold-1);
+}
+.hud-menu-goal-bar .hud-goal-pct {
+  font-weight: 700;
+  color: var(--gold-0);
+}
+/* 菜单里的时辰与天气：深色木底（日期牌与天气字是给木板配的色） */
+.hud-menu-time > .hud-date,
+.hud-menu-time > .hud-now {
+  display: flex;
+  justify-content: flex-start;
+}
+.hud-menu-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.hud-menu-time > .hud-now {
+  padding: 6px 10px;
+  background: var(--wood-1);
+  border: 2px solid var(--ink-deep);
+}
+.hud-menu-time .hud-forecast {
+  left: 0;
+  right: auto;
+}
+.hud-menu-saves.saves {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  /* 桌面顶栏的 .saves 在窄窗口里靠右对齐（justify-self: end），这里铺满一行 */
+  justify-self: stretch;
+  width: 100%;
+}
+.hud-menu-time > .hud-date {
+  align-self: flex-start;
+}
+.hud-menu-saves.saves input:not([type="checkbox"]) {
+  flex: 1 1 8em;
+  width: auto;
+  min-width: 0;
+}
+.hud-menu-system {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.hud-menu button,
+.hud-menu .btn {
+  min-height: 40px;
+}
+.hud-menu .music-toggle {
+  min-width: 44px;
+}
+
+/* ───────────── 平板与桌面的命令栏：放不下的功能页收进“更多”，不再折成两行 ───────────── */
+.cmdbar .cmd-tabs {
+  flex: 0 1 auto;
+  min-width: 0;
+  /* 只有一行高（按钮高度 --cmd-h，缺省 56 px）：放不下的按钮折到看不见的第二行，由 CommandBar 收进“更多” */
+  max-height: calc(var(--cmd-h, 56px) + 2px);
+  overflow: hidden;
+}
+.cmdbar .cmd.is-overflow {
+  visibility: hidden;
+}
+.cmdbar .cmd-more {
+  flex: none;
+}
+.cmd-more-dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 32px;
+  height: 32px;
+}
+.cmd-more-dots i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: var(--paper);
+  border: 1px solid var(--ink-deep);
+  box-shadow: inset -1px -1px 0 var(--parchment-dark);
+}
+.cmd.active .cmd-more-dots i {
+  background: var(--ink);
+  box-shadow: none;
+}
+@media (max-width: 1179px) {
+  .cmdbar {
+    --cmd-h: 56px;
+    gap: 6px;
+    padding: 16px calc(8px + var(--safe-right)) calc(6px + var(--safe-bottom)) calc(8px + var(--safe-left));
+  }
+  .cmdbar .cmd {
+    min-width: 58px;
+    height: var(--cmd-h);
+    padding: 3px 4px;
+  }
+  .cmd-stage .cmd {
+    min-width: 64px;
+  }
+}
+
+/* 英文标签放不下时省略（i18n.css 给它 overflow: hidden）：行高留够，y、p 的下伸部分不被裁掉 */
+:root[lang="en"] .cmdbar .cmd-label,
+:root[lang="en"] .more-grid .cmd-label {
+  line-height: 1.3;
+}
+
+/* “更多”抽屉：大按钮网格 */
+.more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 8px;
+}
+.more-grid .cmd {
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  height: 64px;
+  padding: 4px;
+  font-size: 13px;
+  line-height: 1.15;
+}
+.more-grid .cmd.active {
+  color: var(--ink);
+  background: var(--gold-2);
+  text-shadow: 0 1px 0 var(--gold-3);
+  box-shadow:
+    inset 2px 2px 0 var(--gold-1),
+    inset -2px -2px 0 var(--gold-3),
+    0 1px 0 var(--ink);
+}
+.more-grid .cmd-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ───────────── 手机：底部导航（竖屏）与左侧竖栏（横屏） ───────────── */
+.cmdbar.cmdbar-compact {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 4px;
+  padding: 14px calc(6px + var(--safe-right)) calc(5px + var(--safe-bottom)) calc(6px + var(--safe-left));
+}
+.cmdbar-compact .cmd-stage {
+  flex: 1 1 0;
+  display: flex;
+}
+.cmdbar-compact .cmd-tabs {
+  flex: 3 1 0;
+  display: flex;
+  gap: 4px;
+  max-height: none;
+  overflow: visible;
+}
+.cmdbar-compact .cmd-more {
+  flex: 1 1 0;
+}
+.cmdbar.cmdbar-compact .cmd {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 54px;
+  padding: 3px 2px 2px;
+  font-size: 12px;
+}
+.cmdbar-compact .cmd-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 横屏：竖在左侧 */
+.app.game[data-layout="short"] .cmdbar.cmdbar-compact {
+  flex-direction: column;
+  justify-content: flex-start;
+  width: calc(76px + var(--safe-left));
+  padding: 8px 14px calc(8px + var(--safe-bottom)) calc(6px + var(--safe-left));
+  border-top: 0;
+  border-right: 2px solid var(--ink-deep);
+  box-shadow: 3px 0 0 rgba(11, 15, 36, 0.45);
+  overflow-y: auto;
+}
+.app.game[data-layout="short"] .cmdbar.cmdbar-compact::before {
+  top: 0;
+  bottom: 0;
+  left: auto;
+  right: 0;
+  width: 8px;
+  height: auto;
+  background-image: linear-gradient(90deg, var(--gold-1), var(--gold-3) 45%, var(--gold-2) 70%, var(--gold-1));
+  background-size: auto;
+}
+.app.game[data-layout="short"] .cmdbar-compact .cmd-stage,
+.app.game[data-layout="short"] .cmdbar-compact .cmd-tabs {
+  flex: none;
+  flex-direction: column;
+}
+.app.game[data-layout="short"] .cmdbar-compact .cmd-more {
+  flex: none;
+}
+.app.game[data-layout="short"] .cmdbar.cmdbar-compact .cmd {
+  flex: none;
+  width: 100%;
+  height: 54px;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+/* ───────────── 功能窗口：手机上是整页的 ───────────── */
+.app.game[data-layout="phone"] .gw,
+.app.game[data-layout="short"] .gw {
+  inset: 0;
+  width: auto;
+  margin: 0;
+  border: 0;
+  border-image: none;
+  box-shadow: none;
+  animation: gw-page-in 0.2s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+.app.game[data-layout="phone"] .gw-head,
+.app.game[data-layout="short"] .gw-head {
+  min-height: 48px;
+  padding: 4px 52px 4px 12px;
+}
+.app.game[data-layout="phone"] .gw-plaque,
+.app.game[data-layout="short"] .gw-plaque {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+.app.game[data-layout="phone"] .gw-close,
+.app.game[data-layout="short"] .gw-close {
+  top: 4px;
+  right: 6px;
+  width: 40px;
+  height: 40px;
+}
+.app.game[data-layout="phone"] .gw-body,
+.app.game[data-layout="short"] .gw-body {
+  padding: 10px 12px 18px;
+}
+@keyframes gw-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* 竖放的平板：靠右的窗口放不下街景旁边，铺满舞台（左右留一点边） */
+@media (max-width: 999px) {
+  .app.game[data-layout="tablet"] .gw-right,
+  .app.game[data-layout="tablet"] .gw-center {
+    left: 8px;
+    right: 8px;
+    width: auto;
+    margin: 0;
+  }
+  .app.game[data-layout="tablet"] .shell-main[data-window="right"] {
+    --stage-cover-right: 0px;
+  }
+}
+@media (max-width: 1179px) {
+  .app.game[data-layout="tablet"] .gw {
+    top: 8px;
+    bottom: 8px;
+  }
+  .app.game[data-layout="tablet"] .gw-close {
+    width: 40px;
+    height: 40px;
+    top: 4px;
+  }
+}
+
+/* ───────────── 港口窗口（手机）：设施分页排成一行、左右滑动；掌柜头像小一号 ───────────── */
+.app.game[data-layout="phone"] .port > .tabbar,
+.app.game[data-layout="short"] .port > .tabbar {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding: 4px 12px 3px;
+  border-bottom: 0;
+  box-shadow: inset 0 -3px 0 var(--line-strong);
+}
+.app.game[data-layout="phone"] .port > .tabbar::-webkit-scrollbar,
+.app.game[data-layout="short"] .port > .tabbar::-webkit-scrollbar {
+  display: none;
+}
+.app.game[data-layout="phone"] .port > .tabbar .tab,
+.app.game[data-layout="short"] .port > .tabbar .tab {
+  flex: none;
+}
+.app.game[data-layout="phone"] .keeper,
+.app.game[data-layout="short"] .keeper {
+  gap: 10px;
+  margin: 8px 0 10px;
+}
+.app.game[data-layout="phone"] .keeper-portrait .portrait-art,
+.app.game[data-layout="phone"] .keeper-portrait canvas,
+.app.game[data-layout="short"] .keeper-portrait .portrait-art,
+.app.game[data-layout="short"] .keeper-portrait canvas {
+  width: 72px !important;
+  height: 72px !important;
+}
+
+/* ───────────── 设置（手机）：音量一行放不下时滑块换到下一行、铺满 ───────────── */
+.app.game[data-layout="phone"] .pn-st-volume {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-right: 0;
+}
+.app.game[data-layout="phone"] .pn-st-volume > span {
+  width: auto;
+  flex: 1 1 100%;
+}
+.app.game[data-layout="phone"] .pn-st-volume input[type="range"] {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+/* ───────────── 港口街景：名牌与“出港”小一号 ───────────── */
+.app.game[data-layout="phone"] .scene-hud,
+.app.game[data-layout="short"] .scene-hud {
+  top: 8px;
+  left: 8px;
+  gap: 8px;
+  max-width: calc(100% - 16px);
+}
+.app.game[data-layout="phone"] .scene-sign,
+.app.game[data-layout="short"] .scene-sign {
+  gap: 8px;
+  padding: 5px 10px 5px 7px;
+  border-width: 2px;
+}
+.app.game[data-layout="phone"] .scene-flag,
+.app.game[data-layout="short"] .scene-flag {
+  width: 12px;
+}
+.app.game[data-layout="phone"] .scene-sign-name,
+.app.game[data-layout="short"] .scene-sign-name {
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+.app.game[data-layout="phone"] .scene-sign-sub,
+.app.game[data-layout="short"] .scene-sign-sub {
+  font-size: 11px;
+}
+/* 横屏的舞台矮：名牌只留名字与“停泊在此” */
+.app.game[data-layout="short"] .scene-sign-sub {
+  display: none;
+}
+.app.game[data-layout="phone"] .scene-depart,
+.app.game[data-layout="short"] .scene-depart {
+  gap: 6px;
+  min-height: 44px;
+  padding: 4px 14px 4px 8px;
+  font-size: 17px;
+  letter-spacing: 3px;
+}
+
+/* ───────────── 航海图：左侧栏收窄、给右边的缩放按钮留位置；出航确认框贴底铺开 ───────────── */
+.app.game[data-layout="phone"] .chart-side,
+.app.game[data-layout="short"] .chart-side {
+  top: 8px;
+  left: 8px;
+  width: min(252px, calc(100% - 72px));
+  max-height: calc(100% - 16px);
+  gap: 6px;
+}
+.app.game[data-layout="phone"] .chart-zoom,
+.app.game[data-layout="short"] .chart-zoom {
+  top: 8px;
+  right: 8px;
+}
+.app.game[data-layout="phone"] .voyage-vignette,
+.app.game[data-layout="short"] .voyage-vignette {
+  width: 144px;
+  height: 60px;
+}
+.app.game[data-layout="phone"] .chart-dialog-backdrop,
+.app.game[data-layout="short"] .chart-dialog-backdrop {
+  padding: 8px 8px calc(8px + var(--safe-bottom));
+}
+.app.game[data-layout="phone"] .chart-dialog,
+.app.game[data-layout="short"] .chart-dialog {
+  width: 100%;
+  max-width: 460px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.app.game[data-layout="phone"] .chart-dialog-body,
+.app.game[data-layout="short"] .chart-dialog-body {
+  min-height: 0;
+}
+.app.game[data-layout="phone"] .chart-dialog-actions .chart-btn,
+.app.game[data-layout="short"] .chart-dialog-actions .chart-btn {
+  flex: 1 1 auto;
+  min-height: 44px;
+}
+.app.game[data-layout="phone"] .voyage-pick,
+.app.game[data-layout="short"] .voyage-pick {
+  top: auto;
+  bottom: 8px;
+  gap: 10px;
+  width: calc(100% - 16px);
+  justify-content: space-between;
+}
+
+/* ───────────── 舞台上的浮层：航海日志、提示 ───────────── */
+.app.game[data-layout="phone"] .gamelog,
+.app.game[data-layout="short"] .gamelog {
+  left: 8px;
+  bottom: 8px;
+  width: min(340px, calc(100% - 16px));
+  max-height: 32%;
+}
+.app.game[data-layout="phone"] .notice,
+.app.game[data-layout="short"] .notice {
+  font-size: 12px;
+  padding: 3px 6px;
+}
+.app.game[data-layout="phone"] .shell-main .toast,
+.app.game[data-layout="short"] .shell-main .toast {
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  max-width: none;
+  transform: none;
+  animation-name: toast-rise;
+}
+@keyframes toast-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet-backdrop,
+  .sheet,
+  .speed-menu,
+  .app.game[data-layout="phone"] .gw,
+  .app.game[data-layout="short"] .gw {
+    animation: none;
+  }
+}

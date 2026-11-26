@@ -1,0 +1,176 @@
+# 请托：信比药要紧（request_wu_zhongxing）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：吴中行 wu_zhongxing（1540-03-29 生，男；字子道，常州武进人；1577 年上疏被廷杖，削籍回乡，腿伤久不愈）；势力 ming；身份档 2（官员）。cast：cast/historical_06_ming.toml。
+# 类型：送信（lt）。四章：offer（宁波码头，武进吴家的老仆带来一封信、一张药方）、medicine（可选：福州买樟脑，回宁波交给老仆）、handover（天津码头，把信交给京里那位同年的管家）、reply（回信追上船）。
+#   任务单原表是三章；多出的 medicine 是 brief 里的“可选捎药章”：只接信的一支 offer 直接走 handover。
+# 报价：L（来信）。auto=true；offer 章 at=ningbo，出面的是老仆（写身份，不新建 cast），speaker 省略；吴中行本人不出场，只在信里和老仆的转述里说话。
+#   offer 写 family=c13_offer_ningbo、冷却 20 天；deadline 为窗口止日 1582-06-30，timeout 直接 failed，不写见闻。
+# 窗口：报价 1578-01-15 至 1582-06-30（吴中行 1577 年挨廷杖，1578 年起退居武进）；medicine deadline_days=90，超时 handover（信照送，不罚），老仆来信一封；
+#   handover deadline_days=150，超时 failed、好感 -3、来信一封；reply deadline_days=240，超时 done（折中），谢礼托宁波的钱庄转交。
+#   reply 章不写 at（信追上你的船），所以不写见闻；handover 与 medicine 有 at，各有一条见闻。
+# 依据·史实：1577 年张居正父丧夺情，吴中行、赵用贤、艾穆、沈思孝、邹元标先后上疏，被廷杖；吴中行削籍回乡（《明史·吴中行传》）。
+#   正文只写“当年那道奏疏”“座主”“有人骂他忘恩负义”，不写廷杖的场面，不写张居正身后的事（reply 章的日期晚于 1582 年也只写“京里”）。
+#   赵用贤等人只在这里出现，正文不点名。
+# 依据·原创：老仆；武进吴家与天津那位同年家的管家；封了蜡的信与包药的废纸；樟脑膏药（原表的药剂在 terra16 只有伊斯坦布尔产，改樟脑：福州产，跌打膏药里常用）；信里的内容。
+#   收信的同年不点名。吴中行的好名之心不写破；割肉只由老仆转述一句，不写细节。夫人偷偷备药方一事只在老仆的耳语里出现一次。
+# 读的旗标：无 c7_*，不设 c7_*。吴中行不是主线人物，没有 c13_main 门禁；非恋爱线，不用 relation / tie / bond / heart。
+# 设的旗标：c13_request_wu_zhongxing_accepted / declined（报价）；_camphor（交了樟脑）；_read（偷看了信）；_late（天津超时）；_done / _partial（回信的结局，partial 为超时）。
+#   _camphor 与 _read 只被 reply 的变体读取；没有任何 requires 读本轨道在别的分支上设的旗标。
+# 依赖：港口 ningbo、tianjin（ports_east_asia.toml）；商品 camphor（goods/05_terra_trade.toml，基准价 100；五担货款 5×100×1.25=625，取 650）；人物 wu_zhongxing。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_wu_zhongxing-reply「端正的字与一句腿伤」：船舱的灯下，一封字迹端正的信摊在桌上，末尾只有一行字，写的是一条腿。
+
+[[tracks]]
+key = "request_wu_zhongxing"
+name = "信比药要紧"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["wu_zhongxing"]
+
+# 一、报价：宁波码头，武进吴家的老仆带着一封信、一张药方。老爷交代：两样只能送一样，就送信。
+[[tracks.chapters]]
+key = "offer"
+title = "老仆的两样东西"
+text = "潮退的宁波码头，一个驼背的老仆蹲在缆桩边，等了你小半个时辰。他怀里抱着油布包，揭开一角：一封封了蜡的信，一张折了又折的药方。“武进吴家的。”他扶着桩站起来，腰直不起来，仰着头说话，“信是我家老爷的，给京里一位同年，一定要送到。药方是家里另备的——老爷的腿到今年还在流脓，要樟脑配膏药，福州产的才凉得透。”他把油布包往你这边递了半寸，又缩回去。“老爷交代过，两样只能送一样，就送信。信比药要紧。”"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1578, 1, 15], to = [1582, 6, 30] }, { kind = "fame", ge = 5 }, { kind = "age", person = "wu_zhongxing", ge = 18 }]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+deadline = [1582, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "letter_only"
+text = "信我接下，送到天津"
+next = "handover"
+reply = "老仆把信用油纸包了三层，外头又缠上草绳。“天津码头，那边家里的管家会等着。”他拍了拍包，“老爷说，信到了，他的腿就好了一半。”"
+effects = [{ kind = "flag", flag = "c13_request_wu_zhongxing_accepted" }, { kind = "affinity", person = "wu_zhongxing", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "信和药都接，我去福州买五担樟脑"
+next = "medicine"
+reply = "老仆连声道谢，退了半步，又凑上来压低声音：樟脑运回宁波交给他，货钱当场结清。“别告诉老爷，药是夫人托的。”"
+effects = [{ kind = "flag", flag = "c13_request_wu_zhongxing_accepted" }, { kind = "affinity", person = "wu_zhongxing", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这趟顺不了路，您另托别人吧"
+next = "failed"
+reply = "老仆把信揣回怀里，又用手按了按。“那就托运河上的漕船，慢些，总归到得了。”他提起油布包，一步一步走回码头去了。"
+effects = [{ kind = "flag", flag = "c13_request_wu_zhongxing_declined" }]
+
+# 二、捎药（可选）：樟脑五担到宁波，老仆闻了闻，说了一句割肉的话。
+[[tracks.chapters]]
+key = "medicine"
+title = "樟脑"
+text = "樟脑五担卸在宁波的栈桥上，麻包角渗出一股凉气。老仆等在桥头，没等你开口，先蹲下去撕开一个包，鼻子凑上去闻，闻了很久，眼圈就红了。“福州的，凉。”他抹了一把脸，“老爷挨打那天，腿上烂了的肉是一块块割下来的，他一声没吭。”他把抓出来的一撮樟脑攥在手心里，没有松开。"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+objectives = [{ kind = "goods", good = "camphor", qty = 5, at = "ningbo", text = "五担樟脑运到宁波" }]
+when = [{ kind = "alive", person = "wu_zhongxing", value = true }]
+deadline_days = 90
+news = "宁波栈桥上，武进吴家的驼背老仆收了五担福州樟脑，蹲下闻了半天，说是给自家老爷治腿的。"
+
+[tracks.chapters.timeout]
+next = "handover"
+effects = [{ kind = "letter", person = "wu_zhongxing", text = "樟脑另托福州的药行买了，您的船不必再绕。信请照旧送天津，老爷若问起，就说药不碍事。吴家老仆代笔。" }]
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "把樟脑交给老仆"
+next = "handover"
+reply = "老仆把麻包一个个叠上板车，草绳捆了两道，说今晚就搭运河夜船回武进。货钱当场点清放进你手里，他数得很慢，数完又从头数了一遍。"
+effects = [{ kind = "cash", value = 650 }, { kind = "affinity", person = "wu_zhongxing", value = 3 }, { kind = "flag", flag = "c13_request_wu_zhongxing_camphor" }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "交药时问一句：老爷如今能走路吗"
+next = "handover"
+reply = "“拄着拐，能走。”老仆拍了拍一个麻包，“走到书房就不走了，一坐一天。这封信是坐着写的，写了三遍，前两遍扔了。”货钱点清放进你手里，他没再多说。"
+effects = [{ kind = "cash", value = 650 }, { kind = "affinity", person = "wu_zhongxing", value = 3 }, { kind = "flag", flag = "c13_request_wu_zhongxing_camphor" }]
+
+# 三、天津的码头：京里那位同年家的管家等在栈桥上，先问腿，再说回信得避着人。
+[[tracks.chapters]]
+key = "handover"
+title = "天津的码头"
+text = "天津卫的码头风硬，京里那位同年家的管家已经在栈桥上等了好几天，旧毡帽压到眉毛，两手笼在袖子里。你把信取出来，他没急着接，先问：“吴老爷的腿，如今怎样了？”你把听来的都说了，他听完，点着头，才伸出手。“我家老爷这几年在京里不好过。”他把声音压到只有你听得见，“吴老爷若有回信，得避着人走。”"
+speaker = "captain"
+mood = "tense"
+at = "tianjin"
+objectives = [{ kind = "at", at = "tianjin", text = "把信送到天津" }]
+when = [{ kind = "alive", person = "wu_zhongxing", value = true }]
+deadline_days = 150
+news = "天津码头上，京里一家的管家连等了好几天，接了南边船长送来的信，临走先问了一句武进吴老爷的腿。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_wu_zhongxing_late" }, { kind = "affinity", person = "wu_zhongxing", value = -3 }, { kind = "letter", person = "wu_zhongxing", text = "信已改托运河上的漕船，送到京里了，慢些，无碍。足下在海上，风浪可还受得住？《易》云：君子以致命遂志。望珍重。吴中行手书。" }]
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "原样把信交给他"
+next = "reply"
+reply = "管家把信塞进袖子最深处，冲你拱了拱手。毡帽下的眼睛往栈桥两头各扫了一遍，才转身走进货堆里。"
+effects = [{ kind = "affinity", person = "wu_zhongxing", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "peek"
+text = "交出去之前，先看一眼信里写了什么"
+next = "reply"
+reply = "蜡封已经干透，你用刀尖挑开，又原样糊上。信只有三行，字端端正正：“此事不悔，亦不怨。当年疏稿，望兄留存一份，切莫付之一炬。”管家看着你糊封口，没拦，也没谢。"
+effects = [{ kind = "affinity", person = "wu_zhongxing", value = 3 }, { kind = "flag", flag = "c13_request_wu_zhongxing_read" }]
+
+[[tracks.chapters.choices]]
+key = "speak"
+text = "替吴老爷多说一句：他的腿还没好"
+next = "reply"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "管家听完，点了点头，点得不快。“腿的事，我记着。”他把信塞进袖子，毡帽往下压了压，往货堆里走去。记到什么份上，从背影上看不出来。"
+effects = [{ kind = "affinity", person = "wu_zhongxing", value = 5 }]
+fail = { next = "reply", effects = [] }
+
+# 四、回信：信追上了你的船。不写 at；吴中行的字端端正正，先谢，再说京里的回话，最后是腿。
+[[tracks.chapters]]
+key = "reply"
+title = "追上船的信"
+text = "几个月后，一封信追上了你的船，信封是运河驿站里最粗的那种。吴中行的字端端正正，一笔不连。头一页谢你送信；第二页说京里那位同年回了话，抄在信里，只有一行：“箧底的东西还在，没烧。”第三页写着，乡里有人骂他忘恩负义，背叛座主，门上被人贴过字。后面半页空着，像是停了笔，又接着写。末页还没有翻。"
+mood = "tender"
+objectives = [{ kind = "wait", days = 45 }]
+when = [{ kind = "alive", person = "wu_zhongxing", value = true }]
+deadline_days = 240
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "flag", flag = "c13_request_wu_zhongxing_partial" }, { kind = "letter", person = "wu_zhongxing", text = "谢礼已托宁波的钱庄转交，足下的船既不在近处，这封信便不再追了。京里的回话，吴某自会收好。吴中行手书。" }]
+
+[[tracks.chapters.variants]]
+key = "v1_camphor_read"
+when = [{ kind = "flag", flag = "c13_request_wu_zhongxing_camphor" }, { kind = "flag", flag = "c13_request_wu_zhongxing_read" }]
+text = "几个月后，一封信追上了你的船，信封是运河驿站里最粗的那种。吴中行的字端端正正，一笔不连。头一页谢你送信，也谢那五担樟脑，膏药熬上了，贴了三日；第二页说京里那位同年回了话，抄在信里，只有一行：“疏稿存着，箧底，没烧。”你想起自己拆开又糊上的那三行字，说的正是这件事。第三页写着，乡里有人骂他忘恩负义，背叛座主，门上被人贴过字。后面半页空着，像是停了笔，又接着写。末页还没有翻。"
+
+[[tracks.chapters.variants]]
+key = "v2_camphor"
+when = [{ kind = "flag", flag = "c13_request_wu_zhongxing_camphor" }]
+text = "几个月后，一封信追上了你的船，信封是运河驿站里最粗的那种。吴中行的字端端正正，一笔不连。头一页谢你送信，也谢那五担樟脑，膏药熬上了，贴了三日；第二页说京里那位同年回了话，抄在信里，只有一行：“箧底的东西还在，没烧。”第三页写着，乡里有人骂他忘恩负义，背叛座主，门上被人贴过字。后面半页空着，像是停了笔，又接着写。末页还没有翻。"
+
+[[tracks.chapters.variants]]
+key = "v3_read"
+when = [{ kind = "flag", flag = "c13_request_wu_zhongxing_read" }]
+text = "几个月后，一封信追上了你的船，信封是运河驿站里最粗的那种。吴中行的字端端正正，一笔不连。头一页谢你送信；第二页说京里那位同年回了话，抄在信里，只有一行：“疏稿存着，箧底，没烧。”你想起自己拆开又糊上的那三行字，说的正是这件事。第三页写着，乡里有人骂他忘恩负义，背叛座主，门上被人贴过字。后面半页空着，像是停了笔，又接着写。末页还没有翻。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把信翻到末页，收好"
+next = "done"
+reply = "末页的墨比前头几页重，像是停笔想过：“师恩是私，纲常是公。骂我的人，也有他们的道理；我的道理，写在那道疏里。”末了只有一句：“腿阴天还疼，不碍事。”信里夹着一张谢礼的银票，折得方方正正。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "wu_zhongxing", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_wu_zhongxing-reply", title = "端正的字与一句腿伤" }, { kind = "flag", flag = "c13_request_wu_zhongxing_done" }, { kind = "letter", person = "wu_zhongxing", text = "足下送信，信到了。《论语》有言：君子喻于义。吴某读了三十年书，信这一句，在这件事上才信得最实。路远，海上多风，足下珍重。吴中行手书。" }]
+
+[[tracks.chapters.choices]]
+key = "answer"
+text = "回信问他：疏里的道理，值一条腿吗"
+next = "done"
+reply = "回信隔了很久才到，纸比上一封薄，字有一笔歪了，像是坐着写的。只有一行：“值不值，后人算。”谢礼的银票照附。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "wu_zhongxing", value = 6 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_wu_zhongxing-reply", title = "端正的字与一句腿伤" }, { kind = "flag", flag = "c13_request_wu_zhongxing_done" }, { kind = "letter", person = "wu_zhongxing", text = "足下来问，吴某答得简，没有怠慢的意思。这一问，吴某自己问过自己，三年了，还没有问完。吴中行手书。" }]

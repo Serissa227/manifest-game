@@ -1,0 +1,207 @@
+# 请托：你看过没有（request_alvise）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：阿尔维塞·特龙（alvise，1530-09-26 生，男），威尼斯驻奥斯曼巴伊洛府上的秘书；势力 venice；cast：cast/story_islamic.toml（日程常驻伊斯坦布尔酒馆）。
+# 类型：混合（mixed）。六章：offer（报价）、ragusa（拉古萨的酒馆）、venice（威尼斯的门房）、deliver（先生回来）、back（回伊斯坦布尔，本人一路）、back_partial（交给秘书一路）。
+#       比简报多一章 back_partial：秘书一路不经过威尼斯的先生，两条路的收尾选项不能共用一章（见下“旗标与分支”）。没有 stage 章，因此没有 window 与 default。
+# 报价：T（当面）。auto=false，玩家在伊斯坦布尔港里找到阿尔维塞后，用“问请托”启动（ask:request_alvise）。offer 不写 at，objectives 为 person alvise。
+# 窗口：报价 1562-01-01 至 1569-06-30；offer 的 deadline 即 1569-06-30，timeout 直接 failed，不写见闻（没人知道这件事没成）。后面各章的 when 写到 1569-12-31 为止。
+# 进行中：ragusa 章 deadline_days=60，超时走 failed，来信一封，好感 -3，旗标 _late。deliver 章有 wait 10 目标（先生出城十天）。
+# 依据·史实：威尼斯驻奥斯曼的巴伊洛与十人委员会之间的公函往来（史实）；拉古萨是威尼斯与奥斯曼之间的过路港；密写术（技能 arcana_steganography）。
+# 依据·原创：阿尔维塞与他的密信、拉古萨酒馆里衣领细褶的那位先生、威尼斯门房与秘书、收条、杯底。
+# 秘密：cast 的 secret 不进正文。本请托只写“信纸上还有一层看不见的字”，信的内容一字不写，十人委员会要什么情报也不写，见闻一条不写（ragusa 检定失败的两条除外，见下）。
+#       不写哈桑、托马索、兵工厂的图纸（C7 alvise_hasan 1570 起、tommaso_alvise 1559—61 不在本轨道里）。
+# 读的旗标：c13_request_alvise_waited（back 的 no 门槛，只有 wait 与 steg 两条路能到 back，必然成立）、c13_request_alvise_saw（deliver 的变体改文字）；不读 C7 旗标。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 设的旗标：c13_request_alvise_accepted（offer 两条接法）、_declined（offer 回绝）、_waited（venice 等着，或对灯看过）、_saw（venice 对灯看过，deliver 变体读它）、
+#       _late（ragusa 超时）、_done（back 两条收尾）、_partial（back_partial 两条收尾）。每条轨道只设一面终局旗标：declined / late / done / partial 四者之一。
+# 旗标与分支：没有 requires 读其他路径才设的旗标。steg 与 wait 同走 deliver；saw 只在 deliver 的变体里改文字；saw_layer 用技能门槛（skill arcana_steganography ≥ 60），与 steg 的门槛相同。
+#       秘书一路走 back_partial，那里的两条收尾只认交给秘书这件事。
+# 依赖：港口 ragusa_port、venice、istanbul（ports_east_med.toml）；技能 arcana_steganography（skills.toml）；人物 alvise。无需 B10b 改名；gate_main 为空。
+# 报酬：现金最多 2900（back 两条收尾各给一次）；交给秘书一路 1500（一次）；好感最多 +19；不加名声（密信）；回忆 mem-request_alvise-back。
+# 失败与见闻：检定失败的分支（ragusa 两条）给一条见闻，因为引擎只在失败时显示见闻，没有回复。两条见闻都在拉古萨港，不提信的内容。其余章节不写见闻。
+# 回忆插画清单：
+#   mem-request_alvise-back「翻过来看的杯底」：伊斯坦布尔大巴扎的咖啡馆，桌上一只瓷杯被翻过来，杯底朝着窗外的光，一个人的手指停在杯沿上。
+
+[[tracks]]
+key = "request_alvise"
+name = "你看过没有"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["alvise"]
+
+# 一、一封火漆封口的信：伊斯坦布尔，他从袖袋里取出信，推过来又收回半寸。
+[[tracks.chapters]]
+key = "offer"
+title = "一面也别翻"
+text = "阿尔维塞衣着讲究，笑得恰到好处。他从袖袋里取出一封火漆封口的公函，印是巴伊洛府的，封口压得很平，火漆边一点裂痕都没有。“送到威尼斯，交给一位先生，那位先生在十人委员会里有位子。”他把信推过来，又收回半寸，手指在火漆上按了一下，才松开。“别人扔掉的纸，我都要翻过两面再扔；这一封，你一面也别翻。”说完，他像是想起什么，补了一句：路上会有人请你喝酒，酒你可以喝。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "alvise", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1562, 1, 1], to = [1569, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1569, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下公函。"
+next = "ragusa"
+reply = "他把信塞进你的外衣内袋，又替你把扣子一粒粒扣上，扣得很仔细，说威尼斯的冬天冷，别让风灌进去。"
+effects = [{ kind = "affinity", person = "alvise", value = 2 }, { kind = "flag", flag = "c13_request_alvise_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_drink"
+text = "问他：请我喝酒的会是谁？"
+next = "ragusa"
+reply = "“不知道。”他笑得更恰到好处了，“知道的话，我就不用找你了。”他说完，把你的杯子拿过去又倒满，像是要你别急着走。"
+effects = [{ kind = "affinity", person = "alvise", value = 2 }, { kind = "flag", flag = "c13_request_alvise_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "公函的事你不碰。"
+next = "failed"
+reply = "他毫不在意地把信收回去，说那他找下一个不爱翻纸的人。他说这话时没有生气，只是把信对着窗口看了一眼，才收进袖袋。"
+effects = [{ kind = "flag", flag = "c13_request_alvise_declined" }]
+
+# 二、拉古萨：路上请你喝酒的人，问你带了什么货。
+[[tracks.chapters]]
+key = "ragusa"
+title = "价钱好说"
+text = "拉古萨的酒馆在海关后面，掌柜给你上了一壶白葡萄酒，杯子是厚玻璃的，壁上留着指印。对面坐着个人，衣领上的细褶跟阿尔维塞一个样，手上却没有戒指。他先问你从哪儿来，又问去哪儿，最后才问船上带了什么货。你还没答，他已经替你把杯子斟满了。他把酒壶推过来，说：“你要是带了什么不方便的东西，我可以替你保管。价钱好说。”"
+at = "ragusa_port"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "alvise", value = true }, { kind = "date", from = [1562, 1, 1], to = [1569, 12, 31] }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "alvise", value = -3 }, { kind = "flag", flag = "c13_request_alvise_late" }, { kind = "letter", person = "alvise", text = "船长：信我托别人带去威尼斯了，没等您。拉古萨那位请您喝酒的先生，后来请我喝了一回酒，酒很好，话很少。——阿尔维塞" }] }
+
+[[tracks.chapters.choices]]
+key = "deflect"
+text = "说你只带了胡椒和一肚子酒。"
+next = "venice"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他笑了，又给你倒了一杯，倒得很满，没再问半句货的事，只问你明早几时开船。"
+effects = [{ kind = "affinity", person = "alvise", value = 3 }]
+fail = { next = "venice", effects = [{ kind = "affinity", person = "alvise", value = -2 }], news = "拉古萨的酒馆里有人说，那个威尼斯船长昨夜还在喝酒，今早舱房就被人翻过，东西一件没少。" }
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "喝完这杯就走，连夜开船。"
+next = "venice"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "你回到船上就起锚了，没等天亮。拉古萨的灯在身后越来越小，最后只剩码头尽头的一盏。"
+effects = [{ kind = "affinity", person = "alvise", value = 3 }]
+fail = { next = "venice", effects = [{ kind = "affinity", person = "alvise", value = -2 }], news = "拉古萨港外，夜里有一条小船跟着一艘威尼斯船跑了一程，到了外海才散。" }
+
+# 三、威尼斯：先生出城了。秘书可以先收信，阿尔维塞要的是本人。
+[[tracks.chapters]]
+key = "venice"
+title = "先生出城了"
+text = "到了威尼斯，那位先生的门房说，先生出城了，十天以后才回来。门房是个老头，屋里挂着一面旗，边角已经磨白了。他把你的名字写进本子，写完又划掉，划掉了又添上。“秘书可以先收信。”他说。门房这么说的时候，你想起阿尔维塞的话：要送到本人手里。"
+at = "venice"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "alvise", value = true }, { kind = "date", from = [1562, 1, 1], to = [1569, 12, 31] }]
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "不交，等先生回来。"
+next = "deliver"
+reply = "你在威尼斯等了十天，每天去一回。第一天门房说先生还没回，第五天他已经不问你是谁，只点点头。第十天你去的时候，他正蹲在门口擦靴子，说：“今天回。”"
+effects = [{ kind = "affinity", person = "alvise", value = 3 }, { kind = "flag", flag = "c13_request_alvise_waited" }]
+
+[[tracks.chapters.choices]]
+key = "steg"
+text = "把信对着灯看一眼，看看信纸有没有别的门道。"
+next = "deliver"
+requires = [{ kind = "skill", skill = "arcana_steganography", ge = 60 }]
+hint = "纸边那层淡得几乎看不见的门道，你还读不出来。"
+reply = "火漆没动。你把信凑到灯下，纸边上隐约有一层字，淡得几乎看不见，只有认得这种墨的人才会去看。写的人显然不想让旁人看见。"
+effects = [{ kind = "affinity", person = "alvise", value = 3 }, { kind = "flag", flag = "c13_request_alvise_waited" }, { kind = "flag", flag = "c13_request_alvise_saw" }]
+
+[[tracks.chapters.choices]]
+key = "secretary"
+text = "交给秘书，免得耽误。"
+next = "back_partial"
+reply = "秘书收了信，给你写了一张收条，字迹工整，连日期和时辰都标上了。他把收条压在墨水瓶底下，说：“先生回来，我会替你转到。”"
+effects = [{ kind = "affinity", person = "alvise", value = 1 }]
+
+# 四、先生回来：在书房里接过信，先看火漆，再看你。等十天。
+[[tracks.chapters]]
+key = "deliver"
+title = "先看火漆，再看你"
+text = "先生回来了，在书房里接过信。他先看火漆，火漆完好，再看你，看得比火漆还仔细。书房里很暗，窗子开着一条缝，外面的风把桌上的纸吹得微微翻动。他问：“一路上，有没有人问起过这封信？”裁纸刀搁在一边，信还没拆。"
+at = "venice"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "alvise", value = true }, { kind = "date", from = [1562, 1, 1], to = [1569, 12, 31] }]
+objectives = [{ kind = "wait", days = 10, text = "等先生出城回来" }]
+
+[[tracks.chapters.variants]]
+key = "v1_saw"
+when = [{ kind = "flag", flag = "c13_request_alvise_saw" }]
+text = "先生回来了，在书房里接过信。他先看火漆，火漆完好，再看你。你心里清楚，有个角曾经被你对着灯看过，纸边的薄也还留在指尖上。窗子开着一条缝，风把桌上的纸吹得微微翻动。他问：“一路上，有没有人问起过这封信？”裁纸刀搁在一边，信还没拆。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：拉古萨有人请喝酒，问过。"
+next = "back"
+reply = "他点点头，说问的人是谁他知道，你没说什么，这就够了。他当着你的面把信收进一只锁着的匣子，钥匙挂在表链上，拿出来时没有看你。"
+effects = [{ kind = "affinity", person = "alvise", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "nothing"
+text = "说一路上没人问。"
+next = "back"
+reply = "他看了你一会儿，没说话。那一会儿长得很，书房里只听见钟摆。最后他把信收了，说：“那就是没人问。”他没追问，也没谢你。"
+effects = [{ kind = "affinity", person = "alvise", value = 1 }]
+
+# 五、回伊斯坦布尔（本人一路）：信，你看过没有。
+[[tracks.chapters]]
+key = "back"
+title = "信，你看过没有"
+text = "回到伊斯坦布尔，阿尔维塞在大巴扎的咖啡馆里占了靠窗的位子，桌上两只小杯，一杯已经凉了。你把威尼斯的事从头讲了一遍。门房的话，他要你照原样再说一次，连门房蹲在哪扇门口擦靴子都要问。讲完，他把杯子转了半圈，才抬眼看你。“信，你看过没有？”他最后问，手指在杯沿上停住，“只是好奇，当然。”"
+at = "istanbul"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "alvise", value = true }, { kind = "date", from = [1562, 1, 1], to = [1569, 12, 31] }]
+objectives = [{ kind = "person", person = "alvise", text = "在大巴扎找到他" }]
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "说：没看。"
+next = "done"
+reply = "他笑得很满意，把报酬推给你，说不爱翻纸的人，以后他还找。你起身要走，他把你喝过的那只杯子翻过来，对着窗外的光看了一眼杯底，然后才把它推回桌子中间。"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "alvise", value = 8 }, { kind = "flag", flag = "c13_request_alvise_done" }, { kind = "memory", memory = "mem-request_alvise-back", title = "翻过来看的杯底" }]
+
+[[tracks.chapters.choices]]
+key = "saw_layer"
+text = "说：没拆，可我看出信纸上还有一层字。"
+next = "done"
+requires = [{ kind = "skill", skill = "arcana_steganography", ge = 60 }]
+hint = "你看不出信纸上有什么，这句话也就说不出口。"
+reply = "他的笑停了一下，很快又恢复了，说那你更不该说出来。他付了钱，一文不少，数得很慢，每数一枚就抬眼看你一次：“这钱是买你刚才那句话不再说第二遍。”"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "alvise", value = 6 }, { kind = "flag", flag = "c13_request_alvise_done" }]
+
+# 六、交给秘书那一路：回到伊斯坦布尔，他问的仍是那封信。
+[[tracks.chapters]]
+key = "back_partial"
+title = "交给秘书的那封信"
+text = "回到伊斯坦布尔，阿尔维塞还在大巴扎的咖啡馆里等你，桌上两只杯子，一只是你的，一只他没碰过。他先问：“威尼斯的冬天冷不冷？”又问门房的胡子还留没留着。你一一答了，他听得很仔细，听完才把视线落到你的外衣内袋上。“信，你看过没有？”"
+at = "istanbul"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "alvise", value = true }, { kind = "date", from = [1562, 1, 1], to = [1569, 12, 31] }]
+objectives = [{ kind = "person", person = "alvise", text = "在大巴扎找到他" }]
+
+[[tracks.chapters.choices]]
+key = "handed"
+text = "说：先生不在，信交给了秘书。"
+next = "done"
+reply = "他点点头，说交给秘书，也算到了。秘书的字他认得，收条也对得上。报酬只付了一半，他说这样也算交了差，把杯里的酒一口喝尽。"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "alvise", value = 4 }, { kind = "flag", flag = "c13_request_alvise_partial" }]
+
+[[tracks.chapters.choices]]
+key = "handed_plain"
+text = "说：信交了，别的我没管。"
+next = "done"
+reply = "“没管就对了。”他把杯子转了一圈，没看你，“多问一句，就多欠一个人情。我欠的已经够多了。”"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "alvise", value = 2 }, { kind = "flag", flag = "c13_request_alvise_partial" }]

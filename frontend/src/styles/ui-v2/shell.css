@@ -1,0 +1,1233 @@
+/* 新界面（试用）——外壳：顶栏、命令栏、功能窗口、航海日志、提示、抽屉、舞台上的名牌与出港、各面板的自用变量，
+ * 以及平板与手机上的紧凑顶栏、底部导航与整页窗口（docs/UI-REDESIGN.md 第 4、5 节）。不在层里，按需要覆盖模块样式。
+ */
+
+/* ═════════════════════════ 3. 外壳 ═════════════════════════ */
+:root[data-ui="v2"] .app {
+  background-color: var(--v2-night-0);
+  background-image: none;
+}
+:root[data-ui="v2"] .shell-main,
+:root[data-ui="v2"] .stage-town,
+:root[data-ui="v2"] .map {
+  background: var(--v2-night-0);
+}
+
+/* 顶栏与命令栏共用：深色平面，原来的黄铜栏杆变成一条细细的鎏金线 */
+:root[data-ui="v2"] .hud,
+:root[data-ui="v2"] .cmdbar {
+  color: var(--v2-on-night);
+  background-color: var(--v2-night-1);
+  background-image: none;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud {
+  column-gap: 20px;
+  row-gap: 4px;
+  padding: 10px 18px;
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .cmdbar {
+  border-top: 0;
+}
+:root[data-ui="v2"] .hud::after,
+:root[data-ui="v2"] .cmdbar::before {
+  height: 1px;
+  background-color: transparent;
+  background-image: linear-gradient(90deg, transparent, var(--v2-brass) 18%, var(--v2-brass) 82%, transparent);
+  background-size: auto;
+  opacity: 0.55;
+}
+
+/* 顶栏：头像、名字 */
+:root[data-ui="v2"] .hud-portrait {
+  width: 66px;
+  height: 66px;
+  border: 1px solid var(--v2-night-line-strong);
+  border-image: none;
+  border-radius: var(--v2-r-md);
+  overflow: hidden;
+  background: var(--v2-night-2);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-portrait-btn {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--v2-r-md);
+  background: none;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-portrait-btn:hover:not(:disabled) {
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-portrait-btn:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+}
+:root[data-ui="v2"] .hud-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  color: var(--v2-on-night);
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud-rank {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-brass-hi);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud-where {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+}
+
+/* 顶栏：资产（标签在上、数字在下；标签 12 px，不再 11 px） */
+:root[data-ui="v2"] .hud-stats {
+  gap: 4px 24px;
+}
+:root[data-ui="v2"] .hud-stat-label {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .hud-stat-value {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-on-night);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud-cash .hud-stat-value {
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .hud-goal {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .hud-bar {
+  height: 6px;
+  background: var(--v2-night-3);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  overflow: hidden;
+}
+:root[data-ui="v2"] .hud-bar-fill {
+  background: var(--v2-brass-hi);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-goal-pct {
+  color: var(--v2-brass-hi);
+}
+
+/* 顶栏：日期不再是牌匾，就是一行大字；时刻与天气在下 */
+:root[data-ui="v2"] .hud-date {
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-image: none;
+  background: transparent;
+  color: var(--v2-on-night);
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  line-height: 1.3;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud-now {
+  color: var(--v2-on-night-2);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud-clock-time {
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .hud-clock-period {
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .hud-sky:hover,
+:root[data-ui="v2"] .hud-sky.open {
+  background: var(--v2-night-2);
+  border-radius: var(--v2-r-xs);
+}
+
+/* 顶栏上的按钮：深色底上的“幽灵”按钮；倍速是一组分段按钮 */
+:root[data-ui="v2"] .hud button:not(.hud-portrait-btn) {
+  min-height: var(--v2-h-sm);
+  padding: 0 9px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .hud button:not(.hud-portrait-btn):hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud button:not(.hud-portrait-btn):active:not(:disabled) {
+  background: var(--v2-night-3);
+}
+:root[data-ui="v2"] .hud button:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .hud button.active,
+:root[data-ui="v2"] .hud button.active:hover:not(:disabled) {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: var(--v2-brass-hi);
+  border-color: transparent;
+  text-shadow: none;
+  transform: none;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud .speed {
+  gap: 2px;
+  padding: 2px;
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .hud .speed .speed-n {
+  min-width: 34px;
+}
+:root[data-ui="v2"] .saves-buttons {
+  gap: 2px;
+}
+:root[data-ui="v2"] .saves input:not([type="checkbox"]) {
+  min-height: var(--v2-h-sm);
+  color: var(--v2-on-night);
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud .hud-story {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-pill);
+  padding: 0 12px;
+}
+:root[data-ui="v2"] .hud-story.has-alert::after,
+:root[data-ui="v2"] .hud-menu-btn.has-alert::after {
+  background: var(--v2-seal-hi);
+  border: 2px solid var(--v2-night-1);
+  border-radius: 50%;
+  box-shadow: none;
+}
+
+/* 命令栏：图标 + 文字的大按钮，平时透明，悬停浮起，选中的一页黄铜色字 + 顶上一道亮线 */
+:root[data-ui="v2"] .cmdbar {
+  --cmd-h: 54px;
+  gap: 8px;
+  padding: 10px 12px 10px;
+}
+:root[data-ui="v2"] .cmdbar .cmd {
+  position: relative;
+  gap: 3px;
+  min-width: 64px;
+  height: var(--cmd-h);
+  padding: 4px 6px 3px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 500;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .cmdbar .cmd:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cmdbar .cmd:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .cmdbar .cmd.active,
+:root[data-ui="v2"] .cmdbar .cmd.active:hover:not(:disabled) {
+  color: var(--v2-brass-hi);
+  font-weight: 600;
+  background: var(--v2-night-3);
+  border-color: var(--v2-night-line-strong);
+  text-shadow: none;
+  transform: none;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cmdbar .cmd-tabs .cmd.active::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  background: var(--v2-brass-hi);
+  border-radius: 0 0 2px 2px;
+}
+/* 舞台切换（港口街景 / 航海图）：一组分段按钮，选中的那个才亮——不再是蓝色看着像选中 */
+:root[data-ui="v2"] .cmd-stage {
+  gap: 2px;
+  padding: 3px;
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line);
+  border-radius: calc(var(--v2-r-md) + 3px);
+}
+:root[data-ui="v2"] .cmd-stage .cmd {
+  min-width: 72px;
+  height: calc(var(--cmd-h) - 8px);
+  background: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cmd-stage .cmd:hover:not(:disabled) {
+  background: var(--v2-night-2);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cmd-stage .cmd.active,
+:root[data-ui="v2"] .cmd-stage .cmd.active:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: transparent;
+}
+:root[data-ui="v2"] .cmdbar .cmd:disabled {
+  color: var(--v2-on-night-3);
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-ui="v2"] .cmd-sep {
+  width: 1px;
+  margin: 6px 4px;
+  background: var(--v2-night-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .cmd-dot {
+  top: 4px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--v2-seal-hi);
+  border: 2px solid var(--v2-night-1);
+}
+:root[data-ui="v2"] .cmd-more-dots i {
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
+}
+
+/* 功能窗口：纸面、圆角、细边与深阴影；标题靠左（宋体），关闭键是安静的方块 ×；标题下一道双细线 */
+:root[data-ui="v2"] .gw {
+  top: 12px;
+  bottom: 12px;
+  border: 1px solid rgba(12, 18, 28, 0.55);
+  border-image: none;
+  border-radius: var(--v2-r-lg);
+  overflow: hidden;
+  background: var(--v2-paper-0);
+  box-shadow: var(--v2-shadow-2);
+  image-rendering: auto;
+  animation: v2-rise var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .gw-right {
+  right: 12px;
+}
+:root[data-ui="v2"] .gw-head {
+  justify-content: flex-start;
+  min-height: 52px;
+  padding: 8px 56px 8px 18px;
+  background: var(--v2-paper-1);
+  background-image: none;
+  border-bottom: 3px double var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .gw-plaque {
+  height: auto;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-image: none;
+  background: transparent;
+  color: var(--v2-ink);
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .gw-close {
+  top: 9px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  min-height: 0;
+  padding: 0;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .gw-close canvas {
+  display: none;
+}
+:root[data-ui="v2"] .gw-close::before {
+  content: "×";
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 300;
+}
+:root[data-ui="v2"] .gw-close:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-sunk);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+/* 关闭键左边的“?”小键帽：点它打开全部快捷键（feedback/ShortcutHelp.tsx）；安静的幽灵按钮，与关闭键同高 */
+:root[data-ui="v2"] .gw-head:has(> .gw-keys) {
+  padding-right: 96px;
+}
+:root[data-ui="v2"] .gw-keys {
+  position: absolute;
+  top: 9px;
+  right: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-height: 0;
+  padding: 0;
+  color: var(--v2-ink-3);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .gw-keys:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-sunk);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .gw-keys .v2-kbd {
+  margin: 0;
+}
+/* 触屏、手机的整页窗口上没有键盘：不显示 */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .gw-keys {
+    display: none;
+  }
+  :root[data-ui="v2"] .gw-head:has(> .gw-keys) {
+    padding-right: 56px;
+  }
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .gw-keys,
+:root[data-ui="v2"] .app.game[data-layout="short"] .gw-keys {
+  display: none;
+}
+:root[data-ui="v2"] .gw-body {
+  padding: 16px 20px 24px;
+  background: var(--v2-paper-0);
+  background-image: none;
+  box-shadow: none;
+}
+
+/* 航海日志（每日提醒）：深色半透明卡，每条是一张小纸条 */
+:root[data-ui="v2"] .gamelog-title {
+  padding: 4px 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-bottom: 0;
+  border-radius: var(--v2-r-md) var(--v2-r-md) 0 0;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .notices {
+  gap: 6px;
+  padding: 8px;
+  background: rgba(11, 21, 34, 0.88);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: 0 var(--v2-r-md) var(--v2-r-md) var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .notice {
+  padding: 6px 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border-left: 3px solid var(--v2-seal);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+
+/* 提示：深色的小条，左边一道颜色说明是消息还是错误；按钮是浅色的小按钮 */
+:root[data-ui="v2"] .toast {
+  min-height: 44px;
+  padding: 8px 10px 8px 14px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 4px solid var(--v2-brass-hi);
+  border-image: none;
+  border-radius: var(--v2-r-md);
+  filter: none;
+  box-shadow: var(--v2-shadow-2);
+  image-rendering: auto;
+}
+:root[data-ui="v2"] .toast-text {
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .toast.error {
+  border-left-color: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .toast.error .toast-text {
+  color: #ffd9d2;
+}
+
+/* 抽屉（手机的“更多”、顶栏菜单）：纸面，圆角在上，顶上一条可抓的短横 */
+:root[data-ui="v2"] .sheet {
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  background-image: none;
+  box-shadow: var(--v2-shadow-3);
+}
+:root[data-ui="v2"] .sheet-at-bottom .sheet {
+  border-top: 0;
+  border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+  overflow: hidden;
+}
+:root[data-ui="v2"] .sheet-at-top-right .sheet {
+  border: 1px solid rgba(12, 18, 28, 0.55);
+  outline: 0;
+  border-radius: var(--v2-r-lg);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .sheet-head {
+  min-height: 52px;
+  padding: 14px 56px 10px 18px;
+  background: var(--v2-paper-1);
+  background-image: none;
+  border-bottom: 1px solid var(--v2-line);
+  box-shadow: none;
+  image-rendering: auto;
+}
+:root[data-ui="v2"] .sheet-grip {
+  top: 6px;
+  width: 40px;
+  margin-left: -20px;
+  background: var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sheet h2.sheet-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  letter-spacing: 0.1em;
+  color: var(--v2-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .sheet-close {
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  color: var(--v2-ink-2);
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .sheet-close canvas {
+  display: none;
+}
+:root[data-ui="v2"] .sheet-close::before {
+  content: "×";
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 300;
+}
+:root[data-ui="v2"] .sheet-close:hover:not(:disabled) {
+  background: var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .sheet-body {
+  padding: 14px 16px 18px;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .more-grid {
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 10px;
+}
+:root[data-ui="v2"] .more-grid .cmd {
+  height: 72px;
+  gap: 4px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .more-grid .cmd.active {
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+  text-shadow: none;
+}
+
+/* 顶栏“菜单”（手机与平板，TopBar.tsx 的 HudMenu；抽屉是纸面）：
+   分节标题与窗口里的分节一样（黄铜小菱形 + 字 + 一条细线），不再是 v1 的刻痕双线；
+   六个数字是一张细线账页（名目在左、数在右），不是六块一样的小方块；目标进度是 6 px 圆头的黄铜细条 */
+:root[data-ui="v2"] .hud-menu {
+  gap: 16px;
+}
+:root[data-ui="v2"] .hud-menu-section h3 {
+  gap: 8px;
+  margin: 0 0 8px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hud-menu-section h3::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .hud-menu-section h3::after {
+  height: 1px;
+  background: var(--v2-line);
+  border: 0;
+}
+:root[data-ui="v2"] .hud-menu-stats {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .hud-menu-stat {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 2px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--v2-line);
+  border-radius: 0;
+}
+:root[data-ui="v2"] .hud-menu-stat dt {
+  gap: 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hud-menu-stat dd {
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  color: var(--v2-ink);
+  text-align: right;
+}
+:root[data-ui="v2"] .hud-menu-stat.is-warn dd,
+:root[data-ui="v2"] .hud-menu-colonies .is-warn {
+  color: var(--v2-seal);
+}
+/* 平板上抽屉宽：账页排成两栏（栏间留白，没有竖线） */
+@media (min-width: 720px) {
+  :root[data-ui="v2"] .hud-menu-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+:root[data-ui="v2"] .hud-menu-colonies {
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hud-menu-goal {
+  gap: 6px 10px;
+  margin-top: 12px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .hud-menu-goal-bar .hud-bar {
+  height: 6px;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-menu-goal-bar .hud-bar-fill {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-menu-goal-bar .hud-goal-pct {
+  font-weight: 600;
+}
+
+/* “有发现待报告”：唯一一个“有新东西”的顶栏入口——黄铜细边的小签 + 右上角印章红的小点，不再混在透明的幽灵按钮里；
+   菜单里同一个入口是浅黄铜底的一键按钮 */
+:root[data-ui="v2"] .hud button.hud-discovery {
+  position: relative;
+  align-self: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--v2-brass-hi);
+  background: rgba(227, 176, 86, 0.1);
+  border: 1px solid rgba(227, 176, 86, 0.55);
+  border-radius: var(--v2-r-pill);
+  padding: 0 12px;
+}
+:root[data-ui="v2"] .hud button.hud-discovery:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: rgba(227, 176, 86, 0.2);
+  border-color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .hud button.hud-discovery::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 9px;
+  height: 9px;
+  background: var(--v2-seal-hi);
+  border: 2px solid var(--v2-night-1);
+  border-radius: 50%;
+}
+:root[data-ui="v2"] .hud-menu .hud-discovery {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  min-height: var(--v2-h-touch);
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-menu .hud-discovery:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+}
+
+/* 舞台左上：港口名牌（纸卡）与“出港”（舞台上最醒目的主按钮，不再上下晃） */
+:root[data-ui="v2"] .scene-sign {
+  padding: 10px 16px 10px 12px;
+  background: rgba(248, 243, 233, 0.96);
+  border: 1px solid rgba(12, 18, 28, 0.45);
+  outline: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .scene-flag {
+  border-radius: 2px;
+}
+:root[data-ui="v2"] .scene-sign-name {
+  font-family: var(--v2-font-display);
+  color: var(--v2-ink);
+  letter-spacing: 0.08em;
+}
+:root[data-ui="v2"] .scene-sign-sub {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .scene-sign-docked {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .scene-depart {
+  min-height: var(--v2-h-lg);
+  padding: 0 20px 0 12px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  letter-spacing: 0.3em;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 1px solid #8f6418;
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  animation: none;
+}
+:root[data-ui="v2"] .scene-depart:hover {
+  background: #eabd68;
+}
+:root[data-ui="v2"] .scene-depart:active {
+  transform: translateY(1px);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .scene-depart:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 3px;
+}
+:root[data-ui="v2"] .scene-plate {
+  font-family: var(--v2-font-display);
+  color: var(--v2-on-night);
+  background: rgba(17, 31, 49, 0.94);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-2);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .scene-plate::after {
+  border-top-color: rgba(17, 31, 49, 0.94);
+}
+
+/* 各功能面板（舰队、航海士、设置……）的自用变量改指向新令牌：第二阶段逐个重画之前，先让纸色、描边与阴影一致 */
+:root[data-ui="v2"] .pn {
+  --pn-card: var(--v2-paper-1);
+  --pn-well: var(--v2-paper-sunk);
+  --pn-hi: var(--v2-paper-2);
+  --pn-edge: var(--v2-line-strong);
+  --pn-edge-soft: var(--v2-line);
+  --pn-ink2: var(--v2-ink-2);
+  --pn-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .pn .pn-form,
+:root[data-ui="v2"] .pn .pn-card {
+  border-width: 1px;
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .pn .pn-section > .pn-h {
+  text-shadow: none;
+}
+
+/* ═════════════════════════ 平板与手机 ═════════════════════════ */
+/* 紧凑顶栏：一行，深色；头像圆角；数字放大一点 */
+:root[data-ui="v2"] .hud.hud-compact {
+  gap: 12px;
+  padding: calc(8px + var(--safe-top)) calc(10px + var(--safe-right)) 8px calc(10px + var(--safe-left));
+}
+:root[data-ui="v2"] .hud-compact .hud-portrait {
+  width: 46px;
+  height: 46px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hud-compact .hud-portrait,
+:root[data-ui="v2"] .app.game[data-layout="short"] .hud-compact .hud-portrait {
+  width: 40px;
+  height: 40px;
+}
+:root[data-ui="v2"] .hud-compact .hud-cash .hud-stat-value {
+  font-size: var(--v2-fs-xl);
+}
+/* 现金下面那条细细的目标进度 */
+:root[data-ui="v2"] .hud-goal.hud-goal-mini {
+  height: 4px;
+  background: var(--v2-night-3);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  overflow: hidden;
+}
+:root[data-ui="v2"] .hud-goal-mini .hud-bar-fill {
+  background: var(--v2-brass-hi);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .hud-date.hud-date-mini {
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .hud .speed-pill {
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+:root[data-ui="v2"] .hud .speed-pill button {
+  min-width: var(--v2-h-touch);
+  min-height: var(--v2-h-touch);
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .hud .speed-pill button.active {
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .speed-menu {
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .hud.hud-compact .hud-menu-btn {
+  min-height: var(--v2-h-touch);
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .hud.hud-compact .hud-menu-btn {
+  width: var(--v2-h-touch);
+}
+
+/* ═════════════════════════ 桌面的一行顶栏与矮命令栏 ═════════════════════════ */
+/* 顶栏：与平板同一个紧凑顶栏（components/TopBar.tsx 的 CompactHud），高约 56 px（原来两三行约 100 px，寰宇里折到 128 px）。
+ * 从左到右：头像与名字（下面一行是所在）｜现金、净资产、目标、名声、殖民地｜待报告的发现、故事｜日期（上）与时刻天气（下）｜倍速｜存档、菜单。
+ *
+ * 宽度的账。最挤的是寰宇靠港：有天气、风，倍速旁边还有“在港 · 去旅店”。时间、倍速与按钮不让位，让位的只有数字那一格——
+ * 放不下的从后面整项收掉（它们都在“菜单”里），不会把一个数字从中间切开。为了让现金与净资产在最窄的桌面窗口（1180 px）里也站得住：
+ *   · 日期与时刻天气排成上下两行（省 160 px，一样不少）；
+ *   · 窄于 1600：暂停与“下一天”只留图标，“存档”只留图标，名字限 160 px；
+ *   · 窄于 1440：收掉名字下面的所在，名字限 120 px；
+ *   · 窄于 1320：收掉风向风力、名声、殖民地与目标一格（目标换回现金下面那条细进度）。 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact {
+  gap: 18px;
+  min-height: 56px;
+  padding: 7px 16px 8px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-portrait {
+  width: 40px;
+  height: 40px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-captain {
+  flex: none;
+  gap: 10px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-id {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  min-width: 0;
+  max-width: 220px;
+  line-height: 1.25;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-name {
+  font-size: var(--v2-fs-lg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 头衔（剧本名）在船长卡里；一行顶栏只留名字与所在 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-rank {
+  display: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-where {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 数字这一格是顶栏里唯一会让位的：放不下的整项折到第二行、被裁掉（现金排第一，永远在；净资产、目标、名声、殖民地从后往前让位）。
+ * 高 40 px、上面留 3 px：一格数字高 34 px，正好居中；目标一格底下那条细进度画在 34 px 之外的 3 px 里。 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-stats {
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 16px 22px;
+  height: 40px;
+  padding-top: 3px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-stat-value {
+  font-size: var(--v2-fs-md);
+  line-height: 1.3;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-cash .hud-stat-value {
+  font-size: var(--v2-fs-xl);
+}
+/* 目标一格：样子同旁边的数字（“目标”与百分比），底下一条细进度；有了它，现金下面那条细进度不再重复 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-stat {
+  position: relative;
+  min-width: 44px;
+  cursor: default;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-stat .hud-stat-value {
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-stat-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: var(--v2-night-3);
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-stat-bar .hud-bar-fill {
+  height: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-mini {
+  display: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-discovery {
+  flex: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-story {
+  flex: none;
+  min-height: var(--v2-h-sm);
+}
+/* 日期在上、时刻与天气在下（两行一组，同旁边的名字与数字）；倍速在右 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-time {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-clock-row {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-clock-row .hud-date {
+  font-size: var(--v2-fs-md);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-clock-row .hud-now {
+  justify-content: flex-start;
+  gap: 10px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .speed button {
+  min-height: 30px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact .hud-menu-btn {
+  height: 36px;
+  min-height: 36px;
+}
+/* 存档：一次点到（图标加“存档”二字），样子与旁边的菜单键一样 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact .hud-save-btn {
+  flex: none;
+  gap: 6px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 14px;
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line);
+}
+/* 窄于 1600：暂停与“下一天”只留图标（文字只是看不见，仍是按钮的名称，悬停另有提示），“存档”只留图标，名字限 160 px */
+@media (max-width: 1599px) {
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .speed .speed-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-save-label {
+    display: none;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact .hud-save-btn {
+    width: 36px;
+    padding: 0;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-id {
+    max-width: 160px;
+  }
+}
+/* 窄于 1440：收掉名字下面的所在，名字限 120 px，间距收一点 */
+@media (max-width: 1439px) {
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-where {
+    display: none;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-id {
+    max-width: 120px;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact {
+    gap: 14px;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-stats {
+    column-gap: 16px;
+  }
+}
+/* 窄于 1320：风向风力让位（悬停天况看预报，“菜单”里有全文；航行图上另有风标）；名声、殖民地与目标一格收掉，目标换回现金下面那条细进度 */
+@media (max-width: 1319px) {
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-wind,
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-fame,
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-colonies,
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-stat {
+    display: none;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-goal-mini {
+    display: block;
+  }
+  /* 现金下面多了一条细进度：这一格不再留上面的 3 px */
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .hud-stats {
+    padding-top: 0;
+    align-content: center;
+  }
+}
+/* 触屏的大平板横放也是桌面布局：点按区照旧 ≥ 44 px */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud-compact .speed button,
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact .hud-menu-btn,
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact .hud-save-btn {
+    min-height: var(--v2-h-touch);
+    height: auto;
+  }
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .hud.hud-compact .hud-save-btn {
+    min-width: var(--v2-h-touch);
+  }
+}
+
+/* 命令栏：图标与字排成一行的矮按钮（图标原尺寸 16 px，与顶栏里的小图标一样），整条高约 46 px（原来 74 px）。
+ * 功能页一行放不下时照旧收进最右边的“更多”（CommandBar.tsx 按实际宽度量）。手机的底部导航（cmdbar-compact）不变。 */
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact),
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) {
+  --cmd-h: 32px;
+  gap: 6px;
+  padding: 7px 12px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  /* 通用按钮的下限是 34 px：这里按 --cmd-h 定（鼠标下 32 px，触屏见下面） */
+  min-height: 0;
+  padding: 0 10px;
+  font-size: var(--v2-fs-sm);
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd .shell-icon,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd .shell-icon {
+  flex: none;
+  /* 图标是 16 × 16 的像素画，按原尺寸显示（内联样式给的是两倍） */
+  width: 16px !important;
+  height: 16px !important;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd-tabs,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd-tabs {
+  gap: 2px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd-tabs .cmd.active::after,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd-tabs .cmd.active::after {
+  left: 10px;
+  right: 10px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd-stage,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd-stage {
+  padding: 2px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd-stage .cmd,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd-stage .cmd {
+  min-width: 0;
+  height: calc(var(--cmd-h) - 4px);
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd-sep,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd-sep {
+  margin: 4px 4px;
+}
+:root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact) .cmd-dot,
+:root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) .cmd-dot {
+  top: 2px;
+  right: 2px;
+}
+/* 触屏（平板、桌面布局的大平板）：按钮高 44 px */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .app.game[data-layout="desktop"] .cmdbar:not(.cmdbar-compact),
+  :root[data-ui="v2"] .app.game[data-layout="tablet"] .cmdbar:not(.cmdbar-compact) {
+    --cmd-h: var(--v2-h-touch);
+    padding: 6px 12px;
+  }
+}
+
+/* 底部导航（手机）：四五个等宽的键，选中的黄铜色字 + 顶上一道亮线；舞台切换键不再是蓝色 */
+:root[data-ui="v2"] .cmdbar.cmdbar-compact {
+  gap: 4px;
+  padding: 8px calc(6px + var(--safe-right)) calc(6px + var(--safe-bottom)) calc(6px + var(--safe-left));
+}
+:root[data-ui="v2"] .cmdbar.cmdbar-compact .cmd {
+  min-width: 0;
+  height: 56px;
+  font-size: var(--v2-fs-xs);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .cmdbar-compact .cmd-stage {
+  padding: 0;
+  background: none;
+  border: 0;
+}
+:root[data-ui="v2"] .cmdbar-compact .cmd-stage .cmd {
+  min-width: 0;
+  height: 56px;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .cmdbar.cmdbar-compact .cmd-tabs .cmd.active::after,
+:root[data-ui="v2"] .cmdbar.cmdbar-compact .cmd-more.active::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 18%;
+  right: 18%;
+  height: 2px;
+  background: var(--v2-brass-hi);
+  border-radius: 0 0 2px 2px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .cmdbar.cmdbar-compact {
+  padding: 8px 8px calc(8px + var(--safe-bottom)) calc(6px + var(--safe-left));
+  border-right: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .cmdbar.cmdbar-compact::before {
+  width: 1px;
+  background-image: linear-gradient(180deg, transparent, var(--v2-brass) 18%, var(--v2-brass) 82%, transparent);
+}
+
+/* 手机上功能窗口是整页的：去掉圆角与外框；标题栏 52 px，关闭键 44 px */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .gw,
+:root[data-ui="v2"] .app.game[data-layout="short"] .gw {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: v2-rise var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .gw-head,
+:root[data-ui="v2"] .app.game[data-layout="short"] .gw-head {
+  min-height: 52px;
+  padding: 6px 56px 6px 16px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .gw-plaque,
+:root[data-ui="v2"] .app.game[data-layout="short"] .gw-plaque {
+  font-size: var(--v2-fs-xl);
+  letter-spacing: 0.1em;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .gw-close,
+:root[data-ui="v2"] .app.game[data-layout="short"] .gw-close {
+  top: 4px;
+  right: 6px;
+  width: var(--v2-h-touch);
+  height: var(--v2-h-touch);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .gw-body,
+:root[data-ui="v2"] .app.game[data-layout="short"] .gw-body {
+  padding: 12px 14px 20px;
+  font-size: 15px;
+}
+@media (max-width: 1179px) {
+  :root[data-ui="v2"] .app.game[data-layout="tablet"] .gw-close {
+    top: 6px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ═════════════════════════ 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .gw {
+    animation: none;
+    transition: none;
+  }
+}

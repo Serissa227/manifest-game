@@ -1,0 +1,183 @@
+# 请托：挪了地方的浅滩（request_kutti）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：库提（kutti，1538-06-17 生，男），马拉卡尔家的年轻水手，认得卡利卡特河口的每一道浅滩。cast：story_indian_ocean.toml，日程 1557—1590 一直在 calicut_port（dock）。
+# 类型：去某处（go）。四章：offer（报价）、arrive（测新沟）、report（教孩子）、report_rough（try 没量准时的收尾，只剩一个选项）；没有 stage 章，也没有 witness / rumor。
+#   结构说明：原先 report 的 teach 靠旗标 _channel 门禁，审计机器人会报“准备后条件仍不满足”；改为 try 的两个出口直接走 report_rough，report 里不再有旗标门禁。
+# 报价：T（当面）。auto=false，玩家在卡利卡特港里“问请托”（ask:request_kutti）启动；offer 章没有 at，objectives 写“在港里找到他”。
+# 门禁：offer 写日期 1561-01-01..1570-06-30 与主角年龄 ≥ 17；deadline 1570-06-30，超时 next=failed，不写见闻。arrive 与 report 只写 alive。gate_main 为空，没有 c13_main 门禁。
+# 进行中：arrive 章 deadline_days=60；超时 next=failed，来信一封、好感 -3、旗标 _late。report 是普通章，可以一直等。
+# 依据·史实背景：卡利卡特是扎莫林的港口，马拉卡尔家的快船在河口一带是有名的；葡萄牙人的大船吃水深，只能走外槽；雨季冲来的沙会挪动浅滩。
+# 依据·原创：库提、竹篙上刻的深浅、河岸上的孩子们、新沟的名字、“我撑，你记”。史上没有这个人，也没有这条新沟。
+# 依赖：港口 calicut_port 已是现有 key，无需 B10b 改名；物品 sounding_lead（items_instrument_01.toml，只查持有）；技能 tide_reading（skills.toml）。
+# 回避：不写 C7 的恋情（pair_kutti_diogo_rocha），不写迪奥戈，不写炮台与 1571 年的事；不写恋爱；不用 relation / tie / bond / heart 效果。cast 没有写秘密，本请托不涉及秘密。
+# 读的旗标：无（不读 c7_ 旗标，不读主线旗标）。
+# 设的旗标：c13_request_kutti_accepted（offer 两条接法，非终局）、_declined（终局）、_channel（arrive 测出新沟，非终局）、_late（arrive 超时，终局）、_done（report 完成，终局）。
+#   try 不设 _channel：只是大概测了，改走 report_rough，只剩“站在一边听他讲”；_channel 仍会设，但不再有人读取。
+# 报酬：现金 550（report 给一次）、好感最多 +13、名声 +1、回忆 mem-request_kutti-report（只在“你来讲”那条给）。
+# 回忆插画清单：
+#   mem-request_kutti-report「刻了新痕的竹篙」：落潮的河岸上，几个赤脚的孩子蹲成一圈，一根竹篙横在中间，篙身上一道新痕刻得很深。
+
+[[tracks]]
+key = "request_kutti"
+name = "挪了地方的浅滩"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kutti"]
+
+# 一、竹篙的另一面：库提的小船在港里搁了浅，他托你一起测一遍河口。
+[[tracks.chapters]]
+key = "offer"
+title = "竹篙的另一面"
+text = "卡利卡特河口的老沟今年走了样。库提的小船从沙洲头上冲出来，船底闷响一声，搁在了沙上。他跳下水推了半天，又撑了一回，还是那道沙。这会儿他坐在船头，竹篙横在膝上，笑声比往常小了一截。见你走近，他才抬头：“那条大船别往里开，第三道沙洲会咬船底。要进河口，换我的小船。”他拿篙尖在船板上画了一道弯。“雨季一过，沙就挪。我撑，你记。测完了，新的浅滩要教给马拉卡尔家的几个小孩。”说起葡萄牙人的大船要是搁在这道沙上，他又笑得最响。"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "kutti", text = "在港里找到他" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1570, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1570, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应跟他测河口。"
+next = "arrive"
+reply = "他把竹篙递过来，篙身刻着一道道痕，每道旁边都有个小记号。“这是去年的深浅。今年的，刻在另一面。”他说完跳回小船，船尾一推，先往沙洲那边去了。"
+effects = [
+  { kind = "affinity", person = "kutti", value = 2 },
+  { kind = "flag", flag = "c13_request_kutti_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_kids"
+text = "问他：教小孩做什么？"
+next = "arrive"
+reply = "“他们以后撑快船。”他把篙转了一圈，“快船不认浅滩，会翻。”"
+effects = [
+  { kind = "affinity", person = "kutti", value = 2 },
+  { kind = "flag", flag = "c13_request_kutti_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "河口的浅滩你不碰。"
+next = "failed"
+reply = "他耸耸肩，把竹篙往肩上一扛，自己撑着小船进了河口。没过多久，船底又搁了一回浅。"
+effects = [{ kind = "flag", flag = "c13_request_kutti_declined" }]
+
+# 二、新的一道沟：落潮时测河口，测出北边那道浅滩之间的新沟。
+[[tracks.chapters]]
+key = "arrive"
+title = "新的一道沟"
+text = "落潮的时候，库提撑着小船在前，你坐在船尾记数。竹篙探下去，他嘴里一个数一个数地报。河口北边那道浅滩往南挪了几十步，原来的深水沟淤平了一半。他把篙尖顶住沙面往左一拨：“这里原先是深水。”话还没说完，篙子又往下沉了一截。“中间还有一道新沟，”他盯着水面上一道细细的流纹，“可我撑不准它有多深。”"
+speaker = "captain"
+mood = "cheerful"
+at = "calicut_port"
+when = [{ kind = "alive", person = "kutti", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [
+  { kind = "letter", person = "kutti", text = "“我一个人测完了。新沟我只撑过去一回，没记深浅。”" },
+  { kind = "affinity", person = "kutti", value = -3 },
+  { kind = "flag", flag = "c13_request_kutti_late" },
+] }
+
+[[tracks.chapters.choices]]
+key = "lead"
+text = "放测深锤，一锤一锤把新沟测出来。"
+next = "report"
+requires = [{ kind = "item", item = "sounding_lead", qty = 1 }]
+hint = "船上没有测深锤，这一趟只能靠眼睛和竹篙。"
+reply = "你测了二十多锤，新沟比老沟窄，可深。库提在竹篙上刻了一道新痕，刻得很深，刻完拿拇指抹了抹。"
+news = "卡利卡特河口落潮时，有人拿测深锤在马拉卡尔家的快船后头一锤一锤地探，探出一道新沟。"
+effects = [
+  { kind = "affinity", person = "kutti", value = 3 },
+  { kind = "flag", flag = "c13_request_kutti_channel" },
+]
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "看潮水的颜色和流向，判断新沟的走向。"
+next = "report"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "潮色你还读不准，看不出新沟往哪边走。"
+reply = "潮水在新沟上面走得快，颜色也深。你指给他看，他撑过去试了一篙，篙尖没碰底。“这回你看得比我远。”他说。"
+news = "卡利卡特河口的老水手说，马拉卡尔家的年轻水手只看潮色，就指出了新沟往哪边走。"
+effects = [
+  { kind = "affinity", person = "kutti", value = 3 },
+  { kind = "flag", flag = "c13_request_kutti_channel" },
+]
+
+[[tracks.chapters.choices]]
+key = "try"
+text = "让他撑，你在旁边看他的篙入水多深。"
+next = "report_rough"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "他撑了三趟，你在船帮上记下三个深浅。两个对得上，第三个他自己也说不准，篙子入水时总有一寸在打滑。"
+news = "卡利卡特的河口落潮时，马拉卡尔家的小船撑在前头，后头跟着一条外乡船，船尾的人一篙一篙地记数。"
+fail = { next = "report_rough", effects = [
+  { kind = "affinity", person = "kutti", value = -2 },
+], news = "卡利卡特河口的落潮里，一条外乡船在新沟边上搁了一下，船上的人和水手一起湿透了。" }
+effects = [
+  { kind = "affinity", person = "kutti", value = 1 },
+]
+
+# 三、新沟的名字：河岸上的孩子们学认新挪的浅滩，新沟要有人来讲。
+[[tracks.chapters]]
+key = "report"
+title = "新沟的名字"
+text = "几个马拉卡尔家的小孩蹲在河岸上，赤脚，手里攥着木片，木片上是用炭条画歪了的河口。库提把刻了新痕的竹篙横在膝上，一道一道讲给他们听：“这是老沟，淤了。这是新沟。”最小的那个孩子问：“新沟有没有名字？”库提没答，把竹篙递到你手里：“讲到新沟，你来讲。”"
+speaker = "captain"
+mood = "cheerful"
+at = "calicut_port"
+when = [{ kind = "alive", person = "kutti", value = true }]
+
+[[tracks.chapters.choices]]
+key = "teach"
+text = "照你记的，一道一道讲给孩子们听。"
+next = "done"
+reply = "你照记下的深浅一道一道讲。讲到新沟，孩子们问它叫什么，库提说没有，让你取。你取了一个，孩子们念了几遍，笑了一下午。他把工钱塞进你手里，说名字刻在篙上了。"
+news = "卡利卡特河岸上，马拉卡尔家的孩子们学认河口新挪的浅滩，有一道新沟被起了个外乡名字。"
+effects = [
+  { kind = "cash", value = 550 },
+  { kind = "affinity", person = "kutti", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_kutti-report", title = "刻了新痕的竹篙" },
+  { kind = "flag", flag = "c13_request_kutti_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "把竹篙还给他，让他讲，你在旁边听。"
+next = "done"
+reply = "他讲得比你好，连老沟里哪块石头磕过船底都讲到了。讲到葡萄牙人的大船搁在新沟边上，孩子们笑得最响。他付了钱，说你的记数记得准，嘴巴不行。"
+news = "卡利卡特河岸上，库提给孩子们讲河口新挪的浅滩，讲到葡萄牙人的大船搁浅，孩子们笑得最响。"
+effects = [
+  { kind = "cash", value = 550 },
+  { kind = "affinity", person = "kutti", value = 5 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kutti_done" },
+]
+
+# 三之二、没量准的那一道：try 走到这里。竹篙上的深浅只对上两个，第三个要等下回再撑，所以只剩“让他讲”一个选项。
+[[tracks.chapters]]
+key = "report_rough"
+title = "没量准的那一道"
+text = "几个马拉卡尔家的小孩蹲在河岸上，赤脚，手里攥着木片，木片上炭条画的河口歪歪扭扭。库提把竹篙横在膝上，翻开你记的三个深浅，两个对得上，第三个他拿拇指按了很久。“这是老沟，淤了。这是新沟，宽的地方好撑，窄的地方还没量准。”最小的孩子问：“新沟叫什么？”库提看了看那个没量准的数，把竹篙收回自己手里：“量准了再起名字。”"
+speaker = "captain"
+mood = "cheerful"
+at = "calicut_port"
+when = [{ kind = "alive", person = "kutti", value = true }]
+
+[[tracks.chapters.choices]]
+key = "listen_in"
+text = "站在一边，听他给孩子们讲。"
+next = "done"
+reply = "他讲得比你记的多，连老沟里哪块石头磕过船底都讲到了。讲到那个没量准的数，他让孩子们在木片上画个圈，圈旁边写“下回再撑”。他付了钱，说你站在旁边的时候，孩子们问得比平时勤。"
+news = "卡利卡特河岸上，库提给孩子们讲河口新挪的浅滩，有一道新沟的深浅还没量准，要等下回再撑。"
+effects = [
+  { kind = "cash", value = 550 },
+  { kind = "affinity", person = "kutti", value = 5 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kutti_done" },
+]

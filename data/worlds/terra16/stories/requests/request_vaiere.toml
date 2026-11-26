@@ -1,0 +1,148 @@
+# 请托：先听浪（request_vaiere）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：瓦伊蕾（vaiere，1538-12-11 生，女），塔希提马塔瓦伊湾的星航者，先听浪，再看陌生人的海图。cast：story_americas.toml。
+# 类型：去某处（go）。报价：当面（T），报价港 tahiti；人物在港里找到，auto=false，界面用 ask:request_vaiere 启动。
+# 窗口：报价 1557-06-01..1568-12-31（写在 offer 的 when 里）；之后的章节只看她还活着。
+# 章节：offer（闭眼听浪）→ voyage（一圈低低的绿，去环礁、回程，限期 60 天，等待 10 天）→ report（天、水还是铜）或 report_lost（偏了一天半）→ done。
+#       report_lost 是第四章：检定失败（by_swell）的回话，报酬打折。engine 的失败分支不显示选项回复，又不能用 requires 去挡自己轨道设的旗标，所以另起一章。
+# 身份档：2（富商、学者、官员，基数 1600），风险高 ×1.8，取 2900（cash_total）。
+# 依据·史实：波利尼西亚的星航与涌浪、白燕鸥指陆（传统）。环礁不取名，正文不写岛名。
+# 依据·原创：瓦伊蕾、那颗星的名字（不写出来）、侧涌、那一圈低绿、黑珍珠作报酬、海图边上的浪纹。
+# 秘密：cast 没写秘密；本请托只写“岛在哪里由她说了算”。不写她与托马斯（C7 pair_vaiere_tomas_mendoza）、不写她与库西（tie_extra_12_vaiere_kusi_wayna）。
+# 读的旗标：只读 c13_request_vaiere_nochart（report 的变体，只改正文）。
+# 写的旗标：accepted、declined、nochart、stars、swell、late、partial、done（终局只一面：done 或 partial）。
+# 依赖：港口 tahiti；海区 polynesia（navigation.toml，chart 效果）；技能 astral_navigation（skills.toml）。无 B10b 改名；无主线门禁（c13_main_* 不读）。
+# 回忆插画清单：mem-request_vaiere-report：独木舟边的沙地上画着三道浪，一串黑珍珠压在摊开的海图边上。
+# 失败与超时：不罚钱、不扣物品、不改时间线；超时给瓦伊蕾的一封来信，没有见闻（没人知道这件事没成）。
+
+[[tracks]]
+key = "request_vaiere"
+name = "先听浪"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["vaiere"]
+
+# 一、闭眼听浪：塔希提的礁边，她不看你的海图。
+[[tracks.chapters]]
+key = "offer"
+title = "闭眼听浪"
+text = "瓦伊蕾没去看你摊开的海图。她把它卷起来，塞回你手里，指了指独木舟旁边的沙地，让你坐下，闭上眼。浪一下一下拍着礁石，她问你听出了几个方向的涌。你数到第三个就乱了，睁开眼，她正用脚尖把沙抹平。她不笑，只说出一颗星的名字。你没听过，她也不解释，只要你朝它落下的方向开五天，看见一座环礁就回来。“你的船偏了两天的路，自己还不知道吧？”"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1568, 12, 31] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "vaiere", text = "在港里找到她" }]
+deadline = [1568, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "照她说的星，往它落下的方向开五天。"
+next = "voyage"
+reply = "她用手指在沙上画了三道浪，一道比一道短：“第三天以后，你会觉得船底不对。那是对的。”"
+effects = [{ kind = "affinity", person = "vaiere", value = 2 }, { kind = "flag", flag = "c13_request_vaiere_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_chart"
+text = "问她：能不能先在我的海图上点个位置？"
+next = "voyage"
+reply = "她看了你一会儿，把你的海图压在一块石头底下，压得很平：“回来再还你。它画的是别人的海，你要记的是这片。”"
+effects = [{ kind = "affinity", person = "vaiere", value = 2 }, { kind = "flag", flag = "c13_request_vaiere_accepted" }, { kind = "flag", flag = "c13_request_vaiere_nochart" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "没有海图，你不开船。"
+next = "failed"
+reply = "她点点头，站起来拍掉手上的沙，没有再劝。走回她的独木舟那边时，她背对着你，说了一句很轻的话，你没听清。"
+effects = [{ kind = "flag", flag = "c13_request_vaiere_declined" }]
+
+# 二、一圈低低的绿：五天的航程，第五天黄昏见到环礁；回程的路她没教。
+[[tracks.chapters]]
+key = "voyage"
+title = "一圈低低的绿"
+text = "第三天起，船底的晃法变了，一道涌从侧面压过来，压得你要把舵往回让。你把那道涌的方向记在纸角上。第四天夜里，那颗星压着海平线往下沉，沉得你不敢眨眼。第五天黄昏，一群白燕鸥往同一个方向飞，你顺着它们看过去，海平线上浮着一圈低低的绿。环礁到了。你绕着它走了半圈，找不到能进船的口子。可回程的路，她没教你。"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "alive", person = "vaiere", value = true }]
+objectives = [{ kind = "wait", days = 10, text = "等船在海上走完往返" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "vaiere", value = -3 }, { kind = "flag", flag = "c13_request_vaiere_late" }, { kind = "letter", person = "vaiere", text = "你的船没回来过塔希提。环礁还在那里，等下一个肯先听浪的人。" }] }
+
+[[tracks.chapters.choices]]
+key = "by_star"
+text = "夜里认出她说的那颗星，倒着它的方向开回去。"
+next = "report"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "夜里的星你认得的不多，照着一颗星开四夜，你没有把握。"
+reply = "你在星下面开了四夜，每夜都把船头对准它沉下去的那一点。天亮时，你闻到了塔希提的炊烟。"
+effects = [{ kind = "affinity", person = "vaiere", value = 3 }, { kind = "flag", flag = "c13_request_vaiere_stars" }]
+
+[[tracks.chapters.choices]]
+key = "by_swell"
+text = "闭上眼，照来时那道侧涌开回去。"
+next = "report"
+check = { attr = "seamanship", base = 5, per = 8 }
+fail = { next = "report_lost", effects = [{ kind = "affinity", person = "vaiere", value = -2 }] }
+reply = "侧涌换了一边压船，你把舵扶到它压不动的地方，一手扶着船帮，一直开到看见岛上的山。"
+effects = [{ kind = "affinity", person = "vaiere", value = 3 }, { kind = "flag", flag = "c13_request_vaiere_swell" }]
+
+[[tracks.chapters.choices]]
+key = "by_compass"
+text = "拿出罗盘，按你记下的航向原路回去。"
+next = "report"
+reply = "回程很顺，顺得不像你自己找的路。可你知道，她会问。"
+effects = [{ kind = "affinity", person = "vaiere", value = 1 }]
+
+# 三、天、水还是铜：回到塔希提，她只问一句。
+[[tracks.chapters]]
+key = "report"
+title = "天、水还是铜"
+text = "瓦伊蕾坐在独木舟的阴影里。独木舟边放着一只剖开的椰子，她先把它推给你。然后她听你说环礁的样子：几块露出水的礁，几棵树，鸟往哪边落，潮水在哪一刻转了向。你说得慢，她一句也不插，手指在椰子壳的裂缝里来回地划。说到回程，她忽然抬起头，不问环礁，只问一句：“回来的路上，你看的是天，是水，还是那块铜？”"
+speaker = "captain"
+mood = "tender"
+at = "tahiti"
+when = [{ kind = "alive", person = "vaiere", value = true }]
+news = "塔希提马塔瓦伊湾，一个外乡船长没带海图就出了海，十来天后又回来了，说不清是从哪一边回来的。"
+
+[[tracks.chapters.variants]]
+key = "nochart"
+when = [{ kind = "flag", flag = "c13_request_vaiere_nochart" }]
+text = "瓦伊蕾先把压在石头底下的海图还给你，海图的边角被海风吹卷了，她用拇指压了压，没压平。然后她坐回独木舟的阴影里，听你说环礁的样子：几块露出水的礁，几棵树，鸟往哪边落。说到回程，她忽然抬起头，不问环礁，只问一句：“回来的路上，你看的是天，是水，还是那块铜？”"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实说：回程我是怎么找的路，一样一样说。"
+next = "done"
+reply = "她听完，把一串黑珍珠放在你手心。珠子是温的，像是在她袖子里放了很久。又用指甲在你海图的边上划了一道浪纹：“这片海，你可以记了。”"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "vaiere", value = 8 }, { kind = "fame", value = 3 }, { kind = "skill", skill = "astral_navigation", value = 30 }, { kind = "chart", region = "polynesia" }, { kind = "flag", flag = "c13_request_vaiere_done" }, { kind = "memory", memory = "mem-request_vaiere-report", title = "海图边上的一道浪纹" }]
+
+[[tracks.chapters.choices]]
+key = "boast"
+text = "说你一路都是看星回来的。"
+next = "done"
+reply = "她没拆穿，把一串黑珍珠分出一半放进你手心，剩下的收回了袖子里，手指在袖口停了一下：“下回，你自己会知道哪一半是你的。”"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "vaiere", value = 3 }, { kind = "flag", flag = "c13_request_vaiere_partial" }]
+
+# 四、偏了一天半：侧涌没压住，回程靠罗盘一点一点摸回来。报酬打折。
+[[tracks.chapters]]
+key = "report_lost"
+title = "偏了一天半"
+text = "瓦伊蕾还是坐在独木舟的阴影里。你把环礁的样子说给她听，说得比平时慢，因为有一段你没打算说。她知道。她看了一眼你放在膝上的手，指节都压白了。你想在脑子里把航线往回推一截，又停住了。她没有追问环礁，只问一句：“回来的路上，你看的是天，是水，还是那块铜？”"
+speaker = "captain"
+mood = "tender"
+at = "tahiti"
+when = [{ kind = "alive", person = "vaiere", value = true }]
+news = "塔希提马塔瓦伊湾，一个外乡船长没带海图出去，回来时偏了一天半，是靠罗盘摸回岸的。"
+
+[[tracks.chapters.choices]]
+key = "honest"
+text = "照实说：偏了一天半，最后是靠罗盘摸回来的。"
+next = "done"
+reply = "她把一串不长的黑珍珠放进你手心，合上你的手指：“下一回，先听浪，再看针。”"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "vaiere", value = 4 }, { kind = "flag", flag = "c13_request_vaiere_partial" }]
+
+[[tracks.chapters.choices]]
+key = "boast"
+text = "说你一路都是看星回来的，偏掉的那一天半不提。"
+next = "done"
+reply = "她没拆穿，把那串珍珠分出一小半放进你手心：“那一天半的路，你自己留着记。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "vaiere", value = 1 }, { kind = "flag", flag = "c13_request_vaiere_partial" }]

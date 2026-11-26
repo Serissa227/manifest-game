@@ -1,0 +1,3564 @@
+{
+  "meta": {
+    "title": "寰宇现有货修补表（与 goods-expansion 一起交给 G01 落地）",
+    "date": "2026-11-03",
+    "basis_note": "落 TOML 时 adapted 一律写成 extended（协调人 11-03 已定）；本表新增条目只用 historical / extended。",
+    "formula": "出口条目 supply = round(4 × clamp(1.5 + 1/√n, 1.6, 2.5))，demand = 4；进口条目 supply = 0，demand = round(12 × (0.6 + 繁荣度 × 0.008))；n 含秘境港口（与 11-02 数据一致：祖母绿卡塔赫纳 9/4 即 n = 2）。",
+    "baseline": "“之前”= 现有数据 + goods-expansion.json 的 44 种新货（含伦敦、布里斯托尔的棉布出口换成宽幅呢）；“之后”= 再加本表。",
+    "workshop_model": "工坊状态是静态均衡的粗估：贸易距离按经纬网每度 3 格、海上 × 1.2、经海峡关口转折、陆路 × 1.25 × 2 估算；工坊按 share 接手当地产量，开工时从当地市场取料（消耗 = 日消耗 × 库存 / 目标库存 + 工坊用量）；按影子价格算“产出价值 / 原料价值”。常开 = 满负荷时 ≥ 1.05；间歇 = 停着时 ≥ 1.05、满负荷时 < 1.05（util 为价值比降到 1.0 时的开工比例）；待喂 = 停着时也 < 1.05，按均衡价不复工。未计供给响应、人口、季节与流行。",
+    "workshops_count": {
+      "before": {
+        "间歇": 28,
+        "待喂": 62,
+        "常开": 8
+      },
+      "after": {
+        "间歇": 49,
+        "待喂": 34,
+        "常开": 15
+      }
+    },
+    "economy_asserts_after": {
+      "export_min": [
+        0.44,
+        "antwerp",
+        "calamine"
+      ],
+      "export_max": [
+        0.7,
+        "zeila",
+        "salt"
+      ],
+      "import_min": [
+        1.1812574259421533,
+        "shimizu_tosa",
+        "rice"
+      ],
+      "import_max": [
+        2.338,
+        "venice",
+        "rhubarb"
+      ],
+      "worst_spread": [
+        5.3136363636363635,
+        "glass_beads"
+      ],
+      "export_ok": true,
+      "import_ok": true,
+      "spread_ok": true
+    }
+  },
+  "items": [
+    {
+      "good": "mercury",
+      "name": "水银",
+      "category": "矿产",
+      "base_price": 95,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_mercury",
+        "industry": "mine",
+        "qty": 6,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "seville",
+          "basis": "historical",
+          "shift": "史实：阿尔马登在内陆（拉曼恰），水银装皮囊经陆路运到塞维利亚，再随印度船队去新大陆 → 本世界线写成塞维利亚出口。",
+          "market_entry": {
+            "good": "mercury",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        },
+        {
+          "port": "guangzhou",
+          "basis": "extended",
+          "shift": "史实：中国水银出自贵州、湖广的朱砂产区，16 世纪 70 年代起才经马尼拉大量流入新西班牙 → 本世界线 1550 年代已由广州出货，先卖给日本。",
+          "market_entry": {
+            "good": "mercury",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [
+        {
+          "port": "veracruz",
+          "market_entry": {
+            "good": "mercury",
+            "supply": 0,
+            "demand": 12
+          }
+        },
+        {
+          "port": "hakata",
+          "market_entry": {
+            "good": "mercury",
+            "supply": 0,
+            "demand": 12
+          }
+        }
+      ],
+      "reason": "水银是新大陆汞齐法与镜背锡汞齐的关键原料，史实上有明确的两大来源：阿尔马登（西班牙）与中国的朱砂产区。",
+      "sources": [
+        "格奥尔格·阿格里科拉《论矿冶》（1556），汞矿与蒸馏取汞。",
+        "阿尔马登汞矿 1525 年起租给富格尔家族经营；1559 年西班牙王室把运往西印度的水银收归专营。",
+        "巴尔托洛梅·德·梅迪纳 1554—1555 年在新西班牙帕丘卡用起汞齐法（庭院法）。",
+        "郑若曾《筹海图编》（1562）卷二‘倭好’：日本所好中国货中有水银。"
+      ],
+      "trade_policy": "塞维利亚出货的水银由王室专营（1559 年起），本作抽象为普通货，专营由港口政策落实。",
+      "helps": [
+        "venice silver_mirrors（配方加回 1 份水银）",
+        "韦拉克鲁斯的汞齐法买主（帕丘卡银矿，1554 年起）"
+      ]
+    },
+    {
+      "good": "cocoa",
+      "name": "可可豆",
+      "category": "嗜好品",
+      "base_price": 35,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_cocoa",
+        "industry": "plantation",
+        "qty": 17,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "campeche",
+          "basis": "extended",
+          "shift": "史实：16 世纪最大的海路可可产区是塔巴斯科的琼塔尔帕（地图上无港）→ 本世界线由相邻的坎佩切出货。",
+          "market_entry": {
+            "good": "cocoa",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        },
+        {
+          "port": "veracruz",
+          "basis": "extended",
+          "shift": "史实：墨西加向托奇特佩克省（帕帕洛阿潘河流域）征收可可，离韦拉克鲁斯不远 → 本世界线写成韦拉克鲁斯的小产地。",
+          "market_entry": {
+            "good": "cocoa",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "可可是中美洲的大宗特产，寰宇却没有产地，韦拉克鲁斯的可可饮料作坊只能吃远价原料。",
+      "sources": [
+        "《门多萨抄本》（约1541）贡赋册：索科努斯科、托奇特佩克等省以可可纳贡。",
+        "贡萨洛·费尔南德斯·德·奥维耶多《西印度自然通史》（1535），可可与可可作钱。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "veracruz prepare_cacao"
+      ]
+    },
+    {
+      "good": "amber",
+      "name": "琥珀",
+      "category": "奢侈品",
+      "base_price": 150,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 1,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_amber",
+        "industry": "plantation",
+        "qty": 4,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "danzig",
+          "basis": "historical",
+          "shift": "史实：琥珀出自萨姆兰半岛（柯尼斯堡一带），由条顿骑士团、1525 年后的普鲁士公爵专营收购，经但泽、吕贝克外销 → 本世界线由但泽出货。",
+          "market_entry": {
+            "good": "amber",
+            "supply": 10,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [
+        {
+          "port": "lubeck",
+          "market_entry": {
+            "good": "amber",
+            "supply": 0,
+            "demand": 12
+          }
+        }
+      ],
+      "reason": "琥珀的描述就写着‘经但泽转运’，但但泽没有出口条目。",
+      "sources": [
+        "奥劳斯·马格努斯《北方民族史》（1555），波罗的海的琥珀。",
+        "吕贝克与布鲁日的念珠匠（Paternostermacher）行会以琥珀为料（中世纪至 16 世纪）。"
+      ],
+      "trade_policy": "普鲁士公爵专营收购琥珀，私拾受罚；本作抽象为普通货。",
+      "helps": []
+    },
+    {
+      "good": "saltpeter",
+      "name": "硝石",
+      "category": "矿产",
+      "base_price": 28,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 3,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_saltpeter",
+        "industry": "mine",
+        "qty": 21,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "chittagong",
+          "basis": "extended",
+          "shift": "史实：比哈尔—孟加拉硝石的大宗外销在 17 世纪的荷、英公司时代 → 本世界线 1550 年代已由吉大港外运。",
+          "market_entry": {
+            "good": "saltpeter",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        },
+        {
+          "port": "venice",
+          "basis": "historical",
+          "shift": "威尼斯本岛不产硝，硝来自本土（Terraferma）的硝场 → 本世界线写成威尼斯的小产地。",
+          "market_entry": {
+            "good": "saltpeter",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "istanbul",
+          "basis": "historical",
+          "shift": "奥斯曼的硝石由安纳托利亚与鲁米利亚各省的官营硝场供给伊斯坦布尔的火药坊 → 本世界线写成伊斯坦布尔的小产地。",
+          "market_entry": {
+            "good": "saltpeter",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "火药的三味原料里硝石没有任何产地，威尼斯、伊斯坦布尔的火药工坊永远停着。16 世纪各国都有本地硝场，印度硝石则是远洋大宗。",
+      "sources": [
+        "万诺乔·比林古乔《火工术》（1540）第十卷：意大利本地熬硝的方法。",
+        "Gábor Ágoston《苏丹的枪炮：奥斯曼帝国的军力与军工》（2005），奥斯曼的硝石、铜与火药生产。",
+        "杜阿尔特·巴尔博萨《巴尔博萨书》（约1516），孟加拉的物产与港口。"
+      ],
+      "trade_policy": "仍是军需许可货（license = true，不改）。",
+      "helps": [
+        "venice mix_gunpowder",
+        "istanbul mix_gunpowder"
+      ]
+    },
+    {
+      "good": "lead_ore",
+      "name": "铅矿石",
+      "category": "矿产",
+      "base_price": 18,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_lead_ore",
+        "industry": "mine",
+        "qty": 33,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "seville",
+          "basis": "historical",
+          "shift": "史实：利纳雷斯等莫雷纳山区的铅矿在内陆，经瓜达尔基维尔河谷运到塞维利亚 → 本世界线写成塞维利亚出口。",
+          "market_entry": {
+            "good": "lead_ore",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "hamburg",
+          "basis": "historical",
+          "shift": "史实：哈尔茨山的拉默尔斯贝格（戈斯拉尔）铅银矿在内陆 → 本世界线由汉堡出货。",
+          "market_entry": {
+            "good": "lead_ore",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "塞维利亚、汉堡都有炼铅工坊、都把铅矿石列为进口，却没有任何产地，工坊永远停着。",
+      "sources": [
+        "格奥尔格·阿格里科拉《论矿冶》（1556），哈尔茨与各地的铅矿。",
+        "莫雷纳山区（利纳雷斯）的铅矿，罗马时代起开采。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "seville smelt_lead",
+        "hamburg smelt_lead"
+      ]
+    },
+    {
+      "good": "calamine",
+      "name": "炉甘石",
+      "category": "矿产",
+      "base_price": 25,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 1,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_calamine",
+        "industry": "mine",
+        "qty": 24,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "antwerp",
+          "basis": "historical",
+          "shift": "史实：阿尔滕贝格（凯尔米斯）炉甘石矿在亚琛与列日之间，属哈布斯堡尼德兰的林堡公国，经马斯河运出 → 本世界线由安特卫普出货。",
+          "market_entry": {
+            "good": "calamine",
+            "supply": 10,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "安特卫普有铸黄铜工坊、把炉甘石列为进口，却没有任何产地。",
+      "sources": [
+        "格奥尔格·阿格里科拉《论矿冶》（1556），含锌矿料（cadmia）与黄铜。",
+        "阿尔滕贝格（凯尔米斯）炉甘石矿，供亚琛、斯托尔贝格与迪南的黄铜业（中世纪至近代）。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "antwerp cast_brass"
+      ]
+    },
+    {
+      "good": "olives",
+      "name": "橄榄",
+      "category": "原料",
+      "base_price": 15,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_olives",
+        "industry": "plantation",
+        "qty": 40,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "seville",
+          "basis": "historical",
+          "market_entry": {
+            "good": "olives",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "tunis",
+          "basis": "historical",
+          "market_entry": {
+            "good": "olives",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "塞维利亚、突尼斯都有榨油工坊、都把橄榄列为进口，却没有任何产地；两地本身就是橄榄林的中心。",
+      "sources": [
+        "皮埃尔·肖努《塞维利亚与大西洋》（1955—1959），印度船队货单里的塞维利亚腌橄榄。",
+        "非洲人利奥《非洲志》（1550），突尼斯萨赫勒一带的橄榄林。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "seville press_olive_oil",
+        "tunis press_olive_oil"
+      ]
+    },
+    {
+      "good": "cocoons",
+      "name": "蚕茧",
+      "category": "原料",
+      "base_price": 40,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_cocoons",
+        "industry": "plantation",
+        "qty": 15,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "ningbo",
+          "basis": "historical",
+          "shift": "史实：江南蚕桑的中心在湖州、嘉兴、杭州 → 本世界线由宁波出货。",
+          "market_entry": {
+            "good": "cocoons",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "guangzhou",
+          "basis": "historical",
+          "shift": "珠江三角洲的蚕桑在明中后期兴起，规模要到清代才大 → 本世界线写成广州的小产地。",
+          "market_entry": {
+            "good": "cocoons",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "宁波、广州都有缫丝工坊、都把蚕茧列为进口，却没有任何产地；江南与珠江三角洲本来就养蚕。",
+      "sources": [
+        "宋应星《天工开物》（1637）乃服篇；仅作传统工艺的后世旁证。",
+        "李伯重《江南的早期工业化（1550—1850）》（2000），湖州、嘉兴的蚕桑与缫丝。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "ningbo reel_silk",
+        "guangzhou reel_silk"
+      ]
+    },
+    {
+      "good": "copper_ore",
+      "name": "铜矿石",
+      "category": "矿产",
+      "base_price": 22,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_copper_ore",
+        "industry": "mine",
+        "qty": 27,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "stockholm",
+          "basis": "historical",
+          "shift": "史实：法伦的大铜山（Stora Kopparberg）在内陆 → 本世界线由斯德哥尔摩出货。",
+          "market_entry": {
+            "good": "copper_ore",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "sakai",
+          "basis": "historical",
+          "shift": "史实：摄津的多田银铜山、但马的生野银山离堺不远 → 本世界线写成堺的小产地。",
+          "market_entry": {
+            "good": "copper_ore",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "斯德哥尔摩、堺都有炼铜工坊、都把铜矿石列为进口，却没有任何产地。",
+      "sources": [
+        "格奥尔格·阿格里科拉《论矿冶》（1556），铜矿与熔炼。",
+        "法伦大铜山的开采记录（13 世纪起）；摄津多田银铜山（16 世纪）。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "stockholm smelt_copper",
+        "sakai smelt_copper"
+      ]
+    },
+    {
+      "good": "lacquer",
+      "name": "生漆",
+      "category": "原料",
+      "base_price": 48,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_lacquer",
+        "industry": "plantation",
+        "qty": 12,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "ningbo",
+          "basis": "extended",
+          "shift": "史实：明代生漆多出湖广、四川、陕南，顺长江运到江浙的漆器作坊 → 本世界线由宁波出货。",
+          "market_entry": {
+            "good": "lacquer",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "sakai",
+          "basis": "historical",
+          "shift": "史实：大和吉野一带的漆（吉野漆）与纪伊的漆器业离堺不远 → 本世界线写成堺的小产地。",
+          "market_entry": {
+            "good": "lacquer",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "宁波、堺都有漆器工坊、都把生漆列为进口，却没有任何产地。",
+      "sources": [
+        "李时珍《本草纲目》（1578），干漆。",
+        "大和吉野漆与纪伊黑江（根来）漆器（室町—战国）。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "ningbo make_lacquerware",
+        "sakai make_lacquerware"
+      ]
+    },
+    {
+      "good": "quartz_sand",
+      "name": "石英砂",
+      "category": "矿产",
+      "base_price": 6,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_quartz_sand",
+        "industry": "mine",
+        "qty": 100,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "venice",
+          "basis": "historical",
+          "shift": "史实：穆拉诺用提契诺河、阿迪杰河的石英卵石（cogoli）→ 本世界线写成威尼斯的小产地。",
+          "market_entry": {
+            "good": "quartz_sand",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "prague",
+          "basis": "historical",
+          "market_entry": {
+            "good": "quartz_sand",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [],
+      "reason": "威尼斯有玻璃工坊、把石英砂列为进口，却没有任何产地；穆拉诺的原料本来就取自邻近的河。",
+      "sources": [
+        "万诺乔·比林古乔《火工术》（1540），玻璃的原料与熔制。",
+        "W. Patrick McCray《文艺复兴时期威尼斯的玻璃业》（1999），穆拉诺的石英卵石与苏打灰。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "venice make_glass"
+      ]
+    },
+    {
+      "good": "quinine",
+      "name": "药用柳树皮",
+      "category": "原料",
+      "base_price": 75,
+      "section": "n0",
+      "decision": "add",
+      "n_before": 0,
+      "n_after": 2,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_quinine",
+        "industry": "plantation",
+        "qty": 8,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "istanbul",
+          "basis": "extended",
+          "market_entry": {
+            "good": "quinine",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "venice",
+          "basis": "extended",
+          "market_entry": {
+            "good": "quinine",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [],
+      "reason": "药用柳树皮是伊斯坦布尔药剂工坊的原料，却没有任何产地。柳树处处都有，但当作药材成批收购的是药市发达的地方。",
+      "sources": [
+        "迪奥斯科里德《药物志》（1世纪），柳树皮。",
+        "皮耶特罗·安德烈亚·马蒂奥利《迪奥斯科里德注》（威尼斯，1544），柳。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "istanbul prepare_medicine"
+      ]
+    },
+    {
+      "good": "herbs",
+      "name": "药草",
+      "category": "原料",
+      "base_price": 50,
+      "section": "realm_only",
+      "decision": "add",
+      "n_before": 7,
+      "n_after": 10,
+      "existing_producers": [
+        "（另有秘境 7 处）"
+      ],
+      "tier_change": {
+        "ports": [
+          "秘境 7 处（不按公式改写）"
+        ],
+        "from": "8/4",
+        "to": "7/4",
+        "realm_only": true
+      },
+      "source_recipe": {
+        "recipe": "source_herbs",
+        "industry": "plantation",
+        "qty": 12,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "istanbul",
+          "basis": "historical",
+          "market_entry": {
+            "good": "herbs",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "guangzhou",
+          "basis": "historical",
+          "market_entry": {
+            "good": "herbs",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        },
+        {
+          "port": "goa",
+          "basis": "historical",
+          "market_entry": {
+            "good": "herbs",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [],
+      "reason": "药草只有七处秘境岛屿出产，现实世界没有任何产地，伊斯坦布尔的药剂工坊吃远价。补三处有药市传统的地方。",
+      "sources": [
+        "皮埃尔·贝隆《若干奇物的考察》（1553），君士坦丁堡的药草与药商。",
+        "加西亚·达·奥尔塔《印度香药对话》（果阿，1563）。",
+        "郑若曾《筹海图编》（1562）卷二‘倭好’：日本所好中国货中有药材。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "istanbul prepare_medicine"
+      ]
+    },
+    {
+      "good": "relics",
+      "name": "古代遗物",
+      "category": "奢侈品",
+      "base_price": 450,
+      "section": "n0",
+      "decision": "keep",
+      "n_before": 0,
+      "n_after": 0,
+      "existing_producers": [],
+      "tier_change": null,
+      "source_recipe": null,
+      "add_producers": [],
+      "add_consumers": [],
+      "reason": "古代遗物按设计只从探索与秘境得到（注释元数据 acquisition = “探索或秘境来源；不设普通采集产业，不进入关键生产链”），不该有港口产地，保持 n = 0。",
+      "sources": [],
+      "trade_policy": null,
+      "helps": []
+    },
+    {
+      "good": "star_crystal",
+      "name": "天降石",
+      "category": "矿产",
+      "base_price": 260,
+      "section": "realm_only",
+      "decision": "keep",
+      "n_before": 1,
+      "n_after": 1,
+      "existing_producers": [
+        "（另有秘境 1 处）"
+      ],
+      "tier_change": null,
+      "source_recipe": null,
+      "add_producers": [],
+      "add_consumers": [],
+      "reason": "天降石按设计只来自探索与秘境（同上 acquisition 说明），只有亚特兰蒂斯外港这一处秘境产地，不补现实港口。",
+      "sources": [],
+      "trade_policy": null,
+      "helps": []
+    },
+    {
+      "good": "orichalcum",
+      "name": "山铜",
+      "category": "奢侈品",
+      "base_price": 900,
+      "section": "realm_only",
+      "decision": "keep",
+      "n_before": 1,
+      "n_after": 1,
+      "existing_producers": [
+        "（另有秘境 1 处）"
+      ],
+      "tier_change": null,
+      "source_recipe": null,
+      "add_producers": [],
+      "add_consumers": [],
+      "reason": "山铜是亚特兰蒂斯独有的文学物质（《克里提亚斯篇》），不补现实港口。",
+      "sources": [],
+      "trade_policy": null,
+      "helps": []
+    },
+    {
+      "good": "charcoal",
+      "name": "木炭",
+      "category": "原料",
+      "base_price": 20,
+      "section": "single_source",
+      "decision": "add",
+      "n_before": 1,
+      "n_after": 6,
+      "existing_producers": [
+        "stockholm"
+      ],
+      "tier_change": {
+        "ports": [
+          "stockholm"
+        ],
+        "from": "10/4",
+        "to": "8/4",
+        "realm_only": false
+      },
+      "source_recipe": {
+        "recipe": null,
+        "note": "加工品，没有采集配方；新产地的出口条目代表当地的家庭手工产出，当地若有工坊则按 share 接手一部分。"
+      },
+      "add_producers": [
+        {
+          "port": "sakai",
+          "basis": "historical",
+          "shift": "摄津池田一带的菊炭（池田炭）16 世纪已为茶汤所重，堺是集散地 → 本世界线写成堺的小产地。",
+          "market_entry": {
+            "good": "charcoal",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "venice",
+          "basis": "historical",
+          "shift": "威尼斯的木炭来自卡多雷、弗留利与伊斯特拉的林区 → 本世界线写成威尼斯的小产地。",
+          "market_entry": {
+            "good": "charcoal",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "istanbul",
+          "basis": "historical",
+          "shift": "伊斯坦布尔的柴炭由黑海南岸的林区船运供给 → 本世界线写成伊斯坦布尔的小产地。",
+          "market_entry": {
+            "good": "charcoal",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "nuremberg",
+          "basis": "historical",
+          "market_entry": {
+            "good": "charcoal",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "ningbo",
+          "basis": "extended",
+          "market_entry": {
+            "good": "charcoal",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "木炭只有斯德哥尔摩一处产地，可它是炼铁、炼铜、炼铅、铸炮、配火药的通用燃料，史实上处处就地烧炭、很少远运。补五处有林区烧炭传统的工坊港。",
+      "sources": [
+        "格奥尔格·阿格里科拉《论矿冶》（1556），烧炭与冶炼的燃料。",
+        "Karl Appuhn《海上的森林：文艺复兴时期威尼斯的环境治理》（2009），威尼斯的林区、木材与木炭。",
+        "纽伦堡帝国森林（Reichswald）供城中金属业烧炭（中世纪起）。",
+        "宋应星《天工开物》（1637）五金篇：冶铁用木炭；仅作后世旁证。",
+        "池田炭（菊炭）与茶汤；Robert Mantran《17 世纪下半叶的伊斯坦布尔》（1962），城市的柴炭供给来自黑海沿岸——均为后世旁证。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "sakai smelt_copper / forge_ironware / forge_swords / cupel_silver",
+        "venice cast_cannon / mix_gunpowder",
+        "istanbul cast_cannon / mix_gunpowder",
+        "ningbo forge_ironware"
+      ]
+    },
+    {
+      "good": "pig_iron",
+      "name": "生铁",
+      "category": "加工品",
+      "base_price": 45,
+      "section": "single_source",
+      "decision": "add",
+      "n_before": 1,
+      "n_after": 3,
+      "existing_producers": [
+        "stockholm"
+      ],
+      "tier_change": {
+        "ports": [
+          "stockholm"
+        ],
+        "from": "10/4",
+        "to": "8/4",
+        "realm_only": false
+      },
+      "source_recipe": {
+        "recipe": null,
+        "note": "加工品，没有采集配方；新产地的出口条目代表当地的家庭手工产出，当地若有工坊则按 share 接手一部分。"
+      },
+      "add_producers": [
+        {
+          "port": "sakai",
+          "basis": "historical",
+          "shift": "播磨宍粟的千种铁、出云伯耆的砂铁冶炼（たたら）都在内陆山地，铁经播磨、濑户内海运到堺的锻冶町 → 本世界线写成堺的小产地。",
+          "market_entry": {
+            "good": "pig_iron",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "guangzhou",
+          "basis": "historical",
+          "shift": "佛山的冶铁与铸锅在广州近郊 → 本世界线由广州出货。",
+          "market_entry": {
+            "good": "pig_iron",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [],
+      "reason": "生铁只有斯德哥尔摩一处产地，堺、宁波的锻铁、铸刀工坊都要从波罗的海运铁。日本的砂铁冶炼与广东的铸铁都是史实里的大宗。",
+      "sources": [
+        "播磨千种铁供堺的刀匠与铁炮锻冶（战国时期）。",
+        "《大明会典》铁货出海之禁；屈大均《广东新语》（1700）‘铁语’记佛山冶铁——后世旁证。"
+      ],
+      "trade_policy": "明代禁铁货出海，广州出货的生铁在对外海禁之内。",
+      "helps": [
+        "sakai forge_ironware / forge_swords",
+        "ningbo forge_ironware"
+      ]
+    },
+    {
+      "good": "silver_ore",
+      "name": "银矿石",
+      "category": "矿产",
+      "base_price": 50,
+      "section": "single_source",
+      "decision": "add",
+      "n_before": 1,
+      "n_after": 2,
+      "existing_producers": [
+        "potosi"
+      ],
+      "tier_change": {
+        "ports": [
+          "potosi"
+        ],
+        "from": "10/4",
+        "to": "9/4",
+        "realm_only": false
+      },
+      "source_recipe": {
+        "recipe": "source_silver_ore",
+        "industry": "mine",
+        "qty": 12,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "sakai",
+          "basis": "historical",
+          "shift": "但马生野银山 1542 年开坑、摄津多田银铜山，矿石经播磨、大阪湾运到堺 → 本世界线写成堺的小产地。",
+          "market_entry": {
+            "good": "silver_ore",
+            "supply": 9,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "银矿石只有波托西一处产地，堺的灰吹炼银工坊要从秘鲁运矿石。银矿石的注释元数据本来就写着‘石见’；石见没有港口，近畿的银矿离堺更近。",
+      "sources": [
+        "但马生野银山 1542 年开坑；摄津多田银铜山（16 世纪）。",
+        "灰吹法 1533 年由博多商人神谷寿祯引入石见银山。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "sakai cupel_silver"
+      ]
+    },
+    {
+      "good": "lead",
+      "name": "铅",
+      "category": "加工品",
+      "base_price": 40,
+      "section": "single_source",
+      "decision": "add",
+      "n_before": 2,
+      "n_after": 4,
+      "existing_producers": [
+        "seville",
+        "hamburg"
+      ],
+      "tier_change": {
+        "ports": [
+          "seville",
+          "hamburg"
+        ],
+        "from": "9/4",
+        "to": "8/4",
+        "realm_only": false
+      },
+      "source_recipe": {
+        "recipe": null,
+        "note": "加工品，没有采集配方；新产地的出口条目代表当地的家庭手工产出，当地若有工坊则按 share 接手一部分。"
+      },
+      "add_producers": [
+        {
+          "port": "bristol",
+          "basis": "historical",
+          "shift": "门迪普的铅矿在萨默塞特，铅经布里斯托尔外运 → 本世界线写成布里斯托尔出口。",
+          "market_entry": {
+            "good": "lead",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        },
+        {
+          "port": "ayutthaya_port",
+          "basis": "extended",
+          "shift": "史实：铅同位素研究显示长篠合战（1575）与丰后府内遗址的铅弹、铅锭多出自泰国宋托矿，时间在 1570 年代前后 → 本世界线 1550 年代已由大城出货。",
+          "market_entry": {
+            "good": "lead",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": false
+        }
+      ],
+      "add_consumers": [],
+      "reason": "精铅只有塞维利亚、汉堡两处，英格兰门迪普的铅是 16 世纪的大宗出口；日本炼银、铸弹的铅有不少来自暹罗。补两处，锡器与炼银都受益。",
+      "sources": [
+        "J. W. Gough《门迪普的矿》（1930），门迪普铅矿与布里斯托尔。",
+        "平尾良光等，东亚金属流通的铅同位素比研究（2000 年代），长篠与丰后府内出土铅料的产地。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "plymouth cast_pewter",
+        "london cast_pewter",
+        "sakai cupel_silver"
+      ]
+    },
+    {
+      "good": "cotton",
+      "name": "棉花",
+      "category": "原料",
+      "base_price": 18,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 13,
+      "n_after": 15,
+      "existing_producers": [
+        "ribeira_grande",
+        "famagusta",
+        "smyrna",
+        "beirut",
+        "diu",
+        "bassein",
+        "daman",
+        "surat",
+        "chaul",
+        "calicut_port",
+        "chittagong",
+        "hooghly",
+        "agra"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_cotton",
+        "industry": "plantation",
+        "qty": 33,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "khambhat",
+          "basis": "historical",
+          "market_entry": {
+            "good": "cotton",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "ningbo",
+          "basis": "historical",
+          "shift": "史实：江南棉产以松江为中心 → 本世界线由宁波出货。",
+          "market_entry": {
+            "good": "cotton",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "坎贝、宁波的纺纱工坊都把棉花列为进口；坎贝腹地（布罗奇）与江南本来就是棉产区。",
+      "sources": [
+        "杜阿尔特·巴尔博萨《巴尔博萨书》（约1516），古吉拉特的棉花与棉布。",
+        "宋应星《天工开物》（1637）乃服篇‘木棉’；仅作后世旁证。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "khambhat spin_yarn",
+        "ningbo spin_yarn"
+      ]
+    },
+    {
+      "good": "indigo",
+      "name": "靛蓝",
+      "category": "原料",
+      "base_price": 38,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 2,
+      "n_after": 4,
+      "existing_producers": [
+        "surat",
+        "agra"
+      ],
+      "tier_change": {
+        "ports": [
+          "surat",
+          "agra"
+        ],
+        "from": "9/4",
+        "to": "8/4",
+        "realm_only": false
+      },
+      "source_recipe": {
+        "recipe": "source_indigo",
+        "industry": "plantation",
+        "qty": 15,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "khambhat",
+          "basis": "historical",
+          "shift": "史实：萨尔凯杰的靛蓝在艾哈迈达巴德近郊，经坎贝外运 → 本世界线写成坎贝的小产地。",
+          "market_entry": {
+            "good": "indigo",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "nagapattinam",
+          "basis": "historical",
+          "market_entry": {
+            "good": "indigo",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "坎贝、讷加帕蒂南的印花布工坊都把靛蓝列为进口；萨尔凯杰（艾哈迈达巴德近郊）与科罗曼德尔都产靛。",
+      "sources": [
+        "杜阿尔特·巴尔博萨《巴尔博萨书》（约1516），坎贝外销的靛蓝。",
+        "大都会艺术博物馆 Indian Textiles: Trade and Production（2003），古吉拉特与科罗曼德尔的染料与印染。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "khambhat print_calico",
+        "nagapattinam print_calico"
+      ]
+    },
+    {
+      "good": "sugarcane",
+      "name": "甘蔗",
+      "category": "原料",
+      "base_price": 10,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 4,
+      "n_after": 5,
+      "existing_producers": [
+        "olinda",
+        "funchal",
+        "sao_tome",
+        "las_palmas"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_sugarcane",
+        "industry": "plantation",
+        "qty": 60,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "khambhat",
+          "basis": "historical",
+          "market_entry": {
+            "good": "sugarcane",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "甘蔗只有大西洋岛屿与巴西四处产地，坎贝的制糖工坊要从大西洋运甘蔗；注释元数据本来就写着‘印度’。",
+      "sources": [
+        "杜阿尔特·巴尔博萨《巴尔博萨书》（约1516），古吉拉特的糖。",
+        "阿布勒·法兹勒《阿克巴则例》（1590 年代）古吉拉特各县的甘蔗——后世旁证。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "khambhat refine_sugar"
+      ]
+    },
+    {
+      "good": "grapes",
+      "name": "葡萄",
+      "category": "原料",
+      "base_price": 14,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 4,
+      "n_after": 5,
+      "existing_producers": [
+        "bordeaux",
+        "smyrna",
+        "malaga",
+        "porto"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_grapes",
+        "industry": "plantation",
+        "qty": 42,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "seville",
+          "basis": "historical",
+          "market_entry": {
+            "good": "grapes",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "塞维利亚有酿酒、蒸馏、果脯三座用到葡萄的工坊，却把葡萄列为进口；阿尔哈拉费与赫雷斯的葡萄园就在塞维利亚边上。",
+      "sources": [
+        "皮埃尔·肖努《塞维利亚与大西洋》（1955—1959），印度船队所载的安达卢西亚葡萄酒。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "seville make_wine",
+        "seville preserve_fruit"
+      ]
+    },
+    {
+      "good": "timber",
+      "name": "木材",
+      "category": "原料",
+      "base_price": 20,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 76,
+      "n_after": 78,
+      "existing_producers": [
+        "st_augustine",
+        "salvador",
+        "olinda",
+        "rio_de_janeiro",
+        "buenos_aires",
+        "valparaiso",
+        "concepcion",
+        "st_johns",
+        "red_bay",
+        "tadoussac",
+        "tumbes",
+        "bordeaux",
+        "funchal",
+        "sao_tome",
+        "mpinda",
+        "luanda",
+        "varna",
+        "sofala",
+        "mozambique_island",
+        "kilwa",
+        "zanzibar",
+        "mombasa",
+        "malindi",
+        "pate",
+        "fuzhou",
+        "lushun",
+        "niuzhuang",
+        "pidao",
+        "shuangyu",
+        "yokoseura",
+        "funai",
+        "noshima",
+        "shimoda_tosa",
+        "urado",
+        "shimizu_tosa",
+        "obama",
+        "tsushima",
+        "matsumae",
+        "porto",
+        "bassein",
+        "daman",
+        "cochin_port",
+        "bergen",
+        "stockholm",
+        "danzig",
+        "riga",
+        "narva",
+        "st_nicholas",
+        "arkhangelsk",
+        "guam",
+        "tahiti",
+        "pegu",
+        "ayutthaya_port",
+        "johor_port",
+        "aceh_port",
+        "banten_port",
+        "jepara",
+        "gresik",
+        "makassar",
+        "brunei_port",
+        "tondo",
+        "cebu",
+        "manila",
+        "ternate_port",
+        "tidore_port",
+        "ambon",
+        "banda_neira",
+        "lifau",
+        "hoi_an",
+        "targoviste",
+        "great_zimbabwe_city",
+        "chiang_mai",
+        "hetu_ala",
+        "yehe_city",
+        "luang_prabang",
+        "vientiane"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_timber",
+        "industry": "plantation",
+        "qty": 30,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "venice",
+          "basis": "historical",
+          "shift": "卡多雷的木材顺皮亚韦河漂到潟湖 → 本世界线写成威尼斯的小产地。",
+          "market_entry": {
+            "good": "timber",
+            "supply": 6,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        },
+        {
+          "port": "lubeck",
+          "basis": "historical",
+          "market_entry": {
+            "good": "timber",
+            "supply": 6,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "威尼斯的玻璃、仪器工坊与吕贝克的锯板工坊都把木材列为进口；卡多雷的林区与梅克伦堡、荷尔斯泰因的林区就是它们的木料来源。",
+      "sources": [
+        "Karl Appuhn《海上的森林》（2009），卡多雷林区与兵工厂的木材。",
+        "吕贝克经施特克尼茨运河与特拉沃河取得的荷尔斯泰因、梅克伦堡木材（汉萨史料）。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "venice make_glass / make_instruments",
+        "lubeck saw_planks"
+      ]
+    },
+    {
+      "good": "planks",
+      "name": "木板",
+      "category": "加工品",
+      "base_price": 35,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 14,
+      "n_after": 15,
+      "existing_producers": [
+        "plymouth",
+        "amsterdam",
+        "flushing",
+        "le_havre",
+        "bordeaux",
+        "ragusa_port",
+        "porto",
+        "bassein",
+        "bergen",
+        "lubeck",
+        "suez",
+        "jepara",
+        "toulon",
+        "livorno"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": null,
+        "note": "加工品，没有采集配方；新产地的出口条目代表当地的家庭手工产出，当地若有工坊则按 share 接手一部分。"
+      },
+      "add_producers": [
+        {
+          "port": "kyoto",
+          "basis": "historical",
+          "market_entry": {
+            "good": "planks",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "京都的绘屏工坊要木板；丹波的木材经保津川放筏到嵯峨，京都的材木商就地解板。",
+      "sources": [
+        "保津川放筏：丹波木材运往京都（平安时代起；1606 年角仓了以疏浚后更盛）。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "kyoto paint_screens"
+      ]
+    },
+    {
+      "good": "paper",
+      "name": "纸张",
+      "category": "加工品",
+      "base_price": 32,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 7,
+      "n_after": 8,
+      "existing_producers": [
+        "ningbo",
+        "venice",
+        "nanjing",
+        "jingdezhen",
+        "seoul",
+        "uiju",
+        "liaoyang"
+      ],
+      "tier_change": {
+        "ports": [
+          "ningbo",
+          "venice",
+          "nanjing",
+          "jingdezhen",
+          "seoul",
+          "uiju",
+          "liaoyang"
+        ],
+        "from": "8/4",
+        "to": "7/4",
+        "realm_only": false
+      },
+      "source_recipe": {
+        "recipe": null,
+        "note": "加工品，没有采集配方；新产地的出口条目代表当地的家庭手工产出，当地若有工坊则按 share 接手一部分。"
+      },
+      "add_producers": [
+        {
+          "port": "kyoto",
+          "basis": "historical",
+          "shift": "史实：美浓、越前、播磨（杉原）的纸经京都的纸座流通 → 本世界线写成京都出口。",
+          "market_entry": {
+            "good": "paper",
+            "supply": 7,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "京都、堺的糊扇与绘屏工坊都要纸；美浓纸、杉原纸在京都的纸座成批交易，日本本来就是产纸大国。",
+      "sources": [
+        "寿岳文章《日本的纸》（1967），美浓纸、杉原纸与中世的纸座。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "kyoto make_fans / paint_screens",
+        "sakai make_fans / copy_manuscripts"
+      ]
+    },
+    {
+      "good": "hemp",
+      "name": "麻纤维",
+      "category": "原料",
+      "base_price": 14,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 4,
+      "n_after": 5,
+      "existing_producers": [
+        "riga",
+        "narva",
+        "arkhangelsk",
+        "moscow"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_hemp",
+        "industry": "plantation",
+        "qty": 42,
+        "note": "01_sources 里已有，沿用不改；新产地成了当地特产，玩家也就能在那里建这座采集产业。"
+      },
+      "add_producers": [
+        {
+          "port": "venice",
+          "basis": "historical",
+          "shift": "史实：大麻出自博洛尼亚、费拉拉一带，经波河运到威尼斯 → 本世界线写成威尼斯的小产地。",
+          "market_entry": {
+            "good": "hemp",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "威尼斯的造纸工坊（配方用麻与亚麻）要大麻；兵工厂的制缆所历来用博洛尼亚的大麻。",
+      "sources": [
+        "Frederic C. Lane《文艺复兴时期的威尼斯船与造船匠》（1934），兵工厂制缆所（Tana）与博洛尼亚大麻。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "venice make_paper"
+      ]
+    },
+    {
+      "good": "copper",
+      "name": "精铜",
+      "category": "加工品",
+      "base_price": 70,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 5,
+      "n_after": 6,
+      "existing_producers": [
+        "santiago_cuba",
+        "hakata",
+        "sakai",
+        "stockholm",
+        "augsburg"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": null,
+        "note": "加工品，没有采集配方；新产地的出口条目代表当地的家庭手工产出，当地若有工坊则按 share 接手一部分。"
+      },
+      "add_producers": [
+        {
+          "port": "istanbul",
+          "basis": "historical",
+          "shift": "史实：屈雷铜矿在黑海南岸的卡斯塔莫努 → 本世界线写成伊斯坦布尔的小产地。",
+          "market_entry": {
+            "good": "copper",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "伊斯坦布尔的铸炮工坊要铜；奥斯曼的铜出自黑海边卡斯塔莫努的屈雷矿，船运到托普哈内铸炮场。",
+      "sources": [
+        "Gábor Ágoston《苏丹的枪炮》（2005），屈雷铜矿与托普哈内铸炮场。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "istanbul cast_cannon"
+      ]
+    },
+    {
+      "good": "hides",
+      "name": "生牛皮",
+      "category": "原料",
+      "base_price": 26,
+      "section": "workshop_input",
+      "decision": "add",
+      "n_before": 4,
+      "n_after": 5,
+      "existing_producers": [
+        "santo_domingo",
+        "san_juan",
+        "havana",
+        "santiago_cuba"
+      ],
+      "tier_change": null,
+      "source_recipe": {
+        "recipe": "source_hides",
+        "industry": "plantation",
+        "qty": 23,
+        "note": "goods-expansion 新增的采集配方，见该稿 source 字段。"
+      },
+      "add_producers": [
+        {
+          "port": "fez",
+          "basis": "historical",
+          "market_entry": {
+            "good": "hides",
+            "supply": 8,
+            "demand": 4
+          },
+          "replaces_import_entry": true
+        }
+      ],
+      "add_consumers": [],
+      "reason": "非斯的鞣革工坊要生皮；摩洛哥本地的牛羊皮正是非斯皮匠的原料。塞维利亚不补：它是新大陆生牛皮的目的港，补了会压掉那条远洋线。",
+      "sources": [
+        "非洲人利奥《非洲志》（1550），非斯的皮匠街与本地畜牧。"
+      ],
+      "trade_policy": null,
+      "helps": [
+        "fez tan_hides"
+      ]
+    }
+  ],
+  "recipe_changes": [
+    {
+      "recipe_key": "silver_mirrors",
+      "name": "制玻璃镜",
+      "inputs": [
+        {
+          "good": "glass",
+          "qty": 4
+        },
+        {
+          "good": "tin",
+          "qty": 1
+        },
+        {
+          "good": "mercury",
+          "qty": 1
+        }
+      ],
+      "output": {
+        "good": "mirrors",
+        "qty": 2
+      },
+      "workshop_ports": [
+        "venice"
+      ],
+      "note": "镜背是锡箔加水银的锡汞齐。加回 1 份水银后，水银从塞维利亚运来（约 1.6 倍），按原来的玻璃 6 份闲置时价值比只有 1.02、不复工；玻璃减到 4 份后为 1.14，按均衡价间歇开工（约两成产能）。威尼斯要补一条水银进口（配方投入须在当地交易）。",
+      "value_ratio": 2.07,
+      "replaces": "goods-expansion.json 里 mirrors 条的 silver_mirrors（玻璃 6 + 锡 1 → 玻璃镜 2，价值比 2.26）"
+    }
+  ],
+  "workshops": [
+    {
+      "loc": "aleppo",
+      "recipe": "boil_soap",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.92
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.92
+      },
+      "inputs_after": [
+        "olive_oil:本地:0.61"
+      ],
+      "note": null
+    },
+    {
+      "loc": "amsterdam",
+      "recipe": "weave_linen",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.94,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.94,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "flax:外来:1.30@60"
+      ],
+      "note": "不补：荷兰织亚麻布用的是波罗的海与佛兰德运来的亚麻（史实如此）；但泽那座已间歇开工。"
+    },
+    {
+      "loc": "antwerp",
+      "recipe": "cast_brass",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.64,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.77,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "copper:外来:1.29@53",
+        "calamine:本地:0.44",
+        "charcoal:外来:1.30@60"
+      ],
+      "note": "补了炉甘石（见 calamine）后仍停：铜与木炭都要外来，安特卫普周边没有铜矿和大林区。不再补。"
+    },
+    {
+      "loc": "antwerp",
+      "recipe": "dye_scarlet",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.76,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.76,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "wool:外来:1.21@16",
+        "cochineal:外来:2.34@380",
+        "alum:外来:1.59@132"
+      ],
+      "note": "不补：胭脂虫只出新西班牙，明矾出托尔法、士麦那；安特卫普是染整与转口中心，原料本来全靠进口。"
+    },
+    {
+      "loc": "antwerp",
+      "recipe": "make_furniture",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.75,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.75,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "planks:外来:1.19@3",
+        "ironware:外来:1.22@22"
+      ],
+      "note": "不补：木板、铁器靠波罗的海与德意志运来。"
+    },
+    {
+      "loc": "antwerp",
+      "recipe": "make_jewelry",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.65,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.65,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "gold_ingot:外来:1.70@167",
+        "gems:外来:2.34@386"
+      ],
+      "note": "不补：金与宝石都不产于低地。"
+    },
+    {
+      "loc": "antwerp",
+      "recipe": "set_diamonds",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.7,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.7,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "gold_ingot:外来:1.70@167",
+        "diamonds:外来:2.34@366"
+      ],
+      "note": "不补：金刚石只出德干。"
+    },
+    {
+      "loc": "antwerp",
+      "recipe": "sew_garments",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.88,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.88,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "cloth:外来:1.19@5"
+      ],
+      "note": "不补：布靠周边港口（约 5 格）运来，安特卫普本身是成衣与转口中心。"
+    },
+    {
+      "loc": "augsburg",
+      "recipe": "make_clocks",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.89,
+        "util": 0.42
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.89,
+        "util": 0.42
+      },
+      "inputs_after": [
+        "brass:本地:0.52",
+        "pig_iron:外来:1.51@113"
+      ],
+      "note": null
+    },
+    {
+      "loc": "bergen",
+      "recipe": "make_pitch",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.6,
+        "util": 0.74
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.6,
+        "util": 0.74
+      },
+      "inputs_after": [
+        "timber:本地:0.70"
+      ],
+      "note": null
+    },
+    {
+      "loc": "bergen",
+      "recipe": "saw_planks",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.78,
+        "util": 0.95
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.78,
+        "util": 0.95
+      },
+      "inputs_after": [
+        "timber:本地:0.70"
+      ],
+      "note": null
+    },
+    {
+      "loc": "campeche",
+      "recipe": "roll_tobacco",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.71,
+        "util": 0.64
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.71,
+        "util": 0.64
+      },
+      "inputs_after": [
+        "tobacco:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "campeche",
+      "recipe": "twist_henequen",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.98,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.98,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "henequen:本地:0.48"
+      ],
+      "note": null
+    },
+    {
+      "loc": "danzig",
+      "recipe": "brew_beer",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.73,
+        "util": 0.75
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.73,
+        "util": 0.75
+      },
+      "inputs_after": [
+        "grain:本地:0.61"
+      ],
+      "note": null
+    },
+    {
+      "loc": "danzig",
+      "recipe": "weave_linen",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 2.36,
+        "util": 0.78
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 2.36,
+        "util": 0.78
+      },
+      "inputs_after": [
+        "flax:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "fez",
+      "recipe": "tan_hides",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.5,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.41,
+        "util": 0.54
+      },
+      "inputs_after": [
+        "hides:本地:0.52",
+        "alum:外来:1.41@88"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "florence",
+      "recipe": "full_woolens",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.89,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.89,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "wool:外来:1.24@32"
+      ],
+      "note": "不补：佛罗伦萨毛纺业用的是西班牙、英格兰羊毛（史实）；伦敦那座已间歇开工。"
+    },
+    {
+      "loc": "funchal",
+      "recipe": "refine_sugar",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.09,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.09,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "sugarcane:本地:0.52",
+        "timber:本地:0.70"
+      ],
+      "note": null
+    },
+    {
+      "loc": "fuzhou",
+      "recipe": "cast_cash",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.66,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.66,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "copper:外来:1.28@48"
+      ],
+      "note": "不补：明代铸钱缺铜正是史实，设计上就是“日本铜换大明钱”。"
+    },
+    {
+      "loc": "guangzhou",
+      "recipe": "reel_silk",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.41,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 2.01,
+        "util": 0.86
+      },
+      "inputs_after": [
+        "cocoons:本地:0.48"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "guangzhou",
+      "recipe": "sew_garments",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.84,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.84,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "cloth:外来:1.26@38"
+      ],
+      "note": "不补：布靠江南运来。"
+    },
+    {
+      "loc": "hamburg",
+      "recipe": "brew_beer",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.86,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.86,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "grain:外来:1.23@26"
+      ],
+      "note": "不补：汉堡酿酒的谷物来自易北河腹地，汉堡本身是谷物进口港；但泽那座已间歇开工。"
+    },
+    {
+      "loc": "hamburg",
+      "recipe": "forge_ironware",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.89,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.89,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "pig_iron:外来:1.27@43",
+        "charcoal:外来:1.27@43"
+      ],
+      "note": "不补：汉堡不是冶铁地，生铁靠瑞典（约 43 格，1.27 倍）。"
+    },
+    {
+      "loc": "hamburg",
+      "recipe": "smelt_lead",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.41,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.38,
+        "util": 0.68
+      },
+      "inputs_after": [
+        "lead_ore:本地:0.48",
+        "charcoal:外来:1.27@43"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "istanbul",
+      "recipe": "cast_cannon",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.74,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.64,
+        "util": 0.57
+      },
+      "inputs_after": [
+        "copper:本地:0.52",
+        "tin:外来:1.74@183",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "istanbul",
+      "recipe": "copy_manuscripts",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 1.05,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 1.05,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "paper:外来:1.38@79",
+        "beeswax:外来:1.20@9"
+      ],
+      "note": "不补：奥斯曼的纸大量从意大利进口（史实）；闲置时价值比 1.05，正卡在复工门槛上。"
+    },
+    {
+      "loc": "istanbul",
+      "recipe": "mix_gunpowder",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.47,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.61,
+        "util": 0.51
+      },
+      "inputs_after": [
+        "saltpeter:本地:0.52",
+        "sulfur:外来:1.33@66",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "istanbul",
+      "recipe": "prepare_medicine",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.39,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.42,
+        "util": 0.6
+      },
+      "inputs_after": [
+        "herbs:本地:0.61",
+        "quinine:本地:0.48",
+        "sugar:外来:1.26@38"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "istanbul",
+      "recipe": "weave_carpets",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.75,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.75,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "wool:外来:1.20@9",
+        "raw_silk:外来:1.28@49",
+        "indigo:外来:2.05@245"
+      ],
+      "note": "不补：地毯织在安纳托利亚与波斯，伊斯坦布尔的毛、丝、靛都靠外来，靛蓝远在印度。"
+    },
+    {
+      "loc": "jingdezhen",
+      "recipe": "fire_porcelain",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.96,
+        "util": 0.52
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.96,
+        "util": 0.52
+      },
+      "inputs_after": [
+        "kaolin:本地:0.44",
+        "timber:外来:1.28@52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "khambhat",
+      "recipe": "print_calico",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 1.01,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.12,
+        "util": 0.17
+      },
+      "inputs_after": [
+        "cloth:本地:0.70",
+        "indigo:本地:0.52",
+        "alum:外来:2.00@236"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "khambhat",
+      "recipe": "refine_sugar",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.56,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.76,
+        "util": 0.93
+      },
+      "inputs_after": [
+        "sugarcane:本地:0.52",
+        "timber:外来:1.19@7"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "khambhat",
+      "recipe": "spin_yarn",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.71,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.38,
+        "util": 0.37
+      },
+      "inputs_after": [
+        "cotton:本地:0.61"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "khambhat",
+      "recipe": "weave_cloth",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.37,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.37,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "yarn:本地:0.48"
+      ],
+      "note": null
+    },
+    {
+      "loc": "kyoto",
+      "recipe": "make_fans",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.83,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.75,
+        "util": 0.61
+      },
+      "inputs_after": [
+        "paper:本地:0.61"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "kyoto",
+      "recipe": "paint_screens",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.5,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.61,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "paper:本地:0.61",
+        "planks:本地:0.61",
+        "gold_ingot:外来:1.83@204"
+      ],
+      "note": "补了纸、木板后仍停，差在金锭（占原料成本六成）：甲斐金山不在京都，佐渡要到 1601 年。不再补；玩家运金锭来就开工。"
+    },
+    {
+      "loc": "lisbon",
+      "recipe": "cast_cannon",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.77,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.77,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "copper:外来:1.54@120",
+        "tin:外来:1.27@46",
+        "charcoal:外来:1.57@126"
+      ],
+      "note": "不补：里斯本的铜、锡、木炭都靠进口（德意志铜、英格兰锡）。"
+    },
+    {
+      "loc": "lisbon",
+      "recipe": "make_instruments",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.73,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.73,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "brass:外来:1.33@66",
+        "ironware:外来:1.24@28",
+        "timber:外来:1.20@9"
+      ],
+      "note": "不补：黄铜、铁器靠进口。"
+    },
+    {
+      "loc": "lisbon",
+      "recipe": "twist_rope",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.74,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.76,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "hemp:外来:1.61@137",
+        "pitch:外来:1.44@94"
+      ],
+      "note": "不补：王室制缆所用的是波罗的海大麻。"
+    },
+    {
+      "loc": "london",
+      "recipe": "cast_pewter",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.85,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.86,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "tin:外来:1.21@15",
+        "lead:外来:1.20@9"
+      ],
+      "note": "不补：锡、铅都在 1–2 天外（普利茅斯、布里斯托尔），伦敦本身不产；普利茅斯那座已开工。"
+    },
+    {
+      "loc": "london",
+      "recipe": "dye_scarlet",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.97,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.97,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "wool:本地:0.61",
+        "cochineal:外来:2.34@365",
+        "alum:外来:1.56@126"
+      ],
+      "note": "不补：胭脂虫、明矾靠进口。"
+    },
+    {
+      "loc": "london",
+      "recipe": "full_woolens",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.82,
+        "util": 0.55
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.82,
+        "util": 0.55
+      },
+      "inputs_after": [
+        "wool:本地:0.61"
+      ],
+      "note": null
+    },
+    {
+      "loc": "london",
+      "recipe": "weave_sailcloth",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.78,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.78,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "flax:外来:1.36@76",
+        "hemp:外来:1.43@93"
+      ],
+      "note": "不补：亚麻、大麻来自波罗的海。"
+    },
+    {
+      "loc": "lubeck",
+      "recipe": "saw_planks",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 1.01,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.78,
+        "util": 0.95
+      },
+      "inputs_after": [
+        "timber:本地:0.70"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "lubeck",
+      "recipe": "twist_rope",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 1.04,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 1.04,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "hemp:外来:1.28@50",
+        "pitch:本地:0.52"
+      ],
+      "note": "不补：大麻来自里加、纳尔瓦（史实）；闲置时价值比 1.04，差一点。"
+    },
+    {
+      "loc": "lubeck",
+      "recipe": "weave_sailcloth",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.87,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.87,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "flax:外来:1.24@29",
+        "hemp:外来:1.28@50"
+      ],
+      "note": "不补：同上。"
+    },
+    {
+      "loc": "male",
+      "recipe": "twist_coir",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.75,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.75,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "coir:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "marseille",
+      "recipe": "boil_soap",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.92
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.92
+      },
+      "inputs_after": [
+        "olive_oil:本地:0.61"
+      ],
+      "note": null
+    },
+    {
+      "loc": "marseille",
+      "recipe": "distill_brandy",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.34,
+        "util": 0.32
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.34,
+        "util": 0.32
+      },
+      "inputs_after": [
+        "wine:本地:0.61",
+        "timber:外来:1.34@69"
+      ],
+      "note": null
+    },
+    {
+      "loc": "marseille",
+      "recipe": "make_wine",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.3,
+        "util": 0.37
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.3,
+        "util": 0.37
+      },
+      "inputs_after": [
+        "grapes:外来:1.26@42"
+      ],
+      "note": null
+    },
+    {
+      "loc": "nagapattinam",
+      "recipe": "print_calico",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.96,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.09,
+        "util": 0.13
+      },
+      "inputs_after": [
+        "cloth:本地:0.70",
+        "indigo:本地:0.52",
+        "alum:外来:2.23@280"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "cast_cash",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.68,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.68,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "copper:外来:1.25@35"
+      ],
+      "note": "不补：同上。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "forge_ironware",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.48,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.95,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "pig_iron:外来:1.26@38",
+        "charcoal:本地:0.52"
+      ],
+      "note": "补了木炭后仍停，生铁从广州来（约 38 格），闲置时价值比 0.95；浙江没有大的铁产，不再补。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "make_lacquerware",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.65,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.29,
+        "util": 0.43
+      },
+      "inputs_after": [
+        "planks:外来:1.29@57",
+        "lacquer:本地:0.48"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "make_paper",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.42,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.48,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "hemp:外来:2.34@521",
+        "flax:外来:2.34@440"
+      ],
+      "note": "不补：这条配方是麻加亚麻（欧洲的破布造纸），与中国的竹纸、皮纸不合；宁波本身已有纸张出口。建议另设竹纸配方或撤掉这座工坊（不在本表范围）。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "reel_silk",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.41,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 2.01,
+        "util": 0.86
+      },
+      "inputs_after": [
+        "cocoons:本地:0.48"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "spin_yarn",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.46,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.38,
+        "util": 0.37
+      },
+      "inputs_after": [
+        "cotton:本地:0.61"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "weave_brocade",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.36,
+        "util": 0.67
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.36,
+        "util": 0.67
+      },
+      "inputs_after": [
+        "silk:本地:0.61",
+        "gold_ingot:外来:1.67@156"
+      ],
+      "note": null
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "weave_cloth",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.37,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.37,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "yarn:本地:0.48"
+      ],
+      "note": null
+    },
+    {
+      "loc": "ningbo",
+      "recipe": "weave_silk",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.15,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.15,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "raw_silk:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "nuremberg",
+      "recipe": "make_clocks",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.88,
+        "util": 0.42
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.88,
+        "util": 0.42
+      },
+      "inputs_after": [
+        "brass:本地:0.52",
+        "pig_iron:外来:1.55@121"
+      ],
+      "note": null
+    },
+    {
+      "loc": "olinda",
+      "recipe": "refine_sugar",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 2.09,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.09,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "sugarcane:本地:0.52",
+        "timber:本地:0.70"
+      ],
+      "note": null
+    },
+    {
+      "loc": "plymouth",
+      "recipe": "cast_pewter",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.63,
+        "util": 1.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.66,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "tin:本地:0.52",
+        "lead:外来:1.19@7"
+      ],
+      "note": null
+    },
+    {
+      "loc": "porto",
+      "recipe": "make_wine",
+      "before": {
+        "status": "常开",
+        "idle_ratio": 3.17,
+        "util": 1.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 3.17,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "grapes:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "sakai",
+      "recipe": "copy_manuscripts",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.11,
+        "util": 0.1
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.18,
+        "util": 0.19
+      },
+      "inputs_after": [
+        "paper:外来:1.19@4",
+        "beeswax:外来:1.42@89"
+      ],
+      "note": null
+    },
+    {
+      "loc": "sakai",
+      "recipe": "cupel_silver",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.5,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.69,
+        "util": 0.94
+      },
+      "inputs_after": [
+        "silver_ore:本地:0.48",
+        "lead:外来:1.64@145",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "sakai",
+      "recipe": "forge_arquebus",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.05,
+        "util": 0.09
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.05,
+        "util": 0.09
+      },
+      "inputs_after": [
+        "ironware:本地:0.61",
+        "timber:外来:1.19@3",
+        "gunpowder:外来:2.34@522"
+      ],
+      "note": null
+    },
+    {
+      "loc": "sakai",
+      "recipe": "forge_ironware",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.48,
+        "util": 0.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.16,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "pig_iron:本地:0.52",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "sakai",
+      "recipe": "forge_swords",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.67,
+        "util": 0.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.49,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "pig_iron:本地:0.52",
+        "charcoal:本地:0.52",
+        "timber:外来:1.19@3"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "sakai",
+      "recipe": "make_fans",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.84,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.9,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "paper:外来:1.19@4"
+      ],
+      "note": "不补：纸从京都运来（约 4 格），京都那座已间歇开工。"
+    },
+    {
+      "loc": "sakai",
+      "recipe": "make_lacquerware",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.63,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.38,
+        "util": 0.57
+      },
+      "inputs_after": [
+        "planks:外来:1.19@4",
+        "lacquer:本地:0.48"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "sakai",
+      "recipe": "smelt_copper",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.45,
+        "util": 0.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.17,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "copper_ore:本地:0.48",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "sakai",
+      "recipe": "tan_deerskin",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.68,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.68,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "deerskin:外来:1.42@89"
+      ],
+      "note": "不补：鹿皮靠暹罗、吕宋，是新货设计的那条线；日本本国的鹿皮史实上不够用。"
+    },
+    {
+      "loc": "santo_domingo",
+      "recipe": "roll_tobacco",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.71,
+        "util": 0.64
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.71,
+        "util": 0.64
+      },
+      "inputs_after": [
+        "tobacco:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "seville",
+      "recipe": "boil_soap",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.92
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.92
+      },
+      "inputs_after": [
+        "olive_oil:本地:0.61"
+      ],
+      "note": null
+    },
+    {
+      "loc": "seville",
+      "recipe": "distill_brandy",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.36,
+        "util": 0.33
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.36,
+        "util": 0.33
+      },
+      "inputs_after": [
+        "wine:本地:0.61",
+        "timber:外来:1.21@16"
+      ],
+      "note": null
+    },
+    {
+      "loc": "seville",
+      "recipe": "make_wine",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.37,
+        "util": 0.52
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 3.17,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "grapes:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "seville",
+      "recipe": "preserve_fruit",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.68,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.84,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "grapes:本地:0.52",
+        "sugar:外来:1.27@43"
+      ],
+      "note": "补了葡萄后仍停，差在糖（加那利、马德拉的糖）；格拉纳达沿海的甘蔗规模小，不再补。"
+    },
+    {
+      "loc": "seville",
+      "recipe": "press_olive_oil",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.56,
+        "util": 0.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.74,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "olives:本地:0.48"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "seville",
+      "recipe": "smelt_lead",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.39,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.25,
+        "util": 0.52
+      },
+      "inputs_after": [
+        "lead_ore:本地:0.48",
+        "charcoal:外来:1.55@122"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "seville",
+      "recipe": "tan_hides",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.51,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.75,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "hides:外来:1.23@26",
+        "alum:外来:1.35@72"
+      ],
+      "note": "不补：塞维利亚是新大陆生牛皮的目的港，补本地牛皮会压掉那条远洋线；非斯那座已间歇开工。"
+    },
+    {
+      "loc": "stockholm",
+      "recipe": "burn_charcoal",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.21,
+        "util": 0.31
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.5,
+        "util": 0.8
+      },
+      "inputs_after": [
+        "timber:本地:0.70"
+      ],
+      "note": null
+    },
+    {
+      "loc": "stockholm",
+      "recipe": "make_pitch",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.6,
+        "util": 0.74
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.6,
+        "util": 0.74
+      },
+      "inputs_after": [
+        "timber:本地:0.70"
+      ],
+      "note": null
+    },
+    {
+      "loc": "stockholm",
+      "recipe": "smelt_copper",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.53,
+        "util": 0.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.17,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "copper_ore:本地:0.48",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "stockholm",
+      "recipe": "smelt_iron",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.6,
+        "util": 0.73
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.88,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "iron_ore:本地:0.48",
+        "charcoal:本地:0.52"
+      ],
+      "note": null
+    },
+    {
+      "loc": "tunis",
+      "recipe": "press_olive_oil",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.56,
+        "util": 0.0
+      },
+      "after": {
+        "status": "常开",
+        "idle_ratio": 2.74,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "olives:本地:0.48"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "cast_cannon",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.88,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.95,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "copper:外来:1.23@24",
+        "tin:外来:1.49@109",
+        "charcoal:本地:0.52"
+      ],
+      "note": "补了木炭后仍停，差在锡（英格兰、波希米亚的锡，约 109 格）；闲置时价值比 0.95，不再补。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "make_glass",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.54,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.72,
+        "util": 0.86
+      },
+      "inputs_after": [
+        "quartz_sand:本地:0.48",
+        "timber:本地:0.70"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "make_glass_lamps",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.84,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.84,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "glass:本地:0.48",
+        "brass:外来:1.23@24",
+        "whale_oil:外来:2.25@284"
+      ],
+      "note": "不补：配方用的是拉布拉多的鲸油；威尼斯的灯史实上烧橄榄油，建议把配方里的鲸油换成橄榄油（见说明“拿不准”）。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "make_instruments",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.74,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.76,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "brass:外来:1.23@24",
+        "ironware:外来:1.37@79",
+        "timber:本地:0.70"
+      ],
+      "note": "不补：黄铜、铁器靠奥格斯堡、汉堡运来。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "make_paper",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.62,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.41,
+        "util": 0.78
+      },
+      "inputs_after": [
+        "hemp:本地:0.52",
+        "flax:外来:1.39@81"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "mix_gunpowder",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.48,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.62,
+        "util": 0.51
+      },
+      "inputs_after": [
+        "saltpeter:本地:0.52",
+        "sulfur:外来:1.29@55",
+        "charcoal:本地:0.52"
+      ],
+      "note": "靠本表补的产地开工。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "print_books",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.84,
+        "util": 0.47
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.67,
+        "util": 0.37
+      },
+      "inputs_after": [
+        "paper:本地:0.61",
+        "lead:外来:1.46@100",
+        "beeswax:外来:1.41@88"
+      ],
+      "note": null
+    },
+    {
+      "loc": "venice",
+      "recipe": "silver_mirrors",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.85,
+        "util": 0.63
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.14,
+        "util": 0.22
+      },
+      "inputs_after": [
+        "glass:本地:0.48",
+        "tin:外来:1.49@109",
+        "mercury:外来:1.56@126"
+      ],
+      "note": null
+    },
+    {
+      "loc": "venice",
+      "recipe": "weave_brocade",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.25,
+        "util": 0.49
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.25,
+        "util": 0.49
+      },
+      "inputs_after": [
+        "silk:本地:0.61",
+        "gold_ingot:外来:1.98@233"
+      ],
+      "note": null
+    },
+    {
+      "loc": "venice",
+      "recipe": "weave_silk",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.88,
+        "util": 0.0
+      },
+      "after": {
+        "status": "待喂",
+        "idle_ratio": 0.88,
+        "util": 0.0
+      },
+      "inputs_after": [
+        "raw_silk:外来:1.27@44"
+      ],
+      "note": "不补：生丝来自黎凡特与本土（维琴察、维罗纳）。补本土生丝会让生丝 n 7 → 8、7 个产地全降一档，只换来这一座工坊，不划算。"
+    },
+    {
+      "loc": "venice",
+      "recipe": "wind_beads",
+      "before": {
+        "status": "间歇",
+        "idle_ratio": 1.68,
+        "util": 1.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.68,
+        "util": 1.0
+      },
+      "inputs_after": [
+        "glass:本地:0.48"
+      ],
+      "note": null
+    },
+    {
+      "loc": "veracruz",
+      "recipe": "prepare_cacao",
+      "before": {
+        "status": "待喂",
+        "idle_ratio": 0.37,
+        "util": 0.0
+      },
+      "after": {
+        "status": "间歇",
+        "idle_ratio": 1.09,
+        "util": 0.13
+      },
+      "inputs_after": [
+        "cocoa:本地:0.48",
+        "sugar:外来:1.28@52"
+      ],
+      "note": "靠本表补的产地开工。"
+    }
+  ]
+}

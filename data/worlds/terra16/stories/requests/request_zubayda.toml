@@ -1,0 +1,178 @@
+# 祖贝达：请托“扣押单上的缺页”（故事 2.0，C13d 请托，类型 persuade）
+# 人物：祖贝达（zubayda），1540-01-01 生，女，开罗书商的小女儿，替父亲在柜台后面站柜。cast 见 cast/classmates_cairo.toml。
+#       C7 线 bond_zubayda 只读（变体读它的羁绊级别）；tie_zubayda_amina 与阿米娜本人一律不出场。
+# 窗口与报价：offer 为到访（V 模式），auto=true，在亚历山大港（alexandria）。可接的窗口 1565-01-01 至 1588-12-31，
+#       同一天为期限，到期走 timeout（next=failed，不写见闻）。family c13_offer_alexandria，冷却 20 天。
+# 章节：offer（被扣下的一本）→ persuade（税吏的桌子，三天后库房开门）→ result（头一页）；
+#       检定失败的分支走 result_half（书回来了，单子没改），二者都以 done 收尾。
+# 依据：史实背景只到“奥斯曼埃及的书籍买卖、海关与税吏、送往伊斯坦布尔的书”这一层，不写具体税则与官员名。
+#       原创：被扣的诗集（不写书名与原文，不写讥讽是哪一句）、税吏、海关的书记官、头一页上的那一行字。
+#       待核：无。
+# 旗标：设 c13_request_zubayda_accepted / declined（offer）；c13_request_zubayda_asked（offer 第二个选项，只由 persuade 的变体 v1_asked 读）；
+#       c13_request_zubayda_slip（persuade 的三个成功选项）；c13_request_zubayda_half（persuade 检定失败，转入 result_half）；
+#       终局 c13_request_zubayda_done / c13_request_zubayda_partial。不读任何主角的 c13_main_ 旗标，不设也不读任何 c7_ 旗标。
+# 变体：offer 的 v1_bond 读 bond zubayda ≥ C（C7 羁绊）；persuade 的 v1_asked 读本线的 asked 旗标，只改一段话。
+# 回忆插画清单：mem-request_zubayda-result——诗集头一页上新写的一行字，旁边压着扣押单的一角，窗外是亚历山大港的码头。
+# 秘密：祖贝达卖给巴拉卡的那本残本（定价过低）不碰；见闻里一个字也不写。
+# 禁区：不写书名与原文；税吏不写成坏人，只是不识出处、怕担责的小官；正文不写报酬数字；不写恋爱、心动。
+#       检定与花钱的选项在 persuade 三条路：属性检定、钱、语言技能，各自的代价与结果不同。
+
+[[tracks]]
+key = "request_zubayda"
+name = "扣押单上的缺页"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["zubayda"]
+
+# 1565 年以后 · 亚历山大港海关库房门口：报价。窗口以 when 的日期条件表示（窗口需要缺省分支，这里没有），到期即失败。
+[[tracks.chapters]]
+key = "offer"
+title = "被扣下的一本"
+text = "亚历山大港海关的书箱库房门口，你撞见开罗书商的小女儿。她手里攥着一张扣押单，单子上只写了“诗集一部，内有不宜之语”。门里的税吏说，一个卖书的女人管不着官府的单子，门随即关上。她没走，把单子展开给你看：“书要回来，我认。扣也行，缺了哪几页、为什么扣，一样一样写明。”她打量了你一眼，又说：“你是来买书的，还是来看热闹的？”"
+speaker = "zubayda"
+mood = "tense"
+at = "alexandria"
+when = [
+  { kind = "date", from = [1565, 1, 1], to = [1588, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "zubayda", ge = 18 },
+]
+objectives = [{ kind = "at", at = "alexandria", text = "到亚历山大港海关的库房门口" }]
+deadline = [1588, 12, 31]
+family = "c13_offer_alexandria"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "help_her"
+text = "接下，替她去跟税吏谈。"
+reply = "她把那箱书的清单塞给我，每一本后面都写着缺页：第三本缺七页，第九本缺扉页。被扣的那一本，什么也不缺。“你替我跑一趟，就把这张单子带去，一个字也别改。”"
+next = "persuade"
+effects = [{ kind = "affinity", person = "zubayda", value = 2 }, { kind = "flag", flag = "c13_request_zubayda_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_lines"
+text = "接下，先问她：书里到底有什么话？"
+reply = "“一首骂酒馆老板的诗，骂得好。”她说完自己笑了，又板起脸，说好不好不归税吏管。她把扣押单翻过来，背面一个字也没有。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "zubayda", value = 2 }, { kind = "flag", flag = "c13_request_zubayda_accepted" }, { kind = "flag", flag = "c13_request_zubayda_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "海关的事，劝她算了。"
+reply = "她把扣押单叠成一小块塞进腰带，说她自己会天天来。这一天她没走，在库房门口站到天黑，一句话也不再跟税吏说。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_zubayda_declined" }]
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "zubayda", level = "C" }]
+text = "亚历山大港海关的书箱库房门口，你撞见开罗书商的小女儿。她从袖子里抽出一页书目递给你，说：“你认得我家的规矩，缺页写在头一页。”她另一只手里还攥着扣押单，上面只写了“诗集一部，内有不宜之语”。门里的税吏说，一个卖书的女人管不着官府的单子，门随即关上。她把单子展开给你看：“书要回来，我认。扣也行，缺了哪几页、为什么扣，一样一样写明。”"
+
+# 1565 年以后 · 三天后库房重新开门：税吏的桌子。普通章，没有缺省分支；三天的等待是目标，不是窗口。
+[[tracks.chapters]]
+key = "persuade"
+title = "税吏的桌子"
+text = "三天后库房重新开门。税吏的桌上摊着那本诗集，他用一根细木棍点着一行字，说这首诗讥讽官人，不能放。其实他认不得这首诗的出处，只是有人跟他说过这种书不能放行。桌角压着一摞他没写完的扣押单，最上面那张只写了一半。祖贝达站在门外没进来，隔着门说：“别跟他吵。他要的是一句能写进单子里的话。”税吏听见了，把木棍在桌上敲了两下，没回头。"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+when = [
+  { kind = "alive", person = "zubayda", value = true },
+  { kind = "date", from = [1565, 1, 1], to = [1590, 2, 24] },
+]
+objectives = [{ kind = "at", at = "alexandria", text = "在库房门口等三天" }, { kind = "wait", days = 3 }]
+news = "亚历山大港海关的库房里，一本被扣的诗集发还了，扣押单也改过了。"
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_zubayda_asked" }]
+text = "三天后库房重新开门。税吏的桌上摊着那本诗集，他用一根细木棍点着一行字，说这首诗讥讽官人，不能放。其实他认不得这首诗的出处，只是有人跟他说过这种书不能放行。你已经知道那首诗骂的是谁，这回只需要让他知道。祖贝达站在门外没进来，隔着门说：“别跟他吵。他要的是一句能写进单子里的话。”税吏听见了，把木棍在桌上敲了两下，没回头。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "当着他念出这首诗的出处，说明骂的是酒馆老板，不是官人。"
+reply = "他把木棍放下，又拿起来，最后在扣押单上补写了一行：“查无不宜，发还。”税吏的耳根有点红，没看你。"
+next = "result"
+effects = [{ kind = "affinity", person = "zubayda", value = 3 }, { kind = "flag", flag = "c13_request_zubayda_slip" }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_half", effects = [{ kind = "affinity", person = "zubayda", value = -2 }, { kind = "flag", flag = "c13_request_zubayda_half" }], news = "亚历山大港海关的库房里，税吏被你问得脸发白，还是把书推了过来，扣押单却不肯改。" }
+
+[[tracks.chapters.choices]]
+key = "pay_fee"
+text = "照规矩交一笔“复查费”，请他重写单子。"
+reply = "他收了钱，单子重写得很工整，连缺页一栏都填了“无”。你回头看，税吏在桌下又数了一遍钱，才把单子放进抽屉。"
+next = "result"
+requires = [{ kind = "cash", ge = 300 }]
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "zubayda", value = 3 }, { kind = "flag", flag = "c13_request_zubayda_slip" }]
+hint = "你把袋子翻了两遍，凑不出他要的那笔“复查费”。"
+
+[[tracks.chapters.choices]]
+key = "go_over"
+text = "用土耳其语去找他的上司，海关的书记官。"
+reply = "书记官听完，亲自来库房取了书，当着税吏的面在单子上签了字。税吏的脸红到耳根，说要去前头登记，低着头走了。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_turkish", ge = 60 }]
+effects = [{ kind = "affinity", person = "zubayda", value = 3 }, { kind = "flag", flag = "c13_request_zubayda_slip" }]
+hint = "你的土耳其话还说不利索，书记官的门口，你连第一句都没说完。"
+
+# 1565 年以后 · 头一页：收尾。好结局的两个选项分别给现金、好感与名声，并写回一条回忆。
+[[tracks.chapters]]
+key = "result"
+title = "头一页"
+text = "库房门外的码头边，祖贝达接过诗集，先不看书，看单子。她把单子对着光翻过来又翻过去，满意了，才翻开书。“缺哪页，先写在头一页上。”她从袖子里抽出自己的笔，在头一页写下一行：“某年某月，亚历山大港海关扣三日，查无缺页。”写完吹干，她把书合上，拿给你看字迹的一角：墨是新的，纸边却已经被税吏的手指捻得发毛。"
+speaker = "captain"
+mood = "cheerful"
+at = "alexandria"
+when = [
+  { kind = "alive", person = "zubayda", value = true },
+  { kind = "date", from = [1565, 1, 1], to = [1590, 2, 24] },
+]
+objectives = [{ kind = "at", at = "alexandria", text = "回到亚历山大港" }]
+news = "开罗来的书商女儿在亚历山大港码头上，往一本诗集的头一页写了一行字。"
+
+[[tracks.chapters.choices]]
+key = "laugh"
+text = "笑她：连被扣过也要写进书里？"
+reply = "“买书的人有权知道这本书去过哪儿。”她付了钱，又硬塞给我一杯咖啡的钱，说海关门口那家煮得最难喝，“喝完你就记得这天”。她把书收进箱子最上层，说以后谁来买，都要先给他看这一页。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "zubayda", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_zubayda_done" }, { kind = "memory", memory = "mem-request_zubayda-result", title = "写在头一页的三日" }]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "问她：被扣过的书，价钱是涨还是跌？"
+reply = "“涨。”她毫不犹豫，“有官府的字作证，这本诗是好诗。”她把账算给我听，每一行都写着书的来历：哪天被扣，哪天放，哪一页写了字。算完才付钱。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "zubayda", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_zubayda_done" }, { kind = "memory", memory = "mem-request_zubayda-result", title = "写在头一页的三日" }]
+
+# 检定失败的分支：书回来了，扣押单没有改。两个收尾都设 partial 旗标、现金 500；好感、名声与回忆照 brief 的变体写法不变。
+[[tracks.chapters]]
+key = "result_half"
+title = "书回来了"
+text = "书回来了，扣押单还是那一张，税吏只说一句“书已发还”，就没有下文。祖贝达拿着单子看了很久，眉头一直没松。她还是拿出自己的笔，在诗集的头一页写下那一行：“某年某月，亚历山大港海关扣三日，查无缺页。”写到末尾，她停了停，又添了一句：“单据未改。”"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+when = [
+  { kind = "alive", person = "zubayda", value = true },
+  { kind = "date", from = [1565, 1, 1], to = [1590, 2, 24] },
+]
+objectives = [{ kind = "at", at = "alexandria", text = "回到亚历山大港" }]
+news = "亚历山大港码头上，开罗书商的女儿在一本被扣过的诗集头一页写了一行字，末尾添了“单据未改”。"
+
+[[tracks.chapters.choices]]
+key = "laugh"
+text = "笑她：单子没改，也要写进书里？"
+reply = "“书是我的，单子是他的。”她数钱数得很慢，一个铜板也不多给。付完，她把书往肩上一背，说明天还来码头卖书。"
+next = "done"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "zubayda", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_zubayda_partial" }, { kind = "memory", memory = "mem-request_zubayda-result", title = "头一页，单据未改" }]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "问她：没改过的单子，价钱是涨还是跌？"
+reply = "“跌。”她说得干脆，“单子不干净，书就少了一截来历。”说完，钱还是照数付了。她又说，下回再碰上这样的单子，她宁可把书压在箱底，也不肯拿去卖。"
+next = "done"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "zubayda", value = 7 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_zubayda_partial" }, { kind = "memory", memory = "mem-request_zubayda-result", title = "头一页，单据未改" }]

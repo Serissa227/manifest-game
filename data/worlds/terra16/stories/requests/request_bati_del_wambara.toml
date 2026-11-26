@@ -1,0 +1,191 @@
+# 请托：火枪老兵的名册（request_bati_del_wambara）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：巴蒂·德尔·万巴拉（bati_del_wambara，女），阿达尔伊玛目艾哈迈德的遗孀，哈勒尔埃米尔的女儿。生卒不详（生年 0 为未知占位）；窗口止于 1559，不作卒年。cast 在 cast/historical_04_africa.toml。
+# 类型：去某处（go）。三章：offer（报价，来信／代理人）、search（亚丁，火枪老兵的名册）、report（泽拉，帐子里的三个名字）。终点 done / failed。
+# 报价：L 来信（auto=true）。offer 章 at=zeila，family=c13_offer_zeila，冷却 20 天；deadline 为窗口止日 1559-10-31，timeout 直接 failed，不写见闻。出面的是遗孀的老管事（代理人，不新建 cast），信里的话出自遗孀本人。
+# 窗口：offer 用 when 的 date 条件写 1557-06-01 至 1559-10-31；search 与 report 只用 alive 条件（非 stage 章，不写 window）。
+# 依据·史实：1541—43 年有奥斯曼火枪手助阿达尔的伊玛目作战；1543 年伊玛目战死于瓦伊纳达加；她随军、此后在哈勒尔理事（史实，人物 persona 的背景）。
+# 依据·原创：火枪老兵、那本名册、亚丁城下的水车与水罐、老管事、泽拉的帐子与念珠、三个名字与三道记号。名册上的“旗手战死、铁匠被俘、马夫投了那边”是原创。
+#   “投了那边”是本条的转折；正文与见闻都不审判那个马夫。
+# 依赖：港口 zeila（ports_east_africa.toml）、aden（ports_red_sea_gulf.toml）；技能 lang_arabic（skills.toml）；势力 adal（factions/06_africa.toml）；人物 bati_del_wambara。
+#   B10b：无需改名。主线门禁：无（她不是主线人物）。检定属性 eloquence 取自 captain 表，captain 表定稿后若数值不是 1—10 再统一换算。
+# C7：无 C7 线。本文件不写塞布莱·温格尔、不写换俘的谈判、不写高地皇帝的名字，也不引用别的请托。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_bati_del_wambara_knows_names（search 章变体 v1_names）；full_story、marks_only、has_page（report 章的三个变体）。
+# 设的旗标：accepted（offer 的两条接法）、knows_names（ask_names）、declined（offer 回绝，终局）、full_story（search 的 arabic 或 ask_kindly 成功）、marks_only（ask_kindly 失败）、has_page（buy_page）、late（超时，终局）、done（终局）、partial（终局，soften 分支）、softened（soften 分支）。
+# 报酬：现金 2250（soften 为 1350）；buy_page 路线先付 200 买页。好感最多 +13；名声 +3；阿达尔声望 +3；回忆 mem-request_bati_del_wambara-report（只给 all 这一条最好的结局）。
+# 回忆插画 mem-request_bati_del_wambara-report：帐子里一张矮凳、一串旧念珠，一卷摊开的名册上三个名字与三道记号。
+# 秘密：她的誓言不写入本文件，也不进正文与见闻。口头禅“我不回去”只在 offer 的信里用一次。
+# 偏离 brief 的几处：(1) search 的 ask_kindly 检定失败与成功共用一条 reply（选项 reply 不分支），所以这条 reply 写成两路都说得通的样子，两路的差别由 report 章的变体说出；(2) report 的 all 选项不再写“还有老兵说的为什么”，因为玩家可能没问到原因；(3) search 与 report 加了 at 目标，让玩家知道该去哪。
+
+[[tracks]]
+key = "request_bati_del_wambara"
+name = "名册上的三个名字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["bati_del_wambara"]
+
+# 一、老管事的三个名字：遗孀的老管事在泽拉等船，念了三个名字，还有一封信。
+[[tracks.chapters]]
+key = "offer"
+title = "老管事的三个名字"
+text = "泽拉的码头上，伊玛目遗孀的老管事站在船板边等。他展开一片羊皮，念了三个名字：一个旗手，一个铁匠，一个马夫。都是当年随伊玛目进高地的人，十五年没有音讯。亚丁有个奥斯曼的火枪老兵，当年跟着打过仗，据说手里有一本同袍的名册。羊皮底下压着遗孀的信，字写得很硬：“当年将士们劝我回家，我说，我不回去。如今这三个名字，我不打算让它们就这样没了。”"
+at = "zeila"
+mood = "sad"
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1559, 10, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1559, 10, 31]
+timeout = { next = "failed" }
+family = "c13_offer_zeila"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去亚丁找那本名册。"
+next = "search"
+reply = "老管事把羊皮折好，塞进你手里：“第一个是伊玛目的旗手。遗孀最想知道的，是他。”"
+effects = [
+  { kind = "affinity", person = "bati_del_wambara", value = 2 },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_names"
+text = "接下，先问这三个人是谁。"
+next = "search"
+reply = "老管事一个一个讲：旗手，一个铁匠，一个十六岁的马夫。“他那时候十六岁。现在该三十一了。”"
+effects = [
+  { kind = "affinity", person = "bati_del_wambara", value = 2 },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_accepted" },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_knows_names" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "十五年前的事，我帮不上。"
+next = "failed"
+reply = "老管事点头，把羊皮折起来，说他再等下一条船。"
+effects = [
+  { kind = "flag", flag = "c13_request_bati_del_wambara_declined" },
+]
+
+# 二、亚丁城下的名册：火枪老兵卖水，名册压在水罐底下。三条路：问记号、陪他一天、买下一页。
+[[tracks.chapters]]
+key = "search"
+title = "火枪老兵的名册"
+text = "亚丁城下，火枪老兵如今卖水。他的水车停在城墙根，名册用油布包着，压在一只水罐底下。你翻开，三个名字都在。旗手的名字后面画了一道，是战死。铁匠的名字后面写着“被俘，下落不明”。马夫的名字后面，写的是“投了那边”。"
+at = "aden"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "at", at = "aden", text = "到亚丁城下去" }]
+when = [{ kind = "alive", person = "bati_del_wambara", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "bati_del_wambara", value = -3 }, { kind = "flag", flag = "c13_request_bati_del_wambara_late" }, { kind = "letter", person = "bati_del_wambara", text = "亚丁的消息已经有人先一步带回来了。遗孀说，谢你肯接这件事。——老管事" }] }
+news = "亚丁城下卖水的奥斯曼老兵，把一本旧名册给一个外来的船长看了一整天。"
+
+[[tracks.chapters.variants]]
+key = "v1_names"
+when = [{ kind = "flag", flag = "c13_request_bati_del_wambara_knows_names" }]
+text = "亚丁城下，火枪老兵如今卖水。名册用油布包着，压在水罐底下。老管事念过的那三个名字，都在上面。旗手的名字后面画了一道，是战死。铁匠的名字后面写着“被俘，下落不明”。马夫的名字后面，写的是“投了那边”。"
+
+[[tracks.chapters.choices]]
+key = "arabic"
+text = "用阿拉伯话跟他一条一条核，问清每个记号。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "名册上的字和记号，你一样也读不懂。"
+reply = "他说记号都是他画的。画“投了那边”那一笔时，他的手在抖：那孩子是被俘以后，为了活命，替高地的人养马。"
+effects = [
+  { kind = "affinity", person = "bati_del_wambara", value = 3 },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_full_story" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_kindly"
+text = "陪他卖一天水，等他自己讲。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "一天的水卖完，日头偏西。他收了摊，在墙根的石阶上坐下来，把名册摊在膝上，没有先开口。"
+effects = [
+  { kind = "affinity", person = "bati_del_wambara", value = 3 },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_full_story" },
+]
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_bati_del_wambara_marks_only" }] }
+
+[[tracks.chapters.choices]]
+key = "buy_page"
+text = "买下名册上那一页。"
+next = "report"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "老兵要的价，你出不起。"
+reply = "他犹豫了很久，才把那一页小心地拆下来：“替我交给她。她的名字，我们都还记着。”"
+effects = [
+  { kind = "cash", value = -200 },
+  { kind = "affinity", person = "bati_del_wambara", value = 3 },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_has_page" },
+]
+
+# 三、帐子里的三个名字：回泽拉，念给遗孀听。照名册念完，或者略去一句。
+[[tracks.chapters]]
+key = "report"
+title = "投了那边"
+text = "你回到泽拉，老管事带你去见遗孀。帐子里很暗，她坐在矮凳上，手里转着一串旧念珠，没有抬头。你把名册摊在她面前，一个名字一个名字念。旗手，她点了一下头。铁匠，她让你停了一停。念到马夫的时候，你也停了一下，因为那一行字的墨迹比别的淡，像是被人反复摸过。"
+at = "zeila"
+mood = "sad"
+objectives = [{ kind = "at", at = "zeila", text = "回泽拉去见遗孀" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "bati_del_wambara", value = -3 }, { kind = "flag", flag = "c13_request_bati_del_wambara_late" }, { kind = "letter", person = "bati_del_wambara", text = "遗孀回哈勒尔去了。名册上的事，你若知道了，托泽拉的商人带个口信。——老管事" }] }
+news = "泽拉的人说，伊玛目的遗孀听完一个外来船长念的三个名字，在帐子里坐了很久。"
+when = [
+  { kind = "alive", person = "bati_del_wambara", value = true },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_full"
+when = [{ kind = "flag", flag = "c13_request_bati_del_wambara_full_story" }]
+text = "你回到泽拉，老管事带你去见遗孀。亚丁老兵讲过的那些事，你一件件记着，一件也没漏。帐子里很暗，她坐在矮凳上，手里转着一串旧念珠。你念三个名字，念到马夫的时候，你停了一下。她没有抬头，只把念珠停住了。"
+
+[[tracks.chapters.variants]]
+key = "v2_marks"
+when = [
+  { kind = "flag", flag = "c13_request_bati_del_wambara_marks_only" },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_full_story", value = false },
+]
+text = "你回到泽拉，老管事带你去见遗孀。亚丁的老兵只让你看了名册，那几个记号的来由，他一句也没讲。帐子里很暗，她坐在矮凳上，手里转着一串旧念珠。你照字念，念到马夫的时候，你停了一下，不知道该再往下说什么。"
+
+[[tracks.chapters.variants]]
+key = "v3_page"
+when = [
+  { kind = "flag", flag = "c13_request_bati_del_wambara_has_page" },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_full_story", value = false },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_marks_only", value = false },
+]
+text = "你回到泽拉，老管事带你去见遗孀。那一页是老兵亲手拆下来的，纸角还带着水罐上的湿印。她接过去，一个字一个字看。帐子里很暗，她手里转着一串旧念珠，看到马夫那一行，珠子停住了。"
+
+[[tracks.chapters.choices]]
+key = "all"
+text = "照名册念完，三个名字一个不漏。"
+next = "done"
+reply = "她听完，很久没说话。然后她说：“十六岁的孩子，想活，不算投。”她让老管事把马夫的名字记进还活着的人里。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "bati_del_wambara", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "adal", value = 3 },
+  { kind = "memory", memory = "mem-request_bati_del_wambara-report", title = "帐子里的三个名字" },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "略去“投了那边”，只说下落不明。"
+next = "done"
+reply = "她点头，没有追问。赏钱付了，少了一些。老管事送你出来时低声说：“她猜得到。她什么都猜得到。”"
+effects = [
+  { kind = "cash", value = 1350 },
+  { kind = "affinity", person = "bati_del_wambara", value = 4 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_partial" },
+  { kind = "flag", flag = "c13_request_bati_del_wambara_softened" },
+]

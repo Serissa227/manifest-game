@@ -1,0 +1,282 @@
+/* 行情窗口（.pn-analysis）与交易所的小预测图：方法列表、参数、结论、对照旧账试算、预测簿与复盘。
+   放在外壳窗口的羊皮纸内容区里，颜色取 .pn 定义的 --pn-* 变量（见 panels.css）。 */
+
+.pn-analysis .fc-pick {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pn-analysis .fc-geniuses {
+  margin: 4px 0 8px;
+}
+
+.fc-work-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(240px, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.fc-work-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fc-methods {
+  border: 2px solid var(--pn-edge-soft);
+  background: var(--pn-card);
+  padding: 4px 8px 6px;
+  margin: 0;
+}
+
+.fc-methods legend {
+  font-weight: bold;
+  color: var(--pn-ink2);
+  padding: 0 4px;
+}
+
+.fc-method {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.fc-method input {
+  align-self: center;
+}
+
+.fc-method-name {
+  font-weight: bold;
+}
+
+.fc-method-lock {
+  color: var(--pn-muted);
+  margin-left: 4px;
+}
+
+.fc-method-card {
+  margin: 0;
+  padding: 6px 8px;
+  background: var(--pn-hi);
+  border: 1px solid var(--pn-edge-soft);
+  line-height: 1.45;
+}
+
+.fc-method.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.fc-knobs {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fc-params {
+  border: 2px solid var(--pn-edge-soft);
+  background: var(--pn-well);
+  padding: 4px 8px;
+  margin: 0;
+}
+
+.fc-param {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.fc-param input[type="number"] {
+  width: 7em;
+}
+
+.fc-auto {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding-bottom: 4px;
+}
+
+.fc-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fc-options label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.fc-note {
+  margin: 0;
+  color: var(--pn-ink2);
+}
+
+.fc-pin {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fc-summary,
+.fc-score ul,
+.fc-causes ul,
+.fc-adjust ul {
+  margin: 6px 0;
+  padding-left: 1.2em;
+  line-height: 1.5;
+}
+
+.fc-draft {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: end;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  background: var(--pn-hi);
+  border: 2px solid var(--pn-gold-dk);
+  box-shadow: var(--pn-shadow);
+}
+
+.fc-backtest table td:first-child .tag {
+  margin-left: 6px;
+}
+
+.fc-book {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fc-entry {
+  background: var(--pn-card);
+  border: 2px solid var(--pn-edge-soft);
+  padding: 6px 8px;
+  box-shadow: var(--pn-shadow);
+}
+
+.fc-entry-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.fc-verdict-accurate {
+  background: var(--pn-green);
+  color: var(--pn-hi);
+}
+
+.fc-verdict-biased {
+  background: var(--pn-gold-dk);
+  color: var(--pn-hi);
+}
+
+.fc-verdict-failed {
+  background: var(--pn-red);
+  color: var(--pn-hi);
+}
+
+.fc-verdict-pending {
+  background: var(--pn-well);
+  color: var(--pn-ink2);
+}
+
+.fc-review h4 {
+  margin: 8px 0 2px;
+}
+
+.fc-review h5 {
+  margin: 10px 0 2px;
+  color: var(--pn-ink2);
+}
+
+.fc-drivers li.up::marker {
+  color: var(--pn-red);
+}
+
+.fc-drivers li.down::marker {
+  color: var(--pn-teal);
+}
+
+.pn-genius,
+.mate-genius {
+  margin: 2px 0;
+  font-weight: bold;
+  color: var(--pn-gold-dk, #a86b1c);
+}
+
+.mk-chart-tools {
+  gap: 10px;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.mk-forecast-toggle {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  .fc-work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 酒馆里算学奇才去向的传闻（奇才每季换一处酒馆） */
+.tv-genius {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink, #2b1b17);
+  background: var(--gold-4, #fff3b0);
+  border: 2px solid var(--gold-1, #a86b1c);
+}
+
+/* 本地商人（ECONOMY.md 6.6）：四派的占比条与各自对明天的预测 */
+.fc-merchants {
+  margin-top: 8px;
+}
+.fc-merchants h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+.fc-merchants ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fc-merchants li {
+  display: grid;
+  grid-template-columns: 6em minmax(60px, 1fr) 3em 4.5em;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0;
+}
+.fc-mer-bar {
+  display: block;
+  height: 8px;
+  background: var(--paper-mid);
+  border: 1px solid var(--parchment-deep);
+}
+.fc-mer-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--gold-1);
+}
+.fc-mer-fc {
+  color: var(--muted);
+}

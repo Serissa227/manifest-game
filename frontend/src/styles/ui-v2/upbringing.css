@@ -1,0 +1,3038 @@
+/* 新界面（试用）——养成：主画面（日程、活动卡、属性、日历、书信、相册）、比赛与小游戏、学院期。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写。
+ *
+ * 养成主画面是最密的一屏（体检第 10 条）。新界面的做法：
+ * - 整屏是深海蓝的底（与出海以后的外壳一样），三张纸：主角、本月日程、分页；顶上一条夜航色的顶栏（阶段、日期、倒计时、播放）。
+ * - 层级：每张纸只有一个标题（主角的名字、几年几月）；日程表是“三旬”三列（栏头下一道细线，不套栏卡），排好的格子是矮的一行白卡、
+ *   空格是虚线、正在排的那一格一圈黄铜；活动卡是一张白卡一件事——小图与名字（16 px 半粗）一行，说明、收益（绿）与代价（红）跨整卡宽；
+ *   做不了的卡虚线框 + 印章红的原因小签，原因不再跟着整张卡一起变灰。
+ * - 主要操作：“开始这个月”是这一屏唯一的黄铜主按钮，贴在日程纸的底边（手机上贴在屏幕下沿，拇指够得着）；按不了时旁边写原因与补救。
+ * - 选择器都以 .ub-screen 起头（特异度高于各处通用的 .ts-btn、人物页的 .ub-tab），只管养成主画面；比赛对话框的规则以 .ct-dialog 起头。
+ * - 断点与 v1 的 upbringing.css 一致：≤ 1200 px 两栏（分页挪到下面），≤ 760 px 单栏；v2 在 ≤ 1200 px 与矮窗口（高 < 500）也整屏滚动（第 7b 节）。
+ *   日程纸里的排法（活动卡几列、格子的小图、“排进哪一格”放在标题行还是三旬下面）按日程纸自己的宽，用容器查询（第 4 节末尾）。
+ * - 触屏（pointer: coarse）的点按区一律 ≥ 44 px，不只手机竖屏（第 10 节）。
+ * 对比度（WCAG AA，第 6 节）：正文 ink / paper-2 15.6、次要 ink-2 / paper-2 8.0、说明 ink-3 / paper-2 6.19、
+ * 印章红原因 seal / #f8e3dc 5.65、黄铜字 brass-ink / paper-0 5.72、深色顶栏 on-night-2 / night-1 8.23、一键按钮 #4d3407 / #f6e6c2 9.40、
+ * “通过”小签 up / paper-sunk 4.79、羁绊段位 #fff8ee / brass-ink 6.55（A 海蓝 6.9、S 印章红 6.61）、没点亮的心 ink-3 描边 / paper-2 6.19。
+ */
+
+/* ═════════════════════════ 1. 整屏与顶栏 ═════════════════════════ */
+:root[data-ui="v2"] .ub-screen {
+  color: var(--v2-ink);
+  background: var(--v2-night-0);
+  font-family: var(--v2-font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+:root[data-ui="v2"] .ub-screen.ub-loading {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night-2);
+}
+
+/* 顶栏：深色平面，底下一条鎏金细线（与出海后的顶栏同一种） */
+:root[data-ui="v2"] .ub-screen .ub-top {
+  position: relative;
+  gap: 18px;
+  min-height: 56px;
+  padding: 8px 20px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border-bottom: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-top::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-image: linear-gradient(90deg, transparent, var(--v2-brass) 18%, var(--v2-brass) 82%, transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-top-stage {
+  align-items: center;
+  gap: 12px;
+}
+:root[data-ui="v2"] .ub-screen .ub-stage {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-on-night);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-date {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night-2);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-season {
+  padding: 1px 9px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--v2-brass-hi);
+  background: transparent;
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-pill);
+}
+/* 倒计时：一枚枚深色小签，最近的一枚亮一些 */
+:root[data-ui="v2"] .ub-screen .ub-countdowns {
+  align-items: center;
+  gap: 8px;
+}
+/* 宽 > 760 px：倒计时放不下时（平板竖屏、窄桌面）最后一枚在右边渐隐，不在播放键前面硬切一刀；放得下时渐隐落在空白上，看不出来。
+ * 手机上倒计时一行左右滑，渐隐见第 8 节 */
+@media (min-width: 761px) {
+  :root[data-ui="v2"] .ub-screen .ub-countdowns {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  }
+}
+:root[data-ui="v2"] .ub-screen .ub-countdown {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 11px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-on-night-2);
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-screen .ub-countdown:first-child {
+  color: var(--v2-on-night);
+  border-color: var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-countdown .ub-cal-heart {
+  margin-right: 4px;
+  color: var(--v2-down-night);
+}
+/* 播放 / 暂停：顶栏上的幽灵按钮（像素图标照旧） */
+:root[data-ui="v2"] .ub-screen .ub-play {
+  top: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  line-height: 0;
+  background: transparent;
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-play:hover:not(:disabled) {
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-play:active:not(:disabled) {
+  top: 0;
+  background: var(--v2-night-3);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-play:disabled {
+  filter: none;
+  opacity: 0.4;
+  background: transparent;
+  border-color: var(--v2-night-line);
+}
+:root[data-ui="v2"] .ub-screen .ub-play:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+/* 跳过剩余养成：同样的幽灵按钮，写字、颜色淡一些（不常用、收不回来） */
+:root[data-ui="v2"] .ub-screen .ub-skip {
+  top: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  white-space: nowrap;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-skip:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-skip:disabled {
+  opacity: 0.4;
+}
+:root[data-ui="v2"] .ub-screen .ub-skip:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+
+/* 周条（按周播放的世界）：顶栏下面一条夜航色的窄条——第几周与日期、这个月的几周（过完的黄铜、这一周亮黄铜带进度、没到的暗）、
+ * 右端是这一屏此刻唯一的主按钮（开始第 N 周 / 继续这一周；正在走时退成安静的“暂停”）。 */
+:root[data-ui="v2"] .ub-screen .ub-week {
+  gap: 8px 18px;
+  min-height: 52px;
+  margin: 12px 16px 0;
+  padding: 6px 8px 6px 16px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 3px solid var(--v2-brass-hi);
+  border-radius: var(--v2-r-md);
+}
+@media (max-width: 1599px) {
+  :root[data-ui="v2"] .ub-screen .ub-week {
+    margin: 12px 12px 0;
+  }
+}
+:root[data-ui="v2"] .ub-screen .ub-week-now {
+  gap: 10px;
+}
+:root[data-ui="v2"] .ub-screen .ub-week-no {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-range {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-track {
+  gap: 4px;
+}
+:root[data-ui="v2"] .ub-screen .ub-week-seg {
+  min-width: 52px;
+  padding: 3px 8px 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.4;
+  color: var(--v2-on-night-3);
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-seg.is-done {
+  color: var(--v2-on-night-2);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line-strong);
+  box-shadow: inset 0 -3px 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-seg.is-current {
+  font-weight: 700;
+  color: var(--v2-on-night);
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-seg-bar {
+  height: 3px;
+  background: var(--v2-night-0);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-seg-fill {
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+/* 主按钮：黄铜底、墨色字（与“开始这个月”同一种） */
+:root[data-ui="v2"] .ub-screen .ub-week-go {
+  top: 0;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-week-go:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-go.is-primary {
+  font-size: var(--v2-fs-lg);
+  letter-spacing: 0.08em;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-go.is-primary:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: #eabd68;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .ub-screen .ub-week-go:active:not(:disabled) {
+  top: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-week-go.is-primary:active:not(:disabled) {
+  background: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-go:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .ub-screen .ub-week-key {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .ub-screen .ub-week {
+    margin: 8px 8px 0;
+    padding: 8px 8px 8px 12px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-week-seg {
+    min-width: 0;
+    padding: 3px 6px 6px;
+  }
+}
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .ub-screen .ub-week-go {
+    min-height: var(--v2-h-touch);
+  }
+}
+
+/* 比赛：顶栏下面一条深色的小卡；能玩的左边一道黄铜、“去比赛”是行内的一键按钮，比完的只留名次 */
+:root[data-ui="v2"] .ub-screen .ub-contests {
+  gap: 10px;
+  margin: 12px 16px 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-contest {
+  gap: 10px;
+  min-height: 44px;
+  padding: 5px 6px 5px 14px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 3px solid var(--v2-brass-hi);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-contest--done {
+  padding-right: 14px;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border-color: var(--v2-night-line);
+  border-left-color: var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-contest-name {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ub-screen .ub-contest-kind {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-on-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-contest .is-good {
+  color: var(--v2-up-night);
+}
+:root[data-ui="v2"] .ub-screen .ub-contest-result {
+  color: var(--v2-on-night-2);
+}
+
+/* 行内的一键按钮（去比赛、去考）：浅黄铜底 + 黄铜描边，比主按钮安静、比次要按钮醒目（第 4 节“按钮”） */
+:root[data-ui="v2"] .ub-screen .ub-contest .ts-btn,
+:root[data-ui="v2"] .ub-screen .ub-exam .ts-btn {
+  top: 0;
+  min-height: var(--v2-h-sm);
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-contest .ts-btn:hover:not(:disabled),
+:root[data-ui="v2"] .ub-screen .ub-exam .ts-btn:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .ub-screen .ub-contest .ts-btn:active:not(:disabled),
+:root[data-ui="v2"] .ub-screen .ub-exam .ts-btn:active:not(:disabled) {
+  top: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-exam .ts-btn:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .ub-screen .ub-contest .ts-btn:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .ub-screen .ub-exam .ts-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+
+/* ═════════════════════════ 2. 三张纸 ═════════════════════════ */
+:root[data-ui="v2"] .ub-screen .ub-body {
+  grid-template-columns: 296px minmax(0, 1fr) 380px;
+  gap: 16px;
+  padding: 16px;
+}
+/* 常见笔记本（1201–1599 px，含桌面版默认窗口 1440×900）：分页窄 20 px（与 v1 同宽），纸与纸的间距 12 px（与 v1 相同），
+ * 日程纸多一点地方——1366 px 时内容宽 630（原来 606）：两列活动卡的收益与代价排得进一行，底栏的预计小签一行放得下 */
+@media (max-width: 1599px) {
+  :root[data-ui="v2"] .ub-screen .ub-body {
+    grid-template-columns: 296px minmax(0, 1fr) 360px;
+    gap: 12px;
+    padding: 12px;
+  }
+}
+:root[data-ui="v2"] .ub-screen .ub-hero,
+:root[data-ui="v2"] .ub-screen .ub-planner,
+:root[data-ui="v2"] .ub-screen .ub-running,
+:root[data-ui="v2"] .ub-screen .ub-side {
+  background: var(--v2-paper-0);
+  border: 0;
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-2);
+}
+
+/* ═════════════════════════ 3. 左栏：主角 ═════════════════════════ */
+/* 立绘是一张带衬边的插图；名字（宋体）在立绘下面，不再压在一块木牌上 */
+:root[data-ui="v2"] .ub-screen .ub-hero {
+  align-self: start;
+  max-height: 100%;
+  gap: 16px;
+  padding: 20px 18px 18px;
+}
+:root[data-ui="v2"] .ub-screen .ub-hero-portrait {
+  padding: 4px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+/* 矮的桌面窗口（高 ≤ 800 px，如 1280×720、1366×768，学院期上面还有比赛条）：立绘缩到 208 px，主角纸放得下、不出滚动条
+ * （出了竖滚动条，248 px 的立绘会再把纸撑出一条横滚动条） */
+@media (min-width: 1201px) and (max-height: 800px) {
+  :root[data-ui="v2"] .ub-screen .ub-hero-portrait {
+    width: 208px !important;
+    height: 208px !important;
+  }
+}
+:root[data-ui="v2"] .ub-screen .ub-hero-plate {
+  gap: 2px;
+  margin-top: 12px;
+  padding: 0;
+  color: var(--v2-ink);
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-hero-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.06em;
+  color: var(--v2-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-hero-age {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-dot {
+  color: var(--v2-brass);
+}
+
+/* 四条数值：名字、6 px 的圆头细条、一句状态；色调表示好坏（好 = 绿、留意 = 黄铜、糟 = 印章红），名声是黄铜色的进度 */
+:root[data-ui="v2"] .ub-screen .ub-meters {
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter {
+  grid-template-columns: 3.2em minmax(0, 1fr) auto;
+  gap: 10px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter-name {
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter-track {
+  height: 6px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .ub-screen .ub-meter-fill {
+  background: var(--v2-up);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter--warn .ub-meter-fill,
+:root[data-ui="v2"] .ub-screen .ub-meter:last-child .ub-meter-fill {
+  background: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter--bad .ub-meter-fill {
+  background: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter-label {
+  min-width: 4.5em;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-meter--bad .ub-meter-label {
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+
+/* 评价：两枚小卡；段位黄铜色 */
+:root[data-ui="v2"] .ub-screen .ub-ratings {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ub-screen .ub-rating {
+  align-items: baseline;
+  gap: 0 6px;
+  padding: 8px 10px;
+  font-size: var(--v2-fs-sm);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-rating-name {
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-rating-rank {
+  font-weight: 700;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-rating-value {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-cash {
+  width: 100%;
+  padding-top: 12px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  text-align: center;
+  color: var(--v2-ink);
+  border-top: 1px solid var(--v2-line);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═════════════════════════ 4. 中栏：本月日程 ═════════════════════════ */
+/* 日程纸是一个容器（ub-plan）：活动卡几列、格子里的小图多大、“排进哪一格”放在哪，都按日程纸自己的宽（容器查询），
+ * 不按窗口宽——同样 1280 px 的窗口，三栏与两栏时日程纸的宽差得很多。容器查询只在宽 > 760 px 时用（手机的排法在第 8 节）。
+ * 第三轮审查（常见笔记本上底栏以上完整看得到的活动卡比 v1 少；预计小签被藏在滑不到的地方）：这一屏的高度一处一处省——
+ * - 宽 > 760 px 时“点一张卡，排进……”排进标题那一行（日程纸放得下时），不再单占一行；
+ * - 三旬不再是三张栏卡（卡片套卡片）：栏头下一道细线，格子是唯一的一层白卡；排好的格子是矮的一行（小图 48×32 与名字并排，44–49 px）；
+ * - 活动卡里图只和名字并排，说明、收益、代价跨整卡宽（说明一行放得下，不再剩一两个字孤零零占一行），收益与代价放得下时排在同一行；
+ * - 底栏的预计小签可以折行，一枚也不藏；“太累”的提醒排在最前面。 */
+:root[data-ui="v2"] .ub-screen .ub-planner {
+  container: ub-plan / inline-size;
+  gap: 10px;
+  padding: 14px 16px 0;
+}
+/* 标题：几年几月（宋体），下面一道双细线（功能窗口标题的同一种）；右边“自动安排”。
+ * 宽 > 760 px 时标题这一层只是壳（display: contents），双细线画在三旬的上沿（本节末尾的网格） */
+:root[data-ui="v2"] .ub-screen .ub-planner-head {
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 3px double var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-month {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-preset {
+  gap: 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--v2-ink-2);
+}
+/* “照上月”（11-03 操作手感：最常用的自动安排单独一个键）与它右边的下拉框 */
+:root[data-ui="v2"] .ub-screen .ub-preset-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+:root[data-ui="v2"] .ub-screen .ub-repeat {
+  min-height: var(--v2-h-md);
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .ub-screen .ub-preset select,
+:root[data-ui="v2"] .ub-screen .ub-refine select {
+  min-height: var(--v2-h-md);
+  padding: 0 8px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background-color: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  border-radius: var(--v2-r-sm);
+  box-shadow: inset 0 1px 1px rgba(36, 28, 21, 0.06);
+}
+/* 格子下面的补选框：鼠标下用小号（28 px），两个叠起来也不把这一旬撑得太高；触屏 44 px（第 8 节后的 pointer: coarse） */
+:root[data-ui="v2"] .ub-screen .ub-refine select {
+  min-height: var(--v2-h-sm);
+  font-size: var(--v2-fs-sm);
+}
+/* 还没选的补选框：浅黄铜底，一眼看出这里还缺一样 */
+:root[data-ui="v2"] .ub-screen .ub-refine select:has(option[value=""]:checked) {
+  color: var(--v2-brass-ink);
+  background-color: #fbf0d6;
+  border-color: var(--v2-brass-ink);
+}
+
+/* 三旬：像日历的三列——栏头（旬名、日子）下一道细线，下面直接是格子；不再给每一旬套一张带底色、描边的栏卡（规格第 4 节“不要卡片套卡片”），
+ * 也就不会因为最高的那一栏把另两栏的栏卡撑出一大块空。正在进行的那一旬：栏头的线换成黄铜、旬名黄铜色 */
+:root[data-ui="v2"] .ub-screen .ub-grid {
+  gap: 14px;
+}
+:root[data-ui="v2"] .ub-screen .ub-col {
+  gap: 6px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-col.is-current {
+  border: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-col-head {
+  align-items: baseline;
+  padding: 0 2px 4px;
+  border-bottom: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-col.is-current .ub-col-head {
+  border-bottom-color: var(--v2-brass);
+  box-shadow: 0 1px 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-col-label {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-col.is-current .ub-col-label {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-col-days {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell {
+  gap: 4px;
+}
+/* 一格：矮的一行——左边场景小图（48×32，占两行），右边“课业 / 课后”（学院期）与活动名（16 px 半粗）。
+ * 家乡期只有活动名，44 px（触屏的点按区下限）；学院期多一行“课业 / 课后”，约 49 px */
+:root[data-ui="v2"] .ub-screen .ub-cell-btn {
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  align-items: center;
+  gap: 0 10px;
+  min-height: 44px;
+  padding: 5px 10px 5px 5px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.3;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-btn:disabled {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-part {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-btn .ub-scene {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 48px;
+  height: 32px;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-name {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.3;
+}
+/* 家乡期每旬只有一格：“这一旬”与栏头的旬名重复，不写；活动名竖直居中 */
+:root[data-ui="v2"] .ub-screen .ub-grid--home .ub-cell-part {
+  display: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--home .ub-cell-name {
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+/* 空格：虚线、居中的“＋ 选活动”（学院期上面一行“课业 / 课后”） */
+:root[data-ui="v2"] .ub-screen .ub-cell:not(.is-filled) .ub-cell-btn {
+  padding-left: 10px;
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell:not(.is-filled) .ub-cell-btn:hover:not(:disabled) {
+  background: rgba(255, 253, 248, 0.7);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell:not(.is-filled) .ub-cell-part {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-empty {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: center;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--home .ub-cell-empty {
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+/* 正在排的那一格：一圈黄铜；空着时“＋ 选活动”也换成黄铜色 */
+:root[data-ui="v2"] .ub-screen .ub-cell.is-active .ub-cell-btn,
+:root[data-ui="v2"] .ub-screen .ub-cell.is-active .ub-cell-btn:hover:not(:disabled) {
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-brass-ink);
+  box-shadow: 0 0 0 3px rgba(227, 176, 86, 0.55);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell.is-active .ub-cell-empty {
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell.is-done .ub-cell-btn {
+  opacity: 1;
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-extra,
+:root[data-ui="v2"] .ub-screen .ub-cell-result {
+  padding: 0 2px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-result.is-fail {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .ub-refine {
+  gap: 4px;
+}
+
+/* 活动的小场景：像素插画是插图——圆角、一道淡淡的内框，不再是 2 px 的黑框 */
+:root[data-ui="v2"] .ub-screen .ub-scene {
+  border: 0;
+  border-radius: var(--v2-r-sm);
+  outline: 1px solid rgba(36, 28, 21, 0.22);
+  outline-offset: -1px;
+}
+:root[data-ui="v2"] .ub-screen .ub-scene--large {
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+
+/* “点一张卡，排进中旬”：黄铜色、前面一个小菱形。宽 > 760 px、日程纸放得下时在标题那一行，否则在三旬下面、分类签上面 */
+:root[data-ui="v2"] .ub-screen .ub-target {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-target::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-left: 2px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+
+/* 活动的种类：圆角小签一排（多于七八个、会折行的分页用小签，第 4 节“标签页”） */
+:root[data-ui="v2"] .ub-screen .ub-planner .ub-tabs {
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-planner .ub-tab {
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-planner .ub-tab:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: #fff;
+  border: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-planner .ub-tab.is-on,
+:root[data-ui="v2"] .ub-screen .ub-planner .ub-tab.is-on:hover:not(:disabled) {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border: 1px solid var(--v2-brass-ink);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-planner .ub-tab:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+
+/* 活动卡：一张白卡一件事；悬停描黄铜边。
+ * 第一行是场景小图（48×32）与名字（16 px 半粗，段位、新的小签跟在后面），做不了的卡把原因小签也放在这一行的右边（放不下时换到下一行）；
+ * 下面的说明、收益（绿）、代价（红）跨整卡宽——说明在常见的卡宽里一行放得下（text-wrap: pretty 免得最后一行只剩一两个字），
+ * 收益与代价放得下时排在同一行，放不下时代价换到下一行。
+ * 排法：按钮是一行行折行的 flex（从左排起），正文那一层 span 只是壳（display: contents），名字、说明、收益、代价、段位进度、原因都直接排在按钮里；
+ * 原因在 DOM 里排在最后（读屏照旧），视觉上用 order 提到名字后面。
+ * 几列按日程纸的宽（本节末尾的容器查询）：窄时一列，≥ 480 px 两列，≥ 760 px 三列，≥ 1100 px 四列 */
+:root[data-ui="v2"] .ub-screen .ub-acts {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px 10px;
+}
+:root[data-ui="v2"] .ub-screen .ub-act-btn {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: flex-start;
+  gap: 4px 10px;
+  min-height: 0;
+  padding: 8px 10px 9px 8px;
+  font-size: var(--v2-fs-md);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-brass);
+  box-shadow: 0 0 0 1px var(--v2-brass), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-btn:active:not(:disabled) {
+  background: var(--v2-paper-1);
+  box-shadow: 0 0 0 1px var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-btn:disabled {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-btn .ub-scene {
+  flex: none;
+  width: 48px;
+  height: 32px;
+}
+:root[data-ui="v2"] .ub-screen .ub-act-body {
+  display: contents;
+}
+:root[data-ui="v2"] .ub-screen .ub-act-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 4px 6px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  line-height: 1.3;
+}
+:root[data-ui="v2"] .ub-screen .ub-new {
+  padding: 1px 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-screen .ub-tier {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid var(--v2-brass);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-desc,
+:root[data-ui="v2"] .ub-screen .ub-act-gains,
+:root[data-ui="v2"] .ub-screen .ub-act-meta,
+:root[data-ui="v2"] .ub-screen .ub-tier-line,
+:root[data-ui="v2"] .ub-screen .ub-tier-track {
+  order: 1;
+}
+/* 长进 / 得失 的小标题：小号铜色方签 */
+:root[data-ui="v2"] .ub-screen .ub-act-label {
+  padding: 0 5px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-ink-3);
+  background: var(--v2-paper-sunk);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-tier-line {
+  flex: 1 0 100%;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-desc {
+  flex: 1 0 100%;
+  font-size: var(--v2-fs-md);
+  line-height: 1.45;
+  color: var(--v2-ink-2);
+  text-wrap: pretty;
+}
+:root[data-ui="v2"] .ub-screen .ub-act-gains,
+:root[data-ui="v2"] .ub-screen .ub-act-meta {
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: 0 8px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.45;
+}
+/* 没有收益（约人出去、休息）或没有代价时，空的那一格不占位置（不然代价前面会空出一道间距） */
+:root[data-ui="v2"] .ub-screen .ub-act-gains:empty,
+:root[data-ui="v2"] .ub-screen .ub-act-meta:empty {
+  display: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-act-gains {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-gain b {
+  font-weight: 700;
+  color: var(--v2-up);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-gain-skill b {
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-meta {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .is-cost {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .is-good {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .ub-screen .ub-tier-track {
+  flex: 1 0 100%;
+  height: 4px;
+  margin-top: 2px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+/* 熟练度那一行：名字不折行，进度条占余下的宽度 */
+:root[data-ui="v2"] .ub-screen .ub-tier-line .ub-tier-track {
+  flex: 1 1 auto;
+  min-width: 40px;
+  margin-top: 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-tier-name {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+:root[data-ui="v2"] .ub-screen .ub-tier-track span {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+/* 做不了的卡：虚线框、内容退成说明色、图压暗；原因是印章红的小签，不跟着变灰（读得清） */
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-act-btn {
+  opacity: 1;
+  filter: none;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border: 1px dashed var(--v2-line-strong);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-scene {
+  filter: grayscale(0.7);
+  opacity: 0.7;
+}
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-act-desc,
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-act-gains,
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-act-meta,
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-act-meta .is-cost,
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-act-meta .is-good,
+:root[data-ui="v2"] .ub-screen .ub-act.is-blocked .ub-gain b {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-act-why {
+  flex: 0 1 auto;
+  padding: 2px 8px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--v2-seal);
+  background: #f8e3dc;
+  border-radius: var(--v2-r-xs);
+}
+
+/* 底栏：本月预计（一枚枚小签）+ 开始键。贴在日程纸的底边，往下滚也一直在。
+ * 预计的小签可以折行，一枚也不藏（第三轮审查：原来不折行、横向滑又藏了滚动条，除了最宽的桌面都有小签被渐隐盖住，手机上五枚全看不见）；
+ * “太累”的提醒紧跟“本月预计”排在最前面，疲劳、心情、零用钱排在成长前面（这几枚最要紧，折行时也在第一行）——只是视觉顺序，DOM 与读屏的顺序不变。
+ * 宽 > 760 px 时：预计、原因与开始键一行放得下就排一行（预计在左，原因与开始键在右）；放不下时原因与开始键换到下一行、靠右；
+ * 原因至少 8 个字宽，不会被挤成一字一行（第二轮审查）。手机的排法在第 8 节。 */
+:root[data-ui="v2"] .ub-screen .ub-plan-foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: auto -16px 0;
+  padding: 8px 16px;
+  background: var(--v2-paper-1);
+  border-top: 1px solid var(--v2-line);
+  border-radius: 0 0 var(--v2-r-lg) var(--v2-r-lg);
+  box-shadow: 0 -8px 20px rgba(36, 28, 21, 0.08);
+}
+:root[data-ui="v2"] .ub-screen .ub-proj {
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  align-items: center;
+  gap: 4px 5px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-proj > * {
+  flex: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-proj-label {
+  order: -3;
+  margin-right: 2px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-proj-item {
+  padding: 0 7px;
+  line-height: 22px;
+  white-space: nowrap;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+  font-variant-numeric: tabular-nums;
+}
+/* 疲劳、心情、零用钱（带 is-cost / is-good 的那几枚）排在成长前面 */
+:root[data-ui="v2"] .ub-screen .ub-proj-item.is-cost,
+:root[data-ui="v2"] .ub-screen .ub-proj-item.is-good {
+  order: -1;
+}
+:root[data-ui="v2"] .ub-screen .ub-proj-item b {
+  font-weight: 700;
+  color: var(--v2-up);
+}
+/* 还没排活动时的一句说明：可以折行（这时没有小签）；桌面上与原因、开始键排在同一行，说明折成两行 */
+:root[data-ui="v2"] .ub-screen .ub-proj .ub-proj-none {
+  flex: 0 1 auto;
+  min-width: 0;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-proj:has(.ub-proj-none) {
+  flex-wrap: nowrap;
+}
+@media (min-width: 761px) {
+  :root[data-ui="v2"] .ub-screen .ub-proj:has(.ub-proj-none) {
+    flex-basis: 240px;
+  }
+}
+/* 太累：印章红、前面一个“!”小圆标，紧跟“本月预计” */
+:root[data-ui="v2"] .ub-screen .ub-proj .ub-warn {
+  order: -2;
+  flex: 0 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .ub-warn::before {
+  content: "!";
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 1;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border-radius: 50%;
+}
+/* 原因与开始键：一组靠右；组本身也能折行（日程纸极窄时开始键落到原因下面），原因的字至少 8 个字宽 */
+:root[data-ui="v2"] .ub-screen .ub-go-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px 14px;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+}
+:root[data-ui="v2"] .ub-screen .ub-go-why {
+  flex: 1 1 12em;
+  max-width: 30em;
+  margin: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-go-why .v2-inline-error-text {
+  min-width: 8em;
+}
+:root[data-ui="v2"] .ub-screen .ub-go-why .v2-inline-error-action {
+  white-space: nowrap;
+}
+/* 开始这个月：这一屏唯一的主按钮（黄铜底、墨色字、半粗） */
+:root[data-ui="v2"] .ub-screen .ub-go {
+  top: 0;
+  flex: none;
+  min-height: var(--v2-h-lg);
+  padding: 0 24px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 1px solid #a87a24;
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-go:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .ub-screen .ub-go:active:not(:disabled) {
+  top: 0;
+  background: var(--v2-brass);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-go:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+/* 排满以后开始键上的回车小键帽（焦点不在别的按钮上时回车就按它；触屏上 .v2-kbd 本来就不显示） */
+:root[data-ui="v2"] .ub-screen .ub-go-key {
+  display: inline-flex;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+:root[data-ui="v2"] .ub-screen .ub-go:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+
+/* 宽 > 760 px：日程纸是一张网格。第一行是“城中各处”（城市的 CG 与地点，占满整行：它是尺寸容器，放在 auto 宽的列里会缩成 0）；
+ * 第二行是标题（几年几月）、“排进哪一格”、自动安排（header 只是一层壳，display: contents）；
+ * 下面依次是三旬、分类签、活动卡、底栏。第 4 行留给窄的日程纸（“排进哪一格”放不进标题那一行时回到三旬下面）；
+ * 第 7 行是弹性的空行：内容少时把底栏推到纸的下沿（原来 flex 里的 margin-top: auto）。行与行的间距用各自的 margin，空行不留缝。 */
+@media (min-width: 761px) {
+  :root[data-ui="v2"] .ub-screen .ub-planner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto auto auto auto auto 1fr auto;
+    align-items: center;
+    gap: 0 16px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-town {
+    grid-area: 1 / 1 / 2 / -1;
+    margin-bottom: 14px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-planner-head {
+    display: contents;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-month {
+    grid-area: 2 / 1;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-target {
+    grid-area: 2 / 2;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-preset {
+    grid-area: 2 / 3;
+    justify-self: end;
+  }
+  /* 标题下的双细线画在三旬的上沿（header 没有盒子了） */
+  :root[data-ui="v2"] .ub-screen .ub-grid {
+    grid-area: 3 / 1 / 4 / -1;
+    align-self: start;
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 3px double var(--v2-line-strong);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-planner .ub-tabs {
+    grid-area: 5 / 1 / 6 / -1;
+    margin-top: 12px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-acts {
+    grid-area: 6 / 1 / 7 / -1;
+    align-self: start;
+    margin-top: 10px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-plan-foot {
+    grid-area: 8 / 1 / 9 / -1;
+    margin: 12px -16px 0;
+  }
+}
+
+/* 日程纸的宽决定的排法（容器 ub-plan 的内容宽；只在窗口宽 > 760 px 时，手机的排法在第 8 节）。
+ * 量过的几种窗口（日程纸的内容宽，日程纸出了竖滚动条时扣掉滚动条；第三轮）：1280×720 → 534、1366×768 → 620、1440×900 → 694、
+ * 1536×864 → 800、1600×1000 → 828、1920×1080 → 1148、1024×768 → 694、820×1180（平板竖屏，两栏）→ 490、844×390（手机横屏）→ 514。 */
+@media (min-width: 761px) {
+  /* 活动卡：≥ 480 px 两列、≥ 760 px 三列、≥ 1100 px 四列（每张卡的字至少十个字宽） */
+  @container ub-plan (min-width: 480px) {
+    :root[data-ui="v2"] .ub-screen .ub-acts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @container ub-plan (min-width: 760px) {
+    :root[data-ui="v2"] .ub-screen .ub-acts {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @container ub-plan (min-width: 1100px) {
+    :root[data-ui="v2"] .ub-screen .ub-acts {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  /* 日程纸 < 560 px：“排进哪一格”放不进标题那一行，回到三旬下面、分类签上面（第 4 行） */
+  @container ub-plan (max-width: 559px) {
+    :root[data-ui="v2"] .ub-screen .ub-target {
+      grid-area: 4 / 1 / 5 / -1;
+      margin-top: 12px;
+    }
+  }
+  /* 三旬一栏不到 200 px 宽（日程纸 < 600 px）：小图缩到 40×27，名字至少五个字宽（长的名字折成两行） */
+  @container ub-plan (max-width: 599px) {
+    :root[data-ui="v2"] .ub-screen .ub-grid {
+      gap: 10px;
+    }
+    :root[data-ui="v2"] .ub-screen .ub-cell-btn {
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 0 8px;
+      padding-right: 8px;
+    }
+    :root[data-ui="v2"] .ub-screen .ub-cell-btn .ub-scene {
+      width: 40px;
+      height: 27px;
+    }
+  }
+  /* 日程纸 < 560 px：分类签收一点内边距与间距，八个签（含“课后同行”“实习航行”）一行排得下 */
+  @container ub-plan (max-width: 559px) {
+    :root[data-ui="v2"] .ub-screen .ub-planner .ub-tabs {
+      gap: 5px;
+    }
+    :root[data-ui="v2"] .ub-screen .ub-planner .ub-tab {
+      padding: 0 10px;
+    }
+  }
+}
+
+/* ═════════════════════════ 4b. 中栏最上面：城中各处（UbTown.tsx） ═════════════════════════ */
+/* 日程纸上面的一幅画：这一阶段所在城市的 CG（像素画硬边，与 v1 同）、深色细框与小圆角；地点是夜航色的小方牌（3 px 圆角、
+ * 一像素黄铜描边、硬投影——偏像素一点，但不是颗粒感），地名是深色半透明的小签，在亮的画面上也看得清。
+ * 悬停 / 键盘焦点：方牌抬起 2 px、描边换亮黄铜，地名写全；排过的地点黄铜底、上面一枚“上旬”小签；人数是印章红的小圆签。
+ * 窄的日程纸（< 520 px）照 v1：横幅 + 下面一行左右滑的地点小签（深色条上的深色签，点按区 ≥ 44 px）。 */
+:root[data-ui="v2"] .ub-screen .ub-town {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ub-screen .ub-town-cap {
+  gap: 2px 12px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-town-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-town-hint {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-town-hint.is-blocked {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .ub-town-view {
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-town-view::after {
+  background: linear-gradient(180deg, rgba(11, 21, 34, 0) 55%, rgba(11, 21, 34, 0.32));
+  box-shadow: inset 0 0 0 1px rgba(255, 253, 248, 0.12);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(17, 31, 49, 0.86);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-xs);
+  box-shadow: 0 2px 0 rgba(5, 11, 20, 0.5);
+  transition:
+    transform var(--v2-dur-1) var(--v2-ease),
+    background-color var(--v2-dur-1) var(--v2-ease),
+    border-color var(--v2-dur-1) var(--v2-ease),
+    box-shadow var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot-name {
+  padding: 1px 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 500;
+  color: var(--v2-on-night);
+  background: rgba(11, 21, 34, 0.82);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot:hover .ub-spot-icon,
+:root[data-ui="v2"] .ub-screen .ub-spot:focus-visible .ub-spot-icon {
+  transform: translateY(-2px);
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass-hi);
+  box-shadow: 0 4px 0 rgba(5, 11, 20, 0.5);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot:hover .ub-spot-name,
+:root[data-ui="v2"] .ub-screen .ub-spot:focus-visible .ub-spot-name {
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot:focus-visible .ub-spot-icon {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .ub-screen .ub-spot.is-chosen .ub-spot-icon {
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+}
+:root[data-ui="v2"] .ub-screen .ub-spot-when {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border: 1px solid #a87a24;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot-people {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 1px solid rgba(11, 21, 34, 0.6);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot.is-off .ub-spot-icon {
+  border-style: dashed;
+  border-color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot.is-off .ub-spot-icon .shell-icon {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+:root[data-ui="v2"] .ub-screen .ub-spot.is-off .ub-spot-name {
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot.is-off:hover .ub-spot-icon {
+  transform: none;
+  background: rgba(17, 31, 49, 0.86);
+  border-color: var(--v2-on-night-3);
+  box-shadow: 0 2px 0 rgba(5, 11, 20, 0.5);
+}
+:root[data-ui="v2"] .ub-screen .ub-spot.is-off:hover .ub-spot-name {
+  color: var(--v2-on-night-2);
+}
+@container ub-town (max-width: 519px) {
+  :root[data-ui="v2"] .ub-screen .ub-town-view {
+    background: var(--v2-night-1);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-town-spots {
+    gap: 8px;
+    padding: 8px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-spot {
+    min-height: var(--v2-h-touch);
+    padding: 3px 12px 3px 3px;
+    background: var(--v2-night-2);
+    border: 1px solid var(--v2-night-line-strong);
+    border-radius: var(--v2-r-sm);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-spot-icon {
+    width: 36px;
+    height: 36px;
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-spot-name,
+  :root[data-ui="v2"] .ub-screen .ub-spot:hover .ub-spot-name,
+  :root[data-ui="v2"] .ub-screen .ub-spot:focus-visible .ub-spot-name {
+    padding: 0;
+    font-size: var(--v2-fs-md);
+    background: none;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-spot:hover .ub-spot-icon,
+  :root[data-ui="v2"] .ub-screen .ub-spot:focus-visible .ub-spot-icon {
+    transform: none;
+    box-shadow: none;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-spot:focus-visible {
+    outline: 2px solid var(--v2-focus-night);
+    outline-offset: 2px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-spot:focus-visible .ub-spot-icon {
+    outline: none;
+  }
+}
+
+/* ═════════════════════════ 5. 中栏：这个月进行中 ═════════════════════════ */
+:root[data-ui="v2"] .ub-screen .ub-running {
+  gap: 14px;
+  padding: 18px 20px;
+}
+:root[data-ui="v2"] .ub-screen .ub-running-caption {
+  left: 14px;
+  bottom: 14px;
+  padding: 6px 14px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  color: var(--v2-on-night);
+  background: rgba(11, 21, 34, 0.8);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-running-slots {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot {
+  grid-template-columns: 4.5em minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot--current {
+  border-color: var(--v2-brass);
+  box-shadow: inset 3px 0 0 var(--v2-brass), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot--planned {
+  background: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot-label {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot-result {
+  align-items: baseline;
+  gap: 4px 12px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot-result b {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot-result b.is-fail {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .ub-up {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .ub-screen .ub-down {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .ub-item-got {
+  color: var(--v2-sea);
+}
+/* 评语：不用斜体（中文的斜体是机器拉斜的），左边一道细线 */
+:root[data-ui="v2"] .ub-screen .ub-rslot-line {
+  margin-top: 2px;
+  padding-left: 10px;
+  font-style: normal;
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot-wait {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-rslot--current .ub-rslot-wait {
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+
+/* ═════════════════════════ 6. 右栏：分页 ═════════════════════════ */
+:root[data-ui="v2"] .ub-screen .ub-side {
+  gap: 0;
+  padding: 4px 0 0;
+}
+/* 七个分页一行排开（文字 + 下划线，同人物页）；放不下时这一行左右滑 */
+:root[data-ui="v2"] .ub-screen .ub-side-tabs {
+  flex: none;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 0 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .ub-screen .ub-side-tabs .ub-tab {
+  flex: 1 0 auto;
+  min-height: 44px;
+  padding: 0 9px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-side-tabs .ub-tab:focus-visible {
+  outline-offset: -2px;
+}
+:root[data-ui="v2"] .ub-screen .ub-badge {
+  display: inline-block;
+  min-width: 18px;
+  margin-left: 4px;
+  padding: 0 5px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-screen .ub-side-body {
+  padding: 14px 16px 18px;
+}
+/* 分组的小标题：12 px 黄铜色、字距拉开（同人物详情的分节） */
+:root[data-ui="v2"] .ub-screen .ub-attr-group h4,
+:root[data-ui="v2"] .ub-screen .ub-path h4 {
+  margin: 0 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-attr-group + .ub-attr-group,
+:root[data-ui="v2"] .ub-screen .ub-path section + section {
+  margin-top: 18px;
+}
+
+/* 属性：名字、6 px 黄铜细条、结业时的预计值（等宽数字） */
+:root[data-ui="v2"] .ub-screen .ub-attr-group ul {
+  gap: 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-attr {
+  grid-template-columns: 4.5em minmax(0, 1fr) 2.2em;
+  gap: 12px;
+  min-height: 30px;
+  font-size: var(--v2-fs-md);
+  border-bottom: 1px solid rgba(217, 203, 176, 0.55);
+}
+:root[data-ui="v2"] .ub-screen .ub-attr:last-child {
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-attr-track {
+  height: 6px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .ub-screen .ub-attr-track span {
+  background: var(--v2-brass);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .ub-screen .ub-attr-proj {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  color: var(--v2-ink);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-skills li {
+  align-items: center;
+  gap: 10px;
+  min-height: 30px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-skill-lv {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4d3407;
+  background: #f6e6c2;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-skill-xp {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+/* K01：技能效果（生效中的这一级 / 下一级） */
+:root[data-ui="v2"] .ub-screen .ub-skill-fx {
+  margin: -6px 0 4px;
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-skill-fx-next {
+  color: var(--v2-ink-3);
+}
+
+/* 各分页的列表：一行一张白卡 */
+:root[data-ui="v2"] .ub-screen .ub-bonds,
+:root[data-ui="v2"] .ub-screen .ub-cal,
+:root[data-ui="v2"] .ub-screen .ub-album,
+:root[data-ui="v2"] .ub-screen .ub-letters,
+:root[data-ui="v2"] .ub-screen .ub-path-options,
+:root[data-ui="v2"] .ub-screen .ub-exams {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ub-screen .ub-diary {
+  gap: 16px;
+}
+
+/* 羁绊：头像圆角、名字宋体；情谊是黄铜细条（人物页的同一种）；“下一步”的提示左边一道黄铜线 */
+:root[data-ui="v2"] .ub-screen .ub-bond {
+  gap: 12px;
+  padding: 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-face {
+  border: 1px solid rgba(36, 28, 21, 0.25);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-head {
+  gap: 4px 8px;
+  margin: 0 0 6px;
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-role {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+/* 羁绊的段位：3 px 圆角的小方签（规格第 4 节“等级、羁绊”），底色用令牌——B 及以下深黄铜、A 海蓝、S 印章红，字 #fff8ee（6.55 / 6.9 / 6.61 : 1）；
+ * 原来是 v1 写死的棕、蓝、红底 */
+:root[data-ui="v2"] .ub-screen .ub-rank {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 700;
+  line-height: 1.5;
+  color: #fff8ee;
+  background: var(--v2-brass-ink);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-rank-A {
+  background: var(--v2-sea);
+}
+:root[data-ui="v2"] .ub-screen .ub-rank-S {
+  background: var(--v2-seal);
+}
+/* 心动：点亮的心印章红（seal-hi / paper-2 约 4.9 : 1），没点亮的是 ink-3 描边的空心（6.19 : 1）——
+ * 原来的空心是浅米色 #d6c6b4，在白卡上只有 1.64 : 1，读不出到了第几颗 */
+:root[data-ui="v2"] .ub-screen .ub-heart {
+  display: inline-flex;
+  gap: 1px;
+}
+:root[data-ui="v2"] .ub-screen .ub-heart span {
+  font-size: var(--v2-fs-sm);
+  color: transparent;
+  -webkit-text-stroke: 1px var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-heart span.is-on {
+  color: var(--v2-seal-hi);
+  -webkit-text-stroke: 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-line {
+  gap: 2px 12px;
+  margin: 8px 0 0;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-sub {
+  margin-top: 2px;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-bond-hint {
+  margin: 8px 0 0;
+  padding-left: 8px;
+  font-size: var(--v2-fs-sm);
+  font-style: normal;
+  color: var(--v2-ink-2);
+  border-left: 2px solid var(--v2-brass);
+}
+
+/* 日历：左边一道颜色分种类（节日印章红、考试与比赛海蓝、生日黄铜），天数等宽 */
+:root[data-ui="v2"] .ub-screen .ub-cal-item {
+  grid-template-columns: 5em minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 10px;
+  padding: 10px 12px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-item.ub-cal--festival {
+  border-left-color: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-item.ub-cal--exam,
+:root[data-ui="v2"] .ub-screen .ub-cal-item.ub-cal--contest {
+  border-left-color: var(--v2-sea);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-item.ub-cal--birthday {
+  border-left-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-days {
+  font-weight: 600;
+  color: var(--v2-ink);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-name {
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-item .ub-cal-heart {
+  color: var(--v2-seal-hi);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-kind {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-cal-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+
+/* 相册：还没有回忆的插画，画一个纸色小框 + 黄铜菱形（不用渐变色块） */
+:root[data-ui="v2"] .ub-screen .ub-memory {
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 10px 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-memory-art {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  background: var(--v2-paper-sunk);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-memory-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 10px;
+  height: 10px;
+  margin: auto;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .ub-screen .ub-memory-title {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ub-screen .ub-memory-date {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-memory-line {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+
+/* 书信：一行一封（寄信人、题目、日期）；未读的左边一道印章红、题目加粗；展开的信纸接在下面，正文宋体 16 px */
+:root[data-ui="v2"] .ub-screen .ub-letter-head {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 10px;
+  min-height: 52px;
+  padding: 9px 12px;
+  font-size: var(--v2-fs-md);
+  font-weight: 400;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-head:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter.is-new .ub-letter-head {
+  border-left: 3px solid var(--v2-seal);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-head[aria-expanded="true"] {
+  border-bottom-color: transparent;
+  border-radius: var(--v2-r-md) var(--v2-r-md) 0 0;
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-from {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-title {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter.is-new .ub-letter-title {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-date {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-head .ub-ai-mark {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-body,
+:root[data-ui="v2"] .ub-screen .ub-diary p {
+  margin: 0;
+  padding: 12px 16px 14px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  line-height: var(--v2-lh-read);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-letter-body {
+  border-top: 0;
+  border-radius: 0 0 var(--v2-r-md) var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-diary h5 {
+  display: flex;
+  align-items: center;
+  margin: 0 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--v2-brass-ink);
+}
+
+/* 志向与考试 */
+:root[data-ui="v2"] .ub-screen .ub-lead {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ub-screen .ub-path-chosen {
+  margin: 0 0 8px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ub-screen .ub-path-btn {
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 0;
+  padding: 12px 14px;
+  font-weight: 400;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ub-screen .ub-path-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-brass);
+  box-shadow: 0 0 0 1px var(--v2-brass), var(--v2-shadow-1);
+}
+/* 还没到选的日子（或锁着）的志向：仍然读得清——虚线框、次要字，不用灰到看不清的禁用色 */
+:root[data-ui="v2"] .ub-screen .ub-path-btn:disabled {
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border-style: dashed;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-path-options li.is-chosen .ub-path-btn {
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-brass-ink);
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-path-name {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ub-screen .ub-path-desc {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-exam {
+  gap: 4px 10px;
+  padding: 10px 12px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ub-screen .ub-exam-name {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ub-screen .ub-exam-status {
+  padding: 0 7px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ub-screen .ub-exam--open .ub-exam-status {
+  color: #fff8ee;
+  background: var(--v2-sea);
+}
+:root[data-ui="v2"] .ub-screen .ub-exam--passed .ub-exam-status {
+  color: var(--v2-up);
+  background: var(--v2-paper-sunk);
+  box-shadow: inset 0 0 0 1px var(--v2-up);
+}
+:root[data-ui="v2"] .ub-screen .ub-exam--failed .ub-exam-status {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+:root[data-ui="v2"] .ub-screen .ub-exam-pct {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-exam-req {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-exam .ts-btn {
+  margin-left: auto;
+}
+/* 分页里的空状态（共用的 .v2-empty）：右栏窄，留白小一些 */
+:root[data-ui="v2"] .ub-screen .ub-empty-state {
+  margin: 4px 0;
+  padding: 18px 14px;
+}
+
+/* ═════════════════════════ 7. 平板（≤ 1200 px）：两栏，分页挪到下面 ═════════════════════════ */
+@media (max-width: 1200px) {
+  :root[data-ui="v2"] .ub-screen .ub-body {
+    grid-template-columns: 252px minmax(0, 1fr);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-hero-portrait {
+    width: 200px !important;
+    height: 200px !important;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-side {
+    max-height: 50vh;
+  }
+}
+
+/* ═════════════════════════ 7b. 平板（761–1200 px）与矮窗口（高 < 500 px，手机横屏）：整屏滚动 ═════════════════════════ */
+/* 三张纸各自滚动时，分页挪到下面占去半屏，日程纸只剩三四百 px 高（手机横屏只有一百多 px），底栏一贴就把格子和活动卡全盖住。
+ * 改成整屏一起滚（与手机竖屏一样）：每张纸按内容的高度排，底栏贴在屏幕下沿（日程纸在眼前时一直在），开始键随时够得着；
+ * 分页在最下面、不再限高。矮窗口的断点与外壳的 short 布局相同（高 < 500）。 */
+@media (min-width: 761px) and (max-width: 1200px), (min-width: 761px) and (max-height: 499px) {
+  :root[data-ui="v2"] .ub-screen {
+    overflow-y: auto;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-body {
+    flex: none;
+    align-items: start;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-hero,
+  :root[data-ui="v2"] .ub-screen .ub-planner,
+  :root[data-ui="v2"] .ub-screen .ub-running,
+  :root[data-ui="v2"] .ub-screen .ub-side {
+    max-height: none;
+    overflow: visible;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-plan-foot {
+    box-shadow: 0 -10px 24px rgba(5, 11, 20, 0.22);
+  }
+}
+
+/* ═════════════════════════ 8. 手机（≤ 760 px）：单栏、整屏滚动，开始键贴在屏幕下沿 ═════════════════════════ */
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .ub-screen .ub-top {
+    gap: 8px 12px;
+    min-height: 0;
+    padding: max(8px, var(--safe-top, 0px)) 12px 10px;
+  }
+  /* 阶段与日期独占第一行（11-03 操作手感：原来与三个按钮挤在一行，“土佐中村”“5 月 1 日”被从中间折断）；
+   * 播放、跳过、主菜单在第二行靠右，倒计时第三行。名字、日期各自不折行，放不下时整块换行 */
+  :root[data-ui="v2"] .ub-screen .ub-top-stage {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    min-width: 0;
+    white-space: normal;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-top-stage > .ub-stage,
+  :root[data-ui="v2"] .ub-screen .ub-top-stage > .ub-date {
+    white-space: nowrap;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-top-actions {
+    margin-left: auto;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-stage {
+    font-size: var(--v2-fs-xl);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-date {
+    font-size: var(--v2-fs-sm);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-play {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+  /* 倒计时：一行左右滑，右边渐隐提示还有 */
+  :root[data-ui="v2"] .ub-screen .ub-countdowns {
+    flex-wrap: nowrap;
+    margin: 0 -12px;
+    padding: 0 12px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-countdown {
+    flex: none;
+    padding: 4px 11px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-contests {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin: 10px 10px 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-contest {
+    flex-wrap: wrap;
+    padding: 8px 8px 8px 14px;
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-contest .ts-btn {
+    min-height: var(--v2-h-touch);
+    margin-left: auto;
+    padding: 0 16px;
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-body {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  /* 主角：一行（立绘、名字与年龄、零用钱），四条数值两两一排，评价一行；
+   * 整宽（桌面的 align-self: start 在竖排里会让这张纸按内容收窄，右边缘与日程纸对不齐） */
+  :root[data-ui="v2"] .ub-screen .ub-hero {
+    align-self: stretch;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "fig cash"
+      "meters meters"
+      "ratings ratings";
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-hero-figure {
+    grid-area: fig;
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-hero-portrait {
+    width: 64px !important;
+    height: 64px !important;
+    padding: 3px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-hero-plate {
+    align-items: flex-start;
+    margin: 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-hero-name {
+    font-size: var(--v2-fs-xl);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-cash {
+    grid-area: cash;
+    width: auto;
+    padding: 0;
+    font-size: 15px;
+    text-align: right;
+    border-top: 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-meters {
+    grid-area: meters;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+    padding-top: 12px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-meter {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name label"
+      "track track";
+    gap: 4px 8px;
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-meter-name {
+    grid-area: name;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-meter-label {
+    grid-area: label;
+    min-width: 0;
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-meter-track {
+    grid-area: track;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-ratings {
+    grid-area: ratings;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+  /* 评价在手机上一枚一行字：名字、段位、分数排成一排 */
+  :root[data-ui="v2"] .ub-screen .ub-rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 8px;
+    padding: 6px 10px;
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-rating-value {
+    margin-left: auto;
+    font-size: var(--v2-fs-sm);
+  }
+
+  /* 日程：一旬一行（旬名在左，格子在右；学院期两格并排）。旬与旬之间一道细线，不再是一旬一张栏卡（卡片套卡片） */
+  :root[data-ui="v2"] .ub-screen .ub-planner {
+    gap: 12px;
+    padding: 14px 14px 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-planner-head {
+    flex-wrap: wrap;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-month {
+    font-size: var(--v2-fs-xl);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-preset {
+    margin-left: auto;
+    font-size: var(--v2-fs-md);
+  }
+  /* 手机上的输入框不小于 16 px（iOS 聚焦时不放大）、点按区 44 px；“照上月”键同高 */
+  :root[data-ui="v2"] .ub-screen .ub-repeat {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-preset select,
+  :root[data-ui="v2"] .ub-screen .ub-refine select {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid {
+    gap: 8px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-col {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px 10px;
+    padding: 0 0 8px;
+    border-bottom: 1px solid var(--v2-line);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-col:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--academy .ub-col {
+    grid-template-columns: 60px repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-col-head {
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    gap: 0;
+    padding: 0 0 0 2px;
+    border-bottom: 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-col.is-current .ub-col-head {
+    box-shadow: inset 3px 0 0 var(--v2-brass);
+    padding-left: 9px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-col-label {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-col-days {
+    white-space: nowrap;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-cell-btn {
+    grid-template-columns: 56px minmax(0, 1fr);
+    min-height: 58px;
+    padding: 6px 8px 6px 6px;
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-cell-btn .ub-scene {
+    width: 56px;
+    height: 40px;
+  }
+  /* 学院期两格并排，格子窄：场景小图放在名字上面 */
+  :root[data-ui="v2"] .ub-screen .ub-grid--academy .ub-cell-btn {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    justify-items: start;
+    padding: 6px 8px 8px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--academy .ub-cell-btn .ub-scene {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: 36px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--academy .ub-cell-part {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--academy .ub-cell-name {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--academy .ub-cell-empty {
+    grid-row: 2 / span 2;
+    align-self: center;
+    padding: 12px 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-cell-extra,
+  :root[data-ui="v2"] .ub-screen .ub-cell-result {
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-target {
+    font-size: 15px;
+  }
+  /* 活动的种类：一行左右滑，右边渐隐 */
+  :root[data-ui="v2"] .ub-screen .ub-planner .ub-tabs {
+    flex-wrap: nowrap;
+    margin: 0 -14px;
+    padding: 0 14px 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-planner .ub-tab {
+    flex: none;
+    min-height: var(--v2-h-touch);
+    padding: 0 16px;
+    font-size: 15px;
+  }
+  /* 活动卡：单列；第一行小图（60×40）与名字，说明 15 px、收益与代价 14 px 跨整卡宽 */
+  :root[data-ui="v2"] .ub-screen .ub-acts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-act-btn {
+    gap: 6px 12px;
+    padding: 10px 12px 12px 10px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-act-btn .ub-scene {
+    width: 60px;
+    height: 40px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-act-desc {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-act-gains,
+  :root[data-ui="v2"] .ub-screen .ub-act-meta,
+  :root[data-ui="v2"] .ub-screen .ub-act-why {
+    font-size: var(--v2-fs-md);
+  }
+  /* 底栏贴在屏幕下沿（整屏在滚）：预计的小签折行（一枚也不藏；“太累”、疲劳、心情、零用钱排在前面，见第 4 节），开始键整宽、拇指够得着 */
+  :root[data-ui="v2"] .ub-screen .ub-plan-foot {
+    position: sticky;
+    bottom: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 8px;
+    margin: auto -14px 0;
+    padding: 8px 14px calc(10px + var(--safe-bottom, 0px));
+    background: var(--v2-paper-1);
+    border-top: 1px solid var(--v2-line-strong);
+    border-radius: 0;
+    box-shadow: 0 -10px 24px rgba(5, 11, 20, 0.22);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-proj {
+    flex: none;
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-proj:has(.ub-proj-none) {
+    display: none;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-go-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-left: 0;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-go-why {
+    flex: none;
+    align-items: center;
+    max-width: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-go-why .v2-inline-error-action {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-go {
+    width: 100%;
+    min-height: 48px;
+    font-size: var(--v2-fs-xl);
+  }
+
+  /* 进行中 */
+  :root[data-ui="v2"] .ub-screen .ub-running {
+    padding: 14px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-running-caption {
+    left: 10px;
+    bottom: 10px;
+    font-size: var(--v2-fs-lg);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-rslot {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-rslot-result {
+    font-size: 15px;
+  }
+
+  /* 分页：整屏在滚，分页本身不再限高（平板上的 50vh 不带到手机上）；正文 15 px；分页签一行左右滑 */
+  :root[data-ui="v2"] .ub-screen .ub-side {
+    max-height: none;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-side-tabs {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-side-tabs .ub-tab {
+    flex: none;
+    padding: 0 14px;
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-side-body {
+    padding: 12px 14px 16px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-attr,
+  :root[data-ui="v2"] .ub-screen .ub-attr-proj,
+  :root[data-ui="v2"] .ub-screen .ub-skills li,
+  :root[data-ui="v2"] .ub-screen .ub-cal-item,
+  :root[data-ui="v2"] .ub-screen .ub-memory-line,
+  :root[data-ui="v2"] .ub-screen .ub-letter-head,
+  :root[data-ui="v2"] .ub-screen .ub-exam,
+  :root[data-ui="v2"] .ub-screen .ub-lead {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-attr {
+    min-height: 34px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-bond-line,
+  :root[data-ui="v2"] .ub-screen .ub-bond-hint,
+  :root[data-ui="v2"] .ub-screen .ub-cal-note,
+  :root[data-ui="v2"] .ub-screen .ub-path-desc,
+  :root[data-ui="v2"] .ub-screen .ub-exam-pct,
+  :root[data-ui="v2"] .ub-screen .ub-exam-req,
+  :root[data-ui="v2"] .ub-screen .ub-skill-xp {
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-exam .ts-btn {
+    min-height: var(--v2-h-touch);
+    padding: 0 16px;
+    font-size: 15px;
+  }
+}
+
+/* ═════════════════════════ 9. 比赛对话框（components/contests/ContestDialog） ═════════════════════════ */
+/* 纸面的对话框（桌面居中、手机从底部升起），与确认对话框、剧情对话框同一种外框；小游戏里的选项是圆角小签，主按钮黄铜 */
+:root[data-ui="v2"] .ct-backdrop {
+  background: rgba(6, 11, 20, 0.62);
+}
+:root[data-ui="v2"] .ct-dialog {
+  width: min(720px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 20px 24px 18px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out);
+}
+:root[data-ui="v2"] .ct-head {
+  gap: 6px 12px;
+  padding-bottom: 10px;
+  border-bottom: 3px double var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ct-head h3 {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-2xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-kindname {
+  padding: 1px 8px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid var(--v2-brass);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-auto {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ct-rivals {
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 12px 0 4px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ct-rivals li {
+  gap: 8px;
+}
+:root[data-ui="v2"] .ct-rivals .portrait-art,
+:root[data-ui="v2"] .ct-rivals .portrait-fallback {
+  border: 1px solid rgba(36, 28, 21, 0.25);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .ct-body {
+  margin: 14px 0;
+}
+:root[data-ui="v2"] .ct-status,
+:root[data-ui="v2"] .ct-theme,
+:root[data-ui="v2"] .ct-hints,
+:root[data-ui="v2"] .ct-preview,
+:root[data-ui="v2"] .ct-clues {
+  margin: 6px 0;
+  font-size: var(--v2-fs-md);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-theme {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ct-hints {
+  color: var(--v2-sea);
+}
+/* 吟出前的整首：宋体 18 px，一张白纸条上 */
+:root[data-ui="v2"] .ct-preview {
+  margin: 12px 0;
+  padding: 10px 14px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  line-height: 1.6;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ct-lines,
+:root[data-ui="v2"] .ct-rounds,
+:root[data-ui="v2"] .ct-legs,
+:root[data-ui="v2"] .ct-samples {
+  gap: 12px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .ct-prompt {
+  margin-bottom: 4px;
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .ct-options,
+:root[data-ui="v2"] .ct-hand {
+  gap: 8px;
+  margin-top: 6px;
+}
+/* 选项：圆角小签（同养成的分类签）；选中的浅黄铜底 + 深黄铜描边 */
+:root[data-ui="v2"] .ct-opt {
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 14px;
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+  box-shadow: var(--v2-shadow-1);
+  text-align: left;
+}
+:root[data-ui="v2"] .ct-opt:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-brass);
+  box-shadow: 0 0 0 1px var(--v2-brass);
+}
+:root[data-ui="v2"] .ct-opt.is-on,
+:root[data-ui="v2"] .ct-opt.is-on:hover:not(:disabled) {
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .ct-opt small {
+  font-size: var(--v2-fs-xs);
+}
+:root[data-ui="v2"] .ct-kind {
+  padding: 0 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .ct-opp,
+:root[data-ui="v2"] .ct-mine {
+  align-items: baseline;
+  gap: 8px;
+  margin: 4px 0;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .ct-mine.ct-edge1 {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .ct-mine.ct-edge-1 {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .ct-legs li.is-done {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ct-legs li.is-now > p {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .ct-picked {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .ct-samples select {
+  min-height: var(--v2-h-md);
+  margin-top: 4px;
+}
+/* 配对：扣着的牌是深海蓝底、黄铜细框与“？”；翻开的白纸、配上的浅黄铜 */
+:root[data-ui="v2"] .ct-cards {
+  gap: 8px;
+  margin: 12px 0;
+}
+:root[data-ui="v2"] .ct-card {
+  min-height: 0;
+  padding: 0;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  color: var(--v2-on-night-2);
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: inset 0 0 0 4px var(--v2-night-1), inset 0 0 0 5px rgba(226, 190, 120, 0.3), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-card:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass);
+  box-shadow: inset 0 0 0 4px var(--v2-night-1), inset 0 0 0 5px rgba(226, 190, 120, 0.5), var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-card.is-up,
+:root[data-ui="v2"] .ct-card.is-up:disabled {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line-strong);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .ct-card.is-matched,
+:root[data-ui="v2"] .ct-card.is-matched:disabled {
+  color: #4d3407;
+  background: #f6e6c2;
+  border-color: var(--v2-brass);
+  box-shadow: none;
+}
+/* 节奏：深海蓝的跑道，判定线亮黄铜，拍点是纸色圆点 */
+:root[data-ui="v2"] .ct-track {
+  height: 72px;
+  margin: 12px 0;
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .ct-line {
+  width: 2px;
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ct-beat {
+  top: 22px;
+  background: var(--v2-paper-2);
+  border: 2px solid var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ct-grade {
+  top: 24px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .ct-grade--miss {
+  color: var(--v2-down-night);
+}
+:root[data-ui="v2"] .ct-rhythm:focus-visible .ct-track {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+/* 按钮：小游戏里的“吟出 / 交卷 / 开始”是黄铜主按钮；底下的“按实力结算”是次要按钮 */
+:root[data-ui="v2"] .ct-dialog .ts-btn {
+  top: 0;
+  min-height: var(--v2-h-md);
+  padding: 0 16px;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-1);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn:active:not(:disabled) {
+  top: 0;
+  background: var(--v2-paper-sunk);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn-go {
+  min-height: var(--v2-h-lg);
+  margin-top: 4px;
+  padding: 0 26px;
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn-go:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn:disabled {
+  filter: none;
+  opacity: 1;
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ct-dialog .ts-btn:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+}
+:root[data-ui="v2"] .ct-foot {
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+/* 手机：从底部升起的整宽纸卡，选项与按钮 44 px，主按钮整宽 */
+@media (max-width: 760px) {
+  :root[data-ui="v2"] .ct-backdrop {
+    align-items: end;
+    justify-items: stretch;
+  }
+  :root[data-ui="v2"] .ct-dialog {
+    width: 100%;
+    max-height: calc(100% - 24px - var(--safe-top, 0px));
+    padding: 18px 16px calc(16px + var(--safe-bottom, 0px));
+    border-bottom: 0;
+    border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+    animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out);
+  }
+  :root[data-ui="v2"] .ct-status,
+  :root[data-ui="v2"] .ct-theme,
+  :root[data-ui="v2"] .ct-hints,
+  :root[data-ui="v2"] .ct-clues,
+  :root[data-ui="v2"] .ct-lines,
+  :root[data-ui="v2"] .ct-rounds,
+  :root[data-ui="v2"] .ct-legs,
+  :root[data-ui="v2"] .ct-samples,
+  :root[data-ui="v2"] .ct-rivals {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ct-opt {
+    min-height: var(--v2-h-touch);
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .ct-dialog .ts-btn {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .ct-dialog .ts-btn-go {
+    width: 100%;
+    min-height: 48px;
+  }
+  :root[data-ui="v2"] .ct-foot .ts-btn {
+    width: 100%;
+  }
+  :root[data-ui="v2"] .ct-samples select {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .ct-dialog {
+    animation: none;
+  }
+}
+
+/* ═════════════════════════ 10. 触屏 ═════════════════════════ */
+/* 触屏：点按区不小于 44 px——不只手机竖屏（≤ 760 px 的规则），平板竖屏、手机横屏这些更宽的触屏也一样（第三轮审查） */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .ub-screen .ub-cell-btn,
+  :root[data-ui="v2"] .ub-screen .ub-letter-head,
+  :root[data-ui="v2"] .ub-screen .ub-planner .ub-tab,
+  :root[data-ui="v2"] .ub-screen .ub-side-tabs .ub-tab,
+  :root[data-ui="v2"] .ub-screen .ub-go-why .v2-inline-error-action,
+  :root[data-ui="v2"] .ub-screen .ub-contest .ts-btn,
+  :root[data-ui="v2"] .ub-screen .ub-exam .ts-btn,
+  :root[data-ui="v2"] .ub-screen .ub-preset select,
+  :root[data-ui="v2"] .ub-screen .ub-repeat,
+  :root[data-ui="v2"] .ub-screen .ub-refine select,
+  :root[data-ui="v2"] .ct-opt,
+  :root[data-ui="v2"] .ct-dialog .ts-btn:not(.ts-btn-go),
+  :root[data-ui="v2"] .ct-samples select {
+    min-height: var(--v2-h-touch);
+  }
+  /* 主按钮（吟出 / 交卷 / 开始）桌面 42 px、手机 48 px，触屏下至少 44 */
+  :root[data-ui="v2"] .ct-dialog .ts-btn-go {
+    min-height: max(var(--v2-h-touch), 48px);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-play {
+    width: var(--v2-h-touch);
+    height: var(--v2-h-touch);
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-skip {
+    min-height: var(--v2-h-touch);
+  }
+  /* 开始键：桌面 42 px，触屏至少 44；手机竖屏照旧 48（第 8 节） */
+  :root[data-ui="v2"] .ub-screen .ub-go {
+    min-height: var(--v2-h-touch);
+  }
+  @media (max-width: 760px) {
+    :root[data-ui="v2"] .ub-screen .ub-go {
+      min-height: 48px;
+    }
+  }
+  /* 输入框不小于 16 px（iOS 聚焦时不放大） */
+  :root[data-ui="v2"] .ub-screen .ub-preset select,
+  :root[data-ui="v2"] .ub-screen .ub-refine select,
+  :root[data-ui="v2"] .ct-samples select {
+    font-size: var(--v2-fs-lg);
+  }
+}
+/* 回忆相册：有插画时不画角上的小标记，缩略画填满方框 */
+:root[data-ui="v2"] .ub-screen .ub-memory-art.has-art {
+  overflow: hidden;
+}
+:root[data-ui="v2"] .ub-screen .ub-memory-art.has-art::after {
+  content: none;
+}
+
+/* ───────────── U05 按周排程：本周一行格子（家乡 3 格、学院 3 节课 + 2 格课余） ─────────────
+ * 格子窄（5 格时每格约百来像素）：场景小图放在名字上面，栏位名（课 / 课余 / 自由）在最上一行；格子下面一行是这一格的预计收益。
+ * 课业格栏头一道黄铜细线、课余格一道青色细线，一眼分得出“上课”与“课余”。手机上改成一条可以左右滑的横条。 */
+:root[data-ui="v2"] .ub-screen .ub-grid--week {
+  grid-template-columns: repeat(var(--ub-wk-n, 3), minmax(0, 1fr));
+  gap: 8px;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--n5 {
+  --ub-wk-n: 5;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col-head {
+  justify-content: center;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col-label {
+  font-size: var(--v2-fs-sm, 13px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col--lesson .ub-col-head {
+  border-bottom-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col--after .ub-col-head {
+  border-bottom-color: #4f8a8b;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-btn {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  justify-items: start;
+  gap: 2px;
+  padding: 5px 7px 7px;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-part {
+  display: block;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-btn .ub-scene {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  height: 34px;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-name {
+  grid-column: 1;
+  grid-row: 3;
+  font-size: var(--v2-fs-md);
+  overflow-wrap: anywhere;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-empty {
+  grid-row: 2 / span 2;
+  align-self: center;
+  padding: 10px 0;
+  font-size: var(--v2-fs-sm, 13px);
+}
+:root[data-ui="v2"] .ub-screen .ub-cell-gain {
+  font-size: var(--v2-fs-xs);
+  line-height: 1.35;
+  color: var(--v2-ink-2, #5a4a36);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell.is-locked .ub-cell-btn {
+  opacity: 0.6;
+}
+:root[data-ui="v2"] .ub-screen .ub-cell.is-problem .ub-cell-btn {
+  border: 1px solid #b4483a;
+  box-shadow: 0 0 0 3px rgba(180, 72, 58, 0.25);
+}
+:root[data-ui="v2"] .ub-screen .ub-wk-problem {
+  margin: 0 0 4px;
+}
+:root[data-ui="v2"] .ub-screen .ub-wk-note {
+  margin: 0;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 周条：第 N 周后面的“/4”，与停顿方式的小下拉框 */
+:root[data-ui="v2"] .ub-screen .ub-week-of {
+  margin-left: 2px;
+  font-weight: 400;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-pause select {
+  font-size: var(--v2-fs-xs);
+  padding: 1px 4px;
+}
+@media (max-width: 760px) {
+  /* 手机：一周排成一条横条，左右滑；每格至少 108 px 宽 */
+  :root[data-ui="v2"] .ub-screen .ub-grid--week {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: minmax(108px, 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    border-bottom: 0;
+    scroll-snap-align: start;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col-head {
+    flex-direction: row;
+    padding: 0 2px 3px;
+    border-bottom: 1px solid var(--v2-line-strong);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-btn {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+}
+/* 按周的格子撑满本栏（结算过的格不因内容少而变窄；手机横条里每格一样宽） */
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-col,
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell,
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-btn {
+  min-width: 0;
+  width: 100%;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell-btn .ub-scene {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* U05 收尾（二）：结算过的格与还没结算的格拉开——结算过的退成灰纸底、小图褪色、名字转灰，还没结算的保持亮白底 */
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell.is-done .ub-cell-btn,
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell.is-done .ub-cell-btn:disabled {
+  color: var(--v2-ink-3);
+  background: #ebe3d3;
+  border-style: solid;
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell.is-done .ub-scene {
+  filter: grayscale(0.7);
+  opacity: 0.6;
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell.is-done .ub-cell-part::after {
+  content: " · 已结算";
+}
+:root[data-ui="v2"] .ub-screen .ub-grid--week .ub-cell:not(.is-done) .ub-cell-btn {
+  background: #fff;
+}
+/* 停顿方式：与周条上的说明文字同号、同色（周条是深底） */
+:root[data-ui="v2"] .ub-screen .ub-week-pause {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .ub-screen .ub-week-pause select {
+  font-size: var(--v2-fs-sm);
+  padding: 2px 6px;
+  min-height: 28px;
+}
+@media (max-width: 760px) {
+  /* 手机横条：右边还有格没露出来时，右沿渐隐，并在角上写“滑动看更多” */
+  :root[data-ui="v2"] .ub-screen .ub-grid--week[data-more="right"] {
+    -webkit-mask-image: linear-gradient(to right, #000 78%, transparent);
+    mask-image: linear-gradient(to right, #000 78%, transparent);
+  }
+  :root[data-ui="v2"] .ub-screen .ub-planner:has(.ub-grid--week[data-more="right"]) .ub-wk-note::before {
+    content: "本周还有几格在右边，左右滑动可看。";
+    display: block;
+  }
+  :root[data-ui="v2"] .ub-screen .ub-week-pause,
+  :root[data-ui="v2"] .ub-screen .ub-week-pause select {
+    font-size: var(--v2-fs-md);
+  }
+}
+
+/* X02：这一阶段还没开始（开场剧情还没答）时的中栏——城景照旧，下面一句为什么与“看剧情” */
+:root[data-ui="v2"] .ub-screen .ub-prelude-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  gap: 10px;
+  padding: 12px 2px 18px;
+  border-top: 3px double var(--v2-line-strong);
+}
+:root[data-ui="v2"] .ub-screen .ub-prelude-text {
+  margin: 0;
+  font-size: var(--v2-fs-md);
+  line-height: 1.6;
+  color: var(--v2-ink-2);
+}

@@ -1,0 +1,166 @@
+# 请托：不会被烧的奏议（request_kim_sangheon）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：金尚宪（kim_sangheon，本世界线生于 1515，男），安东金氏子弟，朝鲜主战派文臣，在汉城做官；cast：cast/historical_09_liaodong.toml（势力 joseon）。
+#   本世界线比真实历史提前约 55 年（TERRA16 §10.5）。请托人在汉城的朝里，全轨道只在信里说话；出面的是安东金家的一个年轻书吏（无名，不进 cast）。
+# 类型：押运／带人（escort），托运物是一只樟木箱（叙事里的，不发物品）。
+#   章节：offer（釜山，报价）→ passage（海上，wait 8 天）→ arrive（那霸，到港）或 arrive_wet（那霸，箱底进过水）；终点 done / failed。没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信）。auto=true，offer 章 at=busan，speaker 省略；family=c13_offer_busan、冷却 20 天。
+#   规划窗口（不进 TOML）：offer 1572-06-01 至 1583-06-30；passage 1572-07-01 至 1583-10-31；arrive 1572-08-01 至 1584-03-31。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻；passage 的 deadline_days=150，超时走 failed、设 _late，来一封短信；
+#   arrive / arrive_wet 的 deadline_days=120，超时走 failed、设 _late，不来信（全轨道来信至多两封），各留一条那霸的见闻交代箱子没到（朝鲜船工、釜山通事的闲话，两句不同）。
+# 依据·史实背景：十五世纪后半叶朝鲜数次向琉球赐送大藏经；首里圆觉寺（1494 年建）前的圆鉴池当中有一座小堂，据说最初就是为收藏朝鲜送来的经而建。
+#   正文只让老僧以寺里人的口吻提“池子当中那座堂”（arrive 的正文与 arrive_wet 的 sealed 回复，两条路互斥，每条路一次），不写年份。窗口取本世界线丁卯之役以后、朝中主战主和争得最凶的那些年；正文只写“北边那一仗以后”。
+# 依据·原创：书吏、樟木箱与铜包边、目录最后那一行、桐油纸、老僧与两个小沙弥、封条与指印、竹筐里阴干的湿抄本。
+#   箱子里的奏议只写“主战的、主和的”，不写哪一份、谁上的；不点名崔鸣吉；不预知金尚宪后来的遭遇。与郑迵的请托（同在那霸）不共用人物与场景：本轨道只在码头与圆觉寺的僧人之间。
+# 结构的改动：brief 让 arrive 的 list 按 wet 旗标拆成两个选项。同一轨道里设的旗标不能拿来挡选项（准备后条件会落空），
+#   所以改成按 next 分路：passage 两个检定的 fail 都去 arrive_wet（报酬减半、无声望无回忆无来信），成功去 arrive。wet 旗标照设，供日后读取。
+#   检定失败的分支不带回复，所以“舱里进水、最下面几份字晕开”写进 arrive_wet 的正文。
+# 报酬：现金最多 2600（arrive 的 list），折中 1300（arrive 的 sealed、arrive_wet 的两个选项）；好感：接下 +2、路上办成 +3、list +8，折中 +4，合计至多 +13；
+#   声望 joseon +2（只在 arrive 的 list）；无名声（寄存奏议是隐秘的事）；回忆一张；来信两封（passage 超时与 arrive 的 list，两者互斥）；无物品与技能。
+# 招牌话：金尚宪信里的那一句（“主战的、主和的，都抄一份……”）全轨道只在 offer 正文出现一次；cast 台词“书在，道理就在”只在 passage 超时的来信里用一次；arrive 来信引孟子“孔子成《春秋》而乱臣贼子惧”，合他引经据典的口吻。
+# 读的旗标：无。不读 c7_ 旗标（金尚宪没有 C7 线）。
+# 设的旗标（全部为 c13_request_kim_sangheon_<事件>）：accepted（offer 接下）、declined（offer 回绝，终局）；
+#   wet（passage 检定失败，分支）、sealed（arrive / arrive_wet 原封寄存，分支）；done（arrive 的 list，终局）、partial（其余三个收尾，终局）、late（passage / arrive / arrive_wet 超时，终局）。
+# 不写 relation / tie / bond / heart / growth 效果；不进 cast 的人：书吏、老僧、小沙弥、管账的水手。
+# 依赖：港口 busan、naha（ports_east_asia.toml）；势力 joseon；属性 seamanship、stewardship。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_kim_sangheon-arrive「圆觉寺的樟木箱」：那霸码头的树荫下，老僧蹲在打开的樟木箱旁，借船主的笔在一张长目录的最后一行写字，两个小沙弥捧着抄本等着。
+
+[[tracks]]
+key = "request_kim_sangheon"
+name = "不会被烧的奏议"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kim_sangheon"]
+
+# 一、报价：釜山的栈桥边，坐在樟木箱上的书吏，和大人的一封信。
+[[tracks.chapters]]
+key = "offer"
+title = "一箱抄本"
+text = "釜山浦的栈桥边，一个穿白苎布袍的年轻书吏坐在一只樟木箱上，坐了一整天，饭也是端到箱子上吃的。他是安东金家的人，替汉城的金尚宪大人跑腿。箱子里是北边那一仗以后朝臣们上的奏议，一捆一捆的抄本，主战的、主和的都有，连骂过金大人的那几份也在里头，抄得一样工整。他把大人的信递给我。信上的字一笔是一笔：“主战的、主和的，都抄一份。百年以后，让人看清楚是谁说了什么——又是谁什么也没说。”往下只有两行：“箱送琉球那霸，寄首里圆觉寺。先王赐去的大藏经在那座寺里，僧人守了几代。经守得住，书也守得住。”我问，书为什么不留在汉城。书吏看了一眼栈桥头记船的东莱府差役，声音压得很低：“大人怕的不是敌人烧，是自己人烧。”"
+mood = "tense"
+at = "busan"
+when = [{ kind = "date", from = [1572, 6, 1], to = [1583, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1583, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_busan"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下箱子，往那霸去。"
+next = "passage"
+reply = "书吏从怀里掏出一张折了好几折的目录，一份奏议占一行，只记年月和上疏的官衔，密密麻麻写满了正反两面。最后一行空着。“到了那边，请寺里的人添上日子。”脚夫把箱子抬上跳板，他一路跟到舱口，看着水手把箱子捆上板架，才想起来向我行礼。"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_accepted" }, { kind = "affinity", person = "kim_sangheon", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一程我不往琉球去。"
+next = "failed"
+reply = "书吏没有再求，自己弯腰把箱子扛上肩。樟木沉，他走两步换一次肩。“大人会另想办法。”走出去几步，他又回头补了一句：“大人总有办法，只是都很慢。”"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_declined" }]
+
+# 二、路上：箱子上船的第八天，阴云与浪，樟木防虫防不了水。
+[[tracks.chapters]]
+key = "passage"
+title = "舱底的樟木箱"
+text = "箱子上船的第八天，船进了一片阴云。这一路上，樟木箱一直捆在舱底最高的那层板架上，离积水最远。书吏临走时嘱咐过：樟木防得了虫，防不了水。从昨夜起，浪一阵大过一阵，船身每砸下去一回，舱板缝里就渗进一线海水，舵手说今夜还要更大。我下舱去看了一回，麻绳勒得紧紧的，箱角那道铜包边已经湿得发亮。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 8, text = "载着箱子往南走八天" }]
+when = [{ kind = "alive", person = "kim_sangheon", value = true }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_late" }, { kind = "letter", person = "kim_sangheon", text = "船主：书吏说你的船迟迟不往南去，箱子已从你船上取回，改托了别家的船。到没到，不知道。书在，道理就在。——金尚宪" }]
+
+[[tracks.chapters.choices]]
+key = "ride"
+text = "顶着风走，我守在舵边，叫人轮班看住箱子。"
+next = "arrive"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "浪最大的那一夜，我让船头一直顶着浪，不许它横过来，舱底的水手轮班舀水，舀到天亮。云散了，我下去解开麻绳看了一眼：最上面那一捆是干的，最下面那一捆也是干的，箱子一滴水也没沾。"
+effects = [{ kind = "affinity", person = "kim_sangheon", value = 3 }]
+
+[tracks.chapters.choices.fail]
+next = "arrive_wet"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_wet" }]
+
+[[tracks.chapters.choices]]
+key = "oiled"
+text = "出发前我就叫人用油纸把抄本一份份包好了。"
+next = "arrive"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "舱里到底进了水，箱底在半寸深的海水里泡了一夜。可打开来，抄本一份份裹着桐油纸，纸角折得严严实实，抽出哪一份都是干的。管账的水手得意了好几天，逢人就说那几刀油纸是他开船前在码头的杂货铺里磨了半天价才买下的。"
+effects = [{ kind = "affinity", person = "kim_sangheon", value = 3 }]
+
+[tracks.chapters.choices.fail]
+next = "arrive_wet"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_wet" }]
+
+# 三、到港：那霸码头，圆觉寺的老僧下坡来接箱子，问要不要列目录。
+[[tracks.chapters]]
+key = "arrive"
+title = "寺里的目录"
+text = "那霸的水道窄，船挤进港已是午后。我打发一个水手上首里报信，回来时他身后跟着一个老僧，带着两个小沙弥。小沙弥一人抬一头，把樟木箱挪到码头的树荫底下。老僧摸了摸箱角的铜包边，又摸了摸麻绳，问我箱子里是什么。“寺里收东西，要登记。要不要开箱，列一份目录？”他说，早年朝鲜送来的那部经，就收在寺前池子当中的一座小堂里，四面是水，火过不去。"
+speaker = "captain"
+mood = "tender"
+at = "naha"
+objectives = [{ kind = "at", at = "naha", text = "把箱子送到那霸" }]
+when = [{ kind = "alive", person = "kim_sangheon", value = true }]
+deadline_days = 120
+news = "首里的圆觉寺从那霸码头收了一只朝鲜来的樟木箱，小沙弥抬上坡时直喊沉，老僧说里面是书，不是经。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_late" }]
+news = "那霸码头上，朝鲜来的船工说釜山有个书吏托人往首里圆觉寺运一只樟木箱，四个月没有下落，他天天去栈桥边打听。"
+
+[[tracks.chapters.choices]]
+key = "list"
+text = "照书吏给的目录，一份份点交，添上日子。"
+next = "done"
+reply = "点交用了一个下午。我念一行，小沙弥从箱里抽一份，老僧看一眼，点一下头。主战的、主和的，他一样看一眼，一样点头，不问是谁上的。点完，他借了我的笔，在目录最后那一行写上日子，笔画又细又直。“朝鲜的书在这里放了快一百年，没丢过一页。”他又照样写了一张小条，叫我托往北去的船捎给釜山的书吏。"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "kim_sangheon", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "flag", flag = "c13_request_kim_sangheon_done" }, { kind = "memory", memory = "mem-request_kim_sangheon-arrive", title = "圆觉寺的樟木箱" }, { kind = "letter", person = "kim_sangheon", text = "船主：知道了。目录上添的那个日子，书吏念了两遍。我叫他照样抄进家里的书目，也写在最后一行。朝中还在吵。吵的还是那几句。吵吧。箱子里都有。孟子说，孔子成《春秋》而乱臣贼子惧。金某不敢比圣人，只求抄得全。谢字我不会说。此信不必回。——金尚宪" }]
+
+[[tracks.chapters.choices]]
+key = "sealed"
+text = "箱子原封寄存，不开，也不列目录。"
+next = "done"
+reply = "老僧没有多问，叫小沙弥取来浆糊和一条长纸，沿着箱盖的缝贴了一道封条，写上寄存的日子和我的船名，又在封条两头各按了一个指印。“不开也好。不开的箱子，想烧的人也不知道里头是什么。”书吏那张目录还揣在我怀里，最后一行空着。"
+news = "那霸码头卸下一只朝鲜来的樟木箱，圆觉寺的老僧当场贴了封条按了指印，抬上首里去了，谁也没见着里头装的什么。"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "kim_sangheon", value = 4 }, { kind = "flag", flag = "c13_request_kim_sangheon_partial" }, { kind = "flag", flag = "c13_request_kim_sangheon_sealed" }]
+
+# 三之二、到港（箱底进过水）：同一个老僧，捏起一张晕开的抄本。
+[[tracks.chapters]]
+key = "arrive_wet"
+title = "晕开的几份"
+text = "樟木箱抬上那霸码头的时候，箱底那一角还是深色的，潮气一路没散。路上那场浪里舱里进了水，我开箱看过：上面几捆干着，最下面几份泡过，墨晕成一团一团，有一份只剩半页认得出字。首里圆觉寺的老僧是水手上坡请来的，身后跟着两个小沙弥。他蹲下去，捏起一张晕开的抄本，对着日头看了很久，才问我：箱子里是什么，要不要开个目录，寺里好登记。"
+speaker = "captain"
+mood = "sad"
+at = "naha"
+objectives = [{ kind = "at", at = "naha", text = "把箱子送到那霸" }]
+when = [{ kind = "alive", person = "kim_sangheon", value = true }]
+deadline_days = 120
+news = "那霸码头卸下一只箱底泡过水的朝鲜樟木箱，圆觉寺的小沙弥把里头的纸一张张摊在首里的僧房檐下晾。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_kim_sangheon_late" }]
+news = "那霸的酒馆里，釜山来的通事打听过一条船：船上该有只樟木箱，说是送首里的，过了四个月，谁也没在码头上见着。"
+
+[[tracks.chapters.choices]]
+key = "list"
+text = "照目录点交，晕开的几份也照实记上。"
+next = "done"
+reply = "老僧一份份点过去，点到晕开的，就在目录那一行旁边画一个小圈，圈画得很小，不细看看不出来。最后一行，他写上了日子。小沙弥把那几份湿的另放进一只竹筐，说要拿去檐下阴干，再照着还认得出的字描一遍。老僧没拦，只叮嘱一句：“认不出的地方，空着，别猜。”"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "kim_sangheon", value = 4 }, { kind = "flag", flag = "c13_request_kim_sangheon_partial" }]
+
+[[tracks.chapters.choices]]
+key = "sealed"
+text = "不开了，连湿的一起原样封存。"
+next = "done"
+reply = "老僧看了看箱底那一角湿印，没再提目录，叫小沙弥贴了封条，写上日子和我的船名。他让人在箱底垫了两块干砖：“池子当中那座堂收着朝鲜的经，火烧不到，可那里潮。先在僧房里晾几天，再搬进去。”目录我没拿出来，折好了又塞回怀里。"
+news = "那霸码头上有只湿了底的朝鲜樟木箱，圆觉寺的老僧封了它，垫着两块砖抬上首里，说要先晾几天。"
+effects = [{ kind = "cash", value = 1300 }, { kind = "affinity", person = "kim_sangheon", value = 4 }, { kind = "flag", flag = "c13_request_kim_sangheon_partial" }, { kind = "flag", flag = "c13_request_kim_sangheon_sealed" }]

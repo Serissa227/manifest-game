@@ -1,0 +1,579 @@
+/* 新界面（试用）——交易所：港口的设施分页、掌柜、卖出 / 买入、货物列表、数量加减与一键操作、底部账台
+ * （docs/UI-REDESIGN.md 第 1.2 节第 2 条、第 4 节）。
+ */
+
+/* ═════════════════════════ 4. 交易所 ═════════════════════════ */
+/* 港口的设施分页（九个）：一排排圆角小签，放不下就折行——折行的下划线标签页看不出哪行是哪行 */
+:root[data-ui="v2"] .port > .tabbar {
+  gap: 6px;
+  padding: 0 0 12px;
+  margin: 12px 0 4px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .port > .tabbar .tab {
+  min-height: 32px;
+  padding: 0 12px 0 10px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .port > .tabbar .tab:hover:not(:disabled) {
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-strong);
+}
+:root[data-ui="v2"] .port > .tabbar .tab.active,
+:root[data-ui="v2"] .port > .tabbar .tab.active:hover:not(:disabled) {
+  margin: 0;
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border: 1px solid var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+}
+/* 掌柜：头像小一号、气泡是圆角纸条——让货物列表早一点出现 */
+:root[data-ui="v2"] .keeper {
+  align-items: center;
+  gap: 14px;
+  margin: 12px 0 14px;
+}
+:root[data-ui="v2"] .keeper-portrait {
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-paper-sunk);
+  border: 1px solid rgba(36, 28, 21, 0.35);
+  border-radius: var(--v2-r-md);
+  box-shadow: 0 0 0 3px var(--v2-paper-1), 0 0 0 4px var(--v2-line);
+}
+:root[data-ui="v2"] .keeper-portrait .portrait-art,
+:root[data-ui="v2"] .keeper-portrait canvas {
+  width: 88px !important;
+  height: 88px !important;
+}
+:root[data-ui="v2"] .keeper-name {
+  margin: 0 0 6px 2px;
+}
+:root[data-ui="v2"] .keeper-name strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .keeper-name small {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .keeper-bubble {
+  padding: 10px 14px;
+  font-size: var(--v2-fs-md);
+  line-height: 1.65;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .keeper-bubble::before {
+  border-right-color: var(--v2-line);
+}
+:root[data-ui="v2"] .keeper-bubble::after {
+  border-right-color: var(--v2-paper-2);
+}
+
+/* 交易所的掌柜再小一号：货物列表是这一页的主角 */
+:root[data-ui="v2"] .keeper.keeper-market .keeper-portrait .portrait-art,
+:root[data-ui="v2"] .keeper.keeper-market .keeper-portrait canvas {
+  width: 64px !important;
+  height: 64px !important;
+}
+:root[data-ui="v2"] .keeper.keeper-market .keeper-bubble {
+  padding: 8px 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+}
+/* 先给货、后给账：告示板（行情从哪来）与钱袋（本港还有多少钱）挪到列表下面、账台上面——
+   只改排列（不能聚焦的说明文字），DOM 与键盘顺序不变 */
+:root[data-ui="v2"] .market {
+  display: flex;
+  flex-direction: column;
+}
+:root[data-ui="v2"] .market > .mk-report,
+:root[data-ui="v2"] .market > .mk-purse {
+  order: 1;
+  margin-top: 12px;
+}
+:root[data-ui="v2"] .market > .mk-cart {
+  order: 2;
+}
+:root[data-ui="v2"] .port > h2 {
+  font-size: var(--v2-fs-2xl);
+  margin-bottom: 4px;
+}
+:root[data-ui="v2"] .port > .sub {
+  margin: 0 0 4px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .port-lore-art {
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+
+/* 告示板、钱袋：一张浅色便笺，字小一号 */
+:root[data-ui="v2"] .market .hint,
+:root[data-ui="v2"] .mk-report .hint,
+:root[data-ui="v2"] .mk-purse .hint {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mk-purse {
+  padding: 8px 12px;
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .mk-holder {
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mk-holders .btn.active {
+  color: var(--v2-ink);
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .mk-holder-count {
+  border-radius: var(--v2-r-pill);
+  background: var(--v2-seal);
+}
+
+/* 钱袋的三种状态：吃紧是印章红的左线与一点暖色底，宽裕是绿色的左线（v1 的红绿提示在 v2 里不能丢） */
+:root[data-ui="v2"] .mk-purse.mk-purse-tight {
+  background: #f9ece7;
+  border-left-color: var(--v2-seal);
+}
+:root[data-ui="v2"] .mk-purse.mk-purse-flush {
+  border-left-color: var(--v2-up);
+}
+/* 看的是远方的行情（船上的消息、行情通报）：一张便笺——黄铜墨色的左线、纸色底、细线，写明是几天前的 */
+:root[data-ui="v2"] .market .mk-seen {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.55;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass-ink);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .market .mk-seen strong {
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+
+/* 卖出 / 买入：一组两段的大开关，一眼看得到 */
+:root[data-ui="v2"] .market > .tabbar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 3px;
+  margin: 10px 0 12px;
+  padding: 3px;
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: calc(var(--v2-r-md) + 3px);
+}
+:root[data-ui="v2"] .market > .tabbar .tab {
+  justify-content: center;
+  min-height: 38px;
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink-2);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .market > .tabbar .tab.active,
+:root[data-ui="v2"] .market > .tabbar .tab.active:hover:not(:disabled) {
+  margin: 0;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  box-shadow: var(--v2-shadow-1), inset 0 -2px 0 var(--v2-brass);
+}
+
+:root[data-ui="v2"] .market .mk-sale-hint {
+  margin: 0 0 10px;
+}
+
+/* 查找与排序 */
+:root[data-ui="v2"] .mk-tools {
+  gap: 8px 12px;
+  margin: 0 0 10px;
+}
+:root[data-ui="v2"] .mk-search {
+  min-height: var(--v2-h-md);
+  padding-left: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%236f5d48' stroke-width='1.6'%3E%3Ccircle cx='7' cy='7' r='4.6'/%3E%3Cpath d='M10.4 10.4 14 14' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px 50%;
+}
+:root[data-ui="v2"] .mk-sort {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mk-sort select {
+  min-height: var(--v2-h-md);
+}
+
+/* 货物列表：一张账页——圆角白底、细线分隔，表头浅色，行高一点、字大一点 */
+:root[data-ui="v2"] .mk-list {
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .mk-row {
+  padding: 10px 12px;
+  font-size: var(--v2-fs-md);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .mk-row:last-child {
+  border-bottom: 0;
+}
+/* 去掉 v1 的斑马纹；放在 :where() 里不加特异度——否则偶数行的“已放进成交单”“展开”的底色会被它盖掉 */
+:root[data-ui="v2"] .mk-row:where(:nth-child(even of .mk-row)) {
+  background-color: transparent;
+}
+:root[data-ui="v2"] .mk-row:hover {
+  background-color: #fbf6ea;
+}
+:root[data-ui="v2"] .mk-row.staged {
+  background-color: #fbf0d6;
+  box-shadow: inset 3px 0 0 var(--v2-brass);
+}
+:root[data-ui="v2"] .mk-row.open {
+  background-color: var(--v2-paper-1);
+}
+:root[data-ui="v2"] .mk-name-text {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .mk-name .tag {
+  margin-left: 2px;
+}
+:root[data-ui="v2"] .mk-sub {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .mk-price-n {
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+}
+:root[data-ui="v2"] .mk-arrow {
+  font-size: 11px;
+}
+:root[data-ui="v2"] .mk-vs,
+:root[data-ui="v2"] .mk-stock-band {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .mk-stock-band.band-0,
+:root[data-ui="v2"] .mk-stock-band.band-1 {
+  color: var(--v2-down);
+}
+:root[data-ui="v2"] .mk-c-stock {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mk-lbl {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .mk-line-total {
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .mk-c-why {
+  font-size: var(--v2-fs-sm);
+  font-style: normal;
+  color: var(--v2-ink-2);
+}
+@container mk (min-width: 540px) {
+  :root[data-ui="v2"] .mk-head {
+    padding: 8px 12px;
+    font-size: var(--v2-fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--v2-ink-2);
+    background: var(--v2-paper-sunk);
+    border-bottom: 1px solid var(--v2-line-strong);
+    border-radius: var(--v2-r-md) var(--v2-r-md) 0 0;
+    text-shadow: none;
+  }
+}
+
+/* ── 展开的明细（MarketDrawer.tsx：数量、快捷数量、预估与成交，别处的价格，价格图）──
+   与展开的那一行连成一块：左边一道 3 px 的深黄铜线（选中的样子）、底下一条细线；数量一块是白底的细线框（不是虚线——虚线是空状态） */
+:root[data-ui="v2"] .mk-row.open {
+  box-shadow: inset 3px 0 0 var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .mk-drawer-row {
+  background: var(--v2-paper-1);
+  border-bottom: 1px solid var(--v2-line);
+  box-shadow: inset 3px 0 0 var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .mk-drawer-row:last-child {
+  border-bottom: 0;
+  border-radius: 0 0 var(--v2-r-md) var(--v2-r-md);
+}
+:root[data-ui="v2"] .mk-drawer {
+  padding: 10px 14px 14px 18px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .mk-drawer .mk-need,
+:root[data-ui="v2"] .mk-drawer .mk-origin {
+  font-size: var(--v2-fs-xs);
+  line-height: 1.5;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .mk-qty {
+  gap: 10px;
+  margin: 4px 0 12px;
+  padding: 12px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-md);
+}
+:root[data-ui="v2"] .mk-qty .preview {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .mk-presets .btn {
+  min-width: 52px;
+  min-height: 32px;
+}
+/* 选中的快捷数量（aria-pressed）：浅黄铜底 + 深黄铜边，与设施小签的选中同一种；去掉 v1 的金色字影 */
+:root[data-ui="v2"] .mk-presets .btn[aria-pressed="true"],
+:root[data-ui="v2"] .mk-presets .btn[aria-pressed="true"]:hover:not(:disabled) {
+  color: #4d3407;
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 1px var(--v2-brass-ink);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .mk-in-cart {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+/* 别处的价格：13 px 的细线列表（地名半粗、价格等宽、更划算的那处绿色），说明 12 px 靠右 */
+:root[data-ui="v2"] .mk-else {
+  margin: 4px 0 12px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] p.mk-else {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .mk-else-title {
+  margin-bottom: 4px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .mk-else ul {
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .mk-else li,
+:root[data-ui="v2"] .mk-else li:last-child {
+  gap: 2px 10px;
+  padding: 7px 2px;
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .mk-else strong {
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .mk-else-price {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .mk-else li.better .mk-else-price {
+  color: var(--v2-up);
+}
+:root[data-ui="v2"] .mk-else small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+
+/* 数量加减：一体的三段，触屏 44 px、鼠标 32 px */
+:root[data-ui="v2"] .qty-stepper .qty-btn {
+  color: var(--v2-ink);
+  background: var(--v2-paper-1);
+  border: 1px solid var(--v2-line-control);
+  box-shadow: none;
+  font-weight: 500;
+}
+:root[data-ui="v2"] .qty-stepper .qty-btn:first-child {
+  border-radius: var(--v2-r-sm) 0 0 var(--v2-r-sm);
+}
+:root[data-ui="v2"] .qty-stepper .qty-btn:last-child {
+  border-radius: 0 var(--v2-r-sm) var(--v2-r-sm) 0;
+}
+:root[data-ui="v2"] .qty-stepper .qty-btn:hover:not(:disabled) {
+  background: var(--v2-paper-sunk);
+}
+:root[data-ui="v2"] .qty-stepper .qty-input {
+  min-height: 0;
+  border-radius: 0;
+  border-color: var(--v2-line-control);
+  border-left-width: 0;
+  border-right-width: 0;
+  background: var(--v2-paper-2);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .qty-stepper:not(.has-qty) .qty-input {
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .qty-stepper.has-qty .qty-input {
+  color: var(--v2-ink);
+  background: #fbefcf;
+}
+
+/* 一键操作（买满 n、全卖）：最常用的按钮——黄铜色描边的浅底，比主按钮安静、比普通按钮醒目 */
+:root[data-ui="v2"] .market .btn.small.mk-quick {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: #4d3407;
+  background: #f6e6c2;
+  border: 1px solid #b3852f;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .market .btn.small.mk-quick:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .market .btn.small.mk-quick:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .market .btn.primary:disabled {
+  color: #8e8170;
+  background: var(--v2-paper-0);
+  border-color: var(--v2-line);
+  text-shadow: none;
+  box-shadow: none;
+}
+
+/* 底部账台（现金、装载、成交单）：贴底的深色条，像柜台 */
+:root[data-ui="v2"] .mk-cart {
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  background-image: none;
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  image-rendering: auto;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .mk-cart {
+  --text: var(--v2-on-night);
+  --muted: var(--v2-on-night-2);
+  --up: var(--v2-up-night);
+  --down: var(--v2-down-night);
+  border-top: 1px solid var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .mk-load .rolling {
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .load-bar {
+  height: 6px;
+  background: var(--v2-night-3);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  overflow: hidden;
+}
+:root[data-ui="v2"] .load-now {
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .mk-cart-warn {
+  border: 0;
+  border-radius: var(--v2-r-sm);
+  background: rgba(163, 48, 42, 0.85);
+}
+:root[data-ui="v2"] .mk-load {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .mk-load b,
+:root[data-ui="v2"] .mk-load strong,
+:root[data-ui="v2"] .mk-cash-n,
+:root[data-ui="v2"] .mk-used-n {
+  color: var(--v2-brass-hi);
+  font-weight: 700;
+}
+:root[data-ui="v2"] .mk-keys {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .mk-cart .mk-gain {
+  color: var(--v2-up-night);
+}
+:root[data-ui="v2"] .mk-cart .mk-loss,
+:root[data-ui="v2"] .mk-after.bad {
+  color: var(--v2-down-night);
+}
+
+/* ═════════════════════════ 手机与触屏 ═════════════════════════ */
+/* 手机上的港口窗口：设施分页一行左右滑，右边渐隐提示还有；掌柜更小 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .port > .tabbar,
+:root[data-ui="v2"] .app.game[data-layout="short"] .port > .tabbar {
+  -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+  mask-image: linear-gradient(90deg, #000 85%, transparent);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .keeper-portrait .portrait-art,
+:root[data-ui="v2"] .app.game[data-layout="phone"] .keeper-portrait canvas,
+:root[data-ui="v2"] .app.game[data-layout="short"] .keeper-portrait .portrait-art,
+:root[data-ui="v2"] .app.game[data-layout="short"] .keeper-portrait canvas {
+  width: 56px !important;
+  height: 56px !important;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .keeper-bubble {
+  padding: 8px 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+}
+/* 触屏上数量加减与一键操作 44 px 高 */
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .qty-stepper {
+    height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .qty-stepper .qty-btn {
+    width: var(--v2-h-touch);
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .market .btn.small.mk-quick {
+    min-height: var(--v2-h-touch);
+    padding: 0 14px;
+  }
+  /* 卖出 / 买入两段、“全部卖出”、持有者的切换、行情通报的“买”、查找与排序、明细里的快捷数量：都不小于 44 px */
+  :root[data-ui="v2"] .market > .tabbar .tab,
+  :root[data-ui="v2"] .mk-toolbar .btn,
+  :root[data-ui="v2"] .mk-holders .btn,
+  :root[data-ui="v2"] .mk-report .btn,
+  :root[data-ui="v2"] .mk-presets .btn,
+  :root[data-ui="v2"] .mk-tools .mk-search,
+  :root[data-ui="v2"] .mk-tools select {
+    min-height: var(--v2-h-touch);
+  }
+}

@@ -1,0 +1,125 @@
+# 请托：羊之岛（request_drifter_brendan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：圣布伦丹的修士（drifter_brendan，1490-08-24 生，男），势力 free_port；cast：cast/story_atlantic.toml。
+# 类型：去某处（go）。三章：offer（报价）、arrive（去冰岛看羊）、report（回来写哪一页）。没有 stage 章，因此没有 window 与 default；时间条件写在 when 里。
+# 报价：T（当面）。auto=false，玩家在亚特兰蒂斯外港找到他，用“问请托”（ask:request_drifter_brendan）启动。offer 不写 at，objectives 为 person drifter_brendan。
+#       窗口 1584-01-15 至 1590-06-30：offer 的 when 写日期，deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：arrive 写 deadline_days=150；超时 failed，来信一封，好感 -3，旗标 _late，不写见闻。arrive 与 report 的时间由 offer 的开局门禁与 150 天期限承接，不再重复写日期。
+# 依据·史实背景：《圣布伦丹航海记》（史上的传说文本）里的“羊之岛”，羊大如牛；16 世纪冰岛哈夫纳夫约杜尔的德意志商站，外岛上放养的羊。
+# 依据·原创：老修士两页的争吵、外岛没人管的羊、渔夫的话、牧师说的祖父辈的旧事。
+# 秘密：cast 没写秘密，本请托不触碰；C7 的线为无，不写 c7_ 旗标。
+# 读的旗标：无。
+# 设的旗标：c13_request_drifter_brendan_accepted（offer 两条接法）、_declined（offer 回绝）、_saw（arrive 借渔船看到外岛）、_asked（arrive 问了牧师）、_late（超时）、_done（report 收尾）。
+# 不用 relation / tie / bond / heart 效果；不设任何 c7_ 旗标。
+# 报酬：现金 550（report 给一次）；好感最多 +13；名声 +1；回忆 mem-request_drifter_brendan-report。无唯一奖励物品。
+# 检定失败（row_out）：好感 −2，照样往下走到 report（决定书 §二 好感通则）；失败分支不设旗标，report 用缺省正文。
+# 身份档：任务单写的是 0 档（现金 550），这里照任务单的数字写；决定书把修士归为 P 档（清贫、只付 0—50%），两者不一致，待定。
+# 依赖：港口 atlantis_port（ports_realm.toml，B10b 改名已落实）、hafnarfjordur（ports_north.toml）；技能 lang_latin（skills.toml）；属性 seamanship；人物 drifter_brendan。
+# 回忆插画清单：
+#   mem-request_drifter_brendan-report「合上的两页」：外港图书馆的桌上，两页字迹一样密的本子被一双手压在一起，窗外是亚特兰蒂斯的雾。
+
+[[tracks]]
+key = "request_drifter_brendan"
+name = "羊之岛"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["drifter_brendan"]
+
+# 一、左页与右页：外港里，老修士的本子摊在膝上。
+[[tracks.chapters]]
+key = "offer"
+title = "左页与右页"
+text = "老修士的本子摊在膝上，左页记见闻，右页记疑问，两页的字一样密。他抬头看了我一眼，先开口：“弟兄，坐。你这一路上，有没有哪座岛……后来发现它会动？”没等我答，他把本子翻到一页，指给我看：《航海记》里那座羊之岛，羊大如牛。左页抄着这一句，右页画着一个大问号。“我要去北边，冰岛那边。看看羊是不是真有那么大。要是没有，我就把左页划掉。”"
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "date", from = [1584, 1, 15], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "drifter_brendan", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应带他去冰岛。"
+next = "arrive"
+reply = "他在右页的问号底下写了一行小字：“船已找到。”写完用指腹抹了一下，怕墨还没干。“路上的事你管，两页的事我来记。”"
+effects = [{ kind = "affinity", person = "drifter_brendan", value = 2 }, { kind = "flag", flag = "c13_request_drifter_brendan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_which"
+text = "先问：要是羊不大，划掉哪一页？"
+next = "arrive"
+reply = "他想了很久，想得眉头都拧成了一团：“划左页。可右页的问号，我留着。”说完他又翻回右页，把那个问号描了一遍，描得很用力。"
+effects = [{ kind = "affinity", person = "drifter_brendan", value = 2 }, { kind = "flag", flag = "c13_request_drifter_brendan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "北边太冷，这趟我不去。"
+next = "failed"
+reply = "他没有生气，只在右页又添了一个问号，把本子合上，夹到胳膊底下。走到门口他回过头，说了一句：“北边的雪大，你不去也好，省得我一路念叨。”"
+effects = [{ kind = "flag", flag = "c13_request_drifter_brendan_declined" }]
+
+# 二、比圈里的大：哈夫纳夫约杜尔的商站后面，羊满山坡，一个渔夫给了一句话。
+[[tracks.chapters]]
+key = "arrive"
+title = "比圈里的大"
+text = "哈夫纳夫约杜尔的德意志商站后面，羊满山坡，灰的白的，个头跟别处的羊差不多。老修士看了一上午，脸上没什么失望，只是把右页的问号又数了一遍。一个渔夫蹲在码头上补网，听说我们是来看羊的，抬起头：“外头那座小岛上的羊没人管。长得比这边大，冬天也不进圈。”"
+speaker = "captain"
+mood = "cheerful"
+at = "hafnarfjordur"
+when = [{ kind = "alive", person = "drifter_brendan", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "drifter_brendan", text = "北边的船一直没来。我的右页又多了几个问号，左页没动。" }, { kind = "affinity", person = "drifter_brendan", value = -3 }, { kind = "flag", flag = "c13_request_drifter_brendan_late" }] }
+
+[[tracks.chapters.choices]]
+key = "row_out"
+text = "借渔夫的船，划去外岛看。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "外岛的羊毛长得拖地，看着确实大了一圈。老修士笑出了声，抓着船帮，在左页上添了一行：“比圈里的大，比牛小。”写完他把笔别到耳后，船一晃，差点把本子掉进水里。"
+news = "哈夫纳夫约杜尔的码头上，一个老修士借了渔船去外岛看羊，回来说羊毛拖到了地上，比这边的大了一圈。"
+effects = [{ kind = "affinity", person = "drifter_brendan", value = 3 }, { kind = "flag", flag = "c13_request_drifter_brendan_saw" }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "drifter_brendan", value = -2 }], news = "哈夫纳夫约杜尔的码头上，借来的渔船想靠外岛，浪大，船头一抬就被打了回来，船上的老修士只远远看了一眼。" }
+
+[[tracks.chapters.choices]]
+key = "ask_latin"
+text = "陪他用拉丁话问商站的牧师，岛上的羊是哪年放的。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60 }]
+hint = "你的拉丁话还拼不成一整句，问不明白牧师的话。"
+reply = "牧师说那些羊是祖父那辈放上去的，没人去剪，就越长越野。老修士每句都让牧师重说一遍，然后在右页记下：“羊之岛，是没人管的岛。”"
+news = "哈夫纳夫约杜尔的商站里，牧师说外岛的羊是几十年前放上去的，没人去剪，一直越长越野。"
+effects = [{ kind = "affinity", person = "drifter_brendan", value = 3 }, { kind = "flag", flag = "c13_request_drifter_brendan_asked" }]
+
+# 三、两页不吵了：回到外港，他要你替他定写在哪一页。
+[[tracks.chapters]]
+key = "report"
+title = "两页不吵了"
+text = "回到亚特兰蒂斯，老修士在外港的图书馆里等着，桌上的本子摊开着。左页和右页这回吵得更厉害了，两边的字挤在一起，分不清谁是谁的。窗外的雾从港口压上来，灯才点了一半。他翻到最后一页，那里还空着一半，他用手压住，不让我看，另一只手还按着右页的那个问号。“两页吵了一辈子，”他说，“今天你替我定。这一趟写在哪一页？”"
+speaker = "captain"
+mood = "tender"
+at = "atlantis_port"
+when = [{ kind = "alive", person = "drifter_brendan", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_saw"
+when = [{ kind = "flag", flag = "c13_request_drifter_brendan_saw", value = true }]
+text = "回到亚特兰蒂斯，老修士在外港的图书馆里等着。左页上还是那一行：“比圈里的大，比牛小。”右页的问号一个压着一个，两边吵得比从前更凶。窗外的雾压上来，灯才点了一半。他翻到最后一页，那里还空着一半，他用手压住，不让我看。另一只手还按着右页的那个问号。“这一趟，你替我定，”他说，“写在哪一页？”"
+
+[[tracks.chapters.variants]]
+key = "v2_asked"
+when = [{ kind = "flag", flag = "c13_request_drifter_brendan_asked", value = true }]
+text = "回到亚特兰蒂斯，老修士在外港的图书馆里等着。右页上多了一行牧师的话：“羊之岛，是没人管的岛。”左页的字一个也没动，两页还是吵。窗外的雾压上来，灯才点了一半。他翻到最后一页，那里还空着一半，他用手压住。右页上的牧师的话，他又念了一遍。“你替我定，”他说，“这一趟写在哪一页？”"
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "两页都写：左页写看见的，右页写为什么。"
+next = "done"
+reply = "他照你说的写了，左页记下看见的，右页记下为什么要去。写完他把两页合上，用手压了很久：“好，它们今天不吵了。”"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_brendan", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_drifter_brendan-report", title = "合上的两页" }, { kind = "flag", flag = "c13_request_drifter_brendan_done" }]
+
+[[tracks.chapters.choices]]
+key = "cross_out"
+text = "划掉左页那句“羊大如牛”。"
+next = "done"
+reply = "他拿起笔，又放下了，只在那句旁边画了一个小小的圈：“划掉太可惜。圈起来，下一个人自己去看。”说完他把本子合上，没有再翻开。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "drifter_brendan", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_drifter_brendan_done" }]

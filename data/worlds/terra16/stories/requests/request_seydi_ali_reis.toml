@@ -1,0 +1,230 @@
+# C13d 人物的请托：风暴到底刮了几天（request_seydi_ali_reis）。中文，Claude 写。
+# 人物：西迪·阿里·雷斯 seydi_ali_reis，奥斯曼海军将领、《列国之镜》的作者；男；势力 ottoman；生年不详（cast 占位 [0,1,1]）；1562 年卒。cast 在 cast/historical_02_islamic.toml，日程 1560—1561 在伊斯坦布尔（istanbul，trading_house）。身份档 2（官员）。
+# 类型：复合（mx）；5 章，offer → muscat → diu → back → epilogue；终点 done / failed。
+# 报价：来信／代理人（L）。auto=true；offer 章 at=istanbul，出面的是兵工厂海图房的书记（只写身份，不新建 cast，不写 speaker）。窗口 1560-02-01 至 1561-06-30（offer 的 when 与 deadline）；family c13_offer_istanbul，冷却 20 天；名声门槛 10。将军本人只在 back 章说话（求见门槛高，前面都是书记）。
+# 依据·史实：1554 年他奉命把巴士拉的舰队带回苏伊士，两度遇上葡萄牙舰队，又遇上风暴，残船漂到古吉拉特，水手多半留下；他由陆路回伊斯坦布尔，1557 年写成《列国之镜》，1562 年卒。正文只写书里怎么写、水手怎么说之间的出入；1554 年的海上与救起的小艇不写（那是纳吉玛的养成事件）。
+# 依据·原创：海图房的书记、马斯喀特葡萄牙堡下补网的老水手（设拉子人）、第乌堡里搓缆绳的老水手长、将军的字条与镇纸都是原创。
+# 待核：风暴刮了几天没有定论，正文只用“书里说”与“水手说”两种口吻，不下结论。
+# 秘密：cast 无 secret。将军为放行文书给君主写过颂诗、事后难为情；只在 back 章的 change 一支由他自己带过一句，不进见闻。
+# 读的旗标：c13_main_najma（offer 的变体，主线第一章设；未设时不触发）。不读 c7_*，不写 C7 的任何人。
+# 设的旗标：c13_request_seydi_ali_reis_accepted / declined / heard_passage / thin / detailed / exact / soft / greeting / done / book_changed / partial / book_kept / left_in_room / late。
+# 依赖：无 B10b 改名（istanbul、muscat、diu 都是现有港口）；奖励物 seydi_mirror_ms（items/books_03_geography_02.toml）。整合时请把将军的日程延到 1562-10-31（back 章的窗口在 1562 年，表里只写到 1561-12-31）。
+# 缺省走向：offer 不在场就一直挂着，到 1561-06-30 走 failed，不写见闻。muscat、diu、back 超时走 failed 并各来一封信；epilogue 超时走 done（事情已经办完了）。
+# 回忆插画清单：
+#   mem-request_seydi_ali_reis-epilogue（誊清的抄本）：一部新誊的抄本摊在海图房的桌上，书页翻到风暴那一页，纸边夹着一张小字条。
+
+[[tracks]]
+key = "request_seydi_ali_reis"
+name = "风暴到底刮了几天"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["seydi_ali_reis"]
+
+# 一、海图房的书记：1560 年 2 月起，在伊斯坦布尔报价。
+[[tracks.chapters]]
+key = "offer"
+title = "海图房的书记"
+text = "兵工厂海图房的书记把一封信推到你面前，信封上压着将军的私章。“将军写《列国之镜》，写到 1554 年那场风暴，写的是刮了十天十夜。”书记用指甲敲着那一行，“他想知道，船上的水手们记得的，跟他写的是不是一样。”他停了停，把信往你这边又推了推，“不催你。只是将军问起来，我得有句话答。”他说，那年在船上的一个老水手，后来流落到马斯喀特，如今在葡萄牙人的堡下面补网。"
+mood = "cheerful"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1560, 2, 1], to = [1561, 6, 30] }, { kind = "fame", ge = 10 }]
+at = "istanbul"
+deadline = [1561, 6, 30]
+family = "c13_offer_istanbul"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "najma"
+when = [{ kind = "flag", flag = "c13_main_najma", value = true }]
+text = "兵工厂海图房的书记把一封信推到你面前，信封上压着将军的私章。“将军写《列国之镜》，写到 1554 年那场风暴，写的是刮了十天十夜。”书记用指甲敲着那一行，“他想知道，船上的水手们记得的，跟他写的是不是一样。”他停了停，把信往你这边又推了推，“不催你。只是将军问起来，我得有句话答。”他说，那年在船上的一个老水手，后来流落到马斯喀特，如今在葡萄牙人的堡下面补网。书记多看了你一眼。“听说你是尤尔法人。那年阿曼湾的事，你小时候听过吧？”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去马斯喀特找那个老水手。"
+next = "muscat"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 2 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_accepted" }]
+reply = "书记把将军画的一张小图交给你，图上马斯喀特的海湾画得比真的还圆。“将军说，照这个找。”他把图卷起来塞进你手里，又补了一句，“我劝你照你自己的眼睛找。”"
+
+[[tracks.chapters.choices]]
+key = "read_passage"
+text = "接下，先请书记把写风暴的那段念给你听。"
+next = "muscat"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 2 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_accepted" }, { kind = "flag", flag = "c13_request_seydi_ali_reis_heard_passage" }]
+reply = "书记念到“十天十夜，天与海不分”，停下来看你：“将军最喜欢这一句。”他又翻过一页，指着下面一行，“这一句他改过三遍。头一版写的是‘失算在舵手’，后来改成了‘不过是信了风’。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "葡萄牙人的堡下面，这一趟我不去。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_seydi_ali_reis_declined" }]
+reply = "书记松了口气，把信收回信封。“那我就回将军，没人记得了。”他说这话时没看你，眼睛盯着窗外那几根桅杆，手指把信封的边角一点点压平。"
+
+# 二、补网的老水手：马斯喀特，葡萄牙堡下面。进行中的章，200 天内要到。
+[[tracks.chapters]]
+key = "muscat"
+title = "补网的老水手"
+text = "马斯喀特的海滩上，老水手盘腿坐在网堆里，葡萄牙人的堡墙在他背后投下一截影子。他听说你是将军派来的，先冷笑了一声。“风是刮了。十天？五天。第六天早上就停了。”他的口音带着设拉子那一带的软调子，梭子在网眼里穿来穿去，“剩下那几天，船是漂着的，人是吵着的，没人知道往哪儿去。”他说完又笑，这回笑得有点难看，“你要问清楚，去第乌找老水手长。他那时候在将军身边。”"
+speaker = "captain"
+mood = "cheerful"
+at = "muscat"
+when = [{ kind = "alive", person = "seydi_ali_reis", value = true }]
+deadline_days = 200
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = -3 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_late" }, { kind = "letter", person = "seydi_ali_reis", text = "海图房书记：将军等不到马斯喀特的话，自己又改了一遍那一段。" }]
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "陪他补一下午网，让他慢慢讲。"
+next = "diu"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 3 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "他讲到天黑透，灯都点上了：哪条船先断了桅，谁在船上念经，谁偷偷吃了将军的干枣。他不肯说将军的坏话，只说：“将军那几天，一直在看星。”"
+news = "马斯喀特葡萄牙堡下补网的老水手，跟一个外来的船长讲了一下午当年的风暴。"
+
+[tracks.chapters.choices.fail]
+next = "diu"
+effects = [{ kind = "flag", flag = "c13_request_seydi_ali_reis_thin" }]
+news = "马斯喀特葡萄牙堡下，外来的船长陪老水手补了一下午网，老水手只讲了“五天”两个字，就收网回家。"
+
+[[tracks.chapters.choices]]
+key = "in_tongue"
+text = "用他家乡的波斯话问。"
+next = "diu"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 3 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_detailed" }]
+requires = [{ kind = "skill", skill = "lang_persian", ge = 60 }]
+hint = "他的话你听得懂一半，另一半是哪里的口音你都分不清。"
+reply = "他一听你开口，眼眶就红了。“十年了，这里没人跟我这样说话。”他讲得很细，连船哪天看见了陆地都记得，还比划着海鸟飞来的方向。"
+news = "马斯喀特的海滩上，一个外乡船长用设拉子话问补网的老水手，老人眼眶红了，讲了很久。"
+
+[[tracks.chapters.choices]]
+key = "pay_debt"
+text = "替他还了网铺的账，再问。"
+next = "diu"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "seydi_ali_reis", value = 3 }]
+requires = [{ kind = "cash", ge = 200 }]
+hint = "网铺的账你垫不起。"
+reply = "他把账单折起来塞进头巾，骂了一句葡萄牙话，说这笔账他记着，以后请你喝酒。说话痛快多了，说完他问你：将军的书里，有没有写到他？"
+news = "马斯喀特葡萄牙堡下，一个船长替补网的老水手还清了网铺的账，老水手这才肯开口。"
+
+# 三、是谁先转的舵：第乌堡里，搓缆绳的老水手长。
+[[tracks.chapters]]
+key = "diu"
+title = "是谁先转的舵"
+text = "第乌堡里，搓缆绳的老水手长听你说完，放下手里的麻。“风暴前一天，是将军自己下令往东转，躲开葡萄牙人的船。转去古吉拉特，是将军先定的。风暴只是把这件事做完了。”他说这话一点也不像在告状，倒像替将军可惜。他把手在裤腿上擦了擦，又去拿麻。手上的老茧一道一道，缠着麻绳，像是绕了几十年。"
+speaker = "captain"
+mood = "tense"
+at = "diu"
+when = [{ kind = "alive", person = "seydi_ali_reis", value = true }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = -3 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_late" }, { kind = "letter", person = "seydi_ali_reis", text = "海图房书记：第乌的话没带回来，将军说也好，书就照原样。" }]
+
+[[tracks.chapters.choices]]
+key = "write_exact"
+text = "一字一字记下来，连他的口气也记。"
+next = "back"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 3 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_exact" }]
+reply = "他看你写完，叫你念一遍。念到“将军先定的”，他点点头：“对。那天往西就是死，他没有判错。可那道令是他先下的，这个你要写清楚。”"
+news = "第乌堡里搓缆绳的老水手长说，有个船长专程来问他当年谁转的舵，问得一字不差。"
+
+[[tracks.chapters.choices]]
+key = "write_soft"
+text = "记下来，但把谁下的令写得含糊一点。"
+next = "back"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 2 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_soft" }]
+reply = "他把你的纸拿过去，对着灯看了一眼。那一行被你写成了“船上定了往东”，他用指甲在“船上”两个字下面划了一道。他没说什么，把麻又拿起来。“书是将军的书。”"
+news = "第乌堡里的老水手长说，有个船长来问当年的舵，问完低着头写了很久，写的什么没人看见。"
+
+[[tracks.chapters.choices]]
+key = "invite"
+text = "请他跟你回伊斯坦布尔，当面跟将军说。"
+next = "back"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 3 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_exact" }, { kind = "flag", flag = "c13_request_seydi_ali_reis_greeting" }]
+reply = "他笑了：“我老婆在这里，孩子在这里，堡里的人给工钱。”他把麻团往你怀里一塞，“你替我问将军好。就说，那天的星他看得对。”"
+news = "第乌堡里搓缆绳的老水手长说，有个船长请他去伊斯坦布尔，替将军把那场风暴当面讲一遍，他没应。"
+
+# 四、书要不要改：伊斯坦布尔海图房，将军亲自见你。
+[[tracks.chapters]]
+key = "back"
+title = "书要不要改"
+text = "将军亲自在海图房见你。他没有坐，手里拿着你记的那几页纸。“北极星离海面几指？说准了，我们再谈。”你答了，他才走到窗口，一行一行看下去。看到“五天”，他皱起眉：“五天？从哪一刻算起的五天？”看到“将军先定的”，他把纸放在桌上，手指压着纸角。“书要不要改？”"
+speaker = "seydi_ali_reis"
+mood = "tense"
+at = "istanbul"
+when = [{ kind = "alive", person = "seydi_ali_reis", value = true }]
+deadline_days = 200
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = -5 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_late" }, { kind = "letter", person = "seydi_ali_reis", text = "海图房书记：将军病了，你带的话我替他收着。他醒着的时候，问过两次你的船。" }]
+
+[[tracks.chapters.variants]]
+key = "soft"
+when = [{ kind = "flag", flag = "c13_request_seydi_ali_reis_soft", value = true }]
+text = "将军亲自在海图房见你。他没有坐，手里拿着你记的那几页纸。他先问了你一个数，你答了，他才走到窗口，一行一行看下去。看到“五天”，他皱起眉：“五天？从哪一刻算起的五天？”看到“船上定了往东”，他停住了，把纸翻回去又看一遍。“船上？是谁定的，你没写清楚。”他把纸放在桌上，手指压着纸角。“书要不要改？”"
+
+[[tracks.chapters.choices]]
+key = "change"
+text = "照水手们的说法改：五天，先转舵的是您。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "seydi_ali_reis", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_done" }, { kind = "flag", flag = "c13_request_seydi_ali_reis_book_changed" }]
+reply = "他沉着脸坐了很久，提笔把“十天十夜”划掉，写上“五天，余下是漂”。写完又在旁边添了一行小字，笔尖抖了一下。“为了一纸放行文书，我给人写过颂诗。这一行，就当还账。”"
+news = "伊斯坦布尔兵工厂的海图房里，西迪·阿里·雷斯将军为他书里的一场风暴，跟一个外来的船长谈到半夜，最后自己提笔改了一行。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "不必改，水手记错日子是常有的事。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 1350 }, { kind = "affinity", person = "seydi_ali_reis", value = 4 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_partial" }, { kind = "flag", flag = "c13_request_seydi_ali_reis_book_kept" }]
+reply = "他明显松了口气，笑着拍你的肩，说你懂书，还顺手把桌上的海图卷好。可你走到门口时，听见他在背后自言自语：“五天……五天……”"
+news = "伊斯坦布尔兵工厂的海图房里，西迪·阿里·雷斯将军跟一个外来的船长谈到半夜，末了书没改，送人出门时还在念叨“五天”。"
+
+[[tracks.chapters.choices]]
+key = "his_call"
+text = "把两份说法都留给他，由他自己定。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "seydi_ali_reis", value = 6 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_done" }]
+reply = "他把两张纸并排摊开，用镇纸压住，说要想一个晚上，还让书记把灯多添一盏。第二天书记告诉你，将军在“十天”旁边加了一句：“有人说是五天。”"
+news = "伊斯坦布尔兵工厂的海图房里，西迪·阿里·雷斯将军把两份说法摊在桌上，压着镇纸看了一夜。"
+
+# 五、一部誊清的抄本：一个月后，书记送来抄本。
+[[tracks.chapters]]
+key = "epilogue"
+title = "一部誊清的抄本"
+text = "一个月后，书记抱着一部誊清的《列国之镜》来到码头。抄本是新的，纸边还带着墨香。书记说，这一个月将军几乎没出过海图房，抄的时候，错字都是他自己一个一个划掉的。书页里夹着将军的一张字条，字写得又小又直：“书送你。你去过的那些港口，书里也有。”书记把抄本翻到风暴那一页，停了停，又合上，“将军让我别多翻。”"
+mood = "tender"
+at = "istanbul"
+when = [{ kind = "alive", person = "seydi_ali_reis", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等一个月" }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "seydi_ali_reis", text = "海图房书记：将军的抄本还在架子上，等你来取。" }]
+
+[[tracks.chapters.variants]]
+key = "changed"
+when = [{ kind = "flag", flag = "c13_request_seydi_ali_reis_book_changed", value = true }]
+text = "一个月后，书记抱着一部誊清的《列国之镜》来到码头。抄本是新的，纸边还带着墨香。书记说，这一个月将军几乎没出过海图房，抄的时候，错字都是他自己一个一个划掉的。书页里夹着将军的一张字条，字写得又小又直：“书送你。你去过的那些港口，书里也有。”书记把抄本翻到风暴那一页，指给你看：“这一页的字迹比别的页新。那一行是将军亲笔添的。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下这部抄本。"
+next = "done"
+effects = [{ kind = "item", item = "seydi_mirror_ms", qty = 1 }, { kind = "memory", memory = "mem-request_seydi_ali_reis-epilogue", title = "誊清的抄本" }]
+reply = "书记说将军叮嘱过：“告诉他，别拿去换钱。要换，也换个好价。”他把抄本往你怀里放，手指在封皮上停了一下，像在掸灰。书记站在一旁，没有催你。"
+
+[[tracks.chapters.choices]]
+key = "leave_in_room"
+text = "请书记把它留在海图房，给年轻的船长们看。"
+next = "done"
+effects = [{ kind = "affinity", person = "seydi_ali_reis", value = 2 }, { kind = "flag", flag = "c13_request_seydi_ali_reis_left_in_room" }]
+reply = "书记愣了一下，把抄本放回架子上最显眼的一格，又把旁边的书往后挪了挪，腾出地方，顺手拂去了架子上的灰。“将军听了，会高兴的。他嘴上不会说。”"

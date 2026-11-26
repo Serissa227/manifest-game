@@ -1,0 +1,167 @@
+# 请托：两本账一起摆上桌（request_lin_hui）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude（Sonnet）执笔。
+# 人物：林蕙 lin_hui（1538-06-08 生，女），八连（Parián）福建商人的女儿，门口总摆一张大桌，左边汉字账，右边西班牙账（cast/story_southeast_asia.toml）。
+# 类型：说服某人（persuade）。章节：offer 谁也别想走 → persuade 天经地义（三条路：复式记账 / 卡斯蒂利亚语念条例 / 口才）→ 终章：result 对上了（条子上写的是“照旧”）、result_partial 只对上一半（口才失手，只肯少加一半）。
+# 结构说明：分支靠 next 走到各自的章节，不靠互斥的旗标门禁。persuade 的 argue 检定成功走 result，失败走 result_partial；result 与 result_partial 的选项都不带 requires。
+# 报价：当面（T）。auto=false，玩家在马尼拉八连找到她（ask:request_lin_hui）。窗口 1585-01-01 至 1590-06-30；persuade 期限 60 天，最迟 1590-08 底结束；result 没有期限，只写起日，免得过了年末没人收尾。
+# 身份档 1（小商）、风险中：现金基数 900，×1.4 = 1250。最好的结局 1250；折中 700；失败 0。名声 +2 给 result 的两个选项（各一次，互斥），折中结局不给。好感正向合计：接下 2 + 路上 3 + 结局 8 = 13。
+# 依据（史实）：1580 年代马尼拉城墙外的八连（Parián）是华商聚居与交易的地方，西班牙人向华商收执照钱与各样捐费（背景，传闻口吻）；1583 年马尼拉大火之后铺子重盖（只说“火后重盖”，大火本身归 C7）。
+# 依据（原创）：林蕙门口的大桌与红绳捆着的两本账；隔壁卖线的老妇；市政厅偏厅里那个不起名字的书记（叙事人物，不建 cast）；账页脚上钉着的收据签条；书记批的那张条子；账本末页并排的两行字。
+# 待核：八连执照钱的征收方式（按铺面还是按营业），正文一律用告示与书记的口吻，不下断语。
+# 秘密：林凤手下有她一个远房堂兄（cast secret）。本请托永远不碰，正文不暗示，见闻不写。
+# 不写：佩德罗·德·奥坎波、卡塔丽娜·佩雷拉（C7 的另一半）、C7 的章名“两种账簿的桌”；只写门口的大桌。不写恋爱，不用 relation / tie / bond / heart。
+# 口头禅：「你那张单子，先报给我听，我两本账一起记。」只在 result 用一次（书记批的那张单子交到她手里）。
+# 读写的旗标：只设 c13_request_lin_hui_*。终局 done / partial / late；分支 accepted / declined / kept；另三面分支旗标 rent（问过房租，persuade 变体读）、ledger / spanish（result 变体读）。不读任何 c7_ 旗标，不设 c7_ 旗标。
+# 门禁：无（brief 的 gate_main 为空）。c13_main_* 不读。
+# 依赖：技能 double_entry、lang_spanish 现成（skills.toml）；港口 manila 现成；无改名依赖。
+# 回忆插画清单：
+#   mem-request_lin_hui-result「对上了的两行」：门口的大桌上，两本账翻到末页并排摊着，汉字一行、西班牙字一行，写的是同一个日子。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；persuade 超时，告示照贴，来信一封；result 没有期限，可以一直等。
+
+[[tracks]]
+key = "request_lin_hui"
+name = "两本账一起摆上桌"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["lin_hui"]
+
+# offer · 1585—1590 · 八连街口：林蕙家门口的大桌，市政厅的告示压在算盘下面
+[[tracks.chapters]]
+key = "offer"
+title = "谁也别想走"
+text = "八连街口，林蕙家门口那张大桌上摊着两本账：左边汉字，右边西班牙字，中间压着市政厅刚送来的告示，拿算盘当镇纸。她左手拨珠，右手在西班牙那本上写，嘴里用闽南话念数，笔下出来的却是卡斯蒂利亚字。“铺子火后重盖，比从前大了。”她头也不抬，“告示就说，铺子大了，执照钱跟着涨。你去市政厅，找管这桩的书记，把两本账一起摆上他的桌。两本对不上，谁也别想走——他也一样。”隔壁卖线的老妇端着碗站在门边，汤也不喝，只看着她的算盘。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "lin_hui", text = "在马尼拉八连找到林蕙" }]
+when = [{ kind = "date", from = [1585, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，去市政厅。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "lin_hui", value = 2 }, { kind = "flag", flag = "c13_request_lin_hui_accepted" }]
+reply = "她把两本账叠在一起，汉字的垫在下面，西班牙字的盖在上面，拿一根红绳捆了三道。“汉字的在下面。”她把绳结拍实，“他先看西班牙的，看不懂了，再翻下面的。”老妇在门边把碗里的汤喝完，算盘声又响了起来。"
+
+[[tracks.chapters.choices]]
+key = "ask_bigger"
+text = "先问她：铺子真的比以前大了？"
+next = "persuade"
+effects = [{ kind = "affinity", person = "lin_hui", value = 2 }, { kind = "flag", flag = "c13_request_lin_hui_accepted" }, { kind = "flag", flag = "c13_request_lin_hui_rent" }]
+reply = "“大了三尺。”她翻开汉字那本，指给我看一行红笔圈过的数，“可房租是以前的两倍，卖出去的货没多几件。账上都有。”她说完把两本账一叠，红绳绕上，往我手边一推。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "市政厅的事，我不碰。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_lin_hui_declined" }]
+reply = "她点点头，把红绳解开，接着对她的两本账。那张告示还压在算盘底下，边角被珠子硌出了一排小坑。卖线的老妇端着空碗走了。"
+
+# persuade · 1585—1590 · 市政厅偏厅：书记念告示，账页脚上钉着市政厅自己的收据
+[[tracks.chapters]]
+key = "persuade"
+title = "天经地义"
+text = "市政厅的偏厅里，书记把告示从头念了一遍，念到“铺面既已加宽，执照钱照例增收”，抬眼说：“天经地义。”我没有争，解开红绳，把西班牙字的那本摊到他桌上。那一页的页脚钉着一排小小的签条，是市政厅去年收执照钱时开的收据，每张都盖着衙门的印。他的笔停了，眉头皱起来，手指不由自主地去摸其中一张的印。汉字的那本，仍压在我手底下。"
+speaker = "captain"
+mood = "tense"
+at = "manila"
+when = [{ kind = "date", from = [1585, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "lin_hui", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "lin_hui", text = "告示贴出来了，执照钱照加。账我还摊着，等下一个肯去的人。" }, { kind = "affinity", person = "lin_hui", value = -3 }, { kind = "flag", flag = "c13_request_lin_hui_late" }] }
+news = "马尼拉市政厅里，有人把八连唐人商户的两本账摆上了书记的桌，执照钱的告示压了下来。"
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "照复式记账，把八连的进出一栏一栏摆给他看。"
+next = "result"
+requires = [{ kind = "skill", skill = "double_entry", ge = 60 }]
+hint = "借方贷方，你只认得一边，翻到汉字那本就卡住了。"
+effects = [{ kind = "affinity", person = "lin_hui", value = 3 }, { kind = "flag", flag = "c13_request_lin_hui_kept" }, { kind = "flag", flag = "c13_request_lin_hui_ledger" }]
+reply = "我把两本账翻到去年同一个月，一栏进，一栏出，指给他看：铺面宽了三尺，房租翻了一倍，卖出去的货只多了零头。汉字那半他不认得，就拿手指在西班牙那本上一行一行地去对。对到最后一页，他把笔放下了。“进出是对得上的。”他说，“我没法说这铺子多赚了。执照钱，照旧。”"
+
+[[tracks.chapters.choices]]
+key = "spanish"
+text = "用卡斯蒂利亚语，把市政厅自己的条例一条一条念给他听。"
+next = "result"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_spanish", ge = 60, hard = true }]
+hint = "条文你只听得懂大意，一条一条念出声来还不行。"
+effects = [{ kind = "affinity", person = "lin_hui", value = 3 }, { kind = "flag", flag = "c13_request_lin_hui_kept" }, { kind = "flag", flag = "c13_request_lin_hui_spanish" }]
+reply = "他案头就搁着市政厅的条例册子。我翻到收执照钱的那一条，一个字一个字地念：按营业征收。念完又往前翻一条，也是营业。没有哪一条写着按尺寸。书记的耳根红了，把告示翻过来看背面，手指在“尺寸”两个字上停了很久。“告示，”他说，“我回头改。”声音比刚才轻得多。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说：再加钱，八连的人就去别处了，马尼拉的货谁来卖？"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "lin_hui", value = -2 }], news = "马尼拉市政厅里，书记在八连执照钱的告示上划了一笔，原先要加的只加一半，两本账还摊在他桌上。" }
+effects = [{ kind = "affinity", person = "lin_hui", value = 3 }, { kind = "flag", flag = "c13_request_lin_hui_kept" }]
+reply = "书记没有马上答话。他走到窗边，八连的新瓦顶一片挨着一片，这个月进港的几条福建船正往那边卸丝。“告示先压一季。”他转回身，“看看再说。”他把两本账推回我面前，红绳散在桌角。"
+
+[[tracks.chapters.variants]]
+key = "v1_rent"
+when = [{ kind = "flag", flag = "c13_request_lin_hui_rent" }]
+text = "市政厅的偏厅里，书记把告示从头念了一遍，念到“铺面既已加宽，执照钱照例增收”，抬眼说：“天经地义。”我想着林蕙指给我看的那行红圈：铺子大了三尺，房租翻了一倍。我没有先开口，解开红绳，把西班牙字的那本摊到他桌上。页脚钉着一排小小的签条，是市政厅去年收执照钱时开的收据，每张都盖着衙门的印。他的笔停了，眉头皱起来，手指去摸其中一张的印。汉字的那本，仍压在我手底下。"
+
+# result · 1585— · 八连：书记批的单子，两本账末页各添一行
+[[tracks.chapters]]
+key = "result"
+title = "对上了"
+text = "我回到八连，林蕙已经把大桌擦净了，两本账原样摊着。我把书记批给我的那张单子放在桌上，上头只有一行字：告示先压一季，执照钱照旧。她看也不看，把算盘往边上一推：“你那张单子，先报给我听，我两本账一起记。”我念给她听。她先在汉字那本的末页写了一行，墨迹未干，就把笔递过来，朝右边抬了抬下巴：“西班牙这本，你也写一行。”"
+speaker = "captain"
+mood = "cheerful"
+at = "manila"
+objectives = [{ kind = "person", person = "lin_hui", text = "回八连找林蕙" }]
+when = [{ kind = "date", from = [1585, 1, 1] }, { kind = "alive", person = "lin_hui", value = true }]
+news = "马尼拉八连，林蕙家门口那张大桌上的账本，最后一页多了一行：执照钱照旧。"
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "在西班牙那本上写：执照钱照旧，再添上日子。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lin_hui", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_lin_hui_done" }, { kind = "memory", memory = "mem-request_lin_hui-result", title = "对上了的两行" }]
+reply = "我写得很慢，每个字母都怕歪。她等我收笔，把两本账的末页并排拉近，一个字一个字地对过去，连日子也对。“对上了。”她把酬金推到我手边，又把西班牙那本转向街口，朝来往的邻居扬了扬下巴：“都看见了？这一行是谁写的，八连的人记得住。”"
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "字不好看，让她自己写。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lin_hui", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_lin_hui_done" }]
+reply = "她笑了一声，说字好不好看不要紧，对得上就行。她的西班牙字写得圆，汉字写得方，两行并在末页，像两个人在门口并排站着。她吹干墨，把酬金数给我，数的时候没有看我，看的是账。"
+
+[[tracks.chapters.variants]]
+key = "v1_ledger"
+when = [{ kind = "flag", flag = "c13_request_lin_hui_ledger" }]
+text = "我回到八连，林蕙已经把大桌擦净了，两本账原样摊着。我把书记批给我的那张单子放在桌上，上头只有一行字：进出相符，执照钱照旧。她看也不看，把算盘往边上一推：“你那张单子，先报给我听，我两本账一起记。”我念给她听。她先在汉字那本的末页写了一行，墨迹未干，就把笔递过来，朝右边抬了抬下巴：“西班牙这本，你也写一行。”"
+
+[[tracks.chapters.variants]]
+key = "v2_spanish"
+when = [{ kind = "flag", flag = "c13_request_lin_hui_spanish" }]
+text = "我回到八连，林蕙已经把大桌擦净了，两本账原样摊着。我把书记批给我的那张单子放在桌上，上头只有一行字：告示改为按营业收，执照钱照旧。她看也不看，把算盘往边上一推：“你那张单子，先报给我听，我两本账一起记。”我念给她听。她先在汉字那本的末页写了一行，墨迹未干，就把笔递过来，朝右边抬了抬下巴：“西班牙这本，你也写一行。”"
+
+# result_partial · 1585— · 八连：书记划过的告示，只肯少加一半
+[[tracks.chapters]]
+key = "result_partial"
+title = "只对上一半"
+text = "我回到八连，把书记划过的那张告示放在大桌上。原先要加的数目被一道墨线拦腰截去，只剩一半。林蕙拿算盘把剩下的一半重新拨了一遍，珠子落得比平时重。“少加一半，账上也是个加字。”她说。可她还是翻开汉字那本的末页，写了一行，笔尖顿了顿，把笔朝我这边递过来。"
+speaker = "captain"
+mood = "tense"
+at = "manila"
+objectives = [{ kind = "person", person = "lin_hui", text = "回八连找林蕙" }]
+when = [{ kind = "date", from = [1585, 1, 1] }, { kind = "alive", person = "lin_hui", value = true }]
+news = "马尼拉八连，林蕙家门口的账本末页添了一行：执照钱只加一半，她还是照样记了。"
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "在西班牙那本上写：执照钱加半，再添上日子。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "lin_hui", value = 4 }, { kind = "flag", flag = "c13_request_lin_hui_partial" }]
+reply = "我把“加半”两个字写得很小。她看了看，没说我写得难看，只说少加一半也是少，账上照样写一行。她把两行对了对，酬金数得干脆，数完把算盘拨回了零。"
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "这一行不好落笔，让她自己写。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "lin_hui", value = 3 }, { kind = "flag", flag = "c13_request_lin_hui_partial" }]
+reply = "她哼了一声，把笔收回去，西班牙字写得又快又重，写完在“半”字底下划了一道。“下回再碰上他，”她说，“账摊得比这回大。”酬金放在桌沿上，她没有递过来，我自己伸手去拿。"

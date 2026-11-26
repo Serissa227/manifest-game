@@ -1,0 +1,301 @@
+# 殖民地建筑（航海历 1502 年追加）。key 只允许按顺序追加（美术与图标按 key 绘制），name 可以随意改。
+# 殖民地的全局规则（建立费、人口、粮食、税收、袭击……）在 rules.toml 的 [colony] 一节。
+#
+# 字段说明（每种建筑都写全字段，用不到的填 0 或 []）：
+#   key         内部标识
+#   name        显示名
+#   kind        类型：food 粮食 | extract 采集 | process 加工 | storage 仓储 | defense 防御 | morale 士气 | dock 码头 | housing 住房
+#   cost        每级建造费（金币；升到第 n 级同样收这么多）
+#   materials   每级从殖民地库存（所有者在该地的仓库）扣除的建材：[{ good, qty }]
+#   build_days  每级工期（天）；同一殖民地同一时间只能有一个工程
+#   workers     每级需要的劳动人口；人手不足时按比例减产
+#   upkeep      每级每月维护费（金币）
+#   max_level   最高等级
+#   goods       food / extract：可产出的商品（与殖民点的资源取交集；农庄按肥力产出其中的粮食）
+#   output      food / extract：每级每天基础产量（件），再乘殖民点的肥力或资源丰度 / 100
+#   inputs      process：每级每天消耗的原料 [{ good, qty }]
+#   outputs     process：每级每天产出的成品 [{ good, qty }]
+#   capacity    storage：每级增加的仓储容量
+#   defense     defense：每级防御值（降低海盗袭击的成功率与损失）
+#   morale      morale：每级士气加成
+#   housing     housing：每级增加的人口上限
+
+# 农庄：开荒种粮，殖民地的命根子。第一批殖民者靠玉米熬过了 1463 年的冬天。
+[[buildings]]
+key = "farm"
+name = "农庄"
+kind = "food"
+cost = 1500
+materials = [{ good = "timber", qty = 20 }]
+build_days = 20
+workers = 25
+upkeep = 40
+max_level = 3
+goods = ["grain", "maize", "potato"]
+output = 12
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 种植园：甘蔗、烟草、咖啡、可可、香草……新大陆的财富多半长在地里。
+[[buildings]]
+key = "plantation"
+name = "种植园"
+kind = "extract"
+cost = 3000
+materials = [{ good = "timber", qty = 30 }, { good = "ironware", qty = 5 }]
+build_days = 30
+workers = 40
+upkeep = 80
+max_level = 3
+goods = ["sugarcane", "tobacco", "cotton", "coffee", "cocoa", "vanilla", "indigo", "tea", "spice", "flax", "hemp", "cochineal", "quinine", "herbs"]
+output = 6
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 伐木场：砍伐原始森林，出产木材、桃花心木与苏木。
+[[buildings]]
+key = "lumber"
+name = "伐木场"
+kind = "extract"
+cost = 1200
+materials = [{ good = "ironware", qty = 5 }]
+build_days = 15
+workers = 20
+upkeep = 30
+max_level = 3
+goods = ["timber", "mahogany", "dyewood"]
+output = 10
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 矿坑：开采金银铜铁、宝石、瓷土与星辉晶；建在阿尔坎遗迹上时也用来发掘古代遗物。
+[[buildings]]
+key = "mine"
+name = "矿坑"
+kind = "extract"
+cost = 4000
+materials = [{ good = "timber", qty = 30 }, { good = "ironware", qty = 10 }]
+build_days = 40
+workers = 35
+upkeep = 120
+max_level = 3
+goods = ["iron_ore", "copper_ore", "gold_ore", "silver_ore", "gems", "quartz_sand", "kaolin", "star_crystal", "sulfur", "saltpeter", "relics"]
+output = 5
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 渔场：近海捕鱼、晒盐、采珠、捕鲸。咸鱼也是粮食。
+[[buildings]]
+key = "fishery"
+name = "渔场"
+kind = "extract"
+cost = 1400
+materials = [{ good = "timber", qty = 15 }, { good = "rope", qty = 5 }]
+build_days = 15
+workers = 15
+upkeep = 30
+max_level = 3
+goods = ["fish", "salt", "whale_oil", "pearl", "coral"]
+output = 10
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 猎场：设陷阱猎取毛皮，顺带采集林下的药草。
+[[buildings]]
+key = "hunting"
+name = "猎场"
+kind = "extract"
+cost = 1000
+materials = [{ good = "timber", qty = 10 }]
+build_days = 10
+workers = 12
+upkeep = 20
+max_level = 2
+goods = ["fur", "herbs"]
+output = 3
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 酿酒坊：把甘蔗蒸馏成朗姆酒——殖民地的硬通货。
+[[buildings]]
+key = "distillery"
+name = "酿酒坊"
+kind = "process"
+cost = 3500
+materials = [{ good = "planks", qty = 20 }, { good = "ironware", qty = 5 }]
+build_days = 30
+workers = 20
+upkeep = 90
+max_level = 3
+goods = []
+output = 0
+inputs = [{ good = "sugarcane", qty = 12 }]
+outputs = [{ good = "rum", qty = 4 }]
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 糖坊：压榨甘蔗、熬煮结晶，把蔗汁变成蔗糖。
+[[buildings]]
+key = "sugarmill"
+name = "糖坊"
+kind = "process"
+cost = 3000
+materials = [{ good = "planks", qty = 20 }, { good = "ironware", qty = 6 }]
+build_days = 30
+workers = 20
+upkeep = 80
+max_level = 3
+goods = []
+output = 0
+inputs = [{ good = "sugarcane", qty = 15 }]
+outputs = [{ good = "sugar", qty = 5 }]
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 仓棚：木板搭的大棚仓，让殖民地能囤更多货。
+[[buildings]]
+key = "storehouse"
+name = "仓棚"
+kind = "storage"
+cost = 1000
+materials = [{ good = "timber", qty = 25 }, { good = "planks", qty = 10 }]
+build_days = 12
+workers = 5
+upkeep = 15
+max_level = 5
+goods = []
+output = 0
+inputs = []
+outputs = []
+capacity = 400
+defense = 0
+morale = 0
+housing = 0
+
+# 栅栏堡：原木栅栏、瞭望塔与几门小炮，挡得住大部分海盗。
+[[buildings]]
+key = "fort"
+name = "栅栏堡"
+kind = "defense"
+cost = 5000
+materials = [{ good = "timber", qty = 50 }, { good = "ironware", qty = 10 }]
+build_days = 35
+workers = 15
+upkeep = 100
+max_level = 3
+goods = []
+output = 0
+inputs = []
+outputs = []
+capacity = 0
+defense = 25
+morale = 0
+housing = 0
+
+# 礼拜堂：钟声与彩色玻璃窗让远离故土的人们有了主心骨。
+[[buildings]]
+key = "chapel"
+name = "礼拜堂"
+kind = "morale"
+cost = 2500
+materials = [{ good = "planks", qty = 25 }, { good = "glass", qty = 5 }]
+build_days = 25
+workers = 3
+upkeep = 40
+max_level = 2
+goods = []
+output = 0
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 8
+housing = 0
+
+# 殖民地酒馆：朗姆酒、骰子与思乡的歌，也是新移民打听消息的地方。
+[[buildings]]
+key = "tavern"
+name = "殖民地酒馆"
+kind = "morale"
+cost = 1800
+materials = [{ good = "planks", qty = 20 }, { good = "wine", qty = 10 }]
+build_days = 15
+workers = 4
+upkeep = 30
+max_level = 2
+goods = []
+output = 0
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 6
+housing = 0
+
+# 码头：栈桥、吊杆与小船坞，让大船能靠岸装卸、补给与修理（具体效果由内核规则决定）。
+[[buildings]]
+key = "dock"
+name = "码头"
+kind = "dock"
+cost = 3000
+materials = [{ good = "timber", qty = 40 }, { good = "planks", qty = 20 }, { good = "rope", qty = 10 }]
+build_days = 25
+workers = 10
+upkeep = 50
+max_level = 3
+goods = []
+output = 0
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 0
+
+# 住宅区：原木屋与石基小屋，住得下才能留得住移民。
+[[buildings]]
+key = "housing"
+name = "住宅区"
+kind = "housing"
+cost = 1500
+materials = [{ good = "timber", qty = 30 }, { good = "planks", qty = 15 }]
+build_days = 15
+workers = 0
+upkeep = 20
+max_level = 5
+goods = []
+output = 0
+inputs = []
+outputs = []
+capacity = 0
+defense = 0
+morale = 0
+housing = 150

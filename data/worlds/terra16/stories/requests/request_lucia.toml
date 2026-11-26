@@ -1,0 +1,172 @@
+# 请托：一箱铅字（request_lucia）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude（Opus）执笔。
+# 人物：卢西娅 lucia（1537-04-04 生，女），墨西哥城奥恰尔特印书坊的排字工。cast 见 cast/story_americas.toml。
+# 类型：说服某人（persuade）。报价：来信／代理人（L），auto=true，报价港韦拉克鲁斯（veracruz）。
+#       出面的是印书坊的学徒，不新建 cast，offer 的 speaker 省略。
+# 窗口：报价 1574-01-01 至 1590-06-30（offer 的 when 与 deadline）。之后各章不写窗口，靠 alive 与 wait 排开。
+# 章节：offer 一行不差的单子 → persuade 字是死的（委员上船，三条路）
+#       → result 少了十一枚（三条成功路线进入）或 result_half 只还了一半（argue 检定失败进入）。
+# 结构：分支靠 next 走到各自的章节，不靠互斥的旗标门禁。result 只由设了 returned 的三条路进入，
+#       所以 let_go 不写 requires。argue 失败单独走 result_half，写的是简报里的“降为折中”。
+# 引擎事实：检定失败时不显示选项的回复（crates/manifest-core/src/story2/queue.rs），
+#       失败的结果由下一章正文、分支见闻与变体交代。offer 的 check_list 失败设分支旗标 c13_request_lucia_missed，
+#       persuade 的变体 missed 读它，改写正文里学徒偷笑的那一句。
+# 依据（史实）：1571 年新西班牙设宗教裁判所；1570 年代起的查船，委员在韦拉克鲁斯上船查禁书；
+#       墨西哥城的印书坊在 1570 年代仍然开印。正文不写奥恰尔特本人的下场，只说印书坊又开印了。
+# 依据（原创）：卢西娅、印书坊的学徒、查船的委员（叙事人物，不起名、不建 cast）、被扣的那箱铅字、
+#       第七格多出的一枚、带尾巴的字母、仓租与保管费。
+# 待核：1572 年奥恰尔特被捕的细节（传闻口吻，正文不写）；查船委员的职衔与权限；仓租与保管费的算法；
+#       扣押清单用拉丁文还是西班牙文。正文一律用传闻口吻。
+# 秘密：cast 没有写秘密（secret 为“无须处理”）。本请托不碰 C7 的恋人线：不写安娜，不写心动，正文不写情愫。
+#       C7 的 pair_ana_cruz_lucia 线只读不写；本文件不读 c7_ 旗标，也不设 c7_ 旗标。
+# 依赖：唯一奖励无（reward_item 空）；技能 lang_latin（skills.toml）与地点 veracruz（ports_americas.toml）现成；
+#       无改名依赖；主线门禁无（gate_main 空）。
+# 读写的旗标：设 c13_request_lucia_accepted / declined / returned / missed / done / partial / late。
+#       终局旗标每条路径只设一面：done（let_go）、partial（ask_again、take_half、list_rest）、late（超时）、declined（回绝）。
+# 回忆插画清单：
+#   mem-request_lucia-result：烛光下，卢西娅闭着眼，一排一排地摸过去，摸到缺口那一格停住。
+
+[[tracks]]
+key = "request_lucia"
+name = "一箱铅字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["lucia"]
+
+# offer · 1574 起 · 韦拉克鲁斯码头：印书坊的学徒送来一张单子，一行不差
+[[tracks.chapters]]
+key = "offer"
+title = "一行不差的单子"
+text = "印书坊的学徒在码头上等你，手里攥着一张折了三道的单子。是卢西娅的字，排得比印出来的还齐：被扣的那箱铅字，哪一格是什么字母，多少枚，一格一格写着。她闭着眼都摸得出来，学徒说，这张单子她是一格一格摸过的。最后一行是她的话：“铅字是饭碗，不是罪证。下回他们上船查书，你替我说这一句。”学徒把单子往你手里一塞，又补一句：“她问你肯不肯去。”"
+mood = "tense"
+at = "veracruz"
+when = [{ kind = "date", from = [1574, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下单子，等查船的人来。"
+next = "persuade"
+effects = [{ kind = "affinity", person = "lucia", value = 2 }, { kind = "flag", flag = "c13_request_lucia_accepted" }]
+reply = "学徒把单子叠成四折，说她让他提醒你一句：单子上有一格的数，她故意写错了。看查船的人会不会一行一行地看。学徒说完就走，回头又补了一句：“你要是一眼找到了，就别在船上说大话。”"
+
+[[tracks.chapters.choices]]
+key = "check_list"
+text = "先把单子从头对一遍，找出她写错的那一格。"
+check = { attr = "numeracy", base = 35, per = 6 }
+next = "persuade"
+effects = [{ kind = "affinity", person = "lucia", value = 3 }, { kind = "flag", flag = "c13_request_lucia_accepted" }]
+fail = { next = "persuade", effects = [{ kind = "affinity", person = "lucia", value = -2 }, { kind = "flag", flag = "c13_request_lucia_accepted" }, { kind = "flag", flag = "c13_request_lucia_missed" }] }
+reply = "你找到了：第七格的数多了一枚。学徒把单子收回怀里，说她就是要看谁肯一行一行对。她自己挑了三遍，也只挑出过这一格。学徒说这话时没笑。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宗教裁判所的事，你不碰。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_lucia_declined" }]
+news = "韦拉克鲁斯码头上，印书坊的学徒等了半天，把一张单子叠好揣回怀里，说要回墨西哥城去。"
+reply = "学徒把单子叠好，揣回怀里，没有多说一句。走到码头口，他才回过头，说他会照原话告诉她。她要是问起你怎么答的，他就说你只说了“不碰”两个字。"
+
+# persuade · 30 天后 · 韦拉克鲁斯码头：查船的委员上了船，又到仓里看那箱铅字
+[[tracks.chapters]]
+key = "persuade"
+title = "字是死的"
+text = "查船的委员带着书记上了你的船，翻完你的书，又被你领到码头的仓里，看那箱铅字。书记先开了箱盖，一格一格对着清单念。委员拈起一枚，对着光看了看，放回格子里，动作很轻。字是死的，他说，排出来的东西才是活的。“所以要扣。”书记在一旁记下这一句，笔尖没停。"
+speaker = "captain"
+mood = "tense"
+at = "veracruz"
+when = [{ kind = "alive", person = "lucia", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等查船的委员到港" }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "lucia", value = -3 }, { kind = "flag", flag = "c13_request_lucia_late" }, { kind = "letter", person = "lucia", text = "查船的委员换了人，箱子还在仓里。我又写了一张单子，第七格还是错的。" }], news = "韦拉克鲁斯码头的仓里，扣了两年的那箱铅字没人来领，码头的人说它快在仓里烂掉了。" }
+news = "韦拉克鲁斯码头的仓里，一箱被扣了两年的铅字，听说要发还给墨西哥城的印书坊了。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说：铅字排什么，看排字的人；扣了字，祈祷书也印不成。"
+check = { attr = "eloquence", base = 5, per = 8 }
+next = "result"
+effects = [{ kind = "affinity", person = "lucia", value = 3 }, { kind = "flag", flag = "c13_request_lucia_returned" }]
+fail = { next = "result_half", effects = [{ kind = "affinity", person = "lucia", value = -2 }], news = "韦拉克鲁斯码头的仓里，一箱扣了两年的铅字，委员松了口，只肯还一半，另一半说是留着备查。" }
+reply = "委员把铅字放回格子里，说祈祷书的事他得写进报告。书记在报告上记了一行：发还。书记的笔尖停了一下，才落下去。委员临走又回头看了那箱字一眼，像是在数它。"
+
+[[tracks.chapters.choices]]
+key = "latin"
+text = "用拉丁文念出扣押清单上的原话：扣的是“书”，没写“字”。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60, hard = true }]
+hint = "清单上那几行拉丁文，你念到词尾就卡住了。"
+next = "result"
+effects = [{ kind = "affinity", person = "lucia", value = 5 }, { kind = "flag", flag = "c13_request_lucia_returned" }]
+reply = "委员接过清单看了一遍，脸色不太好看。可他还是在下面签了“发还”，签得很小，像是怕人看见。书记在一旁把清单又念了一遍，念到“书”那个词，停下来看了你一眼。"
+
+[[tracks.chapters.choices]]
+key = "custody_fee"
+text = "替印书坊交清这一年的仓租与保管费，把箱子领走。"
+requires = [{ kind = "cash", ge = 400 }]
+hint = "你身上的钱，垫不起这一年的仓租。"
+next = "result"
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "lucia", value = 3 }, { kind = "flag", flag = "c13_request_lucia_returned" }]
+reply = "书记收了钱，开了一张领货单，纸角的火漆盖得端正。委员没说话，只叮嘱一句：印什么，还是要先送来看。收据上写的是“仓租”和“保管”两个词，没有别的字眼。"
+
+[[tracks.chapters.variants]]
+key = "missed"
+when = [{ kind = "flag", flag = "c13_request_lucia_missed" }]
+text = "学徒在船边等你，远远看见你就笑，说你没找出第七格那个多出来的数。查船的委员随后上了船，翻完你的书，又被你领到码头的仓里，看那箱铅字。他拈起一枚，对着光看了看，说字是死的，排出来的东西才是活的。“所以要扣。”"
+
+# result · 60 天后 · 韦拉克鲁斯码头：学徒来取箱子，带来卢西娅的信
+[[tracks.chapters]]
+key = "result"
+title = "少了十一枚"
+text = "学徒过了两个月又来，这回是来取箱子。仓门开得很慢，他一直把手揣在怀里。他带着卢西娅的信，信上说她已经闭着眼把箱子摸了一遍，少了十一枚，都是带尾巴的那个字母。她写得很短：“地上有掉的铅字，捡起来给我，一个也不能少。”信的末尾，她问你要不要再写一张单子，把这十一枚也要回来。学徒站在一边，手里还攥着她的单子，等你开口。"
+speaker = "captain"
+mood = "cheerful"
+at = "veracruz"
+when = [{ kind = "alive", person = "lucia", value = true }]
+objectives = [{ kind = "wait", days = 60, text = "等学徒来取箱子" }]
+news = "韦拉克鲁斯码头上有人说，墨西哥城的印书坊又开印了，排字的女人闭着眼就知道箱子里少了几枚字。"
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "回信说：十一枚，就当是仓租，别再要了。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "lucia", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_lucia-result", title = "闭着眼数铅字" }, { kind = "flag", flag = "c13_request_lucia_done" }]
+reply = "她回了一行字：“好。少了的那个字母，我拿别的字母改出来，排出来一样认得。”信末附着一页新印的祈祷书，字排得很密。学徒把它交给你时说，这一页的字是卢西娅亲自拣的。"
+
+[[tracks.chapters.choices]]
+key = "ask_again"
+text = "回信说：再去要，十一枚也是饭碗。"
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "lucia", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lucia_partial" }]
+reply = "她回信说你比她还倔，可她不打算再要了，箱子回来就够了。钱照付，只是附言里多挑了你信里两个错字。附言的末了一行写着：下回别替我争，你争得太用力，我的字都要排歪了。"
+
+# result_half · 60 天后 · 韦拉克鲁斯码头：只还了一半，学徒推走半箱
+[[tracks.chapters]]
+key = "result_half"
+title = "只还了一半"
+text = "学徒来取箱子，只能推走一半。委员说另一半要留在仓里备查，等上头的回文，书记在清单上画了一道横线，又在旁边补了个日期。清单摊在木箱上，学徒一格一格指给你看，哪一格走了，哪一格留着。学徒推着车出仓门的时候，车轮声在码头上响了很久。卢西娅的信压在清单底下：“一半也好。另一半的数你替我列出来，书记照着点，少一枚都不认。”"
+speaker = "captain"
+mood = "sad"
+at = "veracruz"
+when = [{ kind = "alive", person = "lucia", value = true }]
+objectives = [{ kind = "wait", days = 60, text = "等学徒来取半箱" }]
+news = "韦拉克鲁斯码头上，印书坊的学徒推着半箱铅字出了仓门，另一半说要等上头的回文。"
+
+[[tracks.chapters.choices]]
+key = "take_half"
+text = "收下这半箱，另一半等回文再说。"
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "lucia", value = 4 }, { kind = "flag", flag = "c13_request_lucia_partial" }]
+reply = "学徒把半箱铅字装上车，车轮压过码头的石缝，颠得箱里的字一阵乱响。走前他说，她会把另一半的数记在单子上。学徒临上车，又站了一会儿，最后只说了一句：“她会记得是你替她留的半箱。”"
+
+[[tracks.chapters.choices]]
+key = "list_rest"
+text = "替她把另一半的数列成单子，让书记照单点。"
+check = { attr = "numeracy", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "lucia", value = 4 }, { kind = "flag", flag = "c13_request_lucia_partial" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "lucia", value = -2 }, { kind = "flag", flag = "c13_request_lucia_partial" }], news = "韦拉克鲁斯的书记点到一半，把数抄错了，重抄了三遍才肯放行，码头上的脚夫等得直骂。" }
+reply = "书记照单点完，一枚不差，连纸角的墨点都照抄了。学徒把单子带回去，卢西娅回信只有一行：“列得比我还整齐。”信纸背面，她用一枚铅字在角上盖了个小印。"

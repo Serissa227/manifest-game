@@ -1,0 +1,131 @@
+# 请托：黑船前的生丝（request_genroku）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：南蛮屋源六（genroku，1534-08-12 生，男），堺南蛮商家的儿子，1570 年起在长崎设分号；cast：cast/story_eastasia.toml，kind=story，势力 sakai。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（卸丝，堺的掌柜出高价，交货）、settle（黑船进港，结账）。没有 stage 章，因此没有 window 与 default；日期与人物存活写在 when 里。
+# 报价：T（当面）。auto=false，玩家在长崎（nagasaki）用“问请托”（ask:request_genroku）启动；offer 不写 at，目标是在港里找到他（日程 1570—1590 在长崎）。
+#       窗口 1572-01-01 至 1579-06-30（offer 的 when 与 deadline），timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：deliver 章 deadline_days=120（宁波到长崎，同在东海），超时走 failed：来信一封、好感 -3、旗标 _late；settle 是普通章（等三十天，黑船进港），可以一直等。
+# 依据·史实背景：1570 年长崎开港，葡萄牙的日本航船（黑船）每年从澳门运来生丝，船到之前与船到之后丝价起落；堺的商人在南蛮贸易里的分量。
+#       生丝从宁波的私市买（海禁之下），正文只说“宁波的丝”。
+# 依据·原创：源六账房里的三本账（黑船、堺、没写字的一本）、指甲划的那道印子、第十三捆受潮的丝、堺来的掌柜与他的折扇、封皮上的船名。
+# 秘密：cast 没写秘密；persona 里与若昂的事不写。C7 的两条线（pair_genroku_joao_fernandes、tie_extra_08_gu_zhao_genroku）一概不写，若昂、顾昭都不出场；
+#       窗口 1572—1579，避开 C7 的 1571 与 1580 两章（若 settle 拖到 1580 年初结算，正文也只写丝与账，不碰“寄进”）。
+# 待核：无。
+# 口头禅：只用招呼语“哎呀，稀客稀客！南蛮的好货刚到——先看，先看，价钱慢慢谈。”一次，放在 offer 开头；persona 里的“货可以晚，人别失约”本轨道不用。
+# 读的旗标：c13_request_genroku_priced（本轨道 offer 讲价成功设的分支旗标，deliver 的变体 v1_priced 读它）、c13_request_genroku_raised（deliver 加价成功设，settle 的变体 v1_raised 读它）。
+#       不读 C7 旗标；本请托没有主线门禁（gate_main、variant_main 都空）。
+# 设的旗标：c13_request_genroku_accepted（offer 两种接法）、_priced（offer 讲价成功，分支旗标）、_declined（offer 回绝，终局）、
+#       _raised（deliver 加价成功，分支旗标）、_late（deliver 超时，终局）、_done（settle 两条收尾，终局）。
+# 依赖：港口 nagasaki；货物 raw_silk（goods/02_manufactures.toml，基准价 110）；属性 commerce；人物 genroku。
+# 报酬（每份只给一次）：现金 1600（settle 一次）+ 货款 2750（deliver 两条分支与检定失败互斥，只付一次）；
+#       好感最多 +15（offer +2、deliver +5、settle +8）；名声 +3；回忆 mem-request_genroku-settle。没有唯一奖励物品，没有技能奖励，没有声望。
+# 回忆插画清单：
+#   mem-request_genroku-settle「封皮上的船名」：账房矮桌上并排摊着三本账，中间一本的封皮上新写着一条船的名字，旁边推开一架算盘。
+
+[[tracks]]
+key = "request_genroku"
+name = "黑船前的生丝"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["genroku"]
+
+# 一、报价：账房里挂着三本账，第三本一个字也没有。黑船迟了，堺的同行在压价，源六要先囤二十担丝。
+[[tracks.chapters]]
+key = "offer"
+title = "什么也没写的那本账"
+text = "南蛮屋的账房在仓后头，门帘一掀，源六先笑：“哎呀，稀客稀客！南蛮的好货刚到——先看，先看，价钱慢慢谈。”其实货一样也没到。墙上钉着三根竹钉，挂着三本账：一本封皮写“黑船”，一本写“堺”，第三本什么也没写。他说今年的黑船迟了，澳门那边连个信也没有，堺来的同行就在长崎放话，说船一到丝多得没处堆，趁人心慌压价收丝。“他们收，我也收。我要二十担，赶在黑船进港以前进我的仓。宁波的丝捻得紧，我认得。”他把第三本账摘下来翻开，头一页一个字也没有：“这一笔，记在这里。账分开记，最后一文也不让。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "genroku", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1572, 1, 1], to = [1579, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1579, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应从宁波运二十担丝来。"
+next = "deliver"
+reply = "他蘸了墨，在那本账的头一页写下你的船名，一笔一划写得很正，写完对着纸吹了两口气，又笑：“记上了，就跑不掉了。你跑不掉，我也跑不掉。”他把账挂回第三根竹钉，挂得比另外两本低一点，说是新账，先让它低着头。"
+effects = [{ kind = "affinity", person = "genroku", value = 2 }, { kind = "flag", flag = "c13_request_genroku_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "price_first"
+text = "先把价钱说死，免得到时候他一文不让。"
+next = "deliver"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "他笑得更开心了，拍着膝盖说，跟会算账的人做买卖最省事。你们一来一回讲了半盏茶的工夫，他在那本账的头一页写下你的船名，名字底下写一个数，用拇指的指甲在数底下划了一道，划得纸都起了毛：“这道印子在，墨能刮，它刮不掉。”"
+effects = [{ kind = "affinity", person = "genroku", value = 2 }, { kind = "flag", flag = "c13_request_genroku_accepted" }, { kind = "flag", flag = "c13_request_genroku_priced" }]
+fail = { next = "deliver", effects = [{ kind = "affinity", person = "genroku", value = 2 }, { kind = "flag", flag = "c13_request_genroku_accepted" }], news = "长崎南蛮屋的源六跟一个外乡船长讲丝的价钱，讲来讲去还是压下了一点，那船长笑着认了，照样接下这趟丝。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宁波的丝，我不碰。"
+next = "failed"
+reply = "他把那本账合上，挂回竹钉，挂得端端正正：“那它就再空一阵子。”说完照样笑着送你到门口，顺口问你船上有没有南蛮的玻璃要出手。你说没有，他也不恼：“那下回有了，先往我这儿拐一趟。”"
+effects = [{ kind = "flag", flag = "c13_request_genroku_declined" }]
+
+# 二、交货：二十担丝卸进仓，第十三捆受了潮；堺的掌柜上门，出高一成的价整批买走。
+[[tracks.chapters]]
+key = "deliver"
+title = "高一成的价"
+text = "二十担丝从船上卸下来，脚夫扛着往南蛮屋的仓里送。源六不让人码，自己蹲在仓门口，一捆一捆地捏，捏完凑到鼻子底下闻。捏到第十三捆，他皱了一下眉，把捆绳解开半截，摸了摸里头，又系上，搁到墙角，什么也没说。仓门外有人咳嗽。来的是堺的一个掌柜，穿着上方的绸褂子，手里一把折扇合着：“源六殿，这批丝，我们出比你高一成的价，整个买走。”他说话时不看源六，看的是你。源六还蹲着，手里捏着第十四捆，笑嘻嘻的，没站起来。"
+speaker = "captain"
+mood = "tense"
+at = "nagasaki"
+when = [{ kind = "alive", person = "genroku", value = true }]
+objectives = [{ kind = "goods", good = "raw_silk", qty = 20, at = "nagasaki", text = "二十担宁波的丝" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "genroku", text = "黑船先到了，价钱塌了一半。那本账，我还空着。" }, { kind = "affinity", person = "genroku", value = -3 }, { kind = "flag", flag = "c13_request_genroku_late" }] }
+news = "长崎的南蛮屋赶在黑船进港前囤了二十担生丝，堺来的同行出高价没买走。"
+
+[[tracks.chapters.variants]]
+key = "v1_priced"
+when = [{ kind = "flag", flag = "c13_request_genroku_priced" }]
+text = "二十担丝从船上卸下来，脚夫扛着往南蛮屋的仓里送。源六不让人码，自己蹲在仓门口，一捆一捆地捏，捏完凑到鼻子底下闻。捏到第十三捆，他皱了一下眉，把捆绳解开半截，摸了摸里头，又系上，搁到墙角，什么也没说。仓门外有人咳嗽。来的是堺的一个掌柜，穿着上方的绸褂子，手里一把折扇合着：“源六殿，这批丝，我们出比你高一成的价，整个买走。”你想起账上那道指甲印子——那个数是你跟源六说死的，堺的人一开口就比它高。掌柜说话时看的是你。源六还蹲着，笑嘻嘻的，没站起来。"
+
+[[tracks.chapters.choices]]
+key = "stay_deal"
+text = "说好卖给源六，就卖给源六。"
+next = "settle"
+reply = "堺的掌柜把扇子打开又合上，说了一句“可惜”。源六这才站起来，拍掉膝上的丝屑，一句话没说，回账房把那本账翻到头一页，蘸墨把你的船名又描了一遍，描得比原来粗。堺来的人出门的时候，回头看了你两眼。"
+effects = [{ kind = "cash", value = 2750 }, { kind = "affinity", person = "genroku", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "raise"
+text = "当着两边的面，让源六也加一成。"
+next = "settle"
+check = { attr = "commerce", base = 5, per = 8 }
+reply = "源六看看你，又看看堺的掌柜，笑出了声，一拍大腿就加了。掌柜的扇子停在半空。源六当着他的面在账上改了数，一边写一边说：“这一成，我从堺那边找回来。”他说的堺那边，就站在仓门口。"
+effects = [{ kind = "cash", value = 2750 }, { kind = "affinity", person = "genroku", value = 2 }, { kind = "flag", flag = "c13_request_genroku_raised" }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 2750 }, { kind = "affinity", person = "genroku", value = -2 }], news = "长崎南蛮屋的仓门口，有个外乡船长当着堺来的掌柜逼源六加一成价，源六掰着指头算了半天，只肯加半成。" }
+
+# 三、结账：黑船吃水浅，丝价跳了。三本账并排摊开，没写字的那本写满了半本。
+[[tracks.chapters]]
+key = "settle"
+title = "一文不让，一文不少"
+text = "黑船是在一个起雾的早上进港的，吃水浅得出奇，舱里的丝比往年少了一截。不到晌午，长崎的丝价就跳了，堺的掌柜们在码头上来回走，扇子摇得飞快。源六把账算完，叫你进账房。三本账并排摊在矮桌上：“黑船”那本记着今年的船期，“堺”那本记着别人压过他的价，原来什么也没写的那本，写满了半本——二十担丝哪天到、卖给了谁，一笔一笔，连第十三捆晒了两天才出手也记着。他把算盘推到一边，手按在那半本上：“这本账，往后要不要接着记？”"
+speaker = "captain"
+mood = "cheerful"
+at = "nagasaki"
+when = [{ kind = "alive", person = "genroku", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等黑船进港" }]
+news = "长崎的南蛮屋这一季赚了，老板笑嘻嘻地跟人说，那本新账是一个外乡船长的。"
+
+[[tracks.chapters.variants]]
+key = "v1_raised"
+when = [{ kind = "flag", flag = "c13_request_genroku_raised" }]
+text = "黑船是在一个起雾的早上进港的，吃水浅得出奇，舱里的丝比往年少了一截。不到晌午，长崎的丝价就跳了，堺的掌柜们在码头上来回走，扇子摇得飞快。源六把账算完，叫你进账房。三本账并排摊在矮桌上，原来什么也没写的那本，写满了半本。他先指着那个改过的数：“那一成，我从堺那边找回来了。找回来的，比加给你的多。”说着翻到“堺”那本，最后一行墨还没干。他把算盘推到一边，手按回那半本上：“这本账，往后要不要接着记？”"
+
+[[tracks.chapters.choices]]
+key = "keep_book"
+text = "接着记，下回还找我。"
+next = "done"
+reply = "他把账本合上，封皮转过来给你看：封皮上新写了你的船名，墨已经干了，看来你进门以前他就写好了。“这本，就是你的账了。”付钱的时候，他把铜钱和碎银一样一样数过去，一文也没让，也一文没少。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "genroku", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_genroku_done" }, { kind = "memory", memory = "mem-request_genroku-settle", title = "封皮上的船名" }]
+
+[[tracks.chapters.choices]]
+key = "close_book"
+text = "这一笔记完，就合上吧。"
+next = "done"
+reply = "他点点头，在最后一行底下划了一道，把账本合上，用细绳捆了两道，挂回第三根竹钉。“合上的账最好看，一文也不欠。”他付钱时数得很快，数完自己又数了一遍，才推到你面前。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "genroku", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_genroku_done" }]

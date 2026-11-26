@@ -1,0 +1,186 @@
+# C13a 主线·巴拉卡·亚特兰蒂斯补章「金之河·外港」（故事 2.0，A5 / E37 契约）
+# 2026-11-01 接回登记（C13 收尾）：A8 E63 的帷幕（realms.toml 的 atlantis：钥匙 tabula_smaragdina，另要 c11_atlantis_key_ready、判词不是“合上”）与 C11 的十王会议
+#   （stories/c11_realms.toml 的 atlantis_council，设 atlantis_council_met 与判决旗标）都已在世界里，本文件登记进 world.toml；下文写“暂存 / 不登记”的注释是当时的情形。
+#   接线：每个通向 done / failed 的分支（含 at1 超时）设 c13_main_baraka_atlantis_over，主线“那以后”章 c04_after 的 when 读它；at1 期限由 1584-12-31 收到 1583-12-31（黑暗之海窗口止于 9-30，没进外港的局早点放行主线）。
+# 标签：main；主角巴拉卡（baraka，基尔瓦的船长，1540 年生）。本文件的“我”是巴拉卡（speaker = captain）。
+# 轨道：main_baraka_atlantis（kind = main，auto = true，start = at1_coins），三章：
+#       at1 外港的铜币 → at2 十王面前的诸城 → at3 所罗门没来过的地方（个人终章）。
+#       暂存：A8 的 E63（帷幕、atlantis_port 可达）与 C11 第二轮（atlantis_council 轨道、atlantis_council_met 与判决旗标）合进来以前，
+#       整合方不登记本文件与它的英文覆盖。不登记时 main_baraka 照样完整（召请 → 黑暗之海 → 那以后 → 第三幕余下各章）。
+# 依据：
+#   史实与古典——柏拉图《克里提亚斯篇》（113d—120d）：运河从海上穿进内城、环墙包着铜、锡与山铜、林中的大象、
+#       一冷一热两眼泉、十王在律法柱前的会议、天亮后刻在金板上的判词。只按原文复原，不添新景物；判决内容归 C11。
+#   史实——基尔瓦苏丹国的铜币与铭文（背面的半行字），只作为物件出现，不写年号。
+#   原创——钱商的木盘、母亲的铜币与它的“亲戚”、七城主教后人的钥匙、里斯本冒险者后代画的回程图、
+#       判词边上那行小字（只作传闻，归 C11 的判决旗标）。
+# 读的旗标（均由 main_baraka 设定，本文件只读）：
+#   c13_main_baraka（门槛，main_baraka a00_gate 的 default 设）；
+#   c13_main_baraka_crossed（main_baraka 黑暗之海章的穿越选项设）——at1 的门槛；
+#   c13_main_baraka_keepsake（main_baraka 召请章的选择设；超时不设）——at1 give_coin 的门槛；
+#   c13_main_baraka_league_sworn（main_baraka b08 盟誓章的 default 设）——at2 oath 的门槛；
+#   c13_main_baraka_history_begun（main_baraka a06 的“开始写”设）——at3 last_page 的门槛；
+#   atlantis_council_met（C11）——at2 的变体 met。
+# 设的旗标：无。主线读不到的旗标不设（补章未登记时，主线读它会因“旗标没有来源”加载失败）；不设 done / end（终章 main_baraka 才设）。
+# 物品：无（母亲的铜币是回忆，不写 item 条件）。
+# 检定：at1 weigh —— commerce，base 20 per 7（一般）；at2 joke —— eloquence，base 20 per 7（一般）。
+#       两者失败分支的 news 就是玩家看到的失败回复（也进见闻）。
+# 缺省走向：
+#   at1 期限 1584-12-31，到期静默结束（next = failed，不写见闻、不写效果）。
+#   at2 期限 1584-12-31，到期静默结束。
+#   at3 期限 1585-06-30，到期静默结束。
+#   普通章不写 window；不写 default。
+# 等待的包：A8 E63（帷幕、atlantis_port 可达）；C11 第二轮（atlantis_council 轨道、会议与判决旗标）。
+# HIST 占位：无。
+# 回忆插画清单：
+#   mem-main_baraka_atlantis-at1「外港的铜币」：钱商的木盘里，一枚磨平的铜币和一枚崭新的铜币并排放着，旁边是一只打开的黄铜砝码箱。
+#   mem-main_baraka_atlantis-at3「没来过的地方」：运河边大象在喝水，环墙在太阳下发红光，码头上一个老妇人在画回去的海图。
+# 禁区：不写十王会议的判决与十王的长相、名字（归 C11）；不写带银枝的女人；
+#       不写弥助的秘密（main_baraka c01 才揭开）；见闻不写秘密；不写精灵；不写恋爱。
+
+[[tracks]]
+key = "main_baraka_atlantis"
+name = "金之河·外港"
+kind = "main"
+start = "at1_coins"
+auto = true
+cast = ["baraka"]
+
+# ───────────────────────── at1 外港的铜币 ─────────────────────────
+# 普通章，at 外港，限期。门槛：巴拉卡是主角、穿过了黑暗之海。到期静默结束。
+[[tracks.chapters]]
+key = "at1_coins"
+title = "外港的铜币"
+text = "外港的集市上什么话都有：古葡萄牙话讨价，拉丁文的祷词，还有几句我听不出是哪里的。钱商的木盘摆在码头的货堆上，码着几百年的钱：罗马的银币，拜占庭的金币，还有一小撮基尔瓦苏丹的铜币。七城主教的后人腰上挂着七把旧钥匙，正拿一把去试钱商的钱箱，试了两把都不对。伊斯梅妮站在码头上，先问我的来意：“你从哪片海来，我不急着问。你来做什么，我先问。”我把母亲那枚磨平了的铜币放在手心上。钱商探过身来，把它和盘里一枚崭新的并排放下：“这两枚是一窑出来的。你母亲那枚，走了远路。”我心里想：母亲，你的钱在这里有亲戚。"
+speaker = "captain"
+mood = "mystic"
+at = "atlantis_port"
+cast = ["ismene", "drifter_seven_cities"]
+night = false
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "flag", flag = "c13_main_baraka_crossed" }]
+deadline = [1583, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "give_coin"
+text = "把母亲的铜币交给伊斯梅妮，放在律法柱前"
+requires = [{ kind = "flag", flag = "c13_main_baraka_keepsake" }]
+hint = "那枚铜币你留在了基尔瓦。"
+reply = "伊斯梅妮双手接过去，没有立刻放下，先翻到背面，把那半行字念了出来。我母亲一直不知道上面写的是什么，只说那是这枚钱的名字。念完，她把钱放在柱前的石台上：“柱前的东西，十王都要看。”"
+next = "at2_council"
+effects = [{ kind = "memory", memory = "mem-main_baraka_atlantis-at1", title = "外港的铜币" }]
+news = "外港的集市上有人说，一个从基尔瓦来的船长把一枚旧铜币放上了律法柱前的石台，女祭司当场念出了背面的字。"
+
+[[tracks.chapters.choices]]
+key = "weigh"
+text = "打开砝码箱，替钱商称一块红光的铜"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "基尔瓦的砝码称亚特兰蒂斯的山铜，差了一点。钱商说差的那一点是海水的分量，我说那就按干的算。他笑着数出钱来，比谈好的多了一把。"
+next = "at2_council"
+effects = [{ kind = "cash", value = 2000 }]
+news = "外港的钱商今天用一个基尔瓦人的砝码称了一块红铜，差了一点，他说那是海水的分量，最后多付了一把钱。"
+fail = { next = "at2_council", effects = [{ kind = "cash", value = 800 }], news = "外港的钱商说，前天有个基尔瓦来的船长替他称红铜，砝码不准，称了半天，只付了一半的钱，说那是看热闹的钱。" }
+
+[[tracks.chapters.choices]]
+key = "trade_tales"
+text = "跟七城主教的后人换故事：他讲七座城，我讲七条船"
+reply = "我讲基尔瓦老人的话：设拉子来了七条船，船数对得上，上岸的人数对不上。他讲海那边的七座城，数到第七，我们都说少了一个。他借了一把钥匙给我试砝码箱的锁，打不开，他很高兴，说这说明箱子还是我的。"
+next = "at2_council"
+effects = [{ kind = "affinity", person = "drifter_seven_cities", value = 6 }]
+news = "外港的酒馆里，七城主教的后人和一个基尔瓦来的船长换了一夜故事，两人都说对方少讲了一座城。"
+
+# ───────────────────────── at2 十王面前的诸城 ─────────────────────────
+# 普通章，at 外港，限期。无门槛（at1 的任一选项都会把它排进队列）。到期静默结束。
+[[tracks.chapters]]
+key = "at2_council"
+title = "十王面前的诸城"
+text = "会议那一夜，火熄了，只剩海浪声。十王审的是外面的世界，外来的人坐在柱子背后的石阶上，可以说一句话。守柱的人低声提醒：“只能说一句。”我想起父亲页边那个“不对”：外人写我们，写错了。轮到这里的人写外面，他们会不会也写错？伊斯梅妮站在柱前，誓词一句一句念下去，念到末了才抬眼看我：“把誓词读完，再碰那根柱子。”我心里想：在马林迪是一只铜盆，在这里是一根柱子，说的都是同一件事，别把我们漏了。"
+speaker = "captain"
+mood = "mystic"
+at = "atlantis_port"
+cast = ["ismene"]
+night = false
+deadline = [1584, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "oath"
+text = "把马林迪铜盆里的盟誓念给十王听"
+requires = [{ kind = "flag", flag = "c13_main_baraka_league_sworn" }]
+hint = "你手里没有一份诸城共同起过的誓。"
+reply = "我念完，没有人说话。后来伊斯梅妮告诉我，金板的边上多添了一行小字，写的是几座城的名字。她说那是律法允许的最小的字。"
+next = "at3_no_solomon"
+effects = [{ kind = "fame", value = 3 }]
+news = "外港的人说，十王会议那一夜，一个基尔瓦人念完了马林迪的盟誓，没有人说话，判词的边上却多了一行字。"
+
+[[tracks.chapters.choices]]
+key = "joke"
+text = "讲一个砍价的故事，让金板前的人笑一次"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我讲一个商人跟我砍价，砍到一半，他忘了自己还要还价，我就替他把话全说完了。黑暗里有一个人先笑出声，接着是第二个。伊斯梅妮后来说，十王的会议上，三百年没人笑过。"
+next = "at3_no_solomon"
+effects = [{ kind = "fame", value = 3 }]
+news = "外港的人说，十王会议那一夜，有个基尔瓦的船长讲砍价的故事，黑暗里先有人笑出声。"
+fail = { next = "at3_no_solomon", effects = [], news = "外港的人说，十王会议那一夜，有个基尔瓦的船长讲了个砍价的笑话，金板前没有一个人笑。" }
+
+[[tracks.chapters.choices]]
+key = "weights"
+text = "什么也不说，把父亲的砝码箱放在石阶上"
+reply = "箱子放下去，铜碰石头，响了一声。我想十王听得懂：这一声，是一个称了一辈子金子的人说的“对”与“不对”。"
+next = "at3_no_solomon"
+effects = [{ kind = "growth", attr = "honor", value = 200 }]
+news = "外港的人说，会议那一夜，一个基尔瓦来的船长什么也没说，只把一只黄铜箱子放在柱前的石阶上，铜碰石头，响了一声。"
+
+[[tracks.chapters.variants]]
+key = "met"
+when = [{ kind = "flag", flag = "atlantis_council_met" }]
+text = "天亮以后，金板上的判词已经刻好了一半，我是被领进来补一句的。石阶上没有空位了，守柱的人让我站到第二级，压低声音说：“说话的时候别回头。”伊斯梅妮站在柱前，把誓词从头念给我听，念到一半停下来，看我一眼：“你的那一句，要落在哪一段？”她念的是律文，我听出来的是另一句话。我心里想：在马林迪是一只铜盆，在这里是一根柱子，说的都是同一件事，别把我们漏了。"
+
+# ───────────────────────── at3 所罗门没来过的地方 ─────────────────────────
+# 普通章，个人终章，at 外港，限期。到期静默结束（next = failed，不写见闻、不写效果）。
+# 终章不设 main_baraka 读的旗标；选项之后直接 done。
+[[tracks.chapters]]
+key = "at3_no_solomon"
+title = "所罗门没来过的地方"
+text = "会议以后的那个早上。运河从海上一直穿进内港，河边有大象在喝水；环墙包着的铜与山铜在太阳下发红光。这里有河，有金子，可金子不称，它是一层一层包在墙上的。官方的葡萄牙船没来过这里，漂进来的人都是出海以后再没回去的。码头上，里斯本冒险者的后代老妇人在画海图，画的是回去的路。她把笔在水盆里涮了涮，墨一下散开，成了一片海的颜色。她头也不抬：“别人画来路，我画回去的路。你说个地名。”我说：“基尔瓦。退潮的时候从南边进港，涨潮的时候别进。”她问：“基尔瓦还在吗？”我答不上来。我心里想：这里没人为金子的分量吵架，我倒有点想吵。"
+speaker = "captain"
+mood = "tender"
+at = "atlantis_port"
+cast = ["drifter_lisbon"]
+night = false
+deadline = [1585, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "last_page"
+text = "在史书最后一页写下这座岛，不写它的名字"
+requires = [{ kind = "flag", flag = "c13_main_baraka_history_begun" }]
+hint = "你没写过诸城的事，这一页没处安放。"
+reply = "我写：海的那一边有一座不称金子的城，城里的人收我们三百年前的铜钱。没写名字，也没写怎么去。写到一半我想起父亲的书，外人写的那几页，他在页边写“不对”。我没在我的页边写什么。写完，我把那一页折了个角，是父亲的习惯。"
+next = "done"
+effects = [{ kind = "memory", memory = "mem-main_baraka_atlantis-at3", title = "没来过的地方" }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+news = "外港的码头上有人说，一个基尔瓦来的船长在写他的史书，写到最后一页，写了一座岛，偏偏没写岛的名字。"
+
+[[tracks.chapters.choices]]
+key = "chart_home"
+text = "请老妇人画一条回基尔瓦的路"
+reply = "她画得很慢，画到好望角停下来问我那边的风。我讲了，她照着改了一笔。又问北边有没有冰，我说没有，她笑了，说她祖母也这么说。图上的基尔瓦画得太大，我没说，她也没问。卷好图递给我的时候她说：“回去以后，别把它画得更大。”"
+next = "done"
+effects = [{ kind = "affinity", person = "drifter_lisbon", value = 6 }, { kind = "memory", memory = "mem-main_baraka_atlantis-at3", title = "没来过的地方" }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+news = "外港的码头上，里斯本冒险者的后代替一个基尔瓦来的船长画回程的海图，画到好望角停了很久。"
+
+[[tracks.chapters.choices]]
+key = "elephants"
+text = "去运河边看大象过河，不拿笔，只看"
+reply = "大象过河的时候，河水漫过它们的膝盖，像索法拉的雨季。最小的那头最后下水，一步一步试着踩，母象在对岸等它，不催。我在河边坐了一上午，一个笑话也没讲。回去的路上才想起来，该给伊斯梅妮讲一个。"
+next = "done"
+effects = [{ kind = "growth", attr = "sensibility", value = 200 }, { kind = "memory", memory = "mem-main_baraka_atlantis-at3", title = "没来过的地方" }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+news = "外港的运河边，有大象在河里过了一个上午，岸上站满了看的人，没有一个人说话。"

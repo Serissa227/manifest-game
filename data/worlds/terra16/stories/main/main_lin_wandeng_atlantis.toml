@@ -1,0 +1,179 @@
+# 主线补章·林晚灯·外港的灯（暂存，故事 2.0，A5 / E37 契约，C13a 第九批，Claude 写，仅中文）
+# 2026-11-01 接回登记（C13 收尾）：A8 E63 的帷幕（realms.toml 的 atlantis：钥匙 tabula_smaragdina，另要 c11_atlantis_key_ready、判词不是“合上”）与 C11 的十王会议
+#   （stories/c11_realms.toml 的 atlantis_council，设 atlantis_council_met 与判决旗标）都已在世界里，本文件登记进 world.toml；下文写“暂存 / 不登记”的注释是当时的情形。
+#   接线：每个通向 done / failed 的分支（含 at1 超时）设 c13_main_lin_wandeng_atlantis_over，主线“那以后”章 c05_returned 的 when 读它；at1 期限由 1584-12-31 收到 1583-12-31（黑暗之海窗口止于 9-30，没进外港的局早点放行主线）。
+#   at2 期限 1585-06-30 收到 1583-10-15（理由同上，会议窗口止于 9-30）；at2 超时也设 _atlantis_over：at3 在外港，没赶上会议的玩家多半已经离港，主线 c05_returned 不必等他回来。
+#   at3 的 leave_lamp 另设 c13_main_lin_wandeng_lamp_left（主线 c05_returned、c12 的“灯笼不在身上”变体读）。
+# 标签：主线补章；主角林晚灯（lin_wandeng，1540 年生，月港林家的女儿）。本文件的“我”是晚灯（speaker = captain），1583—1585 年她四十三到四十五岁。
+# 轨道：main_lin_wandeng_atlantis（kind = main，auto = true，start = at1_two_harbor_lamps），三章：
+#       at1 外港的灯 → at2 黑地里的一句话 → at3 灯的去处。
+# 登记：暂存。A8 的 E63（帷幕、atlantis_port 可达）与 C11 第二轮（atlantis_council 轨道、atlantis_council_met、判决旗标、
+#       合进来以前，整合方不登记本文件。不登记时主线照样完整：
+#       c03 召请 → c04 黑暗之海 → c05 那以后 → 第三幕余下各章；主线 c12 不读本文件设的任何旗标。
+# 依据·史实与古典：柏拉图《克里提亚斯篇》里的环形外港、包着铜（再往里是锡）的外墙，以及十王在夜里熄了火、在黑暗中议事的习俗（TERRA16 §6.1、§8.5，H56）。
+#       只从人物的眼睛与物件里透出来，不讲课；不写献祭与血。
+# 依据·原创：天妃宫的红纸灯笼（竹骨上补过的地方、背面糊歪的一圈）、外港最外一圈尽头的空铜桩、
+#       伊斯梅妮（cast/story_atlantic.toml，1564 年生，最年轻的“克莱托”，只守庙、不谈情）、
+#       晚灯在会上说的三句话。闽南俗语每章至多一句，全写成普通话的意思：at1 “输人不输阵”，at3 “好天着积雨来粮”（正文只写意思）。
+# 秘密：本文件不涉及林晚灯的任何秘密；女扮男装已由 C7 在 1556 年独占揭开，这里不提。
+#       牵星图末页的“西洋之西”也不再出现（c03、c04 已用完）。
+# 不写：十王会议本身的进程与判决（归 C11 的 atlantis_council）；
+#       伊斯梅妮不谈恋爱；本文件不设 heart / relation / tie / bond 效果。
+# 读的旗标：
+#   c13_main_lin_wandeng（身份旗标，main_lin_wandeng a00_gate 的 default 设）；
+#   c13_main_lin_wandeng_crossed（main_lin_wandeng c04_dark_sea 的穿过分支设，at1 门槛）；
+#   c13_main_lin_wandeng_two_lamps（main_lin_wandeng a10_two_lamps 设，at1 变体）；
+#   atlantis_council_met（C11 设，at2 门槛）；atlantis_verdict_open / atlantis_verdict_close（C11 设，at2 变体）；
+#   c13_main_lin_wandeng_at_lamp_shown（本文件 at1 设，at3 变体读）。
+# 设的旗标：c13_main_lin_wandeng_at_lamp_shown（at1 的 show_lamp）。不设 done 与 end_*（终局归主线 c12）。
+# 物品与效果：tianfei_lantern（天妃宫的灯笼，开局随身）——at1 的 show_lamp、at3 的 leave_lamp 都要持有，leave_lamp 交出（qty -1）；
+#       称号“替雾里点灯的人”（at3 leave_lamp）；亚特兰蒂斯势力声望 +2（at2 say_open）；伊斯梅妮的好感（at1、at2、at3 各选项）。
+# 缺省走向：at1 期限 1584-12-31，timeout 去 failed、不写见闻（没有帷幕、到不了外港时静默结束）；
+#       at2 期限 1585-06-30，timeout 无效果、去 at3；at3 期限 1585-12-31，timeout 无效果、去 done。
+# 见闻：三章都有 at，转折与收尾写在各选项上；章节级 news 留空（避免超时时引擎拿它顶上）。
+# 回忆插画清单（mem-main_lin_wandeng_atlantis-*）：
+#   at1 外港的灯：泛着金属光的环形码头上，一盏小红纸灯笼是唯一的火，年轻的女祭司俯身看它的竹骨。
+#   at2 黑地里的一句话：熄了火的大殿漆黑一片，只看得见一只金杯的边沿和一个女船主腰间熄着的小纸灯笼。
+#   at3 灯的去处：雾中的环形码头尽头，一根铜桩上挂着一盏小红纸灯笼，年轻的女祭司踮脚剪灯芯，远处一条鸟船驶进雾里。
+# 待交付给整合方：见交付说明（A8 E63、C11 第二轮）。
+
+[[tracks]]
+key = "main_lin_wandeng_atlantis"
+name = "外港的灯"
+kind = "main"
+start = "at1_two_harbor_lamps"
+auto = true
+cast = ["lin_wandeng", "ismene"]
+
+# at1 外港的灯：夜里的环形码头，墙自己亮，没有一盏火；晚灯腰上的红纸灯笼是全港唯一的火。
+# 伊斯梅妮先问来意，再问灯。要紧的物件是灯笼竹骨上补过的地方。
+[[tracks.chapters]]
+key = "at1_two_harbor_lamps"
+title = "外港的灯"
+text = "外港的码头一圈一圈往里收，最外一圈的墙裹着铜，夜里不点灯也泛着光。我走了半圈，没找到一盏火点的灯。腰上这盏红纸灯笼成了全港唯一的一团火，火苗被海风吹得直歪，我下意识拿手去拢。码头尽头站着个年轻的女祭司，等我走到跟前才开口：“来意先讲。你替哪位王办事，不急，晚一点报也行。”俗话说输人不输阵，我把腰挺直了，咧嘴笑：“客官问得好，我先来看一看。”她没笑，眼睛一直落在我腰上：“那是什么？”我心里想：全港只有我一盏火，我反倒不怕灭了。她把手伸过来，离纸面还有一指，停住，又缩了回去。“很多年没人见过会怕风的火了。”她说。"
+mood = "mystic"
+speaker = "captain"
+at = "atlantis_port"
+night = true
+cast = ["ismene"]
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng" }, { kind = "flag", flag = "c13_main_lin_wandeng_crossed" }, { kind = "date", from = [1583, 4, 1] }]
+deadline = [1583, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "show_lamp"
+text = "把天妃宫的灯笼解下来递给她，讲它的来历"
+requires = [{ kind = "item", item = "tianfei_lantern", qty = 1 }]
+hint = "灯笼不在你身上；你只能比划它的样子，她看不出竹骨上补过的地方。"
+effects = [{ kind = "flag", flag = "c13_main_lin_wandeng_at_lamp_shown" }, { kind = "affinity", person = "ismene", value = 5 }, { kind = "memory", memory = "mem-main_lin_wandeng_atlantis-at1", title = "外港的灯" }]
+next = "at2_council_word"
+reply = "她两手捧着灯笼翻过来看：看竹骨上补过的那一截，看补过三回的纸，连背面糊歪的那一圈也看。我讲这盏灯在天妃宫檐下挂了几十年，出海人家的女人轮着添油，还替我挡过一回巡检的盘问，讲着讲着自己先笑出了声。她听得认真，没问巡检是什么。看了很久，她把灯还进我手里：“糊歪的那一圈，也没有偷懒。明天的会上，带着它。”"
+news = "亚特兰蒂斯外港的夜里，一个海上来的女船主把红纸灯笼递给守律法柱的女祭司，那是全港唯一的一团火。"
+
+[[tracks.chapters.choices]]
+key = "ask_rules"
+text = "先问她：这港里的灯，是谁来点的？"
+effects = [{ kind = "affinity", person = "ismene", value = 3 }]
+next = "at2_council_word"
+reply = "“墙自己会亮。”她说，“从来没有人点过。”我说那你们一定不知道怕灯灭是什么滋味，半夜起来摸黑去看灯芯还在不在的滋味。她低头想了想，那面墙的光在她脸上淡淡地晃。过了好一阵，她点了点头，说明天会上有人要问我的话，让我今晚先睡。"
+news = "听说亚特兰蒂斯外港的墙自己会亮，有个海上来的女船主问港里的灯是谁点的，守庙的女祭司说，从来没人点过。"
+
+[[tracks.chapters.variants]]
+key = "two_lamps"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng_two_lamps" }]
+text = "外港的码头一圈一圈往里收，最外一圈的墙裹着铜，夜里不点灯也泛着光。我走了半圈，没找到一盏火点的灯。腰上这盏红纸灯笼成了全港唯一的一团火，火苗被海风吹得直歪，我下意识拿手去拢。我想起久米村殿檐下那一夜，两盏灯挨着挂；这里找不到第二盏。码头尽头站着个年轻的女祭司，等我走到跟前才开口：“来意先讲。你替哪位王办事，不急，晚一点报也行。”俗话说输人不输阵，我把腰挺直了，咧嘴笑：“客官问得好，我先来看一看。”她没笑，眼睛一直落在我腰上：“那是什么？”我心里想：全港只有我一盏火，我反倒不怕灭了。她把手伸过来，离纸面还有一指，停住，又缩了回去。“很多年没人见过会怕风的火了。”她说。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_main_lin_wandeng_atlantis_over" }]
+
+# at2 黑地里的一句话：会场的火全熄了，十个王坐在看不见的地方。晚灯只许说一句，说出口的不是路上想好的那一句。
+# 三句话各配各的后果；会议的判决归 C11，这里只在变体末尾加一句判词。
+[[tracks.chapters]]
+key = "at2_council_word"
+title = "黑地里的一句话"
+text = "会场里的火全灭了。伊斯梅妮领我进门时就说过，这里不许有火，我腰上那盏灯笼熄着，纸壳贴在腿边，凉的。黑地里坐着十个王，一张脸也看不见，只听见穿深蓝长袍的人一个接一个替外面的世界说话，说完就退出去。轮到我，伊斯梅妮在黑里碰了碰我的手背：“只许一句。说你自己的，不要说你的王的。”我一路上想了好几句。想起天妃宫墙上那行被刮花的“倭国不许”，想起登州空了的炮台，想起那霸老妇人手里攥着的信。一句话装得下哪一样？平时灯一跳，我的话就少；今晚没有灯可跳，话照样一个字也不肯出来。我吸了口气，张开嘴。出来的不是想好的那一句。"
+mood = "tense"
+speaker = "captain"
+at = "atlantis_port"
+night = true
+cast = ["ismene"]
+when = [{ kind = "flag", flag = "atlantis_council_met" }, { kind = "date", from = [1583, 4, 1] }]
+deadline = [1583, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "say_open"
+text = "说：“海是大家的路，禁得住船，禁不住人。”"
+effects = [{ kind = "reputation", faction = "atlantis", value = 2 }]
+next = "at3_where_lamp_goes"
+reply = "黑地里有人用指节在金杯沿上轻轻敲了一下，叮的一声，不知道是赞成还是反对。没有人接话。我退到门边，才发觉后背全湿了。伊斯梅妮跟出来，压低声音问：“你们那里的禁，是怎样禁的？”我说，一张告示，一队兵，再加一个收钱的人。她听完，半晌没说话。"
+news = "亚特兰蒂斯外港的夜会上，海上来的女船主说，海是大家的路，禁得住船，禁不住人。"
+
+[[tracks.chapters.choices]]
+key = "say_close"
+text = "说：“开了海，有人发财，也有人死。你们想清楚再开。”"
+effects = [{ kind = "affinity", person = "ismene", value = 5 }]
+next = "at3_where_lamp_goes"
+reply = "伊斯梅妮的手在黑里握了我一下，很快松开，指尖是凉的。前头有人咳了一声，有人翻动了长袍。我知道这句话得罪了想开的那些人。可我见过码头上从船里抬下来的人，说出来的时候，舌头没打一下结。出门以后她问我，怕不怕。我说怕，我怕鬼，怕黑，怕灯灭，今晚三样都占全了。她点点头，没再问。"
+news = "亚特兰蒂斯外港的夜会上，海上来的女船主说，开了海有人发财也有人死，叫十位王想清楚再开。"
+
+[[tracks.chapters.choices]]
+key = "say_lamp"
+text = "说：“我只会点灯。门开不开，灯都得有人点。”"
+effects = [{ kind = "memory", memory = "mem-main_lin_wandeng_atlantis-at2", title = "黑地里的一句话" }]
+next = "at3_where_lamp_goes"
+reply = "没人回话。静了很久，久到我怀疑自己说错了地方，黑地里有个苍老的声音笑了一声，说外面的人倒也有说一句就够的。有人跟着笑，很快又收住。我腰上的灯笼贴着腿，还是凉的，可我觉得它在发烫。出了门，伊斯梅妮把一块蜡板塞给我，上头只刻了一行字：外面的人，会点灯。我问她刻这个做什么，她说律文里没有这一条，她想先记着。"
+news = "亚特兰蒂斯外港的夜会上，海上来的女船主只说了一句：她只会点灯，门开不开，灯都得有人点。"
+
+[[tracks.chapters.variants]]
+key = "verdict_close"
+when = [{ kind = "flag", flag = "atlantis_verdict_close" }]
+text = "会场里的火全灭了。伊斯梅妮领我进门时就说过，这里不许有火，我腰上那盏灯笼熄着，纸壳贴在腿边，凉的。黑地里坐着十个王，一张脸也看不见，只听见穿深蓝长袍的人一个接一个替外面的世界说话，说完就退出去。轮到我，伊斯梅妮在黑里碰了碰我的手背：“只许一句。说你自己的，不要说你的王的。”我一路上想了好几句。想起天妃宫墙上那行被刮花的“倭国不许”，想起登州空了的炮台，想起那霸老妇人手里攥着的信。一句话装得下哪一样？平时灯一跳，我的话就少；今晚没有灯可跳，话照样一个字也不肯出来。我吸了口气，张开嘴。出来的不是想好的那一句。后来天亮，金板上的判词写着：合上。"
+
+[[tracks.chapters.variants]]
+key = "verdict_open"
+when = [{ kind = "flag", flag = "atlantis_verdict_open" }]
+text = "会场里的火全灭了。伊斯梅妮领我进门时就说过，这里不许有火，我腰上那盏灯笼熄着，纸壳贴在腿边，凉的。黑地里坐着十个王，一张脸也看不见，只听见穿深蓝长袍的人一个接一个替外面的世界说话，说完就退出去。轮到我，伊斯梅妮在黑里碰了碰我的手背：“只许一句。说你自己的，不要说你的王的。”我一路上想了好几句。想起天妃宫墙上那行被刮花的“倭国不许”，想起登州空了的炮台，想起那霸老妇人手里攥着的信。一句话装得下哪一样？平时灯一跳，我的话就少；今晚没有灯可跳，话照样一个字也不肯出来。我吸了口气，张开嘴。出来的不是想好的那一句。后来天亮，金板上的判词写着：开。"
+
+[tracks.chapters.timeout]
+next = "at3_where_lamp_goes"
+effects = [{ kind = "flag", flag = "c13_main_lin_wandeng_atlantis_over" }]
+
+# at3 灯的去处：离开外港的前一夜，最外一圈尽头有一根空着的铜桩，雾从外海涌进来。
+# 两个落点：把灯留在铜桩上（交出灯笼，称号），或带回月港天妃宫。都不改主线结局。
+[[tracks.chapters]]
+key = "at3_where_lamp_goes"
+title = "灯的去处"
+text = "离开外港的前一夜，雾从外海涌进来。伊斯梅妮领我走到环形码头最外面一圈的尽头，那里立着一根空铜桩，上头什么也没挂，桩顶被海风磨得发亮。“很久以前，这里挂过一盏灯，给迷路的船看的。”她说，“后来墙会自己亮了，就没有人再点。”我抬头看墙。光从墙里透出来，亮是亮，照到雾边上就散了，像水泼在油布上。雾里什么也看不见，只有火照得进去。月港外的礁滩上，天黑了渔家的女人就往岸边点火把，一支接一支，最后一条船进了港才收。我把灯笼举到铜桩底下。灯芯在纸壳里一下子站直了，不歪，不跳，像回到了它该待的地方。伊斯梅妮盯着那点火：“它会灭的。外面的火都会灭。”我笑了：“会灭就有人添油。这个，我们月港人最拿手。”"
+mood = "tender"
+speaker = "captain"
+at = "atlantis_port"
+night = true
+cast = ["ismene"]
+deadline = [1585, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "leave_lamp"
+text = "把灯笼挂上那根铜桩，给雾里迷路的船照路"
+requires = [{ kind = "item", item = "tianfei_lantern", qty = 1 }]
+hint = "你身上没有灯可挂。"
+effects = [{ kind = "item", item = "tianfei_lantern", qty = -1 }, { kind = "title", title = "替雾里点灯的人" }, { kind = "memory", memory = "mem-main_lin_wandeng_atlantis-at3", title = "灯的去处" }, { kind = "flag", flag = "c13_main_lin_wandeng_atlantis_over" }, { kind = "flag", flag = "c13_main_lin_wandeng_lamp_left" }]
+next = "done"
+reply = "我把灯笼挂上铜桩，教伊斯梅妮怎么剪灯芯，纸破了怎么糊，浆要薄，厚了一见潮就起皮。老话讲，天好的时候就得把落雨天的粮存足，油也一样，我给她留了三罐。她学得很慢，很认真，剪坏了两根，没吭声，换了第三根。我的船驶出雾的时候，回头还看得见那一点红。"
+news = "亚特兰蒂斯外港最外一圈的铜桩上，如今挂了一盏红纸灯笼，是海上来的女船主留下的，守庙的女祭司在学剪灯芯。"
+
+[[tracks.chapters.choices]]
+key = "take_home"
+text = "把灯带回月港，挂回天妃宫的檐下"
+effects = [{ kind = "affinity", person = "ismene", value = 5 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_main_lin_wandeng_atlantis_over" }]
+next = "done"
+reply = "伊斯梅妮送我到码头。雾在她背后一层一层合上，她说她会记得，外面有一种火是会怕风的。我把灯笼提回腰上，火苗又歪了，歪得叫人踏实。我说下回带一盏新的给你，红纸我糊，竹骨我自己破。她想了想：“那就说定了。”说完，她把手指按在铜桩上，像在那儿记了一道。"
+news = "亚特兰蒂斯外港，海上来的女船主带着红灯笼起锚，守庙的女祭司送到码头，说好了下回要一盏新的。"
+
+[[tracks.chapters.variants]]
+key = "shown"
+when = [{ kind = "flag", flag = "c13_main_lin_wandeng_at_lamp_shown" }]
+text = "离开外港的前一夜，雾从外海涌进来。伊斯梅妮领我走到环形码头最外面一圈的尽头，那里立着一根空铜桩，上头什么也没挂，桩顶被海风磨得发亮。她指给我看桩身上一道补过的接缝，说这根铜桩也补过。那晚我给她看过竹骨上补的地方，她记得。“很久以前，这里挂过一盏灯，给迷路的船看的。”她说，“后来墙会自己亮了，就没有人再点。”我抬头看墙。光从墙里透出来，亮是亮，照到雾边上就散了，像水泼在油布上。雾里什么也看不见，只有火照得进去。月港外的礁滩上，天黑了渔家的女人就往岸边点火把，一支接一支，最后一条船进了港才收。我把灯笼举到铜桩底下。灯芯在纸壳里一下子站直了，不歪，不跳，像回到了它该待的地方。伊斯梅妮盯着那点火：“它会灭的。外面的火都会灭。”我笑了：“会灭就有人添油。这个，我们月港人最拿手。”"
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_lin_wandeng_atlantis_over" }]

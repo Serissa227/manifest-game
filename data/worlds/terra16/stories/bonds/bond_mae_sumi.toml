@@ -1,0 +1,336 @@
+# 真栄澄：替人写的家信（bond_mae_sumi）——C7 重写，2026-10-11，Claude（Opus）；旧 GPT 稿作废，只沿用两条轨道 key、章节 key、at = naha 与各章窗口。
+# 标签：GL（自创主角性别由玩家定：女主角时为 GL，男主角时为 BG；真栄澄 romance = any）。学院同学羁绊线，academy = true；重逢轨道不设 academy。
+# 人物：真栄澄 mae_sumi（1540-12-16，女，祝女亲族的女孩，替出海人家写家信）；主角 custom_naha_envoy（模板生年 1540-01-01，性别由玩家定）。
+#   学院期 1554-01—1556-12：主角 14—16 岁，真栄澄 13—15 岁（1556-12-16 才满 16）。A1、A2 的心动与 S 的 crush 都只写在意、脸红、递信物、手背上停一下；
+#   S 的 heart 选项写成交换信物、不说破，不告白。重逢 1562 年两人 21—22 岁，love 落点才写吻，要 romance 旗标 + 心动 ≥ 24 + 双方满 18。
+# 依据·史实：那霸的进贡船往福州（琉球馆）；久米村是闽人后裔聚居、教汉文的地方，琉球派官生入南京国子监；三重城是那霸港口的石堤与城台，送船的人在那里挥手巾；
+#   琉球“姊妹神”（をなり神）的信仰：姊妹的灵力护佑出海的兄弟，女人送出海的人一方手巾（ティサージ）；那霸的爬龙船在五月初四；
+#   1555 年尚清王去世、1556 年尚元继位，1562 年明朝册封使郭汝霖、李际春到那霸册封尚元；十六世纪琉球仍有船往暹罗、马六甲。正文一律用“听说”的口吻，不写日期细节。
+# 依据·原创：真栄澄袖子里的名字纸片与那册名簿（封面后来写上“船上的人”）；卖鱼的老妇人与要上船的年轻水手；官生课本页边的假名小字；
+#   去暹罗的船与出港簿上少记的两个少年；爬龙船的船旗与落水的少年；她父亲的名字；扶桑花手巾；半个“回”字。
+# 待核：1555 年五月初四约当公历 6 月上旬（窗口 05-25..06-10 照简报）；册封使到港的月份（正文只说“这一年”）；三重城的筑成年代（十六世纪中叶，正文只当作港口的石堤）。
+# 与简报的出入：S 章把“开春随进贡船走”改为“北风起时、年底出港”，码头送别与缺省“船已出港”才都落在 12 月的窗口里；
+#   S 的 heart 选项把“船上的一角旗子”写成家学廊下那面爬龙船旗上写着主角名字的一角（B2 的旗，所有路径都挂在廊下）；
+#   A2 的 not_a_sister 没有 item 效果，回复里手巾由她捡回去先收着，不写塞进主角手里。
+#   B2 的落水少年是开赛当天早上才顶上来的、旗上原本没有他，船拖着他划到终点、靠岸时他还挂在船帮外，pull_him_out 与岸上添名字两件事才接得上。
+# 秘密：名簿在 B1 露出一叠、A1 给主角看；本文件的羁绊章都没有 stage，不写见闻；名簿永远不进见闻。
+# 缺省走向：C1—A2 的 default 不写效果，故事照走（她照样写信、记名字、绣手巾）；S 的 default 是船提前起锚、她赶到时船已出港——开重逢、设 c7_bond_mae_sumi_parted；
+#   重逢的 default 是她寄来名簿的一页抄本，主角名字后面写着“回”（letter），设 c7_bond_mae_sumi_missed。
+#   C1 default：那天的信写到天黑，她的袖子鼓鼓的。C2：课本没借出去，她照我念的格式记了几行。B1：那条船第二个月回来了，少了一个人。
+#   B2：船旗挂在家学廊下，最下面那个名字墨色最浅。A1：石堤上只有她一个人，名簿抱回家，封面还是没写字。A2：那方手巾挂到家学廊下，挨着那面船旗。
+# 羁绊阶梯：C2 lend_textbook 给 C；B1 match_the_roster 补签 C；B2 your_name_too 给 B；A1 copy_names_back 补签 B；A2 两个“收下”给 A + embroidered_kerchief + 回忆。
+#   心动：A1 your_name_last +6；A2 bigger_flower +6（要求已有 6）；S heart +12（要求 12）→ 全选心动正好 24，够重逢的 love。
+#   （简报决定表原写 S +10，算下来只有 22，永远到不了 24；照简报改为 +12。）
+#   重逢 love 的 requires 只写心动 ≥ 24 与双方满 18，不再另写 c7_bond_mae_sumi_romance：心动只由故事效果产生，本文件里到 24 的唯一一条路就是 S 的 heart（同时设 romance），
+#   两者等价；故事审计把重逢轨道单独跑，读不到另一条轨道设的旗标，写上它会报分支错误。
+# 旗标：设 c7_bond_mae_sumi_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed；
+#   S 的 promise 与 heart 另设 c7_tie_new_kogo_mae_sumi_taken（配角线 tie_new_kogo_mae_sumi 据此改走“并肩的朋友”）。重逢 variants 读 _promise / _romance。
+# 日程：不改。真栄澄 1557 年起在首里城抄文书、1562 年在那霸码头登记册封使随员，都是故事里的差事，日程仍在那霸。
+
+[[tracks]]
+key = "bond_mae_sumi"
+name = "真栄澄：替人写的家信"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["mae_sumi"]
+
+# C1：1554 春，进贡船出港前三天。码头上排队写家信；她袖子里的小纸片。口头禅只在这里出现。
+[[tracks.chapters]]
+key = "c1"
+title = "替人写的家信"
+text = "进贡船出港前三天，那霸码头的石阶上排起了长队，都是来找真栄澄写家信的水手家人。她跪坐在一张矮几后面，拿砚台压着纸角。轮到一个卖鱼的老妇人，老人说一句，她写一句。老人说到“你要是敢在福州学坏，就别回来”，她的笔尖顿了顿，照样写下去；写完一句一句念回去，那一句到了她嘴里，成了“在福州别学坏，早点回来”。老人愣了愣，点了头。她这才折好封口，递给老人身后那个要上船的年轻水手，笑着说：“回来时，也把故事带回来。”水手红着脸接了。我在旁边站了一下午，看出一件怪事：每封信封好，她都从袖子里摸出一张小纸片，飞快地记下一个名字，再塞回去，袖口越来越鼓。队伍还有半条街长，她抬头看见我，拿笔杆朝我一点：“使节家的学生，闲着就来磨墨。”"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "flag", flag = "family_access_naha_envoy_house" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "grind_ink"
+text = "坐下替她磨墨，排队的人念一句，我也帮着写一句。"
+reply = "我写的汉字一笔一画，横平竖直。她凑过来看了一眼，笑得肩膀直抖：“你这是写信，还是刻碑？”我只好把字写得圆一点，写到后来，手腕酸得提不起来。天黑时队伍总算排完了，她提起茶壶，壶里只剩一个碗底。她倒出来，自己喝了一半，把碗推到我面前。"
+next = "c2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }, { kind = "skill", skill = "calligraphy", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "ask_the_slip"
+text = "问她袖子里那些纸片上写的是什么。"
+reply = "她把袖口一拢，笑眯眯地说：“是名字，不给你看。”我又问是谁的名字，她就换了琉球话，又快又密，一个字也不让我听懂。一串话说完，她把袖口又拢紧了些，冲队伍里招招手，叫下一个人上前。"
+next = "c2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }]
+
+# C2：1554 夏，久米村的屋檐下。官话公文换假名家信；“你奶奶会以为你欠了她钱”。
+[[tracks.chapters]]
+key = "c2"
+title = "候文与官话"
+text = "家学的先生叫我练写给福州官府的公文，课本是早年官生从南京带回来的，纸边都翻毛了。真栄澄来借这本课本：她写家信用的是假名，一句一个“候”，写给官府的那一套，她一个字也不会。我们在久米村一户人家的屋檐下摆开纸笔，做起了交换。我教她公文怎么起头、怎么称呼、碰到“布政司”三个字要另起一行抬头写；她教我假名信里怎么问候家里的长辈。我照她教的给祖母写了一段，她拿过去念，念到第二句就笑得直不起腰：“你这样写，你奶奶会以为你欠了她钱。”“哪里不对？”“哪里都对，”她擦着眼角，“就是太对了。”她把我开头那句“谨启”划掉，在旁边写了一行：“家里的芭蕉结果了没有？”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "lend_textbook"
+text = "把官生课本借给她带回家抄，抄完再还。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 20 }]
+hint = "她还不好意思欠使节家的人情。课本递过去，她只会笑着推回来。"
+reply = "三天后课本还了回来，一页也没折。每页的边上却多了一行细细的假名，写的是这一页的公文用琉球话该怎么说。我拿去给先生看，先生翻了好几页，叹了口气：“这丫头，可惜进不了官生。”我回去学给她听，她低着头磨墨：“那我就在页边上当官生。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "bond", person = "mae_sumi", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "read_a_letter"
+text = "请她挑一封家信念给我听，学那种说话的口气。"
+reply = "她挑了一封渔夫写给妻子的信。信是她代笔的，念起来却是那渔夫的嗓音，粗声粗气。念到“你那边下雨没有”，我忽然想起家里屋檐下接雨的那口瓮，喉咙一紧。她停下来看了我一会儿，把一张白纸推到我面前：“要不要也写一封？这封不收钱。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }]
+
+# B1：1554 秋冬，去暹罗的船过了归期。那叠按船名排好的纸，七个名字被红笔圈起来。
+[[tracks.chapters]]
+key = "b1"
+title = "没回来的船"
+text = "一条去暹罗的船过了归期半个月，还没有回来。码头上那几户人家一天比一天安静，有个妇人站在米铺门口，忘了自己要买几升。真栄澄照常给他们写信，写好了不封，收进一只木匣：“等船回来，一起交。”那天我去她家还书，她不在屋里，桌上压着一叠纸，就是她袖子里那些纸片，攒成了厚厚一叠，按船名一沓一沓排好，每沓用细绳扎着。最上面那一沓写着去暹罗那条船的名字，底下七个名字，都被红笔圈了起来。她端着茶进门，看见我在看，没有去收，只把茶放在我手边。“要是船回不来，”她说，“总得有人知道船上是谁。”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "match_the_roster"
+text = "替她去港务那里，拿这沓名单和那霸港的出港簿对一遍。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 20 }]
+hint = "这叠纸她还不放心交到别人手里。你一提要拿去对簿子，她就会把纸收进抽屉。"
+reply = "港务的老书记嫌我多事，翻出簿子往桌上一摔。出港簿上那条船的人名记了满满一页，她圈的那七个，只对得上五个。少的两个，是开船那天早上才跑来补缺的两个少年，书记说簿子早写好了，懒得改。我回去告诉她，她点点头，在那两个名字旁边各添了一个小点：“簿子上没人记，我记了。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "bond", person = "mae_sumi", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "wait_on_the_wall"
+text = "不提名单，陪她到三重城的石堤上去等那条船。"
+reply = "我们在石堤上坐到太阳沉进海里，海面上一片帆也没有。回去的路上她一直没开口，走到岔路才说：“明天还来。”我说好。第二天我去晚了些，远远看见她已经坐在昨天那块石头上，膝盖上搁着两个饭团，一个给我。"
+next = "b2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }]
+
+# B2：1555 年五月初四，爬龙船。船旗上的名字；落水的少年也要写上去。
+[[tracks.chapters]]
+key = "b2"
+title = "爬龙船的旗"
+text = "五月初四爬龙船，使节家学也凑了一条船，我坐第三排划桨。前一晚，真栄澄替我们写船旗，把每个桨手的名字照琉球的读音写上去，念错一个，就罚自己喝一口凉水。只有我的名字，她照汉字的官样写了：“你是使节家的，写土了不好看。”坐我旁边的少年是开赛那天早上才顶上来的，旗上没有他。比赛划到一半，他一桨划空，整个人翻进了水里，两手死死抓着我的桨杆。船一歪，后面两条船擦着我们过去了。我们拖着他划到终点，船靠了岸，他还挂在船帮外头，呛得说不出话，岸上一片哄笑。真栄澄已经把船旗从竹竿上解下来，摊在岸边的石板上，在最下面添了一个名字，就是他。旁边有人嘀咕：“掉下去了，还算划过？”“他也划了，”她头也不抬，“名字得在上面。”"
+window = [[1555, 5, 25], [1555, 7, 24]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1555, 5, 25], to = [1555, 7, 24] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "your_name_too"
+text = "上岸后请她把我的名字也重写一遍，用琉球的读音。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 50 }, { kind = "bond", person = "mae_sumi", level = "C" }]
+hint = "她还当你是使节家的人，用琉球读音写你的名字，怕你嫌土，笔提起来又放下了。"
+reply = "她把原来那行刮掉，写得很慢，一笔一笔，写完念给我听。我的名字到了她嘴里，软软的，像换了一个人。那面旗后来挂在家学的廊下，我每天经过都要看一眼；有一回看见她也站在那里看，看的是哪一行，我没问。"
+next = "a1"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "bond", person = "mae_sumi", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "pull_him_out"
+text = "先跳下水把那个少年托上船，旗的事回头再说。"
+reply = "我把他托上船的时候，自己灌了好几口海水。上了岸，真栄澄跑过来拍我的背，拍得又急又重，我咳得更厉害了。“好了好了，”她说，“吐出来就好了。”那天晚上船旗挂上廊下，我在自己的名字旁边，看见她添了一朵小小的浪花。"
+next = "a1"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }]
+
+# A1：1556 春，三重城的石堤。麻绳装订的名簿；“朝廷记船，不记人”。
+[[tracks.chapters]]
+key = "a1"
+title = "一册名簿"
+text = "开春的一个傍晚，真栄澄带我上了三重城的石堤。她怀里抱着一册书，麻绳装订，封面一个字也没写。翻开来，是那些纸片：这两年她袖子里的、桌上的、木匣里的，一张张誊清了，一条船一页，没回来的人，名字上画着红圈。“我想给那些出了海就没回来的人家，留一本查得到的簿子。”她说，“朝廷记船，不记人。哪条船沉了，王府的簿子上写一行；船上是谁，没人写。”她翻到最后一页。那一页只写了一半，下半截还白着。海风把页角掀得哗哗响，她伸手按住。“你以后跟着使节的船走，”她没看我，看着港口，“能不能把每条船上的名字，抄回来给我？”"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "your_name_last"
+text = "请她把我的名字也抄进名簿里。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 20 }, { kind = "romance_open", romance_open = "mae_sumi" }]
+hint = "这本簿子她才第一次拿给人看。你们还没熟到能往里头添自己的名字。"
+reply = "她握着笔犹豫了一会儿，翻到最后，在最末一行写下我的名字，写得很小，后面什么也没画。写完她把簿子合上，抱在胸口：“这样你就得回来。不然，我还得替你画红圈。”风停了。我们在石堤上坐到第一颗星出来，她的手始终按在那本簿子上。"
+next = "a2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "heart", person = "mae_sumi", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "copy_names_back"
+text = "答应她：以后每到一个港口，就把船上人的名字抄回来给她。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 50 }, { kind = "bond", person = "mae_sumi", level = "C" }]
+hint = "她这一问问得很轻。你们还没熟到能接下这件托付的份上，这时候答应，她也只当是一句客气话。"
+reply = "她没道谢，把簿子翻到最后一页，用指甲在纸上划了一道浅浅的印子：“从这里往后，是你的。”我问抄错了怎么办。“抄错了，也比没人抄好。”她又把那道印子描了一遍，像是怕风把它吹平了。"
+next = "a2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "bond", person = "mae_sumi", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "first_name"
+text = "问她：名簿上的第一个名字是谁？"
+reply = "她翻到第一页。第一行的字歪歪扭扭，墨也淡。“是我父亲。”他随进贡船去福州，回程病死在船上；船回到那霸，王府的簿子上只记了船回来了。“那年我八岁，刚学写字。”她用指头摸了摸那一行，“我学会写的头一个名字，就是他。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }]
+
+# A2：1556 夏秋。姊妹神的手巾，左边那朵扶桑拆了三回。
+[[tracks.chapters]]
+key = "a2"
+title = "姊妹神的手巾"
+text = "琉球的女人送兄弟出海，要送一方自己绣的手巾，说姊妹的魂会附在上面，跟着船走，替他挡风浪。真栄澄在家学后院的石凳上咬断最后一根线头，把一方手巾递过来。白麻布，一角绣着两朵扶桑花，左边那朵比右边大了一圈，针脚密得对着太阳也透不过光。“左边那朵拆了三回，”她说，“越拆越大。”我还没伸手，她的脸先红了，把手巾往我面前一推，嘟囔道：“我又不是你姊妹。”停了一会儿，她又补了一句，声音低下去：“可你要是走远了，总得有一样东西跟着。”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_kerchief"
+text = "收下手巾，当着她的面叠好，放进贴身的衣袋。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 80 }, { kind = "bond", person = "mae_sumi", level = "B" }]
+hint = "这方手巾太重了。你们还没熟到这一步，她递不出手，你也接不住。"
+reply = "我叠了两折，她看不下去：“叠得像块抹布。”她拿过去，把扶桑花翻到最上面，重新叠成方方正正的一小块，塞进我衣襟里的口袋。塞好了，她的手指在口袋外面按了一下，按得很实，像在盖一方印。"
+next = "s"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "bond", person = "mae_sumi", level = "A" }, { kind = "item", item = "embroidered_kerchief", qty = 1 }, { kind = "memory", memory = "mem-bond_mae_sumi-a2", title = "姊妹神的手巾" }]
+
+[[tracks.chapters.choices]]
+key = "bigger_flower"
+text = "收下手巾，告诉她：最喜欢左边那朵大的。"
+requires = [{ kind = "affinity", person = "mae_sumi", ge = 80 }, { kind = "bond", person = "mae_sumi", level = "B" }, { kind = "heart", person = "mae_sumi", ge = 6 }, { kind = "romance_open", romance_open = "mae_sumi" }]
+hint = "这方手巾太重了。这句话现在说出口，她只会红着脸把手巾收回去。"
+reply = "“那朵是绣坏的。”她说。我说绣坏的才认得出是你绣的，换了别人，两朵会一样大。她没接话，转过脸去看海，耳朵红得跟那朵扶桑一个颜色。过了好一会儿，她才小声说：“下回再绣，两朵就一样大了。”"
+next = "s"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "bond", person = "mae_sumi", level = "A" }, { kind = "item", item = "embroidered_kerchief", qty = 1 }, { kind = "memory", memory = "mem-bond_mae_sumi-a2", title = "姊妹神的手巾" }, { kind = "heart", person = "mae_sumi", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "not_a_sister"
+text = "接着她的话逗她：那你是我的什么？"
+reply = "她把手巾往我脸上一扔：“是替你写信的人！”扔完先笑出了声，又过来把手巾从地上捡起，拍掉灰，攥回自己手里：“等你想好了怎么说话，再给你。”"
+next = "s"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 3 }]
+
+# S：1556 年 12 月，北风起，进贡船出港。名簿最后一页，我的名字后面还空着。
+[[tracks.chapters]]
+key = "s"
+title = "带回来的故事"
+text = "北风起了，进贡船赶在年底出港，我跟船去福州。起锚前，真栄澄到码头来送我，名簿夹在胳膊底下，比开春时又厚了一指。她说过了年，她要去首里城替女官们抄文书：“听说新王的册封使迟早要来，首里缺会写字的人。”名簿她会一直记下去。她把簿子翻到最后一页给我看。最末一行是我的名字，后面还空着。“等你回来，我在这后面写个‘回’字。”她说，“要是回不来……”她没说下去。码头上的风很大，把她的头发吹进了嘴里，她用手指勾出来，又被吹了进去。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_mae_sumi" }, { kind = "flag", flag = "c7_bond_mae_sumi_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好每一趟回来，先把一路上船上人的名字带给她。"
+requires = [{ kind = "bond", person = "mae_sumi", level = "A" }]
+hint = "每趟回来先报船上人的名字——这样的约要记一辈子，你们的交情还没记到那一页；要么，名簿上一辈子的那一行，你已经留给了另一个人。"
+reply = "她听完，没说好，也没说不好，从发髻上拔下那支细笔，舔了舔笔尖，在我的名字后面写了一笔，又一笔，写到一半停了。“这是什么字？”“半个‘回’。”她把笔插回发髻，“另一半，等你回来再写。”我说船上那么多人，一个个抄下来，怕是要抄到手软。她说那正好：“你手软了，就知道我这几年是怎么过的。”船上在喊人了。她把名簿合上，抱在胸前，低头用额头碰了碰封面，碰得很轻，像在神龛前低头。然后她把簿子夹回胳膊底下，退后两步，冲我挥手，挥的是那只空着的手。"
+next = "done"
+effects = [{ kind = "bond", person = "mae_sumi", level = "S" }, { kind = "relation", person = "mae_sumi", relation = "friends" }, { kind = "memory", memory = "mem-bond_mae_sumi-s", title = "带回来的故事" }, { kind = "flag", flag = "c7_bond_mae_sumi_promise" }, { kind = "flag", flag = "c7_tie_new_kogo_mae_sumi_taken" }, { kind = "start_track", track = "reunion_mae_sumi" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "把昨夜从廊下船旗上剪下的、写着我名字的那一角递给她，换她一截红线，什么也不说。"
+requires = [{ kind = "bond", person = "mae_sumi", level = "A" }, { kind = "heart", person = "mae_sumi", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "mae_sumi", le = 17 }, { kind = "romance_open", romance_open = "mae_sumi" }]
+hint = "这样的东西，要熟到一定的份上才换得出手；又或者，一生的约，你已经许给了另一个人。"
+reply = "旗角剪得不齐，上面我的名字是她写的，墨被雨打得有点花。我递过去，什么也没说。她看了一眼就认出是谁的字，也什么都没问，从袖子里摸出一小绞红线，是绣那两朵扶桑剩下的，没剩多少。她抽出一截，在我左手的小指上绕了三圈，打了个结，线头用牙咬断，跟那天在后院石凳上一样。那角旗布，她缠在自己的手腕上，缠得很紧，袖口一放就遮住了。船上在喊人。她送我走到跳板前，手搭在我的手背上，停了很久，久到船上又喊了一遍。她才松开，往后退了一步：“去吧。”"
+next = "done"
+effects = [{ kind = "bond", person = "mae_sumi", level = "S" }, { kind = "heart", person = "mae_sumi", value = 12 }, { kind = "relation", person = "mae_sumi", relation = "crush" }, { kind = "flag", flag = "c7_bond_mae_sumi_romance" }, { kind = "memory", memory = "mem-bond_mae_sumi-s", title = "带回来的故事" }, { kind = "flag", flag = "c7_tie_new_kogo_mae_sumi_taken" }, { kind = "start_track", track = "reunion_mae_sumi" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好各走各的路：她去首里当书记，我去海上，十年后比谁记下的名字多。"
+reply = "“比就比。”她把名簿往胳膊底下一夹，“我会赢的。”我问凭什么。“你在船上，一趟只记得下一船人。”她掰着手指，“我在首里，城里进进出出的，从王府的厨子到册封使带来的轿夫，一个都跑不掉。”我说海上的船多，十年里我能跑几十趟。她说那你就跑：“跑得越多，我记你越省事。一个人，写一遍就够了。”船上在喊人。她伸手在我背上一推，推得我差点踩空了跳板。我回头时，她已经转身往回走了，走了几步又转回来，冲我喊：“十年！不许耍赖！”"
+next = "done"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 2 }, { kind = "relation", person = "mae_sumi", relation = "friends" }, { kind = "flag", flag = "c7_bond_mae_sumi_own" }, { kind = "start_track", track = "reunion_mae_sumi" }]
+
+[[tracks]]
+key = "reunion_mae_sumi"
+name = "真栄澄：册封使来的那一年"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["mae_sumi"]
+
+# 重逢：1562 年，明朝册封使来那霸。码头上登记随员的长桌，三册名簿，第一册封面写着“船上的人”。
+[[tracks.chapters]]
+key = "reunion"
+title = "册封使来的那一年"
+text = "这一年，那霸港从来没这么挤过。听说明朝的册封使从福州来，要给新王行册封礼，大船一条接一条进港，随员、兵丁、厨子、乐工，几百人下了船，首里城忙得人仰马翻。码头上搭了一张长桌，替册封使的随员登记名字，坐在桌后的是真栄澄。她面前摞着三册名簿，最底下那一册最旧，封面上终于写了字：“船上的人”。她抬头看见我，放下笔，先不说话，把最旧那一册抽出来，翻到最后一页，找到我的名字，在后面写了一个“回”字。写完她才笑：“回来了？”她的袖口里露出一角很薄的信纸。我多看了一眼，她说是京都来的，一个替别人写和歌的人寄的：“那人也替人写信。我们俩比赛，看谁写得慢。”"
+window = [[1562, 1, 1], [1562, 12, 31]]
+at = "naha"
+cast = ["mae_sumi"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1562, 12, 31] }, { kind = "age", ge = 18 }]
+
+[[tracks.chapters.variants]]
+key = "promise"
+when = [{ kind = "flag", flag = "c7_bond_mae_sumi_promise" }]
+text = "这一年，那霸港从来没这么挤过。听说明朝的册封使从福州来，要给新王行册封礼，大船一条接一条进港，随员、兵丁、厨子、乐工，几百人下了船，首里城忙得人仰马翻。码头上搭了一张长桌，替册封使的随员登记名字，坐在桌后的是真栄澄。她面前摞着三册名簿，最底下那一册最旧，封面上终于写了字：“船上的人”。她抬头看见我，放下笔，先不说话，把最旧那一册抽出来，翻到最后一页。我的名字后面，那半个“回”字还在，墨已经旧了。她蘸了墨，把另一半补上，补完才笑：“回来了？”她的袖口里露出一角很薄的信纸。我多看了一眼，她说是京都来的，一个替别人写和歌的人寄的：“那人也替人写信。我们俩比赛，看谁写得慢。”"
+
+[[tracks.chapters.variants]]
+key = "romance"
+when = [{ kind = "flag", flag = "c7_bond_mae_sumi_romance" }]
+text = "这一年，那霸港从来没这么挤过。听说明朝的册封使从福州来，要给新王行册封礼，大船一条接一条进港，随员、兵丁、厨子、乐工，几百人下了船，首里城忙得人仰马翻。码头上搭了一张长桌，替册封使的随员登记名字，坐在桌后的是真栄澄。她面前摞着三册名簿，最底下那一册最旧，封面上终于写了字：“船上的人”。她提笔的那只手腕上，缠着一角褪了色的旗布。她抬头看见我，笔停在半空，过了一会儿才放下，把最旧那一册抽出来，翻到最后一页，找到我的名字，在后面写了一个“回”字。写完她才笑：“回来了？”她的目光在我的左手上停了停，又低头去理袖口。袖口里露出一角很薄的信纸，她说是京都一个替别人写和歌的人寄的：“那人也替人写信。我们俩比赛，看谁写得慢。”"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "mae_sumi", text = "使节家的学生：册封使的船都走了，那霸港一下子空了一半。你没有来。这一年我在码头上替册封使的随员登名字，登了四百三十一个，厨子十九个，乐工二十六个，轿夫我数到最后也没数清。他们走的时候，我照例在每个人后面写一个“回”字，回福州去，也算回。我把名簿里有你的那一页抄了一份，夹在这封信里。你看最后一行：你的名字后面，我写上了“回”。每条进港的船我都问过有没有见着你，有两条说见过，在海上远远擦过去。没见着人，见着船也算。墨还是新的，你别拿手去蹭。第一册的封面我写了字，写的是“船上的人”。先生说这不像书名，我说本来就不是书。京都有个替人写信的人，跟我通了两年信，她的字比我好看，我不服气，每天晚上在练。下回进港，先来码头，我还坐在那张长桌后面。回来时，你知道后面那半句的。真栄澄" }, { kind = "flag", flag = "c7_bond_mae_sumi_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "把这几年在海上抄下的名字一页页交给她，陪她登记到天黑。"
+reply = "我把一卷纸摊在长桌上，是这几年在各个港口抄下的船上人名，福州的、马六甲的、暹罗的，四百多个，有几页被海水泡过，字晕成一团。她一个一个念过去，念得很慢，碰到我写错的读音就改，改完抬头瞪我一眼。念到一个在马六甲病死的水手，她停了停，提笔画了一个红圈。那个名字她认得，是当年在码头上排队写信的人家。册封使的随员在桌前排起了队，她叫他们等着。天黑透了，最后一个随员登完名字，她把我那卷纸和三册名簿捆在一起，拍了拍：“你是我名簿里最勤快的人。”又补了一句：“明天早点来。册封使的厨子还没登完。”"
+next = "done"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 5 }, { kind = "relation", person = "mae_sumi", relation = "friends" }, { kind = "flag", flag = "c7_bond_mae_sumi_landing_friend" }, { kind = "memory", memory = "mem-reunion_mae_sumi", title = "册封使来的那一年" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "从衣袋里取出那方手巾，系回她的手腕上。"
+requires = [{ kind = "heart", person = "mae_sumi", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "mae_sumi", ge = 18 }, { kind = "romance_open", romance_open = "mae_sumi" }]
+hint = "那方手巾在衣袋里攥得发潮。当年在码头上你什么也没说，今天她连“回”字都写上了，你的手还是伸不出去。"
+reply = "那方手巾在我衣袋里待了六年，洗过很多回，左边那朵扶桑褪成了浅粉，还是比右边的大一圈。我把它取出来，绕过她的手腕。她腕上那角旗布也褪了色，我的名字只剩半边。我把手巾系在旗布外面，打了个结。她低头看着那个结，看了很久。“这是给出海的人带走的，”她说，“你系回我这里，算什么？”“算我回来了。”她把手腕翻过来，又翻过去，像在验一封信的封口有没有封牢。“系在这里，”她说，“就不许再走那么远。”然后她揪住我的衣襟，隔着长桌和三册名簿，吻了我。排队的随员里有人吹了一声口哨。她松开手，脸红到了耳根，重新拿起笔，笔尖抖了一下：“下一个。”"
+next = "done"
+effects = [{ kind = "affinity", person = "mae_sumi", value = 5 }, { kind = "relation", person = "mae_sumi", relation = "lovers" }, { kind = "flag", flag = "c7_bond_mae_sumi_landing_love" }, { kind = "memory", memory = "mem-reunion_mae_sumi", title = "册封使来的那一年" }]

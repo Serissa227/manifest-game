@@ -1,0 +1,155 @@
+# 请托：折成贴身样子的手巾（request_matsuru）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-25，Claude（Opus）执笔。
+# 人物：真鹤 matsuru（1534-07-01 生，女），那霸的祝女，替出海的人把手巾折成贴身好藏的样子（cast/story_eastasia.toml）。
+# 类型：送信（lt）。章节：offer 一年来问几回 → handover 门槛上补网的人（鹿儿岛番所，三条路）→ reply 换了折法（手巾完好）／ reply_partial 看不出的折法（手巾被翻乱）。
+# 报价：当面（T）。auto=false，界面用 ask:request_matsuru 启动；offer 章不写 at，objectives 是在那霸港里找到她。窗口 1577-01-01 至 1590-06-30（offer 到期走 timeout，不写见闻）。
+# 身份档 1（中风险）：现金 1250，只在 reply 章付一次；手巾被翻乱时改走 reply_partial，付 750。好感：接下 +2/+3，番所 +3/+4，收尾 +8/+6（折中 +4/+2）；最好的一路 3+4+8=15，照简报的上限（编辑把日本话一路由 +5 改为 +4）；名声 +2 只给完好的收尾；回忆 mem-request_matsuru-reply。不发物品。
+# 依据（史实）：琉球“姊妹神”（をなり神）的旧俗——姊妹织的手巾护着出海的兄弟；1570 年代起萨摩要琉球遣“绫船”贺岛津家，为礼数争执不休，萨摩扣船扣人的事时有传闻。正文一律用传闻口吻。
+# 依据（原创）：被扣在鹿儿岛的五个那霸水手（樽金、加那、真牛、次良、思德，叙事人物，不建 cast）；番所的两个武士；门槛上补网的人；第六条没说是谁家的手巾。
+# 待核：萨摩扣留琉球船员的具体年份与人数（正文只说“去年秋天”，不落年份）。
+# 秘密：cast 的 secret（她捎的信里有几封是给王府的消息）本请托全轨道不写、不暗示；不给玩家拆信的选项；见闻不写。第六条手巾的来历不交代。
+# C7：真鹤×高海月（1557—60）、纳屋小夜×真鹤（1573—76）都在 C7；本轨道从 1577 年起，不写高海月，不写小夜，不读也不设任何 c7_ 旗标。没有恋爱。
+# 读写的旗标：只设 c13_request_matsuru_*——accepted、declined、whole（手巾完好过了番所，分支旗标）、done、partial、late。
+#   完好与翻乱靠 handover 的 next 分流（reply / reply_partial），不用 requires 读 whole；每条路只设一面终局旗标（done 或 partial 或 late）。
+# 依赖：无改名依赖（naha、kagoshima 都是现有港口）；无主线门禁（gate_main、variant_main 为空）；技能 lang_japanese 在 skills.toml。
+# 回忆插画清单：
+#   mem-request_matsuru-reply：那霸御岳外的石阶上，一排香头亮着；真鹤袖口露出一角折法陌生的蓝手巾，递来最后一炷香。
+# 缺省走向：offer 到期走 timeout（不写见闻）；handover 九十天没去鹿儿岛，真鹤来信一封，走 failed；reply 与 reply_partial 没有期限，可以一直等。
+
+[[tracks]]
+key = "request_matsuru"
+name = "折成贴身样子的手巾"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["matsuru"]
+
+# offer · 1577—1590 · 那霸的酒馆：一叠折成方块的手巾
+[[tracks.chapters]]
+key = "offer"
+title = "一年来问几回"
+text = "真鹤把一叠手巾放在酒馆的桌上，推到你面前。每一条都折成巴掌大的方块，边角压得死紧，塞进衣襟正好贴着胸口，从外面看不出来。去年秋天几条那霸的船在山川靠岸，萨摩人说琉球欠着一条绫船的礼数，扣下了几个水手，到今天还关在鹿儿岛。家里人的祈愿和家书都折在这里头。手巾是六条，她只说了五户人家。“我不要你把人带回来，那不是一条船办得了的事。你给我带一句平安回来就行。”她把最上面那条按平，“谁家的船没回来，那家人一年来问几回，我都记得。今年我想答一回。”"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1577, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "matsuru", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下手巾，去鹿儿岛。"
+next = "handover"
+effects = [{ kind = "affinity", person = "matsuru", value = 2 }, { kind = "flag", flag = "c13_request_matsuru_accepted" }]
+reply = "她一条一条点给你看：这条叠了三折，是打铁的比嘉家老母亲的；金城家的媳妇过门才三个月，那条折得最小。点到最后一条，她的手指停了停，没说是谁家的，只说：“这条也要到。”"
+
+[[tracks.chapters.choices]]
+key = "ask_names"
+text = "请她把水手的名字一个一个说给你，你记在本子上。"
+next = "handover"
+effects = [{ kind = "affinity", person = "matsuru", value = 3 }, { kind = "flag", flag = "c13_request_matsuru_accepted" }]
+reply = "她念得很慢：樽金、加那、真牛、次良、思德。你一个一个记下来。念完，她看着你的本子：“写在纸上的，萨摩人也看得懂。”你把那一页撕下来还给她。她把纸凑到灯上烧了，又把五个名字念了一遍，要你跟着念，念错一个就从头来。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "萨摩的事，你不沾。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_matsuru_declined" }]
+reply = "她把手巾收回去，一条一条码好，边角对齐，没再看你。"
+
+# handover · 1577—1590 · 鹿儿岛的番所：武士要看你怀里的东西
+[[tracks.chapters]]
+key = "handover"
+title = "门槛上补网的人"
+text = "鹿儿岛的番所在码头上头的坡上，门口两个武士，一个坐着，一个站着。站着的那个先问你船上装的什么，问完了，眼睛就落在你的衣襟上。门里头是一排长屋，屋檐下晾着渔网，一个人坐在门槛上补网，梭子走得很慢。他抬头看了你一眼，又低下头去，手上没停。站着的武士朝你伸出手来：“怀里的，拿出来。”"
+speaker = "captain"
+mood = "tense"
+at = "kagoshima"
+when = [{ kind = "date", from = [1577, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "matsuru", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "letter", person = "matsuru", text = "鹿儿岛来的船说，那几个人还在补网。手巾我又折了一回，等下一条船。" }, { kind = "affinity", person = "matsuru", value = -3 }, { kind = "flag", flag = "c13_request_matsuru_late" }] }
+news = "鹿儿岛的番所前，一个外乡船长替那霸的人家送去一叠折好的手巾，没让守门的翻乱。"
+
+[[tracks.chapters.choices]]
+key = "courtesy"
+text = "照萨摩的礼数回话：这是家里人求的平安，不是书信。"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "reply_partial", effects = [], news = "鹿儿岛的番所前，守门的武士从一个外乡船长怀里抽出一条琉球手巾，抖开看了半天，没看出名堂，又扔了回去。" }
+effects = [{ kind = "affinity", person = "matsuru", value = 3 }, { kind = "flag", flag = "c13_request_matsuru_whole" }]
+reply = "你先低头行了礼，说这是岛上的女人给出门的男人求的，跟萨摩人进神社求的护符是一个意思。武士听完，挥挥手让你过去。补网的那人接过一条，没打开，先贴在胸口上按了一会儿。"
+
+[[tracks.chapters.choices]]
+key = "japanese"
+text = "用萨摩口音跟武士攀谈，说你是来收渔网的买主。"
+next = "reply"
+requires = [{ kind = "skill", skill = "lang_japanese", ge = 60 }]
+hint = "你的日本话还学不来萨摩人那种拖着尾巴的腔调，一开口就露了底。"
+effects = [{ kind = "affinity", person = "matsuru", value = 4 }, { kind = "flag", flag = "c13_request_matsuru_whole" }]
+reply = "武士笑你把“网”字念得像京都的老太太，还是放你进了长屋看货。你蹲下去翻网，把手巾塞进他们手心，谁也没让门口看见。补网的那人收下手巾，扯着嗓子跟你讨价，说这张网少一个铜钱也不卖。"
+
+[[tracks.chapters.choices]]
+key = "pay_guard"
+text = "往武士袖子里塞一点钱，请他行个方便。"
+next = "reply"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你身上的钱，还不够让一个萨摩武士转过身去。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "matsuru", value = 3 }, { kind = "flag", flag = "c13_request_matsuru_whole" }]
+reply = "钱进了武士的袖子，他转过身去看海。你进了长屋，把手巾分到每个人手里。出来的时候，补网的那人托你带一句话，只有两个字：“平安。”"
+
+# reply · 1577—1590 · 那霸的码头：手巾完好地到过鹿儿岛
+[[tracks.chapters]]
+key = "reply"
+title = "换了折法"
+text = "回到那霸，船还没靠稳，你就看见真鹤站在码头上，身后跟着几户人家，有个老妇人拄着竹杖。你一上岸，她先迎过来，从袖子里抽出一条手巾：“海上回来的？先别急着卸货，过来，我给你系一条手巾。”她在你腕上打了个结，这才让你开口。补网的人托你带回来的话只有两个字：“平安。”你一户一户地说了，说到第三户，那家的媳妇蹲下去，捂着脸哭。最后你从怀里掏出一条手巾，就是那条没说是谁家的。补网的人收下它，临走又塞回给你，折法换了一种，你看不懂。"
+speaker = "captain"
+mood = "tender"
+at = "naha"
+when = [{ kind = "date", from = [1577, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "matsuru", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+objectives = [{ kind = "person", person = "matsuru", text = "回那霸，找到真鹤" }]
+
+[[tracks.chapters.choices]]
+key = "hand_back"
+text = "把那条手巾原样交还给她。"
+next = "done"
+news = "那霸的码头上，祝女真鹤给几户人家点了香，说扣在萨摩的人捎回了平安。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "matsuru", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_matsuru_done" }, { kind = "memory", memory = "mem-request_matsuru-reply", title = "换了折法的手巾" }]
+reply = "她接过去，只看了一眼折法，就收进了袖子，没有打开。然后她领着那几户人家去了御岳外头的石阶，一户点一炷香。香点完了，她手里还剩一炷，递给了你。"
+
+[[tracks.chapters.choices]]
+key = "ask_fold"
+text = "问她：折法换了，是什么意思？"
+next = "done"
+news = "那霸的码头上，祝女真鹤给几户人家点了香，说扣在萨摩的人捎回了平安。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "matsuru", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_matsuru_done" }]
+reply = "“是收到了的意思。”她只说了这一句，把手巾收进袖子，转身去取要付你的钱。那几户人家还在码头上站着，等她回来，她手里多了一捆香，没分给你。"
+
+# reply_partial · 1577—1590 · 那霸的码头：手巾在番所门口被翻乱过
+[[tracks.chapters]]
+key = "reply_partial"
+title = "看不出的折法"
+text = "回到那霸，真鹤一个人在码头上等你，那几户人家站在坡上御岳的石阶边，没有下来。补网的人托你带回的话只有两个字：“平安。”可那叠手巾在番所门口被武士抖开过一条，折痕全乱了，长屋里分不清哪条是谁家的，只好一人随手拿一条。最后那条没说是谁家的手巾，他塞回给你，出门时又被武士摸了一遍，皱成一团，看不出换没换过折法。真鹤接过去，整条抖开，一折一折重新折好，才抬头看你：“折痕怎么乱成这样？”"
+speaker = "captain"
+mood = "tender"
+at = "naha"
+when = [{ kind = "date", from = [1577, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "matsuru", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+objectives = [{ kind = "person", person = "matsuru", text = "回那霸，找到真鹤" }]
+
+[[tracks.chapters.choices]]
+key = "tell_truth"
+text = "照实说：番所的武士抖开过，手巾是乱着到的。"
+next = "done"
+news = "那霸的码头上，祝女真鹤把一条皱了的手巾重新折好，才去告诉几户人家，扣在萨摩的人都还平安。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "matsuru", value = 4 }, { kind = "flag", flag = "c13_request_matsuru_partial" }]
+reply = "她听完点点头：“乱着到，也是到了。”她上了石阶，跟那几户人家说，手巾都到了，只是不一定到了自家人手里。几个人挤在一间长屋里，谁拿着都一样。人堆里一个老妇人听了，反倒笑出声来。"
+
+[[tracks.chapters.choices]]
+key = "blame_wind"
+text = "只说路上潮气重，折痕是被海风吹乱的。"
+next = "done"
+news = "那霸的码头上，祝女真鹤把一条皱了的手巾重新折好，才去告诉几户人家，扣在萨摩的人都还平安。"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "matsuru", value = 2 }, { kind = "flag", flag = "c13_request_matsuru_partial" }]
+reply = "真鹤用指甲顺着一道折痕刮过去，那是手指捏出来的印子，潮气弄不出来。她没说破，只说：“海风也会抖开手巾，以后我折紧一点。”说完她才上石阶，把那两个字带给那几户人家。"

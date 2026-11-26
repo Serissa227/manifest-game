@@ -1,0 +1,344 @@
+# 请托：萨摩人怎么说（request_tei_do）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：郑迵（谢名亲方，tei_do，1549 生，男），久米村郑家子弟，替琉球王府起草对明文书、掌航海，1580 年起总管久米村；cast：cast/historical_08_korea_ryukyu.toml，kind=historical，势力 ryukyu。
+# 类型：复合（mixed）。brief 是五章（offer、listen、turn、meeting、settle）；为了不用“本轨道自己设的旗标”去挡选项，按 next 分路，落成九章：
+#   offer（久米村书房，报价）→ listen（鹿儿岛酒馆）
+#     listen 记下原话（ear / drink 成功 / buy）→ turn；drink 失败、只记得大意 → turn_vague
+#   turn / turn_vague（鹿儿岛，岛津家的老家臣）：说动他去那霸（检定）或递武家拜帖（技能）→ meeting；只带一句话（或检定失败）→ word / word_vague
+#   meeting（那霸护国寺后院，老家臣在场，两条路都算“见了面”）→ settle
+#   word（那霸，只带了话，酒馆原话是准的）→ settle；word_vague（只带了话，酒馆的话只有大意）→ settle_partial
+#   settle（最好的结局：原话准，或两人见了面）／settle_partial（折中：只有大意，也没见面）。
+#   这正是 brief 的“exact 或 met 拿全额，vague 且未 met 拿折中”，只是不再设 exact / vague / meeting / message_only / good 五面过路旗标。
+# 没有 stage 章，因此没有 window 与 default；到期靠 deadline / deadline_days 加 timeout。
+# 报价：T（当面）。auto=false，玩家在那霸（naha）用“问请托”（ask:request_tei_do）启动；offer 不写 at，目标是在久米村找到他（历史人物，先要过求见）。
+#   窗口 1580-01-15 至 1588-03-31（offer 的 when 与 deadline），timeout 直接 failed，不写见闻。
+# 期限：listen 150 天（超时来信一封）；turn / turn_vague 30 天；meeting / word / word_vague 120 天；settle / settle_partial 60 天。每个 timeout 都是 failed + 旗标 _late；有 at 的章给一条见闻交代后来怎样。
+#   settle / settle_partial 在 brief 里 at 为空（目标是找到郑迵）：这里写 at="naha"，好让超时的见闻能被路过那霸的人听到；郑迵 1572—1590 的日程都在那霸，与 person 目标不冲突。
+# 依据·史实背景：岛津家给往琉球去的船发印判，要琉球只认有印判的船（1570 年代起）；1582 年有日本大名向羽柴秀吉讨得“琉球守”的名号（龟井兹矩，正文只写成酒馆传闻“远处有个大名被封了琉球守”，日期从 1582-09 起算，免得传闻早于事情）；
+#   1587 年五月岛津义久降于秀吉，此后萨摩对琉球的口气由轻慢变成催逼，要琉球遣使上京（只写成传闻，不写结果）；那霸波上崖下的护国寺；樱岛的落灰；锦江湾。
+# 依据·原创：郑迵改货单上的“福洲”、岛津家告老的老家臣与他那方磨圆了边的旧印、老家臣托带的那句话“印还是那方印，盖印的手换了。”、酒馆里缺门牙的老船头、船奉行手下的书记与抄件、节略上那一排墨点。
+# 酒馆传闻分三段（listen 的 variants，按日期互斥）：v1_after1587（1587-06-01 起：上头要琉球派人去京里）、v2_before1582（至 1582-08-31：没盖印判的船也放进港）、缺省（1582-09—1587-05：琉球守）。
+# 口吻：嗓门大、对字眼较真、常打断人。“这个词，用准了没有？”只在 offer 用一次；全轨道唯一要紧的那句“萨摩人说‘进贡’，还是说‘来朝’？差一个字，就是两样的国。”只在 offer 用一次；“倭”只在 offer 他背地里说一次，不进见闻。
+# 秘密：cast 无 secret。不预知 1609 年的事与他 1611 年的结局，一字不提。C7（tie_new_kogo_mae_sumi）写的 1575 年萨摩责备琉球使船、1589 年琉球使者经萨摩上京，本请托一概不写；同在那霸的金尚宪请托（寺里寄存的奏议）不写郑迵，这里也不写那只箱子。不写任何恋爱。
+# 读的旗标：c13_request_tei_do_met（meeting 设，settle 的变体 v1_met 读它换正文）。不读 C7 旗标；不设主线门禁。
+# 设的旗标：c13_request_tei_do_accepted（offer 接下）；终局旗标（每条路只设一面）_declined（offer 回绝）、_late（各章超时）、_done（settle 的 verbatim / leave）、_partial（settle 的 soften，settle_partial 全部）；
+#   分支旗标（三面）_met（meeting 两条）、_verbatim（settle / settle_partial 的原样报）、_softened（settle / settle_partial 的改一个字）。
+# 依赖：港口 naha、kagoshima（ports_east_asia.toml，现名）；技能 lang_japanese、court_etiquette（skills.toml）；属性 eloquence（captain.toml）；势力 ryukyu、shimazu；人物 tei_do（日程 1572—1590 在那霸）。
+# 报酬（每份只给一次）：现金至多 3650（settle 的 verbatim / leave；折中 1800）；buy 的选项自付 200；好感正向至多 +19（接下 +2、ear +3、arrange / etiquette +3、translate +3、最好的结局 +8）；
+#   声望 ryukyu +3、shimazu −1（最好的结局），soften 只给 ryukyu +1；名声 +7（最好的结局）；回忆 mem-request_tei_do-settle 一张。没有唯一奖励物品、没有技能奖励。
+#   brief 之外加了一处代价：word_vague 的 guess（把大意说成原话）好感 −2，让两个选项的后果不同。
+# 来信：全轨道一封（listen 超时）。
+# 回忆插画清单：
+#   mem-request_tei_do-settle「久米村灯下的三遍字」：久米村书房的灯下，一张纸上同一句话用汉文写了三遍，每遍有一个字不同；案角一封压实了蜡的节略。
+
+[[tracks]]
+key = "request_tei_do"
+name = "萨摩人怎么说"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["tei_do"]
+
+# 一、报价：久米村的书房，他一边听人说话，一边改人货单上的错字。
+[[tracks.chapters]]
+key = "offer"
+title = "“福州”写成了“福洲”"
+text = "久米村郑家的书房，墙上挂着针路簿，案头压着一沓去福州的咨文底稿。郑迵个子高，坐着也比人高出半个头，一边听我说话，一边拿朱笔改我的货单。我说萨摩那边对琉球的船好像不大客气，他头也不抬就截住了：“‘不大客气’——这个词，用准了没有？是骂了，是扣了，还是笑了？”他把“福洲”的“洲”圈掉，在旁边写了个“州”。“你去一趟鹿儿岛，在码头和酒馆里听他们怎么说我们的船。萨摩人说‘进贡’，还是说‘来朝’？差一个字，就是两样的国。”他这才抬眼，嗓门压低了些：“倭人的码头上，嘴比文书老实。原话带回来，一个字也别替他们改好听。”"
+speaker = "tei_do"
+mood = "tense"
+objectives = [{ kind = "person", person = "tei_do", text = "在那霸的久米村找到郑迵" }]
+when = [{ kind = "date", from = [1580, 1, 15], to = [1588, 3, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "tei_do", ge = 18 }]
+deadline = [1588, 3, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去鹿儿岛听，原话带回来。"
+next = "listen"
+reply = "他把改好的货单推回来，朱笔圈过的地方还没干。“这张拿去。萨摩的人看了这笔字，就知道你跟久米村打过交道——是好是坏，看你怎么用。”我伸手去接，他又按住了一角：“记不住就别编。编出来的话，比没有还坏。”"
+effects = [{ kind = "affinity", person = "tei_do", value = 2 }, { kind = "flag", flag = "c13_request_tei_do_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "鹿儿岛这一趟，你不去。"
+next = "failed"
+reply = "他嗤了一声，没再看我，把货单推回桌边，顺手抽出别人的一份文书接着改。改到第二行，朱笔又落下去，圈住了一个字，嘴里骂了一句写字的人，嗓门大得院子里都听得见。"
+effects = [{ kind = "flag", flag = "c13_request_tei_do_declined" }]
+
+# 二、鹿儿岛的酒馆：萨摩的船头喝着烧酒说琉球的船；手边没有纸，只能靠记。
+[[tracks.chapters]]
+key = "listen"
+title = "鹿儿岛的酒馆"
+text = "鹿儿岛码头边的酒馆，樱岛落下的灰积在门口的草席上，一脚踩一个印。几个萨摩的船头围着一坛烧酒，北边的仗说腻了，说到琉球的船。一个说：“又来晚了，进贡也不晓得赶个早。”几个人都笑。另一个拍着桌子说，远处有个大名向上头讨了个“琉球守”的名号，“琉球的沙滩还没踩过，守倒先封了”，笑声更响。我手边没有纸，也不敢当着他们掏纸。烧酒一碗一碗端上来，那几句话混在笑声里，转眼就要散。"
+speaker = "captain"
+mood = "tense"
+at = "kagoshima"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "at", at = "kagoshima", text = "去鹿儿岛听萨摩人的议论" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }, { kind = "letter", person = "tei_do", text = "鹿儿岛的话，不必再带了。前些天一条从山川来的船，已经把萨摩人怎么说我们的船传到久米村，传得七零八落，我自己一个字一个字去拼。——郑迵" }] }
+news = "鹿儿岛的酒馆里有个外来船长打听琉球的事，陪着萨摩的船头喝烧酒，打听得比萨摩人自己还细。"
+
+[[tracks.chapters.variants]]
+key = "v1_after1587"
+when = [{ kind = "date", from = [1587, 6, 1] }]
+text = "鹿儿岛码头边的酒馆，门口的草席上又落了一层樱岛的灰。几个萨摩的船头围着一坛烧酒，说的都是殿下向关白低了头以后的事，说着说着，说到琉球的船。一个说：“又来晚了，进贡也不晓得赶个早。”这回没人笑。另一个压着嗓子说：“上头的上头发了话，要琉球派人去京里。往后催他们的，就不是咱们了。”几个人都低头去倒酒。我手边没有纸，也不敢当着他们掏纸。那几句话混在倒酒的声音里，转眼就要散。"
+
+[[tracks.chapters.variants]]
+key = "v2_before1582"
+when = [{ kind = "date", to = [1582, 8, 31] }]
+text = "鹿儿岛码头边的酒馆，樱岛的灰把门口的草席染成了灰白。几个萨摩的船头围着一坛烧酒，北边的仗说腻了，说到琉球的船。一个说：“又来晚了，进贡也不晓得赶个早。”几个人都笑。另一个拍着桌子说，那霸那边见了没盖岛津印判的船，也照样放进港，“得叫他们长长记性”，旁边的人跟着起哄。我手边没有纸，也不敢当着他们掏纸。烧酒一碗接一碗，那几句话混在起哄声里，转眼就要散。"
+
+[[tracks.chapters.choices]]
+key = "ear"
+text = "用萨摩话跟他们搭腔，把那几句话再套一遍。"
+requires = [{ kind = "skill", skill = "lang_japanese", ge = 60 }]
+hint = "你的日本话一开口就是外地腔，他们会立刻闭嘴。"
+next = "turn"
+reply = "我学着他们的腔调接了一句，说琉球的船慢，是让风给拖的。一个缺了门牙的老船头乐了，把那句话又说了一遍，说得更慢，末了还纠正我：“‘晚’字不是这么念的，舌头往后缩。”他念两遍，我跟两遍。回到船上，我把它一字一字写下来，写完还念得出他的口音。"
+effects = [{ kind = "affinity", person = "tei_do", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "drink"
+text = "陪他们喝，能记住多少是多少。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "turn"
+reply = "烧酒喝到第四碗，我借着酒劲说琉球人也不好惹。几个船头争着驳我，把那几句话又抢着说了一遍，一个比一个说得难听。回船的路上我扶着栏杆，一边吐一边念，念到天亮，一个字没丢。"
+fail = { next = "turn_vague", news = "鹿儿岛的酒馆里，一个外来船长陪萨摩的船头喝到半夜，被人架回船上，第二天在码头上逢人就问，昨晚那几个船头说的到底是哪几个字。" }
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "请船奉行手下的书记喝一顿，借他的抄件看一眼。"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你身上的钱，不够请一个书记喝到他肯开口。"
+next = "turn"
+reply = "书记是个瘦子，酒量却大，喝到第三坛才醉。他从怀里摸出一页抄件摊在桌上，记的是这一年往来琉球的船，旁边批着几句上头的话。我看了半刻，他忽然惊醒，一把收了回去，问我刚才说到哪了。那半刻够了。"
+effects = [{ kind = "cash", value = -200 }]
+
+# 三、转折（原话记准了）：岛津家的老家臣找上门，想见的是久米村那个嗓门大的人。
+[[tracks.chapters]]
+key = "turn"
+title = "老家臣"
+text = "第二天傍晚，一个小厮在栈桥上找到我，说他家老爷想见见。老人已经坐在我船边的石阶上了，发髻雪白，膝上放着一个布包。他年轻时替岛津家管过往琉球去的船的印判；听说酒馆里有个外来人打听琉球的船，又在港里查验货单时瞧见了那几处朱笔改的字，一眼认出是久米村的笔路。“我想见的不是你，”他说，“是那个嗓门大的郑家人。”他把布包解开一角，里面是一方磨圆了边的旧印。“可不能在鹿儿岛见，萨摩的眼睛太多。也不能写信，纸会落到别人手里。”"
+speaker = "captain"
+mood = "mystic"
+at = "kagoshima"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "wait", days = 1 }, { kind = "at", at = "kagoshima" }]
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "鹿儿岛的人说，岛津家一位告老的家臣在码头边等了一个月，没等到要等的人，把布包夹在腋下回乡下去了。" }
+news = "鹿儿岛的人说，岛津家一位告老的家臣这几天常到码头边坐着，膝上放个布包，像在等哪条船。"
+
+[[tracks.chapters.choices]]
+key = "arrange"
+text = "劝他搭下一班印判船去那霸，私下见一面。"
+check = { attr = "eloquence", base = 5, per = 8 }
+next = "meeting"
+reply = "我说那霸也有寺，寺里有后院，后院的门夜里不上锁。他把旧印攥在手里听着，没答应，也没走。那一夜他没给回话。天亮时小厮来敲船舷，只说了一句：“老爷说，下一班去那霸的船，他坐。”"
+effects = [{ kind = "affinity", person = "tei_do", value = 3 }]
+fail = { next = "word", news = "鹿儿岛的栈桥上，有人看见一位白头发的老人跟外来船长说了半夜的话，最后摇着头起身，只托他带回去一句话。" }
+
+[[tracks.chapters.choices]]
+key = "etiquette"
+text = "照武家的规矩写一张拜帖，正式请他。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "武家拜帖的折法与称呼，你没学过，写错了反倒得罪人。"
+next = "meeting"
+reply = "我把拜帖折成三折，称呼写在最右，落款压低半格。老人接过去看了很久，先看折痕，再看称呼的位置，看完笑了：“久米村的人还懂这个？”我没说我不是久米村的人。他把拜帖收进布包，跟旧印放在一起：“那就去一趟。老了，也该看看那霸的海。”"
+effects = [{ kind = "affinity", person = "tei_do", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "message"
+text = "不安排见面，只把他的话带回去。"
+next = "word"
+reply = "他像是早料到了，点点头，把那方旧印在掌心里转了一圈。“那就带一句。”那句话很短，他只说了一遍，不许我写。我在心里念到船出了锦江湾，还念得出他说话时停顿的地方。"
+
+# 三′、转折（只记得大意）：同一位老家臣，先问酒馆里的原话，问得我答不上来。
+[[tracks.chapters]]
+key = "turn_vague"
+title = "大意是没用的"
+text = "第二天醒来，头还在疼，一个小厮找到船上，说他家老爷想见见。来的是个白发老人，布包搁在膝上，年轻时替岛津家管过往琉球去的船的印判；听说昨晚有人在酒馆里打听琉球，港里查验货单时，他又认出了我单子上久米村的朱笔字。他先问我昨晚在酒馆里听见了什么。我照大意说了，说到一半自己也含糊起来。他等我说完，摇了摇头：“大意是没用的。久米村那个郑家人，要的是字。”布包解开一角，露出一方磨圆了边的旧印。“我想见的是他。可鹿儿岛不行，萨摩到处是眼睛；信也不能写。”"
+speaker = "captain"
+mood = "mystic"
+at = "kagoshima"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "wait", days = 1 }, { kind = "at", at = "kagoshima" }]
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "鹿儿岛码头上的人说，那位常来坐着的白发老武士有好些天没露面了，听说回了乡下，那个布包也带走了。" }
+news = "鹿儿岛码头上有人说，昨晚喝醉的那个外来船长，第二天一早就被一位白头发的老武士叫去，站着听了半天训。"
+
+[[tracks.chapters.choices]]
+key = "arrange"
+text = "劝他亲自去那霸：酒馆里的字我已经丢了，他的话别再让我转一手。"
+check = { attr = "eloquence", base = 5, per = 8 }
+next = "meeting"
+reply = "老人笑了一声：“醉成那样，还知道自己丢了什么，倒也难得。”他把旧印在掌心里掂了掂，过了很久才点头：“去那霸的印判船，我搭下一班。到了那边，让郑家人自己听。”"
+effects = [{ kind = "affinity", person = "tei_do", value = 3 }]
+fail = { next = "word_vague", news = "鹿儿岛的栈桥上，一位白头发的老人听外来船长说完，摇着头把布包夹在腋下走了，走出几步又回头，说了一句什么。" }
+
+[[tracks.chapters.choices]]
+key = "etiquette"
+text = "写一张合武家规矩的拜帖，补上昨晚的失礼。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "武家拜帖怎么折、称呼写在哪里，你拿不准；昨晚已经失了礼，今天再错就没有下回。"
+next = "meeting"
+reply = "老人接过拜帖，翻来覆去看落款压低的那半格，脸色松了下来：“昨晚喝成那样的人，今天还写得出这个。”他把拜帖收进布包：“好，我去那霸，当面说给他听。”"
+effects = [{ kind = "affinity", person = "tei_do", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "message"
+text = "不劳他走一趟，只把他的话记牢带回去。"
+next = "word_vague"
+reply = "“这回可要记牢。”他把那句话说了一遍，又说了一遍，第二遍比第一遍慢。我当着他念了三遍，他听着，一个字一个字点头，这才放我走。"
+
+# 四、波上的夜：老家臣来了那霸，护国寺后院隔着一盏灯，两个人都不先开口。
+[[tracks.chapters]]
+key = "meeting"
+title = "波上的夜"
+text = "那霸，波上崖下的护国寺。夜里后院只点一盏灯，郑迵和老家臣隔着灯坐着，我坐在中间。老人的布包放在膝上没解，郑迵的手按着一叠还没写字的纸。两个人都不先开口。灯芯爆了一下，寺外的浪一阵一阵拍着崖底。郑迵终于转过来看我：“他说一句，你传一句。他用萨摩话说，你别替他文雅；我答他，你也别替我客气。”老人听不懂这句，却像听懂了，把布包解开，把那方旧印放在灯下。"
+speaker = "captain"
+mood = "mystic"
+at = "naha"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "at", at = "naha", text = "回那霸" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "那霸护国寺的和尚说，有位从萨摩来的老客人在寺里借住了好些日子，等的人一直没来，后来搭回程的船走了。" }
+
+[[tracks.chapters.choices]]
+key = "translate"
+text = "在两人之间来回传话，一个字也不改。"
+next = "settle"
+reply = "我传了大半夜。老人说得慢，郑迵答得快，有两回郑迵的嗓门大起来，老人就停下，等他把那口气喘完。最后一句是：“印还是那方印，盖印的手换了。”说完，老人把旧印包好，起身走了，没让人送。郑迵坐着没动，就着那盏灯，把这句话用汉文写了三遍，每一遍换一个字。"
+effects = [{ kind = "affinity", person = "tei_do", value = 3 }, { kind = "flag", flag = "c13_request_tei_do_met" }]
+
+[[tracks.chapters.choices]]
+key = "brush"
+text = "把笔墨推到他们中间，让他们自己笔谈。"
+next = "settle"
+reply = "两个人都看得懂汉文，谁也用不着我。纸上的字越写越密，郑迵写得快，常常写到一半划掉重来；老人写得慢，一笔不改。我替他们添了两回灯油。天快亮时，老人在纸尾写下最后一行：“印还是那方印，盖印的手换了。”写完起身，把满纸的字留给郑迵，只带走了那方旧印。郑迵把那一行另抄在一张纸上，抄了三遍，每遍动一个字。"
+effects = [{ kind = "flag", flag = "c13_request_tei_do_met" }]
+
+# 四′、只带了话（酒馆的原话是准的）：郑迵听完那句话，问老人说话时的脸色。
+[[tracks.chapters]]
+key = "word"
+title = "那句话"
+text = "回到那霸，我先去了久米村。郑迵把酒馆里那几句原话听完，一句没打断，只叫学生在旁边记。轮到老家臣那句，我照着老人的停顿说了一遍：“印还是那方印，盖印的手换了。”郑迵半天没出声，手指在案上敲着，一下一下，像在数这句话有几个字。“他说这话的时候，”他问，“是什么脸色？”"
+speaker = "captain"
+mood = "mystic"
+at = "naha"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "at", at = "naha", text = "回那霸" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "那霸久米村的人说，郑家那位等鹿儿岛来的消息等了几个月，后来不等了，又埋头去改给福州的咨文。" }
+
+[[tracks.chapters.choices]]
+key = "face"
+text = "照实说：他说完就低头看自己的手。"
+next = "settle"
+reply = "郑迵听完，把学生打发出去，自己把那句话写在一张纸的角上。“老人家说话留了一半，”他说，“另一半，萨摩的船会替他说。”他把纸角折起来，压在砚台底下。"
+
+[[tracks.chapters.choices]]
+key = "words"
+text = "说你只顾着记字，没看他的脸。"
+next = "settle"
+reply = "“字是死的，脸是活的。”他瞪了我一眼，又叹了口气，“也罢，字准就好，脸色我自己猜。”他在那句话旁边画了个圈，没写评语，圈画得很重，朱砂透到了下一张纸上。"
+
+# 四″、只带了话（酒馆的话只有大意）：郑迵在拿不准的字旁边点了一排点。
+[[tracks.chapters]]
+key = "word_vague"
+title = "哪一个字"
+text = "回到那霸的久米村，我把酒馆里的话照大意说了。郑迵听到一半就搁了笔：“他们说的是‘贡’，还是‘献’？是‘晚了’，还是‘慢了’？”我答不上来。他没骂人，只把我说的那几句写下来，在拿不准的字旁边各点一个点，点了一排。然后是老家臣那句，我照着老人说话时的停顿念了：“印还是那方印，盖印的手换了。”这一句，郑迵没有点点。"
+speaker = "captain"
+mood = "mystic"
+at = "naha"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "at", at = "naha", text = "回那霸" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "那霸久米村的学生说，郑家那位先生把鹿儿岛的事搁下了，说等来的话要是只剩个大意，不等也罢。" }
+
+[[tracks.chapters.choices]]
+key = "admit"
+text = "认了：酒馆里的原话，你只记得大意。"
+next = "settle_partial"
+reply = "“记得大意，就说大意。”他把那一排点又描了一遍，描得更圆，“点在这里，首里的人看了就知道这几个字没人听准。总比编出来的强。”"
+
+[[tracks.chapters.choices]]
+key = "guess"
+text = "把大意说得像原话，替那几个字拿个主意。"
+next = "settle_partial"
+reply = "我说是“贡”，说得很肯定。他看了我一会儿：“萨摩的船头说话，不会这样整齐。”他没擦掉那个点，反倒在旁边又添了一个，比先前那个小些，是记给我的。"
+effects = [{ kind = "affinity", person = "tei_do", value = -2 }]
+
+# 五、收尾（原话准，或两人见了面）：节略写完不封，问要不要原样报给国王。
+[[tracks.chapters]]
+key = "settle"
+title = "要不要原样报给国王"
+text = "久米村的书房，灯点到半夜。郑迵把酒馆里那几句原话、老家臣那句短话，一条一条写成节略，船头说“进贡”的那一处，他用朱笔在旁边画了一道。写到老人那句，他写了三遍，每遍换一个字，换完又都划掉，照原样誊了一遍。学生进来添灯油，他头也不回地把人轰了出去。节略写完，他没封，推到灯下。“首里那些人，萨摩话一句听不懂，难听的话也不爱听。”他看着我，“这些话，要不要原样报给国王？”"
+speaker = "tei_do"
+mood = "tense"
+at = "naha"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "person", person = "tei_do", text = "回久米村见郑迵" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "那霸的人说，久米村郑家那位没等到人，自己把节略封了送去首里，里头用的是哪几个字，没人知道。" }
+news = "那霸的人说，久米村郑家那位，这些天书房的灯点到天亮，写坏的纸一筐一筐往外倒。"
+
+[[tracks.chapters.variants]]
+key = "v1_met"
+when = [{ kind = "flag", flag = "c13_request_tei_do_met" }]
+text = "久米村的书房，灯点到半夜。护国寺那一夜的话，郑迵从头理了一遍，一条一条写成节略。那张写了三遍的纸铺在案上，三种写法他挨个念过，誊进节略的却是老人的原样，字比别处大了一号。案角还压着那晚剩下的半截灯芯。节略写完，他没封，推到灯下。“老人家坐船来这一趟，是担着干系的。可首里的贵人不通萨摩话，刺耳的话更不爱听。”他看着我，“这些话，要不要原样报给国王？”"
+
+[[tracks.chapters.choices]]
+key = "verbatim"
+text = "原样报：萨摩人怎么说，首里就怎么听。"
+next = "done"
+reply = "他点点头，把节略折好，蜡封压得很实，封口盖了久米村的印。“这样一报，首里一半的人要说我拿萨摩吓唬国王，另一半要说我早该报。”他把封好的节略揣进袖子，“得罪一半的人，合算。”"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "tei_do", value = 8 }, { kind = "reputation", faction = "ryukyu", value = 3 }, { kind = "reputation", faction = "shimazu", value = -1 }, { kind = "fame", value = 7 }, { kind = "flag", flag = "c13_request_tei_do_done" }, { kind = "flag", flag = "c13_request_tei_do_verbatim" }, { kind = "memory", memory = "mem-request_tei_do-settle", title = "久米村灯下的三遍字" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "把最难听的那一句，换个说法。"
+next = "done"
+reply = "他瞪了我一眼，那眼神像要把我货单上的错字再挑一遍。可他还是提起笔，把那一句里最扎人的一个字划掉，换了一个。换完他把笔搁下，很久没说话，灯芯烧弯了也没去剪。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "tei_do", value = 2 }, { kind = "reputation", faction = "ryukyu", value = 1 }, { kind = "flag", flag = "c13_request_tei_do_partial" }, { kind = "flag", flag = "c13_request_tei_do_softened" }]
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "这是你的国，我不替你拿主意。"
+next = "done"
+reply = "他笑了一声，声音难得放低：“你倒比首里的人懂分寸。”他没再问我，自己把节略从头念了一遍，念到“盖印的手换了”那一句，嗓门又大了起来。念完，一个字没改，封了口。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "tei_do", value = 8 }, { kind = "reputation", faction = "ryukyu", value = 3 }, { kind = "reputation", faction = "shimazu", value = -1 }, { kind = "fame", value = 7 }, { kind = "flag", flag = "c13_request_tei_do_done" }, { kind = "memory", memory = "mem-request_tei_do-settle", title = "久米村灯下的三遍字" }]
+
+# 五′、收尾（只有大意，也没见面）：节略上一排墨点，难听的地方还都是虚的。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "一排墨点的节略"
+text = "久米村的书房里，郑迵把节略写完了。酒馆里那几句只有大意，拿不准的字旁边一排墨点；老家臣那句原样写着，一个点也没有。他写坏了三张纸，揉成团扔在脚边，第四张才算干净。他没封，把纸转过来对着我。“首里的贵人不通萨摩话，也不爱听难听的。这一份，难听的地方还都是虚的。”他用笔杆敲了敲那排点，“原样报到国王跟前去，还是不报？”"
+speaker = "tei_do"
+mood = "tense"
+at = "naha"
+when = [{ kind = "alive", person = "tei_do", value = true }]
+objectives = [{ kind = "person", person = "tei_do", text = "回久米村见郑迵" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tei_do_late" }], news = "那霸的人说，久米村郑家那位那份满是墨点的节略，到底没等来人，他自己封了，差学生送去了首里。" }
+news = "那霸的人说，久米村郑家那位这几天写了一份节略，满纸都是墨点，学生们谁也不敢问点的是什么。"
+
+[[tracks.chapters.choices]]
+key = "verbatim"
+text = "原样报，连那排点一起报上去。"
+next = "done"
+reply = "“点也报。”他把节略封了，“首里的人看见这些点，会说久米村办事不牢。说就说吧，点是真的。”他把封好的节略放在案角，压上镇纸，没有再看我。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "tei_do", value = 4 }, { kind = "flag", flag = "c13_request_tei_do_partial" }, { kind = "flag", flag = "c13_request_tei_do_verbatim" }]
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "把最难听的那句换个说法，反正也不是原话。"
+next = "done"
+reply = "“反正不是原话——”他把我的话重复了一遍，像在挑一个错字。他还是改了，划掉一个字，换上一个温和些的，改完把笔搁下，一直到我告辞都没再开口。"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "tei_do", value = 2 }, { kind = "reputation", faction = "ryukyu", value = 1 }, { kind = "flag", flag = "c13_request_tei_do_partial" }, { kind = "flag", flag = "c13_request_tei_do_softened" }]
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "怎么报是久米村的事，我不插嘴。"
+next = "done"
+reply = "“不插嘴的人，久米村少见。”他把那排点数了一遍，一共七个，一个没改，就这样封了口，叫学生天亮送去首里。学生出门前，他又追出去一句：“路上别打开。”"
+effects = [{ kind = "cash", value = 1800 }, { kind = "affinity", person = "tei_do", value = 4 }, { kind = "flag", flag = "c13_request_tei_do_partial" }]

@@ -1,0 +1,176 @@
+# 请托：第一幅羽毛画（request_xochitl）。中文，Claude 写。
+# 人物：霍奇特尔 xochitl（1540-09-07 生，女）。墨西加辅兵的女儿，母家在梅里达圣克里斯托瓦尔区，世代做羽毛活；1568 年起在墨西哥城的画坊学羽毛画。
+# 类型：押运（escort）。托运的是一幅画，不发物品；路上没有检定打断，只在老人面前有两次选择。
+#   章节：offer（报价）→ arrive（到坎佩切，老工匠看画）→ reply_words（听懂了，回信）或 reply_plain（没听懂的那一路，回信）；另有 done、failed。
+#   收尾分成两章而不是一章加 requires：arrive 的三条路线分别走向听懂与没听懂，路由由 next 决定，变体只换一句话。
+# 报价：L（来信）。驮队头是代理人（不新建 cast），在韦拉克鲁斯（veracruz）歇脚处交给你画箱与她的信；auto=true；
+#   窗口 1568-01-01 至 1590-06-30；offer 的 deadline 即窗口止日，timeout 直接 failed，不写见闻。family=c13_offer_veracruz，冷却 20 天。
+#   名声门槛未设（brief 未列）。
+# 依据·史实：墨西加的羽毛工艺（amantecah）；殖民后墨西哥城的画坊继续做圣像与图样；尤卡坦的墨西加辅兵后代与母家的工匠；坎佩切与梅里达之间的海路与陆路。
+#   待核的史实（正文一律传闻口吻）：墨西哥城画坊的确切年份与规模。
+# 依据·原创：扁平木箱与三层油布、一尺见方的蜂鸟画、老工匠放反的那一根羽毛、驮队头与陆路、孙女替爷爷译话。
+# 秘密：她做梦都想去墨西哥城，其实一次也没去过；可伊内斯走不了，她就不走。本请托不碰伊内斯，不写她们怎么去的，见闻不写。
+# 读的旗标：c13_main_* 不读（不是主线人物）；bond xochitl（只在 offer 的变体里读，伊希那一路换开头一句）；c7_* 一概不读不设。
+# 设的旗标：accepted（接下）、seen（offer 打开看过）、declined（回绝，终局 failed）、words（arrive 听懂）、partial（ask_family 没译清）、
+#   ruffled（keep_dry 失败，海风翘起细羽）、late（arrive 超时，终局 failed）、done（reply 收尾，终局 done）。reply_plain 的变体读 partial 与 ruffled。
+# 依赖：港口 veracruz、campeche 已存在；人物 xochitl（cast/classmates_merida.toml）；技能 lang_nahuatl（skills.toml）。不依赖 B10b 改名。
+# 回忆插画：mem-request_xochitl-reply（放反的那一根羽毛）：韦拉克鲁斯歇脚处，木箱开着一角，一根蜂鸟羽毛换个角度从绿变金。
+
+[[tracks]]
+key = "request_xochitl"
+name = "第一幅羽毛画"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["xochitl"]
+
+# 一、画箱：驮队头在韦拉克鲁斯递来一只木箱和一封信。
+[[tracks.chapters]]
+key = "offer"
+title = "画箱"
+text = "韦拉克鲁斯的驮队歇脚处，一头骡子背上卸下一只扁平的木箱，外面包着三层油布。驮队头把箱子放在你脚边，又递过来一封信。“这算什么？墨西哥城的比这大十倍。”他念第一句，自己先笑了一声。信里说，这是她做的第一幅羽毛画，小得可怜。母家梅里达有个老工匠病了，想在死前看一眼。信的末尾她添了一行：“画到了，请你听老人说什么，一个字一个字带回来。他说难看，也带回来。”"
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "xochitl", ge = 18 },
+]
+at = "veracruz"
+objectives = [{ kind = "at", at = "veracruz", text = "在韦拉克鲁斯的驮队歇脚处" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond"
+when = [{ kind = "bond", person = "xochitl", level = "C" }]
+text = "韦拉克鲁斯的驮队歇脚处，一头骡子背上卸下一只扁平的木箱，外面包着三层油布。驮队头递过来一封信，念第一句时挠了挠头。信的开头写着：“伊希，这算什么？墨西哥城的比这大十倍。”信里说，这是她做的第一幅羽毛画，小得可怜。母家梅里达有个老工匠病了，想在死前看一眼。信的末尾她添了一行：“画到了，请你听老人说什么，一个字一个字带回来。他说难看，也带回来。”"
+
+[[tracks.chapters.choices]]
+key = "take_case"
+text = "接下，把画箱送到坎佩切。"
+next = "arrive"
+reply = "驮队头说箱子不能倒放，不能见雨，也不能晒。说完又补一句：“她说的，不是我说的。”他把油布的四个角一一按了按。"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "flag", flag = "c13_request_xochitl_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "peek"
+text = "接下，先打开箱子看一眼画。"
+next = "arrive"
+reply = "驮队头拦了一下，没拦住。画只有一尺见方，是一只蜂鸟，停在一朵红花上。换个角度看，翅膀从绿变成了金。我把油布重新包好，包了四层。"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "flag", flag = "c13_request_xochitl_accepted" }, { kind = "flag", flag = "c13_request_xochitl_seen" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "羽毛画太娇贵，海上的潮气受不住。"
+next = "failed"
+reply = "驮队头把箱子重新扛回骡背，用绳子在箱角又绑了一圈。他说那他走陆路，“慢，可是干”。骡子打了个喷嚏，他骂了骡子一句。"
+effects = [{ kind = "flag", flag = "c13_request_xochitl_declined" }]
+
+# 二、老人的手：坎佩切的码头边，老工匠看画。一句墨西加话，听懂与否分两路。
+[[tracks.chapters]]
+key = "arrive"
+title = "老人的手"
+text = "坎佩切的码头边，一张草席铺在石头上，老工匠坐在上面，膝上盖着毯子。家里人从梅里达把他抬下来，就为了让他在海边看一眼。你把画箱打开，他的手一下子就不抖了，用指甲轻轻拨动蜂鸟翅膀上的一根羽毛。他说了一句很长的话，你只抓住了其中的一个词。那是墨西加人的话，他说得很慢，像是怕惊着画。"
+speaker = "captain"
+mood = "sad"
+when = [
+  { kind = "alive", person = "xochitl", value = true },
+  { kind = "date", to = [1590, 12, 31] },
+]
+at = "campeche"
+objectives = [{ kind = "at", at = "campeche", text = "到坎佩切的码头" }]
+news = "坎佩切的码头边，梅里达来的老工匠对着一幅小小的羽毛画看了一下午。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "xochitl", value = -3 }, { kind = "flag", flag = "c13_request_xochitl_late" }, { kind = "letter", person = "xochitl", text = "画是驮队头走陆路送去的。老人看到了。他说了什么，没人记。——霍奇特尔" }] }
+
+[[tracks.chapters.choices]]
+key = "in_nahuatl"
+text = "用纳瓦特语请他再说一遍，一字一字记下来。"
+next = "reply_words"
+requires = [{ kind = "skill", skill = "lang_nahuatl", ge = 60 }]
+hint = "你只听出一个“羽毛”"
+reply = "他的手停在那根羽毛上，慢慢又说了一遍。“这一根放反了，放反了，光才从下面来。”他笑了，说她是故意的，“我教她的时候，她就爱放反。”我一个字一个字记下来。"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }, { kind = "flag", flag = "c13_request_xochitl_words" }]
+
+[[tracks.chapters.choices]]
+key = "ask_family"
+text = "请他家里人替他译成卡斯蒂利亚话。"
+next = "reply_words"
+check = { attr = "eloquence", base = 35, per = 6 }
+fail = { next = "reply_plain", effects = [{ kind = "affinity", person = "xochitl", value = -2 }, { kind = "flag", flag = "c13_request_xochitl_partial" }] }
+reply = "他的孙女替他译，译到一半停下来，又问了老人一句。老人笑了，她才替他译：“这一根放反了，可放反了好看。”她又说，爷爷很久没笑过了。"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }, { kind = "flag", flag = "c13_request_xochitl_words" }]
+
+[[tracks.chapters.choices]]
+key = "keep_dry"
+text = "先不问，替他把画挪到阴凉处，免得潮气上了羽毛。"
+next = "reply_plain"
+check = { attr = "seamanship", base = 35, per = 6 }
+fail = { next = "reply_plain", effects = [{ kind = "affinity", person = "xochitl", value = -2 }, { kind = "flag", flag = "c13_request_xochitl_ruffled" }] }
+reply = "我把画挪到码头的货棚底下，老人跟着挪过去，看了一下午，手一直悬在画的上方，没有碰。最后他只说了一个词，我照音记下来。"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }]
+
+# 三之一、听懂了：纳瓦特语或家里人译出来的那一路，老人的话带得回去。
+[[tracks.chapters]]
+key = "reply_words"
+title = "放反的那一根"
+text = "驮队头又在歇脚处等你。你把老人的话一句一句说给他听，他记在本子上，嘴里跟着念了两遍，说下一趟就带上去。他说话的时候一直看着木箱的方向，像是箱子还在他背上。半个月后，他带下来一封她的回信，和画箱一样包着三层油布。信里她写：那一根确实是故意放反的，“我想知道他还看不看得出来。”信纸角上沾着一点黄颜料，没擦干净。"
+when = [
+  { kind = "alive", person = "xochitl", value = true },
+  { kind = "date", to = [1590, 12, 31] },
+]
+at = "veracruz"
+objectives = [{ kind = "at", at = "veracruz", text = "回到韦拉克鲁斯的歇脚处" }]
+news = "韦拉克鲁斯的驮队歇脚处，一封墨西哥城来的信里夹着一根蜂鸟羽毛。"
+
+[[tracks.chapters.choices]]
+key = "read_on"
+text = "接着往下读。"
+next = "done"
+reply = "她说老人看出来了，那她就放心了。信里夹着谢礼，还有一根蜂鸟羽毛，换个角度看，从绿变成金。信尾写着：“墨西哥城的蜂鸟，也就这么大。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "xochitl", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_xochitl_done" }, { kind = "memory", memory = "mem-request_xochitl-reply", title = "放反的那一根羽毛" }]
+
+[[tracks.chapters.choices]]
+key = "write_back"
+text = "托驮队头带一句话回去：老人笑了。"
+next = "done"
+reply = "驮队头记下了，说这句他会先说，一个字也不改。下一趟他带下来谢礼，还有一张小纸条，纸条上只有一个词：“好。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "xochitl", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_xochitl_done" }, { kind = "memory", memory = "mem-request_xochitl-reply", title = "放反的那一根羽毛" }]
+
+# 三之二、没听懂：那个词只照了音，或者家里人只译出一个大概。
+[[tracks.chapters]]
+key = "reply_plain"
+title = "没听懂的那个词"
+text = "驮队头蹲在歇脚处的树荫底下等你。你把老人看了一下午的事说给他听，又把那个词照音念了一遍。他念得不准，念到一半自己先笑出来，记在本子上，说下一趟带上去问她。过了十来天，他又在歇脚处出现，怀里揣着她的回信。信里说，那一根确实是故意放反的，她想知道老人还看不看得出来。纸边蹭着一点黄颜料。"
+when = [
+  { kind = "alive", person = "xochitl", value = true },
+  { kind = "date", to = [1590, 12, 31] },
+]
+at = "veracruz"
+objectives = [{ kind = "at", at = "veracruz", text = "回韦拉克鲁斯的歇脚处等她的回信" }]
+news = "韦拉克鲁斯的驮队歇脚处，驮队头从坎佩切回来，又带下一包墨西哥城的东西，油布包了三层。"
+
+[[tracks.chapters.variants]]
+key = "partial"
+when = [{ kind = "flag", flag = "c13_request_xochitl_partial" }]
+text = "驮队头靠着骡子等你。你把家里人的话说给他听：“他说好。”驮队头听得直挠头，说这可译不出什么来。他把那两个字抄在本子的最后一页，抄完又翻回前面，像是还在找别的字。又过了半个月，他带下来她的回信，信角上印着一小块黄颜料。她承认那一根是故意放反的，还问老人到底看不看得出来。"
+
+[[tracks.chapters.variants]]
+key = "ruffled"
+when = [{ kind = "flag", flag = "c13_request_xochitl_ruffled" }]
+text = "驮队头在歇脚处等你。你把码头上那阵海风说给他听，画上有几根细羽翘了起来，被你一根一根压回去。他听得直皱眉，说她要是知道，头一句就是骂你，骂完了还得自己补一根。半个月后，他带下来她的回信，油布上压着一道折痕。信里她承认那一根是故意放反的，还说：“翘起来的那几根，留着。”"
+
+[[tracks.chapters.choices]]
+key = "read_on"
+text = "把信从头读到尾。"
+next = "done"
+reply = "她说老人看了一下午，终究还是看出来了，这就够了。谢礼和一根蜂鸟羽毛一起包在信封里，羽毛换个角度看，从绿变成金。信尾写着：“墨西哥城的蜂鸟，我见得多了，也就这么大。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "xochitl", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_xochitl_done" }, { kind = "memory", memory = "mem-request_xochitl-reply", title = "放反的那一根羽毛" }]
+
+[[tracks.chapters.choices]]
+key = "write_back_plain"
+text = "托驮队头带一句话回去：老人看了一下午，没有走。"
+next = "done"
+reply = "驮队头记下了，说这句他原样带上去。下一趟的纸条上只写了一行：“那就好。”纸条的边角被手指捏得发软，像是看过很多遍。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "xochitl", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_xochitl_done" }, { kind = "memory", memory = "mem-request_xochitl-reply", title = "放反的那一根羽毛" }]

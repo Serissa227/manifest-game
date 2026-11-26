@@ -1,0 +1,155 @@
+# C13d 人物的请托：海峡对岸的回信（L 来信，3 章）
+# 人物：玛丽一世（1516 年生，1558 年卒），英格兰女王，cast 的 mary_i（historical）。
+# 报价模式 L（代理人）：白厅水门边的一位女官出面，只写身份，不点名，不新建 cast；女王不当面，只在信封背面的一行字里出现。
+# 窗口：报价 1557-07-10 至 1558-06-30（offer 的 deadline 为窗口止日，timeout 无见闻）；送信章限期 90 天；回信章限期 1558-11-10。
+#   报价章 family = c13_offer_london，冷却 20 天；名声门槛为 0，不写。
+# 依据：史实——1557 年 7 月腓力离开英格兰，此后再没回来；同年 8 月圣康坦之役（正文不写）；1558 年 1 月加来失守（只在 calais 变体里一句）；玛丽卒于 1558 年 11 月。
+#   历史人物的婚姻按史料写，不加戏：回信只谈战事与钱，末尾一行问候。不写玛丽的心事，不写腓力的感情，不提伊丽莎白，不写火刑。
+#   原创——女官与秘书（只写身份）、黑蜡封口的信与背面的一行字、安特卫普西班牙商馆楼上的会面、那页薄信。
+#   待核：安特卫普西班牙商馆楼上是否确有会面的房间（正文用传闻口吻）；加来失守的确切日子（calais 变体从 1558-01-10 起算）。
+# 读写旗标：写 c13_request_mary_i_accepted / declined / done / partial / late（终局），分支 c13_request_mary_i_fast 与 _word；不读外部旗标；不设 c7_ 旗标。
+# 依赖：无 B10b 改名（london、antwerp 已在港口表）；mary_i 的日程只到 1557 年底，本请托不用 person 目标，不依赖日程；无主线门禁（不写 c13_main_*）。
+# 回忆插画：mem-request_mary_i-reply——冬天的白厅水门，一位女官把一封很薄的信揣进怀里。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_mary_i"
+name = "海峡对岸的回信"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["mary_i"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "黑蜡封的信"
+text = "白厅的水门边，一个穿黑衣的女官站在台阶最下面，手里托着一封黑蜡封口的信。信不厚，蜡印压得很深，是女王寝宫的章。她把信翻过来，背面有一行小字，笔画很稳：“请他看完再回，不必急。”女官又说：“这封信不能走大使的邮包。要一个船长，直接去安特卫普，把信交到国王的秘书手里，等得了回信，就把回信带回来。”她没有说信里写的是什么，也没有说要等多久。台阶下面，你的水手正拖着缆绳往船上走，女官看了一眼，把信又托高了些，像是在等你开口。"
+mood = "tense"
+at = "london"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 7, 10], to = [1558, 6, 30] }, { kind = "alive", person = "mary_i", value = true }]
+deadline = [1558, 6, 30]
+family = "c13_offer_london"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "calais"
+when = [{ kind = "date", from = [1558, 1, 10] }]
+text = "白厅的水门边，一个穿黑衣的女官站在台阶最下面，手里托着一封黑蜡封口的信。加来丢了，她说这话的时候没有抬头，海峡对岸的船今年都得绕着走。女官又说：“这封信不能走大使的邮包。要一个船长，直接去安特卫普，把信交到国王的秘书手里，等得了回信。”信封背面那行小字还在，字迹没有抖。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：送到安特卫普，等回信"
+reply = "女官把信缝进一只油布袋，又叮嘱你别让海关的人碰。"
+next = "handover"
+effects = [{ kind = "affinity", person = "mary_i", value = 2 }, { kind = "flag", flag = "c13_request_mary_i_accepted" }]
+news = "白厅水门边的船上，一个船长揣着女官交的黑蜡信，要去安特卫普等回信。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：宫里的信，不沾为好"
+reply = "女官点点头，把信收回袖子里。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_mary_i_declined" }]
+news = "白厅水门边，女官拿着一封黑蜡封口的宫信找船，有个船长嫌麻烦，摇摇头走了。"
+
+[[tracks.chapters]]
+key = "handover"
+title = "国王秘书的桌子"
+text = "西班牙商馆的楼上，人说这间屋子原是给商人记账用的，窗外是运河和卸货的吊杆。国王的秘书已经坐在桌边等你，见面第一句问的是：“路上有没有人拆过封？”你说没有。他接过信，拇指压着那块黑蜡，像在试它硬不硬，却没有拆。“女王的身体怎么样？你在伦敦见过她吗？”他问的是你，眼睛却一直看着信。你还没答，他已经把信放回桌上，压在一只铜镇纸底下。"
+speaker = "captain"
+mood = "tense"
+at = "antwerp"
+when = [{ kind = "alive", person = "mary_i", value = true }]
+objectives = [{ kind = "at", at = "antwerp", text = "到安特卫普，去西班牙商馆" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "mary_i", value = -3 }, { kind = "flag", flag = "c13_request_mary_i_late" }, { kind = "letter", person = "mary_i", text = "女王寝宫的女官代笔：陛下的信等不到船长，已改由大使的邮包送往布鲁塞尔。船长不必再赶路，陛下记下了你的好意。" }]
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "原样交出，只答他问的"
+reply = "你只答了他问的两句。秘书点点头，把信收进公文匣，说国王这几日忙着军饷的账，回信要等。"
+next = "reply"
+effects = [{ kind = "affinity", person = "mary_i", value = 3 }]
+news = "安特卫普西班牙商馆的楼上，一个英格兰船长把女王的信交到了国王秘书手里，没多说一句。"
+
+[[tracks.chapters.choices]]
+key = "etiquette"
+text = "按宫廷的规矩递信，请他当日呈上"
+reply = "秘书看了你一眼，没有说谢，只把信按宫廷的次序收进匣子，当天下午就骑马回了布鲁塞尔。"
+hint = "你不知道该向秘书行哪一种礼。"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+next = "reply"
+effects = [{ kind = "affinity", person = "mary_i", value = 3 }, { kind = "flag", flag = "c13_request_mary_i_fast" }]
+news = "安特卫普西班牙商馆里，一个英格兰船长按宫廷的礼数递了信，国王的秘书当天下午就骑马回了布鲁塞尔。"
+
+[[tracks.chapters.choices]]
+key = "word"
+text = "替女官带一句话：女王这一冬病得不轻"
+reply = "秘书沉默了一会儿，把你的话记在一张纸条上，说他会一并转达给布鲁塞尔。信还是交到了他手里。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply"
+effects = [{ kind = "affinity", person = "mary_i", value = 3 }, { kind = "flag", flag = "c13_request_mary_i_word" }]
+news = "西班牙商馆的楼上，一个英格兰船长替女王带了句口信，秘书记在纸条上，说要一并转达。"
+fail = { next = "reply", effects = [{ kind = "affinity", person = "mary_i", value = -2 }], news = "西班牙商馆的楼上，一个英格兰船长想替女王带句话，秘书说这种话该由大使说，把话挡了回去，信还是收了。" }
+
+[[tracks.chapters]]
+key = "reply"
+title = "一页回信"
+text = "回信是秘书派人送到伦敦的，比你想的薄。一页纸，谈的是战事和钱，末尾一行问候的墨色比别处深一些。女官在水门边接过去，手没有抖，只把信角对齐。水门外的风从河口吹进来，她的披风贴在身上，她还是站着没动。她的黑手套上沾着一点蜡，抬眼看你，问：“陛下若问起国王的气色，你怎么说？”"
+speaker = "captain"
+mood = "sad"
+at = "london"
+when = [{ kind = "alive", person = "mary_i", value = true }]
+objectives = [{ kind = "at", at = "london", text = "回伦敦，把回信交到女官手里" }]
+deadline = [1558, 11, 10]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "mary_i", value = -3 }, { kind = "flag", flag = "c13_request_mary_i_late" }, { kind = "letter", person = "mary_i", text = "女王寝宫的女官代笔：布鲁塞尔的回信已由大使先送到枢密院，陛下还没有看。船长若还有话，可以等。" }]
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "flag", flag = "c13_request_mary_i_fast" }, { kind = "date", from = [1558, 1, 10] }]
+text = "回信比你想的快，秘书那天下午就骑马回了布鲁塞尔。信里提到加来，只有一句，女官念到那里停住了。一页纸，谈的是战事和钱，末尾一行问候。她抬眼看你：“陛下若问起国王的气色，你怎么说？”"
+
+[[tracks.chapters.variants]]
+key = "calais"
+when = [{ kind = "date", from = [1558, 1, 10] }]
+text = "回信里有一句提到加来，女官在水门边念到那里停住了。一页纸，谈的是战事和钱，末尾一行问候。她的黑手套上沾着一点蜡，抬眼看你：“陛下若问起国王的气色，你怎么说？”"
+
+[[tracks.chapters.variants]]
+key = "fast"
+when = [{ kind = "flag", flag = "c13_request_mary_i_fast" }]
+text = "回信比你想的快。秘书那天下午就骑马回了布鲁塞尔，四天以后，信已经到了伦敦。一页纸，谈的是战事和钱，末尾一行问候。女官在水门边接过去，没有立刻走，问你：“陛下若问起国王的气色，你怎么说？”"
+
+[[tracks.chapters.choices]]
+key = "sealed"
+text = "原封交出，什么也不添"
+reply = "女官把信揣进怀里，没有拆，也没有再问你什么，快步走进宫门。宫门口的卫兵替她让开了路。"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "england", value = 2 }, { kind = "affinity", person = "mary_i", value = 8 }, { kind = "memory", memory = "mem-request_mary_i-reply", title = "水门边的薄信" }, { kind = "flag", flag = "c13_request_mary_i_done" }]
+news = "白厅水门边，一个船长从安特卫普带回一页薄信，女官原样接过，揣进怀里进了宫门。"
+
+[[tracks.chapters.choices]]
+key = "soften"
+text = "照你看见的说：秘书说国王忙，没说别的"
+reply = "女官说这样就好，她会这样转告。钱是另外数给你的，一张一张，数得很慢，像是怕数错。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "england", value = 2 }, { kind = "affinity", person = "mary_i", value = 8 }, { kind = "memory", memory = "mem-request_mary_i-reply", title = "水门边的薄信" }, { kind = "flag", flag = "c13_request_mary_i_done" }]
+news = "白厅水门边，一个船长照实说国王忙着，没说别的，女官说这样就好，把回信揣进了怀里。"
+fail = { next = "done", effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "mary_i", value = 2 }, { kind = "flag", flag = "c13_request_mary_i_partial" }], news = "白厅水门边，女官听出一个船长在挑字眼，脸色变了，钱照付，最后也没有说一句谢。" }
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "说你不知道，只是送信的"
+reply = "女官说这样最好。她从袖子里摸出一个小钱袋，数过两遍，才放进你手里，没有再问一个字。"
+next = "done"
+effects = [{ kind = "cash", value = 2600 }, { kind = "affinity", person = "mary_i", value = 4 }, { kind = "flag", flag = "c13_request_mary_i_partial" }]
+news = "白厅水门边，一个船长说自己只是送信的，女官说这样最好，付了钱，回信收走了。"

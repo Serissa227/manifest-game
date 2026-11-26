@@ -1,0 +1,154 @@
+# 请托：树的眼泪值多少（request_eleni）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：埃莱妮（eleni，1535-09-14 生，女），希俄斯南边玛蒂克树园的姑娘，在希俄斯港的集市卖玛蒂克树脂；势力 genoa，身份档 0（平民）。cast：cast/story_europe.toml。
+# 类型：说服某人（persuade）。任务单写的是三章，文件里是四章：offer（报价）、persuade（热那亚定的价，仓房里的代理人）、result（割脂季收尾，第一等树脂的小陶罐）、result_partial（工钱照压的那一季）。
+#   多出一章是引擎的限制：result 只能由三种谈成的接法（deal）到达，所以 take_jar 不再写 requires；检定失败的降级走 fail.next = result_partial，那一章自带两个无 requires 的选项。
+# 报价：T（当面）。埃莱妮按日程在希俄斯港（chios）。auto=false，玩家“问请托”（ask:request_eleni）启动；offer 章不写 at，objectives 为在港里找到她。offer 的 deadline 为窗口止日 1563-06-30，timeout 直接 failed，不写见闻。
+# 窗口：报价 1558-01-01 至 1563-06-30；之后的章节 1558-01-01 至 1563-12-31（作为 when 的日期条件，不是 window）。persuade 进行中 deadline_days=60，超时走 failed，埃莱妮来信一封，好感 -3，旗标 _late。
+# 依据·史实背景：希俄斯岛南部的村子出产玛蒂克（乳香黄连木的树脂），割脂一年一季，树脂由热那亚人的马奥纳（Maona）商团专卖，价钱由商团定。马奥纳统治希俄斯至 1566 年（TERRA16 H26；1566 年的变局不写）。
+# 依据·原创：埃莱妮、仓房里的代理人、树园的工人、第一等树脂的小陶罐、仓房的价目册、“别家园子”的说法。
+# 待核：割脂的确切月份与工钱压低的比例（正文只用“压两成”“半成”的传闻口吻）；玛蒂克村子的名字不写，只说“南边的树园”。
+# 秘密：cast 的 persona 里有一件私下卖货的事，永远不写进本轨道的正文、来信与见闻。
+# 读的旗标：无。不读 c7_ 旗标；C7 的 tie_frana_eleni 窗口在 1564 年以后，本轨道在 1563 年以前结束，不写芙拉娜，也不写心动或感情。
+# 设的旗标：c13_request_eleni_accepted（offer 接下，分支）、_asked（offer 问了别家园子，persuade 的变体只改文字，分支）、_deal（persuade 三种谈成的接法，分支）；终局每条路只设一面：_declined（offer 回绝）、_late（persuade 超时）、_done（result）、_partial（result_partial）。
+# 依赖：港口 chios（ports_east_med.toml）；技能 negotiation（skills.toml）；属性 eloquence；人物 eleni。无需 B10b 改名，无主线门禁（gate_main 与 variant_main 为空）。
+# 回忆插画清单：
+#   mem-request_eleni-result「封口的小陶罐」：希俄斯港仓房门口的台阶，一只小陶罐封口压着一圈蜡，罐子旁边放着一截新划的树皮。
+
+[[tracks]]
+key = "request_eleni"
+name = "树的眼泪值多少"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["eleni"]
+
+# 一、划得很浅的一刀：希俄斯港的集市上，埃莱妮拿一截树皮给我看，托我去跟代理人谈。
+[[tracks.chapters]]
+key = "offer"
+title = "划得很浅的一刀"
+text = "希俄斯港的集市，埃莱妮蹲在摊子边上，面前摊着一截树皮，小刀贴着皮面划，划得很浅，树脂一滴一滴渗出来，像眼泪。她是从南边的玛蒂克树园下来的，手指上全是黏印。她掰下一小块凝好的树脂塞给我。“商团的代理人又压工钱了，压了两成。”她把刀往树皮上一搁，“园子里哪棵树流的泪最多，只有我知道。谈不拢，我就带着工人去别家园子，看他今年收谁的眼泪。”我问她，要我去做什么。她没答，又划下一刀，划得比刚才还浅。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "eleni", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1558, 1, 1], to = [1563, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1563, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应替她去跟代理人谈。"
+next = "persuade"
+reply = "她把刀收进袖子里，又把树皮翻过来看了看背面。“拿去，让他闻闻。这是第一等的，他一闻就知道，不是仓房里放久了的货。他要是还不信，就让他到树园来，看哪棵树在哭。”"
+effects = [{ kind = "affinity", person = "eleni", value = 2 }, { kind = "flag", flag = "c13_request_eleni_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_trees"
+text = "问她：别家园子真肯收我们？"
+next = "persuade"
+reply = "“肯。”她划下一刀，“只是那边的工钱跟这里一样低，有的还要先扣饭钱。别家的工头也抽成，抽得比这边还狠。所以我要你去谈，不是去吓他。”"
+effects = [{ kind = "affinity", person = "eleni", value = 2 }, { kind = "flag", flag = "c13_request_eleni_accepted" }, { kind = "flag", flag = "c13_request_eleni_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "商团的价，我插不上手。"
+next = "failed"
+reply = "她点点头，没有劝，也没有骂。接着划树，划得比刚才深了一点，树脂一下子多渗出来几滴。她把刀在袖子上擦了擦，那截树皮她留着，没扔。"
+effects = [{ kind = "flag", flag = "c13_request_eleni_declined" }]
+
+# 二、热那亚定的价：港口南边的商团仓房，代理人守着秤和价目册，不肯松口。
+[[tracks.chapters]]
+key = "persuade"
+title = "热那亚定的价"
+text = "商团的仓房在港口南边，高窗，屋里点着灯。代理人坐在一张长桌后头，桌上摆着一杆秤和一本价目册，册子是热那亚那边寄来的。他说玛蒂克的价钱是热那亚定的，他做不了主，“压两成，是账上的数，不是我的脾气。”他的手指在册子上一页页翻，翻到今年那一行，停住了。我问他能不能让一步。他的眼睛落到我手里那块树脂上，没应，先把秤盘推到我面前。“今年的收成要是少了，我也不好交代。”"
+speaker = "captain"
+mood = "tense"
+at = "chios"
+when = [{ kind = "date", from = [1558, 1, 1], to = [1563, 12, 31] }, { kind = "alive", person = "eleni", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "eleni", text = "我带着工人去了别家园子。工钱一样低，可是树是我挑的。——埃莱妮" }, { kind = "affinity", person = "eleni", value = -3 }, { kind = "flag", flag = "c13_request_eleni_late" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_eleni_asked" }]
+text = "商团的仓房在港口南边，高窗，屋里点着灯。代理人坐在一张长桌后头，桌上摆着一杆秤和一本价目册。那天我问过她的“别家园子”，他显然也听说了，手里的笔停了一停。他说玛蒂克的价钱是热那亚定的，他做不了主，“压两成，是账上的数，不是我的脾气。”他的手指在册子上一页页翻，翻到今年那一行，停住了。我问他能不能让一步。他的眼睛落到我手里那块树脂上，没应，先把秤盘推到我面前。“今年的收成要是少了，我也不好交代。”"
+
+[[tracks.chapters.choices]]
+key = "negotiate"
+text = "跟他算账：压两成工钱，少收三成好脂，他亏的比省的多。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "这笔账要会算的人去谈，我的算盘还差一截。"
+next = "result"
+reply = "代理人拨了半天算盘，珠子响了好一阵，末了说工钱只压半成，可今年第一等的树脂要先给他留一份。他说这话时，眼睛没看我，看的是秤。"
+effects = [{ kind = "affinity", person = "eleni", value = 3 }, { kind = "flag", flag = "c13_request_eleni_deal" }]
+news = "希俄斯南边的树园里，马奥纳的代理人只压了半成工钱，听说他跟商团的人拨了半夜的算盘。"
+
+[[tracks.chapters.choices]]
+key = "smell"
+text = "让他闻那块第一等的，说这种只有她找得到。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+reply = "代理人把树脂捏在手里，凑到鼻子下闻了很久。“这种味道，我只在树园里闻到过这一种。”他把价目册合上，说今年的工钱不压了，明年的事明年再说。"
+effects = [{ kind = "affinity", person = "eleni", value = 3 }, { kind = "flag", flag = "c13_request_eleni_deal" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "eleni", value = -2 }], news = "希俄斯港南的商团仓房里，马奥纳的代理人闻了一块树脂，点头说好，可工钱照压，埃莱妮在仓房门口站了很久。" }
+news = "希俄斯港口的人说，马奥纳的代理人今年不压工钱了，听说是一块树脂闻出来的。"
+
+[[tracks.chapters.choices]]
+key = "cover"
+text = "替商团先垫上那两成的差价，这一季不压。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "身上的现钱，凑不齐这一季的差价。"
+next = "result"
+reply = "代理人收了钱，数了两遍，说这一季照旧，明年的账他不管。他问我图什么。我说，图那块树脂的味道。他把钱收进抽屉，锁了两道，才抬头看我。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "eleni", value = 2 }, { kind = "flag", flag = "c13_request_eleni_deal" }]
+news = "希俄斯港的商团仓房里，有人替马奥纳垫了这一季的差价，树园的工人照旧拿着原来的工钱。"
+
+# 三、哪一棵，不告诉你：割脂季收尾，埃莱妮把第一等的树脂封进小陶罐，留了一罐给我。
+[[tracks.chapters]]
+key = "result"
+title = "哪一棵，不告诉你"
+text = "割脂的季节收了尾，南边的树园里只剩下一道道割口，树脂还在慢慢往外渗。埃莱妮坐在仓房门口的台阶上，把今年第一等的树脂装进一个小陶罐，封上口，又用蜡把封口压了一圈。蜡还是热的，她用拇指按了一下，留下一个指印。她掂了掂罐子，忽然说：“这一罐本该先给代理人。我留了一罐，你要不要？”她把罐子往前一推，“要玛蒂克？这一罐，是今年最好的眼泪。”"
+speaker = "captain"
+mood = "cheerful"
+at = "chios"
+objectives = [{ kind = "person", person = "eleni", text = "在仓房门口找到她" }]
+when = [{ kind = "date", from = [1558, 1, 1], to = [1563, 12, 31] }, { kind = "alive", person = "eleni", value = true }]
+news = "希俄斯的割脂季收了尾，树园的姑娘封了一罐第一等的玛蒂克，说是哪棵树流的，不告诉人。"
+
+[[tracks.chapters.choices]]
+key = "take_jar"
+text = "收下那罐树脂，问她是哪一棵。"
+next = "done"
+reply = "她把罐子放进我手里，说这罐的树是哪一棵，她不告诉我。“告诉了你，你就要来割了。”工钱谈下来了，我那一份，她一枚一枚数给了我。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "eleni", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_eleni_done" }, { kind = "memory", memory = "mem-request_eleni-result", title = "封口的小陶罐" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_jar"
+text = "不要，留给工人们分。"
+next = "done"
+reply = "她想了想，把罐子打开，挨个给园子里的工人掰了一小块，最后才轮到我。钱她照付了，一个铜子也没少。“不要罐子的人，我记下了。”"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "eleni", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_eleni_done" }]
+
+# 三′、今年就这样：代理人工钱照压，只让了一点；埃莱妮不闹，把罐子放在台阶上。
+[[tracks.chapters]]
+key = "result_partial"
+title = "今年就这样"
+text = "割脂的季节收了尾。代理人最后还是压了工钱，只是比册子上的数高了一截，算是给我留的面子。埃莱妮没有闹，她把一个小陶罐放在台阶上，封口压着蜡。“今年就这样。”她说，“工钱是他的。树是我挑的，明年也还是我挑。”她说完才看我，像是在等我也说一句。我没有接话。她的袖口上沾着一圈树脂，干了，发亮。"
+speaker = "captain"
+mood = "tender"
+at = "chios"
+when = [{ kind = "date", from = [1558, 1, 1], to = [1563, 12, 31] }, { kind = "alive", person = "eleni", value = true }]
+news = "希俄斯割脂的工棚里，马奥纳的代理人工钱照压，树园的姑娘说今年就这样，明年她自己挑树。"
+
+[[tracks.chapters.choices]]
+key = "take_pay"
+text = "收下工钱，罐子留给她。"
+next = "done"
+reply = "她把钱袋推过来，数也没数。“罐子你不要，那就留着。明年还来买，价钱我自己跟他谈。”她把罐子收回袖子里，封口的蜡又压了一遍。"
+effects = [{ kind = "cash", value = 200 }, { kind = "affinity", person = "eleni", value = 4 }, { kind = "flag", flag = "c13_request_eleni_partial" }]
+
+[[tracks.chapters.choices]]
+key = "take_jar_only"
+text = "钱不要了，只要那罐树脂。"
+next = "done"
+reply = "她愣了一下，把罐子放进我手里，手心还带着树脂的黏。“钱不要，那我就欠你一罐。”她说，“那是这一季最好的，别拿去换钱。”她说完，又看了一眼罐子上的蜡印。"
+effects = [{ kind = "affinity", person = "eleni", value = 6 }, { kind = "flag", flag = "c13_request_eleni_partial" }]

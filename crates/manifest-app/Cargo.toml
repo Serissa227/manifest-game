@@ -1,0 +1,43 @@
+[package]
+name = "manifest-app"
+description = "Manifest 桌面应用（Tauri 2）"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "manifest_app"
+path = "src/lib.rs"
+
+[[bin]]
+name = "manifest-app"
+path = "src/main.rs"
+
+[features]
+default = ["custom-protocol"]
+# 打包前端资源（release 构建必须开启；`tauri dev` 热更新时可关闭）
+custom-protocol = ["tauri/custom-protocol"]
+# Jev 裁决器（见 docs/JEV_CONTRACT.md）
+jev = ["manifest-appcore/jev", "manifest-ai/jev", "manifest-sim/jev"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+manifest-core.workspace = true
+manifest-data.workspace = true
+manifest-ai.workspace = true
+manifest-sim.workspace = true
+# 应用层（处理函数、视图、设置、存档与时钟），原样重新导出
+manifest-appcore.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tauri = { version = "2", features = [] }
+
+[dev-dependencies]
+tempfile.workspace = true
+wiremock.workspace = true

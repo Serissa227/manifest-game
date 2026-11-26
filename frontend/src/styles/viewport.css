@@ -1,0 +1,490 @@
+/* 窗口自适应：跨模块的视口规则（决定见 docs/DECISIONS.md“网页自适应”）。
+ * - 刘海屏安全区（env(safe-area-inset-*)）与动态视口高度（手机浏览器地址栏收起 / 展开时跟着变）；
+ * - 页面不出现横向滚动条；
+ * - 触屏（主要指针是手指）上可点的目标至少 40 px，输入框字号不小于 16 px（iOS 聚焦时不自动放大页面）；
+ * - 各种对话框在矮屏、窄屏上不溢出：高度按可见视口算，内容区滚动；
+ * - 大屏（宽 ≥ 1800 且高 ≥ 1000）加大排版，不拉得稀疏。
+ * 游戏外壳在手机与平板上的紧凑布局在 compact.css。断点与 hooks/useViewport.ts 一致：
+ * 矮窗口 高 < 500、手机 宽 < 720、平板 宽 < 1180、大屏 宽 ≥ 1800 且高 ≥ 1000。 */
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  /* 可见视口的高度（不支持 dvh 的浏览器回退到 vh） */
+  --vh100: 100vh;
+}
+@supports (height: 100dvh) {
+  :root {
+    --vh100: 100dvh;
+  }
+}
+
+/* 页面不出现横向滚动条：个别元素超出时裁掉（各处的溢出另行修好，这里只是兜底）。
+ * html 的 hidden 作用在视口上；body 与 .app 用 clip——hidden 会顺带把它们变成上下滚动的容器，
+ * clip 只裁不滚；不认识 clip 的旧浏览器上由 html 兜底 */
+html {
+  overflow-x: hidden;
+}
+body,
+.app {
+  overflow-x: clip;
+}
+.app.game {
+  height: var(--vh100);
+}
+.app.boot,
+.app.start-root {
+  min-height: var(--vh100);
+}
+
+/* 开局画面左下的语言、音乐：一行放不下就整体折行，按钮里的字不竖排（笔记本上左栏只有三百多像素） */
+.title-controls {
+  flex-wrap: wrap;
+}
+/* 折到第二行的一项与第一行一样高（第一行被语言下拉撑到 32 px） */
+.title-controls > * {
+  white-space: nowrap;
+  min-height: 32px;
+}
+
+/* ── 对话框：高度按可见视口算，安全区之内 ─────────────────── */
+.modal-body,
+.cw-retro.ts-window {
+  max-height: calc(var(--vh100) - 32px - var(--safe-top) - var(--safe-bottom));
+}
+.modal,
+.cw-retro-backdrop {
+  padding-top: max(16px, var(--safe-top));
+  padding-bottom: max(16px, var(--safe-bottom));
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
+}
+.toast {
+  max-width: min(560px, calc(100vw - 24px - var(--safe-left) - var(--safe-right)));
+}
+
+/* 窄屏上对话框的黄铜边框与留白收窄一些，正文多留地方 */
+@media (max-width: 719px), (max-height: 499px) {
+  .modal,
+  .cw-retro-backdrop {
+    padding-left: max(8px, var(--safe-left));
+    padding-right: max(8px, var(--safe-right));
+    padding-top: max(8px, var(--safe-top));
+    padding-bottom: max(8px, var(--safe-bottom));
+  }
+  .modal-body {
+    max-width: 100%;
+    max-height: calc(var(--vh100) - 16px - var(--safe-top) - var(--safe-bottom));
+    border-width: 12px;
+    border-image-width: 12px;
+    padding: 10px 12px;
+  }
+  .cw-retro.ts-window {
+    max-height: calc(var(--vh100) - 16px - var(--safe-top) - var(--safe-bottom));
+  }
+}
+
+/* ── 开局画面与开机画面：手机上 ─────────────────────── */
+@media (max-width: 719px), (max-height: 499px) {
+  /* 标题收小，第一屏就看得到菜单与向导。滚动容器底部不留内边距：贴底的“上一步 / 下一步”要贴着屏幕下沿（内边距会把它顶上去） */
+  .title-ui {
+    gap: 12px;
+    padding: max(12px, var(--safe-top)) max(10px, var(--safe-right)) 0 max(10px, var(--safe-left));
+  }
+  /* 读档页（没有贴底栏）的最后一格下面留白 */
+  .ts-window {
+    margin-bottom: 64px;
+  }
+  .ts-window:has(.ts-launch) {
+    margin-bottom: 0;
+  }
+  .title-side {
+    gap: 10px;
+    padding-top: 0;
+  }
+  .title-emblem {
+    width: 66px !important;
+    height: 66px !important;
+  }
+  .title-name {
+    gap: 8px;
+  }
+  .title-name-en {
+    font-size: 42px;
+  }
+  .title-name-zh {
+    font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .title-name-zh::before,
+  .title-name-zh::after {
+    top: 6px;
+  }
+  .title-tagline {
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .title-era {
+    margin-top: 6px;
+  }
+  .title-era-year {
+    font-size: 14px;
+  }
+  .title-era-lore {
+    font-size: 12px;
+  }
+  .title-menu {
+    align-self: stretch;
+    justify-content: center;
+    margin-top: 4px;
+    padding: 6px;
+  }
+  .title-menu-item {
+    flex: 1 1 0;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 4px;
+    font-size: 17px;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+  .title-menu-cursor {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  /* 语言、音乐：居中（折行见文件开头），只留语言下拉 */
+  .title-controls {
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .title-controls .music-toggle {
+    min-width: 44px;
+    min-height: 40px;
+  }
+  .title-lang-label {
+    display: none;
+  }
+  .title-footer {
+    text-align: center;
+  }
+  /* 向导：步骤条收紧；“上一步 / 下一步”一栏贴在屏幕底部（整页滚动时总看得见） */
+  .cw-stepper {
+    padding: 0 8px 6px;
+  }
+  .cw-stepper li {
+    min-width: 40px;
+  }
+  .cw-stepper-btn {
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  /* 步骤名只在视觉上藏起来（下面的小标题就是这一步的名字；读屏照样读） */
+  .cw-stepper-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  /* 贴着屏幕下沿（滚动容器底部没有内边距）；底部的安全区（全面屏的横条）由自身的内边距让开，背景一直铺到屏幕边 */
+  .ts-launch {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    padding: 8px 56px calc(8px + var(--safe-bottom)) 12px;
+    background: #e2c796 var(--ts-parchment, none) repeat;
+    background-size: 64px 64px;
+    box-shadow:
+      0 -6px 0 -4px #e2c796,
+      0 -8px 12px -8px rgba(43, 27, 23, 0.45);
+  }
+  .ts-launch-row {
+    gap: 8px;
+  }
+  .ts-launch .cw-nav {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 8px;
+  }
+  .ts-launch .cw-nav .ts-btn {
+    flex: 1 1 0;
+    min-height: 44px;
+  }
+  /* 开机画面：徽记按 2 倍画（原来 3 倍） */
+  .app.boot {
+    padding: max(16px, var(--safe-top)) max(12px, var(--safe-right)) calc(72px + var(--safe-bottom)) max(12px, var(--safe-left));
+  }
+  .boot-emblem {
+    width: 128px !important;
+    height: 128px !important;
+  }
+}
+/* 很矮的屏幕（手机横屏）：开机画面的徽记再小一号 */
+@media (max-height: 499px) {
+  .boot-emblem {
+    width: 64px !important;
+    height: 64px !important;
+  }
+}
+/* 手机横屏的开局画面：左边标题与菜单、右边向导窗口（窗口里自己滚动），不必整页上下滚 */
+@media (max-height: 499px) and (min-width: 720px) {
+  .title-ui {
+    grid-template-columns: minmax(250px, 1fr) minmax(0, 560px);
+    grid-auto-rows: auto;
+    align-items: stretch;
+    height: 100%;
+    overflow: hidden;
+    padding-bottom: max(10px, var(--safe-bottom));
+  }
+  .title-side {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-bottom: 56px;
+  }
+  .ts-window,
+  .ts-window:has(.ts-launch) {
+    margin-top: 14px;
+    margin-bottom: 0;
+    min-height: 0;
+    max-height: calc(var(--vh100) - 24px - var(--safe-top) - var(--safe-bottom));
+  }
+  .ts-body {
+    overflow-y: auto;
+  }
+  .ts-launch {
+    position: static;
+  }
+  .title-name-en {
+    font-size: 34px;
+  }
+  .title-era-lore {
+    display: none;
+  }
+}
+/* 单栏时菜单不必拉满整行 */
+@media (max-width: 1000px) {
+  .title-menu {
+    width: min(100%, 520px);
+    align-self: center;
+  }
+  /* 两个键等宽铺满菜单（不留半截空的底板） */
+  .title-menu-item {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
+/* ── 触屏：可点的目标至少 40 px；悬停才有的东西改为常显或点按 ──────── */
+@media (pointer: coarse) {
+  @layer shell-theme {
+    button,
+    .btn {
+      min-height: 40px;
+      touch-action: manipulation;
+    }
+    .tab {
+      min-height: 40px;
+    }
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select,
+    textarea {
+      min-height: 40px;
+      /* iOS 在字号小于 16 px 的输入框聚焦时会放大整页 */
+      font-size: max(16px, 1em);
+    }
+    input[type="checkbox"],
+    input[type="radio"] {
+      width: 22px;
+      height: 22px;
+    }
+    /* 框本身 22 px，连同文字的整行（label）都能点：整行不矮于 40 px（这些 label 都是 flex 排的，内容照旧对齐） */
+    label:has(input[type="checkbox"]),
+    label:has(input[type="radio"]) {
+      min-height: 40px;
+    }
+    input[type="range"] {
+      min-height: 40px;
+    }
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* 年龄的快捷按钮与 −/+ */
+  .ts-btn-arrow,
+  .ts-btn-small {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  /* 开局画面左下的音乐：平板上同样是手指点（手机上另有同样的规则） */
+  .title-controls .music-toggle {
+    min-width: 44px;
+    min-height: 40px;
+  }
+}
+/* 没有悬停（触屏）：原来悬停才露出的提示常显 */
+@media (hover: none) {
+  .ts-save .ts-save-go {
+    visibility: visible;
+  }
+}
+
+/* ── 大屏：加大排版（窗口更宽、字更大、按钮更大），不拉得稀疏 ──────────── */
+@media (min-width: 1800px) and (min-height: 1000px) {
+  :root {
+    --gw-medium: 760px;
+    --gw-large: 1360px;
+  }
+  /* 顶栏 */
+  .hud {
+    column-gap: 22px;
+    padding: 8px 20px 18px;
+  }
+  .hud-portrait {
+    width: 88px;
+    height: 88px;
+  }
+  .hud-portrait .portrait-art,
+  .hud-portrait canvas {
+    width: 76px !important;
+    height: 76px !important;
+  }
+  .hud-id {
+    max-width: 220px;
+  }
+  .hud-name {
+    font-size: 21px;
+  }
+  .hud-rank,
+  .hud-where {
+    font-size: 14px;
+  }
+  .hud-stats {
+    gap: 3px 26px;
+  }
+  .hud-stat-label {
+    font-size: 13px;
+  }
+  .hud-stat-value {
+    font-size: 18px;
+  }
+  .hud-goal {
+    font-size: 14px;
+  }
+  .hud-bar {
+    height: 14px;
+  }
+  .hud-date {
+    height: 36px;
+    font-size: 16px;
+  }
+  .hud-now {
+    font-size: 14px;
+  }
+  .hud-clock-time {
+    font-size: 15px;
+  }
+  .hud button {
+    min-height: 32px;
+    font-size: 15px;
+  }
+  .hud .speed .speed-n {
+    min-width: 40px;
+  }
+  .saves input:not([type="checkbox"]) {
+    font-size: 15px;
+  }
+  /* 命令栏：按钮与图标放大一号（图标按 3 倍画，像素整齐） */
+  .cmdbar {
+    --cmd-h: 76px;
+    gap: 14px;
+    padding: 20px 16px 10px;
+  }
+  .cmd-stage,
+  .cmd-tabs {
+    gap: 6px;
+  }
+  .cmdbar .cmd {
+    min-width: 84px;
+    height: 76px;
+    font-size: 14px;
+  }
+  .cmd-stage .cmd {
+    min-width: 94px;
+  }
+  .cmdbar .cmd .shell-icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  /* 功能窗口 */
+  .gw-body {
+    font-size: 15px;
+  }
+  .gw-center.gw-medium {
+    width: min(900px, calc(100% - 40px));
+  }
+  .gw-head {
+    min-height: 50px;
+  }
+  .gw-plaque {
+    height: 36px;
+    font-size: 19px;
+  }
+  .gw-close {
+    width: 32px;
+    height: 32px;
+  }
+  /* 港口名牌、出港与航海图的侧栏 */
+  .scene-hud {
+    top: 18px;
+    left: 18px;
+  }
+  .scene-sign-name {
+    font-size: 26px;
+  }
+  .scene-sign-sub {
+    font-size: 14px;
+  }
+  .scene-depart {
+    font-size: 24px;
+  }
+  .chart-side {
+    width: 300px;
+  }
+  .chart-win-title h3 {
+    font-size: 15px;
+  }
+  .chart-view .chart-loc-list .loc,
+  .chart-view .chart-legend,
+  .voyage-kv {
+    font-size: 14px;
+  }
+  .gamelog {
+    width: min(480px, calc(100% - 24px));
+  }
+  .notice {
+    font-size: 14px;
+  }
+}
+
+/* FE2：手机宽度下（经典界面）“继续”的小字单独一行，超长打省略号 */
+@media (max-width: 719px) {
+  .title-menu-continue {
+    min-width: 0;
+  }
+  .title-menu-note {
+    min-width: 0;
+    max-width: 100%;
+    padding-left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    letter-spacing: 0;
+  }
+}

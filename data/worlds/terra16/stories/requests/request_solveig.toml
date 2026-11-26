@@ -1,0 +1,190 @@
+# 请托：格陵兰的炊烟（request_solveig）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-24，Claude 执笔。
+# 人物：索尔维格 solveig（1493-09-09 生，女），哈夫纳夫约杜尔的说书老太太（cast/story_europe.toml）。
+# 类型：混合（mixed）。卑尔根送抄本换航路（去某处）→ 往西看格陵兰的遗迹（登岸或画岸）→ 回港照实讲或留一点希望（当面）→ 终章。
+# 报价：当面（T），报价港 hafnarfjordur。auto=false，玩家在港里找到她（ask:request_solveig 启动）。报价窗口 1572-01-01 至 1585-06-30；之后各章的窗口写在 when 的 date 里，止于 1585-12-30。
+# 依据（史实）：格陵兰东定居点在 15 世纪前后消失（史实，正文只写遗迹，不写原因）；文兰萨迦（史上的文本，说书人讲的版本）；卑尔根汉萨商站与布吕根码头。
+# 依据（原创）：索尔维格的说书与口头禅；祖父的冰岛海旧图与旧航路；布吕根商站的老商人（叙事人物，不起全名、不建 cast）；峡湾的石墙、没顶的教堂与冷灶；门边的水手帽（C7 变体）。
+# 待核：卑尔根汉萨商站的账目与旧航路的保存方式（正文一律用传闻口吻）。
+# 秘密：cast 没写秘密；本请托不碰，正文与见闻都不写。
+# 读写的旗标：设 c13_request_solveig_accepted / declined / route / landed / drawn / late / partial / done。读 c7_pair_hans_brock_solveig_together（只在 report 的变体里写门边一顶水手帽，一句，不写人）。
+# 依赖：无改名依赖（hafnarfjordur、bergen、ruin_greenland、iceland_sea、solveig 现成）；技能 lang_german、cartography 现成；属性 eloquence、seamanship 现成。
+# 回忆插画清单：
+#   mem-request_solveig-report：火塘边的老太太，膝上摊着一张冰岛海的旧图，图上添了一行新字。
+# 缺省走向：offer 超时走 failed，不写见闻（没人知道这件事没成）；bergen、west 超时各给一封来信；report 没有期限，可以一直等。
+# 偏离与说明：look（船上画岸）不登岸，所以不设 landed，改设分支旗标 drawn；report 的变体按 landed 的有无分“登岸”与“远望”两种正文。检定失败的 fail 分支没有回复字段：卑尔根的失败话写在 fail.news 里（进卑尔根见闻）；西岸上岸失败时正文已写浪撞在滩上，报告章的未登岸变体接着讲。成功的回复只回答本选项。
+# 终局旗标：done（照实讲）/ partial（留一点希望）/ late（超时）；declined 是回绝。
+
+[[tracks]]
+key = "request_solveig"
+name = "格陵兰的炊烟"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["solveig"]
+
+# offer · 1572—1585 · 哈夫纳夫约杜尔的码头：一部萨迦抄本，一张旧航路，一个没去过的地方
+[[tracks.chapters]]
+key = "offer"
+title = "讲了一辈子没去看过"
+text = "哈夫纳夫约杜尔的码头边，说书的索尔维格坐在一只矮凳上，膝上压着一部皮面磨得发亮的萨迦抄本。“坐近点，我嗓子不如从前了。”她把抄本塞进我手里，“先说你拿什么换。”我还没开口，她已经讲起卑尔根：汉萨商站的德意志商人欠她一个人情，这部抄本送过去，那边会翻出一张旧航路来还。那是她祖父那辈人往西去格陵兰时用的。“我要的不是航路。”她拍了拍封皮，“是航路的尽头。看看格陵兰的老农庄还有没有炊烟。我讲了一辈子，没去看过。”"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "solveig", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1572, 1, 1], to = [1585, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1585, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应先去卑尔根，再往西。"
+next = "bergen"
+effects = [{ kind = "affinity", person = "solveig", value = 2 }, { kind = "flag", flag = "c13_request_solveig_accepted" }]
+reply = "她把萨迦翻到某一页，用指甲划了一道：“这一段是他们要的。别让他们只抄这一段。”"
+
+[[tracks.chapters.choices]]
+key = "ask_saga"
+text = "请她先把文兰那一段讲一遍。"
+next = "bergen"
+effects = [{ kind = "affinity", person = "solveig", value = 2 }, { kind = "flag", flag = "c13_request_solveig_accepted" }]
+reply = "她讲了，讲到一半换了个人名，你问她，她眯着眼想了想，说上回讲的那个也对。“萨迦是讲出来的，”她说，“讲一回，就长一点。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "格陵兰太远，你不去。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_solveig_declined" }]
+reply = "她把萨迦从你手里抽回去，抱在怀里拍了拍封皮。“那我就接着讲，”她说，“讲到有人肯去为止。”"
+
+# bergen · 1572—1585 · 布吕根码头的汉萨商站：老商人翻开萨迦，旧航路在箱底
+[[tracks.chapters]]
+key = "bergen"
+title = "箱底的旧航路"
+text = "卑尔根布吕根码头的汉萨商站，木墙里飘着鱼油和湿羊毛的味道。一个老德意志商人接过萨迦，翻到某一页停住，手指在一行韵文上压了压，眼睛亮了一下。他说那张旧航路在商站的箱底，压了快五十年。可这份人情是索尔维格和他父亲之间的，他得想想认不认。“你是她派来的船长，”他用德语问我，“还是只是拿书来的人？”他把萨迦合上，放在手边，没有还给我。"
+speaker = "captain"
+mood = "tense"
+at = "bergen"
+when = [{ kind = "date", from = [1572, 1, 1], to = [1585, 12, 30] }, { kind = "alive", person = "solveig", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "solveig", text = "卑尔根那边说没人来过。萨迦你先留着，我接着讲。" }, { kind = "affinity", person = "solveig", value = -3 }, { kind = "flag", flag = "c13_request_solveig_late" }] }
+news = "卑尔根布吕根码头的汉萨商站里，一个老商人用一张发黄的航路换下了一部冰岛萨迦。"
+
+[[tracks.chapters.choices]]
+key = "german"
+text = "用德语跟他讲：人情是他父亲的，账也是他父亲的，他接了商站，也接了账。"
+next = "west"
+requires = [{ kind = "skill", skill = "lang_german", ge = 60 }]
+hint = "你的德语绕不过那些从句，这番话说不完整，他会打断你。"
+effects = [{ kind = "affinity", person = "solveig", value = 3 }, { kind = "flag", flag = "c13_request_solveig_route" }]
+reply = "老商人笑了，说汉萨的人最认账，从箱底翻出一张发黄的纸，上面画着几道线和几个岛的样子。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说萨迦的抄本卑尔根找不到第二部。"
+next = "west"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "west", effects = [{ kind = "affinity", person = "solveig", value = -2 }, { kind = "flag", flag = "c13_request_solveig_route" }], news = "卑尔根布吕根码头的汉萨商站里，有个船长跟老商人争了半天，只抄回一份航路，萨迦还留在商站。" }
+effects = [{ kind = "affinity", person = "solveig", value = 3 }, { kind = "flag", flag = "c13_request_solveig_route" }]
+reply = "他把你的话在嘴里嚼了两遍，才从箱底抽出那张航路递过来。萨迦没还，他说那本书该留在卑尔根，才对得起它的年纪。"
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "加一笔钱，把航路买下来。"
+next = "west"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上的钱凑不出这一笔，这话先不提。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "solveig", value = 2 }, { kind = "flag", flag = "c13_request_solveig_route" }]
+reply = "他把钱数了两遍，才把航路推过来。“这样最清楚，”他说，“人情是索尔维格的事，钱是我们的事。”"
+
+# west · 1572—1585 · 格陵兰的峡湾：石墙、没顶的教堂，没有炊烟
+[[tracks.chapters]]
+key = "west"
+title = "没有炊烟"
+text = "照着旧航路往西，冰山一座比一座大，海水冷得发黑。到了格陵兰的峡湾里，两侧的山壁压下来。岸上有石墙，石墙围出一块一块的草场，中间一座没顶的教堂，草长得比墙还高。我把船停在石滩外，浪一下一下撞在滩上，远处没有羊叫，也没有狗。风从峡口灌进来，吹得桅上的旧帆啪啪响。草场一直伸到石墙根下，没有炊烟，一缕也没有。"
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "discovery", discovery = "ruin_greenland", text = "到格陵兰的峡湾找到那处遗迹" }]
+when = [{ kind = "date", from = [1572, 1, 1], to = [1585, 12, 30] }, { kind = "alive", person = "solveig", value = true }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "letter", person = "solveig", text = "你没往西去。格陵兰的事，我还是照老样子讲。" }, { kind = "affinity", person = "solveig", value = -3 }, { kind = "flag", flag = "c13_request_solveig_late" }] }
+
+[[tracks.chapters.choices]]
+key = "search"
+text = "上岸走一圈，看还有没有人住过的新痕迹。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "report", effects = [{ kind = "affinity", person = "solveig", value = -2 }] }
+effects = [{ kind = "affinity", person = "solveig", value = 3 }, { kind = "flag", flag = "c13_request_solveig_landed" }]
+reply = "你在教堂墙根下找到一块刻着字的木头，字已经认不出来了。灶坑里是冷的，冷了很多年。"
+
+[[tracks.chapters.choices]]
+key = "look"
+text = "不上岸，在船上画下这片岸。"
+next = "report"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你的线画不到那么细，峡湾的轮廓落不上纸，这句先不说。"
+effects = [{ kind = "affinity", person = "solveig", value = 3 }, { kind = "flag", flag = "c13_request_solveig_drawn" }]
+reply = "你画下了峡湾、石墙和那座没顶的教堂，草场的界线也一条条描上了。"
+
+# report · 1572—1585 · 哈夫纳夫约杜尔的火塘边：她问你，以后怎么讲这一段
+[[tracks.chapters]]
+key = "report"
+title = "以后怎么讲这一段"
+text = "哈夫纳夫约杜尔的火塘边，索尔维格把膝上的毯子拉到腿上，听你讲：峡湾、石墙、草场里那座没顶的教堂，还有灶坑里冷了很多年的灰。她一直没有插话，只把木勺在碗沿上敲了两下。讲到灶坑，她停了一会儿。屋里炖着鱼，她却像没闻到。末了她抬起头问我：“你说，这一段我以后怎么讲？”"
+speaker = "captain"
+mood = "tender"
+at = "hafnarfjordur"
+when = [{ kind = "date", from = [1572, 1, 1], to = [1585, 12, 30] }, { kind = "alive", person = "solveig", value = true }]
+news = "哈夫纳夫约杜尔的说书老太太讲格陵兰，最近多了一段：有个船长去看过，岸上石墙还在，没见着炊烟。"
+
+[[tracks.chapters.choices]]
+key = "tell_true"
+text = "照实讲：去了，没有炊烟。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "solveig", value = 8 }, { kind = "fame", value = 3 }, { kind = "chart", region = "iceland_sea" }, { kind = "flag", flag = "c13_request_solveig_done" }, { kind = "memory", memory = "mem-request_solveig-report", title = "火边听讲的老太太" }]
+reply = "她点点头，说那她以后讲到这里，就说有一个船长去看过，岸上没有炊烟。她把祖父画的一张冰岛海旧图给了你，图上添了一行新字：格陵兰，石墙在，无烟。"
+
+[[tracks.chapters.choices]]
+key = "leave_hope"
+text = "说：也许他们往更西边去了，你没看见。"
+next = "epilogue"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "solveig", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_solveig_partial" }]
+reply = "她笑了，说这样讲也好听，听的人会想去看。报酬照数给了你，那张旧图她留着。"
+
+[[tracks.chapters.variants]]
+key = "a_unlanded_hat"
+when = [{ kind = "flag", flag = "c13_request_solveig_landed", value = false }, { kind = "flag", flag = "c7_pair_hans_brock_solveig_together" }]
+text = "哈夫纳夫约杜尔的火塘边，索尔维格把膝上的毯子拉到腿上，听你讲：峡湾、石墙、草场里那座没顶的教堂。你没有上岸，她就问得很细，你答不上来的地方，她也不催。她一直没有插话，只把木勺在碗沿上敲了两下。门边那顶德意志水手帽还挂着，帽檐上一圈盐渍。末了她抬起头问我：“你说，这一段我以后怎么讲？”"
+
+[[tracks.chapters.variants]]
+key = "b_hat"
+when = [{ kind = "flag", flag = "c13_request_solveig_landed" }, { kind = "flag", flag = "c7_pair_hans_brock_solveig_together" }]
+text = "哈夫纳夫约杜尔的火塘边，索尔维格把膝上的毯子拉到腿上，听你讲：峡湾、石墙、草场里那座没顶的教堂，还有灶坑里冷了很多年的灰。她一直没有插话，只把木勺在碗沿上敲了两下。讲到灶坑，她停了一会儿。屋里炖着鱼，她却像没闻到。门边那顶德意志水手帽还挂着，帽檐上一圈盐渍。末了她抬起头问我：“你说，这一段我以后怎么讲？”"
+
+[[tracks.chapters.variants]]
+key = "c_unlanded"
+when = [{ kind = "flag", flag = "c13_request_solveig_landed", value = false }]
+text = "哈夫纳夫约杜尔的火塘边，索尔维格把膝上的毯子拉到腿上，听你讲：峡湾、石墙、草场里那座没顶的教堂。你没有上岸，她就问得很细，你答不上来的地方，她也不催。她一直没有插话，只把木勺在碗沿上敲了两下。末了她抬起头问我：“你说，这一段我以后怎么讲？”"
+
+# epilogue · 1572—1585 · 哈夫纳夫约杜尔：一屋子孩子听文兰萨迦，她没改词
+[[tracks.chapters]]
+key = "epilogue"
+title = "这一回没改词"
+text = "过了些日子，我在哈夫纳夫约杜尔的码头上又找到索尔维格。她坐在一屋子孩子中间，正讲文兰萨迦。孩子们把草垫坐得满满的，有个小子嚼着鱼干，眼睛却不离她的嘴。她讲到那些人在海边搭木屋，讲到一个冬天的大雪。嗓子比从前哑了，该停的地方，她还是停得准。讲到格陵兰那一段，她抬起头，看见门口的我，停了一下。屋里的孩子也跟着回头，像是等她把这一段讲完。"
+speaker = "captain"
+mood = "cheerful"
+at = "hafnarfjordur"
+when = [{ kind = "date", from = [1572, 1, 1], to = [1585, 12, 30] }, { kind = "alive", person = "solveig", value = true }]
+
+[[tracks.chapters.choices]]
+key = "sit"
+text = "坐下来听她讲完。"
+next = "done"
+effects = [{ kind = "affinity", person = "solveig", value = 2 }]
+reply = "她讲到格陵兰，说有个船长去看过——她指了指你。孩子们全回头看你，你只好点头。"
+
+[[tracks.chapters.choices]]
+key = "wave"
+text = "摆摆手，让她接着讲，你去码头了。"
+next = "done"
+effects = [{ kind = "affinity", person = "solveig", value = 1 }]
+reply = "你摆了摆手，退到门外，隔着门听见她讲：“岸上没有炊烟。”这一回，她没改词。"

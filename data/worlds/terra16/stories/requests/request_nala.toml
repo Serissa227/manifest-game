@@ -1,0 +1,172 @@
+# 请托：母亲卖掉的琴（request_nala）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：娜拉（nala，1540-06-07 生，女），安达卢斯区乐师的女儿，弹乌德琴；势力 morocco，身份档 1。cast：cast/classmates_fez.toml。
+# 类型：说服某人（persuade）。任务单三章（offer、persuade、result），文件里四章：result_partial 是 result 的“只弹一晚”版本。
+#   引擎的变体只改文字、不改玩法，而这一支的现金、技能、终局旗标都不同，所以拆成两章；persuade 的检定失败直接 next 到 result_partial。
+# 报价：V（到访）。娜拉随婚宴乐班下到得土安（tetouan）港口，auto=true；offer 写 family=c13_offer_tetouan，冷却 20 天；
+#   玩家满 17 岁、娜拉满 18 岁、名声 ≥ 30（V 的名声门槛，1572 年已封顶）；窗口 1572-01-01 至 1575-12-31，offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 日期：普通章不写 window（引擎只在 stage 章用窗口），起止日写进 when。persuade 与 result 的 when 为 1572-01-01 至 1577-02-23；
+#   persuade 进入后限期 90 天（同一海区），超时 next=failed，娜拉来信一封，好感 -3，旗标 _late，超时另写一条见闻。
+# 依据·史实背景：格拉纳达流亡者在北非的乐师传统（安达卢斯的努巴）；阿尔及尔有许多格拉纳达来的人家；阿尔拜辛是格拉纳达的老城区名。
+#   待核：阿尔及尔这一户人家与那把琴的来历是原创；格拉纳达流亡者在阿尔及尔的具体街区不写地名以外的细节。
+# 依据·原创：娜拉与母亲卖琴的旧事、琴肚里母亲偷偷刻下的一行小字、阿尔及尔的商人（不取名，他是格拉纳达流亡者的后代，阿尔拜辛区出来的）、廊下的橘子树。
+# 秘密：母亲卖琴与娜拉攒赏钱的办法。正文只写“母亲卖掉的琴”与“剩下的赏钱”，攒了多少年、怎么攒的不写；见闻不写赏钱。
+# 读的旗标：无。offer 的变体读 bond nala ≥ C（条件不是旗标）。不设任何 c7_ 旗标。
+#   不写埃丝特、阿伊莎、伊德里斯、塔里克（C7）；不写曲本、学堂、批注本。
+# 待决（编辑核对时发现，待裁定）：C7 的 bond_nala 1562 重逢（default 来信写“琴赎回来了”）与 c7_bond_nala_own（梅拉区橱窗里的那把琴）说琴在 1560 年前后已经赎回；本轨道的前提是琴 1572 年仍在阿尔及尔商人手里、娜拉还在攒钱赎琴。两者相冲突。本文件按任务单的前提写，没有改 C7。
+#   offer 变体里曲谱末了一句写着“这一遍你唱”（只是写下的字，不是说出口）；口头禅只在 persuade 章 play_with 选项的回复里由娜拉说出口一次（任务单写她在 persuade 章一句话也不说）。
+# 设的旗标：c13_request_nala_accepted（offer 接下，两种接法）、_declined（offer 回绝）；
+#   分支旗标 _played（persuade 合琴或拨弦）、_one_night（argue 检定失败，只借一晚）；终局旗标 _late（超时）、_done（result）、_partial（result_partial），每条路只设一面。
+# 不用 relation / tie / bond / heart 效果；bond 只作条件读取。
+# 报酬：现金最多 900（只弹一晚 500）；好感最多 +13；名声 +1；技能 oud_playing +20（只一次）；回忆 mem-request_nala-result。
+#   pay_more 的 600 是玩家自己出的钱，先用 requires 查过。
+# 依赖：港口 tetouan、algiers（ports_north_africa.toml）；技能 oud_playing（skills.toml）；人物 nala。无 B10b 改名；无主线门禁（不写 c13_main_ 门禁）。
+# 与 C7 的交叉：tie_esther_nala、tie_new_nala_aisha、tie_new_idriss_qalam_nala与本轨道无关，本轨道不写他们；bond_nala 的冲突见上面的待决。
+# 回忆插画清单：
+#   mem-request_nala-result「码头上的老琴」：得土安的码头石阶，娜拉把老琴转过来，指着琴肚里一行歪斜的小字。
+
+[[tracks]]
+key = "request_nala"
+name = "母亲卖掉的琴"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["nala"]
+
+# 一、琴肚里的名字：得土安的婚宴散了场，娜拉过来跟你说话，要你替她去阿尔及尔谈那把琴。
+[[tracks.chapters]]
+key = "offer"
+title = "琴肚里的名字"
+text = "得土安的婚宴，乐班在院子里奏到第三遍。娜拉抱着一把借来的乌德琴，弹完最后一首，才穿过人群走到你跟前。她从袖子里摸出一小卷钱，放在桌上，又收回去。“我打听到了。我娘当年卖掉的那把老琴，在阿尔及尔一个商人手里。琴肚里刻着做琴人的名字，格拉纳达的。”她看着你，嘴角压得很平。“他不卖。我不会求人。你去。他要钱，给钱；他要理，讲理；他要听琴，我跟你去，弹给他听。”"
+speaker = "captain"
+mood = "tense"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "在得土安的港里" }]
+when = [{ kind = "date", from = [1572, 1, 1], to = [1575, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "nala", ge = 18 }, { kind = "fame", ge = 30 }]
+deadline = [1575, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_tetouan"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "nala", level = "C" }]
+text = "得土安的婚宴，乐班在院子里奏到第三遍。娜拉抱着一把借来的乌德琴，弹完最后一首，才穿过人群走过来。她从琴袋里抽出一张曲谱，塞到你手里，末了一句用炭笔写着：“这一遍你唱。”她说：“我打听到了。我娘当年卖掉的那把老琴，在阿尔及尔一个商人手里。琴肚里刻着做琴人的名字，格拉纳达的。”她看着你，嘴角压得很平。“他不卖。我不会求人。你去。他要钱，给钱；他要理，讲理；他要听琴，我跟你去，弹给他听。”"
+
+[[tracks.chapters.choices]]
+key = "go_algiers"
+text = "接下，带她去阿尔及尔见那个商人。"
+next = "persuade"
+reply = "她把钱袋系在腰上，系了两道，又把借来的琴还给了乐班。“这回去，回来就有自己的了。”"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "flag", flag = "c13_request_nala_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_song"
+text = "接下，先问：他老家是哪儿，你打算弹哪一首？"
+next = "persuade"
+reply = "“阿尔拜辛。”她说，那一片的人都爱一首曲子，走调的地方都一样。“我照着走调的弹。”"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "flag", flag = "c13_request_nala_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "他不肯卖，硬要也要不来。"
+next = "failed"
+reply = "她哼了一声，说那她就再攒，攒到他不好意思不卖。"
+effects = [{ kind = "flag", flag = "c13_request_nala_declined" }]
+
+# 二、商人的院子：阿尔及尔，商人不卖，只说要有人能让琴再响一回老家的声音。
+[[tracks.chapters]]
+key = "persuade"
+title = "商人的院子"
+text = "阿尔及尔，商人的宅子在旧城一条窄巷尽头。院子里一棵橘子树，那把老琴挂在廊下，琴面的漆裂了几道。商人请你坐，话说得客气：“琴我不卖。”他小时候在阿尔拜辛听过这把琴的声音，买下它，就是买下一点老家。娜拉站在你身后，攥着钱袋，一句话也不说。商人看了她很久，才说：“除非有人能让这把琴再响一回老家的声音。”"
+speaker = "captain"
+mood = "tender"
+at = "algiers"
+objectives = [{ kind = "at", at = "algiers", text = "到阿尔及尔商人的宅子里" }]
+when = [{ kind = "alive", person = "nala", value = true }, { kind = "date", from = [1572, 1, 1], to = [1577, 2, 23] }]
+deadline_days = 90
+news = "阿尔及尔一户格拉纳达人家的院子里，一把老乌德琴响了一晚上阿尔拜辛的调子。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "nala", value = -3 }, { kind = "flag", flag = "c13_request_nala_late" }, { kind = "letter", person = "nala", text = "我自己去了一趟阿尔及尔。他还是不卖，让我弹了一晚。——娜拉" }]
+news = "阿尔及尔一户格拉纳达人家的院子里，有个得土安来的女人抱着一把借来的琴，弹了一晚上老调，商人还是不卖。"
+
+[[tracks.chapters.choices]]
+key = "pay_more"
+text = "加上我的钱，出一个他不好意思拒绝的价。"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "你的钱袋，还够不上他开的价。"
+news = "阿尔及尔旧城一户格拉纳达人家，廊下那把老乌德琴卖了。买主是得土安来的一个女乐师，钱是两袋凑起来的。"
+next = "result"
+reply = "商人掂了掂钱袋，叹了口气。钱他收下了，琴却得让他再摸一回。他的手顺着琴颈摸下去，摸到裂纹，停住，说：“琴是你们的了。”"
+effects = [{ kind = "cash", value = -600 }, { kind = "affinity", person = "nala", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "跟他说：琴挂在廊下不响，就不是老家的声音。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "result"
+reply = "他想了很久，把琴从钉子上取下来，递给娜拉。“你弹，弹完它跟你走。”"
+effects = [{ kind = "affinity", person = "nala", value = 3 }, { kind = "flag", flag = "c13_request_nala_played" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "nala", value = -2 }, { kind = "flag", flag = "c13_request_nala_one_night" }], news = "阿尔及尔一户格拉纳达人家的院子里，有人替一个女孩讲了半天理，商人最后只肯借琴弹一晚。" }
+
+[[tracks.chapters.choices]]
+key = "play_with"
+text = "我拿起院子里另一把琴，跟娜拉合一首阿尔拜辛的老调。"
+requires = [{ kind = "skill", skill = "oud_playing", ge = 60 }]
+hint = "你会拨几下，可合不上她的调。"
+next = "result"
+reply = "娜拉对我说：“这一遍你唱，别又用笑话混过去。”我们俩照着走调的地方弹，一处都不改。商人听到一半，眼泪掉下来。曲子完了，他把老琴取下来，放进娜拉怀里。"
+effects = [{ kind = "affinity", person = "nala", value = 3 }, { kind = "flag", flag = "c13_request_nala_played" }]
+
+# 三、自己的琴：得土安的码头上，琴赎回来了，娜拉把琴肚里那行小字指给你看。
+[[tracks.chapters]]
+key = "result"
+title = "自己的琴"
+text = "回到得土安，娜拉抱着那把老琴坐在码头的石阶上，琴面的裂纹她用指头一道一道摸过去。她调了弦，弹了一段，没弹完就停下来。“琴肚里还有一行字。”她把琴转过来，让你看。做琴人的名字底下，刻着一行更小的字，歪歪斜斜，只有一个女人的名字，没有姓。码头上有人挑着鱼筐走过去，扁担吱呀一响，她没有回头。“我娘卖琴前，偷偷刻上去的。”她说完，把琴抱紧了些。"
+speaker = "captain"
+mood = "cheerful"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "回到得土安" }]
+when = [{ kind = "alive", person = "nala", value = true }, { kind = "date", from = [1572, 1, 1], to = [1577, 2, 23] }]
+news = "得土安的码头上，安达卢斯乐师的女儿抱着一把赎回来的老琴弹了一下午。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "请她把那一段弹完。"
+next = "done"
+reply = "她弹完了，还是她母亲常哼的那一首，走调的地方一处没改。她付了钱，说剩下的赏钱，这回可以花了。又教了我那首曲子开头的指法。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "nala", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "oud_playing", value = 20 }, { kind = "flag", flag = "c13_request_nala_done" }, { kind = "memory", memory = "mem-request_nala-result", title = "码头上的老琴" }]
+
+[[tracks.chapters.choices]]
+key = "ask_mother"
+text = "问她：要不要把琴拿给母亲看？"
+next = "done"
+reply = "“她看了会哭，哭完会骂我乱花钱。”娜拉笑了一下，说那也要拿去。她付了钱，手指在钱袋口上停了一下，才松开。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "nala", value = 7 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "oud_playing", value = 20 }, { kind = "flag", flag = "c13_request_nala_done" }, { kind = "memory", memory = "mem-request_nala-result", title = "码头上的老琴" }]
+
+# 三′、只借一晚：琴没有赎回来，娜拉还是把借来的那把琴抱在怀里，说至少老琴记得她。
+[[tracks.chapters]]
+key = "result_partial"
+title = "只弹了一晚"
+text = "回到得土安，娜拉抱着乐班借她的那把乌德琴坐在码头的石阶上。阿尔及尔的老琴没有赎回来。商人只肯让她弹一晚，天亮前，琴就挂回了廊下。她拨了几下弦，没有调准，又拨了几下。码头上的风大，她把琴袋的带子拉紧，手指在琴颈上停了一会儿。“老琴至少记得我了。”她又说：“下回去，我自己带够钱。”"
+speaker = "captain"
+mood = "sad"
+at = "tetouan"
+objectives = [{ kind = "at", at = "tetouan", text = "回到得土安" }]
+when = [{ kind = "alive", person = "nala", value = true }, { kind = "date", from = [1572, 1, 1], to = [1577, 2, 23] }]
+news = "得土安的码头上，安达卢斯乐师的女儿从阿尔及尔回来，怀里抱的还是别人借她的琴。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "请她把这一晚的曲子弹完。"
+next = "done"
+reply = "她从头弹到尾，错的地方一个没改。她付了钱，说这一晚是那把琴给的，剩下的，她自己攒。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "nala", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_nala_partial" }]
+
+[[tracks.chapters.choices]]
+key = "ask_next"
+text = "问她：下一回，还去阿尔及尔吗？"
+next = "done"
+reply = "她付了钱，又把钱袋系好。“去。他那晚没听完我的第二首。”她说下回去，就只弹给他一个人听。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "nala", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_nala_partial" }]

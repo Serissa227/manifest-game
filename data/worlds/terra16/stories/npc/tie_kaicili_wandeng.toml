@@ -1,0 +1,63 @@
+# 丁香与名单（tie_kaicili_wandeng）——主角之间的关系轨道（NPC—NPC），标签：无恋爱（恋爱归 C7；NPC 主角之间不写恋情）。
+# 人物：凯奇利·劳特（kaicili，特尔纳特苏丹的小儿子，爱压价、爱班顿）；林晚灯（lin_wandeng，月港林家的女船主，快嘴）。
+#       两人都是 NPC：两章都是码头与香料行里的转述，没有“我”，不写 speaker；正文只叫“特尔纳特的王子”“月港林家的女船主”，
+#       见闻里同样不叫名字、不用“他们”“她们”的合称。
+# 轨道：tie_kaicili_wandeng（request，auto=true，start t1_the_list）。两章，都是见闻（rumor），没有选项，窗口一到走 default。
+#       门槛：两人的 c12_voyage_* 都为 false 且 upbringing_graduated（两人都不是玩家时才跑）；第一章就是门槛，不满足则静默失败。
+#       不用 heart、relation、tie、bond 效果；两人之间只写丁香生意与一张名单。关系落点在 cast/ties.toml 的 kaicili_wandeng
+#       （friends，since 1574-12-31），本轨道不写关系效果。
+# 依据（史实）：1574 年冬林凤的船队攻马尼拉，西班牙人守城，城外聚居的华人夹在两边之间；1575 年初王望高追林凤至吕宋。
+#       特尔纳特是丁香的产地，苏丹家 1575 年收回堡垒后，丁香的收购价由特尔纳特说了算；月港 1567 年起准民船领引往东西洋，
+#       运丁香回来的船在月港行里过秤。班顿（pantun）是马来—摩鹿加一带的四行诗，一三行、二四行押同一个韵。
+# 原创：丁香合同谈到一半被一张名单打断；念名字、数人头、一户上船、一颗丁香落进碗里；
+#       月港行里“念一首番歌再开价”、韵脚对不上就磨价的规矩；伙计与老掌柜的话。
+# 待核：林凤围攻期间城外华人如何撤离，史料说法不一，正文只用马尼拉老唐人转述的口吻，不写成定论。
+# 秘密：两人的秘密一个也不碰（凯奇利心里的刺；林晚灯在社学的事）；见闻不写任何秘密。
+# 共享旗标：读 c12_voyage_kaicili、c12_voyage_lin_wandeng（均为 false）、upbringing_graduated。写：无。
+# 等待的包：A9——门槛可改为 protagonist_in 排除两人；整合方把 cast/ties.toml 里凯奇利与林晚灯那条关系的 story 指向本轨道（key 不变），
+#       并在 world.toml 的 tables.stories 登记本文件、从 runtime_links.toml 的 pending_tracks 删去本轨道。
+# HIST 占位清单：无。
+# 回忆插画清单：无（本轨道不设回忆）。
+# 写法注意：不重写 main_kaicili b06（巴石河口的红灯）与 main_lin_wandeng b04 的场面，只写事后的传闻；
+#       与 npc_kaicili 的 m1_bay（运老人去汤都）不用同一句话。
+
+[[tracks]]
+key = "tie_kaicili_wandeng"
+name = "丁香与名单"
+kind = "request"
+start = "t1_the_list"
+auto = true
+cast = ["kaicili", "lin_wandeng"]
+
+# 第一章（1574 冬）：马尼拉湾林凤那一仗，一碗丁香变成数人头的筹码。门槛章，只有两人都不是玩家时才跑。
+[[tracks.chapters]]
+key = "t1_the_list"
+title = "城外的名单"
+text = "林凤的船打进湾里那几天，马尼拉的老唐人是这么讲的：特尔纳特的王子正坐在月港林家那条鸟船的舱里，桌上一碗样品丁香，同女船主谈一船货的价。谈到一半，城外的头家划着小船靠了舷，递上来一张名单，一户一行，几口人，有没有老的。丁香推到一边，女船主照着名单念，王子站在跳板头，念到谁家，那家的人就顺着跳板上了舷边拴着的科拉科拉，他就往空碗里丢一颗丁香。碗满了，换了两回。老唐人说：“王子事后逢人就讲，那张名单是他这辈子唯一没压过价的东西。”"
+stage = "rumor"
+window = [[1574, 12, 16], [1575, 3, 31]]
+at = "manila"
+cast = ["kaicili", "lin_wandeng"]
+mood = "tense"
+when = [{ kind = "flag", flag = "c12_voyage_kaicili", value = false }, { kind = "flag", flag = "c12_voyage_lin_wandeng", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "马尼拉湾林凤那一仗，特尔纳特的王子和月港的女船主一起把华人家眷运出了城。"
+
+[tracks.chapters.default]
+next = "t2_clove_price"
+effects = []
+
+# 第二章（1577 春夏）：月港香料行里，开价前先念的一首番歌。关系轨道收尾。
+[[tracks.chapters]]
+key = "t2_clove_price"
+title = "月港的丁香价"
+text = "月港香料行的伙计说，这几年丁香的价是特尔纳特那边说了算。林家的女船主每年从摩鹿加运一船回来，进了行不开价，先站到秤旁念一首四句的番歌，说是那位王子教的，那边管它叫班顿。头两句是她的价，后两句留给对面的价。班顿讲究一三句、二四句押同一个韵，伙计们听久了，都听得出来：她念的和对面递回来的，韵脚总差一点。老掌柜拨着算盘：“她说下半句一直没对上，所以每年的价都得磨上三天。”"
+stage = "rumor"
+window = [[1577, 3, 1], [1577, 6, 30]]
+at = "yuegang"
+cast = ["kaicili", "lin_wandeng"]
+mood = "cheerful"
+news = "月港的丁香价钱这几年由特尔纳特那边说了算，林家的女船主开价前总要先念一首番歌。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []

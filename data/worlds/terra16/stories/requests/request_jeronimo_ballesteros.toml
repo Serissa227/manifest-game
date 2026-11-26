@@ -1,0 +1,267 @@
+# 请托：亚速尔以西十天（2026-10-25，Claude 写）。
+# 标签：mixed（复合）：监考 → 押运一个学徒往西开十天 → 回塞维利亚当着学生讲看见的东西。T 当面，报价港 seville（贸易总署）。
+# 人物：赫罗尼莫·巴列斯特罗斯（jeronimo_ballesteros，1498-04-16 生），贸易总署的老领航考官。cast 日程在塞维利亚，本线全部章节在港口当面进行。
+# 窗口：报价 1557-06-01 至 1585-06-30（offer 的 deadline 为窗口止日，到期 next=failed，不写见闻）；之后各章的 when 带日期区间，到 1585-12-31 为止。
+# 依据·史实：贸易总署的领航员考试（考官当众出题、当众问难）；七城岛的传说（大西洋上的传说岛，与亚速尔一带的海图传说常被并提，正文只用学生的传闻口吻）。
+# 依据·原创：年轻时在亚速尔以西见过的那座岛、岛上的一道烟、第九天黄昏的暗线、鱼贩的儿子、日志本、海图上被划掉的那座岛。正文不判定岛是否真有。
+# 秘密：cast 没写秘密。他年轻时在亚速尔以西见过一座岛，这是他自己说的，正文只写他讲的话，不判定真假。学徒的身世不写。
+# 同学与 C7：本轨道无 C7 线。诺埃尔主线 9 写科尔武岛：本轨道不写科尔武岛，不写骑马的石像；诺埃尔主角的变体只有一句（report 章，v3_noel）。
+# 读的旗标：c13_main_noel（report 的 v3_noel、v1_both 变体，只读；主线未写入前按未设看待）。
+# 设的旗标：c13_request_jeronimo_ballesteros_accepted（offer 接受）、_declined（offer 回绝）、_passed（exam 的两种过关）、_vague（exam 的追问检定失败，angra 的 v1_vague 读）、_boy（angra 带上学徒）、_late（angra 超时）、_seen（west 照实记下了暗线）、_done（最好的结局）、_partial（折中）。
+# 依赖：无 B10b 改名（seville、angra 为现有港口）；技能 astral_navigation 在 skills.toml 中；海图 azores（chart 效果，region 为现有海域）。
+# 实现说明：
+#   （a）普通章不写 window，窗口改写进各章 when 的 date 条件；引擎要求带窗口的章必须有 default，而请托的章没有缺省结算。
+#   （b）检定失败时引擎不显示选项的 reply，只显示章节正文。失败的那段描述因此放在 angra 的变体 v1_vague 里（flag _vague 由失败分支设置）。
+#   （c）west 的“照实记”与“记云”：“记云”的检定成功才设 _seen 并进 report；失败走 report_unsure（新增章，brief 之外），不在 report 用 requires 卡 _seen——同一轨道的旗标在前面的章设，report 只从设了旗标的路径进入，所以 only_seen 不再写 requires。
+#   （d）brief 的 speaker 写 captain；offer 的旁白用“你”，学徒与老考官的话用直接引语。
+#   （e）现金按 brief：最好结局 2900（富商、学者档 × 高风险 1.8），折中 1500，超时与失败 0。好感合计最多 +19，名声最好结局 +5。
+#   （f）报酬只在 report（only_seen 与 island）与 report_unsure（两个选项）各给一次，没有其他效果带钱。
+# 回忆插画清单：
+#   mem-request_jeronimo_ballesteros-report「划掉的那座岛」：讲堂长桌上的亚速尔海图，一座岛被墨线划掉，旁边写着“未见”。
+
+[[tracks]]
+key = "request_jeronimo_ballesteros"
+name = "亚速尔以西十天"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["jeronimo_ballesteros"]
+
+# 报价：贸易总署的考场门口，老考官拦住你要你监考；他借着监考把真正的请托压到最后一题。
+[[tracks.chapters]]
+key = "offer"
+title = "说“听说”就是白卷"
+text = "贸易总署的考场门口，老考官拦住你，说今天缺一个监考，要你坐到他旁边去。他先看你的站姿，再看你的手，最后才说：“站直了。哪个港出的？出海第几天见的陆地？”没等你答，他朝考场里一指。那里坐着一个特里亚纳鱼贩的儿子，老人一看见他就皱眉。他压低声音：“这孩子答得比谁都好，所以今天最难的那一题，我偏要你来问。记住，在我面前说‘听说’，就等于交了白卷。你也一样。”"
+mood = "tense"
+speaker = "captain"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1557, 6, 1], to = [1585, 6, 30] },
+]
+objectives = [{ kind = "person", person = "jeronimo_ballesteros", text = "在港里找到他" }]
+deadline = [1585, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "坐下来，替他监这场考。"
+next = "exam"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 2 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_accepted" }]
+reply = "他把考题递给你，最后一题用红笔圈着：在亚速尔以西，若见陆地，如何定其位置。"
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问他：您为什么看不上那孩子？"
+next = "exam"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 2 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_accepted" }]
+reply = "“我没看不上他。”老考官脸红了，“我看不上的是他答得太快。快的人，海上死得也快。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "考场的事，你不掺和。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_jeronimo_ballesteros_declined" }]
+reply = "他哼了一声，把考题往怀里一塞，转身进了考场。门关得很响，里面有人站起来，又慢慢坐下了。"
+
+# 考场：鱼贩的儿子答到红圈那一题。追问的三种接法：会星高的人可以问，会算的人可以估，两样都不会的人只能让他自己答。
+[[tracks.chapters]]
+key = "exam"
+title = "红圈那一题"
+text = "考场中间，鱼贩的儿子一道一道答得干净。到了红圈那一题，他先想了想，然后说：“照星定纬，照日程估经，再照所见的鸟和云校一遍。”说完，他把手心在衣襟上蹭了蹭，没敢抬头。旁边的考生都停了笔，只有窗外的鸟叫了一声。老考官的笔尖点在红圈上，盯着你，等你追问。"
+mood = "tense"
+speaker = "captain"
+at = "seville"
+when = [
+  { kind = "alive", person = "jeronimo_ballesteros", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1585, 12, 31] },
+]
+
+[[tracks.chapters.choices]]
+key = "hard_q"
+text = "追问：若连续三日阴天，见不到星呢？"
+next = "angra"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "这一问要会用星高推位置才问得出口，你只背过算法。"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_passed" }]
+reply = "那孩子想了一会儿，说那就不定位置，只记航向与时日，回来照实报“未定”。老考官没说话，在他的名字旁边画了一个勾。"
+
+[[tracks.chapters.choices]]
+key = "numbers"
+text = "追问：照日程估经，误差多大？"
+next = "angra"
+check = { attr = "numeracy", base = 20, per = 7 }
+fail = { next = "angra", effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = -2 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_vague" }] }
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_passed" }]
+reply = "孩子报了一个数，又说这个数他也不信，要海上回来再改。老考官咳了一声，掩住了笑。"
+
+[[tracks.chapters.choices]]
+key = "let_pass"
+text = "不追问了，答得够好。"
+next = "angra"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 1 }]
+reply = "老考官瞪了你一眼，自己开口问了。那孩子也答上了，只是这一回，答得慢了半拍。"
+
+# 安格拉：考完那天夜里，老考官说出真正的事，并要你带上那个学徒往西开。
+[[tracks.chapters]]
+key = "angra"
+title = "往西第九天"
+text = "考完那天夜里，老考官才说出真正的事。他年轻时随船过亚速尔，往西第九天的黄昏，看见过一座岛，岛上有一道烟，第二天就没了。“海图上没有的，我不往纸上画。”他说，“你从安格拉往西开十天，回来当着我的学生，说你看见了什么。”安格拉的码头上，那个鱼贩的儿子已经抱着日志本在等，老考官说，他要他上你的船。"
+mood = "mystic"
+speaker = "captain"
+at = "angra"
+when = [
+  { kind = "alive", person = "jeronimo_ballesteros", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1585, 12, 31] },
+]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = -3 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_late" }, { kind = "letter", person = "jeronimo_ballesteros", text = "你没去安格拉。那孩子等了一个月，回来考了第二次，过了。岛的事，我不再提。" }] }
+news = "安格拉的水手都在传：塞维利亚来的一个年轻领航员抱着日志本，见船就问往西去不去。"
+
+[[tracks.chapters.choices]]
+key = "take_boy"
+text = "带那孩子上船，让他管日志。"
+next = "west"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_boy" }]
+reply = "孩子把日志本抱在怀里，指节都发白了。他说他会一天一记，阴天也记，下雨就记在干的那一页上。"
+
+[[tracks.chapters.choices]]
+key = "alone"
+text = "不带他，你自己记。"
+next = "west"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 1 }]
+reply = "孩子在码头上站了很久，最后把一本空日志塞给你：“老师让我给你的。”"
+
+[[tracks.chapters.variants]]
+key = "v1_vague"
+when = [{ kind = "flag", flag = "c13_request_jeronimo_ballesteros_vague" }]
+text = "考完那天夜里，老考官没提考题。“你那一问没问到根上，那孩子答得也没到根上。”他说得很慢，“所以我只给了他一个‘可’。”然后他才说出真正的事。他年轻时随船过亚速尔，往西第九天的黄昏，看见过一座岛，岛上有一道烟，第二天就没了。“海图上没有的，我不往纸上画。”他说，“你从安格拉往西开十天，回来当着我的学生，说你看见了什么。”安格拉的码头上，那个鱼贩的儿子已经抱着日志本在等，老考官说，他要他上你的船。"
+
+# 海上：开十天。学徒在船上管日志；没有学徒，你自己记。第九天黄昏的那道暗线，由你选择怎么记。
+[[tracks.chapters]]
+key = "west"
+title = "一线暗色"
+text = "往西开到第九天，海上全是漂浮的海藻，一缕一缕地从船边漂过，鸟比前几天多，有一只黑鸟绕着桅顶叫了三遍。黄昏时，西边起了一道云，下面压着一线暗色，直直的，像岸。船上没有人喊，舵手把舵柄握紧了，又松开。你把日志摊在膝上，笔尖悬在纸面上方，没有落下去。第十天早上，那线暗色没了，只剩海。"
+mood = "mystic"
+speaker = "captain"
+objectives = [{ kind = "wait", days = 10, text = "往西开十天" }]
+when = [
+  { kind = "alive", person = "jeronimo_ballesteros", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1585, 12, 31] },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_boy"
+when = [{ kind = "flag", flag = "c13_request_jeronimo_ballesteros_boy" }]
+text = "往西开到第九天，海上全是漂浮的海藻，鸟比前几天多。黄昏时，西边起了一道云，下面压着一线暗色，像岸。那孩子在船头喊了一声，又把嘴闭上，等你先看。第十天早上，那线暗色没了，只剩海。他管日志，第十天那一行，他写得很慢。"
+
+[[tracks.chapters.choices]]
+key = "record_seen"
+text = "照实记：第九天黄昏，西方见暗线一道，次日不见。"
+next = "report"
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_seen" }]
+reply = "你把这一行写得很短，没有形容，也没有猜测。墨干以后，那一页摊在桌上，谁也没去动它。"
+
+[[tracks.chapters.choices]]
+key = "record_cloud"
+text = "记：第九天黄昏，云下暗影，疑为云。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "report_unsure", effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = -2 }] }
+effects = [{ kind = "affinity", person = "jeronimo_ballesteros", value = 3 }, { kind = "flag", flag = "c13_request_jeronimo_ballesteros_seen" }]
+reply = "你在“疑为云”底下画了一道线。云岸你认得，这一笔写得很稳。"
+
+# 报告：讲堂里的学生。最好的一种讲法只讲看见的；那一屋子人里，有人把“听说”带了进来。
+[[tracks.chapters]]
+key = "report"
+title = "没有一个“听说”"
+text = "贸易总署的讲堂里，老考官的学生坐了一屋子，长桌上摊着一张卷了角的亚速尔旧海图。他叫你站到前面，说：“讲你看见的。”你把海藻、鸟，和西边那道暗线一样一样讲完，讲到第十天早上它没了，只剩海。屋里静着，前排有人在本子上记了一笔。一个学生在下面小声说：“听说那就是七城岛。”老考官的脸一下子沉了下来。"
+mood = "tender"
+speaker = "captain"
+at = "seville"
+when = [
+  { kind = "alive", person = "jeronimo_ballesteros", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1585, 12, 31] },
+]
+news = "塞维利亚的酒馆里都在讲：贸易总署的老考官在讲堂上，把自己画过的一座岛从海图上划掉了，旁边写着“未见”。"
+
+[[tracks.chapters.variants]]
+key = "v1_both"
+when = [
+  { kind = "flag", flag = "c13_request_jeronimo_ballesteros_boy" },
+  { kind = "flag", flag = "c13_main_noel" },
+]
+text = "贸易总署的讲堂里，老考官的学生坐了一屋子。鱼贩的儿子站在你旁边，日志是他念的，一天一行，阴天那几行他念得最慢。老考官看了你一眼，说：“你们家的人，都爱往西看。”然后叫你讲你看见的。一个学生在下面小声说：“听说那就是七城岛。”老考官的脸一下子沉了下来。"
+
+[[tracks.chapters.variants]]
+key = "v2_boy"
+when = [{ kind = "flag", flag = "c13_request_jeronimo_ballesteros_boy" }]
+text = "贸易总署的讲堂里，老考官的学生坐了一屋子。鱼贩的儿子站在你旁边，日志是他念的，一天一行，阴天那几行他念得最慢。老考官叫你站到前面，说：“讲你看见的。”你讲完，那孩子把日志合上，补了一句：“第十天，只有海。”一个学生在下面小声说：“听说那就是七城岛。”老考官的脸一下子沉了下来。"
+
+[[tracks.chapters.variants]]
+key = "v3_noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "贸易总署的讲堂里，老考官的学生坐了一屋子。老考官看了你一眼，说：“你们家的人，都爱往西看。”然后叫你站到前面，说：“讲你看见的。”讲完，屋里静了一阵。一个学生在下面小声说：“听说那就是七城岛。”老考官的脸一下子沉了下来。"
+
+[[tracks.chapters.choices]]
+key = "only_seen"
+text = "只讲看见的：海藻、鸟、第九天的暗线、第十天的海。"
+next = "done"
+effects = [
+  { kind = "cash", value = 2900 },
+  { kind = "affinity", person = "jeronimo_ballesteros", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "chart", region = "azores" },
+  { kind = "flag", flag = "c13_request_jeronimo_ballesteros_done" },
+  { kind = "memory", memory = "mem-request_jeronimo_ballesteros-report", title = "划掉的那座岛" },
+]
+reply = "讲完，屋里静了。老考官站起来，说这是他听过的最好的一份报告，因为里面没有一个“听说”。他把一张亚速尔海域的海图交给你，图上他年轻时画的那座岛，用墨划掉了，旁边写着：未见。"
+
+[[tracks.chapters.choices]]
+key = "island"
+text = "说：我看见了一座岛。"
+next = "done"
+effects = [
+  { kind = "cash", value = 1500 },
+  { kind = "affinity", person = "jeronimo_ballesteros", value = 2 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_jeronimo_ballesteros_partial" },
+]
+reply = "老考官盯着你看了很久，说你没看见，你是想看见。他还是付了钱，可那张海图没给你。"
+
+# 未明：记云没有成功的那一页。讲得出来的只有一道暗线，讲不出来的是一座岛。
+[[tracks.chapters]]
+key = "report_unsure"
+title = "写着“未明”的那一页"
+text = "贸易总署的讲堂里，老考官的学生坐了一屋子。你的日志翻到第九天那一页，上面写着“未明”两个字，墨迹很淡。老考官说：“讲。”你讲到西边那道暗线，讲到第十天早上它没了，声音越讲越低。一个学生在下面小声说：“听说那就是七城岛。”老考官没接话，只盯着你手里那一页纸。"
+mood = "tense"
+speaker = "captain"
+at = "seville"
+when = [
+  { kind = "alive", person = "jeronimo_ballesteros", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1585, 12, 31] },
+]
+news = "塞维利亚的人都说，贸易总署讲堂里有个学生问那道暗线是不是七城岛，老考官没接话。"
+
+[[tracks.chapters.choices]]
+key = "unsure_seen"
+text = "照实讲：一道暗线，我不敢说是岛。"
+next = "done"
+effects = [
+  { kind = "cash", value = 1500 },
+  { kind = "affinity", person = "jeronimo_ballesteros", value = 3 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_jeronimo_ballesteros_partial" },
+]
+reply = "老考官没追问，把“不敢说”三个字记在本子上。他付了钱，那张海图没给你。"
+
+[[tracks.chapters.choices]]
+key = "unsure_island"
+text = "说：那一定是一座岛。"
+next = "done"
+effects = [
+  { kind = "cash", value = 1500 },
+  { kind = "affinity", person = "jeronimo_ballesteros", value = 1 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_jeronimo_ballesteros_partial" },
+]
+reply = "学生们交头接耳，老考官没笑。他把那页日志拿过去，在“未明”两个字底下添了一个“岛”字，还给你。钱照付，海图没给。"

@@ -1,0 +1,429 @@
+# 沿岸的伊希：NPC 线（故事 2.0，A5 / E37 契约）
+# 标签：伊希不是玩家时跑的线。玩家是任何主角或自由船长，正文只写“你”，不写玩家的性别与外貌；伊希是 NPC。
+# 人物：伊希·妮克特（ix_nikte，1540 年生），科苏梅尔独木舟商队首领的女儿。
+# 轨道：npc_ix_nikte（request，脊轨，auto）：s00_gate 门槛 → s01_mani（1562 马尼）→ s02_census（1570 普查）→ s03_end（1588 结尾）。
+#       交汇旁轨（auto = false，由脊轨 default 开启）：npc_ix_nikte_cocoa（铁器与可可豆，1 章）、npc_ix_nikte_refuge（哈瓦那的船舱，2 章）、
+#       npc_ix_nikte_corsair（对岸的渔村，1 章）、npc_ix_nikte_landa（在主教面前，1 章）、npc_ix_nikte_jade（那是玉，1 章）、
+#       npc_ix_nikte_join（离岛，1 章）。共 11 章：脊轨 4 章、旁轨 7 章。
+# 依据：
+#   史实：1562 年 7 月坎佩切的马尼，兰达修士把各村收来的玛雅书与神像堆进火里烧了（烧了多少，尤卡坦的人各说各的）；
+#         1570 年神父挨家挨户登记科苏梅尔的名册，名字写成教名加玛雅姓；1573 年兰达以主教身份回到尤卡坦；
+#         1579 年兰达死于梅里达（只在闲话里提一句）；戈马拉（1552）书中记科尔特斯带回的五块雕石，写作祖母绿；
+#         1541 年皇帝的舰队沉在阿尔及尔外海（印记线索，见 jade）；1568 年以后私掠船在尤卡坦东岸出没。
+#   原创：伊希的商队与两条独木舟、耳珰、那一串打结的棉绳、对岸渔村被掳的九个人、伊希切尔节剩下的老妇人。
+#   待核（正文一律传闻或人物嘴里的口吻）：1570 年普查的主持人；1562 年马尼被烧书籍的数量。
+# 旗标：设 c13_npc_ix_nikte（门槛，s00 default）、c13_npc_ix_nikte_refuge_done（refuge m2）、c13_npc_ix_nikte_corsair_helped（corsair 追上、追不上或赎回都设）、
+#       c13_npc_ix_nikte_jade_hint（jade m1）、c13_npc_ix_nikte_mate（join 请她上船；之后旁轨因门槛静默结束）。
+#       读 c12_voyage_ix_nikte、upbringing_graduated、mate ix_nikte（整合时对一下 mate key 与人物 key 的对应）、r03_mani_codices_people_and_codices_sheltered（C10 提供，s01 变体）。
+# 回忆插画：mem-npc_ix_nikte-refuge「一串结绳」：哈瓦那码头上，一个玛雅老妇把包袱打开一角，里面是一串串打结的棉绳，孩子们挤在她身后。
+# 禁区：本线不写伊希家的书与抄本、她的两个名字、亚特兰蒂斯、任何恋情（不用 heart / relation / tie / bond）；见闻里不写秘密。
+#       “你是谁派来的”只在 cocoa m1 用一次；“我欠你一回”只在 corsair m1 用一次；求人的话在 refuge（说成买卖）与 corsair（改成“我欠你一回”）各一次，写法不同。
+# 交付：C10 的 r03_mani_codices_people_and_codices_sheltered；mate 的 key 与人物 ix_nikte 对应（整合时对一下）；A9 门槛的否定形式（可选）。
+
+[[tracks]]
+key = "npc_ix_nikte"
+name = "沿岸的伊希"
+kind = "request"
+start = "s00_gate"
+auto = true
+cast = ["ix_nikte"]
+
+# 1557 春 · 门槛见闻：科苏梅尔与坎佩切的码头闲话。
+[[tracks.chapters]]
+key = "s00_gate"
+title = "商队首领家的女儿"
+text = "科苏梅尔的码头上有人说，独木舟商队首领家的女儿从梅里达的修院回来了，领着两条刷了红土的独木舟跑沿岸，贩盐和蜂蜡。生船靠岸，她先打量三遍，问清来路才肯谈价；认下的人，一个也不丢。坎佩切的船夫把话传过来：“想跟她做买卖？先把来路说清楚，别绕弯子。她这辈子听够了软话。”"
+stage = "rumor"
+window = [[1557, 3, 11], [1557, 3, 18]]
+at = "cozumel"
+cast = ["ix_nikte"]
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c12_voyage_ix_nikte", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "科苏梅尔的独木舟商队换了个年轻的领头人，是首领家从梅里达回来的女儿，听说对生船问得比税吏还细。"
+
+[tracks.chapters.default]
+next = "s01_mani"
+effects = [{ kind = "flag", flag = "c13_npc_ix_nikte" }, { kind = "start_track", track = "npc_ix_nikte_cocoa" }, { kind = "start_track", track = "npc_ix_nikte_refuge" }]
+
+# 1562 夏 · 马尼的火。NPC 线只写火，不写她救了几部书（那是主线的事）。
+[[tracks.chapters]]
+key = "s01_mani"
+title = "马尼来的消息"
+text = "坎佩切码头的闲话。马尼的修院前烧了一整天，兰达修士把各村收上来的书和神像一车一车堆进火里，火光在海上都看得见。卖鱼的女人说：“那个科苏梅尔的女船主，这个月来回跑了四趟，船吃水一回比一回浅。”没人问她运的是什么。"
+stage = "rumor"
+window = [[1562, 7, 13], [1562, 10, 31]]
+at = "campeche"
+cast = ["ix_nikte", "diego_de_landa"]
+mood = "sad"
+news = "马尼的修院前烧了一整天，坎佩切码头上的人说，科苏梅尔那个女船主这个月跑了四趟。"
+
+[tracks.chapters.default]
+next = "s02_census"
+effects = [{ kind = "start_track", track = "npc_ix_nikte_corsair" }, { kind = "start_track", track = "npc_ix_nikte_landa" }]
+
+[[tracks.chapters.variants]]
+key = "v1_refuge"
+when = [{ kind = "flag", flag = "c13_npc_ix_nikte_refuge_done" }]
+text = "坎佩切码头的闲话。马尼的修院前烧了一整天，兰达修士把各村收上来的书和神像一车一车堆进火里，火光在海上都看得见。卖鱼的女人说：“那个科苏梅尔的女船主，这个月来回跑了四趟，船吃水一回比一回浅。”你送去哈瓦那的那户人家，后来托人捎来一句谢，就一句。没人问她运的是什么。"
+
+[[tracks.chapters.variants]]
+key = "v2_more_saved"
+when = [{ kind = "flag", flag = "r03_mani_codices_people_and_codices_sheltered" }]
+text = "坎佩切码头的闲话。马尼的修院前烧了一整天，兰达修士把各村收上来的书和神像一车一车堆进火里，火光在海上都看得见。卖鱼的女人说：“那个科苏梅尔的女船主，这个月来回跑了四趟，船吃水一回比一回浅。”也有人说，火边被人抢出去的书，比修士以为的多。没人问她运的是什么。"
+
+# 1570 春 · 普查：神父与书记挨家挨户登记。
+[[tracks.chapters]]
+key = "s02_census"
+title = "岛上的名册"
+text = "科苏梅尔的码头闲话：神父带着书记挨家挨户登记，岛上两个村子三四百人，名字都写成教名加玛雅姓。商队首领家那个女儿跟在书记后头走了一上午，每一家她都替书记叫得出名字。书记的册子上，有一家的名字拼得不对，她没吭声，只把那一页的边角折了一下。书记在码头上说：“有她在后头跟着，我一个名字也没写错。那一页边角的折痕，是她折的，我回去就改。”"
+stage = "rumor"
+window = [[1570, 3, 1], [1570, 6, 30]]
+at = "cozumel"
+cast = ["ix_nikte"]
+mood = "tender"
+news = "科苏梅尔来了个神父挨家挨户记名字，岛上两个村子的人一家一家排着队，报上自己的名字。"
+
+[tracks.chapters.default]
+next = "s03_end"
+effects = [{ kind = "start_track", track = "npc_ix_nikte_jade" }, { kind = "start_track", track = "npc_ix_nikte_join" }]
+
+[[tracks.chapters.variants]]
+key = "v1_mate"
+when = [{ kind = "mate", mate = "ix_nikte" }]
+text = "科苏梅尔的码头闲话：神父带着书记挨家挨户登记，岛上两个村子三四百人，名字都写成教名加玛雅姓。商队首领家那个女儿这回不在岛上，她在你的船上。书记在码头上叹气：“少了她，有三家的名字我拿不准，只好一家一家去问。”"
+
+# 1588 春 · 结尾：十年后的闲话。
+[[tracks.chapters]]
+key = "s03_end"
+title = "老庙的台阶"
+text = "科苏梅尔的闲话，十年后：主教兰达早死在了梅里达，岛上那口钟铸了三年才铸成。商队首领家的女儿如今四十多了，船还在跑，春分的时候替伊希切尔节剩下的几个老妇人捧香。有人问她还去不去外头跑，老桨手替她答：“她说岛不大，一面镜子就装得下。”"
+stage = "rumor"
+window = [[1588, 3, 1], [1588, 6, 30]]
+at = "cozumel"
+cast = ["ix_nikte"]
+mood = "tender"
+news = "科苏梅尔的伊希切尔节只剩几个老妇人了，商队首领家的女儿每年春分替她们捧香。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_mate"
+when = [{ kind = "mate", mate = "ix_nikte" }]
+text = "科苏梅尔的闲话，十年后：主教兰达早死在了梅里达，岛上那口钟铸了三年才铸成。商队首领家的女儿如今四十多了，这一年的春分，她不在岛上，在一条外来的船上，说好了春分前回来，替伊希切尔节剩下的几个老妇人捧香。老桨手在码头上说：“她说过的日子，从来不晚。”"
+
+[[tracks.chapters.variants]]
+key = "v2_corsair"
+when = [{ kind = "flag", flag = "c13_npc_ix_nikte_corsair_helped" }]
+text = "科苏梅尔的闲话，十年后：主教兰达早死在了梅里达，岛上那口钟铸了三年才铸成。商队首领家的女儿如今四十多了，船还在跑，春分的时候替伊希切尔节剩下的几个老妇人捧香。对岸渔村的人提起你，说是那年替他们把被掳走的人找了回来的船。有人问她还去不去外头跑，老桨手替她答：“她说岛不大，一面镜子就装得下。”"
+
+# ---------------------------------------------------------------
+# 交汇旁轨一：铁器与可可豆（1557—1566）。
+[[tracks]]
+key = "npc_ix_nikte_cocoa"
+name = "铁器与可可豆"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["ix_nikte"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "先说是谁派你来的"
+text = "科苏梅尔的货岸，你的船刚靠稳。跳板下面站着一个年轻女人，长辫缠着彩布条，腰间别着一把黑曜石小刀，身后两条刷了红土的独木舟。她不让你的人卸货，先把你从头到脚看了三遍，看你的手，你的靴子，还有船上挂的旗。“你是谁派来的？”她问，“说清楚了，再上我的岸。我们这里，带着笑脸来的人见得太多了。”草席上摆着几根空的斧柄，柄口还留着旧铁锈的印子。她指着那几根柄说：“鱼钩一百个，斧子二十把。少一个，可可豆少一把。”"
+speaker = "ix_nikte"
+mood = "cheerful"
+at = "cozumel"
+cast = ["ix_nikte"]
+when = [{ kind = "date", from = [1557, 3, 1] }, { kind = "flag", flag = "c13_npc_ix_nikte_mate", value = false }]
+deadline = [1566, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：没人派我来，我来做买卖。"
+next = "done"
+check = { attr = "charm", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "affinity", person = "ix_nikte", value = 1 }], news = "科苏梅尔的码头上，一条外来的船说没人派它来，女船主回了一句“都这么说”，还是让人卸了货。" }
+effects = [{ kind = "affinity", person = "ix_nikte", value = 5 }, { kind = "chart", region = "west_caribbean" }]
+reply = "她盯着你的眼睛看了一会儿，转身从独木舟里拿出一张画在鹿皮上的海岸图，指给你看哪几处浅滩退潮时会露出牙来。"
+news = "科苏梅尔的女船主给一条外来的船看了她的鹿皮海图，码头上的人说，这可是头一回。"
+
+[[tracks.chapters.choices]]
+key = "deposit"
+text = "先付一袋定钱，铁器下一趟带来。"
+next = "done"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你的钱袋太轻，她连看都不看。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "ix_nikte", value = 3 }, { kind = "chart", region = "west_caribbean" }]
+reply = "她把钱袋掂了掂，没数，收进怀里：“斧子来了再说，账我记着。”然后把鹿皮海图借给你抄。"
+news = "外来的船长先把一袋钱押在科苏梅尔的码头上，女船主掂了掂，收下了，说斧子来了再算。"
+
+[[tracks.chapters.choices]]
+key = "ask_route"
+text = "不谈买卖，先问她往南的老水道怎么走。"
+next = "done"
+effects = [{ kind = "affinity", person = "ix_nikte", value = -1 }]
+reply = "她脸一冷：“水道不卖。”转身走了。她的桨手后来在酒馆里跟人说，那个外来的船长一张嘴就问不该问的。"
+
+# ---------------------------------------------------------------
+# 交汇旁轨二：哈瓦那的船舱（1562）。两章：先接活，再限期到港。
+[[tracks]]
+key = "npc_ix_nikte_refuge"
+name = "哈瓦那的船舱"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["ix_nikte"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "一户人家和一个包袱"
+text = "坎佩切城外的海滩，天黑以后。伊希从岛上划过来，身后跟着一户人家：一个西班牙老兵的玛雅妻子，她的老母亲，三个孩子。修士在找那位老母亲，说她会撒玉米粒占卜。这一家要去哈瓦那，那边没人认得他们。伊希的独木舟出不了远海，她站在齐腰深的水里，憋了半天，才说：“我不求你。我拿一袋可可豆，换你船舱里五个人的地方。”老母亲怀里抱着一个包袱，谁也不让碰。她开口只说了一句：“包袱里是孩子们的生日。别的都可以丢。”"
+speaker = "ix_nikte"
+mood = "tense"
+at = "campeche"
+cast = ["ix_nikte"]
+when = [{ kind = "date", from = [1562, 5, 1] }, { kind = "flag", flag = "c13_npc_ix_nikte_mate", value = false }]
+deadline = [1562, 8, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "让他们上船，去哈瓦那。"
+next = "m2"
+effects = [{ kind = "affinity", person = "ix_nikte", value = 3 }]
+reply = "伊希帮着把孩子一个一个递上船，最后递上来的是那个包袱。她站在齐腰深的水里没走，一直等到你的船出了浅滩。"
+news = "坎佩切外的海滩上，有人看见一条外来的船夜里装了几个人，往海峡那边开了。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟不接。"
+next = "done"
+effects = [{ kind = "affinity", person = "ix_nikte", value = -3 }]
+reply = "伊希没说话，转身领着那家人往回走，脚印一路踩进水里。第二天码头上的人说，她用自己的独木舟贴着岸往东划了。"
+
+[[tracks.chapters]]
+key = "m2"
+title = "哈瓦那的码头"
+text = "哈瓦那的海湾深而静，返航的船队在这里等齐了再一起过海峡，修船的敲打声从早响到晚。没人多看一眼从你船上下来的一家人。老母亲在码头上把那个包袱打开了一角，里面是一串一串打了结的棉绳，每一串是一个孩子出生的那一天。她解下最小的孩子那一串，递到你手里：“这一串是在你的船上过的。”老母亲说：“伊希说你会问值不值。她说，你问了，就说明值。”"
+speaker = "captain"
+mood = "tender"
+at = "havana"
+cast = ["ix_nikte"]
+objectives = [{ kind = "at", at = "havana", text = "把那户人家送到哈瓦那" }]
+deadline_days = 45
+
+[tracks.chapters.timeout]
+next = "done"
+effects = []
+news = "坎佩切的人说，那户夜里上了外来船的人家，后来在尤卡坦东边的小岛上下了船，自己往南走了。"
+
+[[tracks.chapters.choices]]
+key = "take_cord"
+text = "收下那串结绳。"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_refuge_done" }, { kind = "affinity", person = "ix_nikte", value = 8 }, { kind = "memory", memory = "mem-npc_ix_nikte-refuge", title = "一串结绳" }]
+reply = "你把那串结绳系在罗盘箱的把手上。半年后在坎佩切碰见伊希，她看了一眼那串绳子，什么也没说，给你的可可豆多数了一把。"
+news = "哈瓦那的码头上，一户从尤卡坦来的人家下了船，老太太给船长留下了一串打结的绳子。"
+
+[[tracks.chapters.choices]]
+key = "refuse_gift"
+text = "不收，让她留给孩子。"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_refuge_done" }, { kind = "affinity", person = "ix_nikte", value = 6 }]
+reply = "老母亲把绳子系回包袱里，对孩子说了一句玛雅话。你没听懂，后来伊希告诉你，那句话的意思是：记住这条船的样子。"
+
+# ---------------------------------------------------------------
+# 交汇旁轨三：对岸的渔村（1568—1575）。
+[[tracks]]
+key = "npc_ix_nikte_corsair"
+name = "对岸的渔村"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["ix_nikte"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "对岸的渔村"
+text = "科苏梅尔的货岸。一条外国小船昨夜掳走了对岸渔村的九个人，往北去了，说是要卖到哪个岛上的种植园去。伊希的独木舟追不上帆船，她站在岸上等你的船，身后蹲着那九个人的家里人，没有人哭。“它往北去了，吃水很深。”她说，“追不追，你一句话。”说到这里她停了停，把手按在桨柄上，又说：“我求你——”话只到这里，她把后面的话咽了回去，换了一句：“我欠你一回。这句话我一辈子没说过几次。”"
+speaker = "ix_nikte"
+mood = "tense"
+at = "cozumel"
+cast = ["ix_nikte"]
+when = [{ kind = "date", from = [1568, 11, 1] }, { kind = "flag", flag = "c13_npc_ix_nikte_mate", value = false }]
+deadline = [1575, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "追上去。"
+next = "done"
+check = { attr = "command", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_corsair_helped" }, { kind = "affinity", person = "ix_nikte", value = 4 }], news = "科苏梅尔对岸被掳的渔民，外来的船只只追回了四个。剩下的五个，女船主一个一个刻在了桨柄上。" }
+effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_corsair_helped" }, { kind = "affinity", person = "ix_nikte", value = 8 }, { kind = "fame", value = 2 }]
+reply = "你在第二天傍晚追上了那条船，没打几炮它就把人放进了小艇。伊希在码头上一个一个数，九个，数了两遍。"
+news = "科苏梅尔对岸被掳走的渔民，让一条外来的船追了回来，码头上的人说，女船主数人数的时候，手指头都在发抖。"
+
+[[tracks.chapters.choices]]
+key = "ransom"
+text = "出钱赎人，托哈瓦那的掮客去办。"
+next = "done"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "赎九个人的钱，你的箱子里还凑不出来。"
+effects = [{ kind = "cash", value = -600 }, { kind = "flag", flag = "c13_npc_ix_nikte_corsair_helped" }, { kind = "affinity", person = "ix_nikte", value = 6 }]
+reply = "两个月后，九个人坐着一条运糖的船回来了。伊希在舷梯下接人，没有看你一眼。过了几天，她让人把一袋可可豆搁在你的舷梯上。你没去拿，第二天它就到了你的船舱里，一颗不少。"
+news = "对岸渔村的九个人，被一位外来的船长出钱从哈瓦那的掮客手里赎了回来。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一仗你不打，钱你也不出。"
+next = "done"
+effects = [{ kind = "affinity", person = "ix_nikte", value = -4 }]
+reply = "她点了点头，什么也没说，回身把渔村的人领走了。之后你再靠科苏梅尔，她的桨手卸你的货，都慢半拍。"
+
+# ---------------------------------------------------------------
+# 交汇旁轨四：在主教面前（1573—1578）。
+[[tracks]]
+key = "npc_ix_nikte_landa"
+name = "在主教面前"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["ix_nikte", "diego_de_landa"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "在主教面前"
+text = "坎佩切方济各会修院的前廊，主教巡视到港口时住在这里，前廊上排着等见主教的人。科苏梅尔要出钱铸一口新钟，老庙的石头要拆去砌墙。伊希不肯进去，十来年前马尼的火她看见了。她把一张纸递给你，上面是她亲手算的账：岛上一年产多少盐，拆一块石头要误几天渔季，钟铸三年，欠的可可税怎么还。她说，主教对外来的船长，比对岛上的玛雅人客气。“你进去。我在外头等。他看见我，就想起马尼。”"
+speaker = "ix_nikte"
+mood = "tense"
+at = "campeche"
+cast = ["ix_nikte", "diego_de_landa"]
+when = [{ kind = "date", from = [1573, 10, 15] }, { kind = "flag", flag = "c13_npc_ix_nikte_mate", value = false }]
+deadline = [1578, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "speak"
+text = "照她的账替岛上说。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "affinity", person = "ix_nikte", value = 3 }], news = "坎佩切的修院里，有个外来的船长拿着一张账替科苏梅尔说情，主教把那张账收进了袖子。" }
+effects = [{ kind = "affinity", person = "ix_nikte", value = 8 }, { kind = "reputation", faction = "new_spain", value = 1 }]
+reply = "兰达听你说完，问的第一句是：“这些数，是谁替你算的？”你说是伊希。主教把账折了一折，说钟分三年铸，石头先不动。你出来的时候，伊希还站在台阶下，听完只问：“他问是谁算的？”她笑了一下，很短。"
+news = "坎佩切的修院里，主教答应科苏梅尔的新钟分三年铸，老庙的石头先不拆。"
+
+[[tracks.chapters.choices]]
+key = "gift"
+text = "带上一份可可的礼，再替岛上说。"
+next = "done"
+requires = [{ kind = "cash", ge = 400 }]
+hint = "空着手进主教的门，你知道是什么结果。"
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "ix_nikte", value = 5 }, { kind = "reputation", faction = "new_spain", value = 3 }]
+reply = "礼收下了，钟的事主教说“再议”，石头那一年没人来拆。伊希知道了礼的事，把一袋可可豆硬塞回你手里：“岛上的事，不让外人出钱。”"
+news = "坎佩切的修院里，有个外来的船长送了一份可可的礼，主教说了句“再议”。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这句话，我不替岛上去说。"
+next = "done"
+effects = [{ kind = "affinity", person = "ix_nikte", value = -2 }]
+reply = "她把账收回去，自己进了门。半个时辰以后她出来，脸色和进去时一样，什么也没说。"
+
+# ---------------------------------------------------------------
+# 交汇旁轨五：那是玉（1576—1588）。
+[[tracks]]
+key = "npc_ix_nikte_jade"
+name = "那是玉"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["ix_nikte"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "那是玉"
+text = "科苏梅尔她家的屋檐下，雨季，屋里飘着加辣椒的可可的味道。你随口提起，在哪个港口听人说，戈马拉写的书里，科尔特斯带回五块雕好的祖母绿：一朵玫瑰、一只号角、一条金眼的鱼、一只小铃、一只小杯，后来沉在了阿尔及尔外海。伊希听完，把自己的玉耳珰摘下来，放在你手心里。“书上那条鱼，我在韦拉克鲁斯见过画。”她说，“墨西加的匠人手里没有祖母绿。他们雕的绿石头是玉，西班牙人认错了。”她又压低了声音：“你要是去那片海，别找祖母绿，找玉。玉在水里不会发亮，要拿手摸。”"
+speaker = "ix_nikte"
+mood = "mystic"
+at = "cozumel"
+cast = ["ix_nikte"]
+when = [{ kind = "date", from = [1576, 1, 1] }, { kind = "affinity", person = "ix_nikte", ge = 40 }, { kind = "flag", flag = "c13_npc_ix_nikte_mate", value = false }]
+deadline = [1588, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "note"
+text = "把她的话记下来。"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_jade_hint" }, { kind = "affinity", person = "ix_nikte", value = 3 }]
+reply = "你记在航海日志的最后一页。伊希探头看了一眼，把“玉”字圈了起来，说这个字她在修院里练过，写得比你的还端正。"
+
+[[tracks.chapters.choices]]
+key = "ask_how"
+text = "问她：你怎么知道？"
+next = "done"
+check = { attr = "perception", base = 35, per = 6 }
+fail = { next = "done", effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_jade_hint" }, { kind = "affinity", person = "ix_nikte", value = 1 }], news = "科苏梅尔的码头上，有人问那个女船主凭什么说玉，她只回一句：摸过就知道。" }
+effects = [{ kind = "flag", flag = "c13_npc_ix_nikte_jade_hint" }, { kind = "affinity", person = "ix_nikte", value = 5 }]
+reply = "她让你闭上眼睛，把玉耳珰和一块绿玻璃轮流放进你手心。玉是凉的，凉得慢；玻璃一下就热了。"
+
+# ---------------------------------------------------------------
+# 交汇旁轨六：离岛（1580—1590）。
+[[tracks]]
+key = "npc_ix_nikte_join"
+name = "离岛"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["ix_nikte"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "离岛"
+text = "春分前几天，科苏梅尔的货岸。伊希的两条老独木舟拖在沙滩上，一条补过七回。她坐在船舷上，问你这一趟往哪里去、多久回来。她从没在别人的船上待过超过一个月，腰间那面黄铁矿镜用布包着，她没拿出来。她先把条件摆在前面：每年春分以前，船要送她回岛，替伊希切尔节剩下的老妇人捧香。“我这辈子只在自己的船上睡过觉。”她说，“春分以前送我回来。别的，路上说。”"
+speaker = "ix_nikte"
+mood = "tender"
+at = "cozumel"
+cast = ["ix_nikte"]
+when = [{ kind = "date", from = [1580, 1, 1] }, { kind = "flag", flag = "c13_npc_ix_nikte_mate", value = false }]
+deadline = [1590, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "invite"
+text = "请她上船，答应春分以前送她回岛。"
+next = "done"
+requires = [{ kind = "affinity", person = "ix_nikte", ge = 60 }]
+hint = "她看了你很久，说：再跑几趟买卖，再来问。"
+effects = [{ kind = "join", person = "ix_nikte" }, { kind = "flag", flag = "c13_npc_ix_nikte_mate" }]
+reply = "她把黑曜石小刀用软布擦了一遍，收进母亲缝的布袋，扛着一捆草药上了你的船。上船以后第一件事，是把你的货舱从头到尾数了一遍。"
+news = "科苏梅尔的女船主上了一条外来的船，岛上的人说她走以前，把两条老独木舟的缆绳系在了一起。"
+
+[[tracks.chapters.choices]]
+key = "not_now"
+text = "不请她走，只问岛上今年缺什么。"
+next = "done"
+effects = [{ kind = "affinity", person = "ix_nikte", value = 3 }]
+reply = "她说缺鱼钩和一个会写字的年轻人。说完自己笑了：“鱼钩你带得来。年轻人，你带不来。”"

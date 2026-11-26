@@ -1,0 +1,465 @@
+# C9：原生养成结构；玩家文案由 Claude 补写。
+"format_version" = 1
+
+[[families]]
+"key" = "mio"
+"act" = true
+"venue_aliases" = {}
+# U01：十点家庭优势，按分组换算为成长，不占每年额度。
+"initial_points" = { "seamanship" = 3, "etiquette" = 3, "command" = 2, "sensibility" = 2 }
+# U03：每月零用钱，月初发到手上。按家境分三档（参照结业出资 4800）：本家为“薄”档，家乡期 10、学院期 24；富 20/36、中 15/30、薄 10/24。
+"allowance" = { "home" = 10, "academy" = 24 }
+# U02：家境与文化底子八点——公家的书与言辞、能岛村上乳母家的帆别钱与记数和刀、家门变故里学会的察言观色、祭所的敬神，加上河口长大的身子骨。叠在十二岁年龄基线之上、个人优势之下，不占年度额度。
+"origin_points" = { "learning" = 1, "eloquence" = 1, "commerce" = 1, "numeracy" = 1, "arms" = 1, "intrigue" = 1, "piety" = 1, "constitution" = 1 }
+# U01：少年称呼。家人与熟人在养成期对主角的缺省叫法，下面 call_you 没写到的人用它。
+"youth_name" = "澪"
+"name" = "一条澪"
+"scenario" = "mio_1553"
+"protagonists" = ["mio"]
+"templates" = []
+"home" = "shimoda_tosa"
+"born" = [1540, 6, 21]
+"gender" = "f"
+"graduation" = [1557, 1, 1]
+"places" = [{ "key" = "mio_home_home", "name" = "家中", "venue" = "home", "kind" = "home", "x" = 15, "y" = 20 }, { "key" = "mio_home_classroom", "name" = "学堂", "venue" = "classroom", "kind" = "classroom", "x" = 45, "y" = 20 }, { "key" = "mio_home_library", "name" = "书房", "venue" = "library", "kind" = "library", "x" = 75, "y" = 20 }, { "key" = "mio_home_market", "name" = "市集", "venue" = "market", "kind" = "market", "x" = 15, "y" = 65 }, { "key" = "mio_home_dock", "name" = "码头", "venue" = "dock", "kind" = "dock", "x" = 45, "y" = 65 }, { "key" = "mio_home_workshop", "name" = "作坊", "venue" = "workshop", "kind" = "workshop", "x" = 75, "y" = 65 }, { "key" = "mio_home_roof", "name" = "屋顶", "venue" = "roof", "kind" = "roof", "x" = 85, "y" = 45, "events" = ["c9_mio_rare_*"] }, { "key" = "mio_home_shrine", "name" = "祭所", "venue" = "shrine", "kind" = "shrine", "x" = 12, "y" = 43, "events" = ["c9_mio_rare_*"] }, { "key" = "mio_home_trading_house", "name" = "商馆", "venue" = "trading_house", "kind" = "trading_house", "x" = 42, "y" = 43, "events" = ["c9_mio_rare_*"] }, { "key" = "mio_home_garden", "name" = "庭院", "venue" = "garden", "kind" = "garden", "x" = 64, "y" = 43, "events" = ["c9_mio_rare_*"] }]
+# U07：家乡期第一段的入学事件改成开场介绍 intro_mio_home（mio_intro.toml），它最后一幕的选项设 c9_family_mio；原来的 c9_mio_home_start 只剩“寄往月港的信”一章，由介绍接着开。
+"stages" = [{ "from" = [1553, 1, 1], "stage" = "home", "name" = "家乡", "at" = "shimoda_tosa", "entry_flag" = "c9_family_mio", "entry_event" = "intro_mio_home" }, { "from" = [1554, 1, 10], "stage" = "academy", "name" = "京都宫中女房见习与宝镜寺", "at" = "kyoto", "academy" = "kyoto_court", "entry_flag" = "family_access_kyoto_court", "entry_event" = "c9_academy_kyoto_court_enrollment_1554" }, { "from" = [1555, 8, 10], "stage" = "home", "name" = "返乡探亲", "at" = "shimoda_tosa" }, { "from" = [1555, 9, 1], "stage" = "academy", "name" = "京都宫中女房见习与宝镜寺", "at" = "kyoto", "academy" = "kyoto_court" }, { "from" = [1556, 9, 1], "stage" = "home", "name" = "返乡探亲", "at" = "shimoda_tosa" }, { "from" = [1556, 10, 1], "stage" = "academy", "name" = "京都宫中女房见习与宝镜寺", "at" = "kyoto", "academy" = "kyoto_court" }]
+# 11-04 改投学院：家乡期选了 c9_mio_route_noshima，学院期整段改去 noshima_boat_school（日期不变）。
+"routes" = [{ "flag" = "c9_mio_route_noshima", "academy" = "noshima_boat_school", "entry_event" = "c9_academy_noshima_boat_school_enrollment_1554", "completion_event" = "c9_mio_noshima_critical_17" }]
+"completion" = { "family_event" = "c9_family_graduation_mio", "choose_event" = "c9_aspiration_placeholder", "event" = "c9_mio_critical_17", "promise_at" = "kyoto_court_place_garden", "paths" = ["mio_path_1", "mio_path_2", "mio_path_3", "mio_path_4"], "capital" = { "cash" = 4800, "ships" = ["kobaya"], "crew" = 18, "food" = 18, "water" = 18, "mementos" = [{ "key" = "mio_cypress_fan", "name" = "桧扇", "kind" = "story_keepsake", "transferable" = false, "consumable" = false, "description" = "桧木薄片串成的扇子。扇骨上用细细的假名写着一首歌，是那年七夕夜里写下的。" }], "source" = "family_capital", "grant_once" = "c12_voyage_mio", "at" = "shimoda_tosa", "cargo" = { "grain" = 3, "salt" = 2 }, "items" = { "court_fan" = 1, "mio_pass_flag" = 1 }, "known" = [{ "key" = "japan_inland", "name" = "日本内海", "regions" = ["seto_inland"], "clip_arcmin" = [7740, 1920, 8160, 2100] }, { "key" = "japan_south", "name" = "日本南海路", "regions" = ["kuroshio", "seto_inland"], "clip_arcmin" = [7800, 1740, 8520, 2100] }, { "key" = "kyushu", "name" = "九州、五岛与朝鲜南岸", "regions" = ["east_china_sea", "japan_sea", "seto_inland"], "clip_arcmin" = [7500, 1740, 7920, 2160] }, { "key" = "ryukyu", "name" = "琉球", "regions" = ["east_china_sea", "kuroshio", "taiwan_strait"], "clip_arcmin" = [7260, 1440, 7920, 1800] }], "rumored" = [] }, "defaults" = { "growth" = { "constitution" = 200, "might" = 200, "agility" = 200, "intellect" = 200, "perception" = 200, "resolve" = 200, "charm" = 200, "seamanship" = 300, "commerce" = 200, "arms" = 200, "stewardship" = 200, "numeracy" = 200, "eloquence" = 200, "astronomy" = 200, "gunnery" = 200, "command" = 300, "etiquette" = 300, "intrigue" = 200, "medicine" = 200, "learning" = 200, "sensibility" = 80 }, "flags" = ["family_access_kyoto_court", "c9_family_mio", "c9_mio_default_ending", "c9_mio_critical_00_solved", "c9_mio_critical_00_deferred", "c9_mio_critical_01_solved", "c9_mio_critical_01_deferred", "c9_mio_critical_02_solved", "c9_mio_critical_02_deferred", "c9_mio_critical_03_solved", "c9_mio_critical_03_deferred", "c9_mio_critical_04_solved", "c9_mio_critical_04_deferred", "c9_mio_kyara_sold", "c9_mio_critical_05_solved", "c9_mio_critical_05_deferred", "c9_mio_critical_06_deferred", "c9_mio_critical_07_deferred", "c9_mio_critical_08_deferred", "c9_mio_critical_09_deferred", "c9_mio_critical_10_deferred", "c9_mio_critical_11_deferred", "c9_mio_critical_12_deferred", "c9_mio_critical_13_deferred", "c9_mio_critical_14_deferred", "c9_mio_critical_15_deferred", "c9_mio_critical_16_deferred", "c9_mio_critical_17_deferred"], "path" = "mio_path_1", "skills" = { "tide_reading" = 120, "negotiation" = 120, "poetry" = 120 }, "affinity" = { "ase" = 35, "mio_mother" = 35, "ichijo_kanesada" = 35 } } }
+"companions" = { "ase" = "family", "mio_mother" = "family", "ichijo_kanesada" = "family", "lin_wandeng" = "penpal", "ushio" = "friend", "chidori" = "friend", "takamaru" = "rival", "hirohashi_yasuko" = "mentor", "hirohashi_kuniko" = "mentor", "sanjonishi_kineda" = "mentor", "yamashina_tokitsugu" = "mentor" }
+"mentor_roles" = { "lesson_mentor" = "mio_mother", "job_mentor" = "ase", "training_mentor" = "ase", "social_mentor" = "mio_mother", "club_mentor" = "mio_mother", "craft_mentor" = "mio_mother", "reading_mentor" = "mio_mother", "rest_mentor" = "mio_mother" }
+
+# U01：养成期各人怎么叫主角（人物键 = 称呼，最多 20 字）。
+# 同窗、对手结了羁绊以后，改用人物卡里随羁绊等级变化的称呼；家人、导师、朋友、笔友一直用这里的。
+[families.call_you]
+"ase" = "姬君"                       # 阿濑 · 家人
+"ichijo_kanesada" = "姊上"           # 一条兼定 · 家人
+"mio_mother" = "澪"                  # 大友夫人 · 家人
+"hirohashi_kuniko" = "一条家的姬君"  # 广桥国子 · 导师
+"hirohashi_yasuko" = "澪姬"          # 广桥保子 · 导师
+"sanjonishi_kineda" = "土佐的姬君"   # 三条西公条 · 导师
+"yamashina_tokitsugu" = "一条姬"     # 山科言继 · 导师
+"kikuchiyo" = "墙那边的姬君"         # 鞠千代 · 同窗
+"kogo" = "看见了的那位"              # 小督 · 同窗
+"reizei_yuki" = "土佐的那位"         # 冷泉雪 · 同窗
+"ushio" = "姬君"                     # 汐 · 同窗
+"ayame" = "澪大人"                   # 大炊御门菖 · 对手
+"takamaru" = "公家的姬君"            # 村上鹰丸 · 对手
+"chidori" = "公家的"                 # 千鸟 · 朋友
+"lin_wandeng" = "小姬君"             # 林晚灯 · 笔友
+
+[[paths]]
+"key" = "mio_path_1"
+"name" = "水军大将"
+"description" = "能岛的老水夫和幡多的渔家子弟挤在一条小早上，听你一声号令。替堺的商船护航，绕足摺岬，在内海跟海贼抢水路。阿濑教的潮要比谁都记得准：两船咬上的那一刻，潮往哪边走，仗就往哪边倒。要付的是手上的茧、身上的伤，和那件再也穿不上的绯袴。"
+"hidden" = false
+"capital" = { "cash" = 4800, "ships" = ["kobaya"], "crew" = 18, "food" = 18, "water" = 18, "mementos" = [{ "key" = "mio_cypress_fan", "name" = "桧扇", "kind" = "story_keepsake", "transferable" = false, "consumable" = false, "description" = "桧木薄片串成的扇子。扇骨上用细细的假名写着一首歌，是那年七夕夜里写下的。" }], "source" = "family_capital", "grant_once" = "c12_voyage_mio", "at" = "shimoda_tosa", "cargo" = { "grain" = 3, "salt" = 2 }, "items" = { "court_fan" = 1, "mio_pass_flag" = 1 }, "known" = [{ "key" = "japan_inland", "name" = "日本内海", "regions" = ["seto_inland"], "clip_arcmin" = [7740, 1920, 8160, 2100] }, { "key" = "japan_south", "name" = "日本南海路", "regions" = ["kuroshio", "seto_inland"], "clip_arcmin" = [7800, 1740, 8520, 2100] }, { "key" = "kyushu", "name" = "九州、五岛与朝鲜南岸", "regions" = ["east_china_sea", "japan_sea", "seto_inland"], "clip_arcmin" = [7500, 1740, 7920, 2160] }, { "key" = "ryukyu", "name" = "琉球", "regions" = ["east_china_sea", "kuroshio", "taiwan_strait"], "clip_arcmin" = [7260, 1440, 7920, 1800] }], "rumored" = [] }
+"requirements" = { "rating" = { "key" = "naval", "min" = 203 } }
+"award" = { "flags" = ["path_mio_path_1"], "titles" = ["下田的姬船头"], "skills" = { "tide_reading" = 120 } }
+"events" = ["c9_mio_critical_09", "c9_mio_noshima_critical_09"]
+
+[[paths]]
+"key" = "mio_path_2"
+"name" = "海商"
+"description" = "土佐的米、堺的纸、内海的盐，价钱隔一道海就翻个身。你数钱快，跟堺商讲价从不先松口，手里还有能岛的过所旗，内海的船主见了它才肯掏钱。走这条路，小早的舱里装满了货，账本比歌稿厚。京里会有人摇着扇子说，一条家的姬君做起了买卖。"
+"hidden" = false
+"capital" = { "cash" = 4800, "ships" = ["kobaya"], "crew" = 18, "food" = 18, "water" = 18, "mementos" = [{ "key" = "mio_cypress_fan", "name" = "桧扇", "kind" = "story_keepsake", "transferable" = false, "consumable" = false, "description" = "桧木薄片串成的扇子。扇骨上用细细的假名写着一首歌，是那年七夕夜里写下的。" }], "source" = "family_capital", "grant_once" = "c12_voyage_mio", "at" = "shimoda_tosa", "cargo" = { "grain" = 3, "salt" = 2 }, "items" = { "court_fan" = 1, "mio_pass_flag" = 1 }, "known" = [{ "key" = "japan_inland", "name" = "日本内海", "regions" = ["seto_inland"], "clip_arcmin" = [7740, 1920, 8160, 2100] }, { "key" = "japan_south", "name" = "日本南海路", "regions" = ["kuroshio", "seto_inland"], "clip_arcmin" = [7800, 1740, 8520, 2100] }, { "key" = "kyushu", "name" = "九州、五岛与朝鲜南岸", "regions" = ["east_china_sea", "japan_sea", "seto_inland"], "clip_arcmin" = [7500, 1740, 7920, 2160] }, { "key" = "ryukyu", "name" = "琉球", "regions" = ["east_china_sea", "kuroshio", "taiwan_strait"], "clip_arcmin" = [7260, 1440, 7920, 1800] }], "rumored" = [] }
+"requirements" = { "rating" = { "key" = "mercantile", "min" = 153 } }
+"award" = { "flags" = ["path_mio_path_2"], "titles" = ["卖旗的姬君"], "skills" = { "negotiation" = 160 } }
+"events" = ["c9_mio_critical_09", "c9_mio_noshima_critical_09"]
+
+[[paths]]
+"key" = "mio_path_3"
+"name" = "朝廷的使者"
+"description" = "宫里穷得连漏雨的屋顶都修不起。你揣着女房奉书和一首歌，坐自己的小早去各国大名的城下：讨修缮的献金，替人斡旋官位，引荐飞鸟井家的蹴鞠。字与歌就是你的门路。代价是在别人的厅堂外跪着等，一句话说错，丢的是宫里的脸。"
+"hidden" = false
+"capital" = { "cash" = 4800, "ships" = ["kobaya"], "crew" = 18, "food" = 18, "water" = 18, "mementos" = [{ "key" = "mio_cypress_fan", "name" = "桧扇", "kind" = "story_keepsake", "transferable" = false, "consumable" = false, "description" = "桧木薄片串成的扇子。扇骨上用细细的假名写着一首歌，是那年七夕夜里写下的。" }], "source" = "family_capital", "grant_once" = "c12_voyage_mio", "at" = "shimoda_tosa", "cargo" = { "grain" = 3, "salt" = 2 }, "items" = { "court_fan" = 1, "mio_pass_flag" = 1 }, "known" = [{ "key" = "japan_inland", "name" = "日本内海", "regions" = ["seto_inland"], "clip_arcmin" = [7740, 1920, 8160, 2100] }, { "key" = "japan_south", "name" = "日本南海路", "regions" = ["kuroshio", "seto_inland"], "clip_arcmin" = [7800, 1740, 8520, 2100] }, { "key" = "kyushu", "name" = "九州、五岛与朝鲜南岸", "regions" = ["east_china_sea", "japan_sea", "seto_inland"], "clip_arcmin" = [7500, 1740, 7920, 2160] }, { "key" = "ryukyu", "name" = "琉球", "regions" = ["east_china_sea", "kuroshio", "taiwan_strait"], "clip_arcmin" = [7260, 1440, 7920, 1800] }], "rumored" = [] }
+"requirements" = { "rating" = { "key" = "social_rating", "min" = 333 } }
+"award" = { "flags" = ["path_mio_path_3"], "titles" = ["替御所叩门的人"], "skills" = { "poetry" = 200 } }
+"events" = ["c9_mio_critical_09", "c9_mio_noshima_critical_09"]
+
+[[paths]]
+"key" = "mio_path_4"
+"name" = "黑濑川以南"
+"description" = "足摺岬往南有一道发黑的急流，老船头叫它黑濑川，海图上那一块从来没人填过。听说有的船出了港就不打算回头，船上的人也一样。这条路要你把潮读到谁都不肯去的地方，出船前照方位走一回反闭的步子。要付的，也许是再也回不了下田。"
+"hidden" = true
+"capital" = { "cash" = 4800, "ships" = ["kobaya"], "crew" = 18, "food" = 18, "water" = 18, "mementos" = [{ "key" = "mio_cypress_fan", "name" = "桧扇", "kind" = "story_keepsake", "transferable" = false, "consumable" = false, "description" = "桧木薄片串成的扇子。扇骨上用细细的假名写着一首歌，是那年七夕夜里写下的。" }], "source" = "family_capital", "grant_once" = "c12_voyage_mio", "at" = "shimoda_tosa", "cargo" = { "grain" = 3, "salt" = 2 }, "items" = { "court_fan" = 1, "mio_pass_flag" = 1 }, "known" = [{ "key" = "japan_inland", "name" = "日本内海", "regions" = ["seto_inland"], "clip_arcmin" = [7740, 1920, 8160, 2100] }, { "key" = "japan_south", "name" = "日本南海路", "regions" = ["kuroshio", "seto_inland"], "clip_arcmin" = [7800, 1740, 8520, 2100] }, { "key" = "kyushu", "name" = "九州、五岛与朝鲜南岸", "regions" = ["east_china_sea", "japan_sea", "seto_inland"], "clip_arcmin" = [7500, 1740, 7920, 2160] }, { "key" = "ryukyu", "name" = "琉球", "regions" = ["east_china_sea", "kuroshio", "taiwan_strait"], "clip_arcmin" = [7260, 1440, 7920, 1800] }], "rumored" = [] }
+"requirements" = { "year" = 2, "attr" = "seamanship", "min" = 4 }
+"reveal" = { "year" = 2, "all" = [{ "flag" = "c9_mio_omen_0" }, { "flag" = "c9_mio_omen_1" }] }
+"award" = { "flags" = ["path_mio_path_4"], "titles" = ["追渡海船的人"], "skills" = { "tide_reading" = 240 } }
+"events" = ["c9_mio_critical_09", "c9_mio_noshima_critical_09"]
+
+[[activities]]
+"key" = "c9_mio_sail_toll_1"
+"name" = "帆别钱·入门"
+"description" = "跟在阿濑身后登上过往的船，看她报出能岛的旗号、收下帆别钱。我在木札上记船名和钱数。"
+"kind" = "job"
+"stage" = "any"
+"scene" = "dock_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"income" = [12, 20]
+"fatigue" = 7
+"mood" = -1
+"gains" = { "commerce" = [5, 8] }
+"skills" = [{ "skill" = "double_entry", "xp" = 10 }]
+"tier" = { "group" = "c9_mio_sail_toll", "level" = 1, "name" = "跟船记数", "after" = 0, "next" = 3 }
+"risk" = { "failure_bp" = 2200, "attr" = "commerce", "per" = 160 }
+"failure" = { "income_pct" = 50, "gains_pct" = 50, "extra_fatigue" = 3, "mood" = -2 }
+"events" = ["c9_mio_sail_toll_success", "c9_mio_sail_toll_failure"]
+"counts_as" = "c9_mio_sail_toll_1"
+"where" = { "at" = "shimoda_tosa" }
+
+[[activities]]
+"key" = "c9_mio_sail_toll_2"
+"name" = "帆别钱·担责"
+"description" = "自己划小船靠上商船，看过所旗、照帆数算钱。船主嫌贵，就得讲到他肯掏钱；少收一文，回去挨骂。"
+"kind" = "job"
+"stage" = "any"
+"scene" = "dock_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"income" = [24, 40]
+"fatigue" = 9
+"mood" = -1
+"gains" = { "commerce" = [6, 9] }
+"skills" = [{ "skill" = "double_entry", "xp" = 12 }]
+"tier" = { "group" = "c9_mio_sail_toll", "level" = 2, "name" = "登船收钱", "after" = 3, "next" = 8 }
+"risk" = { "failure_bp" = 2200, "attr" = "commerce", "per" = 160 }
+"failure" = { "income_pct" = 50, "gains_pct" = 50, "extra_fatigue" = 3, "mood" = -2 }
+"events" = ["c9_mio_sail_toll_success", "c9_mio_sail_toll_failure"]
+"counts_as" = "c9_mio_sail_toll_1"
+"where" = { "at" = "shimoda_tosa" }
+
+[[activities]]
+"key" = "c9_mio_sail_toll_3"
+"name" = "帆别钱·独当一面"
+"description" = "一个人守着下田河口。一天十几条船，谁缴了、谁欠着、谁挂着假旗，账全在我手里。累，钱也多。"
+"kind" = "job"
+"stage" = "any"
+"scene" = "dock_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"income" = [36, 60]
+"fatigue" = 11
+"mood" = -1
+"gains" = { "commerce" = [8, 11] }
+"skills" = [{ "skill" = "double_entry", "xp" = 14 }]
+"tier" = { "group" = "c9_mio_sail_toll", "level" = 3, "name" = "独守河口", "after" = 8, "next" = 12 }
+"risk" = { "failure_bp" = 2200, "attr" = "commerce", "per" = 160 }
+"failure" = { "income_pct" = 50, "gains_pct" = 50, "extra_fatigue" = 3, "mood" = -2 }
+"events" = ["c9_mio_sail_toll_success", "c9_mio_sail_toll_failure"]
+"counts_as" = "c9_mio_sail_toll_1"
+"where" = { "at" = "shimoda_tosa" }
+
+[[activities]]
+"key" = "c9_mio_court_duty_1"
+"name" = "宫中当值·入门"
+"description" = "在老女房的局里跑腿：递香盒、磨墨、把御帘卷到该有的高度。敬语说错一个字就被叫住重来，跪到腿发麻。"
+"kind" = "job"
+"stage" = "academy"
+"scene" = "court_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"income" = [12, 20]
+"fatigue" = 7
+"mood" = -1
+"gains" = { "etiquette" = [5, 8] }
+"skills" = [{ "skill" = "court_etiquette", "xp" = 10 }]
+"tier" = { "group" = "c9_mio_court_duty", "level" = 1, "name" = "局中跑腿", "after" = 0, "next" = 3 }
+"risk" = { "failure_bp" = 2200, "attr" = "etiquette", "per" = 160 }
+"failure" = { "income_pct" = 50, "gains_pct" = 50, "extra_fatigue" = 3, "mood" = -2 }
+"events" = ["c9_mio_court_duty_success", "c9_mio_court_duty_failure"]
+"counts_as" = "c9_mio_court_duty_1"
+"where" = { "academy" = "kyoto_court" }
+
+[[activities]]
+"key" = "c9_mio_court_duty_2"
+"name" = "宫中当值·担责"
+"description" = "轮到我值夜，替典侍誊写《御汤殿上日记》的草稿：当天的膳食、赏赐与来客，都用假名记。墨不许晕，错一字整页重抄。"
+"kind" = "job"
+"stage" = "academy"
+"scene" = "court_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"income" = [24, 40]
+"fatigue" = 9
+"mood" = -1
+"gains" = { "etiquette" = [6, 9] }
+"skills" = [{ "skill" = "court_etiquette", "xp" = 12 }]
+"tier" = { "group" = "c9_mio_court_duty", "level" = 2, "name" = "轮值执笔", "after" = 3, "next" = 8 }
+"risk" = { "failure_bp" = 2200, "attr" = "etiquette", "per" = 160 }
+"failure" = { "income_pct" = 50, "gains_pct" = 50, "extra_fatigue" = 3, "mood" = -2 }
+"events" = ["c9_mio_court_duty_success", "c9_mio_court_duty_failure"]
+"counts_as" = "c9_mio_court_duty_1"
+"where" = { "academy" = "kyoto_court" }
+
+[[activities]]
+"key" = "c9_mio_court_duty_3"
+"name" = "宫中当值·独当一面"
+"description" = "替上臈承办一场年中行事：排座次、备齐赏赐的绢、应付上门讨官位的使者。办砸了，挨骂的是整个局。"
+"kind" = "job"
+"stage" = "academy"
+"scene" = "court_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"income" = [36, 60]
+"fatigue" = 11
+"mood" = -1
+"gains" = { "etiquette" = [8, 11] }
+"skills" = [{ "skill" = "court_etiquette", "xp" = 14 }]
+"tier" = { "group" = "c9_mio_court_duty", "level" = 3, "name" = "承办行事", "after" = 8, "next" = 12 }
+"risk" = { "failure_bp" = 2200, "attr" = "etiquette", "per" = 160 }
+"failure" = { "income_pct" = 50, "gains_pct" = 50, "extra_fatigue" = 3, "mood" = -2 }
+"events" = ["c9_mio_court_duty_success", "c9_mio_court_duty_failure"]
+"counts_as" = "c9_mio_court_duty_1"
+"where" = { "academy" = "kyoto_court" }
+
+# U06C：澪的“笔墨与家记”第二档原来借通用的“家乡宗教学堂”（说明里是神父、伊玛目），换成这一条；数值照原条不动。
+[[activities]]
+"key" = "c9_mio_temple_sutra"
+"name" = "寺里读经抄经"
+"description" = "每回交几文束脩，去寺里跟住持读《观音经》、抄经，顺带记下各家的忌日与法会。得学问与定力，手腕也练稳了。"
+"kind" = "lesson"
+"scene" = "shrine_jp"
+"where" = { "feature" = "school" }
+"stage" = "home"
+"age" = [12, 16]
+"income" = 0
+"cost" = 8
+"gains" = { "learning" = [8, 14], "resolve" = [3, 6], "piety" = [2, 3] }
+"fatigue" = 6
+"mood" = 1
+"skills" = [{ "skill" = "calligraphy", "xp" = 12 }]
+"events" = ["c9_activity_lesson_devotional_*"]
+"tags" = ["lesson"]
+"unlock" = { "flag" = "c9_family_mio" }
+"mentor_role" = "lesson_mentor"
+"needs" = []
+
+[[activities]]
+"key" = "c9_mio_water"
+"name" = "下田水练"
+"description" = "阿濑把我领到河口外的礁石边：憋气、踩水、潜下去摸海底的石头。冬天也下水，上岸冻得牙齿打架。"
+"kind" = "training"
+"stage" = "any"
+"scene" = "swim_tosa"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"gains" = { "constitution" = [6, 11] }
+"skills" = [{ "skill" = "diving", "xp" = 12 }]
+"fatigue" = 6
+"mood" = 1
+"events" = ["c9_mio_rare_*"]
+"risk" = { "failure_bp" = 1800, "attr" = "constitution", "per" = 100 }
+"failure" = { "gains_pct" = 60, "income_pct" = 0, "mood" = -1, "extra_fatigue" = 2 }
+"where" = { "at" = "shimoda_tosa" }
+
+[[activities]]
+"key" = "c9_mio_tide_race"
+"name" = "潮流竞渡练习"
+"description" = "在下田河口跟渔家的小船赛划。四万十川往外冲，海潮往里顶，得认准哪一片水先转。手掌磨出泡来。"
+"kind" = "training"
+"stage" = "any"
+"scene" = "sea_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"gains" = { "seamanship" = [6, 11] }
+"skills" = [{ "skill" = "tide_reading", "xp" = 12 }]
+"fatigue" = 6
+"mood" = 1
+"events" = ["c9_mio_rare_*"]
+"risk" = { "failure_bp" = 1800, "attr" = "seamanship", "per" = 100 }
+"failure" = { "gains_pct" = 60, "income_pct" = 0, "mood" = -1, "extra_fatigue" = 2 }
+"where" = { "at" = "shimoda_tosa" }
+
+[[activities]]
+"key" = "c9_mio_incense"
+"name" = "闻香辨材"
+"description" = "学闻香：香木切成米粒大，搁在云母片上慢慢熏。伽罗、罗国、真南蛮，闻错一回就从第一炷重来。"
+"kind" = "training"
+"stage" = "academy"
+"scene" = "court_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"gains" = { "perception" = [6, 11] }
+"skills" = [{ "skill" = "incense_blending", "xp" = 12 }]
+"fatigue" = 6
+"mood" = 1
+"events" = ["c9_mio_rare_*"]
+"risk" = { "failure_bp" = 1800, "attr" = "perception", "per" = 100 }
+"failure" = { "gains_pct" = 60, "income_pct" = 0, "mood" = -1, "extra_fatigue" = 2 }
+"where" = { "academy" = "kyoto_court" }
+
+[[activities]]
+"key" = "c9_mio_sutra"
+"name" = "宝镜寺读经"
+"description" = "在宝镜寺的经堂里抄经，跟尼僧们一同跪读。一行字要写得匀，笔锋不许抖，膝盖跪到发凉。"
+"kind" = "training"
+"stage" = "academy"
+"scene" = "temple_kyoto"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"gains" = { "learning" = [6, 11] }
+"skills" = [{ "skill" = "calligraphy", "xp" = 12 }]
+"fatigue" = 6
+"mood" = 1
+"events" = ["c9_mio_rare_*"]
+"risk" = { "failure_bp" = 1800, "attr" = "learning", "per" = 100 }
+"failure" = { "gains_pct" = 60, "income_pct" = 0, "mood" = -1, "extra_fatigue" = 2 }
+"where" = { "academy" = "kyoto_court" }
+
+[[activities]]
+"key" = "c9_mio_kemari"
+"name" = "蹴鞠练习"
+"description" = "鞠场四角种着樱、柳、枫、松。跟着飞鸟井家的规矩练脚背接鞠，鞠不许落地，袴脚不许乱，踢完一身汗。"
+"kind" = "training"
+"stage" = "academy"
+"scene" = "kemari_jp"
+"unlock" = { "flag" = "c9_family_mio" }
+"age" = [12, 17]
+"gains" = { "agility" = [6, 11] }
+"skills" = [{ "skill" = "court_etiquette", "xp" = 12 }]
+"fatigue" = 6
+"mood" = 1
+"events" = ["c9_mio_rare_*"]
+"risk" = { "failure_bp" = 1800, "attr" = "agility", "per" = 100 }
+"failure" = { "gains_pct" = 60, "income_pct" = 0, "mood" = -1, "extra_fatigue" = 2 }
+"where" = { "academy" = "kyoto_court" }
+
+[[activities]]
+"key" = "c9_mio_home_walk"
+"name" = "家乡探访"
+"description" = "挑一个人陪着，去下田的码头、市集或铁匠铺转一圈。河口的船换了旗，市上的鲣节涨了价；换个人陪，看见的也不一样。"
+"kind" = "free"
+"stage" = "home"
+"scene" = "market_tosa"
+"where" = { "at" = "shimoda_tosa" }
+"unlock" = { "flag" = "c9_family_mio" }
+"needs" = ["place", "companion"]
+"gains" = { "perception" = [3, 6] }
+"fatigue" = 3
+"mood" = 2
+"events" = ["c9_mio_rare_*"]
+
+[[endings]]
+weights = { "flags" = { "c9_family_mio" = 1 }, "bonds" = { "mio_mother" = 1 } }
+"key" = "c9_mio_ending_00"
+"family" = "mio"
+"title" = "一条澪·启航"
+"text" = "出海那天早上，下田河口的芦苇上结着霜。小早是政所拨下来的旧船，十八个水夫，一半我还叫不全名字，舱里压着三袋米、两袋盐。阿濑替我把头发用那根红白的绳束起，勒得太紧，我嚷了一声，她没松手。母亲没来河口，托人捎来一张怀纸，上面只有一首歌的上句。下句我还没想出来。我把桧扇插进腰带，喊起锚。船头一转，四万十川的水推着我们往外走，比我想的快。"
+"priority" = 95
+requirements = {}
+"award" = { "titles" = ["一条家的姬君"], "skills" = { "tide_reading" = 20 }, "flags" = ["c9_mio_ending_00_earned", "ending_c9_mio_ending_00"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_01"
+"family" = "mio"
+"title" = "乳母的托付"
+"text" = "阿濑的肩膀到底好了。我托人隔海捎回来的药膏，她嫌味道冲，还是抹了一整个冬天；年底她又下了一回河口，憋气比我还长，上来先骂水凉。出海前一夜，她把两个能岛来的老水夫领到我面前，一个缺两根指头，一个一到阴天就喊腰疼。“这两个是我从小看大的。”她说，“往后他们听你的，你听潮的。”她把一块磨得发亮的木札塞进我手里，是当年在能岛收帆别钱用的，背面刻着她的名字。我说我不要。她说借你的，回来要还。"
+"priority" = 96
+"requirements" = { "flag" = "c9_mio_side_ase_illness_resolved" }
+"award" = { "titles" = ["乳母的托付"], "skills" = { "negotiation" = 25 }, "flags" = ["c9_mio_ending_01_earned", "ending_c9_mio_ending_01"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_02"
+"family" = "mio"
+"title" = "家计交还"
+"text" = "兼定回土佐的那个冬天，母亲把中村的粮账捧到政所，一册一册交还。欠租的庄户名下，她用朱笔添了减免的数，旁边注着是哪一年的水灾。源康政大人翻到最后一册，停住了：末页的空处，母亲用假名写了一首歌，说秋天的稻穗低着头。“这一页不入账。”母亲说。回到住处，她把那支用秃了的笔给了我：“船上的账，你自己记。记错了，没人替你改。”念珠在她手里转过一圈，她又补了一句，“歌也一样。”"
+"priority" = 97
+"requirements" = { "flag" = "c9_mio_side_mother_accounts_resolved" }
+"award" = { "titles" = ["家计交还"], "skills" = { "poetry" = 30 }, "flags" = ["c9_mio_ending_02_earned", "ending_c9_mio_ending_02"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_03"
+"family" = "mio"
+"title" = "姊弟约定"
+"text" = "兼定的字到底不歪了。他交给我的最后一册习字，“姊上”两个字写得比我的还端正。回到中村，政所的人都改口叫他“御所大人”，他应得很快，转过身来，对我还是那一声“姊上”。出海前，他塞给我一张纸，上面列着宿毛、清水、下田几个港，说每个港都给一条家的船留一处泊位。“泊位我来管，潮信你来写。”我说你才十三岁，管得了几个港。他红着脸说，管得了一个算一个。"
+"priority" = 98
+"requirements" = { "flag" = "c9_mio_side_kanesada_letters_resolved" }
+"award" = { "titles" = ["姊弟约定"], "skills" = { "tide_reading" = 35 }, "flags" = ["c9_mio_ending_03_earned", "ending_c9_mio_ending_03"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_04"
+"family" = "mio"
+"title" = "小早下水"
+"text" = "那条小早在下田的船台上躺了三年，船底的旧钉锈得结了一层壳。老船匠一根一根拔出来，排在草席上，叫我看哪几根裂了。补船的桧木，是我隔着海写了两封信，才跟山主讲下来的。下水那天，船匠把最后一根新钉扶在船首，把锤子递给我：“姬君，这根是你的。”我敲歪了，钉头翘着。他说不改了，就让它翘着，往后谁看见都知道是谁敲的。小早滑进河口，溅了岸上的人一身水。"
+"priority" = 99
+"requirements" = { "flag" = "c9_mio_side_boat_nails_resolved" }
+"award" = { "titles" = ["小早下水"], "skills" = { "negotiation" = 40 }, "flags" = ["c9_mio_ending_04_earned", "ending_c9_mio_ending_04"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_05"
+"family" = "mio"
+"title" = "作坊交货"
+"text" = "那年山里的炭窑叫连雨冲垮，铁匠烧了一阵松根，火头忽高忽低，打坏的铁堆了半屋；后来的炭，是我在外头写保单，一笔一笔替他赊来的。出海前十天，他把船具一件件摆在铺子门口：锚爪、桨环、舱门的铰链，每一件都錾着他的记号，一只歪嘴的鸟。“炭账清了，货也交了。”他不识字，叫我在账页上替他写一句。我写了半首歌，说炉火映着河口的潮。他听我念完，嘟囔道：“没听懂，倒是好听。”"
+"priority" = 100
+"requirements" = { "flag" = "c9_mio_side_tosa_forge_resolved" }
+"award" = { "titles" = ["作坊交货"], "skills" = { "poetry" = 45 }, "flags" = ["c9_mio_ending_05_earned", "ending_c9_mio_ending_05"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_06"
+"family" = "mio"
+"title" = "岬南那块空纸"
+"text" = "金刚福寺的老僧给我看过一张那智传来的图记：一条小船，四面钉死，只留一道缝，船上立着写满经文的帆。老僧说，这样的船那智出过，足摺也出过，去了哪里，没有人回来讲。我问遍了加久见的老船头和堺来的商人，谁也没见过船到了哪里。出海前我摊开海图，从足摺岬往南画到一处就停了笔，那一块空着。阿濑问我怎么不画完。“等我去过再画。”她瞪了我一眼：“那就一辈子空着。”"
+"priority" = 101
+"requirements" = { "flag" = "c9_mio_side_fudaraku_resolved" }
+"award" = { "titles" = ["没画完的海图"], "skills" = { "tide_reading" = 50 }, "flags" = ["c9_mio_ending_06_earned", "ending_c9_mio_ending_06"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_07"
+"family" = "mio"
+"title" = "衣账结清"
+"text" = "局里的旧衣，这两年是我跟几位前辈一起理的：该拆的拆，该染的染，当出去的几件也一件件赎了回来。最后两笔，赶在我离京以前勾掉了。老女房翻着账页，用扇骨点着我写的数：“一文不差，倒像商家的女儿。”我说一条家的人不卖衣裳，只卖旗。她笑出了声，从箱子里抽出一件改短了袖子的小袖，塞进我的行李：“海上风大。宫里的针脚，别叫人笑话。”那件小袖，我出海那天就穿上了。"
+"priority" = 102
+"requirements" = { "flag" = "c9_mio_side_court_sisters_resolved" }
+"award" = { "titles" = ["衣账结清"], "skills" = { "negotiation" = 55 }, "flags" = ["c9_mio_ending_07_earned", "ending_c9_mio_ending_07"] }
+
+[[endings]]
+supplementary = true
+"key" = "c9_mio_ending_08"
+"family" = "mio"
+"title" = "渡口归还"
+"text" = "四万十川的渡口丢过三捆楮皮，渡守被人指着鼻子骂了一个月。我翻遍了泊船的记录，才查出货是认错了船，卸进了对岸的盐仓。错赔给货主的那笔钱，我一点一点替渡守讨了回来。渡口如今又归了他。出海那天，他撑着那条赎回来的渡船追到河口，船头堆着一筐晒干的香鱼。“姬君吃不了这么多，分给水夫！”他嗓门大，整条河都听得见。我吟了两句歌谢他，他挠挠头，撑船回去，走远了还回头喊：“回来的时候，渡钱不收！”"
+"priority" = 103
+"requirements" = { "flag" = "c9_mio_side_river_claim_resolved" }
+"award" = { "titles" = ["渡口归还"], "skills" = { "poetry" = 60 }, "flags" = ["c9_mio_ending_08_earned", "ending_c9_mio_ending_08"] }
+
+# U04 审查：志向结局 09、10 的门槛取所选志向本身的门槛（不再机械地要 naval / mercantile ≥ 400），09–11 的志向权重 3000，选了有专属结局的志向且达标，主结局就是它。
+[[endings]]
+weights = { "ratings" = { "naval" = 3 }, "aspirations" = { "mio_path_1" = 3000 }, "bonds" = { "ase" = 1 } }
+"key" = "c9_mio_ending_09"
+"family" = "mio"
+"title" = "能岛女船头"
+"text" = "能岛来了一封信，是阿濑族里的人写的，字很大，话很少：小早上的十八个人，听一条家的姬君号令。随信捎来一面过所旗，旗心一个大大的“上”字。出海那天，我叫人把它挂在船尾。回乡这几个月操船下来，水夫们有几个已经不叫我“姬君”，改叫“船头”。我装作没听见，耳朵却热了。阿濑站在栈桥上，看那面旗吃满了风，说了一句：“歪了。”她说的是旗，可我还是把背挺直了。"
+"priority" = 104
+"requirements" = { "all" = [{ "aspiration" = "mio_path_1" }, { "rating" = { "key" = "naval", "min" = 203 } }] }
+"award" = { "titles" = ["能岛女船头"], "skills" = { "tide_reading" = 65 }, "flags" = ["c9_mio_ending_09_earned", "ending_c9_mio_ending_09"] }
+
+[[endings]]
+weights = { "ratings" = { "mercantile" = 3 }, "aspirations" = { "mio_path_2" = 3000 }, "bonds" = { "ase" = 1 } }
+"key" = "c9_mio_ending_10"
+"family" = "mio"
+"title" = "海商"
+"text" = "我在下田把米和盐的价钱问了三遍，又托堺来的船捎回那边的行情：米在土佐贱，到了堺能涨一成半；盐正好反过来。账本第一页，我用假名记下第一单：日子、货名、几袋、买价，还有心里想卖的价。母亲看了，说字太挤；阿濑看了，说数太贪。出海前一天，一个堺商找到河口，要我顺路替他捎一船纸。我开了个价，他嫌贵；我再开一个，比头一个还高。他愣了半天，点了头。"
+"priority" = 105
+"requirements" = { "all" = [{ "aspiration" = "mio_path_2" }, { "rating" = { "key" = "mercantile", "min" = 153 } }] }
+"award" = { "titles" = ["南海路的海商"], "skills" = { "negotiation" = 70 }, "flags" = ["c9_mio_ending_10_earned", "ending_c9_mio_ending_10"] }
+
+[[endings]]
+weights = { "ratings" = { "scholarship" = 2 }, "aspirations" = { "mio_path_4" = 3000 }, "flags" = { "c9_mio_omen_1" = 150 }, "bonds" = { "mio_mother" = 1 } }
+"key" = "c9_mio_ending_11"
+"family" = "mio"
+"title" = "补陀落访海者"
+"text" = "若狭来的行商说，小滨有个比丘尼吃了人鱼的肉，活了八百岁，至今还在各国行走。我把这话记在怀纸上，挨着那年在足摺听来的补陀落船。两件事隔着半个日本，我总觉得说的是同一片海。出海那天，我没照母亲的意思先往东去堺，船头朝南，绕到足摺岬外头，在金刚福寺底下停了一会儿。浪很大，寺里的钟响了三下。我对着南边的海念了一首歌，水夫们都不出声。阿濑说，那边什么也没有。我说，那就去看看什么也没有的地方。"
+"priority" = 106
+"requirements" = { "all" = [{ "aspiration" = "mio_path_4" }, { "flag" = "c9_mio_omen_1" }] }
+"award" = { "titles" = ["补陀落访海者"], "skills" = { "poetry" = 75 }, "flags" = ["c9_mio_ending_11_earned", "ending_c9_mio_ending_11"] }

@@ -1,0 +1,249 @@
+# 事件类型（封闭集合）。AI 事件导演只能从这里挑选事件并在范围内填写参数；效果由内核计算。
+# effect 可选：good_supply / good_demand（某商品全地区的产量 / 需求）、supply_shift / demand_shift（某地某商品）、
+#   location_supply / location_demand（某地全部商品）、popularity（某地某商品流行）、region_storm / region_pirates（海区风暴 / 海盗）、
+#   relation_shift（两势力关系值）、faction_tax（势力交易税）、development（港口发展度）、interest_shift（贷款利率）、industry_efficiency（产业效率）。
+# mult 为系数范围、days 为持续天数范围、delta 为变化量范围；goods 限定可用的商品；port_only 表示地点必须是港口；
+# requires 为势力关系前提（none / tension / tension_or_war）；cooldown_days 为同类事件的冷却期；max_per_year 为每年上限。
+# key 只允许追加；name 与 description 可以随意改。
+
+[[events]]
+key = "bumper_harvest"
+name = "丰年"
+description = "风调雨顺，各地的谷仓与蔗田都装不下了。"
+effect = "good_supply"
+cooldown_days = 90
+max_per_year = 3
+goods = ["grain", "grapes", "cotton", "sugarcane", "tea", "maize", "potato", "coffee"]
+mult = [1.2, 1.6]
+days = [30, 90]
+
+[[events]]
+key = "crop_blight"
+name = "黑穗病"
+description = "黑穗病与旱灾让作物大面积歉收，乡下人说这是帝国亡魂在作祟。"
+effect = "good_supply"
+cooldown_days = 120
+max_per_year = 2
+goods = ["grain", "grapes", "cotton", "sugarcane", "tea", "cocoons", "maize", "potato", "coffee"]
+mult = [0.5, 0.85]
+days = [30, 120]
+
+[[events]]
+key = "harbor_fire"
+name = "码头大火"
+description = "一盏打翻的鲸油灯点燃了码头货栈，大火烧了整整一夜，当地生产受挫。"
+effect = "location_supply"
+cooldown_days = 180
+max_per_year = 2
+mult = [0.5, 0.8]
+days = [20, 60]
+port_only = true
+
+[[events]]
+key = "plague"
+name = "灰热病复发"
+description = "三百年前拖垮阿尔坎帝国的灰热病又在城里出现，居民闭门不出，市面萧条。"
+effect = "location_demand"
+cooldown_days = 240
+max_per_year = 1
+mult = [0.6, 0.9]
+days = [30, 90]
+
+[[events]]
+key = "festival"
+name = "丰饶节庆"
+description = "港口举行盛大的节庆游行，彩旗、烟火与酒桶带动了各种消费。"
+effect = "location_demand"
+cooldown_days = 30
+max_per_year = 6
+mult = [1.1, 1.4]
+days = [10, 30]
+
+[[events]]
+key = "fashion_craze"
+name = "宫廷新风尚"
+description = "王都的贵妇们追捧某种奢侈品，各地商人闻风而动。"
+effect = "good_demand"
+cooldown_days = 120
+max_per_year = 2
+goods = ["silk", "brocade", "pearl", "coral", "amber", "fur", "garments", "furniture", "wine", "candy",
+  "vanilla", "chocolate", "cigars", "jewelry", "scarlet_cloth", "porcelain", "crystal_lamp"]
+mult = [1.2, 1.6]
+days = [30, 90]
+
+[[events]]
+key = "new_vein"
+name = "新矿脉"
+description = "勘探者在旧矿坑下找到了富矿，矿产供应大增。"
+effect = "supply_shift"
+cooldown_days = 180
+max_per_year = 2
+goods = ["iron_ore", "copper_ore", "sulfur", "saltpeter", "amber", "gold_ore", "silver_ore", "gems", "quartz_sand", "kaolin"]
+mult = [1.3, 2.0]
+days = [60, 180]
+
+[[events]]
+key = "trade_boom"
+name = "商旅云集"
+description = "新航线的消息传开，商旅云集，当地百业兴旺。"
+effect = "location_supply"
+cooldown_days = 120
+max_per_year = 2
+mult = [1.1, 1.3]
+days = [60, 120]
+
+[[events]]
+key = "storm_season"
+name = "风暴之季"
+description = "反常的气候让海区风暴频发，老水手说这是海蛇在海底翻身。"
+effect = "region_storm"
+cooldown_days = 90
+max_per_year = 3
+mult = [1.5, 3.0]
+days = [30, 90]
+
+[[events]]
+key = "pirate_surge"
+name = "黑帆出没"
+description = "持私掠许可的船长们越界劫掠，海区里到处是黑帆。"
+effect = "region_pirates"
+cooldown_days = 90
+max_per_year = 3
+mult = [1.5, 3.0]
+days = [30, 120]
+
+[[events]]
+key = "pirate_crackdown"
+name = "联合剿匪"
+description = "各国舰队联合清剿海盗，航路一时安宁。"
+effect = "region_pirates"
+cooldown_days = 90
+max_per_year = 2
+mult = [0.3, 0.7]
+days = [30, 120]
+
+[[events]]
+key = "border_incident"
+name = "边境摩擦"
+description = "巡逻船在争议海域交火，两国关系恶化。"
+effect = "relation_shift"
+cooldown_days = 60
+max_per_year = 4
+delta = [-25, -5]
+
+[[events]]
+key = "royal_wedding"
+name = "王室联姻"
+description = "两国王室联姻，婚礼宴席摆了七天七夜，关系回暖。"
+effect = "relation_shift"
+cooldown_days = 180
+max_per_year = 1
+delta = [5, 25]
+
+[[events]]
+key = "war_scare"
+name = "战云密布"
+description = "紧张局势下，两国海军在港口集结，剑拔弩张。"
+effect = "relation_shift"
+cooldown_days = 90
+max_per_year = 2
+requires = "tension"
+delta = [-40, -20]
+
+[[events]]
+key = "peace_talks"
+name = "和谈"
+description = "在马纳瓦议会的斡旋下，双方使节坐到了同一张桌前。"
+effect = "relation_shift"
+cooldown_days = 90
+max_per_year = 2
+requires = "tension_or_war"
+delta = [20, 40]
+
+[[events]]
+key = "tariff_hike"
+name = "关税上调"
+description = "为填补连年征战的亏空，国库全面上调关税。"
+effect = "faction_tax"
+cooldown_days = 180
+max_per_year = 1
+mult = [1.2, 1.6]
+days = [60, 180]
+
+[[events]]
+key = "tariff_cut"
+name = "关税下调"
+description = "为招揽往来新大陆的商船，关税下调。"
+effect = "faction_tax"
+cooldown_days = 180
+max_per_year = 1
+mult = [0.6, 0.9]
+days = [60, 180]
+
+[[events]]
+key = "port_expansion"
+name = "港口扩建"
+description = "当局出资疏浚航道、扩建码头，港口发展度提升。"
+effect = "development"
+cooldown_days = 180
+max_per_year = 2
+delta = [3, 10]
+port_only = true
+
+[[events]]
+key = "earthquake"
+name = "地震"
+description = "大地震撼动城镇，人们又想起了阿尔坎尼斯一夜沉海的传说。"
+effect = "development"
+cooldown_days = 360
+max_per_year = 1
+delta = [-10, -3]
+
+[[events]]
+key = "credit_crunch"
+name = "银根紧缩"
+description = "赫伦丹的几家银行接连遭到挤兑，放贷收紧，利率上浮。"
+effect = "interest_shift"
+cooldown_days = 180
+max_per_year = 1
+mult = [1.2, 1.6]
+days = [60, 180]
+
+[[events]]
+key = "easy_money"
+name = "白银涌入"
+description = "新大陆的白银大量流入，银行竞相放贷，利率走低。"
+effect = "interest_shift"
+cooldown_days = 180
+max_per_year = 1
+mult = [0.6, 0.9]
+days = [60, 180]
+
+[[events]]
+key = "craft_innovation"
+name = "工艺革新"
+description = "学院里流出的新式工具与图纸传开，作坊效率提升。"
+effect = "industry_efficiency"
+cooldown_days = 360
+max_per_year = 1
+mult = [1.1, 1.3]
+days = [90, 360]
+
+[[events]]
+key = "local_craze"
+name = "一时风行"
+description = "某种商品在当地突然流行起来，街头巷尾都在谈论它。"
+effect = "popularity"
+cooldown_days = 20
+max_per_year = 8
+days = [20, 40]
+
+[[events]]
+key = "shortage_panic"
+name = "抢购风潮"
+description = "谣言引发抢购，某商品需求激增。"
+effect = "demand_shift"
+cooldown_days = 45
+max_per_year = 4
+mult = [1.3, 1.8]
+days = [20, 60]

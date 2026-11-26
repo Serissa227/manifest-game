@@ -1,0 +1,177 @@
+# 请托：署她自己的名（request_kogo）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：小督（kogo，1540-06-16 生，女），地下官人家的女儿，宫里最末一等的见习，替人写假名信；势力 imperial_court，身份档 1。cast：cast/classmates_kyoto.toml。
+# 类型：送信（letter）。任务单写的是三章，文件里是四章：offer（报价，堺）、handover（博多，交到老夫人手里）、reply_visit（堺，老夫人当面许了“住一季”）、reply（堺，只收到一封封得很严的回信）。
+#   多出一章是引擎的限制：任务单里 reply 章的 tell_visit 要求本轨道在 handover 设的旗标 c13_request_kogo_visit，同轨道旗标不能做 requires，
+#   所以 handover 里赢得“住一季”的两个选项（念给孩子听、指给老夫人看署名）走 next 到 reply_visit，其余（只交信、念信检定失败）走 next 到 reply；两章各有两个选项。
+#   旗标 c13_request_kogo_visit 照任务单照样设，本轨道内不读，留给之后的变体。
+# 报价：V（到访）。小督从京都下到堺（sakai），auto=true；窗口 1576-01-01 至 1588-12-31；offer 写 family=c13_offer_sakai，冷却 20 天；玩家满 17 岁、小督满 18 岁；名声门槛 0。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：handover 章 deadline_days=60（堺到博多同一片海），超时走 failed，小督来信一封，好感 -3，旗标 _late；超时另写一条见闻（不写的话会套用本章“读了很久”的见闻）。
+#   handover 没有 stage，不写 default。reply_visit 与 reply 是普通章，可以一直等。
+#   念信的检定失败没有回应文字（引擎在失败时不显示 reply），所以失败的结果写在 fail 的 news 里（老夫人不许，把孩子领回屏风后面），并设旗标 _refused，reply 章的变体由“我”开头把这件事告诉小督。
+# 依据·史实背景：战国时的代笔书信；武家的丈夫战死后，孩子归夫家是规矩，寡妇常被送回娘家，求夫家让她见孩子要靠书信与说情。
+# 依据·原创：寡妇（阿竹，堺的油屋家的女儿）、她八岁上下的儿子、博多夫家的老夫人；废纸上写样子、寡妇照着描三遍的署名、老夫人自己写的歪扭落款。
+#   孩子只出场一眼、问一句话；不写争抢、不写危险；孩子最终归谁不写死，只到“去住一季”。
+# 秘密：替菖代笔、让她赢了澪的那首恋歌——永远不碰。正文不写菖、澪、真荣澄、鞠千代、代笔恋歌；不替任何人给真荣澄带信。见闻一律不写。
+# 读的旗标：bond kogo ≥ C（offer 的变体，只读）；c13_request_kogo_note（handover 的变体，本轨道 offer 设，只改文字）；c13_request_kogo_refused（reply 的变体，本轨道 handover 设，只改文字）。不设任何 c7_ 旗标。
+# 设的旗标：c13_request_kogo_accepted（offer 两种接法）、_declined（offer 回绝）、_note（接下并写了问候纸条，handover 变体读）、
+#   _visit（老夫人许了住一季；本轨道内不读）、_refused（念信检定失败；reply 的变体读，补上失败时不显示的回应）、_late（handover 超时）、_done（reply_visit 与 reply 的终局）。
+# 不用 relation / tie / bond / heart 效果；bond 只作条件读取。
+# 报酬：工钱 900（每条终局一次）；好感最多 +13（接下 +2、送信 +3、最好的结局 +8）；念信失败 -2；超时 -3；名声 +1；回忆 mem-request_kogo-reply。无物品奖励。
+# 依赖：港口 sakai、hakata（ports_east_asia.toml）；技能 calligraphy（skills.toml）；属性 eloquence；人物 kogo。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_kogo-reply「两封信的署名」：堺的矮几上并排摊着两封信，一封的署名描了三遍，一封的署名歪歪扭扭，小督的手指停在两封信中间。
+
+[[tracks]]
+key = "request_kogo"
+name = "署她自己的名"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kogo"]
+
+# 一、署名：堺的油屋后头，小督替寡妇写完了信，署名那一栏留给寡妇自己描。
+[[tracks.chapters]]
+key = "offer"
+title = "署名"
+text = "堺的一条窄巷，一家油屋后头的小屋。小督跪坐在矮几前，把一封信展开，推给对面的女人看最后一遍。女人叫阿竹，武家的寡妇，丈夫死在仗上，八岁的儿子被博多的夫家接走了，她自己被送回了娘家，就是前头这家油屋。信是求夫家把孩子还给她的。她认不得几个字，只拿指头一行一行摸过去。署名那一栏还空着。小督在一张废纸上写了两个假名，把笔递给她。阿竹握笔像握筷子，照着废纸一笔一笔描，描完一遍，又从头描一遍。小督等她搁下笔，才把那张废纸撕成两半。“字我替你写，心事你自己留着。”她把信叠成细长的一条，放进我手里，“博多，交给老夫人。”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "在堺的港里" }]
+when = [{ kind = "date", from = [1576, 1, 1], to = [1588, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "kogo", ge = 18 }]
+deadline = [1588, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "kogo", level = "C" }]
+text = "堺的一条窄巷，油屋后头的一间屋子。我一进门，小督先递给我一张揉过的信纸，“孩子”两个字上洇了一团墨。“你认得我写坏的字。”她说完就收回去，压在砚台底下。矮几对面坐着阿竹，武家的寡妇，丈夫死在仗上，八岁的儿子被博多的夫家接走了。信是求夫家把孩子还给她的。署名那一栏还空着。小督在废纸上写了两个假名，把笔递过去。阿竹照着一笔一笔描，描完一遍，又从头描一遍。小督等她搁下笔，才把废纸撕成两半。“字我替你写，心事你自己留着。”她把信叠好，放进我手里，“博多，交给老夫人。”"
+
+[[tracks.chapters.choices]]
+key = "take_letter"
+text = "接下，把信送到博多，交到老夫人手里。"
+next = "handover"
+reply = "小督又裁了一小条纸，写了三行，压在信底下。“给老夫人的问候。”她把纸条的边对齐了信的边，“老夫人也是做过母亲的人。”"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }, { kind = "flag", flag = "c13_request_kogo_accepted" }, { kind = "flag", flag = "c13_request_kogo_note" }]
+
+[[tracks.chapters.choices]]
+key = "ask_signature"
+text = "接下。问她：为什么一定要阿竹自己署名？"
+next = "handover"
+reply = "“信是替人写的，名字不是。”小督低头收拾笔墨，把笔尖在水盂里涮了又涮。“博多那边认得我的字，京都替人写信的，就那么几个。阿竹的字，他们没认过。”她盖上砚台，“认不得的，才是真的。”"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }, { kind = "flag", flag = "c13_request_kogo_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "武家要孩子，一封信要不回来。"
+next = "failed"
+reply = "小督点点头。“我也知道。”她把信收回袖子里，按了按，“可信总得有人送。送到了，才算问过。”"
+effects = [{ kind = "flag", flag = "c13_request_kogo_declined" }]
+
+# 二、老夫人：博多夫家的宅子，老夫人读信读到署名，屏风后头跑出来一个孩子。
+[[tracks.chapters]]
+key = "handover"
+title = "老夫人"
+text = "博多，夫家的宅子离码头不远，廊下晾着一双小草鞋。接信的是老夫人，阿竹丈夫的母亲，头发全白了，坐得笔直。她拆信的手很稳。信不长，她却读了很久，读到最后一行，手指落在署名那两个字上，按着，没有挪开。屏风后头跑出来一个男孩，八岁上下，衣领是新浆过的。他大概在后头听见了“堺”字，站在榻榻米边上看我：“你是从堺来的？是母亲叫你来的吗？”老夫人没有回头，也没有叫他回去。"
+speaker = "captain"
+mood = "sad"
+at = "hakata"
+objectives = [{ kind = "at", at = "hakata", text = "在博多" }]
+when = [{ kind = "alive", person = "kogo", value = true }]
+deadline_days = 60
+news = "博多码头附近一户武家的老夫人，收到一封堺来的信，信上的署名是描出来的，她拿着读了很久。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "kogo", value = -3 }, { kind = "flag", flag = "c13_request_kogo_late" }, { kind = "letter", person = "kogo", text = "信我托下向九州的人送去了。老夫人回了一句：孩子在这里很好。——小督" }]
+news = "博多一户武家收到一封从堺辗转捎来的信，老夫人只回了一句话，说孩子在这里很好。"
+
+[[tracks.chapters.variants]]
+key = "note"
+when = [{ kind = "flag", flag = "c13_request_kogo_note" }]
+text = "博多，夫家的宅子离码头不远，廊下晾着一双小草鞋。接信的是老夫人，阿竹丈夫的母亲，头发全白了，坐得笔直。她先抽出压在信底下的那条小纸，是小督写的问候，读完折成一小块，收进袖子，这才拆信。信不长，她读了很久，读到最后一行，手指落在署名那两个字上，没有挪开。屏风后头跑出来一个男孩，八岁上下，衣领是新浆过的。他站在榻榻米边上看我：“你是从堺来的？是母亲叫你来的吗？”老夫人没有回头，也没有叫他回去。"
+
+[[tracks.chapters.choices]]
+key = "read_aloud"
+text = "请老夫人许我把信照字面念一遍，念给孩子听。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply_visit"
+reply = "老夫人沉默了一会儿，点了头。我念得很慢，一个字也没添。念到“入冬了，替他把棉衣絮厚些”，孩子没有哭，只问母亲什么时候来。老夫人把他拉到身边，替他把衣领理平，说：“让她来住一季。”"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }, { kind = "flag", flag = "c13_request_kogo_visit" }]
+fail = { next = "reply", effects = [{ kind = "affinity", person = "kogo", value = -2 }, { kind = "flag", flag = "c13_request_kogo_refused" }], news = "博多一户武家的宅子里，堺来的客人要把一封信念给孩子听，老夫人没许，起身把孩子领回了屏风后头。" }
+
+[[tracks.chapters.choices]]
+key = "show_hand"
+text = "请老夫人细看那个署名：是阿竹一笔一笔描出来的。"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "你看得出那几个字是描的，可说不出描字的人用了多少力气"
+next = "reply_visit"
+reply = "我把信侧过来，对着窗口的光指给她看：每一笔都描过三回，墨叠着墨，最后一笔收得发颤。老夫人看了很久，说她当年给出征的儿子写第一封信，也是这么描的，“那时候我也认不得几个字。”她把信放回膝上，说：“让她来住一季。”"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }, { kind = "flag", flag = "c13_request_kogo_visit" }]
+
+[[tracks.chapters.choices]]
+key = "just_give"
+text = "只把信交到，等老夫人回话。"
+next = "reply"
+reply = "老夫人把信折回原来的样子，说她要想一想。孩子被侍女领回了屏风后头。第三天，宅子里差人送来一封回信，封口压了两道，外头只写着一个“堺”字。"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }]
+
+# 三a、回信的署名（老夫人许了住一季）：回信里一句没提，听见那句话的只有我。
+[[tracks.chapters]]
+key = "reply_visit"
+title = "回信的署名"
+text = "堺，还是油屋后头那间屋子。小督又从京都下来了，跪坐在阿竹身边，拆开博多的回信。阿竹不识字，小督念给她听。回信写得很规矩：孩子长高了一寸，每天早上习字，冬衣夫家已经备下，不必再寄。没有一句提到她来不来。阿竹听着，手在膝上越攥越紧。小督念到末尾，停住了。署名那一栏没有请人代笔，几个字歪歪扭扭，有一笔出了格。“这一行我不念了。”小督把信转过来，摊在阿竹膝上，“你自己看。”阿竹看了很久，抬起头来看我。小督也抬起眼睛：“你在博多，老夫人还说了什么？”"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "在堺，等小督再下到港口" }]
+when = [{ kind = "alive", person = "kogo", value = true }]
+news = "堺一家油屋的女儿守了寡，听说要去博多夫家住上一季；博多来的回信，落款是那家老夫人自己写的。"
+
+[[tracks.chapters.choices]]
+key = "tell_visit"
+text = "告诉阿竹：老夫人当着我的面说了，让她去住一季。"
+next = "done"
+reply = "阿竹哭了，哭得没有声音，只是肩膀一直在抖。小督把回信按原来的折痕叠好，放进她手里，按了按，说往后两边写信，“都署自己的名字”。她把一个小布包交给我，是阿竹凑的谢礼，不多。“多了，她过不去。”小督说完，低头去叠那块包袱布。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "kogo", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_kogo_done" }, { kind = "memory", memory = "mem-request_kogo-reply", title = "两封信的署名" }]
+
+[[tracks.chapters.choices]]
+key = "tell_limit"
+text = "告诉她老夫人许了住一季，也说清：孩子归谁，老夫人没松口。"
+next = "done"
+reply = "阿竹点头，说一季也好，一季够她给孩子缝两件衣裳。小督看了我一眼，铺开一张纸，左边写要带的东西，右边写夫家的规矩，一条一条。写完递给阿竹：“你认不得的，到了博多，让孩子念给你听。”她把阿竹凑的谢礼交给我，不多。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "kogo", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_kogo_done" }, { kind = "memory", memory = "mem-request_kogo-reply", title = "两封信的署名" }]
+
+# 三b、回信的署名（只收到一封封得很严的回信）：信里说的是规矩，落款是老夫人自己描的。
+[[tracks.chapters]]
+key = "reply"
+title = "回信的署名"
+text = "堺，油屋后头那间屋子。小督又下到堺来，陪阿竹拆博多的回信。封口压了两道，她拿小刀挑了半天才挑开。“封得这么严，是怕路上有人看。”她说。阿竹认不得字，小督一句一句念。信里说孩子在夫家很好，读书写字，跟着祖母住；夫家的规矩，老夫人一个人改不了。阿竹听一句，点一下头，点到后来，头低着不抬了。小督念到最后，忽然停了。落款没有请人代笔，那几个字歪歪扭扭，墨一处浓一处淡，看得出是照着样子写的。“她也是描的。”小督说，声音很轻。"
+speaker = "captain"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "把博多那封封得很严的回信带回堺" }]
+when = [{ kind = "alive", person = "kogo", value = true }]
+news = "堺的一位武家寡妇收到了博多的回信，两封信都署着写信人自己的名字。"
+
+[[tracks.chapters.variants]]
+key = "refused"
+when = [{ kind = "flag", flag = "c13_request_kogo_refused" }]
+text = "堺，油屋后头那间屋子。小督又下到堺来，陪阿竹拆博多的回信。我先把博多的事说了：信我没念成，老夫人把孩子领回了屏风后头，回信是第三天差人送到船上的。小督听着，没说话，拿小刀去挑封口。封口压了两道，她挑了半天才挑开。阿竹认不得字，小督一句一句念。信里说孩子在夫家很好，读书写字，跟着祖母住；夫家的规矩，老夫人一个人改不了。阿竹听一句，点一下头，点到后来，头低着不抬了。小督念到最后，忽然停了。落款没有请人代笔，那几个字歪歪扭扭，墨一处浓一处淡，看得出是照着样子写的。“她也是描的。”小督说，声音很轻。"
+
+[[tracks.chapters.choices]]
+key = "comfort"
+text = "说老夫人肯自己署名回信，就是还肯往下说。"
+next = "done"
+reply = "小督想了想，说：“是。”她把回信又念了一遍，比头一回慢，念到落款停了一停，才把那几个字念出来。阿竹点着头，把信叠好收进怀里，隔着衣裳按了一下。小督把阿竹凑的谢礼交给我，替她道了一声谢。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "kogo", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_kogo_done" }, { kind = "memory", memory = "mem-request_kogo-reply", title = "两封信的署名" }]
+
+[[tracks.chapters.choices]]
+key = "write_back"
+text = "请小督替阿竹再写一封，从孩子的冬衣问起。"
+next = "done"
+reply = "小督铺开纸，阿竹说一句，她写一句。阿竹先问孩子的冬衣絮得厚不厚，又问夜里还踢不踢被子，小督照着写，一个字也没替她改。写到署名那一栏，她把笔递过去，这回没有写样子。阿竹握着笔想了很久，自己写了出来，比上回歪，一笔也没描。小督把信收进袖子，“这封我找人送。”临走，她把阿竹包好的一小包钱推到我面前。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "kogo", value = 5 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_kogo_done" }, { kind = "memory", memory = "mem-request_kogo-reply", title = "两封信的署名" }]

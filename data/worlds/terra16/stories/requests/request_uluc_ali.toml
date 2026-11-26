@@ -1,0 +1,274 @@
+# 请托：勒卡斯泰拉的三个渔夫（request_uluc_ali）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：乌卢赤·阿里（uluc_ali，1519 年生，男；1587 年卒），奥斯曼海军统帅，1572 年起在金角湾兵工厂督造战船。出身卡拉布里亚勒卡斯泰拉的渔家，少年被掳、改宗，这两件事是公开的。cast：cast/historical_02_islamic.toml（其 faction 写的是 algiers；本条的声望只记奥斯曼）。
+# 类型：混合（mixed）。任务单的五章是 offer（船台）、ransom（巴尼奥的赎价）、passage（海上的无花果树）、landing（那不勒斯的盘问）、report（金角湾回话）。
+#   文件里是八章：passage、landing、report 为不点名的一路；ransom 的“压低声音”选项 next 到 passage_named，之后走 landing_named、report_partial 这一条平行的链。
+#   原因：变体只能改文字，不能改选项的去处；选项的 requires 不能挡在本轨道另一条路才设的旗标上（点名旗标只在 ransom 的那个选项里设），所以两条路必须在 ransom 之后分开走。
+# 报价：T（当面）。auto=false，玩家“问请托”（ask:request_uluc_ali）启动；offer 不写 at，目标为“在港里找到他”。玩家满 17 岁。
+#   offer 的 deadline 为窗口止日 1585-10-31，timeout 直接 failed，不写见闻（没人知道这件事没成）。预计窗口 1572-03-01 至 1585-10-31（只是注释，引擎里非 stage 章不写 window）。
+# 进行中：ransom 期限 120 天（阿尔及尔到金角湾，跨一片海）；landing 与 landing_named 期限 90 天；report 与 report_partial 期限 150 天。超时都走 failed，人的来信一封，好感 -3，旗标 _late。
+#   passage 与 passage_named 只用 wait 5 天，不设期限。
+# 依据·史实：乌卢赤·阿里生于卡拉布里亚的勒卡斯泰拉（原名乔万尼·迪奥尼吉·加莱尼），少年被北非的船掳去，在桨帆船上划桨，后来改宗，勒班陀之后任海军统帅，1572 年起在伊斯坦布尔金角湾兵工厂一冬之间重建舰队（传闻口吻）。阿尔及尔的赎俘有帕夏的抽成、港税与通事费。
+#   不写勒班陀，不写三一会与塞万提斯，不写新舰队的图纸（C7 哈桑×阿尔维塞的舰队线不碰）。
+# 依据·原创：三个渔夫（一个老的、两个年轻的）、老渔夫补的那张网、勒卡斯泰拉教堂后面的无花果树、那不勒斯港的书记、阿尔及尔巴尼奥的看守、船台上的饭锅。
+#   任务单的梗概写的是“赎回三个渔夫”，场景与修正都以金角湾与阿尔及尔为准。
+#   三个渔夫的年纪不写，只写是桨手与渔人；不写危险的打斗，不写恋爱。
+# 秘密：“名字不许提他”。出钱的人是统帅，这件事不进见闻。正文里只在 ransom 的点名选项与 passage_named、landing_named、report_partial 里，岸上的传言碰到这件事；那是违背了他的条件的后果，不是见闻。
+# 读的旗标：c13_main_tariq（offer 的变体，只改一句话；由塔里克主线第一章设，尚未写入，此前门禁等于不存在）。不读 c7_ 旗标，不设任何 c7_ 旗标。
+# 设的旗标：c13_request_uluc_ali_accepted / _declined（offer）、_paid（ransom 付钱的两条）、_named（ransom 点名）、_word_taken（passage 与 passage_named 的两个选项）、_questioned（landing 与 landing_named 检定失败）、_at_sea（landing 海上换船）、_word_kept（report 只说人已到家）；
+#   终局 _late / _done / _partial，每条路只设一面。
+# 不用 relation / tie / bond / heart 效果；本轨道不写 requires 挡在另一条路的旗标上。
+# 报酬：现金 3650 加上还垫付的赎金 900，合计 4550（done 路，单笔不超过 5000）；点名的一路只付 2200，不还赎金（本来也没花）。好感最多 19（offer +2、ransom +3、passage +3、landing +3、report +8）；名声 +7（统帅档 5 加复合 2，仅 done 路）；奥斯曼声望 +2（仅 done 路）；回忆 mem-request_uluc_ali-report。无物品奖励，无技能奖励。
+#   haggle 一路压到 500，省下的 400 当场给三个人置办衣裳与干粮，合计仍垫 900，与结账对上（2026-10-26 整合时改）。
+# 依赖：港口 istanbul（ports_east_med.toml）、algiers（ports_north_africa.toml）、naples（ports_west_med.toml）；属性 eloquence；技能 negotiation、lang_italian；人物 uluc_ali。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_uluc_ali-report「无花果树」：金角湾的船台，新龙骨的木架之间，墨斗线绷得笔直，线头压在一根木料上；旁边一只冷掉的饭碗。
+
+[[tracks]]
+key = "request_uluc_ali"
+name = "勒卡斯泰拉的三个渔夫"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["uluc_ali"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "船台边的名字"
+text = "金角湾兵工厂的船台上，一截新龙骨架在木架里立着。乌卢赤·阿里站在饭棚边，掀开大锅的盖子，拿木勺把豆子压散，数底下的肉。桨手们排成一队，他没回头，先问：“你的水手吃得饱吗？”不等你答，他从腰带里抽出一张折得发毛的纸，展开递过来。纸上是三个名字，都是勒卡斯泰拉的渔夫，关在阿尔及尔的巴尼奥里。“赎金我出，人送回卡拉布里亚的海边。”他把木勺搁在锅沿上，“只有一条：这话我只说一遍，谁也不许知道钱是谁的。”"
+speaker = "uluc_ali"
+mood = "tense"
+objectives = [{ kind = "person", person = "uluc_ali", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1572, 3, 1], to = [1585, 10, 31] }, { kind = "age", ge = 17 }]
+deadline = [1585, 10, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_tariq"
+when = [{ kind = "flag", flag = "c13_main_tariq" }]
+text = "金角湾兵工厂的船台上，一截新龙骨架在木架里立着。乌卢赤·阿里站在饭棚边，掀开大锅的盖子，拿木勺把豆子压散。桨手们排成一队，他没回头，先问：“你的水手吃得饱吗？”你还没答，他转过身，目光在你脸上停了停。“阿尔及尔码头上那个替人数钱的孩子。”就这一句，没有下文。然后他从腰带里抽出一张折得发毛的纸，展开递过来。纸上是三个名字，都是勒卡斯泰拉的渔夫，关在阿尔及尔的巴尼奥里。“赎金我出，人送回卡拉布里亚的海边。”他把木勺搁在锅沿上，“只有一条：这话我只说一遍，谁也不许知道钱是谁的。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下，名字的事我烂在肚子里。"
+next = "ransom"
+reply = "他点一下头，算是成交，把纸塞进你手里：“赎金你先垫。回来我还你，一个子儿不少。”"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 2 }, { kind = "flag", flag = "c13_request_uluc_ali_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "why_me"
+text = "接下，但问他：为什么不一道命令，让阿尔及尔放人？"
+next = "ransom"
+reply = "“我开口，价钱翻三倍，全阿尔及尔都知道统帅心软。”他把锅盖扣回去，“心软的统帅，下一个冬天就造不出船。”"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 2 }, { kind = "flag", flag = "c13_request_uluc_ali_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "阿尔及尔的生意我不做。"
+next = "failed"
+reply = "他没再看你，转身去骂一个把缆绳盘错的水手。"
+effects = [{ kind = "flag", flag = "c13_request_uluc_ali_declined" }]
+
+[[tracks.chapters]]
+key = "ransom"
+title = "巴尼奥的价钱"
+text = "阿尔及尔的巴尼奥，铁栅门里一股烂稻草和尿的味道。看守把三个人领到门口：一个老的，两个年轻的，手上都是桨磨出来的茧，脚踝上还留着铁环的印子。看守伸出手，一根指头一根指头地数：“帕夏的抽成，通事费，港税，一人一份。”他说完，眼睛才往你身上溜，又去看那三个人，像在估他们还值不值。“要赎就快点，我这里不等人。”老的那个一直盯着你，一句话也不说。"
+speaker = "captain"
+mood = "tense"
+at = "algiers"
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+deadline_days = 120
+news = "阿尔及尔的巴尼奥里，三个卡拉布里亚的渔夫一起被赎了出去，赎他们的是一条外国船。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "uluc_ali", value = -3 }, { kind = "flag", flag = "c13_request_uluc_ali_late" }, { kind = "letter", person = "uluc_ali", text = "乌卢赤·阿里（书记代笔）：三个人已由别的船赎走。你垫的钱若还没花，就留着。" }] }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "照价付清，不讨价。"
+next = "passage"
+reply = "看守数钱数得很慢，像是嫌你付得太痛快，后悔没多要。三个人出了门，老的那个在台阶上跪下去，亲了亲地面。"
+requires = [{ kind = "cash", ge = 900 }]
+hint = "你算了算钱袋，赎金还差一截。"
+effects = [{ kind = "cash", value = -900 }, { kind = "affinity", person = "uluc_ali", value = 3 }, { kind = "flag", flag = "c13_request_uluc_ali_paid" }]
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "照船长圈里的规矩，一项一项压价。"
+next = "passage"
+reply = "你把通事费和港税一条条拆开问，看守越答越短。最后的数目比开价少了将近一半，他骂骂咧咧收了钱。省下的四百，你在码头上给三个人买了衣裳、鞋和回程的干粮。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }, { kind = "cash", ge = 900 }]
+hint = "帕夏的抽成、港税、通事费，你分不清哪一项能砍。"
+effects = [{ kind = "cash", value = -900 }, { kind = "affinity", person = "uluc_ali", value = 3 }, { kind = "flag", flag = "c13_request_uluc_ali_paid" }]
+
+[[tracks.chapters.choices]]
+key = "name_drop"
+text = "压低声音说：这是金角湾那位要的人。"
+next = "passage_named"
+reply = "看守的脸一下子白了，钱也不要，亲自给三个人卸了脚镣。当天晚上，阿尔及尔的酒馆里就有人说：统帅在赎他老家的渔夫。"
+effects = [{ kind = "flag", flag = "c13_request_uluc_ali_named" }]
+
+[[tracks.chapters]]
+key = "passage"
+title = "无花果树"
+text = "出海第五天，风转了向。老渔夫还坐在船尾补网，针脚很慢。他忽然抬头问：“出钱的人，是不是左边眉毛上有一道疤，小时候爬过教堂后面那棵无花果树？”你没答。他把针插进网眼里，自己往下说：“那孩子十几岁被掳上了船，家里人以为他死了。他母亲在门口那棵树底下坐了好些年。”网补到一半，他停了手，“我求你带一句话回去：树还结果子，房子的顶也还在。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "wait", days = 5, text = "出海五天" }]
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "答应把话带到，不说出钱的人是谁。"
+next = "landing"
+reply = "老人把补好的网叠起来，叠得方方正正：“那就够了。我不问是谁。”"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 3 }, { kind = "flag", flag = "c13_request_uluc_ali_word_taken" }]
+
+[[tracks.chapters.choices]]
+key = "deny"
+text = "告诉他：出钱的人不许提，我什么也不知道。"
+next = "landing"
+reply = "他看了你很久，笑了：“好，好。不知道。”然后他还是把那句话又说了一遍，慢慢地，像怕你记错。"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 2 }, { kind = "flag", flag = "c13_request_uluc_ali_word_taken" }]
+
+[[tracks.chapters]]
+key = "landing"
+title = "那不勒斯的盘问"
+text = "那不勒斯港的总督府书记，听说船从阿尔及尔来，船上还有三个刚赎出来的人，马上派人上船。书记站在跳板上，手里拿着名册，三个人一听，缩进了舱底，老的那个把年轻的拉到身后。港口外头，一条卡拉布里亚的小船正在装鱼，划一天就能到家。“你们在那边改没改信？”书记问，手指在名册上敲了两下，“见过哪些船，一个个说清楚。”"
+speaker = "captain"
+mood = "tense"
+at = "naples"
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+deadline_days = 90
+news = "那不勒斯港外，三个卡拉布里亚的渔夫从一条外国船上换到自家的小船，往南划走了。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "uluc_ali", value = -3 }, { kind = "flag", flag = "c13_request_uluc_ali_late" }, { kind = "letter", person = "uluc_ali", text = "乌卢赤·阿里（书记代笔）：人在你船上耽搁太久。听说他们最后是自己搭渔船回去的。" }] }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟书记讲清楚：赎俘的船，问话到港务处问。"
+next = "report"
+reply = "书记翻了翻你的赎俘文书，嘟囔着放人。三个人当天就搭上了回卡拉布里亚的小船，老的那个回头冲你挥了很久的手。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "uluc_ali", value = 3 }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "uluc_ali", value = -2 }, { kind = "flag", flag = "c13_request_uluc_ali_questioned" }], news = "那不勒斯港的书记把三个从阿尔及尔赎回的渔夫扣下问了七天话，才放他们回卡拉布里亚。" }
+
+[[tracks.chapters.choices]]
+key = "boatmen"
+text = "不进港，用意大利话跟外头的小船讲好，海上换船。"
+next = "report"
+reply = "小船的船老大一听你说的是他们那边的话，二话不说靠上来。三个人跳过船舷，连头都没回。回家的人都是这样。"
+requires = [{ kind = "skill", skill = "lang_italian", ge = 60 }]
+hint = "外头小船上的人说的话，你一句也接不上。"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 3 }, { kind = "flag", flag = "c13_request_uluc_ali_at_sea" }]
+
+[[tracks.chapters.choices]]
+key = "clerk_fee"
+text = "给书记的抽屉里放一笔“文书费”。"
+next = "report"
+reply = "书记在三个名字后面各画了一道，说他今天没见过这条船。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你的钱袋不够书记开口。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "uluc_ali", value = 3 }]
+
+[[tracks.chapters]]
+key = "report"
+title = "树还结果子"
+text = "金角湾的船台上，他在看新上的龙骨，墨斗线拉得笔直。棚子里那口大锅刷得干干净净，扣在架子上，桨手们正排着队领饭。你走过去，他没有抬头，只问：“那边的人，怎么样？”你还没开口，他又说：“别绕，说清楚。”墨斗线在木头上弹下一道黑线，他拿指头压住线头，等着你说。船台边的工匠都停了锤子。"
+speaker = "uluc_ali"
+mood = "tender"
+objectives = [{ kind = "person", person = "uluc_ali", text = "在港里找到他" }]
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+deadline_days = 150
+news = "金角湾兵工厂的人说，统帅那天在船台边站了很久，叫人去市场上找无花果。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "uluc_ali", value = -3 }, { kind = "flag", flag = "c13_request_uluc_ali_late" }, { kind = "letter", person = "uluc_ali", text = "乌卢赤·阿里（书记代笔）：人到家了，卡拉布里亚来的船捎了信。你垫的钱，下次到兵工厂来领。" }] }
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "一字不改地把那句话告诉他。"
+next = "done"
+reply = "“无花果树。”他重复了一遍，没有别的话。过了一会儿他叫书记来，把你垫的钱连本带利算清，又加了一句：“下回来，带一筐那边的无花果。”"
+effects = [{ kind = "cash", value = 4550 }, { kind = "affinity", person = "uluc_ali", value = 8 }, { kind = "fame", value = 7 }, { kind = "reputation", faction = "ottoman", value = 2 }, { kind = "memory", memory = "mem-request_uluc_ali-report", title = "树还结果子" }, { kind = "flag", flag = "c13_request_uluc_ali_done" }]
+
+[[tracks.chapters.choices]]
+key = "short"
+text = "只说人已到家，那句话留在你这里。"
+next = "done"
+reply = "他点头，叫书记付钱，没有多问。你转身时他说：“那个老的，有没有说什么？”你说没有。他说：“好。”"
+effects = [{ kind = "cash", value = 4550 }, { kind = "affinity", person = "uluc_ali", value = 4 }, { kind = "fame", value = 7 }, { kind = "flag", flag = "c13_request_uluc_ali_done" }, { kind = "flag", flag = "c13_request_uluc_ali_word_kept" }]
+
+[[tracks.chapters]]
+key = "passage_named"
+title = "岸上的话"
+text = "出海第五天的傍晚，风转了向。老渔夫补着网，补到一半忽然停了手。他说，阿尔及尔码头的挑夫在传，出钱的是统帅。“我不信。”他把针插进网眼里，抬眼看你，“统帅左边眉毛上是不是有一道疤，小时候爬过教堂后面那棵无花果树？”你没答。他往下说：“那孩子十几岁被掳上了船，家里人以为他死了。他母亲一坐就是好些年，船一靠岸就上码头去问。我求你带一句话回去：树还结果子，房子的顶也还在。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "wait", days = 5, text = "出海五天" }]
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "答应把话带到，岸上的话我不接。"
+next = "landing_named"
+reply = "老人把补好的网收进船尾的筐里：“那就够了。岸上的话，我也不信。”"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 3 }, { kind = "flag", flag = "c13_request_uluc_ali_word_taken" }]
+
+[[tracks.chapters.choices]]
+key = "deny"
+text = "告诉他：岸上的话不作数，我什么也不知道。"
+next = "landing_named"
+reply = "他看了你很久，没有笑。“好。岸上的话不作数。”他停了一下，又把那句话说了一遍，声音压得很低，像是说给网听的。"
+effects = [{ kind = "affinity", person = "uluc_ali", value = 2 }, { kind = "flag", flag = "c13_request_uluc_ali_word_taken" }]
+
+[[tracks.chapters]]
+key = "landing_named"
+title = "那不勒斯的名单"
+text = "那不勒斯港的总督府书记，已经听说阿尔及尔的酒馆里在讲一个统帅。他把三个渔夫叫到桌前，问得比别人细：在那边有没有人替他们说过话，是谁的船把他们带出来的。三个人挤在一起，不敢抬头。书记把名册翻到一页，指甲在纸上一顿。“船的事，问话到港务处去。”他说，“名字的事，港务处管不着。”"
+speaker = "captain"
+mood = "tense"
+at = "naples"
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+deadline_days = 90
+news = "那不勒斯港的总督府，书记把三个从阿尔及尔赎回的卡拉布里亚渔夫叫去问话，问到半夜才放人。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "uluc_ali", value = -3 }, { kind = "flag", flag = "c13_request_uluc_ali_late" }, { kind = "letter", person = "uluc_ali", text = "乌卢赤·阿里（书记代笔）：人在那不勒斯耽搁太久，三个人等不到你，雇了条渔船自己走的。名字的事，别再提了。" }] }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟书记讲清楚：船的事问港务处，名字的事不必问。"
+next = "report_partial"
+reply = "书记把名册合上，没再看那三个名字：“港务处的事，港务处去办。”三个人上了船，船老大把帆一扯，连桨都没下。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "uluc_ali", value = 3 }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "uluc_ali", value = -2 }, { kind = "flag", flag = "c13_request_uluc_ali_questioned" }], news = "那不勒斯港的书记听说了阿尔及尔的传言，把三个渔夫扣下问了七天话，才放他们回卡拉布里亚。" }
+
+[[tracks.chapters.choices]]
+key = "clerk_fee"
+text = "给书记的抽屉里放一笔“文书费”，请他把那一页忘了。"
+next = "report_partial"
+reply = "书记收了钱，把那一页合上，说这一页他没见过。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "要书记把那一页忘干净，身上的钱还差一截。"
+news = "那不勒斯港的书记收了一笔“文书费”，三个从阿尔及尔赎回的渔夫当晚就上了小船。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "uluc_ali", value = 3 }]
+
+[[tracks.chapters]]
+key = "report_partial"
+title = "话带到了"
+text = "金角湾的船台上，他已经听完了阿尔及尔的传言。你走过去，他没有抬头，手里的墨斗线压在一根新刨的木料上。“岸上的话，你听到了？”他问，又说，“别替我遮。”棚子那边传来桨手领饭的吵嚷，他听了一会儿，把墨斗线收进木匣里。船台边的工匠都低着头干活，没有人出声。"
+speaker = "uluc_ali"
+mood = "tense"
+objectives = [{ kind = "person", person = "uluc_ali", text = "在港里找到他" }]
+when = [{ kind = "alive", person = "uluc_ali", value = true }]
+deadline_days = 150
+news = "金角湾兵工厂的人说，统帅这几天在船台边话更少了，龙骨上的墨线弹了又擦。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "uluc_ali", value = -3 }, { kind = "flag", flag = "c13_request_uluc_ali_late" }, { kind = "letter", person = "uluc_ali", text = "乌卢赤·阿里（书记代笔）：人到了卡拉布里亚，那边的信我收到了。阿尔及尔的话我不解释。你垫的钱，下次来兵工厂领。" }] }
+
+[[tracks.chapters.choices]]
+key = "named_report"
+text = "照实认下，再把那句话告诉他。"
+next = "done"
+reply = "他听完传言，又听完那句话，下颌的肌肉动了一下，没出声。书记付了你一笔钱，数目不大，也没还赎金，本来也没花。他说：“话带到了。别的，你自己知道。”"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "uluc_ali", value = 2 }, { kind = "flag", flag = "c13_request_uluc_ali_partial" }]
+
+[[tracks.chapters.choices]]
+key = "named_short"
+text = "认下传言，只说人已到家，那句话不提了。"
+next = "done"
+reply = "他收起墨斗线，看了你一会儿：“传言我听过了。人到家，就够了。”书记付了钱，他没再说话，转身回了船台。"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "uluc_ali", value = 1 }, { kind = "flag", flag = "c13_request_uluc_ali_partial" }]

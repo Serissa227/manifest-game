@@ -1,0 +1,270 @@
+# 请托：满仓的证词（request_mao_wenlong）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：毛文龙（mao_wenlong，1521 生，男），东江镇总兵，据皮岛（本世界线 1567 年开镇，提前约 55 年，TERRA16 §10.5、§11）；势力 ming，身份档 3；有 fate（1574 年被处死的可能，本请托一字不提）。
+# 类型：去某处（go）。三章：offer（皮岛上见到总兵，他领人看满仓，要一纸证词）→ arrive（住到第三夜，岛背面小湾里的事）→ report（证词怎么写）；
+#       report 因旗标分流拆成三章：report（夜里看见了）、report_blind（当场照他说的写）、report_unseen（睡过去），所以文件里共五章（另有保留终点 done / failed）。
+# 报价：T（当面）。auto=false，玩家在皮岛“问请托”（ask:request_mao_wenlong）启动；offer 不写 at，目标是 person；窗口 1567-06-01 至 1573-06-30，
+#       玩家满 17 岁；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 这是一条“照实 / 遮掩 / 不下结论”的请托：照实写拿不到钱、好感 -10（对他的出卖），终局旗标仍设 done——它是故事上的最好结局，也是唯一有回忆的一支；
+#       替他遮掩（只写白天的满仓）拿钱、好感 +8，终局旗标 partial；什么都不写好感 -2，旗标 failed，next 仍是 done。
+#       当场照他说的写（sign）与睡过去的（sleep）什么都没看见：按 next 分流到 report_blind / report_unseen，那两章只有 day 与 none，没有 truth（选项里不用 requires 读本轨道的旗标）。
+# 依据·史实平移：毛文龙据皮岛，被指虚报兵额、转卖粮货（1621 → 1566/67）；“牵制”是他自己的说法。史实与世界线的界线：只写他请一个外来商人写证词，不写战事、不写袁崇焕、不写他的死。
+# 依据·原创：满仓的米袋（梁上有灰，袋上无灰）、石桌上的纸笔、两个不起名的义子、岛背面的小湾与朝鲜小船、人参与貂皮、石桌边煮茶的炭盆。
+#       义子不新建 cast；“送回去”不写暴力。
+# 秘密：饷银去向、兵额虚实、转卖粮食与人参——他本人一句不认，见闻里一字不写。本请托让玩家自己去看（arrive），但毛文龙的口里没有一句承认；
+#       见闻整个文件一条都没有，唯一例外是 arrive 里 slip 检定失败分支的 news——失败时界面要显示一段文字，引擎取的就是这一条，写成只讲“客人走错了路”的闲话，不透露粮与船。
+# 辽东战役链：只写人、粮与家信；不运兵器、火药、火炮、铁料，不传军情，不改任何战役变量，不给 jianzhou 加声望。
+# 读的旗标：c13_request_mao_wenlong_caught（只读本轨道自己的旗标，report 的变体 v1_caught 读它）。其余旗标（_saw / _unseen / _blind）只设不读，靠 next 分流。
+# 设的旗标：_accepted（offer 接下）、_declined（offer 回绝）、_blind（sign）、_saw（korean，slip）、_caught（slip 检定失败，同时设 saw）、_unseen（sleep）、
+#       _late（arrive、report、report_blind、report_unseen 超时）、_done + _truthful（report 照实）、_partial + _covered（report 只写白天）、_failed（report 不写）。
+#       终局旗标每条路径只设一面（done / partial / failed / late / declined）；不设 c7_ 旗标；不用 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 报酬：现金至多 3650（只有替他遮掩的那一路）；好感 +2（接下）/ +8（遮掩）/ -2（不写）/ -10（照实）；无名声、无声望（隐秘，且不改战役变量）；回忆一张（照实写的那一路）；无物品。
+# 依赖：港口 pidao（ports_east_asia.toml，1567 年起开港，dormant until 1567 by L08；若时间线 L08 改写使皮岛仍休眠，这条请托碰不到，属正常）；
+#       技能 lang_korean 在 skills.toml；属性 arms；人物 mao_wenlong（日程 1567-01-01 至 1573-12-31 在皮岛）。无需 B10b 改名。
+# 缺省走向（玩家什么也不做）：offer 到 1573-06-30 超时，走 failed，无见闻；arrive 与三个 report 章各 30 天不回应，走 failed，各一封毛文龙的短信。
+# 回忆插画清单：
+#   mem-request_mao_wenlong-report「炭盆里那一团纸」：皮岛，石桌边的炭盆上煮着一壶茶，一个嗓门很大的中年总兵把一团纸扔进火里，纸边卷起，一半黑一半亮；两个义子低头站在后面，海边的天是灰白的。
+
+[[tracks]]
+key = "request_mao_wenlong"
+name = "满仓的证词"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["mao_wenlong"]
+
+# 一、报价：皮岛，毛总兵领人看粮仓。
+[[tracks.chapters]]
+key = "offer"
+title = "满的粮仓"
+text = "毛总兵听说来了外来的船，不等人通报，自己拎着一串钥匙下到码头，领我走到半山腰，一脚踢开仓门。米袋从地上码到房梁，梁上积着灰，袋子上却一粒灰也没有。“看见没有？岛上十几万兵，吃的就是这个！”他拍着最近的一袋，袋口的米粒震得直往下掉，又拽我到门外的石桌前：纸笔墨摆得齐齐整整，两个年轻的义子一边一个，站得笔直。“朝里有人参我卖粮，一本接一本。我不辩，我老毛不跟那帮人辩。你是外来的商人，进仓看过了，往这纸上写你看见的。”他压低嗓门，没压住，“奏本里写一句‘商人亲眼所见’，朝里那些人就闭嘴了。”"
+objectives = [{ kind = "person", person = "mao_wenlong", text = "在皮岛见到总兵" }]
+when = [
+  { kind = "date", from = [1567, 6, 1] },
+  { kind = "age", ge = 17 },
+]
+speaker = "mao_wenlong"
+mood = "cheerful"
+deadline = [1573, 6, 30]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "答应写，但要先在岛上住几夜"
+next = "arrive"
+reply = "“住！住三夜都行！”毛总兵一巴掌拍在我背上，回头吼人去东厢收拾铺盖。两个义子对看了一眼，其中一个转身就跑，不知是去铺床，还是去报信。"
+effects = [
+  { kind = "affinity", person = "mao_wenlong", value = 2 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "sign"
+text = "当场照他说的写"
+next = "report_blind"
+reply = "“痛快！”他又是一巴掌，拍得我差点扑在石桌上，扭头叫人上酒。一个义子已经蘸好了笔递到我手里，墨汁滴在纸角，晕开一小团。另一个从仓后头搬出一坛酒来，拍开了泥封。"
+effects = [
+  { kind = "affinity", person = "mao_wenlong", value = 2 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_accepted" },
+  { kind = "flag", flag = "c13_request_mao_wenlong_blind" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这证词我不写"
+next = "failed"
+reply = "他的笑收了一半，另一半还挂在脸上。“行。”他自己把仓门踢回去，铁锁咔哒一声，“船明天一早走，潮不等人。”两个义子上来，一个收笔，一个收纸，手脚比来时快得多。"
+effects = [{ kind = "flag", flag = "c13_request_mao_wenlong_declined" }]
+
+# 二、第三夜：岛背面的小湾。三种做法：说朝鲜话（技能）、悄悄退回去（检定）、睡过去。
+[[tracks.chapters]]
+key = "arrive"
+title = "夜里的小湾"
+text = "在岛上住到第三夜，我被一阵绞盘声弄醒，推开窗，岛背面有火光。顺着礁石摸过去，小湾里泊着几条朝鲜小船，火把插在石缝里。白天仓里那样的粮袋，一袋接一袋，从栈桥上肩扛手递，上了船；船上卸下来的是成捆的人参，和用草绳扎着的貂皮，堆得比人高。我刚蹲下，一盏灯笼从礁石那头晃了过来，提灯的是个巡夜的义子，一边走一边哼着小调。"
+when = [{ kind = "alive", person = "mao_wenlong", value = true }]
+objectives = [
+  { kind = "wait", days = 3 },
+  { kind = "at", at = "pidao", text = "在皮岛住满三夜" },
+]
+at = "pidao"
+speaker = "captain"
+mood = "tense"
+night = true
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_mao_wenlong_late" },
+  { kind = "letter", person = "mao_wenlong", text = "船主，仓门我叫人擦了三遍，等你等到酒都酸了。奏本我另找人写，岛上不缺肯写字的。下回路过皮岛，酒还有。" },
+]
+
+[[tracks.chapters.choices]]
+key = "korean"
+text = "用朝鲜话跟船上的人搭话"
+requires = [{ kind = "skill", skill = "lang_korean", ge = 60 }]
+hint = "船上的人说的话，我一句也接不上。"
+next = "report"
+reply = "我站起来，用朝鲜话问了一句。船夫吓了一跳，随即咧嘴笑了：这是换货，每个月都换，“总兵爷的买卖”。灯笼晃到栈桥头，他扬声喊了句什么，灯笼就拐了个弯。他抖出一根扎红绳的人参往我手里塞，当见面礼；我没收，他耸耸肩，又塞回了捆里。"
+effects = [{ kind = "flag", flag = "c13_request_mao_wenlong_saw" }]
+
+[[tracks.chapters.choices]]
+key = "slip"
+text = "趁灯笼没照过来，悄悄退回去"
+next = "report"
+reply = "我把脊背贴住礁石，听着灯笼的脚步，一步一步往后挪。碎贝壳在脚下硌得生疼，一声也没响。回到东厢，被窝里还是温的，巡夜的小调从窗外过去，又过去了。"
+check = { attr = "arms", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_request_mao_wenlong_saw" }]
+
+[tracks.chapters.choices.fail]
+next = "report"
+news = "皮岛上传开了一桩小事：总兵爷的客人夜里在岛上走错了路，叫巡夜的小子拿灯笼逮着，笑嘻嘻送回了东厢。"
+effects = [
+  { kind = "flag", flag = "c13_request_mao_wenlong_saw" },
+  { kind = "flag", flag = "c13_request_mao_wenlong_caught" },
+]
+
+[[tracks.chapters.choices]]
+key = "sleep"
+text = "回去睡觉，什么也没看见"
+next = "report_unseen"
+reply = "我把窗板合上，蒙头躺下。绞盘声响了半夜。天亮时我推窗去看，小湾里只剩几道船底拖过的印子，被潮水舔平了一半。"
+effects = [{ kind = "flag", flag = "c13_request_mao_wenlong_unseen" }]
+
+# 三、证词怎么写。按 next 分流：夜里看见了（含被撞见）走 report，当场照他说的写走 report_blind，睡过去走 report_unseen。
+[[tracks.chapters]]
+key = "report"
+title = "证词怎么写"
+text = "第四天一早，毛文龙在石桌前等我，纸铺平了，砚里是新磨的墨，笔尖朝着我的方向。“睡得好？”他乐呵呵地问，“外乡人头两夜都睡不着，第三夜就好了。”两个义子还站在老位置，靠左的那个裤脚上沾着一圈潮湿的细沙。"
+when = [{ kind = "alive", person = "mao_wenlong", value = true }]
+objectives = [{ kind = "person", person = "mao_wenlong", text = "把证词交给总兵" }]
+speaker = "mao_wenlong"
+mood = "tense"
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_mao_wenlong_late" },
+  { kind = "letter", person = "mao_wenlong", text = "纸在石桌上摊了一个月，墨干了不知几回。奏本我叫别人写完递上去了。仓还满着，哪天回来看，我招待。" },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_caught"
+when = [{ kind = "flag", flag = "c13_request_mao_wenlong_caught", value = true }]
+text = "第四天一早，毛文龙在石桌前等我，纸铺平了，砚里是新磨的墨。“睡得好？”他的笑声大得惊飞了檐下的麻雀，“昨夜巡夜的小子说，船主走夜路，走到湾子里去了！哈哈哈！”两个义子站在老位置，靠左的那个冲我点点头，客气得很，裤脚上沾着一圈潮湿的细沙。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实写：白天仓是满的，夜里粮往朝鲜船上搬"
+next = "done"
+reply = "我写完，他伸手把纸接过去。他读得很慢，嘴唇跟着动，读到“朝鲜船”那一行停了停。石桌脚下的炭盆上，一壶茶刚滚开，他把纸揉成一团，丢进火里，纸边卷起来，黑了，亮了，化成一片灰。“商人眼花了。”声音不大，不像他。他转身时靴跟碾过一块碎炭，“船明天走。”"
+effects = [
+  { kind = "affinity", person = "mao_wenlong", value = -10 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_done" },
+  { kind = "flag", flag = "c13_request_mao_wenlong_truthful" },
+  { kind = "memory", memory = "mem-request_mao_wenlong-report", title = "炭盆里那一团纸" },
+]
+
+[[tracks.chapters.choices]]
+key = "day"
+text = "只写白天看见的满仓"
+next = "done"
+reply = "我只写了仓：米袋至梁，白天所见。他拿起纸，对着太阳吹干墨，念出声来，念到“至梁”两个字，仰头大笑。“好！就是要这样！”他叫人抬来一只木箱，掀开盖，银锭码得整整齐齐。“这叫牵制——我老毛在这儿一天，对岸的就睡不踏实。辛苦钱，拿着！”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "mao_wenlong", value = 8 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_partial" },
+  { kind = "flag", flag = "c13_request_mao_wenlong_covered" },
+]
+
+[[tracks.chapters.choices]]
+key = "none"
+text = "什么都不写"
+next = "done"
+reply = "我把笔放回笔架。他盯着我看了很久，久到炭盆上的茶壶都不响了，才把那张白纸对折起来，放进袖子，没有撕。“来人，”他对义子说，“把船主船上的淡水桶都灌满。”然后转过脸，声音又响了起来：“明早潮平就走，别误了潮！”"
+effects = [
+  { kind = "affinity", person = "mao_wenlong", value = -2 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_failed" },
+]
+
+# 三之二、我念你写：当场应下的，没去过小湾，只有“照念”和“不写”两条路。
+[[tracks.chapters]]
+key = "report_blind"
+title = "我念，你写"
+text = "酒碗还没放下，毛文龙已经站到我背后，纸铺平了，笔尖蘸饱了墨。“我念，你写。皮岛粮仓，米袋至梁——”念到一半，他把笔杆在我手里压了压：“落款落你自己的名字，写大点！”一个义子替我按着纸角，另一个的裤脚上沾着一圈潮湿的细沙，不知是什么时候沾上的。"
+when = [{ kind = "alive", person = "mao_wenlong", value = true }]
+objectives = [{ kind = "person", person = "mao_wenlong", text = "在石桌前把证词写完" }]
+speaker = "mao_wenlong"
+mood = "tense"
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_mao_wenlong_late" },
+  { kind = "letter", person = "mao_wenlong", text = "船主，我念了半截，你的笔就搁下了，往后没了下文。奏本我另叫书办写完，落款是我老毛自己的名。酒还在窖里，哪天路过皮岛，来喝。" },
+]
+
+[[tracks.chapters.choices]]
+key = "day"
+text = "照他念的写完，落上自己的名字"
+next = "done"
+reply = "我照他念的把那几行写完，末了落款，字写得很大。他把纸举到太阳底下吹，边吹边念，念完叫人抬来一只木箱，掀开盖，银锭码得整整齐齐。“这叫牵制！”他朝岛外的海一指，“我老毛在这儿一天，对岸的就睡不踏实。辛苦钱，拿着！”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "mao_wenlong", value = 8 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_partial" },
+  { kind = "flag", flag = "c13_request_mao_wenlong_covered" },
+]
+
+[[tracks.chapters.choices]]
+key = "none"
+text = "把笔放下，说这证词不写了"
+next = "done"
+reply = "笔杆在他手底下压着，我一点一点把它抽出来，搁回笔架，纸角的墨晕开了一小团。他的手还悬在半空，过了很久才收回去。“来人，”他说，“给船主灌淡水。”这一回他没有喊，话说得又轻又短，不像他。"
+effects = [
+  { kind = "affinity", person = "mao_wenlong", value = -2 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_failed" },
+]
+
+# 三之三、睡得沉的客人：夜里没看见，也只有“写白天”和“不写”两条路。
+[[tracks.chapters]]
+key = "report_unseen"
+title = "睡得沉的客人"
+text = "第四天一早，我推门出来，毛文龙已经在石桌前等着了，纸铺平了，砚里是新磨的墨。“睡得好？”他乐呵呵地问，凑近了看我的脸，像看一件刚买来的货，“眼皮不肿，看来是睡得沉。沉了好，沉了好。”"
+when = [{ kind = "alive", person = "mao_wenlong", value = true }]
+objectives = [{ kind = "person", person = "mao_wenlong", text = "回石桌前，把证词交给总兵" }]
+speaker = "mao_wenlong"
+mood = "tense"
+deadline_days = 30
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "flag", flag = "c13_request_mao_wenlong_late" },
+  { kind = "letter", person = "mao_wenlong", text = "船主睡得沉，我叫人别吵你，这一睡就没了音信。奏本我另找人写了，岛上不缺肯写字的。下回来皮岛，酒管够。" },
+]
+
+[[tracks.chapters.choices]]
+key = "day"
+text = "写下白天所见：满仓，米袋至梁"
+next = "done"
+reply = "我把白天的仓一字一句写下来，夜里的事一个字没有，因为我确实没看见。他拿起纸对着太阳照了照，没起疑，叫人抬来一只木箱，掀开盖，银锭码得整整齐齐。“辛苦钱！”他拍着箱盖，“睡得沉的客人，我老毛最爱。”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "mao_wenlong", value = 8 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_partial" },
+  { kind = "flag", flag = "c13_request_mao_wenlong_covered" },
+]
+
+[[tracks.chapters.choices]]
+key = "none"
+text = "说夜里什么也没看见，这证词没法写"
+next = "done"
+reply = "我把笔搁回笔架，说夜里睡得太沉，什么也没看见，没见过的事不敢写。他眯眼打量了我片刻，笑了两声，把那张没动过的纸对折，塞进袖子。“老实人。”他吩咐义子，“船主的淡水桶灌满。”"
+effects = [
+  { kind = "affinity", person = "mao_wenlong", value = -2 },
+  { kind = "flag", flag = "c13_request_mao_wenlong_failed" },
+]

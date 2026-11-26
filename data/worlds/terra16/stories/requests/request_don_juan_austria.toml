@@ -1,0 +1,217 @@
+# C13d 请托：科孚的空桨位（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单分片写，中文单语）
+# 人物：奥地利的唐·胡安 don_juan_austria（1547-01-01 生，1578 年卒；cast/historical_01_europe.toml，faction spain）。1571 年夏二十四岁，神圣同盟舰队统帅，8 月 23 日到墨西拿接掌集结的联军。
+# 类型与报价：去某处（gs），六章（offer / count / return / return_short / report / report_partial），kind=request，auto=false（T 当面，墨西拿）：玩家用 ask:request_don_juan_austria 启动；offer 章不写 at，objectives 为在墨西拿的舰队营地找到他。求见门槛由 cast 的 audience 承担，本文件不另写。
+# 窗口（规划用，TOML 不写，普通章不写 window）：报价 1571-08-24 至 09-08（deadline 即 09-08）；数船 08-26 至 09-12（deadline_days 40）；回程等 3 天；回报 08-30 至 09-15（deadline 09-15）。
+# 依据（史实）：1571-08-23 唐·胡安到墨西拿；威尼斯的加莱船人手不足，报上来的科孚船数是满员；09-16 舰队出航。本请托只写出航前的这一趟：不写海战，不上旗舰，不写分兵后的风波与勒班陀的结果。
+# 依据（原创）：墨西拿帐篷里的名单与匕首，科孚城堡下的加莱船、书记官的名册与酒，北风里的海峡，两份名单并排压着的油灯；书记官的名字不点。
+# 待核：科孚船上的桨位数与军饷拖欠的确切数字，正文只用传闻口吻、不写数字；请托人口头禅只用一次（report）。
+# 读写的旗标：设 c13_request_don_juan_austria_accepted / declined（报价）、counted（数完了三条船的路线：走上船数、用威尼斯话、拿海图换，只作记录）、slow（回程的分支：换报回的开场）、done（照数报或建议分兵成功）、partial（遮一点或分兵失败）、late（超时）。每条路径只设一面终局旗标（done / partial / declined / late）。
+#   读 c13_main_noel（offer 的一条 variant，只加一句，不提名册、不提旗舰）；report 与 report_partial 的 slow 变体读 slow。不读也不设任何 c7_ 旗标。
+# 依赖：港口 messina、corfu 与技能 lang_italian、物品 chart_mediterranean 均为现有；无 B10b 改名；无主线门禁。
+# 结构说明：检定的 fail 分支没有回复字段，所以失败的结果由后续章节承接。数船只数到一条船的（走上船数失败）走 return_short，再到 report_partial；数完的（走上船数成功、用威尼斯话、拿海图）走 return，再到 report。照数报只在 report 上给，不用 requires 去读本轨道在别的分支上设的旗标，按路线分章。split 的失败只体现在较少的银钱与 partial 旗标上。
+# 回忆插画清单：
+#   mem-request_don_juan_austria-report「墨西拿的帐篷」：帐篷里一盏油灯，两份名单并排压着一把匕首，门外桅杆如林。
+
+[[tracks]]
+key = "request_don_juan_austria"
+name = "科孚的空桨位"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["don_juan_austria"]
+
+# 报价：墨西拿的舰队营地。威尼斯报上来的科孚船数对不上，唐·胡安要一个不属于任何一方的船长去数。
+[[tracks.chapters]]
+key = "offer"
+title = "长凳上的名单"
+text = "墨西拿港里桅杆密得像芦苇。奥地利的唐·胡安在码头边的帐篷里摊开一张名单，手指压在威尼斯人报上来的数字上。“科孚那边还有几条他们的船，报的是满员。”他抬起眼。二十四岁，帐篷里的陈设摆得讲究，目光却冷。“满员的船，我不信。”他要一个不属于任何一方的船长，去科孚数一数：长凳上到底坐了几个人，甲板上架着几支火绳枪。“九月中旬以前回来。路上别替任何人说话，只把看见的报给我。”"
+mood = "tense"
+objectives = [{ kind = "person", person = "don_juan_austria", text = "在墨西拿的舰队营地找到他" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1571, 8, 24], to = [1571, 9, 8] }, { kind = "alive", person = "don_juan_austria", value = true }]
+deadline = [1571, 9, 8]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去科孚，数完就回"
+next = "count"
+effects = [{ kind = "affinity", person = "don_juan_austria", value = 2 }, { kind = "flag", flag = "c13_request_don_juan_austria_accepted" }]
+reply = "他把名单撕下半张递给你，指尖在纸边按了一下。“那边的人会说他们都在吃饭。你别信，也别急着回来说他们没吃。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：不替哪一方数别人的人"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_don_juan_austria_declined" }]
+reply = "他笑了一下，没有挽留，把名单折起来压在铜镇纸下面。“也好。墨西拿不缺会算数的人，缺的是肯跑路的人。”"
+
+[[tracks.chapters.variants]]
+key = "noel"
+when = [{ kind = "flag", flag = "c13_main_noel" }]
+text = "墨西拿港里桅杆密得像芦苇。奥地利的唐·胡安在码头边的帐篷里摊开一张名单，手指压在威尼斯人报上来的数字上。“科孚那边还有几条他们的船，报的是满员。”他抬起眼。二十四岁，帐篷里的陈设摆得讲究，目光却冷。“满员的船，我不信。”他要一个不属于任何一方的船长，去科孚数一数：长凳上到底坐了几个人，甲板上架着几支火绳枪。“九月中旬以前回来。路上别替任何人说话，只把看见的报给我。”他说完，目光在你衣襟上的星徽停了一瞬，什么也没问。"
+
+# 数船：科孚城堡下的威尼斯加莱船。三条路：借送酒上船、用威尼斯话聊、拿海图换；借送酒上船失败，只数到一条船。
+[[tracks.chapters]]
+key = "count"
+title = "科孚的长凳"
+text = "科孚城堡下泊着几条威尼斯的加莱船，桨位上空着的长凳用帆布盖着，掀开一角，木板上的磨痕是新的。船上的书记官客气地请你喝酒，一杯接一杯，名册却一页也不肯翻给你看。“名册是给督军府的，不是给墨西拿的。”他笑着说，手按在册子上没有挪开。酒壶在你手里转了一圈，舱口的梯子就在脚边。"
+at = "corfu"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "corfu", text = "在科孚城堡下找到那几条威尼斯船" }]
+when = [{ kind = "alive", person = "don_juan_austria", value = true }]
+deadline_days = 40
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "don_juan_austria", value = -3 }, { kind = "flag", flag = "c13_request_don_juan_austria_late" }, { kind = "letter", person = "don_juan_austria", text = "书记代笔：舰队已经点过人了，名单不必再送。" }] }
+
+[[tracks.chapters.choices]]
+key = "walk"
+text = "借着送酒上船，一排排数长凳"
+next = "return"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "don_juan_austria", value = 3 }, { kind = "flag", flag = "c13_request_don_juan_austria_counted" }]
+news = "科孚城堡下，一个墨西拿来的船长借着送酒的名义，把威尼斯加莱船的长凳从舱口一排排数了下去。"
+reply = "你提着酒壶上了跳板，从舱口一排排数下去，炭笔在袖口上划着记。数到哪条凳子，哪条凳子旁的水手就抬起手来，像在赶一群羊。"
+fail = { next = "return_short", effects = [{ kind = "affinity", person = "don_juan_austria", value = -2 }], news = "科孚城堡下，一个送酒的客人刚踏上威尼斯加莱船的跳板，就被书记官请了下来，酒壶留在了舱口。" }
+
+[[tracks.chapters.choices]]
+key = "italian"
+text = "用威尼斯话，跟值更的军官聊欠了几个月的饷钱"
+next = "return"
+requires = [{ kind = "skill", skill = "lang_italian", ge = 60 }]
+hint = "你说不出威尼斯船上那几句骂人的话。"
+effects = [{ kind = "affinity", person = "don_juan_austria", value = 3 }, { kind = "flag", flag = "c13_request_don_juan_austria_counted" }]
+news = "科孚城堡下，一个墨西拿来的船长用威尼斯话跟值更的军官聊了半宿，听来听去都是欠了几个月的饷钱。"
+reply = "军官一发起牢骚，连哪条船少了几十个桨手、哪条船的火绳枪只剩一半都说了，末了还替你把长凳又念了一遍，念得比账房还准。"
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "拿一张地中海海图，换书记官把名册摊开一刻钟"
+next = "return"
+requires = [{ kind = "item", item = "chart_mediterranean", qty = 1 }]
+hint = "你手里没有能换这一刻的东西。"
+effects = [{ kind = "item", item = "chart_mediterranean", qty = -1 }, { kind = "affinity", person = "don_juan_austria", value = 3 }, { kind = "flag", flag = "c13_request_don_juan_austria_counted" }]
+news = "科孚的威尼斯船上，一个墨西拿来的船长拿出一张地中海海图，换书记官把名册摊开了一刻钟。"
+reply = "海图被卷起来夹进书记官的腋下，名册终于摊开了。他自己转过身去看海，背对着桌子，一刻钟没回头，连酒杯也忘了端。"
+
+# 回程（数完的路线）：北风转过来，海峡口的浪压下来。袖口上记着三条船的数。
+[[tracks.chapters]]
+key = "return"
+title = "北风与海峡"
+text = "回墨西拿的路上转了北风，海峡口的浪一排排压过来，船身往下一扎，又被抬起来。袖口上记着三条船的数：每条船空着几张长凳，甲板上有几支火绳枪，炭笔印在皮子上，擦都擦不掉。水手在舱口喊着换班，浪头从船舷上翻进来，把舱底的水又抬高了一寸。离舰队出航只剩几天，码头上的人说，唐·胡安这几天一早就站在码头边，看船，不看人。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 3 }]
+when = [{ kind = "alive", person = "don_juan_austria", value = true }]
+
+[[tracks.chapters.choices]]
+key = "beat"
+text = "顶风抢进海峡"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "don_juan_austria", value = 3 }]
+reply = "你把舵压到底，顶着北风往海峡口冲。浪一个接一个扑上船头，水手们攥着缆绳，没人敢松手，连掌舵的老水手也在骂天。"
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_don_juan_austria_slow" }, { kind = "affinity", person = "don_juan_austria", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "在雷焦躲风，等风转"
+next = "report"
+effects = [{ kind = "flag", flag = "c13_request_don_juan_austria_slow" }]
+reply = "你把船拖进雷焦的小湾，锚在浪影里。每天清早，你爬上桅杆看一眼风向，再爬下来，把过去的日子用炭笔记在舱壁上。"
+
+# 回程（数不完的路线）：袖口上只记着一条船的数，码头上的人也只看见你空手回来。
+[[tracks.chapters]]
+key = "return_short"
+title = "北风里的一条船"
+text = "北风转过来了，回墨西拿的路上，浪一排排压上船头，船身往下一扎，又被抬起来。袖口上只记着一条船的数，另外两条你没来得及数完，炭笔的字糊在汗里。水手在舱口喊着换班，舱底的水又高了一寸。离舰队出航只剩几天，码头上有人说，唐·胡安天不亮就站到码头边去看船。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 3 }]
+when = [{ kind = "alive", person = "don_juan_austria", value = true }]
+
+[[tracks.chapters.choices]]
+key = "beat"
+text = "顶着北风，抢进海峡"
+next = "report_partial"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "don_juan_austria", value = 3 }]
+reply = "你把舵压到底，往海峡口冲。掌舵的老水手骂了一声，把舵柄让给你，自己去拽帆脚索。"
+fail = { next = "report_partial", effects = [{ kind = "flag", flag = "c13_request_don_juan_austria_slow" }, { kind = "affinity", person = "don_juan_austria", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "拐进雷焦的小湾躲风"
+next = "report_partial"
+effects = [{ kind = "flag", flag = "c13_request_don_juan_austria_slow" }]
+reply = "你把船拖进雷焦的小湾，锚在浪影里。舱壁上那一条船的数，你又照着记了一遍，免得回去时对不上。"
+
+# 回报（数完的路线）：帐篷里一盏油灯，两份名单并排压着。问题本身是他的转折，怎么回由你。
+[[tracks.chapters]]
+key = "report"
+title = "两份名单"
+text = "唐·胡安在帐篷里接过你的数，一行行对着威尼斯人的报表看，手指沿着船名一条条往下划。帐篷外头桅杆如林，油灯被风吹得直晃，他没去按灯芯。威尼斯人报的是满员，你报的是另一个数。他把两份名单并排压在桌上，匕首压在中间，抬起眼。“我要的是数，不是誓言。”然后他问得很随意，像在问一段路要走几天：“要是把西班牙的步兵分一些上威尼斯的船，那边的老将军会不会答应？”"
+mood = "tense"
+objectives = [{ kind = "person", person = "don_juan_austria" }]
+when = [{ kind = "alive", person = "don_juan_austria", value = true }]
+deadline = [1571, 9, 15]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "don_juan_austria", value = -3 }, { kind = "flag", flag = "c13_request_don_juan_austria_late" }, { kind = "letter", person = "don_juan_austria", text = "舰队已经出港，名单留在墨西拿港务处，没人来取。" }] }
+
+[[tracks.chapters.choices]]
+key = "exact"
+text = "照数报，一条船一条船说"
+next = "done"
+reply = "他把你的数一行行抄进自己的本子，抄完合上，叫门外的传令兵去请威尼斯的将领。传令兵跑得很快，帐篷帘子被他撞得直晃。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "don_juan_austria", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 3 }, { kind = "reputation", faction = "venice", value = -1 }, { kind = "memory", memory = "mem-request_don_juan_austria-report", title = "墨西拿的帐篷" }, { kind = "flag", flag = "c13_request_don_juan_austria_done" }]
+
+[[tracks.chapters.choices]]
+key = "shade"
+text = "替威尼斯人遮一点：空位里是病号"
+next = "done"
+reply = "他看了你很久，才说威尼斯人的酒大概不错。钱付了一半多，他没有再问那些空位，也没有问你为什么把病号写在空位上。"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "don_juan_austria", value = 4 }, { kind = "reputation", faction = "venice", value = 2 }, { kind = "flag", flag = "c13_request_don_juan_austria_partial" }]
+
+[[tracks.chapters.choices]]
+key = "split"
+text = "建议把西班牙步兵分上威尼斯的船"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "你把两列数摆到桌上，哪条船该分几个兵，一条一条说给他听，说到西班牙步兵上船的那几天也没有停。他听完，手指在名单上敲了两下，没有马上接话。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "don_juan_austria", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 3 }, { kind = "reputation", faction = "venice", value = -2 }, { kind = "flag", flag = "c13_request_don_juan_austria_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "don_juan_austria", value = 2 }, { kind = "flag", flag = "c13_request_don_juan_austria_partial" }] }
+
+[[tracks.chapters.variants]]
+key = "slow"
+when = [{ kind = "flag", flag = "c13_request_don_juan_austria_slow" }]
+text = "墨西拿港里的帐篷拆了一半，唐·胡安站在一只空木箱旁，没有坐，也没有叫人搬椅子。你站着报数，一条船一条船报下去，他不打断，只在名单边上画圈。威尼斯人报的是满员，你报的是另一个数。他把两份名单并排压在桌上，匕首压在中间。“报完了？”他问，声音很平，又像在问一段路要走几天：“要是把西班牙的步兵分一些上威尼斯的船，那边的老将军会不会答应？”"
+
+# 回报（数不完的路线）：只有一条船的纸，他问的还是同一件事，但这张纸撑不起“照数报”。
+[[tracks.chapters]]
+key = "report_partial"
+title = "一条船的数"
+text = "唐·胡安在帐篷里接过你的纸，一条船的数，他翻过来倒过去看，又翻回第一页。威尼斯人报的是满员，你这一张纸上只有一条船，其余的船你连凳子都没数完。他没有生气，把纸压在桌角，手指在报表上的船名之间来回移。帐篷外的桅杆挡住了半边天，油灯的火苗缩成一粒。他抬起眼，问得很平，像在问粮船几时到：“要是把西班牙的步兵分一些上威尼斯的船，那边的老将军会不会答应？”"
+mood = "tense"
+objectives = [{ kind = "person", person = "don_juan_austria" }]
+when = [{ kind = "alive", person = "don_juan_austria", value = true }]
+deadline = [1571, 9, 15]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "don_juan_austria", value = -3 }, { kind = "flag", flag = "c13_request_don_juan_austria_late" }, { kind = "letter", person = "don_juan_austria", text = "舰队已经出港。你那张只数了一条船的纸，压在墨西拿港务处的桌角，没人来取。" }] }
+
+[[tracks.chapters.choices]]
+key = "shade"
+text = "替威尼斯人遮一点：那条船的空位是病号"
+next = "done"
+reply = "他把那张纸对着灯看了一会儿，说威尼斯人的伙食大概不差。钱付了一半多，另外两条船他没再问。"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "don_juan_austria", value = 4 }, { kind = "reputation", faction = "venice", value = 2 }, { kind = "flag", flag = "c13_request_don_juan_austria_partial" }]
+
+[[tracks.chapters.choices]]
+key = "split"
+text = "建议把西班牙步兵分上威尼斯的船，就拿这一条说"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "你把那张纸推到他面前，指着空的那条船，说西班牙步兵该上哪几条船，人数照威尼斯人报的算。说到一半，他抬手止住你，手指在纸边敲了两下，没有马上接话。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "don_juan_austria", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "spain", value = 3 }, { kind = "reputation", faction = "venice", value = -2 }, { kind = "flag", flag = "c13_request_don_juan_austria_done" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "don_juan_austria", value = 2 }, { kind = "flag", flag = "c13_request_don_juan_austria_partial" }] }
+
+[[tracks.chapters.variants]]
+key = "slow"
+when = [{ kind = "flag", flag = "c13_request_don_juan_austria_slow" }]
+text = "墨西拿港里的帐篷拆了一半，唐·胡安靠着一根木柱，手里转着铅笔，不叫你坐。你站着报那一条船的数，他不打断，只在名单边上画圈。他问得很平，像在问粮船几时到：“要是把西班牙的步兵分一些上威尼斯的船，那边的老将军会不会答应？”"

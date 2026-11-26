@@ -1,0 +1,167 @@
+# C13d 请托：围城里的邻居（request_pierre_cardon）。中文，Claude 写。
+# 人物：皮埃尔·卡尔东 pierre_cardon（1534-05-09 生，男；随新教徒来到瓜纳巴拉湾的木匠，1561 年起在勒阿弗尔的船坞干活，势力 france，身份档 1）。
+# 类型：押运／带人（es）；4 章，offer → passage → arrive（或 arrive_rough 降级一章）；没有 stage 章。
+# 报价：当面（T）。人物按日程在勒阿弗尔（le_havre，1561—1590 的船坞日程），auto=false，玩家“问请托”（ask:request_pierre_cardon）启动；offer 章不写 at，目标是在港里找到他。
+# 窗口：报价 1562-10-15 至 1563-07-25（英格兰人进驻以后，城降之前）；路上与到港章 1562-07-01 至 1563-12-31。
+# 进行中：offer 章 deadline=1563-07-25，超时走 failed（不写见闻）；arrive 与 arrive_rough 章 deadline_days=60，超时走 failed，来信一封，见闻是拉罗谢尔码头上的闲话。
+# 依据（史实背景）：1562 年 10 月英格兰军进驻勒阿弗尔；1563 年夏法王的军队围城，7 月底城降（史实）。胡格诺派人家趁夜出城，走海路去拉罗谢尔，是原创情节，只写出城那一夜。
+#   巡逻的是“国王那边的小船”，不写围城的战斗与城降。皮埃尔的木匠身份、信仰与“主日不干活”是原创。
+# 不写：皮埃尔与让·勒布朗的任何事（C7 的线只读不写，cast 里他对勒布朗的感情全轨道不写）；不写恋爱、不写心动。
+# 读的旗标：无（gate_main 与 variant_main 都是空的，不依赖主线旗标）。
+# 设的旗标：c13_request_pierre_cardon_accepted（接下，含载家什的分支）、declined（回绝）、done（到港，终局）、late（超时，终局）、
+#   split（家什分成三个小包）、scared（巡逻船上的人上船看了一眼，只读它改 arrive 的文字）。终局旗标只有 done / late / declined；路上擦沙的降级用章节分开（arrive_rough）。
+# 依赖：人物 pierre_cardon 在 cast/story_americas.toml；地点 le_havre、la_rochelle（ports_atlantic_eu.toml）；无物品、无技能奖励。
+# 报酬：现金最多 1600（降级路线 1000）；好感最多 +13；名声 +2；回忆 mem-request_pierre_cardon-arrive（只给最好的结局）。
+# 回忆插画清单：mem-request_pierre_cardon-arrive，拉罗谢尔码头，一箱木工家什摆开，一把旧角尺搁在最上头。
+
+[[tracks]]
+key = "request_pierre_cardon"
+name = "围城里的邻居"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["pierre_cardon"]
+
+# 一、舱门往哪边开：1562 年秋，英格兰人占着港，皮埃尔来问你的船。
+[[tracks.chapters]]
+key = "offer"
+title = "舱门往哪边开"
+text = "工棚里刨花堆到门槛。皮埃尔在刨一扇门，听见脚步声，头也不抬：“站远点，刨花会进眼睛。要修什么？先说好，主日我不干活。”你还没开口，他先问你的船舱门往哪边开。城外是国王的兵，城里是英格兰人，他那户胡格诺派的邻居两边都不敢信。老汉要带两个孙子走，还要带一箱木工家什。“家什留下，人到了拉罗谢尔也是饿死。”皮埃尔把老汉的话学给你听，要你趁夜里开船。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1562, 10, 15], to = [1563, 7, 25] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "pierre_cardon", text = "在港里找到他" }]
+deadline = [1563, 7, 25]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应夜里开船，人和家什一起走。"
+next = "passage"
+reply = "他把刨了一半的门靠在墙上：“这扇门不刨完了。你的舱门往外开，我记住了。”"
+effects = [{ kind = "affinity", person = "pierre_cardon", value = 2 }, { kind = "flag", flag = "c13_request_pierre_cardon_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "no_chest"
+text = "答应载人，可那箱家什太沉，劝他们留下。"
+next = "passage"
+reply = "皮埃尔不肯：“工具是他的手。”他自己把箱子拆开，分成三个小包，一人背一个。"
+effects = [{ kind = "affinity", person = "pierre_cardon", value = 2 }, { kind = "flag", flag = "c13_request_pierre_cardon_accepted" }, { kind = "flag", flag = "c13_request_pierre_cardon_split" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "围城的港，你不进不出。"
+next = "failed"
+reply = "他点点头，没再问，回去接着刨那扇门。刨花从门缝里掉下来，落在你的鞋边。"
+effects = [{ kind = "flag", flag = "c13_request_pierre_cardon_declined" }]
+
+# 二、挂灯的小船：出港不久，国王那边的巡逻小船横在航路上。
+[[tracks.chapters]]
+key = "passage"
+title = "挂灯的小船"
+text = "船出港还不到两里，海上横着一条国王那边的巡逻小船，船头挂着灯，在喊口令。舵边的水手压低嗓子问：灯还点不点？舱门还敞着，老汉一把将两个孩子按进舱底。舱板一合，里头黑得伸手不见五指，孩子一声不出，只拿小手攥住了他的袖口。巡逻船上的灯晃了一下，转过来，朝你们这边划过来了。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "pierre_cardon", value = true }, { kind = "date", from = [1562, 7, 1], to = [1563, 12, 31] }]
+objectives = [{ kind = "wait", days = 2, text = "在海上航行两天" }]
+
+[[tracks.chapters.choices]]
+key = "dark_run"
+text = "灭了灯，贴着沙洲边上溜过去。"
+next = "arrive"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "小船上的灯从船尾晃过去，没停。老汉直到看不见港口的火光，才把孩子放出来。"
+effects = [{ kind = "affinity", person = "pierre_cardon", value = 3 }]
+fail = { next = "arrive_rough", effects = [{ kind = "affinity", person = "pierre_cardon", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "hail_fishing"
+text = "挂起灯，说是去外海收网的渔船。"
+next = "arrive"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "小船上的人骂了一句，这种时候还收网，朝你们挥了挥手。"
+effects = [{ kind = "affinity", person = "pierre_cardon", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "pierre_cardon", value = -2 }, { kind = "flag", flag = "c13_request_pierre_cardon_scared" }] }
+
+[[tracks.chapters.choices]]
+key = "pay_pilot"
+text = "塞钱给熟水路的渔夫，跟着他的小船出去。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "口袋里的钱不够雇一条熟水路的渔船。"
+reply = "渔夫在前头打着暗号，巡逻小船让开了一条道。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "pierre_cardon", value = 3 }]
+
+# 三、一把旧角尺：拉罗谢尔码头，老汉把家什一样一样摆开。
+[[tracks.chapters]]
+key = "arrive"
+title = "一把旧角尺"
+text = "拉罗谢尔的码头上，海风把木屑吹得满地都是。老汉把家什箱一样一样拿出来摆好：刨子、凿子，还有一把用旧了的角尺。每样都用布擦过，摆成一排。刨子柄上刻着一个歪歪扭扭的记号，老汉说那是皮埃尔的刀。两个孩子第一回在船外头站稳，大的那个一直拽着箱角不撒手。老汉一路没合眼，这会儿才坐下。他把角尺递给你，说这是给皮埃尔的：“告诉他，我到了。”"
+speaker = "captain"
+mood = "tender"
+at = "la_rochelle"
+when = [{ kind = "alive", person = "pierre_cardon", value = true }, { kind = "date", from = [1562, 7, 1], to = [1563, 12, 31] }]
+news = "拉罗谢尔码头上，一户从勒阿弗尔逃出来的胡格诺派人家下了船，老汉先把一箱木工家什摆开。"
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "pierre_cardon", value = -5 }, { kind = "flag", flag = "c13_request_pierre_cardon_late" }, { kind = "letter", person = "pierre_cardon", text = "你没到拉罗谢尔。老汉一家在一个渔村下了船，自己走过去的，家什丢了一半。" }], news = "拉罗谢尔码头上，等一户从勒阿弗尔来的人家等了两个月，人没来。有渔夫说，他们在一个渔村下了船。" }
+
+[[tracks.chapters.variants]]
+key = "split"
+when = [{ kind = "flag", flag = "c13_request_pierre_cardon_split" }, { kind = "flag", flag = "c13_request_pierre_cardon_scared", value = false }]
+text = "拉罗谢尔的码头上，老汉把三个小包拆开，又一样一样装回箱子里。箱子的合页咬了好几回才合上。他装得很慢，包袱上的绳结解开又系上，最后才腾出手，把那把旧角尺摸了摸。两个孩子第一回在船外头站稳。他把角尺递给你，说这是给皮埃尔的：“告诉他，我到了。”"
+
+[[tracks.chapters.variants]]
+key = "scared"
+when = [{ kind = "flag", flag = "c13_request_pierre_cardon_scared" }, { kind = "flag", flag = "c13_request_pierre_cardon_split", value = false }]
+text = "拉罗谢尔的码头上，老汉把家什箱一样一样拿出来摆好：刨子、凿子，还有一把用旧了的角尺。他吓得一夜没睡，这会儿手还在抖。巡逻船上的人上船看了一眼，看见孩子，挥挥手放过去了。老汉说到这里，把两个孩子往身后拉了拉，声音还是飘的。两个孩子这才敢在船外头站稳。他把角尺递给你：“告诉他，我到了。”"
+
+[[tracks.chapters.variants]]
+key = "split_scared"
+when = [{ kind = "flag", flag = "c13_request_pierre_cardon_split" }, { kind = "flag", flag = "c13_request_pierre_cardon_scared" }]
+text = "拉罗谢尔的码头上，老汉把三个小包一样一样装回箱子里，手抖得合不上箱盖，又打开重来一遍。巡逻船上的人上船看了一眼，见着孩子，摆摆手让开了。两个孩子在船外头站稳了，还有点不敢松手。他把角尺递给你：“告诉他，我到了。”"
+
+[[tracks.chapters.choices]]
+key = "bring_square"
+text = "收下角尺，带回去给皮埃尔。"
+next = "done"
+reply = "回到勒阿弗尔，皮埃尔接过角尺，在自己那扇门上量了一下。“歪了半分。”他说完把门放倒，重刨。工钱给你时，他手上全是木屑。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "pierre_cardon", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pierre_cardon_done" }, { kind = "memory", memory = "mem-request_pierre_cardon-arrive", title = "码头上摆开的家什" }]
+
+[[tracks.chapters.choices]]
+key = "send_word"
+text = "让老汉自己写信，角尺留给他用。"
+next = "done"
+reply = "老汉想了想，把角尺收回箱子：“也是。这把尺我留着，将来在拉罗谢尔自己量地。”工钱后来由一个拉罗谢尔的商人捎来，信是皮埃尔写的，只有一句：“舱门那边，谢了。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "pierre_cardon", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pierre_cardon_done" }]
+
+# 三之二（降级）：路上船底擦了沙，天亮时才到港，多绕了一天，报酬打折。
+[[tracks.chapters]]
+key = "arrive_rough"
+title = "擦沙的那一夜"
+text = "天亮才靠上拉罗谢尔的码头，两个孩子的鞋还是湿的。船底擦沙的那道白印还在，老汉一路指给孩子看，说就是这道白印，把人拖到了天亮。家什箱拖上岸，刨子、凿子、一把用旧了的角尺，有两件还沾着海水，一样一样摆开。他把角尺递给你，说这是给皮埃尔的：“告诉他，我到了。”"
+speaker = "captain"
+mood = "tender"
+at = "la_rochelle"
+when = [{ kind = "alive", person = "pierre_cardon", value = true }, { kind = "date", from = [1562, 7, 1], to = [1563, 12, 31] }]
+news = "拉罗谢尔码头上，一户从勒阿弗尔逃出来的人家下了船，船底擦过沙，老汉一路没合眼。"
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "pierre_cardon", value = -5 }, { kind = "flag", flag = "c13_request_pierre_cardon_late" }, { kind = "letter", person = "pierre_cardon", text = "你没到拉罗谢尔。老汉一家在一个渔村下了船，一路自己走过去，家什丢了一半。" }], news = "拉罗谢尔码头上的鱼贩说，等的那户人家两个月没来，有人在一个渔村见过一箱子木匠的家什。" }
+
+[[tracks.chapters.variants]]
+key = "split"
+when = [{ kind = "flag", flag = "c13_request_pierre_cardon_split" }]
+text = "天亮的码头上，老汉把三个小包拆开，一样一样装回箱子里，每一样都要拿在手里看一眼才放。船底擦沙的白印还在，他一路指给孩子看，说的还是那一夜。两个孩子站在船外头，第一回站稳。他把角尺递给你，说这是给皮埃尔的：“告诉他，我到了。”"
+
+[[tracks.chapters.choices]]
+key = "bring_square_rough"
+text = "收下角尺，带回去给皮埃尔，船底擦沙的事也一并说。"
+next = "done"
+reply = "皮埃尔接过角尺，把船底那道白印又摸了一遍，没说话。工钱比说好的少了一截，他说剩下的等下次修船再算，手在围裙上擦了又擦。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "pierre_cardon", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pierre_cardon_done" }]
+
+[[tracks.chapters.choices]]
+key = "send_word_rough"
+text = "让老汉自己写信，角尺留给他用。"
+next = "done"
+reply = "老汉想了想，把角尺收回箱子：“他那边也要量地。”工钱由一个拉罗谢尔的商人捎来，比说好的少了一截。信上只有皮埃尔的一句：“听说你们擦了沙，谢了。”"
+effects = [{ kind = "cash", value = 1000 }, { kind = "affinity", person = "pierre_cardon", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_pierre_cardon_done" }]

@@ -1,0 +1,176 @@
+# 请托：画圈的地方（request_dahai）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：达海（dahai，1540-01-01 生，男），觉尔察氏的满洲人，九岁起学满、汉两种文字，1574 年起在沈阳文馆主持译书；势力 later_jin，身份档 2。cast：cast/historical_09_liaodong.toml。
+# 类型：找东西（find）。四章：offer（来信）、handin（交书）、use（念书，书留给他）、use_lent（念书，借他抄）；没有 stage 章，因此没有 window 与 default。
+#       简报是三章：handin 的“留下”与“借抄”两条路在 use 章要付不同的钱。引擎只能用 requires 区分，而“requires 读本轨道在别的路上设的旗标”会让故事机器人报“准备后条件仍不满足”，
+#       所以改成按 next 分路：留下走 use，借抄走 use_lent，两章的场面不同（一个人对着书念，一个人对着抄本听），选项与检定相同。
+# 报价：L（来信）。人物在沈阳，不下港口；出面的是一个无名的年轻旗下书手，送信到牛庄驿馆（niuzhuang）。auto=true；offer 写 family=c13_offer_niuzhuang、冷却 20 天，speaker 省略。
+# 窗口：报价 1571-01-15 至 1576-06-30（deadline，超时直接 failed，不写见闻）；handin 到 1576-09-30（deadline，超时 failed，来信一封）；use / use_lent 进章后 90 天（deadline_days，超时 failed，来信一封）。
+# 进行中：use 在 handin 之后 20 天（留下）；use_lent 在 handin 之后 28 天（借抄，抄一套要些日子）。
+# 地点：牛庄 niuzhuang（辽河旧道上的驿馆；全轨道只用这一个港）。
+# 依据·史实背景：达海译汉籍，后来改进满文（本世界线 1577）；本轨道止于 1576，不写满文已经定制，只在 handin 有书手一句话带过“想在字旁加点、点在哪里还没定”。
+#       辽东战役链（TERRA16 §10.5，提前约 55 年）只写人、书与家信：不运兵器、火药、火炮、铁料，不传军情，不改任何战役变量，不给 jianzhou 加声望。
+#       《三国志通俗演义》嘉靖元年（1522）刻本二十四卷，装十二册；“张飞据水断桥”一则是长坂坡一节里最有名的一幕。
+# 依据·原创：旗下书手、牛庄驿馆的炭盆、念书时画的圈、八个人抄一套书、贝勒们听了两则嫌长。画圈是读书的圈，与满文的圈点是两件事。
+# 秘密：译文里哪句硬、哪句软，由他照汗的意思斟酌——本请托一字不碰，见闻也不写。
+# 检定失败时引擎显示的是失败分支的 news，不是选项的 reply，所以 plain 的两条 fail.news 兼作失败结果的文字（写成有人物有动作的酒馆闲话）。
+# 读的旗标（只读，不设）：无。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 设的旗标：c13_request_dahai_accepted（offer 接下）、_declined（offer 回绝）、_gave（handin 书留给他）、_lent（handin 借他抄）、_late（handin 或 use 超时）、_done（use 办成）、_partial（use 照字念检定失败）。
+# 报酬：现金最多 1600（借抄 1000）、好感最多 +13、技能 lang_jurchen +20；无名声、无声望（辽东中立）；回忆一张；没有额外物品（书是玩家交出去的，不是奖励）。
+#       检定失败的现金按简报给 800，不按“借抄”拆开（借抄成功为 1000，仍在上限内）。
+# 依赖：港口 niuzhuang（ports_east_asia.toml）；物品 sanguo_jiajing（items/books_12_chinese.toml，商店可买）；技能 lang_chinese、lang_jurchen；属性 eloquence；人物 dahai。
+# 回忆插画清单：
+#   mem-request_dahai-use「桥上那一声与七个圈」（use 与 use_lent 共用同一个 key 和标题，二选一发生）：牛庄驿馆的长桌，摊开的《三国志通俗演义》，页边一排墨圈，一个圈旁写着小小的满文；窗外是辽河的冰。
+
+[[tracks]]
+key = "request_dahai"
+name = "画圈的地方"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["dahai"]
+
+# 一、墨没干的信：牛庄驿馆，书手送来达海的信。
+[[tracks.chapters]]
+key = "offer"
+title = "墨没干的信"
+text = "牛庄驿馆的炭盆边，一个年轻的旗下书手候了半天，见我进门才站起来，双手递上一封信。信纸对折，一半是汉字，一半是满文，满文那半边的墨还没干透，蹭了他半个拇指。汉字写得极工整：“要一部《三国志通俗演义》，嘉靖年间刻的，朝鲜、日本的书铺里常有。书到了，请你念几段给我听。念到可笑的地方，我在旁边画个圈。译书的人最怕两样：一样是没有那个词，一样是有那个词、却不好笑。——达海”落款底下空着一行，像是写到一半，被谁叫走了。"
+mood = "cheerful"
+cast = ["dahai"]
+at = "niuzhuang"
+when = [{ kind = "date", from = [1571, 1, 15] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }, { kind = "age", person = "dahai", ge = 18 }]
+deadline = [1576, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_niuzhuang"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应：书到了，我念给他听。"
+next = "handin"
+reply = "书手问得一板一眼，像在背：“大人让我问，您念书的时候，会不会学人说话的腔调？”背完才发现自己忘了说别的，红着脸补了一句：“书到牛庄，我在驿馆等。”"
+effects = [{ kind = "affinity", person = "dahai", value = 2 }, { kind = "flag", flag = "c13_request_dahai_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：念书不是我的行当。"
+next = "failed"
+reply = "书手把信折好塞回袖子，人没走。“回绝”这个词满文该怎么写，他站在炭盆边想了半天，最后说：“我就写‘船长忙’。大人要是嫌不准，他自己会改。”"
+effects = [{ kind = "flag", flag = "c13_request_dahai_declined" }]
+
+# 二、十二册书：书到牛庄，书手验过，书留下还是借抄。
+[[tracks.chapters]]
+key = "handin"
+title = "十二册书"
+text = "书到了，十二册，蓝布函套，船上的潮气没侵进去。书手在驿馆的长桌上摊开第一册，指着目录一个字一个字地念，念错了两个，脸红了，从头再来，才念顺。他说文馆里先前只有几则残抄本，贝勒爷们听人念过两则，都说好，只问能不能别念那么长；大人听完没吭声，回去把那两则又抄了一遍。末了他顺口提了一句：大人这阵子在满文的字旁试着加点，点在哪里还没定，下来时稿子上点子会很密，您别当成墨渍。"
+speaker = "captain"
+mood = "cheerful"
+cast = ["dahai"]
+at = "niuzhuang"
+when = [{ kind = "alive", person = "dahai", value = true }]
+objectives = [{ kind = "item", item = "sanguo_jiajing", qty = 1, text = "带来一部《三国志通俗演义》" }, { kind = "at", at = "niuzhuang" }]
+deadline = [1576, 9, 30]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "dahai", value = -3 }, { kind = "flag", flag = "c13_request_dahai_late" }, { kind = "letter", person = "dahai", text = "书从别处找到了，是个抄本，错字不少，我改了一遍。念书的人还没找到。该笑的地方，我先空着，没听人念过，不敢画。——达海" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "书留给达海。"
+next = "use"
+reply = "书手抱着函套，像抱着一只刚生的羊羔，弯着腰过门，不让函套的角碰到门框。到了院里他又折回来：“大人吩咐过，书要是留下了，就得有人把它念出声。二十天后他自己下牛庄。”"
+effects = [{ kind = "item", item = "sanguo_jiajing", qty = -1 }, { kind = "affinity", person = "dahai", value = 3 }, { kind = "flag", flag = "c13_request_dahai_gave" }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借他抄一套，抄完原书还我。"
+next = "use_lent"
+reply = "书手立刻数了起来：文馆里有八个人，十二册分下去，抄一套用不了一个月。数完他才想起这是借，不是送，赶紧补上一句：抄的时候不许有一滴墨沾到原书，错一个字，整页重抄。"
+effects = [{ kind = "flag", flag = "c13_request_dahai_lent" }]
+
+# 三之一、张飞在桥上（书留给了他）：二十天后，达海本人下到牛庄。
+[[tracks.chapters]]
+key = "use"
+title = "张飞在桥上"
+text = "二十天后，达海自己下到牛庄。他带来一支笔、一摞白纸，那十二册书跟着他，函套的边已经磨白了。纸堆最上面压着一页满文稿，字旁点着细点，有的点了又划掉。他不寒暄，在长桌另一头坐下，把稿子翻过去：“从长坂坡念起。”我念到张飞立马桥头，横矛一声大喝，自报“燕人张翼德”，叫曹兵来决一死战，没一个敢上前。他的笔停在纸上方，抬起头：“这里该笑，还是该怕？”书手在门边屏着气，也在等。"
+speaker = "dahai"
+mood = "cheerful"
+cast = ["dahai"]
+at = "niuzhuang"
+when = [{ kind = "alive", person = "dahai", value = true }]
+objectives = [{ kind = "wait", days = 20 }, { kind = "at", at = "niuzhuang" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "dahai", value = -3 }, { kind = "flag", flag = "c13_request_dahai_late" }, { kind = "letter", person = "dahai", text = "我在牛庄等了三天，念书的人没来。书我留下了，页边的圈一个也没敢画。——达海" }] }
+
+[[tracks.chapters.choices]]
+key = "voices"
+text = "学着腔调念：张飞吼，曹兵退，一个人念出几个人。"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "腔调要靠汉话的底子撑着，你念到“燕人张翼德”就怕咬了舌头。"
+reply = "我压低嗓子学张飞，又尖着嗓子学夏侯杰从马上摔下去的那一声，学曹兵一排往后退的脚步。他一个圈一个圈地画，画了七个，有一个画在张飞喝退曹兵那里，旁边写了一个满文的字，他说是“又怕又想笑”。写完他把笔横在纸上，问：“那一声怪叫，你们那边的人听了也笑吗？”"
+news = "牛庄驿馆里有个外来船长念了一下午《三国》，听的人是个从沈阳来的译书先生，念到张飞那一段，满屋的人都笑了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 8 }, { kind = "flag", flag = "c13_request_dahai_done" }, { kind = "memory", memory = "mem-request_dahai-use", title = "桥上那一声与七个圈" }]
+
+[[tracks.chapters.choices]]
+key = "jurchen"
+text = "用女真话把笑点讲给他听。"
+next = "done"
+requires = [{ kind = "skill", skill = "lang_jurchen", ge = 60 }]
+hint = "笑话要用女真话讲完才有味，你现在讲到一半就得停下找词。"
+reply = "我用女真话讲：张飞一个人堵一座桥，曹操的人马却不敢动，最怕的那个人，吓得从马上掉下去。他听到一半就开始笑，笑完说满文里有现成的说法，是他小时候在马圈边听老人讲的，他一直没想到拿来用。他当场写在纸上，连画了七个圈，第七个画得最大。"
+news = "牛庄驿馆里，有个外来船长用女真话给一位沈阳来的译书先生讲《三国》里的笑话，先生没听完就笑了。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 8 }, { kind = "flag", flag = "c13_request_dahai_done" }, { kind = "memory", memory = "mem-request_dahai-use", title = "桥上那一声与七个圈" }]
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照字念，不加腔调。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我照字念，一个腔也不加。他照样画了圈，只是少些，只有四个，画得很轻，像怕画重了笑点会跑。画到张飞断桥那一个，他停了停，说平着念也有好处，每个字他都听清了，连夏侯杰是怎么个摔法，他都能自己在脑子里排出来。"
+news = "牛庄驿馆里有个外来船长照字念了一下午《三国》，沈阳来的译书先生在书页边上画了几个圈。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 8 }, { kind = "flag", flag = "c13_request_dahai_done" }, { kind = "memory", memory = "mem-request_dahai-use", title = "桥上那一声与七个圈" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 2 }, { kind = "flag", flag = "c13_request_dahai_partial" }], news = "牛庄驿馆里有个外来船长念《三国》，念得平平的，沈阳来的译书先生一个圈也没画，只说了句“汉话原来这么平”。" }
+
+# 三之二、张飞在桥上（借他抄）：二十八天后，达海带着抄本和原书下到牛庄。
+[[tracks.chapters]]
+key = "use_lent"
+title = "原书与抄本"
+text = "二十八天后，达海下到牛庄，带着两样东西：一个布包，里面是新抄的十二册，八个人的字，八种笔迹；一个蓝布函套，是我的原书，连函套角上的折痕都没添。他把原书交还给我，自己翻开抄本：“你念，我对着看。哪个字不一样，我叫你停。”从长坂坡念起。念到张飞立马桥头，横矛一声大喝，自报“燕人张翼德”，他的手指在抄本上停住，没叫停，只抬起头：“这里该笑，还是该怕？”"
+speaker = "dahai"
+mood = "cheerful"
+cast = ["dahai"]
+at = "niuzhuang"
+when = [{ kind = "alive", person = "dahai", value = true }]
+objectives = [{ kind = "wait", days = 28 }, { kind = "at", at = "niuzhuang" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "dahai", value = -3 }, { kind = "flag", flag = "c13_request_dahai_late" }, { kind = "letter", person = "dahai", text = "我在牛庄等了三天，念书的人没来。抄本抄完了，八个人的字我对了两遍，页边都留着，等你。——达海" }] }
+
+[[tracks.chapters.choices]]
+key = "voices"
+text = "学着腔调念，吼一声，让他对着抄本听。"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "腔调要靠汉话的底子撑着，对着抄本念，咬错一个字他就叫停。"
+reply = "我压低嗓子学张飞，又尖着嗓子学夏侯杰栽下马去的那一声。念到一半他叫了停：八个人抄的，有两处字不一样，念出来是两种声气。他用指甲在那两处掐了道印，才让我接着往下。末了抄本的页边有七个圈，一个画在张飞喝退曹兵那里，旁边是个满文的字，他说是“又怕又想笑”。他把笔横在纸上：“吼，汉话是这个字。蒙古话呢？你们那边呢？”"
+news = "牛庄驿馆里，沈阳来的译书先生带着一套新抄的书，听外来船长念了一下午，念到张飞那一段，满屋的人都笑了。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 8 }, { kind = "flag", flag = "c13_request_dahai_done" }, { kind = "memory", memory = "mem-request_dahai-use", title = "桥上那一声与七个圈" }]
+
+[[tracks.chapters.choices]]
+key = "jurchen"
+text = "合上书，用女真话把笑点讲给他听。"
+next = "done"
+requires = [{ kind = "skill", skill = "lang_jurchen", ge = 60 }]
+hint = "笑话得用女真话讲完才有味，词不够，讲到一半就得停。"
+reply = "我用女真话讲：一座桥，一个人，一声吼，曹操的大队人马没有一个往前走，倒是吓破了胆的那个先从马上栽了下去。他先是听，听到栽下去那一句才笑出声，说满文里管牲口受惊叫“炸了胆”，老人们只用在牲口身上，用在人身上还没人试过。他翻开抄本，把那个词写在页边，七个圈连着画下去，第七个最大。"
+news = "牛庄驿馆里，沈阳来的译书先生摊着新抄的书，听一个外来船长用女真话讲张飞断桥的笑话，没讲完先笑了。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 8 }, { kind = "flag", flag = "c13_request_dahai_done" }, { kind = "memory", memory = "mem-request_dahai-use", title = "桥上那一声与七个圈" }]
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照字念，让他对着抄本核。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "我照字念，一个腔也不加。他对着抄本一边听一边看，听出一个抄错的字，叫我停，说单看字形看不出，念出声才露馅。圈只画了四个，画得很轻，像怕画重了笑点会跑。画到张飞断桥那一个，他停了停，说平着念也有好处，错字是听出来的。"
+news = "牛庄驿馆里，沈阳来的译书先生捧着新抄的书，听外来船长平平地念了一下午，只在页边画了几个圈。"
+effects = [{ kind = "cash", value = 1000 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 8 }, { kind = "flag", flag = "c13_request_dahai_done" }, { kind = "memory", memory = "mem-request_dahai-use", title = "桥上那一声与七个圈" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 800 }, { kind = "skill", skill = "lang_jurchen", value = 20 }, { kind = "affinity", person = "dahai", value = 2 }, { kind = "flag", flag = "c13_request_dahai_partial" }], news = "牛庄驿馆里，有个外来船长念《三国》念得平平的，沈阳来的译书先生捧着新抄的书，一个圈也没画，只说“汉话原来这么平”。" }

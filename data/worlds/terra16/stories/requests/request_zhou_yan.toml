@@ -1,0 +1,230 @@
+# 七页证词（request_zhou_yan）——请托线，类型：送信（kind=letter），报价模式 V 到访（auto=true，offer 章 at=yuegang，family=c13_offer_yuegang，冷却 20 天）。
+# 人物：周砚（zhou_yan，1540-06-25 生），漳州龙溪社学出来的书生，较真，一个字能争到天黑，争完还要跑去街上问人；1568 年起他从漳州城下到月港。cast 见 cast/classmates_zhangzhou.toml。
+# 时间：报价 1568-01-01—1590-06-30（月港茶铺），到 1590-06-30 仍没接就走 timeout（不写见闻）；
+#       handover 福州（fuzhou）按察司衙门外，60 天期限；reply 回月港茶铺（过 35 天，他把批回带下来）。
+#       没有 window 章节：期限与 timeout 已经给出去处。
+# 依据（史实）：明代的词讼由州县先断，不服可以往上告；各省按察司下设照磨所，照磨是管文书卷宗的小官；状纸要誊得清楚才会有人看。
+#       1567 年隆庆开海以后月港设海澄县，船行、渔户的租船契约纠纷多。
+# 原创：渔户蔡阿九、洪家船行、泡烂的赁船契、补网的婆婆那一页证词、福州门房与老照磨。
+# 待核：渔户越过州县直接告到按察司在律例上的限制（正文只写“递到按察司”“发回县里重审”，不写条文）；照磨所的具体办事规矩为推想，只写“有一个人把七页看完了”。
+# 结构：reply（照磨看完了，或花钱把状纸放在最上面）与 reply_partial（照磨只翻了第一页，批回只写“候查”）用旗标 first_page 分开；
+#       引擎的 variants 只换文字、不能换效果，所以两种报酬分成两章。find_clerk 检定失败走 reply_partial 并设 first_page；
+#       pay_porter 不设 read 旗标，走 reply（花钱是把状纸放到上面，七页是否被读完，批回里没人说）。
+#       offer 的两条 variants 读 bond 与 c7_wandeng_unmasked_known：只多一两句话，不改玩法。
+# 读写的旗标：只写 c13_request_zhou_yan_accepted / declined / read / first_page / done / partial / late；
+#       读 c7_wandeng_unmasked_known（只读，不设）。不依赖主线旗标。
+# 与 C7 的界线：bond_zhou_yan 的结拜帖、写错字的灯、《同窗记》、1567 年重逢的开海账都不在本文件出现；他的日记与心事永远不写，见闻也不写。
+# 与金城真的请托（福州琉球馆）两条不相干，按察司只是这一条里的衙门。
+# 回忆插画清单：
+#   mem-request_zhou_yan-reply：月港茶铺的窗光下，一张盖着红印的薄批回被举起来，一根手指悬在“赁”字上，茶碗里的茶洒了一点。
+
+[[tracks]]
+key = "request_zhou_yan"
+name = "七页证词"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["zhou_yan"]
+
+# 报价：1568 年起，月港茶铺。七页证词，念到一个字被他喊停。
+[[tracks.chapters]]
+key = "offer"
+title = "泡烂的契约"
+text = "茶铺最里面那张桌子，周砚面前摊着七页纸，字小得像撒了一把芝麻，页角用茶碗压着。他从漳州城下来，鞋帮上还带着泥。“蔡阿九，打了三十年鱼。洪家船行拿一张泡烂的契约告他，说他欠一条船。”他把第一页推过来，“契上泡烂的那几个字，我问遍了当年在场的人，一个一个补出来的。你念，我听着。”我念到“蔡某任船一只”，他的手指按在纸上：“且慢，这个字不对。底下有个贝字，是我写挤了。‘任’是承当，‘赁’是租借，一条船买的还是租的，全在这一个字上。”他松开手指，“县里已经断了，限蔡阿九三个月交船，我这几页，县里不收。”他把七页纸拢齐，往我这边推：“我走旱路到福州要二十几天，等批回来，船早被拖走了。你的船走海。交到按察司，要交给一个肯看完七页的人手里。”"
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "yuegang", text = "到月港茶铺，找周砚" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "zhou_yan", ge = 18 },
+]
+family = "c13_offer_yuegang"
+family_cooldown_days = 20
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+# 变体（排在前面的先中）：同窗的人（情谊 C 级以上）。他先说一句，念错的是“我”；
+# 知道那件事的人（c7_wandeng_unmasked_known），多一句，只此一句。
+[[tracks.chapters.variants]]
+key = "v1_bond_known"
+when = [
+  { kind = "bond", person = "zhou_yan", level = "C" },
+  { kind = "flag", flag = "c7_wandeng_unmasked_known" },
+]
+text = "茶铺最里面那张桌子，周砚面前摊着七页纸，字小得像撒了一把芝麻，页角用茶碗压着。他从漳州城下来，鞋帮上还带着泥。他把第一页推过来：“你念字从来不错，这回也别错。”低头理了理纸角，又添了一句：“搜港那天的事，我后来也知道了。”我没接话。他已经翻到了下一页：“蔡阿九，打了三十年鱼。洪家船行拿一张泡烂的契约告他，说他欠一条船。契上泡烂的那几个字，我问遍了当年在场的人，一个一个补出来的。”我念到“蔡某任船一只”，他的手指按在纸上：“且慢，这个字不对。”我头一回在他面前念错了字。“底下有个贝字，是我写挤了。‘任’是承当，‘赁’是租借，船是买的还是租的，全在这一个字上。”他松开手指，“县里已经断了，限蔡阿九三个月交船。”他把七页纸拢齐：“我走旱路到福州要二十几天，赶不上。你的船走海。交到一个肯看完七页的人手里。”"
+
+[[tracks.chapters.variants]]
+key = "v2_bond_c"
+when = [{ kind = "bond", person = "zhou_yan", level = "C" }]
+text = "茶铺最里面那张桌子，周砚面前摊着七页纸，字小得像撒了一把芝麻，页角用茶碗压着。他从漳州城下来，鞋帮上还带着泥。他把第一页推过来：“你念字从来不错，这回也别错。”“蔡阿九，打了三十年鱼。洪家船行拿一张泡烂的契约告他，说他欠一条船。契上泡烂的那几个字，我问遍了当年在场的人，一个一个补出来的。”我念到“蔡某任船一只”，他的手指按在纸上：“且慢，这个字不对。”我头一回在他面前念错了字。“底下有个贝字，是我写挤了。‘任’是承当，‘赁’是租借，船是买的还是租的，全在这一个字上。”他松开手指，“县里已经断了，限蔡阿九三个月交船。”他把七页纸拢齐：“我走旱路到福州要二十几天，赶不上。你的船走海。交到一个肯看完七页的人手里。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，七页证词我送到福州。"
+next = "handover"
+reply = "他把七页纸理齐，拿线穿了孔订上，看了一会儿，又一页页拆开。“订起来的状纸，没人肯拆。散着，才有人一页页翻。”他在每页的角上标了号，用一块旧汗巾包好，递过来的时候手是松的，眼睛还停在汗巾上。"
+effects = [
+  { kind = "affinity", person = "zhou_yan", value = 2 },
+  { kind = "flag", flag = "c13_request_zhou_yan_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_short"
+text = "接下，先问：七页太长，能不能删成一页？"
+next = "handover"
+reply = "“能删的，我早删了。”他翻到第四页，“这一页是蔡家隔壁补网的婆婆，她只有一句话。删了这页，就少一个人说话。”他没把纸收回去，反倒又往我这边推了推，说话快了半拍：“七页，一页也别少。”"
+effects = [
+  { kind = "affinity", person = "zhou_yan", value = 2 },
+  { kind = "flag", flag = "c13_request_zhou_yan_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "衙门的事，我不去碰。"
+next = "failed"
+reply = "他把七页纸一页页收回来，在茶碗底下垫平，没有争。“那我自己走去。”他看了看窗外的天，“二十几天，赶得上赶不上，看老天。走路，也能送到。”"
+effects = [{ kind = "flag", flag = "c13_request_zhou_yan_declined" }]
+
+# 进行：福州，按察司衙门外。60 天内没到，证词就由别人带去，没有回音。
+[[tracks.chapters]]
+key = "handover"
+title = "照磨的桌子"
+text = "福州按察司衙门外，递状的人从照壁排到了街口，有抱孩子的，有扛着一卷田契的。门房把七页纸接过去，翻都没翻，往旁边一摞状纸上一放。那一摞比他的肩膀还高，风一吹，最上面几张就往下滑。“一天看不了十份。”他拿袖子压住纸，“你这七页的，更没人看。放着吧。”放到几时，他没说。墙根下两个代写状纸的书手抬头看了我一眼，又低头去舔笔。东厢有扇窗开着，窗下一张堆满卷宗的桌子，是管文书的照磨的，人还没散衙。"
+at = "fuzhou"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "at", at = "fuzhou", text = "到福州按察司衙门外" }]
+when = [{ kind = "alive", person = "zhou_yan", value = true }]
+deadline_days = 60
+news = "福州按察司衙门外，递状的人排到街口，有一份七页的证词被人从一摞状纸里抽了出来。"
+timeout = { next = "failed", effects = [{ kind = "letter", person = "zhou_yan", text = "证词我托一个去福州的同年带去了。他说递上去了，没回音。——周砚" }, { kind = "affinity", person = "zhou_yan", value = -3 }, { kind = "flag", flag = "c13_request_zhou_yan_late" }] }
+
+[[tracks.chapters.choices]]
+key = "find_clerk"
+text = "打听管文书的照磨，等他散衙，当面请他看。"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "reply_partial", effects = [{ kind = "affinity", person = "zhou_yan", value = -2 }, { kind = "flag", flag = "c13_request_zhou_yan_first_page" }], news = "福州按察司衙门外，一个外港来的船长拦住管文书的照磨说了半天，照磨只翻了第一页，说放着吧。" }
+reply = "照磨是个老举人，须发都白了。他听我说一个书生为了几个泡烂的字跑了半个月港，笑了一声，什么也没问，接过七页纸，站在街边就看了起来。看到第四页，补网婆婆那一句话，他停了停，倒回去又看了一遍。“这一份，明天放最上面。”他把纸理齐还给我，“明早来拿个信。”"
+effects = [
+  { kind = "affinity", person = "zhou_yan", value = 3 },
+  { kind = "flag", flag = "c13_request_zhou_yan_read" },
+]
+
+[[tracks.chapters.choices]]
+key = "fair_copy"
+text = "在客栈里把七页誊成一份更清楚的，字大一号、行距宽一分。"
+next = "reply"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "你的字比周砚的还难认"
+reply = "我誊了一夜。周砚的字挤，我把每一行拉开，贝字底下留足了地方，补网婆婆那句话单占一行。七页誊成了九页。天亮门房接过去，看了一眼，把它从那一摞里抽出来，单放在窗台上，压了一方砚台：“这份看着舒服。”"
+effects = [
+  { kind = "affinity", person = "zhou_yan", value = 3 },
+  { kind = "flag", flag = "c13_request_zhou_yan_read" },
+]
+
+[[tracks.chapters.choices]]
+key = "pay_porter"
+text = "塞给门房一点钱，请他把这一份放在上面。"
+next = "reply"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "门房的手伸了一半，看了看你的钱袋，又缩回去了。"
+reply = "门房收了钱，把七页纸抽出来，放在那一摞的最上面，拍了拍袖子。“要紧的先放上头，规矩。”他说“规矩”两个字的时候没看我。排在我后面那个抱孩子的人，看了一眼那七页纸，又看了一眼我。"
+effects = [
+  { kind = "cash", value = -100 },
+  { kind = "affinity", person = "zhou_yan", value = 2 },
+]
+
+# 收尾（有人看完了七页）：月港茶铺，他把批回带下来。他以为会说字不对。
+[[tracks.chapters]]
+key = "reply"
+title = "批回"
+text = "一个多月后，我在月港上岸，周砚已经在茶铺里等着。他面前压着一张纸，不是七页，是薄薄一张批回，边上盖着衙门的红印。“按察司发回县里重审。”他念给我听，念得很慢，“契内赁字泡损，不足为凭——”念到这里他停了，把批回举到窗光里，手指悬在一个字上。“且慢——”我以为他又要说字不对。他盯着看了好一会儿，才说：“这个字，对了。贝字在底下，一笔不少。”"
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "cheerful"
+objectives = [
+  { kind = "at", at = "yuegang", text = "回月港茶铺，找周砚" },
+  { kind = "wait", days = 35, text = "过一个多月，批回才会下来" },
+]
+when = [
+  { kind = "alive", person = "zhou_yan", value = true },
+  { kind = "flag", flag = "c13_request_zhou_yan_first_page", value = false },
+]
+news = "月港的茶铺里，一个书生拿着福州按察司的批回看了三遍，茶洒在桌上也没顾得上擦。"
+
+[[tracks.chapters.choices]]
+key = "laugh"
+text = "笑他：总算有个字对了。"
+next = "done"
+reply = "他也笑了，笑得把茶都洒到了桌上，慌忙拿袖子去按批回，批回没湿，他的袖子湿了半截。他推过来一个布包，是蔡家和街坊凑的，他自己添了一点。“蔡阿九说过，事成了要请你吃鱼。”顿了顿，“他只有鱼。”"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "zhou_yan", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_zhou_yan_done" },
+  { kind = "memory", memory = "mem-request_zhou_yan-reply", title = "批回上对了的那个字" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_fisher"
+text = "问他：蔡阿九知道了吗？"
+next = "done"
+reply = "“我还没去说。”他把批回折了一半又展开，“先在这里再看三遍。看三遍，才敢信。”他一边看，一边去解桌角的布包，结是蔡家人打的死扣，手指解不开，最后拿牙咬开，推到我这边。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "zhou_yan", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_zhou_yan_done" },
+  { kind = "memory", memory = "mem-request_zhou_yan-reply", title = "批回上对了的那个字" },
+]
+
+# 收尾（照磨只翻了第一页）：批回只有一行，“候查”。第一页上正好有那个字。
+[[tracks.chapters]]
+key = "reply_partial"
+title = "候查"
+text = "一个多月后，周砚在月港的茶铺里等我，面前压着一张批回，薄得透光，角上一方衙门的红印。上头只有一行：“契内赁字不明，候查。”没有说发回县里，也没有说契约作不得数。他把这一行看了又看，看到茶凉了。“且慢——”我以为他要说这批回写得不对。他的手指停在“赁”字上，指甲在贝字底下划了一道：“这个字，对了。”又过了一会儿，他说：“候查，也是有人看了。”"
+at = "yuegang"
+cast = ["zhou_yan"]
+speaker = "captain"
+mood = "tender"
+objectives = [
+  { kind = "at", at = "yuegang", text = "回月港茶铺，找周砚" },
+  { kind = "wait", days = 35, text = "过一个多月，批回才会下来" },
+]
+when = [
+  { kind = "alive", person = "zhou_yan", value = true },
+  { kind = "flag", flag = "c13_request_zhou_yan_first_page" },
+]
+news = "月港的茶铺里，一个书生拿着福州按察司只写了“候查”两个字的批回，看了三遍。"
+
+[[tracks.chapters.choices]]
+key = "laugh"
+text = "笑他：一个字对了，也算对了。"
+next = "done"
+reply = "他也笑了，笑得没有那么响。“第一页就这一个字，他们看了。后头六页，还在那一摞里躺着。”他推过来一个布包，比说好的轻些：“蔡阿九早先讲定的，事办一半，钱给一半。”"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "zhou_yan", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_zhou_yan_partial" },
+  { kind = "memory", memory = "mem-request_zhou_yan-reply", title = "批回上对了的那个字" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_fisher"
+text = "问他：这话怎么跟蔡阿九说？"
+next = "done"
+reply = "“我还没去说。说什么？说‘候查’？”他把批回折起来又展开，“先看三遍。”看到第三遍，他才开口：“候查是几时，我答不上来。船先别拖，我明天拿这张纸去县里。”他把布包推过来。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "zhou_yan", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_zhou_yan_partial" },
+  { kind = "memory", memory = "mem-request_zhou_yan-reply", title = "批回上对了的那个字" },
+]

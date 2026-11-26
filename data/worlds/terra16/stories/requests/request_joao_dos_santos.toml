@@ -1,0 +1,180 @@
+# 请托：一种草两个名字（request_joao_dos_santos）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：若昂·多斯·桑托斯（joao_dos_santos，男，生年不详、以 0 为占位，1622 年卒）；多明我会修士，1587—1590 年在莫桑比克岛修院；cast 在 cast/historical_04_africa.toml。
+# 类型：去某处（go）。三章：offer（报价）、ask（索法拉的草药妇人）、report（两个名字）。终点 done / failed。
+# 报价：当面（auto=false，交谈话题 ask:request_joao_dos_santos 启动）。offer 不写 at，目标是在港里找到他。
+# 窗口：以 when 的 date 条件表达（非 stage 章不写 window）。offer 1587-01-15 至 1590-06-30；ask 1587-01-15 至 1590-12-31；report 1587-02-01 至 1591-03-31。
+# 限期：offer 以窗口止日 1590-06-30 为期，超时 failed，不写见闻；ask 90 天、report 120 天，超时都写一封来信并设 late 旗标。
+# 依据·史实：多斯·桑托斯 1586 年到东非，在索法拉与莫桑比克岛一带传教；1609 年出版他那部东非记述（正文不提书名与年份）。
+# 依据·原创：索法拉集市上的老草药妇人、她讲的三种草与每种两个名字、修士画的那几张图、笔记上的小圈、修院里越堆越高的纸。
+# 不写：津巴人南下（1587—89，归巴拉卡主线 10）、吃人的故事；“北边传来的故事”在 offer 里只带一句，不写内容。修院里使唤奴隶、他对当地神灵的“魔鬼的把戏”都不写。
+# 依赖：港口 sofala 与 mozambique_island（ports_east_africa.toml）；人物日程已是 mozambique_island（B10b 已改，无需再改）；技能 lang_swahili、herbal_medicine（skills.toml）；属性 eloquence（captain.toml）。主线门禁：无。
+# C7：无 C7 线；本轨道不读也不设任何 c7_ 旗标。
+# 读的旗标：变体 v1_sketch 读 c13_request_joao_dos_santos_sketch；变体 v1_two_names 读 c13_request_joao_dos_santos_two_names。两者都由本轨道设，没有外部依赖。
+# 设的旗标：offer 的 accepted（接下两种接法）、sketch（先请他讲清楚三种草）、declined（回绝，终局）；ask 的 three_names（三种接法拿到两个名字，只设不读）、two_names（检定失败，只拿到一个名字）；超时 late；report 的 done / partial / embellished（终局）。
+# 秘密：cast 无 secret，本条不写秘密。口头禅“可没有一个是亲眼见的”只在 offer 用一次。
+# 报酬：现金 900（低风险档，cash_total 900，无物品）；好感最多 +13；名声 +2；葡萄牙声望 +1（最好的结局）；回忆 mem-request_joao_dos_santos-report（只给最好的结局）。
+# 回忆插画清单：mem-request_joao_dos_santos-report，画面：桌上摊着一张写满名字的纸，纸角画着一个小圈，旁边是一片晒干的叶子与一截树皮，窗外是莫桑比克岛的白墙。
+# 结构说明：ask 的 sit_down 检定失败走 fail 分支，next 直接指向 report，靠 two_names 旗标让 report 的变体改正文，不另设章节。
+# 结构说明：见闻只写在每个选项上，不写在章节上。超时是没人在场的自动结算，酒馆不该讲玩家没做过的事，所以超时无见闻。
+# 偏离说明：offer 的 ask_sketch 多设一面 sketch 旗标，ask 章的 v1_sketch 变体读它，让这个选项在正文里留下痕迹；sit_down 检定失败多给一条见闻（brief 写 null），因为老妇人讲了一下午这件事本身发生了。
+
+[[tracks]]
+key = "request_joao_dos_santos"
+name = "一种草两个名字"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["joao_dos_santos"]
+
+# 一、越写越厚的笔记：修院里，修士要一个南下的人替他去索法拉问草药。
+[[tracks.chapters]]
+key = "offer"
+title = "越写越厚的笔记"
+text = "修院的桌上堆满了纸，若昂修士正在画一种会爬树的鱼。你的船一靠岸，他就从楼上跑下来，一把拉住你的袖子：“索法拉的集市上有三种草药，葡萄牙人只知道怎么叫。叶子是什么颜色的？根上有没有毛？树皮是剥下来还是刮下来的？”北边传来的故事一个比一个吓人，“可没有一个是亲眼见的”——这回他要亲眼见过的人的话。"
+speaker = "joao_dos_santos"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "joao_dos_santos", text = "在港里找到他" }]
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1587, 1, 15], to = [1590, 6, 30] },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去索法拉问那三种草。"
+next = "ask"
+reply = "他在纸上画了一片叶子、一段根、一块树皮，画得很认真，就是看不出是什么。“照着这个找。”他把纸折成两半，一半塞给你。"
+effects = [
+  { kind = "affinity", person = "joao_dos_santos", value = 2 },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_sketch"
+text = "接下，但请他先把三种草讲清楚。"
+next = "ask"
+reply = "他讲了半天，讲到第三种停住了，承认自己也没见过，是听一个水手说的。“所以才要你去看。”说完他把那片叶子重画了一遍，叶缘画得更细。"
+effects = [
+  { kind = "affinity", person = "joao_dos_santos", value = 2 },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_accepted" },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_sketch" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟不往南走。"
+next = "failed"
+reply = "他不在意，转身又去画那条鱼了。鱼背上多添了一排小刺，像是等着谁来问。"
+effects = [{ kind = "flag", flag = "c13_request_joao_dos_santos_declined" }]
+
+# 二、索法拉的集市：老草药妇人。三种接法：斯瓦希里语、草药知识、坐下来慢慢问。
+[[tracks.chapters]]
+key = "ask"
+title = "集市上的草药妇人"
+text = "索法拉的集市里，一个通加族的老妇人坐在草席上，面前摆着一排晒干的根和叶。你拿出修士的画给她看，她笑出了声。卖鱼的女人凑过来看了一眼，替她翻成葡萄牙话：“她说，画它的人没见过这草，画的是别的草。”老妇人拍着席子，又说了一句，周围的人都笑起来。"
+speaker = "captain"
+mood = "cheerful"
+at = "sofala"
+venue = "market"
+objectives = []
+when = [
+  { kind = "date", from = [1587, 1, 15], to = [1590, 12, 31] },
+  { kind = "alive", person = "joao_dos_santos", value = true },
+]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "joao_dos_santos", value = -3 }, { kind = "flag", flag = "c13_request_joao_dos_santos_late" }, { kind = "letter", person = "joao_dos_santos", text = "船长：索法拉的草药，我托过路的水手去问了，他说的与我记下的对不上。我还是更想听亲眼见过的人讲。——若昂·多斯·桑托斯" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_sketch"
+when = [{ kind = "flag", flag = "c13_request_joao_dos_santos_sketch" }]
+text = "索法拉的集市里，一个通加族的老妇人坐在草席上，面前摆着一排晒干的根和叶。你拿出修士的画给她看。修士先把三种草的样子讲给你听过，你心里有数，一眼就看出画上哪一片是哪一种。她还是笑出了声，画得太不像了，可她的手指一片一片点过去，点到第三片才停。"
+
+[[tracks.chapters.choices]]
+key = "swahili"
+text = "用斯瓦希里话跟她一样一样问。"
+next = "report"
+reply = "她一样一样告诉你：叶子退热，根治肚子疼，树皮——她压低声音——是给生孩子的女人止血的，不能乱用。她让你记两个名字，一个是村里人叫的，一个是她小时候外婆叫的。"
+requires = [{ kind = "skill", skill = "lang_swahili", ge = 60 }]
+hint = "她说的话，你只听得懂“好”和“不好”。"
+news = "索法拉集市上，卖草药的老妇人用斯瓦希里话，一样一样讲给一个外来船长听。"
+effects = [
+  { kind = "affinity", person = "joao_dos_santos", value = 3 },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_three_names" },
+]
+
+[[tracks.chapters.choices]]
+key = "herbal"
+text = "拿起草药看断面、闻气味，跟她比对。"
+next = "report"
+reply = "你说出那片叶子是退热的，她点头；你猜树皮是止痛的，她摇头，把树皮掰开给你看断面，一层一层讲了一遍。她也让你记两个名字。"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "三样东西在你眼里都是干草。"
+news = "索法拉集市上，卖草药的老妇人把一截树皮掰开，给一个外来船长看断面，一层一层地讲。"
+effects = [
+  { kind = "affinity", person = "joao_dos_santos", value = 3 },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_three_names" },
+]
+
+[[tracks.chapters.choices]]
+key = "sit_down"
+text = "在她的草席边坐下，买她一点叶子，慢慢问。"
+next = "report"
+reply = "她讲了一下午，讲着讲着讲到了她外婆。讲完她看着你，说：“第三种，别乱写。”"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_joao_dos_santos_two_names" }], news = "索法拉集市上卖草药的老妇人，跟一个外来船长讲了一下午，讲到第三种草，只肯说出一个名字。" }
+news = "索法拉集市上卖草药的老妇人，跟一个外来船长讲了一下午她外婆的方子。"
+effects = [
+  { kind = "affinity", person = "joao_dos_santos", value = 3 },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_three_names" },
+]
+
+# 三、两个名字：修士的笔记本。最好的结局给回忆；让他添一段则是另一种结局。
+[[tracks.chapters]]
+key = "report"
+title = "两个名字"
+text = "修士的笔记本已经厚得合不拢，每一页都有他自己画的小图。他听你讲，一边听一边记，每种草记两个名字。记到第三种，他的笔停住了，眼睛却亮起来：“那树皮是不是巫师用来害人的？”北边有人这么说过，他想在旁边添一句。笔尖悬在纸上，等你点头。"
+speaker = "joao_dos_santos"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "joao_dos_santos", text = "在港里找到他" }]
+when = [
+  { kind = "date", from = [1587, 2, 1], to = [1591, 3, 31] },
+  { kind = "alive", person = "joao_dos_santos", value = true },
+]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "joao_dos_santos", value = -3 }, { kind = "flag", flag = "c13_request_joao_dos_santos_late" }, { kind = "letter", person = "joao_dos_santos", text = "修士的来信：我被派去了别的地方，笔记都带走了。草药的事，若你记得，写信告诉我。——若昂·多斯·桑托斯" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_two_names"
+when = [{ kind = "flag", flag = "c13_request_joao_dos_santos_two_names" }]
+text = "修士的笔记本已经厚得合不拢，每一页都有他自己画的小图。他听你讲，一边听一边记，前两种草每种记了两个名字。记到第三种，你说老妇人只肯给一个名字，别的不肯讲。他的笔停了一下，在纸上留出一行，又问：“那树皮是不是巫师用来害人的？”北边有人这么说过，他想在旁边添一句。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "照实说：老妇人说是止血的，不能乱用，别的没有。"
+next = "done"
+reply = "他有点失望，笔尖在纸上停了一下，还是照你说的写了，又在旁边画了个小圈：“亲眼见过的人说的。”"
+news = "莫桑比克岛的多明我会修士，在他越写越厚的笔记里，添了几种草药的当地叫法。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "joao_dos_santos", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "reputation", faction = "portugal", value = 1 },
+  { kind = "memory", memory = "mem-request_joao_dos_santos-report", title = "笔记上的小圈" },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "随他添，反正是他的书。"
+next = "done"
+reply = "他高高兴兴地添了一段，写得绘声绘色。那段字比老妇人讲的热闹得多，你看了一会儿，没再拦他。"
+news = "莫桑比克岛的修士新添了一段草药的故事，据说写得比索法拉那位老妇人讲的还热闹。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "joao_dos_santos", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_partial" },
+  { kind = "flag", flag = "c13_request_joao_dos_santos_embellished" },
+]

@@ -1,0 +1,187 @@
+# C11：七岛、城市及会议，主线只通过已约定旗标接入。
+# 正文仅为中文占位；完整出处要点见独立 target 的 copy-needed.json。
+
+[[tracks]]
+key = "c11_najma_star_key"
+name = "外曾祖父的星路"
+kind = "request"
+start = "read_route"
+auto = true
+
+[[tracks.chapters]]
+key = "read_route"
+title = "星路对读"
+text = "摩卡的旧库房里，她把外曾祖父的航路诗摊在桌上，又把《翠玉录》的抄片压在上面。诗里有两行韵脚对不上，她把星名一颗颗念出来，用指尖按着节拍去对。她说，差一指就差一百里，你来数。"
+choices = [{ key = "align", text = "把航路与翠玉录对读", reply = "两条线在纸上并成一条，星点落在虚线的节上。她把誊好的《翠玉录》抄片和航路一并交到你手里，说照这条星路走，浅泥会让开一条道。", next = "done", effects = [{ kind = "item", item = "tabula_smaragdina", qty = 1 }, { kind = "flag", flag = "c11_atlantis_key_ready", value = true }], requires = [{ kind = "item", item = "majid_hidden_route", qty = 1 }, { kind = "skill", skill = "astral_navigation", ge = 1 }] }]
+at = "mocha"
+when = [{ kind = "age", ge = 16 }, { kind = "date", from = [1563, 8, 25] }]
+
+[[tracks]]
+key = "c11_atlantis_city"
+name = "环城与山铜柱"
+kind = "request"
+start = "city"
+auto = true
+
+[[tracks.chapters]]
+key = "city"
+art = "realm_atlantis_port"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "入环城"
+text = "进了亚特兰蒂斯外港，先过一条长长的运河，两岸是凿进岩石里的船坞，停着三列桨的战船。三道环墙一道包铜、一道包锡，最里面一道在太阳底下泛着火一样的光，那是山铜。神庙的圣所外面围着金栅，守庙的女祭司穿着白袍，问你为什么来。"
+choices = [{ key = "visit", text = "向守庙人求七岛的航路", reply = "守庙的女祭司把一张抄了又抄的航路摊在桌上，七个小红点连成一串。你照着誊进海图，她站在旁边数着每个点，直到你写完最后一笔。", next = "done", effects = [{ kind = "flag", flag = "c11_atlantis_city_seen", value = true }, { kind = "item", item = "seven_isles_route", qty = 1 }], requires = [] }]
+at = "atlantis_port"
+when = [{ kind = "age", ge = 16 }]
+
+[[tracks]]
+key = "c11_silver_branch"
+name = "银枝"
+kind = "request"
+start = "song"
+auto = true
+
+[[tracks.chapters]]
+key = "song"
+title = "雾中的歌"
+text = "仲夏夜的雾里，只有你看得见她。她唱的是西方大洋里的岛，三倍五十座，一座一座数过去。船上的人都在睡，她站在雾中，手里托着一截开白花的银枝。"
+choices = [{ key = "listen", text = "听她唱完这一段", reply = "你把那段歌记在心里。一片花瓣落在甲板上，第二天早上已经干成了透明的薄片，迎着太阳看，能看见细细的纹路。", next = "rent", effects = [{ kind = "flag", flag = "c11_silver_branch_heard", value = true }], requires = [] }]
+at = "galway"
+when = [{ kind = "age", ge = 16 }, { kind = "season", season = 1 }, { kind = "date", from = [1563, 8, 25] }]
+night = true
+
+[[tracks.chapters]]
+key = "rent"
+title = "灯心草"
+text = "仲夏前夜，戈尔韦码头上坐着几个马恩岛来的渔民，脚边堆着一捆捆灯心草。他们每年这时候都要上南巴鲁尔山交地租，今年雾不散，谁也走不上去。"
+choices = [{ key = "carry", text = "垫付船钱，替他们送草", reply = "你垫付了二十金币的船钱，把灯心草装上小艇。山脚下雾浓得看不清人，有只手从雾里伸出来接过草捆，捆子落下时发出湿润的声响，雾里没有人应声。", next = "tower", effects = [{ kind = "cash", value = -20 }], requires = [{ kind = "cash", ge = 20 }] }]
+at = "galway"
+when = [{ kind = "season", season = 1 }]
+
+[[tracks.chapters]]
+key = "tower"
+title = "玻璃塔"
+text = "海中央立着一座玻璃做的塔，塔身透出海水的青绿。塔顶站满了人影，一动不动，从不回答人的话。跑过这一带的人讲，攻打过它的船，没有一条回来。"
+choices = [{ key = "poem", text = "用一首短诗回答", reply = "诗句一行行唱完，塔顶的人影终于动了动，塔身发出一声低低的嗡响，像是回应了你。塔门仍旧关着。", next = "child", effects = [], requires = [{ kind = "skill", skill = "poetry", ge = 1 }] }, { key = "music", text = "用一段乐调回答", reply = "你吹起一支慢调的笛子，节拍顺着浪头一下下推过去。塔顶那排影子随着拍子晃了晃，又慢慢静下来，塔门始终没有开。", next = "child", effects = [], requires = [{ kind = "skill", skill = "music", ge = 1 }] }]
+at = "angra"
+
+[[tracks.chapters]]
+key = "child"
+title = "循钟声"
+text = "戈尔韦码头上来了一个绿皮肤的孩子，不哭不闹，循着教堂的钟声，一步步往码头尽头走。他说家里没有太阳，只有钟声。你递过去一把生麦粒，他抓了就嚼，嚼了又嚼，眼睛始终望着远处的海。"
+choices = [{ key = "return", text = "领他去听钟声的地方", reply = "你领着他穿过石头巷子，钟声越来越近。他在教堂门口停住，把剩下的麦粒撒进石阶的缝里，然后再也没有回头。", next = "pan", effects = [], requires = [] }]
+at = "galway"
+objectives = [{ kind = "goods", good = "grain", qty = 1, at = "galway" }]
+
+[[tracks.chapters]]
+key = "pan"
+title = "风停之后"
+text = "科孚外海的风忽然停了，帆软塌塌地挂着，船工们说这是要出大事。老水手讲，同船的人后来讲，有声音从船舷下面传上来，三次叫舵手的名字，说伟大的潘已经死了。"
+choices = [{ key = "announce", text = "替那声音去报死讯", reply = "你照那声音的话，让舵手到帕洛德斯对面的岸边，大声报出伟大的潘已经死了。岸上的哭声从四面响起，回到舱里时，风暴已经压了上来，雨打在帆布上。", next = "iron", effects = [{ kind = "flag", flag = "c11_pan_announced", value = true }], requires = [] }]
+at = "corfu"
+
+[[tracks.chapters]]
+key = "iron"
+title = "加的斯的一天"
+text = "加的斯城外，她在等你。她想在城里走一天，找找1145年被人拆掉的那尊铜像原来立在哪里。那尊铜像指着西方，城里的老人说它的手指断过三次。你的船上所有的铁，都要留在船舱里。"
+choices = [{ key = "escort", text = "陪她走完这一天", reply = "加的斯的街上，她每走一步都避开铁栏、铁钉与马蹄铁。一天走完，她在码头上回过头，把一张叠好的航图递给你。", next = "apple", effects = [{ kind = "item", item = "seven_isles_route", qty = 1 }], requires = [] }]
+at = "cadiz"
+objectives = [{ kind = "wait", days = 1 }]
+
+[[tracks.chapters]]
+key = "apple"
+art = "realm_persephone_isle_3"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "苹果之岛"
+text = "第三岛的林子里结着金黄的苹果，岛上人不许随便摘。九个姐妹轮流坐在一张木桌前，按法度断事，两方都说完了才开口。摩根坐在最靠窗的位置，手边放着一小罐药膏，谁伤了都先给她看。"
+choices = [{ key = "council", text = "请九姐妹开议定夺", reply = "九姐妹让人从枝上剪下一截银枝，交到你手里。她们说，持着它的船，不用人指路也找得到女人之国。", next = "done", effects = [{ kind = "flag", flag = "c11_silver_branch_complete", value = true }, { kind = "item", item = "silver_branch", qty = 1 }], requires = [] }]
+at = "persephone_isle_3"
+
+[[tracks]]
+key = "c11_otherworld_food"
+name = "彼界的食物"
+kind = "request"
+start = "table"
+auto = true
+
+[[tracks.chapters]]
+key = "table"
+art = "realm_persephone_isle_1"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "岛上的餐桌"
+text = "第一岛的长桌铺着白布，上面摆着石榴、蜂蜜和一壶温水。主人是一位不肯说自己名字的女子，请你坐下，说这些都是岛上最好的东西。桌边没人动筷，都等着你开口。"
+choices = [{ key = "decline", text = "谢绝食物，只作客人", reply = "你谢过主人，把杯子推回去，只坐到天黑就起身。岛上的人没有强留，只在码头上朝你挥了挥手。", next = "done", effects = [], requires = [] }, { key = "eat", text = "吃下岛上的食物", reply = "第一口是甜的，像熟透的石榴。咽下去以后，岛上的一天就要抵外面的十天，这件事再也收不回来。", next = "done", effects = [{ kind = "eat_otherworld", realm = "persephone_isles" }], requires = [] }]
+at = "persephone_isle_1"
+
+[[tracks]]
+key = "atlantis_council"
+name = "十王的会议"
+kind = "main"
+start = "arrival"
+auto = true
+cast = ["ismene", "silver_branch_woman"]
+
+[[tracks.chapters]]
+key = "arrival"
+art = "realm_atlantis_port"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "穿过三道水环"
+text = "木星与土星在双鱼宫相会的这一年，海草一直铺到天边，风死了三天，罗经的针在盘里乱跳。第四天清早，雾在船头裂开一道缝：一条笔直的运河通进陆地，两岸的墙先包着铜，再往里是锡，最里面那道闪着火一样的红光。外港挤满了各国的船，有挂十字的，有挂新月的，还有一条整天张着黑伞。神庙台阶上站着一个年轻的女祭司，不问你是哪位王的客人，只问你来做什么。"
+choices = [{ key = "attend", text = "向女祭司说明来意", reply = "你说完来意，她点点头，才问你是哪位王的客人，又说自己叫伊斯梅妮。当天下午，十王的人空着手走进牧场，拿木棍和绳套追牛，场边连一把刀也没有。她在你耳边低声说：“柱子跟前不许有铁。你的剑，留在船上。”", next = "keepsakes", effects = [{ kind = "flag", flag = "atlantis_council_met", value = true }], requires = [] }]
+variants = [{ key = "mio_crossed", when = [{ kind = "flag", flag = "c13_main_mio_crossed", value = true }], text = "桧扇揣在怀里，潮从船尾推着你，海草往两边分开，像有人替你掀起了御帘。一条家的船顺着运河划进内港，桨手们看见铜墙发红，都忘了划。台阶上的女祭司问你来做什么，你把扇子往掌心一合：“土佐一条家的澪。来看这里的王怎么审天下——审得不公，我也要说话。”" }, { key = "mio_turned_back", when = [{ kind = "flag", flag = "c13_main_mio_turned_back", value = true }], text = "开春第一次进雾，正赶上那天的方位犯金神，你照阴阳家的规矩掉头绕了一程，海草当晚就合拢了。第二回你没再看方位。船擦着浅泥进了运河，铜墙在晨光里烧成一片。年轻的女祭司问你的来意，你笑了一声：“上回我让了方位一步，这回不让了。我来赶这场会。”" }, { key = "mio_absent", when = [{ kind = "flag", flag = "c13_main_mio_absent", value = true }], text = "土佐的事、弟弟的事，哪一样都比一座海里的城要紧，你本不想走这一趟。可汐从能岛捎来一句话：各家的船都往西去了，你不去，往后那张桌上就没有一条家的位子。到了三月，你还是让船头朝了西。船进运河时，你没去看那几道发光的墙，一直在算回去要走多少天。守柱的女祭司等你开口，你想了想：“来看热闹。顺便替来不了的人看一眼。”" }, { key = "lieve_crossed", when = [{ kind = "flag", flag = "c13_main_lieve_crossed", value = true }], text = "你在舱里把账簿翻到最后一页，那里记着这一趟的本钱：船、人、半年的利息。运河通进来五十斯塔德，你一路数着铜墙上的接缝。神庙前的女祭司问你来做什么，你合上账簿：“安特卫普的莉芙·德克莱尔克。你们的城要是跟外面做买卖，总得有人先把这笔账算清。我来算。”" }, { key = "lieve_turned_back", when = [{ kind = "flag", flag = "c13_main_lieve_turned_back", value = true }], text = "头一回你在海草边上停了三天，算来算去，进去的风险比回去的利钱大，于是掉了头，在账上记了两个字：观望。可观望也要付利息。第二回你没再停，铜墙、锡墙、红光的墙一道道从船边过去，你在心里给它们一一估了价。女祭司问你这回为何不停了，你说：“上回我赌输了一半，这回来把另一半赢回来。”" }, { key = "lieve_absent", when = [{ kind = "flag", flag = "c13_main_lieve_absent", value = true }], text = "安特卫普的人以为你在里斯本，里斯本的人以为你回了安特卫普。你谁也没告诉，带着一条船悄悄进了雾。外港没有一条船认得你的旗，正合你意。女祭司看着你手里的笔：“你来记账？”“我来看账。”你说，“谁都没请我，所以谁也欠不着我的人情。”" }, { key = "najma_crossed", when = [{ kind = "flag", flag = "c13_main_najma_crossed", value = true }], text = "外曾祖父的诗你背了三十年，最后一句里的那颗星，今夜才升到该在的高度。你举起牵星板，差不到半指，舵往左一扳，海草就在船头让开了。罗经还在乱跳，你看都没看。上了岸，女祭司迎上来问你的来意，你把星盘挂回腰间：“尤尔法的纳吉玛。替一位老领航人，把他没走完的那一程走完。”" }, { key = "najma_turned_back", when = [{ kind = "flag", flag = "c13_main_najma_turned_back", value = true }], text = "头一回你照着诗里的星进雾，那颗星被云遮了半夜，你不肯凭猜的走，硬是把船退了出来——差一指，就差一百里，这话你从小说到大。云散的那一夜你又来了，这回星在，路也在。年轻的女祭司问起来意，你答得很慢：“上回我等星，这回星等我。我来看它指的地方。”" }, { key = "najma_absent", when = [{ kind = "flag", flag = "c13_main_najma_absent", value = true }], text = "那条星路你一直没走——诗里的东西，你怕走一回就俗了。今年你是跟在一支葡萄牙船队的船尾进来的，看着他们的领航人对着罗经发愁。进了运河，你才把星盘拿出来，偷偷量了一下北极星的高度。女祭司撞见你在量星，问你来做什么，你说：“看看外曾祖父有没有说错。还没量完。”" }, { key = "lin_wandeng_crossed", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_crossed", value = true }], text = "雾里你点着天妃宫那盏小红灯，船上的人都说它照不过三丈，可海草偏偏顺着灯光分开。你一路嘴里念着妈祖，眼睛却盯着两边的浅泥，生怕有什么东西从里面伸出手来。进了内港，女祭司打量着你腰间的灯笼，问你来做什么。你把灯笼举高一点：“月港来的林晚灯，做买卖的。听说这里的海没人管，我来看看是真是假。”" }, { key = "lin_wandeng_turned_back", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_turned_back", value = true }], text = "头一回进雾，灯笼被一阵怪风吹灭了，你想都没想就喊掉头——灯灭了还往前走，那是找死。司香的老人在船上的妈祖龛前重新替你引了火，你又来了，这回灯一路没灭。台阶上的女祭司还没开口，你先嘿嘿一笑：“上回是海不让我进，这回我跟海讲好了价钱。”" }, { key = "lin_wandeng_absent", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_absent", value = true }], text = "这场会你本来没放在心上。头一回听人说起，你的第一句是“关我什么事”，第二句是“那边收不收生丝”。于是你来了，混在一群葡萄牙商人中间，谁也没多看你一眼。女祭司见你东张西望，问你找什么，你眨眨眼：“说实话还是说好听的？好听的是来见识见识，实话是来看看有没有生意。”" }, { key = "ix_nikte_crossed", when = [{ kind = "flag", flag = "c13_main_ix_nikte_crossed", value = true }], text = "你一直猜，墨西加人说的白色之地和这座城是同一个传说。船进运河的时候，你看见神庙的白石在铜墙后面亮起来，手心出了汗。你的水手吹响海螺，城墙上没人应声，只惊起一群鸟。神庙台阶上，女祭司问起你的来意，你挺直了背：“科苏梅尔的伊希·妮克特。来看看一座没被征服过的城是什么样子。”" }, { key = "ix_nikte_turned_back", when = [{ kind = "flag", flag = "c13_main_ix_nikte_turned_back", value = true }], text = "第一次进雾时，船上的玛雅水手都说听见水底下有人说话，像塞诺特深处的回声。你让船退了——你自己可以冒险，却不能拿他们的命去赌。第二回你只带了愿意来的人。女祭司问你为什么又来，你说：“上回我听了水底下的话。这回我想听听你们的。”" }, { key = "ix_nikte_absent", when = [{ kind = "flag", flag = "c13_main_ix_nikte_absent", value = true }], text = "你原以为这一年要守在尤卡坦，替镇子打官司，跟主教的人周旋。是一个从伊察人的湖上来的老预言者叫你出海的，他入迷时说：“白色的城在等名字。”你不太信，还是来了。运河口的守卫听不懂你的话，比划了半天才放行。守柱的女祭司只问来意。“替那个老人看一眼，”你说，“回去好让他闭嘴。”" }, { key = "noel_crossed", when = [{ kind = "flag", flag = "c13_main_noel_crossed", value = true }], text = "科尔武岛上那尊骑马的石人指着西方，你照着它的手指开了九天。老团长没走到的地方，海草替你让开了。进运河时你把红缎带又系紧一道，瞥见城门口有人盯着你的脸看，冷冷地瞪了回去。女祭司问你的名号，你报得一字不差：“海峡骑士团，诺埃尔·德·卡德纳。来替一个死在半路的人点名。”" }, { key = "noel_turned_back", when = [{ kind = "flag", flag = "c13_main_noel_turned_back", value = true }], text = "头一回进雾那天你睡过了头，醒来时风向已经变了，船在海草里打了一下午的转，只好退出来，你骂了自己一路。第二回你一夜没合眼，盯着罗经直到天亮。进运河时有人笑你眼圈发黑，你说是看路看的。女祭司问你怎么来晚了，你答：“迟到的点名，也是点名。”" }, { key = "noel_absent", when = [{ kind = "flag", flag = "c13_main_noel_absent", value = true }], text = "名册上的名字还没找齐，你本不想来——一个人的骑士团，去赴十个王的会，像个笑话。是科尔武的石像让你一连几夜睡不着，你终于还是揣着星徽上了船。城门口念名单，没有海峡骑士团。你把下巴一抬：“那就现在记上。”女祭司看了你一眼，在蜡板上添了一行。" }, { key = "tariq_crossed", when = [{ kind = "flag", flag = "c13_main_tariq_crossed", value = true }], text = "诺埃尔在前船，你在后船，过了赫拉克勒斯之柱，两条船一直没离开彼此的视线。进雾那夜你弹了半宿乌德琴，船上的人说海草是被琴声赶开的，你也没否认。女祭司在神庙前拦住你问来意，你行了个礼，笑得很好看：“阿尔及尔的塔里克。来看看柱子外面的人，懂不懂得别把人当货。”" }, { key = "tariq_turned_back", when = [{ kind = "flag", flag = "c13_main_tariq_turned_back", value = true }], text = "头一回你在雾边上撞见一条贩人的船，舱底有人在敲板子。你掉头追了它两天，把人放上了亚速尔的岸，再回来时雾已经合了一半。第二回才挤了进来。女祭司听说你是第二回进雾，问上回怎么没进来，你耸耸肩：“上回路上有人要救，耽误了。这回路上没人，我就来了。”" }, { key = "tariq_absent", when = [{ kind = "flag", flag = "c13_main_tariq_absent", value = true }], text = "阿尔及尔的船长们都在议论那座城，你只当是海上的胡话。是祖母的钥匙让你改了主意——那天它从脖子上的绳子滑下来，正落在海图的西边。你半信半疑地出了海。进了内港，你先在码头上转了一圈，挨个听那些漂流者的口音，才去见守柱的女祭司：“我是来赎人的，要是这里有谁想回家。”" }, { key = "kaicili_crossed", when = [{ kind = "flag", flag = "c13_main_kaicili_crossed", value = true }], text = "你的船从香料群岛出来，绕过好望角，走了大半年，舱里的丁香气一路没散。进雾的那几天一丝风也没有，水手们把头巾浸湿了盖在脸上，你在甲板上跟大副下棋，一直下到海草让开。女祭司问你从哪里来，你答得客客气气：“特尔纳特的凯奇利。来看看别人的王冠是怎么戴的。”" }, { key = "kaicili_turned_back", when = [{ kind = "flag", flag = "c13_main_kaicili_turned_back", value = true }], text = "头一回进雾，雾里有人隔着水请你上岸，客气得过了头——你一听这种客气就背上发凉，当即把船退了出来，在亚速尔等了一个月，看别人进去、出来。看够了，你才进去。女祭司说你在雾外停得太久了，你温和地笑笑：“先看三步，再落子。这三步，我看完了。”" }, { key = "kaicili_absent", when = [{ kind = "flag", flag = "c13_main_kaicili_absent", value = true }], text = "这一年你本该留在特尔纳特，岛上的事一件也放不下。可蒂多雷的表姐托人捎来一句话：大西洋上有人要替天下分香料。你不能不来。外港停着两条葡萄牙船，其中一条的船长你认得。守柱的女祭司问你为谁而来，你说：“来看看他们分的时候，有没有给摩鹿加留一份。”" }, { key = "baraka_crossed", when = [{ kind = "flag", flag = "c13_main_baraka_crossed", value = true }], text = "克卢瓦的老诗人说过，金子总往有人的地方流。你从索法拉一路北上又往西，箱里的金砝码叮当响了半年。进运河时你看见墙上包的铜，忍不住估起了成色，船上的人都笑你。神庙前的女祭司见你还盯着墙看，问你到底来做什么，你也笑：“克卢瓦的巴拉卡。我们那边的城散了，听说你们的城上万年没散，我来学一手。”" }, { key = "baraka_turned_back", when = [{ kind = "flag", flag = "c13_main_baraka_turned_back", value = true }], text = "上一回进雾，船上病倒了三个伙计，你讲了一夜故事让他们别怕，天亮时还是掉了头——故事退不了烧。把他们安顿上岸再回来，雾已经薄了。女祭司问你雾都快散了怎么才到，你拍拍铜箱：“上回我把人看得比城重。这回人都安顿好了，轮到城了。”" }, { key = "baraka_absent", when = [{ kind = "flag", flag = "c13_main_baraka_absent", value = true }], text = "你原本没打算来：一座谁也没见过的城，不如一条看得见的金河。可从阿曼来的船说，各国的舰队都往大西洋去了，你想，人多的地方总有买卖。城门口找不到你的名字，你就自己报：“巴拉卡·宾·萨利姆，克卢瓦人，不请自来，自带干粮。”守柱的女祭司差点笑出声。" }, { key = "free_crossed", when = [{ kind = "flag", flag = "c13_main_free_crossed", value = true }], text = "七级试炼走完的那一年，醒来的石板就一直压在你的舱里，摸上去微微发凉。船一进雾，石板上的字像有了呼吸，海草跟着它的节拍往两边退。运河通进来，三道墙一道比一道亮。女祭司问你为何而来，你想了很久，说起这些年在海上见过的人：“我替他们来听听，这里怎么判他们。”" }, { key = "free_turned_back", when = [{ kind = "flag", flag = "c13_main_free_turned_back", value = true }], text = "头一回你怕了：海草缠住了舵，罗经的针转个不停，水手们跪在甲板上祷告，你下令掉头。等你回过神，船已经漂在雾外，像什么都没发生过。这一回你把石板压在舵柄旁边，一步没退。女祭司问你怕不怕，你照实说：“上回我退了。这回我想知道，我退出去的那片海里到底有什么。”" }, { key = "free_absent", when = [{ kind = "flag", flag = "c13_main_free_absent", value = true }], text = "你走完赫尔墨斯的七级试炼，图的原是那几门法术，石板醒来以后就一直压在箱底。今年各国的船都往西去，你才想起它，跟着进了雾，又进了运河。进了外港，你跟着别人的船走，别人下锚你也下锚。守柱的女祭司问你来意，你只好说：“我也说不清。等你们都说完，我再决定。”" }]
+at = "atlantis_port"
+window = [[1583, 3, 1], [1583, 11, 30]]
+stage = "involve"
+news = "亚速尔的渔夫说，西南海上的雾这几个月退了一圈，挂着各国旗号的船一条接一条往里开，谁也不肯说去做什么。"
+cast = ["ismene", "silver_branch_woman"]
+default = { next = "failed", effects = [{ kind = "flag", flag = "c11_council_missed", value = true }], news = "往大西洋中央去的那些船陆续回到了安格拉，船上的人说那场会已经散了，城门口的名单到最后也没念完。" }
+
+[[tracks.chapters]]
+key = "keepsakes"
+art = "realm_atlantis_port"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "柱前的信物"
+text = "天刚擦黑，十王把捉来的牛牵到山铜柱前，在柱顶割开牛喉，血顺着柱上的刻字往下流。伊斯梅妮站在柱子另一侧，请每一位外来的客人把一件从家里带来的东西放上柱基，说出它的来历。她说律法只认看得见的东西：“空着手说的话，天一亮就散了。”轮到你了。"
+choices = [{ key = "speak", text = "讲出信物的来历", reply = "伊斯梅妮俯身看了很久，没有碰它，只在蜡板上记下几行。十王一个接一个往酒缸里投下血块，用金杯舀起酒来起誓。夜色压下来，四周的火一盏盏熄灭，有人往你肩上披了一件深蓝的长袍。", next = "testimony", effects = [], requires = [] }]
+variants = [{ key = "mio_keepsake", when = [{ kind = "flag", flag = "c13_main_mio_keepsake", value = true }], text = "你把桧扇放上柱基，没有展开。“土佐一条家的扇子。扇骨上写着一首歌，是学院那年七夕隔着白绢换来的。”伊斯梅妮问写的是什么，你摇摇头：“歌是两个人的，不能在柱子前面念。我只说一句——写歌的人如今在京都，我在海上，这把扇子替我们两头都记着。”" }, { key = "lieve_keepsake", when = [{ kind = "flag", flag = "c13_main_lieve_keepsake", value = true }], text = "你把父亲的账簿放上去，摊开在墨迹最密的那一页。“安特卫普一个兑换商的账。他记了一辈子，没有一笔糊涂——西班牙停付那年少了一半，也照样一笔笔记上。”伊斯梅妮问它值多少钱，你笑了：“不卖。账簿值钱，是因为总有人肯照着它把账还清。”" }, { key = "najma_keepsake", when = [{ kind = "flag", flag = "c13_main_najma_keepsake", value = true }], text = "你解下外曾祖父的铜星盘，盘面朝上放在柱基上。“尤尔法的伊本·马吉德用过它，他在诗里说，海是可以读的。”伊斯梅妮伸手想碰，又缩了回去。你把盘背翻过来给她看，上面刻着一行很小的字：“这是他留给领航人的话——手要稳，眼要比手更稳。”" }, { key = "lin_wandeng_keepsake", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_keepsake", value = true }], text = "你把天妃宫的红灯笼挂上柱旁的钩子，伊斯梅妮马上说：“今夜所有的火都要熄。”你的手一抖。“这盏灯是我娘在妈祖跟前求来的。她说灯一灭，人就找不着回家的路。”你盯着她看了半天，最后还是自己吹熄了它，“说好了，天一亮，你们得把火还我。”" }, { key = "ix_nikte_keepsake", when = [{ kind = "flag", flag = "c13_main_ix_nikte_keepsake", value = true }], text = "你把伊希切尔神庙的黄铁矿镜放上柱基，镜面映出柱上的血和字，有些发暗。“科苏梅尔的女人生孩子、看病、出远门，都要先照一照它。”伊斯梅妮问它照出了什么，你说：“神庙只剩石头了，镜子还在。它照的是谁还记得那座岛。”" }, { key = "noel_keepsake", when = [{ kind = "flag", flag = "c13_main_noel_keepsake", value = true }], text = "你从白外套上拆下骑士团的金星徽，放上柱基。“海峡骑士团的星。名册上七十七个名字，到我这里只剩一个人戴它。”你把老团长刻在堡门上的那句话也念了出来。伊斯梅妮听完，抬头看了看柱上的誓言，又看看你，像在比两边的字。" }, { key = "tariq_keepsake", when = [{ kind = "flag", flag = "c13_main_tariq_keepsake", value = true }], text = "你把祖母的钥匙放上去——铁打的。伊斯梅妮立刻皱起眉头，你不慌不忙，把它挪到柱基外的石阶上。“格拉纳达阿尔拜辛一扇门的钥匙。门早换了主人，锁说不定都没了，可我祖母到死都带着它。你们的律法要是讲道理，就该懂一把开不了门的钥匙有多重。”" }, { key = "kaicili_keepsake", when = [{ kind = "flag", flag = "c13_main_kaicili_keepsake", value = true }], text = "你把一枝特尔纳特的丁香放上柱基，花苞还红着，香气一下子压过了血腥。“我们岛上生了孩子，就种一棵丁香树。我那一棵还活着。”伊斯梅妮低头闻了闻。你温声说：“欧洲的王为这一枝打了几十年的仗。在你们这里，它只是一枝花——我想看看那是什么样子。”" }, { key = "baraka_keepsake", when = [{ kind = "flag", flag = "c13_main_baraka_keepsake", value = true }], text = "你把那枚克卢瓦苏丹的铜币放上去，小得几乎看不见。“我们的城最阔的时候，铸的就是这种钱。葡萄牙人来过以后，就不怎么铸了。”伊斯梅妮问它能买什么，你想了想：“从前能买一只鸡。现在嘛，能买一个故事——你要是不嫌贵，我讲给你听。”" }, { key = "free_keepsake", when = [{ kind = "flag", flag = "c13_main_free_keepsake", value = true }], text = "你把从家里带来的那件东西放上柱基。它不起眼，一路上被人问过好几回值不值钱。伊斯梅妮问它的来历，你讲了它怎么到你手上、跟着你过了哪几片海。她听完，在蜡板上记下一个名字——是你家乡的名字。" }]
+at = "atlantis_port"
+window = [[1583, 3, 1], [1583, 11, 30]]
+stage = "involve"
+news = "加那利群岛的水手说，海中那座城的人在一根发红的柱子前杀牛，血顺着柱上的字往下流，外来的人都得在柱前摆一件家里的东西。"
+cast = ["ismene", "silver_branch_woman"]
+default = { next = "failed", effects = [{ kind = "flag", flag = "c11_council_missed", value = true }], news = "加的斯的酒馆里说，大西洋上的客人已经各自回航。有的人进了城，连那根柱子都没走到跟前，就被雾送回了海上。" }
+
+[[tracks.chapters]]
+key = "testimony"
+art = "realm_atlantis_port"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "熄火之后"
+text = "火全熄了。十个人披着深蓝的长袍坐成一圈，谁也看不见谁的脸，只听得见声音。按柱上的律法，他们在黑暗里审人，也受人审；这一夜，被审的是外面的世界。圈外站着一个手持银枝的女人，枝上的白花在黑暗里微微发亮，她是七岛来的见证人，始终一言不发。一个苍老的声音对你说：讲一件你做过的事，让我们知道外面是什么样子。"
+choices = [{ key = "testify", text = "在黑暗里讲下去", reply = "黑暗里有人叹了口气，有人轻轻敲了一下椅背。没有人问你真假——伊斯梅妮后来告诉你，在熄了火的地方，假话是听得出来的。圈外那个女人手里的银枝上，白花好像亮了一点。", next = "stance", effects = [], requires = [] }]
+variants = [{ key = "c13_main_mio_ichijo_held", when = [{ kind = "flag", flag = "c13_main_mio_ichijo_held", value = true }], text = "你讲四万十川。人人都说一条家要在那条河上倒下，你的船队趁着涨潮逆流而上，截住了对岸的援兵。那一仗之后，中村的御所里还挂着一条家的旗。“我不是来夸功的，”你在黑暗里说，“潮是自己来的。我只是那天没让桨停下。”" }, { key = "c13_main_lieve_bianca_known", when = [{ kind = "flag", flag = "c13_main_lieve_bianca_known", value = true }], text = "你讲安特卫普一位只在夜里来兑钱的贵妇。她的金币成色好得出奇，汇票从不拒付，人却从不在白天出门。你查了二十多年，终于知道她替谁做事。“她叫比安卡·马雷，在热那亚替那群白天撑伞的人管钱，”你说，“她的人此刻就在外港。你们审外面的世界，别忘了，有的买家出得起任何价钱。”" }, { key = "c13_main_ix_nikte_saved_books", when = [{ kind = "flag", flag = "c13_main_ix_nikte_saved_books", value = true }], text = "你讲马尼。那年夏天，兰达修士的人在广场上堆起柴火，把抄本一本本扔进去。你带着几个人从后门搬出了能搬的，藏进独木舟，送到伊察人的湖上。“你们把律法刻在不会烂的山铜上，”你在黑暗里说，“我们的书是树皮纸做的，一点就着。可总还有人记得把它们背出来。”" }, { key = "c13_main_noel_origin_known", when = [{ kind = "flag", flag = "c13_main_noel_origin_known", value = true }], text = "你讲塔里法城堡的门口。三岁那年你被放在那里，老团长到死都没说你从哪里来——如今你知道了。你把知道的说了出来，一句一句，说得很平。黑暗里有人的椅子响了一下。坐在靠柱子那一侧的，是加德罗斯一系的老王，他过了很久才开口：“再说一遍，最后那一句。”" }, { key = "c13_main_tariq_broke_rule", when = [{ kind = "flag", flag = "c13_main_tariq_broke_rule", value = true }], text = "你讲的是一件没对任何人讲过的事。只劫货，不劫人——这条规矩你守了半辈子，有一回破了。那一夜船上多了一个不该在的人，你没有放他走。你把那条船的名字、那个人的名字都说了出来。“我不求你们原谅，”你对着看不见的十个人说，“我只是不想在你们面前，装成一个干净的人。”" }]
+at = "atlantis_port"
+window = [[1583, 3, 1], [1583, 11, 30]]
+stage = "involve"
+news = "里斯本的码头上传着一个说法：海中那座城的王一到夜里就熄掉所有的灯，坐在黑处听外来的人讲自己做过的事。"
+cast = ["ismene", "silver_branch_woman"]
+default = { next = "failed", effects = [{ kind = "flag", flag = "c11_council_missed", value = true }], news = "塞维利亚的老水手说，大西洋上的十个王已经在黑暗里审完了外面的世界，外来的客人里，有的到散会也没开口。" }
+
+[[tracks.chapters]]
+key = "stance"
+art = "realm_atlantis_port"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "深蓝的长袍"
+text = "黑暗里，圈中最苍老的那个声音问：浅泥和海草护了这座城上万年，如今外面的人来了——是让雾重新合上，是把航路打开，还是把钥匙交到一双守得住的手里？外港的船都在等这句话的回答：托马尔来的骑士，伊斯坦布尔来的舰队，白天也不收伞的那条船，还有两派彼此不说话的学者。轮到你了。"
+choices = [{ key = "state", text = "说出你对航路的主张", reply = "最后一个字落下，谁也没接话。圈子另一头有人压低嗓子跟邻座争了几句，又被谁一声咳嗽按了下去。天快亮的时候，伊斯梅妮把一块空白的金板抱到柱前，用布擦了三遍。", next = "verdict", effects = [], requires = [] }]
+variants = [{ key = "mio_stance_open", when = [{ kind = "flag", flag = "c13_main_mio_stance_open", value = true }], text = "你的手习惯地去摸扇子，才想起它还搁在柱基上。“我乳母那一族靠卖过所旗过日子，我知道一面旗能收多少钱，也知道海上的路一旦有人收钱，就有人饿死。”你朝黑暗里坐着的十个人说，“潮水从来不问船是谁家的。把航路打开吧——要审天下，先得让天下的人看得见你们。”" }, { key = "mio_stance_close", when = [{ kind = "flag", flag = "c13_main_mio_stance_close", value = true }], text = "你想起那智的渡海僧，乘着钉死的船往南去，没有一条回来。“有的海，就该是去了不回的海。”你说，“我在补陀落的船后面跟过一程，看见那片海通向哪里，回来以后谁也没告诉。你们的城也一样——让雾合上吧，留在歌里，比留在海图上安稳。”" }, { key = "mio_stance_hand", when = [{ kind = "flag", flag = "c13_main_mio_stance_hand", value = true }], text = "“这座城自己守不住，也不该谁都能来。”你的声音很稳，“我在京都见过朝廷怎样靠大名的钱过日子。一个没有兵的主人，最好替自己挑一位靠得住的护主，把规矩写在前头。挑错了会后悔，可什么都不挑，来的准是最坏的那一个。”" }, { key = "lieve_stance_open", when = [{ kind = "flag", flag = "c13_main_lieve_stance_open", value = true }], text = "你在黑暗里掰着指头算，一根一根，像小时候趴在父亲的兑换桌边上。“一座城上万年没跟人做过买卖，它的山铜拿到外面，能换一整支舰队。航路一开，价钱会跌，人会来抢，这些我都算过。”你停了一下，“可锁在库里的金子不生利息。开吧——只是开门的价钱，得先刻在金板上。”" }, { key = "lieve_stance_close", when = [{ kind = "flag", flag = "c13_main_lieve_stance_close", value = true }], text = "“我这辈子什么都能估价，”你说，“可安特卫普被劫的那三天，我看着人把一辈子的东西扛走，账簿上一行也记不下来。”你攥了攥空着的手，“有的东西一旦上了市，就再也赎不回来。这座城算一件。把雾合上吧，这笔账我宁愿永远不做。”" }, { key = "lieve_stance_hand", when = [{ kind = "flag", flag = "c13_main_lieve_stance_hand", value = true }], text = "“放贷之前，先看借钱的人有没有抵押。”你的口气像在交易所里，“你们守不住航路，又不愿谁都来，那就挑一个债主——挑那个还得起、又怕赖账的。外港那几家的家底我替你们算过，有一家千万别挑：那条船上的人从不在太阳底下露脸，账上记的全是死人的名字。”" }, { key = "najma_stance_open", when = [{ kind = "flag", flag = "c13_main_najma_stance_open", value = true }], text = "“外曾祖父把航路写进诗里，从来不是为了藏。”你说，“他是怕后来的人忘了。领航人的规矩是：认得的路，要教给下一个人。”你在黑暗里仰起头，像在找一颗看不见的星，“把航路打开吧。只求一件事：让来的船跟着星走，别跟着谁的通行证走。”" }, { key = "najma_stance_close", when = [{ kind = "flag", flag = "c13_main_najma_stance_close", value = true }], text = "“外曾祖父的星路，是他写给自家孩子的。”你说得很慢，“他要是想让天下人都知道，就会写进书里，不会藏在诗里。”你想起霍尔木兹的葡萄牙人卖的通行证，“路一开，就会有人站在路口收钱。让雾合上吧。星还在天上，懂的人自然会读。”" }, { key = "najma_stance_hand", when = [{ kind = "flag", flag = "c13_main_najma_stance_hand", value = true }], text = "“一条船只能有一个领航人，舵在两个人手里，船就要撞礁。”你说，“这座城也一样，它要一个懂得看星、也懂得闭嘴的人替它掌舵。外港那几家里谁是这样的人，你们比我清楚。我只提醒一句：星高差一点，船就偏进别人的海里——挑的时候，量准些。”" }, { key = "lin_wandeng_stance_open", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_stance_open", value = true }], text = "“我这辈子最恨一个字：禁。”你在黑暗里说，嗓门有点大，“朝廷禁海禁了几十年，禁出来的是走私、是海贼、是被砍了头的老船主。你们要是把雾合上，就是又一道海禁。”你想起那盏熄了的灯笼，“开吧。海是大家的，谁都能来，谁都能走，这才叫自在。”" }, { key = "lin_wandeng_stance_close", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_stance_close", value = true }], text = "你自己都没想到会说出口：“合上吧。”黑暗里有人轻轻笑了一声，你瞪不着他，只好接着说，“月港开海那年，我以为好日子来了。结果呢？引税要钱，水饷要钱，陆饷也要钱，最后发财的是收钱的人。”你叹了口气，“你们这里还没人收钱，趁早关门，别学我们。”" }, { key = "lin_wandeng_stance_hand", when = [{ kind = "flag", flag = "c13_main_lin_wandeng_stance_hand", value = true }], text = "“我爹说过，招安不丢人，丢人的是找错了人招。”你嘻嘻一笑，又正经起来，“这城就像一条没主的好船，放着不管，迟早被人抢走。不如自己挑个靠山，把价钱谈好，把规矩写死。挑谁我不管——只别挑那个说话最好听的，说话好听的最会赖账。”" }, { key = "ix_nikte_stance_open", when = [{ kind = "flag", flag = "c13_main_ix_nikte_stance_open", value = true }], text = "“我见过一片海被人‘找到’是什么样子。”你的声音发紧，“先来的是船，然后是十字架，然后是火。”你停了很久，“可关起门来也躲不过，我们的城就是关着门被一座座拿下的。打开吧，趁你们还有墙、有船、有自己的律法，让外面的人来的时候，先学会敲门。”" }, { key = "ix_nikte_stance_close", when = [{ kind = "flag", flag = "c13_main_ix_nikte_stance_close", value = true }], text = "“合上。”你几乎没等那个声音问完，“在尤卡坦，我们把孩子和书藏进湖上的城，才保住了一点东西。你们有雾，有浅泥，有不说话的海草，这是我们做梦都想要的。”你攥紧了拳头，“别把它交给任何人。他们一来，你们的神庙就会只剩石头。”" }, { key = "ix_nikte_stance_hand", when = [{ kind = "flag", flag = "c13_main_ix_nikte_stance_hand", value = true }], text = "“一座没有兵的城守不住自己的门，就得找人庇护。”你说得很慢，像在镇子的官司上陈词，“我替玛雅的镇子打过官司，用他们的律法挡过他们的刀。你们也可以：挑一个肯立契约的，把条件一条条刻在柱子上。刀是会变的，刻下的字留得久一些。”" }, { key = "noel_stance_open", when = [{ kind = "flag", flag = "c13_main_noel_stance_open", value = true }], text = "“查理皇帝的格言是‘更远之处’。”你摸了摸手腕——剑留在船上，剑柄的红缎带解下来系在了这里，“老团长听说以后，说柱子已经拆了，一个人往西走，死在科尔武的石像底下。他想看的就是你们。”你的声音冷下来，“我不想替他守一道早就拆掉的门。打开吧，让下一个往西走的人，能活着走到这里。”" }, { key = "noel_stance_close", when = [{ kind = "flag", flag = "c13_main_noel_stance_close", value = true }], text = "“此链非为锁汝，乃为锁彼。”你把堡门上的那句话又念了一遍，“我到今天才懂。骑士团守海峡，从来不为自己，为的是不让那些不该过去的东西过去。”你朝外港的方向偏了偏头，“那里停着张黑伞的船。把雾合上吧，海峡我替你们守。”" }, { key = "noel_stance_hand", when = [{ kind = "flag", flag = "c13_main_noel_stance_hand", value = true }], text = "“骑士的誓言要有人见证，守城要有人领头。”你说，“这座城需要一个肯立誓的人，把它放进誓言里，别放进账本里。”你顿了顿，嘴还是那么毒，“当然，外面那几家没一个配得上。真要挑，就挑那个至少还记得什么叫守信的——就算会背誓，起码还知道羞。”" }, { key = "tariq_stance_open", when = [{ kind = "flag", flag = "c13_main_tariq_stance_open", value = true }], text = "“我生在格拉纳达，长在阿尔及尔，两岸的人都说我是对岸的。”你笑了一下，“我这辈子就在两岸中间来回跑。门关着，被卖的人回不了家；门开着，至少还赎得回来。”你把手按在胸口那根空了的绳子上，“打开吧，我替你们看着。谁要是往这条水路上运人去卖，我头一个去截。”" }, { key = "tariq_stance_close", when = [{ kind = "flag", flag = "c13_main_tariq_stance_close", value = true }], text = "“把雾合上。”你说，“我在阿尔及尔卖人的集市边上长大，知道一个新地方被人找到以后会怎样：先是买卖，然后是买人。”你压低了声音，“你们这里的人不会说外面的话，不懂外面的价钱，头一批被卖的就是你们。别开这道门。”" }, { key = "tariq_stance_hand", when = [{ kind = "flag", flag = "c13_main_tariq_stance_hand", value = true }], text = "“海上没人管的地方，最后都归最狠的那一个。”你耸耸肩，“我见过。萨拉赫·雷斯死后那几个月，阿尔及尔换了好几个主人，每换一个，就有一批人被卖掉。”你看着黑暗，“与其等最狠的来抢，不如你们先挑一个讲规矩的——哪怕他的规矩跟我的不一样。”" }, { key = "kaicili_stance_open", when = [{ kind = "flag", flag = "c13_main_kaicili_stance_open", value = true }], text = "“我们的丁香有好些年只许卖给一家，”你温和地说，“葡萄牙人定价，我们收钱，后来连收钱的人都被请进了要塞。”你轻轻敲着椅子扶手，像在棋盘上落子，“关着门的东西，迟早会被人硬撬开。不如你们自己开，自己定价——开门的人，才有资格定规矩。”" }, { key = "kaicili_stance_close", when = [{ kind = "flag", flag = "c13_main_kaicili_stance_close", value = true }], text = "“我父亲被请进别人的要塞吃饭，卫士留在门外。”你的声音一直很轻，“他没再出来。”黑暗里没人说话。“门一开，来的人都会说自己是来做买卖的。”你说，“我宁愿你们的城在雾后面守着，像我们围那座堡一样，不强攻，也不开门。合上吧。”" }, { key = "kaicili_stance_hand", when = [{ kind = "flag", flag = "c13_main_kaicili_stance_hand", value = true }], text = "“四座山的王谁也压不住谁，所以我们的岛一直被外人挑拨。”你说，“一座城最怕的，倒不是挑错了人，是谁也不挑，让外面那几家自己去抢。挑一家吧，跟它下一盘长棋：让它守门，棋盘握在你们手里。只是——别挑那个想要你们的血的。”" }, { key = "baraka_stance_open", when = [{ kind = "flag", flag = "c13_main_baraka_stance_open", value = true }], text = "“我这辈子都在把散了的城串起来，”你说，“克卢瓦、蒙巴萨、马林迪，说的话不一样，收的税也不一样，葡萄牙人一来，就一座座倒下。”你笑了笑，笑声很短，“城跟城连起来，才活得久。开航路吧，让你们的山铜跟我们的金子走同一条路——我帮你们砍价。”" }, { key = "baraka_stance_close", when = [{ kind = "flag", flag = "c13_main_baraka_stance_close", value = true }], text = "“葡萄牙人写了我们的编年史，印进里斯本的书里，我们自己的城倒成了别人故事里的一章。”你从怀里摸出一张旧纸，又收了回去，“你们的城还没被谁写过。合上吧——让你们的来历留在你们自己的金板上，别让外面的人替你们写。”" }, { key = "baraka_stance_hand", when = [{ kind = "flag", flag = "c13_main_baraka_stance_hand", value = true }], text = "“我在开罗念书那几年，先生说过，没有主人的井，总是最先被弄脏的那一口。”你摊开手，“这城就是一口好井。挑一个人守着吧，跟他把用水的规矩讲清楚：一桶水换多少，谁先打水。剩下的事我在行，讨价还价我替你们去。”" }, { key = "free_stance_open", when = [{ kind = "flag", flag = "c13_main_free_stance_open", value = true }], text = "“这些年我在海上见过的港口，一个比一个不一样，可都是靠船来船往才活着的。”你说，“把航路打开吧。来的人会带来坏东西，也会带来书、种子和新的歌。你们的城等了上万年，总不能一直只听自己说话。”" }, { key = "free_stance_close", when = [{ kind = "flag", flag = "c13_main_free_stance_close", value = true }], text = "“我在好些港口听老人叫它们的旧名，年轻人已经听不懂了。”你说，“新画的海图上，一个原来的名字都没有。”你停了停，“合上吧。这世上总该留一片海，画不进任何人的海图。”" }, { key = "free_stance_hand", when = [{ kind = "flag", flag = "c13_main_free_stance_hand", value = true }], text = "“我一个外人，替你们挑不了主人。”你说，“可我知道一条船没有船长会怎样：人人都想掌舵，最后谁也到不了岸。挑一个吧，挑那个肯当着你们起誓、起了誓又真照着做的。挑错了，往后每一年都会有人记得是谁挑的。”" }]
+at = "atlantis_port"
+window = [[1583, 3, 1], [1583, 11, 30]]
+stage = "involve"
+news = "安格拉的领航人说，那座海中之城的王在挨个问外来的人：雾该合上，还是航路该打开。各国都派了人去说话，吵得比交易所还凶。"
+cast = ["ismene", "silver_branch_woman"]
+default = { next = "failed", effects = [{ kind = "flag", flag = "c11_council_missed", value = true }], news = "丰沙尔的船老大说，西边海上那座城的火早已重新点上。天亮前没把话说出口的客人，往后再没机会说。" }
+
+[[tracks.chapters]]
+key = "verdict"
+art = "realm_atlantis_port"  # 插画 key（art/lore.ts；按当时的时辰与天气挑版本）
+title = "金板上的判词"
+text = "东边发白的时候，火重新点了起来。十王脱下深蓝的长袍，叠好了放在金板旁边。最老的那位王说，祖先的故事停在宙斯召集众神、正要开口的地方，城里没有人知道他说了什么；这一夜外面的世界该说的都说了，判词的第一行，该由一个外面来的人写。伊斯梅妮把刻刀递到你手里。带银枝的女人站在门边，像是早就知道你会写什么。"
+choices = [{ key = "close", text = "合上黑暗之海", reply = "你写下：雾合上。十王挨个在金板上按了手印。外港的船陆续起锚，各国的人骂骂咧咧，海草在船尾重新铺开。伊斯梅妮送你到运河口，说往后的雾会一年比一年厚，外面的人会慢慢忘了这条水路。“七岛不归我们管，”她说，“那边的人还肯不肯见你，要看她们。”", next = "done", effects = [{ kind = "flag", flag = "atlantis_verdict_close", value = true }, { kind = "flag", flag = "atlantis_verdict_open", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_hermetic", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_christ", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_ottoman", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_dragon", value = false }], requires = [] }, { key = "open", text = "打开亚特兰蒂斯的航路", reply = "你写下：航路打开。判词刻上金板的那一刻，运河口拦水的绳网就沉进了水里。消息传出去以后，外港很快挤满了各国的商船，山铜在里斯本的市场上露了面，价钱一天三变。伊斯梅妮站在码头上看着，说：“往后谁都能来了。律法，得再从头读一遍。”", next = "done", effects = [{ kind = "flag", flag = "atlantis_verdict_close", value = false }, { kind = "flag", flag = "atlantis_verdict_open", value = true }, { kind = "flag", flag = "atlantis_verdict_hand_hermetic", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_christ", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_ottoman", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_dragon", value = false }, { kind = "open_realm", realm = "atlantis" }], requires = [] }, { key = "hand_hermetic", text = "把航路交给赫尔墨斯圈子", reply = "你写下：交给赫尔墨斯圈子。圈子里守秘的那一派当场脸色发白，公开的那一派已经在商量把律文印成书。十王把金板的抄本交到他们手里，附了一句话：书可以印，柱子不许碰。那天夜里，他们的船上灯一直亮着，两派的人吵到半夜，隔着水都听得见。", next = "done", effects = [{ kind = "flag", flag = "atlantis_verdict_close", value = false }, { kind = "flag", flag = "atlantis_verdict_open", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_hermetic", value = true }, { kind = "flag", flag = "atlantis_verdict_hand_christ", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_ottoman", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_dragon", value = false }], requires = [] }, { key = "hand_christ", text = "把航路交给基督骑士团", reply = "你写下：交给基督骑士团。骑士团的人捧着金板的抄本跪了很久，说要送回托马尔的修院。可他们自己也分成了两拨：一拨听腓力国王的，一拨还认唐·安东尼奥为王。葡萄牙的港口从此待你客气了许多，只是这份情该记在哪一位国王的账上，谁也说不清。", next = "done", effects = [{ kind = "flag", flag = "atlantis_verdict_close", value = false }, { kind = "flag", flag = "atlantis_verdict_open", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_hermetic", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_christ", value = true }, { kind = "flag", flag = "atlantis_verdict_hand_ottoman", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_dragon", value = false }, { kind = "reputation", faction = "portugal", value = 10 }], requires = [] }, { key = "hand_ottoman", text = "把航路交给奥斯曼", reply = "你写下：交给奥斯曼。舰队的旗舰当天就升起新月旗，开进了内港。十王把判词另抄了一份，装进一只银匣，要送往伊斯坦布尔，呈给穆拉德苏丹。从此奥斯曼的港口见了你的船都格外客气；外港的葡萄牙人和西班牙人却连夜起锚，一句话也没留。", next = "done", effects = [{ kind = "flag", flag = "atlantis_verdict_close", value = false }, { kind = "flag", flag = "atlantis_verdict_open", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_hermetic", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_christ", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_ottoman", value = true }, { kind = "flag", flag = "atlantis_verdict_hand_dragon", value = false }, { kind = "reputation", faction = "ottoman", value = 10 }], requires = [] }, { key = "hand_dragon", text = "把航路交给龙骑士团", reply = "你写下：交给龙骑士团。那一刻谁也没出声。正午时分，外港那条船上的人头一回收起了黑伞，站在太阳底下眯着眼睛，像在尝阳光的味道。伊斯梅妮转过身去，没有送你。带银枝的女人一言不发地走出门去，枝上的白花全都合上了。", next = "done", effects = [{ kind = "flag", flag = "atlantis_verdict_close", value = false }, { kind = "flag", flag = "atlantis_verdict_open", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_hermetic", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_christ", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_ottoman", value = false }, { kind = "flag", flag = "atlantis_verdict_hand_dragon", value = true }], requires = [] }]
+news = "海上传来消息：大西洋中央那座城的王在天亮时写下判词，刻在一块金板上。至于判了什么，各国的使者回来说的都不一样。"
+at = "atlantis_port"
+window = [[1583, 3, 1], [1583, 11, 30]]
+stage = "involve"
+cast = ["ismene", "silver_branch_woman"]
+default = { next = "failed", effects = [{ kind = "flag", flag = "c11_council_missed", value = true }], news = "入秋，亚速尔西南的雾合拢了。听说那座城的金板到最后还空着一行，外来的客人谁也没在上面落刀。" }

@@ -1,0 +1,138 @@
+# 请托：道堂的锅（request_abd_al_wahhab_sharani）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：沙拉尼（abd_al_wahhab_sharani，1493-01-01 生，1565 卒，男）；开罗城北道堂的苏菲长老与学者。cast：cast/historical_02_islamic.toml。
+# 类型：送货（deliver）。三章：offer（长老的信，报价）、deliver（骆驼与麻袋，交货）、thanks（锅一天也没停，收尾）。没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信／代理人）。auto=true，offer 在亚历山大港（alexandria）；出面的是长老的弟子（不立 cast，不写名字），信是长老口述的。
+#       窗口 1557-03-01 至 1564-12-31；offer 写 family=c13_offer_alexandria、冷却 20 天；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=90，超时走 failed，好感 -3，旗标 _late，来信一封；thanks 章 objective wait 30 天，deadline_days=180，超时走 done 并设 _partial，来信一封。
+# 依据·史实：沙拉尼（1493—1565）在开罗城北有道堂，弟子、寡妇与穷人在那里吃饭；他爱骂贪官，书里点过商人的名（口气照史实，细节原创）；
+#           TERRA16 §12.9 写他是巴拉卡学院期的先生。尼罗河水小、粮价上涨是常有的事，不点具体年份。
+# 依据·原创：长老口述的信、三峰骆驼、最小的那个弟子、码头上吐的唾沫、磨亮的念珠、两袋分给穷人的谷物。
+# 秘密：cast 无 secret；“有人说他的书里有异端的话”是他的心病，本条不碰、不写。不写借书、抄书（C7 萨利赫），不写爱资哈尔学者的争吵。
+# 读的旗标：c13_main_baraka（offer 的 v1_baraka 变体，信上多一句）。thanks 的变体读本条自己的 _shared 与 _walked。
+# 设的旗标：c13_request_abd_al_wahhab_sharani_accepted（offer 两条接法）、_declined（offer 回绝）、_walked（deliver 送到运河码头）、_shared（deliver 分两袋给穷人）、
+#           _late（deliver 超时）、_beads_left（thanks 留给道堂）、_done（thanks 两条收尾）、_partial（thanks 超时）。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：不付现金、不付货款（清贫档，梗概写明：沙拉尼的人一文不付）。好感合计最多 2+5+8=15；名声 +1；苏菲念珠（唯一奖励，只在 thanks 的 accept 给）；回忆 mem-request_abd_al_wahhab_sharani-thanks。
+#       deliver 的 40 袋谷物是交货时从船上扣走的，不补偿，这是清贫档的代价。
+# 依赖：港口 alexandria（ports_north_africa.toml）；货物 grain（goods/01_staples_raw.toml）；物品 sufi_beads（items/items_focus_01.toml）；人物 abd_al_wahhab_sharani。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_abd_al_wahhab_sharani-thanks「磨亮的念珠」：一串深色的木珠被手磨出油光，弟子把它放在你摊开的掌心，码头的风正吹过。
+
+[[tracks]]
+key = "request_abd_al_wahhab_sharani"
+name = "道堂的锅"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["abd_al_wahhab_sharani"]
+
+# 一、长老的信：亚历山大港的码头，弟子捧着木碗来。
+[[tracks.chapters]]
+key = "offer"
+title = "长老的信"
+text = "码头上有个瘦高的弟子，捧着一只木碗，碗里压着一封折了四道的信。他不先开口，把信递过来，站在一边等我读完。信是长老口述、弟子代笔的，字写得又大又斜：“孩子，今年尼罗河水小，粮价翻了一倍，道堂的锅快见底了。亚历山大港的粮商，有几个被我在书里点过名，没一个肯卖给我们。要四十袋谷物，送到这个码头。不收你的钱——也没有钱给你。”弟子在一旁补了一句：“长老说，你要是不来，他就亲自到码头骂人。”"
+at = "alexandria"
+mood = "tender"
+when = [{ kind = "date", from = [1557, 3, 1], to = [1564, 12, 31] }, { kind = "age", ge = 17 }]
+deadline = [1564, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_alexandria"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_baraka"
+when = [{ kind = "flag", flag = "c13_main_baraka" }]
+text = "码头上有个瘦高的弟子，捧着一只木碗，碗里压着一封折了四道的信。信是长老口述、弟子代笔的：“孩子，今年尼罗河水小，粮价翻了一倍，道堂的锅快见底了。亚历山大港的粮商，有几个被我在书里点过名，没一个肯卖给我们。要四十袋谷物，送到这个码头。不收你的钱——也没有钱给你。”信的末尾多出一行，字迹比前面小了一圈：“克卢瓦来的那个讲故事比背书好的孩子，若是你，先生记得你。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：四十袋谷物，送到码头。"
+next = "deliver"
+reply = "弟子把木碗抱进怀里，鞠了一躬：“长老说，送粮的人，道堂第一碗豆子先盛给他。你要是去不了开罗，就记在账上。”"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 2 }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_merchants"
+text = "接下，但问：粮商为什么不卖？"
+next = "deliver"
+reply = "弟子红了脸：“长老在书里写他们囤粮，写得很重。”他想了想，又说：“可长老说，他没写错。”"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 2 }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟腾不出舱位。"
+next = "failed"
+reply = "弟子把信收好，说他再去码头那头问问。他走得很快，怀里的木碗一路没放下。"
+effects = [{ kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_declined" }]
+
+# 二、骆驼与麻袋：交货。三个选项都交出四十袋，区别在怎么交。
+[[tracks.chapters]]
+key = "deliver"
+title = "骆驼与麻袋"
+text = "弟子们牵着三峰骆驼来了，一袋一袋往骆驼背上码。麻袋是粗麻织的，袋口用草绳扎死，一袋差不多和最小的那个弟子一样沉。码头上的粮商远远看着，有一个朝这边吐了口唾沫，吐在石缝里。最小的那个弟子扛不动，脸憋得通红也不肯放手。领头的大个子弟子喘着气说：“长老说，一袋都不能少，少一袋，他骂到底。”"
+speaker = "captain"
+mood = "tender"
+at = "alexandria"
+when = [{ kind = "alive", person = "abd_al_wahhab_sharani", value = true }]
+objectives = [{ kind = "goods", good = "grain", qty = 40, at = "alexandria", text = "把谷物（40）运到亚历山大港" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = -3 }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_late" }, { kind = "letter", person = "abd_al_wahhab_sharani", text = "沙拉尼的弟子来信：粮从别处凑到了。长老说，孩子，下回来，锅还在。" }] }
+[[tracks.chapters.choices]]
+key = "hand_all"
+text = "全部交给弟子们，看他们装好就走。"
+next = "thanks"
+reply = "他们装完最后一袋，排成一排向你行礼。骆驼走远了，最小的那个还回头挥手，手里攥着空的麻绳。"
+news = "亚历山大港码头上，一条外国船卸下几十袋粮，一队苏菲的弟子赶着骆驼来装，粮商们远远地看着。"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "walk_canal"
+text = "帮他们装货，一直送到城门外的运河码头。"
+next = "thanks"
+reply = "你跟着骆驼走到运河码头，看着麻袋上了船。最小的弟子说：“长老一定会把你写进书里。写成什么样，我就不知道了。”"
+news = "亚历山大港的人说，苏菲的弟子牵着三峰骆驼拉粮，一个外国船长一路跟到了城门外的运河码头。"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 5 }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_walked" }]
+
+[[tracks.chapters.choices]]
+key = "share_poor"
+text = "交货时请弟子们匀出两袋，给码头边的穷人。"
+next = "thanks"
+reply = "弟子们商量了一下，当场解开两袋，分给码头边排队的人。粮商们看着，不再吐唾沫了。"
+news = "亚历山大港码头上，苏菲的弟子卸粮时当场解开两袋，分给排队的穷人，旁边的粮商没人吭声。"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 3 }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_shared" }]
+
+# 三、锅一天也没停：一个月后，弟子又在码头等你，带来长老的信与念珠。
+[[tracks.chapters]]
+key = "thanks"
+title = "锅一天也没停"
+text = "一个月后，最小的那个弟子又在码头等你。他手里托着长老的信，另一只手里是一串用旧棉线穿起来的念珠，珠子一颗颗磨得发亮，线是新换的，结打得很死，像是怕路上散了。信上说：“我不是自夸，这一季开罗城北，谁家的锅也没有我这里喂饱的人多。你的四十袋，一粒也没进粮商的仓。”弟子说，长老还在信尾写了一句，却不许他念出来。"
+mood = "tender"
+at = "alexandria"
+when = [{ kind = "alive", person = "abd_al_wahhab_sharani", value = true }]
+objectives = [{ kind = "wait", days = 30 }]
+deadline_days = 180
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_partial" }, { kind = "letter", person = "abd_al_wahhab_sharani", text = "沙拉尼的信：孩子，你的船来得少，念珠我先替你收着。" }] }
+[[tracks.chapters.variants]]
+key = "v1_shared"
+when = [{ kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_shared" }]
+text = "一个月后，最小的那个弟子又在码头等你。他手里托着长老的信，另一只手里是一串用旧棉线穿起来的念珠，珠子一颗颗磨得发亮，线是新换的，结打得很死，像是怕路上散了。信上说：“这一季开罗城北，谁家的锅也没有我这里喂饱的人多。你的四十袋，一粒也没进粮商的仓。”码头边分出去的那两袋，信上单独记了一行：排队的人里头，有个孩子先接到了第一把。"
+
+[[tracks.chapters.variants]]
+key = "v2_walked"
+when = [{ kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_walked" }]
+text = "一个月后，最小的那个弟子又在码头等你。他手里托着长老的信，另一只手里是一串用旧棉线穿起来的念珠，珠子一颗颗磨得发亮，线是新换的，结打得很死，像是怕路上散了。信上说：“这一季开罗城北，谁家的锅也没有我这里喂饱的人多。你的四十袋，一粒也没进粮商的仓。”信尾还有一行小字，是另一个弟子的笔迹：运河码头那天，有人一直站到最后一袋上了船。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下念珠。"
+next = "done"
+reply = "弟子把念珠放在你掌心，说是长老年轻时用的，珠子磨得发亮。“长老说，数一颗，记一个吃饱的人。”"
+news = "亚历山大港的人说，开罗城北那座道堂今年粮荒也没停锅，粮是一条外国船送来的。"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 8 }, { kind = "fame", value = 1 }, { kind = "item", item = "sufi_beads", qty = 1 }, { kind = "memory", memory = "mem-request_abd_al_wahhab_sharani-thanks", title = "磨亮的念珠" }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_done" }]
+
+[[tracks.chapters.choices]]
+key = "pass_on"
+text = "请弟子把念珠留给道堂里更需要的人。"
+next = "done"
+reply = "弟子愣了一下，把念珠收进怀里：“道堂里要的是豆子，不要珠子。”他想了想又笑了，“长老会骂我没送到。骂完，他会高兴的。”"
+news = "亚历山大港的人说，开罗城北道堂的锅今年没停，船长连长老送的念珠都留给了道堂。"
+effects = [{ kind = "affinity", person = "abd_al_wahhab_sharani", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_done" }, { kind = "flag", flag = "c13_request_abd_al_wahhab_sharani_beads_left" }]

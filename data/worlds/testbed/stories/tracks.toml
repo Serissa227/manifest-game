@@ -1,0 +1,222 @@
+# 原创多轨道样例；完整交货目标与相对限期在 E41 扩充，此处用绝对窗口验证缺省分支。
+
+[[tracks]]
+key = "request_letters"
+name = "港口的书信"
+kind = "request"
+start = "ask"
+auto = false
+cast = ["mentor"]
+[[tracks.chapters]]
+key = "ask"
+title = "一件小小的请托"
+text = "对方想请你帮忙捎个口信，也愿意听听你的安排。"
+at = "test_west"
+window = [[1558, 1, 1], [1558, 1, 2]]
+[tracks.chapters.default]
+next = "failed"
+news = "这件请托没能及时接下。"
+[[tracks.chapters.choices]]
+key = "accept"
+text = "我愿意帮忙。"
+next = "return"
+[[tracks.chapters.choices]]
+key = "decline"
+text = "我暂时抽不开身。"
+next = "failed"
+[[tracks.chapters]]
+key = "return"
+title = "带回消息"
+text = "对方等着与你再次碰面。"
+at = "test_west"
+window = [[1558, 1, 3], [1558, 1, 4]]
+[tracks.chapters.default]
+next = "failed"
+news = "约好的碰面日期过去了。"
+[[tracks.chapters.choices]]
+key = "finish"
+text = "事情已经办妥。"
+next = "done"
+effects = [{ kind = "affinity", person = "mentor", value = 5 }]
+news = "港口的书信有了妥当的着落。"
+
+[[tracks]]
+key = "request_charts"
+name = "失而复得的海图"
+kind = "request"
+start = "ask"
+auto = false
+cast = ["sailor"]
+[[tracks.chapters]]
+key = "ask"
+title = "一件小小的请托"
+text = "对方想请你帮忙捎个口信，也愿意听听你的安排。"
+at = "test_west"
+window = [[1558, 1, 1], [1558, 1, 2]]
+[tracks.chapters.default]
+next = "failed"
+news = "这件请托没能及时接下。"
+[[tracks.chapters.choices]]
+key = "accept"
+text = "我愿意帮忙。"
+next = "return"
+[[tracks.chapters.choices]]
+key = "decline"
+text = "我暂时抽不开身。"
+next = "failed"
+[[tracks.chapters]]
+key = "return"
+title = "带回消息"
+text = "对方等着与你再次碰面。"
+at = "test_west"
+window = [[1558, 1, 3], [1558, 1, 4]]
+[tracks.chapters.default]
+next = "failed"
+news = "约好的碰面日期过去了。"
+[[tracks.chapters.choices]]
+key = "finish"
+text = "事情已经办妥。"
+next = "done"
+effects = [{ kind = "affinity", person = "sailor", value = 5 }]
+news = "失而复得的海图有了妥当的着落。"
+
+[[tracks]]
+key = "side_letters"
+name = "两人的航程"
+kind = "history"
+start = "meet"
+cast = ["classmate_a", "classmate_b"]
+
+[[tracks.chapters]]
+key = "meet"
+title = "码头相遇"
+text = "小岚与小汐交换了近来的消息，各自说起未来的打算。"
+stage = "witness"
+window = [[1558, 1, 1], [1558, 1, 1]]
+at = "test_west"
+venue = "tavern"
+speaker = "classmate_a"
+mood = "tender"
+when = [{ kind = "not_bond_s", person = "classmate_a" }, { kind = "not_bond_s", person = "classmate_b" }]
+news = "小岚与小汐：码头相遇。"
+[tracks.chapters.default]
+next = "care"
+effects = [{ kind = "tie", a = "classmate_a", b = "classmate_b", relation = "friends" }]
+
+[[tracks.chapters]]
+key = "care"
+title = "彼此在意"
+text = "小岚与小汐交换了近来的消息，各自说起未来的打算。"
+stage = "involve"
+window = [[1558, 1, 2], [1558, 1, 2]]
+at = "test_west"
+venue = "tavern"
+speaker = "classmate_a"
+mood = "tender"
+when = [{ kind = "not_bond_s", person = "classmate_a" }, { kind = "not_bond_s", person = "classmate_b" }]
+news = "小岚与小汐：彼此在意。"
+[tracks.chapters.default]
+next = "confess"
+effects = [{ kind = "tie", a = "classmate_a", b = "classmate_b", relation = "crush" }]
+
+[[tracks.chapters.choices]]
+key = "support"
+text = "替她们捎个口信。"
+next = "confess"
+effects = [{ kind = "tie", a = "classmate_a", b = "classmate_b", relation = "crush" }]
+news = "你帮两人传达了彼此的关心。"
+[[tracks.chapters.choices]]
+key = "friendship"
+text = "听她们商量各自远行的计划。"
+next = "done"
+effects = [{ kind = "tie", a = "classmate_a", b = "classmate_b", relation = "friends" }]
+news = "两人暂作朋友，带着祝福各自启程。"
+
+[[tracks.chapters]]
+key = "confess"
+title = "互诉心意"
+text = "小岚与小汐交换了近来的消息，各自说起未来的打算。"
+stage = "rumor"
+window = [[1558, 1, 3], [1558, 1, 3]]
+at = "test_west"
+venue = "tavern"
+speaker = "classmate_a"
+mood = "tender"
+when = [{ kind = "not_bond_s", person = "classmate_a" }, { kind = "not_bond_s", person = "classmate_b" }]
+news = "小岚与小汐：互诉心意。"
+[tracks.chapters.default]
+next = "promise"
+effects = [{ kind = "tie", a = "classmate_a", b = "classmate_b", relation = "lovers" }]
+
+[[tracks.chapters]]
+key = "promise"
+title = "共同启程"
+text = "小岚与小汐交换了近来的消息，各自说起未来的打算。"
+stage = "witness"
+window = [[1558, 1, 4], [1558, 1, 4]]
+at = "test_west"
+venue = "tavern"
+speaker = "classmate_a"
+mood = "tender"
+when = [{ kind = "not_bond_s", person = "classmate_a" }, { kind = "not_bond_s", person = "classmate_b" }]
+news = "小岚与小汐：共同启程。"
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "tie", a = "classmate_a", b = "classmate_b", relation = "partners" }]
+
+# E41：实物交付只在回应时扣除；逾期保留明确失败出口。
+[[tracks]]
+key = "request_grain"
+name = "三袋粮食"
+kind = "request"
+start = "delivery"
+auto = false
+cast = ["mentor"]
+[[tracks.chapters]]
+key = "delivery"
+title = "码头的托付"
+text = "导师希望你在十天之内带来三袋粮食。"
+at = "test_west"
+deadline_days = 10
+objectives = [{ kind = "goods", good = "grain", qty = 3, at = "test_west", text = "送三袋粮食到西港" }]
+[tracks.chapters.timeout]
+next = "failed"
+[[tracks.chapters.choices]]
+key = "deliver"
+text = "如数交付。"
+reply = "粮食妥善收下，导师记住了这次帮助。"
+next = "done"
+effects = [{ kind = "affinity", person = "mentor", value = 5 }]
+[[tracks.chapters.choices]]
+key = "keep"
+text = "交付以后不留姓名。"
+next = "done"
+effects = [{ kind = "memory", memory = "quiet_help", title = "码头上的善意" }]
+
+# E41：携带与交出物品不同；等待目标从进入本章的日期起算。
+[[tracks]]
+key = "request_keepsake"
+name = "约好的信物"
+kind = "request"
+start = "return"
+auto = false
+cast = ["classmate_a"]
+[[tracks.chapters]]
+key = "return"
+title = "两天后的约定"
+text = "小岚希望两天后再见到那枚铜戒。"
+at = "test_west"
+deadline_days = 7
+objectives = [{ kind = "wait", days = 2, text = "等两天" }, { kind = "item", item = "ring", qty = 1, text = "带上铜戒" }]
+[tracks.chapters.timeout]
+next = "failed"
+[[tracks.chapters.choices]]
+key = "show"
+text = "给她看一看。"
+next = "done"
+effects = [{ kind = "affinity", person = "classmate_a", value = 2 }]
+[[tracks.chapters.choices]]
+key = "give"
+text = "把铜戒留下作纪念。"
+next = "done"
+effects = [{ kind = "item", item = "ring", qty = -1 }, { kind = "affinity", person = "classmate_a", value = 4 }]

@@ -1,0 +1,294 @@
+# 请托：月湖边的牡丹灯（request_bai_daozhang）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：白道长（bai_daozhang，1495-05-24 生，男），宁波玄妙观的老道士，画符之前先问来由，香火钱收得爽快；cast 在 cast/story_eastasia.toml。
+# 类型：复合（mixed）：听证词 -> 去福州比纸 -> 湖边守夜 -> 一句判断。七章：offer（报价）、listen（柳汀街听老仆）、shop（福州纸铺）、paper（回宁波）、watch（守夜）、settle（看清了提灯人）、settle_blind（没看清）。终点 done / failed。
+#   结构说明（对 brief 的改动，已在交付说明里列出）：
+#   1) brief 的 paper 章同时要“福州纸铺”和“和白道长一起看假符”，一章只能有一个 at，所以拆成 shop（at=fuzhou，掌柜说话）与 paper（at=ningbo，白道长在场）。期限 120 天挂在 shop 上。
+#   2) brief 的 settle 里 call_it 以旗标 seen 为门槛，旗标是本轨道另一条路设的，会让“准备后条件仍不满足”。改成按 next 分流：watch 的 follow 检定成功去 settle（看清了提灯人），检定失败与 stay 去 settle_blind（没看清）；两章各有两个选项，奖励结构与 brief 一致。
+# 报价：T 当面（auto=false），玩家“问请托”（ask:request_bai_daozhang）启动；offer 章不写 at，objectives 是 person 白道长。deadline 为窗口止日 1590-06-30，timeout 直接 failed，不写见闻。
+# 窗口：普通章不写 window，用 when 的 date 条件。offer 1557-06-01 至 1590-06-30；其余各章 1557-06-01 至 1590-12-31，并要求白道长在世。
+# 依据·出处：瞿佑《剪灯新话·牡丹灯记》（明州上元夜、湖心寺、给符的法师）是这个世界里人们都听过的书；本请托是借这本书的气氛写的新故事，没有搬情节，没有复述原书的结局。
+# 依据·原创：白道长、柳汀街书生家与老仆吴伯、福州南台的纸铺与掌柜、假符的“第三笔倒着起”、翻墙的姑娘（不交代身份与动机）。
+# 依赖：港口 ningbo / fuzhou（ports_east_asia.toml）；技能 arcana_daoist_talismans（skills.toml）；物品 incense_paper（items_consumable_01.toml）；人物 bai_daozhang。B10b：无需改名。主线门禁：无。
+# C7：无（白道长不在 C7 的线里）。本文件不读也不设任何 c7_ 旗标。
+# 设的旗标：c13_request_bai_daozhang_accepted（offer 两条接法）、_declined（回绝，终局）、_lane（listen 的 draw_out 成功，watch 的开场读它）、_hand（paper 的 talisman_eye）、_seen（watch 的 follow 成功；只设不读，settle 的分流靠 next）、_late（shop 超时，终局）、_done（最好的结局，终局）、_partial（折中的结局，终局）。
+# 秘密：月港天妃宫前卖的那批符与他有牵连。本文件只写到“纸是一样的，画符的手不一样”，不写天妃宫，不写他卖符，见闻不涉及。
+# 口头禅（招呼语）：“居士请坐。先别急着求符——遇见了什么，从头说。”只在 paper 章用一次，那里是他听出纸来自哪里的那一刻。
+# 报酬：现金最多 900（settle 与 settle_blind 的三个收尾选项都付）；好感最多 +19（接下 2、听 3、比纸 3、守夜 3、收尾 8；纸铺不加好感，检定失败不加也不扣）；名声 +2；唯一奖励护符香纸 incense_paper（只给“分不清”的两个最好结局）；回忆 mem-request_bai_daozhang-settle。
+#   shop 的买纸选项花 40 现金（requires 现金 40）。timeout 与失败不罚钱、不扣物品。
+# 回忆插画 mem-request_bai_daozhang-settle：月湖边的石阶上搁着一把蒲扇，湖面起着薄雾，对岸一盏红色的牡丹灯快要熄了，岸上的人影看不清。
+
+[[tracks]]
+key = "request_bai_daozhang"
+name = "月湖边的牡丹灯"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["bai_daozhang"]
+
+# 一、先带耳朵：香火钱收得爽快，然后才说正事。
+[[tracks.chapters]]
+key = "offer"
+title = "先带耳朵"
+text = "你在玄妙观偏殿上了香，把香火钱投进竹筒。白道长倒出来，一枚一枚数过，数得很爽快，数完才抬眼。“城西月湖边，这半个月有人夜里见着一盏牡丹灯，”他说，“提灯的是个穿白衣的女子。”第二天观里求符的人就排出了山门，街口摆摊卖的黄纸符也一天多过一天。“符，贫道先不画。见着灯的人是怎么说的，你替贫道原原本本听一遍。是骗子，是病人，还是别的什么，贫道要分清楚。”"
+speaker = "captain"
+mood = "mystic"
+objectives = [{ kind = "person", person = "bai_daozhang", text = "在港里找到白道长" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应替他去听。"
+next = "listen"
+reply = "白道长从袖里抽出一张折过的纸，推到你手边，纸上只有一个名字和一条巷子。纸下压着一张黄纸符，是他从街口摊子上买来的。“先找这个人。”他想了想，又添一句，“别拿符吓人，带耳朵去。这张符你先收着。”"
+effects = [
+  { kind = "affinity", person = "bai_daozhang", value = 2 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_ghost"
+text = "问他：您信是鬼吗？"
+next = "listen"
+reply = "“信不信，是听完以后的事。”白道长捋了捋胡子，把一张写着名字和巷子的纸连同一张黄纸符推过来，符是街口摊子上买的。“香火钱贫道已经收了，居士别想跑。”"
+effects = [
+  { kind = "affinity", person = "bai_daozhang", value = 2 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "鬼神的事，我不掺和。"
+next = "failed"
+reply = "白道长把竹筒里的钱又数了一遍，数完放回去。“钱不退。下回来上香，算在那一回里。”他没有再提灯的事，转身去给长明灯添油。"
+effects = [{ kind = "flag", flag = "c13_request_bai_daozhang_declined" }]
+
+# 二、没有影子：柳汀街书生家的老仆，蚕豆摆出一条路。
+[[tracks.chapters]]
+key = "listen"
+title = "没有影子"
+text = "柳汀街一户书生家的后门口，老仆吴伯蹲在台阶上剥蚕豆，听说是玄妙观来的，豆子也不剥了。“那夜我起来解手，”他说，“看见湖边一盏牡丹灯，红的，花瓣一层一层的。灯下一个穿白的女人，走得不快。灯照得着墙，照得着我的鞋，就是照不着她脚下那一块。没有影子，客官，我看得清清楚楚。”他把手里的豆荚捏扁了，又说：那几夜，他家少爷也去了湖边，回来就起了烧，到今天还躺着。"
+news = "宁波城西月湖边，一个书生家的老仆说夜里见过一盏牡丹灯，玄妙观的老道士派人来听了一下午。"
+speaker = "captain"
+mood = "mystic"
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "到宁波柳汀街去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "bai_daozhang", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "draw_out"
+text = "慢慢问：灯是从哪边来的，往哪边去的。"
+next = "shop"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "吴伯想了很久，拿蚕豆在台阶上一粒一粒摆：灯是从湖心寺那边来的，绕着湖走了半圈，到他家后门外头就不见了。摆到最后一粒，他自己愣住了。后门外头是一条死胡同。"
+effects = [
+  { kind = "affinity", person = "bai_daozhang", value = 3 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_lane" },
+]
+fail = { next = "shop", news = "柳汀街一户书生家的老仆说起月湖边的牡丹灯，越说越乱，来问的人只记下了“没有影子”四个字。" }
+
+[[tracks.chapters.choices]]
+key = "see_master"
+text = "去看一眼那位生病的少爷。"
+next = "shop"
+reply = "少爷躺在里屋，烧得说胡话，一会儿喊“灯”，一会儿喊“别关门”。枕头底下压着三张黄纸符，笔画潦草，朱砂洇开了边。你抽了一张出来，吴伯在门口看着，没有拦。"
+effects = [{ kind = "affinity", person = "bai_daozhang", value = 2 }]
+
+# 三、福州的黄表：掌柜一搓纸边，说这纸常年供着宁波的一家道观。
+[[tracks.chapters]]
+key = "shop"
+title = "福州的黄表"
+text = "回观里复命，白道长把那张街口买来的黄纸符对着窗看了看，只看纸的断口，就说这是福州的纸。“去纸铺比一比，”他说，“再买一刀这样的纸回来。贫道的笔，在这种纸上写不成符。”于是你站在福州南台一家纸铺的院子里，竹纸一排排晾在架上。掌柜捏起你放在柜上的假符，搓了搓纸边，凑近闻了闻。“我家的黄表。”他说，“竹料粗，吃墨快，下笔就洇，写符不成，烧给神仙倒正好。宁波有一家道观，这种黄表常年在我家拿。”"
+speaker = "captain"
+mood = "mystic"
+at = "fuzhou"
+objectives = [{ kind = "at", at = "fuzhou", text = "到福州的纸铺去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "bai_daozhang", value = true },
+]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "bai_daozhang", value = -3 }, { kind = "flag", flag = "c13_request_bai_daozhang_late" }, { kind = "letter", person = "bai_daozhang", text = "纸的事，贫道自己去问了。湖边的灯，又有人见着。——白道长" }] }
+
+[[tracks.chapters.choices]]
+key = "buy_ream"
+text = "买一刀黄表，照掌柜开的价。"
+next = "paper"
+requires = [{ kind = "cash", ge = 40 }]
+hint = "你身上凑不出买一刀纸的零钱。"
+reply = "掌柜用麻绳把一刀黄表捆结实，纸角还带着晾架上的潮气，又把假符折回原样还给你。买了就是主顾，他话也松了：宁波那边来取货的人，每回都要搭两刀边角料，不搭就不拿。“这个价赚得薄，你别往外说。”"
+effects = [{ kind = "cash", value = -40 }]
+
+[[tracks.chapters.choices]]
+key = "ask_buyer"
+text = "不买，请掌柜多说说宁波那家道观。"
+next = "paper"
+reply = "掌柜把算盘往旁边一推。“主顾的事，我不讲。”不买纸又要打听，他脸上不大好看，还是从架底抽出一小摞边角料塞给你，纸边毛毛的，“要比，拿这个比。别的没有。”"
+
+# 四、同一家纸铺：把话带回宁波，白道长沉默了一阵。
+[[tracks.chapters]]
+key = "paper"
+title = "同一家纸铺"
+text = "你把带回来的纸摊在案上，玄妙观偏殿里没有别人。白道长指了指案前的蒲团。“居士请坐。先别急着求符——遇见了什么，从头说。”你从头讲：纸是福州南台一家铺子的黄表，竹料粗，一笔就洇，宁波有一家道观常年在那儿拿货。白道长听着，拇指在纸边上来回搓，搓得纸毛都起来了。你讲完，他沉默了一阵，没有接话。"
+speaker = "captain"
+mood = "mystic"
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "回宁波玄妙观去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "bai_daozhang", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "talisman_eye"
+text = "和他一起看那张假符：纸一样，笔法不一样。"
+next = "watch"
+requires = [{ kind = "skill", skill = "arcana_daoist_talismans", ge = 60 }]
+hint = "那张符上的笔路，你看不懂。"
+reply = "你把假符铺平，指给他看第三笔：起笔是倒着来的，懂行的人不这么画。白道长把符举到窗前，看了很久。“纸是一样的，画符的手不一样。”他说，说完把符放下，没有再往下说。"
+effects = [
+  { kind = "affinity", person = "bai_daozhang", value = 3 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_hand" },
+]
+
+[[tracks.chapters.choices]]
+key = "not_ask"
+text = "不追问，把纸留下就走。"
+next = "watch"
+reply = "白道长接过纸，在指头上捻了捻，说居士是个懂规矩的人。第二天，观里订纸的铺子换了一家。"
+effects = [{ kind = "affinity", person = "bai_daozhang", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "ask_straight"
+text = "直接问他：那家道观，是不是您这儿？"
+next = "watch"
+reply = "白道长看了你一眼。“纸是一样的，画符的手不一样。”这句话说完，他闭上眼，像在打坐。炉里的香烧断了一截，掉进灰里。你坐了一会儿，起身告辞，他没有睁眼。"
+effects = [{ kind = "affinity", person = "bai_daozhang", value = 1 }]
+
+# 五、四更前的灯：三更守到四更，湖心寺那边真的过来一盏灯。
+[[tracks.chapters]]
+key = "watch"
+title = "四更前的灯"
+text = "月湖边，三更过了很久。白道长坐在你身边的石阶上，手里没拿符，只拿了一把蒲扇，扇得很慢。湖对面的湖心寺黑着，水面偶尔响一声。他从袖里摸出半块冷糍粑，掰一半给你。四更的梆子还没响，湖心寺那边亮起一点红，贴着岸绕过来：一盏牡丹灯，灯后一身白，走得不快。"
+speaker = "captain"
+mood = "mystic"
+night = true
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "到宁波月湖边去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "bai_daozhang", value = true },
+]
+
+[[tracks.chapters.variants]]
+key = "v1_lane"
+when = [{ kind = "flag", flag = "c13_request_bai_daozhang_lane" }]
+text = "月湖边，三更过了很久。白道长坐在你身边的石阶上，手里没拿符，只拿了一把蒲扇，扇得很慢。湖对面的湖心寺黑着，水面偶尔响一声。他从袖里摸出半块冷糍粑，掰一半给你。四更的梆子还没响，湖心寺那边亮起一点红，贴着岸绕过来：一盏牡丹灯，灯后一身白，走得不快。你想起吴伯在台阶上摆的蚕豆，这灯该是往柳汀街后门去的。"
+
+[[tracks.chapters.choices]]
+key = "follow"
+text = "跟上去，看它到哪里不见。"
+next = "settle"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "你贴着湖岸的柳树走，灯在前头三十来步，不快不慢。它在书生家后门外的死胡同口停下，提灯的人把灯吹灭，扶着墙翻了进去。借着湖面一点微光你看清了：一个瘦瘦的姑娘，脚上沾着湖泥，吹灭的灯里只剩半截蜡烛头。白道长不知什么时候到了你身后，叹了口气。"
+effects = [
+  { kind = "affinity", person = "bai_daozhang", value = 3 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_seen" },
+]
+fail = { next = "settle_blind", news = "月湖边夜里有人跟着牡丹灯走，到柳汀街后头的死胡同口跟丢了，只看见灯在墙根晃了一下。" }
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "不动，陪白道长坐着看。"
+next = "settle_blind"
+reply = "灯绕湖走了半圈，拐进柳汀街后头的黑影里，再没出来。你没动，他也没动。“没影子的，不一定是鬼，”白道长摇着蒲扇，“有影子的，也不一定是人。”说完，他把剩下的半块糍粑也吃了。"
+effects = [{ kind = "affinity", person = "bai_daozhang", value = 2 }]
+
+# 六、分不清（看清了提灯人）：天亮以后，他问骗子、病人，还是别的什么。
+[[tracks.chapters]]
+key = "settle"
+title = "分不清"
+text = "天亮以后，白道长没有去书生家贴符，叫道童提了一副退烧的药，送到柳汀街。道童回来说，吴伯接了药，没问价钱，只问那灯还来不来。湖面上的雾还没散，蒲扇上沾了一层露水，白道长把它搁在石凳边，坐下，让你也坐。他看着水，半天没开口，湖心寺的钟这才敲了头一下。“骗子，病人，还是别的什么，”他终于问，“你给贫道一句。”"
+news = "宁波玄妙观的老道士在月湖边守了一夜，第二天没贴符，只给书生家送了一副退烧药。"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "到宁波月湖边去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "bai_daozhang", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "cant_tell"
+text = "说：分不清。翻墙的是个人，可灯为什么从湖心寺来，我说不上。"
+next = "done"
+reply = "白道长点点头，说分不清就是分不清，贫道今天也不敢下断语。他进偏殿，出来时拿着一叠香纸，角上盖着观里的小印，往你手里一塞：“这是真画的。夜里出海，烧一张。”"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "bai_daozhang", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "item", item = "incense_paper", qty = 1 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_done" },
+  { kind = "memory", memory = "mem-request_bai_daozhang-settle", title = "四更前湖边的灯" },
+]
+
+[[tracks.chapters.choices]]
+key = "call_it"
+text = "说：就是那姑娘在闹，跟鬼没关系。"
+next = "done"
+reply = "白道长笑了。“居士说得对。”他说，“可那姑娘为什么要往那条死胡同里去，居士也没问。”他让道童数了钱，只数钱，没有拿香纸出来。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "bai_daozhang", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_partial" },
+]
+
+# 六之二、分不清（没看清提灯人）：灯是看见了，灯后面的人没有。
+[[tracks.chapters]]
+key = "settle_blind"
+title = "没看清的夜"
+text = "天亮以后，白道长没有去书生家贴符，叫道童提了一副退烧的药，送到柳汀街。道童回来说，吴伯接了药，没问价钱，只问那灯还来不来。湖面上的雾还没散，蒲扇上沾了一层露水，白道长把它搁在石凳边，坐下，让你也坐。湖心寺的钟这才敲了头一下。灯是看见了，灯后面的人，你和他都没看清。“骗子，病人，还是别的什么，”他问，“你给贫道一句。”"
+news = "宁波月湖边闹牡丹灯，玄妙观的老道士守了一夜没下断语，退烧的药倒是先送去了书生家。"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+objectives = [{ kind = "at", at = "ningbo", text = "到宁波月湖边去" }]
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "bai_daozhang", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "cant_tell_blind"
+text = "说：分不清。灯是看见了，灯后的人我没看清。"
+next = "done"
+reply = "白道长点点头，说没看清就是没看清，他自己坐了一夜，也只看清了灯。他进偏殿，抽出一叠香纸，纸角盖着观里的小印，递过来：“真画的，贫道亲自盖的印。夜里出海，烧一张。”"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "bai_daozhang", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "item", item = "incense_paper", qty = 1 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_done" },
+  { kind = "memory", memory = "mem-request_bai_daozhang-settle", title = "四更前湖边的灯" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_back"
+text = "反问他：守了一夜的是您，您怎么看？"
+next = "done"
+reply = "白道长哈哈一笑，笑得蒲扇掉在了地上。“贫道要是看得出，还用问居士？”他弯腰去捡扇子，让道童数了钱，没有拿香纸出来。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "bai_daozhang", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_bai_daozhang_partial" },
+]

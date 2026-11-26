@@ -1,0 +1,277 @@
+# C13d 人物的请托：三娘子——马市的茶价（复合，5 章 + 1 章分支：报价、交货、价目单、开市的账、谢礼两档；故事 2.0，A5 / E37 契约）
+# 人物：三娘子（钟金，1550 年生，明人称“夫人”）。俺答汗身边最年轻也最能干的夫人，在归化城主持马市、调度兵马、接见明朝边官。
+#   她本人不到海边，话由一个汉人通事带来；通事不新建 cast，不写 speaker。
+# 类型：复合（送货 → 转折 → 算账）。报价模式 L（代理人）：offer 在天津，auto=true，family=c13_offer_tianjin，冷却 20 天。
+# 窗口：offer 1576-03-01..1590-10-31（deadline 为窗口止日，timeout 直接 failed，不写见闻）；
+#   deliver 进章后 150 天（超时走 failed）；price 进章后 60 天（超时照书记的价走 market）；
+#   market 要等 60 天才出现，进章后 180 天（超时走 settle_plain，不罚）；settle / settle_plain 要等 30 天才出现，进章后 180 天（超时走 done，谢礼折半）。
+#   普通章没有 stage，brief 里的 window 只是规划用的出现区间，不写进 TOML。
+# 依据——史实：1571 年俺答封贡、开马市，三娘子主持互市；明朝封她“忠顺夫人”是 1587 年，正文只称“夫人”，不写封号与年份；
+#   马市上茶换马，官府先挑货；女真各部头人凭敕书进京朝贡、到马市交易（物品 horse_market_edict 的说明）。
+#   原创：天津的通事、驼队领头的、边镇书记和他的价目单、对半劈开的木签、开市的账。
+#   正文把敕书写成“一道马市上的敕书”，不点是哪一部的；不写她怎样到了俺答身边、汗家的孙辈为何出走、俺答死后的婚事，不写成恋情。
+#   招牌话用在 offer 的转述里，全轨道一次；“名字她记住了”只出现在 settle 一次。
+# 与 brief 的出入：
+#   1. offer 的 beat 写“十匹丝绸、二十担茶”，objectives 与货款 3050 却是 6 匹、15 担；正文以 objectives 为准写六匹、十五担。
+#   2. settle 拆成 settle（价算得公道，带敕书）与 settle_plain（没算出公道价，只有谢礼）两章，由 market 的 next 分流；
+#      原因：不能让一个选项去 requires 同一条轨道自己在别的路径上设的旗标（fair）。low / rough 两面分支旗标由 variants 读取，fair 只作记录。
+# 旗标：读——无（c7 为 none，不读 c7_* 与 c13_main_*）；variants 读本轨道的 low / rough。
+#   写——accepted / declined（报价）；low、rough、fair（分支，三面；fair 只作记录）；done / partial / failed / late（终局，每条路径只设一面）。
+# 依赖：tianjin 为现有港口；goods silk、tea，skill negotiation、lang_mongolian，item horse_market_edict，faction tumed 均为现有内容；无 B10b 改名。
+# 英文覆盖：不写（本批仅中文）。
+# 回忆插画清单：
+#   mem-request_sanniangzi-settle（画面：天津码头外卧着的驼队，穿蒙古袍的汉人通事双手捧着一卷黄绫，背后是装好的丝茶）
+
+[[tracks]]
+key = "request_sanniangzi"
+name = "马市的茶价"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["sanniangzi"]
+
+# 报价：天津码头，通事转述夫人的话。
+[[tracks.chapters]]
+key = "offer"
+title = "穿蒙古袍的通事"
+text = "天津卫的码头上，一个汉人在长衫外头套了件蒙古袍，袍子太宽，袖口挽了两道。他说自己从归化城来，替夫人传话，开口先问：“你就是那个汉商？去年张家口的市上，有人拿掺了沙的茶砖骗我的人。不是你吧？”这是夫人的原话，他一字不漏地学下来，学完才笑了一下。夫人管海上来的买卖人一概叫汉商。接着条件一条条摆出来：丝绸六匹，茶十五担，都在天津交，驼队从这里北上；货款当场结清。丝和茶天津都不产，要从南边运来，茶尤其不能是马市上买的那种。"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1576, 3, 1], to = [1590, 10, 31] }, { kind = "fame", ge = 25 }, { kind = "age", person = "sanniangzi", ge = 18 }]
+deadline = [1590, 10, 31]
+family = "c13_offer_tianjin"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，丝和茶我从南边运来"
+reply = "通事从袖里摸出一根手指长的木签，顺着木纹掰成两半，一半放进你手心，签身上刻着三道斜口。另一半他揣回袍子里：“这半是驼队领头的。交货那天两半对上，才算数。”"
+next = "deliver"
+effects = [{ kind = "flag", flag = "c13_request_sanniangzi_accepted" }, { kind = "affinity", person = "sanniangzi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，先问她为什么不在马市上买"
+reply = "“马市上的茶，官府先挑一遍，挑剩的才轮到我们。夫人不喜欢吃剩的。”通事说得很平，像在讲天气。他把木签掰开，半支递给你，三道斜口在日头下亮了亮：“交货那天，凭这个。另一半在领头的怀里。”"
+next = "deliver"
+effects = [{ kind = "flag", flag = "c13_request_sanniangzi_accepted" }, { kind = "affinity", person = "sanniangzi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这趟货我不接"
+reply = "通事把木签塞回袖里，没有劝。“夫人记性好，”他笑着说，“你今天的话，她会记得。”他整了整袍子，朝码头另一头的船行走去，袖口又落下来一道。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sanniangzi_declined" }]
+
+# 交货：驼队验货。两种验法，货款一样，一个当面证清白，一个把数记在自己手里。
+[[tracks.chapters]]
+key = "deliver"
+title = "拆一块茶砖"
+text = "驼队在码头外歇着，七八峰骆驼卧了一片，嚼草的声音隔着仓库都听得见。领头的蒙古汉子脸上全是风裂的口子，先从怀里掏出半支木签，和你手里那半一对，三道斜口严丝合缝。通事蹲在货箱旁，拨着一只小算盘。夫人的人开始一包一包验货，验到茶，领头的自己抽出一块砖茶，在手里掂了掂，看着你，什么也没说。"
+speaker = "captain"
+mood = "tense"
+at = "tianjin"
+when = [{ kind = "alive", person = "sanniangzi", value = true }]
+objectives = [{ kind = "goods", good = "silk", qty = 6, at = "tianjin", text = "在天津交六匹丝绸" }, { kind = "goods", good = "tea", qty = 15, at = "tianjin", text = "在天津交十五担茶" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sanniangzi_late" }, { kind = "affinity", person = "sanniangzi", value = -3 }, { kind = "letter", person = "sanniangzi", text = "夫人另托了晋商，货已由他们带着北上。她说，你的船大概是被风吹到别处去了。通事代笔。" }]
+news = "天津码头外，归化城来的驼队等了几个月，没等到海上的货，空着驮鞍往北走了。"
+
+[[tracks.chapters.choices]]
+key = "break"
+text = "当面掰开一块给他看"
+reply = "你把茶砖往膝盖上一磕，掰成两半。断面深褐，一粒沙也没有。领头的凑近闻了闻，又掰下一角丢进嘴里嚼，嚼完把半块揣进怀里：“回去给夫人看。”"
+next = "price"
+effects = [{ kind = "cash", value = 3050 }, { kind = "affinity", person = "sanniangzi", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "让他们逐包验，你在旁边记数"
+reply = "验了整整一天。每包拆开，每块掂过，你站在旁边，用炭笔在木板上画道，一包一道。日头偏西，一包不差。通事在账上画了个圈，把笔搁到耳朵上。"
+next = "price"
+effects = [{ kind = "cash", value = 3050 }]
+
+# 转折：边镇书记的价目单。三条路——口才（会失手）、行情本事、花钱。
+[[tracks.chapters]]
+key = "price"
+title = "书记的价目单"
+text = "货刚装上驼背，一个边镇来天津采买的书记找上门，袖里抽出一张价目单，纸角都卷了。今年马市，一匹马只许换多少斤茶，比夫人定的少了三成。他把单子压在货箱上，用手背抹平：“上头的意思，我也难。”通事凑到你耳边，声音压得很低：这个价不是朝廷定的，是书记的上司自己定的。"
+speaker = "captain"
+mood = "tense"
+at = "tianjin"
+when = [{ kind = "alive", person = "sanniangzi", value = true }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "market"
+effects = [{ kind = "flag", flag = "c13_request_sanniangzi_low" }]
+news = "天津码头上，边镇来的书记把价目单留在货箱上走了，通事看了一眼，没有去追。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟书记讲：价压得太狠，马市开不长"
+reply = "你没提夫人，只讲账：三成压下去，牧人今年卖不出价，明年不再赶马来，市上没有马，边镇的兵骑什么？书记嘴上不松，手里的价目单却改了一个数，改完用袖子盖住。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "market"
+effects = [{ kind = "affinity", person = "sanniangzi", value = 3 }]
+news = "天津码头上，海商和边镇来的书记为一张价目单磨了半天，书记改了一个数。"
+fail = { next = "market", effects = [{ kind = "flag", flag = "c13_request_sanniangzi_low" }, { kind = "affinity", person = "sanniangzi", value = -2 }], news = "天津码头上，边镇来的书记只肯让一成价，通事看着那张单子，半晌没有说话。" }
+
+[[tracks.chapters.choices]]
+key = "deal"
+text = "跟他一条一条谈：马的齿口、茶的成色"
+hint = "牙行里的规矩你知道得不够多，谈不到齿口这一层。"
+reply = "你把马分了三等，茶也分了三等，各配各的价。书记拨着算盘算了半天，抬头说，这样他回去也好交代。通事低着头笑，在单子边上记了三行。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+next = "market"
+effects = [{ kind = "affinity", person = "sanniangzi", value = 3 }]
+news = "天津码头的牙行里，有人把马分三等、茶分三等，说得边镇来的书记点了头。"
+
+[[tracks.chapters.choices]]
+key = "tea_money"
+text = "塞给他一份“茶钱”"
+hint = "你的钱袋里拿不出一份像样的茶钱。"
+reply = "价目单进了他的袖子。第二天一早，送来的是新的一张，墨还没干，数目回到了夫人定的那一档。书记没有看你，只在门口站了站，像是在听外头有没有人。"
+requires = [{ kind = "cash", ge = 500 }]
+next = "market"
+effects = [{ kind = "cash", value = -500 }, { kind = "affinity", person = "sanniangzi", value = 3 }]
+news = "天津码头上，边镇来的书记收了一份茶钱，第二天换了一张新的价目单。"
+
+# 开市的账：两个月后。算对了走 settle，算错、顺着说或没人回话走 settle_plain。
+[[tracks.chapters]]
+key = "market"
+title = "开市那天的账"
+text = "两个月后，通事回到天津，带着马市开市那天的账。账记在一卷粗纸上，一行一笔，连马的毛色、齿口都写了，像是写给牙行看的。他把纸卷摊在货箱上，四角压了石头：“夫人让我问你一句。一匹马换多少茶，你看怎样才算公道？”"
+speaker = "captain"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "alive", person = "sanniangzi", value = true }]
+objectives = [{ kind = "wait", days = 60 }]
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "settle_plain"
+effects = []
+news = "天津码头上，通事等了几个月，没等到海商给一句话，把账卷了回去。"
+
+[[tracks.chapters.choices]]
+key = "fair"
+text = "照账算给他：按马的齿口分等，茶按成色"
+reply = "你把马分作三等，茶也分作三等，一等马配一等茶，一行一行拨给他看。通事把你的算法抄了一份，抄完吹了吹墨：“夫人会看。她看账，比看人快。”"
+check = { attr = "numeracy", base = 20, per = 7 }
+next = "settle"
+effects = [{ kind = "affinity", person = "sanniangzi", value = 3 }, { kind = "flag", flag = "c13_request_sanniangzi_fair" }]
+news = "天津码头上，有个海商替归化城的通事算了一遍马市的账，马分三等、茶分三等。"
+fail = { next = "settle_plain", effects = [{ kind = "flag", flag = "c13_request_sanniangzi_rough" }], news = "天津码头上，海商替归化城的通事算马市的账，算错了一处，通事笑着拿笔替他改了。" }
+
+[[tracks.chapters.choices]]
+key = "hers"
+text = "说按夫人定的就好"
+reply = "通事笑了：“夫人就知道你会这么说。”他把账卷起来扎好，笔都没有蘸墨。"
+next = "settle_plain"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "more_tea"
+text = "说多给些茶，马市才长久"
+reply = "通事想了想，笔在纸上点了点：“今年多给一点，明年的马会好一点。这话我替你带到。”他把这句另起一行记下，旁边画了个小圈。"
+check = { attr = "commerce", base = 20, per = 7 }
+next = "settle"
+effects = [{ kind = "affinity", person = "sanniangzi", value = 3 }, { kind = "flag", flag = "c13_request_sanniangzi_fair" }]
+news = "天津码头上，通事听海商说今年多给些茶，明年的马会更好，把这句话记进了账里。"
+fail = { next = "settle_plain", effects = [], news = "天津码头上，通事听海商说要多给些茶，摇头说多给茶汉商就亏了，明年还有谁肯来？" }
+
+[[tracks.chapters.choices]]
+key = "mongolian"
+text = "用蒙古话把你的算法直接说给驼队领头的听"
+hint = "领头的说话又快又碎，你的蒙古话跟不上。"
+reply = "你用蒙古话把三等马配三等茶的算法从头说了一遍，说到一半，领头的把嚼着的草茎吐了。他听完，拍了拍你的肩，拍得人一沉：“这话我回去，当着夫人的面再说一遍。”"
+requires = [{ kind = "skill", skill = "lang_mongolian", ge = 60 }]
+next = "settle"
+effects = [{ kind = "affinity", person = "sanniangzi", value = 4 }, { kind = "flag", flag = "c13_request_sanniangzi_fair" }]
+news = "天津码头上，有个海商用蒙古话对着驼队领头的算马价，领头的听完拍着肩膀笑。"
+
+# 书记的价照旧时，开市的账里头几行写得明白。
+[[tracks.chapters.variants]]
+key = "low"
+when = [{ kind = "flag", flag = "c13_request_sanniangzi_low" }]
+text = "两个月后，通事回到天津，带着马市开市那天的账。账记在一卷粗纸上，一行一笔，连马的毛色、齿口都写了。头几行的茶价比往年低了一截，一看就是书记那张价目单的缘故，通事拿指甲在那几行底下划了道痕。他把纸卷摊在货箱上，四角压了石头：“夫人让我问你一句。一匹马换多少茶，你看怎样才算公道？”"
+
+# 收尾（算出公道价）：谢礼与敕书。
+[[tracks.chapters]]
+key = "settle"
+title = "一道敕书"
+text = "通事最后一次来天津，换了双新靴子，肩上多了一卷黄绫，怀里还夹着一张折了四折的纸，是开市账里算马价的那几行，边上有人用细笔写了两个蒙古字。他把黄绫在系缆的石墩上摊开：一道旧敕书，纸边磨毛，印泥发黑。他说这是马市上过了夫人手的东西，凭它能进市交易，夫人留着没用，送给海上的人。谢礼另装在一只皮袋里，他拍了拍，没有打开。“还有一句，”他学着夫人，下巴抬了一下，“你的名字我记住了。在草原上，这多半是好事。”"
+speaker = "captain"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "alive", person = "sanniangzi", value = true }]
+objectives = [{ kind = "wait", days = 30 }]
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "cash", value = 2200 }, { kind = "flag", flag = "c13_request_sanniangzi_partial" }, { kind = "letter", person = "sanniangzi", text = "谢礼放在天津码头的晋商铺子里，记在你名下。开市的账夫人看过，算得不差。通事代笔。" }]
+news = "天津码头的晋商铺子里，替归化城的人收着一只皮袋，等了几个月，没等到海商来问。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下"
+reply = "通事把敕书放进你手里，黄绫上有一股干草和羊油的气味。他笑了一下，像替夫人笑的。"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "sanniangzi", value = 8 }, { kind = "item", item = "horse_market_edict", qty = 1 }, { kind = "fame", value = 7 }, { kind = "reputation", faction = "tumed", value = 3 }, { kind = "memory", memory = "mem-request_sanniangzi-settle", title = "驼队与黄绫敕书" }, { kind = "flag", flag = "c13_request_sanniangzi_done" }]
+news = "天津码头上，归化城来的驼队驮走了丝和茶，领头的说今年马市的价是海上来的人帮着算的。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问通事：这道敕书夫人为什么不留着"
+reply = "通事摸了摸鼻子：“这是别家的凭证，到了夫人手里，只能压箱底。”他想了想，又说：“压箱底的东西，她送出去的时候最大方。”说着把黄绫往你怀里一送，皮袋也跟着放下了。"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "sanniangzi", value = 8 }, { kind = "item", item = "horse_market_edict", qty = 1 }, { kind = "fame", value = 7 }, { kind = "reputation", faction = "tumed", value = 3 }, { kind = "memory", memory = "mem-request_sanniangzi-settle", title = "驼队与黄绫敕书" }, { kind = "flag", flag = "c13_request_sanniangzi_done" }]
+news = "天津码头外，驼队装完了丝和茶，通事把一道黄绫裹着的旧敕书交到海商手里，围观的脚夫看了半天。"
+
+# 收尾（没算出公道价）：只有谢礼。
+[[tracks.chapters]]
+key = "settle_plain"
+title = "皮袋里的谢礼"
+text = "通事最后一次来天津，肩上没有黄绫，只带着一只皮袋。他把皮袋放在石墩上，手按着袋口没松：“开市的账，夫人看过了。谢礼照数。”他的目光在你脸上停了一会儿，像在掂一块茶砖。"
+speaker = "captain"
+mood = "cheerful"
+at = "tianjin"
+when = [{ kind = "alive", person = "sanniangzi", value = true }]
+objectives = [{ kind = "wait", days = 30 }]
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "cash", value = 2200 }, { kind = "flag", flag = "c13_request_sanniangzi_partial" }, { kind = "letter", person = "sanniangzi", text = "谢礼寄在天津码头的晋商铺子里，记在你名下。开市的账夫人看过了。通事代笔。" }]
+news = "天津码头的晋商铺子里，替归化城的人收着一只皮袋，海商的名字写在袋口，一直没人来取。"
+
+[[tracks.chapters.choices]]
+key = "take_plain"
+text = "收下谢礼"
+reply = "谢礼照数，通事一袋一袋数给你。敕书却没有拿出来。他说夫人只送给算过账的人，说完扎紧了袋口。"
+next = "done"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "sanniangzi", value = 4 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "tumed", value = 2 }, { kind = "flag", flag = "c13_request_sanniangzi_partial" }]
+news = "天津码头上，归化城的通事交给海商一只皮袋，驼队的人说今年的丝茶都是这条船送来的。"
+
+[[tracks.chapters.choices]]
+key = "next_year"
+text = "收下，说明年开市的账想自己看"
+reply = "通事把皮袋递过来，眼睛弯了弯：“这话夫人爱听。明年春天驼队还从这里北上，账我给你留一份。”"
+next = "done"
+effects = [{ kind = "cash", value = 2200 }, { kind = "affinity", person = "sanniangzi", value = 4 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "tumed", value = 2 }, { kind = "flag", flag = "c13_request_sanniangzi_partial" }]
+news = "天津码头上，海商对归化城的通事说明年开市的账想亲自过目，通事答应留一份。"
+
+# 算错过的那一行，夫人用朱笔圈着退了回来。
+[[tracks.chapters.variants]]
+key = "rough"
+when = [{ kind = "flag", flag = "c13_request_sanniangzi_rough" }]
+text = "通事最后一次来天津，肩上没有黄绫，只带着一只皮袋。袋口压着一张折了四折的纸，是那天你算的法子，其中一行被人用朱笔圈了，旁边写着改过的数。他把皮袋放在石墩上，手按着袋口没松：“开市的账，夫人看过了。谢礼照数。”他的目光在你脸上停了一会儿，像在掂一块茶砖。"

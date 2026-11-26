@@ -1,0 +1,182 @@
+# 季风的赌（request_hamid）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：哈米德 hamid（1540-02-04 生，男；摩加迪沙船主家的小儿子，在开罗爱资哈尔念书；势力 ottoman；cast 在 cast/classmates_cairo.toml；身份档 1）。
+# 类型：找东西（find）；3 章：offer（报价）、handin（拉赫马尼）、use（港务老人的刻痕）。终点 done / failed。
+# 报价：V 到访，auto=true。offer 章 at=alexandria，哈米德从开罗下到亚历山大港；family=c13_offer_alexandria，冷却 20 天；
+#       deadline 为窗口止日 1586-12-31，timeout 直接 failed，不写见闻。
+# 窗口：普通章不写 window（引擎要求 window 必须带 default），以 when 的 date 条件表达。offer 1563-01-01 至 1586-12-31。
+# 与 brief 的出入（写手判断，已逐条核对引擎）：
+#   1. handin 的 objectives 只写 item chart_arabian ≥ 1，不写 person hamid。哈米德的日程在开罗，开罗是城市，玩家的舰队停不进去，
+#      person 目标在哪个港口都不成立，章节会永远卡住。handin 的 at 写 alexandria（brief 的 setting 也是亚历山大港）。
+#   2. handin 设 deadline 1588-02-24 与 timeout（来信 + 好感 -3 + late 旗标），把 brief 的 window 止日落到显式期限，避免静默卡死。
+#   3. offer 的 speaker 写 hamid（请托人自己说话）；handin 与 use 写 captain（玩家行动）。
+#   4. 报酬与好感按 brief：名声 +2 与身份档 1 的表一致（decisions：1 档最好结局 +2）。
+# 依据·史实背景：印度洋季风的航期（东北季风自阿拉伯一侧南下东非）；阿拉伯航海的拉赫马尼（航路书，目标物 chart_arabian）。
+#       chart_arabian 的史料来源是皮里·雷斯《Kitab-ı Bahriye》（1526）与 16 世纪的航路书传统（items_chart_01.toml）。
+# 依据·原创：哈米德的季风账、港务老人在摩加迪沙木桩上刻风的做法、他第一年算早了一个月的那一页账。
+# 依赖：item chart_arabian（有商店，阿拉伯文化港）、chart_east_africa（唯一奖励）；skill astral_navigation（teach_stars 的门槛）；
+#       港口 alexandria、mogadishu；cast hamid。
+# 读的旗标：无（不读 c7_*；不读 c13_main_*，哈米德不在主线门禁里）。
+# 设的旗标：c13_request_hamid_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_given（handin 送书）、_recalc（handin 星高重算）、
+#       _done（use 写实或写认输，终局）、_partial（use 只抄日子，终局）、_late（handin 或 use 超时，终局）。
+# 秘密：哈米德第一年独自推算回程季风，算早了整整一个月，那一页账撕了。只在 use 章 write_true（requires affinity hamid ≥ 30）的来信里由他自己写出来；
+#       老人那句“算早过一整个月”只在 use 章正文里说给玩家听。见闻永远不写。
+# 回忆插画：mem-request_hamid-use「木桩上的刻痕」。画面：摩加迪沙码头的木桩上，一排新刻的痕，老人的烟斗挂在桩边，远处是印度洋的白浪。
+# 禁区：不写卡里姆出场；“卡里姆的弟弟”只在 offer 回绝的回复里由他自己说一次（人人都这么叫他）；不写恋爱；不用 relation / tie / bond / heart。
+
+[[tracks]]
+key = "request_hamid"
+name = "季风的赌"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["hamid"]
+
+# 一、转风的日子：报价（亚历山大港，哈米德下来找你）。
+[[tracks.chapters]]
+key = "offer"
+title = "转风的日子"
+text = "亚历山大港的咖啡摊，哈米德把一张写满数字的纸推到你面前，纸角压着一只杯子。“今年东北风哪天刮稳，我算好了，一天不差。”他的指甲敲在其中一行上，“要对，就得有一本阿拉伯海的拉赫马尼。你们船上有没有？”他又笑起来，把杯子往你这边一碰，“我还要赌一把。你照我算的日子从亚丁开船去摩加迪沙，到港问问港务的老人，风哪天转。他报的日子要是跟我差得不远，这一把算我赢。”“你有你的海，我有我的潮。”"
+speaker = "hamid"
+mood = "cheerful"
+at = "alexandria"
+when = [
+  { kind = "date", from = [1563, 1, 1], to = [1586, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "hamid", ge = 18 },
+]
+deadline = [1586, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_alexandria"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "hamid", level = "C" }]
+text = "亚历山大港的咖啡摊，哈米德把一张写满数字的纸推到你面前，纸角压着一只杯子。“今年东北风哪天刮稳，我算好了。”他的指甲敲在一行上，“上回你赢了，这回我让你先挑日子。挑哪一天都行，只要是我算过的。你照那天从亚丁开船去摩加迪沙，到港问问港务的老人，风哪天转。”他把杯子往你这边一碰，“你有你的海，我有我的潮。”"
+
+[[tracks.chapters.choices]]
+key = "take_bet"
+text = "接下，赌就赌。"
+next = "handin"
+reply = "他把纸上的日子圈起来，旁边写了一行小字，写的是你的名字。输了的人请喝一个季风的咖啡，他说，“我先替你记着。”说完他把纸翻到背面，画了一只歪歪扭扭的船，船头添了个问号。"
+effects = [
+  { kind = "affinity", person = "hamid", value = 2 },
+  { kind = "flag", flag = "c13_request_hamid_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "no_bet"
+text = "接下，但不赌，只替他对日子。"
+next = "handin"
+reply = "他撇撇嘴，说不赌的人看风不准。还是把纸递了过来，“那你替我对，对错都记在纸背面。”他把笔也塞进你手里，笔杆上留着一排浅浅的牙印，是他自己咬的。"
+effects = [
+  { kind = "affinity", person = "hamid", value = 2 },
+  { kind = "flag", flag = "c13_request_hamid_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "风的事，我不跟人赌。"
+next = "failed"
+reply = "“不跟人赌。”他把这几个字在嘴里转了一圈，笑得很淡，“人人都叫我卡里姆的弟弟，我听够了。”纸被他收回袖子里，咖啡没喝完。"
+effects = [{ kind = "flag", flag = "c13_request_hamid_declined" }]
+
+# 二、拉赫马尼：他拿到书，一页一页对数字。
+[[tracks.chapters]]
+key = "handin"
+title = "拉赫马尼"
+text = "亚历山大港的咖啡摊上，哈米德一见你手里的拉赫马尼，就伸手拿了过去，摊在膝上一页一页对他的数字。他用的是自己那支秃了的铅笔，对到亚丁到摩加迪沙那一段，笔尖停住了。书上写的日子，比他算的晚了好几天。“书是旧的。”他没认输，把书合上又翻开，“风也会老。”"
+speaker = "captain"
+mood = "tense"
+at = "alexandria"
+objectives = [{ kind = "item", item = "chart_arabian", qty = 1, text = "带着一本阿拉伯海的拉赫马尼" }]
+news = "亚历山大港的咖啡摊上，摩加迪沙船主家的年轻人对着一本阿拉伯航路书算了半天，嘴里只说“书是旧的”。"
+deadline = [1588, 2, 24]
+timeout = { next = "failed", effects = [{ kind = "letter", person = "hamid", text = "拉赫马尼你一直没有拿来，我就只照自己的数对了。风照旧转，没等人。" }, { kind = "affinity", person = "hamid", value = -3 }, { kind = "flag", flag = "c13_request_hamid_late" }] }
+
+[[tracks.chapters.choices]]
+key = "give_chart"
+text = "把拉赫马尼送给他，让他慢慢对。"
+next = "use"
+reply = "他愣了一下，说这种书家里只有卡里姆有，他从来没敢开口借。他把书揣进怀里，像揣着一只鸟，走到门口又回头看了一眼你的船，手指在书脊上停了一下才松开。"
+effects = [
+  { kind = "item", item = "chart_arabian", qty = -1 },
+  { kind = "affinity", person = "hamid", value = 3 },
+  { kind = "flag", flag = "c13_request_hamid_given" },
+]
+
+[[tracks.chapters.choices]]
+key = "lend_chart"
+text = "借他看一夜，天亮拿回来。"
+next = "use"
+reply = "他抄了一夜，天亮时眼睛通红。书还给你的时候，他自己的抄本上密密麻麻全是批注，有几处还划了两道线，说是跟书上吵过架。你问他结果，他说，“明天再说。”"
+effects = [{ kind = "affinity", person = "hamid", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "teach_stars"
+text = "不给书，跟他用星高把那一段重算一遍。"
+next = "use"
+reply = "我们在屋顶上量了半夜。他算出来的日子跟书上的差少了一截，他却高兴不起来，说星星比书还不客气。天快亮时他把两页纸都揣进怀里，一句谢谢也没说。"
+requires = [{ kind = "skill", skill = "astral_navigation", ge = 60 }]
+hint = "你的星高还看不稳，这半夜量下来只会量出错数。"
+effects = [
+  { kind = "affinity", person = "hamid", value = 3 },
+  { kind = "flag", flag = "c13_request_hamid_recalc" },
+]
+
+# 三、港务老人的刻痕：摩加迪沙码头上，老人报出今年东北风的日子。
+[[tracks.chapters]]
+key = "use"
+title = "港务老人的刻痕"
+text = "摩加迪沙码头上，哈米德家商号的港务老人正在一根木桩上刻风，每转一回风，刻一道，刻痕密得像鱼鳞。你问今年东北风是哪天刮稳的，老人数完刻痕，报出一个日子。比哈米德算的晚了四天，比书上早了两天。老人把烟斗在桩上磕了磕，说这孩子第一年自己算风，还算早过一整个月。“这话你听了就算，别拿到码头上说。”"
+speaker = "captain"
+mood = "cheerful"
+at = "mogadishu"
+when = [{ kind = "alive", person = "hamid", value = true }]
+deadline_days = 300
+news = "摩加迪沙码头上那根记风的木桩，今年又多了一道刻痕；有个外港的船长特地来问是哪天刻的。"
+timeout = { next = "failed", news = "摩加迪沙码头上那根记风的木桩，今年又多了一道刻痕；老人数了半天，没等到来对账的人。", effects = [{ kind = "letter", person = "hamid", text = "风转了，你没到。赌算没赌。" }, { kind = "affinity", person = "hamid", value = -3 }, { kind = "flag", flag = "c13_request_hamid_late" }] }
+
+[[tracks.chapters.choices]]
+key = "write_true"
+text = "照实写信给他：晚了四天。"
+next = "done"
+reply = "回信来得很快，信纸上只有一行字写得比别的重。他没解释那一年的事，也没替自己辩，只说这回差了四天，他认。信末他添了一句：你的账我记下了。"
+requires = [{ kind = "affinity", person = "hamid", ge = 30 }]
+hint = "你们还没熟到让他听得进“错了”两个字。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "item", item = "chart_east_africa", qty = 1 },
+  { kind = "affinity", person = "hamid", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_hamid_done" },
+  { kind = "memory", memory = "mem-request_hamid-use", title = "木桩上的刻痕" },
+  { kind = "letter", person = "hamid", text = "差四天。我认。那年我第一次自己算回程的季风，把日子算早了整整一个月。那一页账撕了，谁也没见过。" },
+]
+
+[[tracks.chapters.choices]]
+key = "write_close"
+text = "写信说他差不多算对了，书上的更差。"
+next = "done"
+reply = "回信说这一把算他赢，信里夹着一张东非沿岸的航路图，角上写着：“输家请喝咖啡，赢家送图。”图上的阿拉伯字沿着海岸排成一排，从摩加迪沙一直排到索法拉。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "item", item = "chart_east_africa", qty = 1 },
+  { kind = "affinity", person = "hamid", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_hamid_done" },
+  { kind = "memory", memory = "mem-request_hamid-use", title = "木桩上的刻痕" },
+  { kind = "letter", person = "hamid", text = "这一把算我赢。图你留着，下回换你算。" },
+]
+
+[[tracks.chapters.choices]]
+key = "no_verdict"
+text = "只把老人报的日子抄给他，不说谁赢。"
+next = "done"
+reply = "他的回信只有一行。报酬照付了一半，另一半说要等他自己去看过那根桩再给。你把钱数了两遍，信纸角上落着一个小墨点，像是笔尖在那里停了很久。"
+effects = [
+  { kind = "cash", value = 650 },
+  { kind = "affinity", person = "hamid", value = 4 },
+  { kind = "flag", flag = "c13_request_hamid_partial" },
+  { kind = "letter", person = "hamid", text = "明年我自己去看那根桩。" },
+]

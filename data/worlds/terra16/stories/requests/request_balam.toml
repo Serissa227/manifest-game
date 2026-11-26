@@ -1,0 +1,161 @@
+# 请托：四十袋盐（request_balam）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：巴兰（balam，1540-11-13 生，男），可可商的儿子，梅里达一带独木舟商队的押队人；势力 new_spain，身份档 1。cast：cast/classmates_merida.toml。
+# 类型：送货（deliver）。任务单写的是三章，实际是四章：offer（报价）、deliver（过秤，交货）、settle（结账，过急流之前的一瓢可可）、settle_partial（结账，税被抽过）。
+#   多出的一章是引擎的限制：被抽税的分支要少付工钱，而选项的 requires 不能读本轨道在别的分支上设的旗标，所以被抽过税的分支转到 settle_partial，那里有自己的选项与效果。
+# 报价：V（到访）。巴兰从内陆下到坎佩切的海边，auto=true；offer 写 family=c13_offer_campeche、冷却 20 天；窗口 1564-01-01 至 1590-06-30，同时要求玩家满 17 岁、巴兰满 18 岁。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：deliver 章 deadline_days=120，超时走 failed，来信一封，好感 -3，旗标 _late；settle 与 settle_partial 是普通章，可以一直等。
+# 依据·史实背景：尤卡坦沿岸的盐田与内陆的可可交换，自古由独木舟商队与脚夫走；殖民后盐田多被监护主或官府收管。
+# 依据·原创：今年海边的盐场被官府收了；书记过秤、抽税的一幕；可可豆磨粉掺香草与辣椒的调法；过急流这一段。
+# 待核：无。正文只写传闻与人物口吻，不写具体年份的史实事件。
+# 秘密：看见急流就腿软，只在报价时当一个笑话讲一次，不嘲笑；见闻一律不写。
+#   C7 的 bond_balam 只在 offer 读取 bond≥C 做变体；不写科苏梅尔的圣所，不写春分的海边。
+# 读的旗标：bond balam ≥ C（offer 的变体，只读）。不设任何 c7_ 旗标。
+# 设的旗标：c13_request_balam_accepted（offer 接下）、_declined（offer 回绝）、_taxed（deliver 被抽税，转 settle_partial）、_late（deliver 超时）、_done（settle 终局）、_partial（settle_partial 终局）。
+# 不用 relation / tie / bond / heart 效果；bond 只作条件读取。
+# 报酬：工钱 1250（被抽税时 900）+ 货款 400；好感最多 +8（折中 +4），名声 +1（只在最好的结局）；回忆 mem-request_balam-settle。
+#   唯一奖励物品 cacao_gift 已删（10-24 波次核查）：bond_balam（C7 羁绊线 a2）已经发了同一件，按总决定“与 C7 重复就删，不换别的”；
+#   正文里的可可改成当场喝掉的一瓢，不再有“礼包”交到手里。
+# 依赖：港口 campeche（ports_americas.toml）；货物 salt（goods.toml）；属性 commerce；人物 balam。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_balam-settle「独木舟正中间的人」：坎佩切海边，装满盐的独木舟离岸，正中间坐着一个挺直腰、抓着船帮的人，朝岸上挥手。
+
+[[tracks]]
+key = "request_balam"
+name = "四十袋盐"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["balam"]
+
+# 一、官府收了盐场：坎佩切的海边，巴兰一见你就说话。
+[[tracks.chapters]]
+key = "offer"
+title = "官府收了盐场"
+text = "坎佩切的海边，独木舟排成一排，船头都朝着海。我还没走到跟前，一个人从船帮上跳下来，迎上来就说：“说个价。”他是巴兰，可可商的儿子，这支独木舟商队是他押的。商队要拿可可换盐，可今年海边的盐场被官府收了，盐价翻了一番，私盐还要被扣。“四十袋盐，从别处运来，交在坎佩切。”他拍了拍船帮上的可可袋，又说，“我自己押队回内陆，路上要过一段急流。我过急流还是腿软——”他把腿伸出来，在船板上跺了一脚，“可我跟船三个月都跟过了，腿软也走。”"
+speaker = "captain"
+mood = "cheerful"
+at = "campeche"
+objectives = [{ kind = "at", at = "campeche", text = "在坎佩切的海边" }]
+when = [{ kind = "date", from = [1564, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "balam", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_campeche"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "balam", level = "C" }]
+text = "坎佩切的海边，独木舟排成一排。巴兰从船帮上跳下来，一眼看见我，先说：“跟我的船，别跟我父亲的——这回是我的船要盐。”然后才是那句：“说个价。”盐场被官府收了，盐价翻了一番，四十袋盐，从别处运来，交在坎佩切。他要自己押队回内陆，路上要过急流。“我过急流还是腿软，”他拍着船帮笑，“可我跟船三个月都跟过了，腿软也走。”"
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，四十袋盐，交在坎佩切。"
+next = "deliver"
+reply = "他当场数出一把可可豆，在手心摊了摊，又一粒粒数回钱袋，说：“定钱太多，你会跑。”"
+effects = [{ kind = "affinity", person = "balam", value = 2 }, { kind = "flag", flag = "c13_request_balam_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "tease"
+text = "接下，笑他：腿软的人还押队？"
+next = "deliver"
+reply = "“腿软又不是心软。”他挺起胸，说过急流的时候他坐在船中间，眼睛闭着，两手抓着船帮，“船过去了，我就过去了。”"
+effects = [{ kind = "affinity", person = "balam", value = 3 }, { kind = "flag", flag = "c13_request_balam_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "盐是官府的买卖，我不碰。"
+next = "failed"
+reply = "他耸耸肩，说那他就去跟官府磨。“官府也得吃可可。”"
+effects = [{ kind = "flag", flag = "c13_request_balam_declined" }]
+
+# 二、过秤：四十袋盐卸在坎佩切的码头上，书记过来要交税。每个选项都会把货交出去。
+[[tracks.chapters]]
+key = "deliver"
+title = "过秤"
+text = "四十袋盐卸在坎佩切的码头上，巴兰的脚夫一袋一袋往独木舟里搬。搬到一半，一个官府的书记走过来，夹着一本账册，说盐要过官秤、交盐税，私盐要没收。脚夫们都停了手。巴兰的脸一下子白了，可他还是挺着胸走上前，把帽子往后一推：“书记先生，盐是我从外港运来的，咱们谈谈。”"
+speaker = "captain"
+mood = "tense"
+at = "campeche"
+when = [{ kind = "alive", person = "balam", value = true }]
+objectives = [{ kind = "goods", good = "salt", qty = 40, at = "campeche", text = "四十袋盐" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "balam", value = -3 }, { kind = "flag", flag = "c13_request_balam_late" }, { kind = "letter", person = "balam", text = "盐我跟官府说了个价，贵了，可商队走成了。——巴兰" }], news = "坎佩切的海边，一支独木舟商队没等到外港的盐，自己跟官府的书记磨了半个时辰，买了贵盐才上路。" }
+news = "坎佩切的码头上，一支独木舟商队装满了盐，跟官府的书记说了半个时辰的价。"
+
+[[tracks.chapters.choices]]
+key = "show_receipt"
+text = "拿出买盐的票据，说这是外港买来的，税在那边交过了。"
+next = "settle"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "书记看了票据，又看了看那一船可可，说可可也该交税。巴兰赶紧塞给他一小袋，书记这才揣起票据，走了。"
+effects = [{ kind = "affinity", person = "balam", value = 3 }]
+fail = { next = "settle_partial", effects = [{ kind = "affinity", person = "balam", value = -2 }, { kind = "flag", flag = "c13_request_balam_taxed" }] }
+
+[[tracks.chapters.choices]]
+key = "pay_tax"
+text = "照官价交一笔盐税，省得纠缠。"
+next = "settle"
+requires = [{ kind = "cash", ge = 150 }]
+hint = "你身上的钱凑不齐官价的一笔税。"
+reply = "书记收了钱，开了一张税单。巴兰把税单折成小块塞进钱袋，说：“这张纸比盐还贵。”"
+effects = [{ kind = "cash", value = -150 }, { kind = "affinity", person = "balam", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "let_balam"
+text = "让巴兰自己去跟书记说价。"
+next = "settle_partial"
+reply = "他跟书记说了半个时辰，最后交了三袋盐当税。回来时他得意洋洋，说本来要五袋。"
+effects = [{ kind = "affinity", person = "balam", value = 2 }, { kind = "flag", flag = "c13_request_balam_taxed" }]
+
+# 三a、过急流之前的一瓢：盐税没有被抽过，工钱照数付。
+[[tracks.chapters]]
+key = "settle"
+title = "过急流之前的一瓢"
+text = "独木舟装满了，巴兰把货款和工钱一把一把数给你，数得很仔细。数完他又从自己那一份里舀出一瓢东西：可可豆磨成的粉，掺了香草和辣椒，冲上热水，是他亲手调的。“这一瓢是过急流之前调的。”他把木瓢递过来，“回梅里达，我过了急流再调一回，那回要更好。”码头上最后一袋盐扛上了船，船头的缆绳绷得直直的，他站在船尾，等你喝完才肯转身。"
+speaker = "captain"
+mood = "cheerful"
+at = "campeche"
+objectives = [{ kind = "at", at = "campeche", text = "在坎佩切的海边" }]
+when = [{ kind = "alive", person = "balam", value = true }]
+news = "坎佩切的海边，一支装满盐的独木舟商队往内陆去了，领头的坐在船正中间。"
+
+[[tracks.chapters.choices]]
+key = "take_gift"
+text = "接过那一瓢可可，祝他过急流顺利。"
+next = "done"
+reply = "你喝得很慢，他也不催，等你把瓢还回去，他才挺着胸上了独木舟，坐在正中间，抓着船帮，冲你挥手。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = 400 }, { kind = "affinity", person = "balam", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_balam_done" }, { kind = "memory", memory = "mem-request_balam-settle", title = "独木舟正中间的人" }]
+
+[[tracks.chapters.choices]]
+key = "price_it"
+text = "笑着问他：这一瓢可可，说个价？"
+next = "done"
+reply = "“不卖。”他头一回说这两个字，自己也愣了一下，然后把木瓢硬塞进你手里，看着你喝完。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = 400 }, { kind = "affinity", person = "balam", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_balam_done" }, { kind = "memory", memory = "mem-request_balam-settle", title = "独木舟正中间的人" }]
+
+# 三b、抽走的几袋盐：税被抽过，工钱比说好的少，那一瓢照样递过来。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "抽走的几袋盐"
+text = "独木舟装满了，巴兰把货款一把一把数给你，工钱却比说好的少了一截。书记抽走的那几袋盐，他说算他自己的账，不让你替他担。数完钱，他从自己那一份里舀出一瓢东西：可可豆磨成的粉，掺了香草和辣椒，冲上热水。“过急流之前调的。”他把木瓢递过来，眼睛一直看着船，没看你。脚夫们把最后一袋盐扛上船，缆绳一根根收紧，船身压得低了些，他还是没回头。"
+speaker = "captain"
+mood = "tender"
+at = "campeche"
+objectives = [{ kind = "at", at = "campeche", text = "在坎佩切的海边" }]
+when = [{ kind = "alive", person = "balam", value = true }]
+news = "坎佩切的海边，一支装满盐的独木舟商队往内陆去了，领头的为官府抽走的几袋盐认了账。"
+
+[[tracks.chapters.choices]]
+key = "take_partial"
+text = "收下货款，接过那一瓢，工钱的事不提了。"
+next = "done"
+reply = "他没争，把剩下的钱推过来。“那几袋盐，下回你来坎佩切，我替你记在可可账上。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 400 }, { kind = "affinity", person = "balam", value = 4 }, { kind = "flag", flag = "c13_request_balam_partial" }]
+
+[[tracks.chapters.choices]]
+key = "ask_partial"
+text = "问他：少给的工钱，是不是替那几袋盐垫了？"
+next = "done"
+reply = "“是。”他说得很轻，“盐是我的，税也是我的。少给你的，下回来坎佩切，我从可可里补上。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 400 }, { kind = "affinity", person = "balam", value = 4 }, { kind = "flag", flag = "c13_request_balam_partial" }]

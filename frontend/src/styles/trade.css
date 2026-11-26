@@ -1,0 +1,1172 @@
+/* ───────────── 交易所：交易台（每行调数量、成交单、底部账台）与交易类面板共用的数量加减 ─────────────
+ * 布局跟着交易所自己的宽度走（容器查询，不看整个屏幕）：
+ * - 窄（手机竖屏，内容区约 270–520 像素）：每种货折成两三行的卡片，表头只给读屏；
+ * - 宽（≥ 540 像素）：一行一种货，与表头对齐。
+ * 触屏（粗指针）上可点的目标不小于 40 像素；鼠标下紧凑一些。不依赖悬停：原因、合计都直接写在界面上。 */
+
+.market {
+  container: mk / inline-size;
+}
+
+/* 交易所里的小按钮（持有者切换、快捷数量、详细分析） */
+.market .btn.small {
+  padding: 1px 8px 2px;
+  font-size: 12px;
+}
+
+/* 只给读屏的文字 */
+.mk-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── 顶部：在哪艘船 / 商队 / 仓库上交易 ── */
+.mk-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 6px 0 4px;
+}
+.mk-holders {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.mk-holders .btn.active {
+  color: var(--ink);
+  background: var(--gold-2);
+  text-shadow: 0 1px 0 var(--gold-3);
+}
+.mk-holder {
+  font-weight: 700;
+}
+.mk-holder-count {
+  margin-left: 4px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--white);
+  background: var(--red-1);
+  text-shadow: none;
+}
+
+/* 卖出页上方：全部卖出的估算与按钮 */
+.mk-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 8px;
+  margin: 6px 0;
+}
+.mk-empty {
+  margin: 10px 2px;
+}
+
+/* 查找与排序 */
+.mk-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 2px 0 8px;
+}
+.mk-search {
+  flex: 1 1 9em;
+  min-width: 0;
+  min-height: 34px;
+}
+.mk-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.mk-sort select {
+  min-height: 34px;
+  max-width: 12em;
+  font-size: 13px;
+}
+
+/* ── 列表 ── */
+.mk-list {
+  border: 2px solid var(--line-strong);
+  background: var(--panel);
+}
+.mk-head,
+.mk-row {
+  display: grid;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 4px;
+}
+/* 窄窗口：表头只给读屏 */
+.mk-head {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.mk-row {
+  position: relative;
+  padding: 7px 8px;
+  border-bottom: 1px dashed var(--line);
+  cursor: pointer;
+  font-size: 13px;
+}
+.mk-row:nth-child(even of .mk-row) {
+  background-color: rgba(184, 149, 95, 0.14);
+}
+.mk-row:hover {
+  background-color: rgba(245, 214, 107, 0.26);
+}
+.mk-row:focus-visible {
+  outline: 2px solid var(--gold-1);
+  outline-offset: -2px;
+}
+/* 成交单里有数量的行：左边一道金边、底色略亮 */
+.mk-row.staged {
+  background-color: rgba(245, 214, 107, 0.32);
+  box-shadow: inset 4px 0 0 var(--gold-1);
+}
+/* 展开明细的行 */
+.mk-row.open {
+  background-color: rgba(220, 164, 52, 0.42);
+  box-shadow: inset 4px 0 0 var(--red-2);
+  border-bottom-style: solid;
+}
+.mk-row.mk-readonly {
+  cursor: pointer;
+}
+
+/* 成交的行闪一下（两个同样的动画轮换，连续成交也会重新播放） */
+.mk-flash-0 {
+  animation: mk-flash-a 1.2s ease-out;
+}
+.mk-flash-1 {
+  animation: mk-flash-b 1.2s ease-out;
+}
+@keyframes mk-flash-a {
+  0%,
+  18% {
+    background-color: rgba(245, 214, 107, 0.95);
+    box-shadow: inset 0 0 0 2px var(--gold-1);
+  }
+  100% {
+    background-color: rgba(245, 214, 107, 0);
+    box-shadow: inset 0 0 0 2px rgba(168, 107, 28, 0);
+  }
+}
+@keyframes mk-flash-b {
+  0%,
+  18% {
+    background-color: rgba(245, 214, 107, 0.95);
+    box-shadow: inset 0 0 0 2px var(--gold-1);
+  }
+  100% {
+    background-color: rgba(245, 214, 107, 0);
+    box-shadow: inset 0 0 0 2px rgba(168, 107, 28, 0);
+  }
+}
+
+/* 单元格 */
+.mk-c-good {
+  grid-area: good;
+  min-width: 0;
+}
+.mk-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 4px;
+}
+.mk-name .good-icon {
+  flex: none;
+  margin-right: 2px;
+}
+.mk-name-text {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.mk-name .tag {
+  margin-left: 0;
+}
+.mk-sub {
+  display: block;
+  margin-top: 1px;
+  padding-left: 22px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.mk-c-price,
+.mk-c-bid {
+  text-align: right;
+  white-space: nowrap;
+}
+.mk-c-price {
+  grid-area: price;
+}
+.mk-c-bid {
+  grid-area: bid;
+}
+.mk-price-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.mk-price-n {
+  font-weight: 700;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+/* 高于基准价：暖红（适合卖出）；低于基准价：绿（适合买入） */
+.mk-price.up .mk-price-n {
+  color: var(--down);
+}
+.mk-price.down .mk-price-n {
+  color: var(--up);
+}
+.mk-arrow {
+  font-size: 10px;
+}
+.mk-arrow.rise {
+  color: var(--down);
+}
+.mk-arrow.fall {
+  color: var(--up);
+}
+.mk-vs {
+  display: block;
+  font-size: 10px;
+  font-weight: normal;
+  color: var(--muted);
+}
+.spark {
+  flex: none;
+  color: var(--muted);
+  opacity: 0.9;
+}
+.spark-rise {
+  color: var(--down);
+}
+.spark-fall {
+  color: var(--up);
+}
+.mk-c-stock {
+  grid-area: stock;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  min-width: 0;
+}
+.mk-lbl {
+  margin-right: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.mk-stock-band {
+  margin-left: 4px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.mk-stock-band.band-0,
+.mk-stock-band.band-1 {
+  color: var(--down);
+}
+.mk-c-profit {
+  grid-area: profit;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.mk-c-qty {
+  grid-area: qty;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  justify-self: end;
+}
+.mk-line-total {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--down);
+  font-variant-numeric: tabular-nums;
+}
+.mk-line-total.gain {
+  color: var(--up);
+}
+.mk-c-act {
+  grid-area: act;
+  justify-self: end;
+}
+/* 一键操作（买满 / 全卖）：每行都有，用浅色的羊皮纸按钮，免得满屏金色抢了“成交”的风头；悬停与按下时才亮成金色 */
+.mk-quick {
+  white-space: nowrap;
+  min-height: 40px;
+}
+.market .btn.small.mk-quick {
+  padding: 3px 10px 4px;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--paper-mid);
+  text-shadow: none;
+  box-shadow:
+    inset 2px 2px 0 var(--white),
+    inset -2px -2px 0 var(--parchment-dark),
+    0 2px 0 var(--ink);
+}
+.market .btn.small.mk-quick:hover:not(:disabled) {
+  background: var(--gold-3);
+  box-shadow:
+    inset 2px 2px 0 var(--gold-4),
+    inset -2px -2px 0 var(--gold-1),
+    0 2px 0 var(--ink);
+}
+.market .btn.small.mk-quick:disabled {
+  color: #8a7152;
+  background: #dccaa4;
+  box-shadow:
+    inset 2px 2px 0 #ebdfc4,
+    inset -2px -2px 0 #b89f76,
+    0 2px 0 #6b5a45;
+}
+.mk-c-why {
+  grid-area: why;
+  justify-self: end;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+  text-align: right;
+}
+.mk-off-note {
+  justify-self: stretch;
+  text-align: center;
+}
+.mk-c-note {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--down);
+}
+/* 此地不收的货：灰掉 */
+.mk-row.mk-off > .mk-c-good {
+  color: var(--muted);
+}
+.mk-row.mk-off .good-icon {
+  opacity: 0.55;
+}
+
+/* 盈亏 */
+.mk-gain {
+  color: var(--up);
+  font-weight: 700;
+}
+.mk-loss {
+  color: var(--down);
+  font-weight: 700;
+}
+.mk-even {
+  color: var(--muted);
+}
+
+/* 列宽：数量一列与加减按钮一样宽（触屏 40 + 52 + 40，鼠标 32 + 52 + 32） */
+.mk-list {
+  --mk-qty-w: 132px;
+}
+@media (pointer: fine) {
+  .mk-list {
+    --mk-qty-w: 116px;
+  }
+}
+
+/* 窄窗口（缺省）：两行的卡片——第一行商品与价格，第二行库存（或盈亏）、数量与一键操作 */
+.mk-list-buy .mk-row {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "good  good  price"
+    "stock qty   act";
+}
+.mk-list-buy .mk-row.mk-blocked {
+  grid-template-areas:
+    "good  good price"
+    "stock why  why";
+}
+.mk-list-buy .mk-row.mk-readonly {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "good  price"
+    "stock stock";
+}
+.mk-list-sell .mk-row {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "good   good bid"
+    "profit qty  act";
+}
+.mk-list-sell .mk-row.mk-blocked {
+  grid-template-areas:
+    "good   good bid"
+    "profit why  why";
+}
+.mk-list-sell .mk-row.mk-off {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "good why";
+}
+
+/* 更窄（小屏手机）：数量与一键操作单独一行 */
+@container mk (max-width: 339px) {
+  .mk-list-buy .mk-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "good  price"
+      "stock stock"
+      "qty   act";
+  }
+  .mk-list-buy .mk-row.mk-blocked {
+    grid-template-areas:
+      "good  price"
+      "stock stock"
+      "why   why";
+  }
+  .mk-list-sell .mk-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "good   bid"
+      "profit profit"
+      "qty    act";
+  }
+  .mk-list-sell .mk-row.mk-blocked {
+    grid-template-areas:
+      "good   bid"
+      "profit profit"
+      "why    why";
+  }
+  .mk-c-qty {
+    justify-self: start;
+  }
+}
+
+/* 宽窗口：一行一种货，与表头对齐 */
+@container mk (min-width: 540px) {
+  .mk-head {
+    position: sticky;
+    top: var(--mk-stick-top, 0px);
+    z-index: 2;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    padding: 4px 8px;
+    color: var(--white);
+    background: var(--wood-2);
+    border-bottom: 2px solid var(--wood-0);
+    text-shadow: 1px 1px 0 var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .mk-lbl {
+    display: none;
+  }
+  .mk-list-buy .mk-head,
+  .mk-list-buy .mk-row,
+  .mk-list-buy .mk-row.mk-readonly {
+    grid-template-columns: minmax(0, 1.8fr) minmax(96px, 1fr) 64px var(--mk-qty-w) 88px;
+    grid-template-areas: "good price stock qty act";
+  }
+  .mk-list-buy .mk-row.mk-blocked {
+    grid-template-areas: "good price stock why why";
+  }
+  /* 只能看行情（远方港口、此地没有自己的船队）：没有数量与操作两列 */
+  .mk-list-ro .mk-head,
+  .mk-list-ro .mk-row,
+  .mk-list-ro .mk-row.mk-readonly {
+    grid-template-columns: minmax(0, 2fr) minmax(96px, 1fr) minmax(72px, 1fr);
+    grid-template-areas: "good price stock";
+  }
+  .mk-list-sell .mk-head,
+  .mk-list-sell .mk-row,
+  .mk-list-sell .mk-row.mk-off {
+    grid-template-columns: minmax(0, 1.6fr) minmax(96px, 1fr) 76px var(--mk-qty-w) 60px;
+    grid-template-areas: "good bid profit qty act";
+  }
+  .mk-list-sell .mk-row.mk-blocked {
+    grid-template-areas: "good bid profit why why";
+  }
+  .mk-list-sell .mk-row.mk-off {
+    grid-template-areas: "good why why why why";
+  }
+  /* 表头与数字列对齐：价格、盈亏靠右，数量居中 */
+  .mk-head .mk-h-1,
+  .mk-list-sell .mk-head .mk-h-2 {
+    text-align: right;
+  }
+  .mk-head .mk-h-3 {
+    text-align: center;
+  }
+  .mk-c-profit {
+    text-align: right;
+  }
+  .mk-stock-band {
+    display: block;
+    margin-left: 0;
+  }
+}
+
+/* ── 数量加减（交易类面板共用） ── */
+.qty-stepper {
+  display: inline-flex;
+  align-items: stretch;
+  height: 40px;
+}
+.qty-stepper .qty-btn {
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.qty-stepper .qty-input {
+  width: 52px;
+  min-width: 0;
+  padding: 0 2px;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  border-left-width: 0;
+  border-right-width: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.qty-stepper .qty-input::-webkit-outer-spin-button,
+.qty-stepper .qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.qty-stepper:not(.has-qty) .qty-input {
+  color: var(--muted);
+  font-weight: 400;
+}
+.qty-stepper.has-qty .qty-input {
+  background: var(--gold-4);
+}
+/* 鼠标下紧凑一些，输入框上可以左右拖动 */
+@media (pointer: fine) {
+  .qty-stepper {
+    height: 32px;
+  }
+  .qty-stepper .qty-btn {
+    width: 32px;
+    min-height: 32px;
+    font-size: 16px;
+  }
+  .qty-stepper .qty-input:not(:focus):not(:disabled) {
+    cursor: ew-resize;
+  }
+  .mk-quick {
+    min-height: 32px;
+  }
+}
+
+/* 金色的主按钮不能用时灰掉（外壳主题里 .btn.primary 排在禁用样式后面，会盖过它） */
+.market .btn.primary:disabled {
+  color: #d8c8ac;
+  background: #6e5a48;
+  text-shadow: none;
+  box-shadow:
+    inset 2px 2px 0 #857060,
+    inset -2px -2px 0 #54443a,
+    0 2px 0 var(--ink);
+}
+
+/* ── 展开的明细：数量滑块、快捷数量、预估与“只成交这一行” ── */
+.mk-drawer-row {
+  border-bottom: 2px solid var(--line-strong);
+  background: rgba(255, 250, 240, 0.55);
+  box-shadow: inset 4px 0 0 var(--red-2);
+}
+.mk-drawer {
+  padding: 8px 10px 10px 14px;
+  cursor: default;
+}
+.mk-qty {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0 8px;
+  padding: 8px 10px;
+  background: rgba(220, 164, 52, 0.14);
+  border: 1px dashed var(--line);
+}
+.mk-qty-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.mk-qty-row .mk-slider {
+  flex: 1 1 120px;
+  min-width: 120px;
+  min-height: 32px;
+}
+.mk-qty-row .field {
+  margin: 0;
+}
+.mk-qty-row input[type="number"] {
+  width: 90px;
+  min-height: 34px;
+}
+.mk-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mk-presets .btn {
+  min-width: 48px;
+  min-height: 34px;
+}
+.mk-presets .btn[aria-pressed="true"] {
+  color: var(--ink);
+  background: var(--gold-2);
+  text-shadow: 0 1px 0 var(--gold-3);
+}
+.mk-qty .preview {
+  margin: 0;
+}
+.mk-qty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+.mk-confirm {
+  font-weight: 700;
+  min-height: 40px;
+}
+.mk-in-cart {
+  font-size: 12px;
+}
+@media (pointer: coarse) {
+  .mk-presets .btn {
+    min-height: 40px;
+  }
+  .mk-qty-row input[type="number"] {
+    min-height: 40px;
+  }
+}
+
+/* 别处的价格 */
+.mk-else {
+  margin: 4px 0 6px;
+  font-size: 12px;
+}
+.mk-else-title {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 700;
+  color: var(--heading);
+}
+.mk-else ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mk-else li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  padding: 2px 0;
+  border-bottom: 1px dotted var(--line);
+}
+.mk-else li:last-child {
+  border-bottom: 0;
+}
+.mk-else li.better .mk-else-price {
+  color: var(--up);
+  font-weight: 700;
+}
+.mk-else small {
+  margin-left: auto;
+}
+
+/* ── 底部账台：贴在窗口底部的木条，金色数字 ── */
+.mk-cart {
+  --text: var(--paper);
+  --muted: #dcc59b;
+  --up: #9ee6ae;
+  --down: #ffa596;
+  position: sticky;
+  bottom: var(--mk-stick-bottom, 0px);
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "status keys";
+  align-items: center;
+  gap: 4px 12px;
+  margin: 10px 0 0;
+  padding: 7px 12px 8px;
+  color: var(--text);
+  background-color: var(--wood-1);
+  background-image: var(--ui-planks, none);
+  background-size: 96px 32px;
+  image-rendering: pixelated;
+  border: 2px solid var(--ink);
+  border-top: 3px solid var(--gold-1);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 243, 176, 0.18),
+    0 -4px 10px rgba(43, 27, 23, 0.28);
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.mk-cart.open {
+  grid-template-areas:
+    "status status"
+    "sum    actions"
+    "warn   warn";
+}
+.mk-cart-status {
+  grid-area: status;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.mk-load {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.mk-load .rolling {
+  font-weight: 700;
+  color: var(--gold-3);
+}
+.mk-load .rolling.rolling-up {
+  color: var(--up);
+}
+.mk-load .rolling.rolling-down {
+  color: var(--down);
+}
+.mk-after {
+  font-weight: 700;
+  color: var(--gold-4);
+}
+.mk-after.bad {
+  color: var(--down);
+}
+.mk-dot {
+  color: var(--muted);
+}
+.mk-keys {
+  grid-area: keys;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.mk-cart-sum {
+  grid-area: sum;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-size: 13px;
+}
+.mk-sum-part b {
+  font-variant-numeric: tabular-nums;
+}
+.mk-cart-warn {
+  grid-area: warn;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--white);
+  background: rgba(140, 31, 40, 0.75);
+  border: 1px solid var(--red-0);
+}
+.mk-cart-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mk-cart .mk-settle {
+  min-height: 40px;
+  padding: 4px 16px 5px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.mk-cart .mk-clear {
+  min-height: 40px;
+}
+.load-bar {
+  position: relative;
+  display: block;
+  height: 8px;
+  background: rgba(11, 15, 36, 0.55);
+  border: 1px solid var(--ink);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+.load-bar i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.load-now {
+  left: 0;
+  background: linear-gradient(var(--gold-3), var(--gold-1));
+}
+.load-add {
+  background: repeating-linear-gradient(135deg, var(--gold-3) 0 3px, rgba(245, 214, 107, 0.25) 3px 6px);
+}
+.load-free {
+  background: rgba(245, 214, 107, 0.16);
+  outline: 1px dashed var(--gold-3);
+  outline-offset: -1px;
+}
+.load-bar.over .load-add {
+  background: repeating-linear-gradient(135deg, var(--red-3) 0 3px, rgba(236, 106, 92, 0.3) 3px 6px);
+}
+/* 触屏与窄窗口不写键盘提示 */
+@media (hover: none), (pointer: coarse) {
+  .mk-keys {
+    display: none;
+  }
+  .mk-cart:not(.open) {
+    grid-template-areas: "status status";
+  }
+}
+@container mk (max-width: 539px) {
+  .mk-keys {
+    display: none;
+  }
+  /* 窄窗口：现金、装载各占一行，不在半中间折行 */
+  .mk-cart.open .mk-load-part {
+    display: block;
+  }
+  .mk-cart.open .mk-dot {
+    display: none;
+  }
+  .mk-cart:not(.open) {
+    grid-template-areas: "status status";
+  }
+  .mk-cart.open {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "status"
+      "sum"
+      "warn"
+      "actions";
+  }
+  .mk-cart-actions {
+    justify-content: flex-end;
+  }
+  .mk-cart .mk-settle {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-flash-0,
+  .mk-flash-1 {
+    animation: none;
+    outline: 2px solid var(--gold-1);
+    outline-offset: -2px;
+  }
+}
+
+/* ───────────── 装卸台（舰队、商队、仓库之间搬货）与仓库页 ───────────── */
+.tr-desk {
+  container: trd / inline-size;
+}
+.tr-sides {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+@container trd (min-width: 560px) {
+  .tr-sides {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.tr-side {
+  container: trs / inline-size;
+  min-width: 0;
+  border: 2px solid var(--line-strong);
+  background: var(--panel);
+}
+.tr-head {
+  display: grid;
+  gap: 4px;
+  padding: 6px 8px;
+  background: rgba(184, 149, 95, 0.18);
+  border-bottom: 1px dashed var(--line);
+}
+.tr-head .field {
+  margin: 0;
+}
+.tr-head select {
+  min-height: 34px;
+  max-width: 100%;
+}
+.tr-load {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.tr-after {
+  font-weight: 700;
+  color: var(--heading);
+}
+.tr-after.bad {
+  color: var(--down);
+}
+/* 羊皮纸上的装载条：浅色的底 */
+.tr-head .load-bar,
+.wh .load-bar {
+  background: rgba(125, 95, 54, 0.2);
+  border-color: var(--parchment-deep);
+  box-shadow: none;
+}
+.tr-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "good step all";
+  align-items: center;
+  gap: 4px 8px;
+  padding: 6px 8px;
+  border-bottom: 1px dashed var(--line);
+}
+.tr-row:last-child {
+  border-bottom: 0;
+}
+.tr-row.staged {
+  background: rgba(245, 214, 107, 0.32);
+  box-shadow: inset 4px 0 0 var(--gold-1);
+}
+@container trs (max-width: 319px) {
+  .tr-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "good good"
+      "step all";
+  }
+}
+.tr-good {
+  grid-area: good;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.tr-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.tr-qty {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.tr-row .qty-stepper {
+  grid-area: step;
+}
+.btn.small.tr-all {
+  grid-area: all;
+  min-height: 40px;
+  padding: 3px 8px 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+@media (pointer: fine) {
+  .btn.small.tr-all {
+    min-height: 32px;
+  }
+}
+.tr-empty {
+  margin: 8px;
+}
+.tr-swap {
+  align-self: center;
+  justify-self: center;
+  min-width: 40px;
+  min-height: 40px;
+  font-size: 18px;
+}
+@container trd (max-width: 559px) {
+  .tr-swap {
+    transform: rotate(90deg);
+  }
+}
+.tr-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 2px solid var(--line-strong);
+  background: rgba(245, 214, 107, 0.22);
+}
+.tr-sum {
+  flex: 1 1 12em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-weight: 700;
+}
+.tr-foot .btn {
+  min-height: 40px;
+}
+.tr-need {
+  margin: 6px 0;
+}
+.wh-cap {
+  margin: 0 0 6px;
+}
+.wh-cap-line {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 4px;
+}
+.wh-row .field input[type="number"] {
+  width: 96px;
+  min-height: 34px;
+}
+.wh-cost {
+  font-size: 12px;
+}
+
+/* ───────────── 舰队页的“购买补给” ───────────── */
+.sp-rows {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 4px 0 6px;
+}
+.sp-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sp-label {
+  color: var(--muted);
+}
+.sp-presets {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sp-presets .btn {
+  min-height: 34px;
+}
+@media (pointer: coarse) {
+  .sp-presets .btn {
+    min-height: 40px;
+  }
+}
+.sp-note {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+/* ───────────── 船厂：在港舰队的船（卖船要确认、卖不了写明原因、每艘船自己的改造） ───────────── */
+.sy-ships {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.sy-ship {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.sy-ship:last-child {
+  border-bottom: 0;
+}
+.sy-ship-name {
+  flex: 1 1 14em;
+  min-width: 0;
+}
+.sy-ship-acts,
+.sy-refit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.sy-refit .field {
+  margin: 0;
+}
+.sy-ship .btn,
+.sy-refit select {
+  min-height: 34px;
+}
+@media (pointer: coarse) {
+  .sy-ship .btn,
+  .sy-refit select {
+    min-height: 40px;
+  }
+}
+.sy-why {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+}
+.sy-short {
+  flex-basis: 100%;
+  font-size: 12px;
+}
+
+/* ── 货档（T01）：商誉不够的货照样列出、置灰；同一处写“差多少商誉”与一键“去投资” ── */
+.mk-rank {
+  background: rgba(120, 92, 40, 0.16);
+}
+.mk-rank.locked {
+  background: rgba(150, 60, 40, 0.18);
+  color: var(--bad, #a23b2a);
+}
+.mk-rank-pass {
+  background: rgba(60, 120, 80, 0.18);
+}
+.mk-c-rank {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-style: normal;
+}
+.mk-row.mk-blocked .mk-c-good,
+.mk-row.mk-blocked .mk-price,
+.mk-row.mk-blocked .mk-c-stock {
+  opacity: 0.6;
+}
+.mk-rank-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin: 4px 0 6px;
+}
+.mk-rank-bar > span {
+  flex: 1 1 240px;
+  min-width: 0;
+}

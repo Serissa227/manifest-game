@@ -1,0 +1,2081 @@
+/* 新界面（试用）——航海：航海图舞台上的地点列表、图例、缩放、出港对话框、手动航行的罗盘与航行 HUD。
+ * 第二阶段预留给这一组画面的文件：每一条规则都以 :root[data-ui="v2"] 开头（媒体查询、容器查询里的也一样），动画名以 v2- 开头；
+ * 只用 base.css 的令牌（--v2-*），共用的反馈组件（就地错误、空状态、快捷键、确认）的样式在 feedback.css，不在这里重写
+ * （放在深色浮层里时只换颜色，见第 2 节末尾）。
+ *
+ * 版式（docs/UI-REDESIGN.md 第 2、4、5 节）：
+ * - 舞台上的浮层是“夜航”的深色：左侧栏的航行状态、地点、图例，右上的缩放，选目的地的提示条，手动航行的仪表、罗经盘、帆与操作。
+ *   黄铜细线描边、8 px 圆角、柔和阴影；没有木框、羊皮纸与像素斜面。
+ * - 对话框是“纸面”：出航确认、手动出港——纸底、16 px 圆角、标题宋体、标题下一道双细线；手机上从底部升起、整宽，主按钮贴底（拇指区）。
+ * - 像素美术（地点标记、航行小画面、海图本身）一像素不动，只换外面的框。
+ * 对比度（WCAG AA）：深色底上的正文 on-night / night-1 13.78、标签 on-night-2 8.23、说明 on-night-3 5.70、
+ * 黄铜色字 brass-hi / night-1 8.39、警告字 down-night / night-1 7.22；纸面上见 base.css 与 docs/UI-REDESIGN.md 第 6 节。
+ */
+
+/* ═════════════════════════ 1. 舞台上的深色浮层（左侧栏的小窗） ═════════════════════════ */
+:root[data-ui="v2"] .chart-win {
+  --text: var(--v2-on-night);
+  --muted: var(--v2-on-night-2);
+  color: var(--v2-on-night);
+  background-color: rgba(17, 31, 49, 0.97);
+  background-image: none;
+  border: 1px solid var(--v2-night-line-strong);
+  outline: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .chart-win.collapsed {
+  box-shadow: var(--v2-shadow-2);
+}
+/* 小窗的标题：小菱形 + 字；整条标题都能点（折叠键的点按区铺满标题栏） */
+:root[data-ui="v2"] .chart-win-title {
+  position: relative;
+  min-height: 36px;
+  gap: 8px;
+  padding: 0 4px 0 12px;
+  background: transparent;
+  border-bottom: 1px solid var(--v2-night-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-win.collapsed > .chart-win-title {
+  border-bottom-color: transparent;
+}
+:root[data-ui="v2"] .chart-win-title h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--v2-font-ui);
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: var(--v2-lh-tight);
+  letter-spacing: 0.08em;
+  color: var(--v2-on-night);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .chart-win-title h3::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--v2-brass);
+  transform: rotate(45deg);
+}
+/* 折叠键：安静的小方键，画一个箭头（展开时朝上、收起时朝下）；字（“−”“+”）只留给读屏之外的 DOM，不显示 */
+:root[data-ui="v2"] .chart-win-toggle {
+  position: static;
+  display: inline-grid;
+  place-items: center;
+  width: var(--v2-h-sm);
+  min-width: var(--v2-h-sm);
+  height: var(--v2-h-sm);
+  min-height: 0;
+  padding: 0;
+  font-size: 0;
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-win-toggle::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  margin-top: 3px;
+  border: solid currentColor;
+  border-width: 1.5px 0 0 1.5px;
+  transform: rotate(45deg);
+}
+:root[data-ui="v2"] .chart-win-toggle[aria-expanded="false"]::before {
+  margin-top: -3px;
+  transform: rotate(225deg);
+}
+/* 点按区铺满整条标题 */
+:root[data-ui="v2"] .chart-win-toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+:root[data-ui="v2"] .chart-win-toggle:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-win-title:hover .chart-win-toggle {
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .chart-win-toggle:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .chart-win-body {
+  padding: 8px 10px 10px;
+}
+:root[data-ui="v2"] .chart-win ::-webkit-scrollbar-thumb {
+  background-color: rgba(226, 190, 120, 0.3);
+}
+:root[data-ui="v2"] .chart-win ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(226, 190, 120, 0.5);
+}
+
+/* 左侧栏：宽一点（字放大到 14 px 后两列地点仍放得下） */
+:root[data-ui="v2"] .chart-side {
+  top: 12px;
+  left: 12px;
+  width: 280px;
+  max-width: calc(100% - 24px);
+  max-height: calc(56% - 16px);
+  gap: 8px;
+}
+/* 左下角没有航海日志（外壳的 .gamelog，有提醒时才出现，最高 45%）时：左侧栏用满整列的高度，图例与地点不必挤在上半截滚动。
+ * 有航海日志时照旧只占上面 56%（给它让位）；手机与矮屏另有规则（文末，更具体，照样生效） */
+:root[data-ui="v2"] .shell-main:not(:has(> .gamelog)) .chart-view .chart-side {
+  max-height: calc(100% - 24px);
+}
+/* 收起的小窗只是一枚标题签：不占满左侧栏的宽度，海图多露出一块。
+ * 新界面里地点与图例缺省就是收起的（components/MapView.tsx），点标题再展开。 */
+:root[data-ui="v2"] .chart-side > .chart-win.collapsed {
+  align-self: flex-start;
+  min-width: 124px;
+}
+:root[data-ui="v2"] .chart-side > .chart-win.collapsed > .chart-win-title {
+  gap: 14px;
+}
+/* 放不下时先收图例（参考用的，最少还留四行左右），地点（要点的）尽量完整；收起的图例只剩标题，不再收 */
+:root[data-ui="v2"] .chart-side > .chart-legend-win {
+  flex-shrink: 8;
+}
+:root[data-ui="v2"] .chart-side > .chart-legend-win.collapsed {
+  flex-shrink: 0;
+}
+
+/* ═════════════════════════ 2. 地点列表 ═════════════════════════ */
+:root[data-ui="v2"] .chart-places-win .chart-win-body {
+  padding: 8px 8px 10px;
+}
+/* 查找地点：深色输入框 */
+:root[data-ui="v2"] .chart-filter {
+  margin: 0 0 8px;
+}
+:root[data-ui="v2"] .chart-filter input {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night);
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-filter input::placeholder {
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .chart-filter input:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 1px;
+}
+:root[data-ui="v2"] .chart-view .chart-loc-list {
+  gap: 10px;
+}
+:root[data-ui="v2"] .chart-loc-group {
+  gap: 4px;
+}
+:root[data-ui="v2"] .chart-subgroup-title {
+  margin: 0 4px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .chart-loc-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 4px;
+}
+/* 一个地点一行：标记图 + 名字；悬停微亮，选中的黄铜底；能去的（选目的地时）黄铜描边 */
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc {
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 8px 0 6px;
+  font-size: var(--v2-fs-md);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--v2-on-night);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+  text-shadow: none;
+  transition:
+    background-color var(--v2-dur-1) var(--v2-ease),
+    border-color var(--v2-dur-1) var(--v2-ease);
+}
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc:hover {
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line);
+}
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc:active {
+  transform: none;
+  background: var(--v2-night-3);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 0;
+}
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc.active,
+:root[data-ui="v2"] .chart-view .chart-site-list .loc.active {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: transparent;
+  border-style: solid;
+}
+/* 没到访过的：字淡一点（不用斜体，中文斜体难看） */
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc.unknown {
+  font-style: normal;
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc.unknown.active {
+  color: var(--v2-ink);
+}
+/* 选目的地：能去的地点微亮底 + 黄铜描边（不再闪），去不了的淡下去。
+ * “选中”（.active，平时是黄铜底墨色字）在选目的地时没有意义：一律回到深色底浅色字，免得墨色字落在深色底上看不见 */
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc.pickable {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-brass);
+  animation: none;
+}
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc.pickable:hover {
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc.unknown.pickable {
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc.active.pickable {
+  font-weight: 600;
+  color: var(--v2-on-night);
+}
+/* 去不了的（内陆城市、旗舰队所在的港口）：字换成说明色（深色底上 5.70），标记图淡下去——不用整行半透明，字仍达 AA */
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc:not(.pickable),
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc.active:not(.pickable) {
+  font-weight: 500;
+  color: var(--v2-on-night-3);
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-ui="v2"] .chart-view.picking .chart-loc-list .loc:not(.pickable) .chart-loc-icon {
+  opacity: 0.45;
+}
+:root[data-ui="v2"] .chart-loc-icon {
+  image-rendering: pixelated;
+}
+/* 殖民点（“未开拓之地”）：虚线框；我的殖民地实线黄铜 */
+:root[data-ui="v2"] .chart-group-title {
+  gap: 8px;
+  margin: 14px 4px 6px;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .chart-group-title::before,
+:root[data-ui="v2"] .chart-group-title::after {
+  height: 1px;
+  background: var(--v2-night-line-strong);
+  border: 0;
+}
+:root[data-ui="v2"] .chart-view .chart-site-list .loc {
+  background: transparent;
+  border: 1px dashed var(--v2-night-line);
+}
+:root[data-ui="v2"] .chart-view .chart-site-list .group-mine .loc {
+  border-style: solid;
+  border-color: var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .chart-view .chart-site-list .group-claimed .loc,
+:root[data-ui="v2"] .chart-view .chart-site-list .group-other .loc {
+  background: transparent;
+  color: var(--v2-on-night-2);
+}
+/* 市况的小三角旗：贴着圆角收一点 */
+:root[data-ui="v2"] .chart-view .chart-loc-list .loc.chart-cond::after {
+  top: 1px;
+  right: 1px;
+  border-width: 0 9px 9px 0;
+  border-top-right-radius: 3px;
+  filter: none;
+}
+/* 查找没有结果：空状态 + “清除查找”（共用的 EmptyState，放在深色小窗里只换颜色） */
+:root[data-ui="v2"] .chart-win .v2-empty {
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 12px 10px;
+  background: transparent;
+  border-color: var(--v2-night-line-strong);
+}
+:root[data-ui="v2"] .chart-win .v2-empty-text {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .chart-win .v2-empty-action {
+  min-height: var(--v2-h-sm);
+  margin-top: 4px;
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .chart-win .v2-empty-action:focus-visible {
+  outline-color: var(--v2-focus-night);
+}
+
+/* ═════════════════════════ 3. 图例 ═════════════════════════ */
+:root[data-ui="v2"] .chart-view .chart-legend {
+  grid-template-columns: repeat(2, auto);
+  justify-content: start;
+  gap: 6px 14px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.3;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .chart-legend li {
+  gap: 6px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .chart-legend-icon {
+  image-rendering: pixelated;
+}
+
+/* ═════════════════════════ 4. 缩放与“渲染不可用” ═════════════════════════ */
+/* 右上角一竖条：三个键连在一起，中间一道细线 */
+:root[data-ui="v2"] .chart-zoom {
+  top: 12px;
+  right: calc(var(--stage-cover-right, 0px) + 12px);
+  gap: 0;
+  background: rgba(17, 31, 49, 0.97);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .chart-view .chart-zoom-btn,
+:root[data-ui="v2"] .nav-zoom .chart-zoom-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  min-height: 0;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--v2-on-night);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-zoom .chart-zoom-btn + .chart-zoom-btn {
+  border-top: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .chart-view .chart-zoom-btn:hover:not(:disabled) {
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-view .chart-zoom-btn:active:not(:disabled) {
+  background: var(--v2-night-3);
+}
+:root[data-ui="v2"] .chart-view .chart-zoom-btn:disabled {
+  color: var(--v2-on-night-3);
+  background: transparent;
+  opacity: 0.6;
+}
+:root[data-ui="v2"] .chart-view .chart-zoom-btn:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: -2px;
+}
+:root[data-ui="v2"] .chart-zoom-fit canvas {
+  image-rendering: pixelated;
+}
+:root[data-ui="v2"] .chart-view .chart-fail {
+  padding: 12px 18px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 3px solid var(--v2-seal-hi);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+
+/* ═════════════════════════ 5. 深色浮层里的按钮（提示条、航行状态、手动航行的操作与世界图提示条） ═════════════════════════ */
+:root[data-ui="v2"] .chart-btn {
+  font-size: var(--v2-fs-md);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .voyage-pick .chart-btn:not(.primary),
+:root[data-ui="v2"] .voyage-hud .chart-btn:not(.primary),
+:root[data-ui="v2"] .nav-actions .chart-btn:not(.primary),
+:root[data-ui="v2"] .nav-worldbar .chart-btn:not(.primary) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .voyage-pick .chart-btn:not(.primary):hover:not(:disabled),
+:root[data-ui="v2"] .voyage-hud .chart-btn:not(.primary):hover:not(:disabled),
+:root[data-ui="v2"] .nav-actions .chart-btn:not(.primary):hover:not(:disabled),
+:root[data-ui="v2"] .nav-worldbar .chart-btn:not(.primary):hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-3);
+  border-color: var(--v2-brass);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .voyage-pick .chart-btn:not(.primary):active:not(:disabled),
+:root[data-ui="v2"] .voyage-hud .chart-btn:not(.primary):active:not(:disabled),
+:root[data-ui="v2"] .nav-actions .chart-btn:not(.primary):active:not(:disabled),
+:root[data-ui="v2"] .nav-worldbar .chart-btn:not(.primary):active:not(:disabled) {
+  background: var(--v2-night-1);
+}
+:root[data-ui="v2"] .voyage-pick .chart-btn:focus-visible,
+:root[data-ui="v2"] .voyage-hud .chart-btn:focus-visible,
+:root[data-ui="v2"] .nav-actions .chart-btn:focus-visible,
+:root[data-ui="v2"] .nav-worldbar .chart-btn:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 2px;
+}
+/* 主按钮（起航、启航、回到航行）：黄铜底、墨色字——与外壳的主按钮一样，不再是红底 */
+:root[data-ui="v2"] .chart-btn.primary:not(:disabled) {
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: var(--v2-brass-hi);
+  border: 1px solid #a87a24;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .chart-btn.primary:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+/* 主按钮不可用（无法到达时的“起航”）：灰字、淡底、虚线边，一眼看出点不了；原因就写在它上面（就地的原因） */
+:root[data-ui="v2"] .chart-btn.primary:disabled {
+  color: #8e8170;
+  font-weight: 600;
+  background: var(--v2-paper-sunk);
+  border: 1px dashed var(--v2-line-control);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-btn:disabled .v2-kbd {
+  opacity: 0.55;
+}
+/* 深色底上的小键帽 */
+:root[data-ui="v2"] .voyage-pick .chart-btn:not(.primary) .v2-kbd,
+:root[data-ui="v2"] .nav-actions .chart-btn:not(.primary) .v2-kbd,
+:root[data-ui="v2"] .nav-worldbar .chart-btn:not(.primary) .v2-kbd {
+  background: var(--v2-night-1);
+  border-color: var(--v2-night-line-strong);
+}
+
+/* ═════════════════════════ 6. 选目的地的提示条 ═════════════════════════ */
+/* 深色小条，左边一道黄铜：一句话 + 说明 + “取消” */
+:root[data-ui="v2"] .voyage-pick {
+  top: 12px;
+  gap: 16px;
+  padding: 8px 8px 8px 16px;
+  color: var(--v2-on-night);
+  background: rgba(17, 31, 49, 0.96);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 3px solid var(--v2-brass-hi);
+  outline: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  animation: v2-voyage-bar-in var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .voyage-pick > div {
+  gap: 2px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .voyage-pick strong {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v2-on-night);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .voyage-pick span {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: var(--v2-on-night-2);
+}
+@keyframes v2-voyage-bar-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ═════════════════════════ 7. 航行状态（经典世界，海上） ═════════════════════════ */
+:root[data-ui="v2"] .voyage-hud.floating {
+  top: 12px;
+  left: 12px;
+  width: 280px;
+}
+:root[data-ui="v2"] .voyage-body {
+  gap: 10px;
+  padding: 10px 12px 4px;
+}
+/* 航行小画面：书页插图式的细框 */
+:root[data-ui="v2"] .voyage-vignette {
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: 0 0 0 3px var(--v2-night-0);
+}
+:root[data-ui="v2"] .chart-kv dt {
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .voyage-kv {
+  gap: 6px 12px;
+  font-size: var(--v2-fs-md);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .voyage-kv dt {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+}
+:root[data-ui="v2"] .voyage-kv dd {
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .voyage-kv dd strong {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .voyage-eta {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+/* 警告字（粮水告急、士气低落、船员不足）：深色底上的浅红 */
+:root[data-ui="v2"] .voyage-hud .chart-warn {
+  color: var(--v2-down-night);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .chart-tag {
+  padding: 1px 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border: 0;
+  border-radius: var(--v2-r-xs);
+}
+:root[data-ui="v2"] .chart-tag.warn {
+  color: #fff8ee;
+  background: var(--v2-seal);
+}
+/* 士气：6 px 圆头细条（低落时变红） */
+:root[data-ui="v2"] .voyage-meter {
+  width: 64px;
+  height: 6px;
+  background: var(--v2-night-3);
+  border: 0;
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+  overflow: hidden;
+}
+:root[data-ui="v2"] .voyage-meter > span {
+  background: var(--v2-brass-hi);
+  border-radius: var(--v2-r-pill);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .voyage-hud .chart-warn .voyage-meter > span {
+  background: var(--v2-down-night);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .voyage-found {
+  color: var(--v2-brass-hi);
+}
+/* 航程进度（只在 v2 下有）：6 px 黄铜细条 */
+:root[data-ui="v2"] .v2-voyage-progress {
+  height: 6px;
+  margin: 0 12px;
+  background: var(--v2-night-3);
+  border-radius: var(--v2-r-pill);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .voyage-body > .v2-voyage-progress {
+  margin: -4px 0 0;
+}
+:root[data-ui="v2"] .v2-voyage-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--v2-brass-hi);
+  border-radius: var(--v2-r-pill);
+}
+/* 收起时：一行“目的地 · 还需几天” + 进度 */
+:root[data-ui="v2"] .voyage-summary {
+  gap: 4px 10px;
+  padding: 8px 12px 8px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .voyage-summary strong {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-on-night);
+}
+/* “改变航向”：整宽 */
+:root[data-ui="v2"] .voyage-hud .chart-dialog-actions {
+  padding: 10px 12px 12px;
+}
+:root[data-ui="v2"] .voyage-hud .chart-dialog-actions .chart-btn {
+  flex: 1 1 auto;
+}
+
+/* ═════════════════════════ 8. 纸面的对话框：出航确认、手动出港 ═════════════════════════ */
+:root[data-ui="v2"] .chart-dialog-backdrop {
+  padding-bottom: 20px;
+  background: rgba(6, 11, 20, 0.32);
+}
+:root[data-ui="v2"] .chart-win.chart-dialog {
+  --text: var(--v2-ink);
+  --muted: var(--v2-ink-2);
+  --line: var(--v2-line);
+  --line-strong: var(--v2-line-strong);
+  --heading: var(--v2-ink);
+  width: min(460px, calc(100% - 24px));
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  border: 1px solid rgba(12, 18, 28, 0.55);
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-3) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .chart-dialog > .chart-win-title {
+  min-height: 0;
+  padding: 16px 20px 10px;
+  background: var(--v2-paper-1);
+  border-bottom: 3px double var(--v2-line-strong);
+}
+:root[data-ui="v2"] .chart-dialog > .chart-win-title h3 {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .chart-dialog > .chart-win-title h3::before {
+  display: none;
+}
+:root[data-ui="v2"] .chart-dialog-body {
+  gap: 10px 16px;
+  padding: 16px 20px 6px;
+}
+:root[data-ui="v2"] .chart-dialog-body > p,
+:root[data-ui="v2"] .chart-dialog-body > .v2-inline-error,
+:root[data-ui="v2"] .chart-dialog-body > .chart-crew {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+/* 目的地的标记图：书页插图——海蓝底、细框、纸色衬边 */
+:root[data-ui="v2"] .chart-dialog-art {
+  padding: 8px;
+  background: var(--v2-sea);
+  border: 1px solid var(--v2-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow:
+    0 0 0 3px var(--v2-paper-2),
+    0 0 0 4px var(--v2-line);
+}
+:root[data-ui="v2"] .chart-dialog .chart-kv {
+  gap: 6px 14px;
+  font-size: var(--v2-fs-md);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .chart-dialog .chart-kv dt {
+  font-size: var(--v2-fs-sm);
+  line-height: 1.6;
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .chart-dialog .chart-kv dd {
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .chart-dest-name {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+:root[data-ui="v2"] .chart-faction {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* 纸面上的小签：未到访（海蓝）、殖民点的现状（我的：黄铜；被占领 / 他人的：印章红） */
+:root[data-ui="v2"] .chart-dialog .chart-tag {
+  color: var(--v2-sea);
+  background: var(--v2-paper-2);
+  box-shadow: inset 0 0 0 1px var(--v2-line);
+}
+:root[data-ui="v2"] .chart-dialog .chart-tag.site-mine {
+  color: var(--v2-brass-ink);
+  background: #f6e6c2;
+}
+:root[data-ui="v2"] .chart-dialog .chart-tag.site-claimed,
+:root[data-ui="v2"] .chart-dialog .chart-tag.site-other {
+  color: var(--v2-seal);
+  background: #f8e3dc;
+}
+:root[data-ui="v2"] .chart-dialog .chart-warn,
+:root[data-ui="v2"] .chart-dialog .chart-kv dd.chart-warn {
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .chart-dialog .chart-note {
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .chart-dialog .v2-inline-error {
+  flex-wrap: wrap;
+  row-gap: 8px;
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .chart-dialog .v2-inline-error-text {
+  flex: 1 1 calc(100% - 28px);
+}
+:root[data-ui="v2"] .chart-dialog .v2-inline-error-action {
+  align-self: flex-start;
+  margin-left: 28px;
+}
+:root[data-ui="v2"] .chart-crew .crew-hire {
+  margin: 6px 0 0 41px;
+}
+:root[data-ui="v2"] .chart-crew .crew-hire-note {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+/* 一键补给、补船员：浅黄铜底 + 黄铜描边（比主按钮安静、比次要按钮醒目；对话框里的主按钮只有“起航”一个）。
+ * 颜色与交易所的一键“买满 / 全卖”（market.css 的 .mk-quick）同一套 */
+:root[data-ui="v2"] .chart-supply .chart-btn,
+:root[data-ui="v2"] .chart-dialog .v2-inline-error-action,
+:root[data-ui="v2"] .chart-crew .crew-hire .btn {
+  color: #4d3407;
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: #b3852f;
+}
+:root[data-ui="v2"] .chart-supply .chart-btn:hover:not(:disabled),
+:root[data-ui="v2"] .chart-dialog .v2-inline-error-action:hover:not(:disabled),
+:root[data-ui="v2"] .chart-crew .crew-hire .btn:hover:not(:disabled) {
+  background: #f1d99f;
+  border-color: #8f6418;
+}
+/* FIX5F 第二趟：粮水不够这趟、就地能补时，“补给到建议量”是这个框的主按钮（黄铜底），“起航”降成次要 */
+:root[data-ui="v2"] .chart-dialog .v2-inline-error-action.primary {
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: #a87a24;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .chart-dialog .v2-inline-error-action.primary:hover:not(:disabled) {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+/* 两级原因（共用的 InlineError 都用“做不了”那一种：不打断读屏，可被 aria-describedby 指向；这里只换颜色）：
+ * - 有风险、照样能走（粮水不够全程）：黄铜细线、空心的黄铜“!”、黄铜色的字（纸面上 5.72）；
+ * - 做不了（船员不足、无法到达）：印章红细线与字（5.77）、半粗；“起航”此时不可用 */
+:root[data-ui="v2"] .chart-dialog .v2-inline-error.v2-voyage-risk {
+  padding: 8px 0 8px 12px;
+  border-left: 3px solid var(--v2-brass);
+}
+:root[data-ui="v2"] .chart-dialog .v2-voyage-risk .v2-inline-error-mark {
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .chart-dialog .v2-voyage-risk .v2-inline-error-reason {
+  font-weight: 600;
+  color: var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .chart-dialog .v2-inline-error.is-blocked:not(.v2-voyage-risk) {
+  border-left: 3px solid var(--v2-seal);
+}
+:root[data-ui="v2"] .chart-dialog .v2-inline-error.is-blocked:not(.v2-voyage-risk) .v2-inline-error-reason {
+  font-weight: 600;
+}
+:root[data-ui="v2"] .chart-dialog-actions {
+  gap: 8px;
+  padding: 14px 20px 18px;
+}
+:root[data-ui="v2"] .chart-dialog-actions .chart-btn {
+  min-height: var(--v2-h-md);
+  gap: 8px;
+}
+:root[data-ui="v2"] .chart-dialog-actions .chart-btn.primary {
+  min-width: 112px;
+}
+/* 无法到达：下一步是“重新选择”——它画成主按钮（黄铜底、墨色字），不可用的“起航”在它前面只留灰的虚线框 */
+:root[data-ui="v2"] .chart-dialog-actions.v2-voyage-noroute .chart-btn.v2-voyage-repick {
+  min-width: 112px;
+  color: var(--v2-ink);
+  font-weight: 600;
+  background: var(--v2-brass-hi);
+  border: 1px solid #a87a24;
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .chart-dialog-actions.v2-voyage-noroute .chart-btn.v2-voyage-repick:hover {
+  background: #eabd68;
+  border-color: #8f6418;
+}
+
+/* 手动出港：说明在上，罗经盘居中（纸面上的罗经盘配色见第 10 节） */
+:root[data-ui="v2"] .nav-depart .chart-dialog-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 12px;
+}
+:root[data-ui="v2"] .nav-depart .chart-dialog-body > .chart-note {
+  align-self: stretch;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass {
+  margin: 4px auto 14px;
+}
+/* 罗经盘下面：船上的粮水够几天（不到三天时是印章红）与一键补到 10 / 30 天（V01；按钮样式同“购买补给”） */
+:root[data-ui="v2"] .nav-depart .nav-depart-supply {
+  align-self: stretch;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .nav-depart .nav-depart-supply > .chart-note {
+  margin: 0 0 8px;
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .nav-depart .nav-depart-supply > .chart-note.chart-warn {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .nav-depart .sp-quick .sp-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+:root[data-ui="v2"] .nav-depart .sp-quick .sp-presets .btn.small {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+}
+:root[data-ui="v2"] .nav-depart .sp-block {
+  margin: 6px 0 0;
+  font-size: var(--v2-fs-sm);
+  font-weight: 600;
+  color: var(--v2-seal);
+}
+
+/* ═════════════════════════ 9. 手动航行：仪表、罗经盘与帆、操作 ═════════════════════════ */
+:root[data-ui="v2"] .nav-loading {
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night-2);
+}
+/* 平视显示：上方一条深色仪表，标签在上、读数在下，之间一道竖细线。
+ * 在没被右侧功能窗口挡住的那部分舞台里居中（罗经盘、帆与操作也都按 --stage-cover-right 让开） */
+:root[data-ui="v2"] .nav-hud {
+  top: 12px;
+  left: calc((100% - var(--stage-cover-right, 0px)) / 2);
+  gap: 0;
+  padding: 8px 6px;
+  color: var(--v2-on-night);
+  background: rgba(17, 31, 49, 0.97);
+  background-image: none;
+  border: 1px solid var(--v2-night-line-strong);
+  outline: 0;
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .nav-hud-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 0 14px;
+}
+:root[data-ui="v2"] .nav-hud-item + .nav-hud-item {
+  border-left: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .nav-hud-item dt {
+  font-size: var(--v2-fs-xs);
+  line-height: 1.3;
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .nav-hud-item dd {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--v2-on-night);
+  font-variant-numeric: tabular-nums;
+}
+/* 航向是读数不是标题：界面字体、半粗、等宽数字（宋体只给标题与名字），大一号、黄铜色 */
+:root[data-ui="v2"] .nav-hud-heading dd {
+  font-family: var(--v2-font-ui);
+  font-weight: 600;
+  font-size: var(--v2-fs-xl);
+  line-height: 1.2;
+  color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .nav-hud-item.warn dd {
+  color: var(--v2-down-night);
+}
+:root[data-ui="v2"] .nav-hud-auto dd {
+  color: var(--v2-up-night);
+}
+:root[data-ui="v2"] .nav-hud-auto.slow dd {
+  color: var(--v2-brass-hi);
+}
+/* 桌面（不是手机竖排）：仪表与船况条装在一个竖排的浮层里（NavigationView 的 .v2-nav-float），船况条跟在仪表下面流动，
+ * 仪表折成两行、或给“已自动暂停”小卡让开时都不会压住读数（X02）。浮层自己定位与居中；宽度按内容（max-content），
+ * 不再是“left 50% 之后剩下的半边”——原来仪表在 1440 宽的窗口里只有一半宽可用，“位置”一栏常被挤到第二行。 */
+:root[data-ui="v2"] .v2-nav-float {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: calc((100% - var(--stage-cover-right, 0px)) / 2);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  max-width: calc(100% - var(--stage-cover-right, 0px) - 16px);
+  pointer-events: none;
+}
+:root[data-ui="v2"] .v2-nav-float > * {
+  pointer-events: auto;
+}
+:root[data-ui="v2"] .v2-nav-float .nav-hud,
+:root[data-ui="v2"] .v2-nav-float .ship-status {
+  position: static;
+  transform: none;
+  max-width: 100%;
+}
+/* “已自动暂停”小卡挂出一行顶栏：一行字约 28 px，原因长时（“前方是陆地或封冻海面，已停船”）折成两行约 50 px。
+ * 浮层整个往下让开（原来只让仪表 40 px，船况条留在原处压住仪表；两行的小卡还压着仪表右上角） */
+:root[data-ui="v2"] .app.game[data-layout="desktop"]:has(.hud-compact .hud-nav-stop) .v2-nav-float {
+  top: 58px;
+}
+
+/* 罗经盘与帆：右下（手机左下的拇指区） */
+:root[data-ui="v2"] .nav-thumb {
+  gap: 10px;
+}
+:root[data-ui="v2"] .nav-compass {
+  filter: drop-shadow(0 6px 14px rgba(5, 11, 20, 0.45));
+}
+:root[data-ui="v2"] .nav-compass:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 3px;
+}
+:root[data-ui="v2"] .nav-compass.disabled {
+  opacity: 0.7;
+}
+/* 盘面：深色底、黄铜外圈、浅色刻度；北是浅红，航向指针黄铜 */
+:root[data-ui="v2"] .nav-compass-face {
+  fill: rgba(17, 31, 49, 0.94);
+  stroke: var(--v2-brass);
+  stroke-width: 1.5;
+}
+:root[data-ui="v2"] .nav-compass-rim {
+  stroke: var(--v2-night-line-strong);
+  stroke-width: 1;
+}
+:root[data-ui="v2"] .nav-compass .tick {
+  stroke: var(--v2-on-night-3);
+  stroke-width: 0.8;
+}
+:root[data-ui="v2"] .nav-compass .tick.mid {
+  stroke: var(--v2-on-night-2);
+  stroke-width: 1.2;
+}
+:root[data-ui="v2"] .nav-compass .tick.major {
+  stroke: var(--v2-on-night);
+  stroke-width: 1.6;
+}
+/* 字号是盘面坐标（120×120 的 viewBox）：桌面盘宽 168 px，显示约 14 px；手机盘宽 150 px，见文末放大到 11 */
+:root[data-ui="v2"] .nav-compass-label {
+  fill: var(--v2-on-night);
+  font-family: var(--v2-font-ui);
+  font-size: 10px;
+  font-weight: 600;
+}
+:root[data-ui="v2"] .nav-compass-label.north {
+  fill: var(--v2-down-night);
+}
+:root[data-ui="v2"] .nav-compass-nogo {
+  fill: rgba(242, 145, 127, 0.2);
+  stroke: rgba(242, 145, 127, 0.55);
+}
+:root[data-ui="v2"] .nav-compass-wind line {
+  stroke: var(--v2-on-night);
+  stroke-width: 2;
+}
+:root[data-ui="v2"] .nav-compass-wind circle {
+  fill: var(--v2-on-night);
+}
+:root[data-ui="v2"] .nav-compass-current {
+  stroke: var(--v2-up-night);
+  stroke-width: 1.6;
+}
+:root[data-ui="v2"] .nav-compass-needle {
+  stroke: var(--v2-brass-hi);
+  stroke-width: 3.5;
+}
+:root[data-ui="v2"] .nav-compass-needle-tail {
+  stroke: var(--v2-on-night-3);
+  stroke-width: 2.5;
+}
+:root[data-ui="v2"] .nav-compass-draft {
+  stroke: var(--v2-focus-night);
+  stroke-width: 2.5;
+}
+:root[data-ui="v2"] .nav-compass.irons .nav-compass-needle,
+:root[data-ui="v2"] .nav-compass.irons .nav-compass-draft {
+  stroke: var(--v2-down-night);
+}
+:root[data-ui="v2"] .nav-compass-hub {
+  fill: var(--v2-brass-hi);
+  stroke: var(--v2-night-0);
+}
+/* 盘下的读数：深色小签 */
+:root[data-ui="v2"] .nav-compass-readout {
+  bottom: -10px;
+  gap: 8px;
+  padding: 2px 10px;
+  font-size: var(--v2-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--v2-on-night);
+  background: var(--v2-night-0);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .nav-compass-readout strong {
+  color: var(--v2-brass-hi);
+}
+/* 逆风：印章红小条 */
+:root[data-ui="v2"] .nav-irons {
+  max-width: 200px;
+  padding: 4px 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: #fff8ee;
+  background: var(--v2-seal);
+  border: 0;
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-2);
+}
+/* H10hF：船为什么慢、为什么不走——深琥珀底，与逆风的印章红分开 */
+:root[data-ui="v2"] .nav-irons.nav-why {
+  background: #6e4a12;
+}
+/* 帆的三档：分段控件，选中的黄铜底 */
+:root[data-ui="v2"] .nav-sails {
+  gap: 2px;
+  padding: 2px;
+  background: rgba(11, 21, 34, 0.97);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .nav-sail {
+  min-width: 56px;
+  min-height: var(--v2-h-md);
+  padding: 0 10px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-on-night-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .nav-sail:hover:not(:disabled) {
+  color: var(--v2-on-night);
+  background: var(--v2-night-2);
+  border-color: var(--v2-night-line);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .nav-sail.active,
+:root[data-ui="v2"] .nav-sail.active:hover:not(:disabled) {
+  font-weight: 600;
+  color: var(--v2-ink);
+  background: var(--v2-brass-hi);
+  border-color: transparent;
+}
+:root[data-ui="v2"] .nav-sail:disabled {
+  color: var(--v2-on-night-3);
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-ui="v2"] .nav-sail:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 1px;
+}
+
+/* 操作：世界图、暂停、自动航行、登陆、缩放——深色的浮起按钮 */
+:root[data-ui="v2"] .nav-actions {
+  gap: 8px;
+}
+:root[data-ui="v2"] .nav-actions .chart-btn {
+  gap: 8px;
+  box-shadow: var(--v2-shadow-2);
+}
+:root[data-ui="v2"] .nav-actions .chart-btn:not(.primary) {
+  background: rgba(17, 31, 49, 0.97);
+}
+:root[data-ui="v2"] .nav-actions .chart-btn[aria-expanded="true"] {
+  color: var(--v2-brass-hi);
+  border-color: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .nav-zoom {
+  gap: 0;
+  background: rgba(17, 31, 49, 0.97);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: var(--v2-shadow-2);
+  overflow: hidden;
+}
+:root[data-ui="v2"] .nav-zoom .chart-zoom-btn {
+  width: 34px;
+  height: 34px;
+}
+:root[data-ui="v2"] .nav-zoom .chart-zoom-btn + .chart-zoom-btn {
+  border-left: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .nav-zoom .chart-zoom-btn:hover:not(:disabled) {
+  color: var(--v2-brass-hi);
+  background: var(--v2-night-2);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .nav-zoom .chart-zoom-btn:disabled {
+  color: var(--v2-on-night-3);
+  background: transparent;
+  opacity: 0.6;
+}
+
+/* 自动航行、登陆的小菜单：纸面的弹出卡，一行一个目的地 */
+:root[data-ui="v2"] .nav-pop {
+  gap: 4px;
+  width: 280px;
+  padding: 12px;
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  background-image: none;
+  border: 1px solid rgba(12, 18, 28, 0.55);
+  outline: 0;
+  border-radius: var(--v2-r-lg);
+  box-shadow: var(--v2-shadow-3);
+  animation: v2-rise var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .nav-pop h4 {
+  margin: 0 0 6px;
+  padding: 0 2px 8px;
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--v2-ink);
+  border-bottom: 1px solid var(--v2-line);
+}
+:root[data-ui="v2"] .nav-pop-item {
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: var(--v2-fs-md);
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .nav-pop-item:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--v2-brass);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .nav-pop-item small {
+  flex: none;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+/* FIX5F 第二趟：寰宇出港框的两种出港方式（定航向 / 自动驶往）——分段的两格，选中的那格黄铜底；自动驶往的目的地清单 */
+:root[data-ui="v2"] .nav-depart-modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 10px 16px 0;
+}
+:root[data-ui="v2"] .nav-depart-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 48px;
+  padding: 6px 10px;
+  text-align: left;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line-control);
+  border-radius: var(--v2-r-sm);
+  cursor: pointer;
+}
+:root[data-ui="v2"] .nav-depart-mode small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .nav-depart-mode.is-on {
+  background: var(--v2-brass-hi);
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 -3px 0 var(--v2-brass-ink);
+}
+:root[data-ui="v2"] .nav-depart-mode.is-on small {
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .nav-depart-dests {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 6px 0;
+}
+:root[data-ui="v2"] .nav-depart-dest {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2px 8px;
+  min-height: 40px;
+  padding: 4px 10px;
+  text-align: left;
+  color: var(--v2-ink);
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-radius: var(--v2-r-sm);
+  cursor: pointer;
+}
+:root[data-ui="v2"] .nav-depart-dest small {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .nav-depart-dest.is-on {
+  border-color: var(--v2-brass-ink);
+  box-shadow: inset 0 0 0 2px var(--v2-brass);
+  background: #fff;
+}
+:root[data-ui="v2"] .nav-depart-dest.is-short {
+  border-left: 3px solid var(--v2-seal);
+}
+:root[data-ui="v2"] .nav-depart-dest .nav-dest-short {
+  flex: 1 1 100%;
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+/* FIX5F：这一程比粮水撑得久的那一项：第二行红字“粮水只够 N 天”，项的左边一道红线 */
+:root[data-ui="v2"] .nav-pop-item.is-short {
+  flex-wrap: wrap;
+  row-gap: 0;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-left: 3px solid var(--v2-seal);
+}
+:root[data-ui="v2"] .nav-pop-item .nav-dest-short {
+  flex: 1 1 100%;
+  color: var(--v2-seal);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .nav-dest-short-note {
+  color: var(--v2-seal);
+}
+:root[data-ui="v2"] .nav-worldbar-short {
+  flex: 1 1 100%;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-down-night);
+}
+:root[data-ui="v2"] .nav-pop-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+:root[data-ui="v2"] .nav-pop-row .nav-pop-item {
+  justify-content: center;
+  padding: 0 6px;
+}
+:root[data-ui="v2"] .nav-pop-close {
+  align-self: flex-end;
+  min-height: var(--v2-h-sm);
+  margin-top: 4px;
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .nav-pop-close:hover:not(:disabled) {
+  background: var(--v2-paper-sunk);
+  border-color: var(--v2-line);
+}
+:root[data-ui="v2"] .nav-note {
+  margin: 0 2px 4px;
+  font-size: var(--v2-fs-sm);
+  line-height: var(--v2-lh);
+  color: var(--v2-ink-3);
+}
+
+/* 今天会停下的地方：深色小卡，标题取自列表的读屏名（aria-label），每条前一个按种类着色的小圆点。
+ * 标题是生成的内容：替代文字给空（content 的“/ ""”），读屏只念一次列表名，不再把标题当第一行字又念一遍；
+ * 不认这种写法的浏览器退回第一条 content（照样显示） */
+:root[data-ui="v2"] .nav-stops {
+  left: 12px;
+  bottom: 48px;
+  max-width: 320px;
+  padding: 8px 12px 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.5;
+  color: var(--v2-on-night);
+  background: rgba(17, 31, 49, 0.97);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-ui="v2"] .nav-stops::before {
+  content: attr(aria-label);
+  content: attr(aria-label) / "";
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .nav-stop {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .nav-stop::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--v2-on-night-2);
+  transform: translateY(-1px);
+}
+:root[data-ui="v2"] .nav-stop-land::before {
+  background: var(--v2-down-night);
+}
+:root[data-ui="v2"] .nav-stop-port::before {
+  background: var(--v2-brass-hi);
+}
+:root[data-ui="v2"] .nav-stop-storm::before {
+  background: var(--v2-on-night);
+}
+:root[data-ui="v2"] .nav-stop-sight::before {
+  background: var(--v2-up-night);
+}
+/* FIX6F：粮水到了警戒线——与仪表上粮水告急的红字同一色 */
+:root[data-ui="v2"] .nav-stop-supplies_low::before {
+  background: var(--v2-down-night);
+}
+/* 按键说明：一组小键帽（KeyHints），左下角。底是不透明的夜航深色小牌（半透明时底下的海是亮蓝，说明字的对比掉到 4 以下），
+   说明字用次要色 on-night-2（8.2 : 1），不用更暗的 on-night-3 */
+:root[data-ui="v2"] .v2-keys.nav-keys {
+  left: 12px;
+  bottom: 12px;
+  padding: 5px 10px;
+  color: var(--v2-on-night-2);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+}
+:root[data-ui="v2"] .v2-keys.nav-keys .v2-keys-label {
+  color: var(--v2-on-night-2);
+}
+
+/* 世界图上的“回到航行”：深色小条（同选目的地的提示条） */
+:root[data-ui="v2"] .nav-worldbar {
+  top: 12px;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(17, 31, 49, 0.96);
+  border: 1px solid var(--v2-night-line-strong);
+  border-left: 3px solid var(--v2-brass-hi);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  animation: v2-voyage-bar-in var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .nav-worldbar .chart-btn {
+  gap: 8px;
+}
+:root[data-ui="v2"] .nav-worldbar-pick {
+  gap: 8px;
+}
+/* 特异度要压过上面深色浮层里次要按钮的 .nav-worldbar .chart-btn:not(.primary) */
+:root[data-ui="v2"] .nav-worldbar .chart-btn[data-testid="nav-pick-go"]:not(.primary) {
+  color: #4d3407;
+  font-weight: 600;
+  background: #f6e6c2;
+  border-color: var(--v2-brass);
+}
+:root[data-ui="v2"] .nav-worldbar .chart-btn[data-testid="nav-pick-go"]:not(.primary):hover:not(:disabled) {
+  color: #4d3407;
+  background: #f1d99f;
+  border-color: var(--v2-brass-hi);
+}
+
+/* ═════════════════════════ 10. 纸面上的罗经盘（手动出港） ═════════════════════════ */
+:root[data-ui="v2"] .nav-depart .nav-compass {
+  filter: drop-shadow(0 2px 4px rgba(36, 28, 21, 0.18));
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-face {
+  fill: var(--v2-paper-2);
+  stroke: var(--v2-line-strong);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-rim {
+  stroke: var(--v2-line);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass .tick {
+  stroke: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass .tick.mid {
+  stroke: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass .tick.major {
+  stroke: var(--v2-ink);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-label {
+  fill: var(--v2-ink);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-label.north {
+  fill: var(--v2-seal);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-needle {
+  stroke: var(--v2-seal);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-needle-tail {
+  stroke: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-draft {
+  stroke: var(--v2-brass);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass-hub {
+  fill: var(--v2-brass);
+  stroke: var(--v2-ink);
+}
+:root[data-ui="v2"] .nav-depart .nav-compass:focus-visible {
+  outline-color: var(--v2-focus);
+}
+
+/* ═════════════════════════ 11. 顶栏的时刻与天气（HudClock） ═════════════════════════ */
+:root[data-ui="v2"] .hud-now {
+  font-size: var(--v2-fs-sm);
+}
+:root[data-ui="v2"] .hud-clock-time {
+  font-size: var(--v2-fs-md);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .hud-sky:focus-visible {
+  outline: 2px solid var(--v2-focus-night);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+/* 手动航行自动暂停的原因：与预报同一种深色提示卡 */
+:root[data-ui="v2"] .hud-nav-stop {
+  top: calc(100% + 8px);
+  padding: 6px 10px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+}
+/* 未来两天的预报：深色的提示卡（与提示条同一种） */
+:root[data-ui="v2"] .hud-forecast {
+  top: calc(100% + 8px);
+  min-width: 248px;
+  padding: 10px 12px 12px;
+  font-size: var(--v2-fs-sm);
+  line-height: 1.4;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  text-shadow: none;
+  animation: v2-rise var(--v2-dur-2) var(--v2-ease-out) both;
+}
+:root[data-ui="v2"] .hud-forecast-title {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  font-weight: 600;
+  color: var(--v2-on-night);
+  border-bottom: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .hud-forecast ul {
+  gap: 6px;
+}
+:root[data-ui="v2"] .hud-forecast-day {
+  grid-template-columns: 6.5em auto auto;
+  gap: 12px;
+  color: var(--v2-on-night-2);
+}
+:root[data-ui="v2"] .hud-forecast-when {
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .hud-forecast-when small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-3);
+}
+:root[data-ui="v2"] .hud-forecast-day.is-storm,
+:root[data-ui="v2"] .hud-forecast-day.is-storm .hud-forecast-when {
+  color: var(--v2-down-night);
+  font-weight: 600;
+}
+:root[data-ui="v2"] .hud-forecast-empty {
+  color: var(--v2-on-night-3);
+}
+/* 手机竖屏的顶栏：时刻与短日期两行，去掉字影 */
+:root[data-ui="v2"] .hud-clock-mini {
+  color: var(--v2-on-night);
+  text-shadow: none;
+}
+/* 手机“菜单”里的时辰与天气：抽屉是纸面，日期是墨色大字，时刻与天气放在一块深色小牌上（预报卡从它下面弹出） */
+:root[data-ui="v2"] .hud-menu-time > .hud-date {
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .hud-menu-time > .hud-now {
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: var(--v2-fs-md);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+}
+/* 同一个抽屉里、紧挨在时辰上面的目标进度：百分比在纸面上用纸面的黄铜字（5.72；顶栏深色底上的亮黄铜在纸上只有 1.64） */
+:root[data-ui="v2"] .hud-menu-goal-bar .hud-goal-pct {
+  color: var(--v2-brass-ink);
+}
+/* 天气不再是定位的基准：预报卡以整块小牌为准，从它的左边往下弹出（原来从天气的左边弹出，手机上伸出屏幕右边） */
+:root[data-ui="v2"] .hud-menu-time .hud-sky {
+  position: static;
+}
+:root[data-ui="v2"] .hud-menu-time .hud-forecast {
+  left: 0;
+  right: auto;
+  max-width: calc(100vw - 32px);
+  font-size: var(--v2-fs-md);
+}
+
+/* ═════════════════════════ 12. 别家商会船队的悬停卡（FleetHoverCard） ═════════════════════════ */
+/* 舞台上的浮层，与停靠小卡、预报卡同一种夜航深色小卡：深色底、黄铜细线、8 px 圆角、柔和阴影；
+ * 标题是说明色的小字，船长的名字用宋体（名字），头衔是说明色；头像的框是细线圆角，不再是木框与像素斜面（头像本身不动） */
+:root[data-ui="v2"] .chart-view .chart-fleet-card {
+  --text: var(--v2-on-night);
+  --muted: var(--v2-on-night-3);
+  max-width: 260px;
+  padding: 8px 12px 10px 10px;
+  color: var(--v2-on-night);
+  background: var(--v2-night-1);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-2);
+  text-shadow: none;
+}
+:root[data-ui="v2"] .chart-view .chart-fleet-card-head {
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  font-size: var(--v2-fs-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--v2-on-night-3);
+  border-bottom: 1px solid var(--v2-night-line);
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-row {
+  gap: 10px;
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-frame {
+  padding: 0;
+  overflow: hidden;
+  background: var(--v2-night-2);
+  border: 1px solid var(--v2-night-line-strong);
+  border-radius: var(--v2-r-sm);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-text {
+  gap: 2px;
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-text strong {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-md);
+  font-weight: 700;
+  color: var(--v2-on-night);
+}
+:root[data-ui="v2"] .chart-fleet-card .cast-text small {
+  font-size: var(--v2-fs-xs);
+  color: var(--v2-on-night-3);
+}
+
+/* ═════════════════════════ 平板与手机 ═════════════════════════ */
+/* 左侧栏：给右上的缩放留位置；地点仍是两列（手指点的行高 44 px） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-side,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-side {
+  top: 8px;
+  left: 8px;
+  width: min(300px, calc(100% - 72px));
+  max-height: calc(100% - 16px);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-zoom,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-zoom {
+  top: 8px;
+  right: 8px;
+}
+@media (max-width: 900px) {
+  :root[data-ui="v2"] .chart-loc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (pointer: coarse) {
+  :root[data-ui="v2"] .chart-win-title {
+    min-height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .chart-win-toggle {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+  }
+  :root[data-ui="v2"] .chart-win-title h3 {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .chart-view .chart-loc-list .loc {
+    min-height: var(--v2-h-touch);
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .chart-filter input {
+    min-height: var(--v2-h-touch);
+    font-size: var(--v2-fs-lg);
+  }
+  :root[data-ui="v2"] .chart-view .chart-legend {
+    font-size: var(--v2-fs-md);
+  }
+  :root[data-ui="v2"] .chart-view .chart-zoom-btn,
+  :root[data-ui="v2"] .nav-zoom .chart-zoom-btn {
+    width: var(--v2-h-touch);
+    height: var(--v2-h-touch);
+  }
+  :root[data-ui="v2"] .chart-btn,
+  :root[data-ui="v2"] .nav-sail,
+  :root[data-ui="v2"] .nav-pop-item {
+    min-height: var(--v2-h-touch);
+    font-size: 15px;
+  }
+  /* 就地的补救按钮（补给到建议量、补到最低人数）、小菜单的“收起”、“清除查找”：一样是手指点的，不小于 44 px */
+  :root[data-ui="v2"] .chart-dialog .btn.v2-inline-error-action,
+  :root[data-ui="v2"] .chart-crew .crew-hire .btn,
+  :root[data-ui="v2"] .nav-pop .nav-pop-close,
+  :root[data-ui="v2"] .chart-win .v2-empty .v2-empty-action {
+    min-height: var(--v2-h-touch);
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .voyage-kv,
+  :root[data-ui="v2"] .chart-dialog .chart-kv,
+  :root[data-ui="v2"] .chart-dialog .v2-inline-error {
+    font-size: 15px;
+  }
+  :root[data-ui="v2"] .voyage-pick span,
+  :root[data-ui="v2"] .nav-stops {
+    font-size: var(--v2-fs-md);
+  }
+}
+
+/* 手机：出航确认与手动出港从底部升起、整宽；主按钮整宽贴底（拇指最近），“重新选择”“取消”在它上面一行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog-backdrop,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog-backdrop {
+  padding: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-win.chart-dialog,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-win.chart-dialog {
+  width: 100%;
+  max-width: 100%;
+  border-width: 1px 0 0;
+  border-radius: var(--v2-r-lg) var(--v2-r-lg) 0 0;
+  animation: v2-sheet-up var(--v2-dur-3) var(--v2-ease-out) both;
+}
+/* 顶上一条可抓的短横 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-win-title,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-win-title {
+  padding: 22px 18px 10px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-win-title::before,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-win-title::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 40px;
+  height: 4px;
+  margin-left: -20px;
+  background: var(--v2-line-strong);
+  border-radius: var(--v2-r-pill);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog-body,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog-body {
+  padding: 14px 18px 4px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-dialog-actions,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 12px 18px calc(14px + var(--safe-bottom, 0px));
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-dialog-actions .chart-btn,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions .chart-btn {
+  min-height: var(--v2-h-touch);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-dialog-actions .chart-btn.primary,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions .chart-btn.primary {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-height: 48px;
+  font-size: var(--v2-fs-lg);
+}
+/* 无法到达：“重新选择”整宽贴底（拇指最近），不可用的“起航”退到第一行与“取消出港”并排 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-dialog-actions.v2-voyage-noroute .chart-btn.primary,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions.v2-voyage-noroute .chart-btn.primary {
+  grid-column: auto;
+  grid-row: 1;
+  min-height: var(--v2-h-touch);
+  font-size: 15px;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-dialog > .chart-dialog-actions.v2-voyage-noroute .chart-btn.v2-voyage-repick,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions.v2-voyage-noroute .chart-btn.v2-voyage-repick {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-height: 48px;
+  font-size: var(--v2-fs-lg);
+}
+/* 手动出港只有一个次要按钮（“取消”）：它占满第一行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .nav-depart .chart-dialog-actions .chart-btn:not(.primary),
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-depart .chart-dialog-actions .chart-btn:not(.primary) {
+  grid-column: 1 / -1;
+}
+/* 手机横屏（矮，对话框只有三百来像素高）：页脚只占一行——三个按钮并排、44 px 高，靠右，主按钮在最右（右手拇指）；
+ * 正文的键值两对一行。这样做不了 / 有风险的第一条原因不用滚动就看得见（不再被两行的页脚挤到折线以下） */
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  padding: 8px 18px calc(8px + var(--safe-bottom, 0px));
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions .chart-btn {
+  min-width: 112px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions .chart-btn.primary,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions.v2-voyage-noroute .chart-btn.v2-voyage-repick {
+  order: 2;
+  min-height: var(--v2-h-touch);
+  font-size: 15px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog > .chart-dialog-actions.v2-voyage-noroute .chart-btn.primary {
+  order: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog .chart-kv {
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-dialog-body {
+  padding-top: 10px;
+}
+/* 选目的地时左侧栏给贴底的提示条让出位置（地点列表的最后几行不被盖住） */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .chart-view.picking .chart-side,
+:root[data-ui="v2"] .app.game[data-layout="short"] .chart-view.picking .chart-side {
+  max-height: calc(100% - 104px);
+}
+/* 选目的地的提示条：手机上贴底（拇指区），整宽 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .voyage-pick,
+:root[data-ui="v2"] .app.game[data-layout="short"] .voyage-pick {
+  top: auto;
+  bottom: 8px;
+  width: calc(100% - 16px);
+  padding: 8px 8px 8px 14px;
+}
+
+/* 世界图的提示条（手动航行切到世界图）：手机上贴底、整宽，“回到航行”在左，点选港口后“驶往”“收起”在下一行 */
+:root[data-ui="v2"] .app.game[data-layout="phone"] .nav-worldbar,
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-worldbar {
+  top: auto;
+  bottom: 8px;
+  width: calc(100% - 16px);
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .nav-worldbar > .chart-btn.primary,
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-worldbar > .chart-btn.primary {
+  flex: 1 1 auto;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .nav-worldbar-pick,
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-worldbar-pick {
+  flex: 1 1 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="phone"] .nav-worldbar-pick > .chart-btn:first-child,
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-worldbar-pick > .chart-btn:first-child {
+  flex: 1 1 auto;
+}
+
+/* 手动航行（手机竖屏与横屏）：仪表、“今天会停下”与打开着的小菜单在同一个纵向容器里（.v2-nav-stack，见 NavigationView）——
+ * 停靠小卡总是紧跟在仪表下面（仪表的读数折行、变高时一起往下让，不再按写死的高度定位）；
+ * 小菜单从底部升起，最高到停靠小卡下沿再空 8 px 为止（弹性收缩，目的地多时在菜单里滚动），盖住罗经盘与右下的按钮（选的时候用不着）。
+ * 容器本身不接指针（海面照样能点），里面的几块接。罗经盘在左下拇指区，操作在右下。 */
+:root[data-ui="v2"] .v2-nav-stack {
+  position: absolute;
+  z-index: 4;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  pointer-events: none;
+}
+:root[data-ui="v2"] .v2-nav-top {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud,
+:root[data-ui="v2"] .v2-nav-stack .nav-stops,
+:root[data-ui="v2"] .v2-nav-stack .nav-pop {
+  position: static;
+  transform: none;
+  pointer-events: auto;
+}
+/* 竖屏：仪表铺满一行宽，读数四列网格——航向占三列、航速一列；风、洋流各占两列；粮水、士气各一列，位置两列；自动航行占满一行。
+ * 读数不截断：放不下时在自己的格子里折行（长的洋流方向、英文的罗经点名），不用省略号 */
+:root[data-ui="v2"] .v2-nav-stack .nav-hud {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px 0;
+  max-width: none;
+  margin: 0;
+  padding: 8px 4px;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item {
+  min-width: 0;
+  padding: 0 10px;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item dt,
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item dd {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item dd {
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-heading {
+  grid-column: span 3;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-heading dd {
+  font-size: var(--v2-fs-lg);
+}
+/* 第 3 格是风、第 4 格是洋流（各两列），第 5 格是粮水 */
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item:nth-child(3),
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item:nth-child(4),
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-pos {
+  grid-column: span 2;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-auto {
+  grid-column: 1 / -1;
+}
+/* 每一行的第一格不画竖线：航向（第 1 格）、风（第 3 格）、粮水（第 5 格）、自动航行 */
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item:nth-child(3),
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-item:nth-child(5),
+:root[data-ui="v2"] .v2-nav-stack .nav-hud-auto {
+  border-left: 0;
+}
+:root[data-ui="v2"] .v2-nav-stack .nav-stops {
+  flex: none;
+  max-width: min(320px, 100%);
+}
+/* 自动航行 / 登陆的小菜单：整宽的小抽屉，贴着容器底边（舞台底上 12 px），“收起”整宽贴底，拇指最近 */
+:root[data-ui="v2"] .v2-nav-stack > .nav-pop {
+  flex: 0 1 auto;
+  align-self: stretch;
+  width: auto;
+  min-height: 0;
+  max-height: 308px;
+  margin-top: auto;
+  overscroll-behavior: contain;
+  animation-name: v2-sheet-up;
+}
+:root[data-ui="v2"] .nav-view.compact .nav-pop-close {
+  align-self: stretch;
+  min-height: var(--v2-h-touch);
+  font-size: 15px;
+  background: var(--v2-paper-2);
+  border-color: var(--v2-line);
+}
+/* 矮一点的手机上菜单放不下全部目的地、在菜单里滚动时，“收起”贴在菜单底边不跟着滚走（四周一圈纸色，滚过去的行不从它旁边露出来） */
+:root[data-ui="v2"] .v2-nav-stack > .nav-pop .nav-pop-close {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  box-shadow: 0 0 0 8px var(--v2-paper-0);
+}
+:root[data-ui="v2"] .nav-view.compact .nav-compass-label {
+  font-size: 11px;
+}
+:root[data-ui="v2"] .nav-view.compact .nav-thumb {
+  left: 8px;
+  bottom: 12px;
+}
+:root[data-ui="v2"] .nav-view.compact .nav-actions {
+  right: 8px;
+  bottom: 12px;
+  gap: 6px;
+}
+
+/* 手机横屏（矮，舞台只有三百来像素高）：仪表与停靠小卡并排在上方——仪表在左，读数横排（标签与读数同一行）、放不下时折行；
+ * 停靠小卡在右。罗经盘缩到 132 px，操作按钮在右下排成一行（不再竖成一列顶到仪表）；
+ * 小菜单靠右、两列（标题与“收起”同一行），从底部升起，同样不越过上方的仪表与停靠小卡 */
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-top {
+  flex-direction: row;
+  align-items: flex-start;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack .nav-hud {
+  flex: 1 1 auto;
+  align-self: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 0;
+  min-width: 0;
+  padding: 5px 4px;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack .nav-hud-item {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  padding: 0 9px;
+  border-left: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack .nav-hud-heading dd {
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack .nav-hud-auto {
+  flex-basis: 100%;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack .nav-stops {
+  flex: none;
+  max-width: 40%;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-view.compact .nav-compass {
+  width: 132px;
+  height: 132px;
+}
+/* 一行放不下（英文、多了“停止自动航行”）时折成两行；左边给罗经盘与帆留 264 px（英文的帆约 235 px 宽）。
+ * 折行时这个框比按钮宽：框本身不接指针，免得空白处挡住帆的按钮 */
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-view.compact .nav-actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  max-width: calc(100% - 264px);
+  pointer-events: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .nav-view.compact .nav-actions > * {
+  pointer-events: auto;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack > .nav-pop {
+  align-self: flex-end;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  width: min(380px, 100%);
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack > .nav-pop h4 {
+  grid-column: 1;
+  align-self: center;
+  margin: 0;
+  padding: 0 2px;
+  border-bottom: 0;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack > .nav-pop .nav-pop-close {
+  position: static;
+  grid-row: 1;
+  grid-column: 2;
+  justify-self: end;
+  align-self: center;
+  margin: 0;
+  padding: 0 16px;
+  box-shadow: none;
+}
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack > .nav-pop .nav-note,
+:root[data-ui="v2"] .app.game[data-layout="short"] .v2-nav-stack > .nav-pop .nav-pop-row {
+  grid-column: 1 / -1;
+}
+
+/* ═════════════════════════ 减少动效 ═════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ui="v2"] .voyage-pick,
+  :root[data-ui="v2"] .nav-worldbar,
+  :root[data-ui="v2"] .chart-win.chart-dialog,
+  :root[data-ui="v2"] .nav-pop,
+  :root[data-ui="v2"] .v2-nav-stack > .nav-pop,
+  :root[data-ui="v2"] .hud-forecast {
+    animation: none;
+  }
+  :root[data-ui="v2"] .chart-view .chart-loc-list .loc {
+    transition: none;
+  }
+}
+
+/* H03：最快的风角 */
+:root[data-ui="v2"] .nav-compass-fast {
+  fill: #a9d86a;
+  stroke: rgba(22, 48, 31, 0.8);
+}
+
+/* H04 海上所见的小卡片（夜航深色） */
+:root[data-ui="v2"] .nav-sighting {
+  color: #e8e2d4;
+  background: rgba(18, 24, 38, 0.94);
+  background-image: none;
+  border: 1px solid rgba(220, 164, 52, 0.55);
+  outline: none;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+:root[data-ui="v2"] .nav-sighting h4 {
+  color: #f5d66b;
+}
+:root[data-ui="v2"] .nav-sighting-result {
+  color: #a9d86a;
+}
+:root[data-ui="v2"] .nav-sighting-result.harm {
+  color: #f2917f;
+}

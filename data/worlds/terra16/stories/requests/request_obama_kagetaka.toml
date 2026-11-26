@@ -1,0 +1,184 @@
+# 请托：龙骨该多长（request_obama_kagetaka）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：小浜景隆（obama_kagetaka，1540 生，男），志摩海贼众出身，被九鬼赶出故乡的海，1571 年起当武田水军的船大将，驻骏河清水；势力 takeda。cast：cast/historical_07_japan.toml。
+# 类型：送货（deliver）。任务单写三章，文件里是四章：offer（报价，热田）、deliver（热田，港奉行问话）、settle（热田，三个船工吵龙骨）、settle_held（热田，同一场争论，货被奉行盯上之后）。
+#   多出一章是引擎的限制：任务单的 settle 按 clean / held 两面旗标拆选项，可这两面旗标都是本轨道 deliver 设的，选项不能用 requires 读本轨道别处设的旗标，
+#   所以 deliver 里设 clean 的两条路（伊势的说法检定成功、塞看守钱）走 next 到 settle，设 held 的两条路（伊势的说法检定失败、照实说）走 next 到 settle_held；
+#   两章各有三个选项，选项意思相同，回应与报酬按任务单的 clean / held 各写一份。
+# 报价：V（到访）。景隆扮成志摩来的木材船头，夜里坐伊势渔船来热田（atsuta），auto=true；窗口 1572-01-15 至 1581-03-31；offer 写 family=c13_offer_atsuta，冷却 20 天；
+#   玩家满 17 岁、景隆满 18 岁、名声 ≥ 20。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章两项 goods 目标（缆绳 rope×20、铁器 ironware×10，热田都不产），deadline_days=150，超时走 failed，景隆来信一封，好感 -3，旗标 _late；
+#   goods 目标在回应任一选项时扣货，所以四条路都付货款（塞看守钱那条付货款减去看守钱，写成一笔）。
+#   settle / settle_held 等三十天、玩家在热田才出现，deadline_days=90，超时走 failed，好感 -3，旗标 _late，另写一条见闻。
+#   最晚的进度：offer 1581-03-31 接下 → deliver 至迟 1581-08 → settle 至迟 1581-11，都在武田家灭亡（1582）以前；正文不写武田灭亡、不写长篠、不点信玄或胜赖的名字。
+#   检定失败时引擎不显示 reply，失败的结果写在 fail 的 news 里。
+# 依据·史实背景：小浜景隆，志摩小浜的海贼众，九鬼嘉隆凭织田家的势力吞并志摩诸家后出走，1569—71 年间投武田，任骏河水军的船大将（研究笔记 P_eastasia_1540 与武田水军研究）；
+#   1572 年起武田与织田交恶；热田是织田家尾张的港；伊势神宫的式年迁宫停了上百年，外宫 1563 年重建，此后内宫一直在募钱，所以“运给伊势的宫大工”说得通。
+# 依据·原创：伊势渔船与栈桥头的两盏灯、港奉行掂在掌心的那根船钉、清水船坞的三个老船工与三根打了结的麻绳、渔船换帆、景隆来信的内容。
+#   骏河的清水不在地图上；正文只当地名提起，事情都在热田办。九鬼只出现在 offer 里景隆那句话（及紧跟的变脸）、第三个船工的说法与 deliver 超时的来信里，不写木津川口。
+# 秘密：无。“从前在志摩收关钱”只在塞看守钱那条的回应里，由他的手下当笑话说一句。
+# 读的旗标：无。不设任何 c7_ 旗标。
+# 设的旗标：c13_request_obama_kagetaka_accepted（offer 接下）、_declined（offer 回绝）、
+#   分支旗标 _clean（伊势的说法成功、塞看守钱）、_held（伊势的说法失败、照实说），共两面；
+#   终局旗标 _late（deliver 或 settle 超时）、_done（settle 的最好结局）、_partial（settle 的折中、settle_held 全部），每条路只设一面。
+# 不用 relation / tie / bond / heart 效果；不写恋爱。
+# 报酬：货款 2150（塞看守钱那条 1950）；报酬最多 2250（折中 1100）；技能 shipbuilding +20（只在“按吃水与风算”那条）；
+#   好感最多 +13（接下 +2、货过了奉行这一关 +3、最好的结局 +8）；超时 -3；声望 takeda +2、oda -1；名声 +3；回忆 mem-request_obama_kagetaka-settle。无物品奖励。
+# 依赖：港口 atsuta（ports_east_asia.toml）；货物 rope（goods/04_overseas_crafts.toml）、ironware（goods/02_manufactures.toml）；技能 shipbuilding（skills.toml）；
+#   属性 eloquence、seamanship；势力 takeda、oda（factions/10_japan.toml）；人物 obama_kagetaka。人物日程的 shimizu 疑似错配到土佐清水，留给 B10b；本轨道不靠日程。
+# 与 C7 的交叉：无。主线门禁：无。
+# 回忆插画清单：
+#   mem-request_obama_kagetaka-settle「渔船上的龙骨之争」：夜里热田的栈桥边，伊势渔船的船板上摊着三根打结的麻绳，老船工蹲着用炭条画龙骨，粗壮的汉子仰头大笑。
+
+[[tracks]]
+key = "request_obama_kagetaka"
+name = "龙骨该多长"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["obama_kagetaka"]
+
+# 一、志摩口音的船头：热田码头的半夜，伊势渔船靠上来，跳下来的汉子先看“我”手上的茧。
+[[tracks.chapters]]
+key = "offer"
+title = "志摩口音的船头"
+text = "热田码头，半夜。一条伊势的渔船摸黑靠上栈桥，船上闻不到鱼腥，只有一股松脂味。跳下来一个粗壮的汉子，不先开口，先抓过我的手，翻过来看掌心的茧。“拉过缆，掌过舵。行。”他自称志摩来的木材船头，可说起骏河清水湾的水深，哪里几寻、哪里退潮露礁，张口就来，比说自家门口还熟。他要缆绳、船钉和铁锚，运到热田，他的人夜里来接。“船坞里等着下龙骨。九鬼家的船越造越大。我不跟他比大——我跟他比谁的船先散架。”说到九鬼两个字，他脸一沉，脖子上的筋都鼓了起来。快上船了，他才报出名字：小浜景隆。“白天别提这名字。热田的风，是往织田家那边吹的。”"
+speaker = "obama_kagetaka"
+mood = "tense"
+at = "atsuta"
+when = [{ kind = "date", from = [1572, 1, 15], to = [1581, 3, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 20 }, { kind = "age", person = "obama_kagetaka", ge = 18 }]
+deadline = [1581, 3, 31]
+timeout = { next = "failed" }
+family = "c13_offer_atsuta"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：缆绳、船钉和铁锚，运到热田来。"
+next = "deliver"
+reply = "他咧嘴一笑：“热田是织田家的港，货在他们眼皮底下过，才叫本事。武田家的米给得足，我就给武田家卖命；你也一样，货到，钱到，谁也不欠谁。”他指了指栈桥头的木桩，说货到了，夜里在那儿挂两盏灯，渔船看见就来。“一盏不算，三盏也不算。两盏。”说完他跳回船上，渔船连桨声都压得很低，退进了黑里。"
+effects = [{ kind = "flag", flag = "c13_request_obama_kagetaka_accepted" }, { kind = "affinity", person = "obama_kagetaka", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "在织田家的港里替你运这个，我不干。"
+next = "failed"
+reply = "他又看了一眼我的手，像是觉得可惜了那层茧，朝栈桥下啐了一口，跳回渔船上。船上的人一句话没问，竹篙往桥墩上一点，渔船就滑开了。松脂味在码头上留了好一会儿才散。"
+effects = [{ kind = "flag", flag = "c13_request_obama_kagetaka_declined" }]
+
+# 二、港奉行的问话：货卸上栈桥，织田家的港奉行打着灯笼过来，拈起一根船钉问往哪里运。
+[[tracks.chapters]]
+key = "deliver"
+title = "港奉行的问话"
+text = "二十捆缆绳、十箱船钉和铁锚卸上热田的栈桥，桥头的木桩上挂起了两盏灯。伊势渔船来得比约好的还早，三四个人缩在船舱里，斗笠压得很低，没一个上岸。先上栈桥的倒是另一串灯笼：织田家的港奉行带着两个手下，一路走过来。他蹲下身，从撬开的箱子里拈起一根船钉，放在掌心掂了掂。扁头，长身，比他的手掌还长。“这么多铁，往哪里运？”一个手下已经把本子翻开了，笔尖蘸好了墨，等我开口。"
+speaker = "captain"
+mood = "tense"
+at = "atsuta"
+when = [{ kind = "alive", person = "obama_kagetaka", value = true }]
+objectives = [{ kind = "goods", good = "rope", qty = 20, at = "atsuta", text = "二十捆缆绳运到热田" }, { kind = "goods", good = "ironware", qty = 10, at = "atsuta", text = "十箱船钉与铁锚运到热田" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "obama_kagetaka", value = -3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_late" }, { kind = "letter", person = "obama_kagetaka", text = "缆绳和钉子，我从相模那边弄到了，贵一倍，好歹不用等。你那条船，慢得跟九鬼家的一个样。渔船不去热田了。——志摩的木材船头" }], news = "热田码头上，那条半夜靠岸的伊势渔船好些日子没来了。鱼市的人说，大概是在别处买着了货，嫌这边慢。" }
+news = "热田码头上，织田家的港奉行半夜打着灯笼去看一船缆绳和铁钉，拈起一根钉子掂了半天，问了几句才走。"
+
+[[tracks.chapters.choices]]
+key = "ise"
+text = "说是伊势的宫大工订的，修神宫用。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "settle"
+reply = "奉行又掂了掂那根钉。“伊势那边，近来是在募钱修宫。”他把钉子丢回箱子，朝手下点点头。手下在本子上写了“伊势”两个字，墨还没干就合上了，灯笼一串退下栈桥。渔船上有人长长吐了一口气，接着货一捆一捆传下去，一只沉甸甸的钱袋从船舱里递了上来。"
+effects = [{ kind = "cash", value = 2150 }, { kind = "affinity", person = "obama_kagetaka", value = 3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_clean" }]
+fail = { next = "settle_held", effects = [{ kind = "cash", value = 2150 }, { kind = "flag", flag = "c13_request_obama_kagetaka_held" }], news = "热田的港奉行半夜开箱看了一船货，说那些船钉扁头长身，修神宫用不着这样的钉，扣下一半，三天后才放。" }
+
+[[tracks.chapters.choices]]
+key = "toll"
+text = "往奉行手下的袖子里悄悄塞一笔“看守钱”。"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋太瘪，塞过去只会叫人笑话。"
+next = "settle"
+reply = "手下捏了捏袖口，咳了一声。奉行把船钉丢回箱子，像是忽然想起别处还有事，带着人往栈桥那头去了，一眼也没往渔船上看。货一捆捆传下去时，船舱里有人压着嗓子笑：“这钱，我们头儿在志摩那会儿，是坐在船头收的。”钱袋递上来，他还冲我挤了挤眼。"
+effects = [{ kind = "cash", value = 1950 }, { kind = "affinity", person = "obama_kagetaka", value = 3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_clean" }]
+
+[[tracks.chapters.choices]]
+key = "straight"
+text = "照实说：卖给东边的船家，别的我不知道。"
+next = "settle_held"
+reply = "奉行盯着我看了好一会儿，没再问，把船钉丢回箱子，转身时朝一个手下歪了歪头。货装完，钱袋递上来，渔船一离栈桥，后头就跟上了一条不点灯的小舟。伊势渔船没往东走，先钻进知多那边的浦子里绕，绕了一整夜。天亮时那条小舟回来了，什么也没跟到，手下在码头上挨了一顿骂。"
+news = "热田的港奉行派人跟一条伊势渔船跟了一夜，天亮人回来了，说那船钻进知多的浦子里，再也找不着。"
+effects = [{ kind = "cash", value = 2150 }, { kind = "flag", flag = "c13_request_obama_kagetaka_held" }]
+
+# 三、三个船工吵龙骨：一个月后景隆带着清水船坞的三个老船工来，三根打结的麻绳摊在船板上。
+[[tracks.chapters]]
+key = "settle"
+title = "三个船工吵龙骨"
+text = "一个多月后，栈桥头又挂起两盏灯。这回景隆亲自来了，身后跟着三个清水船坞的老船工。三个人在渔船上吵了一路，到了热田还没吵完，吵的是新船的龙骨该多长。一个要长，多装人；一个要短，湾里掉头快；第三个说，先打听清楚九鬼家的船有多长，再说。每人手里攥着一根细麻绳，结就打在自己要的那个长短上。景隆把三根绳往船板上一摊，又把一只钱袋往我面前一放，袋口都没解。“风我认得，潮我认得，吃水我也认得。龙骨这东西，他们吵了一路，我听得头疼。你说。”"
+speaker = "obama_kagetaka"
+mood = "cheerful"
+at = "atsuta"
+when = [{ kind = "alive", person = "obama_kagetaka", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等一个多月，渔船再来" }, { kind = "at", at = "atsuta", text = "在热田的栈桥边" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "obama_kagetaka", value = -3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_late" }], news = "热田的栈桥边，一条伊势渔船夜里来过几回，船上几个老头吵了半宿，等的人没来，天亮前走了。" }
+news = "热田的夜里有条伊势渔船来回了两趟，船上的人嗓门大得半个码头都听得见。"
+
+[[tracks.chapters.choices]]
+key = "keel"
+text = "按满载的吃水与湾里的风，把长短算给他们听。"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "龙骨的尺寸你说不出个所以然，三个老头只会一起笑你。"
+next = "done"
+reply = "我先问清楚清水湾口的风多从哪边来、满载吃水几尺、船坞的滑道多长，再拿那根长绳在船板上比。长的满载以后吃水太深，退潮要搁在湾口的沙上；短的装不下他要的人。我在两个结中间另打了一个结。三个老船工不吵了，盯着那个新结看，过了一会儿，最年长的一个从腰里摸出炭条，蹲下就在船板上画起龙骨来。景隆大笑，笑得栈桥上的灯直晃。他又抓过我的手看了看：“我还当这茧是拉缆拉的，原来也抡过斧子。”钱袋推过来，袋口这才解开。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "skill", skill = "shipbuilding", value = 20 }, { kind = "affinity", person = "obama_kagetaka", value = 8 }, { kind = "reputation", faction = "takeda", value = 2 }, { kind = "reputation", faction = "oda", value = -1 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_done" }, { kind = "memory", memory = "mem-request_obama_kagetaka-settle", title = "渔船上的龙骨之争" }]
+
+[[tracks.chapters.choices]]
+key = "sea"
+text = "讲讲自己在大洋上见过的船：长的短的，各有什么毛病。"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "done"
+reply = "我讲外海的长船遇上横浪，船身怎么拧，钉子怎么一颗颗往外蹦；短船顶风，船头怎么抬不起来。三个老船工起先还插嘴，后来不插了。中间那个从怀里摸出一块木片，用刀尖刻了两道，说是记下两条。长短还是没定，吵的声音倒小了。景隆把钱袋推过来：“记下两条就值。我在海上活了半辈子，记住的也就十来条。”"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "obama_kagetaka", value = 8 }, { kind = "reputation", faction = "takeda", value = 2 }, { kind = "reputation", faction = "oda", value = -1 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_done" }, { kind = "memory", memory = "mem-request_obama_kagetaka-settle", title = "渔船上的龙骨之争" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "obama_kagetaka", value = 2 }, { kind = "flag", flag = "c13_request_obama_kagetaka_partial" }], news = "热田栈桥边那条伊势渔船上，几个老船工吵龙骨吵到天快亮，说外海的船管不着内湾，外人讲的不算数。" }
+
+[[tracks.chapters.choices]]
+key = "out"
+text = "这是你们的船，我不插嘴。"
+next = "done"
+reply = "“滑头！”景隆骂了一句，嗓门大得栈桥那头守夜的人都探出头来。他解开钱袋，倒出一半推给我，剩下的扎紧揣回怀里。三个老船工接着吵，吵到渔船离了栈桥，声音还从黑里一阵一阵传过来，说的还是那根绳上的结。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_obama_kagetaka_partial" }]
+
+# 三′、换了帆的渔船：货被奉行盯上过，景隆换了一条船来，三个老船工照样吵龙骨。
+[[tracks.chapters]]
+key = "settle_held"
+title = "换了帆的渔船"
+text = "一个多月后，栈桥头又挂起两盏灯。靠上来的是一条没见过的伊势渔船，帆是新的。景隆跳上栈桥，头一句就是：“上回那条船，织田家的人认得了，我换了。换船的钱，从你那份里扣。”他说这话时倒没生气，像在说今天的潮。身后跟着三个清水船坞的老船工，吵了一路，吵的是新船的龙骨该多长：一个要长，多装人；一个要短，湾里掉头快；第三个说，先打听九鬼家的船有多长。三人手里各攥一根细麻绳，结打在自己要的长短上。景隆把三根绳往船板上一摊，钱袋往我面前一放，比上回的瘪。“你说。”"
+speaker = "obama_kagetaka"
+mood = "cheerful"
+at = "atsuta"
+when = [{ kind = "alive", person = "obama_kagetaka", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等一个多月，渔船再来" }, { kind = "at", at = "atsuta", text = "在热田的栈桥边" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "obama_kagetaka", value = -3 }, { kind = "flag", flag = "c13_request_obama_kagetaka_late" }], news = "热田的栈桥边来过一条挂新帆的伊势渔船，船上的人等了几夜没等到人，嘟囔着热田的船家靠不住，走了。" }
+news = "热田的栈桥边又来了一条伊势渔船，帆是新的，船上几个老头吵龙骨，嗓门大得半个码头都听得见。"
+
+[[tracks.chapters.choices]]
+key = "keel"
+text = "按满载的吃水与湾里的风，把长短算给他们听。"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "龙骨的尺寸你说不出个所以然，三个老头只会一起笑你。"
+next = "done"
+reply = "我问清楚清水湾口的风向、满载吃水和船坞的滑道，拿那根长绳在船板上比：长的退潮要搁在湾口的沙上，短的装不下人。我在两个结中间另打了一个结。三个老船工不吵了，最年长的一个摸出炭条，蹲下就画起龙骨来。景隆大笑，把那只瘪钱袋推过来：“换船的钱扣了，剩下的是你的。这结打得值，下回别再让织田家的人认得我的船。”"
+effects = [{ kind = "cash", value = 1100 }, { kind = "skill", skill = "shipbuilding", value = 20 }, { kind = "affinity", person = "obama_kagetaka", value = 4 }, { kind = "flag", flag = "c13_request_obama_kagetaka_partial" }]
+
+[[tracks.chapters.choices]]
+key = "sea"
+text = "讲讲自己在大洋上见过的船：长的短的，各有什么毛病。"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "done"
+reply = "我讲外海的长船遇上横浪怎么拧，短船顶风怎么抬不起头。中间那个老船工摸出一块木片，用刀尖刻了两道，说是记下两条。长短没定，吵的声音小了。景隆把瘪钱袋推过来，拍了拍新帆的帆脚：“两条，够换半张帆。”"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "obama_kagetaka", value = 4 }, { kind = "flag", flag = "c13_request_obama_kagetaka_partial" }]
+fail = { next = "done", effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "obama_kagetaka", value = 2 }, { kind = "flag", flag = "c13_request_obama_kagetaka_partial" }], news = "热田栈桥边那条挂新帆的伊势渔船上，几个老船工听外人讲了半天大洋上的船，说内湾的船用不着这些，又吵到了天亮。" }
+
+[[tracks.chapters.choices]]
+key = "out"
+text = "这是你们的船，我不插嘴。"
+next = "done"
+reply = "“滑头！”景隆骂了一句，把那只瘪钱袋整个推过来，没再往外倒。“换船的钱扣过了，就这些。”三个老船工接着吵，新帆在风里一鼓一鼓，吵到渔船离了栈桥，声音还从黑里传过来。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_obama_kagetaka_partial" }]

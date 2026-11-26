@@ -1,0 +1,586 @@
+# 寰宇·出海后的奇遇（港口）——第九批 S01。写法、规矩与节奏见同目录的 encounters_sea.toml（[rules] 只写在那里）。
+# 可以随意改文字与数值；key 只允许追加，不要改名或删除。
+#
+# 港口的奇遇多一种出场条件：
+#   when.culture = ["文化圈", …]   舰队停靠的港口属于这些文化圈之一（各港口的 culture 字段）
+#   寰宇港口的文化圈：mediterranean（伊比利亚、意大利与大西洋诸岛）、lowland（英法与尼德兰）、nordic（北海与波罗的海）、
+#   ottoman、desert（马格里布与阿拉伯半岛）、swahili（非洲沿岸）、indian、malay（南洋）、ming、japanese、korean、ryukyuan、
+#   frontier（新大陆的欧洲人港口）、andean、maya ……
+# 声望（reputation）不写 faction 时算在停靠港口所属的势力头上。
+# 有出处的条目在各自上方写明“史实 → 本世界线”，一局只出一次（once = true）；其余的一年内不重复。
+
+# ───────────────────────── 哪座港口都会遇到的 ─────────────────────────
+
+[[encounters]]
+key = "port_tax_clerk"
+title = "验货的税吏"
+text = "货还没卸完，税吏就带着书办上了船。他拿铁钎子挨个货包戳了戳，翻了翻你的货单，说上面的估价“低得不像话”。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "照他估的数补税。"
+cost = 120
+reply = "税吏开了收条，字迹工整。往后几天，码头上没有人来找你的麻烦。"
+effects = [{ kind = "reputation", value = 1 }]
+[[encounters.choices]]
+text = "搬出账本，一笔一笔同他对。"
+check = { attr = "numeracy", base = 35, per = 6 }
+reply = "你把进价、运费、折耗算给他看，算到第三页，书办先点了头。税吏哼了一声，照原单放行。"
+effects = [{ kind = "fame", value = 1 }]
+fail_reply = "账是对的，可你有一处换算说岔了。税吏抓住这一处，连罚带补，多收了一倍。"
+fail = [{ kind = "cash", value = -220 }]
+[[encounters.choices]]
+text = "请他到舱里喝一杯，慢慢商量。"
+cost = 50
+check = { attr = "etiquette", base = 40, per = 5 }
+reply = "一杯酒喝到第三巡，估价的事他没有再提。"
+fail_reply = "酒他喝了，税照收，临走还说你这酒不怎么样。"
+fail = [{ kind = "cash", value = -120 }]
+
+[[encounters]]
+key = "port_interpreter"
+title = "自荐的通事"
+text = "跳板刚搭好，一个瘦小的人就挤到你跟前，一口气换了四种话问好。他说自己是这码头上最好的通事，认得每一家货栈的掌柜，工钱按天算，童叟无欺。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "雇他一天。"
+cost = 80
+reply = "他果然哪一家都认得。有他在旁边，掌柜们报的价都实在了些，还有人拉着你说了一桩别处听不到的事。"
+effects = [{ kind = "reputation", value = 2 }, { kind = "rumor" }]
+[[encounters.choices]]
+text = "自己比划着同货栈打交道。"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "手势、算盘和几个现学的词，居然够用。货栈的伙计们觉得你有趣，临走还教了你两句骂人的话。"
+effects = [{ kind = "reputation", value = 1 }, { kind = "morale", value = 1 }]
+fail_reply = "一个数目你说成了十倍，掌柜的脸当场沉了下来。费了半天工夫才解释清楚。"
+fail = [{ kind = "reputation", value = -1 }]
+[[encounters.choices]]
+text = "谢绝，照旧找上回的熟人。"
+reply = "通事耸耸肩，转身去迎下一条船了。"
+
+[[encounters]]
+key = "port_porters_guild"
+title = "脚夫行的规矩"
+text = "你的水手刚抬起头一箱货，就被几个膀大腰圆的汉子拦下了。领头的说，这码头上的货只许脚夫行的人搬，价钱是外头的两倍，这是多少年的老规矩。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "照规矩，雇行里的人。"
+cost = 150
+reply = "脚夫们手脚极快，一箱也没磕着。行首走的时候拍拍你的肩：守规矩的船，下回先卸。"
+effects = [{ kind = "reputation", value = 2 }]
+[[encounters.choices]]
+text = "去同行首讲一讲情面。"
+check = { attr = "etiquette", base = 35, per = 6 }
+reply = "行首听你说完，叫人搬来两条凳子。价钱让了四成，还许你自己的人搬轻货。"
+effects = [{ kind = "cash", value = -90 }, { kind = "reputation", value = 1 }]
+fail_reply = "行首听完，笑了笑：“规矩要是能讲价，就不叫规矩了。”"
+fail = [{ kind = "cash", value = -150 }]
+[[encounters.choices]]
+text = "等天黑，叫自己的人悄悄卸。"
+check = { attr = "intrigue", base = 35, per = 6 }
+reply = "货在后半夜卸完了，没有惊动一条狗。水手们累得直不起腰。"
+effects = [{ kind = "morale", value = -2 }]
+fail_reply = "卸到一半，码头上亮起了一排火把。罚钱之外，还得照价补上脚夫的工钱。"
+fail = [{ kind = "cash", value = -240 }, { kind = "reputation", value = -2 }, { kind = "morale", value = -2 }]
+
+[[encounters]]
+key = "port_feast_day"
+title = "满城灯火"
+text = "你到得正是时候——或者说，正不是时候。全城在过节，街上搭着彩棚，鼓声从早响到晚，码头上找不到一个肯干活的人。水手们扒着船舷，脖子伸得老长。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "放全船上岸，每人再赏一份酒钱。"
+cost = 100
+reply = "天亮时人都回来了，有的少了帽子，有的多了一脸胭脂。此后半个月，支使谁都痛快。"
+effects = [{ kind = "morale", value = 8 }]
+[[encounters.choices]]
+text = "分两班轮着去，船上不许离人。"
+reply = "两班人都说自己那一班没赶上最热闹的时候。不过船和货，一样也没少。"
+effects = [{ kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "趁市面上没有别的卖家，摆出货来。"
+reply = "过节的人出手大方，零卖的价钱比平日高出一截。水手们守着摊子，听了一整天别人的鼓。"
+effects = [{ kind = "cash", value = 130 }, { kind = "morale", value = -4 }]
+
+[[encounters]]
+key = "port_dock_gossip"
+title = "码头上的闲话"
+text = "不知是谁先说的：你的船是从闹瘟的港口来的。等你听到这话，货栈的伙计已经不肯上你的跳板，卖水的也绕着你的船走。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "请本地有头脸的人出面作保。"
+cost = 100
+reply = "一位行东领着你在码头上走了一圈，逢人就拉着你的手说话。到傍晚，闲话换成了别的闲话。"
+effects = [{ kind = "reputation", value = 1 }]
+[[encounters.choices]]
+text = "查一查这话是谁放出来的。"
+check = { attr = "intrigue", base = 35, per = 6 }
+reply = "话头出在隔壁泊位那条船上——他们同你卖的是一样的货。当众对质之后，丢脸的是他们。"
+effects = [{ kind = "reputation", value = 2 }, { kind = "fame", value = 1 }]
+fail_reply = "问了一圈，人人都说是听别人说的。你越打听，这话传得越像真的。"
+fail = [{ kind = "reputation", value = -2 }]
+[[encounters.choices]]
+text = "不理会，买卖照做。"
+reply = "头两天生意清淡，价钱也被人压了一头。闲话没有人添柴，自己就凉了。"
+effects = [{ kind = "cash", value = -80 }]
+
+[[encounters]]
+key = "port_passenger"
+title = "求搭船的人"
+text = "一个背着书箱的人在跳板下等了你半天。他说要往你下一站去，陆路不太平，肯出船钱；又说自己不占地方，不晕船，还写得一手好信。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "收他船钱，带上。"
+reply = "他果然不晕船。一路上替水手们写了十几封家信，下船时还把你的航海日志誊清了一遍。"
+effects = [{ kind = "cash", value = 120 }, { kind = "supplies", value = -1 }]
+[[encounters.choices]]
+text = "不要船钱，叫他一路讲些见闻抵数。"
+reply = "他去过的地方比你的水手加起来还多。夜里甲板上围满了人，听他讲到添第三回灯油。"
+effects = [{ kind = "morale", value = 4 }, { kind = "supplies", value = -1 }, { kind = "rumor" }]
+[[encounters.choices]]
+text = "船上不带生人。"
+reply = "他朝你行了个礼，背起书箱，往下一条船去了。"
+
+[[encounters]]
+key = "port_night_cargo"
+title = "来路不明的货"
+text = "入夜以后，有人敲你的舷板。来人拿斗篷遮着脸，说手上有一批棉布，是“一位急着离港的东家”留下的，只要市价的一半，但得今夜就搬，不问来历。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "点灯验货，看准了再给钱。"
+cost = 200
+check = { attr = "perception", base = 40, per = 5 }
+reply = "布是好布，数目也对。至于那位东家为什么急着离港，你没有问。"
+effects = [{ kind = "goods", good = "cloth", qty = 5 }]
+fail_reply = "灯下看着是好布，天亮一抖开，里头几层全是水渍。"
+fail = [{ kind = "goods", good = "cloth", qty = 2 }]
+[[encounters.choices]]
+text = "不买，天亮告诉港务。"
+reply = "港务的人去晚了一步，只在栈房后头捡到一截割断的封条。他们记下了你的名字——这一回是好事。"
+effects = [{ kind = "reputation", value = 2 }]
+[[encounters.choices]]
+text = "不买，也不多嘴。"
+reply = "斗篷在码头的暗处晃了一下，不见了。"
+
+[[encounters]]
+key = "port_tavern_bill"
+title = "酒馆的账"
+text = "天刚亮，酒馆老板就揪着你的两个水手来到船边，身后跟着一个抱着碎板凳的伙计。昨夜的架打坏了三张桌子、一面窗，还有半架子酒。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "照价赔，把人领回来。"
+cost = 130
+reply = "两个水手耷拉着脑袋上了船，一整天干活都抢在前头。"
+effects = [{ kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "同老板讲价。"
+check = { attr = "eloquence", base = 40, per = 5 }
+reply = "你一张一张数过那些桌子，有两张本来就缺腿。老板的要价落了一大半。"
+effects = [{ kind = "cash", value = -50 }, { kind = "morale", value = 2 }]
+fail_reply = "老板叫来了半条街的邻居作证。价钱一文没落，还添上了伙计的汤药钱。"
+fail = [{ kind = "cash", value = -180 }]
+[[encounters.choices]]
+text = "人留给他，做工抵债。"
+reply = "两个水手在酒馆后厨刷起了盘子。船等不了那么久，只好先开，少了的人手到下一港再补。"
+effects = [{ kind = "crew", value = -2 }, { kind = "morale", value = -3 }]
+
+# 史实：船蛆在暖海里几个月就能蛀穿船板。十六世纪的船靠定期上滩火燎、涂沥青与牛油来防，铜皮包底是两百年后的事。
+#       → 本世界线照此。
+[[encounters]]
+key = "port_shipworm"
+title = "船底的蛀眼"
+text = "趁落潮，船匠钻到船底下看了一圈，出来时手里捏着一截木片，上面密密麻麻全是针眼大的洞。“船蛆。眼下还浅。再跑一季暖水，就不好说了。”"
+place = "port"
+weight = 2
+once = true
+[[encounters.choices]]
+text = "现在就上滩，火燎、涂油、换板。"
+cost = 180
+reply = "船在滩上歪了三天，船底烧得焦黑，又刷得油亮。船匠拍着船壳说：两年之内，蛆咬不动它。"
+effects = [{ kind = "repair", value = 35 }]
+[[encounters.choices]]
+text = "只把蛀得深的几块板换掉。"
+cost = 60
+reply = "换下来的旧板一掰就断。船匠摇着头收了钱：治得了标，治不了本。"
+effects = [{ kind = "repair", value = 12 }]
+[[encounters.choices]]
+text = "下回再说。"
+check = { attr = "fortune", base = 50, per = 3 }
+reply = "船照样跑，舱底照样干。也许船匠只是想多挣一笔。"
+fail_reply = "出港没几天，底舱的水就漫过了压舱石，唧筒日夜不停。"
+fail = [{ kind = "damage", value = 5 }]
+
+[[encounters]]
+key = "port_night_fire"
+title = "夜火"
+text = "半夜里钟声大作。隔着两个泊位的一座货栈烧了起来，火星顺着风一把一把往泊着的船上撒。岸上的人排成长队传水桶，喊声里哪一国的话都有。"
+place = "port"
+weight = 2
+cooldown_days = 365
+[[encounters.choices]]
+text = "带人上岸救火。"
+check = { attr = "command", base = 40, per = 5 }
+reply = "你的人接过了队尾，一直传到天亮。火没有烧过第三座栈房。第二天，港务官亲自到船上来道谢。"
+effects = [{ kind = "reputation", value = 3 }, { kind = "fame", value = 2 }]
+fail_reply = "火场里乱成一团，你的人被倒下的山墙隔开，有两个再没出来。"
+fail = [{ kind = "crew", value = -2 }, { kind = "reputation", value = 1 }]
+[[encounters.choices]]
+text = "砍断缆绳，把船挪到港心去。"
+reply = "船是保住了。天亮后，岸上救火的人看着你的船从港心慢慢靠回来，没有人过来搭跳板。"
+effects = [{ kind = "reputation", value = -2 }]
+[[encounters.choices]]
+text = "全船提水泼湿帆篷和甲板，守着自己的船。"
+reply = "火星落在湿帆上，嗤的一声就灭了。忙到天亮，人人一脸黑灰，船上一块板也没烧着。"
+effects = [{ kind = "morale", value = -2 }]
+
+[[encounters]]
+key = "port_missing_hand"
+title = "少了一个人"
+text = "开船前点名，少了一个人。同铺的说，他昨夜上岸以后就没回来，铺盖还在，那把从不离身的小刀也还在。潮水不等人，缆绳已经解了一半。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "多等一潮。"
+reply = "天擦黑的时候，他自己回来了，一身酒气，怀里还揣着给全船带的一包炒豆。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "派水手长带人上岸去找。"
+check = { attr = "command", base = 40, per = 5 }
+reply = "人是在赌档后头的柴房里找着的，睡得正香。水手长一路拧着他的耳朵回来。"
+effects = [{ kind = "morale", value = 2 }]
+fail_reply = "找遍了半座城也没有人影。去找的人倒有一个也没回来——听说被别的船拿双份工钱招走了。"
+fail = [{ kind = "crew", value = -2 }, { kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "不等了，开船。"
+reply = "船离了岸。他的铺盖卷了起来，那把小刀归了同铺的。"
+effects = [{ kind = "crew", value = -1 }, { kind = "morale", value = -2 }]
+
+[[encounters]]
+key = "port_silver_touch"
+title = "成色"
+text = "你拿银子去换本地的零钱。钱摊的掌柜把银锭在试金石上划了一道，眯着眼看了半天，说成色“差着两分”，得打个折。"
+place = "port"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "照他说的折色换，不伤和气。"
+reply = "掌柜数钱数得飞快，临了还添了一句：往后你的银子，他都收。"
+effects = [{ kind = "cash", value = -80 }, { kind = "reputation", value = 1 }]
+[[encounters.choices]]
+text = "借他的戥子与剪子，当面验给他看。"
+check = { attr = "numeracy", base = 35, per = 6 }
+reply = "银锭剪开，断口雪白。掌柜的脸红到了耳根，照足色给你换了，还饶了一串铜钱。"
+effects = [{ kind = "cash", value = 40 }, { kind = "fame", value = 1 }]
+fail_reply = "你验的手法不对，剪下来的银屑撒了一柜台。吃了亏，还得赔他的剪子钱。"
+fail = [{ kind = "cash", value = -130 }]
+[[encounters.choices]]
+text = "收起银子，换一家。"
+reply = "隔壁那家的掌柜头也没抬：“他说差两分？在我这里，差一分。”"
+effects = [{ kind = "cash", value = -40 }]
+
+# ───────────────────────── 大明的港口 ─────────────────────────
+
+# 史实：明代番货入市须经牙行评价、抽分（广州有“客纲”“客纪”）；月港在 1567 年开海之前是私港，
+#       买卖全凭私牙与“报水”一类的陋规。→ 本世界线：1557 年前后官牙与私牙并存，照此写。
+[[encounters]]
+key = "port_two_brokers"
+title = "官牙与私牙"
+text = "货一上岸，两拨人就找上了门。一拨拿着官府的帖子，说番货照例由牙行评价抽分；另一拨等前一拨走了才进来，说他家东主“不抽分，只抽一成”，天黑交货，天亮结银。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["ming"]
+[[encounters.choices]]
+text = "走官牙，照章抽分。"
+cost = 140
+reply = "牙行的算盘打得你眼花，抽去的那一份也确实心疼。不过往后在这片地面上，你的货单有人认。"
+effects = [{ kind = "reputation", value = 3 }]
+[[encounters.choices]]
+text = "走私牙。"
+check = { attr = "intrigue", base = 35, per = 6 }
+reply = "天亮时银子一锭不少地送到了船上，成色比官秤的还足。"
+effects = [{ kind = "cash", value = 200 }, { kind = "reputation", value = -1 }]
+fail_reply = "货抬走了，天亮来的不是银子，是巡检司的差役。破财之外，还落了个“通同私牙”的名声。"
+fail = [{ kind = "cash", value = -220 }, { kind = "reputation", value = -3 }]
+[[encounters.choices]]
+text = "两边都不应，先请牙人吃茶，问清规矩。"
+reply = "一壶茶的工夫，你弄明白了抽分的成数、过秤的门道，还有哪几位老爷的门槛不能绕。"
+
+# ───────────────────────── 日本的港口 ─────────────────────────
+
+# 史实：堺的会合众以茶汤结交往来的商人，席上看重“唐物”；武野绍鸥（1555 年卒）、今井宗久、千宗易都是堺的町人。
+#       → 本世界线照此，不出现真名。
+[[encounters]]
+key = "port_tea_invitation"
+title = "茶会的请帖"
+text = "町里的一位年寄派人送来一张请帖，请“远来的船主”明日去吃茶。送帖的人低声添了一句：席上诸位都是做大买卖的，头一回去的客人，照例带一件唐物。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["japanese"]
+[[encounters.choices]]
+text = "带一件瓷器去。"
+give = { good = "porcelain", qty = 1 }
+reply = "主人把那只碗托在掌上转了三转，放进了壁龛。茶过三巡，席上有人问起你下一趟的船期，还有人问你缺不缺压舱的货。"
+effects = [{ kind = "reputation", value = 4 }, { kind = "fame", value = 1 }]
+[[encounters.choices]]
+text = "空手去，多看少说。"
+check = { attr = "etiquette", base = 35, per = 6 }
+reply = "你照着邻座的样子转碗、低头、称赞茶釜的声音，没有错一步。主人送客时，腰弯得比迎客时深。"
+effects = [{ kind = "reputation", value = 2 }]
+fail_reply = "你把茶一口喝干，又问这只碗值多少银子。满座的人都笑了，笑得很客气。"
+fail = [{ kind = "reputation", value = -2 }]
+[[encounters.choices]]
+text = "托辞船上事忙，不去。"
+reply = "送帖的人行了个礼，退着出去了。请帖你留着，纸是极好的纸。"
+
+# ───────────────────────── 南洋的港口 ─────────────────────────
+
+# 史实：马来诸港设“沙班达尔”（港主）管理外商，马六甲苏丹国时有四位，各管一方来的商人；
+#       外船到港，照例先送见面礼，再议关税（皮列士《东方志》）。→ 本世界线照此。
+[[encounters]]
+key = "port_harbour_master"
+title = "港主的书记"
+text = "船刚下锚，一条撑着黄伞的小船就靠了过来。来人自称是港主手下的书记，替主人问你的船从哪里来、载的什么货——以及，照这里的规矩，给主人带了什么。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["malay"]
+[[encounters.choices]]
+text = "送两匹棉布。"
+give = { good = "cloth", qty = 2 }
+reply = "书记把布料摸了又摸。当天下午，港主亲自到码头来，指给你一处离栈房最近的泊位。"
+effects = [{ kind = "reputation", value = 4 }]
+[[encounters.choices]]
+text = "封一包银子。"
+cost = 110
+reply = "书记在手里掂了掂，收进袖子。“主人说，欢迎你。”泊位不好不坏，税也不多不少。"
+effects = [{ kind = "reputation", value = 2 }]
+[[encounters.choices]]
+text = "只呈上文书，说礼物卸了货再补。"
+check = { attr = "etiquette", base = 35, per = 6 }
+reply = "你的话说得周全，书记挑不出错来，客客气气地回去了。"
+effects = [{ kind = "reputation", value = 1 }]
+fail_reply = "书记的笑容收了起来。验货的人比平日来得晚，查得比平日细，还“照例”多收了一份泊费。"
+fail = [{ kind = "reputation", value = -2 }, { kind = "cash", value = -70 }]
+
+# ───────────────────────── 印度的港口 ─────────────────────────
+
+# 史实：古吉拉特与马拉巴尔诸港的买卖须经经纪（dalal）撮合，双方的手藏在一块布巾底下，用手指议价；
+#       巴尔博萨（约 1518）与后来的欧洲商人都记过。→ 本世界线照此。
+[[encounters]]
+key = "port_under_the_cloth"
+title = "布巾底下的价钱"
+text = "你同一位货主谈了半天，眼看要成，旁边一直不作声的人忽然把一条布巾搭在你们两人的手上。货主把手伸进布巾底下，等着。那人说：他是经纪，这里的价钱，都是在布巾下面用手指头讲的。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["indian"]
+[[encounters.choices]]
+text = "认下这位经纪，佣金照付。"
+cost = 90
+reply = "布巾底下，货主的手指一屈一伸，经纪在旁边低声替你报数。成交之后，他把你引见给了半条街的货主。"
+effects = [{ kind = "reputation", value = 3 }]
+[[encounters.choices]]
+text = "学着在布巾下面还价。"
+check = { attr = "commerce", base = 35, per = 6 }
+reply = "你捏住他两根手指，又添了半根。货主一愣，哈哈大笑，当场拍了你的手掌。这个价钱，本地人也未必拿得到。"
+effects = [{ kind = "cash", value = 150 }, { kind = "fame", value = 1 }]
+fail_reply = "你捏错了指节，许出去的价钱比心里想的高了三成。布巾揭开，话已经收不回来了。"
+fail = [{ kind = "cash", value = -160 }]
+[[encounters.choices]]
+text = "抽回手，说改日再谈。"
+reply = "经纪不慌不忙地叠起布巾：“改日，也还是我。”"
+
+# ───────────────────────── 奥斯曼与阿拉伯的港口 ─────────────────────────
+
+# 史实：1554–55 年，阿勒颇人哈克姆与大马士革人谢姆斯在伊斯坦布尔开了头两家咖啡铺（佩切维的史书）；
+#       在此之前，也门的苏菲用它守夜，麦加 1511 年一度禁饮。→ 本世界线：1557 年以后这种铺子已经传到各港。
+[[encounters]]
+key = "port_bitter_brew"
+title = "新开的铺子"
+text = "集市的拐角新开了一家铺子，不卖饭，也不卖酒，只卖一种又黑又苦的热汤。铺子里坐满了人，下棋的，念诗的，谈行情的。门口有个老人直摇头，说这是招人闲话的地方。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["ottoman", "desert"]
+[[encounters.choices]]
+text = "进去要一碗，坐上半天。"
+cost = 30
+reply = "汤苦得你直皱眉，喝到第二碗，才喝出点意思。邻座两个商人谈的事，你一字不漏地听了去。"
+effects = [{ kind = "rumor" }, { kind = "morale", value = 1 }]
+[[encounters.choices]]
+text = "买几袋豆子带回船上。"
+cost = 150
+reply = "掌柜的教了你怎么炒、怎么捣、怎么煮。值夜的水手喝过之后，一整夜没有打盹。"
+effects = [{ kind = "goods", good = "coffee", qty = 3 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "听那位老人的，绕着走。"
+reply = "老人很满意，拉着你说了一刻钟这世道如何不如从前。"
+
+# ───────────────────────── 地中海的港口 ─────────────────────────
+
+# 史实：意大利诸港自十五世纪末设卫生署（威尼斯 1486 年设常任卫生官），来船须出示上一港开的健康证书，
+#       否则在锚地隔离候检。→ 本世界线照此；正文里不用后世的说法，叫“防疫的官署”“无疫的凭据”。
+[[encounters]]
+key = "port_health_bill"
+title = "无疫的凭据"
+text = "引水船没有让你靠码头。先靠过来的是一条挂着防疫官署旗号的小艇，艇上的官员隔着一丈水，拿长柄夹子来接你的文书：“上一港开的无疫凭据。没有的话，在锚地候验。”"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["mediterranean"]
+[[encounters.choices]]
+text = "在锚地候满日子。"
+reply = "一天，两天，三天。水手们数着岸上钟楼的钟点打发时光。放行那天，官员隔着水朝你点了点头。"
+effects = [{ kind = "supplies", value = -3 }]
+[[encounters.choices]]
+text = "出一笔“加急查验”的钱。"
+cost = 110
+reply = "当天下午就来了一位医生，看了看众人的舌头，在文书上盖了印。"
+[[encounters.choices]]
+text = "托相熟的商号向防疫的官员说项。"
+check = { attr = "etiquette", base = 35, per = 6 }
+reply = "商号的东家亲自写了保书。那位官员看过署名，叫人撤了守在你船边的小艇。"
+effects = [{ kind = "reputation", value = 1 }]
+fail_reply = "保书被原样退了回来，候验的日子还添了两天。"
+fail = [{ kind = "supplies", value = -4 }, { kind = "reputation", value = -1 }]
+
+# ───────────────────────── 英法与尼德兰的港口 ─────────────────────────
+
+# 史实：安特卫普的新交易所 1531 年落成，“供各国各语言的商人使用”；没到期的汇票可以打折转手，行情一日数变。
+#       → 本世界线照此；英法各港同类的买卖也照这个写。
+[[encounters]]
+key = "port_discounted_bill"
+title = "廊柱下的汇票"
+text = "交易所的廊柱底下，一个戴黑呢帽的人拦住你，手里捏着一张下月到期的汇票，说急等钱用，肯打八折出让。票面上的商号你听说过，签字看着也像真的。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["lowland"]
+[[encounters.choices]]
+text = "算过日子与利钱，买下。"
+cost = 240
+check = { attr = "numeracy", base = 35, per = 6 }
+reply = "你又去问了两家钱铺的牌价，这才付钱。票到期那天，一文不少地兑了出来。"
+effects = [{ kind = "cash", value = 300 }]
+fail_reply = "票是真的，商号也是真的，只是你没留意背面还有一行小字。兑出来的钱，比你付出去的还少。"
+fail = [{ kind = "cash", value = 170 }]
+[[encounters.choices]]
+text = "不碰看不透的东西。"
+reply = "黑呢帽耸耸肩，转身去找下一个人。廊柱底下，这样的买卖一天要做上百桩。"
+
+# ───────────────────────── 北海与波罗的海的港口 ─────────────────────────
+
+# 史实：汉萨诸城对腌鲱鱼设验桶之制，验桶人按成色在桶上烙印分等，没有烙印的桶不得上市；
+#       斯科讷的集市与吕贝克、但泽都照此办。→ 本世界线照此。
+[[encounters]]
+key = "port_barrel_brand"
+title = "桶上的烙印"
+text = "市政厅的验桶人带着烙铁上了码头。照本城的章程，进出的每一桶腌货都要开桶验过、烙上等次才许买卖。他拿铁钩敲了敲你的桶：“开吧。验费按桶算。”"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["nordic"]
+[[encounters.choices]]
+text = "照章开桶，付验费。"
+cost = 70
+reply = "烙铁按下去，冒起一股青烟。验桶人给了你头等的印——有了这个印，货到别的同盟城市也不必再验。"
+effects = [{ kind = "reputation", value = 2 }, { kind = "fame", value = 1 }]
+[[encounters.choices]]
+text = "同他论一论：过路的货不该照本城的章程。"
+check = { attr = "learning", base = 35, per = 6 }
+reply = "你背出了章程里“转口货免验”的那一条。验桶人翻出本子查了半天，合上，朝你点了点头。"
+effects = [{ kind = "fame", value = 1 }]
+fail_reply = "验桶人也背了一条，比你那条新。验费之外，另加一笔“阻挠查验”的罚金。"
+fail = [{ kind = "cash", value = -140 }, { kind = "reputation", value = -1 }]
+[[encounters.choices]]
+text = "货不卸了，原船运走。"
+reply = "验桶人无所谓地收起烙铁。码头上的买主们看着你的船，可惜了一声。"
+effects = [{ kind = "morale", value = -2 }]
+
+# ───────────────────────── 新大陆的港口 ─────────────────────────
+
+# 史实：运往西属美洲的货须在塞维利亚的贸易署（1503 年设）登记造册，金银另缴五一税；
+#       到港查“未登记之货”是王室官员的日常，也是他们的财路。→ 本世界线照此。
+[[encounters]]
+key = "port_unregistered"
+title = "没登记的货"
+text = "王室的司库带着公证人上了船，把你的货单同舱里的货一样一样对。对到最后，他拿鹅毛笔点着三只箱子：“这几件，登记簿上没有。按陛下的法令，未登记之货一律充公——除非，是书记漏写了。”"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["frontier", "andean", "maya"]
+[[encounters.choices]]
+text = "认作漏写，补缴登记的规费。"
+cost = 150
+reply = "公证人当场添了三行字，司库盖上印。法令还是那个法令，只是今天它恰好没有被违反。"
+effects = [{ kind = "reputation", value = 2 }]
+[[encounters.choices]]
+text = "拿出离港时的底单同他对质。"
+check = { attr = "learning", base = 35, per = 6 }
+reply = "底单上三只箱子写得清清楚楚，连封蜡的号数都对得上。司库把笔插回墨水瓶，说了声“失礼”。"
+effects = [{ kind = "fame", value = 1 }, { kind = "reputation", value = 1 }]
+fail_reply = "你的底单少了一个副署。司库和气地指出了这一点，然后叫人抬走了一只箱子里的东西。"
+fail = [{ kind = "cash", value = -260 }]
+[[encounters.choices]]
+text = "请两位到舱里坐坐，桌上压一只钱袋。"
+cost = 60
+check = { attr = "eloquence", base = 40, per = 5 }
+reply = "司库出舱的时候，钱袋不在桌上了，那三只箱子也不在他的簿子上了。"
+fail_reply = "司库把钱袋推了回来——推回来之前，先掂了掂。“这点诚意，只够补一半的规费。”"
+fail = [{ kind = "cash", value = -150 }]
+
+# ───────────────────────── 非洲沿岸的港口 ─────────────────────────
+
+# 史实：伊本·白图泰 1331 年记摩加迪沙：外来的商船一到，本地商人各驾小船来迎，每位客商认一家作东道，
+#       货由东道代卖，不经东道的买卖不作数。→ 本世界线：两百年后沿岸诸城仍留此俗。
+[[encounters]]
+key = "port_host_family"
+title = "东道"
+text = "锚还没落稳，七八条小船就围了上来，每条船上都有人举着一盘吃食朝你喊。舵工说，这是本地的规矩：外来的船主得认一家作东道，住他的屋，货由他代卖；没有东道的买卖，城里不作数。"
+place = "port"
+weight = 5
+once = true
+[encounters.when]
+culture = ["swahili"]
+[[encounters.choices]]
+text = "认下头一个登船的人作东道。"
+reply = "东道把你安顿在他家的石屋里，三顿饭顿顿不重样。货卖得不慢，只是每一笔他都抽了头，账也只有他自己看得懂。"
+effects = [{ kind = "reputation", value = 3 }, { kind = "cash", value = -90 }]
+[[encounters.choices]]
+text = "挑一家，先把抽头的成数讲定。"
+check = { attr = "commerce", base = 35, per = 6 }
+reply = "你挨个问了价，最后挑中一位话最少的。成数写在纸上，按了手印，此后一文也没有多抽。"
+effects = [{ kind = "reputation", value = 2 }, { kind = "fame", value = 1 }]
+fail_reply = "你讲价讲得太狠，几条小船陆续掉头走了。留下的那一家，货栈在城的另一头。"
+fail = [{ kind = "reputation", value = -1 }, { kind = "supplies", value = -1 }]
+[[encounters.choices]]
+text = "谢过众人，说只补水，不做买卖。"
+reply = "小船散了。有人临走把那盘吃食留在你的跳板上，说是给远客的，不算钱。"
+effects = [{ kind = "supplies", value = 1 }]

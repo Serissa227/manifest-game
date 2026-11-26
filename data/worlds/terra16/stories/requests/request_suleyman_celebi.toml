@@ -1,0 +1,141 @@
+# 不识字的朋友（request_suleyman_celebi）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：苏莱曼·切莱比（suleyman_celebi，1527-12-14 生，男），伊斯坦布尔宫廷的书记兼诗人，日程在伊斯坦布尔书库（1553—1590 年）。身份档 2（书记，按官员算），cast 在 cast/story_islamic.toml。
+# 类型：押运／带人（escort）。任务单写的是三章，文件里也是三章：offer（报价，伊斯坦布尔港）、passage（伊斯坦布尔码头，出港查货）、arrive（士麦那，把货交到朋友手里）。
+# 报价：T（当面）。auto=false，玩家在伊斯坦布尔港里“问请托”（ask:request_suleyman_celebi）启动；offer 不写 at，objectives 为“在港里找到他”。
+#   窗口 1561-01-01 至 1590-06-30，玩家满 17 岁。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+#   T 模式不写 family：只有 V/L 模式的报价才有港口冷却。
+# 引擎限制：任务单的 window 写在普通章上，引擎要求同时给 default，而任务单写的是“没有缺省结算”。这里三章都不写 window，
+#   改用 when 的 date 条件与 alive 条件表示时段与生死；passage 没有缺省，可以一直等。
+# 进行中：arrive 章 deadline_days=60（伊斯坦布尔到士麦那，同一片海），超时走 failed：苏莱曼来信一封，好感 -3，旗标 _late。
+#   超时单独写一条见闻（大胡子等货），不沿用本章“送到”的见闻，否则玩家会听到一件没有发生的事。
+# 检定：passage 两个选项各一个检定——说（eloquence 一般 20/7）与抓无花果塞给他（commerce 容易 35/6）。
+#   检定失败走 fail 分支，仍然出港、仍然去士麦那，好感 −2（decisions 的“检定失败 −2”）；结果写在 fail 的见闻里（引擎失败时不显示回复）。
+#   talk 的失败设旗标 _scared，arrive 的变体读它，改一句话（手在抖，大胡子看出来了）。
+# 分支旗标：c13_request_suleyman_celebi_asked（offer 问了“哪几句”，passage 的变体读它）、_scared（见上）。共两面，不影响终局。
+# 设的旗标：c13_request_suleyman_celebi_accepted（offer 两种接法）、_declined（offer 回绝）；终局只设一面：_done（arrive 两个选项）、_late（arrive 超时）。
+# 读的旗标：只读自己的分支旗标（_asked、_scared）。不读 c7_ 旗标，不读 c13_main_ 旗标（本请托没有主线门禁）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬（每份只给一次）：现金 2250（arrive 的两个结局各付一次，与任务单一致）；好感最多 +13（接下 +2、路上 +3、送到 +8 或 +5）；
+#   名声 +3（任务单的写法，见交付说明）；回忆 mem-request_suleyman_celebi-arrive（只在“是。他说你不识字”的结局给）。
+#   超时与失败不罚钱、不扣物品、不改时间线。无物品奖励，无技能奖励。
+# 依据·史实背景：1559 年巴耶济德之乱以后，宫里对替人抄信、藏诗稿的人查得很紧（据说）；士麦那是爱琴海东岸的大港，市集里卖无花果与干果。
+#   正文只用传闻口吻，不引原诗，不写巴耶济德的事。
+# 依据·原创：诗卷与油布包、无花果筐底的夹层、士麦那卖无花果的大胡子、“我只是不念”这句话、码头税吏翻查的一段。
+# 秘密：cast 里没有写 secret；本请托的诗卷涉及“不该在宫里写的几句”，正文里只写他不肯说，诗句内容一律不写；见闻不写诗的内容。
+# 不写：法蒂玛、咖啡馆的炉边（属于 C7 pair_fatima_suleyman_celebi 的线，那条线在 1560 年前结束，本轨道从 1561 年起）。
+# 依赖：港口 istanbul、smyrna（ports_east_med.toml）；人物 suleyman_celebi；无需 B10b 改名。
+# 口头禅／招呼语：「请留步。您刚才那句押着韵，自己没察觉吧？容我记下——不署您的名。」全轨道只在 offer 用一次（苏莱曼第一次开口的地方）。
+# 回忆插画清单：
+#   mem-request_suleyman_celebi-arrive「灶台后面的洞」：士麦那一间铺子的灶台后面，一个黑洞口，洞边堆着一圈无花果干，陶罐斜斜堵在洞口。
+
+[[tracks]]
+key = "request_suleyman_celebi"
+name = "不识字的朋友"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["suleyman_celebi"]
+
+# 一、不识字最安全：伊斯坦布尔的港里，书记把一卷油布包着的诗推到你面前，托你送到士麦那。
+[[tracks.chapters]]
+key = "offer"
+title = "不识字最安全"
+text = "伊斯坦布尔的码头边，一个穿旧官袍的书记坐在木箱上誊抄，笔尖停在半空。我从他身边走过，他忽然抬头：“请留步。您刚才那句押着韵，自己没察觉吧？容我记下——不署您的名。”说完，他把一卷油布包好的纸推到我面前，压低了嗓子：“里头有几句不该在宫里写的。想送出城去，寄存在一个人那里。”他顿了顿，又说：“士麦那，卖无花果的一个朋友。他不识字，所以最安全。”说到这里他忽然停住，抬起手指在空中点了两下，像是在听一句韵。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "suleyman_celebi", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，送去士麦那。"
+next = "passage"
+reply = "他把诗卷塞进一个装无花果干的筐底，上面盖满了无花果，又用手压平了一层：“就当你运的是这个。”他收回手，指尖上沾着一点墨，他自己看了看，没擦。"
+effects = [{ kind = "affinity", person = "suleyman_celebi", value = 2 }, { kind = "flag", flag = "c13_request_suleyman_celebi_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_lines"
+text = "问他：哪几句不该写？"
+next = "passage"
+reply = "他笑了：“我要是告诉你，你就也不安全了。”他把油布的边角折回去，压住卷子的一头，不让我多看一眼。折的时候，他的手很稳，写字时那样停顿的手，这会儿一下也没停。"
+effects = [{ kind = "affinity", person = "suleyman_celebi", value = 2 }, { kind = "flag", flag = "c13_request_suleyman_celebi_accepted" }, { kind = "flag", flag = "c13_request_suleyman_celebi_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宫里忌讳的东西，我不碰。"
+next = "failed"
+reply = "他点点头，没有恼，把诗卷收回袍子里。袖口上，他顺手抄了一句韵，抄完，才慢慢把袖子压回袍底。“也好。”他说，像是真的松了一口气。"
+effects = [{ kind = "flag", flag = "c13_request_suleyman_celebi_declined" }]
+
+# 二、手碰到了油布：出港前，税吏逐筐翻查，手伸进了无花果筐的底下。
+[[tracks.chapters]]
+key = "passage"
+title = "手碰到了油布"
+text = "出港前，码头上的税吏要查每一筐货。无花果筐一只只掀开，税吏的手在里面翻，翻得不耐烦。轮到我这一筐，他的手伸进去，指头碰到了筐底一层硬硬的东西。是油布。税吏的眉毛挑了起来。风把旁边那筐的干叶子吹到我脚边，我没去捡。“这底下是什么？”"
+speaker = "captain"
+mood = "tense"
+at = "istanbul"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "suleyman_celebi", value = true }]
+news = "伊斯坦布尔码头上，税吏逐筐翻查出港的无花果，有一筐的主人一路陪着笑，像是在替谁挡手。"
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_suleyman_celebi_asked" }]
+text = "出港前，码头上的税吏要查每一筐货。我想起那个书记说的：“我要是告诉你，你就也不安全了。”无花果筐一只只掀开，税吏的手在里面翻，翻得不耐烦。轮到我这一筐，他的手伸进去，指头碰到了筐底一层硬硬的东西。是油布。税吏的眉毛挑了起来。风把旁边那筐的干叶子吹到我脚边，我没去捡。“这底下是什么？”"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "说：那是垫筐的油布，怕无花果受潮。"
+next = "arrive"
+reply = "税吏把手抽出来，在袍子上蹭了两下，皱着眉挥手让我走。下了码头我才发现，自己的袖口湿了一片。"
+effects = [{ kind = "affinity", person = "suleyman_celebi", value = 3 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "suleyman_celebi", value = -2 }, { kind = "flag", flag = "c13_request_suleyman_celebi_scared" }], news = "伊斯坦布尔的码头上，税吏从一筐无花果底下抽出油布，问包的是什么。运货的人说是账，税吏不识字，挥手放了过去。" }
+
+[[tracks.chapters.choices]]
+key = "figs"
+text = "抓一把无花果塞给他，问他要不要尝尝。"
+next = "arrive"
+reply = "他尝了，说好吃，又抓了一把揣进怀里，忘了翻筐底。税吏的背影消失在码头的人群里，我摊开手，手心里全是无花果的汁。"
+effects = [{ kind = "affinity", person = "suleyman_celebi", value = 3 }]
+check = { attr = "commerce", base = 35, per = 6 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "suleyman_celebi", value = -2 }], news = "伊斯坦布尔的码头上，税吏嫌一筐无花果不甜，又翻了一遍，没翻到底，挥手放了过去。" }
+
+# 三、我只是不念：士麦那的集市上，大胡子朋友把油布包收进灶台后面，问你书记是不是又写了不该写的东西。
+[[tracks.chapters]]
+key = "arrive"
+title = "我只是不念"
+text = "士麦那的集市上，卖无花果的朋友是个大胡子，笑起来像个孩子。他接过筐，把筐底的油布包拿出来，看都没看，抱着回了自家铺子，塞进灶台后面一个黑洞里，用一只陶罐堵上。铺子里飘着晒干无花果的甜味，墙角一只猫趴在麻袋上打盹。他拍了拍手上的灰，抬头问我：“苏莱曼是不是又写了不该写的东西？”"
+speaker = "captain"
+mood = "cheerful"
+at = "smyrna"
+objectives = [{ kind = "at", at = "smyrna", text = "到士麦那，把货交给他" }]
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "suleyman_celebi", value = true }]
+deadline_days = 60
+news = "士麦那集市上一个卖无花果的大胡子，前些日子从伊斯坦布尔收了一筐无花果，说是朋友托的，他自己不识字。"
+
+[tracks.chapters.timeout]
+next = "failed"
+news = "士麦那集市上，卖无花果的大胡子等了两个月的货，货没来，他一个人坐在灶台边，把火拨了又拨。"
+effects = [{ kind = "affinity", person = "suleyman_celebi", value = -3 }, { kind = "flag", flag = "c13_request_suleyman_celebi_late" }, { kind = "letter", person = "suleyman_celebi", text = "诗卷我还压在床底下。那几句，我又改了一遍，改得更不该写了。" }]
+
+[[tracks.chapters.variants]]
+key = "v1_scared"
+when = [{ kind = "flag", flag = "c13_request_suleyman_celebi_scared" }]
+text = "士麦那的集市上，卖无花果的朋友是个大胡子，笑起来像个孩子。我的手还在抖，他一眼就看见了。他接过筐，把筐底的油布包拿出来，看都没看，抱着回了自家铺子，塞进灶台后面一个黑洞里，用一只陶罐堵上。铺子里飘着晒干无花果的甜味，墙角一只猫趴在麻袋上打盹。他拍了拍手上的灰，抬头问我：“苏莱曼是不是又写了不该写的东西？”"
+
+[[tracks.chapters.choices]]
+key = "yes"
+text = "是。他说你不识字，所以最安全。"
+next = "done"
+reply = "大胡子大笑，拍着大腿说苏莱曼每回都这么讲，可他认得苏莱曼的字，“我只是不念”。他给我装了一筐最好的无花果，又把灶台后面那只陶罐挪正了些。回到伊斯坦布尔，我把这句话转给苏莱曼，他愣了很久，然后付了钱。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "suleyman_celebi", value = 8 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_suleyman_celebi_done" }, { kind = "memory", memory = "mem-request_suleyman_celebi-arrive", title = "灶台后面的洞" }]
+
+[[tracks.chapters.choices]]
+key = "no"
+text = "不是，是一筐账本。"
+next = "done"
+reply = "大胡子点点头，没再问，只把那筐无花果往灶台边挪了挪，离火远些。“账本嘛，放哪里都碍事。”他说。回到伊斯坦布尔，苏莱曼付了钱，说这样最好。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "suleyman_celebi", value = 5 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_suleyman_celebi_done" }]

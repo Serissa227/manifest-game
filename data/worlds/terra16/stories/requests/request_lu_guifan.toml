@@ -1,0 +1,158 @@
+# 请托：租约的小字（request_lu_guifan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：陆归帆（lu_guifan，1536-11-27 生，男），濠镜澳的葡语通事，势力 ming，身份档 1（通事）。cast：cast/story_eastasia.toml。
+# 类型：说服某人（persuade）。四章：offer（报价，在澳门）、persuade（广州海道衙门，三条路）、result（说服成了，回澳门去议事会）、result_partial（检定没过，只存了档）。
+#       简报写三章；检定失败要“降为折中”，而 result 的 go_both 又只给说服成了的人，所以把折中分给自己的一章 result_partial，用 next 路由，不拿本轨道自己设的旗标去挡选项。
+# 报价：T（当面）。人物按日程在 macao（tavern，1557—1590）；auto=false，玩家“问请托”启动（界面用 ask:request_lu_guifan）；offer 不写 at，objectives 为“在港里找到他”。
+#       窗口 1575-01-01 至 1590-06-30；offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：persuade 章 deadline_days=60，超时走 failed，来信一封，好感 -3，旗标 _late。result 与 result_partial 是普通章，可以一直等。
+# 结构：三条分支都以 next 走，没有任何选项被本轨道自己设的旗标门禁。说服成了的三条路（官话、葡萄牙文、辩）去 result，辩的检定失败去 result_partial。
+# 依据·史实：1570 年代起，葡萄牙人每年向香山县交五百两银子，后来算作地租（说法不一，正文只写“地租”“再加一成”，不写名目与经手的人）；
+#       香山县的事由广州的海道衙门定；葡萄牙人在澳门的议事会（正式的议事会 1583 年才立，1575—82 年间只是葡萄牙人自己的议事，正文不分）。
+# 依据·原创：压着两张纸的压舱碎砖、陆归帆在葡萄牙抄本每行边上添的官话小字、书办与他秃了毛的笔、抄本里被带进来的“永租”（原本是“居住”）、中间那一行批注、议事会里敲桌子的老船长。
+#       “永租”与“暂居”的争执是本请托的设定，不是史实。
+# 秘密：不写“那笔地租起初是什么名目、交到谁手里”，正文不出现地租的来历；不写卡塔丽娜（C7 的 pair_lu_guifan_catarina_pereira 止于 1574 年初，本轨道从 1575 年起，不读不写）。见闻不泄露任何人的私事。
+# 读的旗标：无（不读 c7_*）。
+# 设的旗标：c13_request_lu_guifan_accepted（offer 接下，两条接法）、_declined（offer 回绝）、_side（persuade 三条成功的路都设；只作记录，选项不读）、_late（persuade 超时）、_done（result 一起去讲，最好的结局）、_partial（result 让他自己讲，或 result_partial 的两个结局）。
+#       每条轨道只设一面终局旗标：_done / _partial / _declined / _late 四选一。
+# 报酬：现金最多 900（折中 550）、好感最多 +15（接下 +2，persuade 最多 +5，result 最多 +8）、名声 +2、回忆 mem-request_lu_guifan-result。无物品、技能、海图奖励。
+# 依赖：港口 macao 与 guangzhou（ports_east_asia.toml，已存在）；cast 日程里澳门写作 "macau"，依赖 B10b 改名为 "macao"（当面模式）；技能 lang_chinese、lang_portuguese（skills.toml）；属性 eloquence（captain.toml）。
+# 回忆插画清单：
+#   mem-request_lu_guifan-result「钉在一起的两张纸」：通事棚的桌上，两张纸钉在一起，中间夹着一行批注，四角压着碎砖；桌边一碗没喝完的茶。
+
+[[tracks]]
+key = "request_lu_guifan"
+name = "租约的小字"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["lu_guifan"]
+
+# 一、永租与暂居：澳门的通事棚，两张纸并排压着，他走不开，要你去广州。
+[[tracks.chapters]]
+key = "offer"
+title = "永租与暂居"
+text = "陆归帆的通事棚里，桌上并排压着两张纸，四角各用一块压舱的碎砖，免得海风翻了页。左边是葡萄牙人那份租约的抄本，右边是香山县新送来的公文，说今年的地租再加一成。他拿指甲点着两处给你看：抄本里写的是“永租”，公文里写的是“暂居”。“请坐。条款我念两遍，葡萄牙话一遍，官话一遍——哪个字没听懂，当场问。”他念完，抬起头，“两边都说我偏心对方，我听着倒高兴。可这回我偏不了：县里点屋数的人月底就到，我得守在这头，一个字一个字替他们翻。广州的海道衙门，得有人去，把两边的原话摆在一张纸上。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "lu_guifan", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去广州，把两张纸带上。"
+next = "persuade"
+reply = "他提起笔，在葡萄牙抄本的每一行边上添了一行官话小字，添到天擦黑，把两张纸对齐了边递给你。指头在“永”字上又按了一下：“别替谁译得好听。照字译。”"
+effects = [{ kind = "affinity", person = "lu_guifan", value = 2 }, { kind = "flag", flag = "c13_request_lu_guifan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_side"
+text = "问他：您到底偏哪边？"
+next = "persuade"
+reply = "“偏小字。”他笑得把笔搁了下来，“小字写错了，两边都要吃亏。”他又拿起笔，在抄本每一行边上添官话小字，一边添一边说：“到了衙门，你照着念，念到我写得不通的地方，别替我圆。”"
+effects = [{ kind = "affinity", person = "lu_guifan", value = 2 }, { kind = "flag", flag = "c13_request_lu_guifan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "租约的事我不掺和。"
+next = "failed"
+reply = "他把两张纸收回去，一张压在左边的砖下，一张压在右边的砖下，中间隔了一掌宽。"
+effects = [{ kind = "flag", flag = "c13_request_lu_guifan_declined" }]
+
+# 二、番字作不得数：广州海道衙门的偏厅，书办要一个道理。三条路：官话逐句念、指出抄错的词、辩。
+[[tracks.chapters]]
+key = "persuade"
+title = "番字作不得数"
+text = "广州，海道衙门的偏厅。书办把两张纸摊在案上，公文挺括，抄本卷着边，陆归帆添的官话小字挤在每行旁边，比抄本的正文还密。他转着一支秃了毛的笔，一行行看下去，看到“永租”，笔杆敲在那两个字上。“这张是番字。”他说，“番字写的东西，衙门里作不得数。”他把笔搁下，抬眼看你，“你说个道理：凭什么番字的这张，也要摆上我的桌？”"
+speaker = "captain"
+mood = "tense"
+at = "guangzhou"
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "lu_guifan", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "lu_guifan", text = "加的那一成，今年照收了。县里点屋数的人走了，两张纸我又压回砖下，一个字没动。小字的事，明年再吵。" }, { kind = "affinity", person = "lu_guifan", value = -3 }, { kind = "flag", flag = "c13_request_lu_guifan_late" }] }
+
+[[tracks.chapters.choices]]
+key = "chinese"
+text = "用官话把葡萄牙文那张逐句念出来，让他自己比。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "陆归帆的小字里夹着岭南的俗字，你念到一半就卡住了"
+reply = "你照着陆归帆的小字，一行葡萄牙文、一行官话，逐句念下去。念到“永租”，书办皱了眉；念到“每年纳银”，他的笔尖停住，点了点头，又翻回公文去对。对完，他在两张纸中间写了一行批注：二者所纳同，所称异。又叫人拿钉子，把两张纸钉在一起。"
+news = "广州的海道衙门里，一个外乡船长把澳门的两张租约并排念了一遍，书办在中间写了一行批注。"
+effects = [{ kind = "affinity", person = "lu_guifan", value = 3 }, { kind = "flag", flag = "c13_request_lu_guifan_side" }]
+
+[[tracks.chapters.choices]]
+key = "portuguese"
+text = "指出葡萄牙文那张里的“永租”是抄错的词。"
+next = "result"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60, hard = true }]
+hint = "葡萄牙文那几行你读得磕绊，看不出哪个词是抄岔了的"
+reply = "你翻到第七条，指给书办看：同一件事，第七条写的是“居住”，只有头一行成了“永租”，是澳门那边抄的人手滑，把别份契约的词带了进来。书办看不懂番字，却看得出两处不是一个词。他说那就好办，两边都改成“居住纳租”，又把加一成的事压了下来：先把字对上，再说钱。他在两张纸中间写下这一句当批注，叫人钉在一起，交到你手里。"
+news = "广州海道衙门的书办听一个外乡船长指出，澳门租约抄本里的“永租”是抄岔了的词，加租的事先压了下来。"
+effects = [{ kind = "affinity", person = "lu_guifan", value = 5 }, { kind = "flag", flag = "c13_request_lu_guifan_side" }]
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说：字对不上，明年还要吵，衙门也省不了事。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "书办想了想，笔尖在案上点了两下：“吵到衙门里来的，哪一年不是这几个字。”他叫人拿来钉子，把两张纸并排钉进卷宗，中间写了一行批注：二者所称不一，加租之数，候议定再收。"
+news = "广州的海道衙门里，一个外乡船长劝书办把澳门的两张租约钉在一起，加租的数目要等字议定了再收。"
+effects = [{ kind = "affinity", person = "lu_guifan", value = 3 }, { kind = "flag", flag = "c13_request_lu_guifan_side" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "lu_guifan", value = -2 }], news = "广州的海道衙门里，外乡船长替澳门的租约说了半天，书办只肯把两张纸存档，加的那一成照收。" }
+
+# 三之一、又都说他偏心：说服成了，回澳门，议事会要有人去讲。
+[[tracks.chapters]]
+key = "result"
+title = "又都说他偏心"
+text = "陆归帆在通事棚里接过那两张钉在一起的纸，没数钉子，先看中间那一行批注，指头顺着字一个个摸过去，摸到最后一个才抬头。“衙门这头清楚了。”他把纸迎着光举了举，“可澳门这头，议事会的人还当县里是拿‘暂居’两个字来赶人。得有人去讲，讲完了，两边才算都知道。”他把纸卷起来，在手心里敲了敲，“我用葡萄牙话讲。你愿不愿意站在旁边？这张纸是你从广州带回来的。”"
+speaker = "captain"
+mood = "cheerful"
+at = "macao"
+objectives = [{ kind = "person", person = "lu_guifan", text = "回通事棚找陆归帆" }]
+when = [{ kind = "alive", person = "lu_guifan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "go_both"
+text = "一起去，他用葡萄牙话讲，你在旁边作证。"
+next = "done"
+reply = "议事会的厅里坐了七八个葡萄牙人，有个老船长一进门就拿指节敲桌子。陆归帆用葡萄牙话把批注念了两遍，你在旁边把纸举着，让每个人都看得见那一行字。吵了一阵，敲桌子的声音停了，老船长要来笔，在自己那份抄本的头一行划掉一个词，换了另一个。出来的路上，陆归帆说，县里的人说他偏心夷人，议事会的人说他偏心县里，两边又都说他偏心对方了。他笑得露了牙，请你在码头边的粥铺吃了一顿饭，账是他抢着付的。"
+news = "澳门的议事会改了租约上的一个词，通事陆归帆出来时被两边的人都说偏心，他倒挺高兴。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "lu_guifan", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_lu_guifan-result", title = "钉在一起的两张纸" }, { kind = "flag", flag = "c13_request_lu_guifan_done" }]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "让他自己去讲，你的事办完了。"
+next = "done"
+reply = "他点点头，把钱袋放在两张纸中间，推到你面前：“那我一个人去挨两边的骂。”他拿起纸卷走到棚口，又回头补了一句：“开船以前，来喝碗茶。”"
+news = "澳门的通事陆归帆一个人去议事会念了广州带回的批注，出来时两边的人都说他偏心，他还是笑着。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "lu_guifan", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lu_guifan_partial" }]
+
+# 三之二、存了档的两张纸：检定没过，书办只存档，加租照旧。
+[[tracks.chapters]]
+key = "result_partial"
+title = "存了档的两张纸"
+text = "陆归帆接过那两张只用绳子系在一起的纸，翻到背面看了看：只有衙门的一个戳，一行批注也没有。他把纸放回桌上，用碎砖压住。“存了档。”他说，“存了档，明年就有案可查。可今年的一成，议事会还是得交，这话也得有人去跟他们讲。”他看着你，“我用葡萄牙话讲，你肯在旁边听着，他们骂起来也骂得慢些。”"
+speaker = "captain"
+mood = "tense"
+at = "macao"
+objectives = [{ kind = "person", person = "lu_guifan", text = "回通事棚，找陆归帆说存档的事" }]
+when = [{ kind = "alive", person = "lu_guifan", value = true }]
+
+[[tracks.chapters.choices]]
+key = "go_both_partial"
+text = "一起去，把广州的经过也讲给他们听。"
+next = "done"
+reply = "议事会的人听到加租照旧，拍桌子的拍桌子，骂县里的骂县里。陆归帆等他们骂完，才把存档的事慢慢念了一遍。一个管账的葡萄牙人问：存了档，明年算谁的凭据？陆归帆答，两边的都是。那人想了想，当场去库里翻出一叠旧收据，说从今年起，每一张都留底。散了以后，陆归帆拍拍你的肩，什么也没多说。"
+news = "澳门的议事会听说加租照旧，骂了半天，管账的葡萄牙人从库里翻出旧收据，说往后每张都留底。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "lu_guifan", value = 5 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lu_guifan_partial" }]
+
+[[tracks.chapters.choices]]
+key = "let_him_partial"
+text = "让他自己去讲，你先歇一歇。"
+next = "done"
+reply = "他点点头，数了钱放在桌上：“广州的事，算你办了一半。剩下的一半，我去挨骂。”他把那两张系着绳子的纸夹在腋下，出了棚子。"
+news = "澳门的通事陆归帆夹着从广州带回的存档纸去议事会，加租照旧的话，是他一个人讲的。"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "lu_guifan", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_lu_guifan_partial" }]

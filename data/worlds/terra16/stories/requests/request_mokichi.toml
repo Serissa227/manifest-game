@@ -1,0 +1,184 @@
+# 请托：译得太顺耳的一句（request_mokichi）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：茂吉（mokichi，1536-05-18 生，男），平户的通事，替松浦家跟南蛮船传话；势力 matsura，身份档 1，低风险。cast：cast/story_eastasia.toml。
+# 类型：送信（letter）。任务单写的是三章，文件里是四章：offer（平户，报价）、handover（长崎，交到黑船司令手里）、reply（平户，背面签了字）、reply_partial（平户，背面什么也没有）。
+#   多出一章是引擎的限制：任务单里 reply 章的 go_with 要求本轨道在 handover 设的旗标 c13_request_mokichi_signed，同轨道旗标不能做 requires，
+#   所以 handover 里拿到签字的两条路（照原样说且检定成功、用葡萄牙话讲清）走 next 到 reply（go_with / let_him 两个选项，go_with 不再写 requires），
+#   没拿到签字的两条路（照原样说而检定失败、把纸留下）走 next 到 reply_partial（两个选项，都是折中）。
+#   任务单里 leave_it 写 next=reply；改到 reply_partial，并另设一面分支旗标 c13_request_mokichi_left，只给 reply_partial 的变体读（纸留在长崎，茂吉拿出底稿）。
+# 报价：T（当面）。茂吉按日程在平户（hirado，venue tavern），auto=false，界面用 ask:request_mokichi 启动；offer 不写 at，objectives 是 person mokichi。
+#   窗口 1571-01-01 至 1589-06-30；玩家满 17 岁；茂吉生于 1536，不另写年龄门槛；名声门槛 0；当面模式不写 family 冷却。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：handover 章 deadline_days=90（平户到长崎同一片海），超时走 failed，茂吉来信一封，好感 -3，旗标 _late。
+#   超时另写一条见闻：不写的话，引擎会套用本章“背面签了一行字”的见闻。把纸留下（leave_it）与检定失败也各写见闻，理由相同。
+#   handover、reply、reply_partial 都是普通章，不写 stage、window、default；reply 与 reply_partial 没有期限，可以一直等。
+#   照原样说的检定失败没有回应文字（引擎在失败时不显示 reply），失败的结果写在 fail 的 news 里，reply_partial 的缺省正文由“我”把长崎的事告诉茂吉。
+# 依据·史实背景：1550 年起葡萄牙的大船（黑船）到平户贸易，1561 年宫之前事件以后渐渐不来，转去横濑浦、福田，1570 年长崎开港、1571 年起每年的大船靠长崎；
+#   大船的司令（capitão-mor）一年一换，掌着船上的规矩与对日本人的交涉；南蛮船雇当地小船驳货是常事。
+# 依据·原创：茂吉当年替一个葡萄牙船长译的雇船契约、那句“船坏了，船主赔”被译成“船坏了，大家商量”、平户一户打鱼人家赔掉的船、补网的老人、茂吉的词本与底稿。
+#   契约的年份不写死：正文只说“黑船还靠平户的那几年”，好让 1571—1589 整个窗口都说得通；任务单 handover 的章名“十年前的船长”因此改作“当年的船长”（1580 年代就不止十年了）。
+#   黑船司令是叙事人物，不写名字；当年的船长也不写名字。
+# 秘密：cast 没写秘密，本请托无须处理。C7 茂吉×朴素月（1556、1560、1563、1590—91，釜山与平户）不碰：正文不写朴素月、不写釜山与倭馆，不带信、不提通信。
+# 读的旗标：c13_request_mokichi_silver（reply 的变体，本轨道 handover 设，只改文字）；c13_request_mokichi_left（reply_partial 的变体，本轨道 handover 设，只改文字）。不读也不设任何 c7_ 旗标。
+# 设的旗标：c13_request_mokichi_accepted（offer 两种接法）、_declined（offer 回绝）、_signed（司令签了字）、_silver（司令另给了修船的银币）、
+#   _left（纸留在长崎）、_late（handover 超时）、_done（reply 陪他去）、_partial（reply 让他自己去、reply_partial 两个选项）。终局旗标每条路只设一面。
+# 不用 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth / schedule 效果。
+# 报酬：工钱最好 900（reply 陪他去）、折中 600（其余三条终局）；好感最多 +15（接下 +2、讲清两种译法 +5、陪他去 +8）；检定失败 -2；超时 -3；
+#   名声最好 +2、折中 +1（劝他别去的那条不加）；回忆 mem-request_mokichi-reply。无物品、无技能奖励。司令给的银币是戏里的，不发物品。
+# 依赖：港口 hirado、nagasaki（ports_east_asia.toml）；技能 lang_portuguese（skills.toml）；属性 eloquence；人物 mokichi。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_mokichi-reply「念一句，等一下头」：平户浦边，补网的老人坐在门口，茂吉跪坐在他面前，手里那张纸翻在背面，一行葡萄牙文和签名朝着老人。
+
+[[tracks]]
+key = "request_mokichi"
+name = "译得太顺耳的一句"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["mokichi"]
+
+# 一、两回点头：平户码头后头的酒铺，茂吉摊开一张纸，上头是葡萄牙话，下头是他译坏的那一句和重译的一句。
+[[tracks.chapters]]
+key = "offer"
+title = "两回点头"
+text = "平户码头后头的酒铺，茂吉占着靠窗的桌子，把一张纸摊在我面前，拿酒碗压住一角。上头一行葡萄牙话，底下两行日本话，一行划掉了，一行新补的，字都歪歪扭扭。“黑船还靠平户的那几年，我替一个船长译过一份雇船的契约。”他用指甲点着划掉的那行，“原话是‘船坏了，船主赔’。我译成‘船坏了，大家商量’。听着顺耳，两边都高兴，当场就画了押。”“后来船真坏了。船长拿着葡萄牙话的那张，一句也不商量。浦边一户打鱼的人家，赔了一条船。”他敲了敲新补的那行。“这回照原话译了。长崎今年的黑船司令管着船上的规矩，你替我送去——认不认，看他。”说完他看着我。我点了头，他还看着，等我又点了一回。“两边都听明白，才算说完。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "mokichi", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1571, 1, 1], to = [1589, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1589, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下这张纸，去长崎。"
+next = "handover"
+reply = "茂吉又看了我一会儿，等我再点一次头，才把纸对折、再对折，边角压得齐齐整整，塞进我手里。“别让雨淋了。我的字本来就歪，淋湿了，连我自己都认不出来。”"
+effects = [{ kind = "affinity", person = "mokichi", value = 2 }, { kind = "flag", flag = "c13_request_mokichi_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_family"
+text = "先问他：那户人家，现在怎样了？"
+next = "handover"
+reply = "“还在打鱼，船是借的。”他没往下说，端起酒碗，碗是空的，又放下了。他把那张纸往我这边推，一直推到我手边才停，指头还在纸角上按了一下。"
+effects = [{ kind = "affinity", person = "mokichi", value = 2 }, { kind = "flag", flag = "c13_request_mokichi_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "那是别人的旧账，我不去翻。"
+next = "failed"
+reply = "茂吉点点头，把纸照原来的折痕叠好，收回去，夹进一本磨烂了边的词本里。他朝柜台招了招手，又要了一碗酒，推到我面前：“这碗算我的。不为那张纸，为您肯坐下听完。”"
+effects = [{ kind = "flag", flag = "c13_request_mokichi_declined" }]
+
+# 二、当年的船长：长崎码头边的屋子，司令读完那张纸，问送纸的人想要什么。
+[[tracks.chapters]]
+key = "handover"
+title = "当年的船长"
+text = "长崎，码头边一排新盖的屋子，黑船的司令住在最靠水的一间，窗外就是他的船，船舷高得像一堵墙。他给自己倒了一杯葡萄酒，没给我倒。我把纸展开放在桌上。他读上头的葡萄牙话，底下的日本字他认不得，叫来一个会几句日本话的仆役少年，结结巴巴把两行念给他听。听完，他笑了一声：“那个船长？早回里斯本了，说不定已经埋在那儿了。”他把纸放下，指头在桌面上敲了两下，抬眼看我：“平户那个通事，送这张纸来，想要什么？”"
+speaker = "captain"
+mood = "tense"
+at = "nagasaki"
+objectives = [{ kind = "at", at = "nagasaki", text = "把纸送到长崎" }]
+when = [{ kind = "alive", person = "mokichi", value = true }]
+deadline_days = 90
+news = "长崎码头边，黑船的司令收到一张从平户来的旧译文，在背面签了一行字。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "mokichi", text = "黑船走了。那张纸，我还是自己留着吧。——茂吉" }, { kind = "affinity", person = "mokichi", value = -3 }, { kind = "flag", flag = "c13_request_mokichi_late" }]
+news = "长崎的黑船今年起锚走了。往来平户的水手说，那边有个通事托人送一张旧译文，到底没送进司令的屋子。"
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "照原样说：他只要您一句认，不要钱。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply"
+reply = "司令沉默了一会儿。“一句话，又不花我的钱。”他把纸翻过来，蘸了墨，在背面写了一行葡萄牙话，签上名，吹干了才推回给我。少年替我念：“译文有误，原意如此。”"
+effects = [{ kind = "affinity", person = "mokichi", value = 3 }, { kind = "flag", flag = "c13_request_mokichi_signed" }]
+fail = { next = "reply_partial", effects = [{ kind = "affinity", person = "mokichi", value = -2 }], news = "长崎码头边，平户来的客人替一张旧译文讨一句认，黑船的司令说认不认都一样，把纸推回去送了客。" }
+
+[[tracks.chapters.choices]]
+key = "explain_pt"
+text = "用葡萄牙话，把两种译法差在哪里讲给他听。"
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60 }]
+hint = "你的葡萄牙话只够讨价还价，讲不清一句话软在了哪里"
+next = "reply"
+reply = "我从“船主赔”讲起，讲到“大家商量”，讲平户人听见“商量”两个字，只当船坏了有人分担。讲到这里，司令听懂了，摇了摇头，说这种话在船上是要出人命的。他在背面写了一行，签了名，又解开钱袋数出几枚银币，拿纸包了，压在那张纸上：“给那户人家修船。”"
+effects = [{ kind = "affinity", person = "mokichi", value = 5 }, { kind = "flag", flag = "c13_request_mokichi_signed" }, { kind = "flag", flag = "c13_request_mokichi_silver" }]
+news = "长崎码头边，黑船的司令在一张平户来的旧译文背面签了字，又包了几枚银币，说是给平户一户人家修船。"
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "把纸留下，请他想好了再回话。"
+next = "reply_partial"
+reply = "司令把纸压在墨水瓶底下，说船期还早，不急。我走到门口回头看了一眼，他已经转过身去看窗外的船，那张纸还压在瓶底下，没动过。"
+effects = [{ kind = "affinity", person = "mokichi", value = 1 }, { kind = "flag", flag = "c13_request_mokichi_left" }]
+news = "长崎码头边，黑船司令的仆役少年说，平户来的那张旧译文一直垫在墨水瓶底下，司令看窗外的船都比看它勤。"
+
+# 三a、背面那一行（司令签了字）：茂吉先看背面，想去那户人家当面念，又怕自己念得太顺耳。
+[[tracks.chapters]]
+key = "reply"
+title = "背面那一行"
+text = "平户码头。茂吉蹲在栈桥头上看人卸鱼，看见我的船进港，站起来拍了拍膝盖。他接过那张纸，不看正面，先翻到背面，嘴唇跟着那行葡萄牙话动，一个词一个词念过去，念到签名，又从头念了一遍。“认了。”他把纸往胸口按了按，又赶紧拿开，怕按皱了。过了一会儿，他问我：“那户人家住在浦边，走过去半个时辰。您跟我去一趟？我想当面把这一行念给他们听。”他把纸折起来，又打开。“我怕我一开口，又念得太顺耳。”"
+speaker = "captain"
+mood = "tender"
+at = "hirado"
+objectives = [{ kind = "person", person = "mokichi", text = "回平户找到茂吉" }]
+when = [{ kind = "alive", person = "mokichi", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_silver"
+when = [{ kind = "flag", flag = "c13_request_mokichi_silver" }]
+text = "平户码头。茂吉蹲在栈桥头上看人卸鱼，看见我的船进港，站起来拍了拍膝盖。他接过那张纸，不看正面，先翻到背面，嘴唇跟着那行葡萄牙话动，念到签名，又从头念了一遍。“认了。”我把司令包银币的纸包递过去，他掂了掂，没打开。“这个，一枚不少，交到他们手里。”他把纸包揣进怀里，按着，问我：“那户人家住在浦边，走过去半个时辰。您跟我去一趟？我想当面把这一行念给他们听。”他把纸折起来，又打开。“我怕我一开口，又念得太顺耳。”"
+
+[[tracks.chapters.choices]]
+key = "go_with"
+text = "陪他去。他念一句，我在旁边听着。"
+next = "done"
+news = "平户的通事茂吉拿着一张背面签了字的旧译文，去浦边一户打鱼人家念了一下午。"
+reply = "那家的老人坐在门口补网，茂吉在他面前跪坐下来。他念得很慢，念一句，停一下，等老人点头。老人没点头，网梭也没停，等他念完最后一句，才说：“船修好了再说。”茂吉说：“够了。”回来的路上，他拉我进了码头边的酒铺，一碗下肚，荤话就比雅话多了，有几句葡萄牙话我琢磨了半天才听懂，他自己先笑趴在桌上。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "mokichi", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_mokichi_done" }, { kind = "memory", memory = "mem-request_mokichi-reply", title = "念一句，等一下头" }]
+
+[[tracks.chapters.choices]]
+key = "let_him"
+text = "让他一个人去。这一行，该他自己去念。"
+next = "done"
+news = "平户的通事茂吉拿着一张背面签了字的旧译文，去浦边一户打鱼人家念了一下午。"
+reply = "第二天一早，他上了我的船，说老人从头听到尾，一句话也没说，也没点头。他把一个布包放在舱口，是工钱。“没点头……”他想了想，“也算回了话。”说完，他自己先点了一下头。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "mokichi", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mokichi_partial" }]
+
+# 三b、背面什么也没有（检定失败，或纸留在了长崎）：没有司令的字，还去不去念。
+[[tracks.chapters]]
+key = "reply_partial"
+title = "背面什么也没有"
+text = "平户，茂吉家门口。他把那本磨烂了边的词本摊在檐下晒，一页压一块小石子。我把纸还给他，他先翻到背面，背面什么也没有。我把长崎的事一五一十说了：司令听完，说认不认都一样，当年那个船长早不在了。茂吉听着，把纸翻回正面，看自己写的那两行，一行划掉的，一行新补的。“他说得也有道理。”他笑了笑，笑得不大像样。“那户人家，我想当面念给他们听。有司令的字，他们才肯信。”他把纸捏在手里，问我：“没有字，还去不去？”"
+speaker = "captain"
+mood = "sad"
+at = "hirado"
+objectives = [{ kind = "person", person = "mokichi", text = "回平户找到茂吉" }]
+when = [{ kind = "alive", person = "mokichi", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_left"
+when = [{ kind = "flag", flag = "c13_request_mokichi_left" }]
+title = "抄了四遍的底稿"
+text = "平户，茂吉家门口。他把那本磨烂了边的词本摊在檐下晒，看我两手空着，先笑了：“留在司令那里了？”我说司令要想一想，再回话。茂吉点点头，从词本里抽出一张纸，同一句，同样一行划掉、一行新补，字比送去的那张还歪。“底稿。我抄了四遍，送出去的是最不歪的那张。”他把底稿摊平在膝盖上。“等司令想好，黑船也该走了。”他抬头看我：“没有他的字，这一张，还去不去念？”"
+
+[[tracks.chapters.choices]]
+key = "go_plain"
+text = "陪他去，就念他自己重译的这一行。"
+next = "done"
+reply = "老人在船棚底下理网绳，听茂吉念完那一行，抬头看了他很久：“当年说‘大家商量’的，也是你。”茂吉说是。老人没再说话，把渔网往他那边推了推，叫他拽住一头。我在棚边坐到天黑，两个人一直没停手。回来的路上，茂吉把工钱塞给我，手掌上全是网绳勒出的红印子。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "mokichi", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_mokichi_partial" }]
+news = "平户浦边一户打鱼人家门口，通事茂吉念了一行旧译文，又陪那家的老人补网补到天黑。"
+
+[[tracks.chapters.choices]]
+key = "keep_it"
+text = "劝他先别去：没有司令的字，那家人只当又是一句好听话。"
+next = "done"
+news = "平户的通事茂吉在码头的酒铺里翻他那本磨烂了边的词本，说明年黑船来了，他要自己去一趟长崎。"
+reply = "茂吉想了一会儿，说也是。他把纸折好，夹回词本里，跟别的纸压在一起。“明年黑船再来，我自己去长崎，站在司令门口等。”他把工钱塞给我，又冲着长崎的方向补了一句葡萄牙话，我没听全，八成是码头上跟水手学来的那种。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "mokichi", value = 2 }, { kind = "flag", flag = "c13_request_mokichi_partial" }]

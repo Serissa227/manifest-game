@@ -1,0 +1,687 @@
+# 寰宇·出海后的奇遇（海上）——第九批 S01。结业出海以后才会遇到：养成期一条都不出。
+# 可以随意改文字与数值；key 只允许追加，不要改名或删除（存档按 key 记着哪一条什么时候遇到过）。
+#
+# 写法与经典世界的 data/stories/encounters.toml 相同（旧式剧情文件，没有 tracks），另多四种出场条件：
+#   when.at_sea   = ["海区 key", …]      舰队正在这些海区之一航行
+#   when.season   = ["spring" | "summer" | "autumn" | "winter", …]   今天的季节（北半球：3–5 月为春）
+#   when.sky      = ["clear" | "cloudy" | "rain" | "fog" | "storm" | "snow", …]   舰队所在海区今天的天况
+#   when.wind     = [下限, 上限]          舰队所在海区今天的风力（0–10，含两端）
+#   （港口的奇遇另有 when.culture，见 encounters_port.toml）
+# 其余字段：place（sea / port）、weight（同一天几条候选之间的权重）、once（一局只出一次）、
+#   cooldown_days（同一条两次之间至少隔几天）、choices（2–3 个选项）。
+# 选项：text、reply、cost（要付的金币）、give（要交出的货 { good, qty }）、
+#   check（检定 { attr, base, per }：成功率 = base + 属性 × per %，夹在 5%–95%）、
+#   effects（成功或没有检定时的后果）、fail / fail_reply（检定失败时的后果与叙事）。
+# 后果（kind）：cash 金币、fame 名声、reputation 声望（海上必须写 faction）、morale 士气、goods 货物、
+#   crew 水手、repair 修复 %、damage 损伤 %、supplies 粮水（天）、rumor 一条发现物的传闻。
+#
+# 规矩（数据校验与测试会查）：
+#   · 每条至少一个不花钱、不交货的选项，身无分文也答得了；
+#   · 同一条一年内不重复（cooldown_days = 365）；上方写了出处的那些一局只出一次（once = true）；
+#   · 得失只相当于一趟短途的零头：一个选项的净得不过 300，现金 ±300、货值 500、粮水 ±4 天、士气 ±8、损伤 8% 以内。
+# 有出处的条目在各自上方写明“史实 → 本世界线”。正文不点破机制，不用后世的说法。
+#
+# ── 节奏（整个世界只写这一处；港口的那份文件不再写）──
+# 上一件之后至少隔 gap_days 天，此后每天按 encounter_chance 掷一次；掷中了、而且当天有合条件的候选才出。
+# 平均间隔 = gap_days + (1 ÷ encounter_chance − 1) = 6 + 9 = 15 天，即每月至多约 2 件、每年约 24 件；
+# （H04，2026-11-11：海上所见分担了“海上有事”，每日概率从 0.16 降到 0.10，见 docs/drafts/h04-handoff.md。）
+# 一年内同一条不重复，所以常在一片海里跑的船一年能遇到的也就是二十几条，后半年会自然稀下来。
+# 节奏闸（rules.toml [pacing]）开着时，奇遇排在所有过闸的事后面：当天已经有别的事出场、
+# 或者七天里可以等的事已满三件，这一天就不出奇遇。
+[rules]
+encounter_chance = 0.10    # 满足间隔时，每天遇到奇遇的概率
+gap_days = 6               # 两次奇遇至少间隔的天数
+first_day = 0              # 开局多少天之后才会遇到（寰宇的养成期本来就不出，这里不再另设）
+
+# ───────────────────────── 哪片海都会遇到的 ─────────────────────────
+
+# 无风。风力 0–2 的日子才出。
+[[encounters]]
+key = "sea_becalmed"
+title = "无风"
+text = "风在午后停了，帆像晾着的衣裳一样垂着。到第二天，海面平得照得见桅影。舵工说，这样的死水有时一停就是七八天。"
+place = "sea"
+weight = 5
+cooldown_days = 365
+[encounters.when]
+wind = [0, 2]
+[[encounters.choices]]
+text = "放小艇，划桨把船拖出去。"
+check = { attr = "command", base = 35, per = 6 }
+reply = "两条小艇轮班拖了一夜，天亮时帆脚动了一下。划桨的人瘫在甲板上，连骂人的力气也没有。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = -3 }]
+fail_reply = "拖了一天一夜，船只挪出去几里。水手们手上磨出了血泡，看你的眼神不大客气。"
+fail = [{ kind = "supplies", value = -2 }, { kind = "morale", value = -6 }]
+[[encounters.choices]]
+text = "就地等风，趁空修补帆缆。"
+reply = "缝帆、换索、刮船壳，能做的活都做了一遍。第四天傍晚，西边的云终于动了。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "repair", value = 15 }]
+[[encounters.choices]]
+text = "开一桶淡酒，让大家歇着。"
+reply = "有人唱歌，有人对着海面吹口哨唤风。风来得并不比别处快，可这几天没有人吵过架。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "morale", value = 5 }]
+
+[[encounters]]
+key = "sea_drifting_boat"
+title = "漂流的小艇"
+text = "瞭望手喊了一声。一条没有桅杆的小艇随浪起伏，艇里躺着三个人，其中一个还能抬起手来。看衣裳，说不清是哪一国的。"
+place = "sea"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "放缆绳，把人接上来。"
+reply = "三个人里活下来两个，缓过气来就抢着干活，像是怕你后悔。粮水要多分两份，舱里倒没人抱怨。"
+effects = [{ kind = "crew", value = 2 }, { kind = "supplies", value = -2 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "吊一桶水和几块饼下去，指给他们陆地的方向。"
+reply = "那只抬得起来的手朝你挥了很久。水手长小声说，照这个风向，他们三天能靠岸——若是老天肯帮忙。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = -2 }]
+[[encounters.choices]]
+text = "不停船。"
+reply = "没有人说话。舵工把舵握得很紧，一直到那条小艇看不见了才松手。"
+effects = [{ kind = "morale", value = -6 }]
+
+# 桅顶的电火。雨天或暴风雨天才出。
+# 史实：地中海水手把雷雨里桅顶的辉光叫作圣艾尔摩之火，皮加费塔的环球航行记（1519–22）几次写到；
+#       闽粤舟人说那是天妃的灯。→ 本世界线：正文不替谁认领这团火，让各处来的水手各拜各的。
+[[encounters]]
+key = "sea_mast_fire"
+title = "桅顶的火"
+text = "雨还没停，主桅顶上忽然亮起一团青白的火，不烧木头，也不怕风。半船人跪了下去，各念各的神名；另一半人盯着你，等你说话。"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+sky = ["storm", "rain"]
+[[encounters.choices]]
+text = "由他们拜，拜完了各就各位。"
+reply = "有人说这是天妃的灯，有人说是圣徒的烛。火在桅顶停了一刻钟，灭了，风也跟着小了。那一夜没有人再提怕字。"
+effects = [{ kind = "morale", value = 5 }]
+[[encounters.choices]]
+text = "喝令收帆，桅上的人立刻下来。"
+check = { attr = "seamanship", base = 40, per = 5 }
+reply = "帆收得又快又齐。火灭之后，一道闪电劈在一里外的海上——桅顶要是还有人，这会儿就少一个了。"
+effects = [{ kind = "morale", value = 2 }, { kind = "fame", value = 1 }]
+fail_reply = "号令在雨里传岔了，一面帆没收住，被风撕成两半。"
+fail = [{ kind = "damage", value = 3 }]
+[[encounters.choices]]
+text = "取纸笔，把它的样子记下来。"
+check = { attr = "learning", base = 35, per = 6 }
+reply = "你记下了时辰、颜色与它停的位置。日后在港里说起，连老领航人都凑过来听。"
+effects = [{ kind = "fame", value = 2 }]
+fail_reply = "纸刚取出来就被雨打烂了。你只记得那火是青的，别的说不上来。"
+
+[[encounters]]
+key = "sea_whales"
+title = "鲸群"
+text = "前头的海面上喷起十几道水柱。一群鲸横在航路上，慢悠悠地朝北去，最大的一头比船还长。"
+place = "sea"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "偏舵，从它们后头绕过去。"
+reply = "多走了大半天。鲸群在夕照里一头接一头地沉下去，像一座座黑色的岛。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = 2 }]
+[[encounters.choices]]
+text = "照直走，从中间穿过去。"
+check = { attr = "seamanship", base = 45, per = 5 }
+reply = "船擦着一头母鲸的背过去了，近得能闻见它喷出来的腥气。水手们事后说起来，个个都像是自己掌的舵。"
+effects = [{ kind = "morale", value = 5 }]
+fail_reply = "一条鲸尾在船侧扬了起来，又落下去。船壳闷响了一声，底舱开始渗水。"
+fail = [{ kind = "damage", value = 5 }, { kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "放小艇，试着扎一头小的。"
+check = { attr = "arms", base = 25, per = 6 }
+reply = "鱼叉扎得准。油熬了半夜，肉腌了三桶，甲板滑得站不住人。"
+effects = [{ kind = "goods", good = "whale_oil", qty = 5 }, { kind = "supplies", value = 2 }]
+fail_reply = "那头鲸拖着小艇跑出去半里，一摆尾把艇掀翻了。捞上来的人里少了一个。"
+fail = [{ kind = "crew", value = -1 }, { kind = "morale", value = -5 }]
+
+[[encounters]]
+key = "sea_half_sunk"
+title = "半沉的船"
+text = "一条船歪在浪里，甲板已经没水，只有艉楼还露着。没有旗，没有人声，桅上缠着的帆布一下一下拍着水。"
+place = "sea"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "派人上艉楼搜一搜。"
+check = { attr = "agility", base = 35, per = 6 }
+reply = "船长舱的柜子泡烂了，里头的钱袋倒还系得好好的。几卷缆绳也是干的。"
+effects = [{ kind = "cash", value = 140 }, { kind = "goods", good = "rope", qty = 3 }]
+fail_reply = "艉楼的甲板踩塌了，一个水手摔断了腿，被同伴拖着泅回来，这一趟是上不了桅了。"
+fail = [{ kind = "crew", value = -1 }, { kind = "morale", value = -4 }]
+[[encounters.choices]]
+text = "只拆露在水面上的木料和索具。"
+reply = "忙到天黑，拆下来几块好板子。这条船再过一夜就要沉了，木头总比喂了海强。"
+effects = [{ kind = "goods", good = "planks", qty = 6 }, { kind = "supplies", value = -1 }]
+[[encounters.choices]]
+text = "降半帆驶过，不去动它。"
+reply = "老水手摘了帽子。海上的规矩，沉船是坟，不是货栈。"
+effects = [{ kind = "morale", value = 2 }]
+
+# 淡水变质。夏秋两季才出。
+[[encounters]]
+key = "sea_green_water"
+title = "发绿的水"
+text = "管舱的掀开第三排水桶，一股臭气顶了上来。水面浮着一层绿，舀起来能拉出丝。剩下的好水，照眼下的配给撑不到靠岸。"
+place = "sea"
+weight = 4
+cooldown_days = 365
+[encounters.when]
+season = ["summer", "autumn"]
+[[encounters.choices]]
+text = "臭水倒掉，全船减配给。"
+reply = "每人每天一瓢，煮饭的水也算在里头。到港那天，水手们跳下跳板，头一件事是把脸埋进井台的水桶里。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "morale", value = -4 }]
+[[encounters.choices]]
+text = "加醋煮过，照常分下去。"
+check = { attr = "medicine", base = 35, per = 6 }
+reply = "煮过的水发苦，可没有人闹肚子。厨子说，这法子是从桨帆船上传下来的。"
+effects = [{ kind = "supplies", value = -1 }]
+fail_reply = "水是煮了，煮得不够透。两天后病倒了一片，能上桅的人只剩一半。"
+fail = [{ kind = "supplies", value = -1 }, { kind = "crew", value = -1 }, { kind = "morale", value = -5 }]
+[[encounters.choices]]
+text = "开两桶酒，掺着好水喝。"
+give = { good = "wine", qty = 2 }
+reply = "掺了酒的水谁都肯喝，就是值夜的人打瞌睡的多了些。"
+effects = [{ kind = "morale", value = 2 }]
+
+[[encounters]]
+key = "sea_dice_below"
+title = "底舱的骰子"
+text = "换更的时候，水手长揪着两个人上来：底舱里开了赌局，已经有人把下一个港口的饷银都押出去了。输的那个低着头，赢的那个攥着骰子不肯松手。"
+place = "sea"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "骰子扔进海里，赌注充公，到港给全船添菜。"
+reply = "骰子落水没有声音。赢家的脸色比输家还难看；可第二天，没有人再为欠账动手。"
+effects = [{ kind = "cash", value = 60 }, { kind = "morale", value = -3 }]
+[[encounters.choices]]
+text = "立个规矩：只许赌当天的那份酒，不许赌饷银。"
+check = { attr = "command", base = 40, per = 5 }
+reply = "规矩立住了。此后底舱里赌得照样热闹，只是输光了的人，至多干着嗓子睡一夜。"
+effects = [{ kind = "morale", value = 4 }]
+fail_reply = "规矩是立了，没有人当真。过了几天，又有人押上了自己的铺位。"
+fail = [{ kind = "morale", value = -2 }]
+[[encounters.choices]]
+text = "装作没看见。"
+check = { attr = "fortune", base = 50, per = 3 }
+reply = "赌了半个月，有输有赢，谁也没输到翻脸。"
+effects = [{ kind = "morale", value = 3 }]
+fail_reply = "有一天夜里，底舱动了刀子。人是救回来了，这一趟却再也干不了活。"
+fail = [{ kind = "crew", value = -1 }, { kind = "morale", value = -3 }]
+
+[[encounters]]
+key = "sea_bunk_quarrel"
+title = "铺位之争"
+text = "两个水手为一个靠舷窗的铺位吵了三天，今天终于在前甲板上揪打起来。一个是老人，说铺位向来是他的；一个是上个港口新招的，说船上没写谁的名字。"
+place = "sea"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "各赏一角酒钱，叫他们轮着睡。"
+cost = 40
+reply = "两个人接了钱，互相瞪了一眼，都没再说话。到了晚上，铺位上睡的是老的，铺底下那只箱子是新来的。"
+effects = [{ kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "叫两人掰一回手腕，输的让铺。"
+check = { attr = "command", base = 45, per = 4 }
+reply = "全船围着看。新来的输了，输得服气，当晚还替老头子铺了被褥。"
+effects = [{ kind = "morale", value = 5 }]
+fail_reply = "掰到一半又打了起来，这回见了血。水手长拿缆绳头把两人抽开。"
+fail = [{ kind = "morale", value = -4 }]
+[[encounters.choices]]
+text = "由他们吵，不耽误干活就行。"
+reply = "两个人一路吵到靠岸。旁人起初还劝，后来只当是听海鸥叫。"
+
+[[encounters]]
+key = "sea_wrong_water"
+title = "水色不对"
+text = "掌舵的老水手忽然叫人去请你。他指着前头一片发青的水：“图上这里是深海。可这个颜色，我在别处见过一回，那回船底擦掉了一层皮。”"
+place = "sea"
+weight = 3
+cooldown_days = 365
+[[encounters.choices]]
+text = "听他的，绕开那片水。"
+reply = "绕出去小半天。回头看，那片青水里果然翻着细碎的白浪。老头子没说什么，只是腰杆挺直了些。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "放小艇去打水砣。"
+check = { attr = "seamanship", base = 40, per = 5 }
+reply = "水砣打下去，四寻就到了底。你把这片暗礁的方位添在图上，回港后有领航人出钱来抄。"
+effects = [{ kind = "cash", value = 120 }, { kind = "fame", value = 1 }, { kind = "supplies", value = -1 }]
+fail_reply = "小艇打了半天水砣，测出来的深浅前后对不上。天快黑了，只好远远绕开。"
+fail = [{ kind = "supplies", value = -2 }]
+[[encounters.choices]]
+text = "图上是深海，照直走。"
+check = { attr = "fortune", base = 50, per = 3 }
+reply = "船平平安安地过去了。老水手一整天没同人说话。"
+effects = [{ kind = "morale", value = -2 }]
+fail_reply = "船底传来一声长长的刮擦。舱里的人全跑上了甲板。"
+fail = [{ kind = "damage", value = 6 }, { kind = "morale", value = -4 }]
+
+# 雾里的钟。雾天才出。
+[[encounters]]
+key = "sea_fog_bell"
+title = "雾里的钟"
+text = "雾浓得看不见自己的船头。右舷不知多远的地方，有人在一下一下地敲钟，不紧不慢。"
+place = "sea"
+weight = 6
+cooldown_days = 365
+[encounters.when]
+sky = ["fog"]
+[[encounters.choices]]
+text = "敲钟回应，慢慢靠过去。"
+check = { attr = "perception", base = 45, per = 5 }
+reply = "是一条迷了方向的渔船，舱里的鱼还活着。他们拿半舱鲜鱼换了你一句话：陆地在哪一边。"
+effects = [{ kind = "supplies", value = 3 }, { kind = "morale", value = 2 }]
+fail_reply = "两条船在雾里几乎撞个正着，对面的斜桅扫断了你一截栏杆。两边互相骂了几句，各自走开。"
+fail = [{ kind = "damage", value = 2 }]
+[[encounters.choices]]
+text = "熄灯噤声，等雾散。"
+reply = "钟声响了一夜，天亮前渐渐远了。雾散以后，海上什么也没有。"
+effects = [{ kind = "morale", value = -2 }]
+
+# 史实：达·伽马的船队 1497–99 年往返印度，死于坏血病的过半；葡萄牙领航人已知莫桑比克、马林迪的酸橙能救人，
+#       却始终没有成例，直到两百年后才有人认真试验。→ 本世界线：只写症状与船上的土办法，不让船长“发明”疗法。
+[[encounters]]
+key = "sea_bleeding_gums"
+title = "牙龈上的血"
+text = "先是有人说牙松了，嚼不动硬面饼。过了几天，舱里躺下四五个，牙龈乌紫，腿上一按一个坑。厨子说，这病不传人，只找出海久了的船。"
+place = "sea"
+weight = 2
+once = true
+[[encounters.choices]]
+text = "把舱里带的糖渍果脯全分给病人。"
+give = { good = "candy", qty = 2 }
+reply = "糖渍的橘皮和柠檬，本是带去卖钱的。病人含着它们，像含着药。不出十天，躺着的人一个个扶着舱壁站了起来。"
+effects = [{ kind = "morale", value = 6 }]
+[[encounters.choices]]
+text = "照船上的土方子调治。"
+check = { attr = "medicine", base = 30, per = 6 }
+reply = "酸酒、松针汤、叫人咧嘴的野草根，你样样都试了，有一样见了效——究竟是哪一样，谁也说不准。"
+effects = [{ kind = "morale", value = 3 }]
+fail_reply = "土方子灌下去不少，没有一样管用。靠岸之前，海葬了两个人。"
+fail = [{ kind = "crew", value = -2 }, { kind = "morale", value = -4 }]
+[[encounters.choices]]
+text = "减他们的活，粮水照给，撑到靠岸。"
+reply = "能干活的人一个顶两个地熬着。病人到港后吃了三天鲜菜，才有力气自己走下跳板。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "morale", value = -2 }]
+
+[[encounters]]
+key = "sea_glowing_wake"
+title = "发光的海"
+text = "入夜以后，船尾的水痕亮了起来，蓝莹莹的，像有人在海底点着灯。桨一搅，一把碎星；网一拖，一兜冷火。值夜的人把全船都叫醒了。"
+place = "sea"
+weight = 2
+cooldown_days = 365
+[[encounters.choices]]
+text = "让大家看个够。"
+reply = "没有人回舱。有个老水手说，他跑了三十年船，这样的夜一共只见过三回。"
+effects = [{ kind = "morale", value = 4 }]
+[[encounters.choices]]
+text = "打一桶上来，凑到灯下细看。"
+check = { attr = "learning", base = 35, per = 6 }
+reply = "桶里的水一晃就亮，静下来又暗了。你在日志里记了半页，还画了一幅谁也看不懂的图。"
+effects = [{ kind = "fame", value = 1 }, { kind = "morale", value = 2 }]
+fail_reply = "水打上来就不亮了，桶里只有几根海草。水手们笑你把星星捞丢了。"
+fail = [{ kind = "morale", value = 1 }]
+[[encounters.choices]]
+text = "照常行船，值夜的各回各位。"
+reply = "亮光跟了半夜，天亮前自己散了。"
+
+[[encounters]]
+key = "sea_floating_cask"
+title = "漂来的木桶"
+text = "一只箍着铁圈的木桶在浪里一沉一浮，桶盖钉得死死的，看不出是谁家船上掉的。捞它要落帆停船，耽搁小半天。"
+place = "sea"
+weight = 2
+cooldown_days = 365
+[[encounters.choices]]
+text = "停船，捞上来看看。"
+check = { attr = "fortune", base = 45, per = 4 }
+reply = "桶里是好端端的葡萄酒，一滴海水也没进。"
+effects = [{ kind = "goods", good = "wine", qty = 2 }, { kind = "supplies", value = -1 }]
+fail_reply = "撬开桶盖，一股腐臭冲了出来——是一桶烂透了的咸肉。全船人捂着鼻子把它推回了海里。"
+fail = [{ kind = "supplies", value = -1 }, { kind = "morale", value = -2 }]
+[[encounters.choices]]
+text = "拿钩竿够一够，够不着就算了。"
+check = { attr = "agility", base = 40, per = 5 }
+reply = "钩竿搭住了铁圈。桶里是半桶焦油，补船缝正用得上。"
+effects = [{ kind = "goods", good = "pitch", qty = 3 }]
+fail_reply = "钩竿滑脱了两回，木桶顺着浪漂远了。"
+[[encounters.choices]]
+text = "不管它。"
+reply = "木桶在船尾转了个圈，朝着你来的方向漂走了。"
+
+# ───────────────────────── 东亚的海 ─────────────────────────
+
+# 史实：嘉靖朝海禁之下，双屿（1548 年毁于朱纨）、浯屿、月港的私船以丝换银，律称“接济”。
+#       → 本世界线：1557 年以后沿海仍有零星私船，按海上偶遇写；买与告发，各有各的代价。
+[[encounters]]
+key = "sea_lantern_signal"
+title = "夜里的灯号"
+text = "三更天，背风处漂着一条没点桅灯的双桅船，船头有人拿灯笼画了三个圈。靠近了，对面压着嗓子喊：湖州的丝，不过牙行，不上税，只收现银。"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["east_china_sea", "taiwan_strait", "south_china_north", "kuroshio"]
+[[encounters.choices]]
+text = "收下，银货两讫。"
+cost = 320
+reply = "四捆生丝从舷边递过来，捆绳上还带着桑叶的味道。对面数完银子就升了帆，连船名也没让你看清。"
+effects = [{ kind = "goods", good = "raw_silk", qty = 4 }, { kind = "reputation", faction = "ming", value = -3 }]
+[[encounters.choices]]
+text = "不买。记下船形，到港告诉巡检司。"
+reply = "巡检司的书办记了三行字，赏了你一句“知道了”。水手们嘀咕：到手的便宜不要，倒去替官府跑腿。"
+effects = [{ kind = "reputation", faction = "ming", value = 3 }, { kind = "morale", value = -2 }]
+[[encounters.choices]]
+text = "摆摆手，各走各的。"
+reply = "灯笼灭了。那条船贴着岸影滑走，像从来没有来过。"
+
+# 史实：嘉靖三十年代倭患最烈，闽浙沿海设水寨、遣哨船盘查往来船只，查验船引；“常例”一类的陋规屡见于奏疏。
+#       → 本世界线照此。
+[[encounters]]
+key = "sea_patrol_junk"
+title = "巡海的哨船"
+text = "一条挂着“备倭”旗号的哨船斜插过来，船头的把总喝令落帆。兵丁搭上跳板，一边翻货舱，一边拿眼睛瞟你的钱匣。"
+place = "sea"
+weight = 4
+once = true
+[encounters.when]
+at_sea = ["east_china_sea", "taiwan_strait", "south_china_north", "yellow_sea", "bohai"]
+[[encounters.choices]]
+text = "呈上文书，由他查验。"
+check = { attr = "etiquette", base = 40, per = 5 }
+reply = "文书上挑不出毛病，你的应对也挑不出毛病。把总在簿子上画了押，抬手放行。"
+effects = [{ kind = "reputation", faction = "ming", value = 2 }]
+fail_reply = "把总说文书上的印“看不真”，要带回水寨细验。一包银子递过去，印才又看得真了——他脸上可没有好颜色。"
+fail = [{ kind = "cash", value = -200 }, { kind = "reputation", faction = "ming", value = -1 }]
+[[encounters.choices]]
+text = "先递一封“常例”。"
+cost = 100
+reply = "把总掂了掂分量，货舱只看了一眼。“往后走这条水路，报我的名字。”"
+effects = [{ kind = "reputation", faction = "ming", value = 1 }]
+[[encounters.choices]]
+text = "升满帆，甩开他。"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "哨船吃水深，追了一阵就落在后头。水手们朝船尾喝了半天倒彩。"
+effects = [{ kind = "morale", value = 4 }, { kind = "reputation", faction = "ming", value = -2 }]
+fail_reply = "哨船的铳响了一声，铁子打穿了艉楼的板壁。你只得落帆，认罚。"
+fail = [{ kind = "damage", value = 4 }, { kind = "cash", value = -150 }, { kind = "reputation", faction = "ming", value = -3 }]
+
+# ───────────────────────── 南洋 ─────────────────────────
+
+# 史实：马六甲海峡南口与廖内诸岛的“海人”（Orang Laut）世代为马六甲、柔佛的苏丹充水军与引水，
+#       皮列士《东方志》（1512–15）说他们熟知每一处浅滩。→ 本世界线照此。
+[[encounters]]
+key = "sea_strait_pilot"
+title = "海峡里的引水人"
+text = "一条窄长的独木舟从红树林里划出来。舟上的汉子嚼着槟榔，指指你的船，又指指前头的水道，伸出三根手指。舵工说，他是海人，这一带的浅滩都装在他们脑子里。"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["malacca", "south_china_south", "java_sea"]
+[[encounters.choices]]
+text = "照他比的数给钱，请他上船引路。"
+cost = 120
+reply = "他蹲在船头，不看罗盘，只看水色和岸上的树。一路上绕过的暗沙，海图上一处也没有。临走，他还比划着说了一处别人不去的地方。"
+effects = [{ kind = "morale", value = 2 }, { kind = "rumor" }]
+[[encounters.choices]]
+text = "谢过他，自己打着水砣慢慢走。"
+reply = "走一段，测一回，四十里水路走了两天。那条独木舟远远跟了一阵，掉头回去了。"
+effects = [{ kind = "supplies", value = -2 }]
+[[encounters.choices]]
+text = "跟在前头那条本地商船后面走。"
+check = { attr = "perception", base = 40, per = 5 }
+reply = "前船怎么拐，你就怎么拐。出水道时，那边的船主隔着水朝你笑，像是说：学得不坏。"
+fail_reply = "前船吃水浅，过得去的地方你过不去。船底在沙上擦了一道，等到涨潮才脱身。"
+fail = [{ kind = "damage", value = 3 }, { kind = "supplies", value = -1 }]
+
+# ───────────────────────── 印度洋 ─────────────────────────
+
+# 史实：印度洋的航行全凭季风。伊本·马吉德的航海书（约 1490）与葡萄牙“印度航线”的船期都以西南季风起风的日子为准，
+#       风来早了或晚了，一年的生意就两样。→ 本世界线照此。春夏两季才出。
+[[encounters]]
+key = "sea_early_monsoon"
+title = "提早的西南风"
+text = "西南方的天色一夜之间变了，涌浪比历书上说的早来了十几天。领航的说，大风就在后头：抢在它前面，一路顺风；被它追上，就看船结不结实了。"
+place = "sea"
+weight = 4
+once = true
+[encounters.when]
+at_sea = ["arabian_sea", "malabar", "gujarat", "maldives", "ceylon", "bengal_bay", "aden"]
+season = ["spring", "summer"]
+[[encounters.choices]]
+text = "满帆抢风。"
+check = { attr = "seamanship", base = 40, per = 5 }
+reply = "船像被人从后头推着走，一昼夜跑了平日两天的路。"
+effects = [{ kind = "supplies", value = 2 }, { kind = "morale", value = 3 }]
+fail_reply = "风比你快。半夜里一道横浪上了甲板，卷走了两只水桶和半截舷墙。"
+fail = [{ kind = "damage", value = 6 }, { kind = "supplies", value = -1 }]
+[[encounters.choices]]
+text = "收帆缓行，等风势定了再说。"
+reply = "头几天的风果然又乱又猛。等它吹顺了，你才把帆一面一面放出来。"
+effects = [{ kind = "supplies", value = -2 }]
+
+# 史实：葡属印度自 1502 年起推行“卡塔兹”（cartaz）通行证，没有它的亚洲商船可以被扣押、没收；
+#       证钱不贵，要紧的是领证须到葡人的商站缴税。→ 本世界线照此。
+[[encounters]]
+key = "sea_pass_demanded"
+title = "通行证"
+text = "一条挂着十字旗的巡船放了一响空炮，要你顶风停船。登船的书记官伸出手：“通行证。没有的话，这一船货算是无主之物。”"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["arabian_sea", "malabar", "gujarat", "ceylon", "maldives", "persian_gulf"]
+[[encounters.choices]]
+text = "当场补办一张。"
+cost = 160
+reply = "书记官收了钱，在羊皮纸上填了船名、载重与火炮的数目，盖上蜡印。“一年。过期了再来。”"
+effects = [{ kind = "reputation", faction = "portugal", value = 2 }]
+[[encounters.choices]]
+text = "说是遇风偏了航，本不往这片海来。"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "你把航海日志翻给他看，风向一页一页对得上。书记官耸耸肩，放了行。"
+fail_reply = "他合上你的日志：“每条船都这么说。”罚金比证钱贵出一截。"
+fail = [{ kind = "cash", value = -240 }, { kind = "reputation", faction = "portugal", value = -1 }]
+[[encounters.choices]]
+text = "拖到天黑，熄灯溜走。"
+check = { attr = "seamanship", base = 30, per = 6 }
+reply = "巡船的灯在后头晃了半夜，终于看不见了。"
+effects = [{ kind = "morale", value = 3 }, { kind = "reputation", faction = "portugal", value = -2 }]
+fail_reply = "月亮出来得不是时候。追上来的炮弹打断了一根帆桁。"
+fail = [{ kind = "damage", value = 5 }, { kind = "reputation", faction = "portugal", value = -3 }]
+
+# 史实：十六世纪每年都有古吉拉特、马拉巴尔的船载着朝觐的人往吉达去；葡人袭扰红海口以后，这些船多结队而行。
+#       → 本世界线照此。只写同舟，不写教义。
+[[encounters]]
+key = "sea_pilgrim_dhow"
+title = "断了桅的朝觐船"
+text = "一条独桅船歪着半截断桅漂在航路上，甲板上挤满了裹白布的人，是往圣地去的朝觐客。船主隔着水喊：桅杆是昨夜的风折的，求你带上几十个老弱，送到下一个港口。"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["red_sea", "aden", "arabian_sea", "gujarat"]
+[[encounters.choices]]
+text = "接他们上船，分文不取。"
+reply = "甲板上铺满了礼拜的毡子。一位老者临下船前，把手按在你的船舷上念了很久。这件事后来传得比你的船走得还快。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "fame", value = 2 }, { kind = "reputation", faction = "ottoman", value = 2 }]
+[[encounters.choices]]
+text = "接上船，照人头收船钱。"
+reply = "船主替众人凑了一袋银币。朝觐客们一路安安静静，下船时没有人回头。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "cash", value = 220 }]
+[[encounters.choices]]
+text = "匀给他们一根备用的帆桁和两桶水。"
+reply = "独桅船上的人七手八脚竖起了临时的桅杆。两条船并排走了半日，各奔东西。"
+effects = [{ kind = "supplies", value = -1 }, { kind = "morale", value = 2 }]
+
+# ───────────────────────── 地中海 ─────────────────────────
+
+# 史实：威尼斯 1423 年设老检疫所，来自疫区的船须在港外停满四十日（quaranta giorni，“检疫”一词的来历）；
+#       黄色的检疫旗是后世的规矩。→ 本世界线：写成桅顶的一块黑布。
+[[encounters]]
+key = "sea_black_cloth"
+title = "挂黑布的船"
+text = "一条商船落了锚，孤零零停在航道外，桅顶挂着一块黑布。有人在船舷上朝你挥手，喊声被风吹得断断续续：没有水了……已经停了三十天……"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["adriatic", "ionian", "tyrrhenian", "aegean", "levant", "sicily_strait", "ligurian"]
+[[encounters.choices]]
+text = "顺着水流漂几桶淡水过去，不靠帮。"
+reply = "水桶一只一只漂到那条船边。对面的人捞起桶，全船朝你这边脱帽。"
+effects = [{ kind = "supplies", value = -2 }, { kind = "morale", value = 2 }, { kind = "fame", value = 1 }]
+[[encounters.choices]]
+text = "带上药箱，过去看一看。"
+check = { attr = "medicine", base = 30, per = 6 }
+reply = "船上的病是寻常的痢疾，不是瘟疫。你写了一纸证词，叫他们拿去给防疫的官员看。这条船的东家后来专门托人来谢你。"
+effects = [{ kind = "fame", value = 3 }, { kind = "reputation", faction = "venice", value = 2 }]
+fail_reply = "你分不清那是什么病。回船之后，同去的两个水手发起了烧。"
+fail = [{ kind = "crew", value = -2 }, { kind = "morale", value = -5 }]
+[[encounters.choices]]
+text = "远远绕开。"
+reply = "挥手的人影越来越小。水手长在胸前画了个十字，没有人怪你。"
+effects = [{ kind = "morale", value = -1 }]
+
+# 史实：1550 年代图尔古特以的黎波里、阿尔及尔为根基袭扰西地中海，沿岸的望楼就是那时修的；
+#       被俘的人多半可以赎回。→ 本世界线照此，只写帆影与买路钱。
+[[encounters]]
+key = "sea_lateen_sails"
+title = "三角帆"
+text = "南边的水天线上冒出两面三角帆，桨帆并用，直冲你来。老水手一眼认出那种船形：“柏柏里的快船。他们要的不是命，是货和赎金。”"
+place = "sea"
+weight = 4
+once = true
+[encounters.when]
+at_sea = ["alboran", "balearic", "sicily_strait", "tyrrhenian", "libyan_sea", "ionian"]
+[[encounters.choices]]
+text = "抛掉甲板上的重物，满帆逃。"
+reply = "备用的锚、压舱的石头、半舱淡水，都下了海。两面三角帆追到天黑，掉头走了。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "morale", value = -2 }]
+[[encounters.choices]]
+text = "落帆，谈一个买路的价钱。"
+cost = 220
+reply = "对面的头领只上船转了一圈，数过钱，还留下一小袋椰枣。“下回带够银子，照样好说话。”"
+effects = [{ kind = "supplies", value = 1 }]
+[[encounters.choices]]
+text = "亮出炮门，摆好接舷的架势。"
+check = { attr = "gunnery", base = 30, per = 6 }
+reply = "头一炮落在对面船头前的水里。两条快船兜了半个圈，去找更软的柿子了。"
+effects = [{ kind = "fame", value = 2 }, { kind = "morale", value = 4 }]
+fail_reply = "对面的箭和火绳枪先到。打退他们的时候，你的甲板上也躺下了人。"
+fail = [{ kind = "crew", value = -2 }, { kind = "damage", value = 5 }]
+
+# ───────────────────────── 大西洋 ─────────────────────────
+
+# 史实：1492 年哥伦布的船队横渡时驶进马尾藻海，船员疑心近了浅滩，惶惶不安；打水砣二百寻不见底（航海日志，九月）。
+#       → 本世界线照此。
+[[encounters]]
+key = "sea_weed_meadow"
+title = "草海"
+text = "海面成了一片黄绿的草场，藻叶缠着船头，一眼望不到边。水手们聚在舷边交头接耳：有草就有礁，船怕是要搁在这里。"
+place = "sea"
+weight = 6
+once = true
+[encounters.when]
+at_sea = ["sargasso", "azores"]
+[[encounters.choices]]
+text = "当众放水砣，放到绳尽为止。"
+check = { attr = "learning", base = 40, per = 5 }
+reply = "二百寻的绳放完了，砣还悬在水里。你把湿漉漉的绳头举给众人看：底下是深海，草是漂来的。"
+effects = [{ kind = "morale", value = 5 }, { kind = "fame", value = 1 }]
+fail_reply = "绳放到一半缠进了藻里，拉上来一团乱草。底下的人议论得更凶了。"
+fail = [{ kind = "morale", value = -4 }]
+[[encounters.choices]]
+text = "转向，绕到草稀的地方去。"
+reply = "多绕了两天。出了草海，水手们的嗓门才又大起来。"
+effects = [{ kind = "supplies", value = -2 }]
+
+# 史实：十六世纪上半叶起，巴斯克、布列塔尼、葡萄牙的渔船每年春天成百条地往纽芬兰的大浅滩捕鳕，
+#       船上盐多酒少。→ 本世界线照此。春夏两季才出。
+[[encounters]]
+key = "sea_cod_boats"
+title = "雾中的渔帆"
+text = "灰蒙蒙的海上散着几十条渔船，舷边挂满了剖开的鳕鱼。一条小艇靠过来，船主的话你只听懂一半：他们的酒喝完了，鱼倒是要多少有多少。"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["grand_banks", "labrador", "st_lawrence", "iceland_sea"]
+season = ["spring", "summer"]
+[[encounters.choices]]
+text = "拿两桶酒同他们换鱼。"
+give = { good = "wine", qty = 2 }
+reply = "两桶酒换来的咸鳕堆了半个前舱。渔夫们当场开了桶，隔着雾都听得见他们唱歌。"
+effects = [{ kind = "goods", good = "fish", qty = 14 }, { kind = "supplies", value = 2 }]
+[[encounters.choices]]
+text = "出钱买些鲜鱼，给船上添菜。"
+cost = 60
+reply = "厨子熬了三大锅鱼汤，连汤底都被人拿面饼蘸干净了。"
+effects = [{ kind = "supplies", value = 3 }, { kind = "morale", value = 3 }]
+[[encounters.choices]]
+text = "只问一问前头的冰情和风向。"
+reply = "船主拿鱼刀在甲板上画了一幅图：哪里有浮冰，哪里的雾三天不散。你一一记下。"
+effects = [{ kind = "morale", value = 1 }]
+
+# 史实：尼德兰的鲱鱼船队每年圣约翰节（6 月 24 日）之后出海，在船上去鳃腌制，有兵船护渔；
+#       船队下网时绵延数里，过路的船照例避让。→ 本世界线照此。夏秋两季才出。
+[[encounters]]
+key = "sea_herring_nets"
+title = "鲱鱼船队"
+text = "前头的海面上排开了上百条宽肚子的渔船，网浮连成一道道长线。一条护渔的兵船朝你打旗号：船队正在下网，过路的绕行。"
+place = "sea"
+weight = 5
+once = true
+[encounters.when]
+at_sea = ["north_sea", "english_channel", "baltic", "norwegian_sea", "irish_sea"]
+season = ["summer", "autumn"]
+[[encounters.choices]]
+text = "照旗号绕行。"
+reply = "绕过去花了大半天。兵船上有人朝你挥了挥帽子。"
+effects = [{ kind = "supplies", value = -1 }]
+[[encounters.choices]]
+text = "贴着网阵的边穿过去。"
+check = { attr = "seamanship", base = 40, per = 5 }
+reply = "你的船从两道网浮之间擦了过去，一根浮子也没碰着。渔船上骂声一片，可谁也挑不出错。"
+effects = [{ kind = "morale", value = 3 }]
+fail_reply = "船舵挂住了一张网，拖出去老远才割开。护渔的兵船靠上来，网钱一文也少不了。"
+fail = [{ kind = "cash", value = -150 }, { kind = "morale", value = -2 }]
+[[encounters.choices]]
+text = "靠过去，买两桶新腌的鲱鱼。"
+cost = 50
+reply = "桶一开，全船都闻见了。厨子说，这是今年头一网的鱼，在岸上要贵一倍。"
+effects = [{ kind = "supplies", value = 3 }, { kind = "morale", value = 2 }]
+
+# ───────────────────────── 新大陆 ─────────────────────────
+
+# 史实：1502 年总督奥万多不听哥伦布的警告，三十条船自圣多明各出航，遇飓风沉没二十多条；
+#       “飓风”（huracán）一词出自泰诺人的话。→ 本世界线照此。夏秋两季才出。
+[[encounters]]
+key = "sea_long_swell"
+title = "长涌"
+text = "没有风，海却一阵一阵地涌，涌头长得像山梁。落日红得发紫，海鸟成群往陆地飞。船上那个岛民出身的水手只说了一个词，听得懂的人脸都白了。"
+place = "sea"
+weight = 6
+once = true
+[encounters.when]
+at_sea = ["east_caribbean", "west_caribbean", "mexico_gulf", "bahamas_florida"]
+season = ["summer", "autumn"]
+[[encounters.choices]]
+text = "找最近的背风湾，下双锚。"
+reply = "你在一个小湾里躲了三天。风过去以后，湾口的树没有一棵还是直的。"
+effects = [{ kind = "supplies", value = -3 }, { kind = "morale", value = 2 }]
+[[encounters.choices]]
+text = "趁风没到，抢出这片海。"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "船擦着风暴的边跑了出去。回头看，半边天是黑的。"
+effects = [{ kind = "morale", value = 4 }, { kind = "fame", value = 1 }]
+fail_reply = "风的外圈追上了你。一夜之间，前桅折了，舱里进了半人深的水。"
+fail = [{ kind = "damage", value = 8 }, { kind = "morale", value = -4 }, { kind = "supplies", value = -1 }]

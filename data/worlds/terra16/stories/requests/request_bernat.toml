@@ -1,0 +1,129 @@
+# C13d 请托：冰季前的油桶（request_bernat）。中文，Claude 写。
+# 人物：贝尔纳特 bernat（1531-01-16 生，男；拉布拉多红湾巴斯克捕鲸站的鱼叉手，cast/story_americas.toml）。
+# 类型：打一仗（ft）；3 章，offer → battle → after；没有 stage 章。
+# 报价：当面（T）。人物按日程在红湾（red_bay），auto=false，玩家“问请托”（ask:request_bernat）启动；offer 章不写 at，目标是在港里找到他。
+# 窗口：报价 1560-01-01 至 1576-06-30（offer 的期限，超时走 failed，不写见闻）；打仗的期限是进入 battle 章起 90 天；结账到 1576-12-30。
+# 依据：红湾的巴斯克捕鲸站、鲸油桶与北大西洋的法国私掠船是十六世纪拉布拉多的史实背景；贝尔纳特、那条船、木海鸥与这一仗的经过是原创。
+# 解法：offer 的谈判（eloquence 难检定，失败也开打）与回绝；battle 章救人是 seamanship 一般检定，失败降级继续。打仗本身由目标 battle 1 计数，不认对手是谁。
+# 读的旗标（只读，不设）：c7_pair_marion_bernat_together（after 章 variants，一句，不写两人说话）。
+# 设的旗标：c13_request_bernat_accepted（接下，含谈判失败后开打）、declined（回绝）、talked（谈成，没打）、late（超时，那条船搬走了油）、done（结账）。每条终局只设一面。
+# 依赖：无 B10b 改名；港口 red_bay 已有；人物与日程在 cast/story_americas.toml。
+# 秘密：cast 没写秘密；persona 里的私人设定不进入本请托的任何章节。
+# 不写：冬粮与冰封之冬（归 C7 的 pair_marion_bernat 线）；报酬数字（界面显示）。
+# 回忆插画：mem-request_bernat-after，一只木雕海鸥，翅膀一边刻坏了，攥在一只被鲸油熏黑的手里。
+
+[[tracks]]
+key = "request_bernat"
+name = "冰季前的油桶"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["bernat"]
+
+# 一、尖刃朝里：1560 年起，人物在红湾的捕鲸站里，玩家来问。
+[[tracks.chapters]]
+key = "offer"
+title = "尖刃朝里"
+text = "捕鲸站的油桶码成了一堵墙，墙后头贝尔纳特在磨鱼叉。磨完一把，尖刃朝里放进架子，再拿起下一把。灶上的鲸油咕嘟咕嘟翻着泡，腥气压过了海风。港外停着一条法国私掠船，两天了，不打旗，不靠岸，望台上总有人。码头上的人都绕着它走，没人肯去问一句。“它在等冰季前最后一批油。”他的手在怀里摸了一下，又拿开，“它要是抢走了，整个站白干一年。”他要你的船跟他的三条小艇一起出去。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1560, 1, 1], to = [1576, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "bernat", text = "在港里找到他" }]
+deadline = [1576, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "跟他出海，把那条船打走。"
+next = "battle"
+reply = "他把最后一把鱼叉也尖刃朝里放好，直起腰来：“打完了，我数人。少一个，这趟就不算赢。”"
+effects = [{ kind = "affinity", person = "bernat", value = 2 }, { kind = "flag", flag = "c13_request_bernat_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "parley"
+text = "先划小艇过去，跟那条船的船长谈。"
+next = "after"
+reply = "法国船长听你说完冰季的海有多难走，又听说捕鲸站愿出两桶油当路费，想了一夜。第二天一早，望台上的人不见了，船起锚往南去了。"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "affinity", person = "bernat", value = 3 }, { kind = "flag", flag = "c13_request_bernat_accepted" }, { kind = "flag", flag = "c13_request_bernat_talked" }]
+fail = { next = "battle", effects = [{ kind = "affinity", person = "bernat", value = -2 }, { kind = "flag", flag = "c13_request_bernat_accepted" }], news = "红湾外海，一条外乡船的小艇靠上法国船喊话，对方没搭理，拿桨把人赶了回来。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "你的船不跟私掠船打。"
+next = "failed"
+reply = "他没劝。一句话也没有，把手里那把鱼叉尖刃朝里放回架子，转身去码头上叫他的艇手。"
+effects = [{ kind = "flag", flag = "c13_request_bernat_declined" }]
+
+# 二、一个一个喊名字：打赢一仗以后，你回头看见的那场救人。
+[[tracks.chapters]]
+key = "battle"
+title = "一个一个喊名字"
+text = "贝尔纳特的三条小艇贴着岸走，你的船在外头压过去。海是灰的，风从东北来，浪一个接一个压过艇舷。你打退的那条船挂起帆往东南逃了，船尾冒着烟。乱里有一条小艇翻了，艇底朝天，人全浮在浪里，有人攀着翻过来的艇底，有人只剩一顶帽子在水面上打转。贝尔纳特站在船头，一个一个喊名字：“找人就报名字——我数数他回来没有。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "bernat", value = true }, { kind = "date", from = [1560, 1, 1], to = [1576, 12, 30] }]
+objectives = [{ kind = "battle", wins = 1, text = "在外海打赢一仗" }]
+deadline_days = 90
+news = "红湾外海，捕鲸站的小艇和一条外乡船一起，把一条不打旗的法国船赶走了。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "bernat", value = -3 }, { kind = "letter", person = "bernat", text = "那条船趁雾摸进来，搬走了三十桶。人一个没少，我数过。" }, { kind = "flag", flag = "c13_request_bernat_late" }]
+news = "红湾外海起了雾，一条不打旗的法国船趁雾摸进捕鲸站，搬走了三十桶油，人没伤。"
+
+[[tracks.chapters.choices]]
+key = "search"
+text = "把船横过来挡浪，帮他把落水的人捞上来。"
+next = "after"
+reply = "最后一个被捞上来的是个新来的艇手，嘴唇冻得发紫，贝尔纳特一把把他拽进艇里，喊完名字才骂人。骂得很凶，骂完又替他把湿透的外套扯平了。"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "bernat", value = 5 }]
+fail = { next = "after", effects = [{ kind = "affinity", person = "bernat", value = 3 }], news = "红湾外海，一条小艇翻在浪里，捞上来五个，第六个自己游到岸边，冻得说不出话。" }
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "趁势追出去，免得它回头。"
+next = "after"
+reply = "你追了半天，那条船跑远了。回来时翻了的那条艇也被拖上了岸，人都在。贝尔纳特在滩上来回走，数了三遍。"
+effects = [{ kind = "affinity", person = "bernat", value = 2 }]
+
+# 三、今年用不着了：油桶装上回程的船，在红湾结账。
+[[tracks.chapters]]
+key = "after"
+title = "今年用不着了"
+text = "油桶装上了回程的船，捕鲸站空了一半。码头上还在搬桶，鲸油的腥气压过了海风，谁的靴子都是黑的，港务的人拿着单子在桶堆之间来回走。贝尔纳特没急着去点人数，先把每只桶上的火印看了一遍，有两只火印歪了，他让人拿回去重打，才把工钱袋压在最上面一只油桶上。又从怀里摸出一只木雕的海鸥，翅膀有一边刻坏了。“出艇前攥在手里的。”他说，把海鸥往你这边推了推，“今年用不着了。”"
+speaker = "captain"
+mood = "tender"
+at = "red_bay"
+when = [{ kind = "alive", person = "bernat", value = true }, { kind = "date", from = [1560, 1, 1], to = [1576, 12, 30] }]
+news = "红湾的捕鲸站今年的油一桶没少，那个巴斯克鱼叉手回港点人数，照旧点得最慢。"
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "flag", flag = "c13_request_bernat_talked" }, { kind = "flag", flag = "c7_pair_marion_bernat_together" }]
+text = "没打这一仗。油桶装上了回程的船，捕鲸站空了一半。码头上点人数的那本册子，现在归玛丽昂管，每一页都记着日子。贝尔纳特把那两桶路费油记在自己的工钱上，嘴上说“下回打”。又从怀里摸出一只木雕的海鸥，翅膀有一边刻坏了，他说是出艇前攥在手里的，“今年用不着了。”"
+
+[[tracks.chapters.variants]]
+key = "talked"
+when = [{ kind = "flag", flag = "c13_request_bernat_talked" }]
+text = "没打这一仗。油桶装上了回程的船，捕鲸站空了一半。贝尔纳特没急着去点人数，先把每只桶上的火印看了一遍。他把那两桶路费油记在自己的工钱上，嘴上说“下回打”。又从怀里摸出一只木雕的海鸥，翅膀有一边刻坏了，他说是出艇前攥在手里的，“今年用不着了。”"
+
+[[tracks.chapters.variants]]
+key = "together"
+when = [{ kind = "flag", flag = "c7_pair_marion_bernat_together" }]
+text = "油桶装上了回程的船，捕鲸站空了一半。码头上还在搬桶，鲸油的腥气压过了海风。点人数的那本册子，现在归玛丽昂管，每一页都记着日子。贝尔纳特把工钱袋压在最上面一只油桶上，又从怀里摸出一只木雕的海鸥，翅膀有一边刻坏了。“出艇前攥在手里的。”他说，把海鸥往你这边推了推，“今年用不着了。”"
+
+[[tracks.chapters.choices]]
+key = "take_both"
+text = "工钱和木海鸥都收下。"
+next = "done"
+reply = "他看着你把海鸥揣进怀里，点点头，没说谢，也没说别的。回头又去数码头上的人，一个一个点过去，数得比谁都慢。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "bernat", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_bernat_done" }, { kind = "memory", memory = "mem-request_bernat-after", title = "翅膀刻坏的木海鸥" }]
+
+[[tracks.chapters.choices]]
+key = "leave_gull"
+text = "只收工钱，木海鸥让他留着明年用。"
+next = "done"
+reply = "他把海鸥塞回口袋，拍了拍，嘟囔了一句巴斯克话，没翻给你听。明年要是还用得上，他自己会来码头拿。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "bernat", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_bernat_done" }]

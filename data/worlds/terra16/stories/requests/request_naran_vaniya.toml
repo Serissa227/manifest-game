@@ -1,0 +1,181 @@
+# 请托：缩水的棉布（request_naran_vaniya）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：纳兰·瓦尼亚（naran_vaniya，1540-07-01 生，男），坎贝的棉布经纪学徒，学院同学；势力 gujarat，身份档 1。cast：cast/classmates_custom_cambay_broker.toml。
+# C7：bond_naran_vaniya 在 1562 年坎贝重逢，本文件不写重逢，请托窗口从 1563 年起。
+# 类型：说服（persuade）。五章：offer（报价）、persuade（银钱商的铺子）、result（布头上的字，量布或找大主顾的路线）、result_paid（还清以后的量布台，先付钱的路线）、result_partial（退回织坊的布，当众量布失败的路线）。
+# 报价：T（当面）。人物按日程在坎贝，玩家用 ask:request_naran_vaniya 启动；auto=false；offer 不写 at，目标是在坎贝的棉布市找到他。窗口 1563-01-01 至 1590-06-30；offer 写 deadline=1590-06-30，timeout 直接 failed，不写见闻。
+# 进行中：persuade 及之后各章都是普通章（没有 window 与 default，不设期限）。brief 的窗口 1563-01-01..1590-12-31 写在各章 when 的 date 条件里，过了这一天不再出现；轨道可以一直等。
+# 依据·史实背景：古吉拉特的棉布经纪与银钱商（萨拉夫）；经纪行签的“足尺”是行里的信用，买主凭它收货。
+# 依据·原创：纳兰、巷口的银钱商、那杆包铜的公尺、布头上的“短一掌”，以及三条解法。放贷的利率与借据的格式只用传闻口吻，正文不写具体数字。
+# 秘密：背着父亲做过一笔小买卖，赔了；本钱是向巷口银钱商借的，每周从零用里抠几个铜子去还。只在 offer 章由银钱商当面说出（“你借我的那笔小账”）；纳兰的反应写口头禅与 stand_with 的回复；见闻永远不写债；父亲不出场、不知情。
+# 读的旗标：只读 bond naran_vaniya ≥ C（offer 的 variant）。不读、不设任何 c7_ 旗标。
+# 设的旗标：c13_request_naran_vaniya_accepted（offer 两条接法）、_declined（offer 回绝）、_paid（persuade 替他还债）、_measured（当众量布成功或找大主顾）、_stalled（当众量布失败，只设旗标，结局在 result_partial）、_done（result 与 result_paid 的收尾）、_partial（result_partial 的收尾）。
+# 结构：pay_off 路线单独走 result_paid，measure_public 失败走 result_partial。没有选项靠本轨道另一路径设的旗标门禁，所以 result 的两个选项都不用 requires。
+# 报酬：现金 pay_off 路线先付出，最好结局收 900；其余路线最好 900、折中 500。好感最多 +13；名声 +2（最好结局）；回忆 mem-request_naran_vaniya-result。
+# 依赖：纳兰的日程已是 khambhat（cast/classmates_custom_cambay_broker.toml 1554—1590，港口 khambhat 见 ports_india.toml），无需 B10b 改名；技能 negotiation、属性 commerce。
+# 回忆插画清单：
+#   mem-request_naran_vaniya-result「印号旁的一掌」：经纪行的量布台上，布头盖着纳兰自己的印号，印旁有一道被尺子削去的小痕。
+
+[[tracks]]
+key = "request_naran_vaniya"
+name = "缩水的棉布"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["naran_vaniya"]
+
+# 一、足尺：纳兰在棉布市拆开一匹布，巷口的银钱商过来逼他签字。
+[[tracks.chapters]]
+key = "offer"
+title = "足尺"
+text = "纳兰把一匹棉布拖到你面前，当着你拆开。布边上的印还是新的，墨没干透，他的手指沾了一截黑。他拿尺从头量到尾，量完指给你看：“短了一掌。”这批布要发去霍尔木兹，买主只认经纪行签的“足尺”。巷口的银钱商踱过来，笑眯眯地说：“签了吧。你借我的那笔小账，我也就不跟你父亲提了。”纳兰的脸一下子红了，却把尺往前一递：“尺先给你，价再给我。”他不签。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "naran_vaniya", ge = 18 }]
+objectives = [{ kind = "person", person = "naran_vaniya", text = "在坎贝的棉布市找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "naran_vaniya", value = -3 }] }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "naran_vaniya", level = "C" }]
+text = "纳兰见你走近，先把尺递过来：“你量，我信你的尺。”布边上的印还是新的，墨没干透，他的手指沾了一截黑。你拿尺从头量到尾，量完指给他看：“短了一掌。”这批布要发去霍尔木兹，买主只认经纪行签的“足尺”。巷口的银钱商踱过来，笑眯眯地说：“签了吧。你借我的那笔小账，我也就不跟你父亲提了。”纳兰的脸一下子红了，却把尺往前一递：“尺先给你，价再给我。”他不签。"
+
+[[tracks.chapters.choices]]
+key = "stand_with"
+text = "接下，替他摆平这个银钱商。"
+next = "persuade"
+reply = "银钱商冷笑一声，把手揣回袖子里，就走了。他一走，纳兰才低声说，那笔债是他十六岁那年赔的，每周还几个铜子，还差一截。说完他马上补一句：“这跟布没关系。”"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "flag", flag = "c13_request_naran_vaniya_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_debt"
+text = "接下，先问清：还差多少？"
+next = "persuade"
+reply = "他报了一个数，一个铜子也不让，连上周还的那几个都算进去了。他把账本翻到那一页，指着自己的字给我看：“欠的就是欠的，别替我省。”"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 2 }, { kind = "flag", flag = "c13_request_naran_vaniya_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这是他家里的事，我不插手。"
+next = "failed"
+reply = "他点点头，把那匹布重新卷好，在布头上用炭笔写了“短一掌”三个字，又在布尾添了一个日子。“那我自己去说。”他说完，抱着布往织坊的方向走，没有回头。"
+effects = [{ kind = "flag", flag = "c13_request_naran_vaniya_declined" }]
+
+# 二、银钱商的铺子：账本比人高，三种解法各有各的代价。
+[[tracks.chapters]]
+key = "persuade"
+title = "银钱商的铺子"
+text = "银钱商的铺子里，账本比人高。他坐在柜台后头拨着算盘，头也不抬。“纳兰的债不多，”他说，“可利钱也不少。我要的是那张‘足尺’的签字，卖这批布的，是我的老主顾。”纳兰站在门口没进来，隔着门说：“我的账，我自己还。”他身后的墙上挂着一杆尺，尺头包着铜，是城里经纪行公用的那杆。"
+speaker = "captain"
+mood = "tense"
+at = "khambhat"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "naran_vaniya", value = true }]
+objectives = [{ kind = "at", at = "khambhat", text = "在坎贝的巷口找到银钱商的铺子" }]
+news = "坎贝的布市上，有人拿着经纪行的公尺当众量了一批去霍尔木兹的棉布，匹匹短一掌。"
+
+[[tracks.chapters.choices]]
+key = "pay_off"
+text = "替纳兰把那笔债还清，当场要回借据。"
+next = "result_paid"
+requires = [{ kind = "cash", ge = 400 }]
+hint = "钱袋里的数，还够不着这笔债。"
+reply = "银钱商数完钱，把借据推过来，脸上的笑一下子没了。我把借据拿到门口交给纳兰，他当着我撕成两半，又把两半收好。“这一笔记在我本子上，”他说，“我自己还。”"
+news = "坎贝巷口的银钱商铺子里，有人一次数足了钱，银钱商脸上的笑一下子没了。"
+effects = [{ kind = "cash", value = -400 }, { kind = "affinity", person = "naran_vaniya", value = 3 }, { kind = "flag", flag = "c13_request_naran_vaniya_paid" }]
+
+[[tracks.chapters.choices]]
+key = "measure_public"
+text = "取下墙上那杆公用的尺，拉纳兰去布市当众量布。"
+next = "result"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "布市上围了一圈人，我一匹一匹量，短的都短一掌，一匹都没有例外。银钱商的老主顾听见了，当场把布收了回去，说是织坊弄错了，回头就去找那位织坊的管事。"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }, { kind = "flag", flag = "c13_request_naran_vaniya_measured" }]
+fail = { next = "result_partial", effects = [{ kind = "affinity", person = "naran_vaniya", value = -2 }, { kind = "flag", flag = "c13_request_naran_vaniya_stalled" }], news = "坎贝的布市上，有人想拿经纪行的公尺当众量布，人还没围上来，就散了。" }
+
+[[tracks.chapters.choices]]
+key = "talk_patrons"
+text = "去找银钱商的几个大主顾，说说他拿旧债逼人签字的事。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "这一行的大主顾，不肯听一个没有门路的人开口。"
+reply = "两个大主顾当晚就去了他的铺子。第二天银钱商派人来说，那笔债的利钱免了，签字的事“误会了”。纳兰听说以后，只在门口站了一会儿，没有进去道谢。"
+news = "坎贝的几家大主顾，一晚上都去了巷口银钱商的铺子，第二天他就说签字的事“误会了”。"
+effects = [{ kind = "affinity", person = "naran_vaniya", value = 3 }, { kind = "flag", flag = "c13_request_naran_vaniya_measured" }]
+
+# 三之一、布头上的字：当众量布或找大主顾之后，布重新量过，纳兰付谢礼。
+[[tracks.chapters]]
+key = "result"
+title = "布头上的字"
+text = "纳兰在经纪行的量布台上，把那批布重新量过一遍。台上的灯擦得很亮，照着一排排布头，短的那几匹，布头上还留着“短一掌”的炭字。短的退回织坊，足的签上他自己的印号。他量得很慢，每量一匹都要抬头看你一眼。量到一半，有个织坊的管事凑过来想说情，他没抬头，只说：“短了就是短了，你去跟布说。”量完，他从钱袋里数出一些铜子，又数了一遍，推到你面前——“这是谢你的，不是还你的。还你的，另算。”"
+speaker = "captain"
+mood = "cheerful"
+at = "khambhat"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "naran_vaniya", value = true }]
+objectives = [{ kind = "at", at = "khambhat", text = "在坎贝的经纪行找到他" }]
+news = "坎贝经纪行的一个年轻人，宁可退回一批布，也不肯在布上签“足尺”。"
+
+[[tracks.chapters.choices]]
+key = "take_thanks"
+text = "收下谢礼，问他那杆公尺以后放哪儿。"
+next = "done"
+reply = "“尺是经纪行的，就该放在经纪行的台上。”他说得很干脆，“人是我的，那一截我自己量。”他把谢礼的钱袋系紧，想了想，又说：“下回谁再拿旧账逼人，先来问我。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "naran_vaniya", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_naran_vaniya-result", title = "印号旁的一掌" }, { kind = "flag", flag = "c13_request_naran_vaniya_done" }]
+
+[[tracks.chapters.choices]]
+key = "take_plain"
+text = "收下谢礼，问他以后还签不签“足尺”。"
+next = "done"
+reply = "“足的签，短的写短。”他把那杆铜头的公尺借来，量了自己的尺，差了一点点，当场拿小刀削掉了那一点。削下来的木屑落在布头上，他拿指甲把它拨到一边。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "naran_vaniya", value = 7 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_naran_vaniya-result", title = "印号旁的一掌" }, { kind = "flag", flag = "c13_request_naran_vaniya_done" }]
+
+# 三之二、还清以后的量布台：先付了钱的路线，纳兰自己把布量完。
+[[tracks.chapters]]
+key = "result_paid"
+title = "还清以后的量布台"
+text = "纳兰在经纪行的量布台上，把那批布从头量到尾。借据已经撕了，他没再提，只量得比往常更慢，台上的灯擦得很亮。短的退回织坊，足的签上他自己的印号，一匹盖一个，盖完就把印泥盖子扣紧。他的手很稳，印泥一点也没蹭到布边上。量完，他从钱袋里数出一些钱，又数了一遍，推到你面前：“谢你的。”他说，“先前垫的那笔，我另记在本子上。”"
+speaker = "captain"
+mood = "cheerful"
+at = "khambhat"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "naran_vaniya", value = true }]
+objectives = [{ kind = "at", at = "khambhat", text = "在坎贝的经纪行找到他" }]
+news = "坎贝经纪行的量布台上，一个年轻经纪把整批布重新量过，短的退回织坊，足的盖上了自己的印号。"
+
+[[tracks.chapters.choices]]
+key = "take_thanks"
+text = "收下谢礼，那笔替他垫的钱，让他慢慢还。"
+next = "done"
+reply = "他在一张纸上写下欠我的数，每周还几个铜子，跟当年还银钱商一样。他说这回是跟朋友借的，“利钱，一个也不给”。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "naran_vaniya", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_naran_vaniya-result", title = "印号旁的一掌" }, { kind = "flag", flag = "c13_request_naran_vaniya_done" }]
+
+[[tracks.chapters.choices]]
+key = "take_plain"
+text = "收下谢礼，问他往后还签不签“足尺”。"
+next = "done"
+reply = "“以后还签，”他说，“签之前，先让我的尺和你的尺对一对。”他把自己的尺拿出来，两根尺的刻线贴在一起，他这才笑了。笑完又板起脸，说那杆公尺的铜头该擦一擦了。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "naran_vaniya", value = 7 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_naran_vaniya-result", title = "印号旁的一掌" }, { kind = "flag", flag = "c13_request_naran_vaniya_done" }]
+
+# 三之三、退回织坊的布：当众量布没人围观，布一匹也没签，谢礼减半。
+[[tracks.chapters]]
+key = "result_partial"
+title = "退回织坊的布"
+text = "银钱商没有去布市。那一天围上来的人不多，我拿尺才量了两匹，人就散了，有人低声说，这是经纪行的人要闹事。纳兰站在一旁没说话。他把每一匹都重新卷过，卷得很紧，像要把布里的短处都压进去。那批布一匹也没签，全部退回了织坊，他在布头上写了“短一掌”三个字。“宁可少做一笔。”他把布头收进袖子，没有回头看银钱商的铺子。最后他从钱袋里数出一半的钱，推到我面前：“这一半是我的。”"
+speaker = "captain"
+mood = "sad"
+at = "khambhat"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "naran_vaniya", value = true }]
+objectives = [{ kind = "at", at = "khambhat", text = "在坎贝的经纪行找到他" }]
+news = "坎贝的布市散了，经纪行的年轻人把一整批布退回织坊，布头上写着“短一掌”。"
+
+[[tracks.chapters.choices]]
+key = "take_half"
+text = "收下他拿出来的那一半，问织坊会不会赔。"
+next = "done"
+reply = "“织坊赔不了什么，最多少收一笔定钱。”纳兰说完，把钱袋口系紧，塞进我手里。他的手还在抖，大概是这一趟跑得太急。我问他还要不要去布市，他摇摇头，说先去织坊把布头对上号。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "naran_vaniya", value = 4 }, { kind = "flag", flag = "c13_request_naran_vaniya_partial" }]
+
+[[tracks.chapters.choices]]
+key = "take_half_plain"
+text = "收下，劝他下回签之前先在布市上量一遍。"
+next = "done"
+reply = "他点头，说下回就在布市上量，量给所有人看。“短的，让买主自己去找织坊。”他把钱数给我，数得比谁都慢，一个也没有少。他数完，又把其中一枚翻过来看了看，才装进袋子。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "naran_vaniya", value = 3 }, { kind = "flag", flag = "c13_request_naran_vaniya_partial" }]

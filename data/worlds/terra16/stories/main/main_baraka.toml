@@ -1,0 +1,2203 @@
+# 巴拉卡·宾·萨利姆：金之河（主线脊轨，故事 2.0，A5 / E37 契约，C13 第九批）
+# 2026-11-01 接回登记：亚特兰蒂斯补章 main_baraka_atlantis 与本线同批登记；c04_after 的 when 加 c13_main_baraka_atlantis_over，由补章的结局与 c03_dark_sea 的掉头 / 缺席分支设。
+# 2026-11-12 剧情增写（Claude）：旁轨 main_baraka_rw_needle（铜针）、main_baraka_rw_river（河边的兵）、main_baraka_rw_rope（第二本账）追加在文件末尾；
+#   已有章节 a01（两段）、a06、b00、c10 加 rw_ 变体（读旁轨设的 rw_baraka_* 旗标），带 value = false 守卫、排在已有变体之前，不压已有变体。旁轨在 c01 以前不提马库阿男孩。
+# 标签：金之河；家乡港基尔瓦（kilwa）；主线 main_baraka，26 章，auto = true，start = a00_gate。
+# 同文件另有等待旁轨 main_baraka_solomon（两张拓纸，一章 join，auto = false，由 b06 的 wait 或 npc_baraka_rubbing 的 take_copy 打开）。
+# 依据（史实）：1552 巴罗斯《亚洲》记大津巴布韦门铭“连有学问的摩尔商人也读不懂”（a06、b05）；
+#   1557 奥斯曼取马萨瓦、设哈贝什省（a02 只写消息，不写年份以外的细节）；
+#   1560—61 耶稣会士西尔韦拉沿海北上、经赞比西河进穆塔帕王廷，1561 年在王廷被勒死、尸身扔进河里（a03、a04）；
+#   1564 前后诵经与父亲之死（a06 只写散了以后）；
+#   1568—69 卡蒙斯滞留莫桑比克岛，1572 年《卢济塔尼亚人之歌》出版，第二歌写蒙巴萨与马林迪（b00）；
+#   1569—73 巴雷托远征，1572 塞纳的摩尔商人被处死（罪名是毒死了马，只作指控转述），1573 年巴雷托死在塞纳（b01—b03）；
+#   1574—75 葡萄牙人到马尼卡金市，设“门长”抽税（b04）；1577 大彗星（b08）；
+#   1578—79 范礼安在澳门、1579 携非洲随从到日本（c01）；1581 信长赐名弥助（正文不写此名，c05 的来信才第一次出现）；1582 本能寺（c05 只做 HIST 旗标）；
+#   1583 亚速尔海战、圣克鲁斯侯爵攻安格拉（c03）；1586 米尔·阿里·贝伊南下（c06）；
+#   1587 果阿派船队报复向米尔·阿里献礼的城，法扎被毁（c07，指挥官与月份待核，正文只写“果阿来的船”）；
+#   1587 或 1588 津巴人屠基尔瓦（c08，年份待核，食人的说法是葡萄牙人的记载，不写）；
+#   1589 蒙巴萨、津巴首领的话、米尔·阿里被俘、塞格朱人在马林迪以北挡住津巴人（c09、c10）。
+#   基尔瓦铜币背面的“信靠众世界之主”（14 世纪哈桑·本·苏莱曼的铜币）；“设拉子来的七条船”为巴罗斯记下的基尔瓦口传；Haba na haba 为斯瓦希里谚语。
+# 原创：老商人哈希姆、老诗人、父亲页边的“不对”、母亲是蒙巴萨人、诸城同盟与铜盆盟誓、绍纳老人、第二枚铜币与水手、蒙巴萨母亲娘家那条街、马库阿学徒。
+# 秘密：c01_yasuke（1578—79 澳门）揭开：马库阿男孩就是弥助。a00—b08 不提那个男孩，也不写“我救过一个孩子”；任何 news 都不写。
+# 读的共享旗标：c12_voyage_baraka（a00 门槛，C12 结业设）；c7_bond_salih_landing_friend / _landing_love（a06 变体）；
+#   c7_bond_zubayda_landing_friend / _landing_love（b00 变体）；c7_bond_hamid_landing_friend（b07 变体）；
+#   c7_bond_ilhan_landing_friend / _landing_love（c06 变体）；c7_bond_amina_landing_friend（c10 变体）；
+#   c13_npc_mio_yasuke_letter（c05 变体，mio 组 npc_mio s03 设）；
+#   atlantis_council_met、atlantis_verdict_open、atlantis_verdict_close（c04 变体，C11 设，整合时登记 pending_flags）；
+#   h54_honnoji_nobunaga_survives（c05 两组互斥）；h59_mir_ali_coast_coastal_autonomy（c10 变体）。
+# 设的共享旗标：c13_main_baraka（a00 default，C13d 与各 NPC 线读）；_act2（b00 的 timeout 与三个选项）；_act3（c01 的三个选项与 timeout）；
+#   _paid_debt（a01）、_guided / _warned_court（a03）、_told_portuguese（a04）、_hid_traders（a04）、_gold_door（a05）、
+#   _history_begun（a06）、_camoes_heard（b00）、_guided_barreto（b01）、_misled（b01）、_sheltered_sena（b02）、
+#   _league_mombasa / _league_pate / _league_mogadishu / _league_malindi（b07）、_league_sworn（b08）、
+#   _yasuke_gift / _asked_freedom（c01）、_keepsake、_stance_open / _stance_close / _stance_hand（c02，恰好一面）、
+#   _crossed / _turned_back / _absent（c03，恰好一面）、_sided_ottoman / _stood_alone / _warned_goa（c06）、
+#   _faza_saved（c07）、_led_out（c09）、_done 与恰好一面 _end_chronicle / _end_kilwa / _end_road（c10）；
+#   _solomon 印记 c13_mark_solomon（b06 与 join 共用）；c13_half_solomon_gate（b05，b06 用）；c13_half_solomon_gate=false（b06 卖掉）。
+# 等待的包：A9（a00 的 when 可加 protagonist 条件；若引擎接管开轨道，auto 改 false）；
+#   C10（h54_honnoji_nobunaga_survives 与 h59_mir_ali_coast_coastal_autonomy 按代码→key 表替换；不做某个改写结果就删掉读它的那组选项与变体）；
+#   C11（c04 的三个变体读 atlantis_* 旗标，c02 的 stance 与 keepsake 由 C11 十王会议读）；
+#   A8（c03 的 cross 选项要 tabula_smaragdina；b05 的门铭发现物许可定了以后可加 discovery 目标，本文件先不写）；
+#   najma 组（npc_najma_seal 设 c13_half_solomon_bottle，巴拉卡当玩家时铅封只从那里来；npc_najma 补 1586 与 1589 两段 mombasa）；
+#   mio 组（npc_mio s03 设 c13_npc_mio_yasuke_letter）；C9（志向 path_* 落地后 c10 可加变体）。
+# HIST 占位：h54_honnoji_nobunaga_survives（c05）、h59_mir_ali_coast_coastal_autonomy（c10）。
+# 回忆插画清单（mem-main_baraka-*）：a01 父亲的砝码箱（索法拉草席上摊开的黄铜砝码箱，芭蕉叶里的金砂）；
+#   a06 不对（油灯下一本葡萄牙书，页边一行炭笔字，旁边一本后半截一个字也没有的抄本）；
+#   b05 门上的字（弧形石墙门楣上的一张纸与炭条擦出的印子，远处皂石鸟）；b06 两张拓纸（油灯前两张拓纸叠成一枚印）；
+#   b08 彗星下的盟誓（马林迪夜海滩上盛满海水的铜盆）；c01 码头上的高个子（澳门石阶上扛书箱的高个子低头看黄铜砝码箱）；
+#   c08 退潮的浅滩（涨潮后的浅滩上一道水痕，远处清真寺东墙塌了一截）；c10 七份史书（塌了的院墙下，膝上摊着史书，脚边是打开的砝码箱）；
+#   两半合一（join，两张拓纸压在砝码箱上，接缝处合成一枚印）。
+# 注：日程与 cast 的缺口见交付说明（francisco_barreto 补 1569-09—1571-10 基尔瓦以外的岛上驻扎；alessandro_valignano 1579 年初改为 macao）。
+
+[[tracks]]
+key = "main_baraka"
+name = "金之河"
+kind = "main"
+start = "a00_gate"
+auto = true
+cast = ["baraka"]
+
+# ── 第一幕 1557—1566 ──
+
+# a00 门槛见闻：基尔瓦码头，开罗回来的金商之子。窗口止日没人回应也照走。
+[[tracks.chapters]]
+key = "a00_gate"
+title = "开罗回来的人"
+text = "正月的东北风正盛，基尔瓦珊瑚石砌的码头上，挑夫卸着从北边来的布，清真寺台阶上坐着晒太阳的老人。从开罗来的船靠了岸，下船的是金商萨利姆的儿子，白袍上还沾着书铺的灰。他先问的是索法拉的金价，没问家里。台阶上的老人咂着嘴：“开罗教出来的嘴，砍起价来跟他爹一个样，只是多讲一段故事。”码头上已经有人在数他那十二匹布了，父亲早把布装上了他的姆泰佩。"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "kilwa"
+stage = "rumor"
+mood = "cheerful"
+cast = ["baraka"]
+when = [{ kind = "flag", flag = "c12_voyage_baraka" }]
+news = "基尔瓦码头上说，金商萨利姆的儿子从开罗回来了，下船先问的是索法拉的金价。"
+
+[tracks.chapters.default]
+next = "a01_monsoon"
+effects = [{ kind = "flag", flag = "c13_main_baraka" }]
+
+# a01 父亲的砝码：限期交货（布 10 匹），兼教玩家交货；父亲的砝码箱在这一章交到他手上。
+[[tracks.chapters]]
+key = "a01_monsoon"
+title = "父亲的砝码"
+text = "索法拉的金市挨着葡萄牙人的石堡，正午的日头把秤盘晒得烫手。这是我第一次一个人称金。出门前父亲把用了三十年的黄铜砝码箱交给我，箱盖里侧刻着每一枚砝码的记号，最小的那枚只有一粒豆子重。父亲的老伙计哈希姆蹲在草席对面，金砂包在芭蕉叶里，他的拇指搭在秤杆上：“萨利姆的儿子？让我看看你的手。称金的人，手不能比金子先动。”堡里的葡萄牙书记坐在一边，等着抽王室那一份。我在心里又听了一遍父亲临行时的话：“Haba na haba——一点一点，量米的升就满了。”母亲病的那一年我三岁，我只记得一碗没喝完的椰汁。这件事，我得拿个笑话盖过去。"
+at = "sofala"
+speaker = "captain"
+mood = "cheerful"
+cast = ["baraka"]
+when = [{ kind = "date", from = [1557, 1, 7] }]
+objectives = [{ kind = "goods", good = "cloth", qty = 10, at = "sofala", text = "趁东北风，把父亲的十匹布运到索法拉的金市" }]
+deadline = [1557, 3, 31]
+
+[tracks.chapters.timeout]
+next = "a02_massawa"
+effects = []
+news = "基尔瓦的萨利姆今年的布是在自家码头贱卖的，听说儿子没赶上往南的风。"
+
+[[tracks.chapters.choices]]
+key = "reweigh"
+text = "用父亲的砝码，一枚一枚重称"
+next = "a02_massawa"
+check = { attr = "commerce", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 1400 }, { kind = "memory", memory = "mem-main_baraka-a01", title = "父亲的砝码箱" }]
+reply = "哈希姆收回拇指，把那块磨过角的秤砣扔进了海里：“这一块，算我送你的见面礼。”我把箱子里最小的那枚砝码收回袋里，那一枚，我一直没用上。"
+
+[tracks.chapters.choices.fail]
+next = "a02_massawa"
+effects = [{ kind = "cash", value = 900 }, { kind = "memory", memory = "mem-main_baraka-a01", title = "父亲的砝码箱" }]
+news = "索法拉的人说，萨利姆的儿子一枚一枚重称，称对了，却把账讲糊涂了，回去的路上才算明白。"
+
+[[tracks.chapters.choices]]
+key = "story_price"
+text = "讲个故事，讲到他自己把拇指拿开"
+next = "a02_massawa"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1600 }, { kind = "reputation", faction = "swahili_cities", value = 2 }, { kind = "memory", memory = "mem-main_baraka-a01", title = "父亲的砝码箱" }]
+reply = "我讲一个替苏丹称金子、最后称出自己影子有多重的商人。讲到一半，哈希姆把拇指收回去拍大腿，笑得秤杆都在抖。他一边擦眼睛一边说，这个价，就这么定了。"
+
+[tracks.chapters.choices.fail]
+next = "a02_massawa"
+effects = [{ kind = "cash", value = 1000 }, { kind = "memory", memory = "mem-main_baraka-a01", title = "父亲的砝码箱" }]
+news = "索法拉的金市上，哈希姆听完笑了一场，照样按着秤，说故事好，价钱不改。"
+
+[[tracks.chapters.choices]]
+key = "pay_debt"
+text = "先替父亲还上那笔旧账，再谈金价"
+next = "a02_massawa"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "袋里的钱还不够还一笔二十年的账。"
+effects = [{ kind = "cash", value = 800 }, { kind = "flag", flag = "c13_main_baraka_paid_debt" }, { kind = "memory", memory = "mem-main_baraka-a01", title = "父亲的砝码箱" }]
+reply = "哈希姆数也不数就收下了，说从今往后，索法拉的金市上他替萨利姆家说话。我还讲了个笑话，他没笑。那笔账是我母亲的药钱。"
+
+[[tracks.chapters.variants]]
+key = "rw_debt"
+when = [{ kind = "flag", flag = "rw_baraka_hashim_debt_promised" }]
+text = "索法拉的金市挨着葡萄牙人的石堡，正午的日头把秤盘晒得烫手。这是我第一次一个人称金。出门前父亲把用了三十年的黄铜砝码箱交给我，箱盖里侧刻着每一枚砝码的记号，最小的那枚只有一粒豆子重。父亲的老伙计哈希姆蹲在草席对面，金砂包在芭蕉叶里，他的拇指搭在秤杆上：“萨利姆的儿子？让我看看你的手。称金的人，手不能比金子先动。”他又说：“开罗那封信里，你说剩下的账你来还。我记着。”堡里的葡萄牙书记坐在一边，等着抽王室那一份。我在心里又听了一遍父亲临行时的话：“Haba na haba——一点一点，量米的升就满了。”母亲病的那一年我三岁，我只记得一碗没喝完的椰汁。这件事，我得拿个笑话盖过去。"
+
+[[tracks.chapters.variants]]
+key = "rw_story"
+when = [{ kind = "flag", flag = "rw_baraka_hashim_story_promised" }]
+text = "索法拉的金市挨着葡萄牙人的石堡，正午的日头把秤盘晒得烫手。这是我第一次一个人称金。出门前父亲把用了三十年的黄铜砝码箱交给我，箱盖里侧刻着每一枚砝码的记号，最小的那枚只有一粒豆子重。父亲的老伙计哈希姆蹲在草席对面，金砂包在芭蕉叶里，他的拇指搭在秤杆上：“萨利姆的儿子？让我看看你的手。称金的人，手不能比金子先动。”他又问：“故事带来了没有？开罗那封信里，你答应过的。”堡里的葡萄牙书记坐在一边，等着抽王室那一份。我在心里又听了一遍父亲临行时的话：“Haba na haba——一点一点，量米的升就满了。”母亲病的那一年我三岁，我只记得一碗没喝完的椰汁。这件事，我得拿个笑话盖过去。"
+
+# a02 马萨瓦换了旗：红海来的消息，旁白。
+[[tracks.chapters]]
+key = "a02_massawa"
+title = "马萨瓦换了旗"
+text = "红海下来的船带来消息：奥斯曼的帕夏带兵上了马萨瓦岛，海关换了旗，账簿的第一页改写成了“哈贝什省”。去年有人在苏伊士数过那些新桅杆，如今就泊在马萨瓦外面。船老大把这话讲给码头上每一个人听，末了总要加一句：“帕夏的人上船头一句就问，这船往南还去不去基尔瓦。货，他们后来才看。”"
+window = [[1557, 4, 1], [1557, 9, 30]]
+at = "massawa"
+stage = "rumor"
+mood = "tense"
+cast = ["baraka"]
+news = "马萨瓦来的船说，奥斯曼的帕夏带兵上了岛，海关换了旗，账簿开头改写成“哈贝什省”。"
+
+[tracks.chapters.default]
+next = "a03_silveira"
+effects = []
+
+# a03 带盐的神父：召，西尔韦拉要人领路，恩科西要人报信。
+[[tracks.chapters]]
+key = "a03_silveira"
+title = "带盐的神父"
+text = "1560 年旱季，索法拉的清晨冷得要裹毯子。一条从南边下来的小船靠了岸，船上的耶稣会士瘦得像一根桅绳。夜里他睡在甲板上，随身只有一小袋盐和一壶水，说是施洗用的。穆塔帕王廷的年轻信使恩科西刚从山里下来，蹲在码头的木桩上打量他。神父要去赞比西河口，再上到王廷，他要一个懂王廷规矩的人。他把手伸过来，手指干得裂了口子：“我不要金子，也不要象牙。我只要一个肯慢慢替我说话的人。”恩科西在一旁嚼着草根：“信可以急，水不能省——神父，你那壶水是喝的，还是泼的？”王廷里从海边去的商人已经在说，神父是巫师，水和盐是下咒用的。神父听不懂这句绍纳话，还在冲恩科西笑。"
+at = "sofala"
+speaker = "captain"
+mood = "tense"
+cast = ["goncalo_da_silveira", "nkosi"]
+when = [{ kind = "date", from = [1560, 5, 1] }]
+deadline = [1560, 9, 30]
+
+[tracks.chapters.timeout]
+next = "a04_strangled"
+effects = []
+news = "索法拉的人说，那个只带一袋盐的神父自己找了船夫，上赞比西河去了。"
+
+[[tracks.chapters.choices]]
+key = "guide"
+text = "陪他上河口，路上教他王廷的拍手礼"
+next = "a04_strangled"
+effects = [{ kind = "flag", flag = "c13_main_baraka_guided" }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "affinity", person = "goncalo_da_silveira", value = 5 }]
+reply = "我教了他七天。他学得极认真，拍手拍得比王廷的人还响。分手时他把那袋盐分了一半给我，说是给我的船的。"
+news = "索法拉的人说，萨利姆的儿子陪那个瘦神父上了赞比西河口，一路教他怎样在王廷里拍手。"
+
+[[tracks.chapters.choices]]
+key = "warn_court"
+text = "托恩科西先跑回王廷：这个神父不带兵"
+next = "a04_strangled"
+effects = [{ kind = "flag", flag = "c13_main_baraka_warned_court" }, { kind = "affinity", person = "nkosi", value = 6 }, { kind = "reputation", faction = "mutapa", value = 3 }]
+reply = "恩科西把我的话背了一遍，一字不差，当天下午就上了山路，鞋都没换。他回头喊了一句：王要是问起是谁说的，我就说是基尔瓦那个话多的。"
+
+[[tracks.chapters.choices]]
+key = "stay_out"
+text = "两边都不沾，卖完这一季的布就走"
+next = "a04_strangled"
+effects = [{ kind = "cash", value = 600 }]
+reply = "布卖给了王廷来的管事，价钱不坏。神父的小船第二天一早走了，帆上补着一块红布。我站在码头上看了很久，才想起账还没记。"
+
+# a04 河里的神父：历史现场。窗口内没人插手就走 default。
+[[tracks.chapters]]
+key = "a04_strangled"
+title = "河里的神父"
+text = "1561 年四月，雨季快过去了，索法拉外的河水还是黄的。恩科西从王廷一路跑下来，泥一直糊到膝盖，手里攥着神父那只装盐的小袋，袋口的绳子还打着神父的结。他说王廷的议事会信了海边商人的话，夜里把神父勒死，扔进了河里。消息比恩科西晚一步到了石堡。堡里的长官已经叫人去抓城里的摩尔商人，里面有父亲的几个老伙计。恩科西把那只盐袋塞进我手里：“门关着，可钥匙还在王的手里。王已经下令关了海边的金市。你要开，就得空着手去，再带着布回来。”我（心里）：上回见他，那袋盐是满的。"
+window = [[1561, 4, 15], [1561, 8, 31]]
+at = "sofala"
+stage = "involve"
+speaker = "captain"
+mood = "sad"
+cast = ["nkosi"]
+news = "索法拉的人说，内陆王廷把那个施洗的神父勒死、扔进了河里，石堡里的长官要城里的摩尔商人交代。"
+
+[tracks.chapters.default]
+next = "a05_gold_door"
+effects = []
+news = "索法拉石堡的长官连夜抓了三个摩尔商人，内陆的金市一连几天关着门。"
+
+[[tracks.chapters.variants]]
+key = "guided"
+when = [{ kind = "flag", flag = "c13_main_baraka_guided" }]
+text = "1561 年四月，雨季快过去了，索法拉外的河水还是黄的。恩科西从王廷一路跑下来，泥一直糊到膝盖，手里攥着神父那只装盐的小袋，袋口的绳子还打着神父的结。他说神父进王廷那天，拍手拍得一下不差，那是我教的，可王廷的议事会信了海边商人的话，夜里把神父勒死，扔进了河里。消息比恩科西晚一步到了石堡。堡里的长官已经叫人去抓城里的摩尔商人，里面有父亲的几个老伙计。恩科西把那只盐袋塞进我手里：“门关着，可钥匙还在王的手里。王已经下令关了海边的金市。你要开，就得空着手去，再带着布回来。”我（心里）：上回见他，那袋盐是满的。"
+
+[[tracks.chapters.variants]]
+key = "warned"
+when = [{ kind = "flag", flag = "c13_main_baraka_warned_court" }]
+text = "1561 年四月，雨季快过去了，索法拉外的河水还是黄的。恩科西从王廷一路跑下来，泥一直糊到膝盖，手里攥着神父那只装盐的小袋，袋口的绳子还打着神父的结。他说我托他带的话，王听见了，可王的议事会没听。议事会信了海边商人的话，夜里把神父勒死，扔进了河里。消息比恩科西晚一步到了石堡。堡里的长官已经叫人去抓城里的摩尔商人，里面有父亲的几个老伙计。恩科西把那只盐袋塞进我手里：“门关着，可钥匙还在王的手里。王已经下令关了海边的金市。你要开，就得空着手去，再带着布回来。”我（心里）：上回见他，那袋盐是满的。"
+
+[[tracks.chapters.choices]]
+key = "tell_mozambique"
+text = "连夜把消息送到莫桑比克岛，抢在谣言前头"
+next = "a05_gold_door"
+effects = [{ kind = "flag", flag = "c13_main_baraka_told_portuguese" }, { kind = "reputation", faction = "portugal", value = 3 }, { kind = "reputation", faction = "mutapa", value = -2 }]
+reply = "我的船比谣言快了三天。莫桑比克岛的长官听完只问了一句：“哪些摩尔人？”他的羽毛笔已经蘸好了墨，等我报名字。我手里的缆绳勒得掌心发红。"
+news = "莫桑比克岛的长官头一个知道神父的死讯，送信的是基尔瓦萨利姆家的船。"
+
+[[tracks.chapters.choices]]
+key = "hide_traders"
+text = "把被点名的商人藏进父亲的货舱"
+next = "a05_gold_door"
+effects = [{ kind = "growth", attr = "honor", value = 300 }, { kind = "reputation", faction = "portugal", value = -3 }, { kind = "reputation", faction = "swahili_cities", value = 3 }, { kind = "flag", flag = "c13_main_baraka_hid_traders" }]
+reply = "他们蹲在象牙中间过了两夜，第三夜我把船开到外海，换了一条去基尔瓦的船。哈希姆的侄子临走塞给我一枚戒指，我没收。我说等我老了，再拿这个人情换他家的椰子。"
+news = "索法拉石堡的长官要抓的摩尔商人，一夜之间少了三家，听说是坐着基尔瓦的船走的。"
+
+[[tracks.chapters.choices]]
+key = "finish_season"
+text = "什么也不说，照常收完这一季的金子"
+next = "a05_gold_door"
+effects = [{ kind = "cash", value = 900 }]
+reply = "金子照收，账照记。夜里我把账簿翻到父亲那一页，看了很久，一个字也没添。"
+
+# a05 金市的门：限期交货（布 20 匹），献布的规矩。
+[[tracks.chapters]]
+key = "a05_gold_door"
+title = "金市的门"
+text = "金市关着，雨季又过去一回。恩科西带来王的话：海边的人要重新进金市，得先献上二十匹好布，要坎贝织的厚布，葡萄牙船运来的薄布不算。献布那天，王的收布人坐在一张豹皮上，旁边插着一支长矛。恩科西当着我的面从布边抽出一根线，用牙咬，看断不断。收布人摸着布，慢慢开口：“海边的人，先拍手，再说话。”恩科西在我耳边小声说：“伏得低一点。他眼睛不好，看不见你，就当你没伏。”我（心里）：在开罗我跪过讲席，在这里我伏在豹皮前，两样都是为了让人肯开口。收布人又说：“布是好布。可去年说我们王是凶手的，也是海边的嘴。”"
+at = "sofala"
+speaker = "captain"
+mood = "tense"
+cast = ["nkosi"]
+objectives = [{ kind = "goods", good = "cloth", qty = 20, at = "sofala", text = "带二十匹厚布到索法拉，献给穆塔帕王，重开金市的门" }]
+deadline_days = 240
+
+[tracks.chapters.timeout]
+next = "a06_outsiders"
+effects = []
+news = "索法拉的金市重新开了门，头一批进内陆去的，是石堡里葡萄牙人的代理。"
+
+[[tracks.chapters.choices]]
+key = "by_custom"
+text = "照王廷的规矩：拍手、伏地，先献布再开口"
+next = "a06_outsiders"
+effects = [{ kind = "reputation", faction = "mutapa", value = 5 }, { kind = "flag", flag = "c13_main_baraka_gold_door" }]
+reply = "我拍了三下手，伏下去，额头碰到土。收布人点了点头，把长矛从地上拔起来，横放在豹皮上。那就是门开了。"
+news = "索法拉的金市又开了门，听说是基尔瓦萨利姆家献的布，献布的人在豹皮前伏得比王廷的人还低。"
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "布照献，金价得让回一成"
+next = "a06_outsiders"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 2500 }, { kind = "reputation", faction = "mutapa", value = -2 }]
+reply = "他骂我不愧是萨利姆的儿子，骂完还是让了。恩科西在一旁偷笑，笑得很小心，怕被收布人看见。"
+
+[tracks.chapters.choices.fail]
+next = "a06_outsiders"
+effects = [{ kind = "cash", value = 1500 }, { kind = "reputation", faction = "mutapa", value = -2 }]
+news = "索法拉的金市上，基尔瓦来的买家讲价讲输了，半成金子落进了收布人的袋子。"
+
+[[tracks.chapters.choices]]
+key = "hashim_vouch"
+text = "请老哈希姆来作保"
+next = "a06_outsiders"
+requires = [{ kind = "flag", flag = "c13_main_baraka_paid_debt" }]
+hint = "老哈希姆只替不欠他钱的人家说话。"
+effects = [{ kind = "reputation", faction = "mutapa", value = 3 }, { kind = "cash", value = 1800 }, { kind = "flag", flag = "c13_main_baraka_gold_door" }]
+reply = "哈希姆拄着拐杖来了，对收布人说：“这孩子替他爹还过一笔二十年的账。”收布人看了我很久，把长矛放倒了。"
+
+# a06 两本书：父亲下葬后的基尔瓦。笑话要多，眼泪不写。
+[[tracks.chapters]]
+key = "a06_outsiders"
+title = "两本书"
+text = "基尔瓦，父亲下葬第四十天的诵经刚散。清真寺东墙外是母亲的坟，父亲就埋在她旁边。诵经的时候我讲了三个父亲砍价的笑话，满屋子的人都笑了，只有我自己停不下来。父亲的木箱里只有两本书：一本是葡萄牙人巴罗斯印的《亚洲》，翻到写基尔瓦的那几页，页边有一行炭笔字，父亲一辈子只在书上写过这一处：“不对”。另一本是家里传下来的阿拉伯文《克卢瓦编年史》抄本，写到葡萄牙人来的前几年就停了，后半本一个字也没有。老诗人坐在我对面，等我先开口。我看清了父亲画线的地方：巴罗斯写基尔瓦的人望风而逃，城自己交了出来。父亲在旁边写“不对”，祖父那年没逃，他把清真寺的书一捆一捆背上了船。“不对”下面还有半个字，没写完。"
+at = "kilwa"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+when = [{ kind = "date", from = [1564, 1, 1] }]
+deadline = [1566, 10, 31]
+
+[tracks.chapters.timeout]
+next = "b00_camoes"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "begin"
+text = "在父亲的“不对”下面接着写：诸城自己的事"
+next = "b00_camoes"
+check = { attr = "learning", base = 20, per = 7 }
+effects = [{ kind = "item", item = "kilwa_ms", qty = 1 }, { kind = "flag", flag = "c13_main_baraka_history_begun" }, { kind = "growth", attr = "learning", value = 200 }, { kind = "memory", memory = "mem-main_baraka-a06", title = "不对" }]
+reply = "我把编年史后半本摊开，写下第一行：那一年基尔瓦的人没有全逃，有人背着书上了船。写得很慢，像父亲称最后一撮金砂。"
+
+[tracks.chapters.choices.fail]
+next = "b00_camoes"
+effects = [{ kind = "item", item = "kilwa_ms", qty = 1 }, { kind = "flag", flag = "c13_main_baraka_history_begun" }, { kind = "memory", memory = "mem-main_baraka-a06", title = "不对" }]
+news = "基尔瓦的读书人说，萨利姆家的儿子写了三页，撕了两页，留下的那一页只有一行。"
+
+[[tracks.chapters.choices]]
+key = "ask_poet"
+text = "先跟老诗人坐一夜：编年史停下以后，谁还记得"
+next = "b00_camoes"
+effects = [{ kind = "item", item = "kilwa_ms", qty = 1 }, { kind = "skill", skill = "poetry", value = 80 }, { kind = "flag", flag = "c13_main_baraka_history_begun" }, { kind = "memory", memory = "mem-main_baraka-a06", title = "不对" }]
+reply = "老诗人从葡萄牙人的船开进港的那天讲起，讲到天亮，讲到一半停下来骂我记得太慢。我没写一个字，全背下了。他说这才像基尔瓦的读书人。"
+
+[[tracks.chapters.choices]]
+key = "sell_barros"
+text = "把巴罗斯的书卖给葡萄牙商站，换一船布"
+next = "b00_camoes"
+effects = [{ kind = "cash", value = 700 }]
+reply = "书记翻都没翻就付了钱。父亲写字的那一页我撕下来留着。他们不会发现少了一页，我也不打算告诉他们。"
+
+[[tracks.chapters.variants]]
+key = "rw_kati"
+when = [{ kind = "flag", flag = "rw_baraka_k_repaid" }, { kind = "flag", flag = "c7_bond_salih_landing_friend", value = false }, { kind = "flag", flag = "c7_bond_salih_landing_love", value = false }]
+text = "基尔瓦，父亲下葬第四十天的诵经刚散。清真寺东墙外是母亲的坟，父亲就埋在她旁边。诵经的时候我讲了三个父亲砍价的笑话，满屋子的人都笑了，只有我自己停不下来。最后一排坐着从内陆下来的卡蒂，他没笑，诵完经就走了，走之前在门槛上放了一小撮金砂。父亲的木箱里只有两本书：一本是葡萄牙人巴罗斯印的《亚洲》，翻到写基尔瓦的那几页，页边有一行炭笔字，父亲一辈子只在书上写过这一处：“不对”。另一本是家里传下来的阿拉伯文《克卢瓦编年史》抄本，写到葡萄牙人来的前几年就停了，后半本一个字也没有。老诗人坐在我对面，等我先开口。我看清了父亲画线的地方：巴罗斯写基尔瓦的人望风而逃，城自己交了出来。父亲在旁边写“不对”，祖父那年没逃，他把清真寺的书一捆一捆背上了船。“不对”下面还有半个字，没写完。"
+
+[[tracks.chapters.variants]]
+key = "salih_friend"
+when = [{ kind = "flag", flag = "c7_bond_salih_landing_friend" }]
+text = "基尔瓦，父亲下葬第四十天的诵经刚散。清真寺东墙外是母亲的坟，父亲就埋在她旁边。诵经的时候我讲了三个父亲砍价的笑话，满屋子的人都笑了，只有我自己停不下来。父亲的木箱里只有两本书：一本是葡萄牙人巴罗斯印的《亚洲》，翻到写基尔瓦的那几页，页边有一行炭笔字，父亲一辈子只在书上写过这一处：“不对”。另一本是家里传下来的阿拉伯文《克卢瓦编年史》抄本，写到葡萄牙人来的前几年就停了，后半本一个字也没有。萨利赫在开罗说过，等我写出第一页，他念给他的先生听。老诗人坐在我对面，等我先开口。我看清了父亲画线的地方：巴罗斯写基尔瓦的人望风而逃，城自己交了出来。父亲在旁边写“不对”，祖父那年没逃，他把清真寺的书一捆一捆背上了船。“不对”下面还有半个字，没写完。"
+
+[[tracks.chapters.variants]]
+key = "salih_love"
+when = [{ kind = "flag", flag = "c7_bond_salih_landing_love" }]
+text = "基尔瓦，父亲下葬第四十天的诵经刚散。清真寺东墙外是母亲的坟，父亲就埋在她旁边。诵经的时候我讲了三个父亲砍价的笑话，满屋子的人都笑了，只有我自己停不下来。父亲的木箱里只有两本书：一本是葡萄牙人巴罗斯印的《亚洲》，翻到写基尔瓦的那几页，页边有一行炭笔字，父亲一辈子只在书上写过这一处：“不对”。另一本是家里传下来的阿拉伯文《克卢瓦编年史》抄本，写到葡萄牙人来的前几年就停了，后半本一个字也没有。萨利赫的信总是先问一件事：第一页写好了没有。老诗人坐在我对面，等我先开口。我看清了父亲画线的地方：巴罗斯写基尔瓦的人望风而逃，城自己交了出来。父亲在旁边写“不对”，祖父那年没逃，他把清真寺的书一捆一捆背上了船。“不对”下面还有半个字，没写完。"
+
+# ── 第二幕 1567—1577 潮涌 ──
+
+# b00 独眼诗人的米：限期交货（米 15 包），卡蒙斯在莫桑比克岛。第二幕第一章，设 act2。
+[[tracks.chapters]]
+key = "b00_camoes"
+title = "独眼诗人的米"
+text = "莫桑比克岛，等风的季节。岛上挤着两百来个等船回葡萄牙的人，米价一天一变，米在蒙巴萨、马林迪、桑给巴尔都买得到。小教堂边的酒馆里，一个独眼的葡萄牙人胳膊底下压着一卷油布包的诗稿，他说湄公河口沉船那回，他一只手划水，一只手把这卷诗举过头顶。他写的是达·伽马的航海，里面有蒙巴萨，也有马林迪。“米我收下。诗你得听完，不许中途走。”他念到蒙巴萨：诗里的蒙巴萨国王奸诈，马林迪国王是好朋友。他问我：“你们那边的诗人，管我们葡萄牙人叫什么？”我告诉了他。他大笑，说这一句他死也不写进去。我说：“蒙巴萨的国王要是听见这一段，会请你吃一顿饭，吃完再把你扔下海。”我（心里）：外人写我们，一个写成账，一个写成诗；账还能改，诗改不动。"
+at = "mozambique_island"
+speaker = "captain"
+mood = "cheerful"
+cast = ["luis_de_camoes"]
+when = [{ kind = "date", from = [1568, 1, 1] }]
+objectives = [{ kind = "goods", good = "rice", qty = 15, at = "mozambique_island", text = "运十五包米到莫桑比克岛：等船回葡萄牙的人断粮了" }]
+deadline = [1569, 8, 31]
+
+[tracks.chapters.timeout]
+next = "b01_barreto"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act2" }]
+
+[[tracks.chapters.choices]]
+key = "tell_mombasa"
+text = "用米换他念完蒙巴萨那几节，再讲蒙巴萨人自己的说法"
+next = "b01_barreto"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "flag", flag = "c13_main_baraka_camoes_heard" }, { kind = "affinity", person = "luis_de_camoes", value = 8 }]
+reply = "他听完，在诗稿页边用极小的字记了一行，不让我看。“诗里不改，”他说，“页边是我自己的。”"
+
+[tracks.chapters.choices.fail]
+next = "b01_barreto"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "affinity", person = "luis_de_camoes", value = 3 }]
+news = "莫桑比克岛上的人说，独眼的葡萄牙诗人听一个基尔瓦金商讲蒙巴萨人，摇着头说，那人太像人了，诗里要一个坏人。"
+
+[[tracks.chapters.choices]]
+key = "sell_rice"
+text = "米照岛上的价卖给商站，只给诗人留一袋"
+next = "b01_barreto"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "cash", value = 1200 }, { kind = "affinity", person = "luis_de_camoes", value = 3 }]
+reply = "商站管事数钱的时候嫌我心软。那袋米卡蒙斯扛不动，是我替他扛进酒馆的，他在后面念了一路诗，算是付脚钱。"
+
+[[tracks.chapters.choices]]
+key = "give_rice"
+text = "米全分给等船的人，只求他记住一个基尔瓦人的名字"
+next = "b01_barreto"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "growth", attr = "honor", value = 200 }, { kind = "fame", value = 2 }, { kind = "affinity", person = "luis_de_camoes", value = 10 }]
+reply = "他把我的名字念了三遍，念得像个葡萄牙名字。“诗里没有你的位置，”他说，“可我欠你一顿饭，这一顿我记着。”"
+news = "莫桑比克岛上等船的人说，有个基尔瓦金商把一船米全分了，只要那个独眼诗人记住他的名字。"
+
+[[tracks.chapters.variants]]
+key = "rw_mze"
+when = [{ kind = "flag", flag = "rw_baraka_mze_gone" }, { kind = "flag", flag = "c7_bond_zubayda_landing_friend", value = false }, { kind = "flag", flag = "c7_bond_zubayda_landing_love", value = false }]
+text = "莫桑比克岛，等风的季节。岛上挤着两百来个等船回葡萄牙的人，米价一天一变，米在蒙巴萨、马林迪、桑给巴尔都买得到。小教堂边的酒馆里，一个独眼的葡萄牙人胳膊底下压着一卷油布包的诗稿，他说湄公河口沉船那回，他一只手划水，一只手把这卷诗举过头顶。他写的是达·伽马的航海，里面有蒙巴萨，也有马林迪。“米我收下。诗你得听完，不许中途走。”他念到蒙巴萨：诗里的蒙巴萨国王奸诈，马林迪国王是好朋友。他问我：“你们那边的诗人，管我们葡萄牙人叫什么？”我告诉了他。那个词，姆泽老人临死前还在席子上唱过。他大笑，说这一句他死也不写进去。我说：“蒙巴萨的国王要是听见这一段，会请你吃一顿饭，吃完再把你扔下海。”我（心里）：外人写我们，一个写成账，一个写成诗；账还能改，诗改不动。"
+
+[[tracks.chapters.variants]]
+key = "zubayda_friend"
+when = [{ kind = "flag", flag = "c7_bond_zubayda_landing_friend" }]
+text = "莫桑比克岛，等风的季节。岛上挤着两百来个等船回葡萄牙的人，米价一天一变，米在蒙巴萨、马林迪、桑给巴尔都买得到。小教堂边的酒馆里，一个独眼的葡萄牙人胳膊底下压着一卷油布包的诗稿，他说湄公河口沉船那回，他一只手划水，一只手把这卷诗举过头顶。他写的是达·伽马的航海，里面有蒙巴萨，也有马林迪。“米我收下。诗你得听完，不许中途走。”他念到蒙巴萨：诗里的蒙巴萨国王奸诈，马林迪国王是好朋友。他问我：“你们那边的诗人，管我们葡萄牙人叫什么？”我告诉了他。他大笑，说这一句他死也不写进去。我说：“蒙巴萨的国王要是听见这一段，会请你吃一顿饭，吃完再把你扔下海。”祖贝达要是在这儿，准先问这卷诗缺了几页。我（心里）：外人写我们，一个写成账，一个写成诗；账还能改，诗改不动。"
+
+[[tracks.chapters.variants]]
+key = "zubayda_love"
+when = [{ kind = "flag", flag = "c7_bond_zubayda_landing_love" }]
+text = "莫桑比克岛，等风的季节。岛上挤着两百来个等船回葡萄牙的人，米价一天一变，米在蒙巴萨、马林迪、桑给巴尔都买得到。小教堂边的酒馆里，一个独眼的葡萄牙人胳膊底下压着一卷油布包的诗稿，他说湄公河口沉船那回，他一只手划水，一只手把这卷诗举过头顶。他写的是达·伽马的航海，里面有蒙巴萨，也有马林迪。“米我收下。诗你得听完，不许中途走。”他念到蒙巴萨：诗里的蒙巴萨国王奸诈，马林迪国王是好朋友。他问我：“你们那边的诗人，管我们葡萄牙人叫什么？”我告诉了他。他大笑，说这一句他死也不写进去。我说：“蒙巴萨的国王要是听见这一段，会请你吃一顿饭，吃完再把你扔下海。”开罗的书铺里，有人一定会把这卷诗的页数一页一页数清楚，我想起她数页时的样子。我（心里）：外人写我们，一个写成账，一个写成诗；账还能改，诗改不动。"
+
+# b01 要牛的人：历史现场（巴雷托的远征，1569—73）。窗口内没人插手，蒙克拉罗斯说服了巴雷托。
+[[tracks.chapters]]
+key = "b01_barreto"
+title = "要牛的人"
+text = "莫桑比克岛对岸的椰林里，巴雷托的营帐一排排搭开，马一匹接一匹倒在热里。帐门口挂着一张葡萄牙人画的图：一个戴王冠的黑人国王坐在一座金山上，旁边写着“莫诺莫塔帕”。随军的耶稣会士蒙克拉罗斯要走赞比西河，说要先替死在河里的西尔韦拉讨个公道。巴雷托要一个认得金市、会称穆塔帕砝码的人，还要牛。他指着图上的两条路问我：“哪条路上摩尔人多？”我听出来了，他要我替他数的是人头。巴雷托：“牛要多少头，你直说。我只信数得清的东西。”我（心里）：图上的金山画得比整个基尔瓦还大，画图的人一辈子没见过金子是怎么从山里出来的。"
+window = [[1569, 9, 1], [1570, 12, 31]]
+at = "mozambique_island"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["francisco_barreto"]
+news = "莫桑比克岛对岸，巴雷托的人马一匹接一匹倒在热里，营里天天吵走哪条路去穆塔帕。"
+
+[tracks.chapters.default]
+next = "b02_sena"
+effects = []
+news = "莫桑比克岛上的人说，神父吵赢了，巴雷托的远征军要走赞比西河。"
+
+[[tracks.chapters.choices]]
+key = "guide_old_road"
+text = "做向导，领他们走索法拉那条老商路"
+next = "b02_sena"
+effects = [{ kind = "cash", value = 2000 }, { kind = "reputation", faction = "portugal", value = 4 }, { kind = "reputation", faction = "mutapa", value = -4 }, { kind = "flag", flag = "c13_main_baraka_guided_barreto" }]
+reply = "他当场付了一半定钱。牛我替他买齐了。每买一头，卖牛的村子就多问一句：这些人要去哪里。"
+
+[[tracks.chapters.choices]]
+key = "river_road"
+text = "替他画一张图，画的是神父最爱走的那条河路"
+next = "b02_sena"
+check = { attr = "intrigue", base = 20, per = 7 }
+effects = [{ kind = "reputation", faction = "mutapa", value = 3 }, { kind = "flag", flag = "c13_main_baraka_misled" }]
+reply = "蒙克拉罗斯看了我的图，连声说好。河路上船走得慢，热病走得快。这一路碰不到索法拉的金市。"
+
+[tracks.chapters.choices.fail]
+next = "b02_sena"
+effects = [{ kind = "reputation", faction = "portugal", value = -3 }]
+news = "营地里的人说，基尔瓦来的金商画的河路图，被巴雷托翻过来看了背面，以后再没找过他。"
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不去：金商不给兵带路"
+next = "b02_sena"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 2 }, { kind = "growth", attr = "honor", value = 200 }]
+reply = "巴雷托不生气，只说：“记住今天。等我们找到金矿，金价就不由你们说了。”我说那我先记下今天的金价。"
+
+[[tracks.chapters.variants]]
+key = "told"
+when = [{ kind = "flag", flag = "c13_main_baraka_told_portuguese" }]
+text = "莫桑比克岛对岸，巴雷托的营帐一排排搭开，马一匹接一匹倒在热里。帐门口挂着一张葡萄牙人画的图：一个戴王冠的黑人国王坐在一座金山上，旁边写着“莫诺莫塔帕”。随军的耶稣会士蒙克拉罗斯要走赞比西河，说要先替死在河里的西尔韦拉讨个公道。巴雷托要一个认得金市、会称穆塔帕砝码的人，还要牛。他指着图上的两条路问我：“哪条路上摩尔人多？”我听出来了，他要我替他数的是人头。巴雷托认得我：“神父的死讯，是你头一个送到岛上的。”他把这当成一句夸奖。巴雷托：“牛要多少头，你直说。我只信数得清的东西。”我（心里）：图上的金山画得比整个基尔瓦还大，画图的人一辈子没见过金子是怎么从山里出来的。"
+
+# b02 塞纳来的船：历史现场（1572，塞纳的摩尔商人被处死，只写结果）。
+[[tracks.chapters]]
+key = "b02_sena"
+title = "塞纳来的船"
+text = "1572 年旱季，索法拉。赞比西河那边下来几条船，船上全是女人和孩子。塞纳的摩尔商人被巴雷托的人处死了，说是他们毒死了远征军的马。船头放着一架铜秤，一只秤盘被砍掉了。石堡的长官接到命令，要把索法拉所有的摩尔商人列一张名单。抱着秤的女人走上岸来，看见我腰间的砝码箱，停住了。她认出箱盖里侧的刻记：这架秤，是她丈夫从萨利姆手里买的。她说：“这只盘子是他们砍的。另一只，我留着称我们剩下的东西。”我（心里）：父亲卖出去的秤，回来了一半。"
+window = [[1571, 12, 1], [1572, 8, 31]]
+at = "sofala"
+stage = "involve"
+speaker = "captain"
+mood = "sad"
+cast = ["francisco_barreto"]
+news = "索法拉的人说，塞纳的摩尔商人被巴雷托的人处死了，说是他们毒死了远征军的马。"
+
+[tracks.chapters.default]
+next = "b03_barreto_dies"
+effects = []
+news = "索法拉石堡的名单送到了巴雷托手里，从塞纳逃下来的女人孩子在海边散了。"
+
+[[tracks.chapters.choices]]
+key = "hide"
+text = "把人藏进船舱，趁夜往北开"
+next = "b03_barreto_dies"
+effects = [{ kind = "growth", attr = "honor", value = 300 }, { kind = "reputation", faction = "portugal", value = -4 }, { kind = "reputation", faction = "swahili_cities", value = 4 }, { kind = "flag", flag = "c13_main_baraka_sheltered_sena" }]
+reply = "六十多个人挤在象牙和米袋中间，孩子不许哭，就含着椰子肉。天亮时船过了索法拉的沙洲，那个女人才把那半架秤放下来。"
+news = "索法拉的人说，从塞纳逃下来的女人孩子一夜之间不见了，第二天有条基尔瓦的船吃水深得出奇。"
+
+[[tracks.chapters.choices]]
+key = "plead"
+text = "去石堡替他们说情，把名单改短"
+next = "b03_barreto_dies"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "reputation", faction = "portugal", value = 1 }, { kind = "reputation", faction = "swahili_cities", value = 2 }]
+reply = "长官把名单从十七个名字改成了九个，改的时候一直问我金价。"
+
+[tracks.chapters.choices.fail]
+next = "b03_barreto_dies"
+effects = [{ kind = "reputation", faction = "portugal", value = -2 }]
+news = "石堡的书记在名单最后一行添上了一个基尔瓦人的名字，名字后面画了个问号。"
+
+[[tracks.chapters.choices]]
+key = "leave"
+text = "离开索法拉，这一季不做了"
+next = "b03_barreto_dies"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = -2 }]
+reply = "我把船开走了。那架只剩一只盘的秤，我没敢回头看。到了外海我讲了个笑话给水手们听，没人笑，我自己笑了很久。"
+
+[[tracks.chapters.variants]]
+key = "v1_hid"
+when = [{ kind = "flag", flag = "c13_main_baraka_hid_traders" }]
+text = "1572 年旱季，索法拉。赞比西河那边下来几条船，船上全是女人和孩子。塞纳的摩尔商人被巴雷托的人处死了，说是他们毒死了远征军的马。船头放着一架铜秤，一只秤盘被砍掉了。石堡的长官接到命令，要把索法拉所有的摩尔商人列一张名单。抱着秤的女人走上岸来，看见我腰间的砝码箱，停住了。她认出箱盖里侧的刻记：这架秤，是她丈夫从萨利姆手里买的。她说：“这只盘子是他们砍的。另一只，我留着称我们剩下的东西。”她又说，索法拉那年你藏过我的堂兄，这一回，船舱还装得下我们吗？我（心里）：父亲卖出去的秤，回来了一半。"
+
+[[tracks.chapters.variants]]
+key = "v2_guided_b"
+when = [{ kind = "flag", flag = "c13_main_baraka_guided_barreto" }]
+text = "1572 年旱季，索法拉。赞比西河那边下来几条船，船上全是女人和孩子。塞纳的摩尔商人被巴雷托的人处死了，说是他们毒死了远征军的马。船头放着一架铜秤，一只秤盘被砍掉了。石堡的长官接到命令，要把索法拉所有的摩尔商人列一张名单。抱着秤的女人走上岸来，看见我腰间的砝码箱，停住了。她认出箱盖里侧的刻记：这架秤，是她丈夫从萨利姆手里买的。她说：“这只盘子是他们砍的。另一只，我留着称我们剩下的东西。”我想起他们的牛，是我替巴雷托一头一头买齐的。我（心里）：父亲卖出去的秤，回来了一半。"
+
+# b03 巴雷托死了：见闻（1573）。
+[[tracks.chapters]]
+key = "b03_barreto_dies"
+title = "巴雷托死了"
+text = "莫桑比克岛上的人说，巴雷托死在塞纳，热病加上一肚子气。国王派来的人不听他的，远征散了。剩下的人跟着新头领，要改从索法拉那头去马尼卡找金矿。岛上的水手压低了声音讲：“他临死前问的最后一件事，是今年的牛还剩几头。”"
+window = [[1573, 6, 1], [1573, 12, 31]]
+at = "mozambique_island"
+stage = "rumor"
+mood = "sad"
+cast = ["francisco_barreto"]
+news = "莫桑比克岛上的人说，巴雷托死在了塞纳，远征散了，剩下的人要改从索法拉去马尼卡找金矿。"
+
+[tracks.chapters.default]
+next = "b04_fairs"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "misled"
+when = [{ kind = "flag", flag = "c13_main_baraka_misled" }]
+text = "莫桑比克岛上的人说，巴雷托死在塞纳，热病加上一肚子气。国王派来的人不听他的，远征散了。剩下的人跟着新头领，要改从索法拉那头去马尼卡找金矿。岛上的水手压低了声音讲：“他临死前问的最后一件事，是今年的牛还剩几头。”也有人压低了声音说，远征军走河路，是照着一个基尔瓦金商画的图走的。"
+
+# b04 坎贝的花布：限期交货（坎贝花布 20 匹），门长与王的收布人。
+[[tracks.chapters]]
+key = "b04_fairs"
+title = "坎贝的花布"
+text = "葡萄牙人终于摸到了马尼卡的金市：集市边插着他们的旗，门口坐着一个“门长”，每个进市的人先交一份布。穆塔帕王的收布人照旧收王的那一份。恩科西从王城下来，他已经是信使里的老资格了，鞋还是那双旧的。内陆人只认坎贝的花布，一匹花布的纹样能讲一个故事：绕三圈的是河，带点的是星。收布人一匹一匹翻看，翻到一匹带星点的，停下来问我是谁织的、在哪里买的。他要听的，是葡萄牙人还要往里走多远。门长先开口：“先交布，再进门。葡萄牙国王的门，不讲价。”恩科西冷笑：“王的门也讲价，拿规矩讲。”我（心里）：两扇门，一扇比一扇老。"
+at = "sofala"
+speaker = "captain"
+mood = "cheerful"
+cast = ["nkosi"]
+objectives = [{ kind = "goods", good = "calico", qty = 20, at = "sofala", text = "从坎贝运二十匹花布到索法拉，内陆的金市只认这种布" }]
+deadline_days = 240
+
+[tracks.chapters.timeout]
+next = "b05_zimbabwe"
+effects = []
+news = "索法拉的人说，今年马尼卡金市上最好的金子，先让葡萄牙的门长挑走了。"
+
+[[tracks.chapters.choices]]
+key = "gold"
+text = "换金子，用父亲的砝码当场称"
+next = "b05_zimbabwe"
+check = { attr = "commerce", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 3000 }]
+reply = "门长想用他的秤，我说我的秤是基尔瓦的，比他的国王还老。他让了。"
+
+[tracks.chapters.choices.fail]
+next = "b05_zimbabwe"
+effects = [{ kind = "cash", value = 2000 }]
+news = "马尼卡的金市上，门长坚持用自己的秤，基尔瓦来的金商忍着没吵，把那个数记进了账簿。"
+
+[[tracks.chapters.choices]]
+key = "ivory"
+text = "换象牙，留给北边缺象牙的城"
+next = "b05_zimbabwe"
+effects = [{ kind = "cash", value = 1800 }, { kind = "reputation", faction = "swahili_cities", value = 3 }]
+reply = "象牙比金子沉，挑夫骂了一路。可蒙巴萨和帕泰的船都在等这一批。我想看看，北边的城收到南边的东西，会不会多看基尔瓦一眼。"
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "把花布全献给收布人，换穆塔帕王一句话"
+next = "b05_zimbabwe"
+requires = [{ kind = "flag", flag = "c13_main_baraka_gold_door" }]
+hint = "王廷还不认得你家献过的布。"
+effects = [{ kind = "item", item = "mutapa_bracelet", qty = 1 }, { kind = "reputation", faction = "mutapa", value = 5 }]
+reply = "收布人从怀里取出一只金手镯，说王的话就在这上面：拿着它，基尔瓦的人进王城不用在门外等。我戴上，手腕一下子沉了。"
+
+[[tracks.chapters.variants]]
+key = "door"
+when = [{ kind = "flag", flag = "c13_main_baraka_gold_door" }]
+text = "葡萄牙人终于摸到了马尼卡的金市：集市边插着他们的旗，门口坐着一个“门长”，每个进市的人先交一份布。穆塔帕王的收布人照旧收王的那一份。恩科西从王城下来，他已经是信使里的老资格了，鞋还是那双旧的。内陆人只认坎贝的花布，一匹花布的纹样能讲一个故事：绕三圈的是河，带点的是星。收布人一匹一匹翻看，翻到一匹带星点的，停下来问我是谁织的、在哪里买的。他要听的，是葡萄牙人还要往里走多远。收布人认出了我：“当年在豹皮前伏得最低的，就是你。”门长先开口：“先交布，再进门。葡萄牙国王的门，不讲价。”恩科西冷笑：“王的门也讲价，拿规矩讲。”我（心里）：两扇门，一扇比一扇老。"
+
+# b05 门上的字：召（大津巴布韦）。只拓才进 b06；没拓直接去 b07。
+[[tracks.chapters]]
+key = "b05_zimbabwe"
+title = "门上的字"
+text = "从索法拉随商队往内陆走了二十来天，到了石头的房子，大津巴布韦。墙不抹一点灰浆，一层层石片垒成弧形，要仰着头看；墙里立着几根石柱，柱顶站着皂石雕的鸟，鸟眼朝天。领路的是一个绍纳老人，替这片石墙的灵媒跑腿。门楣上有一行刻痕，葡萄牙人的史书说，连有学问的摩尔商人也读不懂。跟着商队来的葡萄牙代理人说：“所罗门的金子就埋在这下面，我拿一年的薪水打赌。”老人说：“鸟看天，人看鸟。你看门，就别看鸟。”我凑近了看，那不像一行字，倒像有人拿一枚戒指在湿泥上按了一下，又按了一下。老人说：“墙是我们的祖父垒的。戒指？戒指是你们海边人的故事。”我（心里）：一个说是所罗门，一个说是祖父，我先拓下来，再听谁的。"
+at = "sofala"
+speaker = "captain"
+mood = "mystic"
+cast = ["baraka"]
+when = [{ kind = "date", from = [1574, 3, 1] }]
+deadline = [1575, 6, 30]
+
+[tracks.chapters.timeout]
+next = "b07_league"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "rub"
+text = "用炭条和开罗的纸，拓下门上那行刻痕"
+next = "b06_two_rubbings"
+requires = [{ kind = "reputation", faction = "mutapa", ge = 5 }]
+hint = "老人不让王廷不认得的人碰那道门。"
+effects = [{ kind = "flag", flag = "c13_half_solomon_gate" }, { kind = "memory", memory = "mem-main_baraka-b05", title = "门上的字" }]
+reply = "老人点了头，替我按住纸角。拓出来的东西黑一块白一块，我卷好，塞进砝码箱的夹层，跟父亲的账簿放在一起。"
+
+[[tracks.chapters.choices]]
+key = "sit_night"
+text = "在门外坐一夜，听老人讲石头房子的来历"
+next = "b06_two_rubbings"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_half_solomon_gate" }, { kind = "reputation", faction = "mutapa", value = 2 }, { kind = "memory", memory = "mem-main_baraka-b05", title = "门上的字" }]
+reply = "天亮时他说：“你讲的海边故事，比你们的书好听。拓吧，别碰鸟。”"
+
+[tracks.chapters.choices.fail]
+next = "b07_league"
+effects = [{ kind = "reputation", faction = "mutapa", value = 2 }]
+news = "大津巴布韦的商路上，有个基尔瓦金商在门外坐了一夜，天亮时老人起身就走，没提那道门。"
+
+[[tracks.chapters.choices]]
+key = "birds_only"
+text = "只看皂石鸟，不碰那道门"
+next = "b07_league"
+effects = [{ kind = "reputation", faction = "mutapa", value = 3 }]
+reply = "我在柱子底下坐了半天，看鸟，看天。葡萄牙代理人去量墙，量到一半被老人赶了出来。我什么也没带走，回去的路上却一直觉得箱子比来时沉。"
+
+# b06 两张拓纸：独白章，无 at。拓了门铭才进；另一半在纳吉玛那边。
+[[tracks.chapters]]
+key = "b06_two_rubbings"
+title = "两张拓纸"
+text = "回到海边，夜里我在油灯下把门铭的拓纸摊开。小时候随季风认得的那个尤尔法领航女孩，纳吉玛，在信里提过：她家那边渔夫网上来一只铜瓶，瓶口的铅封上压着一个谁也不认得的印。我照她信里描的样子在拓纸边上比了比，笔画像是接得上，又差一截。我想要另一半。也想知道，纳吉玛肯不肯把她那一半交给一个跟她吵了一辈子的人。我（心里）：一道门，一只瓶子，中间隔着半片海，印却只有一枚。她信里的话，我还记得：“你要是再把北极星叫错，就别给我写信。”"
+speaker = "captain"
+mood = "mystic"
+cast = ["baraka", "najma"]
+when = [{ kind = "date", from = [1574, 6, 1] }]
+deadline = [1575, 12, 31]
+
+[tracks.chapters.timeout]
+next = "b07_league"
+effects = [{ kind = "start_track", track = "main_baraka_solomon" }]
+
+[[tracks.chapters.choices]]
+key = "join"
+text = "两张拓纸并排摊开，一笔一笔对"
+next = "b07_league"
+requires = [{ kind = "flag", flag = "c13_half_solomon_gate" }, { kind = "flag", flag = "c13_half_solomon_bottle" }, { kind = "flag", flag = "c13_mark_solomon", value = false }]
+hint = "另一半还在尤尔法的领航人手里。"
+effects = [{ kind = "item", item = "emerald_mark_solomon", qty = 1 }, { kind = "flag", flag = "c13_mark_solomon" }, { kind = "memory", memory = "mem-main_baraka-b06", title = "两张拓纸" }]
+reply = "两张纸叠在灯前，铅封上的印正好补上门铭缺的那一截。我把灯拿开，又拿近，看了一夜。天亮时给纳吉玛写信，头一句是：你赢了，这回我没叫错。"
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "把门铭收进砝码箱，托季风船给纳吉玛捎个口信"
+next = "b07_league"
+requires = [{ kind = "flag", flag = "c13_half_solomon_gate" }]
+hint = "你没拓到那道门。"
+effects = [{ kind = "start_track", track = "main_baraka_solomon" }, { kind = "affinity", person = "najma", value = 3 }]
+reply = "口信是这样的：“你的瓶子，我的门，凑一凑。”我故意没说清楚，好让她回信骂我。她骂人的信，比别人夸人的信长。"
+
+[[tracks.chapters.choices]]
+key = "sell"
+text = "把门铭卖给葡萄牙商站，他们正找俄斐"
+next = "b07_league"
+requires = [{ kind = "flag", flag = "c13_half_solomon_gate" }]
+hint = "手里没有门铭的拓纸，卖不了。"
+effects = [{ kind = "cash", value = 2500 }, { kind = "reputation", faction = "portugal", value = 2 }, { kind = "flag", flag = "c13_half_solomon_gate", value = false }]
+reply = "代理人捧着那张纸，像捧着圣物。我没告诉他那上面拓下来的只是一道门，门后面是什么，他得自己去问那个老人。"
+
+[[tracks.chapters.variants]]
+key = "has_bottle"
+when = [{ kind = "flag", flag = "c13_half_solomon_bottle" }]
+text = "回到海边，夜里我在油灯下把门铭的拓纸摊开。纳吉玛托季风船捎来的铅封拓纸，已经压在砝码箱底下等了我一季，信只有一句：“你的门，我的瓶，凑一凑。”我照她的瓶口比了一夜，笔画接得上，一点也不差。我想要另一半。也想知道，纳吉玛肯不肯把她那一半交给一个跟她吵了一辈子的人。我（心里）：一道门，一只瓶子，中间隔着半片海，印却只有一枚。"
+
+# b07 七条船：召（蒙巴萨，诸城同盟）。
+[[tracks.chapters]]
+key = "b07_league"
+title = "七条船"
+text = "蒙巴萨，老城清真寺的院子，季风换向前的那几天。我把五座城的使者请到一张席子上：基尔瓦、蒙巴萨、马林迪、帕泰、摩加迪沙。蒙巴萨和马林迪的人隔得最远，马林迪是葡萄牙人的朋友，蒙巴萨被葡萄牙人烧过不止一回。席子中间我摆上父亲的砝码，一城一枚。我说：“老人们说，从设拉子来的是七条船，一条船一座城。今天到了五条，剩下两条在路上，船老大是我舅舅，向来慢。”马林迪的使者：“我们跟葡萄牙人喝过的酒，比跟你们喝过的水还多。”蒙巴萨的老人盯着我腰上的铜币看了半天：“这枚铜币……你母亲是从我们这条街嫁出去的。”我母亲是蒙巴萨人，我到今天才知道她娘家在哪条街。我拿一个笑话接住：“那我欠你们一顿饭，今天这顿先算我的。”"
+at = "mombasa"
+speaker = "captain"
+mood = "cheerful"
+cast = ["baraka"]
+when = [{ kind = "date", from = [1575, 7, 1] }]
+deadline = [1577, 9, 30]
+
+[tracks.chapters.timeout]
+next = "c01_yasuke"
+effects = []
+news = "蒙巴萨的人说，基尔瓦萨利姆家张罗的那顿饭到底没请成，几座城的使者各回各的船。"
+
+[[tracks.chapters.choices]]
+key = "mombasa_gold"
+text = "蒙巴萨：用金子说话，替苏丹添一笔火药钱"
+next = "b08_oath"
+requires = [{ kind = "cash", ge = 3000 }]
+hint = "蒙巴萨的苏丹只听得见金子落在秤盘上的声音。"
+effects = [{ kind = "cash", value = -3000 }, { kind = "flag", flag = "c13_main_baraka_league_mombasa" }, { kind = "reputation", faction = "swahili_cities", value = 3 }]
+reply = "我把金子用父亲的砝码一枚一枚称给他看，称到最后一枚，蒙巴萨的使者自己伸手按住了秤盘：“够了。我们的苏丹记性好。”"
+
+[[tracks.chapters.choices]]
+key = "seven_ships"
+text = "帕泰与摩加迪沙：讲七条船，讲到他们自己接下去"
+next = "b08_oath"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_main_baraka_league_pate" }, { kind = "flag", flag = "c13_main_baraka_league_mogadishu" }, { kind = "reputation", faction = "swahili_cities", value = 4 }, { kind = "reputation", faction = "ajuran", value = 2 }]
+reply = "讲到第五条船，帕泰的长老接过去讲第六条。摩加迪沙的人不服，抢着讲第七条，讲错了，满院子的人笑成一团，饭就这么吃完了。"
+
+[tracks.chapters.choices.fail]
+next = "b08_oath"
+effects = [{ kind = "flag", flag = "c13_main_baraka_league_pate" }]
+news = "帕泰的长老接了下去，摩加迪沙的人听完就起身告辞，说船要等风。"
+
+[[tracks.chapters.choices]]
+key = "malindi_honor"
+text = "马林迪：以信义起誓，同盟不去打葡萄牙人"
+next = "b08_oath"
+requires = [{ kind = "attr", attr = "honor", ge = 55 }]
+hint = "马林迪的使者只看你在索法拉、在塞纳做过什么。"
+effects = [{ kind = "flag", flag = "c13_main_baraka_league_malindi" }, { kind = "reputation", faction = "portugal", value = 1 }]
+reply = "马林迪的使者让我把手按在经书上。我按了，又补了一句：“葡萄牙人要是先动手，这句不算。”他想了想，说这一句他也按上。"
+
+[[tracks.chapters.variants]]
+key = "v1_camoes"
+when = [{ kind = "flag", flag = "c13_main_baraka_camoes_heard" }]
+text = "蒙巴萨，老城清真寺的院子，季风换向前的那几天。我把五座城的使者请到一张席子上：基尔瓦、蒙巴萨、马林迪、帕泰、摩加迪沙。蒙巴萨和马林迪的人隔得最远，马林迪是葡萄牙人的朋友，蒙巴萨被葡萄牙人烧过不止一回。席子中间我摆上父亲的砝码，一城一枚。我说：“老人们说，从设拉子来的是七条船，一条船一座城。今天到了五条，剩下两条在路上，船老大是我舅舅，向来慢。”马林迪的使者：“我们跟葡萄牙人喝过的酒，比跟你们喝过的水还多。”马林迪的使者带来一本里斯本新印的长诗，翻到写他们国王的那一页给大家看，写诗的就是那个吃过我的米的独眼人。蒙巴萨的老人盯着我腰上的铜币看了半天：“这枚铜币……你母亲是从我们这条街嫁出去的。”我母亲是蒙巴萨人，我到今天才知道她娘家在哪条街。我拿一个笑话接住：“那我欠你们一顿饭，今天这顿先算我的。”"
+
+[[tracks.chapters.variants]]
+key = "v2_sena"
+when = [{ kind = "flag", flag = "c13_main_baraka_sheltered_sena" }]
+text = "蒙巴萨，老城清真寺的院子，季风换向前的那几天。我把五座城的使者请到一张席子上：基尔瓦、蒙巴萨、马林迪、帕泰、摩加迪沙。蒙巴萨和马林迪的人隔得最远，马林迪是葡萄牙人的朋友，蒙巴萨被葡萄牙人烧过不止一回。席子中间我摆上父亲的砝码，一城一枚。我说：“老人们说，从设拉子来的是七条船，一条船一座城。今天到了五条，剩下两条在路上，船老大是我舅舅，向来慢。”马林迪的使者：“我们跟葡萄牙人喝过的酒，比跟你们喝过的水还多。”帕泰的长老说，他家的儿媳是从塞纳逃下来的，坐的就是我的船。蒙巴萨的老人盯着我腰上的铜币看了半天：“这枚铜币……你母亲是从我们这条街嫁出去的。”我母亲是蒙巴萨人，我到今天才知道她娘家在哪条街。我拿一个笑话接住：“那我欠你们一顿饭，今天这顿先算我的。”"
+
+[[tracks.chapters.variants]]
+key = "v3_hamid"
+when = [{ kind = "flag", flag = "c7_bond_hamid_landing_friend" }]
+text = "蒙巴萨，老城清真寺的院子，季风换向前的那几天。我把五座城的使者请到一张席子上：基尔瓦、蒙巴萨、马林迪、帕泰、摩加迪沙。蒙巴萨和马林迪的人隔得最远，马林迪是葡萄牙人的朋友，蒙巴萨被葡萄牙人烧过不止一回。席子中间我摆上父亲的砝码，一城一枚。我说：“老人们说，从设拉子来的是七条船，一条船一座城。今天到了五条，剩下两条在路上，船老大是我舅舅，向来慢。”马林迪的使者：“我们跟葡萄牙人喝过的酒，比跟你们喝过的水还多。”摩加迪沙的使者袖子里有一张哈米德写的条子，只一句：“这一回，你先算对了。”蒙巴萨的老人盯着我腰上的铜币看了半天：“这枚铜币……你母亲是从我们这条街嫁出去的。”我母亲是蒙巴萨人，我到今天才知道她娘家在哪条街。我拿一个笑话接住：“那我欠你们一顿饭，今天这顿先算我的。”"
+
+# b08 彗星下的盟誓：目击（1577-10—12）。只有 b07 回应过才会走到这里。
+[[tracks.chapters]]
+key = "b08_oath"
+title = "彗星下的盟誓"
+text = "马林迪的海滩，入夜以后。天上拖着一条长尾巴的星，亮得能照见人影。盟誓的人用一只铜盆盛了海水，每座城的人往里放一样东西：基尔瓦放的是我父亲箱子里倒数第二小的那枚砝码。一个老水手坐在礁石上，望着彗星说：“彗星出来的年份，海那边有人在开会。”我说：“那他们开会也该请我们吃饭。”"
+window = [[1577, 10, 15], [1577, 12, 31]]
+at = "malindi"
+stage = "witness"
+speaker = "captain"
+mood = "mystic"
+cast = ["baraka"]
+news = "马林迪的人说，彗星出来那几夜，几座城的人在海滩上往一只铜盆里放东西，说是要结盟。"
+
+[tracks.chapters.default]
+next = "c01_yasuke"
+effects = [{ kind = "flag", flag = "c13_main_baraka_league_sworn" }, { kind = "memory", memory = "mem-main_baraka-b08", title = "彗星下的盟誓" }]
+
+[[tracks.chapters.variants]]
+key = "v1_mombasa"
+when = [{ kind = "flag", flag = "c13_main_baraka_league_mombasa" }]
+text = "马林迪的海滩，入夜以后。天上拖着一条长尾巴的星，亮得能照见人影。盟誓的人用一只铜盆盛了海水，每座城的人往里放一样东西：基尔瓦放的是我父亲箱子里倒数第二小的那枚砝码。蒙巴萨的苏丹亲自来了，八十年来头一回坐在马林迪的沙地上。一个老水手坐在礁石上，望着彗星说：“彗星出来的年份，海那边有人在开会。”我说：“那他们开会也该请我们吃饭。”"
+
+[[tracks.chapters.variants]]
+key = "v2_pate_mog"
+when = [{ kind = "flag", flag = "c13_main_baraka_league_mogadishu" }]
+text = "马林迪的海滩，入夜以后。天上拖着一条长尾巴的星，亮得能照见人影。盟誓的人用一只铜盆盛了海水，每座城的人往里放一样东西：基尔瓦放的是我父亲箱子里倒数第二小的那枚砝码。帕泰和摩加迪沙的船并排靠岸，两边的水手为谁的帆先落吵了半夜。一个老水手坐在礁石上，望着彗星说：“彗星出来的年份，海那边有人在开会。”我说：“那他们开会也该请我们吃饭。”"
+
+[[tracks.chapters.variants]]
+key = "v3_pate"
+when = [{ kind = "flag", flag = "c13_main_baraka_league_pate" }]
+text = "马林迪的海滩，入夜以后。天上拖着一条长尾巴的星，亮得能照见人影。盟誓的人用一只铜盆盛了海水，每座城的人往里放一样东西：基尔瓦放的是我父亲箱子里倒数第二小的那枚砝码。帕泰的长老一个人坐船来，说摩加迪沙的人还在等风。一个老水手坐在礁石上，望着彗星说：“彗星出来的年份，海那边有人在开会。”我说：“那他们开会也该请我们吃饭。”"
+
+[[tracks.chapters.variants]]
+key = "v4_malindi"
+when = [{ kind = "flag", flag = "c13_main_baraka_league_malindi" }]
+text = "马林迪的海滩，入夜以后。天上拖着一条长尾巴的星，亮得能照见人影。盟誓的人用一只铜盆盛了海水，每座城的人往里放一样东西：基尔瓦放的是我父亲箱子里倒数第二小的那枚砝码。马林迪的苏丹按着经书起誓，港外泊着葡萄牙人的船，起誓的人背对着它。一个老水手坐在礁石上，望着彗星说：“彗星出来的年份，海那边有人在开会。”我说：“那他们开会也该请我们吃饭。”"
+
+
+# ── 第三幕 1578—1590 更远之处与回家 ──
+
+# c01 码头上的高个子：秘密揭开（澳门）。文中不写“弥助”二字；news 不写认出。
+[[tracks.chapters]]
+key = "c01_yasuke"
+title = "码头上的高个子"
+text = "1578 年秋，澳门南湾，耶稣会院门前的石阶。巡察使范礼安在等去日本的大船。他身边那个随从高出所有人一个头，肩上扛着巡察使的书箱，嘴里哼着一支调子，是马库阿船夫划桨时的号子。我站住了。他手腕上有一道旧绳痕。很多年前，在索法拉的海边，我用父亲给的钱，从一条奴隶贩子的船上换下过一个男孩，那以后他去了哪里，我一直不知道。他放下书箱，先认出了我。他指着我腰间的黄铜箱，用半句斯瓦希里话说：“砝码。最小的那个。”那天在船上，我把箱子里最小的一枚砝码塞进他手里，让他攥着，别抖。范礼安皱了皱眉：“他是我的仆人，不是奴隶。这一点，船上每个人都知道。”我（心里）：我讲了一辈子笑话，这一刻一个也想不起来。"
+at = "macao"
+speaker = "captain"
+mood = "tender"
+cast = ["alessandro_valignano", "yasuke"]
+when = [{ kind = "date", from = [1578, 9, 1] }]
+deadline = [1579, 6, 30]
+
+[tracks.chapters.timeout]
+next = "c02_summons"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "letter", person = "yasuke", text = "致基尔瓦那位带黄铜箱的金商：巡察使的仆人托我写这几句。索法拉海边那条船上的男孩还活着，就要跟巡察使去日本。最小的那枚砝码他一直记得。他问你今年的金价。" }]
+
+[[tracks.chapters.choices]]
+key = "gift"
+text = "把箱里现在最小的那枚砝码，连同一封信交给他"
+next = "c02_summons"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "flag", flag = "c13_main_baraka_yasuke_gift" }, { kind = "affinity", person = "yasuke", value = 10 }, { kind = "memory", memory = "mem-main_baraka-c01", title = "码头上的高个子" }]
+reply = "他把砝码系在腰带上，信塞进怀里。他还不认得字。“到了那边，”我说，“找个会念的人念给你听。念到笑话的地方，你得笑。”他说他会笑两遍，一遍替我。"
+news = "澳门码头上，巡察使的高个子随从跟一个东非来的金商说了半天话，说的是澳门谁也听不懂的话。"
+
+[[tracks.chapters.choices]]
+key = "freedom"
+text = "求巡察使放他自由"
+next = "c02_summons"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "flag", flag = "c13_main_baraka_asked_freedom" }, { kind = "affinity", person = "yasuke", value = 6 }, { kind = "affinity", person = "alessandro_valignano", value = 3 }, { kind = "memory", memory = "mem-main_baraka-c01", title = "码头上的高个子" }]
+reply = "范礼安想了很久，说：“他要是愿意留下，我不拦。”他看了看我，又看了看那条船。他选了船。“我想看看，”他说，“他们说的那个更远的岛。”"
+
+[tracks.chapters.choices.fail]
+next = "c02_summons"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "affinity", person = "yasuke", value = 3 }, { kind = "memory", memory = "mem-main_baraka-c01", title = "码头上的高个子" }]
+news = "澳门的人说，有个东非来的金商当着巡察使的面，替他那个高个子随从说过话，巡察使客气地回绝了。"
+
+[[tracks.chapters.choices]]
+key = "farewell"
+text = "只说一声保重，问他现在叫什么"
+next = "c02_summons"
+effects = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "affinity", person = "yasuke", value = 3 }, { kind = "memory", memory = "mem-main_baraka-c01", title = "码头上的高个子" }]
+reply = "他说葡萄牙人给他起过一个名字，他不喜欢。“等我到了那边，”他说，“也许会有一个我喜欢的。”我说那就写信告诉我，写错了字也行。"
+
+# c02 第二枚铜币：召（无 at）。立场与信物在这里选，恰好一面 stance；超时缺省 open。
+[[tracks.chapters]]
+key = "c02_summons"
+title = "第二枚铜币"
+text = "泊船的港口，集市上一个晒得脱皮的水手用一枚铜币买水。那是一枚基尔瓦苏丹的铜币，崭新，边上的字一个也没磨。我从怀里摸出母亲留下的那一枚：同一个苏丹，同一副模子。母亲那枚背面磨平了的半行字，这一枚上清清楚楚：“他信靠众世界之主。”水手说，这枚钱是在亚速尔西边一个港口找给他的。那里谁也不问你是哪个国王的人，什么都收：消息、书、种子，也收我们这片海三百年前的钱。“那边的人看钱不看值多少，”他说，“看它从哪儿来。”我把两枚铜币背靠背一合，磨掉的那半行字就读全了。母亲那枚磨掉的，原来是“众世界”。"
+cast = ["baraka"]
+mood = "mystic"
+when = [{ kind = "date", from = [1582, 7, 1] }]
+deadline = [1583, 2, 28]
+
+[tracks.chapters.timeout]
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_baraka_stance_open" }]
+
+[[tracks.chapters.choices]]
+key = "open"
+text = "把母亲的铜币缝进衣襟，去找那座港：让雾散开，让两边做买卖"
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_baraka_keepsake" }, { kind = "flag", flag = "c13_main_baraka_stance_open" }]
+reply = "我把两枚铜币都缝进衣襟，一枚是母亲的，一枚是找来的。水手的那枚我照价付了水钱，他乐了。我对水手说，一座港要是只收不卖，迟早没人去。他们笑我说话像我爹。"
+
+[[tracks.chapters.choices]]
+key = "close"
+text = "带上铜币去；那边的人若愿意藏着，就由他们藏着"
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_baraka_keepsake" }, { kind = "flag", flag = "c13_main_baraka_stance_close" }]
+reply = "我想起大津巴布韦那个不许人碰鸟的老人。有些地方，外人一去就变成了别人书里的一页。我去，只想把母亲的钱送回它亲戚身边。开门的事，轮不到一个金商。"
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "铜币托人送回基尔瓦，放在母亲坟头；那片海交给守得住它的人"
+next = "c03_dark_sea"
+effects = [{ kind = "flag", flag = "c13_main_baraka_stance_hand" }]
+reply = "我不带铜币。金商的规矩是：贵重的东西交给保得住它的人，不交给最想要它的人。我还是要去看一眼，看看到底谁守得住。"
+
+# c03 离金之河最远的海：历史现场（1583-07，特塞拉岛外）。赶不到 default 设 absent。
+[[tracks.chapters]]
+key = "c03_dark_sea"
+title = "离金之河最远的海"
+text = "特塞拉岛外，七月，圣克鲁斯侯爵的舰队正在攻安格拉，炮声隔着海一阵一阵传过来。再往西走两天，海面浮满黄褐色的海草，风停了，罗经的针自己打转。这是我离金之河最远的一次。这里没有河，没有金市，只有一片不肯动的海。水手说：“老板，这海连鱼都不游。我们回去卖水吧，西班牙人给的价比金子还好。”我（心里）：在索法拉，金子顺着河下来；在这里，什么都不流。海草中间有一道窄缝，像有人走过。罗经乱转的时候，那道窄缝没有合上，它在等船。"
+window = [[1583, 4, 1], [1583, 9, 30]]
+at = "angra"
+stage = "involve"
+speaker = "captain"
+mood = "mystic"
+cast = ["baraka", "alvaro_de_bazan"]
+news = "亚速尔的人说，特塞拉岛那一仗打到最后的夏天，西边的海草一直漂到了安格拉港外。"
+
+[tracks.chapters.default]
+next = "c04_after"
+effects = [{ kind = "flag", flag = "c13_main_baraka_absent" }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "cross"
+text = "顺着海草里那道缝穿进去"
+next = "c04_after"
+requires = [{ kind = "item", item = "tabula_smaragdina", qty = 1 }]
+hint = "没有那卷《翠玉录》的抄片，海草不让路。"
+effects = [{ kind = "flag", flag = "c13_main_baraka_crossed" }]
+reply = "船头压进海草，海草让开了。罗经停了，指着一个它从没指过的方向。"
+
+[[tracks.chapters.choices]]
+key = "sell_water"
+text = "掉头：把淡水卖给圣克鲁斯侯爵的舰队"
+next = "c04_after"
+effects = [{ kind = "flag", flag = "c13_main_baraka_turned_back" }, { kind = "cash", value = 1500 }, { kind = "reputation", faction = "spain", value = 2 }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+reply = "西班牙的军需官按桶付钱，一桶比索法拉的一两金子还贵。我讲了个笑话，说这是我这辈子卖得最好的一船货，水手们都笑了。我回头看了一眼海草，它已经在身后了。"
+news = "安格拉港外，一条东非来的缝合船把整船淡水卖给了西班牙舰队，船主还跟军需官讲了半天价。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "在海草边停一夜，把铜币贴在耳边听"
+next = "c04_after"
+requires = [{ kind = "flag", flag = "c13_main_baraka_keepsake" }]
+hint = "衣襟里没有那枚铜币，海草边上什么也听不见。"
+effects = [{ kind = "flag", flag = "c13_main_baraka_turned_back" }, { kind = "growth", attr = "sensibility", value = 200 }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+reply = "我听见了一点声音，像远处集市上讨价还价，又像我自己的心跳。天亮时风回来了，船已经被洋流推出了海草。我一句话也没对水手说。"
+
+[[tracks.chapters.variants]]
+key = "coin"
+when = [{ kind = "flag", flag = "c13_main_baraka_keepsake" }]
+text = "特塞拉岛外，七月，圣克鲁斯侯爵的舰队正在攻安格拉，炮声隔着海一阵一阵传过来。再往西走两天，海面浮满黄褐色的海草，风停了，罗经的针自己打转。这是我离金之河最远的一次。这里没有河，没有金市，只有一片不肯动的海。水手说：“老板，这海连鱼都不游。我们回去卖水吧，西班牙人给的价比金子还好。”我（心里）：在索法拉，金子顺着河下来；在这里，什么都不流。衣襟里那两枚铜币，一枚是母亲的，一枚是找来的，一路上我都没松手。海草中间有一道窄缝，像有人走过。罗经乱转的时候，那道窄缝没有合上，它在等船。"
+
+# c04 海草以后：无 at 的回响。基础文本是没有穿过去的回程；C11 的判决旗标只在变体里。
+[[tracks.chapters]]
+key = "c04_after"
+title = "海草以后"
+text = "回程的船上。雾没有开，至少我没看见它开。去过西边的人回来都不大说话；我是唯一一个说个不停的，可说出来的全是笑话，连我自己都听不出哪一句是真的。船上最小的水手问：“巴拉卡叔叔，西边的海是什么颜色？”我说：“黄的。像没熬好的咖啡。”我把手伸进衣襟摸了一下，这一趟比走的时候重。"
+cast = ["baraka"]
+mood = "tender"
+when = [{ kind = "date", from = [1583, 10, 1] }, { kind = "flag", flag = "c13_main_baraka_atlantis_over" }]
+deadline = [1584, 1, 10]
+
+[tracks.chapters.timeout]
+next = "c05_yasuke_letter"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "把这一趟写进史书最后几页"
+next = "c05_yasuke_letter"
+requires = [{ kind = "flag", flag = "c13_main_baraka_history_begun" }]
+hint = "你还没动笔写诸城的事，这一趟没处安放。"
+effects = [{ kind = "growth", attr = "learning", value = 200 }]
+reply = "我写了三页，最后一页只写了海草的颜色和罗经的针。诸城的史书里第一次有了一片不属于诸城的海。"
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "在甲板上当故事讲，讲到一半就收钱"
+next = "c05_yasuke_letter"
+effects = [{ kind = "fame", value = 3 }, { kind = "cash", value = 300 }]
+reply = "讲到海草让开的地方我就停下收钱，收完再讲另一个结尾。三天里讲了三个结尾，没有一个是真的，听的人都说值。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "谁也不告诉，把铜币放回砝码箱"
+next = "c05_yasuke_letter"
+effects = [{ kind = "growth", attr = "sensibility", value = 100 }]
+reply = "铜币放回砝码箱的夹层，跟父亲的账簿压在一起。账簿上最后一笔是父亲的字，我没往下记。"
+
+[[tracks.chapters.variants]]
+key = "v1_verdict_close"
+when = [{ kind = "flag", flag = "atlantis_verdict_close" }]
+text = "回程的船上。西边的海草再没漂到过安格拉。金板上的判词是我写的，字比账本还难认。那道缝合上了，像从来没有过。船上最小的水手问：“巴拉卡叔叔，西边的海是什么颜色？”我说：“黄的。像没熬好的咖啡。”"
+
+[[tracks.chapters.variants]]
+key = "v2_verdict_open"
+when = [{ kind = "flag", flag = "atlantis_verdict_open" }]
+text = "回程的船上。西边回来的船越来越多，船上卖一种发红光的铜。金板上那句判词是我写的：航路打开。亚速尔西边那片海开了，去过西边的人回来都不大说话；我是唯一一个说个不停的，可说出来的全是笑话。船上最小的水手问：“巴拉卡叔叔，西边的海是什么颜色？”我说：“黄的。像没熬好的咖啡。”"
+
+[[tracks.chapters.variants]]
+key = "v3_council"
+when = [{ kind = "flag", flag = "atlantis_council_met" }]
+text = "回程的船上。我在一张金板前坐过一夜，那是别人的事，我只记得它的颜色。回来以后，我讲的笑话少了一半。船上最小的水手问：“巴拉卡叔叔，西边的海是什么颜色？”我说：“黄的。像没熬好的咖啡。”"
+
+[[tracks.chapters.variants]]
+key = "v4_crossed"
+when = [{ kind = "flag", flag = "c13_main_baraka_crossed" }]
+text = "回程的船上。我穿过去了，又回来了。我看见的东西说不清，就先不说。这辈子头一回，我有一个讲不出口的故事。船上最小的水手问：“巴拉卡叔叔，西边的海是什么颜色？”我说：“黄的。像没熬好的咖啡。”"
+
+[[tracks.chapters.variants]]
+key = "v5_turned"
+when = [{ kind = "flag", flag = "c13_main_baraka_turned_back" }]
+text = "回程的船上。我在海草边掉了头。船上的水卖了好价钱，可我总觉得少称了一样东西。船上最小的水手问：“巴拉卡叔叔，西边的海是什么颜色？”我说：“黄的。像没熬好的咖啡。”"
+
+# c05 日本来的信：结果回响（hub，无 at）。两组互斥：HIST_H54 为真的一组、为假的一组，任何时候恰好两项可选。
+[[tracks.chapters]]
+key = "c05_yasuke_letter"
+title = "日本来的信"
+text = "一封从日本来的信，在路上走了两年多才追到我手里。信是耶稣会的人代写的葡萄牙文，末尾按着一个大拇指印，旁边是两个我不认得的日本字。信里说，那是他的主公赏给他的名字：弥助。主公赏了他刀和宅子，还问过他：“东非的海是什么颜色？”他答：“早上是绿的，晚上是金的。”同一条船还捎来一包耶稣会的信，说的是日本那年夏天京都的一座寺。"
+cast = ["yasuke"]
+mood = "tender"
+when = [{ kind = "date", from = [1584, 1, 15] }]
+deadline = [1585, 12, 31]
+
+[tracks.chapters.timeout]
+next = "c06_mir_ali"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "lives_reply"
+text = "回信：问他主公赏的宅子里，有没有一扇朝海的窗"
+next = "c06_mir_ali"
+requires = [{ kind = "flag", flag = "h54_honnoji_nobunaga_survives" }]
+effects = [{ kind = "affinity", person = "yasuke", value = 5 }]
+reply = "耶稣会那包信说，那年夏天京都的寺里起过一场火，信长从火里走了出来。我在回信里画了一扇窗，窗外是海，海是金的。画得很难看，我在旁边写：这是晚上。"
+
+[[tracks.chapters.choices]]
+key = "lives_grave"
+text = "把信带回基尔瓦，念给父母的坟听"
+next = "c06_mir_ali"
+requires = [{ kind = "flag", flag = "h54_honnoji_nobunaga_survives" }]
+effects = [{ kind = "growth", attr = "sensibility", value = 200 }]
+reply = "我念到“晚上是金的”那一句，念不下去了，就改讲了个笑话给坟听。父亲生前最爱听我讲砸了的笑话。"
+
+[[tracks.chapters.choices]]
+key = "fire_ask"
+text = "托耶稣会的船去问：那一夜以后，他在哪里"
+next = "c06_mir_ali"
+requires = [{ kind = "flag", flag = "h54_honnoji_nobunaga_survives", value = false }]
+effects = [{ kind = "affinity", person = "yasuke", value = 3 }]
+reply = "耶稣会那包信里写着：那一夜他在主公身边打到最后，被明智的人交给了神父。以后的事，信里没有。我的问信托出去了，回信一直没来。"
+
+[[tracks.chapters.choices]]
+key = "fire_box"
+text = "把信收进砝码箱的夹层，跟父亲的账簿放在一起"
+next = "c06_mir_ali"
+requires = [{ kind = "flag", flag = "h54_honnoji_nobunaga_survives", value = false }]
+effects = [{ kind = "growth", attr = "sensibility", value = 100 }]
+reply = "信和父亲的账簿压在一起，一样厚。我合上箱子，给水手们讲了一晚上笑话，讲到他们求我别讲了。"
+
+[[tracks.chapters.variants]]
+key = "v1_mio"
+when = [{ kind = "flag", flag = "c13_npc_mio_yasuke_letter" }]
+text = "一封从日本来的信，在路上走了两年多才追到我手里。信先交给了一位土佐来的姬君船主，由她捎到长崎再转出来；包信的油纸上，盖着一面过所旗的印。信是耶稣会的人代写的葡萄牙文，末尾按着一个大拇指印，旁边是两个我不认得的日本字。信里说，那是他的主公赏给他的名字：弥助。主公赏了他刀和宅子，还问过他：“东非的海是什么颜色？”他答：“早上是绿的，晚上是金的。”同一条船还捎来一包耶稣会的信，说的是日本那年夏天京都的一座寺。"
+
+[[tracks.chapters.variants]]
+key = "v2_freedom"
+when = [{ kind = "flag", flag = "c13_main_baraka_asked_freedom" }]
+text = "一封从日本来的信，在路上走了两年多才追到我手里。信是耶稣会的人代写的葡萄牙文，末尾按着一个大拇指印，旁边是两个我不认得的日本字。信里说，那是他的主公赏给他的名字：弥助。信里还说，澳门码头上那个基尔瓦人替他求过情，他一直记得。主公赏了他刀和宅子，还问过他：“东非的海是什么颜色？”他答：“早上是绿的，晚上是金的。”同一条船还捎来一包耶稣会的信，说的是日本那年夏天京都的一座寺。"
+
+[[tracks.chapters.variants]]
+key = "v3_gift"
+when = [{ kind = "flag", flag = "c13_main_baraka_yasuke_gift" }]
+text = "一封从日本来的信，在路上走了两年多才追到我手里。信是耶稣会的人代写的葡萄牙文，末尾按着一个大拇指印，旁边是两个我不认得的日本字。信里说，那是他的主公赏给他的名字：弥助。主公赏了他刀和宅子，还问过他：“东非的海是什么颜色？”他答：“早上是绿的，晚上是金的。”信的末尾画着一枚小砝码，系在刀绪上。同一条船还捎来一包耶稣会的信，说的是日本那年夏天京都的一座寺。"
+
+# c06 一条船的苏丹：历史现场（1586，米尔·阿里南下）。纳吉玛在蒙巴萨码头重逢。
+[[tracks.chapters]]
+key = "c06_mir_ali"
+title = "一条船的苏丹"
+text = "1586 年初，东北季风里，一条挂奥斯曼旗的桨帆船开进蒙巴萨港，只有一条。船长米尔·阿里·贝伊站在船头，说苏丹的舰队就在后面。北边的摩加迪沙、帕泰、拉穆已经派人去他船上献了礼。码头上我撞见了纳吉玛：她替一条阿曼船领航，刚靠岸，牵星板还攥在手里。她看了一眼他的船，心里算出他回程的风只剩一个月。米尔·阿里：“葡萄牙人一年来一回，我一个月就能把伊斯坦布尔的旗插满这条海岸。”纳吉玛：“他的船吃水太浅，装不下他说的那么多苏丹。”我（心里）：我跟她吵了三十年，头一回想听她把话说完。"
+window = [[1586, 1, 1], [1586, 6, 30]]
+at = "mombasa"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["mir_ali_bey", "najma"]
+news = "蒙巴萨的人说，一条挂奥斯曼旗的桨帆船开进港来，船长说苏丹的舰队就在后头，大家数了数，只有一条。"
+
+[tracks.chapters.default]
+next = "c07_faza"
+effects = []
+news = "北边几座城都向那条奥斯曼船献了礼；米尔·阿里装了一船葡萄牙人的货和俘虏，回红海去了。"
+
+[[tracks.chapters.choices]]
+key = "ottoman"
+text = "借奥斯曼之力：替米尔·阿里在诸城之间牵线"
+next = "c07_faza"
+effects = [{ kind = "reputation", faction = "ottoman", value = 5 }, { kind = "reputation", faction = "portugal", value = -5 }, { kind = "flag", flag = "c13_main_baraka_sided_ottoman" }]
+reply = "我替他把蒙巴萨苏丹的话译成他爱听的样子，把他的话译成苏丹敢信的样子。纳吉玛在一旁看着，一句话也没说。这比她骂我还难受。"
+
+[[tracks.chapters.choices]]
+key = "stand"
+text = "自己站起来：照马林迪的盟誓，谁也不投"
+next = "c07_faza"
+requires = [{ kind = "flag", flag = "c13_main_baraka_league_sworn" }]
+hint = "没有当年那只铜盆，这句话没人接。"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 5 }, { kind = "affinity", person = "najma", value = 4 }, { kind = "flag", flag = "c13_main_baraka_stood_alone" }]
+reply = "我把那只铜盆的事讲给蒙巴萨的苏丹听。他说盟誓是好东西，可葡萄牙人不认。我说葡萄牙人也不认米尔·阿里，那我们至少认自己。纳吉玛说，这是她头一回听我讲完一句不带笑话的话。"
+
+[[tracks.chapters.choices]]
+key = "warn_goa"
+text = "给果阿的葡萄牙人报信"
+next = "c07_faza"
+effects = [{ kind = "reputation", faction = "portugal", value = 5 }, { kind = "reputation", faction = "swahili_cities", value = -5 }, { kind = "flag", flag = "c13_main_baraka_warned_goa" }]
+reply = "信是夜里写的，托一条去果阿的船。写完我把纸上的灰吹掉，吹了很久。纳吉玛第二天就走了，没跟我告别。"
+
+[[tracks.chapters.variants]]
+key = "ilhan_friend"
+when = [{ kind = "flag", flag = "c7_bond_ilhan_landing_friend" }]
+text = "1586 年初，东北季风里，一条挂奥斯曼旗的桨帆船开进蒙巴萨港，只有一条。船长米尔·阿里·贝伊站在船头，说苏丹的舰队就在后面。北边的摩加迪沙、帕泰、拉穆已经派人去他船上献了礼。码头上我撞见了纳吉玛：她替一条阿曼船领航，刚靠岸，牵星板还攥在手里。她看了一眼他的船，心里算出他回程的风只剩一个月。米尔·阿里：“葡萄牙人一年来一回，我一个月就能把伊斯坦布尔的旗插满这条海岸。”纳吉玛：“他的船吃水太浅，装不下他说的那么多苏丹。”开罗来的信里，伊尔汗说总督府里谁也说不清米尔·阿里这条船是谁派的。我（心里）：我跟她吵了三十年，头一回想听她把话说完。"
+
+[[tracks.chapters.variants]]
+key = "ilhan_love"
+when = [{ kind = "flag", flag = "c7_bond_ilhan_landing_love" }]
+text = "1586 年初，东北季风里，一条挂奥斯曼旗的桨帆船开进蒙巴萨港，只有一条。船长米尔·阿里·贝伊站在船头，说苏丹的舰队就在后面。北边的摩加迪沙、帕泰、拉穆已经派人去他船上献了礼。码头上我撞见了纳吉玛：她替一条阿曼船领航，刚靠岸，牵星板还攥在手里。她看了一眼他的船，心里算出他回程的风只剩一个月。米尔·阿里：“葡萄牙人一年来一回，我一个月就能把伊斯坦布尔的旗插满这条海岸。”纳吉玛：“他的船吃水太浅，装不下他说的那么多苏丹。”伊尔汗从开罗总督府的书记房捎来一句话：米尔·阿里的船，伊斯坦布尔的账上没有。我（心里）：我跟她吵了三十年，头一回想听她把话说完。"
+
+# c07 法扎的烟：历史现场（1587，果阿来的船报复法扎）。指挥官与月份待核，正文只写“果阿来的船”。
+[[tracks.chapters]]
+key = "c07_faza"
+title = "法扎的烟"
+text = "1587 年初，帕泰岛。果阿派来的葡萄牙船队来清算去年向米尔·阿里献过礼的城。法扎的城墙被炮轰塌了一角，椰林烧了半边，城主被带上旗舰，再没下来。帕泰城的长老派人到港口找我，说基尔瓦萨利姆家的人，在这条海岸上说得上话。葡萄牙船长手里有一张名单。他问：“去年那条土耳其船来的时候，谁给它送了水？”帕泰的长老看着我，说：“你讲过七条船。现在烧的是第六条。”"
+window = [[1587, 1, 15], [1587, 4, 15]]
+at = "pate"
+stage = "involve"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+news = "帕泰岛上的人说，果阿来的船把法扎的城墙轰塌了一角，城主上了旗舰就没再下来。"
+
+[tracks.chapters.default]
+next = "c08_zimba_kilwa"
+effects = []
+news = "法扎烧成了一片灰，帕泰和北边几座城的使者，都给果阿来的船送去了贡品。"
+
+[[tracks.chapters.choices]]
+key = "rescue"
+text = "带船去法扎的海湾接人"
+next = "c08_zimba_kilwa"
+effects = [{ kind = "growth", attr = "honor", value = 300 }, { kind = "reputation", faction = "portugal", value = -3 }, { kind = "flag", flag = "c13_main_baraka_faza_saved" }]
+reply = "法扎的海湾水浅，大船进不来，我的姆泰佩进得来。接了四趟，最后一趟上来一个老织工，怀里抱着一卷没织完的布。"
+news = "帕泰岛上的人说，法扎烧起来那天，有条基尔瓦的缝合船在浅湾里来回跑了四趟。"
+
+[[tracks.chapters.choices]]
+key = "ransom"
+text = "上旗舰去谈：用基尔瓦的金子赎帕泰的长老"
+next = "c08_zimba_kilwa"
+requires = [{ kind = "cash", ge = 2500 }]
+hint = "旗舰上的人只收称得出分量的东西。"
+effects = [{ kind = "cash", value = -2500 }, { kind = "reputation", faction = "swahili_cities", value = 4 }]
+reply = "船长把我的金子过了秤，过得很仔细，像个金商。长老下船的时候没看我，他说赎回来的人不该先谢赎他的人，该先谢称金子的秤。"
+
+[[tracks.chapters.choices]]
+key = "record"
+text = "一个字不改地把今天写进史书"
+next = "c08_zimba_kilwa"
+requires = [{ kind = "flag", flag = "c13_main_baraka_history_begun" }]
+hint = "你从没动笔写过诸城的事。"
+effects = [{ kind = "growth", attr = "learning", value = 200 }, { kind = "reputation", faction = "swahili_cities", value = 1 }]
+reply = "我写下烟往哪边飘，写下船长名单上的名字，写下我站在哪里、什么也没做。父亲页边那个“不对”，这回该写在我自己的名字旁边。"
+
+[[tracks.chapters.variants]]
+key = "goa"
+when = [{ kind = "flag", flag = "c13_main_baraka_warned_goa" }]
+text = "1587 年初，帕泰岛。果阿派来的葡萄牙船队来清算去年向米尔·阿里献过礼的城。法扎的城墙被炮轰塌了一角，椰林烧了半边，城主被带上旗舰，再没下来。帕泰城的长老派人到港口找我，说基尔瓦萨利姆家的人，在这条海岸上说得上话。葡萄牙船长认出了我，向我道谢：“去年那封信，来得正是时候。”这比挨骂还难受。他手里有一张名单。他问：“去年那条土耳其船来的时候，谁给它送了水？”帕泰的长老看着我，说：“你讲过七条船。现在烧的是第六条。”"
+
+[[tracks.chapters.variants]]
+key = "ottoman"
+when = [{ kind = "flag", flag = "c13_main_baraka_sided_ottoman" }]
+text = "1587 年初，帕泰岛。果阿派来的葡萄牙船队来清算去年向米尔·阿里献过礼的城。法扎的城墙被炮轰塌了一角，椰林烧了半边，城主被带上旗舰，再没下来。帕泰城的长老派人到港口找我，说基尔瓦萨利姆家的人，在这条海岸上说得上话。葡萄牙船长手里有一张名单，第三个名字是我。他问：“去年那条土耳其船来的时候，谁给它送了水？”帕泰的长老看着我，说：“你讲过七条船。现在烧的是第六条。”"
+
+[[tracks.chapters.variants]]
+key = "stood"
+when = [{ kind = "flag", flag = "c13_main_baraka_stood_alone" }]
+text = "1587 年初，帕泰岛。果阿派来的葡萄牙船队来清算去年向米尔·阿里献过礼的城。法扎的城墙被炮轰塌了一角，椰林烧了半边，城主被带上旗舰，再没下来。帕泰城的长老派人到港口找我，说基尔瓦萨利姆家的人，在这条海岸上说得上话。葡萄牙船长手里有一张名单。他问：“去年那条土耳其船来的时候，谁给它送了水？”帕泰的长老看着我，说：“你讲过七条船。现在烧的是第六条。去年没向那条船献礼的城只有几座，可葡萄牙人分不清谁是谁。”"
+
+# c08 退潮的浅滩：目击（1587，津巴人与基尔瓦）。不写屠杀与食人。
+[[tracks.chapters]]
+key = "c08_zimba_kilwa"
+title = "退潮的浅滩"
+text = "南边来的津巴人围了基尔瓦好些天，过不了海峡。后来城里有人替他们带路，趁退潮从浅滩涉了过来。我赶到的时候，潮又涨了，浅滩只剩一道水痕。清真寺东墙塌了一截，墙外父母的坟还在。岸上的渔夫直说：“潮退了，他们就过来了。潮涨了，他们就不走了。”我站在岸上讲了一个又一个笑话，讲给谁听，我自己也不知道。带路的那个人，津巴的首领没有留他。我（心里）：父亲，母亲，你们那边的潮，退得没这么快吧。"
+window = [[1587, 5, 1], [1587, 9, 30]]
+at = "kilwa"
+stage = "witness"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+news = "基尔瓦的人说，津巴人是趁退潮从浅滩涉过来的，带路的是城里的人。"
+
+[tracks.chapters.default]
+next = "c09_mombasa"
+effects = [{ kind = "memory", memory = "mem-main_baraka-c08", title = "退潮的浅滩" }]
+
+[[tracks.chapters.variants]]
+key = "faza"
+when = [{ kind = "flag", flag = "c13_main_baraka_faza_saved" }]
+text = "南边来的津巴人围了基尔瓦好些天，过不了海峡。后来城里有人替他们带路，趁退潮从浅滩涉了过来。我赶到的时候，潮又涨了，浅滩只剩一道水痕。清真寺东墙塌了一截，墙外父母的坟还在。去年从法扎接出来的那几家人，这回又坐我的船往北走了，那个老织工还抱着那卷没织完的布。岸上的渔夫直说：“潮退了，他们就过来了。潮涨了，他们就不走了。”我站在岸上讲了一个又一个笑话，讲给谁听，我自己也不知道。带路的那个人，津巴的首领没有留他。我（心里）：父亲，母亲，你们那边的潮，退得没这么快吧。"
+
+[[tracks.chapters.variants]]
+key = "league"
+when = [{ kind = "flag", flag = "c13_main_baraka_league_sworn" }]
+text = "南边来的津巴人围了基尔瓦好些天，过不了海峡。后来城里有人替他们带路，趁退潮从浅滩涉了过来。我赶到的时候，潮又涨了，浅滩只剩一道水痕。清真寺东墙塌了一截，墙外父母的坟还在。蒙巴萨和帕泰的姆泰佩来了，晚了一个潮。岸上的渔夫直说：“潮退了，他们就过来了。潮涨了，他们就不走了。”我站在岸上讲了一个又一个笑话，讲给谁听，我自己也不知道。带路的那个人，津巴的首领没有留他。我（心里）：父亲，母亲，你们那边的潮，退得没这么快吧。"
+
+# c09 海上的神，陆上的神：历史现场（1589，蒙巴萨）。纳吉玛领水道，米尔·阿里被俘。
+[[tracks.chapters]]
+key = "c09_mombasa"
+title = "海上的神，陆上的神"
+text = "1589 年三月，蒙巴萨。米尔·阿里第二回来了，这回在岛上筑了土墙。葡萄牙舰队从海上堵住了港口；对岸大陆上，津巴人的营火一直烧到浅滩边。津巴的首领隔着水派人喊话：“葡萄牙人是海上的神，我是陆上的神。”我母亲娘家那条街就在港边。纳吉玛的船泊在北边的水道里，她说夜里那条水道能走船。她对我说：“水道只开退潮前那一个时辰。你的笑话留到船上再讲。”半夜里有人游水过了海峡，是米尔·阿里自己，他宁可做葡萄牙人的俘虏，也不落到津巴人手里。我（心里）：母亲娘家门口那块踏脚石，我小时候在上面摔过一跤。今晚，我得从它上面把人一个一个扶下船。"
+window = [[1589, 3, 1], [1589, 5, 31]]
+at = "mombasa"
+stage = "involve"
+speaker = "captain"
+mood = "tense"
+cast = ["mir_ali_bey", "najma"]
+news = "蒙巴萨的人说，葡萄牙人的船堵着海，津巴人的火烧在对岸，那一夜米尔·阿里自己游向了葡萄牙人的船。"
+
+[tracks.chapters.default]
+next = "c10_epilogue"
+effects = []
+news = "蒙巴萨被海上和陆上的人先后洗了一遍，米尔·阿里让葡萄牙人押上船带走了。"
+
+[[tracks.chapters.choices]]
+key = "lead_out"
+text = "跟着纳吉玛的灯，领城里的人从夜里的水道撤"
+next = "c10_epilogue"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 5 }, { kind = "affinity", person = "najma", value = 5 }, { kind = "flag", flag = "c13_main_baraka_led_out" }]
+reply = "纳吉玛在前头报水深，一指一指地报，我在后头一个一个数人头。天亮时数到的人比上船时多了两个。有两个孩子是在船上生的，还是在船上藏的，到今天我也没弄清。"
+news = "蒙巴萨的人说，城破那一夜，一个领航女在前头报水深，一个金商在后头数人头，从北边的水道撤出去好几船人。"
+
+[tracks.chapters.choices.fail]
+next = "c10_epilogue"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 2 }, { kind = "flag", flag = "c13_main_baraka_led_out" }]
+news = "北边的水道里搁浅了一条船，后半夜只带出去一半人，剩下的一半，据说下一个潮再来。"
+
+[[tracks.chapters.choices]]
+key = "parley"
+text = "上葡萄牙人的船，替城里谈"
+next = "c10_epilogue"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "reputation", faction = "portugal", value = 3 }, { kind = "reputation", faction = "swahili_cities", value = 2 }]
+reply = "葡萄牙的船长答应天亮以前不放炮，条件是城里交出米尔·阿里。他自己游过来了，条件就算谈成了。"
+
+[tracks.chapters.choices.fail]
+next = "c10_epilogue"
+effects = [{ kind = "reputation", faction = "portugal", value = -2 }]
+news = "葡萄牙人的船上，船长听完一个基尔瓦金商的话，说他只跟有旗的人谈。"
+
+[[tracks.chapters.choices]]
+key = "hold_gate"
+text = "守在母亲娘家那条街的街口"
+next = "c10_epilogue"
+check = { attr = "arms", base = 20, per = 7 }
+effects = [{ kind = "fame", value = 5 }, { kind = "reputation", faction = "swahili_cities", value = 2 }]
+reply = "我拿着那把波斯短剑在街口站到天亮，没人从我身边过去。也许是因为我一直在讲话。"
+
+[tracks.chapters.choices.fail]
+next = "c10_epilogue"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 1 }]
+news = "蒙巴萨的人说，天亮前街口还是破了，有个金商把最后几户人塞进了清真寺。"
+
+[[tracks.chapters.variants]]
+key = "league"
+when = [{ kind = "flag", flag = "c13_main_baraka_league_sworn" }]
+text = "1589 年三月，蒙巴萨。米尔·阿里第二回来了，这回在岛上筑了土墙。葡萄牙舰队从海上堵住了港口；对岸大陆上，津巴人的营火一直烧到浅滩边。马林迪那边捎来话：津巴人要是往北走，马林迪北边的塞格朱人在岸上等着。津巴的首领隔着水派人喊话：“葡萄牙人是海上的神，我是陆上的神。”我母亲娘家那条街就在港边。纳吉玛的船泊在北边的水道里，她说夜里那条水道能走船。她对我说：“水道只开退潮前那一个时辰。你的笑话留到船上再讲。”半夜里有人游水过了海峡，是米尔·阿里自己，他宁可做葡萄牙人的俘虏，也不落到津巴人手里。我（心里）：母亲娘家门口那块踏脚石，我小时候在上面摔过一跤。今晚，我得从它上面把人一个一个扶下船。"
+
+# c10 金之河：终章（1589）。三个落点恰好一面 end_*；HIST_H59 只在变体里读。
+[[tracks.chapters]]
+key = "c10_epilogue"
+title = "金之河"
+text = "1589 年夏天。津巴人往北走，在马林迪北边被塞格朱人挡住了。葡萄牙人在蒙巴萨的岸上量地，说要筑一座石堡。我坐在母亲娘家的院子里。院墙塌了，井还在。膝盖上摊着那本写了二十多年的史书，脚边是父亲的黄铜砝码箱，这些年里面的砝码少了几枚，每一枚都有去处。一个马库阿来的学徒在替我磨墨，他问：“书写完了，给谁看？”我第一次没有笑话可讲。我说：“给写错我们的人看，也给还没出生的人看。Haba na haba——一点一点，量米的升就满了。”"
+cast = ["baraka"]
+mood = "tender"
+when = [{ kind = "date", from = [1589, 6, 1] }]
+
+[[tracks.chapters.choices]]
+key = "chronicle"
+text = "把诸城自己的史书写完，抄七份，一城一份"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_main_baraka_history_begun" }]
+hint = "史书没起过笔，谈不上写完。"
+effects = [{ kind = "flag", flag = "c13_main_baraka_done" }, { kind = "flag", flag = "c13_main_baraka_end_chronicle" }, { kind = "memory", memory = "mem-main_baraka-c10", title = "七份史书" }]
+reply = "七份，基尔瓦、蒙巴萨、马林迪、帕泰、摩加迪沙，还有两份给还没回来的两条船。最后一页没写苏丹的名字，写的是父亲没写完的那半个字。我替他写完了。"
+
+[[tracks.chapters.choices]]
+key = "kilwa"
+text = "回基尔瓦，在退潮的浅滩边重开金市"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_baraka_done" }, { kind = "flag", flag = "c13_main_baraka_end_kilwa" }, { kind = "memory", memory = "mem-main_baraka-c10", title = "七份史书" }]
+reply = "第一天只来了三个人，一个卖鱼的，一个卖布的，一个问我砝码箱卖不卖。我说不卖，但可以借他称一回。潮退的时候，浅滩又露出来，这回从上面走过来的是挑着货的人。"
+
+[[tracks.chapters.choices]]
+key = "road"
+text = "把砝码箱交给马库阿学徒，自己随季风再走一趟"
+next = "done"
+effects = [{ kind = "flag", flag = "c13_main_baraka_done" }, { kind = "flag", flag = "c13_main_baraka_end_road" }, { kind = "memory", memory = "mem-main_baraka-c10", title = "七份史书" }]
+reply = "我教他认箱盖里刻的记号，一格一格讲来历。讲到那个马库阿男孩的那一格，我头一回没加一个笑话。船出港时，他在岸上举着箱子，像举着一盏灯。"
+
+[[tracks.chapters.variants]]
+key = "rw_needle"
+when = [{ kind = "flag", flag = "rw_baraka_needle_end_written" }, { kind = "flag", flag = "h59_mir_ali_coast_coastal_autonomy", value = false }, { kind = "flag", flag = "c13_main_baraka_led_out", value = false }, { kind = "flag", flag = "c7_bond_amina_landing_friend", value = false }]
+text = "1589 年夏天。津巴人往北走，在马林迪北边被塞格朱人挡住了。葡萄牙人在蒙巴萨的岸上量地，说要筑一座石堡。我坐在母亲娘家的院子里。院墙塌了，井还在。膝盖上摊着那本写了二十多年的史书，脚边是父亲的黄铜砝码箱，这些年里面的砝码少了几枚，每一枚都有去处。毡子底下那一枚的去处，我写进了史书，写在父亲的名字底下。一个马库阿来的学徒在替我磨墨，他问：“书写完了，给谁看？”我第一次没有笑话可讲。我说：“给写错我们的人看，也给还没出生的人看。Haba na haba——一点一点，量米的升就满了。”"
+
+[[tracks.chapters.variants]]
+key = "v1_free_led"
+when = [{ kind = "flag", flag = "h59_mir_ali_coast_coastal_autonomy" }, { kind = "flag", flag = "c13_main_baraka_led_out" }]
+text = "1589 年夏天。葡萄牙人的旗从蒙巴萨降下来了，诸城的苏丹第一次自己定港税。那夜跟我出水道的人，回到城里，天天来问书写到了哪一页。津巴人往北走，在马林迪北边被塞格朱人挡住了。我坐在母亲娘家的院子里。院墙塌了，井还在。膝盖上摊着那本写了二十多年的史书，脚边是父亲的黄铜砝码箱，这些年里面的砝码少了几枚，每一枚都有去处。一个马库阿来的学徒在替我磨墨，他问：“书写完了，给谁看？”我第一次没有笑话可讲。我说：“给写错我们的人看，也给还没出生的人看。Haba na haba——一点一点，量米的升就满了。”"
+
+[[tracks.chapters.variants]]
+key = "v2_free"
+when = [{ kind = "flag", flag = "h59_mir_ali_coast_coastal_autonomy" }]
+text = "1589 年夏天。葡萄牙人的旗从蒙巴萨降下来了，诸城的苏丹第一次自己定港税。没人量地，也没人说要筑堡。津巴人往北走，在马林迪北边被塞格朱人挡住了。我坐在母亲娘家的院子里。院墙塌了，井还在。膝盖上摊着那本写了二十多年的史书，脚边是父亲的黄铜砝码箱，这些年里面的砝码少了几枚，每一枚都有去处。一个马库阿来的学徒在替我磨墨，他问：“书写完了，给谁看？”我第一次没有笑话可讲。我说：“给写错我们的人看，也给还没出生的人看。Haba na haba——一点一点，量米的升就满了。”"
+
+[[tracks.chapters.variants]]
+key = "v3_led"
+when = [{ kind = "flag", flag = "c13_main_baraka_led_out" }]
+text = "1589 年夏天。津巴人往北走，在马林迪北边被塞格朱人挡住了。葡萄牙人在蒙巴萨的岸上量地，说要筑一座石堡。那夜跟我出水道的人，在马林迪的海滩上搭起了棚子，天天来问我书写到了哪一页。我坐在母亲娘家的院子里。院墙塌了，井还在。膝盖上摊着那本写了二十多年的史书，脚边是父亲的黄铜砝码箱，这些年里面的砝码少了几枚，每一枚都有去处。一个马库阿来的学徒在替我磨墨，他问：“书写完了，给谁看？”我第一次没有笑话可讲。我说：“给写错我们的人看，也给还没出生的人看。Haba na haba——一点一点，量米的升就满了。”"
+
+[[tracks.chapters.variants]]
+key = "v4_amina"
+when = [{ kind = "flag", flag = "c7_bond_amina_landing_friend" }]
+text = "1589 年夏天。津巴人往北走，在马林迪北边被塞格朱人挡住了。葡萄牙人在蒙巴萨的岸上量地，说要筑一座石堡。我坐在母亲娘家的院子里。院墙塌了，井还在。开罗的阿米娜来信，说书写完了，第七份她来抄。膝盖上摊着那本写了二十多年的史书，脚边是父亲的黄铜砝码箱，这些年里面的砝码少了几枚，每一枚都有去处。一个马库阿来的学徒在替我磨墨，他问：“书写完了，给谁看？”我第一次没有笑话可讲。我说：“给写错我们的人看，也给还没出生的人看。Haba na haba——一点一点，量米的升就满了。”"
+
+# 等待旁轨：两张拓纸（自由开启，auto = false；由 b06 的 wait 或超时打开）。
+[[tracks]]
+key = "main_baraka_solomon"
+name = "两张拓纸"
+kind = "main"
+start = "join"
+auto = false
+cast = ["baraka", "najma"]
+
+[[tracks.chapters]]
+key = "join"
+title = "两半合一"
+text = "两张拓纸凑齐了：一张拓自大津巴布韦的门楣，一张拓自渔夫铜瓶的铅封。摊在一起的那一刻，铅封上的印正好补上门铭缺的那一截。据说拿着这枚印的人，能让山里的灵都听话。灯芯爆了个花，两张纸的边严丝合缝，拓纸上只是一枚印，可灯影晃了一下。"
+mood = "mystic"
+when = [{ kind = "flag", flag = "c13_half_solomon_gate" }, { kind = "flag", flag = "c13_half_solomon_bottle" }, { kind = "flag", flag = "c13_mark_solomon", value = false }]
+deadline = [1588, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "join"
+text = "把两张拓纸并排摊开"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_mark_solomon", value = false }]
+hint = "这枚印已经合过一回了。"
+effects = [{ kind = "item", item = "emerald_mark_solomon", qty = 1 }, { kind = "flag", flag = "c13_mark_solomon" }, { kind = "memory", memory = "mem-main_baraka_solomon-join", title = "两半合一" }]
+reply = "印合上了。拓纸卷好以后，那一截接缝摸上去一点也不硌手。"
+
+[[tracks.chapters.choices]]
+key = "copy_first"
+text = "合起来以前，先各描一份留底"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_mark_solomon", value = false }]
+hint = "印已经合上了，描本也来不及留了。"
+effects = [{ kind = "item", item = "emerald_mark_solomon", qty = 1 }, { kind = "flag", flag = "c13_mark_solomon" }, { kind = "growth", attr = "learning", value = 200 }]
+reply = "描了两份，一份留给自己，一份留给给你另一半的人。合起来的那一张，比两张描本都轻。"
+
+[[tracks.chapters.variants]]
+key = "baraka"
+when = [{ kind = "flag", flag = "c13_main_baraka" }]
+speaker = "captain"
+text = "两张拓纸凑齐了：一张拓自大津巴布韦的门楣，一张拓自渔夫铜瓶的铅封。纳吉玛的铅封拓纸随季风船到了，我把它跟门铭并排摊开，嘴里还在跟她不在场地吵。铅封上的印正好补上门铭缺的那一截。据说拿着这枚印的人，能让山里的灵都听话。灯芯爆了个花。我说：“纳吉玛要是在，准说是她的瓶子先到的。”"
+
+[[tracks.chapters.variants]]
+key = "najma"
+when = [{ kind = "flag", flag = "c13_main_najma" }]
+speaker = "captain"
+text = "基尔瓦的金商托人捎来门铭的拓纸，信里又把一颗星叫错了。我把两张纸对齐，铅封上的印正好补上门铭缺的那一截，差不到一根头发。灯芯爆了个花，两张纸的边严丝合缝。"
+
+# ───────────── 旁轨（剧情增写 2026-11-12，Claude）：铜针（父亲萨利姆，1557 年到他死后，6 章） ─────────────
+# 母本：斯瓦希里史诗《利昂戈·富莫》——刀枪不入的英雄把唯一能杀死他的铜针告诉了亲生儿子；敌人许了儿子一样东西（k3 石堡的书记）；英雄死后跪在井边，城里三天没人敢去打水（k4 秤房的门槛）。
+# 文化：斯瓦希里城邦的商业与体面；对内陆卖金人的轻慢藏在一枚砝码里。张力：萨利姆的爱是真的，他的富也是真的，两样都有一丝一丝称出来的那一部分；巴拉卡接过来以后用还是不用。
+# 入口：c13_main_baraka（a00 default 设）加日期；k6 读 _act3（c01 必设）。各章有期限与 timeout，k6 是终章（next = done）。
+# 人物的死：萨利姆死于 1563 年 10 月（k4；a06 从 1564 年起写下葬第四十天，k4 期限截在 1563 年底）；姆泽死于 1567 年（k5；在 a06 的期限 1566-10-31 以后）。
+# 约定：a00—b08 不提马库阿男孩（c01 的秘密），k6 在 _act3 以后才提箱里“最小的那一枚”；不写恋爱；口头禅 Haba na haba 不在旁轨里出现。
+# 读：rw_baraka_needle_know / _wait / _mute（养成·铜针 n7，k1 变体）、rw_baraka_needle_teach_boy（n6，k2 变体）、rw_baraka_son_guilty / _forgiven / _town（养成·利昂戈的井 n5，k5 变体）、
+#     c13_main_baraka_told_portuguese / _hid_traders（a04，k3 变体）。
+# 设：rw_baraka_k_took / _refused / _asked_kati（k1）、_used / _true / _repaid（k2）、_gave_clerk / _denied / _told_father（k3）、_finished / _hand / _sat（k4）、
+#     _mze_written / _mze_heard / _mze_sang 与 rw_baraka_mze_gone（k5，timeout 也设 mze_gone）、rw_baraka_needle_end_written / _end_told / _end_blank（k6）。
+#     已有章节 a06 读 _repaid，b00 读 mze_gone，c10 读 needle_end_written。
+[[tracks]]
+key = "main_baraka_rw_needle"
+name = "铜针"
+kind = "main"
+start = "k1_bottom"
+auto = true
+cast = ["baraka"]
+
+# k1 毡子底下：利昂戈把秘密告诉儿子。读养成期 n7 的回信。
+[[tracks.chapters]]
+key = "k1_bottom"
+title = "毡子底下"
+text = "从索法拉回来，父亲已经不大下楼了，咳得夜里要坐着睡。他把我叫到秤房，从腰带里摸出那块缝着红线的羊皮：“箱子交给你那天，我把这一枚留下了。”羊皮解开，那枚砝码躺在他掌心里，刻着十，分量只有九成半。“只用在下山卖金的人身上。头一回是你娘咳血那年，后来是你的书，后来是这个屋顶。”他看着我，“利昂戈把铜针交给儿子，是因为他累了。我也累了。”"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1557, 4, 1] }]
+at = "kilwa"
+speaker = "captain"
+mood = "tender"
+cast = ["baraka"]
+deadline = [1557, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接过来：这一枚以后归我管"
+next = "k2_kati"
+effects = [{ kind = "flag", flag = "rw_baraka_k_took" }, { kind = "growth", attr = "resolve", value = 150 }]
+reply = "我把那一枚接过来，连羊皮一起塞进腰带。父亲松了一口气，像卸下一包金砂，又咳了很久。“归你管，”他说，“用不用也归你。”那天夜里他睡得很沉，我在秤房坐到天亮，腰带里那一点分量，比整箱砝码还沉。"
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不接：您用的，您自己收着"
+next = "k2_kati"
+effects = [{ kind = "flag", flag = "rw_baraka_k_refused" }, { kind = "growth", attr = "honor", value = 100 }]
+reply = "我把他的手合上，连那一枚一起。“您用的，您收着。”父亲看着自己的拳头，笑了一声：“利昂戈的儿子要是像你，他就死不了了。”他把羊皮包塞回腰带，拍了两下，“可我还是会死的。”"
+
+[[tracks.chapters.choices]]
+key = "ask_kati"
+text = "问他：卡蒂知道吗"
+next = "k2_kati"
+effects = [{ kind = "flag", flag = "rw_baraka_k_asked_kati" }]
+reply = "“卡蒂？”父亲想了一会儿才想起是谁，“他爷爷信了我二十年。他爷爷不看秤，看我的脸。”他把那一枚放上秤盘，自己盯着横梁：“我这张脸，比这一枚还轻。”卡蒂知不知道，他没答，我也没再问。"
+
+[tracks.chapters.timeout]
+next = "k2_kati"
+effects = []
+news = "基尔瓦的人说，金商萨利姆今年没下过码头，秤房交给了从开罗回来的儿子。"
+
+[[tracks.chapters.variants]]
+key = "rw_know"
+when = [{ kind = "flag", flag = "rw_baraka_needle_know", value = true }]
+text = "从索法拉回来，父亲已经不大下楼了，咳得夜里要坐着睡。他把我叫到秤房，从腰带里摸出那块缝着红线的羊皮：“箱子交给你那天，我把这一枚留下了。”羊皮解开，那枚砝码躺在他掌心里，刻着十，分量只有九成半。“只用在下山卖金的人身上。头一回是你娘咳血那年，后来是你的书，后来是这个屋顶。”他看着我，“你信里说你已经知道。你知道得比我早，我是用了十年才知道它有多轻。利昂戈把铜针交给儿子，是因为他累了。我也累了。”"
+
+[[tracks.chapters.variants]]
+key = "rw_mute"
+when = [{ kind = "flag", flag = "rw_baraka_needle_mute", value = true }]
+text = "从索法拉回来，父亲已经不大下楼了，咳得夜里要坐着睡。他把我叫到秤房，从腰带里摸出那块缝着红线的羊皮：“箱子交给你那天，我把这一枚留下了。”羊皮解开，那枚砝码躺在他掌心里，刻着十，分量只有九成半。“只用在下山卖金的人身上。头一回是你娘咳血那年，后来是你的书，后来是这个屋顶。”他看着我，“我在信里说当面讲，你回信一个字也没提它。你像我。利昂戈把铜针交给儿子，是因为他累了。我也累了。”"
+
+[[tracks.chapters.variants]]
+key = "rw_wait"
+when = [{ kind = "flag", flag = "rw_baraka_needle_wait", value = true }]
+text = "从索法拉回来，父亲已经不大下楼了，咳得夜里要坐着睡。他把我叫到秤房，从腰带里摸出那块缝着红线的羊皮：“箱子交给你那天，我把这一枚留下了。”羊皮解开，那枚砝码躺在他掌心里，刻着十，分量只有九成半。“只用在下山卖金的人身上。头一回是你娘咳血那年，后来是你的书，后来是这个屋顶。”他看着我，“你说等你回来，叫我慢慢讲。我没力气慢慢讲了，就这几句。利昂戈把铜针交给儿子，是因为他累了。我也累了。”"
+
+# k2 卡蒂下山：用还是不用。差额照算要钱（requires 现金，带 hint）。
+[[tracks.chapters]]
+key = "k2_kati"
+title = "卡蒂下山"
+text = "旱季，内陆的商队又下到海边。卡蒂十五了，个子快跟我一般高，背上的芭蕉叶包比他爷爷那时候的还大。他把金砂放在秤房的木台上，没看我的脸，先看秤杆，眼睛跟着横梁走。父亲坐在里屋的门帘后头，我听得见他压着嗓子咳，咳两声，停一停，像在提醒我什么。卡蒂说：“我爷爷说你们家的秤是老的。”他把手搭在台边，等我拿砝码。那一枚在哪儿，我和父亲都知道。"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1558, 9, 1] }]
+at = "kilwa"
+speaker = "captain"
+mood = "tense"
+cast = ["baraka"]
+deadline = [1559, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "use"
+text = "用那一枚，照父亲这些年的规矩"
+next = "k3_clerk"
+effects = [{ kind = "cash", value = 800 }, { kind = "flag", flag = "rw_baraka_k_used" }]
+reply = "横梁停在老地方。卡蒂数了数刻线，点点头，把金砂倒进我的袋子。我给他讲了个海龟借水的笑话，他笑了，笑得跟他爷爷一模一样。门帘后头的咳嗽停了。那一季，萨利姆家的金子比哪一年都多。"
+
+[[tracks.chapters.choices]]
+key = "true"
+text = "用刻字清楚的那一枚"
+next = "k3_clerk"
+effects = [{ kind = "cash", value = 400 }, { kind = "flag", flag = "rw_baraka_k_true" }]
+reply = "横梁朝卡蒂那一边沉下去一点。卡蒂没觉出什么，他从没见过别的数。我照横梁付了钱，多出的那一点，他揣进怀里，说今年的布能多换两匹。门帘后头，父亲很久没咳。晚饭的时候他说：“往后你称，我不听了。”"
+
+[[tracks.chapters.choices]]
+key = "repay"
+text = "称准，再把这些年的差额算给他"
+next = "k3_clerk"
+requires = [{ kind = "cash", ge = 1000 }]
+hint = "这些年的差额，袋里的钱还填不上。"
+effects = [{ kind = "cash", value = -1000 }, { kind = "reputation", faction = "mutapa", value = 2 }, { kind = "flag", flag = "rw_baraka_k_repaid" }]
+reply = "我称准了，又搬出父亲的旧账，一年一年算给他看，算到他爷爷头一回下山那年。卡蒂听完，像被人当胸推了一把。他把钱收下，一枚一枚数，数完问：“我爷爷知道吗？”门帘后头，父亲替我答了：“他不知道。他信我。”"
+
+[tracks.chapters.timeout]
+next = "k3_clerk"
+effects = []
+news = "内陆下来的卖金人说，基尔瓦萨利姆家的秤，今年换了一双手。"
+
+[[tracks.chapters.variants]]
+key = "rw_taught"
+when = [{ kind = "flag", flag = "rw_baraka_needle_teach_boy", value = true }]
+text = "旱季，内陆的商队又下到海边。卡蒂十五了，个子快跟我一般高，背上的芭蕉叶包比他爷爷那时候的还大。他把金砂放在秤房的木台上，没看我的脸，先看秤杆，一格一格数刻线——那些刻线，是我隔着一片海托姑母教给他的。父亲坐在里屋的门帘后头，压着嗓子咳，咳两声，停一停，像在提醒我什么。卡蒂说：“我爷爷说你们家的秤是老的。”他把手搭在台边，等我拿砝码。那一枚在哪儿，我和父亲都知道。"
+
+# k3 书记要的证物：敌人许给儿子一样东西。西尔韦拉死后，石堡把这桩死算在海边摩尔商人头上（a04）。
+[[tracks.chapters]]
+key = "k3_clerk"
+title = "书记要的证物"
+text = "神父死后，索法拉石堡里的人写了一份又一份给国王的报告，说穆塔帕的王是被海边的摩尔商人挑唆的。堡里的书记找到我，请我喝了一杯葡萄牙酒。他说里斯本还要一样东西：摩尔人怎样骗内陆卖金人的证据，最好是一枚亲手拿出来的假砝码。“你给我一枚，你家的名字就不上名单。你父亲的老伙计们，我管不了。”他说话很客气，酒杯一直没放下。我（心里）：利昂戈的儿子，也是有人许了他一样东西。"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1561, 9, 1] }]
+at = "sofala"
+speaker = "captain"
+mood = "tense"
+cast = ["baraka"]
+deadline = [1562, 8, 31]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把那一枚交给书记"
+next = "k4_threshold"
+effects = [{ kind = "reputation", faction = "portugal", value = 3 }, { kind = "reputation", faction = "swahili_cities", value = -3 }, { kind = "flag", flag = "rw_baraka_k_gave_clerk" }]
+reply = "我把羊皮包放在他的酒杯旁边。书记打开看了很久，在本子上描下它的样子，写上分量，又写上“基尔瓦的摩尔人”。他没写萨利姆，他说话算话。回基尔瓦的船上，我给水手讲了一路笑话，讲到最后一个，我自己先停了。"
+
+[[tracks.chapters.choices]]
+key = "deny"
+text = "说海边的秤没有那样的东西"
+next = "k4_threshold"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 1 }, { kind = "flag", flag = "rw_baraka_k_denied" }]
+reply = "我说海边的秤是老的，砝码也是老的，老东西磨轻了，不算骗。书记笑了，说我父亲教得好。他把酒喝完。第二天，名单上多了两个父亲老伙计的名字。是不是因为我，我没去问。"
+
+[[tracks.chapters.choices]]
+key = "tell_father"
+text = "回去把书记的话原样告诉父亲"
+next = "k4_threshold"
+effects = [{ kind = "flag", flag = "rw_baraka_k_told_father" }]
+reply = "父亲靠在墙上闭着眼，过了很久才开口：“他许你什么？”我说许我家的名字。父亲说：“那你回他：萨利姆家的名字，不值一枚砝码。”说完他自己笑了，笑得又咳起来，“这话是我年轻时候说的。说完没几年，我就用上了它，一用二十年。”"
+
+[tracks.chapters.timeout]
+next = "k4_threshold"
+effects = []
+news = "索法拉石堡的报告送去了里斯本，听说里头附了一张砝码的图。"
+
+[[tracks.chapters.variants]]
+key = "rw_hid"
+when = [{ kind = "flag", flag = "c13_main_baraka_hid_traders" }]
+text = "神父死后，索法拉石堡里的人写了一份又一份给国王的报告，说穆塔帕的王是被海边的摩尔商人挑唆的。堡里的书记找到我，请我喝了一杯葡萄牙酒：“你把几个摩尔人藏进象牙堆里，长官记得。”他说里斯本还要一样东西：摩尔人怎样骗内陆卖金人的证据，最好是一枚亲手拿出来的假砝码。“你给我一枚，这笔旧账就算了，你家的名字也不上名单。”他说话很客气，酒杯一直没放下。我（心里）：利昂戈的儿子，也是有人许了他一样东西。"
+
+[[tracks.chapters.variants]]
+key = "rw_told"
+when = [{ kind = "flag", flag = "c13_main_baraka_told_portuguese" }]
+text = "神父死后，索法拉石堡里的人写了一份又一份给国王的报告，说穆塔帕的王是被海边的摩尔商人挑唆的。堡里的书记找到我，请我喝了一杯葡萄牙酒：“神父死的消息，岛上是从你的船上听来的。长官记得你。”他说里斯本还要一样东西：摩尔人怎样骗内陆卖金人的证据，最好是一枚亲手拿出来的假砝码。“你给我一枚，你家的名字就不上名单。”他说话很客气，酒杯一直没放下。我（心里）：利昂戈的儿子，也是有人许了他一样东西。"
+
+# k4 秤房的门槛：萨利姆死（1563 年 10 月）。像利昂戈死在井边，一整天没人敢进去。
+[[tracks.chapters]]
+key = "k4_threshold"
+title = "秤房的门槛"
+text = "十月，父亲死了。他死在秤房的门槛上，背靠着门框，一只手搭在秤杆上，秤盘里还压着半包金砂。码头上来来去去的人都看见了，都以为萨利姆又在等谁先开价，没人敢进去打扰，从早上一直到太阳偏西。是姑母去叫他吃饭，站在门口跟他说了两句话，他没应，她才走过去。我的船是第二天靠的岸。姆泽说，利昂戈也是这样，在井边跪着，三天没人敢去打水。"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1563, 10, 12] }]
+at = "kilwa"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+deadline = [1563, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "finish"
+text = "先把秤盘里那半包称完"
+next = "k5_last_song"
+effects = [{ kind = "growth", attr = "honor", value = 200 }, { kind = "flag", flag = "rw_baraka_k_finished" }]
+reply = "我跪在他旁边，把那半包金砂称完。横梁上压着的砝码刻字清清楚楚，不是羊皮里那一枚。他最后一回称金，用的是准的。我把数记进账，记在他的名字底下，然后才去扶他。"
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "替他把手从秤杆上拿下来"
+next = "k5_last_song"
+effects = [{ kind = "growth", attr = "sensibility", value = 150 }, { kind = "flag", flag = "rw_baraka_k_hand" }]
+reply = "他的手已经僵了，我一根一根掰开他的指头。秤杆上有他攥出来的一道亮印子，三十年攥出来的。姑母在我身后说：“轻点，他怕疼。”她从来没说过他怕疼。"
+
+[[tracks.chapters.choices]]
+key = "sit"
+text = "挨着他坐下，等到天黑再叫人"
+next = "k5_last_song"
+effects = [{ kind = "skill", skill = "poetry", value = 40 }, { kind = "flag", flag = "rw_baraka_k_sat" }]
+reply = "我在门槛上挨着他坐下，像小时候等他收秤。码头上的人还是不进来，他们现在知道了，可还是不进来。天黑了，姆泽拄着拐杖来，站在门外唱了一段利昂戈，唱完说：“好了，可以进去了。”这才有人进来抬他。"
+
+[tracks.chapters.timeout]
+next = "k5_last_song"
+effects = []
+news = "基尔瓦的人说，金商萨利姆死在自家秤房的门槛上，手还搭在秤杆上，过路的人一整天都以为他在等人开价。"
+
+[[tracks.chapters.variants]]
+key = "rw_repaid"
+when = [{ kind = "flag", flag = "rw_baraka_k_repaid", value = true }]
+text = "十月，父亲死了。他死在秤房的门槛上，背靠着门框，一只手搭在秤杆上，秤盘里还压着半包金砂，是卡蒂今年带下山的。码头上来来去去的人都看见了，都以为萨利姆又在等谁先开价，没人敢进去打扰，从早上一直到太阳偏西。是姑母去叫他吃饭，站在门口跟他说了两句话，他没应，她才走过去。我的船是第二天靠的岸。姆泽说，利昂戈也是这样，在井边跪着，三天没人敢去打水。"
+
+# k5 姆泽唱的第三遍：老诗人死（1567 年）。读养成期 n5 对“儿子那一段”的回答。
+[[tracks.chapters]]
+key = "k5_last_song"
+title = "姆泽唱的第三遍"
+text = "姆泽躺在椰荫下的席子上，已经起不来了，嗓子只剩一缕气。他叫我把耳朵凑过去，要唱利昂戈的最后一段，说这是第三遍，给他自己的。他唱铜针，唱井，唱跪着的弓。唱到儿子，他停了很久。“你爹的事，我知道。”他说，“基尔瓦唱歌的人什么都知道，只是不唱。”"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1567, 2, 1] }]
+at = "kilwa"
+speaker = "captain"
+mood = "mystic"
+cast = ["baraka"]
+deadline = [1567, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "拿出纸，他唱一句，我记一句"
+next = "k6_where"
+effects = [{ kind = "growth", attr = "learning", value = 150 }, { kind = "flag", flag = "rw_baraka_k_mze_written" }, { kind = "flag", flag = "rw_baraka_mze_gone" }]
+reply = "他唱一句，我记一句。记到儿子那一行，他唱的是：针是父亲给的，手是儿子的，两样都记着。唱完他问我记下没有。我说记下了。他说：“好，这一段我不唱了。”那是他说的最后一句整话。"
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "不记，只听，听完背给他"
+next = "k6_where"
+effects = [{ kind = "skill", skill = "poetry", value = 60 }, { kind = "flag", flag = "rw_baraka_k_mze_heard" }, { kind = "flag", flag = "rw_baraka_mze_gone" }]
+reply = "我没拿纸。他唱完，我从头背了一遍，背到马菲亚后面那一段，他拿指头敲了一下席子，是我念错了一个音。我改过来，他才把手放下。那天夜里，他就走了。"
+
+[[tracks.chapters.choices]]
+key = "sing"
+text = "替他唱：葡萄牙人来的那年，有人跑了"
+next = "k6_where"
+effects = [{ kind = "growth", attr = "sensibility", value = 150 }, { kind = "flag", flag = "rw_baraka_k_mze_sang" }, { kind = "flag", flag = "rw_baraka_mze_gone" }]
+reply = "我替他唱了那一句，他的调子，我的词：船进港那天，有个孩子跑进红树林，丢了一只鞋，活了下来，后来唱了五十年歌。他闭着眼听，嘴角动了动，像在跟着唱，又像在骂我。"
+
+[tracks.chapters.timeout]
+next = "k6_where"
+effects = [{ kind = "flag", flag = "rw_baraka_mze_gone" }]
+news = "基尔瓦的人说，唱了一辈子老地名的姆泽死了，死前三天还在码头的石凳上坐着。"
+
+[[tracks.chapters.variants]]
+key = "rw_forgiven"
+when = [{ kind = "flag", flag = "rw_baraka_son_forgiven", value = true }]
+text = "姆泽躺在椰荫下的席子上，已经起不来了，嗓子只剩一缕气。他叫我把耳朵凑过去，要唱利昂戈的最后一段，说这是第三遍，给他自己的。他唱铜针，唱井，唱跪着的弓。唱到儿子，他停了很久。“你在开罗画的那个圈，我想了十年，还是画不圆。你爹的事，我知道。基尔瓦唱歌的人什么都知道，只是不唱。”"
+
+[[tracks.chapters.variants]]
+key = "rw_guilty"
+when = [{ kind = "flag", flag = "rw_baraka_son_guilty", value = true }]
+text = "姆泽躺在椰荫下的席子上，已经起不来了，嗓子只剩一缕气。他叫我把耳朵凑过去，要唱利昂戈的最后一段，说这是第三遍，给他自己的。他唱铜针，唱井，唱跪着的弓。唱到儿子，他停了很久。“你在开罗说，儿子该恨。我留着跟你吵，吵不动了。你爹的事，我知道。基尔瓦唱歌的人什么都知道，只是不唱。”"
+
+[[tracks.chapters.variants]]
+key = "rw_town"
+when = [{ kind = "flag", flag = "rw_baraka_son_town", value = true }]
+text = "姆泽躺在椰荫下的席子上，已经起不来了，嗓子只剩一缕气。他叫我把耳朵凑过去，要唱利昂戈的最后一段，说这是第三遍，给他自己的。他唱铜针，唱井，唱跪着的弓。唱到城里那三天，他停了很久。“那三天没敢去打水的，我算一个，你爹也算一个。你爹的事，我知道。基尔瓦唱歌的人什么都知道，只是不唱。”"
+
+# k6 每一枚的去处：终章。_act3 以后才写箱里“最小的那一枚”。
+[[tracks.chapters]]
+key = "k6_where"
+title = "每一枚的去处"
+text = "这些年，父亲的砝码箱跟着我走了半个世界，里面的砝码少了几枚，最小的那一枚跟着一个马库阿男孩去了日本。夜里我把剩下的一枚枚摆出来，从大到小，像父亲当年在秤房里那样。摆到最后，空出来的那个位置是毡子底下那一枚的。它轻了半成，二十年里从下山卖金的人袋子里，一丝一丝称出了一剂药、一个屋顶、开罗的几年书。我写了二十年史书，这一页一直空着。"
+when = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "date", from = [1584, 6, 1] }]
+speaker = "captain"
+mood = "tender"
+cast = ["baraka"]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "在史书里写下：这一枚轻了多少"
+next = "done"
+effects = [{ kind = "growth", attr = "learning", value = 100 }, { kind = "flag", flag = "rw_baraka_needle_end_written" }]
+reply = "我写：基尔瓦金商萨利姆，箱底有一枚砝码，刻十，重九成半，用了二十年，用在下山卖金的人身上。写完我在旁边添上自己的名字，因为那一年我也拿过它。墨干了，这一页终于不空了。"
+
+[[tracks.chapters.choices]]
+key = "kati"
+text = "去马尼卡找卡蒂，当面讲给他"
+next = "done"
+effects = [{ kind = "reputation", faction = "mutapa", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_end_told" }]
+reply = "我随商队上了马尼卡的金市，在门长的旗子底下找到了卡蒂，他的儿子已经能背金砂下山了。我把父亲的事从头讲了一遍，讲到羊皮上的红线。他听完，往我手里塞了一小撮金砂：“我爷爷要是在，会说算了。我不说算了，我说：你讲完了。”"
+
+[[tracks.chapters.choices]]
+key = "blank"
+text = "这一页留着，给以后的人"
+next = "done"
+effects = [{ kind = "flag", flag = "rw_baraka_needle_end_blank" }]
+reply = "我没写。史书里只写父亲死在秤房的门槛上，手还搭在秤杆上。轻的那一枚，留给以后翻到这一页的人自己去称。我合上书，给自己讲了个笑话，没讲完。"
+
+[[tracks.chapters.variants]]
+key = "rw_clerk"
+when = [{ kind = "flag", flag = "rw_baraka_k_gave_clerk", value = true }]
+text = "这些年，父亲的砝码箱跟着我走了半个世界，里面的砝码少了几枚，最小的那一枚跟着一个马库阿男孩去了日本。夜里我把剩下的一枚枚摆出来，从大到小，像父亲当年在秤房里那样。摆到最后，空出来的那个位置是毡子底下那一枚的，它在里斯本哪个柜子里，夹在一份说摩尔人如何骗人的报告中间。它轻了半成，二十年里一丝一丝称出了一剂药、一个屋顶、开罗的几年书。我写了二十年史书，这一页一直空着。"
+
+[[tracks.chapters.variants]]
+key = "rw_repaid"
+when = [{ kind = "flag", flag = "rw_baraka_k_gave_clerk", value = false }, { kind = "flag", flag = "rw_baraka_k_repaid", value = true }]
+text = "这些年，父亲的砝码箱跟着我走了半个世界，里面的砝码少了几枚，最小的那一枚跟着一个马库阿男孩去了日本。夜里我把剩下的一枚枚摆出来，从大到小，像父亲当年在秤房里那样。摆到最后，空出来的那个位置是毡子底下那一枚的。它轻了半成，二十年里称出了一剂药、一个屋顶、开罗的几年书；差额我算给了卡蒂，账是平了。卡蒂每年下山还来我的秤房，自己看刻线，自己报数。我写了二十年史书，这一页一直空着。"
+
+
+# ───────────── 旁轨（剧情增写 2026-11-12，Claude）：河边的兵（流放兵迪奥戈与耶稣会士蒙克拉罗斯，1561—1581，7 章，含掷骰失败的一章） ─────────────
+# 母本：《忏悔录》第八卷的花园——一个放纵的人被一句话击中，从此换了一种活法（这里击中他的是河面一下子平了）；
+# 文化：葡萄牙的流放兵与殉道者崇拜——慈悲与刀出自同一份信；张力：赌了一辈子的人把命押给一个被扔进河里的神父；九年后神父的弟兄要拿摩尔人的命去抵那条命，他信的神站在哪一边，这一把得他自己掷。
+# 蒙克拉罗斯照他自己的报告写（不加旁白审判，也不洗白）：他为没有坟的弟兄悲痛，力主走河路去惩罚害死西尔韦拉的人；塞纳的马死了，马夫在拷问下供出摩尔教长，成年男子被杀，十七人受审，一人受洗、改为绞死；
+#     他把这叫作公道；1573 年与巴雷托大吵，巴雷托不久死在塞纳；他劝接手的人退回莫桑比克，自己搭船回里斯本。兰达那条线的火、书、“你又能救得了谁”，这里都不用。
+# 新人物：流放兵迪奥戈只在正文里出现，不作 speaker，不加情谊效果。他死不死由 r4 的检定定（失败走 r4_dice，死于 1572 年）。
+# 入口：r1、r2 读 c13_main_baraka（a00 设），r3—r5 读 _act2（b00 必设），r6 读 _act3（c01 必设）。塞纳不是港口，r4 不设 at。
+# 读：c13_main_baraka_guided（a03，r1、r3 变体）、c13_main_baraka_guided_barreto（b01，r4 变体）。
+# 设：rw_baraka_r_water / _salt_shown / _asked（r1）、_salt_given / _salt_half / _salt_kept（r2）、_described / _argued / _asked_grave（r3）、
+#     _stood_saved / _diogo_died（检定失败）/ _bought_women / _away（r4，互斥；timeout 也设 _away）、_shouted / _salted_river（r4_dice）、_asked_sleep / _carried_box / _told_silveira（r5）、
+#     rw_baraka_river_end_written / _end_salt / _end_asked（r6）。
+[[tracks]]
+key = "main_baraka_rw_river"
+name = "河边的兵"
+kind = "main"
+start = "r1_dice"
+auto = true
+cast = ["baraka"]
+
+# r1 扔进河里的骰子：西尔韦拉死后，一个流放兵从河上下来（看见天堂一角的人）。
+[[tracks.chapters]]
+key = "r1_dice"
+title = "扔进河里的骰子"
+text = "雨季前，一个葡萄牙流放兵从赞比西河上游漂下来，在索法拉的酒棚里坐着，面前一碗水。棚里的人都认得他：迪奥戈，里斯本的牢里放出来的，在王廷边上跟人赌了五年骰子，输掉过一条船。他说神父被勒死那夜他在河边，看着他们把人抬下来，扔进水里。“他的脸一点也不怕。水一下子就平了，像底下有人伸手接住了他。”从那夜起他没再摸过骰子，骰子他也扔进了河里。"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1561, 9, 15] }]
+at = "sofala"
+speaker = "captain"
+mood = "mystic"
+cast = ["baraka"]
+deadline = [1562, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "water"
+text = "给他再要一碗水"
+next = "r2_penitent"
+effects = [{ kind = "flag", flag = "rw_baraka_r_water" }]
+reply = "他两手捧着那碗水，喝得很慢，像在喝什么贵东西。“我从前一天喝一罐酒，现在喝水，喝出来水是有味道的。”我说那是索法拉的井水咸。他摇头：“不是咸。是我从前没尝过。”"
+
+[[tracks.chapters.choices]]
+key = "salt"
+text = "把神父那只盐袋拿给他看"
+next = "r2_penitent"
+effects = [{ kind = "flag", flag = "rw_baraka_r_salt_shown" }]
+reply = "他一看见袋口那个结，就从凳子上滑下去，跪在泥地上，额头碰着我的鞋尖。他求我让他拿一下，就一下。他捧着袋子，嘴唇动个不停，念的是拉丁话，念完还给我，眼睛是红的：“你留着。你是摩尔人，可你留着比我留着干净。”"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：你那夜在河边做什么"
+next = "r2_penitent"
+effects = [{ kind = "flag", flag = "rw_baraka_r_asked" }]
+reply = "“等他们赌完。”他说那夜王廷边上有一场骰子局，他输光了，出来撒尿，正碰上抬人的。“我要是赢了，就不会出来，就看不见。”他看着自己的手，“你说，是骰子叫我输的，还是谁叫我输的？”"
+
+[tracks.chapters.timeout]
+next = "r2_penitent"
+effects = []
+news = "索法拉的人说，有个流放兵从河上下来，戒了酒，也戒了骰子，逢人就讲神父的事。"
+
+[[tracks.chapters.variants]]
+key = "rw_guided"
+when = [{ kind = "flag", flag = "c13_main_baraka_guided" }]
+text = "雨季前，一个葡萄牙流放兵从赞比西河上游漂下来，在索法拉的酒棚里坐着，面前一碗水。棚里的人都认得他：迪奥戈，里斯本的牢里放出来的，在王廷边上跟人赌了五年骰子，输掉过一条船。他一见我就问：“教神父拍手的，是你吧？他进王廷那天，拍得全城都听见了。”他说神父被勒死那夜他在河边，看着他们把人扔进水里。“他的脸一点也不怕。水一下子就平了，像底下有人伸手接住了他。”从那夜起他没再摸过骰子，骰子他也扔进了河里。"
+
+# r2 医院的水担：他把命交给了那个神，神父们却信不过一个赌徒。盐袋的去处。
+[[tracks.chapters]]
+key = "r2_penitent"
+title = "医院的水担"
+text = "莫桑比克岛的医院挨着小教堂，屋里躺着等船回葡萄牙的病人，热病一来，一夜抬出去好几个。迪奥戈在这里挑水，一天挑三十担，肩膀上一道一道血印。每个星期五他关起门来拿绳子抽自己，抽到隔壁的病人求他停手。神父们说他是个赌徒，信不过，不给他领圣体。他见了我，先问的还是那只盐袋：“还在吗？”他想带着它上河，去找神父沉下去的那一段水。"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1564, 6, 1] }]
+at = "mozambique_island"
+speaker = "captain"
+mood = "tender"
+cast = ["baraka"]
+deadline = [1567, 10, 31]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把盐袋给他"
+next = "r3_monclaro"
+effects = [{ kind = "flag", flag = "rw_baraka_r_salt_given" }]
+reply = "我把盐袋交给他。他这回没有跪，只是两手接过去，贴在胸口，站了很久。“我替你带到那段水边，”他说，“撒一半，留一半。留下的那一半，等我死了，跟我埋在一起。”"
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "分一半给他，另一半我留着"
+next = "r3_monclaro"
+effects = [{ kind = "flag", flag = "rw_baraka_r_salt_half" }]
+reply = "我们蹲在医院门口，把盐倒在一片芭蕉叶上，分成两堆。他分得很仔细，一粒一粒拨，拨到两堆一样多。“一半在河上，一半在海上，”他说，“他走过的路，就都有了。”"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "说：这是恩科西交到我手里的"
+next = "r3_monclaro"
+effects = [{ kind = "flag", flag = "rw_baraka_r_salt_kept" }]
+reply = "我说这只袋子是王廷的信使从山里一路攥下来的，我得替他留着。迪奥戈没再求，点点头，挑起水担走了。走到门口他回头：“那你替我摸一摸袋口的结。他打结的时候，手指是凉的。”"
+
+[tracks.chapters.timeout]
+next = "r3_monclaro"
+effects = []
+news = "莫桑比克岛上的人说，医院里那个挑水的流放兵，神父们还是不肯给他领圣体。"
+
+# r3 没有坟的人：蒙克拉罗斯的悲痛。与 b01 同一时节。
+[[tracks.chapters]]
+key = "r3_monclaro"
+title = "没有坟的人"
+text = "巴雷托的营地里，耶稣会士蒙克拉罗斯住在最靠海的一顶帐篷，夜里点着灯写信，写给国王，也写给罗马。他瘦，眼窝深，一说起西尔韦拉，声音就低下去，像怕吵醒谁。“他连一座坟都没有，河把他吃了。我们的弟兄死在哪里，我们就在哪里替他立十字。他死在一条河里，十字立在哪里？”迪奥戈蹲在帐篷外头，是他找来的证人。蒙克拉罗斯转过来问我：“王廷里那些从海边去的商人，你认得几个？”"
+when = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "date", from = [1569, 10, 1] }]
+at = "mozambique_island"
+speaker = "captain"
+mood = "tense"
+cast = ["baraka"]
+deadline = [1570, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "describe"
+text = "给他讲西尔韦拉在索法拉的样子"
+next = "r4_sena"
+effects = [{ kind = "flag", flag = "rw_baraka_r_described" }]
+reply = "我讲他睡在甲板上，讲那袋盐和那壶水，讲他的手指干得裂了口子。蒙克拉罗斯闭着眼听，听到裂口，把自己的手伸到灯下看了看。“他总不肯抹油，说油是给活人的。”他谢了我，谢完又问了一遍：那些商人，我认得几个。"
+
+[[tracks.chapters.choices]]
+key = "argue"
+text = "说：勒死他的是王廷的议事会"
+next = "r4_sena"
+effects = [{ kind = "flag", flag = "rw_baraka_r_argued" }]
+reply = "蒙克拉罗斯点头，好像早等着这一句：“议事会的耳朵是谁喂的？”他从桌上抽出一张纸，上面一列名字，都是摩尔人。“我不恨他们，我替他们祷告。可公道是公道，祷告是祷告。”他把纸放回去，压上一块石头。"
+
+[[tracks.chapters.choices]]
+key = "grave"
+text = "问他：你要的是一座坟，还是一笔账"
+next = "r4_sena"
+effects = [{ kind = "flag", flag = "rw_baraka_r_asked_grave" }]
+reply = "他看了我很久，久到灯芯爆了一下。“我要他不白死。一个人为天主死在河里，河边的人照旧做买卖，照旧称金子，好像什么都没发生过——那他就白死了。”说这话的时候，他的手在抖，是真的在抖。"
+
+[tracks.chapters.timeout]
+next = "r4_sena"
+effects = []
+news = "莫桑比克岛上的人说，巴雷托营里那个耶稣会士天天写信，写的都是死在河里的那个神父。"
+
+[[tracks.chapters.variants]]
+key = "rw_guided"
+when = [{ kind = "flag", flag = "c13_main_baraka_guided" }]
+text = "巴雷托的营地里，耶稣会士蒙克拉罗斯住在最靠海的一顶帐篷，夜里点着灯写信，写给国王，也写给罗马。他听说我陪西尔韦拉上过河口，叫人给我搬了凳子：“他信里写过一个基尔瓦人，话多，心好。”一说起西尔韦拉，他的声音就低下去：“他连一座坟都没有，河把他吃了。他死在一条河里，十字立在哪里？”迪奥戈蹲在帐篷外头，是他找来的证人。蒙克拉罗斯转过来问我：“王廷里那些从海边去的商人，你认得几个？”"
+
+# r4 塞纳的十七个人：站没站到前面，由玩家的选择与他自己的命定（检定失败走 r4_dice）。
+[[tracks.chapters]]
+key = "r4_sena"
+title = "塞纳的十七个人"
+text = "塞纳的河岸上，远征军的马一匹接一匹倒下。马夫们挨了拷打，供出一个摩尔教长出钱叫他们下毒。巴雷托的人搜遍了河两岸，摩尔人的男人杀得只剩十七个，关在栅栏里等审。我的船运米上来，在下游的沙洲边等水。审完了，十七个人都要死。蒙克拉罗斯在栅栏边说，肯受洗的，死得轻一点。迪奥戈一个一个去劝，劝得满脸是泪，只有一个人点了头。天亮以前，迪奥戈来敲我的船舷：“他们明天动手。你陪我去站一站。”"
+when = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "date", from = [1572, 3, 1] }]
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+deadline = [1572, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "stand"
+text = "跟他一起站到栅栏前头"
+next = "r5_after"
+check = { attr = "eloquence", base = 40, per = 8 }
+effects = [{ kind = "growth", attr = "honor", value = 300 }, { kind = "reputation", faction = "portugal", value = -3 }, { kind = "reputation", faction = "swahili_cities", value = 3 }, { kind = "flag", flag = "rw_baraka_r_stood_saved" }]
+reply = "我们站在栅栏前头，迪奥戈张开两只胳膊，我在他旁边讲，讲了一个早上，讲米，讲牛，讲河路上的热病，讲到巴雷托不耐烦地摆手。最后两个最小的孩子被拉了出来，改判去划船。迪奥戈挨了三十鞭，戴着铐子押下了河。他走的时候冲我笑，背上全是血。"
+fail = { next = "r4_dice", effects = [{ kind = "flag", flag = "rw_baraka_r_diogo_died" }], news = "塞纳的人说，那天早上有个流放兵站在摩尔人的栅栏前头，巴雷托的人没跟他多说一句。" }
+
+[[tracks.chapters.choices]]
+key = "rice"
+text = "上岸找巴雷托：拿一船米换女人孩子"
+next = "r5_after"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "一船米的钱，袋里还凑不出来。"
+effects = [{ kind = "cash", value = -1500 }, { kind = "reputation", faction = "swahili_cities", value = 3 }, { kind = "flag", flag = "rw_baraka_r_bought_women" }]
+reply = "巴雷托收下了米，说米是米，命是命，十七个人照审照判。可栅栏外头那些女人和孩子，他准了，准她们坐我的船下河。迪奥戈一个人站到了栅栏前头，挨了一顿鞭子，被铐起来押走了。他从我的船边过，喊了一声：“米是好米！”"
+
+[[tracks.chapters.choices]]
+key = "away"
+text = "不去，开船往下游走"
+next = "r5_after"
+effects = [{ kind = "flag", flag = "rw_baraka_r_away" }]
+reply = "我没去。天亮时我把船撑离了沙洲，顺着水往下走。走出一里地，上游响了一声炮，又一声。水手们都不说话。后来我才听人说，迪奥戈那天没站到前头，他跪在那十几个人中间，一个一个替他们闭眼睛。"
+
+[tracks.chapters.timeout]
+next = "r5_after"
+effects = [{ kind = "flag", flag = "rw_baraka_r_away" }]
+news = "塞纳的人说，十七个摩尔人只有一个受了洗，受了洗的那一个是绞死的，别的人不是。"
+
+[[tracks.chapters.variants]]
+key = "rw_guided_b"
+when = [{ kind = "flag", flag = "c13_main_baraka_guided_barreto" }]
+text = "塞纳的河岸上，远征军的马一匹接一匹倒下。马夫们挨了拷打，供出一个摩尔教长出钱叫他们下毒。巴雷托的人搜遍了河两岸，摩尔人的男人杀得只剩十七个，关在栅栏里等审。我替巴雷托一头一头买齐的牛，有一半倒在了河岸上。我的船跟着运米上来，在下游的沙洲边等水。审完了，十七个人都要死。蒙克拉罗斯在栅栏边说，肯受洗的，死得轻一点。迪奥戈一个一个去劝，劝得满脸是泪，只有一个人点了头。天亮以前，迪奥戈来敲我的船舷：“他们明天动手。你陪我去站一站。”"
+
+# r4_dice 这一把：检定失败，迪奥戈死（1572 年）。
+[[tracks.chapters]]
+key = "r4_dice"
+title = "这一把"
+text = "迪奥戈没让开。巴雷托的队长骂了他两句，叫人把他拖走，他抱着栅栏的木桩不撒手。蒙克拉罗斯在后头说了一句什么，我没听清。后来他们不拖了，把他跟那十几个人绑在一排。他回过头来看我，脸上一点也不怕，跟他讲过的那个神父一样。“这一把，”他说，“我押上了。”"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+
+[[tracks.chapters.choices]]
+key = "shout"
+text = "喊他的名字"
+next = "r5_after"
+effects = [{ kind = "flag", flag = "rw_baraka_r_shouted" }]
+reply = "我喊他，一遍一遍地喊，喊到嗓子破了。他没再回头。事后我在河岸上找了一天，没找到他。巴雷托的人说，跟摩尔人绑在一起的，都扔进了河里。跟他的神父，是同一条河。"
+
+[[tracks.chapters.choices]]
+key = "salt"
+text = "往河里撒一把船上的盐"
+next = "r5_after"
+effects = [{ kind = "flag", flag = "rw_baraka_r_salted_river" }]
+reply = "我从船上的盐袋里抓了一把，撒进河里。水是黄的，盐一落下去就没了。水手们以为我在做摩尔人的法事，谁也没问，谁也没笑。"
+
+# r5 回里斯本的船：巴雷托死后（b03），蒙克拉罗斯回国。读 r4 的结果。
+[[tracks.chapters]]
+key = "r5_after"
+title = "回里斯本的船"
+text = "巴雷托死在塞纳，死前跟蒙克拉罗斯大吵了一架，吵完就躺倒了。蒙克拉罗斯劝接手的人把剩下的兵带回莫桑比克，自己搭上了回里斯本的船。上船那天，他在码头上认出了我，站住了。他比在营里时更瘦，说塞纳的事他写进了报告，写的是公道：“那不是报仇。报仇的话，我会脸红。”他到底没走到那座山，也没找到那段水。"
+when = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "date", from = [1573, 8, 1] }]
+at = "mozambique_island"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+deadline = [1574, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "sleep"
+text = "问他：塞纳以后，你睡得着吗"
+next = "r6_corner"
+effects = [{ kind = "flag", flag = "rw_baraka_r_asked_sleep" }]
+reply = "“睡得着。我每天夜里替他们祷告，祷告完就睡得着。”他说的是真话，我看得出来。他倒反过来问我睡不睡得着。我说我讲笑话，讲到自己睡着。他想了想：“那也是一种祷告。”"
+
+[[tracks.chapters.choices]]
+key = "box"
+text = "不问，帮他把书箱扛上船"
+next = "r6_corner"
+effects = [{ kind = "flag", flag = "rw_baraka_r_carried_box" }]
+reply = "书箱很沉，里面是写了四年的信与报告。我扛上跳板，他在后头扶着箱角，一路叫我小心，别让海水溅着。放下箱子，他把手按在箱盖上：“这里头有他。”我知道他说的是西尔韦拉，可我想的是栅栏里那十几个人，箱子里也有他们。"
+
+[[tracks.chapters.choices]]
+key = "silveira"
+text = "说：西尔韦拉从没提过摩尔人"
+next = "r6_corner"
+effects = [{ kind = "flag", flag = "rw_baraka_r_told_silveira" }]
+reply = "我说：他在索法拉那几天，跟我讲的是盐、水、拍手，没说过一句摩尔人的坏话。蒙克拉罗斯的脸一下子白了，又慢慢红回来。“他是圣人，圣人不记仇。记仇是我们这些活着的人的事。”他上了船，没再回头。"
+
+[tracks.chapters.timeout]
+next = "r6_corner"
+effects = []
+news = "莫桑比克岛上的人说，巴雷托营里的耶稣会士搭船回里斯本了，带走了一箱子信。"
+
+[[tracks.chapters.variants]]
+key = "rw_bought"
+when = [{ kind = "flag", flag = "rw_baraka_r_bought_women", value = true }]
+text = "巴雷托死在塞纳，死前跟蒙克拉罗斯大吵了一架，吵完就躺倒了。蒙克拉罗斯劝接手的人把剩下的兵带回莫桑比克，自己搭上了回里斯本的船。上船那天，他在码头上认出了我，站住了。他比在营里时更瘦，说塞纳的事他写进了报告，写的是公道：“那不是报仇。报仇的话，我会脸红。”他到底没走到那座山，也没找到那段水。他又说：“你那船米，我写进报告了，写的是：一个摩尔商人的布施。”"
+
+[[tracks.chapters.variants]]
+key = "rw_died"
+when = [{ kind = "flag", flag = "rw_baraka_r_diogo_died", value = true }]
+text = "巴雷托死在塞纳，死前跟蒙克拉罗斯大吵了一架，吵完就躺倒了。蒙克拉罗斯劝接手的人把剩下的兵带回莫桑比克，自己搭上了回里斯本的船。上船那天，他在码头上认出了我，站住了。他比在营里时更瘦，说塞纳的事他写进了报告，写的是公道：“那不是报仇。报仇的话，我会脸红。”他到底没走到那座山，也没找到那段水。说到迪奥戈，他只说了一句：“他是自己要绑上去的。我替他做过弥撒。”"
+
+[[tracks.chapters.variants]]
+key = "rw_saved"
+when = [{ kind = "flag", flag = "rw_baraka_r_stood_saved", value = true }]
+text = "巴雷托死在塞纳，死前跟蒙克拉罗斯大吵了一架，吵完就躺倒了。蒙克拉罗斯劝接手的人把剩下的兵带回莫桑比克，自己搭上了回里斯本的船。上船那天，他在码头上认出了我，站住了。他比在营里时更瘦，说塞纳的事他写进了报告，写的是公道：“那不是报仇。报仇的话，我会脸红。”他到底没走到那座山，也没找到那段水。他又说，那个站在栅栏前头的流放兵关在岛上的牢里，他去听过一回他的告解。“他说他不后悔。我信他不后悔。”"
+
+# r6 天堂的一角：终章。迪奥戈的结局只在变体里分。
+[[tracks.chapters]]
+key = "r6_corner"
+title = "天堂的一角"
+text = "这些年我每回进赞比西河，都要在塞纳下游那片沙洲边停一停。我把迪奥戈写进了史书，又划掉，又写上。一个流放兵，一个摩尔金商，信的不是一个神，在同一条河边，各看见了一点什么。他看见的是水一下子平了；我看见的，是他张开的两只胳膊。"
+when = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "date", from = [1581, 3, 1] }]
+speaker = "captain"
+mood = "tender"
+cast = ["baraka"]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "把他写在摩尔商人的名字旁边"
+next = "done"
+effects = [{ kind = "growth", attr = "learning", value = 100 }, { kind = "flag", flag = "rw_baraka_river_end_written" }]
+reply = "我把他写在塞纳那十七个人的名字旁边。名字我只记得九个，剩下的空着。外人写错了我们五十年，我写一个外人，写得尽量对。"
+
+[[tracks.chapters.choices]]
+key = "salt"
+text = "在沙洲边往河里撒一把盐"
+next = "done"
+effects = [{ kind = "flag", flag = "rw_baraka_river_end_salt" }]
+reply = "我把一把盐撒进河里。是哪一袋的盐，已经说不清了，西尔韦拉的，船上的，索法拉井边晒的，都是盐。河水照旧是黄的，照旧往海里流。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "去塞纳打听那天活下来的人"
+next = "done"
+effects = [{ kind = "flag", flag = "rw_baraka_river_end_asked" }]
+reply = "我在塞纳的市场上问了三天，问那年栅栏里出来的人。有人说没有，有人说有两个孩子，划船划到了果阿。我把“两个孩子，划船”写在本子上，后面打了一个问号，问号比字还大。"
+
+[[tracks.chapters.variants]]
+key = "rw_away"
+when = [{ kind = "flag", flag = "rw_baraka_r_away", value = true }]
+text = "这些年我每回进赞比西河，都要在塞纳下游那片沙洲边停一停。迪奥戈那天没站到前头，后来他又赌上了，在索法拉的酒棚里一把一把地掷，掷输了就笑。有人问他神父的事，他说不记得了。我把迪奥戈写进了史书，又划掉，又写上。一个流放兵，一个摩尔金商，信的不是一个神，在同一条河边，各看见了一点什么。他看见的是水一下子平了；我看见的，是他张开的两只胳膊。"
+
+[[tracks.chapters.variants]]
+key = "rw_bought"
+when = [{ kind = "flag", flag = "rw_baraka_r_bought_women", value = true }]
+text = "这些年我每回进赞比西河，都要在塞纳下游那片沙洲边停一停。迪奥戈挨了鞭子以后回了岛上，又去医院挑水，挑到头发白了。坐我的船下河的那些女人，有一个在索法拉开了一间卖盐的小铺。我把迪奥戈写进了史书，又划掉，又写上。一个流放兵，一个摩尔金商，信的不是一个神，在同一条河边，各看见了一点什么。他看见的是水一下子平了；我看见的，是他张开的两只胳膊。"
+
+[[tracks.chapters.variants]]
+key = "rw_died"
+when = [{ kind = "flag", flag = "rw_baraka_r_diogo_died", value = true }]
+text = "这些年我每回进赞比西河，都要在塞纳下游那片沙洲边停一停。迪奥戈没有坟，跟他的神父一样，河把他吃了。我把迪奥戈写进了史书，又划掉，又写上。一个流放兵，一个摩尔金商，信的不是一个神，在同一条河边，各看见了一点什么。他看见的是水一下子平了；我看见的，是他张开的两只胳膊。"
+
+[[tracks.chapters.variants]]
+key = "rw_saved"
+when = [{ kind = "flag", flag = "rw_baraka_r_stood_saved", value = true }]
+text = "这些年我每回进赞比西河，都要在塞纳下游那片沙洲边停一停。沙洲上如今有一间草棚，迪奥戈出了牢就住在那里，腿瘸了，在河边立了一个木十字，说神父就是在这一段沉下去的。那两个从栅栏里拉出来的孩子长大了，常给他送鱼，他从没劝过他们受洗。我把迪奥戈写进了史书，又划掉，又写上。一个流放兵，一个摩尔金商，信的不是一个神，在同一条河边，各看见了一点什么。他看见的是水一下子平了；我看见的，是他张开的两只胳膊。"
+
+
+# ───────────── 旁轨（剧情增写 2026-11-12，Claude）：第二本账（姑母阿莎与椰纤棚里的人，1557—1588，5 章） ─────────────
+# 母本：《古兰经·光明章》第三十三节的赎身契；后世的训诫诗《姆瓦娜库波纳》作对照。文化：斯瓦希里海岸的家奴、赎身与放人的功德；照样卖绳给运人的船。
+# 张力：阿莎拿卖给运人船的绳钱，一个一个往回赎人；巴拉卡继承了父亲的“九个人”。1587 年津巴人趁退潮过浅滩（史实：城里有人带路，带路的人后来被津巴首领处死）——
+#     这里只用传闻口吻：放没放人、苏迪走没走，决定那一夜从红树林里领人出去的是谁，带路的那个人认不认得沤椰壳的池子，都只在变体里分，不点名。
+# 人物的死：阿莎死于 1587 年津巴人破城那一夜（s4，与 c08 同一时节；c08 以后的章节里她不出场）。
+# 入口：s1、s2 读 c13_main_baraka 加日期，s3、s4 读 _act2，s5 读 _act3。各章有期限与 timeout，s5 是终章（next = done）。
+# 读：rw_baraka_rope_name_wait / _no_more_said（养成·第二本账 c4、c6，s1 变体）、rw_baraka_rope_faraji_freed（c5，s2 变体）。
+# 设：rw_baraka_s_name_learned / _raised / _stopped（s1）、_freed_all / _contract / _waited（s2，timeout 也设 _waited）、_sudi_yes / _sudi_haggled / _sudi_aunt / _sudi_gone（s3，timeout 设 _sudi_gone）、
+#     _ledger_found / _buried / _carried（s4）、rw_baraka_rope_end_chronicle / _end_both / _end_cleared（s5）。
+[[tracks]]
+key = "main_baraka_rw_rope"
+name = "第二本账"
+kind = "main"
+start = "s1_ledger"
+auto = true
+cast = ["baraka"]
+
+# s1 池子最东头：小账当面交到手上。
+[[tracks.chapters]]
+key = "s1_ledger"
+title = "池子最东头"
+text = "回到基尔瓦的第一个旱季，姑母把那本小账当面交给我看，第一页还是那一行，帕泰的赛义德，一年十二捆。赛义德老了，今年来的是他儿子，船更大，舱底的铁环多了一排，说葡萄牙人在莫桑比克岛上也收人，往印度运，价钱涨了。池子最东头那一口，希库达尼还在捶，头发白了一半。她看见我，停下木棒：“金商的儿子，你回来了。名字的事，你还问不问？”"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1557, 5, 1] }]
+at = "kilwa"
+speaker = "captain"
+mood = "tender"
+cast = ["baraka"]
+deadline = [1558, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "ask_name"
+text = "蹲下来，问她原来的名字"
+next = "s2_estate"
+effects = [{ kind = "flag", flag = "rw_baraka_s_name_learned" }]
+reply = "她说了。是一个河那边的名字，四个音，最后一个音往上挑，像在喊远处的人。我念了三遍她才点头。她说那是她母亲起的，意思是“第二场雨”。我把它写进本子，写在希库达尼旁边，两个名字中间没画线。"
+
+[[tracks.chapters.choices]]
+key = "raise"
+text = "把卖给赛义德儿子的绳价翻一倍"
+next = "s2_estate"
+effects = [{ kind = "cash", value = 600 }, { kind = "flag", flag = "rw_baraka_s_raised" }]
+reply = "赛义德的儿子骂我比他父亲还黑，骂完还是买了，说今年船上的人多，绳子省不得。多出来的那一半，我当着姑母记进了小账。姑母看着那一行说：“你翻的是他的价，还是你自己的心？”我答不上来。"
+
+[[tracks.chapters.choices]]
+key = "stop"
+text = "今年起，绳子不卖给这条船"
+next = "s2_estate"
+effects = [{ kind = "flag", flag = "rw_baraka_s_stopped" }]
+reply = "我说不卖。赛义德的儿子耸耸肩，掉头去了马林迪。姑母把小账翻到最后一页：“往后没有这笔钱进来，这一页就一直空着。”她没怪我，只是那天晚上，她一个人在灯下坐了很久。"
+
+[tracks.chapters.timeout]
+next = "s2_estate"
+effects = []
+news = "基尔瓦的人说，萨利姆家的绳坊今年换了人管账，帕泰的大船照样来买绳。"
+
+[[tracks.chapters.variants]]
+key = "rw_name_wait"
+when = [{ kind = "flag", flag = "rw_baraka_rope_name_wait", value = true }]
+text = "回到基尔瓦的第一个旱季，姑母把那本小账当面交给我看，第一页还是那一行，帕泰的赛义德，一年十二捆。赛义德老了，今年来的是他儿子，船更大，舱底的铁环多了一排，说葡萄牙人在莫桑比克岛上也收人，往印度运，价钱涨了。池子最东头那一口，希库达尼还在捶，头发白了一半。她看见我，停下木棒：“你在信里问过我的名字。人回来了，自己问吧。”"
+
+[[tracks.chapters.variants]]
+key = "rw_no_more"
+when = [{ kind = "flag", flag = "rw_baraka_rope_name_wait", value = false }, { kind = "flag", flag = "rw_baraka_rope_no_more_said", value = true }]
+text = "回到基尔瓦的第一个旱季，姑母把那本小账当面交给我看，第一页那一行底下画了一道线：去年起，没卖。赛义德老了，他儿子去马林迪买的绳，船照样来，舱底的铁环多了一排，说葡萄牙人在莫桑比克岛上也收人，往印度运，价钱涨了。后半本那一年一个名字也没添。池子最东头那一口，希库达尼还在捶，头发白了一半。她看见我，停下木棒：“金商的儿子，你回来了。名字的事，你还问不问？”"
+
+# s2 法官的单子：父亲死后分遗产，“九个人”归了儿子。
+[[tracks.chapters]]
+key = "s2_estate"
+title = "法官的单子"
+text = "父亲死后，法官来家里分遗产。书记一样一样记：秤房，砝码箱，两条船，椰纤棚，还有人。单子上写着九个名字，每个名字后面一个价钱，跟写船一样。照规矩，儿子在，姑姑分不到，这九个人都归了我。姑母坐在一边，手里绕着一根椰纤线，绕得越来越紧。法官问我，单子有没有错。希库达尼不在单子上，她的契是十年前写的。法拉吉在单子上，排在第一个，腿肿着，坐在门口听。他儿子苏迪排在第七个，二十岁，会拧绳，会撑船。"
+when = [{ kind = "flag", flag = "c13_main_baraka" }, { kind = "date", from = [1564, 3, 1] }]
+at = "kilwa"
+speaker = "captain"
+mood = "tense"
+cast = ["baraka"]
+deadline = [1565, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "free_all"
+text = "当着法官，把九个人的契一起写了"
+next = "s3_sudi"
+effects = [{ kind = "growth", attr = "honor", value = 300 }, { kind = "reputation", faction = "swahili_cities", value = -1 }, { kind = "flag", flag = "rw_baraka_s_freed_all" }]
+reply = "法官的书记写了一个下午，写到手酸。九个人一个一个按手印，有的笑，有的哭，有个老妇人按完问我：那我今晚还睡原来的地方吗？我说睡。苏迪按完就走了，走到门口又回来，说他明天照样来上工，要工钱。邻居们说萨利姆的儿子败家，败得比他爹会砍价还快。"
+
+[[tracks.chapters.choices]]
+key = "contract"
+text = "照姑母的规矩：钱交够了就写契"
+next = "s3_sudi"
+effects = [{ kind = "flag", flag = "rw_baraka_s_contract" }]
+reply = "我说照姑母那本小账的规矩，谁的钱交够了，谁的契就写。法官点头，说这是正道。书记把九个人的身价抄了一份，交给姑母收着。苏迪听完问：“我的价钱是多少？”我念给他听。他说：“我会交够的。”说得很快。"
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "先不动，等生意稳了再说"
+next = "s3_sudi"
+effects = [{ kind = "cash", value = 500 }, { kind = "flag", flag = "rw_baraka_s_waited" }]
+reply = "我说父亲刚走，生意还不稳，人先照旧。法官没说什么，书记把单子折好，交到我手里。姑母手里的线断了，她没换新的，就那样攥着断头。夜里我听见苏迪在棚子后面跟谁说话，声音压得很低。"
+
+[tracks.chapters.timeout]
+next = "s3_sudi"
+effects = [{ kind = "flag", flag = "rw_baraka_s_waited" }]
+news = "基尔瓦的法官分完了萨利姆的遗产，听说单子上除了船和秤，还有九个人。"
+
+[[tracks.chapters.variants]]
+key = "rw_faraji"
+when = [{ kind = "flag", flag = "rw_baraka_rope_faraji_freed", value = true }]
+text = "父亲死后，法官来家里分遗产。书记一样一样记：秤房，砝码箱，两条船，椰纤棚，还有人。单子上写着九个名字，每个名字后面一个价钱，跟写船一样。照规矩，儿子在，姑姑分不到，这九个人都归了我。姑母坐在一边，手里绕着一根椰纤线，绕得越来越紧。法官问我，单子有没有错。希库达尼不在单子上，她的契是十年前写的。法拉吉也不在，父亲那年替他写过契，他是作为自己的人死的。他儿子苏迪还在单子上，排在第七个，二十岁，会拧绳，会撑船。"
+
+# s3 苏迪要的东西：要什么由 s2 的结果定（变体），回答不变；没回答（timeout）他就自己走了。
+[[tracks.chapters]]
+key = "s3_sudi"
+title = "苏迪要的东西"
+text = "苏迪三十二了，椰纤棚里的活儿一半是他在管。这年旱季他来找我，站在秤房门口，不进来：他要赎他自己，还有他女人和两个孩子，钱他攒了十一年，差一点。“差的那一点，你说个数。”他说完盯着我腰上的砝码箱，像当年卡蒂盯着秤杆。码头上，帕泰的船又来了，舱口开着，底下有人在喊水。"
+when = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "date", from = [1576, 2, 1] }]
+at = "kilwa"
+speaker = "captain"
+mood = "tense"
+cast = ["baraka"]
+deadline = [1577, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "yes"
+text = "他要的，照他说的给"
+next = "s4_ford"
+effects = [{ kind = "flag", flag = "rw_baraka_s_sudi_yes" }]
+reply = "我说好，照你说的。他在门口愣了一下，好像准备好的话没用上，有点不甘心。他点点头走了，走出几步又回头：“你爹不会答应得这么快。”我说我爹答应得慢，可他答应过的都算数。"
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "跟他讲价，讲到他自己笑出来"
+next = "s4_ford"
+effects = [{ kind = "flag", flag = "rw_baraka_s_sudi_haggled" }]
+reply = "我跟他讲了一个上午，他报一个数，我讲一个笑话，再报一个数。讲到后来他笑了，说我把一桩正经事讲成了赶集。最后的数比他说的多一点，比我想的少一点。他走的时候说：“你讲价跟你爹一样，只是多讲故事。”"
+
+[[tracks.chapters.choices]]
+key = "aunt"
+text = "让姑母定"
+next = "s4_ford"
+effects = [{ kind = "flag", flag = "rw_baraka_s_sudi_aunt" }]
+reply = "我说这事让姑母定。姑母把小账翻开，一行一行地看，看到苏迪他娘的名字，停了很久。她定的数，比他说的还少。苏迪没谢她，也没谢我，只说：“她定的，我认。”"
+
+[tracks.chapters.timeout]
+next = "s4_ford"
+effects = [{ kind = "flag", flag = "rw_baraka_s_sudi_gone" }]
+news = "基尔瓦的人说，萨利姆家绳坊的苏迪带着女人孩子，半夜撑一条小船去了对岸的大陆。"
+
+[[tracks.chapters.variants]]
+key = "rw_contract"
+when = [{ kind = "flag", flag = "rw_baraka_s_contract", value = true }]
+text = "苏迪三十二了，他自己的契前年写成了，钱是一枚一枚交够的，比账上的日子早了两年。这年旱季他又来找我，站在秤房门口，不进来：他女人和两个孩子的契还没写，钱差一点。“差的那一点，你说个数。”他说完盯着我腰上的砝码箱，像当年卡蒂盯着秤杆。码头上，帕泰的船又来了，舱口开着，底下有人在喊水。"
+
+[[tracks.chapters.variants]]
+key = "rw_freed"
+when = [{ kind = "flag", flag = "rw_baraka_s_freed_all", value = true }]
+text = "苏迪三十二了，拿着工钱，椰纤棚里的活儿一半是他在管。这年旱季他来找我，站在秤房门口，不进来：他要东头那三口沤椰壳的池子归他自己，赚的钱分我三成。“我自己的人，自己的池子。你说个数。”他说完盯着我腰上的砝码箱，像当年卡蒂盯着秤杆。码头上，帕泰的船又来了，舱口开着，底下有人在喊水。"
+
+# s4 浅滩那一夜：津巴人破基尔瓦（1587，c08 同一时节），阿莎死。带路的人只用传闻。
+[[tracks.chapters]]
+key = "s4_ford"
+title = "浅滩那一夜"
+text = "津巴人过浅滩那一夜，姑母没有走。她七十二了，腿不灵，坐在椰纤棚里，怀里抱着那本小账，说账在哪里她在哪里。我赶回来的时候潮已经涨了，棚子烧塌了半边，沤椰壳的池子里漂着灰。她靠着最东头那口池子的石沿坐着，像在等收工，小账压在胸口，一页也没烧着。码头上的人说，带路的是城里人，退潮的时候哪一块泥能踩、哪一块会陷，他心里清清楚楚。"
+when = [{ kind = "flag", flag = "c13_main_baraka_act2" }, { kind = "date", from = [1587, 5, 15] }]
+at = "kilwa"
+speaker = "captain"
+mood = "sad"
+cast = ["baraka"]
+deadline = [1587, 10, 31]
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "从她怀里把小账拿出来"
+next = "s5_names"
+effects = [{ kind = "flag", flag = "rw_baraka_s_ledger_found" }]
+reply = "她的手指扣着封皮，扣得很紧，我掰了很久。小账最后一页是她临死前几天写的，字歪了：一个是这些年名字的总数，一个是卖绳的总捆数，两个数中间，她没画等号。"
+
+[[tracks.chapters.choices]]
+key = "bury"
+text = "就在椰纤棚后墙外，把她埋了"
+next = "s5_names"
+effects = [{ kind = "flag", flag = "rw_baraka_s_buried" }]
+reply = "清真寺东墙塌了，坟地上全是新土。我在椰纤棚后墙外头给她挖了一个坑，挨着法拉吉他娘。活下来的绳坊的人来了七八个，没人去叫，自己来的，每个人往坑里放了一根椰纤。"
+
+[[tracks.chapters.choices]]
+key = "ships"
+text = "先把活着的人送上北去的船"
+next = "s5_names"
+effects = [{ kind = "reputation", faction = "swahili_cities", value = 3 }, { kind = "flag", flag = "rw_baraka_s_carried" }]
+reply = "我没来得及哭，先把能找到的人一船一船往北送，送到马菲亚，送到桑给巴尔。最后一船开走，我才回到椰纤棚。她还靠在池沿上，潮水已经退了，泥上全是脚印，有大人的，也有孩子的。"
+
+[tracks.chapters.timeout]
+next = "s5_names"
+effects = []
+news = "基尔瓦的人说，津巴人过浅滩那一夜，萨利姆家的老姑母坐在椰纤棚里，没有走。"
+
+[[tracks.chapters.variants]]
+key = "rw_gone"
+when = [{ kind = "flag", flag = "rw_baraka_s_sudi_gone", value = true }]
+text = "津巴人过浅滩那一夜，姑母没有走。她七十二了，腿不灵，坐在椰纤棚里，怀里抱着那本小账，说账在哪里她在哪里。我赶回来的时候潮已经涨了，棚子烧塌了半边，沤椰壳的池子里漂着灰。她靠着最东头那口池子的石沿坐着，像在等收工，小账压在胸口，一页也没烧着。码头上的人说，带路的那个人认得沤椰壳的池子，退潮时哪一块泥能踩，他踩过十几年。没人说出他的名字。听说津巴人一进城，先把他杀了。我想起苏迪半夜撑走的那条小船。"
+
+[[tracks.chapters.variants]]
+key = "rw_led"
+when = [{ kind = "flag", flag = "rw_baraka_s_sudi_gone", value = false }, { kind = "flag", flag = "rw_baraka_s_sudi_yes", value = true }]
+text = "津巴人过浅滩那一夜，姑母没有走。她七十二了，腿不灵，坐在椰纤棚里，怀里抱着那本小账，说账在哪里她在哪里。我赶回来的时候潮已经涨了，棚子烧塌了半边，沤椰壳的池子里漂着灰。她靠着最东头那口池子的石沿坐着，像在等收工，小账压在胸口，一页也没烧着。那一夜从红树林里把人一个一个领出去的，是苏迪，他踩了半辈子沤椰壳的泥，闭着眼都知道哪一块能下脚。他回来找过姑母，姑母不肯走，把孩子们交给了他。"
+
+[[tracks.chapters.variants]]
+key = "rw_led_b"
+when = [{ kind = "flag", flag = "rw_baraka_s_sudi_gone", value = false }, { kind = "flag", flag = "rw_baraka_s_sudi_yes", value = false }]
+text = "津巴人过浅滩那一夜，姑母没有走。她七十二了，腿不灵，坐在椰纤棚里，怀里抱着那本小账，说账在哪里她在哪里。我赶回来的时候潮已经涨了，棚子烧塌了半边，沤椰壳的池子里漂着灰。她靠着最东头那口池子的石沿坐着，像在等收工，小账压在胸口，一页也没烧着。活下来的人说，那一夜是苏迪打着火把，从红树林里把人一个一个领出去的。他回头找过姑母，姑母摆摆手，把怀里那本账抱得更紧了。码头上的人还说，带路的是城里人，退潮时哪一块泥能踩，他心里清清楚楚。"
+
+# s5 没画等号的一页：终章。
+[[tracks.chapters]]
+key = "s5_names"
+title = "没画等号的一页"
+text = "姑母死后的第一个东北风季，我把那本小账从头到尾抄了一遍。前半本是绳：每一年卖给谁，几捆，什么价，那条船往哪里去。后半本是人：名字，身价，交回多少，哪天写的契。有几个名字旁边另有一个名字，是他们自己一个音一个音教她拼的。抄到最后一页，那两个没画等号的数，我看了一夜。赎回来的人多，还是绳子拴走的人多，没有人算得清。"
+when = [{ kind = "flag", flag = "c13_main_baraka_act3" }, { kind = "date", from = [1588, 2, 1] }]
+speaker = "captain"
+mood = "tender"
+cast = ["baraka"]
+
+[[tracks.chapters.choices]]
+key = "chronicle"
+text = "把后半本的名字抄进诸城的史书"
+next = "done"
+effects = [{ kind = "growth", attr = "learning", value = 100 }, { kind = "flag", flag = "rw_baraka_rope_end_chronicle" }]
+reply = "我把那些名字一个一个抄进史书，抄在基尔瓦那一卷的末尾，有两个名字的，两个都抄。史书里写苏丹，写船，写打仗，从来没写过捶椰壳的人。现在写了。"
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "前半本也抄进去，一捆不少"
+next = "done"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_end_both" }]
+reply = "我把前半本也抄了进去，四十一年，每一年卖给谁，几捆。抄的时候手发抖。后人读到基尔瓦的绳，就该知道这绳拴过什么。姑母要是看见，会说：账上写清楚。"
+
+[[tracks.chapters.choices]]
+key = "clear"
+text = "把还没交够的几笔，一笔勾销"
+next = "done"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_end_cleared" }]
+reply = "后半本里凡是没交够的，不管是谁的，我拿父亲的笔一笔一笔划掉，在旁边写一个“清”字。写完我把小账放进砝码箱，压在最底下，毡子下面那个空着的位置上。"

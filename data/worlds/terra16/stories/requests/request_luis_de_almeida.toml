@@ -1,0 +1,145 @@
+# 请托：天草诊所的白布（request_luis_de_almeida）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：路易斯·德·阿尔梅达 luis_de_almeida（1525 生，男，1583 卒，无 fate）；耶稣会神父，晚年在天草照看教友与病人。势力 jesuits。cast：cast/historical_07_japan.toml。
+# 类型：送货（deliver），3 章 offer → deliver → settle；终点 done / failed。
+# 报价：V（到访）。他从天草（offstage amakusa）划小船下到长崎（nagasaki），auto=true；offer 写 at="nagasaki"、family="c13_offer_nagasaki"、family_cooldown_days=20。
+#   offer 的 when：日期起 1580-01-15、玩家满 17 岁、名声 ≥ 5（按 brief）。deadline=1582-06-30（窗口止日），timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=150（布与糖要从宁波、月港、那霸、澳门一带运来，跨一片海），超时走 failed，旗标 _late，来信一封（≤120 字）。
+#   settle 章：交货后等 30 天、人在长崎；deadline_days=120，超时走 failed，旗标 _late（按 brief，不写来信）。最晚约在 1583 年春结束，不越过他的卒年太多。
+#   offer 以后两章都写 alive 条件：人不在了，章节不出现，到期走 timeout。
+# 货：cloth（棉布）×12、sugar（蔗糖）×6，交到长崎；长崎都不产。goods 目标在回应任一选项时扣货。
+# 货款：(12×80 + 6×35)×1.25 = 1462.5，取 1450（按 brief）；“货送给诊所”一路不付货款。
+# 依据·史实：阿尔梅达是里斯本人，考过外科执照，做海商发了财，1556 年把家财捐给耶稣会入会；1580 年在澳门领神父职，此后在天草，1583 年卒于天草。
+#   当时的传教士以糖浆入药（研究笔记）。同宿（dōjuku）是给神父打杂、帮着念经教书的日本教友。
+#   他 1557 年在府内开的病院是澪主线第三段的事，本请托不写；他“新基督徒”的家世永远不写。
+# 依据·原创：磨毛了边的账本与空着的一行、捧糖罐走得极慢的同宿、码头边石头上支的锅、划掉一行后写下的那个字（不揭开）、床板上不刻名字的记号。
+# 读的旗标：c13_main_mio（offer 的变体 v1_mio，由澪的主线设，只换一句：他认出府内那个常来看病人的姬君）；
+#   c13_request_luis_de_almeida_syrup / _donated（settle 的变体，本轨道 deliver 设，只改文字）。不读也不设任何 c7_ 旗标。
+# 设的旗标：c13_request_luis_de_almeida_accepted（offer 接下）；分支 _paid、_donated、_syrup（deliver，三面）；
+#   终局 _declined（offer 回绝）/ _late（deliver 或 settle 超时）/ _done（settle），每条路只设一面。
+# 报酬：货款 1450（捐赠路线 0）；谢礼 900（只在“收下谢礼”）；人情物 herbal_draught ×1（稀有度 1 的药剂，作为人情直接发放）；
+#   好感：接下 +2，交货 熬糖浆 +3 / 白送 +3 / 照价 0，收尾 +8 / +10；任何一条路合计至多 +15（brief 摘要的上限）。
+#     brief 原写白送 +5，与“至多 +15”相抵（白送再捐回谢礼会到 +17），编辑按上限把白送改为 +3：白送花的是货款，熬糖浆靠的是本事，两路好感相同。
+#   名声 +2；回忆一张。不用 relation / tie / bond / heart 效果。
+# 来信：deliver 超时一封（≤120 字）；settle 的两个选项各一封（≤300 字，回答这个选择本身：收下谢礼 / 捐回谢礼）。任何一条路至多收到一封。
+# 依赖：港口 nagasaki（ports_east_asia.toml）；场外地点 amakusa（offstage.toml，只在正文）；商品 cloth、sugar（goods/02_manufactures.toml）；
+#   物品 herbal_draught（items/items_consumable_01.toml）；技能 herbal_medicine（skills.toml）；人物 luis_de_almeida。
+# 与 C7 的交叉：无。主线：澪的主线写过府内的病院，本请托只在变体里让他认出她，不写病院本身；对其余主角都说得通。
+# 回忆插画清单：
+#   mem-request_luis_de_almeida-settle「天草的白布」：天草的小诊所里，草席上铺着新白布，窗外竹竿上晾着一排绷带，桌角一罐糖浆压着一本磨毛了边的账本。
+
+[[tracks]]
+key = "request_luis_de_almeida"
+name = "天草诊所的白布"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["luis_de_almeida"]
+
+# 一、先看病，再谈事：天草来的小船靠上长崎码头，老神父先问有没有人发烧，再说诊所缺布缺糖。
+[[tracks.chapters]]
+key = "offer"
+title = "先看病，再谈事"
+text = "长崎码头，午后退了潮。一条天草来的小船贴着我的船舷靠上来，船尾坐着一个穿黑袍的老神父，咳得弯下腰去，咳完了先冲我喊：“你船上有没有人发烧？起疹子的、拉肚子的，都算。”我说没有。他这才让人搭上跳板，扶着船帮上来，袖口上一片干了的药渍。他是路易斯·德·阿尔梅达，在天草的诊所里照看病人。“绷带上礼拜就用完了，旧布洗了再缠，缠到发黄。病人睡在草席上，一翻身，伤口就跟席子粘在一起。给孩子调药的糖，罐底只剩薄薄一层。”他从怀里摸出一本磨毛了边的账本，翻开，指头点着空着的一行：“布要白的，糖要干的。你要是肯少算一成，那一成记在天主的账上——他从不赖账。”这两样长崎都不出，货到了，他的人划小船来接。"
+speaker = "luis_de_almeida"
+mood = "tender"
+at = "nagasaki"
+when = [{ kind = "date", from = [1580, 1, 15] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+deadline = [1582, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_nagasaki"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "长崎码头，午后退了潮。一条天草来的小船贴着我的船舷靠上来，船尾坐着一个穿黑袍的老神父，咳得弯下腰去，咳完了先冲我喊：“你船上有没有人发烧？起疹子的、拉肚子的，都算。”我说没有。他这才让人搭上跳板，扶着船帮上来，袖口上一片干了的药渍。他眯着眼看了我一会儿，咳着笑了一声：“府内那个常来看病人的姬君，如今自己有船了。”“绷带上礼拜就用完了，旧布洗了再缠，缠到发黄。病人睡在草席上，一翻身，伤口就跟席子粘在一起。给孩子调药的糖，罐底只剩薄薄一层。”他从怀里摸出一本磨毛了边的账本，翻开，指头点着空着的一行：“布要白的，糖要干的。你要是肯少算一成，那一成记在天主的账上——他从不赖账。”这两样长崎都不出，货到了，他的人划小船来接。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，替他把白布和糖运到长崎来。"
+next = "deliver"
+reply = "他当场把账本摊在膝上，翻到新的一页，写下我的船名，后面跟着“布十二、糖六”，写完吹了吹墨。“账要记在前头，”他说，“不然天主那边对不上。”他又咳了一阵，摆手不让人扶，自己下了跳板，说下回小船来，就系在我的船边上。"
+effects = [{ kind = "flag", flag = "c13_request_luis_de_almeida_accepted" }, { kind = "affinity", person = "luis_de_almeida", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟顾不上，请他另找船。"
+next = "failed"
+reply = "他也不恼，把账本揣回怀里，念了两声“好，好”，转身就冲着隔壁那条船喊：“你们船上有没有人发烧？”那边的水手愣了愣，指了指舱底。他已经扶着船帮过去了。"
+effects = [{ kind = "flag", flag = "c13_request_luis_de_almeida_declined" }]
+
+# 二、小船上的布与糖：同宿搬货，老神父在船尾数布、尝糖，等我开价。三种交法，货都交出去。
+[[tracks.chapters]]
+key = "deliver"
+title = "小船上的布与糖"
+text = "天草的小船又来了，挨着我的船舷系好缆。两个同宿跳过来搬货，一个抱布，一个捧糖罐，捧糖罐的那个走得极慢，生怕罐口沾上海上的水汽。老神父没上来，坐在小船船尾，膝上摊着那本账本，一匹一匹地数，数到第十二匹，又伸手捻了捻布边。糖罐他挨个掀开盖，用小指头蘸一点，搁在舌尖上。“干的。”他抬起头看我，那眼神像在看一位施主，笔尖停在账本那一行上，等我开价。"
+speaker = "captain"
+mood = "tender"
+at = "nagasaki"
+when = [{ kind = "alive", person = "luis_de_almeida", value = true }]
+objectives = [{ kind = "goods", good = "cloth", qty = 12, at = "nagasaki", text = "十二匹棉布运到长崎" }, { kind = "goods", good = "sugar", qty = 6, at = "nagasaki", text = "六罐蔗糖运到长崎" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_luis_de_almeida_late" }, { kind = "letter", person = "luis_de_almeida", text = "布与糖已经有人捐了，是一条从澳门回来的商船。病人都换上了白布。账本上你那一行我没划，仍给你留着。——路易斯" }] }
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "照进价结账，一文不让。"
+next = "settle"
+news = "长崎码头上，天草来的老神父跟一个船长买了一船白布和糖，价钱一文没让下来，老神父坐在船尾叹了半天气。"
+reply = "他照数付了，铜钱和碎银子从一个旧皮囊里倒出来，一文不少。付完了，他叹了口气，在那一行的末尾点了一个墨点，没有划掉。“留着，”他说，“你哪天想通了，再来抹。”两个同宿已经把最后一罐糖搬上了小船。"
+effects = [{ kind = "cash", value = 1450 }, { kind = "flag", flag = "c13_request_luis_de_almeida_paid" }]
+
+[[tracks.chapters.choices]]
+key = "donate"
+text = "布和糖都送给诊所，不收钱。"
+next = "settle"
+news = "长崎码头上，有个船长把一船白布和糖白送给了天草来的老神父，老神父的两个同宿临走前冲着那条船鞠了三回躬。"
+reply = "他愣了一下，把账本上那一行划掉，在旁边写了一个字，写完就合上了，没给我看。他朝两个同宿招招手，叫他们给我鞠躬，自己坐在船尾画了个十字。小船离岸的时候，他回过头喊：“下回带病人来，药钱不收你的！”"
+effects = [{ kind = "affinity", person = "luis_de_almeida", value = 3 }, { kind = "flag", flag = "c13_request_luis_de_almeida_donated" }]
+
+[[tracks.chapters.choices]]
+key = "syrup"
+text = "跟他上岸，教同宿怎样熬给孩子喝的糖浆。"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "糖能入药你听人说过，可火候与配法，你一样也说不上来。"
+next = "settle"
+news = "长崎码头边支了一口锅，一个船长和天草老神父的两个同宿熬了一下午糖浆，满码头的孩子都围过去闻甜味。"
+reply = "我们在码头边借了一口锅，支在两块石头上。糖化开以后，我教两个同宿什么时候撇沫、什么时候下甘草，熬到能挂住勺背就停火。老神父蹲在锅边看了一下午，连咳嗽都忘了。付货款的时候他说：“我做了这么多年医生，开刀放脓都是我教人，头一回有人教我。”他叫同宿把火候记在账本的最后一页。"
+effects = [{ kind = "cash", value = 1450 }, { kind = "affinity", person = "luis_de_almeida", value = 3 }, { kind = "flag", flag = "c13_request_luis_de_almeida_paid" }, { kind = "flag", flag = "c13_request_luis_de_almeida_syrup" }]
+
+# 三、天草来的信：一个月后同宿带来老神父的信，病人换上了白布，发烧的孩子退了热；信尾照例劝捐。
+[[tracks.chapters]]
+key = "settle"
+title = "天草来的信"
+text = "过了一个月，天草的小船又进了长崎，这回船尾没有老神父，只有那个捧糖罐的同宿，怀里揣着一封信。信是葡萄牙文写的，同宿一句一句念给我听。字比账本上的抖，有几行墨洇开了。信里说，诊所的病人都换上了白布，草席上垫了两层，翻身不再粘着伤口；有个发烧的渔家孩子，夜里喝了两勺糖浆，天亮前退了热，早上就吵着要吃饭。最后一段照例是劝捐，劝得比上回还直：“诊所还缺一口大锅、三张床板。你下回来，不必带布，带锅。”同宿念完，又从怀里掏出一个小布包，说是神父交代的谢礼。"
+mood = "tender"
+at = "nagasaki"
+news = "天草的诊所换上了外来船送的白布，长崎的人说那位老神父今年咳得更厉害了，诊所倒还开着。"
+when = [{ kind = "alive", person = "luis_de_almeida", value = true }]
+objectives = [{ kind = "wait", days = 30 }, { kind = "at", at = "nagasaki", text = "回到长崎" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_luis_de_almeida_late" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_syrup"
+when = [{ kind = "flag", flag = "c13_request_luis_de_almeida_syrup", value = true }]
+text = "过了一个月，天草的小船又进了长崎，这回船尾没有老神父，只有那个捧糖罐的同宿，怀里揣着一封信。信是葡萄牙文写的，同宿一句一句念给我听。字比账本上的抖，有几行墨洇开了。信里说，诊所的病人都换上了白布，草席上垫了两层，翻身不再粘着伤口；有个发烧的渔家孩子，夜里喝了两勺照我教的火候熬的糖浆，天亮前退了热，早上就吵着要吃饭。最后一段照例是劝捐，劝得比上回还直：“诊所还缺一口大锅、三张床板。你下回来，不必带布，带锅——熬糖浆的那口，同宿说太小。”同宿念完，又从怀里掏出一个小布包，说是神父交代的谢礼。"
+
+[[tracks.chapters.variants]]
+key = "v2_donated"
+when = [{ kind = "flag", flag = "c13_request_luis_de_almeida_donated", value = true }]
+text = "过了一个月，天草的小船又进了长崎，这回船尾没有老神父，只有那个捧糖罐的同宿，怀里揣着一封信。信是葡萄牙文写的，同宿一句一句念给我听。字比账本上的抖，有几行墨洇开了。头一行写着：“白送的东西，天主的账上记了，我的账上也记了。”信里说，诊所的病人都换上了白布，草席上垫了两层，翻身不再粘着伤口；有个发烧的渔家孩子，夜里喝了两勺糖浆，天亮前退了热，早上就吵着要吃饭。最后一段照例是劝捐，劝得比上回还直：“诊所还缺一口大锅、三张床板。你下回来，不必带布，带锅。”同宿念完，又从怀里掏出一个小布包，说是神父交代的谢礼。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下布包里的谢礼。"
+next = "done"
+reply = "同宿把布包往我手里一按，说神父交代过：这笔钱是诊所从灯油里一点一点省出来的，我要是不收，他会难过，一难过就咳得更凶。布包底下还压着一只葫芦，塞子封着蜡，是诊所里熬的药汤，留给船上发烧的人喝。"
+effects = [{ kind = "cash", value = 900 }, { kind = "item", item = "herbal_draught", qty = 1 }, { kind = "affinity", person = "luis_de_almeida", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_luis_de_almeida_done" }, { kind = "memory", memory = "mem-request_luis_de_almeida-settle", title = "天草的白布" }, { kind = "letter", person = "luis_de_almeida", text = "钱你收下了，我就放心了。账本上记着你的那一页，我在末尾添了“两清”两个字——做买卖那些年，我最爱写的就是这两个字。葫芦里的药汤是同宿照我的方子熬的，苦，别往里加糖，糖留给孩子。下回进长崎，先叫人到码头上喊一声：你船上要是有人发烧，我划船过来看。——路易斯" }]
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "谢礼请他带回去，捐给诊所。"
+next = "done"
+reply = "我把布包推回去，请他带回诊所。同宿没接，先笑了：“神父猜到您会这样。”他又从怀里摸出一张小纸条，上面是神父的字，只有一行：“那就买锅。”他这才把布包收好，说今晚趁着潮水就划回天草。"
+effects = [{ kind = "affinity", person = "luis_de_almeida", value = 10 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_luis_de_almeida_done" }, { kind = "letter", person = "luis_de_almeida", text = "退回来的钱，我没让它在箱子里过夜。第二天就买了一口大锅、三张床板，病人从草席上挪到了板上，锅里一天熬两回药。床板上我叫木匠刻了个小记号，不刻名字——刻名字的善事，天主那边要打折扣。你来天草，自己去找。——路易斯" }]

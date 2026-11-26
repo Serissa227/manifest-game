@@ -1,0 +1,583 @@
+/* R10-Q02 任务追踪条、在港时的航线小卡、“去”的圈出、海图上的任务标记、任务日志（新版）。
+   少占屏、地图要大、标记要小；关键操作一眼找到、一次点击。
+   追踪条与航行的小条一个样子：深紫底、木框、羊皮纸色字，港口街景与海图上都看得清。 */
+
+/* ── 舞台上方居中的一叠小条：追踪条、航线小卡、多站行程的“下一站” ── */
+.stage-chips {
+  position: absolute;
+  z-index: 6;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 24px);
+  pointer-events: none;
+}
+.stage-chips > * {
+  pointer-events: auto;
+}
+/* 多站行程的小条原来自己定位在舞台上方居中；放进这一叠里以后跟着排 */
+.stage-chips > .route-itinerary {
+  position: static;
+  transform: none;
+}
+/* 航行画面：上方正中是航向、航速那一条仪表——这一叠挪到左上角（那里是空的海面） */
+.shell-main:has(.nav-view) .stage-chips {
+  top: 12px;
+  left: 12px;
+  transform: none;
+  align-items: flex-start;
+  max-width: min(560px, calc(100% - 24px));
+}
+/* 航行中的世界海图：上方正中是“回到航行”与航线规划、左上是地点与图例——这一叠挪到下方正中 */
+.shell-main:has(.nav-worldbar) .stage-chips {
+  top: auto;
+  bottom: 14px;
+}
+/* 养成外壳：整屏是养成画面，追踪条浮在右下角，不压日程表与标题 */
+.stage-chips.ub-chips {
+  position: fixed;
+  top: auto;
+  bottom: 14px;
+  left: auto;
+  right: 14px;
+  transform: none;
+  align-items: flex-end;
+}
+
+/* ── 追踪条：第一行是种类、名字、剩几天、“去”；下面是目标文字（全文，长了折行）与眼下还差的一件（FE1） ── */
+.stage-chips:empty {
+  display: none;
+}
+.quest-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: min(560px, 100%);
+  padding: 3px 4px 5px 10px;
+  background: rgba(26, 20, 35, 0.84);
+  border: 2px solid #5c3a21;
+  color: #f4ecd8;
+  font-size: 13px;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(10, 8, 20, 0.35);
+}
+.quest-tracker-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+  white-space: nowrap;
+}
+.quest-tracker-gap {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.quest-tracker-pin {
+  flex: none;
+  padding: 0 4px;
+  font-size: 11px;
+  line-height: 15px;
+  color: #e8c98a;
+  border: 1px solid rgba(232, 201, 138, 0.6);
+}
+/* 目标文字：照后端给的全文，不截断；最多四行（120 字的校验线以内都放得下） */
+.quest-tracker-hint {
+  margin: 0;
+  padding-right: 6px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #f4ecd8;
+}
+.quest-tracker-row {
+  margin: 0;
+  padding-right: 6px;
+  white-space: normal;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #d9ccb0;
+}
+.quest-tracker-check {
+  margin-right: 4px;
+  opacity: 0.8;
+}
+.quest-tracker-kind {
+  flex: none;
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 17px;
+  color: #1a1423;
+  background: #e8c063;
+}
+.quest-tracker[data-kind="guide"] .quest-tracker-kind {
+  background: #8fd3c4;
+}
+.quest-tracker[data-kind="contract"] .quest-tracker-kind {
+  background: #e9a77a;
+}
+.quest-tracker[data-kind="character"] .quest-tracker-kind,
+.quest-tracker[data-kind="request"] .quest-tracker-kind {
+  background: #d9b3e6;
+}
+.quest-tracker-title {
+  flex: none;
+  max-width: 12em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #e8c98a;
+  font: inherit;
+  font-weight: bold;
+}
+button.quest-tracker-title {
+  cursor: pointer;
+}
+button.quest-tracker-title:hover,
+button.quest-tracker-title:focus-visible {
+  text-decoration: underline;
+}
+.quest-tracker-n {
+  margin-left: 6px;
+  font-variant-numeric: tabular-nums;
+  color: #e8c98a;
+}
+.quest-tracker-left {
+  flex: none;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.quest-tracker-left.is-urgent {
+  color: #ff9a7e;
+  font-weight: bold;
+  opacity: 1;
+}
+.quest-tracker .quest-go {
+  flex: none;
+  min-height: 24px;
+  padding: 1px 10px;
+}
+.quest-fold {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #f4ecd8;
+  font-size: 15px;
+  line-height: 1;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.quest-fold:hover,
+.quest-fold:focus-visible {
+  opacity: 1;
+}
+
+/* 收起后：一枚小标（图标 + 进度） */
+.quest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 2px 7px;
+  background: rgba(26, 20, 35, 0.84);
+  border: 2px solid #5c3a21;
+  color: #e8c98a;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.quest-badge-n {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 在港时任务的航线小卡：与世界海图提示条里的航线预览同一张（.route-planner），这里给它一个底 */
+.stage-chips > .quest-route {
+  padding: 8px 12px;
+  background: rgba(26, 20, 35, 0.9);
+  border: 2px solid #5c3a21;
+  border-top: 2px solid #5c3a21;
+}
+
+/* 窄屏：追踪条里地名与目标挤不下时目标折掉省略号，“去”始终在 */
+.app.game[data-layout="phone"] .quest-tracker {
+  max-width: 100%;
+  font-size: 12px;
+}
+.app.game[data-layout="phone"] .quest-tracker-head {
+  gap: 6px;
+}
+.app.game[data-layout="phone"] .quest-tracker-hint {
+  font-size: 12px;
+}
+.app.game[data-layout="phone"] .quest-tracker-kind {
+  display: none;
+}
+/* 手机竖屏：舞台上方左边是港口名牌与出港键——这一叠挪到舞台下方（底部导航上面），目标行省掉，只留任务名与“去” */
+.app.game[data-layout="phone"] .stage-chips {
+  top: auto;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+.app.game[data-layout="phone"] .quest-tracker-row,
+.app.game[data-layout="phone"] .quest-tracker-left {
+  display: none;
+}
+.app.game[data-layout="phone"] .quest-tracker-title {
+  max-width: 7em;
+}
+
+/* ── “去”打开面板后圈出入口：金色细框闪几下，不压暗、不挡点击 ── */
+.quest-spot-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 69;
+  pointer-events: none;
+}
+.quest-spot {
+  position: absolute;
+  border: 2px solid #e8c063;
+  box-shadow:
+    0 0 0 2px rgba(26, 20, 35, 0.8),
+    0 0 14px 2px rgba(232, 192, 99, 0.55);
+  animation: quest-spot-pulse 0.9s ease-in-out 4;
+}
+.quest-spot-label {
+  position: absolute;
+  padding: 1px 6px;
+  background: #1a1423;
+  border: 1px solid #e8c063;
+  color: #f4ecd8;
+  font-size: 12px;
+  white-space: nowrap;
+}
+@keyframes quest-spot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ── 世界海图上的任务标记：港口上一枚小图钉；在画面外时画面边缘一枚箭头 ── */
+.quest-chart-mark {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.quest-chart-mark[hidden] {
+  display: none;
+}
+.quest-chart-pin,
+.quest-chart-arrow,
+.quest-chart-name {
+  position: absolute;
+  display: none;
+}
+.quest-chart-mark.is-on .quest-chart-pin {
+  display: block;
+  left: -14px;
+  top: -14px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e8c063;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px rgba(26, 20, 35, 0.55),
+    inset 0 0 0 1px rgba(26, 20, 35, 0.4);
+  animation: quest-pin-breathe 1.8s ease-in-out infinite;
+}
+/* 圈上方一枚尖朝下的小三角 */
+.quest-chart-mark.is-on .quest-chart-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  width: 0;
+  height: 0;
+  margin-left: -6px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 9px solid #e8c063;
+  filter: drop-shadow(0 0 1px #1a1423) drop-shadow(0 0 1px #1a1423);
+}
+.quest-chart-mark.is-edge .quest-chart-arrow {
+  display: block;
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  background: #e8c063;
+  clip-path: polygon(100% 50%, 0 0, 22% 50%, 0 100%);
+  filter: drop-shadow(0 0 1px #1a1423);
+  transform: rotate(var(--angle, 0rad));
+}
+.quest-chart-mark.is-edge .quest-chart-name {
+  display: block;
+  top: -9px;
+  padding: 0 4px;
+  background: rgba(26, 20, 35, 0.78);
+  color: #f4ecd8;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.quest-chart-mark.is-edge[data-side="left"] .quest-chart-name {
+  right: 14px;
+}
+.quest-chart-mark.is-edge[data-side="right"] .quest-chart-name {
+  left: 14px;
+}
+.quest-chart-mark.is-edge[data-side="up"] .quest-chart-name,
+.quest-chart-mark.is-edge[data-side="down"] .quest-chart-name {
+  left: 0;
+  transform: translateX(-50%);
+}
+.quest-chart-mark.is-edge[data-side="up"] .quest-chart-name {
+  top: -30px;
+}
+.quest-chart-mark.is-edge[data-side="down"] .quest-chart-name {
+  top: 12px;
+}
+@keyframes quest-pin-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quest-spot,
+  .quest-chart-mark.is-on .quest-chart-pin {
+    animation: none;
+  }
+}
+
+/* ── 任务日志（新版）：按种类分组，每条一张卡 ── */
+.qs2 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.qs2-group-title {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.qs2-group-title small {
+  opacity: 0.6;
+  font-weight: normal;
+}
+.qs2-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.qs2-item {
+  padding: 8px 10px;
+  border: 1px solid rgba(92, 58, 33, 0.4);
+  border-left: 3px solid #b8862f;
+}
+.qs2-item.is-pinned {
+  border-left-color: #e8c063;
+  box-shadow: inset 0 0 0 1px rgba(232, 192, 99, 0.5);
+}
+.qs2-item--waiting {
+  border-left-color: #8a8070;
+}
+.qs2-item--done {
+  border-left-color: #5a8a4a;
+}
+.qs2-item--failed,
+.qs2-item--missed {
+  border-left-color: #a04a3a;
+}
+.qs2-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 0;
+}
+.qs2-title {
+  font-weight: bold;
+}
+.qs2-kind,
+.qs2-status {
+  padding: 0 5px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+.qs2-head .qs-left {
+  margin-left: auto;
+}
+.qs2-chapter {
+  margin: 2px 0 0;
+  opacity: 0.85;
+}
+.qs2-hint {
+  margin: 4px 0;
+}
+.qs2-rows {
+  margin: 4px 0;
+}
+.qs2-n {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+/* “任一”（FE1）：父行一句“下面做成一件就行”，分支缩进一层、空心圈，任一打勾整行就算完 */
+.qs-objs li.qs2-any {
+  text-decoration: none;
+}
+.qs2-branches {
+  flex-basis: 100%;
+  display: grid;
+  gap: 1px;
+  margin: 1px 0 0 1.4em;
+  padding: 0;
+  list-style: none;
+}
+.qs2-or {
+  opacity: 0.75;
+}
+.qs2-failure {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #a04a3a;
+}
+.qs2-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+.qs2-meta:empty {
+  display: none;
+}
+.qs2-teaches {
+  opacity: 0.8;
+}
+.qs2-rewards {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+.qs2-rewards small {
+  margin-left: 4px;
+  opacity: 0.75;
+}
+.qs2-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 6px;
+}
+.qs2-pin.is-on {
+  border-color: #b8862f;
+}
+.qs2-closed > summary {
+  cursor: pointer;
+  opacity: 0.8;
+}
+.qs2-closed[open] > summary {
+  margin-bottom: 8px;
+}
+.qs2-closed .qs2-item {
+  opacity: 0.75;
+}
+
+/* 新界面（海图室）：纸卡与黄铜 */
+:root[data-ui="v2"] .qs2-group-title {
+  font-family: var(--v2-font-display);
+  font-size: var(--v2-fs-lg);
+  color: var(--v2-ink);
+  letter-spacing: 0.06em;
+}
+:root[data-ui="v2"] .qs2-item {
+  padding: 12px 14px;
+  background: var(--v2-paper-2);
+  border: 1px solid var(--v2-line);
+  border-left: 3px solid var(--v2-brass);
+  border-radius: var(--v2-r-md);
+  box-shadow: var(--v2-shadow-1);
+}
+:root[data-ui="v2"] .qs2-item.is-pinned {
+  box-shadow:
+    var(--v2-shadow-1),
+    inset 0 0 0 1px var(--v2-brass);
+}
+:root[data-ui="v2"] .qs2-item--waiting {
+  border-left-color: var(--v2-ink-3);
+}
+:root[data-ui="v2"] .qs2-item--done {
+  border-left-color: var(--v2-up);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .qs2-item--failed,
+:root[data-ui="v2"] .qs2-item--missed {
+  border-left-color: var(--v2-seal);
+  box-shadow: none;
+}
+:root[data-ui="v2"] .qs2-title {
+  font-size: var(--v2-fs-lg);
+  font-weight: 600;
+  color: var(--v2-ink);
+}
+:root[data-ui="v2"] .qs2-kind,
+:root[data-ui="v2"] .qs2-status {
+  font-size: var(--v2-fs-xs);
+  line-height: 18px;
+  color: var(--v2-ink-2);
+  background: var(--v2-paper-sunk);
+  border-radius: var(--v2-r-xs);
+  opacity: 1;
+}
+:root[data-ui="v2"] .qs2-chapter {
+  font-family: var(--v2-font-display);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .qs2-hint {
+  color: var(--v2-ink);
+  font-size: var(--v2-fs-md);
+}
+:root[data-ui="v2"] .qs2-meta,
+:root[data-ui="v2"] .qs2-rewards {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+:root[data-ui="v2"] .qs2-meta .qs-place {
+  color: var(--v2-sea);
+}
+:root[data-ui="v2"] .qs2-closed > summary {
+  font-size: var(--v2-fs-sm);
+  color: var(--v2-ink-2);
+}
+
+/* 任务的“去”灰着时的原因（这支舰队去不了那座港） */
+.qs2-why {
+  margin: 4px 0 0;
+  font-size: 12px;
+}

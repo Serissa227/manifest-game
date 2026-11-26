@@ -1,0 +1,160 @@
+# 请托：一串样珠（request_tara_mani）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：塔拉·玛尼（tara_mani，1540-08-04 生，女），坎贝珠匠家的女儿，学院同学；势力 gujarat，身份档 1。cast：cast/classmates_custom_cambay_broker.toml。
+# 类型：去某处（gs，kind=go）。四章：offer（报价）、arrive（马斯喀特问价）、report（坎贝回话）、report_partial（只问到一半的回话）。没有 stage 章，因此没有 window 与 default；到期的走向写在 timeout 里。
+# 报价：T（当面）。她按日程就在坎贝（khambhat），auto=false，玩家用“问请托”（ask:request_tara_mani）启动；offer 不写 at，目标是在港里找到她。窗口 1564-01-01 至 1568-12-31（offer 的 when 与 deadline）。
+# 进行中：arrive 期限写绝对日期 1569-03-31，超时走 failed，来信一封，好感 -3，旗标 _late；report 与 report_partial 是普通章，可以一直等。offer 超时走 failed，不写见闻。
+# 与 brief 的两处偏离：（1）brief 的 report 选项 raise_wage 带 requires 三面旗标；按“路由而不是门禁”的规定，haggle 成功与 in_arabic 走 report，just_note 与检定失败走 report_partial，report 的选项不再写 requires。（2）report 写 at=khambhat，让见闻能在坎贝公开（brief 写 null）。
+# 依据·史实背景：坎贝的红玉髓与玛瑙珠外销阿拉伯半岛与东非；马斯喀特在阿曼湾，亚丁在红海口，都是当时的珠市与行情的来处。
+# 依据·原创：塔拉的样珠与布带、三家商人、也门商人的行情、墙上的线。
+# 秘密：荷包里那颗打裂的红玉髓不写，见闻与来信都不提。哈迪贾不出场（C7 的线归 tie_new_tara_mani_khadija_rihla）。
+# 设的旗标：c13_request_tara_mani_accepted（offer 接下）、_declined（offer 回绝）、_three（arrive 问到了三家的价）、_vague（arrive 检定失败，第一家没说死价）、_aden（arrive 用阿拉伯话问到亚丁的买主，report 的 variant 读）、_late（arrive 超时）、_partial（report_partial 两条收尾，report 的半价收尾）、_done（report 最好的收尾）。
+# 读的旗标：bond tara_mani（offer 的 variant，只读 bond_tara_mani 的结果）；c13_request_tara_mani_aden（report 的 variant）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 900（折中 500）；好感最多 +13；名声 +2（身份档 1 的最好结局）；回忆 mem-request_tara_mani-report。无物品、无技能、无海图。
+# 依赖：港口 khambhat（ports_india.toml）、muscat（ports_red_sea_gulf.toml）；技能 lang_arabic（skills.toml）；属性 commerce（captain.toml）；人物 tara_mani。日程已是 khambhat，不需要 B10b 改名。
+# 回忆插画清单：
+#   mem-request_tara_mani-report「墙上的第五根线」：坎贝珠坊的墙上又钉下一根线，线上穿着磨到一半的珠子，底下写着工钱。
+
+[[tracks]]
+key = "request_tara_mani"
+name = "一串样珠"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["tara_mani"]
+
+# 一、哪里最值钱：坎贝她家的珠坊，她把样珠交给你。
+[[tracks.chapters]]
+key = "offer"
+title = "哪里最值钱"
+text = "坎贝她家的珠坊里，塔拉把一串红玉髓样珠绕在手腕上，一颗一颗报名字：鸽血、熟枣、晚霞。“哪个港口最值钱，我要知道。”她说，“中间人报的价我不信，要买主自己开口。”说完她把样珠解下来，塞进你手里。线上缠着一条细布带，每颗珠子的名字都写在上头，字写得小，一笔不乱。“马斯喀特的珠市，你替我问三家。每家出什么价，说了什么话，原样带回来。少一句，我就当他没说。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "tara_mani", text = "在坎贝她家的珠坊找到她" }]
+when = [{ kind = "date", from = [1564, 1, 1], to = [1568, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "tara_mani", ge = 18 }]
+deadline = [1568, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_classmate"
+when = [{ kind = "bond", person = "tara_mani", level = "C" }]
+text = "坎贝她家的珠坊里，塔拉见你进门，先把一颗珠子放进你手心。“你还记得这个颜色叫什么吗？”你想了一会儿，没答上来。她也不催，把样珠绕回手腕，一颗一颗报名字：鸽血、熟枣、晚霞。“哪个港口最值钱，我要知道。”她说，“中间人报的价我不信，要买主自己开口。”说完她把样珠解下来，塞进你手里。线上缠着一条细布带，每颗珠子的名字都写在上头，字写得小，一笔不乱。“马斯喀特的珠市，你替我问三家。每家出什么价，说了什么话，原样带回来。少一句，我就当他没说。”"
+
+[[tracks.chapters.choices]]
+key = "take_string"
+text = "接下，带样珠去马斯喀特问价。"
+next = "arrive"
+reply = "她把布带在结上又绕了一圈，打了个活结。“买主问哪颗是哪颗，就照着念。”她说，手指在最后一颗“晚霞”上停了停，“念错一个，我就当你没问。”样珠还带着她手腕的温度。"
+effects = [{ kind = "affinity", person = "tara_mani", value = 2 }, { kind = "flag", flag = "c13_request_tara_mani_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_wages"
+text = "接下，先问她：问价是为了涨价吗？"
+next = "arrive"
+reply = "“是为了算工钱。”她说珠子卖得贵，磨圆的人就该多拿。说到“磨圆”两个字，她停了一下，像想起了什么，又把话咽回去，只把样珠往你手里推了推。"
+effects = [{ kind = "affinity", person = "tara_mani", value = 2 }, { kind = "flag", flag = "c13_request_tara_mani_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "珠子的事，我不懂行情。"
+next = "failed"
+reply = "她把样珠从你手里拿回来，绕回手腕，说那就等哪个懂行情的人。转身拣起桌上一把小珠，一颗一颗对着窗光看，再没抬头。我站了一会儿，她也没有叫我。"
+effects = [{ kind = "flag", flag = "c13_request_tara_mani_declined" }]
+
+# 二、三家的价：马斯喀特的珠市，三家商人。
+[[tracks.chapters]]
+key = "arrive"
+title = "三家的价"
+text = "马斯喀特的珠市，石板地上铺着毡子，毡子上摆满各色的珠子。第一家是个胖商人，把样珠对着日头看了一眼，伸出两根手指：“看货再说，坎贝的货多的是。”第二家是个年轻伙计，一颗颗拿在手里转，问：“这是谁磨的？”第三家是个也门商人，嗓门大，顺口就报了亚丁的行情，比马斯喀特高出一截。你低头看布带，第二家问到磨珠的人时，有一个字忽然刺眼——“磨圆”。颜色上哪有这两个字。"
+speaker = "captain"
+mood = "tense"
+at = "muscat"
+objectives = [{ kind = "at", at = "muscat", text = "到马斯喀特的珠市" }]
+when = [{ kind = "alive", person = "tara_mani", value = true }]
+deadline = [1569, 3, 31]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "tara_mani", value = -3 }, { kind = "flag", flag = "c13_request_tara_mani_late" }, { kind = "letter", person = "tara_mani", text = "马斯喀特的价，我托一个回程的船主问了。他只问了两家。" }] }
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "照塔拉的规矩逐家问，逼他们把价说死。"
+next = "report"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "我照她的规矩逐家问，问到他们不耐烦了才肯开口。说死的价我记死，没说死的，我照原话记，一个字没替他们补。第一家那句“坎贝的货多的是”，也记上了。"
+news = "马斯喀特的珠市上，有人拿着一串坎贝的红玉髓挨家问价，每颗珠子都系着一个名字。"
+effects = [{ kind = "affinity", person = "tara_mani", value = 3 }, { kind = "flag", flag = "c13_request_tara_mani_three" }]
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "tara_mani", value = -2 }, { kind = "flag", flag = "c13_request_tara_mani_vague" }], news = "马斯喀特的珠市上，第一家商人只说看货再说，挨家问价的那个外乡人没问到死价。" }
+
+[[tracks.chapters.choices]]
+key = "in_arabic"
+text = "用阿拉伯话跟也门商人多聊，问亚丁的买主要什么颜色。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "你的阿拉伯话只够问价钱，他一开口就带着海边的俚语，你听不出他在笑什么。"
+reply = "也门商人说，亚丁的人爱深色，鸽血最好卖，晚霞要往东非走。他把亚丁的三个买主名字也告诉了我，说那三个人都在码头旁的货栈里等船。"
+news = "马斯喀特的珠市上，一个也门商人用阿拉伯话跟外乡人聊了半天，聊的全是亚丁的买主。"
+effects = [{ kind = "affinity", person = "tara_mani", value = 3 }, { kind = "flag", flag = "c13_request_tara_mani_three" }, { kind = "flag", flag = "c13_request_tara_mani_aden" }]
+
+[[tracks.chapters.choices]]
+key = "just_note"
+text = "不讲价，原样记下他们说的话。"
+next = "report_partial"
+reply = "我记下了三家的话。价钱有的说死了，有的没说死，我照他们开口的先后排成一列，免得你念的时候乱了。第二家问过磨珠的人，我也记上了，一字没改。"
+news = "马斯喀特的珠市上，有个坎贝来的外乡人站在摊前不讲价，一句一句把商人的话记进本子里。"
+effects = [{ kind = "affinity", person = "tara_mani", value = 2 }]
+
+# 三、工钱的线：回坎贝珠坊，她听你一家一家念。
+[[tracks.chapters]]
+key = "report"
+title = "工钱的线"
+text = "坎贝珠坊的墙上，塔拉听你一家一家念，手里的线一圈圈绕在指尖。念到第一家的“看货再说”，她没动；念到也门商人报的亚丁行情，她眼睛亮了一下；念到第一家压价时那句“坎贝的货多的是”，她冷笑一声，把样珠从手腕上解下来。她在墙上又钉了一根线，线上穿着磨到一半的珠子，底下写了一个数。“每种颜色都有名字，磨它的手也该有个价。”"
+speaker = "captain"
+mood = "cheerful"
+at = "khambhat"
+objectives = [{ kind = "person", person = "tara_mani", text = "回坎贝她家的珠坊" }]
+when = [{ kind = "alive", person = "tara_mani", value = true }]
+news = "坎贝一家珠坊的墙上又多挂了一根线，线上穿着磨到一半的珠子，底下写着磨珠的工钱。"
+
+[[tracks.chapters.variants]]
+key = "v1_aden"
+when = [{ kind = "flag", flag = "c13_request_tara_mani_aden" }]
+text = "坎贝珠坊的墙上，塔拉听你一家一家念，手里的线一圈圈绕在指尖。念到也门商人报的亚丁行情，她眼睛亮了一下。你又念了那三个亚丁买主的名字，她问得很细，抄在账本第一页，抄完才抬头。念到第一家那句“坎贝的货多的是”，她冷笑一声，把样珠从手腕上解下来。她在墙上又钉了一根线，线上穿着磨到一半的珠子，底下写了一个数。“每种颜色都有名字，磨它的手也该有个价。”"
+
+[[tracks.chapters.choices]]
+key = "raise_wage"
+text = "劝她照亚丁的价，给磨珠的人涨工钱。"
+next = "done"
+reply = "她算了一下午，涨了，涨得不多，可每一道工序都涨了。磨圆这一道涨得最多，她说这一道，她自己也磨过。她付了钱，又把那串样珠的布带解下来送我，说名字我已经会念了。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "tara_mani", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_tara_mani_done" }, { kind = "memory", memory = "mem-request_tara_mani-report", title = "墙上的第五根线" }]
+
+[[tracks.chapters.choices]]
+key = "hold"
+text = "劝她先别涨，等下一季的行情。"
+next = "done"
+reply = "她瞪了我一眼，说行情是商人的事，工钱是她的事。她付了一半的钱，说另一半等下回带来死价再算。我说亚丁的价不一定都准，她说不准就不付。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "tara_mani", value = 4 }, { kind = "flag", flag = "c13_request_tara_mani_partial" }]
+
+# 三之二、只问到一半的回话：没说死的价，塔拉只肯照一半算。
+[[tracks.chapters]]
+key = "report_partial"
+title = "还差一半的价"
+text = "坎贝的珠坊里，塔拉把布带摊在桌上，照着上头的名字，一个一个指给你看。“说死的，我照着算。”她的手指停在一个没写数的名字上，“没说死的，我就当它们还没出价。”墙上那根空线还在，她看了一眼，没有去钉。她用指甲在那个名字上掐了个印子。“半截话，我只肯付半截钱。”她说，“要是你觉得亏，就带死价回来。”"
+speaker = "captain"
+mood = "tense"
+at = "khambhat"
+objectives = [{ kind = "person", person = "tara_mani", text = "回坎贝她家的珠坊" }]
+when = [{ kind = "alive", person = "tara_mani", value = true }]
+news = "坎贝的珠坊里，一串样珠的布带摊在桌上，有人照着上头的名字念马斯喀特的价。"
+
+[[tracks.chapters.choices]]
+key = "read_all"
+text = "把没说死的那几家也照实念给她听。"
+next = "done"
+reply = "她把没说死的那几行用红笔圈起来，一句句对着念，念错一个字，就让你从头来。付的是一半的工钱。她在墙角的粉笔板上写了两个字：死价。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "tara_mani", value = 4 }, { kind = "flag", flag = "c13_request_tara_mani_partial" }]
+
+[[tracks.chapters.choices]]
+key = "no_pay"
+text = "这半截话不收钱，下回带死价来再谈。"
+next = "done"
+reply = "“半截话不值钱，你也知道。”她没有付钱，把布带重新缠回手腕，缠到一半又解开，重新打了一个死结。“下回带死价来，名字要念对。”"
+effects = [{ kind = "affinity", person = "tara_mani", value = 2 }, { kind = "flag", flag = "c13_request_tara_mani_partial" }]

@@ -1,0 +1,189 @@
+# C13d 人物的请托：抚顺匠人的家小（来信／代理人模式，去某处 go，原定 3 章，为让故事机器人一次通过拆成 5 章；故事 2.0 契约，按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：佟养性 tong_yangxing（cast 在 historical_09_liaodong.toml，生年不详；辽东战役链，年代提前约 55 年）。他本人不出场：牙人在牛庄替他传话，他只在一张字条和一封来信里开口。
+# 类型与报价：去某处（gs/go），L 来信模式。kind=request，auto=true。offer 章 at=niuzhuang，speaker 省略（牙人不是 cast，不起名）；family=c13_offer_niuzhuang，冷却 20 天。
+# 窗口：报价 1571-01-15 至 1576-03-31（offer 的 deadline 即窗口止日，timeout 无见闻）。1576 年起他督造铸炮，请托一字不挨着那件事：整条轨道不写炮、铳、铁料，匠人只说“打铁”。
+#   接下后两段各 150 天（arrive 去登州，report 回牛庄）；逾期都走 failed 并设 late。
+# 依据：史实——佟养性抚顺人，商人，降金后为汗管买卖与工匠。本世界线（辽东战役链）提前约 55 年：抚顺城破记作 1563，沈阳为他当年的驻地。
+#   1566 年沈阳、辽阳失守时一批辽民被船撤到登州，见 TERRA16 L07。
+#   原创——七个抚顺铁匠与他们散在登州的家小（二十三口），牛庄后屋的牙人，缠着麻绳的七封信，登州卫偏房里的辽民册子，码头上补网的妇人和她身后的半大孩子，牙人的小秤。
+#   不写：佟姓族人和他们的日子（他的 secret，本请托不碰）；督造铸炮；铁料、火器、军情；千户问话之后的株连。请托不改任何战役变量，不给 jianzhou 加声望。
+#   口头禅“货往价高处走”和要紧的那一句只在 offer 的字条里用一次，不再重复。
+# 结构说明：brief 的 report 章里 truth 与 lie 靠旗标 told_* 区分，lie 还 requires told_families=false，故事机器人会报“准备后条件仍不满足”。
+#   改成 arrive 的三个选项各自 next 到不同章节：report（告诉家小）、report_ming（也告诉了千户）、report_none（谁也没说），每章 2 个选项，不再用 requires。
+#   三面分支旗标 told_families / told_ming / told_none 仍在 arrive 设，供日后查阅；终局旗标每条路径只设一面。
+# 读写的旗标：设 c13_request_tong_yangxing_accepted / _declined / _done / _partial / _failed / _late（终局），分支旗标 _told_families / _told_ming / _told_none；
+#   不读外部旗标，不设 c7_ 旗标（c7 一栏为 none）；无主线门禁（不读 c13_main_*）。
+# 依赖：港口 niuzhuang、dengzhou 都是现有港口，无 B10b 改名；势力 ming 在 factions。
+# 缺省走向：不接（declined → failed）。接了没去登州（arrive 150 天过期）：佟养性寄来一张收条，说账销了、信另托别的船（late → failed）。
+# 回忆插画清单：
+#   mem-request_tong_yangxing-report「登州码头补网的女人」：登州码头的石阶，一个妇人蹲在泊着的渔船边补网，没有抬头；身后的半大孩子扛着整袋的货；妇人怀里露出半截没拆的信。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_tong_yangxing"
+name = "抚顺匠人的家小"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["tong_yangxing"]
+
+# 报价：牛庄马市散后的后屋。七封信，一张字条，一杆小秤放在一边。
+[[tracks.chapters]]
+key = "offer"
+title = "后屋的七封信"
+text = "牛庄马市散了，一个牙人把你拉进后屋，拿门闩顶上门。桌上摆着七封封了口的信，信皮上只写了“登州”两个字和一个姓。信下压着一张字条，是佟养性的账房字，字不多，头一行全是数目：“匠七人，家小二十三口。抚顺城破那年散的，听说在登州。货往价高处走。人也一样——可人得知道家在哪儿，才走得动。”牙人搓着指头：“佟爷在沈阳管着几座炉子，里头就这七位抚顺来的铁匠。这几年手一年比一年钝，前天夜里还有两个在马圈后头被人拦下，要往南跑。佟爷不信打，信账。他说，跑一个，不如寄七封信。”"
+at = "niuzhuang"
+mood = "sad"
+when = [{ kind = "date", from = [1571, 1, 15], to = [1576, 3, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 10 }]
+deadline = [1576, 3, 31]
+family = "c13_offer_niuzhuang"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：带上七封信，去登州找人"
+next = "arrive"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_accepted" }, { kind = "affinity", person = "tong_yangxing", value = 2 }]
+reply = "牙人把信一封封裹进油纸，用麻绳捆成一摞，捆结打的是死扣。“一家一封，别串了。有两封的信皮是同一个姓，那是兄弟俩的家，隔着两条街。”他把字条也塞进去，想想又抽出来，自己收了。“佟爷说了，找到几家算几家，按家付钱。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这种事不沾"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_declined" }]
+reply = "牙人没劝。他把七封信一封封收回柜子，柜子里已经有好几摞，信皮的颜色各不相同，没有一封拆过。关上柜门，他才说：“佟爷也不是头一回找人，下回他换条船问。”"
+
+# 登州卫的偏房：辽民册子，补网的妇人先问了一句话。
+[[tracks.chapters]]
+key = "arrive"
+title = "登州的难民册子"
+text = "登州卫的偏房里堆着当年辽民上岸时登的册子，黄纸脆得翻一页掉一层渣。管册的老吏不认得抚顺这个地名，你只好顺着“铁匠”两个字一页页往下找，翻到第二天傍晚，对上了五家。头一家在码头：一个妇人蹲在泊着的渔船边补网，梭子不停。她身后站着个半大孩子，已经能扛整袋的货。你走到跟前，信还在手里没递出去，她先抬起头，看着信皮上那个姓，问：“他在那边，给谁打铁？”"
+at = "dengzhou"
+speaker = "captain"
+mood = "sad"
+news = "登州卫那间堆册子的偏房里，有个外来的船主翻了一天一夜辽民册，找到了几户抚顺来的铁匠家。"
+when = [{ kind = "alive", person = "tong_yangxing", value = true }]
+objectives = [{ kind = "at", at = "dengzhou", text = "去登州找匠人的家小" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_late" }, { kind = "letter", person = "tong_yangxing", text = "收条。七封信，百五十日不见回音，账销了，银不付。信我另写，另托了别的船。登州那七家，人还在。——佟记" }]
+
+[[tracks.chapters.choices]]
+key = "families"
+text = "把信交到家小手里，别的什么都不多说"
+next = "report"
+effects = [{ kind = "affinity", person = "tong_yangxing", value = 3 }, { kind = "flag", flag = "c13_request_tong_yangxing_told_families" }]
+reply = "你没有回答。她也没有问第二遍，手在梭子上停了一停，把信接过去揣进怀里，按了按。“晚上再拆。”她拿起梭子，“白天哭，让人看见不好。”别的几家，你一家一家找过去，信皮上的姓对上了，信就交出去。每一家接信的样子都差不多：先摸封口，后看你。"
+
+[[tracks.chapters.choices]]
+key = "ming"
+text = "信交了，再把匠人们在沈阳的事报给登州卫的千户"
+next = "report_ming"
+news = "登州卫的千户前几日把码头上几户辽民叫去问话，一直问到天黑，听说是外来的船主递的话。"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_told_ming" }, { kind = "reputation", faction = "ming", value = 1 }]
+reply = "千户是个干瘦的人，用竹笔把你说的记了一整页，翻过来又记了半页。信你先交到了各家手里；等千户的人来叫她们，补网的妇人是梭子还攥在手里就被叫走的。问话问到天黑，衙门口的灯笼点起来了，她们一个接一个出来，补网的妇人最后一个，梭子还攥在手里，从你身边走过去，没有停步。"
+
+[[tracks.chapters.choices]]
+key = "none"
+text = "信不交了，谁也不说"
+next = "report_none"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_told_none" }]
+reply = "你把七封信原样带回船上，油纸还是牙人裹的那一层。码头上补网的妇人没有抬头，梭子穿过去，又穿回来。那个半大孩子扛着一袋货从你身边走过，肩上压得很沉，脚步很稳。"
+
+# 回牛庄，告诉了家小：牙人的秤和一张张写着姓的小纸条。
+[[tracks.chapters]]
+key = "report"
+title = "牙人的秤"
+text = "后屋比上回冷，牙人没生炉子，窗纸上贴着今年的马价单，边角卷了。他把一杆小秤摆上桌，秤盘里的银子一堆一堆码好，每堆底下压着张小纸条，写的是一个姓，有两张的姓一样。“佟爷的规矩，按家付，不按人头。”他拿起笔，在砚台边刮了刮，“几家？几封？信是交到谁手里的？”"
+at = "niuzhuang"
+mood = "sad"
+news = "牛庄马市后屋的牙人给登州回来的船主结了账，替沈阳那几座炉子上的铁匠寄去的信，一封封都有了下落。"
+when = [{ kind = "alive", person = "tong_yangxing", value = true }]
+objectives = [{ kind = "at", at = "niuzhuang", text = "回牛庄向牙人交账" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_late" }]
+news = "牛庄马市的牙人这些天老往码头上张望，说是等个从登州回来的船主，秤盘里的银子都码好了。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实报：五家交了信，两家没找着；补网妇人那句话也带到"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "tong_yangxing", value = 8 }, { kind = "memory", memory = "mem-request_tong_yangxing-report", title = "登州码头补网的女人" }, { kind = "letter", person = "tong_yangxing", text = "牛庄佟记，付账。登州五家，十七口，信五封到，二封退回牙人处。银按家付清。补网妇人一句问话，已入账；我的回话在下一封里，不托你带。沈阳炉上七人，跑的两个已不提跑。——养性" }, { kind = "flag", flag = "c13_request_tong_yangxing_done" }]
+reply = "牙人一笔一笔记：五家，十七口，信五封。写到补网妇人那句，笔停了停，一个字一个字抄下来：“他在那边，给谁打铁？”他把这行字念了两遍，没有评论，吹干墨，封进回信里。银子一堆一堆推到你面前，秤杆平平的。“那两个想跑的，你走后第三天就把包袱拆了。信还没到，听说‘去了’，就够了。”剩下的两封信，他收进柜子，和别人的那几摞放在一起。"
+
+[[tracks.chapters.choices]]
+key = "plain"
+text = "只报几家几口，那句话我替她留着"
+next = "done"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "tong_yangxing", value = 4 }, { kind = "flag", flag = "c13_request_tong_yangxing_done" }]
+reply = "牙人的笔在账上走：五家，十七口，信五封。你没有再说，他也没有问。他抬眼瞟了你一下，像在秤上看一样东西少了几钱，然后低下头，把银子推过来。“佟爷要的，本来也是数。”没送出的两封，他又拿麻绳捆了一道，扔进抽屉。"
+
+# 回牛庄，也告诉了千户：秤杆翘着。
+[[tracks.chapters]]
+key = "report_ming"
+title = "翘着的秤杆"
+text = "后屋里点着灯，还没到天黑。牙人把小秤摆上桌，银子一堆一堆码好，秤杆却翘着，他今天没打算让它平。“几家？几封？”他的笔搁在砚台边，没蘸墨，“佟爷说过，货可以少，话不能少。你在登州，除了送信，还去过别处没有？”"
+at = "niuzhuang"
+mood = "sad"
+news = "牛庄马市的牙人这几天翻来覆去地问人，登州卫的千户那边，有没有外来的船主去说过话。"
+when = [{ kind = "alive", person = "tong_yangxing", value = true }]
+objectives = [{ kind = "at", at = "niuzhuang", text = "回牛庄向牙人交账" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_late" }]
+news = "牛庄后屋那杆小秤翘着杆挂在钩子上，放了小半年，牙人说，等的人去了登州就没回头。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：信交了，也去见了千户"
+next = "done"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "tong_yangxing", value = -2 }, { kind = "flag", flag = "c13_request_tong_yangxing_partial" }]
+reply = "牙人没有打断你。你说到千户用竹笔记了一整页，他的笔才动，只写了一行：问话问到天黑。写完他放下笔，从秤盘里拨走一半银子，把剩下的推过来。“信到了，这一半我认。千户那一页，佟爷看了自己认不认，我不替他认。”"
+
+[[tracks.chapters.choices]]
+key = "lie"
+text = "说信都交了，没跟别人说"
+next = "done"
+effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_tong_yangxing_partial" }]
+reply = "牙人看了你一眼，没有追问。他拨银子时秤杆一下就平了，像是早就知道该是多少，拨走一半，把剩下的推过来。“佟爷的账，迟早会对上。”他说得很轻，像在说今年的马价。"
+
+# 回牛庄，信没交：空秤盘。
+[[tracks.chapters]]
+key = "report_none"
+title = "空着的秤盘"
+text = "后屋的门闩今天没顶，门缝里漏进马市收摊后的风。牙人把小秤摆上桌，秤盘空着。你袖子里那七封信还在，鼓起一块，压着手腕。“几家？”他问，“几封？”他没有抬头，笔尖悬着，墨在笔尖上聚成一粒，慢慢往下坠。"
+at = "niuzhuang"
+mood = "sad"
+when = [{ kind = "alive", person = "tong_yangxing", value = true }]
+objectives = [{ kind = "at", at = "niuzhuang", text = "回牛庄向牙人交账" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_tong_yangxing_late" }]
+news = "牛庄马市的牙人说起七封有去无回的信，只摇头，说登州回来的船主后来再没露过面。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：一封也没交，信原样带回来了"
+next = "failed"
+news = "牛庄马市后屋的牙人收回了七封没送出去的信，沈阳那几座炉子上，听说又有人在打听南去的船。"
+effects = [{ kind = "affinity", person = "tong_yangxing", value = -2 }, { kind = "flag", flag = "c13_request_tong_yangxing_failed" }]
+reply = "你把七封信一封封放到桌上，油纸上的麻绳还是他打的死扣。他数了一遍，七封，一封不少，墨滴到纸上，也没去管。“那两个想跑的，明早就走。”他把信推到桌角，“我拦不住，也不拦了。”秤盘一直空着，到你出门，他也没去碰它。"
+
+[[tracks.chapters.choices]]
+key = "lie"
+text = "说信都交了"
+next = "done"
+effects = [{ kind = "cash", value = 1100 }, { kind = "flag", flag = "c13_request_tong_yangxing_partial" }]
+reply = "牙人的目光落在你鼓起的袖口上，只落了一下，就移开了。他从抽屉里数出银子，一堆一堆码进秤盘，只码了一半，把盘推过来。“佟爷问起，我照你说的回。”他说，“账要是对不上，也不是我的账。”"

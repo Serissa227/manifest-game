@@ -1,0 +1,166 @@
+# C13d 请托：三天的识字课（request_yi_i）。中文，Claude 写（2026-10-25）。
+# 人物：李珥（栗谷）yi_i（1537-01-07 生，男；“九度状元公”，势力 joseon，身份档 2）。cast 在 cast/historical_08_korea_ryukyu.toml，
+#       日程 1576—1578 海州石潭（haeju_city），1581—1583 汉城（seoul）；1579—1580 日程空着，正文按石潭写。
+# 类型：找东西（fd）；4 章：offer →（送书）use /（借书）use_lent → done；没有 stage 章，因此没有 window 与 default。
+# 报价：来信（L）。auto=true，offer 章 at=busan，出面的是东莱府的一个书吏，speaker 省略；李珥只在信里说话。
+#       family="c13_offer_busan"，family_cooldown_days=20（与釜山的其他请托共用冷却）。
+# 规划窗口（不进 TOML）：报价 1577-06-01 至 1583-06-30（offer 的 deadline，逾期 next=failed，不写见闻）；
+#       交书 1583-09-30 止（逾期 failed、_late、一封短信）；三天的课进章后 60 天内（逾期 failed、_late）。
+# 依据：
+#   史实——李珥 1577 年写成给初学者的《击蒙要诀》（《栗谷全书》）；崔世珍 1527 年编《训蒙字会》，每个汉字下用谚文注音释义；
+#   东莱府管着釜山浦。1577—1580 年前后他在海州石潭教书，1581 年起在汉城做官（offer 的 v1_seoul 变体换这一句）。
+#   原创——书吏与那封一条一条排着的信、釜山船家补网的孩子（十岁上下，无名）、他编的数数歌、“理”配船板的木纹、“性”配麻绳、
+#   炭描的字、单子与那首歌。
+# 不碰：金刚山的一年（cast 的秘密，本请托不写）；1583 年的养兵之议；李滉的请托（那边是渔家孩子问理，这边是船家孩子认字）。
+#       孩子未成年，只写认字、补网、编歌。
+# 读的旗标：无。
+# 设的旗标（全部为 c13_request_yi_i_<事件>）：accepted / declined（offer）；gave / lent（handin，分支）；late（handin 或课的超时）；
+#       done / partial（课的结局，只设一面）。
+# 实现说明：
+#   （a）brief 的 use 章按 gave/lent 拆现金（900 / 600）。同一轨道设的旗标不拿来挡选项，所以按 next 分成两章：
+#        送书走 use、借书走 use_lent，两章的两种解法一样，正文写不同的细节（书贴着肚皮 / 书每晚还回舱里、炭描的字），报酬各按 brief。
+#        章数因此是 4，不是 brief 的 3。
+#   （b）检定失败时引擎不显示选项的 reply，结果文字就是 fail 的 news，所以 teach 的 reply 只写成功，失败的经过写在 fail.news。
+#   （c）收尾来信：korean 与 teach 成功各一封（写的是不同的单子），送书、借书两章共用同一封。任何一条路上玩家至多收到一封信
+#        （成功的那封，或交书超时的短信）。
+#   （d）brief 里“书写给谁读……”那一句只用一次，放在 offer 的信里（v1_seoul 变体是同一封信的另一个版本，同一位置）。
+# 依赖：港口 busan；物品 hunmong_jahoe（items/books_11_languages.toml，有 shop，只查持有，送书的选项自己扣）；技能 lang_korean；
+#       检定属性 eloquence；势力 joseon。
+# 回忆插画：mem-request_yi_i-use「船板上的三天」：釜山码头边的船板上摊着一部字书，旁边炭描着歪歪扭扭的字，
+#       一个补网的孩子攥着网梭，指着一截麻绳，身后堆着没补完的渔网。
+
+[[tracks]]
+key = "request_yi_i"
+name = "三天的识字课"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["yi_i"]
+
+# 一、一卷新写的书：东莱府的书吏在釜山码头递来李珥的信，信里夹着《击蒙要诀》的头几页。
+[[tracks.chapters]]
+key = "offer"
+title = "一卷新写的书"
+text = "东莱府的一个书吏在码头上拦住你，从袖子里抽出一封信，信里夹着十几页新抄的书稿，题作《击蒙要诀》。“石潭的李先生托府里转交，指名给常走釜山的船。”信写得很快，一条一条排着：一，找一部崔世珍的《训蒙字会》；二，在釜山找一个想认字、还没认过字的孩子，教他三天；三，孩子读不下去的字，一个不漏，列成单子寄来。末尾另起一行：“书写给谁读，就该让谁先读。读不下去的那一个字，比我写的一整卷都要紧。”书吏把信折回原样，朝码头那头努了努嘴：“孩子倒是现成的，就在那边补网。”"
+mood = "cheerful"
+at = "busan"
+when = [{ kind = "date", from = [1577, 6, 1] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 5 }]
+family = "c13_offer_busan"
+family_cooldown_days = 20
+deadline = [1583, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_seoul"
+when = [{ kind = "date", from = [1581, 1, 1] }]
+text = "东莱府的一个书吏在码头上拦住你，从袖子里抽出一封信，信里夹着十几页书稿，题作《击蒙要诀》，纸边已经被人翻得起了毛。“汉城的李大人托府里转交，指名给常走釜山的船。大人如今公务缠身，这件事倒记得清楚。”信写得很快，一条一条排着：一，找一部崔世珍的《训蒙字会》；二，在釜山找一个想认字、还没认过字的孩子，教他三天；三，孩子读不下去的字，一个不漏，列成单子寄来。末尾另起一行：“书写给谁读，就该让谁先读。读不下去的那一个字，比我写的一整卷都要紧。”书吏把信折回原样，朝码头那头努了努嘴：“孩子倒是现成的，就在那边补网。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，先去码头那头看看那个孩子。"
+next = "handin"
+reply = "书吏领你走过去。一个十岁上下的孩子盘腿坐在一堆渔网中间，网梭穿过去一下，嘴里就数一声，数的是他自己编的歌，数到十又从头来。他抬头看了你一眼，又低下头去，接着数他的网眼。书吏说，这孩子数网眼从来不错，字却一个不认得。"
+effects = [{ kind = "flag", flag = "c13_request_yi_i_accepted" }, { kind = "affinity", person = "yi_i", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：在釜山教三天字，我抽不出这个空。"
+next = "failed"
+reply = "书吏把书稿照原来的折痕夹回信里，塞回袖子。“那我回禀府里。先生会另找人——他找人一向快，比等人快。”"
+effects = [{ kind = "flag", flag = "c13_request_yi_i_declined" }]
+
+# 二、一本字书：带着《训蒙字会》回到釜山，孩子问书还要不要还。
+[[tracks.chapters]]
+key = "handin"
+title = "一本字书"
+text = "你把《训蒙字会》摊在船板上。一页排着几十个汉字，每个字底下用谚文注着音和意思：天、地、日、月，一类挨着一类。孩子蹲在旁边不敢碰，翻页前先把手在衣襟上蹭干，手指悬在纸上，挨着字往下点，嘴唇跟着动。点到“鱼”字，他认得底下那几笔谚文，念出了声，自己先笑了。往后又翻了两页，他抬起头：“这本书，上完课还要还吗？”"
+speaker = "captain"
+mood = "cheerful"
+at = "busan"
+when = [{ kind = "alive", person = "yi_i", value = true }]
+objectives = [{ kind = "item", item = "hunmong_jahoe", qty = 1, text = "带来一部《训蒙字会》" }, { kind = "at", at = "busan", text = "回到釜山的码头" }]
+news = "釜山码头上那个补网的孩子，这两天老蹲在一条外地船的船板上，对着一部《训蒙字会》挨个点字，网都顾不上补。"
+deadline = [1583, 9, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yi_i_late" }, { kind = "letter", person = "yi_i", text = "单子不必寄了。我另托一位乡塾的先生，拿他学堂里的孩子试过书，卡住的字已经列来，改了两处。釜山那个补网的孩子若还想认字，让他去东莱府找书吏。" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "书送给你，上完课也不用还。"
+next = "use"
+reply = "孩子把书合上，掀起衣襟，贴着肚皮塞进去，再把衣襟扎紧。“这样不会湿。”他拍了拍肚子，网也不补了，就那样坐在船板上等你开课。"
+effects = [{ kind = "item", item = "hunmong_jahoe", qty = -1 }, { kind = "affinity", person = "yi_i", value = 3 }, { kind = "flag", flag = "c13_request_yi_i_gave" }]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "上完课书还我，这三天你尽管翻。"
+next = "use_lent"
+reply = "孩子点点头，想了一会儿：“那我得记快点。”他从网堆里摸出一截烧过的木炭，把刚才认得的“鱼”字照着在船板上描了一遍，描得歪歪扭扭，描完又在旁边描了一个。"
+effects = [{ kind = "flag", flag = "c13_request_yi_i_lent" }]
+
+# 三、卡住的字（送书）：三天的课在船上上，孩子自己想出把难字配上船上的东西。
+[[tracks.chapters]]
+key = "use"
+title = "卡住的字"
+text = "三天的课就在船上上。第一天孩子认得飞快：天、地、水、火，鱼、网、船、桨，凡是摸得着的，教一遍就记住，记住了还要拿指头在船板上划。第二天你拿出《击蒙要诀》那几页，他卡住了。“理”“性”这两个字翻来覆去地出现，他盯了半天，问你它们长什么样，你答不上来。第三天一早，他把那本字书从衣襟里掏出来，书皮还带着他身上的热气，说自己想了个办法：难字配一样船上的东西。“理”配船板的木纹——刨板子要顺着纹走；“性”配麻绳——绳子一湿就缩，那是它的性子。还剩几十个字，没配上。"
+speaker = "captain"
+mood = "tender"
+at = "busan"
+when = [{ kind = "alive", person = "yi_i", value = true }]
+objectives = [{ kind = "wait", days = 3, text = "在船上教三天" }, { kind = "at", at = "busan", text = "留在釜山" }]
+news = "釜山码头上一个补网的孩子跟外来的船长学了三天字，如今见人就念他编的认字歌。"
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yi_i_late" }], news = "釜山码头那个补网的孩子说，有个船长答应教他三天字，课到底没上成，他只好接着数他的网眼。" }
+
+[[tracks.chapters.choices]]
+key = "korean"
+text = "用谚文和他的土话，一个字一个字地讲"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_korean", ge = 60, hard = true }]
+hint = "你的朝鲜话只够在码头上问价，讲不了“理”字。"
+reply = "你把每个字掰开来讲：先念谚文，再用码头上的土话说一遍，说不通的就拿他配的东西比。到天黑，单子上只剩七个字。你把这七个字抄下来，每个字旁边写上他配的东西——木纹、麻绳、潮水、锚——一起封进寄给李珥的信里。孩子蹲在一边看你封信，问那位先生会不会嫌他笨。"
+news = "釜山码头补网的孩子跟外来的船长学了三天字，如今指着船板说那是“理”，指着麻绳说那是“性”。"
+effects = [{ kind = "cash", value = 900 }, { kind = "skill", skill = "lang_korean", value = 20 }, { kind = "affinity", person = "yi_i", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_yi_i_done" }, { kind = "memory", memory = "mem-request_yi_i-use", title = "船板上的三天" }, { kind = "letter", person = "yi_i", text = "单子收到，七个字，一个一个看过。一，“理”字旁边写着“船板的木纹”，比我书里那一段讲得明白，那一段要改。二，“性”配麻绳，也对；我原先从《中庸》讲起，孩子读不到《中庸》，这一处要改。三，头一章开头就用了四个他没见过的字，先该教的排到了后面，次第错了，这一处最该改。三处都改。那孩子若还想读，让他去东莱府，书吏那里会有一部新抄的给他。替我谢他：他问的，比我几个学生问的都准。" }]
+
+[[tracks.chapters.choices]]
+key = "teach"
+text = "照《击蒙要诀》的次第，一条一条从头教"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "yi_i", value = 3 }, { kind = "skill", skill = "lang_korean", value = 20 }, { kind = "flag", flag = "c13_request_yi_i_partial" }], news = "釜山码头那个补网的孩子跟船长学了三天字，隔天就没再上船，说补网的活更要紧；他认不下的字，船长抄了满满一页寄走。" }
+reply = "你不跳着教，照书上的次第，一条讲完再讲下一条。孩子听得坐不住，听到第三条，忽然拿网梭敲着网绳，把难字一个接一个编进了他那首数数的歌里。到天黑，单子上还剩十来个字。你把单子和那首歌的词一起抄下来，封进寄给李珥的信里。"
+effects = [{ kind = "cash", value = 900 }, { kind = "skill", skill = "lang_korean", value = 20 }, { kind = "affinity", person = "yi_i", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_yi_i_done" }, { kind = "memory", memory = "mem-request_yi_i-use", title = "船板上的三天" }, { kind = "letter", person = "yi_i", text = "单子收到，十一个字，还有一首歌。歌我念了三遍才念顺：他把“理”“性”编在数网眼的地方，数一个网眼，认一个字。书照这样改三处。一，头一章先教的字太难，往后挪。二，讲“理”的那一段改短，短到一口气念得完。三，每章末尾留几个字，让读的人自己拿身边的东西去配。你照我的次第教，教得不错，错在我排的次第。那首歌，我抄给学生们了。" }]
+
+# 三之二、卡住的字（借书）：书是借的，孩子每晚把书还回舱里，船板上描满了炭字。
+[[tracks.chapters]]
+key = "use_lent"
+title = "炭描的字"
+text = "三天的课就在船上上。书是借的，孩子心里有数，每天收工前把它还到你舱里，第二天一早再来借。第一天他认得飞快：天、地、水、火，鱼、网、船、桨，凡是摸得着的，教一遍就记住，记住了就拿木炭在船板上描，描满一块换一块。第二天你拿出《击蒙要诀》那几页，他卡住了。“理”“性”这两个字翻来覆去地出现，他盯了半天，问你它们长什么样，你答不上来。第三天一早，船板上的炭字被露水洇了一半，他一个也不让你擦，说自己想了个办法：难字配一样船上的东西。“理”配船板的木纹——刨板子要顺着纹走；“性”配麻绳——绳子一湿就缩，那是它的性子。还剩几十个字，没配上。"
+speaker = "captain"
+mood = "tender"
+at = "busan"
+when = [{ kind = "alive", person = "yi_i", value = true }]
+objectives = [{ kind = "wait", days = 3, text = "在船上教三天" }, { kind = "at", at = "busan", text = "留在釜山" }]
+news = "釜山码头上一个补网的孩子跟外来的船长学了三天字，船板上描满了炭字，如今见人就念他编的认字歌。"
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yi_i_late" }], news = "釜山码头那个补网的孩子说，有个船长答应借他一本字书、教他三天，课没上成，他到如今只认得一个“鱼”字。" }
+
+[[tracks.chapters.choices]]
+key = "korean"
+text = "用谚文和他的土话，一个字一个字地讲"
+next = "done"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_korean", ge = 60, hard = true }]
+hint = "你的朝鲜话只够在码头上问价，讲不了“理”字。"
+reply = "你把每个字掰开来讲：先念谚文，再用码头上的土话说一遍，说不通的就拿他配的东西比。到天黑，单子上只剩七个字。你把这七个字抄下来，每个字旁边写上他配的东西——木纹、麻绳、潮水、锚——一起封进寄给李珥的信里。孩子把字书还到你手上，还完又伸手摸了摸书皮，才回去补网。"
+news = "釜山码头补网的孩子跟外来的船长借书学了三天字，如今指着船板说那是“理”，指着麻绳说那是“性”。"
+effects = [{ kind = "cash", value = 600 }, { kind = "skill", skill = "lang_korean", value = 20 }, { kind = "affinity", person = "yi_i", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_yi_i_done" }, { kind = "memory", memory = "mem-request_yi_i-use", title = "船板上的三天" }, { kind = "letter", person = "yi_i", text = "单子收到，七个字，一个一个看过。一，“理”字旁边写着“船板的木纹”，比我书里那一段讲得明白，那一段要改。二，“性”配麻绳，也对；我原先从《中庸》讲起，孩子读不到《中庸》，这一处要改。三，头一章开头就用了四个他没见过的字，先该教的排到了后面，次第错了，这一处最该改。三处都改。那孩子若还想读，让他去东莱府，书吏那里会有一部新抄的给他。替我谢他：他问的，比我几个学生问的都准。" }]
+
+[[tracks.chapters.choices]]
+key = "teach"
+text = "照《击蒙要诀》的次第，一条一条从头教"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "yi_i", value = 3 }, { kind = "skill", skill = "lang_korean", value = 20 }, { kind = "flag", flag = "c13_request_yi_i_partial" }], news = "釜山码头那个补网的孩子跟船长借书学了三天字，隔天把书一还就没再来，说补网的活更要紧；认不下的字，船长抄了满满一页寄走。" }
+reply = "你不跳着教，照书上的次第，一条讲完再讲下一条。孩子听得坐不住，听到第三条，忽然拿木炭敲着船板，把难字一个接一个编进了他那首数数的歌里。到天黑，单子上还剩十来个字。你把单子和那首歌的词一起抄下来，封进寄给李珥的信里。孩子把字书还给你，嘴里还在唱。"
+effects = [{ kind = "cash", value = 600 }, { kind = "skill", skill = "lang_korean", value = 20 }, { kind = "affinity", person = "yi_i", value = 8 }, { kind = "reputation", faction = "joseon", value = 2 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_yi_i_done" }, { kind = "memory", memory = "mem-request_yi_i-use", title = "船板上的三天" }, { kind = "letter", person = "yi_i", text = "单子收到，十一个字，还有一首歌。歌我念了三遍才念顺：他把“理”“性”编在数网眼的地方，数一个网眼，认一个字。书照这样改三处。一，头一章先教的字太难，往后挪。二，讲“理”的那一段改短，短到一口气念得完。三，每章末尾留几个字，让读的人自己拿身边的东西去配。你照我的次第教，教得不错，错在我排的次第。那首歌，我抄给学生们了。" }]

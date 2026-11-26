@@ -1,0 +1,203 @@
+# 请托：赎出来的老水手（request_fray_juan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：胡安修士（fray_juan，1508-02-18 生，男），三一会派驻阿尔及尔的赎俘修士；cast：cast/story_islamic.toml（日程 1553—1590 在阿尔及尔的酒馆）。
+# 类型：混合（mixed）。五章：offer（报价）、papers（盖印）、voyage（海上）、palermo（巴勒莫的抉择）、epilogue（收尾）。track.kind = "request"。
+#   没有 stage 章，因此没有 window 与 default；各章的时间范围写在 when 的 date 条件里（普通章不写 window，见 decisions §〇）。
+# 报价：T（当面）。auto = false，玩家在港里问请托（ask:request_fray_juan）启动；offer 章不写 at，objectives 为 person fray_juan。
+#   offer 的 when 为 1557-06-01..1574-12-31 与主角满 17 岁；deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：papers 章 deadline_days = 30，超时 failed，来信一封、好感 -3、旗标 _late；palermo 章 deadline_days = 60，超时同上。voyage 与 epilogue 没有期限。
+# 依据·史实背景：三一会在阿尔及尔赎俘（史实，出处见 cast）；赎身文书要由帕夏府盖印才能出港，正文只写码头上的说法，不写制度细节（待核：盖印的具体手续）。
+# 依据·原创：胡安修士的名册与讲价，老水手的撒丁岛渔村，海上那个没人认得的女人的名字（只听见，不写出），巴勒莫码头的修网活，盖印钱与推荐信。
+# 待核：撒丁岛不在图上。老人原本要在西西里搭渔船回撒丁，所以航线只到巴勒莫；老人在巴勒莫改口，不回撒丁。
+# 秘密：cast 没写秘密，本请托不触碰秘密；见闻只写码头上看得见的事。
+# 依赖：港口 algiers（ports_north_africa.toml）、palermo（ports_west_med.toml）；物品 holy_water、herbal_draught（items/items_consumable_01.toml）；属性 eloquence、stewardship；人物 fray_juan。无需 B10b 改名。
+# 读的旗标：c13_main_tariq（主线 tariq 设；offer 的 v1_tariq 变体换一句话，未设时门禁不存在）；epilogue 的变体读本轨道自己的旗标。
+# 设的旗标：c13_request_fray_juan_accepted（offer 接下载人，两条接法）、_letter（offer 讲价，要了推荐信，半封）、_declined（offer 回绝）、
+#   _paid（papers 替他交盖印钱）、_partial（palermo 劝动老人回撒丁，成功）、_done（palermo 听他说完，或劝不动，两条收尾）、_late（papers 或 palermo 超时）。
+#   终局旗标只有三面：done、partial、late，每条轨道只设其中一面（late 由超时设，done 与 partial 由 palermo 的回应设）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；没有恋爱。
+# 报酬（每份只给一次）：清贫档不付现金；人情是一瓶圣水（holy_water，稀有度 1 消耗品，只在 listen 路线）与一封推荐信（letter，epilogue 的 tell 选项）；
+#   好感合计最多约 +18；名声 +3（复合，只在 listen 路线：清贫档 +1 加复合 +2）；回忆 mem-request_fray_juan-palermo。
+# 写手决定（不是原文，写给整合方）：
+#   1. 盖印钱的还款不设现金效果。原来的写法是 tell 选项加 cash +50，但选项不能靠同一轨道在别的分支设的旗标门禁（会报“准备后条件仍不满足”），
+#      所以 epilogue 的 v3_paid 变体只写一句“先还你一半”的许诺，没有钱流动。若要真还钱，须另开一章。
+#   2. 检定失败的分支按好感 -2 处理（decisions §二的一般规则）；失败分支只有 news，没有回复文字（引擎的失败分支没有 reply 字段）。
+#   3. urge 失败（老人不肯上船）设 _done，与 listen 同一面终局旗标；epilogue 的正文按“没回去”写。
+#   4. epilogue 的三个变体互斥：v1_partial 要 partial；v2_half 要 letter 且不 partial；v3_paid 要 paid 且不 letter 且不 partial。
+#   5. 没有 stage 章的见闻只挂在选项上（不写章级 news），免得超时也冒出一条不相干的见闻。
+# 回忆插画清单：
+#   mem-request_fray_juan-palermo「码头上修网的老水手」：巴勒莫码头，老水手蹲在网堆旁穿梭子，身后停着去撒丁岛的渔船。
+
+[[tracks]]
+key = "request_fray_juan"
+name = "赎出来的老水手"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["fray_juan"]
+
+# 一、报价：赎俘所的台阶上，胡安修士拉我坐下，问老人想回哪里。
+[[tracks.chapters]]
+key = "offer"
+title = "划了十九年的桨"
+text = "赎俘所的台阶上，胡安修士见我来，先拉我坐下：“孩子，坐。先别说你要赎谁——先告诉我，他叫什么，家在哪个村。”院子里的老水手刚赎出来，背弯得直不起来，是十九年的桨凳坐弯的。修士问他想回哪里，他说撒丁岛的一个渔村，名字说了两遍才说清。修士合上名册：“赎人的钱凑齐了，船钱还差一截。我讲起价来比商人还狠，可跟你，我只能求。”"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1574, 12, 31] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "fray_juan", text = "在港里找到他" }]
+deadline = [1574, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_tariq"
+when = [{ kind = "flag", flag = "c13_main_tariq" }]
+text = "赎俘所的台阶上，胡安修士见我来，先拉我坐下：“孩子，坐。先别说你要赎谁——先告诉我，他叫什么，家在哪个村。”院子里的老水手刚赎出来，背弯得直不起来，是十九年的桨凳坐弯的。修士问他想回哪里，他说撒丁岛的一个渔村，名字说了两遍才说清。修士合上名册，看了看我：“赎人的钱凑齐了，船钱还差一截。你是本地人，书记那里你比我好说话。我讲起价来比商人还狠，可跟你，我只能求。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应载老人走，船钱不收。"
+next = "papers"
+reply = "修士在胸前画了个十字，又马上说：“文书还没办完。码头上的书记要看赎身证，你陪他去。明天一早别让他一个人在院子里等，他坐久了，背会更弯。”"
+effects = [{ kind = "affinity", person = "fray_juan", value = 2 }, { kind = "flag", flag = "c13_request_fray_juan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "船钱可以少，但你要替我写一封推荐信。"
+next = "papers"
+reply = "修士笑了：“这个价，我认。”他当场在纸上写了半封，写到一半停住笔，说剩下的半封，等人送到了再写。你要的是那种能在各港拿出来看的信，他写得很慢，每一个字都像是怕写错了就要还钱。"
+effects = [{ kind = "affinity", person = "fray_juan", value = 2 }, { kind = "flag", flag = "c13_request_fray_juan_accepted" }, { kind = "flag", flag = "c13_request_fray_juan_letter" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "白载人的事，我不做。"
+next = "failed"
+reply = "修士点点头，把名册合上，说那他再去求下一条船。“求人的事，我不怕丢脸。”他走出门口时回头看了一眼院子，老人正把赎身证折成一个小方块，一下一下按平。"
+effects = [{ kind = "flag", flag = "c13_request_fray_juan_declined" }]
+
+# 二、盖印：码头上的书记说印还没盖，人出不了港。
+[[tracks.chapters]]
+key = "papers"
+title = "差一个印"
+text = "码头上的书记翻着赎身证，翻到最后一页，指甲在一个空圈上敲了两下。“帕夏府的印还没盖。没有它，人出不了港。”他把证推回来，又说：“盖印的人今天不在，明天也不一定在。”老水手坐在缆桩上，两手把那张证捏得发皱。胡安修士站在书记桌边，一句话也没说，只把名册翻开，翻到老人那一页，用手指压住了那行字。"
+speaker = "captain"
+mood = "tense"
+at = "algiers"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1575, 6, 30] }, { kind = "alive", person = "fray_juan", value = true }]
+deadline_days = 30
+timeout = { next = "failed", effects = [{ kind = "letter", person = "fray_juan", text = "印一直没盖上，老人在赎俘所又等了一季。他说不急，十九年都等了。" }, { kind = "affinity", person = "fray_juan", value = -3 }, { kind = "flag", flag = "c13_request_fray_juan_late" }] }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟书记说：赎金已经交清，印是规矩，人是人。"
+next = "voyage"
+reply = "书记嘟囔了几句，把赎身证翻过来看背面，又翻回去。最后他在证上画了个记号，说先放行，印回头补。“回头补的印，”他说，“我记在你的名字底下。”"
+effects = [{ kind = "affinity", person = "fray_juan", value = 3 }]
+news = "阿尔及尔码头上，一个船长跟书记争了半晌，书记先放了行，说印回头补。"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "voyage", effects = [{ kind = "affinity", person = "fray_juan", value = -2 }], news = "阿尔及尔码头上，书记让一个船长和赎出来的老水手等了三天，印才盖上。" }
+
+[[tracks.chapters.choices]]
+key = "fee"
+text = "替修士交一笔盖印钱，当场把印盖上。"
+next = "voyage"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "身上的钱凑不出那笔盖印钱。"
+reply = "盖印的人当天就在了。他在书记的桌前站了一会儿，等印盖稳，才慢慢收起钱袋。修士看着你交钱，叹了口气，说他记下了。"
+effects = [{ kind = "cash", value = -100 }, { kind = "affinity", person = "fray_juan", value = 3 }, { kind = "flag", flag = "c13_request_fray_juan_paid" }]
+news = "阿尔及尔码头上，有个船长替三一会的修士交了一笔盖印钱，印当天就盖上了。"
+
+# 三、海上：老人发起烧来，躺在舱里喊一个女人的名字。
+[[tracks.chapters]]
+key = "voyage"
+title = "喊一个女人的名字"
+text = "海上第三天，老人发起烧来，躺在舱里说胡话。一会儿喊桨手的号子，手还在毯子上划，像是在拉一根看不见的桨；一会儿喊一个女人的名字，喊得很轻，像怕吵醒谁。船上没有人认得那个名字。修士不在船上，他留在阿尔及尔的赎俘所里，临别时只说了一句：“名字念对了，人就醒得快。”水手舀来一桶水，说这种烧，熬过了天亮就算。"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1575, 6, 30] }, { kind = "alive", person = "fray_juan", value = true }]
+objectives = [{ kind = "wait", days = 3, text = "船上过了三天" }]
+
+[[tracks.chapters.choices]]
+key = "care"
+text = "守着他，一勺一勺喂水，给他降温。"
+next = "palermo"
+reply = "第二天夜里烧退了，老人醒过来，第一句话是问船往哪开。你说往西西里，他想了想，说那就快点，别让船在海上停着。他的手在毯子上摸索，找到你的袖口，攥住了，过了好一会儿才松开。"
+effects = [{ kind = "affinity", person = "fray_juan", value = 3 }]
+check = { attr = "stewardship", base = 20, per = 7 }
+fail = { next = "palermo", effects = [{ kind = "affinity", person = "fray_juan", value = -2 }], news = "巴勒莫的码头上，一条从阿尔及尔来的船靠了岸，船上一个老水手烧了三天，下船时是被两个水手架下来的。" }
+
+[[tracks.chapters.choices]]
+key = "draught"
+text = "从药箱里拿一瓶草药药剂给他喝。"
+next = "palermo"
+requires = [{ kind = "item", item = "herbal_draught", qty = 1 }]
+hint = "药箱里没有可用的草药药剂了。"
+reply = "喝了药，他睡了一整天。醒来时天已经黑了，他说梦见了渔村的码头，码头边上有一棵没人修的老树，树下的网堆得很高，没有人来收。他说完就笑了一下，露出一颗黄牙。"
+effects = [{ kind = "item", item = "herbal_draught", qty = -1 }, { kind = "affinity", person = "fray_juan", value = 3 }]
+
+# 四、巴勒莫：渔船就停在旁边，老人说他不回去了。
+[[tracks.chapters]]
+key = "palermo"
+title = "他不回去了"
+text = "巴勒莫的码头上，去撒丁岛的渔船就停在旁边，船舷刚刷过桐油，一股刺鼻的味道顺着风飘过来。老人扶着栈桥的柱子，看了那条船很久，手里的赎身证卷成了一个筒。“我不回去了。”他说，“认得我的人，大概都不在了。那个名字，我也不知道还在不在。”他把手掌摊开给我看，掌心的茧是桨磨出来的，他说这种手还能织网。他想在西西里找个码头修网，离海近一点。"
+speaker = "captain"
+mood = "tender"
+at = "palermo"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1575, 6, 30] }, { kind = "alive", person = "fray_juan", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "fray_juan", text = "你的船没到西西里，老人搭了一条商船走了。他去了哪里，我也不知道。" }, { kind = "affinity", person = "fray_juan", value = -3 }, { kind = "flag", flag = "c13_request_fray_juan_late" }] }
+
+[[tracks.chapters.choices]]
+key = "listen"
+text = "听他说完，不劝。"
+next = "epilogue"
+reply = "他说完，你陪他在码头上找了一个修网的活。工钱是按网眼算的，他一边算一边念叨，算错了也不怪人。他说十九年来，头一回有人听他把话说完。"
+effects = [{ kind = "affinity", person = "fray_juan", value = 8 }, { kind = "fame", value = 3 }, { kind = "item", item = "holy_water", qty = 1 }, { kind = "memory", memory = "mem-request_fray_juan-palermo", title = "码头上修网的老水手" }, { kind = "flag", flag = "c13_request_fray_juan_done" }]
+news = "巴勒莫的码头上来了一个在阿尔及尔划了十九年桨的老水手，他没上去撒丁岛的船，留下来修网。"
+
+[[tracks.chapters.choices]]
+key = "urge"
+text = "劝他：船就在这儿，回去看一眼也好。"
+next = "epilogue"
+reply = "他犹豫了半天，最后还是上了渔船，蹲在船头，两只手搭在膝盖上。船开的时候，他回头朝你挥了挥手，一直挥到船转过了码头的角，你不知道他是高兴还是后悔。"
+effects = [{ kind = "affinity", person = "fray_juan", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_fray_juan_partial" }]
+news = "巴勒莫的码头上，一个老水手犹豫了半天，还是上了去撒丁岛的渔船，船开时回头挥了挥手。"
+check = { attr = "eloquence", base = 5, per = 8 }
+fail = { next = "epilogue", effects = [{ kind = "affinity", person = "fray_juan", value = -2 }, { kind = "flag", flag = "c13_request_fray_juan_done" }], news = "巴勒莫的码头上，那个老水手还是不肯上船，留下来找了修网的活。" }
+
+# 五、收尾：回到阿尔及尔，修士在赎俘所门口等你。
+[[tracks.chapters]]
+key = "epilogue"
+title = "你想在哪里停下"
+text = "回到阿尔及尔，胡安修士还在赎俘所的门口等你。院子里晒着几排新赎回来的人的被褥，他一个一个数过去，数到一半才抬头。门房在檐下抽着烟，烟味混着被褥的潮气飘进院子。他把名册抱在胸前，见了面就问：“他到了没有？”你说他没回去，留在了西西里。修士愣了一下，手指停在名册上。那一页，老人的名字旁边还空着，没有打勾。"
+speaker = "captain"
+mood = "tender"
+at = "algiers"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1575, 6, 30] }, { kind = "alive", person = "fray_juan", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_partial"
+when = [{ kind = "flag", flag = "c13_request_fray_juan_partial" }]
+text = "回到阿尔及尔，胡安修士还在赎俘所的门口等你。院子里晒着几排新赎回来的人的被褥，他一个一个数过去，数到一半才抬头。门房在檐下抽着烟，烟味混着被褥的潮气飘进院子。他把名册抱在胸前，见了面就问：“他到了没有？”你说他上了去撒丁的渔船，船开的时候还回头挥了手。修士的手指在名册上停住，又慢慢松开，在老人的名字旁边画了一个勾。"
+
+[[tracks.chapters.variants]]
+key = "v2_half"
+when = [{ kind = "flag", flag = "c13_request_fray_juan_letter" }, { kind = "flag", flag = "c13_request_fray_juan_partial", value = false }]
+text = "回到阿尔及尔，胡安修士还在赎俘所的门口等你。院子里晒着几排新赎回来的人的被褥，他一个一个数过去，数到一半才抬头。门房在檐下抽着烟，烟味混着被褥的潮气飘进院子。他把名册抱在胸前，见了面就问：“他到了没有？”你说他没回去，留在了西西里。修士从袖子里抽出那半封推荐信，摸了摸没写完的那一截，又把它收了回去。“人送到了，就写。”他说。"
+
+[[tracks.chapters.variants]]
+key = "v3_paid"
+when = [{ kind = "flag", flag = "c13_request_fray_juan_paid" }, { kind = "flag", flag = "c13_request_fray_juan_letter", value = false }, { kind = "flag", flag = "c13_request_fray_juan_partial", value = false }]
+text = "回到阿尔及尔，胡安修士还在赎俘所的门口等你。院子里晒着几排新赎回来的人的被褥，他一个一个数过去，数到一半才抬头。门房在檐下抽着烟，烟味混着被褥的潮气飘进院子。他把名册抱在胸前，见了面就问：“他到了没有？”你说他没回去，留在了西西里。修士愣了一下，说那笔盖印钱他记着。“哪天有了钱，先还你一半，另一半算我欠的。”"
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "把老人的话原样告诉他。"
+next = "done"
+reply = "修士听完，笑了，说赎人之前他只问了一半：想回哪里，还该再问一句，想在哪里停下。他把推荐信写完交给你，信里说你是一个肯听人把话说完的船长。"
+effects = [{ kind = "affinity", person = "fray_juan", value = 2 }, { kind = "letter", person = "fray_juan", text = "致各港的三一会修士：持信的船长载过一个被赎的人，没收船钱，肯听人把话说完。请给他一碗汤，一张床。——胡安修士" }]
+
+[[tracks.chapters.choices]]
+key = "brief"
+text = "只说：人平安。"
+next = "done"
+reply = "修士点点头，画了个十字，说平安就好。他把名册翻到那一页，看了看，又轻轻合上，过了一会儿才去叫人端汤来。"
+effects = [{ kind = "affinity", person = "fray_juan", value = 1 }]

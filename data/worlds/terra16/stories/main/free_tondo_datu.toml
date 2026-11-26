@@ -1,0 +1,233 @@
+# 汤都大督之子·个人小线（free_tondo_datu）
+#
+# 标签：自由船长模板“汤都大督之子”（custom_tondo_datu，家乡港 tondo）。“我”不写性别、外貌、肤色与身高，不写名字；
+#   speaker = "captain" 时说话的是“我”；别人称呼“船长”“某家的孩子”“先生的学徒”。
+#   本模板的“家里的话”是“潮退了再说”，全线只用两次：a00 的福建船主转述，c01 的先生说。
+# 依据：史实——汤都与文莱、福建之间的转口贸易；1570 年戈伊蒂与萨尔塞多攻马尼拉，拉惹苏莱曼的木堡与铜炮（H38 前夜，只写河对岸的烟）；
+#   1571 年黎牙实比建马尼拉城后，汤都的拉坎杜拉与西班牙人结盟受洗（只写长辈们受洗、名字是西班牙人起的）；
+#   1587—88 年汤都大督们密谋起事、联络日本船长，事泄（本线只写信与先生的潮，不写结局的处决）。
+#   原创：家学先生在沙上画潮、表兄、港务官的那句话、受洗那天的雨。
+#   待核：无。西班牙人的名字、神父的名字只写到戏里的程度，不写具体的圣人名。
+# 轨道：free_tondo_datu（kind = main，auto = true，start = a00_gate）。门槛章 a00_gate 的 when 是 c12_voyage_custom_tondo_datu；
+#   default 设 c13_free_tondo_datu。
+# 本文件设置的旗标：c13_free_tondo_datu（门槛）；c13_free_tondo_datu_brunei_word（a01 的 word 选项）；
+#   c13_free_tondo_datu_baptized、c13_free_tondo_datu_moved（b01 的两个选项，二者互斥）。
+# 读取的旗标：c12_voyage_custom_tondo_datu（门槛）；c13_free_tondo_datu_brunei_word（a02 变体 v1_word）；
+#   c13_free_tondo_datu_baptized（c01 变体 v1_baptized）；c13_free_tondo_datu_moved（c01 变体 v2_moved）。
+# 变体：变体按 key 的字母序取第一个满足的；v1_ 优先于 v2_。变体是整段正文的替换，不是追加。
+# 秘密：本线没有身世秘密。伏笔是先生在沙上画的那道线：a00 只写他画了一道线，c01 才指给“我”看，那是涨潮。
+# 历史结果：本线没有 HIST_ 占位旗标。史实由各“局”章的 window 与 default 承担（你不在时历史照常）。
+# 请托：本线不读 c13_request_*（阿米汉、拉坎的请托归 C13d）。整合后若 C13d 已登记，可在 c01 加一句变体读 c13_request_<人物>_done。
+# 等待的包：A9（自创主角的身份门槛；本文件只用 c12_voyage 旗标）。
+# 回忆插画清单（mem-* 键与画面，各不超过 60 字）：
+#   mem-free_tondo_datu-a02 马尼拉湾的烟：河口，对岸的木堡冒着黑烟，一条双体船载满了妇孺往这边划。
+#   mem-free_tondo_datu-b01 不受洗的那一天：雨中的汤都河边，一队人走向新盖的教堂，一个人站在竹屋檐下没动。
+#   mem-free_tondo_datu-c01 给日本船长的信：夜里的竹屋，几个人围着一盏油灯，一封信交到船长手里，门外是涨起来的河。
+#   mem-free_tondo_datu-c01b 沙上的潮：竹屋檐下，一个老先生用手指在沙上画了一道涨潮的线，旁边的年轻人低着头。
+
+[[tracks]]
+key = "free_tondo_datu"
+name = "河口的大督家"
+kind = "main"
+start = "a00_gate"
+auto = true
+
+# A00：门槛见闻。选中别的主角或别的模板时这条线静默结束，什么也不留下。
+[[tracks.chapters]]
+key = "a00_gate"
+title = "河口的帆"
+text = "正月初的汤都河口，桅杆挨着桅杆，帆挤着帆。福建的戎克船卸瓷器和铁锅，文莱的帆船装蜡和黄金。大督家一条新漆的双体船停在最里头，船头挂着纹旗。福建船主隔着人群喊：“汤都的人做生意，先看潮。潮退了再说。”竹屋檐下，家学先生拿手指在沙上划了一道线，没有抬头。"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "tondo"
+stage = "rumor"
+mood = "tender"
+cast = ["c8_tondo_teacher"]
+news = "汤都河口挤满了福建和文莱的船，大督家的孩子要带一条双体船出海，先生在沙上画了一道潮。"
+when = [{ kind = "flag", flag = "c12_voyage_custom_tondo_datu" }]
+
+[tracks.chapters.default]
+next = "a01_brunei"
+effects = [{ kind = "flag", flag = "c13_free_tondo_datu" }]
+
+# A01：文莱的港务官。普通章，有期限（1558 年底）与超时（转给 a02）。
+# 瓷器不论选哪一项都在这一章交出；“少卖几件”的 word 选项设旗标，a02 的变体读它。
+[[tracks.chapters]]
+key = "a01_brunei"
+title = "文莱的港务官"
+text = "文莱的水上村庄，房子都架在木桩上，小船从屋底下穿过去。我的船靠在村口，舱里是福建来的青花，每件都用稻草裹得严严实实。苏丹的港务官坐在竹席上，不急着看货，先看船尾挂的纹旗。大督家和文莱王族是亲戚，他认得这面旗。“汤都的瓷器，要先过我的眼。这是你祖父那一辈就定下的。”“我”把货单递过去，只说一句：“船上的数，一件不差。”他一件件揭开稻草，挑走最好的几件，剩下的才能往市上去。挑完，他没有马上走，看了“我”一眼，像是有句话要托“我”带回汤都，又没有立刻说。"
+when = [{ kind = "date", from = [1557, 4, 1] }]
+at = "brunei_port"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "goods", good = "porcelain", qty = 10, at = "brunei_port", text = "把福建的瓷器运到文莱" }]
+deadline = [1558, 12, 31]
+
+[[tracks.chapters.choices]]
+key = "custom"
+text = "照老规矩，让港务官先挑"
+next = "a02_goiti"
+effects = [{ kind = "cash", value = 1500 }, { kind = "reputation", faction = "brunei", value = 2 }]
+reply = "港务官挑走了三件青花，都是最好的那种，每件都要对着光看过才放下。剩下的货我一个上午就卖完了，买主是街口的老铺子。他收起挑剩的单子，在上面画了个小圈，说：“汤都的孩子懂规矩。”"
+
+[[tracks.chapters.choices]]
+key = "direct"
+text = "绕过港务官，夜里卖给商人"
+next = "a02_goiti"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 2000 }]
+reply = "商人们划着小船从木桩底下钻出来，提着灯，摸黑看货。有个胖商人拿铜秤砣压价，秤杆翘得厉害，最后还是他先认输。出的价比港务官高，天亮前我的船就离了港，压舱石底下多压了一袋银子。"
+fail = { next = "a02_goiti", effects = [{ kind = "cash", value = 1500 }, { kind = "reputation", faction = "brunei", value = -1 }], news = "文莱水上村庄的木桩底下，港务官的人等着那条汤都来的船，瓷器还是照老规矩挑了，脸色难看。" }
+
+[[tracks.chapters.choices]]
+key = "word"
+text = "少卖几件，换他那句话带回汤都"
+next = "a02_goiti"
+effects = [{ kind = "cash", value = 1000 }, { kind = "flag", flag = "c13_free_tondo_datu_brunei_word" }]
+reply = "我少留了几件给他挑，港务官挑完货，压低了声音：“东边的海上有白人的船，问起过汤都。”他没说是谁问的，也没说问了什么。这句话我没写下来，在舱里默念了一路，船离港的时候还在想它。"
+
+[tracks.chapters.timeout]
+next = "a02_goiti"
+effects = [{ kind = "letter", person = "c8_tondo_teacher", text = "瓷器托福建人的船送去了文莱。港务官来信问起你，我回他说，你在学等潮。" }]
+
+# A02：马尼拉湾的烟。局章：1570 年 5—6 月，戈伊蒂攻马尼拉，拉惹苏莱曼的木堡被烧（史实）。
+# 你不在时历史照常，default 走向 b01。
+[[tracks.chapters]]
+key = "a02_goiti"
+title = "马尼拉湾的烟"
+text = "五月，西班牙人的船从南边开进马尼拉湾，戈伊蒂带着兵上了岸。河对面，拉惹苏莱曼守着他的木堡，堡上架着铜炮。两边谈了几天，谈崩了，炮响了。黑烟从木堡后面一股一股地升起来，河这边的渔人把网收了，蹲在岸上看。木堡烧起来的时候，苏莱曼的人把铜炮推进了河里，不想留给西班牙人。一个划小船的人从对岸过来，带着拉惹的话：“他们要的是港口，不是朋友。告诉汤都的人，河这边也是港口。”大督家的长辈在堂上说：“船停在河口，两边都望得见，哪边也不靠。”“我”的船就停在那里。"
+stage = "involve"
+window = [[1570, 5, 1], [1570, 6, 30]]
+at = "tondo"
+speaker = "captain"
+mood = "tense"
+cast = ["rajah_sulayman"]
+news = "汤都的人说，西班牙人烧了马尼拉的木堡又走了，拉惹苏莱曼的人把铜炮推进了河里。"
+
+[[tracks.chapters.choices]]
+key = "ferry"
+text = "把马尼拉的妇孺渡到河这边"
+next = "b01_tribute"
+check = { attr = "seamanship", base = 35, per = 6 }
+effects = [{ kind = "fame", value = 1 }, { kind = "reputation", faction = "luzon", value = 2 }, { kind = "memory", memory = "mem-free_tondo_datu-a02", title = "马尼拉湾的烟" }]
+reply = "渡船来回了七趟，孩子哭，男人们沉默地划桨。渡过来的人里有个老妇人一直抱着一只陶罐不肯松手，上了岸她才说，里面装的是祖先的牙。“我”替她把陶罐抱到竹棚里，放在最干的一块席子上。"
+fail = { next = "b01_tribute", effects = [{ kind = "reputation", faction = "luzon", value = 1 }], news = "汤都河口的流太急，渡船翻了一次，人都捞上来了，带过来的东西全丢在了河里。" }
+
+[[tracks.chapters.choices]]
+key = "cannon"
+text = "替苏莱曼的人把沉在河里的铜炮捞起来"
+next = "b01_tribute"
+check = { attr = "command", base = 20, per = 7 }
+effects = [{ kind = "reputation", faction = "luzon", value = 3 }, { kind = "reputation", faction = "spain", value = -2 }]
+reply = "三门铜炮用粗竹杠抬上岸，又藏进上游的竹林里，盖上湿草。苏莱曼的人拍着炮身，说明年还用得上，又说西班牙人的小艇来河口转过两圈，没找到炮。炮身上的铜锈被水泡得发亮，苏莱曼的人一门一门拍过去，数了两遍，才肯放心。"
+fail = { next = "b01_tribute", effects = [{ kind = "reputation", faction = "luzon", value = 1 }], news = "汤都河口的铜炮只捞起来一门，另外两门陷在泥里，西班牙人的小艇已经划过来了。" }
+
+[[tracks.chapters.choices]]
+key = "parley"
+text = "上西班牙人的船，替两边传一回话"
+next = "b01_tribute"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "reputation", faction = "spain", value = 2 }]
+reply = "西班牙人的船舱里摆着一张海图，戈伊蒂说，他们只要米和水，不要仗。“我”把话带回河这边，转给拉惹的人时，对岸的烟还没散。那个划小船的人听完，只说了一句：“他们要的米，不会只要这一船。”"
+fail = { next = "b01_tribute", news = "马尼拉湾的西班牙船上，通事听不懂汤都来的孩子的话，那孩子也听不懂他的，谈了半天，什么也没谈成。" }
+
+[tracks.chapters.default]
+next = "b01_tribute"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_word"
+when = [{ kind = "flag", flag = "c13_free_tondo_datu_brunei_word" }]
+text = "五月，西班牙人的船从南边开进马尼拉湾，戈伊蒂带着兵上了岸。河对面，拉惹苏莱曼守着他的木堡，堡上架着铜炮。两边谈了几天，谈崩了，炮响了。黑烟从木堡后面一股一股地升起来，河这边的渔人把网收了，蹲在岸上看。木堡烧起来的时候，苏莱曼的人把铜炮推进了河里，不想留给西班牙人。“我”想起十几年前文莱港务官那句话——东边的白人问起过汤都。一个划小船的人从对岸过来，带着拉惹的话：“他们要的是港口，不是朋友。告诉汤都的人，河这边也是港口。”大督家的长辈在堂上说：“船停在河口，两边都望得见，哪边也不靠。”“我”的船就停在那里。"
+
+# B01：受洗的名字。普通章，1572 年 3 月起，期限 1573 年 6 月底。三个选项互斥：受洗、送去文莱、留下。
+[[tracks.chapters]]
+key = "b01_tribute"
+title = "受洗的名字"
+text = "马尼拉城立起来了，西班牙人在河对岸修石头的墙。汤都的老拉坎杜拉已经跟西班牙人结了盟，受了洗；收贡的人一家一家上门，家里的长辈们在堂上议了三夜。长辈只说了一句：“田是祖上留下的，人在，田才有人种。”受洗，就保得住田和船；不受洗，就只能把家搬去文莱。神父在河边的新教堂前拦住“我”：“受了洗，你就是国王的臣民了。国王会保护你的田。”他问“我”想叫什么名字。“我”报了一个，他摇头，说那不是圣人的名字。我想，这一回，潮不肯等人。"
+when = [{ kind = "date", from = [1572, 3, 1] }]
+at = "tondo"
+speaker = "captain"
+mood = "sad"
+deadline = [1573, 6, 30]
+
+[[tracks.chapters.choices]]
+key = "baptize"
+text = "受洗，保住家里的田和船"
+next = "c01_conspiracy"
+effects = [{ kind = "flag", flag = "c13_free_tondo_datu_baptized" }, { kind = "reputation", faction = "spain", value = 2 }]
+reply = "受洗那天下着雨，教堂的木门还没刷漆。神父给的那个名字，“我”念了三遍才念对，第三遍的时候，身后有人轻轻笑了一声。长辈们站在门口等“我”出来，雨水顺着檐口往下淌。"
+news = "汤都河边的新教堂前，几家大督受了洗，神父给每人起了西班牙名字，有人念错了还要再念一遍。"
+
+[[tracks.chapters.choices]]
+key = "brunei"
+text = "把家里的船和人送去文莱"
+next = "c01_conspiracy"
+effects = [{ kind = "flag", flag = "c13_free_tondo_datu_moved" }, { kind = "reputation", faction = "brunei", value = 2 }]
+reply = "船队出河口的时候，河对岸的西班牙兵站在新墙上看，没有拦。老船匠一直回头看那道墙，说：“墙砌得这么快，田里的人都还没种完。”“我”把舵交给船上的老水手，自己守着船尾的纹旗，直到河口的竹屋看不见了。"
+news = "汤都河口今早走了一队老船，往文莱去了。河对岸的人说，大督家这回是真不打算留了。"
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "留在汤都，不受洗，也不走"
+next = "c01_conspiracy"
+check = { attr = "resolve", base = 20, per = 7 }
+effects = [{ kind = "memory", memory = "mem-free_tondo_datu-b01", title = "不受洗的那一天" }]
+reply = "神父来了三次。第一次站在门口说话，第二次带着通事，第三次自己搬了条凳子坐下，跟“我”喝了一碗椰子酒，没再提受洗的事。喝完酒，他把碗底的椰子渣倒在地上，说：“田还是你们的。”"
+news = "汤都河边有个老屋不肯受洗，也不肯搬。河口的人说，神父连去了三回，最后还是空着手回去的。"
+fail = { next = "c01_conspiracy", effects = [{ kind = "reputation", faction = "spain", value = -1 }], news = "汤都河边的老屋不肯受洗，神父来了三次，第四次带着兵来，那家的田少了一半。" }
+
+[tracks.chapters.timeout]
+next = "c01_conspiracy"
+effects = [{ kind = "letter", person = "c8_tondo_teacher", text = "长辈们受洗了，名字是西班牙人起的。我还是叫他们原来的名字，没有人改口。" }]
+
+# C01：给日本船长的信。终章，1587 年 9 月起，期限 1588 年 10 月底。
+# 三个选项各设一条回忆；超时由先生写信，没有见闻。变体按 b01 的选择改开头或加一句。
+[[tracks.chapters]]
+key = "c01_conspiracy"
+title = "给日本船长的信"
+text = "雨季末，汤都几家大督的后人夜里聚在竹屋里，围着一盏油灯。西班牙人收的贡一年比一年重，他们想起事，要联络一个常来马尼拉的日本船长，请他带兵来帮。表兄把一封信推到“我”面前：“我们的祖父是在这条河边当王的。我们不能在这条河边当奴隶。”信要送到平户，交到那个船长手里。表兄的拇指在火漆上按了一下，才松开手。“我”接过信，先看火漆，才问：“那个船长，哪天到港？”“我”的船常跑北边，舱底的暗格正好放得下一封信。先生老了，坐在门槛上，指尖在沙里来回地划。他抬起手指，指给“我”看：“潮退了再说。可你看，这是涨潮。”我没说出口：那道线画得比从前任何一次都深。"
+when = [{ kind = "date", from = [1587, 9, 1] }]
+at = "tondo"
+speaker = "captain"
+mood = "tense"
+deadline = [1588, 10, 31]
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "把信带去平户"
+next = "done"
+effects = [{ kind = "reputation", faction = "luzon", value = 2 }, { kind = "reputation", faction = "spain", value = -3 }, { kind = "memory", memory = "mem-free_tondo_datu-c01", title = "给日本船长的信" }]
+reply = "信送到了，平户的风正顺。日本船长看完，把信折进袖子里，说要等风，等风转了，他的船就走。他问“我”是哪家的孩子，听说是汤都大督家的，只点了点头，没再问。后来事泄，名单上没有“我”的名字，因为表兄没有写。"
+news = "汤都竹屋里夜里过了一封信，船往北边的平户去了，几家大督的人都装作没看见。"
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不带，也不说出去"
+next = "done"
+effects = []
+reply = "表兄把信拿回去，没骂“我”，只把信在桌上磕齐了边，说：“你的船，本来就不该装这个。”他把信揣进怀里，揣得很仔细，像揣的是别人家的东西。门外的河水涨了一截，他没回头，就走进了雨里。"
+news = "汤都河口的人说，有一封信在竹屋里转了一圈，又被原样收了回去，没人知道写的是什么。"
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "劝他们再等一等，先等风"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "memory", memory = "mem-free_tondo_datu-c01b", title = "沙上的潮" }]
+reply = "表兄沉默了很久，听“我”说完平户的风向，又听“我”说完先生画的那道线。先生在门槛上一直看着沙，没接话。然后他把信收进竹筒，说等明年的风。竹筒盖上的时候，油灯刚好灭了。"
+news = "汤都几家大督夜里议起事，最后答应等明年的风，那封信收在竹筒里，没送出河口。"
+fail = { next = "done", news = "汤都竹屋里的表兄听完，说等了十七年了，这一回也等不起。那封信后来托别人的船送走了。" }
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "c8_tondo_teacher", text = "表兄他们的事被人告了，名单上没有你的名字。我老了，去不了河口，只能替你看潮。" }]
+
+[[tracks.chapters.variants]]
+key = "v1_baptized"
+when = [{ kind = "flag", flag = "c13_free_tondo_datu_baptized" }]
+text = "雨季末，汤都几家大督的后人夜里聚在竹屋里，围着一盏油灯。西班牙人收的贡一年比一年重，他们想起事，要联络一个常来马尼拉的日本船长，请他带兵来帮。表兄把一封信推到“我”面前。他叫“我”，用的是受洗时的那个西班牙名字，叫完自己先笑了：“我们的祖父是在这条河边当王的。我们不能在这条河边当奴隶。”信要送到平户，交到那个船长手里。表兄的拇指在火漆上按了一下，才松开手。“我”接过信，先看火漆，才问：“那个船长，哪天到港？”“我”的船常跑北边，舱底的暗格正好放得下一封信。先生老了，坐在门槛上，指尖在沙里来回地划。他抬起手指，指给“我”看：“潮退了再说。可你看，这是涨潮。”我没说出口：那道线画得比从前任何一次都深。"
+
+[[tracks.chapters.variants]]
+key = "v2_moved"
+when = [{ kind = "flag", flag = "c13_free_tondo_datu_moved" }]
+text = "“我”家早搬去了文莱，这一回是表兄托文莱的商船捎信，请“我”回汤都一趟。雨季末，竹屋里只剩几个人，油灯亮到天明。表兄把一封信放在桌上：“我们的祖父是在这条河边当王的。我们不能在这条河边当奴隶。”信要送到平户，交到那个日本船长手里。表兄的拇指在火漆上按了一下，才松开手。“我”接过信，先看火漆，才问：“那个船长，哪天到港？”先生没有走，还住在河口的竹屋里，屋檐下的雨一直没停，他坐在门槛上，指尖在沙里来回地划。他抬起手指，指给“我”看：“潮退了再说。可你看，这是涨潮。”我没说出口：那道线画得比从前任何一次都深。"

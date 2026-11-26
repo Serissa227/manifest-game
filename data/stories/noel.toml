@@ -1,0 +1,135 @@
+# 推荐角色诺埃尔·德·卡德纳的故事线“链与缎带”（剧本 scenarios/06_noel.toml）。
+# 可以随意改文字与数值；章节按顺序推进，key 只允许追加、不要改名、删除或重排。写法见 stories/rossella.toml 的说明。
+#
+# 世界观只写只言片语：守链骑士团替帝国守了九百年巨人之门的铁链；巨像上的铭文“此门非为锁汝，乃为锁彼”；
+# 新大陆最南端那尊比巨人还老的黑曜石巨像；老团长留下的一句话——门是为了让“它们”以为，这边没有人。
+#
+# 伏笔：诺埃尔长得像姑娘这件事，开局的文案（剧本的简介、一句话介绍、小传）不点破；第一章只说“漂亮得过分的骑士大人”，
+# 第三章“小姐骑士”才揭开（“我是骑士。……男的。”）。第三章之前的叙事不用“他”指诺埃尔。
+
+key = "noel"
+name = "链与缎带"
+
+[[chapters]]
+key = "roll_call"
+title = "最后一次点名"
+hint = "开始航行，故事就开始了。"
+speaker = "captain"
+text = "守链堡的誓约厅里只剩一张长桌、七十七把椅子，和你。按规矩，每月初一要点名。你打着哈欠翻开名册：“阿尔贝托·德·卡德纳。”——缺席。“布兰卡·德·卡德纳。”——缺席……七十六个名字，七十六个缺席。最后一个是你自己。墙上刻着骑士团的誓词：“链在，门在；门在，世在。”你看着老团长留下的那条红缎带，把它系在了剑柄上。"
+[[chapters.choices]]
+text = "按规矩，把誓词从头念到尾。"
+reply = "水手们在门外等了你一个时辰。你出来的时候，谁也没敢笑——大概是因为你的脸色太难看了。"
+effects = [{ kind = "fame", value = 3 }, { kind = "morale", value = 4 }]
+[[chapters.choices]]
+text = "念到一半，打了个哈欠。"
+reply = "“……门在，世在。好了，走吧，”你说，“再念下去，天就黑了。”水手们第一次觉得，这位漂亮得过分的骑士大人，也是个活人。"
+effects = [{ kind = "morale", value = 10 }]
+
+[[chapters]]
+key = "giants_finger"
+title = "巨人的手指"
+hint = "向东驶进巨人之门，看看岬角上的巨像。"
+speaker = "captain"
+when = { wait = 5, at_sea = ["giants_gate"] }
+text = "南岬上的巨像只剩一只手还举着，指向东方的外洋。你让船靠近岬角，爬上了巨像的手腕——骑士团九百年来谁都不许爬的地方。苔藓底下有一行帝国文字，老团长教你认过：“此门非为锁汝，乃为锁彼。”这道门，不是为了把你们锁在里面，是为了把“它们”锁在外面。"
+[[chapters.choices]]
+text = "把铭文抄下来。"
+reply = "你把铭文抄在缎带的背面。风很大，你差点从巨人的手腕上掉下去——这件事，你不打算告诉任何人。"
+effects = [{ kind = "fame", value = 5 }, { kind = "flag", flag = "noel_inscription" }]
+[[chapters.choices]]
+text = "把苔藓全刮干净，看看还有没有别的字。"
+check = { attr = "arms", base = 40, per = 6 }
+reply = "第二行字只剩半句：“……潮声倒流之时，勿开此链。”你往海峡底下看——断链就躺在水里，一环一环，每一环都有人那么高，像是被谁从里面挣断的。"
+effects = [{ kind = "fame", value = 8 }, { kind = "reveal", discovery = "gate_chain" }, { kind = "flag", flag = "noel_inscription" }]
+fail_reply = "你一脚踩空，掉进了海里。水手们把你捞上来的时候，你浑身湿透、一脸的不耐烦：“……我是故意的。”"
+fail = [{ kind = "morale", value = 5 }]
+
+[[chapters]]
+key = "mistaken"
+title = "“小姐骑士”"
+hint = "找个港口歇歇脚，酒馆里总有人知道些什么。"
+speaker = "portrait:informant-desert-b"
+speaker_name = "老水手"
+when = { wait = 15, docked = [] }
+text = "酒馆里，一个喝得满脸通红的老水手非要请“这位漂亮的小姐骑士”喝一杯。你放下杯子，慢慢地说：“我是骑士。……男的。”酒馆安静了一瞬，然后笑成一片。老水手一点也不尴尬，凑过来小声说：“那你一定是红缎带的人。我年轻时见过你们团长——他往外洋去了，说要找一座跟拉玛塔一模一样的灯塔。”"
+[[chapters.choices]]
+text = "请他再喝一杯，把故事讲完。"
+cost = 200
+reply = "“翡翠湾正中间，有一截露出水面的石塔，风暴天自己会敲钟——跟拉玛塔那座一模一样。”老水手压低了声音，“帝国的人，早就去过门外面了。”"
+effects = [{ kind = "reveal", discovery = "drowned_bell_tower" }, { kind = "flag", flag = "noel_bell_tower" }]
+[[chapters.choices]]
+text = "拔剑。"
+check = { attr = "arms", base = 45, per = 5 }
+reply = "你的剑尖停在他的酒杯沿上，一滴酒都没洒出来。酒馆里的人鼓起掌来，老水手举起杯子：“敬红缎带！”——然后把灯塔的事也告诉了你。"
+effects = [{ kind = "fame", value = 5 }, { kind = "rumor" }]
+fail_reply = "你拔剑拔得太猛，缎带缠住了剑柄。……这一次，全酒馆都在笑，连你的水手也在笑。"
+fail = [{ kind = "morale", value = 6 }]
+[[chapters.choices]]
+text = "叹口气，走开。"
+reply = "你背后传来老水手的嘟囔：“……真的是男的？”"
+
+[[chapters]]
+key = "outside"
+title = "门外"
+hint = "穿过巨人之门，驶进外洋。"
+speaker = "captain"
+when = { wait = 5, at_sea = ["morningstar", "frost_reach", "dawn_sea", "silvermist", "emerald", "red_reef", "lonely_sea", "yaohua_sea", "yunyu_sea", "south_waste"] }
+text = "船驶出巨人之门的那一刻，你下意识地握紧了剑柄。九百年来，守链骑士只在门里面看守；你是第一个站到门外面的骑士——除了老团长。身后，两尊巨像的影子越来越小。海还是那片海，风却换了方向。"
+[[chapters.choices]]
+text = "解下缎带，让它随风飞走。誓约到此为止。"
+reply = "红缎带在风里打了几个旋，落进了海里。你觉得肩上轻了一点，又空了一点。"
+effects = [{ kind = "morale", value = 10 }, { kind = "flag", flag = "noel_unbound" }]
+[[chapters.choices]]
+text = "把缎带系得更紧。誓约还在，只是换一种守法。"
+reply = "“门不用我看着了，”你对着风说，“那我就去看看门外面——替你们看。”"
+effects = [{ kind = "fame", value = 5 }, { kind = "flag", flag = "noel_bound" }]
+
+[[chapters]]
+key = "masters_ribbon"
+title = "团长的缎带"
+hint = "到新大陆的殖民港打听老团长的下落。"
+speaker = "portrait:keeper-frontier-tavern-b"
+speaker_name = "酒馆老板娘"
+when = { wait = 10, docked = ["novamar", "alvaran", "vrijhaven", "oosterwaard", "nurabad", "skaldhavn", "motu_hou"] }
+text = "新大陆的酒馆老板娘盯着你的剑柄看了很久，从柜台底下翻出一条褪了色的红缎带，边上绣着“卡德纳”。“六年前，一个白胡子的老骑士在这儿住过一冬，”她说，“他说要往南去，去找一尊比巨人还老的巨人。临走留下这个，说要是有个嘴很毒、长得很漂亮的孩子来找他，就交给他。”"
+[[chapters.choices]]
+text = "买下他留在这里的航海日志。"
+cost = 1500
+reply = "日志的最后一页画着一尊半埋在沼泽里的巨像，面朝南方。旁边是老团长的笔迹：“巨人之门的巨像指着东方，这一尊望着南方——它们像是在等同一个东西。”"
+effects = [{ kind = "reveal", discovery = "obsidian_colossus" }, { kind = "fame", value = 5 }, { kind = "flag", flag = "noel_logbook" }]
+[[chapters.choices]]
+text = "“……谁是‘嘴很毒的漂亮孩子’。”"
+reply = "老板娘耸耸肩，把缎带推给你，又在你的海图上点了点老骑士说过的那片南方的海岸。你把两条缎带并排系在剑柄上，一条鲜红，一条褪成了粉色。"
+effects = [{ kind = "reveal", discovery = "obsidian_colossus" }, { kind = "morale", value = 5 }]
+
+[[chapters]]
+key = "older_giant"
+title = "比巨人更老的巨人"
+hint = "往南，去新大陆最南端的海岸找那尊黑曜石巨像（赤礁海以南）。"
+speaker = "captain"
+when = { wait = 10, sighted = "obsidian_colossus" }
+text = "黑曜石巨像半埋在沼泽里，比巨人之门的巨像还要高，面朝南方的未知海域。它的脚边插着一把剑，剑柄上系着一截红缎带，已经烂得只剩几根丝。你认得那把剑——老团长每月初一都会擦它。剑旁的石头上刻着一行新字，是他的笔迹：“门不是为了挡住我们。门是为了让它们以为，这边没有人。”"
+[[chapters.choices]]
+text = "拔出团长的剑，带它回去。"
+reply = "剑比你想象的轻。你把它和自己的剑并排挂在腰间，走路的时候，两把剑轻轻碰出声来，像有人在你身边走。"
+effects = [{ kind = "attr", attr = "arms", value = 1 }, { kind = "fame", value = 10 }]
+[[chapters.choices]]
+text = "把剑留在这里，替他守着。"
+reply = "你在剑柄上系上自己的缎带，行了一个骑士礼。这一次，没有人看见，也没有人笑。"
+effects = [{ kind = "fame", value = 15 }, { kind = "morale", value = 10 }]
+
+[[chapters]]
+key = "chain_and_ribbon"
+title = "链在，门在"
+hint = "回贾马尔，回守链堡。"
+speaker = "captain"
+when = { wait = 20, docked = ["tuoling"] }
+text = "你回到守链堡，在名册的最后添了一页：“第七十七代守链骑士诺埃尔·德·卡德纳，出门，见巨人，归。”想了想，你又加了一行：“门外有东西在等。它们还没来。”你合上名册，打了个哈欠——这一次，是因为终于可以睡个好觉了。"
+[[chapters.choices]]
+text = "重开骑士团，招新的骑士。"
+reply = "第一个来报名的是码头上的一个小孩，问你缎带要不要钱。你说不要，他看起来很失望。——诺埃尔·德·卡德纳的故事到这里告一段落。"
+effects = [{ kind = "fame", value = 20 }]
+[[chapters.choices]]
+text = "把名册锁进箱子，继续出海。"
+reply = "“链在，门在；门在，世在，”你对着海说，“那就够了。”——诺埃尔·德·卡德纳的故事到这里告一段落。"
+effects = [{ kind = "morale", value = 20 }, { kind = "fame", value = 10 }]

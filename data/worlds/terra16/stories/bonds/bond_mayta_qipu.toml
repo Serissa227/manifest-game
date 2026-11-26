@@ -1,0 +1,351 @@
+# 迈塔·基普：先数结（bond_mayta_qipu / reunion_mayta_qipu）——C7 重写，2026-10-11，Claude（Opus）；旧 GPT 稿作废，只沿用轨道 key、章节 key、地点与年份。
+# 标签：BL（羁绊线，可恋爱）。迈塔 romance.with = any；主角性别由玩家定：男主角时为 BL，女主角时为 BG。适用主角：custom_chincha_rafts（钦查筏商家学的学生，“我”不写性别、外貌、家族专名）。
+# 人物：迈塔·基普 mayta_qipu（1540-03-25，男）；主角模板生年 1540-01-01。
+#       学院期 1554—1556：主角 14—16 岁、迈塔 13—16 岁；A1（1556-01..05）心动选项双方未成年，只写头挨着头；
+#       A2（1556-06..11）双方 16 岁；S（1556-12）双方 16 岁，心动选项只到牵手与 crush，告白约在成年再见时再答。
+#       重逢 1563：双方 23 岁，恋人落点合法；生年相差不足三个月。
+#       伊卡 ika（1540-02-21）只在重逢里作为跟迈塔吵架的年轻筏夫出场，不进 cast，不写两人的感情（他们的线在 tie_new_mayta_qipu_ika）。
+# 依据：
+#   史实——1553 年底弗朗西斯科·埃尔南德斯·希龙在库斯科起兵，1554 年利马的检审庭（当时总督出缺）四处征船征粮，年底希龙在利马被处死（C2 只写“听说”）；
+#         1556 年新总督卡涅特侯爵到任（S 只写“听说”）；钦查人以巴尔萨木筏做沿海生意，安第斯人用结绳（奇普）记数；
+#         安第斯人在银河的暗处看到羊驼、蛇、狐狸等“黑色星座”；图帕克·尤潘基乘筏西航、约一年后回来的传说（萨米恩托 1572 年记下）；
+#         神父烧毁结绳的事在 16 世纪屡见，祖父的那根绳是本线虚构。
+#   原创——海滩上的四十二包棉花与两包稻草、被征走的锅、比记鱼数、对着礁石练习、红蓝两股丝线编的绳（braided_cord）、
+#         两截记约定的绳、筏头半结半字母的记号、那个“记着一个日子”的结。
+#   待核——1554 年征船是否到过钦查海滩（正文用“听说”与兵的一句话带过）；太阳节在 1556 年的钦查是否还公开过（正文只用作时间）。
+# 缺省走向：C1—A2 的 default 没有收获，故事照走：两包稻草被扔进海里；那根记被征物件的绳挂了起来，兵再也没回来；
+#           迈塔自己烤了那条鲣鱼，嫌不够咸；他又对着礁石练了一个月；他一个人看了一夜羊驼的眼睛；红蓝绳由他自己收尾，挂在家学门口。
+#           S 的 default：“我”北上那天，迈塔把两截空绳挂上“我”那只筏的桅杆；开启重逢，设 c7_bond_mayta_qipu_parted，不改关系。
+#           重逢的 default：迈塔托北上的筏队捎来一根结绳与几行伊卡代写的西班牙字（letter），设 c7_bond_mayta_qipu_missed。
+# 羁绊阶梯：C2 write_beside 给 C；B1 learn_fast_knot 补签 C；B2 play_the_clerk 给 B；A1 witness_for_him 补签 B；
+#           A2 you_tie / tie_together 给 A + braided_cord + 回忆“两股丝线”。心动：A1 +6，A2 tie_together +6（要 ≥ 6），S heart +12（要 ≥ 12），
+#           全选心动正好 24，够重逢的 love 落点（决定表原写 S +10，只能到 22，按简报改为 +12）。
+# 旗标：写 c7_bond_mayta_qipu_promise / _romance / _own / _parted / _landing_friend / _landing_rival / _landing_love / _missed；
+#       S 的 promise 与 heart 另设共享旗标 c7_tie_new_mayta_qipu_ika_taken（tie_new_mayta_qipu_ika 读，改走“并肩的朋友”）。
+#       重逢的 variants 读本文件的 _promise / _romance / _own；不读外部旗标。
+# 日程：迈塔的学院日程在钦查（chincha_raft_house），各章 at 沿用旧稿的卡亚俄（钦查筏户的出海口），由整合方确认在场判定；重逢 1563 在卡亚俄，同样是出行。
+# 口头禅：“先数结，再装货。”只在 C1 用一次；别处只作呼应，不重复原句。
+# 秘密：迈塔偷偷练习把结绳账讲给不懂的人听——B2 是“我”撞见、陪他练；不进任何见闻（本文件的羁绊章没有 stage，不写 news）。
+# 地点（2026-11-01 close-places）：养成期主角在钦查（家庭阶段 chincha），学院章 at 由 callao 改 chincha（海滩、换货集是筏商家学自己的场所）；
+#   C1、C2 正文“卡亚俄的海滩”改“钦查的海滩”，上面“日程”一条作废。重逢 1563 仍在卡亚俄。
+
+[[tracks]]
+key = "bond_mayta_qipu"
+name = "迈塔·基普：先数结"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["mayta_qipu"]
+
+# C1：1554 年初，钦查海滩。四十二包棉花，绳上只有四十个结。
+[[tracks.chapters]]
+key = "c1"
+title = "先数结"
+text = "家里的巴尔萨木筏刚在钦查的海滩上拖稳，一个西班牙商人摇着单子过来，要把四十二包棉花装上筏，运去北边的派塔。单子上的字又直又密，他拿指头敲着最后一行：“四十二，公证人画过押的。”跳板前头站着迈塔·基普，家学里跟库西老人学结绳的那个，平时一天说不了十句话。他拎起一根打满结的绳，挡住了跳板：“先数结，再装货。”那根绳是前一天在棉仓里打的，上面只有四十包。商人笑了，骂他是不识字的乡下小子，问一根草绳能不能比公证人的墨水还准。迈塔不吭声，把绳往肩上一搭，蹲下去一包一包地摸，摸一包，拇指在绳上掐一下。摸到第四十包，他停了停，又去摸后面那两包，把手插进最后一包的棉花里，抽出来一把稻草。他抬头看着商人，下巴一点一点地抬了起来。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_chincha_raft_house" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "count_with_him"
+text = "蹲下来，从另一头跟他一包一包数过去。"
+reply = "我从另一头数起，数得比他快，先喊出了“四十二”，又在第四十一包里掏出一把稻草。迈塔斜了我一眼：“数得快不算本事，数得准才算。”商人最后赔了两包棉花的钱。迈塔把钱在手心里掂了掂，分了一半塞给我，什么也没说。"
+next = "c2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }, { kind = "skill", skill = "quipu", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "bet_on_paper"
+text = "替商人的单子说话，跟迈塔赌他数错了。"
+reply = "我赌了一罐奇恰酒。稻草从棉包里抽出来的时候，先红脸的是商人，跟着红的是我。那罐酒当天傍晚就送到了迈塔家。他喝的时候下巴抬得老高，喝完把空罐子推回给我：“下回别跟绳子赌。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }]
+
+# C2：1554 年夏，钦查海滩。兵征走了筏、玉米和那口锅；迈塔一样一样打进绳里。
+[[tracks.chapters]]
+key = "c2"
+title = "被征走的筏"
+text = "利马那边打起了仗，听说是一个叫希龙的人在南边造了反，利马派出来的兵到处征船征粮。这天一队兵到了钦查的海滩，领头的念了一张纸，就把钦查筏户拖上岸的三只木筏推下了水，又从棚子里搬走二十袋玉米，连煮奇恰的那口大锅也抬了出来。“仗打完了再说。”领头的只撂下这一句。没人敢拦。迈塔一言不发地跟在兵后面，走一步打一个结：三只筏，一只一个大结；玉米，二十个小结串成一串。两个兵抬着锅往路上走，他打到锅，打了一个我没见过的结，打得很用力。他转过身，把那根绳塞到我手里，绳头还是湿的。“你会写西班牙字。在旁边写一份，”他说，“将来他们赖不掉。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "write_beside"
+text = "借来纸笔，用西班牙字一行行写下来，跟他的结对上。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 20 }]
+hint = "他嘴上让你写，手却没松开绳头。你们还不够熟，这份账他还不放心交到你的字里。"
+reply = "我跪在沙上写：三只木筏，二十袋玉米。写到那口锅，迈塔按住我的笔：“写‘村子里唯一的大锅’。”我照他的话写了。他把纸拿过去看了半天，又看看自己的绳，说：“你的字也能当结用。”他把纸折成四折，用绳尾拴住，和那串结捆在一起。"
+next = "b1"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "bond", person = "mayta_qipu", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "wait_till_gone"
+text = "兵还没走远，劝他先把绳收起来，省得惹祸。"
+reply = "他没理我，从我手里把绳抽了回去，一直跟到路口，看着那口锅被抬上驮骡，又在绳尾补了一个结，记下这一天，才转身回来。后来那三只筏、二十袋玉米、那口锅，一样也没还回来。那根绳他挂在家里的门梁上，谁进门都得低头从它底下过。"
+next = "b1"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }]
+
+# B1：1554 年秋冬，钦查海边。比谁先记清一船鱼；绳快，纸慢，船主两样都看不懂。
+[[tracks.chapters]]
+key = "b1"
+title = "比快的绳"
+text = "家学的先生想出一个比法：渔船一靠岸，谁先把一船鱼的数记清楚，谁赢。迈塔用绳，我用纸。船上的鱼一筐一筐往下递，鲣鱼、鲻鱼，还有几条认不出的。迈塔的手指在绳上翻得看不清，一筐一个结，大鱼另打一个，比我早了半刻喊“好了”。先生让我们念给船主听。迈塔一个结一个结地摸着念，船主听得直皱眉；我念纸上的数，船主不认得西班牙字，眉头皱得更紧。最后船主把我们俩都推开，自己蹲下去又数了一遍，数出来跟迈塔的绳一条不差，跟我的纸差了两条。先生判迈塔赢，奖品是船上最大的那条鲣鱼。他拎着鱼尾巴走到我面前晃了晃，下巴朝着天：“纸上的鱼，煮得熟吗？”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "learn_fast_knot"
+text = "认输，请他教那个最快的结。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 20 }]
+hint = "他刚赢了正得意，这时候去求他，他只会拎着鱼尾巴拿你取笑。"
+reply = "他教得很凶。我打错一次，他一把拆开；再打错，再拆。拆到第十几回，绳头都起了毛。天快黑的时候我打对了一个，他没夸，转身把那条鲣鱼架到火上烤了，撕下一半递过来：“鱼尾那截给你，刺多，慢慢吃。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "bond", person = "mayta_qipu", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "rematch"
+text = "不服，约他下个月再比：比谁记的船主看得懂。"
+reply = "“那还比什么，”迈塔说，“我教船主认结就是了。”我当他说气话。下个月再比，码头上有三个船主捏着他的绳，自己把一船鱼的数念了出来。我把那张纸揉成一团塞进袖子，输得服气。"
+next = "b2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }]
+
+# B2：1555 年，钦查海边的礁石。撞见他对着礁石讲账；“你演那个书记官。”
+[[tracks.chapters]]
+key = "b2"
+title = "讲给不懂的人听"
+text = "我去海边捡筏上掉下来的木楔，绕过一块礁石，听见有人在说话。是迈塔，一个人对着礁石，手里捏着一根短绳，一句一句地讲：“这一股是钦查，这一股是派塔。挂在下面的这个结是十，十包海菊蛤……”讲到一半，他停下来，像在等礁石回话，等不到，又从头讲起。他回过头看见了我，脸一下子红到脖子根。“练习。”他说得很快，“明年利马的书记官要来核钦查的账。库西老人老了，他说的话书记官听不懂，书记官说的话他也不想懂。”他把那根练习绳往我手里一塞，绳上的结还是潮的。“你演那个书记官，”他说，“往死里问。”"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "play_the_clerk"
+text = "板起脸扮书记官，挑最刁钻的问题考他。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 50 }, { kind = "bond", person = "mayta_qipu", level = "C" }]
+hint = "他嘴上说往死里问，眼睛却不看你。你们还不够熟，真问到他答不上来，这份难堪他受不住。"
+reply = "我学着书记官的腔调，一个字一个字地问：“这个结凭什么算十？谁定的？写在哪里？”迈塔张了张嘴，答不上来，急得抓起绳子抽我的胳膊，那天扭头就走了。第二天一早，他又站在礁石边上等我：“再问一遍。我想好了。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "bond", person = "mayta_qipu", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "play_old_captain"
+text = "扮成一个耳背的老船主，让他慢慢讲。"
+reply = "我蹲在礁石上，他讲一句，我就扯着嗓子问一句“啥？”。他只好把每个结掰开了讲，从钦查讲到派塔，讲到太阳落进海里。我是真的听懂了怎么从绳上读出一船海菊蛤。他抹了一把汗：“讲给不懂的人听，比讲给书记官难。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }]
+
+# A1：1556 年初夏以前的夜里，拖上岸的木筏。银河里的黑色星座；祖父那根被烧掉的绳。
+[[tracks.chapters]]
+key = "a1"
+title = "黑色的羊驼"
+text = "夜里我们躺在一只拖上岸的木筏上，背底下的巴尔萨木还留着白天的热。迈塔指着银河：“别看亮的，看黑的。”他说那些黑的地方也是星座：一只羊驼，伸着长脖子；一条蛇，从南边游过来；羊驼脚边还蹲着一只小狐狸。“我祖父把星星也打进过绳里。哪颗星什么时候出来，海上该往哪边走。”他停了一会儿，“那根绳，我父亲小时候让神父烧了。”浪一下一下拍着筏尾。“我就记得一个结，”他说，“是羊驼眼睛的位置。”他的手指举在半空，对着那一片黑比了很久，一直没放下来。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "follow_his_finger"
+text = "把头靠过去，顺着他的手指找那只黑色的羊驼。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 20 }, { kind = "romance_open", romance_open = "mayta_qipu" }]
+hint = "你们还没熟到能头挨着头躺着，你只能隔着半只筏，看他的手指在天上比划。"
+reply = "我顺着他的指头找了很久，找到夹在黑影里的那两颗亮星，说了一声“找到了”，才发现我们的头已经挨在了一起。他没有挪开，举着的手慢慢放了下来。过了好一阵，他说：“明晚它还在。你还来不来？”"
+next = "a2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "heart", person = "mayta_qipu", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "witness_for_him"
+text = "答应他，结业以后去利马，向书记官作证他的绳账是准的。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 50 }, { kind = "bond", person = "mayta_qipu", level = "C" }]
+hint = "他还不信你肯为一根绳跑一趟利马。这话现在说出口，他只当你在哄他。"
+reply = "他侧过头来：“你作证，得用西班牙字写。”“两种都写，”我说，“你打结，我写字，一样一份。”他没接话，在筏上翻了个身，背对着我。我听见他在笑，笑得整只筏都在轻轻地晃。"
+next = "a2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "bond", person = "mayta_qipu", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "grandfather_rope"
+text = "问他祖父的绳里还记过什么。"
+reply = "“记过印加王的船。”迈塔说，“好多只筏，从这片海出发，一直往西走，走了一年才回来。带回来什么，绳上也有。”我问往西是哪里。他把手收回来，搁在胸口上：“不知道。绳子烧了。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }]
+
+# A2：1556 年太阳节以后，海边的木筏。红蓝两股丝线编一根绳；收尾的结谁来打。
+[[tracks.chapters]]
+key = "a2"
+title = "两股丝线"
+text = "太阳节过后的一个下午，迈塔拿来两股丝线，一股红，一股蓝，是从利马的布商那里换来的。“编一根绳，”他说，“一种颜色我挑，一种你挑。”他挑了红的。我挑了蓝的，说海是蓝的，他说这理由不算理由。我们坐在海边的木筏上编，红压蓝，蓝压红。他编得快，我编得慢，编到一半，他手上慢下来等我，嘴里还挑我那股蓝的拉得太松。太阳快落进海里的时候，绳子编到了头，只剩收尾的那个结。这个结一打，绳就定了，再也改不了。迈塔捏着两股绳头，没往下打。“谁来打？”他问。他的眼睛看着绳，等我回答。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "you_tie"
+text = "让他来打，他的结比我的准。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 80 }, { kind = "bond", person = "mayta_qipu", level = "B" }]
+hint = "这根绳太重，你们还没熟到能让你伸手收下。"
+reply = "迈塔低下头，打了一个我从没见过的结，绕两道，再从中间穿回来。“这个结，只有我们俩认得。”他把绳子绕在我的手腕上，一圈，两圈，三圈，绕完拿拇指按了按结头，像是在数它牢不牢。"
+next = "s"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "bond", person = "mayta_qipu", level = "A" }, { kind = "item", item = "braided_cord", qty = 1 }, { kind = "memory", memory = "mem-bond_mayta_qipu-a2", title = "两股丝线" }]
+
+[[tracks.chapters.choices]]
+key = "tie_together"
+text = "说两个人一起打，一人捏一头。"
+requires = [{ kind = "affinity", person = "mayta_qipu", ge = 80 }, { kind = "bond", person = "mayta_qipu", level = "B" }, { kind = "heart", person = "mayta_qipu", ge = 6 }, { kind = "romance_open", romance_open = "mayta_qipu" }]
+hint = "一人捏一头，手指就要缠在一起。你们还没近到这一步。"
+reply = "我捏住蓝的那头，他捏住红的那头，两个人的手指缠在一起打那个结，你拉我推，打得歪歪扭扭。打完了，他没有松手，我也没有。过了一会儿，他低头看着那个结：“歪的。以后别人仿不了。”"
+next = "s"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "bond", person = "mayta_qipu", level = "A" }, { kind = "item", item = "braided_cord", qty = 1 }, { kind = "memory", memory = "mem-bond_mayta_qipu-a2", title = "两股丝线" }, { kind = "heart", person = "mayta_qipu", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "说先别打，留着绳头，等以后再说。"
+reply = "“绳子不打结，”迈塔说，“什么也记不住。”他把两股绳头一并，手一翻，打得飞快，打完把绳子往我怀里一塞，跳下木筏走了。他沿着海滩走出老远，一次也没回头。"
+next = "s"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }]
+
+# S：1556 年 12 月，钦查海滩。“我”随筏队北上前一天；两截新绳，把约定打进去。
+[[tracks.chapters]]
+key = "s"
+title = "不改的结"
+text = "年底我要随家里的筏队北上，去派塔，再往北，不知道哪一年回来。迈塔留在钦查。出发前一天，他在海滩上找到我，手里拿着两截新绳，一个结也还没打。“新总督到利马了，听说规矩要变。”他把绳子在膝盖上抻直，“结绳官一年比一年少，库西老人的眼睛也不行了。我要学着把结跟西班牙字对上账，一个结配一个字，让绳子在新规矩底下也有人认。”他把一截递给我，自己留一截。“我们的约，打进去。一人一截。”他看着我，“打进绳里的，就不能悄悄改。”海风把两截绳头吹到了一块儿，他没去分开。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "chincha"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_mayta_qipu" }, { kind = "flag", flag = "c7_bond_mayta_qipu_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好每年回钦查一次，两截绳对一次账。"
+requires = [{ kind = "bond", person = "mayta_qipu", level = "A" }]
+hint = "这样的约，要么你们还没熟到能许，要么这句话你已经对另一个人说过了。"
+reply = "“一年一回。”我说。迈塔点点头，在他那一截上打了一个结，结身短，尾巴上拖一个小圈，那是“一年一回”。轮到我，我想打一个“不许失约”，可我只学过数数的结，打出来的东西歪着身子，谁也认不出是什么。迈塔拿过去看了半天：“你这个结打错了。这是‘十’。”“那就照错的算，”我说，“十年里，一年也不许少。”他张嘴想驳，又闭上了，把我那一截翻过来，在“十”的旁边补了一个小小的结，说那是给我留的改口的地方，又补了一句：“不许用。”他把两截绳并在一起比了比，长短一样，结的位置也对得上。第二天我上筏的时候，他站在齐膝深的潮水里，把他那一截举起来晃了晃。我也举起我的。筏离岸很远了，他还举着。"
+next = "done"
+effects = [{ kind = "bond", person = "mayta_qipu", level = "S" }, { kind = "relation", person = "mayta_qipu", relation = "friends" }, { kind = "memory", memory = "mem-bond_mayta_qipu-s", title = "不改的结" }, { kind = "flag", flag = "c7_bond_mayta_qipu_promise" }, { kind = "flag", flag = "c7_tie_new_mayta_qipu_ika_taken" }, { kind = "start_track", track = "reunion_mayta_qipu" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "请他在我那截上打一个只有他懂的结，成年再见时再说是什么意思。"
+requires = [{ kind = "bond", person = "mayta_qipu", level = "A" }, { kind = "heart", person = "mayta_qipu", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "mayta_qipu", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "mayta_qipu" }]
+hint = "这个结得两个人心里都有数才打得下去。你们还差一步，或者，这句话你已经对另一个人说过了。"
+reply = "迈塔没有马上动手。他把我那一截绳在手里转了两圈，看了我一眼，才开始打。他打得很慢，一股压一股，压错了就拆开重来，拆了两回。我看不懂那个结，只看得出它不是数数的结，也不是记货的结。打完了，他握住我的手，把绳子按进我的掌心，手就压在上面，没有拿开。“这个结记的是一个日子。”他说。“哪一天？”“你猜。”他的手心有点潮，“猜不出来，等我们都长大了，你回来问我，我再告诉你。”“要是我猜出来了呢？”“猜出来了也回来，”他说，“回来告诉我你猜的是哪天，看对不对。”潮水涨上来，漫过我们的脚背，又退下去，把绳头打湿了。他说湿了的结更紧，手还压在上面。"
+next = "done"
+effects = [{ kind = "bond", person = "mayta_qipu", level = "S" }, { kind = "heart", person = "mayta_qipu", value = 12 }, { kind = "relation", person = "mayta_qipu", relation = "crush" }, { kind = "flag", flag = "c7_bond_mayta_qipu_romance" }, { kind = "memory", memory = "mem-bond_mayta_qipu-s", title = "不改的结" }, { kind = "flag", flag = "c7_tie_new_mayta_qipu_ika_taken" }, { kind = "start_track", track = "reunion_mayta_qipu" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "跟他约好，长大以后比一比谁的筏队先到卡亚俄。"
+reply = "“赌什么？”迈塔问。“一船棉花，”我说，“谁的筏队后到，谁赔一船棉花。”他上下打量我，像在掂量我拉得起几只筏：“那你可要输惨了。你北上跑一趟的工夫，我在家里能扎好三只筏。”“那就看谁先到。”他没再驳，把手伸了过来。我们在海滩上击了一掌，掌心都是沙，啪的一声，惊起了礁石上的两只海鸟。他在自己那一截上打了一个大结，打得很紧：“一船棉花。结是我打的，到时候赖不掉的是你。”另一截他塞进我怀里，一个结也没打，说我那一截留着记我输的那天。"
+next = "done"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 2 }, { kind = "relation", person = "mayta_qipu", relation = "rivals" }, { kind = "flag", flag = "c7_bond_mayta_qipu_own" }, { kind = "start_track", track = "reunion_mayta_qipu" }]
+
+[[tracks]]
+key = "reunion_mayta_qipu"
+name = "迈塔·基普：筏上的新记号"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["mayta_qipu"]
+
+# 重逢：1563 年，卡亚俄海滩。迈塔有了三只筏，筏头的记号一半是结、一半是字母；伊卡在跟他吵哪只先下水。
+[[tracks.chapters]]
+key = "reunion"
+title = "筏上的新记号"
+text = "1563 年，我又回到卡亚俄。海滩上排着一溜巴尔萨木筏，最外头三只是新的，筏头刻着记号：一半是结的样子，一圈压一圈；一半是西班牙字母，M 和 Q，刻得端端正正。迈塔就站在那三只筏中间，正跟一个年轻筏夫吵哪只该先下水。那筏夫嗓门大得半个海滩都听得见：“东边那只吃水浅，先下它！”“西边那只货重，”迈塔说，“先数——”他看见了我，话没说完，把筏夫晾在一边，朝我走过来。筏夫在后头嚷：“迈塔！话说一半算什么！”“伊卡，等着。”迈塔站到我面前，从怀里掏出一截绳，旧了，结还是紧的。“那年你北上，两截绳都带走了，”他说，“我又打了一截。你哪年没回来，我就打一个结。”"
+window = [[1563, 1, 1], [1563, 12, 31]]
+at = "callao"
+cast = ["mayta_qipu"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1563, 12, 31] }, { kind = "age", ge = 18 }, { kind = "age", person = "mayta_qipu", ge = 18 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "mayta_qipu", text = "我在卡亚俄等了一季，你没来。托北上的筏队捎这根绳给你。结是这样读的：最上头一个大结，是今年。往下七个小结，是你走了七年。中间那一段光溜溜的，什么也没打，是你没回来的那些日子。我本来想把它打满，后来想，没发生的事，不该记。最底下那个结，记的是一个日子。哪一天，你回来问我。伊卡说我该写字，不该打结，说你在外头待久了，未必还认得绳。我让他闭嘴，又让他在纸上替我写了这几行西班牙字。你要是认不得结，就看他写的；要是认得，就别看，他写得没我打得准。新规矩来了好几回，结绳官又少了两个。库西老人去年把最旧的那一捆绳交给了我，钦查三十多家筏户的账，现在是我一个人管。利马的书记官来核过两回，一处错也没挑出来。怎么练出来的，你知道，别跟人说。我有三只筏了，筏头刻着我的记号，一半是结，一半是字母。你要是在哪个港口看见了，那就是我。迈塔" }, { kind = "flag", flag = "c7_bond_mayta_qipu_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "掏出我那一截绳，跟他把这几年的账一笔一笔对上。"
+reply = "我们坐在他的筏上，把绳摊在膝头，一个结一个结地对。我在派塔、在瓜亚基尔跑的那几年，路过钦查的筏期一次也没赶上，他一年一年记着，我一年一年欠着。对到天黑，伊卡举着火把过来看热闹，看了一眼就嚷：“你们俩这是对账还是吵架？”算下来，我欠他五回，他欠我一回：那年他的筏让风打坏了，我在卡亚俄等了半个月，他没来。这件事他自己都忘了，是我绳上的结记着。迈塔盯着那个结看了很久，鼻子里哼了一声，脖子却梗得笔直，像是输了也要输得有模有样。然后他在自己那一截的末尾打了一个新结，打得很紧，拿牙咬着绳头收了最后一下。“从今年起，”他说，“重新算。”"
+next = "done"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 5 }, { kind = "relation", person = "mayta_qipu", relation = "friends" }, { kind = "flag", flag = "c7_bond_mayta_qipu_landing_friend" }, { kind = "memory", memory = "mem-reunion_mayta_qipu", title = "筏上的新记号" }]
+
+[[tracks.chapters.choices]]
+key = "rival"
+text = "跟他打个赌：这一季，看谁的筏队先到卡亚俄。"
+reply = "迈塔笑出了声，我头一回听他笑得这么响。“就等你这句。”伊卡在后头拍着大腿嚷：“我押迈塔！”那一季，从派塔到卡亚俄的海上都在传两支筏队较劲的事：谁抢了顺风，谁在哪个岬角后头过夜，谁家的筏夫半夜偷偷起了锚。我的筏队快，可装货慢；他的筏慢，可他装货前一包一包数清，一回也不用返工。最后我晚了半天。我的筏进卡亚俄的时候，迈塔坐在码头的石阶上，脚边堆着棉包，冲我扬了扬下巴。他把赢来的棉花分了一半推给我：“输的人没棉花，下一季拿什么跟我赌？”"
+next = "done"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 3 }, { kind = "relation", person = "mayta_qipu", relation = "rivals" }, { kind = "flag", flag = "c7_bond_mayta_qipu_landing_rival" }, { kind = "memory", memory = "mem-reunion_mayta_qipu", title = "筏上的新记号" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "问他当年在我掌心按下的那个结，记的是哪一天。"
+requires = [{ kind = "flag", flag = "c7_bond_mayta_qipu_romance" }, { kind = "heart", person = "mayta_qipu", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "mayta_qipu", ge = 18 }, { kind = "romance_open", romance_open = "mayta_qipu" }]
+hint = "当年那句话没有说出口，那个结也就没有打。现在想问，也问不出口。"
+reply = "我从怀里掏出那截绳。七年了，绳子发了黄，那个我认不得的结还在原处。“我猜了七年，”我说，“猜不出来。是哪一天？”迈塔接过绳，拇指在那个结上来回摸了两遍。“今天。”他说。“你怎么知道我今天回来？”“不知道。”他把绳放回我手里，“打的时候就想，总有一天你会回来问。你哪天来问，它记的就是哪天。”伊卡在后头喊他去看筏，他没应。那天夜里，海滩上的人都散了，我们坐在他那只刻着新记号的木筏上。浪还在拍着筏尾，银河里那只黑色的羊驼又出来了。这回他没有指给我看，只是转过脸来，吻了我。"
+next = "done"
+effects = [{ kind = "affinity", person = "mayta_qipu", value = 5 }, { kind = "relation", person = "mayta_qipu", relation = "lovers" }, { kind = "flag", flag = "c7_bond_mayta_qipu_landing_love" }, { kind = "memory", memory = "mem-reunion_mayta_qipu", title = "筏上的新记号" }]
+
+# 变体：按 S 章的结局换掉迈塔掏出绳以后的那几句话；玩法不变。
+[[tracks.chapters.variants]]
+key = "own"
+when = [{ kind = "flag", flag = "c7_bond_mayta_qipu_own" }]
+text = "1563 年，我又回到卡亚俄。海滩上排着一溜巴尔萨木筏，最外头三只是新的，筏头刻着记号：一半是结的样子，一圈压一圈；一半是西班牙字母，M 和 Q，刻得端端正正。迈塔就站在那三只筏中间，正跟一个年轻筏夫吵哪只该先下水。那筏夫嗓门大得半个海滩都听得见：“东边那只吃水浅，先下它！”“西边那只货重，”迈塔说，“先数——”他看见了我，话没说完，把筏夫晾在一边，朝我走过来。筏夫在后头嚷：“迈塔！话说一半算什么！”“伊卡，等着。”迈塔从怀里掏出那截打着大结的绳，在我眼前晃了晃。“一船棉花，”他说，“你来得正好，这一季的筏还没下水。”"
+
+[[tracks.chapters.variants]]
+key = "promise"
+when = [{ kind = "flag", flag = "c7_bond_mayta_qipu_promise" }]
+text = "1563 年，我又回到卡亚俄。海滩上排着一溜巴尔萨木筏，最外头三只是新的，筏头刻着记号：一半是结的样子，一圈压一圈；一半是西班牙字母，M 和 Q，刻得端端正正。迈塔就站在那三只筏中间，正跟一个年轻筏夫吵哪只该先下水。那筏夫嗓门大得半个海滩都听得见：“东边那只吃水浅，先下它！”“西边那只货重，”迈塔说，“先数——”他看见了我，话没说完，把筏夫晾在一边，朝我走过来。筏夫在后头嚷：“迈塔！话说一半算什么！”“伊卡，等着。”迈塔站到我面前，从怀里掏出那截绳，结尾拖着小圈的那个结还在。“一年一回，”他说，“你欠了我好几回。”"
+
+[[tracks.chapters.variants]]
+key = "romance"
+when = [{ kind = "flag", flag = "c7_bond_mayta_qipu_romance" }]
+text = "1563 年，我又回到卡亚俄。海滩上排着一溜巴尔萨木筏，最外头三只是新的，筏头刻着记号：一半是结的样子，一圈压一圈；一半是西班牙字母，M 和 Q，刻得端端正正。迈塔就站在那三只筏中间，正跟一个年轻筏夫吵哪只该先下水。那筏夫嗓门大得半个海滩都听得见：“东边那只吃水浅，先下它！”“西边那只货重，”迈塔说，“先数——”他看见了我，话没说完，把筏夫晾在一边，朝我走过来。筏夫在后头嚷：“迈塔！话说一半算什么！”“伊卡，等着。”迈塔站到我面前，从怀里掏出他那一截绳，眼睛却落在我的手上。“你那一截，”他问，“还在不在？”"

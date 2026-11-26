@@ -1,0 +1,146 @@
+# 请托：差一半的船（request_daeng）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：达昂（daeng，1539-11-22 生，男），布吉斯少年水手，学院同学（吉里）；势力 giri，身份档 1。cast：cast/classmates_giri.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（老船匠的眼，望加锡交货）、settle（龙骨，结账）。
+# 报价：T 当面。auto=false，玩家“问请托”（ask:request_daeng）启动；offer 章不写 at，objectives 为 person daeng（在格雷西克的港里找到他）。
+# 窗口：非 stage 章不接受 window（会被校验为缺少 default），改写成 when 的日期条件。offer 的 when 为 1566-01-01..1586-06-30 与年龄门槛，deadline 为 1586-06-30，timeout next=failed，不写见闻。deliver 与 settle 的 when 只写 alive daeng。
+# 进行中：deliver 的 deadline_days=120，超时走 failed：达昂的来信一封，好感 -3，旗标 _late；settle 是普通章，可以一直等。
+# 依据·史实背景：布吉斯与望加锡的造船：龙骨先立、木钉合板；望加锡在 16 世纪后半成为东印度群岛的大港；格雷西克在吉里一带。
+#   木料分顺风面、逆风面干燥的说法是本世界线的写法，待核。
+# 依据·原创：达昂的木料账、量了两年的小船、老船匠的“逆风干”之辨、龙骨木上刻的名字。
+# 秘密：量好的木料与差一半的钱是请托本身，已摆上台面；见闻里不写钱的事。C7 bond_daeng 的重逢、拉惹·穆达、1559 年的新船一概不写，不设 c7_ 旗标。
+# 读的旗标：无。offer 的变体读 bond daeng ≥ C（只读 C7 的重逢结果）；settle 的变体读本轨道自己设的 _short / _waived / _own。
+# 设的旗标：c13_request_daeng_accepted（offer 两条接法）、_waived（offer 免跑船抵账）、_declined（offer 回绝）、_sorted（deliver 分木料）、_short（deliver 挑木检定失败）、_own（deliver 照原样交）、_late（超时）、_done（settle 两条）、_trips_kept / _forgiven（settle 两条分支）。
+# 不用 relation / tie / bond / heart 效果；不用 join、schedule、growth。
+# 报酬：现金 900（工钱）+ 货款 750，结账时一次付清；好感最多 +13（接下 +2、交货 +3、结账 +8）；名声 +1；回忆 mem-request_daeng-settle。
+#   偏差：梗概与交货段写“一半现钱、另一半跑船抵”，与奖励段的一次付清冲突；这里按奖励段结账时全数付清，“三趟”只作人情（台词与回忆，不做成 join 或日程）。如要改成半付，只改 settle 两笔现金。
+# 依赖：港口 gresik、makassar（ports_southeast_asia.toml）；货物 timber（goods.toml）；技能 shipbuilding（skills.toml）；属性 stewardship；人物 daeng。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_daeng-settle「龙骨木上的名字」：格雷西克船台边，一块削下来的龙骨木，上面歪歪扭扭刻着一个名字，木屑还是新的。
+
+[[tracks]]
+key = "request_daeng"
+name = "差一半的船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["daeng"]
+
+# 一、记在心里的木料：格雷西克的码头，达昂在木料堆边背数。
+[[tracks.chapters]]
+key = "offer"
+title = "记在心里的木料"
+text = "格雷西克的码头上，达昂刚替人掌完一趟舵，就蹲在一堆新刨的木料边上，一根一根背给你听：龙骨几丈几尺，肋材几根，船板几十块。木料行的人报了价，他摇头，自己念出一个更低的数，念得很平，像在念潮水几时涨。“一条小船。”他拍了拍一根木头，“量了两年，就差钱。”他看你一眼，把手在裤腿上擦干：“三十车木材，送到望加锡，木料的钱你照算，一文不少。”他顿了顿，“船的钱我只凑了一半。另一半，下一年跟你的船跑三趟抵。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "daeng", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1566, 1, 1], to = [1586, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "daeng", ge = 18 }]
+deadline = [1586, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "daeng", level = "C" }]
+text = "格雷西克的码头上，达昂刚替人掌完一趟舵，坐在木料堆边上，见你走近，先问：“还比一程吗？”问完才站起来。他一根一根背给你听：龙骨几丈几尺，肋材几根，船板几十块。木料行的人报了价，他摇头，自己念出一个更低的数。“一条小船。”他拍了拍一根木头，“量了两年，就差钱。”他看你一眼：“三十车木材，送到望加锡，木料的钱你照算。船的钱我只凑了一半，另一半，下一年跟你的船跑三趟抵。”"
+
+[[tracks.chapters.choices]]
+key = "take_terms"
+text = "接下，照他说的：木料的钱照算，另一半船钱跑三趟抵。"
+next = "deliver"
+reply = "他伸出手跟我拍了一下，拍得很重，震得手腕发麻。“三趟随你挑，挑最难走的那三趟。”说完他把手收回去，抓了抓后脑勺，像是自己也没想到会应得这么快。"
+effects = [{ kind = "affinity", person = "daeng", value = 2 }, { kind = "flag", flag = "c13_request_daeng_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "no_trips"
+text = "接下，跑船抵的那部分免了，等他有钱再说。"
+next = "deliver"
+reply = "他皱眉，说不欠人，“欠了就拿力气还”。我说那就记着，哪天你的船缺人手，先来找我。他才点头，说的是“行”，声音低得几乎听不见。"
+effects = [{ kind = "affinity", person = "daeng", value = 2 }, { kind = "flag", flag = "c13_request_daeng_accepted" }, { kind = "flag", flag = "c13_request_daeng_waived" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "望加锡的木料，我这一季运不了。"
+next = "failed"
+reply = "他点点头，没再说什么，把木料行的账本合上，转身去问下一个码头的木料价了。他走得很快，背影像是已经在算下一条船的木头。走到码头尽头，他回头看了一眼你的船，什么也没说。"
+effects = [{ kind = "flag", flag = "c13_request_daeng_declined" }]
+
+# 二、老船匠的眼：望加锡的布吉斯船坞，三十车木料过了老船匠的手。
+[[tracks.chapters]]
+key = "deliver"
+title = "老船匠的眼"
+text = "望加锡的布吉斯船坞里，三十车木料一车车卸在棚下。老船匠一根根看过去，看到第二十根，把木料翻过来，用指甲在木纹上刮了刮，摇头了。“这根是逆风干的。”他指给你看，“有的顺风干，有的逆风干。逆风干的做船板，三年就裂。”达昂站在一边，脸色发白，手里还攥着记账的木签。“能用就行。”他小声说。老船匠看了他一眼：“能用。可得换个用法。”达昂没接这句，只问：“是哪几根？”"
+speaker = "captain"
+mood = "tense"
+at = "makassar"
+when = [{ kind = "alive", person = "daeng", value = true }]
+objectives = [{ kind = "goods", good = "timber", qty = 30, at = "makassar", text = "三十车木材" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "daeng", value = -3 }, { kind = "flag", flag = "c13_request_daeng_late" }, { kind = "letter", person = "daeng", text = "木料我另找了一船，贵了些。你说去哪儿，下回我还是说怎么去。——达昂" }] }
+
+[[tracks.chapters.choices]]
+key = "sort_wood"
+text = "跟老船匠一起分：顺风干的做船板，逆风干的做肋材。"
+next = "settle"
+requires = [{ kind = "skill", skill = "shipbuilding", ge = 60 }]
+hint = "两种木料在你眼里一模一样"
+reply = "我们分了一下午。老船匠一根根过手，顺风干的挑出来做船板，逆风干的堆到另一边做肋材，每根都划一道记号。他说这么一分，一根都不浪费。达昂在旁边数，数到最后，一句话也没说。"
+news = "望加锡的船坞里，老船匠和一个格雷西克来的水手，把三十车木料分成两堆，每根都划了记号。"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }, { kind = "flag", flag = "c13_request_daeng_sorted" }]
+
+[[tracks.chapters.choices]]
+key = "trust_master"
+text = "请老船匠自己挑，我和达昂打下手。"
+next = "settle"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "老船匠挑了两天，挑得很慢，每根都在手里掂过，又放回去。挑完他说够用，一根也没少。达昂不敢问，我替他问了一句，老船匠只回了个“够”字。"
+news = "望加锡的船坞里，老船匠一根根挑过三十车木料，挑了两天，挑完说够用，一根也没少。"
+effects = [{ kind = "affinity", person = "daeng", value = 3 }]
+fail = { next = "settle", effects = [{ kind = "affinity", person = "daeng", value = -2 }, { kind = "flag", flag = "c13_request_daeng_short" }], news = "望加锡的船坞里，老船匠挑了两天木料，挑完说够用。格雷西克来的那条船，怕要比图纸短一截。" }
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "照原样交了，用法让达昂自己拿主意。"
+next = "settle"
+reply = "达昂一根根摸过去，摸到逆风干的那几根，停了很久，还是没有开口。他说他自己慢慢挑，挑错了算他的。我说那就算他的，他点了头，把木签往袖子里一塞。"
+news = "望加锡的船坞里，一个格雷西克来的水手把三十车木料一根根摸过去，说挑错了算他自己的。"
+effects = [{ kind = "affinity", person = "daeng", value = 2 }, { kind = "flag", flag = "c13_request_daeng_own" }]
+
+# 三、龙骨：格雷西克，龙骨立起来了，木料的钱与工钱付清，三趟船怎么算由他说。
+[[tracks.chapters]]
+key = "settle"
+title = "龙骨"
+text = "船台边上，工匠们把龙骨往木架上抬，号子喊得很响。达昂说龙骨立起来了。他把一小块削下来的龙骨木头递给你，木头上刻着他的名字，刻得歪歪扭扭，刀口还是新的。木料的钱和工钱，他一文不少地数给你。数完，他没走，又说一件事：“船的另一半钱，我欠着，跑三趟抵。”他把手插进袖子里，看着港外，“你说去哪儿，我说怎么去。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "daeng", text = "回格雷西克，在港里找到他" }]
+when = [{ kind = "alive", person = "daeng", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_short"
+when = [{ kind = "flag", flag = "c13_request_daeng_short" }]
+text = "达昂说龙骨立起来了，船比他心里的那条短了一截。他自己量过，说不要紧，少的那三根，他自己补。他把一小块削下来的龙骨木头递给你，木头上刻着他的名字，刻得歪歪扭扭。木料的钱和工钱，一文不少地数给你。“船的另一半钱，我欠着，跑三趟抵。”他把手插进袖子里，“你说去哪儿，我说怎么去。”"
+
+[[tracks.chapters.variants]]
+key = "v2_waived"
+when = [{ kind = "flag", flag = "c13_request_daeng_waived" }]
+text = "达昂说龙骨立起来了。他把一小块削下来的龙骨木头递给你，木头上刻着他的名字，刻得歪歪扭扭。你说跑船的账先免着，他没接话，从怀里摸出记账的小本，翻到最后一页，用笔写了个“三”字，又抹掉。木料的钱和工钱，一文不少地数给你。“船的那一半，我还是欠着。”他看着港外，“你说去哪儿，我说怎么去。”"
+
+[[tracks.chapters.variants]]
+key = "v3_own"
+when = [{ kind = "flag", flag = "c13_request_daeng_own" }]
+text = "达昂说龙骨立起来了，船是照他自己的法子造的，挑错的几根也是他的。他把一小块削下来的龙骨木头递给你，木头上刻着他的名字，刻得歪歪扭扭。木料的钱和工钱，一文不少地数给你。“船的另一半钱，我欠着，跑三趟抵。”他说完，又补了一句，“你说去哪儿，我说怎么去。”"
+
+[[tracks.chapters.choices]]
+key = "hold_him"
+text = "记下他欠的三趟。"
+next = "done"
+reply = "他把那块龙骨木头塞回我手里，说三趟跑完再还他。“那时候船就全是我的了。”说完他咧嘴笑，笑得像三趟已经跑完了一样。我把木头收进袖子，木屑扎得手心发痒。"
+news = "格雷西克的船台上，水手达昂立起了自己那条小船的龙骨，龙骨上刻着他的名字。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 750 }, { kind = "affinity", person = "daeng", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_daeng_done" }, { kind = "flag", flag = "c13_request_daeng_trips_kept" }, { kind = "memory", memory = "mem-request_daeng-settle", title = "龙骨木上的名字" }]
+
+[[tracks.chapters.choices]]
+key = "forgive"
+text = "三趟就免了，船早点下水要紧。"
+next = "done"
+reply = "他不说话，看了我很久，才说那他欠的是另一种东西，“记在心里，跟木料一样”。他把钱数完，又把那块龙骨木头放回桌上，压在钱袋上面。"
+news = "格雷西克的船台上，水手达昂立起了自己那条小船的龙骨，他说，账清了，人情也还清了。"
+effects = [{ kind = "cash", value = 900 }, { kind = "cash", value = 750 }, { kind = "affinity", person = "daeng", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_daeng_done" }, { kind = "flag", flag = "c13_request_daeng_forgiven" }, { kind = "memory", memory = "mem-request_daeng-settle", title = "龙骨木上的名字" }]

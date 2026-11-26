@@ -1,0 +1,170 @@
+# 请托：老侍女回土佐（request_hirohashi_kuniko）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：广桥国子（hirohashi_kuniko，生年不详，占位 0-1-1，女），后奈良天皇的典侍，1557 年天皇驾崩后落发为尼；cast：cast/historical_07_japan.toml（势力 imperial_court）。
+#   请托人不下京，全轨道只在信里说话；出面的是她身边伺候了四十年的老侍女（无名，不进 cast）。
+# 类型：押运／带人（escort）。三章：offer（堺的码头，报价）→ passage（浦户，路上那一段外海）→ arrive（下田，到港）；终点 done / failed。没有 stage 章，因此没有 window 与 default。
+# 报价：L（来信）。auto=true，offer 章 at=sakai，speaker 省略；family=c13_offer_sakai、冷却 20 天。
+#   规划窗口（不进 TOML）：offer 1557-11-01 至 1565-12-31；passage 1557-11-15 至 1566-04-30；arrive 1557-12-01 至 1566-08-31。
+#   offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻；passage 的 deadline_days=90、arrive 的 deadline_days=120，超时都走 failed、设 _late，并来一封国子的短信（两封互斥，内容不同）。
+# 依据·史实背景：后奈良天皇 1557 年（弘治三年九月五日）驾崩，典侍广桥国子随后出家。正文只写“上头那一位不在了以后”，不写驾崩的细节，不写宫里的窘迫。
+#   女房词：宫中女官的隐语，“御足”指钱，“御汤”指热水；国子信里照用，不解释。
+# 依据·原创：老侍女（六十多岁，土佐幡多的渔家出身，四十年前随一条家的人上京）、她的姊妹（下田河口的老渔妇）、旧锦袋、宫里的薄底草履、那句幡多土话（正文不写出原话）、渔妇的鲈鱼。
+# 地理的改动：任务单写“绕过足摺岬”，可浦户在土佐湾中部，下田（四万十川口）在足摺岬的东北面，从浦户往下田不必绕岬；
+#   这里改写成浦户以西那一长溜没处躲风的外海岸，检定与分支照旧（选项 key 仍叫 cape）。
+# 报酬：现金最多 900（arrive 带话）或 500（arrive 推钱回去）；好感：接下 +2 或问她 +3（检定成功）、外海办成 +3、带话 +8 或推钱回去 +9；
+#   声望 imperial_court +2、名声 +3（只在带话的结局）；回忆一张；来信至多两封（passage 超时与 arrive 带话不会同时出现）；唯一奖励物品与技能：无。
+#   注：任务单 arrive 的 refuse 写 +10，可照各章累计会到 3+3+10=16，超过 rewards 一栏“至多 +15”；编辑把 refuse 改成 +9，最高正好 15（问话 +3 保留，免得检定成功只换一句正文）。
+#   推钱回去的结局不带话：老妇人说“钱都不肯收的人，哪好再劳烦”，所以这一支没有来信、声望、名声与回忆。
+# 引擎说明：检定失败的分支不带回复，所以 offer 问话失败（她只说“听主子的”）写进 passage 的正文；外海检定失败（包袱湿了、多躲两天）写进 arrive 的 rough 变体。
+# 招牌话：国子信里的那一句（“她伺候了我四十年……”）全轨道只在 offer 正文出现（澪的变体是同一章的替换文字）。
+#   澪的变体：任务单只要求换“认出澪”那一句；澪在京里的局中长大，女房词读得懂，所以“只读懂一半”“想了半天才明白御足是钱”两处也一并换掉，否则前后矛盾。
+# 读的旗标：c13_main_mio（offer 的变体 mio，由澪的主线设，尚未写）；c13_request_hirohashi_kuniko_heard（passage 的变体）、_overland / _rough（arrive 的变体）。不读 c7_ 旗标。
+# 设的旗标（全部为 c13_request_hirohashi_kuniko_<事件>）：accepted（offer 接下或问话，成败都设）、declined（offer 回绝，终局）；
+#   heard（offer 问话成功，分支）、rough（passage 外海检定失败或陪她坐一夜，分支）、overland（passage 雇轿子，分支）；late（passage / arrive 超时，终局）、done（arrive，终局）。
+# 不写 relation / tie / bond / heart / growth 效果；不进 cast 的人：老侍女、渔妇、浦户的轿夫。
+# 依赖：港口 sakai、urado、shimoda_tosa（ports_east_asia.toml）；势力 imperial_court；属性 eloquence、seamanship。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_hirohashi_kuniko-arrive「栈桥上的两个老人」：四万十川口的歪木桩栈桥上晒着渔网，两个驼背的白发老妇面对面站着，一只小包袱掉在脚边的板子上。
+
+[[tracks]]
+key = "request_hirohashi_kuniko"
+name = "老侍女回土佐"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["hirohashi_kuniko"]
+
+# 一、报价：堺的码头，一个抱着包袱的老妇人，和一封只读得懂一半的信。
+[[tracks.chapters]]
+key = "offer"
+title = "女房词写的托付"
+text = "堺的码头风大。一个白发老妇人抱着小包袱站在栈桥头，见船就递一封信，前头两条船都摆手打发了她。轮到我，她先鞠了一躬，才把信递过来。信是宫里女房的笔迹，满纸“御”这个“御”那个，我只读懂一半。读懂的是：这位老人家想回土佐幡多的老家，四十年没回去过。“她伺候了我四十年，从没开口要过一样东西。这一回，我替她开口。”往下又说，御足在锦袋里，到了地方由她自己付，出家人手里只有这么些。我想了半天，才明白御足说的是钱。信末还有一行：读得到这里的船家，就请应下；读不到的，也就不必应了。落款只一个“国”字，旁边小注：上头那一位不在了以后，已落了发。老妇人把包袱换到另一只手，袖口里露出一只旧锦袋，袋口的线磨白了。"
+mood = "tender"
+at = "sakai"
+objectives = [{ kind = "at", at = "sakai", text = "在堺的码头" }]
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 11, 1], to = [1565, 12, 31] }]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_sakai"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "mio"
+when = [{ kind = "flag", flag = "c13_main_mio", value = true }]
+text = "堺的码头风大。一个白发老妇人抱着小包袱站在栈桥头，见船就递一封信，前头两条船都摆手打发了她。轮到我，她盯着我的脸看了半天，才把腰弯下去：“局里那个总把墨弄到袖口的小姬君。”信是宫里女房的笔迹，满纸“御”这个“御”那个，船上的人看着像谜，我小时候在局里听惯了，一读就懂：这位老人家想回土佐幡多的老家，四十年没回去过。“她伺候了我四十年，从没开口要过一样东西。这一回，我替她开口。”往下又说，御足在锦袋里，到了地方由她自己付，出家人手里只有这么些。信末还有一行：读得到这里的船家，就请应下；读不到的，也就不必应了。落款只一个“国”字，旁边小注：上头那一位不在了以后，已落了发。老妇人把包袱换到另一只手，袖口里露出一只旧锦袋，袋口的线磨白了。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "让她上船。"
+next = "passage"
+reply = "老妇人把包袱抱得更紧了，嘴里冒出一句幡多话，说到一半又改成京话：“劳烦船家。”她自己走上跳板，不让人扶，到了船上找了个靠桅杆的角落坐下，包袱搁在膝上，再没动过。"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_accepted" }, { kind = "affinity", person = "hirohashi_kuniko", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "先问她自己：想不想回去。"
+next = "passage"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "她愣了一下，像是从来没人这么问过她。“想。”过了好一会儿又说，下田河口还有一个姊妹活着，比她大三岁，前年托人捎过话来，说还记得她。说完这些，她才低下头去哭，哭得没有声音，包袱上湿了两点。"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_accepted" }, { kind = "flag", flag = "c13_request_hirohashi_kuniko_heard" }, { kind = "affinity", person = "hirohashi_kuniko", value = 3 }]
+
+[tracks.chapters.choices.fail]
+next = "passage"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一程我不往南去。"
+next = "failed"
+reply = "她把信收回去，向我行了一个宫里的礼，腰弯得很低，起身时一点不晃。然后抱着包袱，去问栈桥那头的下一条船。"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_declined" }]
+
+# 二、路上：浦户湾里歇一夜，前头是没处躲风的外海岸，她想下船走山路。
+[[tracks.chapters]]
+key = "passage"
+title = "浦户的风"
+text = "船进了浦户湾，我让人抛锚歇一夜。从这里往西，是一直通到幡多的外海岸，崖子贴着水，没几处能躲风的湾，南来的涌一层压一层往岸上撞。老妇人晕船晕了三天，吃什么吐什么，这会儿扶着船舷，另一只手还攥着包袱。这一路谁问她什么，她都只有一句“听主子的”。今天她头一回自己开口：“要不就在这里下吧。翻过山，也是土佐。”我看看湾口外的浪，又看看她的脚。她穿的还是宫里的草履，鞋底薄得透光。"
+speaker = "captain"
+mood = "tense"
+at = "urado"
+objectives = [{ kind = "at", at = "urado", text = "船到浦户" }]
+when = [{ kind = "alive", person = "hirohashi_kuniko", value = true }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_late" }, { kind = "letter", person = "hirohashi_kuniko", text = "船家：听说她等不及，另搭了一条渔船往幡多去了。到没到，至今没有回音。出家人本不该挂心，这几日念经却总念错行。——国" }]
+
+[[tracks.chapters.variants]]
+key = "heard"
+when = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_heard", value = true }]
+text = "船进了浦户湾，我让人抛锚歇一夜。从这里往西，是一直通到幡多的外海岸，崖子贴着水，没几处能躲风的湾，南来的涌一层压一层往岸上撞。老妇人晕船晕了三天，吃什么吐什么，这会儿扶着船舷，另一只手还攥着包袱。这一路她说得最多的是那个姊妹：小时候背着她去河口拾蚬子，蚬子装满一篮才许回家。今天她头一回说起别的：“要不就在这里下吧。翻过山，也是土佐。”我看看湾口外的浪，又看看她的脚。她穿的还是宫里的草履，鞋底薄得透光。"
+
+[[tracks.chapters.choices]]
+key = "cape"
+text = "等一个平水的日子，一口气走完这段外海。"
+next = "arrive"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "我等到第二天午后，风停了半日，涌也矮下去，船贴着崖子往西赶。她起先还扶着船舷，后来在船尾的帆布堆里睡着了，包袱枕在头底下。醒来的时候，四万十川口的沙洲已经在眼前。"
+effects = [{ kind = "affinity", person = "hirohashi_kuniko", value = 3 }]
+
+[tracks.chapters.choices.fail]
+next = "arrive"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_rough" }]
+
+[[tracks.chapters.choices]]
+key = "palanquin"
+text = "雇轿子走山路，我的船在下田等她。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "浦户的轿夫只收现钱，船上这会儿凑不出来。"
+reply = "浦户的轿夫开了价，我没还价就付了。两个轿夫、一个挑夫，说山路要走六七天。她坐进轿子之前回头看了一眼船，看的是她坐了三天的那个靠桅杆的角落。"
+effects = [{ kind = "cash", value = -100 }, { kind = "flag", flag = "c13_request_hirohashi_kuniko_overland" }]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "陪她在船头坐一夜，等她自己拿主意。"
+next = "arrive"
+reply = "那一夜两个人都没说几句话。湾里的渔火一盏一盏灭了，她把包袱从左手换到右手，又换回来。天快亮时，她站起来拍了拍膝上的潮气：“坐船来的，就坐船回。”出了湾口浪果然大，她吐得更厉害了，可再没提下船的事。"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_rough" }]
+
+# 三、到港：下田河口的栈桥，一个比她还老的渔妇，锦袋里的最后一枚钱。
+[[tracks.chapters]]
+key = "arrive"
+title = "下田的姊妹"
+text = "四万十川口的下田，栈桥是几根歪木桩搭的，桩上晒着渔网。船还没靠稳，老妇人已经站到了船头。栈桥上有个渔妇，背比她还驼，眯着眼认了半天，没认出来，转身要走，走了两步又回头。走近了又看半天，才叫出一个乡下孩子的小名，京里谁也没这么叫过她。老妇人的包袱掉在了板子上。两个老人在栈桥上说了很久的幡多话，我一句也听不懂。说完了，老妇人才想起我，把锦袋里的御足一枚一枚数进我手里。数到最后一枚，她捏着停了一会儿，还是放了进来。她说，还有一句话，要托我捎给京里的主子。"
+speaker = "captain"
+mood = "tender"
+at = "shimoda_tosa"
+objectives = [{ kind = "at", at = "shimoda_tosa", text = "送她到下田" }]
+when = [{ kind = "alive", person = "hirohashi_kuniko", value = true }]
+deadline_days = 120
+news = "下田河口来了一位从京里回来的老婆婆，四十年没回乡，跟栈桥上一个老渔妇认了半天的亲，她们说的幡多话谁也插不进嘴。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_late" }, { kind = "letter", person = "hirohashi_kuniko", text = "船家：听说她到底是自己回了幡多，最后那一程怎么走的，没人说得清。姊妹见着了没有，也还没人捎话来。船家想必也有船家的难处，我不多问。——国" }]
+
+[[tracks.chapters.variants]]
+key = "overland"
+when = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_overland", value = true }]
+text = "四万十川口的下田，栈桥是几根歪木桩搭的，桩上晒着渔网。我的船在这里等了几天，浦户的轿子才从山路上下来，老妇人下轿时腿是软的，草履换成了挑夫给的一双草鞋。栈桥上有个渔妇，背比她还驼，眯着眼认了半天，没认出来，转身要走，走了两步又回头。走近了又看半天，才叫出一个乡下孩子的小名，京里谁也没这么叫过她。老妇人的包袱掉在了板子上。两个老人在栈桥上说了很久的幡多话，我一句也听不懂。说完了，老妇人才想起我，把锦袋里的御足一枚一枚数进我手里。数到最后一枚，她捏着停了一会儿，还是放了进来。她说，还有一句话，要托我捎给京里的主子。"
+
+[[tracks.chapters.variants]]
+key = "rough"
+when = [{ kind = "flag", flag = "c13_request_hirohashi_kuniko_rough", value = true }]
+text = "四万十川口的下田，栈桥是几根歪木桩搭的，桩上晒着渔网。外海那一段浪打上过甲板，船在崖下的小湾里多躲了两天；老妇人的包袱湿了一半，晒过还有一股潮味。船还没靠稳，她已经抱着它站到了船头。栈桥上有个渔妇，背比她还驼，眯着眼认了半天，没认出来，转身要走，走了两步又回头。走近了又看半天，才叫出一个乡下孩子的小名，京里谁也没这么叫过她。老妇人的包袱掉在了板子上。两个老人在栈桥上说了很久的幡多话，我一句也听不懂。说完了，老妇人才想起我，把锦袋里的御足一枚一枚数进我手里。数到最后一枚，她捏着停了一会儿，还是放了进来。她说，还有一句话，要托我捎给京里的主子。"
+
+[[tracks.chapters.choices]]
+key = "carry"
+text = "记下那句话，替她捎回京里。"
+next = "done"
+reply = "那是一句幡多土话，她教了我三遍。头一遍我学错了调，渔妇笑出了声；第二遍错了一个字；第三遍她点了头，又让我当着她的面再说一遍，才放心。她不肯告诉我是什么意思，只说：“主子听得懂。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "hirohashi_kuniko", value = 8 }, { kind = "reputation", faction = "imperial_court", value = 2 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_hirohashi_kuniko_done" }, { kind = "memory", memory = "mem-request_hirohashi_kuniko-arrive", title = "栈桥上的两个老人" }, { kind = "letter", person = "hirohashi_kuniko", text = "船家：捎来的那句话，到了。庵里来走动的几位旧日女房传着念了一下午，谁也没听懂，我也不给她们解。我听得懂。她进宫头一年冬天，端御汤烫了手，嘴里漏过一句这样的土话。我那时笑她，她就再没说过。四十年里，这是第二回。锦袋里的御足够不够船家的辛苦，她不会说，我也不问。船家的名字，我记进庵里的回向帐了，排在头几行。——落了发的国子 合掌" }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "把最后几枚钱推回去。"
+next = "done"
+reply = "她不肯收，我也不肯收，两个人在栈桥上把那几枚钱推过来又推过去。最后是渔妇拿了钱，转身进屋，提出一条刚上岸的鲈鱼，草绳穿了鳃，挂到我手上。老妇人这才笑了，一路上我头一回见她笑。那句话她到底没教我：“钱都不肯收的人，哪好再劳烦。我另托人捎去。”"
+news = "下田河口那位京里回来的老婆婆，拿锦袋里最后几枚钱跟她姊妹换了条鲈鱼，硬挂在送她回来的船家手上。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "hirohashi_kuniko", value = 9 }, { kind = "flag", flag = "c13_request_hirohashi_kuniko_done" }]

@@ -1,0 +1,133 @@
+# 请托：今夜就走（request_amaia）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：阿玛娅（amaia，1530-06-26 生，女），毕尔巴鄂一家酒馆后屋的草药人；势力 spain，身份档 0（平民）。cast：cast/story_europe.toml。
+# 类型：押运／带人（escort）。任务单写三章，文件里也是三章：offer（报价）、passage（河口的夜船）、arrive（拉罗谢尔的码头）。
+# 报价：T（当面）。auto=false，start=offer，玩家在毕尔巴鄂的港里找到她后，用 ask:request_amaia 启动。offer 不写 at，只写 person 目标。
+#   窗口 1567-01-01..1574-12-31：offer 的 when 写日期与年龄（主角满 17），deadline=1574-12-31，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 进行中：arrive 章 deadline_days=60（河口到拉罗谢尔是同一片海），超时 next=failed，阿玛娅一封来信，好感 -5，旗标 _late。
+#   passage 章没有 at，玩家在海上任何地方都能接着往下走；只有 arrive 章在拉罗谢尔出现。
+# 依据·史实背景：纳瓦拉与巴斯克山谷时起时落的猎巫；上一辈人在山谷里烧过人。正文只写老人的口述，不写年份与审判的经过。
+# 依据·原创：后屋、灶膛与绿草汁、那个女人与她的男人斗篷、拉罗谢尔城里的表亲、内尔维翁河口的查夜船。
+# 任务单的修正：不写审问与刑罚，只写“去问话”；不写阿玛娅的法术；不写塞西莉亚与埃莱内（她们是 C7 的线）。
+# 隐秘请托：arrive 不写见闻。passage 的检定失败会在河口的码头留下一条见闻，只写查船的事与船名，不写人。
+# 秘密：cast 没写秘密。本请托不触碰她会不会法术；“女巫”只是街上的人这样叫她。
+# 报酬：现金最多 700（arrive 两个选项都给 700，只给一次）；好感最多 +13（接下 +2、河口 +3、送到 +8 或 +5）；不加名声（隐秘的请托）；无物品奖励。
+#   河口的“塞钱”一项另付 200，先查现钱，不足则挡下。检定失败只扣好感 -2，不罚钱、不扣物品。
+# 设的旗标：c13_request_amaia_accepted（offer 两种接法）、c13_request_amaia_declined（offer 回绝）、c13_request_amaia_asked（问了点名的人，分支旗标，只读作 passage 的变体）；
+#   终局旗标 c13_request_amaia_done（arrive 送到）、c13_request_amaia_late（arrive 超时）；每条路只设一面终局旗标。
+# 读的旗标：c13_request_amaia_asked（passage 的变体，只改文字）。不设任何 c7_ 旗标，不用 relation / tie / bond / heart。
+# 依赖：港口 bilbao（ports_iberia.toml）、la_rochelle（ports_atlantic_eu.toml）；属性 seamanship、eloquence（captain.toml）；人物 amaia。无主线门禁（gate_main 与 variant_main 都为空）。
+# 回忆插画清单：
+#   mem-request_amaia-arrive「还回来的男人斗篷」：拉罗谢尔的码头，女人把叠好的男人斗篷搭在手臂上，身后是灰色的海湾。
+
+[[tracks]]
+key = "request_amaia"
+name = "今夜就走"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["amaia"]
+
+# 一、灶膛里的药包：毕尔巴鄂的后屋，阿玛娅说山谷里又在抓女巫，托你今夜就把那个女人送走。
+[[tracks.chapters]]
+key = "offer"
+title = "灶膛里的药包"
+text = "毕尔巴鄂，码头边那家酒馆的后屋，一股绿草汁的苦味扑出来。阿玛娅蹲在灶前捣药，围裙上溅满了绿点，头也不抬：“坐下，把手伸出来。别跟我说外面怎么传的——流言不会看病。”山谷里又在抓女巫，她治好过的一个邻家女人被点了名，明天一早，镇上的人就要来带她去问话。“我不要你替谁辩白。”她把药臼往灶边一推，“今夜开船，把她送去拉罗谢尔。什么也别带，带了东西，就有人说是作法的。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "amaia", text = "在毕尔巴鄂的港里找到她" }]
+when = [{ kind = "date", from = [1567, 1, 1], to = [1574, 12, 31] }, { kind = "age", ge = 17 }]
+deadline = [1574, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "今夜就开船。"
+next = "passage"
+reply = "阿玛娅把一小包草药塞进你手里，又抽了回去：“不行，这个也不能带。”她把药包扔进了灶膛，火苗噗地窜起来，映亮了她的脸。她说今夜让那女人从后门走，前门的人明早才来。"
+effects = [{ kind = "affinity", person = "amaia", value = 2 }, { kind = "flag", flag = "c13_request_amaia_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_who"
+text = "问她：点名的是谁？"
+next = "passage"
+reply = "“一个嫉妒她家羊多的人。”阿玛娅说得很平，“也可能是我治不好的那家。点名的人，总有理由。”她说完才去擦手上的绿汁，一根手指擦了又擦。"
+effects = [{ kind = "affinity", person = "amaia", value = 2 }, { kind = "flag", flag = "c13_request_amaia_accepted" }, { kind = "flag", flag = "c13_request_amaia_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "你的船明天才走。"
+next = "failed"
+reply = "她看了你一眼，没有求你，也没有骂你。她转身回后屋去了，灶上的锅还在响，她掀开锅盖看了看，又盖上。你站在门口，没听见她再叫你。"
+effects = [{ kind = "flag", flag = "c13_request_amaia_declined" }]
+
+# 二、查夜船的灯：半夜，那女人上了船；河口的码头上，查船的人提着灯朝这边走过来。
+[[tracks.chapters]]
+key = "passage"
+title = "查夜船的灯"
+text = "半夜，那女人裹着一件男人的斗篷上了船，手里什么也没拿，帽兜压得低低的，一路把手缩在袖子里。船顺河往下走，水声很响，她一句话也没说。到河口时，码头的灯还亮着，镇上派来的人正在查夜船，一条一条地看。一盏灯提着，朝这边一步一步走过来，灯影在水面上晃。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 1, text = "顺河往下，到河口" }]
+when = [{ kind = "alive", person = "amaia", value = true }]
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_amaia_asked" }]
+text = "半夜，那女人裹着一件男人的斗篷上了船，手里什么也没拿。上船前，你把阿玛娅的话转给她：“也可能是我治不好的那家。”她听完，把帽兜又压低了一寸。船顺河往下走，到河口时，码头的灯还亮着，镇上派来的人正在查夜船。一盏灯提着，朝这边一步一步走过来。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "说船上只有水手，赶早潮出海。"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "arrive"
+reply = "查船的人照了照船头，挥手放行了。你说水手名字的时候，嗓子一点也没发颤，连自己都有点意外。那女人在缆绳堆里一直没出声，船过了沙洲，才从堆里探出头来，看了看天边的灯，又缩了回去。"
+effects = [{ kind = "affinity", person = "amaia", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "amaia", value = -2 }], news = "内尔维翁河口的码头上都在传：半夜查夜的人翻过一条毕尔巴鄂来的小船，记下了船名，又挥手放了行。" }
+
+[[tracks.chapters.choices]]
+key = "dark"
+text = "不等查，熄灯趁落潮溜出河口。"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "arrive"
+reply = "船贴着对岸的暗处出了河口，身后的灯越来越小。舵手一句话也不说，只把舵柄往右压了一寸。那女人在舱里攥着斗篷，直到灯火全看不见了，才敢喘出声。"
+effects = [{ kind = "affinity", person = "amaia", value = 3 }]
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "amaia", value = -2 }], news = "内尔维翁河口的人都说，昨夜有条船在沙洲上擦了底，搁到天亮才挣脱出去。码头的灯亮了一夜，没人追来。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "塞钱给查船的人，请他别往这边看。"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋不够厚，这一手你使不出来"
+next = "arrive"
+reply = "那人掂了掂钱袋，没看船舱，只说：“早潮前出海。”灯在你船边停了一下，又走了。船舱里的人一声没吭，直到灯照到了下一条船上。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "amaia", value = 3 }]
+
+# 三、那就是她：拉罗谢尔的码头，女人还回斗篷，问你阿玛娅有没有让你捎什么话。
+[[tracks.chapters]]
+key = "arrive"
+title = "那就是她"
+text = "拉罗谢尔的码头，风从海湾里吹进来，带着咸腥。那女人把斗篷还给你，叠得方方正正，边角压了又压。她说城里有个表亲在做洗衣的活，她去投奔，洗衣的人手总缺。这一路她只在过河口时问过一次，那盏灯还亮不亮。她的腿一直在抖，下船时却不肯扶你的手。跳板搭好了，她却停在第一级上，回过头来问：“阿玛娅有没有让你捎句话？”海鸥在桅杆上叫了两声，没人催她。"
+speaker = "captain"
+mood = "tender"
+at = "la_rochelle"
+objectives = [{ kind = "at", at = "la_rochelle", text = "在拉罗谢尔的码头" }]
+when = [{ kind = "alive", person = "amaia", value = true }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "amaia", text = "那女人等不到船，躲进了山里。我不知道她在哪，这样也好。" }, { kind = "affinity", person = "amaia", value = -5 }, { kind = "flag", flag = "c13_request_amaia_late" }]
+
+[[tracks.chapters.choices]]
+key = "no_word"
+text = "说：她什么也没让带，连一句话也没有。"
+next = "done"
+reply = "那女人笑了，笑得眼角发红：“那就是她。”她把斗篷的系带重新系好，说洗衣房的门朝河开着，夜里会有人给她留灯。回到毕尔巴鄂，阿玛娅只问了一句到没到，然后付了钱，转身回后屋捣药。"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "amaia", value = 8 }, { kind = "flag", flag = "c13_request_amaia_done" }, { kind = "memory", memory = "mem-request_amaia-arrive", title = "还回来的男人斗篷" }]
+
+[[tracks.chapters.choices]]
+key = "make_word"
+text = "替阿玛娅编一句：好好过日子。"
+next = "done"
+reply = "那女人点点头，走了，走出几步又回头看了一眼海湾。回到毕尔巴鄂，你把这话转给阿玛娅，她皱了皱眉：“我不会说这种话。”钱她还是付了。"
+effects = [{ kind = "cash", value = 700 }, { kind = "affinity", person = "amaia", value = 5 }, { kind = "flag", flag = "c13_request_amaia_done" }]

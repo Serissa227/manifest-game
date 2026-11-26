@@ -1,0 +1,125 @@
+# 请托：天上城的那一页（request_ludmila）。故事 2.0，遵循 A5 / E37 契约。C13d，2026-10-24，Claude（Opus）执笔。
+# 人物：柳德米拉 ludmila（1330-05-21 生，女），布拉格旧城图书馆的夜间管理员（cast/story_europe.toml）。
+# 类型：送信（lt）。章节：offer 按页数留押 → handover 十二道门（交到修士手里，三条路）→ reply 全书最亮的一页（收回抄本，回信）。
+# 报价：来信（L）。auto=true，offer 章 at=hamburg，出面的是汉堡的书商（叙事人物，不建 cast）；柳德米拉只在信里说话。窗口 1563-01-01 至 1569-12-31；offer 的 family=c13_offer_hamburg，family_cooldown_days=20。
+# 身份档 1（低风险）：现金 900，只在收回抄本那一章付一次。好感合计最多 +15；名声 +2；回忆 mem-request_ludmila-reply。押金收据只写在正文，不发物品。
+# 依据（史实）：《魔鬼圣经》（Codex Gigas）1594 年以前藏在布劳瑙（Břevnov）修院，之后被皇帝取到布拉格；书里有一页魔鬼像，对面画着天上的城。正文一律用传闻口吻。
+# 依据（原创）：布拉格旧城图书馆的夜间管理员，天黑才开门，借书按页数留押；汉堡的书商（叙事人物）；在但泽亚麻市场上记账的布劳瑙修士（叙事人物）；十二道门与第九道门。
+# 待核：《魔鬼圣经》迁出布劳瑙的年份；布劳瑙修士随亚麻船下但泽的季节。
+# 秘密：柳德米拉的来历（cast secret）本请托不碰；正文不暗示，见闻不写。
+# 读写的旗标：只设 c13_request_ludmila_*（accepted、declined、gates、done、late）；不读也不设任何 c7_ 旗标。
+# 依赖：无改名依赖；无主线门禁（gate_main、variant_main 为空）。
+# 回忆插画清单：
+#   mem-request_ludmila-reply：烛光下扁木匣打开，城墙上十二道门一道不少，纸边已经发亮。
+# 缺省走向：offer 到期走 timeout（不写见闻）；handover 超时，修士回了修院，柳德米拉来信一封；reply 没有期限，可以一直等。
+
+[[tracks]]
+key = "request_ludmila"
+name = "天上城的那一页"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ludmila"]
+
+# offer · 1563—1569 · 汉堡：书商天黑以后送来一封信与押金
+[[tracks.chapters]]
+key = "offer"
+title = "按页数留押"
+text = "汉堡的书商天黑以后才上门，把一封信放在你面前，信封上是布拉格旧城图书馆的印。信里只有一页纸的字，写得很轻。夜间管理员要一页抄本：布劳瑙修院那部大书里，魔鬼像对面画着天上城的那一页。“修院里有个修士肯抄，只在白天抄。他这一季跟着亚麻船在但泽，你替我把信送到他手里。”信里夹着押金，一页一份。“按页数留押，是书库的规矩，对他也一样。”"
+mood = "mystic"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1569, 12, 31] }, { kind = "age", ge = 17 }]
+at = "hamburg"
+deadline = [1569, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_hamburg"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下信和押金，去但泽找修士。"
+next = "handover"
+effects = [{ kind = "affinity", person = "ludmila", value = 2 }, { kind = "flag", flag = "c13_request_ludmila_accepted" }]
+reply = "书商说夜间管理员交代过：抄本回来，也要天黑以后交到她手里。"
+
+[[tracks.chapters.choices]]
+key = "ask_page"
+text = "问书商：为什么偏要那一页，不要魔鬼那一页？"
+next = "handover"
+effects = [{ kind = "affinity", person = "ludmila", value = 2 }, { kind = "flag", flag = "c13_request_ludmila_accepted" }]
+reply = "书商翻出信末的一行给你看：“魔鬼那页人人都要。天上城那页，没人要，所以没人好好抄过。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "修院那部大书，你不碰。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ludmila_declined" }]
+reply = "书商点点头，把信收回去，锁进柜子。那时天已经全黑了。"
+
+# handover · 1563—1570 · 但泽的亚麻市场：修士在布匹中间记账
+[[tracks.chapters]]
+key = "handover"
+title = "十二道门"
+text = "但泽的亚麻市场上，布匹堆得比人高，空气里是湿麻和焦油的味道。布劳瑙的修士坐在一只木箱上记账，听说是布拉格来的信，擦了擦手才接。他读得很慢，读完把信纸对着光又看了一遍。“天上城那一页，我可以抄。”他说，“可抄的时候要有人在旁边看着，免得我把城墙上的门画错了。一共十二道，我数过三回，每回数出来都不一样。”"
+speaker = "captain"
+mood = "mystic"
+at = "danzig"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1570, 6, 30] }, { kind = "alive", person = "ludmila", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "ludmila", text = "亚麻船走了，修士回了修院。那一页，还是没人好好抄过。" }, { kind = "affinity", person = "ludmila", value = -3 }, { kind = "flag", flag = "c13_request_ludmila_late" }], news = "但泽的亚麻船卸完货就走了，布劳瑙的修士跟着回了修院，市场上没人再提布拉格的信。" }
+news = "但泽的亚麻市场上，布劳瑙来的修士收了一封布拉格的信，说是要抄一页画着城的书，抄的时候还要人在旁边看着。"
+
+[[tracks.chapters.choices]]
+key = "as_is"
+text = "把信和押金原样交给他，你不看信。"
+next = "reply"
+effects = [{ kind = "affinity", person = "ludmila", value = 3 }]
+reply = "他把押金数了一遍，一页一份，一分不多。“书库的规矩我懂。”他说，“抄好了从汉堡寄。”"
+
+[[tracks.chapters.choices]]
+key = "latin"
+text = "用拉丁话跟他把十二道门的位置一道一道对清楚。"
+next = "reply"
+requires = [{ kind = "skill", skill = "lang_latin", ge = 60 }]
+hint = "你的拉丁话还撑不住一整面城墙的门，话到一半就断了。"
+effects = [{ kind = "affinity", person = "ludmila", value = 5 }, { kind = "flag", flag = "c13_request_ludmila_gates" }]
+reply = "你们对到第九道门，他发现自己记错了一道。他笑了，说管理员找对了人，这一页他会抄得比原来还清楚。"
+
+[[tracks.chapters.choices]]
+key = "add_word"
+text = "替管理员多说一句：她要的是一页好好抄过的。"
+next = "reply"
+check = { attr = "eloquence", base = 35, per = 6 }
+fail = { next = "reply", effects = [], news = "但泽的亚麻市场上，一个外港来的船长替布拉格的人多嘴，布劳瑙的修士嫌他啰嗦，说抄书的人比谁都知道。" }
+effects = [{ kind = "affinity", person = "ludmila", value = 3 }]
+reply = "他点点头，在信的背面记了一行字：好好抄。"
+
+# reply · 1563—1570 · 汉堡：书商交出扁木匣，夜间管理员的回信
+[[tracks.chapters]]
+key = "reply"
+title = "全书最亮的一页"
+text = "几个月后，汉堡的书商又是天黑以后才来，把一个扁木匣交给你。匣盖一掀，是那一页抄本，城墙上的十二道门一道不少，纸边被手指摸得发亮。木匣的角上磨得发白，是书库里借出去又收回来的旧匣子。木匣底下压着夜间管理员的回信，只有几行字。最后一行是补上去的，字比上面都小：“你看过那一页了吗？嘘——轻一点，那一页我还没读完。”"
+speaker = "captain"
+mood = "mystic"
+at = "hamburg"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1570, 6, 30] }, { kind = "alive", person = "ludmila", value = true }]
+objectives = [{ kind = "wait", days = 90, text = "等抄本从但泽寄到汉堡" }]
+news = "汉堡的酒馆里有人说，但泽寄来一只扁木匣，书商夜里交给了一个去布拉格的船长，匣里是一页画着城的抄本。"
+
+[[tracks.chapters.choices]]
+key = "looked"
+text = "回信说：看了一眼，城画得很亮。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "ludmila", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ludmila_done" }, { kind = "memory", memory = "mem-request_ludmila-reply", title = "十二道门的城" }]
+reply = "她回了一行字：“亮是对的。原本那一页，是全书最亮的。”信里夹着你的押金收据，盖着书库的印，可以在布拉格借三页任何书——天黑以后。"
+
+[[tracks.chapters.choices]]
+key = "not_looked"
+text = "回信说：没看，是交给你的东西。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "ludmila", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ludmila_done" }]
+reply = "她回信说，没看的人最守规矩，可也最可惜。钱照付。"
+
+[[tracks.chapters.variants]]
+key = "gates"
+when = [{ kind = "flag", flag = "c13_request_ludmila_gates" }]
+text = "几个月后，汉堡的书商又是天黑以后才来，把一个扁木匣交给你。匣盖一掀，是那一页抄本，城墙上的十二道门一道不少。木匣里多了一张修士的字条，写着第九道门的位置，是船长替他改对的。夜间管理员的回信也在里面，只问你看没看过那一页。"

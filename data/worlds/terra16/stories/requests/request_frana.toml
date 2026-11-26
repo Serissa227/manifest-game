@@ -1,0 +1,212 @@
+# C13d 请托：中立的抄本（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单分片写，中文优先，不写英文覆盖）
+# 人物：芙拉娜·卢基奇 frana（1534-12-02 生，cast 在 cast/story_europe.toml；拉古萨共和国的女使者，日程在 ragusa_port 的酒馆）。
+# 类型与报价：押运／去某处／说服混合（mixed），5 章（offer / corfu / istanbul / chios 与 chios_paper / back）。kind=request，auto=false（T 当面）：人物按日程在 ragusa_port，玩家用“问请托”（ask:request_frana）启动；offer 章不写 at，目标是在港里找到她。
+# 窗口：报价 1570-03-01 至 1573-03-31，offer 的 deadline 即止日，到期走 timeout（next=failed，不写见闻）。之后各章的窗口写成 when 里的 date 条件（1570-03-01 至 1573-09-30）。corfu 进入后 60 天、chios 与 chios_paper 进入后 90 天到期，走 timeout。
+# 依据：史实背景——1570—73 年塞浦路斯战争，拉古萨向苏丹纳贡、保持中立（报价写在 1570 年春，正文只说“眼看要动刀兵”）；1566 年希俄斯由奥斯曼接管，此前是热那亚人的马奥纳公司所管，公证人替马奥纳记账；拉古萨同威尼斯与奥斯曼都有往来。1571 年勒班陀只作背景，不写。
+#   原创——旧约抄本缝在斗篷衬里，科孚的威尼斯“朋友”，伊斯坦布尔帝国议会的通译，希俄斯的老公证人（叙事人物，不入 cast，正文不起名字），三箱账册与铜印。
+# 读写的旗标：设 c13_request_frana_accepted（接下，分支）/ _paper（证词路线，分支）/ _declined / _late / _done（终局，每条只设一面）。不读任何 c7_* 或 c13_main_* 旗标；没有主线门禁，没有变体。
+# 依赖：地点 corfu、istanbul、chios、ragusa_port 都是现有地点，无 B10b 改名。reputation 效果的势力 ragusa（factions/03_italy）、ottoman（factions/05_ottoman_persia）都已存在。
+# 路线：chios 与 chios_paper 按 next 分开，不用 requires 区分——只有伊斯坦布尔的证词检定成功才进 chios_paper，其余都进 chios。
+# 缺省走向：不接，拉古萨的女使者另找船（declined，failed）。接了但 60 天内没到科孚，抄本被人看了一眼，她从别的船去了伊斯坦布尔（late，failed）。到了希俄斯却在 90 天内没把人接上，老人去年冬天走了（late，failed）。其余走到拉古萨（done）。
+# 回忆插画清单：
+#   mem-request_frana-back「码头上的三箱账册」：拉古萨码头的傍晚，三只木箱排成一行，老公证人站在箱边，芙拉娜伸手摸着箱角。
+
+[[tracks]]
+key = "request_frana"
+name = "中立的抄本"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["frana"]
+
+# 报价：拉古萨的酒馆。斗篷衬里里缝着一卷纸，她要把它送去伊斯坦布尔。
+[[tracks.chapters]]
+key = "offer"
+title = "缝在衬里的抄本"
+text = "芙拉娜从斗篷的衬里里抽出一卷纸，纸边被缝线勒出一道折。那是拉古萨向苏丹纳贡的旧约抄本，每一页的角上都盖着共和国的印。塞浦路斯那边眼看要动刀兵，威尼斯人想看它，奥斯曼人也想看它，路过的每个港口都有人想先摸一摸。“远道而来的阁下，拉古萨不胜荣幸。……好了，客套话说完了。你要什么？我们好谈价钱。”她把纸按回衬里，“我要送它去伊斯坦布尔。到了那边，要找一个肯收它、又肯照它办事的人。你要是觉得这活重，今晚就当没见过我。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "frana", text = "在港里找到她" }]
+deadline = [1573, 3, 31]
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 3, 31] }, { kind = "age", ge = 17 }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应送她去伊斯坦布尔。"
+next = "corfu"
+effects = [{ kind = "affinity", person = "frana", value = 2 }, { kind = "flag", flag = "c13_request_frana_accepted" }]
+reply = "她先替你想好了退路：“路上要是有人逼你，就说你不知道我带了什么。这是实话，我一样也不会告诉你。”"
+
+[[tracks.chapters.choices]]
+key = "ask_text"
+text = "问她：抄本上写的，真能让两边都不动拉古萨？"
+next = "corfu"
+effects = [{ kind = "affinity", person = "frana", value = 2 }, { kind = "flag", flag = "c13_request_frana_accepted" }]
+reply = "“不能。”她笑了，用指甲在纸角的印上刮了刮，“可它能让两边都找不到动手的理由。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "两国打仗，你不走这条路。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_frana_declined" }]
+reply = "她点点头，没有劝。替你把理由说完了，说得比你自己还周全，说完把那卷纸又往衬里里按了按。"
+
+# 科孚：威尼斯的“朋友”请吃饭。他不想知道箱子里是什么，只想知道是哪一页。
+[[tracks.chapters]]
+key = "corfu"
+title = "只想知道是哪一页"
+text = "科孚的码头上，威尼斯的那位“朋友”早等在一间酒馆里。白酒是岛上自己酿的，煮章鱼一盘接一盘，炭烤的沙丁鱼连骨头都是脆的。芙拉娜先举杯：“您的酒是科孚最好的。今晚的账记在拉古萨头上，您要是只想吃顿饭，就只吃顿饭。”他笑着干了杯，眼睛却一直落在她的斗篷上。吃到一半，他把杯子放下：“我不想知道您带着什么。我只想知道是哪一页。”"
+at = "corfu"
+speaker = "captain"
+mood = "tense"
+news = "科孚的码头上，一个威尼斯人请拉古萨来的女使者吃饭，饭没吃完，她的船就开了。"
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 9, 30] }, { kind = "alive", person = "frana", value = true }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "frana", text = "我从别的船去了伊斯坦布尔，抄本在科孚被人看了一眼。不要紧，看一眼的人，最难开口。" }, { kind = "affinity", person = "frana", value = -3 }, { kind = "flag", flag = "c13_request_frana_late" }]
+
+[[tracks.chapters.choices]]
+key = "excuse"
+text = "说船要赶潮，先告辞。"
+next = "istanbul"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "frana", value = 3 }]
+fail = { next = "istanbul", news = "科孚的威尼斯人派了两个随从跟到码头，拉古萨的船一直等到半夜才开。" }
+reply = "芙拉娜笑着接话：“下回来拉古萨，我请。”他把你们送到门口，门口却站着他的两个人。"
+
+[[tracks.chapters.choices]]
+key = "night_sail"
+text = "饭吃完，趁他的人换班时连夜开船。"
+next = "istanbul"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "frana", value = 3 }]
+fail = { next = "istanbul", news = "科孚外海夜里有条拉古萨的船被望见，一条威尼斯的小船跟了半夜。" }
+reply = "天亮时科孚已经看不见了。芙拉娜说，那位朋友今天会很不高兴，可他明天会写信说一切都好。"
+
+[[tracks.chapters.choices]]
+key = "decoy"
+text = "现在科孚买一船货，把新开的货单给他看。"
+next = "istanbul"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "身上的钱，凑不齐这一船货。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "frana", value = 5 }]
+reply = "他接过货单看了半天，越看越糊涂，最后笑着还给你。芙拉娜在船上说，你这个台阶，留得比她还好。"
+
+# 伊斯坦布尔：通译收下了抄本，要一个人作证。
+[[tracks.chapters]]
+key = "istanbul"
+title = "还得有一个人作证"
+text = "伊斯坦布尔，帝国议会的一位通译把抄本摊在桌上，一页一页读，读得很慢。他的指尖沾着墨，洗也洗不净。他说抄本没错，拉古萨的印，拉古萨的字，都对。“可议会要照它办事，还得有一个人作证：拉古萨这些年，真的没帮过威尼斯。”芙拉娜接过话头，给他留了个体面：“纸不会自己说话，通译先生要人作证，也是应该的。”然后她说，有这么一个人。希俄斯有个热那亚人留下的老公证人，替马奥纳记了三十年的账，什么船进过希俄斯，他都记得。"
+at = "istanbul"
+speaker = "captain"
+mood = "tense"
+news = "伊斯坦布尔帝国议会的一个通译，收下了拉古萨送来的一份旧约抄本，说要找证人。"
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 9, 30] }, { kind = "alive", person = "frana", value = true }]
+
+[[tracks.chapters.choices]]
+key = "go_chios"
+text = "答应去希俄斯接他。"
+next = "chios"
+effects = [{ kind = "affinity", person = "frana", value = 3 }]
+reply = "通译说三个月内带人来，议会就听。芙拉娜替他补了一句：“三个月不到，是我的错，不是拉古萨的。”"
+
+[[tracks.chapters.choices]]
+key = "letter_only"
+text = "提议请老公证人写一份证词，不必本人来。"
+next = "chios_paper"
+check = { attr = "eloquence", base = 5, per = 8 }
+effects = [{ kind = "affinity", person = "frana", value = 3 }, { kind = "flag", flag = "c13_request_frana_paper" }]
+fail = { next = "chios", news = "伊斯坦布尔的通译说，议会不收没有本人的证词，拉古萨的人还得再跑一趟海路。" }
+reply = "通译想了想，说证词也行，只要公证人的印在上面。芙拉娜看了你一眼，说你这样省了他一趟海路。"
+
+# 希俄斯：老公证人的小屋，账册堆到房梁。他不想去伊斯坦布尔，也不想留在奥斯曼人的岛上。
+[[tracks.chapters]]
+key = "chios"
+title = "三箱账册"
+text = "希俄斯港口后面有一间小屋，屋里的账册从地上一直堆到房梁。老公证人坐在中间，镜腿用细线缠了又缠。他一开口就报出一条船的名字：几时来，装什么，往哪里去。“拉古萨的船，我都记着。”他说，又摆摆手，“伊斯坦布尔我不去，我老了，经不起颠。通译说议会只认当面的人，我听说过。这岛从热那亚人手里换到了奥斯曼人手里，我也不想留下。”芙拉娜放软了声音：“您要是不想走，就当是去拉古萨看看老朋友。”门外有人在催屋租，催了三回，他都装没听见。"
+at = "chios"
+speaker = "captain"
+mood = "tender"
+news = "希俄斯港口后面，替马奥纳记了三十年账的老公证人收拾了三箱账册，上了一条去拉古萨的船。"
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 9, 30] }, { kind = "alive", person = "frana", value = true }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "frana", text = "希俄斯的老人没等到船，去年冬天走了。他的账册，我托人收起来了。" }, { kind = "affinity", person = "frana", value = -3 }, { kind = "flag", flag = "c13_request_frana_late" }]
+
+[[tracks.chapters.choices]]
+key = "take_him"
+text = "接他上船：先去伊斯坦布尔作证，再送他去拉古萨。"
+next = "back"
+effects = [{ kind = "affinity", person = "frana", value = 3 }]
+reply = "老公证人收拾了三箱账册，说别的都可以不带，账册得带。他在伊斯坦布尔说了一个下午，说完就上船去了拉古萨。"
+
+[[tracks.chapters.choices]]
+key = "pay_rent"
+text = "替他付清欠下的屋租，请他随船走。"
+next = "back"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "身上的钱，还不起他欠的屋租。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "frana", value = 4 }]
+reply = "他不肯白拿，把钱压在账册上看了很久，才说：“这笔我记上。”他把它记进了最后一页，然后才去收拾箱子。"
+
+# 证词路线：通译收下的是盖了印的证词，人还在希俄斯，只差一个印。
+[[tracks.chapters]]
+key = "chios_paper"
+title = "盖印的证词"
+text = "老公证人看完了证词稿，把抽屉拉开，取出一方铜印。印面刻的是马奥纳的旧徽，他用拇指摸了摸，又放回去。“马奥纳的人走了，这方印我替他们盖了三十年。”芙拉娜把稿子摊在他面前，逐条指给他看：哪一年，哪一条船，往哪里去。他一条一条点头，点到第三条停下来。“这船进港那天，我不在。”芙拉娜没有催，只把笔递过去：“那就写您在的那一天。”"
+at = "chios"
+speaker = "captain"
+mood = "tender"
+news = "希俄斯港口后面，老公证人替一份送往伊斯坦布尔的证词盖了印，印面还是热那亚人的旧徽。"
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 9, 30] }, { kind = "alive", person = "frana", value = true }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "frana", text = "证词稿还摊在老人的桌上，印没盖，他去年冬天走了。三箱账册有人替我收着。" }, { kind = "affinity", person = "frana", value = -3 }, { kind = "flag", flag = "c13_request_frana_late" }]
+
+[[tracks.chapters.choices]]
+key = "seal"
+text = "请他在证词上盖印，再接他去拉古萨。"
+next = "back"
+effects = [{ kind = "affinity", person = "frana", value = 3 }]
+reply = "他盖了印，把证词交给你，说这是他这辈子最后一份公证。你把证词收进衬里，先送去伊斯坦布尔，再载他和三箱账册去了拉古萨。"
+
+[[tracks.chapters.choices]]
+key = "reword"
+text = "读给他听，问他有没有哪一句要改。"
+next = "back"
+effects = [{ kind = "affinity", person = "frana", value = 2 }]
+reply = "他想了很久，说有一句写得太满。“拉古萨从没帮过威尼斯”，他只看见过一回。于是改成“我没有见过拉古萨的船替威尼斯装过货”。芙拉娜把那一行划掉又写上，写得比原来小。改完，他才让水手把三箱账册一箱一箱抬上你的船。"
+
+# 拉古萨码头：老公证人下船，芙拉娜替他把账册搬上岸。报告里的名字由你定。
+[[tracks.chapters]]
+key = "back"
+title = "名字要不要写进去"
+text = "拉古萨的码头上，芙拉娜亲自来接老公证人，替他把三箱账册一只一只搬下船。她伸手摸过每只箱角，像在数人头。伊斯坦布尔那边回了话：拉古萨的船照旧通行。她把报酬交到你手里，手指在钱袋口停了一下。“议会要我写一份报告。”她说，“你的名字要不要写进去，你想清楚再说。不写，也没有人会怪你；写了，报告是我写的，怪不到你头上。”"
+at = "ragusa_port"
+speaker = "captain"
+mood = "tender"
+news = "拉古萨的女使者从伊斯坦布尔回来了，码头上多了一个带着三箱账册的老人。"
+when = [{ kind = "date", from = [1570, 3, 1], to = [1573, 9, 30] }, { kind = "alive", person = "frana", value = true }]
+
+[[tracks.chapters.choices]]
+key = "no_name"
+text = "不写，写“一条商船”就行。"
+next = "done"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "frana", value = 8 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ragusa", value = 3 }, { kind = "memory", memory = "mem-request_frana-back", title = "码头上的三箱账册" }, { kind = "flag", flag = "c13_request_frana_done" }]
+reply = "她点点头，说这样最好，“名字写进去，就有人来找你；不写，你下回还能这么走”。说完，她拧上笔帽，没有再提这件事。"
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "写上，你不怕。"
+next = "done"
+effects = [{ kind = "cash", value = 2900 }, { kind = "affinity", person = "frana", value = 6 }, { kind = "fame", value = 5 }, { kind = "reputation", faction = "ragusa", value = 3 }, { kind = "reputation", faction = "ottoman", value = 1 }, { kind = "flag", flag = "c13_request_frana_done" }]
+reply = "她写得很慢，一笔一划。写完把笔递给你看，说：“那你以后进伊斯坦布尔，会有人对你客气，也会有人盯着你。”"

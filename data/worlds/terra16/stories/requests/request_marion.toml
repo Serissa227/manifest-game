@@ -1,0 +1,137 @@
+# 请托：开季前的盐（request_marion）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：玛丽昂（marion，1530-11-06 生，女），布列塔尼来的渔场女老板，圣约翰斯晒鱼滩的管事；势力 france；身份档 1。cast：cast/story_americas.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（交货，货款在这一章付）、settle（结账，等 30 天后出现）。
+# 报价：T（当面），报价港 st_johns。auto=false，玩家在港里“问请托”（ask:request_marion）启动；offer 不写 at，目标是在港里找到她。
+#       offer 的 when 写日期 1560-01-01..1576-06-30 与主角满 17 岁；deadline=1576-06-30，timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=120（盐从欧洲跨大西洋运来），超时走 failed：来信一封、好感 -5、旗标 _late，并有一条见闻说明开季那天盐没到。
+#       settle 是普通章，等待 30 天（wait 目标）后出现，之后可以一直等。
+#       普通章不写 window（引擎要求写了 window 就必须有 default），窗口改写进 when 的 date 条件里。
+# 依据·史实背景：纽芬兰渔场的鳕鱼要用大量盐腌；盐来自欧洲大陆，春天从布列塔尼与比斯开湾一带的港口装船出发，冰封以前装鱼回去；
+#       巴斯克人的捕鲸船在欧洲与北美之间往返，盐价被抬高的说法只用传闻口吻，正文不写具体盐田与盐商的名字。
+# 依据·原创：玛丽昂本人；账房里的石板与背面的日子；潮了的那几袋盐；晒鱼滩上的木架与苹果酒。
+# 待核：开季前装船的具体月份（正文只写“春天”与“一个礼拜”）；布列塔尼盐的价格走势（正文只写“涨了三成”，作传闻）。
+# 秘密：cast 没有写秘密。她与贝尔纳特的事归 C7 的 pair_marion_bernat，本请托的见闻一律不写；正文只在 settle 的 bernat 变体里让他在滩边出现，不说话。
+# 读的旗标：c7_pair_marion_bernat_together（只用于 settle 的 bernat 变体）；c13_request_marion_haggled（只用于 deliver 的 haggled 变体）。
+# 设的旗标：c13_request_marion_accepted（offer 接下，两条接法）、_declined（offer 回绝）、_late（deliver 超时）、_done（settle 结账，两条收尾）；分支旗标 c13_request_marion_haggled（offer 谈价成功，只改交货章的开场）。
+#       不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 1250（settle 一次）+ 500（货款，deliver 一次）；好感最多 +15；名声 +2；回忆 mem-request_marion-settle。没有唯一奖励物品。
+# 依赖：港口 st_johns（ports_americas.toml）；商品 salt（goods/01_staples_raw.toml）；属性 commerce、stewardship；人物 marion。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_marion-settle「木架上的鳕鱼」：圣约翰斯的晒鱼滩，一排排腌好的鳕鱼摆在木架上；远处账房的门开着，门框上挂着一块写了日子的石板。
+
+[[tracks]]
+key = "request_marion"
+name = "开季前的盐"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["marion"]
+
+# 一、石板背面的日子：账房里，玛丽昂的石板上写着今年的盐，背面写着另一个日子。
+[[tracks.chapters]]
+key = "offer"
+title = "石板背面的日子"
+text = "账房的门开着，玛丽昂坐在里头，算盘拨得噼啪响。她头也不抬：“鳕鱼按担算，盐另算，耽误我晒鱼的工夫也算。说吧，要多少？”墙上挂着一块石板，粉笔写着今年开季的日子，底下一个数：五十袋。她说盐商今年涨了三成，码头上的盐被巴斯克人的捕鲸船先包了，她宁可从老家那边调。她把石板翻了个面，背面写着另一个日子，比正面早了整整一个星期。“晚过这一天，鱼就烂在滩上。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "marion", text = "在港里找到她" }]
+when = [{ kind = "date", from = [1560, 1, 1], to = [1576, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1576, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "照石板上的日子，五十袋盐从布列塔尼运来。"
+next = "deliver"
+reply = "她用粉笔在石板背面那个日子下面划了一道线，划得很重，粉灰落在袖口上。“说好的价我不改，你也别改。盐要是晚一天到，账记你头上。”"
+effects = [{ kind = "affinity", person = "marion", value = 2 }, { kind = "flag", flag = "c13_request_marion_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "haggle_first"
+text = "先谈价：跨一趟大洋，运费得另算。"
+next = "deliver"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "她盯着你看了半天，在价钱上松了一点点，松完就把粉笔收进了口袋。“运费我不认，盐你给我按日子运到。”"
+effects = [{ kind = "affinity", person = "marion", value = 2 }, { kind = "flag", flag = "c13_request_marion_accepted" }, { kind = "flag", flag = "c13_request_marion_haggled" }]
+fail = { next = "deliver", effects = [{ kind = "affinity", person = "marion", value = 2 }, { kind = "flag", flag = "c13_request_marion_accepted" }], news = "圣约翰斯的账房里，布列塔尼来的女老板一分钱没让，船长还是接下了盐的单子。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一季的盐，不跨这趟大洋。"
+next = "failed"
+reply = "她把石板翻回正面，用袖子把背面那个日子的粉灰擦掉，什么也没说，拿起笔开始给另一家盐商写信。"
+effects = [{ kind = "flag", flag = "c13_request_marion_declined" }]
+
+# 二、潮了的那几袋：盐袋卸在晒鱼滩边，拍到第三十几袋，手停了。
+[[tracks.chapters]]
+key = "deliver"
+title = "潮了的那几袋"
+text = "盐袋卸在晒鱼滩边，木架还空着，几个布列塔尼来的伙计站在一边，攥着拍鱼的木板。玛丽昂一袋一袋拍过去，拍一下，听一下声音。拍到第三十几袋，她的手停了。那袋提起来抖开，捏出一团湿块。“潮了。”她说，像在报一个价。她没说退，把账本翻到空页，笔尖点着那几袋的数：“潮了的那几袋，你打算怎么算？”"
+speaker = "captain"
+mood = "cheerful"
+at = "st_johns"
+when = [{ kind = "alive", person = "marion", value = true }, { kind = "date", from = [1560, 1, 1], to = [1576, 12, 30] }]
+objectives = [{ kind = "goods", good = "salt", qty = 50, at = "st_johns", text = "五十袋盐" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "marion", value = -5 }, { kind = "flag", flag = "c13_request_marion_late" }, { kind = "letter", person = "marion", text = "开季那天盐没到，我照涨了三成的价买了。鱼没烂，账烂了一页。你欠我一页。" }], news = "圣约翰斯的晒鱼滩上，开季那天没等到布列塔尼的盐，女老板照涨了三成的价从别家买了。" }
+news = "圣约翰斯渔港的晒鱼滩上，布列塔尼来的盐赶在开季前到了，女老板一袋一袋拍着数。"
+
+[[tracks.chapters.variants]]
+key = "haggled"
+when = [{ kind = "flag", flag = "c13_request_marion_haggled", value = true }]
+text = "盐袋卸在晒鱼滩边，木架还空着，几个布列塔尼来的伙计站在一边，攥着拍鱼的木板。玛丽昂一袋一袋拍过去，拍一下，听一下声音。拍到第三十几袋，她的手停了。那袋提起来抖开，捏出一团湿块。“潮了。”她说，抬眼看你，“运费是你谈下来的，这几袋潮的账也归你。”她把账本翻到空页，笔尖点着那几袋的数：“你打算怎么算？”"
+
+[[tracks.chapters.choices]]
+key = "full_price"
+text = "潮的那几袋照好盐的价算，路上的事归船长。"
+next = "settle"
+reply = "她挑出四袋潮盐放在一边，账本上的数照原样写了，一个字也没改，连墨都没重蘸。“船长认账，我也认。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "marion", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "discount"
+text = "潮的那几袋，让一半的价。"
+next = "settle"
+reply = "她马上答应了，答应得太快，你这才知道她早就算好了这一步。“让一半，下回的盐别再压我的价。”"
+effects = [{ kind = "cash", value = 450 }, { kind = "affinity", person = "marion", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "dry_them"
+text = "叫水手把潮盐摊开晒一天，干了再算。"
+next = "settle"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "太阳很好，潮盐干透了。玛丽昂在滩上站了一下午，看着你的水手翻袋子，最后说：“你的人比我的会晒。”"
+news = "圣约翰斯的晒鱼滩上，一船潮盐摊开晒了一天，干透了才收进仓，女老板站在滩边看了一下午。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "marion", value = 5 }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 450 }], news ="圣约翰斯的晒鱼滩上那天下了一下午雨，潮盐没干透，结账时还是让了一截。" }
+
+# 三、明年的日子：一个月后，鳕鱼腌好了，结账的时候她问你明年还来不来。
+[[tracks.chapters]]
+key = "settle"
+title = "明年的日子"
+text = "一个月后，滩上的鳕鱼腌好了，一排排摊在木架上晒，风从海湾那头吹过来，腥得很。账房的门开着，墙上那块石板翻着，背面朝外，正面写的今年日子擦掉了，背面那一行她没擦。玛丽昂把这一季算完，报酬推到你面前，旁边压着一张纸，写着明年开季的日子。“明年还来不来？”她问。“来，就把日子写上；不来，就别碰那张纸。”"
+speaker = "captain"
+mood = "tender"
+at = "st_johns"
+when = [{ kind = "alive", person = "marion", value = true }]
+objectives = [{ kind = "wait", days = 30 }]
+news = "圣约翰斯渔港那家布列塔尼女老板的鳕鱼今年腌得早，木架摆满了半个滩。"
+
+[[tracks.chapters.variants]]
+key = "bernat"
+when = [{ kind = "flag", flag = "c7_pair_marion_bernat_together", value = true }]
+text = "一个月后，滩上的鳕鱼腌好了，一排排摊在木架上晒。翻鱼的人里有贝尔纳特，他朝账房这边看了一眼，又低头翻鱼。账房的门开着，墙上那块石板翻着，背面朝外，正面写的今年日子擦掉了，背面那一行她没擦。玛丽昂把这一季算完，报酬推到你面前，旁边压着一张纸，写着明年开季的日子。“明年还来不来？”她问。“来，就把日子写上；不来，就别碰那张纸。”"
+
+[[tracks.chapters.choices]]
+key = "sign_next"
+text = "在纸上写上明年的日子。"
+next = "done"
+reply = "她把纸收进抽屉，锁上。“记住，涨价的事我不认。”说完她笑了一下，这是你头一回在账房里见她笑。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "marion", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_marion-settle", title = "木架上的鳕鱼" }, { kind = "flag", flag = "c13_request_marion_done" }]
+
+[[tracks.chapters.choices]]
+key = "not_sign"
+text = "收下报酬，那张纸不碰。"
+next = "done"
+reply = "她点点头，把纸折起来压进账本底下，又用手掌按了一下。“说不来的人，比说了来又不来的人好算。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "marion", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_marion_done" }]

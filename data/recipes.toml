@@ -1,0 +1,391 @@
+# 产业类型与配方。build_cost 为建设费（金币；升级费为 build_cost × 当前等级）；workers 为每级工人数；
+# wage 为工人日薪；maintenance 为每级每日维护费；manager_salary 为雇佣管理人的日薪（效率 +20%）。
+# 配方的 inputs / outputs 为 1 级产业每日的投入与产出；没有投入的采集类配方只能建在产出为当地特产的地方。
+# key 只允许追加；name 可以随意改。
+# 三级生产链：棉花→棉纱→棉布→成衣、铁矿石→生铁→铁器→火炮、蚕茧→生丝→丝绸→织锦礼服，
+# 以及航海历 1502 年追加的：棉花→棉纱→棉布→猩红呢绒（配胭脂虫与羊毛）、
+# 石英砂→玻璃→航海仪器→星辉灯、铜矿石→黄铜→航海仪器→星辉灯（配星辉晶）。
+
+[[industries]]
+key = "plantation"
+name = "种植园"
+build_cost = 30000
+workers = 20
+wage = 2
+maintenance = 30
+manager_salary = 40
+
+[[industries]]
+key = "mine"
+name = "矿场"
+build_cost = 40000
+workers = 25
+wage = 3
+maintenance = 40
+manager_salary = 50
+
+[[industries]]
+key = "workshop"
+name = "作坊"
+build_cost = 25000
+workers = 12
+wage = 3
+maintenance = 20
+manager_salary = 40
+
+[[industries]]
+key = "factory"
+name = "工场"
+build_cost = 60000
+workers = 30
+wage = 3
+maintenance = 60
+manager_salary = 80
+
+# ── 采集 ──
+[[recipes]]
+key = "grow_grain"
+name = "农庄"
+industry = "plantation"
+outputs = [{ good = "grain", qty = 60 }]
+
+[[recipes]]
+key = "grow_cotton"
+name = "棉田"
+industry = "plantation"
+outputs = [{ good = "cotton", qty = 30 }]
+
+[[recipes]]
+key = "grow_cane"
+name = "蔗田"
+industry = "plantation"
+outputs = [{ good = "sugarcane", qty = 45 }]
+
+[[recipes]]
+key = "grow_grapes"
+name = "葡萄园"
+industry = "plantation"
+outputs = [{ good = "grapes", qty = 35 }]
+
+[[recipes]]
+key = "raise_silkworms"
+name = "蚕房"
+industry = "plantation"
+outputs = [{ good = "cocoons", qty = 12 }]
+
+[[recipes]]
+key = "grow_tea"
+name = "茶园"
+industry = "plantation"
+outputs = [{ good = "tea", qty = 9 }]
+
+[[recipes]]
+key = "logging"
+name = "伐木场"
+industry = "plantation"
+outputs = [{ good = "timber", qty = 30 }]
+
+[[recipes]]
+key = "mine_iron"
+name = "铁矿"
+industry = "mine"
+outputs = [{ good = "iron_ore", qty = 45 }]
+
+[[recipes]]
+key = "mine_copper"
+name = "铜矿"
+industry = "mine"
+outputs = [{ good = "copper_ore", qty = 30 }]
+
+[[recipes]]
+key = "mine_saltpeter"
+name = "硝石矿"
+industry = "mine"
+outputs = [{ good = "saltpeter", qty = 22 }]
+
+[[recipes]]
+key = "mine_sulfur"
+name = "硫磺矿"
+industry = "mine"
+outputs = [{ good = "sulfur", qty = 22 }]
+
+# ── 棉纺链 ──
+[[recipes]]
+key = "spin_yarn"
+name = "纺纱"
+industry = "workshop"
+inputs = [{ good = "cotton", qty = 10 }]
+outputs = [{ good = "yarn", qty = 6 }]
+
+[[recipes]]
+key = "weave_cloth"
+name = "织布"
+industry = "workshop"
+inputs = [{ good = "yarn", qty = 8 }]
+outputs = [{ good = "cloth", qty = 5 }]
+
+[[recipes]]
+key = "tailor"
+name = "成衣"
+industry = "factory"
+inputs = [{ good = "cloth", qty = 6 }, { good = "indigo", qty = 2 }]
+outputs = [{ good = "garments", qty = 4 }]
+
+# ── 冶铁链 ──
+[[recipes]]
+key = "smelt_iron"
+name = "炼铁"
+industry = "factory"
+inputs = [{ good = "iron_ore", qty = 12 }]
+outputs = [{ good = "pig_iron", qty = 6 }]
+
+[[recipes]]
+key = "forge_iron"
+name = "打铁"
+industry = "workshop"
+inputs = [{ good = "pig_iron", qty = 6 }]
+outputs = [{ good = "ironware", qty = 4 }]
+
+[[recipes]]
+key = "cast_cannon"
+name = "铸炮"
+industry = "factory"
+inputs = [{ good = "ironware", qty = 6 }, { good = "copper_ore", qty = 4 }]
+outputs = [{ good = "cannon", qty = 2 }]
+
+# ── 丝绸链 ──
+[[recipes]]
+key = "reel_silk"
+name = "缫丝"
+industry = "workshop"
+inputs = [{ good = "cocoons", qty = 5 }]
+outputs = [{ good = "raw_silk", qty = 2 }]
+
+[[recipes]]
+key = "weave_silk"
+name = "织绸"
+industry = "workshop"
+inputs = [{ good = "raw_silk", qty = 3 }]
+outputs = [{ good = "silk", qty = 2 }]
+
+[[recipes]]
+key = "embroider"
+name = "刺绣锦袍"
+industry = "factory"
+inputs = [{ good = "silk", qty = 4 }, { good = "indigo", qty = 1 }]
+outputs = [{ good = "brocade", qty = 2 }]
+
+# ── 其他加工 ──
+[[recipes]]
+key = "refine_sugar"
+name = "制糖"
+industry = "workshop"
+inputs = [{ good = "sugarcane", qty = 15 }]
+outputs = [{ good = "sugar", qty = 5 }]
+
+[[recipes]]
+key = "make_candy"
+name = "蜜饯"
+industry = "workshop"
+inputs = [{ good = "sugar", qty = 6 }]
+outputs = [{ good = "candy", qty = 2 }]
+
+[[recipes]]
+key = "saw_planks"
+name = "锯木"
+industry = "workshop"
+inputs = [{ good = "timber", qty = 10 }]
+outputs = [{ good = "planks", qty = 6 }]
+
+[[recipes]]
+key = "make_furniture"
+name = "家具"
+industry = "workshop"
+inputs = [{ good = "planks", qty = 5 }, { good = "ironware", qty = 1 }]
+outputs = [{ good = "furniture", qty = 2 }]
+
+[[recipes]]
+key = "mix_gunpowder"
+name = "火药"
+industry = "factory"
+inputs = [{ good = "saltpeter", qty = 6 }, { good = "sulfur", qty = 3 }]
+outputs = [{ good = "gunpowder", qty = 3 }]
+
+[[recipes]]
+key = "make_wine"
+name = "酿酒"
+industry = "workshop"
+inputs = [{ good = "grapes", qty = 12 }]
+outputs = [{ good = "wine", qty = 5 }]
+
+# ── 航海历 1502 年追加的配方 ──
+# 采集：新大陆作物与矿产（同样只能建在产出为当地特产的地方）
+[[recipes]]
+key = "grow_maize"
+name = "玉米田"
+industry = "plantation"
+outputs = [{ good = "maize", qty = 70 }]
+
+[[recipes]]
+key = "grow_potato"
+name = "马铃薯田"
+industry = "plantation"
+outputs = [{ good = "potato", qty = 85 }]
+
+[[recipes]]
+key = "grow_coffee"
+name = "咖啡园"
+industry = "plantation"
+outputs = [{ good = "coffee", qty = 12 }]
+
+[[recipes]]
+key = "grow_flax"
+name = "亚麻田"
+industry = "plantation"
+outputs = [{ good = "flax", qty = 40 }]
+
+[[recipes]]
+key = "grow_hemp"
+name = "麻田"
+industry = "plantation"
+outputs = [{ good = "hemp", qty = 45 }]
+
+[[recipes]]
+key = "log_mahogany"
+name = "硬木林场"
+industry = "plantation"
+outputs = [{ good = "mahogany", qty = 14 }]
+
+[[recipes]]
+key = "mine_gold"
+name = "金矿"
+industry = "mine"
+outputs = [{ good = "gold_ore", qty = 7 }]
+
+[[recipes]]
+key = "mine_silver"
+name = "银矿"
+industry = "mine"
+outputs = [{ good = "silver_ore", qty = 13 }]
+
+[[recipes]]
+key = "dig_quartz"
+name = "石英砂场"
+industry = "mine"
+outputs = [{ good = "quartz_sand", qty = 110 }]
+
+[[recipes]]
+key = "dig_kaolin"
+name = "瓷土矿"
+industry = "mine"
+outputs = [{ good = "kaolin", qty = 48 }]
+
+# 殖民地作物加工
+[[recipes]]
+key = "distill_rum"
+name = "朗姆酒坊"
+industry = "workshop"
+inputs = [{ good = "sugarcane", qty = 12 }]
+outputs = [{ good = "rum", qty = 4 }]
+
+[[recipes]]
+key = "make_chocolate"
+name = "巧克力作坊"
+industry = "workshop"
+inputs = [{ good = "cocoa", qty = 6 }, { good = "sugar", qty = 2 }]
+outputs = [{ good = "chocolate", qty = 3 }]
+
+[[recipes]]
+key = "roll_cigars"
+name = "卷烟坊"
+industry = "workshop"
+inputs = [{ good = "tobacco", qty = 6 }]
+outputs = [{ good = "cigars", qty = 4 }]
+
+# 金银与珠宝
+[[recipes]]
+key = "smelt_gold"
+name = "炼金"
+industry = "factory"
+inputs = [{ good = "gold_ore", qty = 6 }]
+outputs = [{ good = "gold_ingot", qty = 2 }]
+
+[[recipes]]
+key = "smelt_silver"
+name = "炼银"
+industry = "factory"
+inputs = [{ good = "silver_ore", qty = 6 }]
+outputs = [{ good = "silver_ingot", qty = 2 }]
+
+[[recipes]]
+key = "craft_jewelry"
+name = "金匠铺"
+industry = "workshop"
+inputs = [{ good = "gold_ingot", qty = 1 }, { good = "silver_ingot", qty = 1 }, { good = "gems", qty = 2 }]
+outputs = [{ good = "jewelry", qty = 2 }]
+
+# 织物与船具
+[[recipes]]
+key = "dye_scarlet"
+name = "猩红染坊"
+industry = "factory"
+inputs = [{ good = "cloth", qty = 4 }, { good = "wool", qty = 2 }, { good = "cochineal", qty = 2 }]
+outputs = [{ good = "scarlet_cloth", qty = 3 }]
+
+[[recipes]]
+key = "weave_sailcloth"
+name = "织帆"
+industry = "workshop"
+inputs = [{ good = "flax", qty = 10 }]
+outputs = [{ good = "sailcloth", qty = 4 }]
+
+[[recipes]]
+key = "twist_rope"
+name = "制缆"
+industry = "workshop"
+inputs = [{ good = "hemp", qty = 10 }]
+outputs = [{ good = "rope", qty = 5 }]
+
+[[recipes]]
+key = "brew_medicine"
+name = "药剂坊"
+industry = "workshop"
+inputs = [{ good = "quinine", qty = 3 }, { good = "herbs", qty = 2 }]
+outputs = [{ good = "medicine", qty = 3 }]
+
+# 光学与仪器（两条新的三级链在这里汇合）
+[[recipes]]
+key = "cast_brass"
+name = "黄铜熔炉"
+industry = "factory"
+inputs = [{ good = "copper_ore", qty = 8 }]
+outputs = [{ good = "brass", qty = 3 }]
+
+[[recipes]]
+key = "blow_glass"
+name = "玻璃工坊"
+industry = "workshop"
+inputs = [{ good = "quartz_sand", qty = 12 }, { good = "timber", qty = 2 }]
+outputs = [{ good = "glass", qty = 4 }]
+
+[[recipes]]
+key = "make_instruments"
+name = "仪器作坊"
+industry = "workshop"
+inputs = [{ good = "brass", qty = 3 }, { good = "glass", qty = 3 }]
+outputs = [{ good = "instruments", qty = 2 }]
+
+[[recipes]]
+key = "make_crystal_lamp"
+name = "星辉灯工坊"
+industry = "factory"
+inputs = [{ good = "star_crystal", qty = 2 }, { good = "instruments", qty = 1 }]
+outputs = [{ good = "crystal_lamp", qty = 2 }]
+
+# 瓷器
+[[recipes]]
+key = "fire_porcelain"
+name = "瓷窑"
+industry = "workshop"
+inputs = [{ good = "kaolin", qty = 10 }, { good = "timber", qty = 2 }]
+outputs = [{ good = "porcelain", qty = 2 }]

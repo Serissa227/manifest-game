@@ -1,0 +1,145 @@
+/* H07 航线规划：世界图提示条里的航线预览、靠港后的“行程下一站”、右上角的季风历开关。
+   配色沿用航行界面的深紫底、木框与羊皮纸色字；粮水不够、风险提示用暖红。少占屏：预览只在点了目的地后出现。 */
+
+/* 提示条里有预览时改成上下排：“回到航行”在上，预览在下 */
+.nav-worldbar:has(> .route-planner) {
+  flex-direction: column;
+  align-items: stretch;
+}
+.route-planner {
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 6px 2px 2px;
+  border-top: 1px solid rgba(244, 236, 216, 0.18);
+  color: #f4ecd8;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.route-planner h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: #e8c98a;
+}
+.route-prefs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.route-pref {
+  padding: 2px 8px;
+  border: 1px solid #5c3a21;
+  background: rgba(244, 236, 216, 0.08);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.route-pref.active {
+  background: #8a5a2b;
+  border-color: #e8c98a;
+  color: #fff8e6;
+}
+.route-legs {
+  margin: 0 0 4px;
+  padding-left: 18px;
+}
+.route-leg span {
+  margin-right: 6px;
+}
+.route-leg small {
+  opacity: 0.8;
+}
+.route-total {
+  margin: 2px 0;
+  font-weight: bold;
+}
+.route-supply {
+  margin: 2px 0;
+}
+.route-short {
+  color: #ff8a70;
+  font-weight: bold;
+}
+.route-hazards {
+  margin: 4px 0;
+  padding-left: 18px;
+  color: #ffc48a;
+}
+.route-hazard-frozen {
+  color: #b9e3ff;
+}
+.route-note {
+  margin: 2px 0;
+  opacity: 0.85;
+}
+.route-warn {
+  margin: 2px 0;
+  color: #ff8a70;
+}
+.route-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* 靠港后的行程下一站：舞台上方居中的一枚小卡 */
+.route-itinerary {
+  position: absolute;
+  z-index: 6;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  max-width: calc(100vw - 32px);
+  padding: 6px 10px;
+  background: rgba(26, 20, 35, 0.82);
+  border: 2px solid #5c3a21;
+  color: #f4ecd8;
+  font-size: 13px;
+}
+/* FIX5F：下一站比粮水撑得久——红字的一句占满一行，下面是“先去补给 / 照样出发” */
+.route-itinerary-short {
+  flex: 1 1 100%;
+  color: #ff8a70;
+  font-weight: bold;
+}
+
+/* 季风历：右上角缩放按钮下面 */
+.route-monsoon {
+  position: absolute;
+  z-index: 3;
+  top: 132px;
+  right: calc(var(--stage-cover-right, 0px) + 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: calc(100vw - 32px);
+  color: #f4ecd8;
+  font-size: 13px;
+}
+.route-monsoon .chart-btn.active {
+  border-color: #e8c98a;
+  background: #8a5a2b;
+}
+.route-monsoon-month {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 6px;
+  background: rgba(26, 20, 35, 0.78);
+  border: 2px solid #5c3a21;
+}
+.route-monsoon-month strong {
+  min-width: 3.2em;
+  text-align: center;
+}
+.route-monsoon .route-note {
+  padding: 2px 6px;
+  background: rgba(26, 20, 35, 0.78);
+}

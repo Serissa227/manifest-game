@@ -1,0 +1,210 @@
+# 请托：卑尔根的四十袋（request_hinrik_korn）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：欣里克·科恩（hinrik_korn，1540-11-04 生，男），吕贝克粮栈的学徒，拿指节敲桶板听满空；cast 在 cast/classmates_custom_lubeck_accounts.toml。
+# 类型：送货（deliver）。四章：offer（报价）、deliver（卑尔根交货）、settle（收单，全数）、settle_short（收单短了几袋）。终点 done / failed。
+#   结构说明：短袋原本设想为 settle 的变体，但变体只能改文字，改不了现金与终局旗标，所以短袋做成独立的 settle_short 章，由 let_go 与交货的检定失败分支 next 过去。
+# 报价：T（当面，auto=false）。玩家在吕贝克港问请托（ask:request_hinrik_korn）启动；offer 章不写 at，objectives 为 person hinrik_korn。
+# 窗口：以 when 的 date 条件表达（普通章不写 window）。offer 1568-01-01 至 1590-06-30，deadline 为窗口止日，timeout 直接 failed，不写见闻。
+#       deliver 1568-01-01 至 1590-12-31，进入后 120 天期限；超时走 failed，附一封来信、好感 -3、旗标 _late。settle 与 settle_short 是普通章，没有 default，可以一直等。
+# 地点：offer 在吕贝克粮栈（人物当面）；deliver 在卑尔根（bergen）的汉萨商站；settle 与 settle_short 回到吕贝克粮栈（at=lubeck，见闻才有人能听到）。
+# 依据·史实背景：卑尔根的德意志商站（布吕根的汉萨木头商站）靠波罗的海与北德的粮换挪威鳕鱼干；北方七年战争（1563—1570，丹麦与吕贝克对瑞典）期间波罗的海有私掠船。掌秤人是叙事人物，不进 cast，正文不写名字。
+# 依据·原创：欣里克、他的数单（每十袋画一个方框）、父亲留下的印章戒指、掌秤人库房门边那三袋“受了潮”的谷物。
+# 依赖：港口 lubeck、bergen（ports_north.toml）；货物 grain；物品 hanse_signet（items/items_accessory_01.toml）；人物 hinrik_korn。无需 B10b 改名。主线门禁：无。
+# C7：不写格蕾塔、不写哥得兰的风暴。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：bond hinrik_korn 至少 C（offer 的 variant，只改开场的一句）；交货章的 variant 只读日期。
+# 设的旗标：c13_request_hinrik_korn_accepted（offer 接下，两条接法）、_declined（offer 回绝，终局）、_short（let_go，或交货检定失败，分支旗标，settle_short 章用）、_late（超时，终局）、_done（settle 终局）、_partial（settle_short 终局）。
+# 报酬：现金最多 1250（全数收单）+ 货款 600；短袋时工钱 700 + 货款 600、戒指不给；好感最多 +13；名声 +1（只有全数收单给）；唯一奖励 hanse_signet（只完整结局给一次）；回忆 mem-request_hinrik_korn-settle。
+#   货款按 brief 放在收单章结算；decisions §二 的“交货章另付”未采用，由整合时决定。
+# 秘密：他想当船长，可一上船就晕，每回都躲到舱底吐完。offer 章由他自己笑着说“我一上船就吐”，当笑话讲；此后各章不再拿来取笑；见闻一律不写。
+# 口头禅：“桶可以空，数不能空。”只在 deliver 章，由玩家想起他敲桶时说过的这句。
+# 回忆插画清单：
+#   mem-request_hinrik_korn-settle「桌上的收单与戒指」：粮栈的木桌上铺着卑尔根的收单，每十袋一个方框，框里画满了勾；收单旁边放着一枚旧印章戒指，窗外是吕贝克的屋顶与晾着的麻袋。
+
+[[tracks]]
+key = "request_hinrik_korn"
+name = "卑尔根的四十袋"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["hinrik_korn"]
+
+# 一、晕船的押运人：吕贝克粮栈，他拿指节敲着粮袋走过来。
+[[tracks.chapters]]
+key = "offer"
+title = "晕船的押运人"
+text = "欣里克拿指节敲着粮袋一路走过来，敲完一袋，才抬头看你。“我该押一船粮去卑尔根的商站。”他说，“可我一上船就吐，从特拉沃河口吐到斯卡恩，账本都吐湿了。”他自己先笑出了声，又敲了敲袋口。袋口的麻绳上挂着一块木牌，刻着粮栈的记号。“四十袋谷物，你替我运过去，账我在岸上记。卑尔根的掌秤人去年少算过吕贝克三袋，到港的数，一个也不能少。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "hinrik_korn", text = "在吕贝克的粮栈找到他" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "hinrik_korn", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "hinrik_korn", level = "C" }]
+text = "欣里克拿指节敲着粮袋走过来，敲到你胸口，敲了一下。“满的，好。”他说，还是老样子，先敲一敲再说。“我该押一船粮去卑尔根的商站，可我一上船就吐，从特拉沃河口吐到斯卡恩，账本都吐湿了。”他自己先笑出了声。袋口的麻绳上挂着一块木牌，刻着粮栈的记号。“四十袋谷物，你替我运过去，账我在岸上记。卑尔根的掌秤人去年少算过吕贝克三袋，到港的数，一个也不能少。”"
+
+[[tracks.chapters.choices]]
+key = "take_grain"
+text = "接下，四十袋谷物运到卑尔根的商站。"
+next = "deliver"
+reply = "他把一张数单折好塞进我的袖口，单子上每十袋画一个方框，框里都空着。“到了那边照着画，一格对一格。”"
+effects = [
+  { kind = "affinity", person = "hinrik_korn", value = 2 },
+  { kind = "flag", flag = "c13_request_hinrik_korn_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "tease"
+text = "接下，笑他：一个晕船的人，怎么在粮栈里管海上的账？"
+next = "deliver"
+reply = "“晕船的人最懂海上会丢什么。”他敲了敲你的肩膀，又去敲粮袋，一袋敲一下，敲到第三袋，才笑着说：“这两样都是满的。”"
+effects = [
+  { kind = "affinity", person = "hinrik_korn", value = 3 },
+  { kind = "flag", flag = "c13_request_hinrik_korn_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "卑尔根太远，这一趟我不顺路。"
+next = "failed"
+reply = "他耸耸肩，说那他就带一桶醋上船，听说闻醋能好一点。“你不去也行，”他把数单又折了一道，“我自己去吐。”"
+effects = [{ kind = "flag", flag = "c13_request_hinrik_korn_declined" }]
+
+# 二、掌秤人的三袋：卑尔根布吕根的木头商站，掌秤人当众过秤。
+[[tracks.chapters]]
+key = "deliver"
+title = "掌秤人的三袋"
+text = "布吕根的木头商站一排排挤在码头边，屋里一股鳕鱼干的咸味。掌秤人一袋一袋过秤，过完了说只有三十七袋，另外三袋“受了潮，不算数”。你记着欣里克敲着桶说的那句：“桶可以空，数不能空。”还有他在粮栈里提的那几袋。往库房门口一望，那三袋好好的，干干净净码在掌秤人自己的门边。"
+speaker = "captain"
+mood = "tense"
+at = "bergen"
+objectives = [{ kind = "goods", good = "grain", qty = 40, at = "bergen", text = "四十袋谷物运到卑尔根的商站" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "hinrik_korn", value = true },
+]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "hinrik_korn", value = -3 }, { kind = "flag", flag = "c13_request_hinrik_korn_late" }, { kind = "letter", person = "hinrik_korn", text = "我自己押了一船去，吐了一路，粮到了，人瘦了一圈。你手上那四十袋是你自己的货，哪个港口都能出手，不必还我。数单我收回来了。——欣里克" }] }
+news = "卑尔根的汉萨商站里，吕贝克来的四十袋谷物被人一框一框当众对了一回数，围观的伙计站了一排。"
+
+[[tracks.chapters.variants]]
+key = "v1_war_early"
+when = [{ kind = "date", from = [1568, 1, 1], to = [1570, 12, 13] }]
+text = "布吕根的木头商站一排排挤在码头边，屋里一股鳕鱼干的咸味。出卡特加特的时候，远远见过一条挂瑞典旗的船，跟了半天又走了。掌秤人一袋一袋过秤，过完了说只有三十七袋，另外三袋“受了潮，不算数”。你记着欣里克敲着桶说的那句：“桶可以空，数不能空。”还有他在粮栈里提的那几袋。往库房门口一望，那三袋好好的，干干净净码在掌秤人自己的门边。"
+
+[[tracks.chapters.choices]]
+key = "tally"
+text = "拿出欣里克的数单，一框一框跟他当众对。"
+next = "settle"
+reply = "你把数单摊开，一框一框跟他对。对到第四框，旁边几个商站的伙计都围过来看，掌秤人的脸色变了。"
+check = { attr = "stewardship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "hinrik_korn", value = 3 }]
+fail = { next = "settle_short", news = "卑尔根的码头上有人说，吕贝克来的一船粮，掌秤人认了两袋，另一袋咬定受了潮。", effects = [{ kind = "affinity", person = "hinrik_korn", value = -2 }, { kind = "flag", flag = "c13_request_hinrik_korn_short" }] }
+
+[[tracks.chapters.choices]]
+key = "open_sacks"
+text = "当场把那三袋解开，请他伸手摸一摸潮在哪里。"
+next = "settle"
+reply = "你伸手去解第一袋的绳子，绳结被海风吹硬了，解了两回才松。掌秤人的伙计往门口一站，没说话。"
+check = { attr = "arms", base = 35, per = 6 }
+effects = [{ kind = "affinity", person = "hinrik_korn", value = 3 }]
+fail = { next = "settle_short", news = "卑尔根的木头商站里传开了：吕贝克来的粮，伙计挡住了门，只认了一袋受潮的。", effects = [{ kind = "affinity", person = "hinrik_korn", value = -2 }, { kind = "flag", flag = "c13_request_hinrik_korn_short" }] }
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "不跟他争，在收单上写明“掌秤人称三袋受潮”，请他签字。"
+next = "settle_short"
+reply = "他犹豫了一下，还是签了，签得很轻，像怕把纸划破。那三袋算不算数，要吕贝克的人自己回去争。"
+effects = [
+  { kind = "affinity", person = "hinrik_korn", value = 2 },
+  { kind = "flag", flag = "c13_request_hinrik_korn_short" },
+]
+
+# 三、收单：粮栈的桌上，全数的收单，戒指拿了出来。
+[[tracks.chapters]]
+key = "settle"
+title = "收单"
+text = "卑尔根的收单铺在粮栈的桌上，四十袋，一袋不少。欣里克一框一框敲过去，敲到最后一框，笑了。“满的。”他说。算盘珠子在他手里一颗一颗拨过去，货款和工钱都算给你，又从抽屉里拿出一枚旧印章戒指，说是他父亲押船时戴的，汉萨的商人认这个印。“戴它的人得在船上。”他把戒指放回桌上，“我这辈子大概戴不上了，在船上我只会吐。”"
+news = "吕贝克的粮栈里，学徒欣里克把卑尔根的收单钉在墙上，每个方框都敲过了，说一袋不少。"
+speaker = "captain"
+mood = "cheerful"
+at = "lubeck"
+objectives = [{ kind = "person", person = "hinrik_korn", text = "回到吕贝克的粮栈去找他" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "hinrik_korn", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "take_ring"
+text = "收下戒指，答应戴着它去下一个汉萨的港口。"
+next = "done"
+reply = "他把戒指放进我手心，敲了一下桌角，说：“这下有人替我戴了。”他把收单卷好塞进我的包里，嘱咐路上别让它吐湿了。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "cash", value = 600 },
+  { kind = "item", item = "hanse_signet", qty = 1 },
+  { kind = "affinity", person = "hinrik_korn", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_hinrik_korn-settle", title = "桌上的收单与戒指" },
+  { kind = "flag", flag = "c13_request_hinrik_korn_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "refuse_ring"
+text = "劝他留着：等哪天他不吐了，自己戴。"
+next = "done"
+reply = "“那得等到下辈子。”他笑着把戒指塞回抽屉，又拿出来，硬塞给我，说放在抽屉里才是浪费。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "cash", value = 600 },
+  { kind = "item", item = "hanse_signet", qty = 1 },
+  { kind = "affinity", person = "hinrik_korn", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_hinrik_korn-settle", title = "桌上的收单与戒指" },
+  { kind = "flag", flag = "c13_request_hinrik_korn_done" },
+]
+
+# 三之二、短了几袋的收单：有几袋没有算进去。戒指不给，工钱只付一截，货款照付。
+[[tracks.chapters]]
+key = "settle_short"
+title = "短了几袋的收单"
+text = "卑尔根的收单铺在粮栈的桌上，欣里克的指节敲着单子，敲到一半停住了。“短的那几袋，”他说，“记在这张单子上。”算盘拨到工钱那一档，他拨慢了些，拨完又拨回去一颗。货款他照样付清，工钱却比算好的少了一截，他自己也不提。抽屉里那枚印章戒指他拿出来看了看，又放了回去。他说：“等你哪天替我把那几袋讨回来，我再给。”"
+news = "吕贝克的粮栈里，卑尔根收单上短了几袋，学徒欣里克照样付清了货款，只是工钱压了一截。"
+speaker = "captain"
+mood = "tense"
+at = "lubeck"
+objectives = [{ kind = "person", person = "hinrik_korn", text = "回到吕贝克的粮栈去找他" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "hinrik_korn", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "take_short"
+text = "收下这笔工钱，那几袋的账我替你记着。"
+next = "done"
+reply = "他把一张空白的收单也塞给你，说讨回来的数就写在这张上。他敲了敲你的手背，没有说满的。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "hinrik_korn", value = 5 },
+  { kind = "flag", flag = "c13_request_hinrik_korn_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "leave_short"
+text = "那几袋算了，工钱收下就走。"
+next = "done"
+reply = "他点点头，在账上画了一道线，把那几袋划在线外。“算了，账也就清了。”他说完，又敲了敲桌子，像是要敲掉什么。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "hinrik_korn", value = 1 },
+  { kind = "flag", flag = "c13_request_hinrik_korn_partial" },
+]

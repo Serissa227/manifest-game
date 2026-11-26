@@ -1,0 +1,133 @@
+# C13d 请托：舟山外的余寇（request_gu_zhao）。中文，Claude 写。
+# 人物：顾昭 gu_zhao（1530-06-02 生，男；俞家军麾下的把总，按日程 1557 年起驻台州营，cast/story_eastasia.toml）。
+# 类型：打一仗（ft）；3 章，offer → battle → after；没有 stage 章。
+# 报价：到访（V），报价港宁波（ningbo）。人物从台州营下来调船，auto=true；offer 章写 at=ningbo，人物在正文里说话。
+# 窗口：报价 1562-01-01 至 1565-12-31（offer 的期限，超时走 failed，不写见闻）；打仗的期限是进入 battle 章起 90 天，到期来信；结账到 1566-06-30。
+# 依据：1561—63 年台州、平海卫一带的战事之后，浙闽沿海仍有倭寇的余党出没（史实背景，只作远景）；舟山、沈家门、俞家军的哨船与设伏是史实地名与建制；
+#       顾昭、那三条船、渔民、战报上的字句与这一仗的经过是原创。正文不点名任何真实将领。
+# 解法：offer 有三条路——跟他出海打（无检定）、绕到岛后露帆把倭船赶进伏里（seamanship 难检定，失败也开打，走 battle 的变体）、回绝；
+#       battle 章救人是 seamanship 一般检定，失败降级继续（人救上来了，只是慢）。打仗本身由目标 battle 1 计数，不认对手是谁。
+# 读的旗标（只读，不设）：无。C7 的顾昭×弥七、顾昭×源六（1556—61）在本轨道之前，本轨道不写弥七、源六、王直与招抚。
+# 设的旗标：c13_request_gu_zhao_accepted（接下，含赶不进伏而开打）、declined（回绝）、done（结账，唯一的终局旗标）、late（battle 超时）；
+#       分支旗标三面：ambush（把倭船赶进了伏里，after 变体 v1 读）、spooked（赶的时候被看穿，battle 变体 v1 读）、rescued（救起了渔民，after 变体 v2 读）。
+# 秘密：cast 里的秘密（同营的兵拿渔民人头冒功、他没告发）不进入本请托的任何一章；战报只写船与人，不写首级，不写请功。
+# 口头禅：全轨道只用一次，“印信是真的，人也得活着回来”，放在 after 章签字的回应里（最要紧的地方）；招呼语“站住，腰牌”不用。
+# 依赖：港口 ningbo 已有；人物与日程在 cast/story_eastasia.toml；offer 的名声门槛按 decisions 的 V 模式应为 20，brief 没写，这里按 brief 不加。
+# 回忆插画：mem-request_gu_zhao-after，营房的油灯下，一张写得很慢的战报，末行墨迹未干，旁边压着一枚没盖的印。
+
+[[tracks]]
+key = "request_gu_zhao"
+name = "舟山外的余寇"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["gu_zhao"]
+
+# 一、写过的话不收回：1562 年起，顾昭从台州营下来，在宁波栈桥上等船。
+[[tracks.chapters]]
+key = "offer"
+title = "写过的话不收回"
+text = "宁波的栈桥尽头，顾昭手里捏着一封台州营的公文，边角叫海风吹得发卷。他认得你的船，没寒暄，直接把公文递过来：舟山外头还有三条倭船，专等渔船回港的潮口下手，这个月劫了四条。“能出海的哨船就两条，追不上。”他说话像下军令，“兄台，要么你的船跟顾某出去打一仗。要么绕到岛后头露帆，把它们往沈家门赶，俞家军在那边设了伏。信里我对渔户写过话，今年让他们安生出海。写过的，我不收回。”"
+speaker = "gu_zhao"
+mood = "tense"
+at = "ningbo"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1565, 12, 31] }, { kind = "age", ge = 17 }]
+deadline = [1565, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "跟他出海，把那三条船打回去。"
+next = "battle"
+reply = "他把公文折起来塞进胸口。“你的船在外，顾某的哨船在里，别让它们三条并到一处。”说完转身就走，腰牌在腰带上撞得当当响。"
+effects = [{ kind = "affinity", person = "gu_zhao", value = 2 }, { kind = "flag", flag = "c13_request_gu_zhao_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "drive"
+text = "不硬打：绕到岛后露帆，把它们赶进伏里。"
+next = "after"
+reply = "你绕到岛后头，故意把帆升到一半又降下去，三条倭船以为撞见了一条落单的商船，追了一程，忽然发觉背后有哨船，慌着往沈家门逃，一头钻进了伏里。顾昭站在哨船上看完全程，只说了一句：“这一仗，省了半个营的人。”"
+check = { attr = "seamanship", base = 5, per = 8 }
+effects = [{ kind = "affinity", person = "gu_zhao", value = 3 }, { kind = "flag", flag = "c13_request_gu_zhao_accepted" }, { kind = "flag", flag = "c13_request_gu_zhao_ambush" }]
+fail = { next = "battle", effects = [{ kind = "affinity", person = "gu_zhao", value = -2 }, { kind = "flag", flag = "c13_request_gu_zhao_accepted" }, { kind = "flag", flag = "c13_request_gu_zhao_spooked" }] }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "官军的仗，你的船不打。"
+next = "failed"
+reply = "他点点头，没劝。“那顾某自己去。信里写的话，还是算数。”他把公文重新卷紧，沿着栈桥往哨船走，公文夹在胳膊底下。"
+effects = [{ kind = "flag", flag = "c13_request_gu_zhao_declined" }]
+
+# 二、雾里的渔船：打赢一仗以后，雾里漂着一条被劫的渔船。
+[[tracks.chapters]]
+key = "battle"
+title = "雾里的渔船"
+text = "舟山外头起了雾，倭船贴着岛脚走，桅尖时有时无。你打退的那条挂着破帆往东逃，另两条跟着散进了雾里。炮声停下以后，水面上漂着一条渔船，船头画的那只眼睛被刀劈掉了半边，网还拖在水里。船上有两个人，一个趴在舵上，一个抱着桅杆根，谁也没出声。北边传来哨船的号角，还远。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "gu_zhao", value = true }, { kind = "date", from = [1562, 1, 1], to = [1566, 6, 30] }]
+objectives = [{ kind = "battle", wins = 1, text = "在舟山外海打赢一仗" }]
+deadline_days = 90
+news = "舟山外头的雾里，一条外乡船跟台州营的哨船一起，把劫渔船的倭船打散了。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "gu_zhao", value = -3 }, { kind = "letter", person = "gu_zhao", text = "三条倭船入秋就散了，又劫了两条渔船。顾某答应渔户的话，今年没做到。" }, { kind = "flag", flag = "c13_request_gu_zhao_late" }]
+
+[[tracks.chapters.variants]]
+key = "v1_spooked"
+when = [{ kind = "flag", flag = "c13_request_gu_zhao_spooked" }]
+text = "你的帆升到一半，三条倭船就看穿了，调头压过来，没一条往沈家门去。一场硬仗打下来，舟山外头起了雾，倭船贴着岛脚走，桅尖时有时无。你打退的那条挂着破帆往东逃，另两条跟着散进了雾里。水面上漂着一条渔船，船头画的那只眼睛被刀劈掉了半边，网还拖在水里，船上有两个人，一个趴在舵上，一个抱着桅杆根，谁也没出声。"
+
+[[tracks.chapters.choices]]
+key = "rescue"
+text = "先靠上渔船，把那两个人救起来。"
+next = "after"
+reply = "两个渔民被拉上船，一个攥着你的手不放，手指上全是网绳勒出的口子。顾昭的哨船赶到，船还没靠稳，他先问：“几个人？”听说两个都在，才问：“倭船往哪边去了？”"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "gu_zhao", value = 5 }, { kind = "flag", flag = "c13_request_gu_zhao_rescued" }]
+fail = { next = "after", effects = [{ kind = "affinity", person = "gu_zhao", value = 3 }, { kind = "flag", flag = "c13_request_gu_zhao_rescued" }] }
+
+[[tracks.chapters.choices]]
+key = "pursue"
+text = "渔船有哨船来救，你去追那条逃的倭船。"
+next = "after"
+reply = "你追出去十几里，那条船钻进雾里，再没露头。回来时顾昭的哨船已经靠在渔船边，两个渔民裹着他的外衣，被扶上了甲板。他看你一眼，没提追的事，只点了点头。"
+effects = [{ kind = "affinity", person = "gu_zhao", value = 2 }]
+
+# 三、写你看见的：回到宁波，营房里的战报。
+[[tracks.chapters]]
+key = "after"
+title = "写你看见的"
+text = "宁波的营房里点着一盏油灯，顾昭坐在案前写战报，一个字一个字地落，写岔了就把整页重抄。写完他把纸推过来。上头有你追出去的那一段：“追敌十余里，雾失。”他没把“失”字改成别的。底下是：“倭船三，击退一，散二。哨船救渔民二。”“写你看见的。”他说，“顾某写的，你要是觉得不对，就别签。”"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+when = [{ kind = "alive", person = "gu_zhao", value = true }, { kind = "date", from = [1562, 1, 1], to = [1566, 6, 30] }]
+news = "宁波的营房里，台州营的顾把总熬了半夜写战报，一个字一个字地写，写完先给外乡船长看。"
+
+[[tracks.chapters.variants]]
+key = "v1_ambush"
+when = [{ kind = "flag", flag = "c13_request_gu_zhao_ambush" }]
+text = "宁波的营房里点着一盏油灯，顾昭坐在案前写战报，一个字一个字地落，写岔了就把整页重抄。写完他把纸推过来。上头是：“倭船三，诱入伏中。沈家门海面，当日无渔船被劫。”他指着前四个字：“这四个字，顾某是替你写的。想了一夜，总不能写外乡船绕了个圈。写你看见的，你要是觉得不对，就别签。”"
+
+[[tracks.chapters.variants]]
+key = "v2_rescued"
+when = [{ kind = "flag", flag = "c13_request_gu_zhao_rescued" }]
+text = "宁波的营房里点着一盏油灯，顾昭坐在案前写战报，一个字一个字地落，写岔了就把整页重抄。写完他把纸推过来。上头是：“倭船三，击退一，散二。救渔民二。”渔民的名字他问了两遍才写，一个姓陈，一个只有小名阿满，这几个字压得比别处都重。“写你看见的。”他说，“顾某写的，你要是觉得不对，就别签。”"
+
+[[tracks.chapters.choices]]
+key = "sign"
+text = "看完，照实签上名字。"
+next = "done"
+reply = "他把战报封进信封，滴上蜡，按下印。“印信是真的，人也得活着回来。”这话他说得很慢，像是念给那点蜡听的。你的名字在最后一行，墨还没干，他对着吹了两下，才收进怀里。“你签的，往后别收回。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "gu_zhao", value = 8 }, { kind = "fame", value = 2 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "flag", flag = "c13_request_gu_zhao_done" }, { kind = "memory", memory = "mem-request_gu_zhao-after", title = "一个字一个字的战报" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_sign"
+text = "你不签官府的文书，钱照收就行。"
+next = "done"
+reply = "他点点头，没劝，提笔在战报末尾添了一行：“协同者，海商一名，不具名。”钱袋从案上推过来，压在那行字的旁边，等墨干。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "gu_zhao", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_gu_zhao_done" }]

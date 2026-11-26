@@ -1,0 +1,228 @@
+# C13d 请托：白海的岬角（request_abraham_ortelius）。中文，Claude 写。
+# 人物：亚伯拉罕·奥特柳斯 abraham_ortelius（1527-01-01 生，男；安特卫普的地图上色匠与地图商，势力 netherlands，身份档 2）。
+#       cast 在 cast/historical_01_europe.toml，日程 1553—1590 在安特卫普（trading_house）。
+# 类型：混合（mx）；6 章：offer → desk → voyage → proof →（挑出错）settle / （没挑出）settle_b。没有 stage 章，因此没有 window 与 default。
+# 结局分两章而不用 requires 旗标：旗标门禁的选项在无法满足时，分支检查会报错（准备动作里没有设旗标的办法），所以 done 与 partial 各走自己的收尾章。
+# 报价：当面（T）。auto=false，玩家“问请托”（ask:request_abraham_ortelius）启动；offer 章不写 at，目标是在他的工作间找到他。
+# 规划窗口（不进 TOML）：报价 1568-01-01 至 1569-09-30，逾期走 failed；案头约 1568—1569；白海 1568-05 至 1570-03，期限 240 天；校样 1569-06-01 之后；收尾 1570-05-20 之后。
+# 依据：
+#   史实——1555 年莫斯科公司成立，圣尼古拉锚地启用，英格兰商站设在那里；1570 年 5 月《寰宇概观》在安特卫普出版；奥特柳斯的工作间、圣路加行会、妹妹安娜替地图上色，都是他这一生的事。
+#   原创——请托本身、三种说法对不上的白海岬角、修士与商人的口供、校样上那一处错、英格兰商站的名册。白海岬角的具体地名对应只写“各自的叫法”（待核）。
+# 不碰：C7 的彼得与爱尔兰（pair 艾希林×彼得）；不说谁的稿进了图集；冰上的事；cast 里写的那个团体。忧郁只作 desk 章的一句闲笔。
+# 读的旗标（只读）：c13_main_lieve（offer 章 variants，主角学生时代在上色坊帮过忙；由主线设）。
+# 设的旗标（全部为 c13_request_abraham_ortelius_<事件>）：accepted / declined（offer）；matched（desk）；signed / english（voyage）；late（voyage 超时）；spotted（proof）；done / partial（settle）。
+# 依赖：B10b 日程与港口 antwerp、st_nicholas；奖励物 ortelius_antwerp（items/books_03_geography_02.toml）；案头 requires 的 carta_marina_venice（items/books_09_natural_history.toml，只查持有、不扣）；技能 lang_german、cartography；检定属性 eloquence、numeracy。
+# 回忆插画：mem-request_abraham_ortelius-settle，工作间里一捆捆刚装订的新书，安娜在窗下给北方那一页上色，桌上摊着校样。
+
+[[tracks]]
+key = "request_abraham_ortelius"
+name = "白海的岬角"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["abraham_ortelius"]
+
+# 一、北边那串问号：1568—1569 年，工作间里，他把白海的事摊给你。
+[[tracks.chapters]]
+key = "offer"
+title = "北边那串问号"
+text = "奥特柳斯的工作间在安特卫普圣路加行会附近的一条窄巷里，窗子朝南，光很好。妹妹安娜坐在窗下，给一张地图的海岸线上色，笔尖蘸得很轻。他自己在另一张大图的北边画了一串问号，问号一直拖到纸边。“你来得正好。上个月市政厅的晚宴上，一位伦敦来的大人还问我，白海那边到底有没有岬角。”他把笔搁回砚台上，“英格兰人、尼德兰人、俄国人叫的都不一样。没有名字的岬角，我画了也是瞎画。”他想先跟你对一对案头的几张旧图，再请你去一趟圣尼古拉锚地。"
+mood = "cheerful"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1568, 1, 1], to = [1569, 9, 30] }, { kind = "alive", person = "abraham_ortelius", value = true }]
+objectives = [{ kind = "person", person = "abraham_ortelius", text = "在他的工作间找到他" }]
+deadline = [1569, 9, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "lieve"
+when = [{ kind = "flag", flag = "c13_main_lieve" }]
+text = "奥特柳斯的工作间在安特卫普圣路加行会附近的一条窄巷里。妹妹安娜坐在窗下，给一张地图的海岸线上色。他一见你就笑：“你学生时代来上色坊帮过忙，那会儿你的手就比颜料稳。”说着他在另一张大图的北边画了一串问号，问号拖到了纸边。“白海那一带，英格兰人、尼德兰人、俄国人叫的都不一样。”他想先跟你对一对案头的几张旧图，再请你去一趟圣尼古拉锚地。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，先去看看那几张旧图。"
+next = "desk"
+reply = "他把北方那几张旧图从柜子里抱出来，一张张摊在桌上。“先看海岸的弯，地名放一放。”他说着，把安娜的颜料盒推到了一边。"
+effects = [{ kind = "affinity", person = "abraham_ortelius", value = 2 }, { kind = "flag", flag = "c13_request_abraham_ortelius_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "白海太远，这活我接不了。"
+next = "failed"
+reply = "他笑着说那就等下一个去莫斯科的人。他把问号那张图卷起来，卷得很慢，“英格兰人的船还在往北开，总有人替我问到。”"
+effects = [{ kind = "flag", flag = "c13_request_abraham_ortelius_declined" }]
+
+# 二、几张打架的旧图：案头，三个名字对一对。
+[[tracks.chapters]]
+key = "desk"
+title = "几张打架的旧图"
+text = "几张北方的旧图摊满了桌子。有拉丁文的，有德意志字的，还有一张是手绘的，海岸边抄着几行看不懂的西里尔字母。岬角的名字在图上互相打架：这张叫它一个名字，那张把它挪到了河对岸。奥特柳斯端着杯温啤酒来回踱步。“一个一个对。对不上的空着，别替它瞎编；每个名字都要注明是谁说的。”他前几天没出门，安娜悄悄跟你说，他又犯了那阵子的忧郁，今天才肯下楼。他请你帮他把它们对齐。"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "abraham_ortelius", value = true }]
+objectives = [{ kind = "person", person = "abraham_ortelius", text = "去安特卫普找奥特柳斯" }]
+
+[[tracks.chapters.choices]]
+key = "carta"
+text = "拿出你那部奥劳斯·马格努斯的《海图》，铺在旁边对"
+next = "voyage"
+requires = [{ kind = "item", item = "carta_marina_venice", qty = 1 }]
+hint = "你手里没有那部北方的大图，这一条对不了。"
+reply = "你把《海图》铺在桌子另一头，一个岬角一个岬角地对。对到第三处，三种名字原来是同一个地方。奥特柳斯的手指在木版的鲸鱼上停了很久，才挪开。"
+effects = [{ kind = "affinity", person = "abraham_ortelius", value = 3 }, { kind = "flag", flag = "c13_request_abraham_ortelius_matched" }]
+
+[[tracks.chapters.choices]]
+key = "german"
+text = "替他念德意志图上的地名"
+next = "voyage"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_german", ge = 60, hard = true }]
+hint = "那几个德意志地名你念不出来，念错了他更难对。"
+reply = "你从最北的那张念起，念到第四个，他拍了一下桌子。“就是这个！抄手把 Kap 抄成了 Kaap，两张图都照着错的念。”"
+effects = [{ kind = "affinity", person = "abraham_ortelius", value = 3 }, { kind = "flag", flag = "c13_request_abraham_ortelius_matched" }]
+
+[[tracks.chapters.choices]]
+key = "ask_there"
+text = "说你看不懂，直接去白海问。"
+next = "voyage"
+reply = "他叹了口气，把图往你那边推了推。“看不懂就去问，问到了再回来对。问不到的，就空着。”"
+
+# 三、圣尼古拉锚地的口供：白海，三种说法，要一个肯画押的人。
+[[tracks.chapters]]
+key = "voyage"
+title = "圣尼古拉锚地的口供"
+text = "圣尼古拉锚地只有一座修道院、几排仓房，还有英格兰人的商站。木码头边堆着一排鳕鱼桶，几个水手在晒网。你拿着奥特柳斯的单子，挨个问岬角的名字：英格兰商站的通事说一个，修道院的修士说一个，从霍尔莫戈雷来的商人又说一个。三种说法都对不上。奥特柳斯要的是一个肯在记录上画押的人，不然他一个字也不敢印。"
+speaker = "captain"
+mood = "tense"
+at = "st_nicholas"
+when = [{ kind = "alive", person = "abraham_ortelius", value = true }]
+objectives = [{ kind = "at", at = "st_nicholas", text = "到圣尼古拉锚地去" }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "abraham_ortelius", value = -3 }, { kind = "flag", flag = "c13_request_abraham_ortelius_late" }, { kind = "letter", person = "abraham_ortelius", text = "白海那一页我先照旧图印了，岬角还是老样子。你要是后来问到了，寄个口信来，我另排一版。" }] }
+
+[[tracks.chapters.choices]]
+key = "witness"
+text = "请修道院的一位修士当见证人"
+next = "proof"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "proof", effects = [{ kind = "affinity", person = "abraham_ortelius", value = -2 }], news = "圣尼古拉锚地的修士只肯口述北方的岬角名字，不肯在记录上画押，说修道院不管这种账。" }
+reply = "你把单子摊在修士面前，把每个名字念给他听。他看了很久，手指按着纸角，没有立刻说话。"
+effects = [{ kind = "affinity", person = "abraham_ortelius", value = 3 }, { kind = "flag", flag = "c13_request_abraham_ortelius_signed" }]
+news = "圣尼古拉锚地的一位修士替船长在岬角名字旁画了十字，说这样记录上有人负责。"
+
+[[tracks.chapters.choices]]
+key = "gift"
+text = "送霍尔莫戈雷的商人一份礼，请他画押"
+next = "proof"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "这份礼你现在拿不出手。"
+reply = "你把礼包放在商人的账册上。他收下，把皮帽往后一推，画押前还替你改正了两个名字，说英格兰商站抄来的字，总把俄国的名字写歪。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "abraham_ortelius", value = 3 }, { kind = "flag", flag = "c13_request_abraham_ortelius_signed" }]
+news = "圣尼古拉锚地有个霍尔莫戈雷的商人收了一份礼，替一个船长改正了记录上的两个名字。"
+
+[[tracks.chapters.choices]]
+key = "english"
+text = "只抄英格兰商站的名册"
+next = "proof"
+reply = "名册是英格兰书记写的，字迹整齐，名字一个个都带着水手的绰号。你照着抄了一页，抄完才发现，没有一个名字是当地人自己叫的。"
+effects = [{ kind = "flag", flag = "c13_request_abraham_ortelius_english" }]
+news = "圣尼古拉锚地的英格兰商站，让一个船长抄了一页名册，名字都是水手起的。"
+
+# 四、挑一处错：安特卫普，校样上北方那一页，他要你挑错。
+[[tracks.chapters]]
+key = "proof"
+title = "挑一处错"
+text = "他的工作间里堆着一摞刚刷好的校样，北方那一页上，白海的岬角已经有了名字。页边空着，没有人替这些名字签过字。墨迹还没干透，纸角沾着安娜的手印，旁边压着一罐松节油。奥特柳斯把校样推到你面前：“挑一处错。”书再过几个月就要印了，他说这话时没有笑。"
+speaker = "captain"
+mood = "tense"
+at = "antwerp"
+when = [{ kind = "alive", person = "abraham_ortelius", value = true }, { kind = "date", from = [1569, 6, 1] }]
+
+[[tracks.chapters.variants]]
+key = "v1_signed"
+when = [{ kind = "flag", flag = "c13_request_abraham_ortelius_signed" }]
+text = "他的工作间里堆着一摞刚刷好的校样，北方那一页上，白海的岬角已经有了名字。页边注着见证人的名字，每个名字旁边都有一道画押。墨迹还没干透，纸角沾着安娜的手印。奥特柳斯把校样推到你面前：“挑一处错。”书再过几个月就要印了，他说这话时没有笑。"
+
+[[tracks.chapters.variants]]
+key = "v2_english"
+when = [{ kind = "flag", flag = "c13_request_abraham_ortelius_english" }]
+text = "他的工作间里堆着一摞刚刷好的校样，北方那一页上，白海的岬角已经有了名字。页边注着几行英格兰商站的名字，岬角的写法和水手们的叫法一个样。墨迹还没干透，纸角沾着安娜的手印。奥特柳斯把校样推到你面前：“挑一处错。”书再过几个月就要印了，他说这话时没有笑。"
+
+[[tracks.chapters.choices]]
+key = "spot"
+text = "照你记的名字一处处对"
+next = "settle"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你对不上校样上的经纬线，看不出哪里不对。"
+reply = "你找出一个岬角被画到了河的另一边。奥特柳斯盯着那一处看了半天，二话不说就把版改了，嘴里骂的是刻版的人。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "abraham_ortelius", value = 5 }, { kind = "flag", flag = "c13_request_abraham_ortelius_spotted" }]
+news = "安特卫普一家印书坊的校样上，白海的一个岬角被画到了河的另一边，印前被人挑了出来。"
+
+[[tracks.chapters.choices]]
+key = "scale"
+text = "量一量比例尺，算一算纬度对不对"
+next = "settle"
+check = { attr = "numeracy", base = 20, per = 7 }
+fail = { next = "settle_b", effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "abraham_ortelius", value = 2 }], news = "安特卫普的印书坊里，有个船长替北方那一页量了半天纬度，什么也没量出来，校样照旧开了印。" }
+reply = "你拿圆规和比例尺在纸上量，量到一半，纸角卷了起来。奥特柳斯接过去看了一眼，没有说话，把纸抚平。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "abraham_ortelius", value = 5 }, { kind = "flag", flag = "c13_request_abraham_ortelius_spotted" }]
+news = "安特卫普的校样上，白海的纬度差了半度，有个船长量了出来，印书坊的人被叫去对图。"
+
+[[tracks.chapters.choices]]
+key = "pass"
+text = "说你看不出错"
+next = "settle_b"
+reply = "他自己指了一处给你看，说他也是第三遍才看出来。他叹了口气，说版已经开了，只能等下一版。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "abraham_ortelius", value = 1 }]
+
+# 五、北方那一页：1570 年 5 月以后，《寰宇概观》印成了。
+[[tracks.chapters]]
+key = "settle"
+title = "北方那一页"
+text = "《寰宇概观》印出来了。工作间里堆着一捆捆刚装订的书，安娜坐在中间，给其中几部上色，一句话也不说，笔尖的水一滴一滴落在桌布上。奥特柳斯抽出一部，深绿的布面上烫着金字，书脊还有股没散尽的胶味。他翻到北方那一页，把你带回来的名字指给你看。你挑出来的那一处，已经改回了海岸上。他指甲缝里还嵌着墨，指的时候手一直没停。"
+speaker = "captain"
+mood = "tender"
+at = "antwerp"
+when = [{ kind = "alive", person = "abraham_ortelius", value = true }, { kind = "date", from = [1570, 5, 20] }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下这部书"
+next = "done"
+reply = "扉页上他写了一行字，提到了你的船。他合上书，又打开，像是怕墨还没干。"
+effects = [{ kind = "item", item = "ortelius_antwerp", qty = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_abraham_ortelius-settle", title = "北方那一页" }, { kind = "flag", flag = "c13_request_abraham_ortelius_done" }]
+news = "安特卫普新出的一部大地图集里，白海那一页的岬角有了名字，奥特柳斯说是一位船长替他对出来的。"
+
+[[tracks.chapters.choices]]
+key = "color"
+text = "请安娜把北方那一页给你上一遍色再给"
+next = "done"
+reply = "安娜上了一下午，海是蓝的，岬角是赭色的。书晚了一天到你手里。"
+effects = [{ kind = "item", item = "ortelius_antwerp", qty = 1 }, { kind = "fame", value = 3 }, { kind = "affinity", person = "abraham_ortelius", value = 2 }, { kind = "flag", flag = "c13_request_abraham_ortelius_done" }]
+news = "安特卫普的印书坊里，新书的北方那一页是安娜一笔一笔上的色，据说连海都是蓝的。"
+
+
+# 五之二、没挑出的那一处：校样没挑出错，这一版带着一处错印了出去。
+[[tracks.chapters]]
+key = "settle_b"
+title = "带着一处错的那一版"
+text = "第一版已经印完了，一捆捆刚装订的书堆在工作间的地上，安娜蹲在中间给其中几部上色。奥特柳斯抽出一部，封面还沾着胶水，翻到北方那一页，手指停在一个岬角上：那里的线画歪了，印在纸上，改不回来了。他看了一眼，把书合上，又打开看了一遍，没有再说什么。"
+speaker = "captain"
+mood = "tender"
+at = "antwerp"
+when = [{ kind = "alive", person = "abraham_ortelius", value = true }, { kind = "date", from = [1570, 5, 20] }]
+
+[[tracks.chapters.choices]]
+key = "take_partial"
+text = "收下这部书，那一页的错就先不提了。"
+next = "done"
+reply = "他把书塞进你怀里，说那一页的错就留着，等下一版再改。扉页上他还是写了一行字，把你的船也写了进去。"
+effects = [{ kind = "item", item = "ortelius_antwerp", qty = 1 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_abraham_ortelius-settle", title = "北方那一页" }, { kind = "flag", flag = "c13_request_abraham_ortelius_partial" }]
+news = "安特卫普新出的一部大地图集，北方那一页的岬角有了名字，据说印出来的字还有一处没改正。"
+
+[[tracks.chapters.choices]]
+key = "color_partial"
+text = "请安娜把北方那一页给你上一遍色再给"
+next = "done"
+reply = "安娜上了一下午。那一处歪的线她没有改，只在旁边多描了一笔，描成了一截礁石。"
+effects = [{ kind = "item", item = "ortelius_antwerp", qty = 1 }, { kind = "fame", value = 3 }, { kind = "affinity", person = "abraham_ortelius", value = 2 }, { kind = "flag", flag = "c13_request_abraham_ortelius_partial" }]

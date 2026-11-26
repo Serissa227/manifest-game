@@ -1,0 +1,469 @@
+# NPC 线：林晚灯——台湾海峡的灯（故事 2.0，A5 / E37 契约）
+#
+# 标签：C13c NPC 线（林晚灯不是玩家主角时才跑）。Claude 写（Sonnet 5.5，2026-10-25），仅中文。
+#       玩家是“你”，不写性别与外貌；她管玩家叫“客官”，熟了会改口（cast 里的称呼：客官→熟客→自己人→替我守灯的人）。
+# 人物：林晚灯（lin_wandeng，漳州月港人，天妃宫灯火的女儿）。同场的人：弥七（yashichi，王直船队的通事）、王直（wang_zhi）、
+#       林蕙（lin_hui，马尼拉八连的账房）、林凤（lin_feng，只在传闻里）。
+# 轨道：
+#   npc_lin_wandeng（脊轨，request，auto，五章见闻）：s00 林家的鸟船出港 → s01 舟山外海的纸灯 → s02 白天进港的鸟船
+#         → s03 离开吕宋的那个秋天 → s04 点到天亮的灯。
+#   npc_lin_wandeng_black   双屿的夜货（m1，s00 的 default 开启；1557-03—1562-12，双屿废港）
+#   npc_lin_wandeng_goto    替老船主看风（m1，s00 开启；1557-09—11，平户；玩家是澪时由 main_mio 负责）
+#   npc_lin_wandeng_license 一张船引的钱（m1，s02 开启；1567-03—1569-12，月港）
+#   npc_lin_wandeng_manila  吕宋的牙人（m1，s02 开启；1571-07—1575-12，马尼拉；玩家是凯奇利时由 main_kaicili 负责）
+#   npc_lin_wandeng_cannon  皮岛的最后一船（m1，s03 开启；1576-06—11，皮岛）
+#   npc_lin_wandeng_seal    一张印文的抄样（m1，s03 开启；1581—1588，月港；情谊 ≥50）
+#   npc_lin_wandeng_join    灯下的问话（m1，s03 开启；1583-10—1590-10，月港；请上船要情谊 ≥60）
+#   旁轨 auto=false，各一章，有 at、有期限，超时静默 failed（超时不写见闻，见闻都写在各选项里）。
+# 依据（史实与原创的界线）：
+#   史实：1557 年前后王直的船队在平户，受胡宗宪招抚、1559 年底被斩于杭州官巷口（本世界线写作 1560 年初传到宁波）；
+#         双屿私市 1548 年被官军烧毁，此后成废港；1567 年月港开海、设海澄县，准贩东西二洋，日本仍禁，商船要领船引；
+#         1571 年西班牙人立马尼拉城，城外华人区（八连）；1574—75 年林凤袭马尼拉、从林加延挖水道逃走；
+#         辽东战役链（本世界线整体提前约 55 年，见 TERRA16 §10.5）：皮岛、登州的粮与硫磺、察哈尔的制诰之宝印文、北京与山海关的消息。
+#   原创：林晚灯与她的鸟船、红灯笼与天妃宫的长明灯、杨桃干、双屿的宁波牙人、平户缆桩上的“没灭吧？”、
+#         海防馆的书办与后院的鬼、林蕙桌边的半两秤差、皮岛管粮的副将与他的大秤砣、墙上那张印文的描本、二哥接灯钥。
+#   待核（正文一律用传闻或人物口吻）：王直在平户的确切日子；杭州斩首的确切月份；北京消息传到月港的确切月份。
+# 秘密：①女扮男装进社学：C7（bond_zhou_yan#wandeng_unmasked）已独占，本文件不写、不暗示、不出现“林兄”。
+#       ②过洋牵星图末页的“西洋之西”：归主线（b02_last_page），本文件不写。
+# 口头禅：“不撒谎怎么活？”只属主线，本文件不用；NPC 线里用她的 greet：“放心，我从不撒谎——今天还没有”，全文件一次（npc_lin_wandeng_black 的 m1）。
+#         seal 章里“一个字没改，不撒谎”是简报给的原话，不是口头禅。
+# 闽南俗语：每章至多一句，都用普通话写出意思：钱四脚，人两脚（black）；输人不输阵（goto）；官字两个口（license）；
+#           一样米饲百样人（manila）；好天着积雨来粮（cannon）；食果子拜树头（seal）；一枝草一点露（join）。
+# 恋爱：不用 heart / relation / tie / bond 效果，不写告白与交往；招募（join）只是请一位航海士上船。历史人物只写史料里的往来。
+# 读写的共享旗标：
+#   写：c13_npc_lin_wandeng（s00 的 default）；c13_npc_lin_wandeng_mate（m1_join 的 invite）；c13_mark_seal（m1_seal 的 take_copy）。
+#   读：c12_voyage_lin_wandeng（为 false）、upbringing_graduated（s00）；c13_main_mio（为 false：goto；为 true：license 的变体 v1_mio）；
+#       c13_main_kaicili（为 false：manila）；c13_npc_lin_wandeng_mate（各交汇章 when 为 false；s03、s04 的变体）；
+#       c13_mark_seal（seal 的 when 与 take_copy，为 false）；h14_wang_zhi_return_wang_zhi_amnestied（s01 变体）；l19_beijing_shanhaiguan_frontier_stalemate（s04 变体）。
+# 等待的包：A9（门槛章加 protagonist 排除；mate 与人物 key 的对应）；C10（HIST 代码表）。
+# HIST 占位（C10 替换；未替换时变体读不到，缺省章节照史实写）：
+#   h14_wang_zhi_return_wang_zhi_amnestied（王直受了招抚、没有被斩）；l19_beijing_shanhaiguan_frontier_stalemate（关外的仗打成对峙）。
+# 已知的“读不到”：s03 的变体 mate 读 c13_npc_lin_wandeng_mate，而这面旗要 1583 年以后才可能设，1575 年的 s03 读它读不到；
+#   若整合方把 mate 换成 {kind="mate"} 条件（玩家用别的办法招了她），这条变体才有机会出现。文字照简报写好。
+# 回忆插画清单：本文件没有回忆效果。
+
+[[tracks]]
+key = "npc_lin_wandeng"
+name = "台湾海峡的灯"
+kind = "request"
+start = "s00_gate"
+auto = true
+cast = ["lin_wandeng", "lin_feng"]
+
+# 第一幕：1557 年初，门槛见闻。九龙江口的渔户在滩上说，林家只剩一条鸟船。
+[[tracks.chapters]]
+key = "s00_gate"
+title = "林家的鸟船出港"
+text = "九龙江口的渔户在滩上补网，说林老大家去年被烧了一条福船，剩下的一条鸟船交给了小女儿。那丫头嘴甜，谎也说得甜：过卡子的时候，她蹲在船头给兵丁讲鬼，讲到溺死鬼半夜拍船板，兵丁听入了迷，忘了查舱。渔户拿梭子点着江面：“那丫头讲的鬼，比兵丁见过的倭寇还多。”"
+stage = "rumor"
+window = [[1557, 1, 8], [1557, 1, 14]]
+at = "yuegang"
+cast = ["lin_wandeng"]
+mood = "tense"
+when = [{ kind = "flag", flag = "c12_voyage_lin_wandeng", value = false }, { kind = "flag", flag = "upbringing_graduated" }]
+news = "九龙江口有渔户传，林家的小女儿驾着最后一条鸟船出了港，过卡子时给兵丁讲了半天鬼故事。"
+
+[tracks.chapters.default]
+next = "s01_hangzhou_news"
+effects = [{ kind = "flag", flag = "c13_npc_lin_wandeng" }, { kind = "start_track", track = "npc_lin_wandeng_black" }, { kind = "start_track", track = "npc_lin_wandeng_goto" }]
+
+# 第一幕：1560 年初，五峰船主的消息传到宁波。缺省 = 被斩；h14_wang_zhi_return_wang_zhi_amnestied = 受封。
+[[tracks.chapters]]
+key = "s01_hangzhou_news"
+title = "舟山外海的纸灯"
+text = "宁波的船户蹲在船头补缆，说杭州官巷口斩了五峰船主的那天，舟山外海漂着一盏纸灯，是月港林家那个丫头放的。她在平户替老船主看过风，回来逢人就讲，船户学着她的腔：“那封招抚信上，一个‘开’字也没有。”有人问她放灯给谁看，她说给潮看，潮不识字，只认灯。"
+stage = "rumor"
+window = [[1560, 2, 1], [1560, 5, 31]]
+at = "ningbo"
+cast = ["lin_wandeng"]
+mood = "sad"
+news = "五峰船主的消息传到宁波那天，有人看见月港林家的女儿在舟山外海放了一盏纸灯。"
+
+[tracks.chapters.default]
+next = "s02_kaihai"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "amnesty"
+when = [{ kind = "flag", flag = "h14_wang_zhi_return_wang_zhi_amnestied" }]
+text = "宁波的船户蹲在船头补缆，说五峰船主受了封，船队挂起了朝廷的旗；月港林家那个丫头在舟山外海放了一盏纸灯，说是贺他。有人笑她贺人怎么放灯，她说旗是挂上去的，灯是漂出去的，她只怕这面旗挂不长。"
+
+# 第二幕：1567 年，月港开海。缺省没有变体；开海的账与小蛮归 C7，这里只写茶棚里的闲话。
+[[tracks.chapters]]
+key = "s02_kaihai"
+title = "白天进港的鸟船"
+text = "月港开了海。茶棚里的人说，林家那条鸟船十年来头一回大白天进了九龙江，船主先去天妃宫看她娘，又给妈祖磕了头，出来才去海防馆排队领船引。队排到一半她又走了，茶棚里的人学她的口气：“她说倭国不许，领了也白领。”卖茶的婆子把壶一放：“这丫头，有船引的时候倒不想要了。”"
+stage = "rumor"
+window = [[1567, 2, 1], [1567, 6, 30]]
+at = "yuegang"
+cast = ["lin_wandeng"]
+mood = "cheerful"
+news = "月港刚开了海，林家的鸟船大白天进了九龙江，船主先去天妃宫磕了头。"
+
+[tracks.chapters.default]
+next = "s03_leaving_luzon"
+effects = [{ kind = "start_track", track = "npc_lin_wandeng_license" }, { kind = "start_track", track = "npc_lin_wandeng_manila" }]
+
+# 第二幕：1575 年秋，林凤逃出林加延之后，月港林家的船离开吕宋。变体 mate：她已经在玩家的船上。
+[[tracks.chapters]]
+key = "s03_leaving_luzon"
+title = "离开吕宋的那个秋天"
+text = "马尼拉的唐人说，林凤从林加延挖了一条水道跑掉的那个秋天，月港林家的船也离开了吕宋，舱里装满了美洲的银子和唐人托带的家书。码头上的人问她往哪儿去，她说北边有人在招船，运粮，运炮，给钱爽快。唐人学她的腔：“北边冷倒不怕，就怕北边的灯不好点。”"
+stage = "rumor"
+window = [[1575, 8, 1], [1575, 10, 31]]
+at = "manila"
+cast = ["lin_wandeng", "lin_feng"]
+mood = "tender"
+news = "林凤从林加延跑掉那个秋天，月港林家的船也离了马尼拉，船上装满了银子和唐人的家书。"
+
+[tracks.chapters.default]
+next = "s04_north_news"
+effects = [{ kind = "start_track", track = "npc_lin_wandeng_cannon" }, { kind = "start_track", track = "npc_lin_wandeng_seal" }, { kind = "start_track", track = "npc_lin_wandeng_join" }]
+
+[[tracks.chapters.variants]]
+key = "mate"
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate" }]
+text = "马尼拉的唐人说，月港林家的那个女船主如今在别人的船上当牙人，见了老熟人还是先报价，再问好。有人托她带家书回月港，她把信收进舱里，说收信不收费，送到了再算——算完了，还是只收一碗茶。"
+
+# 第三幕：1589 年秋，北边的消息传到月港。缺省按“消息传来传去有三种说法”写；v1_mate 她在玩家的船上；v2_held 关外对峙（l19_beijing_shanhaiguan_frontier_stalemate）。
+[[tracks.chapters]]
+key = "s04_north_news"
+title = "点到天亮的灯"
+text = "北边的消息传到月港那天，天妃宫的长明灯点到了天亮，添油的是林家那个女船主。茶棚里的人说，京城出了事，山海关的门是开是关，传来传去有三种说法。她站在梯子上听完，说她运过粮、跑过炮、送过信，到头来不知道哪一样落到了哪一边。茶棚里的人说：“她说她只知道灯不能灭。”后来天亮了，灯还没添完，她提着半空的油壶下梯子，让卖早茶的先给她盛一碗。"
+stage = "rumor"
+window = [[1589, 8, 1], [1589, 11, 30]]
+at = "yuegang"
+cast = ["lin_wandeng"]
+mood = "sad"
+night = true
+news = "北边的消息传来那夜，月港天妃宫的长明灯点到了天亮，林家的人说这盏灯不能灭。"
+
+[tracks.chapters.default]
+next = "done"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "v1_mate"
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate" }]
+text = "北边的消息追到你的船上那天，林晚灯在船头点了一盏灯，点到天亮。她拿小剪子剪灯芯，一夜剪了七回。她说她运过粮、跑过炮、送过信，到头来不知道哪一样落到了哪一边，船头这盏倒是一直亮着。天快亮时她把剪子别回腰上，说月港天妃宫的灯，她娘会替她添。"
+
+[[tracks.chapters.variants]]
+key = "v2_held"
+when = [{ kind = "flag", flag = "l19_beijing_shanhaiguan_frontier_stalemate" }]
+text = "北边传来消息，关外的仗拖成了僵局，两边都在雪里扎着营，谁也不肯先撤。那天夜里，天妃宫的长明灯点到了天亮，添油的是林家那个女船主。她站在梯子上听茶棚里的人讲完，说她运过粮、跑过炮、送过信，到头来不知道哪一样落到了哪一边。茶棚里的人说：“她说她只知道灯不能灭。”"
+
+# @@SPINE_END@@
+
+# 旁轨一：双屿的夜货（npc_lin_wandeng_black）。她是同行，也可能是对手；输了只扣情谊与钱，不改她的命运。
+[[tracks]]
+key = "npc_lin_wandeng_black"
+name = "红灯与白灯"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "双屿的夜货"
+text = "舟山外的双屿，当年的私市烧成了一片废港，王直手下的散船夜里照样来歇脚。浙江的巡船隔几夜过一回，灯一亮，满港的船就熄火。林晚灯的鸟船泊在最里头，她蹲在船舷上剥杨桃干，见你的船进港，冲你招手：“客官，要什么货？摆在明面上的，还是夜里才装船的？放心，我从不撒谎——今天还没有。”今夜宁波来的牙人只带了一批生丝，竹筹攥在手心里，她要，你也要。她朝港口外抬抬下巴：“巡船的灯是白的，我的是红的。跟红的走，别跟白的。”"
+speaker = "lin_wandeng"
+mood = "cheerful"
+night = false
+at = "shuangyu"
+cast = ["lin_wandeng"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1557, 3, 1] }]
+deadline = [1562, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "follow_her"
+text = "付她一笔引路钱，跟着她的红灯躲开巡船"
+next = "done"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你的钱袋太瘪，她看了一眼就笑着摇头。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "lin_wandeng", value = 5 }]
+reply = "她提起红灯在前头走，灯在礁石之间钻来钻去，你的船跟得满头是汗。出了港她才在船舷上直起腰，说巡船今夜根本没来，引路钱照收：“钱四脚，人两脚，钱跑得比我快，我得追着收。”那批生丝她一根竹筹压下了牙人的价，转身分了你一小包杨桃干。"
+news = "双屿废港的夜里，月港林家的女儿提着红灯，领一条外来的船从礁石间绕出了港，巡船那夜根本没来。"
+
+[[tracks.chapters.choices]]
+key = "own_eyes"
+text = "不跟她，凭自己的眼力绕开巡船"
+next = "done"
+check = { attr = "intrigue", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 3 }]
+reply = "你吹熄了灯，贴着北口的暗礁溜出去，橹上缠了布，连水声都轻。白灯从港心划过去的时候，你的船正蹲在一段烧塌的梁头后面。身后传来一声口哨，又脆又长，是她在给你喝彩——虽然她嘴上从不承认。"
+news = "双屿废港的夜里，有条外来的船没跟林家女儿的红灯，自己熄火从北口溜了出去，她在后头吹了声口哨。"
+fail = { next = "done", effects = [{ kind = "cash", value = -500 }], news = "双屿废港外，一条外来的船撞进巡船的灯里，罚了银子才放行。林家的女儿第二天递来块杨桃干：“下回跟红的走。”" }
+
+[[tracks.chapters.choices]]
+key = "outbid"
+text = "跟她抢那批生丝"
+next = "done"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "lin_wandeng", value = -5 }]
+reply = "牙人看了你的价，把竹筹往你手里一塞。她不恼，把剥了一半的杨桃干抛给你，说下回双屿见，她的船会比你的先到。你们蹲在各自的船舷上，隔着一道水，把那包杨桃干分着吃完了。"
+news = "双屿废港的夜市上，月港林家的女儿跟一个外来的船主抢同一批生丝，抢输了，蹲在船舷上请对方吃杨桃干。"
+fail = { next = "done", effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "lin_wandeng", value = -3 }], news = "双屿废港的夜市上，林家的女儿给宁波牙人讲了个闹鬼的故事，丝全归了她，外来的船主还被压了一成价。" }
+
+# 旁轨二：替老船主看风（npc_lin_wandeng_goto）。玩家是澪时 main_mio 已写这一段，门槛排除。
+[[tracks]]
+key = "npc_lin_wandeng_goto"
+name = "平户的风"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng", "yashichi", "wang_zhi"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "替老船主看风"
+text = "秋天的平户，五峰船主的船队正在修帆，说是要回舟山去见胡总督。宅子的门敞着，里头传出老船主的笑声，大得像放炮。林晚灯坐在码头的缆桩上看云，腰上挂一盏小红灯笼。她说她在替老船主看风，其实是在等一个敢带话的人。弥七蹲在帆下缝线，不信纸，只信人嘴。她要你替她捎一句话给他：浙江那封信上，一个“开”字也没有——有赦，有赏，有官，海不开，赦了也没处去。“客官，你替我带一句话，我替你看一回风——两不相欠。”"
+speaker = "lin_wandeng"
+mood = "tense"
+night = false
+at = "hirado"
+cast = ["lin_wandeng", "yashichi", "wang_zhi"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1557, 9, 1] }, { kind = "flag", flag = "c13_main_mio", value = false }]
+deadline = [1557, 11, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "carry_word"
+text = "替她把话带给弥七，一个字不改"
+next = "done"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 5 }, { kind = "affinity", person = "yashichi", value = 3 }]
+reply = "弥七听你说完，没吭声，放下针线，转身进了宅子。船队还是照日子开拔了。她在缆桩上坐了一夜，第二天把灯笼举到你眼前：“没灭吧？”里头的火苗在晨光里细得几乎看不见，她说看不见也是亮着的。"
+news = "平户的码头上，月港来的提灯姑娘在缆桩上坐了一夜，说是替五峰船主看风，一个外来的船长替她带了话。"
+
+[[tracks.chapters.choices]]
+key = "tell_herself"
+text = "劝她自己去说：话该由说话的人带"
+next = "done"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 3 }, { kind = "fame", value = 1 }]
+reply = "她愣了愣，拍拍裤腿跳下缆桩：“输人不输阵，去就去。”灯笼在她手里甩成一圈一圈的光，一路小跑进了王直的宅子。你在门外站了半炷香，听见里头先是笑，后来没了声。她出来时眼睛红红的，嘴上却说风向变了，是好风。"
+news = "平户的码头上，月港来的提灯姑娘被劝着自己进了五峰船主的宅子，出来时眼睛红红的，说风向变了。"
+fail = { next = "done", effects = [], news = "平户码头上，月港来的提灯姑娘被劝着自己去说，她摆摆手说他们不听月港丫头的，提着灯笼走了。" }
+
+# 旁轨三：一张船引的钱（npc_lin_wandeng_license）。开海以后的月港，书办要规费。玩家是澪时读变体 v1_mio（平户走私的那一次交汇只在这里写一句）。
+[[tracks]]
+key = "npc_lin_wandeng_license"
+name = "海防馆门口"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "一张船引的钱"
+text = "开了海的月港，海防馆门口排着领船引的队，队尾一直拖到卖糖水的摊子前。林晚灯给自家新造的第二条船来领引，书办把文书翻了两遍，说梁头量错了，要重量，重量要“规费”。他一边说，一边拿手指头在桌角敲，敲的是个数。她站在台阶下来回踱步，手里的文书卷敲得比他还响。见了你，眼睛一亮：“客官！你说这怪不怪，十年前我骗卡子，十年后卡子换了个名字来骗我。”她压低声音又补一句：“官字两个口，上头一张，下头也一张。”"
+speaker = "lin_wandeng"
+mood = "cheerful"
+night = false
+at = "yuegang"
+cast = ["lin_wandeng"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1567, 3, 1] }]
+deadline = [1569, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_mio"
+when = [{ kind = "flag", flag = "c13_main_mio" }]
+text = "开了海的月港，海防馆门口排着领船引的队，队尾一直拖到卖糖水的摊子前。林晚灯给自家新造的第二条船来领引，书办把文书翻了两遍，说梁头量错了，要重量，重量要“规费”。他一边说，一边拿手指头在桌角敲，敲的是个数。她站在台阶下来回踱步，手里的文书卷敲得比他还响。见了你，先笑：“姬君！船引上只许往东西洋，写不了日本，写了，书办的笔先断。”她把文书卷在掌心拍了拍：“等我领了引，借你一面一条家的旗，挂着进平户卸丝，旗钱照你的规矩算，怎么样？”"
+
+[[tracks.chapters.choices]]
+key = "pay_fee"
+text = "替她把规费付了"
+next = "done"
+requires = [{ kind = "cash", ge = 800 }]
+hint = "你的钱袋不够书办张嘴。"
+effects = [{ kind = "cash", value = -800 }, { kind = "affinity", person = "lin_wandeng", value = 8 }]
+reply = "书办接了银子，当场换了新纸，船引当天就发下来了，章盖得又深又正。她把船引对着太阳照了一遍，数那朱印有几圈，说这钱她不还，要还就还一船货——第二年果然还了，一船货压得吃水线都看不见，比钱多出一大截，她还嫌自己吃亏。"
+news = "月港海防馆门口，有个外来的船长替林家的女船主付了规费，她说这钱不还，要还就还一船货。"
+
+[[tracks.chapters.choices]]
+key = "vouch"
+text = "以你在大明的名声替她作保"
+next = "done"
+requires = [{ kind = "reputation", faction = "ming", ge = 10 }]
+hint = "书办没听过你的名字。"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 5 }, { kind = "reputation", faction = "ming", value = 1 }]
+reply = "书办翻了翻你的文书，咳了一声，改口说梁头好像是量得偏了点，拿笔把数改了，规费连提也没再提。她出了门才笑，一路笑到卖糖水的摊子前，说你的名字比银子好用，回头得给它烧三炷香。"
+news = "月港海防馆门口，书办看了一个外来船长的文书，当场把林家新船的梁头改了，规费也不提了。"
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "站一边看她自己怎么对付书办"
+next = "done"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 1 }]
+reply = "她请书办到廊下坐，慢慢讲起海防馆后院的鬼：那口井，那棵榕，半夜里数船引的声音。书办听到一半想叫她别讲了，她偏停在最要紧的地方，等书办自己开口问。讲完日头也偏了，书办不敢天黑回家。船引第二天就发了，一文规费也没花。"
+news = "月港海防馆门口，林家的女船主跟书办讲了一下午鬼故事，第二天她的船引就发下来了。"
+
+# 旁轨四：吕宋的牙人（npc_lin_wandeng_manila）。玩家是凯奇利时 main_kaicili b06 已有晚灯，门槛排除。输赢只扣情谊与钱。
+[[tracks]]
+key = "npc_lin_wandeng_manila"
+name = "半两银子"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng", "lin_hui"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "吕宋的牙人"
+text = "马尼拉城外的唐人货棚里，林蕙的大桌上左边摊汉字账，右边摊西班牙账，两本对不上的人别想走。林晚灯坐在桌角，替刚到的船主们跟西班牙人谈价，她管自己叫“牙人”，抽一成。她说西班牙人的秤比唐人的重半两，砝码上还刻着十字，这半两她能要回来。你的舱里有丝，她的眼睛先落在你的舱口，再落到你身上：“客官，这半两银子，你自己要不回来。我要得回来，分我一成。一样米饲百样人，一样银子，可不是一样秤。”"
+speaker = "lin_wandeng"
+mood = "cheerful"
+night = false
+at = "manila"
+cast = ["lin_wandeng", "lin_hui"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1571, 7, 1] }, { kind = "flag", flag = "c13_main_kaicili", value = false }]
+deadline = [1575, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "hire_her"
+text = "让她做你的牙人，抽一成"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "lin_wandeng", value = 5 }]
+reply = "她抱着你的丝样，跟西班牙人吵了整整一个时辰，从秤砣吵到砝码，又从砝码吵到他们的圣人，最后把那半两要了回来，还多要了一壶酒。林蕙的两本账记完，笔尖在汉字那一页上点了点，抬头冲你点点头：这一成，花得值。"
+news = "马尼拉城外的唐人货棚里，月港来的女牙人替一个外来的船主跟西班牙人吵了一个时辰，把秤上的半两银子要了回来。"
+
+[[tracks.chapters.choices]]
+key = "undercut"
+text = "绕开她，自己去压西班牙人的价"
+next = "done"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "cash", value = 1200 }, { kind = "affinity", person = "lin_wandeng", value = -5 }]
+reply = "你一个人坐到西班牙人的桌前，从头到尾没让他们把秤砣放平。书记对着账本算了三遍，改了一次价。她在棚子那头鼓掌，说马尼拉又多了一个不用牙人的，她得换个地方抽成了，嘴上这么说，手里已经把桌角让出一半给你坐。"
+news = "马尼拉城外的唐人货棚里，有个外来的船主没请牙人，自己把西班牙人的价压了下来，月港来的女牙人在棚子那头鼓了掌。"
+fail = { next = "done", effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "lin_wandeng", value = -3 }], news = "马尼拉的唐人货棚里，有个外来的船主绕开牙人去压价，秤还是重半两。月港来的女牙人远远挥手：“客官，下回找我。”" }
+
+# 旁轨五：皮岛的最后一船（npc_lin_wandeng_cannon）。同一件事 main_lin_wandeng b09 写过，这里玩家是帮手。品德用声望、情谊与钱表现。
+[[tracks]]
+key = "npc_lin_wandeng_cannon"
+name = "封冻之前"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "皮岛的最后一船"
+text = "皮岛的码头上，林晚灯的鸟船正往岸上卸登州来的粮和硫磺，粮是给岛上人户的，硫磺是登州炮坊托她带的。老人说这片海一年里总要冻住几个月，冰一合拢，卸不完的就走不了。岸上的人户抱着空口袋，沿着码头排成一溜。岛上管粮的副将提着一杆大秤，秤砣大得像只小石臼，凑近她耳边，小声说一半粮夜里装船，卖给对岸。她笑着点头，等他走开才收了笑，把一只麻袋踢得更靠里。看见你的船进港，她远远喊：“客官，冰不等人。搭把手，回头请你喝酒。”"
+speaker = "lin_wandeng"
+mood = "tense"
+night = false
+at = "pidao"
+cast = ["lin_wandeng"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1576, 6, 1] }]
+deadline = [1576, 11, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "help_unload"
+text = "让你的船工帮她按户发粮"
+next = "done"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 5 }, { kind = "reputation", faction = "ming", value = 2 }]
+reply = "两条船的人一起念户口、点口袋，一袋一袋地发下去。副将的秤一直没有拿起来，秤砣在他手里转了几圈，又放回了桌上。她拍着一只空麻袋说：“好天着积雨来粮——这一袋是给他们下雨天的。”冰合上之前，两条船一前一后挤出了港。"
+news = "皮岛封冻前，两条南边来的船在码头上一起按户发粮，管粮的副将那杆大秤砣一直没拿起来。"
+
+[[tracks.chapters.choices]]
+key = "buy_sulfur"
+text = "收下她舱里的硫磺，转卖给对岸"
+next = "done"
+effects = [{ kind = "cash", value = 1000 }, { kind = "reputation", faction = "later_jin", value = 3 }, { kind = "reputation", faction = "ming", value = -3 }, { kind = "affinity", person = "lin_wandeng", value = -10 }]
+reply = "她把硫磺卖给了你，脸上还在笑，眼睛已经不笑了。点银子的时候她数得很慢，一锭一锭放进褡裢，说这一船她跑了一千里，是给登州的炮用的。你的船出港时，码头上没有人挥手，那杆大秤砣还挂在副将的门口，晃了两下。"
+news = "皮岛的码头上，月港来的女船主把一船硫磺卖给了一个外来的船主，听说那些硫磺是要转卖给对岸的。"
+
+[[tracks.chapters.choices]]
+key = "unload_only"
+text = "只帮她把货卸上岸，发不发由她"
+next = "done"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 2 }]
+reply = "货卸完，她冲你作了个揖，转身又去跟副将吵秤砣：发不发、怎么发，她没要你管。你出港时回头看了一眼，她还在吵，副将的秤砣被她翻来覆去地掂，掂一下，数一个袋子，岸上的人户已经排到了码头尽头。"
+news = "皮岛的码头上，月港来的女船主和一个外来的船长卸完了货，她转身又去跟副将吵那杆秤砣。"
+
+# 旁轨六：一张印文的抄样（npc_lin_wandeng_seal）。情谊 ≥50。只看、只记、只拓，没有偷与抢。印记 emerald_mark_seal 一局只发一次（c13_mark_seal）。
+[[tracks]]
+key = "npc_lin_wandeng_seal"
+name = "牛庄的印样"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "一张印文的抄样"
+text = "月港天妃宫边，林晚灯的屋里，墙上钉着一张泛黄的纸，四角的钉眼磨得发毛，纸上一圈朱红的印边，印文是篆字，弯弯绕绕看不懂。她说这是那年在牛庄，察哈尔的老管事只准压一次的印文：元朝传下来的那一方，有人说就是秦朝的。她踮脚把纸取下来铺在桌上，拿一张新纸覆上去，灯影在纸面上晃了晃，她伸手按住。“自己人我才让看。拿纸，不拿印——那老管事就是这么说的，我照着说一遍，一个字没改，不撒谎。你要不要，我照着描一份？”"
+speaker = "lin_wandeng"
+mood = "mystic"
+night = false
+at = "yuegang"
+cast = ["lin_wandeng"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1581, 1, 1] }, { kind = "affinity", person = "lin_wandeng", ge = 50 }, { kind = "flag", flag = "c13_mark_seal", value = false }]
+deadline = [1588, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take_copy"
+text = "收下她描的那一份印文"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_mark_seal", value = false }]
+hint = "那方印的样子，你已经带在身上了。"
+effects = [{ kind = "item", item = "emerald_mark_seal", qty = 1 }, { kind = "flag", flag = "c13_mark_seal" }, { kind = "affinity", person = "lin_wandeng", value = 3 }]
+reply = "她描得很慢，笔尖在纸边停过两回，描完吹干，卷起来塞进你手里：“食果子拜树头——吃了果子，得记着树在哪儿。这张纸比我那条船还值钱，你要是卖了，我做鬼也去找你。”她说完自己先打了个哆嗦，回头看了一眼门后。"
+news = "月港天妃宫边那间屋子里，林家的女船主描了一张辽河口带回来的印文，卷起来交给了一位外来的船长。"
+
+[[tracks.chapters.choices]]
+key = "just_look"
+text = "只看一眼，纸留给她"
+next = "done"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 5 }]
+reply = "她愣了一下，描笔悬在半空，半天才放下。纸又钉回了墙上，她说那老管事要是知道有人见了连描本都不要，一定会喜欢。钉子是她自己敲的，敲了三下才敲正。你走到门口，她朝着你的背影添了一句：想看随时来，纸跑不了，我也跑不了——除非有船。"
+news = "月港天妃宫边有间屋子的墙上钉着一张泛黄的印文，林家的女船主说那是从辽河口带回来的。"
+
+# 旁轨七：灯下的问话（npc_lin_wandeng_join）。请上船走招募检查（情谊 ≥60）；或劝她留下守灯。
+[[tracks]]
+key = "npc_lin_wandeng_join"
+name = "守灯的人"
+kind = "request"
+start = "m1"
+auto = false
+cast = ["lin_wandeng"]
+
+[[tracks.chapters]]
+key = "m1"
+title = "灯下的问话"
+text = "天妃宫的长明灯下，林晚灯踩着梯子往灯里添油，梯子是旧的，第三格用麻绳绑着，你在下面扶着，扶得手心出汗，她在上头倒不见怕。她说她娘手抖了，油壶端不平，灯钥迟早要交到她手里。她低头看你，油壶还在手上滴：“你在梯子下扶了这么久，不算客官了。你是替我守灯的人。”她说她站在梯子上想的是另一件事：灯不会走，她会，船一停，她就坐不住。她从梯子上下来，拍了拍手上的油，问你：你的船上，还缺不缺一个会讲鬼故事、会撒谎、也会添灯油的人？"
+speaker = "lin_wandeng"
+mood = "tender"
+night = false
+at = "yuegang"
+cast = ["lin_wandeng"]
+when = [{ kind = "flag", flag = "c13_npc_lin_wandeng_mate", value = false }, { kind = "date", from = [1583, 10, 1] }]
+deadline = [1590, 10, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "invite"
+text = "请她上你的船"
+next = "done"
+requires = [{ kind = "affinity", person = "lin_wandeng", ge = 60 }]
+hint = "她看了看殿前的灯，没答话。"
+effects = [{ kind = "join", person = "lin_wandeng" }, { kind = "flag", flag = "c13_npc_lin_wandeng_mate" }]
+reply = "她把灯钥交给了二哥，二哥接得手都在抖，嫌它比想的沉。她背着一个小包袱上了你的船，腰上还是那盏红灯笼。临上跳板，她回头朝天妃宫的方向看了一眼，嘴里小声念了几句，大概是跟妈祖交代。头一夜她就给你的船工讲了三个鬼故事，讲完，自己不敢一个人睡。"
+news = "月港天妃宫的灯钥换了人，林家的女船主背着小包袱上了一条外来的船，腰上还挂着那盏红灯笼。"
+
+[[tracks.chapters.choices]]
+key = "stay_lamp"
+text = "劝她留下，替月港守着这盏灯"
+next = "done"
+effects = [{ kind = "affinity", person = "lin_wandeng", value = 3 }]
+reply = "她点点头，又爬上梯子，说一枝草一点露，每棵草有每棵草的那一滴，月港这一滴归她管。你出港那天，宫里的长明灯挑得比平时高，灯焰直直的，她站在灯下冲你挥手，手上的油还没擦干净。船出了九龙江口，回头还看得见一点红。"
+news = "月港天妃宫的长明灯下，林家的女船主跟一个外来的船长说了半夜的话，灯油续了三回。"
+

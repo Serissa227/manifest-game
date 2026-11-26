@@ -1,0 +1,329 @@
+# 断弦（bond_nala）——C7 重写，2026-10-11，Claude（Opus）；旧 GPT 稿作废，只沿用两条轨道 key、章节 key、at = fez、窗口与 1562 年重逢。
+# 标签：BG 羁绊线。娜拉只对男性心动（romance.with = m）；塔里克（any）主动，或两人对等。
+# 人物：娜拉 nala（1540-06-07，女）；主角塔里克·加尔纳蒂 tariq（1540-01-02，男），第一人称“我”，speaker = captain。
+#       学院期 1554-01—1556-12：塔里克 13—16 岁，娜拉 13—16 岁，同为未成年、生年差不到半岁。
+#       心动：A1（1556-01..05，塔里克 15—16、娜拉 15）+6；A2（1556-06..11，塔里克 16、娜拉 15—16）+6；S（1556-12，两人都 16）+12 与 crush，告白只到牵手。
+#       恋人只在重逢（1562，两人 21—22 岁），要 c7_bond_nala_romance + 心动 ≥ 24 + 双方满 18。
+# 依据：
+#   史实——1554 年 1 月萨拉赫·雷斯带阿尔及尔的奥斯曼兵扶瓦塔斯王朝的布·哈松进非斯，城里遭了劫；同年 9 月萨阿德王朝夺回非斯，新王铸新币；
+#         非斯老城的安达卢斯区住着格拉纳达陷落后渡海来的人家，梅拉区（犹太区）在新城；安达卢斯的努巴组曲在婚礼与诗会上唱；
+#         格拉纳达阿尔拜辛的清真寺改作教堂以后，宣礼塔多改成钟楼（圣何塞教堂的塔即是）。
+#   原创——两人的故事、断弦、祖母那首唱水渠与朝南窗子的歌、梅拉区乐器铺橱窗里那把缺了一块螺钿的旧琴、诗会的白胡子老乐师、屋顶调弦、姨妈的玫瑰糖。
+#   待核——“对着宣礼塔的声音调琴、格拉纳达全城的琴是一个音”是娜拉母亲的说法，当作家传的讲究写，不当史实；非斯近处的宣礼跟着卡拉维因起，只作氛围。
+# 缺省走向：玩家不选时，各章 default 无效果、照样往下走；S 的 default 开重逢并设 _parted；重逢错过时娜拉来信，捎来那首歌的曲谱，设 _missed。
+# 羁绊阶梯：C2 finish_it 给 bond C；B1 ask_the_price 补签 C；B2 hold_steady 给 B；A1 coin_in_jar 补签 B；A2 take_the_jar / feed_her_one 给 A + 玫瑰糖 + 回忆。
+#   心动：A1 hum_her_mistake +6 → A2 feed_her_one（要 ≥ 6）+6 → S heart（要 ≥ 12）+12 = 24，正好够重逢的 love（简报改 S 为 +12，照办）。
+# 旗标：写 c7_bond_nala_coin（A1 coin_in_jar，A2 的 variants 读）、c7_bond_nala_promise / _romance / _own / _parted、
+#       c7_bond_nala_landing_friend / _landing_love / _missed；重逢的 variants 读 _romance。
+#       S 的 promise 与 heart 都写 c7_tie_new_idriss_qalam_nala_taken（配角线 tie_new_idriss_qalam_nala 据此改走“并肩的朋友”）。
+# 重逢里角落抄词的年轻学者就是伊德里斯（他们 1559 年相识，1562 年还只是朋友），本文件不点名、不写两人的事。
+# 秘密：娜拉攒钱赎回母亲那把琴——B1 起主角知道；本线没有 stage，不写见闻，这件事永远不进见闻。
+# 日程：无需改动。
+
+[[tracks]]
+key = "bond_nala"
+name = "娜拉：断弦"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["nala"]
+
+# C1：1554 年初，城里刚遭过兵。安达卢斯区的婚礼上，一根弦断了。
+[[tracks.chapters]]
+key = "c1"
+title = "断弦"
+text = "安达卢斯区一户人家娶亲。城里刚过完兵，巷口的墙还是黑的，这家的鼓却敲得比谁家都响。弹乌德琴的是乐师家的女儿娜拉，手指快得看不清。弹到新娘进门那一段，满院子的人跟着拍手，“嘣”的一声，一根弦断了，弦头抽在她手背上。拍手声一下停了，所有人都看她。我正愁没机会在人前露脸，抱着自己的琴挤过去：“用我的！阿尔及尔带来的，弦是新换的——”她看都没看我，用剩下的弦接着弹，缺的那几个音挪到别的弦上，弹得比刚才还好。弹完，新郎的老娘在台阶上嘟囔：“喜事上断弦，不吉利。”院子里跟着嗡嗡起来。娜拉蹲下去，把那截断弦一圈一圈卷好，塞进袖子里，抬头看我，像看一个多嘴的客人：“琴收好吧。你就是跟土耳其兵一块儿进城的那个？”"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_fez_qarawiyyin" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "find_a_string"
+text = "答应她，明天就送一根好弦来"
+reply = "我跑遍了染坊后面那几家乐器铺，听铺子里的老头讲了半天羊肠弦怎么晒、怎么搓，挑了最贵的一根，第二天一早送到她家门口。她当着我的面装上，拨了两下，皱眉：“太紧。”我说那我再去换，她把我推出了门。隔天另一家办喜事，我挤在人堆里看——她琴上那根新弦，正是我买的。"
+next = "c2"
+effects = [{ kind = "affinity", person = "nala", value = 3 }, { kind = "skill", skill = "oud_playing", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "joke_it_over"
+text = "跳上台阶说个笑话，把“不吉利”盖过去"
+reply = "我跳上台阶，说这根弦是叫新娘的模样惊断的，下一根准保撑到新郎胡子白。满院子哄地笑开，新郎的老娘也笑骂了一句，没人再提不吉利。只有娜拉没笑。散场时她从我身边走过：“我的场子，不用你的笑话圆。”走出两步，她肩膀抖了一下，到底还是笑了。"
+next = "c2"
+effects = [{ kind = "affinity", person = "nala", value = 2 }]
+
+# C2：1554 年夏，乐师家的院子。口头禅只在这里用一次。
+[[tracks.chapters]]
+key = "c2"
+title = "这一遍你唱"
+text = "娜拉在乐师家的院子里教五六个孩子唱努巴，叫我坐在一边拿手鼓打拍子。打了不到半首，我就管不住嘴了：教孩子们把“夜莺”唱成“野猫”，又学隔壁卖油的老头咳嗽。孩子们笑得滚到地上，拍子早散了。娜拉把琴往膝上一放：“这一遍你唱，别又用笑话混过去。”院子一下静了，孩子们全盯着我。我清了清嗓子，唱祖母教我的那首格拉纳达的歌，唱的是城里的水渠和一扇朝南的窗。唱到第三段，下一句怎么也想不起来，我张着嘴愣在那儿。她接了下去，一个字都不差，连祖母唱到这里要换的那口气，都换在同一个地方。唱完那一句，她停下来看我：“你也会这首？”“我祖母教的。你呢？”“我娘。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "finish_it"
+text = "接着往下唱，跑调也唱完它"
+requires = [{ kind = "affinity", person = "nala", ge = 20 }]
+hint = "她还当我是个只会耍嘴皮子的海盗崽子，这首歌她不会陪我唱完。"
+reply = "我接着往下唱，一句比一句跑得远，孩子们捂着耳朵笑。她一直跟着弹，不停也不纠正，弹到最后一句才把手按在弦上：“你祖母唱的是阿尔拜辛那边的调。我家是另一条街的，尾音往下走。”她把琴竖起来靠在墙上，“下礼拜你再来，把你那边的调从头唱给我听，我记下来。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "bond", person = "nala", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "play_instead"
+text = "唱到卡住的地方，剩下的用乌德琴弹完"
+reply = "我把自己的琴拿过来，后半首用弹的。指头比嗓子听话，祖母那几个拐弯的地方一个也没落。娜拉听完点点头：“手比嘴老实。”孩子们嚷着要我再弹一遍，她没拦，自己坐到台阶上，跟着琴声把词小声哼完。"
+next = "b1"
+effects = [{ kind = "affinity", person = "nala", value = 3 }]
+
+# B1：1554 年秋，萨阿德的新王进城换了钱。梅拉区乐器铺的橱窗。
+[[tracks.chapters]]
+key = "b1"
+title = "橱窗里的旧琴"
+text = "九月里新王的兵进了城，换了旗，也换了钱。娜拉说梅拉区有家铺子卖好弦，带我穿过犹太区的窄街。到了那家乐器铺，她没进门，在橱窗前站住了。橱窗里挂着一把旧乌德琴，琴面镶着一圈螺钿，有一处缺了一小块，像月亮被咬了一口。她看了很久，久到店里的伙计探出头来。“那是我娘的琴。”她说，“前年家里断了粮，我娘拿它换了两袋麦子。”她从腰带里摸出一个小布袋，掂了掂，里面叮当响——旧王的铜钱，新王的银币，混在一起。她把袋口扎紧：“还差得远。”说完就走，走得很快，我得小跑才跟得上。到了街角，她才想起来，我们是来买弦的。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "ask_the_price"
+text = "拉她回去，一起问店主那把琴到底要多少钱"
+requires = [{ kind = "affinity", person = "nala", ge = 20 }]
+hint = "卖琴的事她肯告诉我，却还不肯让店里的人看见她为这把琴回头；这扇铺门，她不会让我陪着进。"
+reply = "我拽着她的袖子回到铺子里。店主报了个价，她脸都白了。我没走，跟店主从琴面那块缺口说起，说到琴颈上一道细裂，又说这种老派的琴非斯没几个人会弹，挂到明年也没人买。磨了半个时辰，价钱砍下来一半，店主还答应先不卖给别人。出了门，她把布袋又掂了掂：“你这张嘴，原来还有点用。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "bond", person = "nala", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "look_away"
+text = "装作没看见她在看那把琴，陪她去买弦"
+reply = "我们另找了一家铺子。她拿起一根弦，看了看价钱，又放下了。回去的一路，两个人都没开口。到了她家门口，她站了一会儿：“谢谢你没问。”第二天她弹琴，我看见断过的那个位置装的是一根旧弦，颜色比别的都深。"
+next = "b2"
+effects = [{ kind = "affinity", person = "nala", value = 3 }]
+
+# B2：1555 年，安达卢斯区的诗会。我抢了她的拍子。
+[[tracks.chapters]]
+key = "b2"
+title = "诗会上的底"
+text = "安达卢斯区的白胡子老乐师办诗会，屋里坐满了从格拉纳达来的老人，有几个当年是被人抱着上船的。老乐师点名要娜拉独唱一段，又看看我：“你替她弹。”他自己膝上搁一面达夫鼓，咚、咚嗒，拍得很慢。满座都是行家，我心里痒得厉害。娜拉唱到第二句，我手一快，弹出一串花腔，又在她换气的地方抢先进了下一句。达夫鼓停了。她也停了。她转过头，当着一屋子人对我说：“跟着我，不是我跟着你。”满座的老人都笑了，有个老太太笑得拿袖子擦眼睛。我的脸烧得发烫，手指还按在弦上。老乐师没笑，把手掌平平按在鼓面上，等着。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_steady"
+text = "收起花腔，跟着鼓只弹最稳的底，一下也不抢"
+requires = [{ kind = "affinity", person = "nala", ge = 50 }, { kind = "bond", person = "nala", level = "C" }]
+hint = "她还不信我肯为别人收起本事；这一段，她宁可清唱。"
+reply = "鼓声重新响起来。我只弹底下那两个音，一下跟着一下，像桨手跟着鼓点下桨。她唱到离家那一段，满座的老人低下了一半的头，刚才笑出眼泪的老太太这回是真哭了。散场后她把一块玫瑰糖塞进我手里：“今天的底弹得好，比你那些花腔都好。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "bond", person = "nala", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "let_her_solo"
+text = "干脆停手，把这一段让给她清唱"
+reply = "我把琴放平，手搁在膝上。她清唱完那一段，屋里静得听得见灯芯响。老乐师说：“这孩子的嗓子像她娘。”她看了我一眼，没说话；到下一段起头，她冲我点了点头，让我接着弹。"
+next = "a1"
+effects = [{ kind = "affinity", person = "nala", value = 3 }]
+
+# A1：1556 年春，黄昏的屋顶。她等的是宣礼塔上的那个音。
+[[tracks.chapters]]
+key = "a1"
+title = "没有听众的调弦"
+text = "黄昏，娜拉在她家屋顶上调弦。没人请她弹，也不为哪家办事，就是调。攒琴钱的布袋解下来搁在脚边，她拧一下弦轴，拨一下，侧着头听，又拧回去一点。我坐在晾着的毯子旁边，看了小半个时辰也没看出名堂。直到宣礼塔上的声音响起来，卡拉维因那边先起，近处的几座跟着，一层一层压过屋顶。她手里那根弦正落在那个音上，跟着嗡嗡地响。原来她一直在等这个。宣礼声停了，她才转过头：“无不无聊？”“不无聊。”我说的是真话，自己都有点吃惊。她嗯了一声，弹起一支慢曲。弹到第三句，有个音按偏了半格，刺耳得很。她没停，眉毛都没动，接着往下弹。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hum_her_mistake"
+text = "等她弹完，把整支曲子连那个错音一起哼出来"
+requires = [{ kind = "affinity", person = "nala", ge = 20 }, { kind = "romance_open", romance_open = "nala" }]
+hint = "要把她弹错的音原样哼回去，得先跟她熟到不怕挨瞪。"
+reply = "她弹完，我把那支曲子从头哼了一遍，哼到第三句，把那个偏了半格的音也原样哼了出来。她停下来瞪我，瞪着瞪着笑了：“你连错的都记得。”天黑透了，她娘在楼下叫了两回吃饭，我们还坐在屋顶上。我起身要走，她低头拨着弦说：“明天黄昏，我还在这儿调弦。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "heart", person = "nala", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "coin_in_jar"
+text = "趁她低头调弦，把替人写诗挣的一枚银币放进那个布袋"
+requires = [{ kind = "affinity", person = "nala", ge = 50 }, { kind = "bond", person = "nala", level = "C" }]
+hint = "往她的钱袋里放东西，得先熟到她不会当成施舍——她最受不得这个。"
+reply = "那枚银币是前些天我在集市上替人写情诗挣的，新王的钱，亮得扎眼。她弹完收琴，拎起布袋一掂就知道了，把银币倒出来，对着天边的余光翻过来、翻过去。没有还我。“这一枚我记在账上，”她说，“赎回琴那天，第一首弹给你。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "bond", person = "nala", level = "B" }, { kind = "flag", flag = "c7_bond_nala_coin" }]
+
+[[tracks.chapters.choices]]
+key = "ask_the_tower"
+text = "问她为什么非要等宣礼塔的声音来对弦"
+reply = "她又拨了一下那根弦，让它跟着余音多响一会儿。“我娘说，在格拉纳达的时候，她也是这么对的。家家户户对着塔上的声音调琴，一城的琴是一个音。”她把琴抱正，“那边的塔，现在挂的是钟了。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "nala", value = 3 }]
+
+# A2：1556 年夏秋。姨妈厨房里的玫瑰糖（赠礼 rose_sweets）。
+[[tracks.chapters]]
+key = "a2"
+title = "玫瑰糖"
+text = "娜拉从她姨妈的厨房里拿来一个小陶罐，罐口用油纸扎着，往我面前一放：“玫瑰糖。谢你这两年在院子里替我打拍子，别以为我会忘。”她又特意交代，姨妈这回把香调淡了：“不然你会以为在吃香水。”罐身上还沾着一点面粉，看得出是刚从灶台边拿来的。油纸一揭，屋里全是玫瑰味。糖切成小方块，粉红的，上头撒着碎杏仁。我捏起一块，她就盯着我看，看得很认真，跟诗会上听我有没有抢拍子时一个样子。我把糖放进嘴里。她往前倾了一点：“怎么样？”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_the_jar"
+text = "收下这罐糖，说留着，每回想家的时候吃一块"
+requires = [{ kind = "affinity", person = "nala", ge = 80 }, { kind = "bond", person = "nala", level = "B" }]
+hint = "一整罐姨妈的手艺，分量太重；我们还没熟到我能当着她的面收下。"
+reply = "“想哪个家？”她问。“格拉纳达那个。”我摸了摸腰上祖母那把门钥匙，“我三岁就走了，什么也不记得。就记得祖母说，院子里种着玫瑰。”她没再说话，把罐子往我怀里推了推，又把油纸重新扎紧，扎了个死结。"
+next = "s"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "bond", person = "nala", level = "A" }, { kind = "item", item = "rose_sweets", qty = 1 }, { kind = "memory", memory = "mem-bond_nala-a2", title = "玫瑰糖" }]
+
+[[tracks.chapters.choices]]
+key = "feed_her_one"
+text = "收下糖，也捏一块递到她嘴边"
+requires = [{ kind = "affinity", person = "nala", ge = 80 }, { kind = "bond", person = "nala", level = "B" }, { kind = "heart", person = "nala", ge = 6 }, { kind = "romance_open", romance_open = "nala" }]
+hint = "这罐糖太重，这只手也伸得太近；屋顶上的黄昏还没坐够，我不敢。"
+reply = "我捏起一块递到她嘴边。她愣住了，下意识张了嘴，糖就进去了。她含着糖说不出话，脸一点一点红起来，红得跟那块糖一个颜色。过了好一会儿她才咽下去：“太甜了。”说完却又从罐子里拿了一块，自己吃了。"
+next = "s"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "bond", person = "nala", level = "A" }, { kind = "item", item = "rose_sweets", qty = 1 }, { kind = "memory", memory = "mem-bond_nala-a2", title = "玫瑰糖" }, { kind = "heart", person = "nala", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "perfume_joke"
+text = "嚼两下，说还是像在吃香水"
+reply = "“像在嚼一瓶香水。”话没说完，罐子就被她抢了回去：“那你别吃了。”第二天她又把罐子送来，里头的糖少了一半。“香水味重的那几块，”她说，“我替你吃了。”"
+next = "s"
+effects = [{ kind = "affinity", person = "nala", value = 3 }]
+
+[[tracks.chapters.variants]]
+key = "coin"
+when = [{ kind = "flag", flag = "c7_bond_nala_coin" }]
+text = "娜拉从她姨妈的厨房里拿来一个小陶罐，罐口用油纸扎着，往我面前一放：“玫瑰糖。谢你屋顶上那枚银币，别以为我会忘。”她又特意交代，姨妈这回把香调淡了：“不然你会以为在吃香水。”罐身上还沾着一点面粉，看得出是刚从灶台边拿来的。油纸一揭，屋里全是玫瑰味。糖切成小方块，粉红的，上头撒着碎杏仁。我捏起一块，她就盯着我看，看得很认真，跟诗会上听我有没有抢拍子时一个样子。我把糖放进嘴里。她往前倾了一点：“怎么样？”"
+
+# S：1556 年腊月，屋顶。我开春回阿尔及尔上船；走以前，那首歌得唱完一遍。
+[[tracks.chapters]]
+key = "s"
+title = "唱完的那一遍"
+text = "年底，阿尔及尔来了信：开春，港里有一条加列奥特归我管。卡拉维因的先生叹着气，在我的书上签了字。娜拉听说了，什么也没问，傍晚把我拉上她家屋顶。琴已经调好，宣礼塔的声音刚落。“你要走，走就是了。”她把琴抱在怀里，“走以前，那首格拉纳达的歌，从头到尾唱一遍。这回不许忘词。”“要是忘了呢？”“忘了就别走。”她说得一本正经，手指已经搭在弦上。楼下她姨妈在骂猫，染坊的味道顺着风飘过来。那年夏天在院子里卡住的那一句，这些天我每晚睡前都念一遍——可真站在她面前，嗓子还是紧的。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_nala" }, { kind = "flag", flag = "c7_bond_nala_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "唱完它；约好以后回非斯，先唱给她听，再讲笑话"
+requires = [{ kind = "bond", person = "nala", level = "A" }]
+hint = "这样的约，得先在她面前唱过、错过、熟透了才许得出口；又或者，这句话我已经对另一个人说过了。"
+reply = "我从头唱起。水渠，朝南的窗，祖母拖长的那个尾音，一句一句唱过去。唱到当年卡住的地方，嗓子抖了一下，词没丢。她的琴一直跟着，跟到最后一个音，手掌按住了弦。“这回算你过关。”我说以后每回到非斯，船一靠岸，先来这屋顶上唱一遍，唱完再讲笑话。她说笑话可以免了。她从袖子里摸出一样东西放在我手心——一截卷得紧紧的羊肠弦，快三年前婚礼上断的那一根。“凭据。哪回你来了不唱，我就拿它勒你。”我把那截弦缠在祖母那把门钥匙上，绕了三圈，打了个结。她看着那把钥匙，没问它开哪扇门。"
+next = "done"
+effects = [{ kind = "bond", person = "nala", level = "S" }, { kind = "relation", person = "nala", relation = "friends" }, { kind = "memory", memory = "mem-bond_nala-s", title = "唱完的那一遍" }, { kind = "flag", flag = "c7_bond_nala_promise" }, { kind = "flag", flag = "c7_tie_new_idriss_qalam_nala_taken" }, { kind = "start_track", track = "reunion_nala" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "唱到最后一句停下，让她来接；约好长大再见时一起唱完"
+requires = [{ kind = "bond", person = "nala", level = "A" }, { kind = "heart", person = "nala", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "nala", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "nala" }]
+hint = "把最后一句留给她接，光熟还不够，得先有屋顶上那些黄昏、那罐糖垫在前头；又或者，这样的一句，我早已留给了另一个人。"
+reply = "我一句一句唱下去，唱到最后一句，停了。她的琴也停了，抬头看我。我说：“最后一句你来。”她张口接了半句，又停住。屋顶上只剩晾着的毯子被风吹得扑扑响。她看着我，看了很久。“剩下的半句，等你回来。”她说，“等你长成个像样的大人，不靠笑话也敢站在人前，再来跟我一起唱完。”我说那得好几年。她说她等得起，攒琴钱都攒了四年了。下楼的时候楼梯很黑，她走在前面，伸手往后一摸，握住了我的手——弹琴的那只。到了院子里，灯光照过来，她才松开。"
+next = "done"
+effects = [{ kind = "bond", person = "nala", level = "S" }, { kind = "heart", person = "nala", value = 12 }, { kind = "relation", person = "nala", relation = "crush" }, { kind = "flag", flag = "c7_bond_nala_romance" }, { kind = "memory", memory = "mem-bond_nala-s", title = "唱完的那一遍" }, { kind = "flag", flag = "c7_tie_new_idriss_qalam_nala_taken" }, { kind = "start_track", track = "reunion_nala" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "先讲条件：她赎回母亲那把琴的那天，我来当第一个听众"
+reply = "我没急着唱，先跟她讲条件：等她把梅拉区橱窗里那把琴赎回来，第一首，得弹给我听。“那你可得付钱，”她说，“第一首最贵。”“我劫一船货来付。”“就知道你要说这个。”她拨了一下弦，“只劫货，不劫人——你这句天天挂在嘴上，比你祖母的诗记得牢。”我说那是自然，诗会忘词，饭碗不会。她骂了我一句，把琴往膝上一摆：“价钱以后再谈，歌今天得唱。”唱到当年卡住的地方，我又卡住了。她没接，弹了一段过门，等我自己找回下一段。"
+next = "done"
+effects = [{ kind = "affinity", person = "nala", value = 2 }, { kind = "relation", person = "nala", relation = "friends" }, { kind = "flag", flag = "c7_bond_nala_own" }, { kind = "start_track", track = "reunion_nala" }]
+
+[[tracks]]
+key = "reunion_nala"
+name = "娜拉：曲里的故乡"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["nala"]
+
+# 重逢：1562 年，安达卢斯区的诗会。她抱着那把螺钿旧琴，角落里有个学者在抄她的词。
+[[tracks.chapters]]
+key = "reunion"
+title = "曲里的故乡"
+text = "六年后我回到非斯。安达卢斯区一户人家办诗会，院子里坐满了人，门口还站了一圈。听说今晚唱的是娜拉，报酬开唱以前就谈定了，唱哪几首由她自己挑，主人家一句也插不上。我挤到墙根底下。她坐在院子当中，怀里抱着一把乌德琴。琴面那圈螺钿上缺的那一小块，我隔着半个院子就认出来了。角落里有个年轻学者，膝上摊着本子，她唱一句他抄一句，笔快得像在追她。她唱完一段，抬眼扫了一圈，看见了我。没笑，也没停，只冲我扬了扬下巴。下一首，她拨了两下弦，是那首格拉纳达的歌。唱到当年我卡住的那一句，她往我这边看了一眼，嘴角动了动。"
+window = [[1562, 1, 1], [1562, 12, 31]]
+at = "fez"
+cast = ["nala"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1562, 12, 31] }, { kind = "age", ge = 18 }, { kind = "age", person = "nala", ge = 18 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "nala", text = "塔里克：你没来。今年非斯的诗会我唱了十一场，每一场都往门口看。不怪你，海上的事我知道，船比人难等。琴赎回来了。前年冬天，钱刚好够，我抱着它从梅拉区走回家，一路不敢走快，怕摔。琴面上那块缺口还在，我没让人补，补了就不是我娘那把了。赎回来那天，第一首弹给我娘。她听完没夸，伸手把琴颈上的弦轴拧回去半圈，说她当年就是这么调的。第二首本该轮到你，你不在，我就没弹，那一首还欠着。托人给你捎去一张曲谱，是那首格拉纳达的歌。我请抄书铺的人照我唱的一句句记下来，水渠那段、朝南的窗那段都记全了，连你祖母爱拖的那个尾音也画上了。你那边的调跟我家的不一样，两种我都写了，你那种写在上面。最后一句旁边，是我自己写的：这一遍你唱。你认得出我的字。下回船到了，先来唱，唱完再讲笑话。不来也行，曲谱别弄丢。——娜拉" }, { kind = "flag", flag = "c7_bond_nala_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "听她唱完；散场后约好，以后每回到非斯都先来听她唱"
+reply = "散场以后，她把主人家给的钱数了两遍，数得仔仔细细，然后拉我去集市边上一家小馆子，要了一锅羊肉，说她请。我问那把琴。她说是前年冬天赎回来的，钱里有婚宴的赏钱、诗会的报酬，还有她这几年往返阿尔及尔走唱攒下的。“赎回来那天，第一首弹给我娘。”她用手指摸了摸琴面那块缺口，“第二首才轮到你。你不在，我就对着往阿尔及尔去的那条路弹了。”“那也算数。”“算数。”她给我添了一勺汤，“以后你每回到非斯，先来听我唱。听完了，笑话随你讲。”我说我攒了一肚子，海上的、阿尔及尔的、西班牙人的。她说那就一个一个讲，讲得不好笑的，罚唱一首。"
+next = "done"
+effects = [{ kind = "affinity", person = "nala", value = 5 }, { kind = "relation", person = "nala", relation = "friends" }, { kind = "flag", flag = "c7_bond_nala_landing_friend" }, { kind = "memory", memory = "mem-reunion_nala", title = "曲里的故乡" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "散场后留下来，替她把琴背回家"
+requires = [{ kind = "flag", flag = "c7_bond_nala_romance" }, { kind = "heart", person = "nala", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "nala", ge = 18 }, { kind = "romance_open", romance_open = "nala" }]
+hint = "当年在屋顶上，那句话没说出口；如今站在她面前，还是说不出口。"
+reply = "客人散尽，主人家的仆人开始收灯。我从她手里接过琴囊，往背上一甩：“我送你。”她没推辞。我们走过安达卢斯区的窄巷，她一路给我讲这几年：在阿尔及尔的码头上唱过，在一个法官家的婚宴上把新郎的叔叔唱哭过，攒钱攒到最后那个冬天，饿着肚子去敲梅拉区那家铺子的门。我给她讲海上的事，讲到一半，发现她没在听，在看我。到了她家门口，她把琴从我背上接过去，抱在怀里：“你背得比我稳。”“剩下的半句呢？”她仰起脸，吻了我。这条街上住的都是格拉纳达人，有扇窗开了又关上。然后她贴着我的耳朵，把那半句唱完了。"
+next = "done"
+effects = [{ kind = "affinity", person = "nala", value = 5 }, { kind = "relation", person = "nala", relation = "lovers" }, { kind = "flag", flag = "c7_bond_nala_landing_love" }, { kind = "memory", memory = "mem-reunion_nala", title = "曲里的故乡" }]
+
+[[tracks.chapters.variants]]
+key = "romance"
+when = [{ kind = "flag", flag = "c7_bond_nala_romance" }]
+text = "六年后我回到非斯。安达卢斯区一户人家办诗会，院子里坐满了人，门口还站了一圈。听说今晚唱的是娜拉，报酬开唱以前就谈定了，唱哪几首由她自己挑，主人家一句也插不上。我挤到墙根底下。她坐在院子当中，怀里抱着一把乌德琴。琴面那圈螺钿上缺的那一小块，我隔着半个院子就认出来了。角落里有个年轻学者，膝上摊着本子，她唱一句他抄一句，笔快得像在追她。她唱完一段，抬眼扫了一圈，看见了我。没笑，也没停，只冲我扬了扬下巴。下一首，她拨了两下弦，是那首格拉纳达的歌。唱到最后一句，她停住了，手按在弦上，隔着满院子的人看着我。那个学者的笔悬在半空，等了半天，没等到下半句。"

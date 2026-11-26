@@ -1,0 +1,159 @@
+# C13d 人物的请托：只画水，不画炮（当面模式，去某处 go，3 章 + 1 章分支；故事 2.0 契约，按 2026-10-12 的 C13d 总决定写）
+# 人物：孙元化 sun_yuanhua（cast 在 historical_09_liaodong.toml，born 1526；辽东战役链，年代提前约 55 年）。本世界线里他是登莱巡抚，驻登州，有 fate（登莱的处决）。
+# 类型与报价：去某处（gs/go），T 当面。kind=request，auto=false，由交谈话题 ask:request_sun_yuanhua 启动；offer 章不写 at，目标是在登州找到他本人。
+# 窗口：报价 1575-01-15 至 1576-03-31（offer 的 deadline 即窗口止日，timeout 无见闻）。接下后 arrive 120 天（去庙岛群岛一圈、停在旅顺），report 90 天（回登州交图）。
+#   所有期限都在 1576-10 以前；吴桥兵变一概不写。
+# 依据：史实——孙元化嘉定人，跟徐光启学过算学与西洋炮法，后任登莱巡抚。本世界线（辽东战役链）提前约 55 年。
+#   原创——铳尺放在一边、改用带牛油的测深锤；庙岛群岛的一串水道；退潮才露头的“牛背礁”（旅顺三个村三个叫法）；图角写船名和日子的做法；雾里没量成的两条水道。
+#   不写：炮台位置、登陆点、兵器火药铁料、会改变战局的军情；葡萄牙铳师与吴桥兵变；林晚灯主线 9 的登州—皮岛海路与西洋大铳。
+#   孙元化在 report 章问到一半就自己停住的那句，只留下“小船能不能”这半截，不让它说出口。
+#   请托不改任何战役变量，不给 jianzhou 加声望；奖励只有现金、好感、旗标、名声、少量声望（ming）、技能 cartography、一张回忆。无 secret，无 C7 线，无主线门禁。
+# 要紧的一句（“这回只画水……”）只在 offer 用一次。
+# 结构说明：brief 的 report 章靠旗标 fine / gaps 拆选项，这些旗标由 arrive 的不同选项设置，直接 requires 会让故事机器人报“准备后条件仍不满足”。
+#   改成按 next 分流：arrive 的 chart / tide / lead 成功走 report，lead 失败走 report_gaps；两章各有 hand / copy 两个选项。
+#   检定的 fail 分支没有单独的回复，所以 lead 的 reply 只写打锤的过程，结果由下一章的正文交代。
+# 读写的旗标：设 c13_request_sun_yuanhua_accepted / _declined / _done / _partial / _late（终局），分支旗标 _fine / _gaps / _kept_copy；
+#   不读外部旗标，不设 c7_ 旗标；信（letter）两封：arrive 超时一封，report 超时一封；report_gaps 超时只设旗标、不再写信（全轨道 ≤2 封）。
+# 依赖：港口 dengzhou、lushun 是现有港口，无 B10b 改名；势力 ming 在 factions；技能 cartography / tide_reading 在 skills.toml。
+# 缺省走向：不接（declined → failed）。接了没出海（arrive 120 天过期）：他来信说另雇了船（late → failed）。
+# 回忆插画清单：
+#   mem-request_sun_yuanhua-report「墙上那张只有水的图」：登州水城的白墙上钉着一张海图，岛的轮廓之间全是细密的数；一把刻满刻度的铳尺搁在桌边，图角一行小字是船名和日子。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_sun_yuanhua"
+name = "只画水，不画炮"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["sun_yuanhua"]
+
+# 一、登州水城：铳尺被推到桌边，海图上只有岛。
+[[tracks.chapters]]
+key = "offer"
+title = "铳尺"
+text = "登州水城的城楼上摆着一张长桌，孙元化坐在桌后，左手按着一把刻满刻度的铳尺，尺面磨得发亮。桌上摊着一张海图：从登州往北到旅顺，一串岛的轮廓描得很细，岛与岛之间却什么也没有，连一个数都没有。他把铳尺往桌边一推，像推开一只碍事的杯子。“庙岛这一圈，我要有人走一趟。”笔杆敲在那些光秃秃的水面上，“这回只画水。哪条水道几尺深，哪块礁退潮才露头——炮台往哪儿安，是我的事，你别替我想。”说完他才想起什么似的，抬头问：“你的船叫什么来着？……算了，图上写。”"
+speaker = "sun_yuanhua"
+mood = "cheerful"
+when = [{ kind = "date", from = [1575, 1, 15], to = [1576, 3, 31] }, { kind = "age", ge = 17 }, { kind = "alive", person = "sun_yuanhua", value = true }]
+objectives = [{ kind = "person", person = "sun_yuanhua", text = "在登州找到孙巡抚" }]
+deadline = [1576, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：绕庙岛群岛走一圈，测深，记礁"
+next = "arrive"
+effects = [{ kind = "flag", flag = "c13_request_sun_yuanhua_accepted" }, { kind = "affinity", person = "sun_yuanhua", value = 2 }]
+reply = "他把铳尺推得更远，推到桌子另一头。“这东西这回用不上。”他转身从墙钩上摘下一条麻绳，一头坠着铅，铅底凹进去一块，抹着牛油。“每一托绳子一个结。铅底的油能粘上海底的东西，是沙是泥是碎石，回来一并告诉我。”他把绳子在我手里绕了两圈，“看礁要在退潮的时候看。涨潮时说‘没有’，我不收。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这趟海不走"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sun_yuanhua_declined" }]
+reply = "他把海图卷起来，用绳一捆，动作比摊开时还快。“不勉强。澳门的人也会画，就是贵，定钱要先付一半。”他说着已经在往门口看，像是在数下一个路过的人。铳尺不知什么时候又回到了他手里。"
+
+# 二、庙岛群岛：十几天，一串岛，一块趴着的礁。
+[[tracks.chapters]]
+key = "arrive"
+title = "庙岛群岛的水"
+text = "从登州出港往北，船在庙岛群岛的缝里穿了十来天。有的水道宽得像条街，却浅，非大潮不敢走；有的窄得两舷擦着石头，底下偏偏深，一卷绳放尽了还没着底。第七天退潮，一块礁在船边慢慢冒出头，黑黑一条脊，像头趴着的牛。到旅顺补水，我问渔民它叫什么。“牛背礁。”“不对，黑牛。”“你们都错了，老辈叫它‘等潮’。”三个村三个叫法，吵了半袋烟也没吵出个定论。图上总得落一个名字，水深的数一个也不能少。"
+at = "lushun"
+speaker = "captain"
+mood = "tense"
+news = "登州到旅顺之间有条外来船在岛缝里转了十来天，渔民说它一路往海里扔铅锤。"
+when = [{ kind = "alive", person = "sun_yuanhua", value = true }]
+objectives = [{ kind = "at", at = "lushun", text = "绕庙岛群岛测到旅顺" }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sun_yuanhua_late" }, { kind = "affinity", person = "sun_yuanhua", value = -3 }, { kind = "letter", person = "sun_yuanhua", text = "图不必了。我另雇了船去量，雇的船画得粗，水深只肯给个大概，将就用吧。——元化" }]
+
+[[tracks.chapters.choices]]
+key = "chart"
+text = "画一张水深图，每条水道都标数"
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你的海图本里，还没有哪一张是让别人照着走的"
+next = "report"
+effects = [{ kind = "affinity", person = "sun_yuanhua", value = 3 }, { kind = "flag", flag = "c13_request_sun_yuanhua_fine" }]
+reply = "我把纸摊在舱桌上，一条水道一条水道地描。头一张线压了线，擦了重画；第二张数齐了，名字乱了；画到第三张才满意，连牛背礁的三种叫法也标上了，三行小字并排写在礁的轮廓边。渔民凑过来，找到自己村的叫法，伸手想摸，被我拦住：墨还没干。"
+
+[[tracks.chapters.choices]]
+key = "tide"
+text = "按潮时记下：哪条水道几时走得了船"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "你分不清这几天是大潮还是小潮，记下的时辰靠不住"
+next = "report"
+effects = [{ kind = "affinity", person = "sun_yuanhua", value = 3 }, { kind = "flag", flag = "c13_request_sun_yuanhua_fine" }]
+reply = "我没有把深浅画成一圈圈的线，记的是时辰：这条水道，初二、十六涨潮前一个时辰才有两托半；那条，退潮后水只到腰，小舢板也得人拖着走。三十几页，一页一条水道。牛背礁露头的时辰写在最前头，旁边我画了头小小的牛。"
+
+[[tracks.chapters.choices]]
+key = "lead"
+text = "一条水道一条水道地打测深锤"
+check = { attr = "seamanship", base = 20, per = 7 }
+next = "report"
+effects = [{ kind = "affinity", person = "sun_yuanhua", value = 3 }, { kind = "flag", flag = "c13_request_sun_yuanhua_fine" }]
+reply = "绳子放下去，数结，提上来，看铅底的牛油粘着什么，记一笔。一天打四十几处，手心的皮磨掉一层，换一只手接着打。数一行行排在纸上，沙、泥、碎石的记号写在数后面，直写到旅顺的栈桥边。"
+fail = { next = "report_gaps", effects = [{ kind = "affinity", person = "sun_yuanhua", value = -2 }, { kind = "flag", flag = "c13_request_sun_yuanhua_gaps" }], news = "庙岛群岛起大雾那几天，一条外来船在岛缝里绕着打铅锤，雾里看不见绳结，有两条水道就此没量成。" }
+
+# 三、回登州，数齐了：满墙的数，一把铳尺，问到一半的话。
+[[tracks.chapters]]
+key = "report"
+title = "钉在墙上的水"
+text = "孙元化把我交来的纸一张张钉上墙，左手拿着铳尺，一个数一个数地比，边比边念：“三托半……四托……这条退潮只剩一托？”比到一半，他回过头来：“那几条浅水道，大船过不了，小船能不——”话停在半截。他把铳尺往墙上一敲，摆摆手，像赶走一只蚊子：“不问。说好只画水。”他退后两步，看着满墙的数，好半天没出声，手里的笔早就干了。"
+speaker = "sun_yuanhua"
+mood = "cheerful"
+when = [{ kind = "alive", person = "sun_yuanhua", value = true }]
+objectives = [{ kind = "person", person = "sun_yuanhua", text = "回登州把图交给孙巡抚" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sun_yuanhua_late" }, { kind = "affinity", person = "sun_yuanhua", value = -3 }, { kind = "letter", person = "sun_yuanhua", text = "图拖过了雾季，我另派人划小船量了一遍，数粗，够用。你那份我不等了。下回来登州，铳尺借你看。——元化" }]
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "把图交给他"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "affinity", person = "sun_yuanhua", value = 8 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_sun_yuanhua-report", title = "墙上那张只有水的图" }, { kind = "flag", flag = "c13_request_sun_yuanhua_done" }]
+reply = "他看了很久，最后抽出笔，在图角写下我的船名和日子，一笔一画，比写公文慢得多。“水是你量的，名字得留在上头。”写完，他叫人把图收进樟木匣，匣面没贴封条，只贴了一张条子：庙岛至旅顺，水。"
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "交图，但自己留一份副本"
+next = "done"
+effects = [{ kind = "cash", value = 3650 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "affinity", person = "sun_yuanhua", value = 8 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_sun_yuanhua-report", title = "墙上那张只有水的图" }, { kind = "flag", flag = "c13_request_sun_yuanhua_done" }, { kind = "flag", flag = "c13_request_sun_yuanhua_kept_copy" }]
+reply = "他笑了：“留着吧。水是大家的。”笔在图角落下船名和日子，墨干了才抬头，补一句：“你那份要是比我这份画得细，下回我去借。”"
+
+# 三（降级）：雾里有两条水道没量成，格子是空的，他没有怪人。
+[[tracks.chapters]]
+key = "report_gaps"
+title = "空着的那几条"
+text = "孙元化把纸钉上墙，用铳尺一个数一个数地比过去，比到第三排，手停了：有两条水道的格子是空的，旁边只有三个字——“雾，未测”。我说起雾那几天，绳子放下去，伸手不见结，只好把锤收了。他没打断，听完点点头，铳尺的末端点了点那两格，又顺着旁边已填满的几排数划过去，一排也没漏看。“空着，比乱填强。”"
+speaker = "sun_yuanhua"
+mood = "cheerful"
+when = [{ kind = "alive", person = "sun_yuanhua", value = true }]
+objectives = [{ kind = "person", person = "sun_yuanhua", text = "回登州，把带着空格的图交给孙巡抚" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_sun_yuanhua_late" }, { kind = "affinity", person = "sun_yuanhua", value = -3 }]
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "带着那两格空，把图交给他"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "affinity", person = "sun_yuanhua", value = 4 }, { kind = "flag", flag = "c13_request_sun_yuanhua_partial" }]
+reply = "他在图角写下我的船名和日子，又在那两格下面添了两个小字：待补。笔一搁，他看着我，不像生气，倒像在算什么：“开春前我自己找条渔船去补。你量过的那些，我不再去碰了。”"
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "交图，那两格空也照原样抄一份留着"
+next = "done"
+effects = [{ kind = "cash", value = 1800 }, { kind = "skill", skill = "cartography", value = 20 }, { kind = "affinity", person = "sun_yuanhua", value = 4 }, { kind = "flag", flag = "c13_request_sun_yuanhua_partial" }, { kind = "flag", flag = "c13_request_sun_yuanhua_kept_copy" }]
+reply = "他挥挥手：“留着吧。水是大家的。”想了想，又指指副本上那两格：“你路过哪天雾散了，顺手填上，填多少算多少。填不上，空着就是了，我认得出哪里是空的。”"

@@ -1,0 +1,203 @@
+# 请托：渡船的三趟（request_ushio）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：汐（ushio，1540-01-01 生，女），能岛村上家的女儿，京都学院同学；势力 imperial_court，身份档 1。cast：classmates_kyoto.toml。
+# 类型：打一仗（fight）。三章：offer（报价）、battle（岛缝里的船）、after（渡船上的旗）；没有 stage 章。
+#       offer 有两条不打的路：读潮（requires 技能 tide_reading ≥ 60）与引开（seamanship 检定，一般），成功都直接进 after；
+#       引开失败，劫船的没上当，回头迎战进 battle。只有“接下来就打”与引开失败两条路会进 battle。
+# 报价：T（当面）。人物 1566—1590 按日程在能岛（noshima）渡口；auto=false，玩家用 ask:request_ushio 启动。
+#       offer 不写 at，目标是在港里找到她；窗口 1567-01-01 至 1587-06-30（同学重逢之后，丰臣的海贼停止令 1588 之前）。
+#       deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：battle 章 deadline_days=90（同一片内海），超时走 failed，来信一封（好感 -3，旗标 _late）。
+#       battle 章不设章级见闻（超时会继承章级见闻，“打退了”就成了假话），见闻写在各选项与 fail 分支上。
+#       after 章是普通章，可以一直等；见闻写在章上，两个选项共用。
+# 依据·史实背景：濑户内海的村上水军向过往船只收“帆别钱”、替交钱的船护航；不服村上家的零散海贼劫小船；
+#       1576 年第一次木津川口之战，毛利与村上的船队开进大坂湾（offer 的 variants：那一年能岛的大船都去了大坂湾，内海空了）。
+#       关船是村上水军的中型船。劫船的是叙事人物，不写姓名，不写成大海贼；那个后生是成年人。
+# 依据·原创：汐的渡船与船头那面靛蓝底、白圈的小旗；炭条写在渡船坐板背面的三趟船期（都在早潮）；
+#       早年在土佐下田渔港补网的孩子，如今是比她小几岁的渔家后生，喊她“汐姐”；船板上数了两遍的钱；装白漆的蛤壳与刷船的小漆刷；白圈底下那道潮线。
+#       口头禅“等着，潮会转的。”全轨道只在 offer 你问她怎么办时用一次；battle 超时的来信与 after 的 hired 变体照任务单各带半句“潮会……”。
+# 不写：冷泉雪、信（C7 的捎信）、过所旗、澪（C7 与主线）；村上武吉不出场，村上家只作背景；鹰丸在能岛的押运请托另有一件，不共用。
+#       variants 的 bond 变体只换汐对玩家的称呼与一句“船头”的话，不提任何人名。
+# 秘密：她夜里就着灯芯描假名——不碰；炭条写船期、拿漆刷画潮线都不评她的字；见闻一律不写。
+# 读写的旗标：只读 c13_request_ushio_hired（after 的 variants）；不读不设任何 c7_ 旗标。
+#       写 c13_request_ushio_accepted（三条接法都设，引开失败也设）、_declined、_tide（读潮或引开成功，没打）、
+#       _fought（battle 的两个选项都设）、_hired（叫住后生、说动了）、_late（battle 超时）、_done（after）。
+# 报酬：现金 1600（只在 after 给一次）；好感最多 +13（接下 +2、battle +3、after +8；读潮 / 引开 +3 再 after +8 = 11）；
+#       名声 +1；回忆 mem-request_ushio-after。叫住后生说不动（检定失败）好感 +1。
+# 窗口说明：battle、after 的世界窗口止于 1588-08-23；battle 从 offer 止日起最晚到 1587-09 便到期，after 没有期限，
+#       引擎的普通章不写 window，所以这里不另加日期条件（加了又没期限会让轨道卡住）。
+# 依赖：港口 noshima；人物 ushio（cast/classmates_kyoto.toml）；技能 tide_reading（skills.toml）。无需 B10b 改名。
+# 回忆插画：mem-request_ushio-after：能岛渡口最下一级石阶，渡船系在铁环上，汐蹲着把一面靛蓝小旗摊在膝头，白圈下一道弯弯的白漆潮线。
+
+[[tracks]]
+key = "request_ushio"
+name = "渡船的三趟"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ushio"]
+
+# 一、专劫小船的人：能岛渡口，她的渡船坐满了人，她不解缆，先指给你看岛缝。
+[[tracks.chapters]]
+key = "offer"
+title = "专劫小船的人"
+text = "能岛的渡口开在岛的背风处，石阶最下一级长满了藤壶。汐的渡船就系在那里，船不大，船头插一面小旗，靛蓝底子上一个白圈，是她自己的旗号。船上已经坐了卖鱼的、走亲戚的、背着孩子的女人，都在等她解缆。她没解，先指给你看对岸那串小岛：“这一季丢了四条船，都跟我这条差不多大。拿了鱼和钱就走，钻进岛缝里，找不着。”港里泊着一排村上家的关船，桨都收着。她朝那边努努嘴：“他们护的是大船。小船的事，懒得管。”她要渡三趟，三趟都得过对岸那段窄水道。她托你守这三趟：打跑他们也行，赶在潮转之前把船带过去也行。你问她自己打算怎么办。她看着窄水道那头，水正往东退，礁头一块块露出来：“等着，潮会转的。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1567, 1, 1], to = [1587, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "ushio", ge = 18 },
+]
+objectives = [{ kind = "person", person = "ushio", text = "在能岛的渡口找到她" }]
+deadline = [1587, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_old_friend_osaka"
+when = [
+  { kind = "bond", person = "ushio", level = "C" },
+  { kind = "date", from = [1576, 1, 1], to = [1576, 12, 31] },
+]
+text = "能岛的渡口开在岛的背风处，石阶最下一级长满了藤壶。汐的渡船就系在那里，船头插一面小旗，靛蓝底子上一个白圈，是她自己的旗号。船上坐满了卖鱼的、走亲戚的、背着孩子的女人。她见了你，没行礼就开口：“姬君，我是你的船头。这回你替我当一回。”她指给你看对岸那串小岛：“这一季丢了四条船，都跟我这条差不多大。拿了鱼和钱就走，钻进岛缝里，找不着。”港里空了一大半，只剩几条旧船在修。“今年能岛的大船都去了大坂湾。内海空了，他们才敢出来。”她要渡三趟，三趟都得过那段窄水道。她托你守这三趟，打跑他们，或者赶在潮转前把船带过去。你问她自己打算怎么办。她看着窄水道那头，水正往东退，礁头一块块露出来：“等着，潮会转的。”"
+
+[[tracks.chapters.variants]]
+key = "v2_old_friend"
+when = [{ kind = "bond", person = "ushio", level = "C" }]
+text = "能岛的渡口开在岛的背风处，石阶最下一级长满了藤壶。汐的渡船就系在那里，船头插一面小旗，靛蓝底子上一个白圈，是她自己的旗号。船上坐满了卖鱼的、走亲戚的、背着孩子的女人。她见了你，没行礼就开口：“姬君，我是你的船头。这回你替我当一回。”她指给你看对岸那串小岛：“这一季丢了四条船，都跟我这条差不多大。拿了鱼和钱就走，钻进岛缝里，找不着。”港里泊着一排村上家的关船，桨都收着。她朝那边努努嘴：“他们护的是大船。小船的事，懒得管。”她要渡三趟，三趟都得过那段窄水道。她托你守这三趟，打跑他们，或者赶在潮转前把船带过去。你问她自己打算怎么办。她看着窄水道那头，水正往东退，礁头一块块露出来：“等着，潮会转的。”"
+
+[[tracks.chapters.variants]]
+key = "v3_osaka_year"
+when = [{ kind = "date", from = [1576, 1, 1], to = [1576, 12, 31] }]
+text = "能岛的渡口开在岛的背风处，石阶最下一级长满了藤壶。汐的渡船就系在那里，船不大，船头插一面小旗，靛蓝底子上一个白圈，是她自己的旗号。船上已经坐了卖鱼的、走亲戚的、背着孩子的女人，都在等她解缆。她没解，先指给你看对岸那串小岛：“这一季丢了四条船，都跟我这条差不多大。拿了鱼和钱就走，钻进岛缝里，找不着。”港里空了一大半，只剩几条旧船在修。“今年能岛的大船都去了大坂湾。内海空了，他们才敢出来。”她要渡三趟，三趟都得过对岸那段窄水道。她托你守这三趟：打跑他们也行，赶在潮转之前把船带过去也行。你问她自己打算怎么办。她看着窄水道那头，水正往东退，礁头一块块露出来：“等着，潮会转的。”"
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "接下：守她三趟，劫船的来了就打。"
+next = "battle"
+reply = "她抽出渡船上的一块坐板，翻过来，拿炭条在背面写了三行，是三趟的船期。日子不挨着，时辰都在早潮。你问为什么都挑早潮，她把坐板竖在你脚边：“他们也看潮。早潮涨上来，岛缝里的水才够深，他们的船才钻得出来。那时候你就在窄水道口。”说完她解了缆，篙往石阶上一点，渡船离了岸。"
+effects = [
+  { kind = "affinity", person = "ushio", value = 2 },
+  { kind = "flag", flag = "c13_request_ushio_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "tide_route"
+text = "接下：照潮走，赶在潮转前冲过窄水道，不跟他们照面。"
+next = "after"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "内海的潮转得快，你算不准哪一刻该冲。"
+reply = "三趟你都算准了潮。你坐在渡船尾上数浪，她在船头撑篙，谁也不说话。潮转前的那一刻，你喊了一声，渡船冲进窄水道；岛缝里钻出来的小船追到一半，潮头一翻，把它们推回了岛后头，橹摇得再快也没用。第三趟靠了岸，她把篙横在船上，看了你一眼：“你数浪的时候，嘴在动。”"
+effects = [
+  { kind = "affinity", person = "ushio", value = 3 },
+  { kind = "flag", flag = "c13_request_ushio_accepted" },
+  { kind = "flag", flag = "c13_request_ushio_tide" },
+]
+
+[[tracks.chapters.choices]]
+key = "decoy"
+text = "接下：我的船走前面引开他们，渡船从岛的另一边绕。"
+next = "after"
+check = { attr = "seamanship", base = 20, per = 7 }
+reply = "你把帆全张开，大摇大摆地从窄水道口过去。岛缝里的小船跟着你的帆走了半个上午，绕过两座岛才回过神来，再掉头，渡船早就到了对岸。第二趟他们只跟了一个时辰，第三趟干脆没露面。你回到能岛，她正在渡口收缆绳，头也不抬：“他们追你的时候，我在对岸看着。追得真卖力。”"
+fail = { next = "battle", effects = [
+  { kind = "affinity", person = "ushio", value = 2 },
+  { kind = "flag", flag = "c13_request_ushio_accepted" },
+], news = "能岛对岸的窄水道口，有条大船张满了帆想把劫小船的引开，那伙人偏不上当，掉头扑向汐的渡船。" }
+effects = [
+  { kind = "affinity", person = "ushio", value = 3 },
+  { kind = "flag", flag = "c13_request_ushio_accepted" },
+  { kind = "flag", flag = "c13_request_ushio_tide" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "内海的事，村上家都不管，我也不管。"
+next = "failed"
+reply = "她没说什么，解了缆，一篙撑离了石阶。一船人跟着她晃，背着的孩子哭了一声，又不哭了。船头那面小旗被风吹得笔直，一直到窄水道口都没歪。"
+effects = [{ kind = "flag", flag = "c13_request_ushio_declined" }]
+
+# 二、岛缝里的船：第二趟早潮，你打退的那条船上有人喊她的名字。
+[[tracks.chapters]]
+key = "battle"
+title = "岛缝里的船"
+text = "第二趟早潮，水刚漫过窄水道的暗礁，岛缝里就钻出三条小船，橹摇得飞快，直扑渡船。你把船横过去，挡在渡船和岛缝之间。两条见势不对，掉头就跑；你打退的那条船被浪打横了，船上的人扒着船帮往水里跳。有人在水里喊了一声：“汐姐！”渡船上，汐的篙停在半空。那人晒得黝黑，比她小几岁，是她早年在土佐下田的渔港见过的孩子，那时他光着脚帮他爹补网。如今他攀着翻了的船底，不喊了，只看着她。汐没看他，看的是你：“你的船，你说了算。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "ushio", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在内海打退劫小船的人" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "ushio", value = -3 },
+  { kind = "flag", flag = "c13_request_ushio_late" },
+  { kind = "letter", person = "ushio", text = "三趟我自己守了，丢了一船鱼，人没事。潮会转的。——汐" },
+] }
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "让他们走，告诉他们这条航线有人守。"
+next = "after"
+reply = "你让人把翻了的船扶正，扔给他们两支橹，冲着他们喊：这条水道往后有人守。那后生爬上船，回头看了汐一眼，摇着走了，没再回来。第三趟早潮，渡船上的人比平常多出一倍，卖鱼的挤着走亲戚的，有个老婆婆坐在船头唱起了内海的船歌。汐撑着篙，跟着哼了两句，跑了调。"
+news = "濑户内海能岛附近，专劫小船的那伙人被一条大船打退了，汐的渡船照常来回，第三趟船上还有人唱歌。"
+effects = [
+  { kind = "affinity", person = "ushio", value = 3 },
+  { kind = "flag", flag = "c13_request_ushio_fought" },
+]
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "叫住那个渔家后生，问他为什么劫船。"
+next = "after"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "他攀着船底，半天才开口：今年鱼少，村上家的帆别钱又涨了，不劫，就交不上。说到帆别钱，汐的脸冷了下来，篙尖在水里搅了一圈，好一阵没说话。后来她把篙伸过去，杵在他手边：“上来。我船上缺个摇橹的。”他愣着没动。她又说了一遍，声音更冲：“上来。潮要转了。”"
+news = "能岛附近的窄水道上，劫小船的被打退了，汐的渡船上倒多了个摇橹的后生，听说是从劫船的那边过来的。"
+fail = { next = "after", effects = [
+  { kind = "affinity", person = "ushio", value = 1 },
+  { kind = "flag", flag = "c13_request_ushio_fought" },
+], news = "能岛附近的窄水道上，劫小船的被打退了。有个后生被人叫住问话，骂了一句，翻身跳进海里游走了。" }
+effects = [
+  { kind = "affinity", person = "ushio", value = 3 },
+  { kind = "flag", flag = "c13_request_ushio_fought" },
+  { kind = "flag", flag = "c13_request_ushio_hired" },
+]
+
+# 三、渡船上的旗：渡口石阶，她数钱数得慢，然后要在旗上加一道潮线。
+[[tracks.chapters]]
+key = "after"
+title = "渡船上的旗"
+text = "三趟走完，汐把渡船系在能岛渡口最下一级石阶的铁环上，蹲在船帮边跟你算钱。她算得慢，一枚一枚数在船板上，数到一半忘了，又从头数；该起身道谢的时候她还蹲着，想起来了才站直，弯腰弯得比谁都急。钱一文不少，堆在船板上，她没推过来，先把船头那面小旗拔下来，摊在膝头。旗角的线脚被海风咬得起了毛，白圈也褪成了米色。“我想改一改。”她用指甲在白圈底下划了一道，弯的，“加一道潮线。让劫船的看见就知道，这条船看潮。”她从船舱里摸出一只盛白漆的蛤壳，一把刷船用的小漆刷。"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "alive", person = "ushio", value = true }]
+objectives = [{ kind = "person", person = "ushio", text = "回能岛的渡口找她" }]
+news = "能岛渡口汐的那条渡船换了旗，白圈底下多了一道弯弯的潮线。船家都说，劫小船的看见这道线，该绕着走了。"
+
+[[tracks.chapters.variants]]
+key = "hired"
+when = [{ kind = "flag", flag = "c13_request_ushio_hired" }]
+text = "三趟走完，汐把渡船系在能岛渡口最下一级石阶的铁环上，蹲在船帮边跟你算钱。船尾坐着那个下田来的后生，正把橹绳一圈一圈收好。她朝他扬扬下巴：“摇得不好，老往东偏。潮会教他的。”她算得慢，一枚一枚数在船板上，数到一半忘了，又从头数；该道谢了她还蹲着，想起来才站直，弯腰弯得比谁都急。钱一文不少，堆在船板上，她没推过来，先把船头那面小旗拔下来，摊在膝头。旗角的线脚被海风咬得起了毛，白圈也褪成了米色。“我想改一改。”她用指甲在白圈底下划了一道，弯的，“加一道潮线。让劫船的看见就知道，这条船看潮。”她从船舱里摸出一只盛白漆的蛤壳，一把刷船用的小漆刷。"
+
+[[tracks.chapters.choices]]
+key = "draw_line"
+text = "替她在旗上画那道潮线。"
+next = "done"
+reply = "你蘸了漆，一刷下去，船被浪托了一下，潮线歪出了白圈。你要抹，她按住你的手腕：“别动。歪的才像潮。”她把旗插回船头晾着，这才把船板上的钱推过来。“往后你的船过能岛，到渡口来，有人给你指潮。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ushio", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_ushio-after", title = "旗上的潮线" },
+  { kind = "flag", flag = "c13_request_ushio_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "her_flag"
+text = "旗是她的，潮线该她自己画。"
+next = "done"
+reply = "她捏着漆刷看了你一会儿，低头画了一道，笔直，像拿绳子绷过。她盯着那道线，拿袖子抹了，又画，这回是弯的，一头高一头低，跟窄水道早潮涨上来的样子一样。袖口沾了一片白，她也不管，把船板上的钱推过来：“弯的。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ushio", value = 7 },
+  { kind = "fame", value = 1 },
+  { kind = "memory", memory = "mem-request_ushio-after", title = "旗上的潮线" },
+  { kind = "flag", flag = "c13_request_ushio_done" },
+]

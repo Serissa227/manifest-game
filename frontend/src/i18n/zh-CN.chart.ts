@@ -1,0 +1,115 @@
+// 界面字符串（zh-CN）：航海图、航行状态、选择目的地与入港。
+// 键名加模块前缀（如 `chart.xxx` 或驼峰 `chartXxx`），避免与其他模块重复。
+export const chart = {
+  // 航海图上的小窗
+  chartWinLegend: "图例",
+  chartWinPlaces: "地点",
+  chartCollapse: "收起",
+  chartExpand: "展开",
+  chartToggleLegend: "收起或展开图例",
+  chartTogglePlaces: "收起或展开地点列表",
+  chartUnknownPlace: "未到访",
+  chartFilter: "查找地点",
+  chartFilterEmpty: "没有名字相符的地点。",
+
+  // 地点列表的分组（括号里是个数）
+  chartGroupPorts: "港口（{n}）",
+  chartGroupCities: "内陆城市（{n}）",
+  chartGroupWild: "尚未开拓（{n}）",
+  chartGroupClaimed: "已被占领（{n}）",
+  chartGroupMine: "我的殖民地（{n}）",
+  chartGroupOther: "他人的殖民地（{n}）",
+
+  // 殖民点与发现物
+  chartSites: "未开拓之地",
+  chartSiteWild: "殖民点（未开拓）",
+  chartSiteClaimed: "殖民点（已被{faction}占领）",
+  chartSiteColony: "殖民地：{name}",
+  chartSiteOther: "殖民地（他人所有）",
+  chartLegendSite: "殖民点（未开拓）",
+  chartLegendClaimed: "势力占领",
+  chartLegendColony: "殖民地",
+  chartLegendDiscovery: "发现物",
+  // 天况标记（各海区当天的天气，EXPANSION.md §9.3）与夜间灯火
+  chartLegendWeather: "各海区当天的天况（随风向漂移）",
+  "chartLegendSky.cloudy": "多云",
+  "chartLegendSky.rain": "雨",
+  "chartLegendSky.fog": "雾",
+  "chartLegendSky.storm": "暴风雨",
+  "chartLegendSky.snow": "雪",
+  chartLegendLights: "夜间灯火",
+
+  // 选择目的地
+  chartPickHint: "请在海图上选择目的地",
+  chartPickSub: "点选一座港口，或在左侧的地点列表中选择。",
+  chartPickCancel: "取消",
+  chartPickPortOnly: "只能驶向港口；内陆城市请组建商队前往。",
+  chartPickPortOrSite: "只能驶向港口或殖民点；内陆城市请组建商队前往。",
+  chartPickSubSites: "点选一座港口或殖民点，或在左侧的地点列表中选择。",
+  chartAlreadyHere: "旗舰队已经停泊在{port}。",
+  chartNoFleet: "没有可以出航的舰队。",
+
+  // 出航确认
+  chartConfirmTitle: "扬帆出港",
+  chartConfirmDest: "目的地",
+  chartConfirmNew: "未到访的港口",
+  chartConfirmDays: "预计航程",
+  chartConfirmSupplies: "建议备粮水",
+  chartConfirmHave: "现有粮水",
+  chartConfirmHaveValue: "粮 {food}，水 {water}（可支撑 {days} 天）",
+  chartConfirmShort: "粮水不足以支撑全程，途中可能断粮。",
+  chartResupply: "补给到建议量（约 {cost}）",
+  chartConfirmCrew: "船员",
+  chartConfirmCrewValue: "{crew} 人（最少 {min}，最多 {max}）",
+  chartCrewShort: "船员不足：至少要 {min} 人，现在只有 {crew} 人，开不了船。",
+  chartConfirmNoRoute: "无法到达该港口。",
+  chartConfirmLoading: "正在规划航线……",
+  chartConfirmSail: "起航",
+  chartConfirmRepick: "重新选择",
+  chartConfirmCancel: "取消出港",
+  chartConfirmAutoStart: "确认后时间将以 1× 开始流动。",
+
+  // 出航确认：目的地是殖民点
+  chartConfirmStatus: "现状",
+  chartConfirmTerrain: "地形",
+  chartTerrainValue: "{terrain}（肥力 {fertility}，风险 {hazard}）",
+  chartStatusWild: "未开拓之地",
+  chartStatusClaimed: "已被{faction}占领",
+  chartStatusMine: "我的殖民地：{name}",
+  chartStatusOther: "他人的殖民地",
+  chartConfirmNewSite: "尚未探明",
+  chartConfirmNoRouteSite: "无法到达该地。",
+  chartConfirmFoundHint: "抵达后可在此建立殖民地：至少 {settlers} 名殖民者、{cost:money} 与建材。",
+  chartConfirmTakenHint: "此地已有主人，不能在这里建立殖民地。",
+
+  // 航行状态
+  chartHudTitle: "航行状态",
+  chartHudDest: "目的地",
+  chartHudDays: "已航行",
+  chartHudEta: "预计还需",
+  chartHudSupply: "粮水可支撑",
+  chartHudMorale: "士气",
+  chartHudCrew: "船员",
+  chartHudCrewValue: "{crew} 人（至少 {min}）",
+  chartHudDaysValue: "{n} 天",
+  chartHudUnknown: "—",
+  chartHudSupplyLow: "粮水告急！",
+  chartHudMoraleLow: "士气低落",
+  chartHudChangeCourse: "改变航向",
+  chartHudDrifting: "漂泊中",
+  chartHudFound: "新发现",
+  chartHudFoundValue: "{n} 处",
+
+  // 入港
+  chartArrived: "抵达{port}。",
+  chartArrivedPaused: "已自动暂停，出港时按原来的速度继续。",
+  chartDiscovered: "发现新港口：{port}！市场行情已记入航海日志。",
+  chartArrivedWild: "抵达未开拓之地：{site}。",
+  chartArrivedWildNew: "探明未开拓之地：{site}！可以在此建立殖民地。",
+  chartArrivedColony: "抵达殖民地{name}。",
+  chartArrivedClaimed: "抵达{site}：此地已被{faction}占领。",
+  chartArrivedOther: "抵达{site}：这里已有他人的殖民地。",
+
+  // 航行中的发现
+  chartFoundNotice: "发现：{name}！到港口商会报告可领取赏金。",
+} as const;

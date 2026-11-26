@@ -1,0 +1,180 @@
+# 请托：须断了的参（request_jakdan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：扎克丹（jakdan，1538-12-26 生，男），建州的鹰猎人；势力 jianzhou，身份档 0（平民），风险 m。cast：cast/story_eastasia.toml。
+# 类型：说服（persuade）。四章：offer（报价）、persuade（书记的棚子）、result（鹰手套与海）、result_fee（交了过秤钱的那一路）；没有 stage 章，因此没有 window 与 default。
+#   brief 写三章；result 里的 describe 原本要求旗标 c13_request_jakdan_fair，而 fee 一路不设这面旗标，同一轨道里自己挡自己，审计会报“准备后条件仍不满足”。
+#   所以改成按 next 分流：negotiate / jurchen -> result（describe 与 short），fee -> result_fee（另有两个选项，报酬折中）。fair 旗标仍由前两条路设，作记录，没有条件读它。
+# 报价：L（来信／代理人）。扎克丹在建州，不上地图，也不出场；出面的是一个常来牛庄互市的女真皮货客（代理人，不新建 cast），auto=true，报价港 niuzhuang。
+#   offer 写 family=c13_offer_niuzhuang、冷却 20 天；deadline 为窗口止日 1562-06-30，timeout 直接 failed，不写见闻。
+#   扎克丹的话全部是皮货客转述（或手套随话），speaker 在 offer 省略。
+# 窗口：报价 1557-06-01 至 1562-06-30（offer 的 when）；后几章不写日期条件，只用 alive。persuade deadline_days=60（超时 failed + 好感 -3 + 旗标 _late + 来信一封）；result / result_fee 无期限，可一直等。
+# 依据·史实：明代辽东马市上，女真以人参、貂皮、马匹换盐、铁锅与布，官府按“抽分”收税、按成色压价；人参以参须齐全为上品，断须则折价。正文只写书记按“规矩”压价、猎户出不了声的那种气氛。
+#   七大恨（本世界线提前到 1563）在这条请托之后，正文一字不提；不写兵器、弓弦、军情；扎克丹要的只写“盐和铁锅”；不写皇太极，也不提扎克丹的童年。
+#   牛庄在本世界里是辽河旧道上的互市港，与后来的营口不是一处。
+# 依据·原创：牛庄栅门边的皮货客、桦树皮包与活扣、青苔垫参、书记小指的长指甲和册子上先写下的“断须”、熬鹰的皮手套（虎口磨毛、一道旧爪痕用细筋缝上）、“海像冬天的草原”这句回话。
+# 秘密：cast 无 secret；persona 里的“越界挖参、见过被抓的人”本请托不写。jurchen 一路只让皮货客讲苏子河上游的一道沟、一棵老榆树，不谈界碑。
+# 口头禅：只用 lines.greet 里的那句“别动，它在看你”，放在 persuade 书记伸手扯活扣的那一刻，全轨道一次。
+# 读的旗标：c13_request_jakdan_asked（result / result_fee 的变体）。不读 C7 旗标，不读 c13_main_*（gate_main 为空）。
+# 设的旗标：c13_request_jakdan_accepted（offer 两条接法）、_asked（ask_want，分支旗标）、_declined（decline）、_fair（negotiate / jurchen）、_late（persuade 超时）、
+#   _done（result.describe，终局）、_partial（result.short、result_fee 两个选项，终局）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 550（result.describe），折中 300（result.short、result_fee 两条）；好感 accept/ask_want +2，路上最多 +5（jurchen），结尾最多 +8，合计最多 +15；名声 +1（只在 result / result_fee 的收尾，各一次）；
+#   回忆 mem-request_jakdan-result（只有 result.describe）。皮手套只写在正文，不发物品。fee 一路自己花 200，是玩家的开销，不计入报酬。正文不写报酬数字。
+# 依赖：港口 niuzhuang（ports_east_asia.toml）；技能 negotiation、lang_jurchen（skills.toml）；人物 jakdan（cast/story_eastasia.toml）。无需 B10b 改名，无主线门禁。
+# 局限：persuade 的三条路都有门槛（谈判 60、女真话 60、手里有钱）。三样都没有的玩家会停在这一章，等到期限走 failed，来信说参照断须的价卖了。brief 没给无门槛的路，没有加。
+# 回忆插画清单：
+#   mem-request_jakdan-result「熬鹰的皮手套」：一副发黑的鹿皮手套搁在牛庄栅门边的木桩上，虎口磨出了毛，一道旧爪痕用细筋缝着，远处是辽河旧道的芦苇。
+
+[[tracks]]
+key = "request_jakdan"
+name = "须断了的参"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["jakdan"]
+
+# 一、桦树皮包的参：栅门边，皮货客把参摊给你看。
+[[tracks.chapters]]
+key = "offer"
+title = "桦树皮包的参"
+text = "牛庄互市的栅门边，一个女真皮货客蹲在貂皮摊后头，见你走近，把脚边的桦树皮包推到你面前，掀开一角。参须一根根完好，细得像白头发，铺在青苔上。“扎克丹的参。”他的汉话咬得很硬，“书记看都没看，说须断了，只给断须参的钱。扎克丹要自己来，我拦下了。他来，只会把人骂一顿，往后就进不了这道栅门。”他把桦树皮盖回去，手掌压平：“扎克丹说，这参是他一根一根从土里挑出来的，书记拿眼睛瞎说。你去跟书记谈，行不行？”"
+mood = "tense"
+at = "niuzhuang"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1562, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1562, 6, 30]
+timeout = { next = "failed" }
+family = "c13_offer_niuzhuang"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去跟书记谈这捆参的价。"
+next = "persuade"
+reply = "皮货客把参用桦树皮重新包好，绳结打了个活扣，一拉就开，他把它放到你手里。“扎克丹交代了，谈不成，别跟书记吵。”他顿了顿，“他自己吵够了。”"
+effects = [{ kind = "affinity", person = "jakdan", value = 2 }, { kind = "flag", flag = "c13_request_jakdan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_want"
+text = "问他：扎克丹要钱，还是要换东西？"
+next = "persuade"
+reply = "“盐和铁锅。”皮货客想了想，又说，“还有一件。他没见过海，听说你们是从海上来的。你谈完了，给他捎句话，说海是什么样子。”他把参裹回桦树皮里，绳头一抽，系了个松松的结，递给你。"
+effects = [{ kind = "affinity", person = "jakdan", value = 2 }, { kind = "flag", flag = "c13_request_jakdan_accepted" }, { kind = "flag", flag = "c13_request_jakdan_asked" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "马市的事，我不插手。"
+next = "failed"
+reply = "皮货客点点头，把参用桦树皮重新包好，放回脚边。“成。”他转向下一个过路的买主，貂皮在他手里抖开，像什么都没问过。"
+effects = [{ kind = "flag", flag = "c13_request_jakdan_declined" }]
+
+# 二、十捆有九捆断须：书记的棚子里，册子上先写了字。
+[[tracks.chapters]]
+key = "persuade"
+title = "十捆有九捆断须"
+text = "书记的棚子在栅门里头，一杆秤，一本册，一方砚台。你把桦树皮包放上桌，绳结还没解，书记已经提笔写下两个字：断须。“女真人的参，十捆有九捆断须。”他眼皮都没抬，“规矩。”他说着伸手去扯那个活扣，小指的指甲留得老长。皮货客在你背后咬着牙，低声念了一句扎克丹熬鹰时的话：“别动，它在看你。”你的手已经伸出去一半，停在了半空。"
+speaker = "captain"
+mood = "tense"
+at = "niuzhuang"
+when = [{ kind = "alive", person = "jakdan", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "jakdan", value = -3 }, { kind = "flag", flag = "c13_request_jakdan_late" }, { kind = "letter", person = "jakdan", text = "（皮货客代笔）参照断须的价卖了，桦树皮包留在书记的棚子里。扎克丹说，明年不来牛庄了。" }] }
+
+[[tracks.chapters.choices]]
+key = "negotiate"
+text = "当面过秤，一根一根数须给他看。"
+next = "result"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "书记说话比你快，你刚开口就被他截断了。"
+news = "牛庄互市的棚子里，一捆女真人的参被一根一根数了须，书记把册子上的字改了。"
+reply = "你没跟他争规矩，只说过秤不耽误书记的工夫，然后自己拨开活扣，把参一根根摆上秤盘，须朝一个方向理顺，从头数起。数到第四十根，书记把笔往砚台上一搁，划掉“断须”，在旁边改写“上等”，价钱照上等给。皮货客咬着的牙终于松开了。"
+effects = [{ kind = "affinity", person = "jakdan", value = 3 }, { kind = "flag", flag = "c13_request_jakdan_fair" }]
+
+[[tracks.chapters.choices]]
+key = "jurchen"
+text = "叫皮货客用女真话说清挖参的地方，我转述。"
+next = "result"
+requires = [{ kind = "skill", skill = "lang_jurchen", ge = 60 }]
+hint = "皮货客一开口就是女真话，你只听懂了一个“沟”字。"
+news = "牛庄互市的棚子里，一个外乡船长替女真皮货客翻话，讲得书记把册子上的“断须”划掉了。"
+reply = "皮货客改说女真话，一口气讲下去：苏子河上头哪道沟，哪棵老榆树下，挖了几天，拿青苔垫了三层才抬下山。你一句句转给书记。他起先还在册子上画圈，听到“青苔垫三层”，笔停住了：“这么讲究的参，我头一回见。”册子上的“断须”划掉，改成了“上等”。"
+effects = [{ kind = "affinity", person = "jakdan", value = 5 }, { kind = "flag", flag = "c13_request_jakdan_fair" }]
+
+[[tracks.chapters.choices]]
+key = "fee"
+text = "交一笔“过秤钱”，请他照实写。"
+next = "result_fee"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "书记看了看你的钱袋，又把笔蘸了蘸墨。"
+news = "牛庄互市的棚子里，一个外乡船长给书记递了过秤钱，一捆女真人的参在册子上从“断须”改成了“中等”。"
+reply = "你把一小串钱放在册子旁边，说请他照实写。书记没看钱，手一拢，钱进了袖子。他划掉“断须”，旁边写上“中等”。皮货客盯着那两个字，嘴唇动了动，没出声。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "jakdan", value = 2 }]
+
+# 整合补（2026-10-26）：三条路都有门槛，三样都没有的玩家不必干等 60 天，可以回去照实说，轨道走 failed。
+[[tracks.chapters.choices]]
+key = "report_back"
+text = "不跟书记争了，回去照实告诉皮货客。"
+next = "failed"
+news = "牛庄互市的书记棚里，一捆女真人的参还是记了“断须”，替皮货客出头的外乡船长自己把包系好，送他出了栅门。"
+reply = "你把桦树皮包的活扣重新系上，系得跟原先一样紧。皮货客听你说完，手指在绳结上摩挲了好一阵，才把包背回肩上：“断须就断须，参是真的。”他说扎克丹那边由他去讲，出栅门前又把包往肩上颠了颠。"
+effects = [{ kind = "affinity", person = "jakdan", value = -1 }, { kind = "flag", flag = "c13_request_jakdan_told" }]
+
+# 三、海是什么样子：数须或翻话换来上等的价，皮货客带着手套回来。
+[[tracks.chapters]]
+key = "result"
+title = "海是什么样子"
+text = "一个月后，皮货客在栅门边等你，背上多了一个包。他把包放在你脚边：“扎克丹托我带的。”里面是一副熬鹰的皮手套，鹿皮鞣得发黑，虎口磨出了毛，一道旧爪痕被人拿细筋缝了起来。“他还有句话要问。”皮货客挠挠头，“海是什么样子？他没见过。你见过，你怎么说？”"
+speaker = "captain"
+mood = "cheerful"
+at = "niuzhuang"
+objectives = [{ kind = "wait", days = 30, text = "皮货客一个月后回来。" }]
+when = [{ kind = "alive", person = "jakdan", value = true }]
+news = "牛庄互市上，一个女真皮货客背来一副熬鹰的手套，说是送给一个外乡船长的。"
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_jakdan_asked" }]
+text = "一个月后，皮货客在栅门边等你，背上多了一个包。他把包放在你脚边，没提盐和铁锅，你问过了。“扎克丹托我带的。”里面是一副熬鹰的皮手套，鹿皮鞣得发黑，虎口磨出了毛，一道旧爪痕被人拿细筋缝了起来。“他那句话，你想好了没有？”皮货客问，“海是什么样子。”"
+
+[[tracks.chapters.choices]]
+key = "describe"
+text = "说：海像冬天的草原，一眼望不到边，风比鹰还急。"
+next = "done"
+reply = "皮货客闭着眼念了两遍，睁开眼：“记住了。”他想了想，“扎克丹听了大概会骂。海哪有草好。骂完，他会想一整个冬天。”他把卖参的钱数出一份，推到你手里，又指指你的左手：“手套戴这只。鹰落这边。”"
+effects = [{ kind = "cash", value = 550 }, { kind = "affinity", person = "jakdan", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_jakdan-result", title = "熬鹰的皮手套" }, { kind = "flag", flag = "c13_request_jakdan_done" }]
+
+[[tracks.chapters.choices]]
+key = "short"
+text = "说：你自己来看。"
+next = "done"
+reply = "皮货客愣了一下，笑出声来，貂皮摊上的人都回头看。“这话，最像扎克丹自己会说的。他要是在这儿，也这么回你。”卖参的钱他分了你一半，手套是整副塞到你怀里的，没有分。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "jakdan", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jakdan_partial" }]
+
+# 三之二、中等的价钱：交了过秤钱的那一路。
+[[tracks.chapters]]
+key = "result_fee"
+title = "中等的价钱"
+text = "皮货客是在貂皮摊收摊的时候找到你的，先数钱。参卖了，价钱不高不低，他数得很慢，没抬头。数完才从背后拎出一个布包，里头是一副熬鹰的手套，鹿皮发黑，指根处有被爪尖勾出的细丝。“扎克丹托我带的。”他说，“他还问一句：海是什么样子？他没见过，问你。”"
+speaker = "captain"
+mood = "cheerful"
+at = "niuzhuang"
+objectives = [{ kind = "wait", days = 30, text = "等皮货客数完卖参的钱，一个月后回来。" }]
+when = [{ kind = "alive", person = "jakdan", value = true }]
+news = "牛庄互市的貂皮摊后头，女真皮货客数完卖参的钱，把一副磨毛了的鹰手套交给了一个外乡船长。"
+
+[[tracks.chapters.variants]]
+key = "v1_asked"
+when = [{ kind = "flag", flag = "c13_request_jakdan_asked" }]
+text = "皮货客是在貂皮摊收摊的时候找到你的，先数钱。参卖了，价钱不高不低，他数得很慢，没抬头。盐和铁锅的事他这回没提，你问过了。数完才从背后拎出一个布包，里头是一副熬鹰的手套，鹿皮发黑，指根处有被爪尖勾出的细丝。“扎克丹那句话，你想好了没有？”他问，“海是什么样子。”"
+
+[[tracks.chapters.choices]]
+key = "describe"
+text = "说：海是倒过来的草原，风一吹，整片都在跑。"
+next = "done"
+reply = "皮货客念了两遍，点点头：“我记下了。”他把卖参的钱分出一份，数得比平常慢。“书记那边的事，我不会对扎克丹讲。”他说，“他听见‘过秤钱’三个字，要把整座栅门骂一遍。”手套是整副递过来的，递的时候，他拿拇指把那几根勾出的细丝抹平了。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "jakdan", value = 5 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jakdan_partial" }]
+
+[[tracks.chapters.choices]]
+key = "short"
+text = "说：让他自己上船，看一回。"
+next = "done"
+reply = "皮货客看了你一会儿，点点头：“这话我原样带回去。”他把卖参的钱分了一份推过来，推的时候说：“中等的价钱，分不了多少。”手套是整副塞给你的，他按着你的手腕，把它压实了才松开。"
+effects = [{ kind = "cash", value = 300 }, { kind = "affinity", person = "jakdan", value = 3 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_jakdan_partial" }]

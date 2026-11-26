@@ -1,0 +1,938 @@
+/* 殖民地：顶部状态栏里的殖民地数量，以及殖民地窗口（.pn-colonies）。
+   殖民地窗口放在外壳窗口的羊皮纸内容区里，文字色取 .parchment / .pn 定义的变量；
+   港口窗口里的殖民点详情（.colony-in-port）与“建立殖民地”对话框（.colony-found）也带 .pn.pn-colonies，共用这里的样式。
+   选择器一律以 .hud-colonies 或 .pn-colonies 开头，避免与全局样式冲突。 */
+
+/* ── 顶部状态栏：殖民地数量；有殖民地断粮时数字变红并闪一下 ── */
+.hud-colonies .hud-stat-value {
+  color: var(--white);
+}
+.hud-colonies.hud-warn .hud-stat-value {
+  color: var(--red-3);
+  animation: hud-colony-warn 1.2s steps(2, jump-none) 3;
+}
+@keyframes hud-colony-warn {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* ── 殖民地窗口：名册 + 详情 ── */
+.pn-colonies .colony-slots {
+  display: flex;
+  align-items: center;
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--pn-ink2);
+}
+.pn-colonies .colony-layout {
+  display: grid;
+  grid-template-columns: minmax(170px, 220px) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+/* 名册：每个殖民地一张可按下的小卡 */
+.pn-colonies .colony-roster ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pn-colonies .colony-roster-item {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 6px 8px;
+  text-align: left;
+  font: inherit;
+  color: var(--pn-ink);
+  background: var(--pn-card);
+  border: 2px solid var(--pn-edge-soft);
+  border-radius: 0;
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    var(--pn-shadow);
+  cursor: pointer;
+}
+.pn-colonies .colony-roster-item:hover {
+  background: #fbeecb;
+}
+.pn-colonies .colony-roster-item:focus-visible {
+  outline: 2px dashed var(--pn-gold-dk);
+  outline-offset: 2px;
+}
+.pn-colonies .colony-roster-item.is-on {
+  background: #fbeecb;
+  border-color: var(--pn-gold-dk);
+  box-shadow:
+    inset 4px 0 0 var(--pn-gold),
+    var(--pn-shadow);
+}
+.pn-colonies .colony-roster-item.is-warn {
+  border-color: var(--pn-gold-dk);
+}
+.pn-colonies .colony-roster-item.is-bad {
+  border-color: var(--pn-red);
+}
+.pn-colonies .colony-roster-name {
+  font-family: var(--font-title, serif);
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--heading, var(--pn-ink));
+}
+.pn-colonies .colony-roster-site {
+  font-size: 11px;
+}
+.pn-colonies .colony-roster-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.pn-colonies .colony-roster-stats > span,
+.pn-colonies .colony-roster-build {
+  display: inline-flex;
+  align-items: center;
+}
+.pn-colonies .colony-roster-build {
+  gap: 4px;
+  font-size: 11px;
+  color: var(--pn-gold-dk);
+}
+.pn-colonies .colony-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.pn-colonies .colony-chips:empty {
+  display: none;
+}
+.pn-colonies .colony-chip,
+.pn-colonies .colony-risk {
+  font-style: normal;
+  font-size: 11px;
+  padding: 0 5px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.pn-colonies .colony-chip.bad,
+.pn-colonies .colony-risk.is-high {
+  color: var(--pn-red);
+  background: rgba(236, 106, 92, 0.15);
+}
+.pn-colonies .colony-chip.warn,
+.pn-colonies .colony-risk.is-mid {
+  color: var(--pn-gold-dk);
+  background: rgba(245, 214, 107, 0.25);
+}
+.pn-colonies .colony-risk {
+  margin-left: 6px;
+}
+.pn-colonies .colony-risk.is-low {
+  color: var(--pn-green);
+}
+
+/* 详情：标题、状态牌、警示 */
+.pn-colonies .colony-detail {
+  min-width: 0;
+}
+.pn-colonies .colony-detail-head {
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-name {
+  margin: 0;
+  font-family: var(--font-title, serif);
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--heading, var(--pn-ink));
+  text-shadow: 1px 1px 0 var(--pn-hi);
+}
+.pn-colonies .colony-detail-head .sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+.pn-colonies .colony-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+.pn-colonies .colony-tiles.compact {
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+}
+.pn-colonies .colony-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 6px 8px;
+  background: var(--pn-well);
+  border: 2px solid var(--pn-edge);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    inset -1px -1px 0 var(--pn-edge-soft),
+    var(--pn-shadow);
+}
+.pn-colonies .colony-tile-head {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--pn-muted);
+}
+.pn-colonies .colony-tile-value {
+  font: bold 18px/1.1 "Consolas", "Microsoft YaHei", monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--pn-ink);
+  white-space: nowrap;
+}
+.pn-colonies .colony-tile.is-ok .colony-tile-value {
+  color: var(--pn-green);
+}
+.pn-colonies .colony-tile.is-warn {
+  border-color: var(--pn-gold-dk);
+}
+.pn-colonies .colony-tile.is-warn .colony-tile-value {
+  color: var(--pn-gold-dk);
+}
+.pn-colonies .colony-tile.is-bad {
+  border-color: var(--pn-red);
+  background: #f6d3c6;
+}
+.pn-colonies .colony-tile.is-bad .colony-tile-value {
+  color: var(--pn-red);
+  animation: colony-blink 1.2s steps(2, jump-none) 3;
+}
+.pn-colonies .colony-tile small {
+  font-size: 11px;
+}
+.pn-colonies .colony-alert {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: bold;
+  border: 2px solid;
+}
+.pn-colonies .colony-alert.bad {
+  color: #fff3b0;
+  background: var(--pn-red);
+  border-color: #4a0f14;
+  text-shadow: 1px 1px 0 #4a0f14;
+}
+.pn-colonies .colony-alert.warn {
+  color: var(--pn-ink2);
+  background: rgba(245, 214, 107, 0.35);
+  border-color: var(--pn-gold-dk);
+}
+
+/* 两栏的小节 */
+.pn-colonies .colony-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0 16px;
+}
+.pn-colonies .colony-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 4px 0;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.pn-colonies .colony-note {
+  margin: 4px 0;
+  font-size: 12px;
+  color: var(--pn-muted);
+}
+.pn-colonies .colony-note.warn {
+  font-weight: bold;
+  color: var(--pn-gold-dk);
+}
+.pn-colonies .colony-reason {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--pn-red);
+}
+
+/* 数值条：沿用 .pn-bar 的像素分段样式，按含义换颜色；warn 时变红 */
+.pn-colonies .colony-meter {
+  display: block;
+  width: 100%;
+  margin: 2px 0;
+}
+.pn-colonies .colony-line > .colony-meter,
+.pn-colonies .colony-cargo-cap > .colony-meter,
+.pn-colonies .colony-site-meters .colony-meter,
+.pn-colonies .colony-resources .colony-meter,
+.pn-colonies .colony-roster-build > .colony-meter {
+  display: inline-block;
+  flex: 1 1 60px;
+  width: auto;
+  margin: 0;
+}
+.pn-colonies .colony-tone-pop {
+  --bar: #6a8ad8;
+}
+.pn-colonies .colony-tone-morale {
+  --bar: #e2789a;
+}
+.pn-colonies .colony-tone-food {
+  --bar: #e0b85a;
+}
+.pn-colonies .colony-tone-cargo {
+  --bar: #b8804a;
+}
+.pn-colonies .colony-tone-build {
+  --bar: #dca434;
+}
+.pn-colonies .colony-tone-defense {
+  --bar: #8a8699;
+}
+.pn-colonies .colony-tone-fertile {
+  --bar: #6aad48;
+}
+.pn-colonies .colony-tone-hazard {
+  --bar: #c8373a;
+}
+.pn-colonies .colony-tone-rich {
+  --bar: #4fd0c4;
+}
+.pn-colonies .colony-tone-tax {
+  --bar: #f5d66b;
+}
+.pn-colonies .colony-meter.warn {
+  --bar: #ec6a5c;
+}
+
+/* 士气构成：左边一道颜色表示提升或拖累 */
+.pn-colonies .colony-factors {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.pn-colonies .colony-factor {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 6px;
+  background: var(--pn-card);
+  border-left: 4px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-factor b {
+  font-variant-numeric: tabular-nums;
+}
+.pn-colonies .colony-factor.is-up {
+  border-left-color: #6aad48;
+}
+.pn-colonies .colony-factor.is-up b {
+  color: var(--pn-green);
+}
+.pn-colonies .colony-factor.is-down {
+  border-left-color: #ec6a5c;
+}
+.pn-colonies .colony-factor.is-down b {
+  color: var(--pn-red);
+}
+
+/* 建筑卡片与建造选项：顶边按建筑种类着色 */
+.pn-colonies .colony-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(236px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pn-colonies .colony-card {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--pn-card);
+  border: 2px solid var(--pn-edge);
+  border-top-width: 5px;
+  box-shadow:
+    inset 1px 1px 0 var(--pn-hi),
+    var(--pn-shadow);
+}
+.pn-colonies .colony-card.kind-food {
+  border-top-color: #6aad48;
+}
+.pn-colonies .colony-card.kind-extract {
+  border-top-color: #b8804a;
+}
+.pn-colonies .colony-card.kind-process {
+  border-top-color: #8a64b0;
+}
+.pn-colonies .colony-card.kind-storage {
+  border-top-color: #7d5f36;
+}
+.pn-colonies .colony-card.kind-defense {
+  border-top-color: #62627a;
+}
+.pn-colonies .colony-card.kind-morale {
+  border-top-color: #e2789a;
+}
+.pn-colonies .colony-card.kind-dock {
+  border-top-color: #2f86b8;
+}
+.pn-colonies .colony-card.kind-housing {
+  border-top-color: #dca434;
+}
+.pn-colonies .colony-card.is-focus {
+  border-color: var(--pn-gold-dk);
+  box-shadow:
+    0 0 0 3px var(--pn-gold-lt),
+    var(--pn-shadow);
+  animation: colony-focus 0.5s steps(2, jump-none) 4;
+}
+.pn-colonies .colony-option.is-blocked {
+  background: var(--pn-well);
+}
+.pn-colonies .colony-option.is-blocked .colony-bicon {
+  filter: grayscale(0.7);
+}
+.pn-colonies .colony-bicon {
+  flex: none;
+  align-self: flex-start;
+  display: inline-block;
+  padding: 4px;
+  line-height: 0;
+  background: var(--pn-wood);
+  border: 1px solid var(--pn-ink);
+  box-shadow:
+    inset 1px 1px 0 var(--pn-wood-lt),
+    inset -1px -1px 0 var(--pn-wood-dk);
+}
+.pn-colonies .colony-line .colony-bicon,
+.pn-colonies .colony-producible .colony-bicon {
+  padding: 2px;
+}
+.pn-colonies .colony-card-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.pn-colonies .colony-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.pn-colonies .colony-card-head strong {
+  font-size: 14px;
+}
+.pn-colonies .colony-pips {
+  display: inline-flex;
+  gap: 2px;
+}
+.pn-colonies .colony-pips i {
+  width: 12px;
+  height: 6px;
+  background: var(--pn-wood-dk);
+  border: 1px solid var(--pn-ink);
+}
+.pn-colonies .colony-pips i.on {
+  background: var(--pn-gold);
+  box-shadow: inset 0 1px 0 var(--pn-gold-lt);
+}
+.pn-colonies .colony-kind {
+  font-size: 11px;
+}
+.pn-colonies .colony-effect {
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--pn-green);
+}
+.pn-colonies .colony-effect.muted {
+  font-weight: normal;
+  color: var(--pn-muted);
+}
+.pn-colonies .colony-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  font-size: 12px;
+}
+.pn-colonies .colony-flow-label {
+  margin-right: 2px;
+  color: var(--pn-muted);
+}
+.pn-colonies .colony-good {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 5px 1px 2px;
+  font-size: 12px;
+  white-space: nowrap;
+  background: var(--pn-hi);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-good.bad {
+  color: var(--pn-red);
+  background: rgba(236, 106, 92, 0.12);
+  border-color: var(--pn-red);
+}
+.pn-colonies .colony-good-qty {
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+.pn-colonies .colony-miss {
+  margin-left: 3px;
+  font-style: normal;
+  color: var(--pn-red);
+}
+.pn-colonies .colony-card-foot {
+  font-size: 11px;
+}
+.pn-colonies .colony-tag {
+  padding: 0 5px;
+  font-size: 11px;
+  white-space: nowrap;
+  background: var(--pn-well);
+  border: 1px solid var(--pn-edge);
+}
+.pn-colonies .colony-tag.new {
+  color: #fffaf0;
+  background: #4f8a3a;
+  border-color: var(--pn-green);
+}
+.pn-colonies .colony-cost {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+}
+.pn-colonies .colony-cost .colony-gap {
+  margin-left: 8px;
+}
+.pn-colonies .colony-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* 在建工程：黄色斜纹的施工牌 */
+.pn-colonies .colony-construct {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background:
+    repeating-linear-gradient(135deg, rgba(245, 214, 107, 0.35) 0 8px, transparent 8px 16px),
+    var(--pn-card);
+  border: 2px dashed var(--pn-gold-dk);
+}
+.pn-colonies .colony-construct-main {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* 税率档位：一排可按的档位牌，当前档位描金 */
+.pn-colonies .colony-tax {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 6px;
+}
+.pn-colonies .colony-tax-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  font: inherit;
+  color: var(--pn-ink);
+  background: var(--pn-card);
+  border: 2px solid var(--pn-edge-soft);
+  border-radius: 0;
+  box-shadow: var(--pn-shadow);
+  cursor: pointer;
+}
+.pn-colonies .colony-tax-step:hover {
+  background: #fbeecb;
+}
+.pn-colonies .colony-tax-step:focus-visible {
+  outline: 2px dashed var(--pn-gold-dk);
+  outline-offset: 2px;
+}
+.pn-colonies .colony-tax-step.is-on {
+  background: var(--pn-gold-lt);
+  border-color: var(--pn-gold-dk);
+  box-shadow:
+    inset 0 0 0 2px var(--pn-gold),
+    var(--pn-shadow);
+}
+.pn-colonies .colony-tax-step strong {
+  font-size: 14px;
+}
+.pn-colonies .colony-tax-step small {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 上月统计 */
+.pn-colonies .colony-month {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 3px 12px;
+  margin: 0;
+  font-size: 13px;
+}
+.pn-colonies .colony-month dt {
+  color: var(--pn-muted);
+}
+.pn-colonies .colony-month dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 装卸：船舱与殖民地仓库两栏 */
+.pn-colonies .colony-cargo-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+.pn-colonies .colony-cargo-col {
+  min-width: 0;
+  padding: 6px 8px;
+  background: var(--pn-well);
+  border: 2px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-cargo-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  margin-bottom: 6px;
+}
+.pn-colonies .colony-cargo-cap {
+  display: flex;
+  flex: 1 1 140px;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.pn-colonies .colony-cargo-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pn-colonies .colony-cargo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  padding: 4px;
+  background: var(--pn-card);
+  border: 1px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-cargo-row .field {
+  margin: 0;
+}
+.pn-colonies .colony-cargo-row .field > span {
+  display: none;
+}
+.pn-colonies .colony-cargo-row input[type="number"] {
+  width: 72px;
+}
+.pn-colonies .colony-quick {
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+/* 放弃殖民地的二次确认 */
+.pn-colonies .colony-confirm {
+  padding: 8px 10px;
+  background: rgba(236, 106, 92, 0.12);
+  border: 2px solid var(--pn-red);
+}
+.pn-colonies .colony-confirm p {
+  margin: 0 0 6px;
+  font-weight: bold;
+  color: var(--pn-red);
+}
+
+/* ── 港口窗口里的殖民点与殖民地 ── */
+.pn-colonies.colony-in-port {
+  margin-top: 6px;
+}
+.pn-colonies .colony-lore {
+  margin: 4px 0 8px;
+  padding: 6px 10px;
+  font-style: italic;
+  color: var(--pn-ink2);
+  background: rgba(255, 250, 240, 0.4);
+  border-left: 4px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-flag {
+  flex: none;
+  display: inline-block;
+  width: 12px;
+  height: 16px;
+  margin-right: 8px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+.pn-colonies .colony-site-meters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 4px 14px;
+  margin: 4px 0;
+}
+.pn-colonies .colony-site-meters > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.pn-colonies .colony-resources,
+.pn-colonies .colony-producible,
+.pn-colonies .colony-checks,
+.pn-colonies .colony-fleets {
+  display: grid;
+  gap: 3px;
+  margin: 4px 0;
+  padding: 0;
+  list-style: none;
+}
+.pn-colonies .colony-resources li {
+  display: grid;
+  grid-template-columns: minmax(7em, auto) auto minmax(60px, 1fr);
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.pn-colonies .colony-producible li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.pn-colonies .colony-checks li,
+.pn-colonies .colony-fleets li {
+  position: relative;
+  padding: 2px 6px 2px 22px;
+  font-size: 13px;
+  background: var(--pn-card);
+}
+.pn-colonies .colony-checks li::before,
+.pn-colonies .colony-fleets li::before {
+  content: "✔";
+  position: absolute;
+  left: 6px;
+  color: var(--pn-green);
+}
+.pn-colonies .colony-checks li.bad,
+.pn-colonies .colony-fleets li.bad {
+  color: var(--pn-red);
+}
+.pn-colonies .colony-checks li.bad::before,
+.pn-colonies .colony-fleets li.bad::before {
+  content: "✘";
+  color: var(--pn-red);
+}
+
+/* ── “建立殖民地”对话框 ── */
+.pn-colonies.colony-found {
+  width: min(520px, calc(100vw - 32px));
+}
+.pn-colonies .colony-found-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-family: var(--font-title, serif);
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--heading, var(--pn-ink));
+}
+.pn-colonies .colony-found-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+}
+.pn-colonies .colony-found-name .field {
+  flex: 1 1 200px;
+  margin: 0;
+}
+.pn-colonies .colony-found-name input {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+}
+.pn-colonies .colony-found-settlers {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 6px 0 0;
+}
+.pn-colonies .colony-found-count {
+  min-width: 2.5em;
+  font: bold 18px/1 "Consolas", "Microsoft YaHei", monospace;
+  text-align: right;
+  color: var(--pn-ink);
+}
+.pn-colonies .colony-found-actions {
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+@keyframes colony-blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+@keyframes colony-focus {
+  from {
+    box-shadow:
+      0 0 0 3px var(--pn-gold-lt),
+      var(--pn-shadow);
+  }
+  to {
+    box-shadow:
+      0 0 0 5px var(--pn-gold),
+      var(--pn-shadow);
+  }
+}
+
+/* ── 殖民地窗口：选中殖民点时名册上方的殖民点卡片（与港口窗口同一份详情） ── */
+.pn-colonies .colony-site-card {
+  margin: 0 0 12px;
+  padding: 8px 12px 10px;
+  background: var(--pn-card);
+  border: 2px solid var(--pn-gold-dk);
+  box-shadow:
+    inset 4px 0 0 var(--pn-gold),
+    var(--pn-shadow);
+}
+.pn-colonies .colony-site-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--pn-edge-soft);
+}
+.pn-colonies .colony-site-head small {
+  margin-left: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-shadow: none;
+  color: var(--pn-muted);
+}
+/* “在此建立殖民地”一节排在最前面，加一道金边提醒 */
+.pn-colonies .colony-found-cta {
+  padding: 4px 10px 8px;
+  background: rgba(245, 214, 107, 0.18);
+  border: 2px dashed var(--pn-gold-dk);
+}
+.pn-colonies .colony-found-ready {
+  font-weight: bold;
+  color: var(--pn-green);
+}
+.pn-colonies .colony-back-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 2px 0 4px;
+}
+/* 显示殖民点卡片时名册单独一栏，卡片横排 */
+.pn-colonies .colony-layout.is-roster-only {
+  grid-template-columns: 1fr;
+}
+.pn-colonies .colony-layout.is-roster-only .colony-roster ul {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* ── 殖民地详情：事件影响（组合事件的殖民地效果） ── */
+.pn-colonies .colony-chip.event {
+  color: #5a4fb0;
+  background: rgba(106, 138, 216, 0.15);
+}
+.pn-colonies .colony-line b.up,
+.pn-colonies .colony-note.up {
+  color: var(--pn-green);
+}
+.pn-colonies .colony-line b.down {
+  color: var(--pn-red);
+}
+.pn-colonies .colony-events {
+  display: grid;
+  gap: 4px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.pn-colonies .colony-event {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  padding: 3px 8px;
+  background: var(--pn-card);
+  border-left: 4px solid #6aad48;
+}
+.pn-colonies .colony-event.is-down {
+  border-left-color: #ec6a5c;
+}
+.pn-colonies .colony-event-label {
+  font-size: 13px;
+}
+.pn-colonies .colony-event-text {
+  flex: 1 1 180px;
+  font-variant-numeric: tabular-nums;
+}
+.pn-colonies .colony-event-left {
+  color: var(--pn-gold-dk);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .pn-colonies .colony-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-colonies.hud-warn .hud-stat-value,
+  .pn-colonies .colony-tile.is-bad .colony-tile-value,
+  .pn-colonies .colony-card.is-focus {
+    animation: none;
+  }
+}

@@ -1,0 +1,168 @@
+# C13d 请托：试价的十匹丝（request_huang_dun）。中文，Claude 写。
+# 人物：黄墩 huang_dun（1540-08-04 生，男；月港海商家的胖少爷，势力 ming，身份档 1），学院同学（cast/classmates_zhangzhou.toml）。
+# 类型：送货（deliver）；offer → deliver → settle，另有一章 settle_cheap（简报的 variants“卖贱了：工钱 700、终局旗标 partial”要改玩法，variants 只能换文字，所以拆成独立章节）。共 4 章，没有 stage 章。
+# 报价：当面（T）。人物按日程在月港码头（yuegang），auto=false，玩家“问请托”（ask:request_huang_dun）启动。
+# 窗口：报价 1573-01-01 至 1590-06-30；进行中与结账到 1590-12-31。deliver 章 deadline_days=150，超时走 failed，寄一封信。
+# 地点：月港 yuegang（报价与结账）；马尼拉 manila（交货，生理人市集）。
+# 身份档 1，中风险 ×1.4：工钱 1250，货款另付 3250（十匹丝 × 基准价 × 1.25）；卖贱了工钱 700、货款照付。
+# 依据（史实）：1571 年西班牙人在马尼拉立城，福建船载丝绸去换墨西哥运来的银，大帆船一年一班；1574 年末林凤攻马尼拉，城外烧过一片（deliver 的 variants 只用一句，不写战事、不写人名）；
+#   后来设八连市场（本请托不写）。生理人（Sangley）是西班牙人对福建来的商人的叫法。
+# 依据（原创）：一匹丝三两还是五两的争吵；红丝最先被摸；泉州腔的老商人（叙事人物，不建 cast）；大帆船进港前三两、进港后五两、走后又回三两；饭馆里最后一块麻糍归输家。
+# 待核：大帆船进港的月份与出港季风（正文一律不写具体月份，只让黄墩在桌上写一个自家的出港月份）。
+# 秘密：家里的船被劫以后他天不亮去码头扛货还债（cast secret）。本请托不碰，正文不暗示，见闻不写。
+# 与 C7 的交界：不写苏玛、格雷西克（pair_huang_dun_suma）；不写点心盒；林晚灯（bond_huang_dun）只在 offer 的 variants 里出场，
+#   读 c7_wandeng_unmasked_known 时多一句“你那档子事，我早不提了”，此外不提；不设任何 c7_ 旗标。
+# 读的旗标（只读）：c7_wandeng_unmasked_known；bond huang_dun（C 级以上）。
+# 设的旗标：c13_request_huang_dun_accepted / declined / five / cheap / late / done / partial（终局只设 done、partial 之一；分支旗标 five、cheap 两面）。
+# 依赖：B10b 日程与港口 yuegang、manila；货物 silk、技能 lang_chinese 现成；人物 huang_dun 在 cast/classmates_zhangzhou.toml（tracks 已含 request_huang_dun）。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；交货章 150 天内没到，他托泉州的船把丝带去卖了三两，来信一封；结账章没有期限，可以一直等。
+# 回忆插画清单：
+#   mem-request_huang_dun-settle：饭馆二楼的圆桌，盘子里只剩最后一块麻糍，一双筷子把它推向对面。
+
+[[tracks]]
+key = "request_huang_dun"
+name = "试价的十匹丝"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["huang_dun"]
+
+# 一、月港码头的货包上：他啃着饼，托你先运十匹丝去试价
+[[tracks.chapters]]
+key = "offer"
+title = "头一回去马尼拉"
+text = "月港码头，黄墩坐在一垛货包上啃饼，腮帮子鼓鼓的。见了我，他掰下一半递过来，饼屑落了一裤腿。“我家的船头一回去马尼拉，可那边的丝价谁也说不准。”他拿饼比画，“码头上有人讲一匹换三两银，有人讲五两，吵了半个月。你替我先运十匹过去卖一卖，就知道谁讲得对。丝在月港自己挑，货钱和工钱回来一并算。十匹不多，砸了，也就砸十匹。”他咽下一口，“试好了，我请你吃一顿；试砸了，也请。价钱是价钱，饭是饭。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "huang_dun", text = "在月港的码头找到他" }]
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "huang_dun", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "take_it"
+text = "接下，十匹丝绸，运到马尼拉试价。"
+next = "deliver"
+effects = [{ kind = "affinity", person = "huang_dun", value = 2 }, { kind = "flag", flag = "c13_request_huang_dun_accepted" }]
+reply = "他把另一半饼也塞过来，说路上饿。想了想又叮嘱：“丝要挑颜色鲜的，红的最好，西班牙人爱红的。”他拍掉手上的饼屑，“货钱我记着，不会让你垫着。”"
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "接下，问他：心里的底价是多少？"
+next = "deliver"
+effects = [{ kind = "affinity", person = "huang_dun", value = 2 }, { kind = "flag", flag = "c13_request_huang_dun_accepted" }]
+reply = "“四两。”他答得干脆，随即又改口，“四两是我娘说的。我自己想的是五两。”他舔了舔指头上的饼渣，“就是要试，试出来是她对还是我对。她要是对了，我回家得听三天。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "马尼拉的价，等别人试了再说。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_huang_dun_declined" }]
+reply = "他耸耸肩，把最后一口饼塞进嘴里，嚼了一会儿才咽下去。“那就等别人试。别人试砸了，可没人请他们吃饭。”他从货包上跳下来，往饭馆那条街走，看背影，一点也不急。"
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c_known"
+when = [{ kind = "bond", person = "huang_dun", level = "C" }, { kind = "flag", flag = "c7_wandeng_unmasked_known" }]
+text = "月港码头，黄墩坐在货包上啃饼，远远看见我，把饼举过头顶晃：“兄弟，吃了没？”不等我答，他掰下一半递过来，又补一句：“你那档子事，我早不提了。吃，吃。”他咽下一口，“我家的船头一回去马尼拉，丝价谁也说不准。码头上有人讲一匹三两，有人讲五两，吵了半个月。你替我先运十匹过去卖一卖，就知道谁讲得对。丝在月港自己挑，货钱和工钱回来一并算。十匹不多，砸了，也就砸十匹。试好了，我请你吃一顿；试砸了，也请。价钱是价钱，饭是饭。”"
+
+[[tracks.chapters.variants]]
+key = "v2_bond_c"
+when = [{ kind = "bond", person = "huang_dun", level = "C" }]
+text = "月港码头，黄墩坐在货包上啃饼，远远看见我，把饼举过头顶晃：“兄弟，吃了没？”不等我答，他掰下一半递过来，饼屑落了一裤腿。“我家的船头一回去马尼拉，丝价谁也说不准。码头上有人讲一匹三两，有人讲五两，吵了半个月。你替我先运十匹过去卖一卖，就知道谁讲得对。丝在月港自己挑，货钱和工钱回来一并算。十匹不多，砸了，也就砸十匹。”他咽下一口，“试好了，我请你吃一顿；试砸了，也请。价钱是价钱，饭是饭。”"
+
+# 二、马尼拉城外的生理人市集：十匹丝摊开，红的最先被摸
+[[tracks.chapters]]
+key = "deliver"
+title = "生理人的市集"
+text = "马尼拉城墙外，福建来的生意人把市集挤得转不开身，西班牙人管他们叫“生理人”。我的十匹丝才摊开，一圈手就伸过来，红的最先被摸，一匹展开又叠回去三回。黄墩那句“砸了也就砸十匹”在耳朵里响了一路。一个西班牙商人掂着银币，隔着翻译开价：一匹三两，现银，今天。邻摊的福建老商人往我这边偏过头，压着嗓子说：“等大帆船进港，价翻一倍。”我问船哪天到，他竖起一根手指：“一个月。”"
+speaker = "captain"
+mood = "tense"
+at = "manila"
+objectives = [{ kind = "goods", good = "silk", qty = 10, at = "manila", text = "把十匹丝绸运到马尼拉" }]
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "huang_dun", value = true }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "letter", person = "huang_dun", text = "丝绸我托泉州的船带去了，卖了三两。饭还是要请的。——黄墩" }, { kind = "affinity", person = "huang_dun", value = -3 }, { kind = "flag", flag = "c13_request_huang_dun_late" }] }
+news = "马尼拉城外的生理人市集上，月港来的船长摊开十匹丝绸，红的最先被摸，也卖得最快。"
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "当场跟西班牙商人磨价，磨到他肯出的最高价。"
+next = "settle"
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "settle_cheap", effects = [{ kind = "affinity", person = "huang_dun", value = -2 }, { kind = "flag", flag = "c13_request_huang_dun_cheap" }], news = "马尼拉城外的生理人市集，月港来的船长跟西班牙商人磨价磨到嗓子冒烟，十匹丝只多磨上来半两银。" }
+effects = [{ kind = "affinity", person = "huang_dun", value = 3 }, { kind = "flag", flag = "c13_request_huang_dun_five" }]
+reply = "磨了一个下午。西班牙商人每加一点价，就让翻译多叹一口气，我把每一匹卖给谁、什么价，一笔一笔记在本子上，天黑时翻译的嗓子已经哑了。"
+news = "马尼拉城外的生理人市集，听说月港来的船长跟西班牙商人磨了一个下午，红丝卖出了六两的价。"
+
+[[tracks.chapters.choices]]
+key = "ask_old"
+text = "向福建老商人请教：大帆船进港前后的价各是多少。"
+next = "settle"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "老商人说的是泉州腔，你只听懂一半"
+effects = [{ kind = "affinity", person = "huang_dun", value = 3 }, { kind = "flag", flag = "c13_request_huang_dun_five" }]
+reply = "老商人一开口就是泉州腔，我听得比对面的西班牙人还认真。他伸出三根手指：大帆船进港以前，一匹三两；船一靠岸，银子下了船，五两；船一走，又落回三两。“月港那头的人不晓得，所以年年亏。”他咳了两声。我先卖了一半，另一半用油布盖在摊位底下，等船。"
+news = "马尼拉城外的生理人市集，月港来的船长蹲在泉州老商人的摊前问了半天价，只卖了一半丝，另一半盖着油布等船。"
+
+[[tracks.chapters.choices]]
+key = "sell_now"
+text = "照三两卖了，早卖早回。"
+next = "settle_cheap"
+effects = [{ kind = "affinity", person = "huang_dun", value = 2 }, { kind = "flag", flag = "c13_request_huang_dun_cheap" }]
+reply = "十匹丝一个上午就卖光了，红的最先没。银子装进袋里，沉甸甸地坠着衣襟。收摊的时候，福建老商人从邻摊抬起眼，摇了摇头，什么也没说，低头去数自己的货。"
+news = "马尼拉城外的生理人市集，月港来的十匹丝绸一个上午就卖光了，福建老商人在旁边直摇头。"
+
+[[tracks.chapters.variants]]
+key = "after_the_fire"
+when = [{ kind = "date", from = [1574, 11, 29], to = [1575, 3, 31] }]
+text = "马尼拉城墙外，市集靠海的一角还留着一片烧黑的地，生意人压低了声音说，城外刚打过一仗。西班牙人管福建来的生意人叫“生理人”。我的十匹丝才摊开，一圈手就伸过来，红的最先被摸，一匹展开又叠回去三回。黄墩那句“砸了也就砸十匹”在耳朵里响了一路。一个西班牙商人掂着银币，隔着翻译开价：一匹三两，现银，今天。邻摊的福建老商人往我这边偏过头，压着嗓子说：“等大帆船进港，价翻一倍。”我问船哪天到，他竖起一根手指：“一个月。”"
+
+# 三、月港最好的饭馆：照单报价，吃一顿
+[[tracks.chapters]]
+key = "settle"
+title = "请你吃一顿"
+text = "月港最好的饭馆，黄墩订了二楼靠窗的一桌，菜一道一道上，红烧肘子压在最上头。他一边夹一边听我报价，听到“五两”，筷子啪地拍在桌上，震得酒杯跳了一下。我再讲大帆船进港前后差着一倍，他的筷子停在半空，那块肉悬着，滴下一滴油。“天塌下来，也先吃饱了再说。”他把最大的一块夹进我碗里，自己才接着开口，“我家的船，往后等大帆船进港再去。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "huang_dun", text = "回月港找黄墩" }]
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "huang_dun", value = true }]
+news = "月港最好的饭馆里，一个胖船主请人吃了一桌，说马尼拉的丝价试出来了。"
+
+[[tracks.chapters.choices]]
+key = "eat"
+text = "先吃。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_dun", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_huang_dun_done" }, { kind = "memory", memory = "mem-request_huang_dun-settle", title = "筷子尖推过来的麻糍" }]
+reply = "我埋头吃。吃到最后，盘子里剩一块麻糍，他用筷子尖推过来：“老规矩，最后一块归输家。这回你没输，那就归客人。”他把货钱和工钱点给我，银子压得桌面一沉，他自己不看，只盯着我咬那块麻糍。"
+
+[[tracks.chapters.choices]]
+key = "talk_trade"
+text = "边吃边跟他算：哪个月出港，正好赶上大帆船。"
+next = "done"
+effects = [{ kind = "cash", value = 1250 }, { kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_dun", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_huang_dun_done" }, { kind = "memory", memory = "mem-request_huang_dun-settle", title = "筷子尖推过来的麻糍" }]
+reply = "他把筷子横在碗上，掰着指头数：北风起的日子，船在海上走的日子，大帆船一年一回进港的日子。数到一半指头不够用，借了我的。数完他蘸了酒，在桌上写下“四月”两个字，没等我看清就拿袖子抹掉。“别往外讲，这是我家的月份。你这顿饭，吃得值。”货钱和工钱，他当场点给了我。"
+
+# 四、卖贱了的那一桌：结账的另一条路（sell_now 与磨价失败走到这里）
+[[tracks.chapters]]
+key = "settle_cheap"
+title = "砸了也请"
+text = "月港最好的饭馆，黄墩照旧订了二楼靠窗那一桌，菜一道一道上。我把价钱报给他，三两上下，他“哦”了一声，筷子都没停，只把盘里的鱼翻了个面。我又讲福建老商人那句话，大帆船一进港，价能翻一倍。他嚼得很慢，嚼完才开口：“砸了也请，说好的。”他把最大的一块肉夹进我碗里，招呼伙计再添一碟，“我家的船，往后等大帆船进港再去。这一趟，值。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "huang_dun", text = "回月港找黄墩" }]
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "huang_dun", value = true }]
+news = "月港最好的饭馆里，一个胖船主请人吃了一桌，说马尼拉的丝价试砸了，饭照请。"
+
+[[tracks.chapters.choices]]
+key = "eat"
+text = "先吃。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_dun", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_huang_dun_partial" }, { kind = "memory", memory = "mem-request_huang_dun-settle", title = "筷子尖推过来的麻糍" }]
+reply = "吃到最后，盘子里剩一块麻糍，他用筷子尖往我这边推：“最后一块归输家。”我讲丝是卖贱了，可我没输。他笑得筷子都拿不稳：“那就归替我输的人。”货钱他一文不少，工钱薄了一截，他自己先提了，提完又夹了一筷子菜堵我的嘴。"
+
+[[tracks.chapters.choices]]
+key = "talk_trade"
+text = "边吃边跟他算：丝要赶上大帆船靠岸，该几月出港。"
+next = "done"
+effects = [{ kind = "cash", value = 700 }, { kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_dun", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_huang_dun_partial" }, { kind = "memory", memory = "mem-request_huang_dun-settle", title = "筷子尖推过来的麻糍" }]
+reply = "我把三两和五两摆在桌上，跟他算船几时出港，丝才赶得上大帆船靠岸的那几天。他掰着指头数，数到一半不够用，借了我的。数完他蘸了酒，在桌上写下“三月”，拿袖子一抹：“别往外讲，这是我家的月份。”货钱他一文不少，工钱薄了一截，他自己先提了。"

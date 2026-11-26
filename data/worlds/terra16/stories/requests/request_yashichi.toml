@@ -1,0 +1,205 @@
+# C13d 人物的请托：弥七——老伙计的话（送信，5 章；故事 2.0，A5 / E37 契约）。中文，Claude 写。
+# 人物：弥七 yashichi（1531-07-07 生，男；汪直船队里的通事，五岛渔家子，按日程 1557—1590 在平户码头，cast/story_eastasia.toml）。
+# 类型：送信（lt）。船上的老伙计焦老三死前留了几句话，弥七不信纸，可宁波他去不得，只好写下来托你送到老伙计家里。
+# 报价：当面（T），报价港平户（hirado）。auto=false，玩家“问请托”启动（ask:request_yashichi）；offer 不写 at，目标是在港里找到他。
+# 窗口：offer 1562-01-01..1590-06-30（期限为止日，超时走 failed，不写见闻）；handover / handover_heard 进章后 120 天（超时来信、走 failed）；
+#   reply / reply_partial 没有期限，到 1590-12-31 为止都可以回去交差。
+# 结构：brief 原是三章（offer → handover → reply）。为了不让选项用本轨道另一条路设的旗标作 requires，按 next 分流：
+#   offer 的 ask_words（问他原话）进 handover_heard，那里多一条“照原话说给她听”；accept 进 handover（没有这条）。
+#   handover 里念信、说话两条路进 reply（老妇人托你带回一句话，tell_him 可选）；把信留给孙子的那条进 reply_partial（没有带回的话）。
+#   reply_partial 的两个选项：只说送到了（折中的钱），或者不收钱（只拿好感与名声）。
+# 依据——史实背景：1559 年汪直死后，船队里的人散到平户、五岛；宁波城东有灵桥与灵桥门。
+#   原创：焦老三与他的遗言、灵桥门外沿河第三户与门口的乌桕、老妇人与半大的孙子、照旧契描下来的字、“卖”字顶上描漏的那一截。
+#   不写：汪直的死（只说“船队散了这些年”）、顾昭（C7 pair_gu_zhao_yashichi 在 1556—61，本轨道从 1562 起）；焦老三怎么死的只说“睡着走的”。
+# 旗标：读——无外部旗标（c13_request_yashichi_misread 只由本轨道 reply_partial 的变体读）。
+#   写——accepted / declined（报价）；heard（问过原话，只作记录，分流靠 next）；read（念了或说了，只作记录，分流靠 next）；
+#   misread（孙子念错字的检定失败，reply_partial 变体 v1_misread 读）；late（handover 两章的超时）；done / partial（终局，二选一）。
+# 见闻：handover 两章不写章级见闻（超时会套用章级见闻，那家人其实没收到信），见闻都挂在选项与 fail 上；超时不写见闻。
+# 秘密：cast 没写弥七的秘密；persona 里“船队抢过的村子他都见过”不进本请托。不写恋爱、不写心动。
+# 招呼语“外人？船主不在。要传话，跟我说；要做买卖，明天再来。”全轨道只用一次，放在 reply 章他在码头迎你的地方。
+# “当面”只在 reply 章出现；“亲口”不用。
+# 报酬：现金最多 900（tell_him），折中 600（just_done）；好感最多 +16（ask_words 3 + say_it 5 + tell_him 8）；名声最好 +2、折中 +1；回忆一条。
+# 依赖：ningbo、hirado 都是现有港口，无 B10b 改名；技能 lang_chinese 在 skills.toml 里。
+# 回忆插画：mem-request_yashichi-reply，平户码头，一个穿旧短褂的通事背对来人看海，右手按着左边的袖口，身后的船还没靠稳。
+# 英文覆盖：不写（本批仅中文）。
+
+[[tracks]]
+key = "request_yashichi"
+name = "老伙计的话"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["yashichi"]
+
+# 一、照着别人的信描的字：平户码头，弥七袖里揣着一封信。
+[[tracks.chapters]]
+key = "offer"
+title = "照着别人的信描的字"
+text = "平户的码头上，弥七从栈房那头走过来，走得比平时慢，右手一直按着左边的袖口。到了你的船边，他从袖里抽出一封信，信皮压得起了皱，封口是拿饭粒粘的。“船上的焦老三，上个月走了。宁波人，出来以后就没回去过。临走说了几句话，要带给他屋里的。”他把信在手上掂了掂，像嫌它太轻，“要紧的话，我向来拿嘴转，不交给纸。纸会湿，会丢，会落到不相干的人手里。可宁波我去不得，这回只好写。”他把信递过来，手却没松。“我写得不好。有几个字不会写，是照着别人的旧信描的。你要是念给他们听，念慢一点。”"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "yashichi", text = "在港里找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下信，去宁波。"
+next = "handover"
+reply = "他把信塞进你手里，手在信上按了一会儿才松开。“灵桥门外，沿河第三户，门口有棵乌桕。别打听，一打听，人家就知道你是从哪边来的。”说完他转身回栈房，袖口空了，走得还是不快。"
+effects = [{ kind = "affinity", person = "yashichi", value = 2 }, { kind = "flag", flag = "c13_request_yashichi_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_words"
+text = "问他：老焦说了什么？你记下，到了说给她听。"
+next = "handover_heard"
+reply = "弥七看了你一会儿，把信收回袖子，过了一阵又拿出来。他想了很久才开口，说得比信上多：“别等了，把船卖了。孙子别让他上船。那年走得急，没跟她说一声，是他不对。”停了停，他又补一句：“她要是问疼不疼，你就说不疼，睡着走的。”你照着复了一遍，错了一个字，他让你重来。第二遍对了，他才把信交到你手上：灵桥门外，沿河第三户，门口一棵乌桕。"
+effects = [{ kind = "affinity", person = "yashichi", value = 3 }, { kind = "flag", flag = "c13_request_yashichi_accepted" }, { kind = "flag", flag = "c13_request_yashichi_heard" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宁波，我的船去不得。"
+next = "failed"
+reply = "“也是。”他把信收回袖子里，隔着布按了按，转身往栈房走，比来的时候走得更慢。"
+effects = [{ kind = "flag", flag = "c13_request_yashichi_declined" }]
+
+# 二甲、念慢一点：只带着信到宁波城外。
+[[tracks.chapters]]
+key = "handover"
+title = "念慢一点"
+text = "宁波灵桥门外，沿河第三户，门口的乌桕底下坐着一个老妇人，在替别家补网；旁边蹲着个半大的孙子，拿树枝在地上划字。你说是从平户来的，老妇人手里的网梭掉在了地上。她不识字。孙子识得几个，接过信拆开，念了头一行“屋里的”，就卡住了。信上的字一个大一个小，有几笔是倒着走的，像描字的人不知道哪一笔该先落。孩子把信翻过去又翻回来，抬头看你。老妇人没催，弯腰把网梭捡起来，攥在手里。"
+speaker = "captain"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "alive", person = "yashichi", value = true }, { kind = "date", from = [1562, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "yashichi", text = "那封信不必送了。我另写了一封，托了一条福建船，不知道到了没有。我本来就不信纸。" }, { kind = "affinity", person = "yashichi", value = -3 }, { kind = "flag", flag = "c13_request_yashichi_late" }]
+
+[[tracks.chapters.choices]]
+key = "read_it"
+text = "接过信，替他们念。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "那几个描出来的字，你也认不准。"
+next = "reply"
+news = "宁波城外一户人家，收到一封从平户来的信，一个外乡船长坐在门口念了一下午。"
+reply = "你念得很慢，描出来的字一笔一笔对着认。念到“别等了，把船卖了”那一句，老妇人点了点头：“早卖了。他走的第二年就卖了。”念完，她让孙子把信折好，压在灶台的盐罐底下，又招手叫你凑近些，说了一句话，要你带回平户，带给写信的人。"
+effects = [{ kind = "affinity", person = "yashichi", value = 3 }, { kind = "flag", flag = "c13_request_yashichi_read" }]
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "把信留给孙子，教他慢慢认。"
+check = { attr = "eloquence", base = 35, per = 6 }
+next = "reply_partial"
+reply = "你教孩子先挑认得的念，描坏的那几个圈出来放到最后。他认了一下午，认出了大半。老妇人一直没出声，网梭在手里转着，一个结也没打。天黑前你得回船，走到河边回头看，孩子还蹲在乌桕底下念。"
+news = "宁波灵桥门外，一户人家收到平户来的信，半大的孙子捧着信，在门口一个字一个字认了一下午。"
+effects = [{ kind = "affinity", person = "yashichi", value = 2 }]
+fail = { next = "reply_partial", effects = [{ kind = "flag", flag = "c13_request_yashichi_misread" }], news = "宁波灵桥门外，一个半大的孩子替奶奶念平户来的信，把“卖”念成了“买”，老人家在门口哭了一场。" }
+
+# 二乙、照他说的说：带着弥七的原话到宁波城外。
+[[tracks.chapters]]
+key = "handover_heard"
+title = "照他说的说"
+text = "宁波灵桥门外，沿河第三户，门口一棵乌桕。一路上你把弥七那几句话在心里过了好几遍，到了门口，反倒怕说岔。树下有个老妇人在补网，一个半大的孙子拿树枝在地上划字。听你报出平户两个字，老妇人的手抖了一下，网梭滚到脚边。孙子接过信，拆开念了头一行“屋里的”，就念不下去了：字有大有小，有几笔是倒着走的。孩子抬头看你。老妇人把网梭捡回来攥着，也在看你。"
+speaker = "captain"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "alive", person = "yashichi", value = true }, { kind = "date", from = [1562, 1, 1], to = [1590, 12, 31] }]
+deadline_days = 120
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "letter", person = "yashichi", text = "那几句话你不必带了。我又写了一封，托了一条福建船，不知道到了没有。我本来就不信纸。" }, { kind = "affinity", person = "yashichi", value = -3 }, { kind = "flag", flag = "c13_request_yashichi_late" }]
+
+[[tracks.chapters.choices]]
+key = "say_it"
+text = "不看信，照弥七说给你的，一句一句告诉她。"
+next = "reply"
+reply = "你没看信，照弥七的话一句一句说。说到“孙子别让他上船”，孩子把手里的树枝扔了。说完，老妇人只问了一句：“他走的时候，疼不疼？”你照弥七教的答：“不疼，睡着走的。”她点点头，让孙子把信收好，压在灶台的盐罐底下，又叫你凑近，托你带一句话回平户，带给写信的人。"
+news = "宁波灵桥门外，一个外乡船长没拆信，坐在门口把平户捎来的话一句一句说给老太太听。"
+effects = [{ kind = "affinity", person = "yashichi", value = 5 }, { kind = "flag", flag = "c13_request_yashichi_read" }]
+
+[[tracks.chapters.choices]]
+key = "read_it"
+text = "照着信上的字念，一个字也不添。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "信上那几个倒着走的字，你也念不出来。"
+next = "reply"
+news = "宁波城外一户人家，收到一封从平户来的信，一个外乡船长坐在门口，替那家人把信念了一遍。"
+reply = "你照信念，不添一个字。信比弥七说的短，“那年走得急”那几句，信上没有。念到“别等了，把船卖了”，老妇人点头：“早卖了。”念完她没让你走，叫孙子把信压到灶台的盐罐底下，招手要你凑近，说了一句话，要你带回平户，带给写信的人。"
+effects = [{ kind = "affinity", person = "yashichi", value = 3 }, { kind = "flag", flag = "c13_request_yashichi_read" }]
+
+[[tracks.chapters.choices]]
+key = "leave_it"
+text = "信交给孙子去认，你不多嘴。"
+check = { attr = "eloquence", base = 35, per = 6 }
+next = "reply_partial"
+reply = "你把信还给孩子，只指了指最难认的两个字，让他别急。孙子认了一下午，认出了大半。弥七那几句话你没说出口，一直揣到天黑。走到河边回头看，孩子还蹲在乌桕底下念，老妇人坐在他旁边，网一眼也没补。"
+news = "宁波灵桥门外，一户人家收到平户来的信，半大的孙子蹲在乌桕底下，捧着信认了一整个下午。"
+effects = [{ kind = "affinity", person = "yashichi", value = 2 }]
+fail = { next = "reply_partial", effects = [{ kind = "flag", flag = "c13_request_yashichi_misread" }], news = "宁波灵桥门外，有户人家的孙子替奶奶念信，念岔了一个字，老太太当着外乡人的面哭了。" }
+
+# 三甲、别写，当面说：带着老妇人的一句话回平户。
+[[tracks.chapters]]
+key = "reply"
+title = "别写，当面说"
+text = "回到平户，船还没靠稳，弥七已经站在码头上了。他照着招呼生人的老规矩开口：“外人？船主不在。要传话，跟我说；要做买卖，明天再来。”说完自己先摇了摇头。船队散了这些年，这句话他还没改过口。他没问信送到没有，先问那家人：老太太身子怎样，孙子长多高了，门口那棵乌桕还在不在。你一样一样答了，想起老妇人托的那句话。你怕记岔，在宁波就把它写在了账本的末页，这会儿伸手去翻。弥七摆了摆手。“别写，当面说。”"
+speaker = "captain"
+mood = "tender"
+at = "hirado"
+when = [{ kind = "alive", person = "yashichi", value = true }, { kind = "date", from = [1562, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "person", person = "yashichi", text = "回平户找到他" }]
+news = "平户的码头上，弥七等来一个从宁波回来的船长，只听了一句“送到了”，付了钱就回栈房去了。"
+
+[[tracks.chapters.choices]]
+key = "tell_him"
+text = "合上账本，把老妇人的话说给他听。"
+next = "done"
+reply = "你学着老妇人的口气说：“谢谢你替他写。”弥七听完，背过身去看海，看了很久。回过头来，他把一只钱袋塞进你手里，右手又按回左边的袖口上，像那封信还揣在里头。“头一回，”他说，“觉得纸也有点用。”"
+news = "平户码头上，汪直船队里的老通事听一个船长说完宁波的事，背过身看了很久的海。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "yashichi", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_yashichi_done" }, { kind = "memory", memory = "mem-request_yashichi-reply", title = "背过身去看海的通事" }]
+
+[[tracks.chapters.choices]]
+key = "just_done"
+text = "不提那句话，只说：送到了。"
+next = "done"
+reply = "他点点头，付了钱，没再问，转身回了栈房。账本还摊在你手上，末页那一行，他一眼也没看。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "yashichi", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_yashichi_partial" }]
+
+# 三乙、圈起来的字：信留给了孙子，没有带回的话。
+[[tracks.chapters]]
+key = "reply_partial"
+title = "圈起来的字"
+text = "回到平户，弥七在码头上等你。他没问信，先问那家人还好不好。你说老太太身子还硬朗，在门口替人补网；信留给了孙子，有几个字他认不出，拿炭圈了起来，说等私塾先生回来再问。弥七听着，右手按到左边袖口上，按了个空。“圈起来的那几个，”他说，“是我描的吧。”"
+speaker = "captain"
+mood = "sad"
+at = "hirado"
+when = [{ kind = "alive", person = "yashichi", value = true }, { kind = "date", from = [1562, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "person", person = "yashichi", text = "回平户找到他" }]
+news = "平户码头上，汪直船队的老通事听人讲宁波有个孩子替奶奶念他写的信，半天没出声，袖口按了又按。"
+
+[[tracks.chapters.variants]]
+key = "v1_misread"
+when = [{ kind = "flag", flag = "c13_request_yashichi_misread" }]
+title = "顶上那一截"
+text = "回到平户，弥七在码头上等你。他没问信，先问那家人还好不好。你只好照实说：孙子念到“把船卖了”那一句，念成了“把船买了”，老太太愣了半天，在门口哭了一场，哭完才说，船她早就卖了。弥七半天没出声。他从袖里摸出一封折得发软的旧信，是早年别人托他转的，里头有个“卖”字，就是他照着描的那一个。顶上那一截，他描漏了。"
+
+[[tracks.chapters.choices]]
+key = "just_done"
+text = "接过工钱，回船。"
+next = "done"
+reply = "他点点头，把钱付了，没再往下问。钱袋是从左边袖子里掏出来的，原先揣信的地方。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "yashichi", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_yashichi_partial" }]
+
+[[tracks.chapters.choices]]
+key = "refuse_pay"
+text = "钱不收：信没念明白，不算办完。"
+next = "done"
+news = "平户码头上有个船长，替汪直船队的老通事往宁波送了一趟信，回来说信没念明白，连工钱都没收。"
+reply = "弥七把钱袋往前推了推，见你不接，又收回袖子里。“那孩子过两年就认全了，”他说，“到时候，他自己会知道哪个字是我描坏的。”"
+effects = [{ kind = "affinity", person = "yashichi", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_yashichi_partial" }]

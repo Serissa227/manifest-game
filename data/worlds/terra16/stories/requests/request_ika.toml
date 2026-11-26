@@ -1,0 +1,157 @@
+# 请托：还认生的筏子（request_ika）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：伊卡（ika，1540-02-21 生，男），钦查筏家的儿子，结绳记事官库西·瓦伊纳的徒弟；势力 peru，身份档 1（中风险），cast：cast/story_americas.toml；日程 1571—1590 在阿里卡（arica，dock）。
+# 类型：去某处（go）。四章：offer（报价）、arrive（皮斯科外海那一截）、report（颜色浅的结）、report_partial（绳上的问号，guess 检定失败的一条路，报酬打折）。没有 stage 章，因此没有 window 与 default。
+# 报价：当面（T）。auto=false，玩家“问请托”（ask:request_ika）启动；offer 章不写 at，目标是在阿里卡码头找到他（person 目标）。窗口 1576-01-01 至 1590-06-30，逾期走 failed，不写见闻。
+# 进行中：arrive 章 deadline_days=90，超时走 failed，来信一封，好感 -3，旗标 _late；report / report_partial 是普通章，可以一直等。
+# 章节数说明：简报为三章；guess 检定失败要走“报酬打折”，引擎里现金数额不能按条件改，所以拆出 report_partial 一章，自己的两个选项，各自收尾。
+# 依据·史实：沿海的巴尔萨木筏、秘鲁沿岸北向的寒流、印加治下的结绳记事（正文只用传闻口吻）。待核：1570 年代阿里卡至卡亚俄一段的漂流日数与海流的说法。
+# 依据·原创：伊卡与库西·瓦伊纳、新筏子、白绑绳、皮斯科外海的那一截、颜色浅的新结、绳上的问号结。
+# 秘密：cast 写有秘密（拆过老师的一个结）。本请托不提远航绳，见闻里也不写；口头禅“别碰那串绳，是老师的！”全轨道只用一次。
+# 不写：迈塔（C7 的线）、筏名、1575 年的旧筏；不写恋爱、不写心动。
+# 读的旗标：无。
+# 设的旗标：c13_request_ika_accepted（offer 接下，分支）、c13_request_ika_tow（offer 拖船一段，分支）、c13_request_ika_matched（arrive 对上海流，分支）；终局旗标 c13_request_ika_declined（offer 回绝）、c13_request_ika_late（arrive 超时）、c13_request_ika_done（report / report_partial 收尾，两条路共用）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果。
+# 报酬：现金最多 1250（report；take_copy 检定失败时现金照给，只少了回忆、名声与四点好感）；report_partial 给 850（约 68%，折中档，报酬打折）；好感最多 +13；名声 +2（report 的两个成功收尾）；回忆 mem-request_ika-report。不发物品。
+# 依赖：港口 arica、callao（ports_americas.toml）；技能 quipu、tide_reading（skills.toml）；检定属性 seamanship、numeracy、eloquence；人物 ika。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_ika-report「颜色浅的新结」：阿里卡码头的石头上，一串海流绳摊开一段一段拉直，新打的结颜色浅，伊卡蹲在旁边，手还悬在绳子上方没有落下。
+
+[[tracks]]
+key = "request_ika"
+name = "第一趟北上"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["ika"]
+
+# 一、还认生的筏子：阿里卡码头，他的新筏子拴在外头。
+[[tracks.chapters]]
+key = "offer"
+title = "还认生的筏子"
+text = "伊卡的新筏子拴在阿里卡码头外头，九根巴尔萨木扎成一片，绑绳还是白的，一根也没泡黄。他跳上码头来迎你，嗓门大得半条街都听得见：“别碰那串绳，是老师的！”话是这么说，他自己的指尖先在绳上一摸，就指出哪个结是新打的。“你的船从北边来？那边的流往哪儿走，快说说。”他要头一趟就开到卡亚俄，顺路把老师那张结绳海流图对一对，哪一段漂几天、漂多远。“你记你的，我记我的。到了卡亚俄对得上，这张图才算数。”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1576, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "ika", ge = 18 }]
+objectives = [{ kind = "person", person = "ika", text = "在阿里卡码头找到他" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，跟着他的筏子一路往北记。"
+next = "arrive"
+reply = "他高兴得在筏子上跳了一下，筏子晃得厉害，他赶紧蹲下，拍着木头说：“它还认生。”说完又站起来，把绑绳一圈圈勒紧，勒到自己满意，才沿着码头往你船边走。"
+effects = [{ kind = "affinity", person = "ika", value = 2 }, { kind = "flag", flag = "c13_request_ika_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "tow"
+text = "接下，开不动的时候，你的船拖他一段。"
+next = "arrive"
+reply = "他脸红了，说拖也行，可拖的那几段他要在绳上另打一种结，“免得以后的人把海流算快了”。拖缆他自己来系，系完让你拉一下，看绳头松不松。"
+effects = [{ kind = "affinity", person = "ika", value = 2 }, { kind = "flag", flag = "c13_request_ika_accepted" }, { kind = "flag", flag = "c13_request_ika_tow" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟你不往北。"
+next = "failed"
+reply = "他点点头，摸着白绑绳说，那就等下一条船。绳子从码头的桩上解下来，他一圈一圈绕回筏子上，绕完把绳头压进掌心。“下回船来，先找我看绳。”"
+effects = [{ kind = "flag", flag = "c13_request_ika_declined" }]
+
+# 二、皮斯科外海那一截：卡亚俄，他的筏子晚了半天进港。
+[[tracks.chapters]]
+key = "arrive"
+title = "皮斯科外海那一截"
+text = "到卡亚俄那天，伊卡的筏子比你的船晚了半天进港。他浑身湿透，左手攥着那串海流绳，绳头上还挂着海草，右手的指节被木头磨破了皮。皮斯科外海那一段，筏子漂得比绳上说的远了一截。他一路数着，数到后来数不下去，站在码头的石头上问你：“是绳错了，还是今年的海不一样？”"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+when = [{ kind = "alive", person = "ika", value = true }]
+deadline_days = 90
+news = "卡亚俄港里，一只绑绳还是白的巴尔萨木筏从阿里卡漂过来，筏上的年轻人手里攥着一串绳。"
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "ika", value = -3 }, { kind = "flag", flag = "c13_request_ika_late" }, { kind = "letter", person = "ika", text = "我一个人开到了卡亚俄，晚了九天。绳上皮斯科那段，我打了一个问号结。" }] }
+
+[[tracks.chapters.choices]]
+key = "by_knots"
+text = "把你的航海日志念给他，让他照结一段段对。"
+next = "report"
+requires = [{ kind = "skill", skill = "quipu", ge = 60 }]
+hint = "那串结的读法你认不全，念到一半就卡住了"
+reply = "你念一天，他摸一个结，嘴里跟着数。对到皮斯科，他停下来，在旁边打了一个新结：“今年的海。”打完天已经黑了，你的嗓子也哑了。"
+effects = [{ kind = "affinity", person = "ika", value = 3 }, { kind = "flag", flag = "c13_request_ika_matched" }]
+
+[[tracks.chapters.choices]]
+key = "by_tide"
+text = "看潮看风：那几天刮的是北风，海流被顶住了。"
+next = "report"
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "潮与风的账你还看不透，说出来他不会信"
+reply = "他想了很久，把那段绳单独绕了一圈，又去翻前面几段的结，翻到一个北风的结才停手。说回去要问老师，北风的年份有没有别的绳记着。"
+effects = [{ kind = "affinity", person = "ika", value = 3 }, { kind = "flag", flag = "c13_request_ika_matched" }]
+
+[[tracks.chapters.choices]]
+key = "guess"
+text = "照你的航海经验，估一个数。"
+next = "report"
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "ika", value = -2 }] }
+reply = "他听你报完数，照着绳上的结一个个比，比一个，就把一个数打进绳里。比到一半，他的指尖停在一个结上磨了磨，没说话，接着往下比。"
+effects = [{ kind = "affinity", person = "ika", value = 2 }]
+
+# 三、颜色浅的结：回到阿里卡，整串绳摊在石头上。
+[[tracks.chapters]]
+key = "report"
+title = "颜色浅的结"
+text = "回到阿里卡，伊卡把整串海流绳摊在码头的石头上，一段一段拉直。新打的结一眼就看得出来，颜色浅，绳芯还白，别的结早被海水泡成了灰褐，有几段还带着晒干的盐霜。他蹲在旁边，不敢碰，又忍不住伸手去摸，摸了一下又缩回来。“老师摸过了。”他说，“没说对，也没说错。”说完他抬起头，指着最浅的那个结问你：“这串绳，要不要也给你打一份？”"
+speaker = "captain"
+mood = "tender"
+at = "arica"
+when = [{ kind = "alive", person = "ika", value = true }]
+news = "阿里卡码头的石头上摊着一串海流绳，新打的结颜色浅，筏手说那是今年的海。"
+
+[[tracks.chapters.variants]]
+key = "tow"
+when = [{ kind = "flag", flag = "c13_request_ika_tow" }]
+text = "回到阿里卡，伊卡把整串海流绳摊在码头的石头上，一段一段拉直。拖船的那几段打的是另一种结，结头是方的，他特意拎出来指给你看。新打的结颜色浅，绳芯还白，别的结早被海水泡成了灰褐。他蹲在旁边，不敢碰，又忍不住伸手去摸。“老师摸过了，没说对，也没说错。”说完他抬起头，指着最浅的那个结问你：“这串绳，要不要也给你打一份？”"
+
+[[tracks.chapters.choices]]
+key = "take_copy"
+text = "要一份，带上船。"
+next = "done"
+check = { attr = "numeracy", base = 35, per = 6 }
+fail = { next = "done", effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "ika", value = 4 }, { kind = "flag", flag = "c13_request_ika_done" }] }
+reply = "他打了一下午，手指磨得发红，每打一个都要对着光看一遍，拿不准的就解开重打。绳圈绕好交给你，他还特意在绳头上系了一个小结。“回去别挂在潮的地方。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "ika", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_ika-report", title = "颜色浅的新结" }, { kind = "flag", flag = "c13_request_ika_done" }]
+
+[[tracks.chapters.choices]]
+key = "keep_one"
+text = "不要了，让这串绳只有一份。"
+next = "done"
+reply = "他愣了一下，脸又红了。绳一圈圈收回布袋，收到最浅的那个结时停了停，袋口系了两道，布袋上还沾着绳上的盐霜。“那你下回来，我念给你听。”"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "ika", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_ika_done" }]
+
+# 四（分支）：绳上的问号：guess 检定失败，他在绳上打了一个不确定的结，报酬打折。
+[[tracks.chapters]]
+key = "report_partial"
+title = "绳上的问号"
+text = "伊卡把海流绳摊开，手没抖，声音却低下去。皮斯科外海那一段，你估的数和他漂的差了一截，他只好在绳上打了一个“不确定”的结。那个结颜色深，比旁边的结暗一号，他用拇指在上头搓了又搓，搓不掉。“这个结，老师看了会问。”他说，“问到你头上，你说不说？”码头上风大，绳子被吹得贴在石头上，他一把按住。旁边的筏子也跟着晃了一下。"
+speaker = "captain"
+mood = "sad"
+at = "arica"
+when = [{ kind = "alive", person = "ika", value = true }]
+news = "阿里卡码头的石头上摊着一串海流绳，一个结打得发深，筏手说那是估出来的数。"
+
+[[tracks.chapters.choices]]
+key = "take_partial"
+text = "要一份，连同那个问号结一起带走。"
+next = "done"
+reply = "他把那个结单独挑出来，重新打了一遍。还是那个不确定的结，只是打得比先前紧。“看一次，记一次。”他把绳圈塞进你手里，手心里全是汗。"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "ika", value = 4 }, { kind = "flag", flag = "c13_request_ika_done" }]
+
+[[tracks.chapters.choices]]
+key = "own_blame"
+text = "替那个问号认个账：是我估错的。"
+next = "done"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "done", effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "ika", value = 2 }, { kind = "flag", flag = "c13_request_ika_done" }] }
+reply = "他没去动那个结，只把绳子又理了一遍，理得比先前松。他的耳根红了一截。“认了就算你的。”他说，“老师问起来，我替你扛，你别抢着说。”"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "ika", value = 6 }, { kind = "flag", flag = "c13_request_ika_done" }]

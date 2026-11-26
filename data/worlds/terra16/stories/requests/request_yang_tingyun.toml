@@ -1,0 +1,149 @@
+# 请托：平价卖给善会的米（request_yang_tingyun）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：杨廷筠（yang_tingyun，号淇园，1502-01-01 生，男），杭州人，做过监察御史后辞官回乡，亲近佛门，施粥放生印经；势力 ming，身份档 2。cast：cast/historical_09_liaodong.toml。
+# 类型：送货（deliver）。主线章 offer（报价）、deliver（栈桥上的牙人，交米）、settle（粥棚结账）；另有 settle_partial（米有闪失时的结账，免得 settle 里拿同轨道旗标当选项门禁）。没有 stage 章，因此没有 window 与 default；日期与人物存活写在 when 里。
+# 报价：L（来信）。杨廷筠本人不出场，只在信里说话；出面的是善会的管事，一位吃斋的老居士（不起名，不新建 cast），在宁波（ningbo）城外的粥棚前；speaker 省略。
+#       窗口 1557-03-01 至 1571-03-31（offer 的 when 与 deadline），timeout 直接 failed，不写见闻。名声门槛：窗口起年 1557，封顶规则为 0，不设。
+#       offer 写 family=c13_offer_ningbo、冷却 20 天。
+# 进行中：deliver 章 deadline_days=180（跨海去釜山、博多一带运米），超时 failed：来信一封（≤120 字）、旗标 _late、一条见闻；settle 与 settle_partial 是普通章，目标是等十五天后回到宁波，deadline_days=120，超时 failed：来信一封、旗标 _late。
+# 依据·史实平移：杨廷筠（1562—1627）是杭州人，做过监察御史，辞官后亲近佛门，施粥放生印经，后来与传教士往来、受洗并办仁会（本世界线提前约 55 年，且本请托只写他未受洗的时候，不写受洗，不写论道，只在信末留一句邀约）。牙行抽牙钱、官府靠牙行验货是明代各口岸的常例。《施食获五福报经》是真实的佛经，信里只引它的名字与“施食者得福”一层意思。
+# 依据·原创：春荒的一年、宁波城外粥棚的老居士、刻着去年线的竹米筒、牙人的烙字木斗与印泥盒、蓝布小包。牙人是行规，不是反派；老居士不起名。
+# 秘密：无。本请托不涉及任何 secret，见闻只写宁波的粥棚与栈桥，不提杨廷筠的信仰倾向。
+# 与 C7 的关系：杨廷筠在 C7 里没有线；本请托不读、不设任何 c7_ 旗标，不用 relation / tie / bond / heart 效果。
+# 与袁崇焕（觉华岛，米 30 + 布 8）不同数、不同场景、不同人情。
+# 读的旗标：无（分支一律靠 next 走：deliver 里检定成功与技能走 settle，检定失败与交给牙行走 settle_partial）。
+# 设的旗标：c13_request_yang_tingyun_accepted（offer 接下）、_declined（offer 回绝，终局）、_clean（deliver 米完好无缺：检定成功或立账）、_late_rice（deliver 米有闪失：检定失败或交牙行）、_late（deliver、settle、settle_partial 超时，终局）、_done（settle 两条收尾，终局）、_partial（settle_partial 两条收尾，终局）。
+# 货：稻米 rice × 40，在宁波交（goods/05_terra_trade.toml，基准价 12；宁波不产米，釜山、鹿儿岛、府内、博多等处有）。货款 = 40 × 12 × 1.25 = 600，在 deliver 的三个选项里各付一次（引擎在回应时扣货）。
+# 报酬（每份只给一次）：货款 600；谢礼现金 1600（settle 收下）或 900（settle_partial 收下），捐给粥棚则没有现金；好感最多 +15（接下 2、路上 3、结账 8；捐出 10）；声望 ming +1、名声 +3 只在米完好时给；回忆 mem-request_yang_tingyun-settle（settle 两条）。没有唯一奖励物品，没有技能奖励。
+# 依赖：港口 ningbo（ports_east_asia.toml，已是现名）；货物 rice；属性 commerce；技能 double_entry（skills.toml）；势力 ming；人物 yang_tingyun。
+# 回忆插画清单：
+#   mem-request_yang_tingyun-settle「粥棚前的米袋」：城外粥棚，竹米筒里的米平到了去年那道刻线，老居士把一勺稠粥舀进老妇伸出的碗里。
+
+[[tracks]]
+key = "request_yang_tingyun"
+name = "平价卖给善会的米"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["yang_tingyun"]
+
+# 一、粥棚的账：队排过河埂，竹米筒上刻着去年的线。
+[[tracks.chapters]]
+key = "offer"
+title = "粥棚的账"
+text = "宁波城外的粥棚前，队伍排过了河埂。锅里的粥稀得能照见人影，锅边立着一只竹米筒，筒身刻着去年的线，今年的米一回也没够着。管事的老居士一手添水，一手捻着念珠，等船上的人走近了，才从袖里抽出一封信，折痕压得平平的：“杨老爷从杭州寄来的。”信先抄了半段《施食获五福报经》，才说到正事：开春以来米价一日高过一日，城里的米行把米囤着不放。要四十袋米，价钱照去年的。末了一行字写得很慢：“米价涨一文，城外就多一口锅空着。你按平价卖给会里——你少赚的，佛祖替你记着。”"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "date", from = [1557, 3, 1], to = [1571, 3, 31] }, { kind = "age", ge = 17 }]
+deadline = [1571, 3, 31]
+timeout = { next = "failed" }
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，米从外海运来。"
+next = "deliver"
+reply = "老居士念了声佛，把信折好交到我手里。“杨老爷交代，您要是嫌价低，他再写一封信劝您。”他说这话时脸上一点笑意也没有。“宁波的米行指望不上了。听海上的人讲，釜山、博多那边的米价还平。米到了，直接送棚里来，老朽在这儿等。”"
+effects = [{ kind = "affinity", person = "yang_tingyun", value = 2 }, { kind = "flag", flag = "c13_request_yang_tingyun_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这样的价钱做不来。"
+next = "failed"
+reply = "老居士念了句佛，把信折回袖里，回到粥锅边去添水。队里一个老妇把空碗往怀里抱紧了些，往前挪了半步，看的是锅，不是我。"
+effects = [{ kind = "flag", flag = "c13_request_yang_tingyun_declined" }]
+
+# 二、米行的牙人：四十袋米卸上栈桥，印泥盒和烙字的木斗已经候着。
+[[tracks.chapters]]
+key = "deliver"
+title = "米行的牙人"
+text = "四十袋米刚上栈桥，两个牙人就到了。一个腰上别着算盘，一个捧着印泥盒，盒盖上扣着烙了字号的木斗。“船上的客人，这是行规，不是冲您来的。”挂算盘的笑得很客气，“上这座码头的米，先过我们的斗，盖我们的印，抽一成作牙钱。没有牙行的印，水门口的兵不放。”老居士站在米袋后头，念珠捻得比平日快，一声没吭。粥棚在东门外，米要去，只有这一条路。"
+speaker = "captain"
+mood = "tense"
+at = "ningbo"
+when = [{ kind = "alive", person = "yang_tingyun", value = true }]
+objectives = [{ kind = "goods", good = "rice", qty = 40, at = "ningbo", text = "四十袋米运到宁波" }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yang_tingyun_late" }, { kind = "letter", person = "yang_tingyun", text = "米已从别处募得，粥棚未断过一日炊，足下不必挂怀。劝善的话，老夫照旧写了半页，纸短，只抄末一句：船过宁波，东门外的锅还在。" }], news = "宁波城外的粥棚等一船米等了半年，后来米是从别处募来的，锅没有停，管事的老居士还是每天捻着念珠守在锅边。" }
+news = "宁波栈桥上，牙行的两个牙人拦下一船要送去城外粥棚的米，要抽牙钱，粥棚的老居士在旁边捻着念珠。"
+
+[[tracks.chapters.choices]]
+key = "alms"
+text = "说这是施粥的米，不上行市，不走牙行。"
+next = "settle"
+check = { attr = "commerce", base = 20, per = 7 }
+reply = "我说：“牙钱抽的是行市的利。这米是进粥锅的，卖给会里照的是去年的价，一文没加，哪儿来的利给你们抽？”挂算盘的低头拨了两下，拨不出个数来。牙行的规矩里有买有卖，没有粥。他让开半步，印泥盒合上了，四十袋米一袋不少，抬进了粥棚。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "yang_tingyun", value = 3 }, { kind = "flag", flag = "c13_request_yang_tingyun_clean" }]
+fail = { next = "settle_partial", effects = [{ kind = "cash", value = 600 }, { kind = "flag", flag = "c13_request_yang_tingyun_late_rice" }], news = "宁波栈桥上，牙行的人把一船要送去粥棚的米堵了三天，米袋在雨里淋着，最后是粥棚的老居士托了人情才放行。" }
+
+[[tracks.chapters.choices]]
+key = "books"
+text = "把这批米的账一笔笔立清，当着牙人的面念。"
+next = "settle"
+requires = [{ kind = "skill", skill = "double_entry", ge = 60 }]
+hint = "账你会算，可要立出一本让牙人挑不出错的，手上的功夫还差一截。"
+reply = "我就地摊开账本，一笔一笔念：几袋米，进价多少，卖给会里多少，运费多少，末一栏写着“牙钱”，空着。念到那一栏，我问：这一栏谁来签字？两个牙人互看了一眼，谁也没伸手。账念完，他们自己先走了——这样的账，他们抽不到一文。老居士把我立的账抄了一份带回去。"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "yang_tingyun", value = 3 }, { kind = "flag", flag = "c13_request_yang_tingyun_clean" }]
+
+[[tracks.chapters.choices]]
+key = "broker"
+text = "交给牙行，让他们去送。"
+next = "settle_partial"
+reply = "挂算盘的笑着收下，说一定送到，米袋一袋一袋盖了印，抬走了。当晚粥棚点数，少了五袋。牙钱是一成，四袋；还有一袋记在谁的账上，没有人说得出来。"
+effects = [{ kind = "cash", value = 600 }, { kind = "flag", flag = "c13_request_yang_tingyun_late_rice" }]
+
+# 三、佛祖的账：十五天后，米筒里的米平到了刻线。
+[[tracks.chapters]]
+key = "settle"
+title = "佛祖的账"
+text = "半个月后，粥棚前的队还是那么长，锅里的粥却稠了，木勺插下去能站住。老居士把那只竹米筒倒过来给我看，筒里的米头一回平到了去年的刻线。他从袖里取出一封信，火漆还没裂，另有一个蓝布小包，系得很紧。“信是杨老爷的，回船上再拆。”他把包往前递了递，“这个，也是他的。”"
+speaker = "captain"
+mood = "tender"
+at = "ningbo"
+when = [{ kind = "alive", person = "yang_tingyun", value = true }]
+objectives = [{ kind = "wait", days = 15 }, { kind = "at", at = "ningbo" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yang_tingyun_late" }, { kind = "letter", person = "yang_tingyun", text = "谢礼放了一季，没等到人来取，老夫做主，拨给粥棚添了米。善缘不必追。日后路过杭州，茶还是有一盏的。" }], news = "宁波城外粥棚的老居士守着一包没人来取的谢礼守了一季，后来杭州那位老爷叫他拿去添了米。" }
+news = "宁波城外的粥棚今年没断过锅，米是一条外来船按去年的价卖进来的，管事的老居士逢人便说。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下谢礼。"
+next = "done"
+reply = "老居士说，这份谢礼是杨老爷自己出的，不是善会的钱，叫我放心拿。我解开蓝布，里头夹着一页抄经的纸，墨迹很新。他把米筒收回棚里，走到棚口又转过身：“信里夸您的话在前头，劝您的话在后头，您从前往后读。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "yang_tingyun", value = 8 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_yang_tingyun_done" }, { kind = "memory", memory = "mem-request_yang_tingyun-settle", title = "粥棚前的米袋" }, { kind = "letter", person = "yang_tingyun", text = "足下的米到了。粥棚今年没断过一日炊，老夫在杭州听了，很是欢喜，叫人备了薄礼，聊表谢意。夸过了，老夫还是要劝：海上营生，十成里留下一二成，本是常情；可买卖做得顺手，人就容易忘了锅里的米是谁的米。足下聪明，往后少做些只图利的买卖，多做几桩这样的。下回有空，来杭州坐坐。听说海外另有一种教门，老夫想听足下讲；讲得不通的地方，老夫也是要驳的。——杨廷筠" }]
+
+[[tracks.chapters.choices]]
+key = "donate"
+text = "谢礼捐给粥棚。"
+next = "done"
+reply = "老居士合掌，把蓝布包搁进米缸边的功德箱，没打开，也没数。“杨老爷大概要再写一封信，”他说，“这回是夸的。”"
+effects = [{ kind = "affinity", person = "yang_tingyun", value = 10 }, { kind = "reputation", faction = "ming", value = 1 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_yang_tingyun_done" }, { kind = "memory", memory = "mem-request_yang_tingyun-settle", title = "粥棚前的米袋" }, { kind = "letter", person = "yang_tingyun", text = "足下把薄礼留在了粥棚，老夫听管事说了。老夫向来以为，做买卖的人手是往回收的，今日才知道也有往外放的。这一回，老夫没有什么要劝的，只有一句夸：足下是个肯在锅边站一站的人。下回路过杭州，请到寒舍吃茶。海外的教门，足下若肯讲，老夫洗耳；讲到不通处，老夫仍要驳。——杨廷筠" }]
+
+# 三之二、米有闪失的结账：粥棚掺过糠，米筒离刻线还差一指。
+[[tracks.chapters]]
+key = "settle_partial"
+title = "三天的糠"
+text = "再到粥棚，队还是那么长，锅里的粥却不如先前稠。老居士把那只竹米筒倒过来给我看，筒里的米离去年的刻线还差一指。“米到得迟，袋数和成色都不齐整，头三天锅里掺过糠。”他说得平平的，“米到了就是到了，杨老爷不怪人。”他仍从袖里取出一封信，另有一个蓝布小包。队里那个抱着空碗的老妇，把碗在膝盖上磕了磕。"
+speaker = "captain"
+mood = "sad"
+at = "ningbo"
+when = [{ kind = "alive", person = "yang_tingyun", value = true }]
+objectives = [{ kind = "wait", days = 15 }, { kind = "at", at = "ningbo" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_yang_tingyun_late" }, { kind = "letter", person = "yang_tingyun", text = "米到得迟，谢礼又放了一季没人来取，老夫做主，拨给粥棚买了新米，把掺糠的日子补过去。善缘不必追。杭州的茶，仍有一盏。" }], news = "宁波城外粥棚前有包谢礼放了一季没人取，杭州那位老爷叫管事换了新米，掺糠的那几天总算补上了。" }
+news = "宁波城外的粥棚有三天拿糠掺着米煮，后来一条外来船的米到了，锅才又稠起来。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下这份薄一些的谢礼。"
+next = "done"
+reply = "老居士说，这份是杨老爷自己出的，比他原本备的薄了一些，叫我别见怪。我解开蓝布，里头的钱用一张抄经的纸包着，纸角沾了灶灰。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "yang_tingyun", value = 4 }, { kind = "flag", flag = "c13_request_yang_tingyun_partial" }, { kind = "letter", person = "yang_tingyun", text = "足下的米到了，只是到的时候，不是装船时的样子。老夫不怪，行里的事有行里的难处。谢礼比老夫原本备的薄些，足下见谅。老夫还是要劝：货交到谁手里，总得问一句他要抽几成。粥棚三天掺糠，这三天，没有人替锅边的人问。杭州不远，足下得空来吃盏茶。海外的教门，老夫也想听一听，听了不服，是要驳的。——杨廷筠" }]
+
+[[tracks.chapters.choices]]
+key = "donate"
+text = "把谢礼也留给锅边的人。"
+next = "done"
+reply = "老居士合掌，把蓝布包搁进米缸边的功德箱，没打开，也没数。“头三天的糠，”他说，“这下算是补上了。”那个老妇的碗，这回满满地端了回去。"
+effects = [{ kind = "affinity", person = "yang_tingyun", value = 6 }, { kind = "flag", flag = "c13_request_yang_tingyun_partial" }, { kind = "letter", person = "yang_tingyun", text = "足下把薄礼留在了粥棚，老夫听管事说了。米到时有些闪失，足下没有推诿，还把谢礼留给了锅边的人，老夫记下了。足下做买卖，手里总要攥着点什么才安心，今日肯松一回，老夫看见了。杭州的茶还在炉上。海外的教门，足下愿讲，老夫愿听；该驳的，老夫不会客气。——杨廷筠" }]

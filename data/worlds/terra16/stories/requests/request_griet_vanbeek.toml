@@ -1,0 +1,130 @@
+# 请托：没有气泡的玻璃坯（request_griet_vanbeek）。中文，Claude 写。
+# 人物：赫丽特·范贝克 griet_vanbeek（1535-03-17 生，女），米德尔堡眼镜坊的学徒，势力 netherlands（cast/story_europe.toml）。
+# 类型：送货（deliver）；3 章，offer → deliver → settle。
+# 报价：到访（V），报价港 flushing；auto=true；offer 章 at=flushing，family c13_offer_flushing（冷却 20 天）。
+# 窗口：报价 1561-01-01 至 1590-06-30，过止日走 timeout（不写见闻）；交货章 180 天；结算章可以一直等，止于 1590-12-31。
+# 依据：史实背景——米德尔堡的眼镜工匠；望远镜在本世界线提前。本请托只写一块玻璃坯的失败，她在本线里做不成望远镜（失败成本保留）。穆拉诺的玻璃、气泡、第七箱里的三块、阁楼上的镜片都是原创。
+# 待核：无（正文不涉及史实年份）。
+# 读的旗标（只读）：c7_pair_griet_vanbeek_matthias_hoffmann_together（settle 的变体，一句，工坊里钟的嘀嗒声；不写马蒂亚斯说话）。
+# 设的旗标：c13_request_griet_vanbeek_accepted（接下）、_declined（回绝）、_first（少付一点）、_late（超时）、_done（结账，终局）。
+# 依赖：货物 glass（goods/04_overseas_crafts.toml）；港口 flushing；属性 stewardship（captain.toml）；无改名依赖。
+# 秘密：cast 没写秘密，本请托不涉及。
+# 报酬：货款在交货章另付（swap 全额，discount 少 50）；报酬 400 在结算章付。
+# 回忆插画清单：
+#   mem-request_griet_vanbeek-settle：码头上两片新磨的镜片一前一后举着，其中一片的一角是清的。
+# 缺省走向：玩家不来，offer 到期走 timeout（不写见闻）；交货章 180 天内不交，她拿本地坯子磨了一片又裂了，寄一封信；结算章玩家不来就一直等。
+
+[[tracks]]
+key = "request_griet_vanbeek"
+name = "没有气泡的玻璃坯"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["griet_vanbeek"]
+
+# 一、气泡炸的裂：1561 年起，她在弗利辛恩码头上拦住你。
+[[tracks.chapters]]
+key = "offer"
+title = "气泡炸的裂"
+text = "“你是今早第三条进港的船上的吧？我从阁楼上看见了。”赫丽特从码头的人堆里挤过来，鞋尖上还沾着昨夜的泥，额头上推着一片镜片，镜片边上有一道裂。她不等你答话，抬手指向港外，“那条船是从南边来的，还在等潮。”她是米德尔堡眼镜坊的学徒，这片镜片是她自己磨的第一片。“我要磨一副能看见远处的镜片。本地的玻璃坯总有气泡，磨到一半就裂。要穆拉诺的，二十箱，一个气泡也不要。”"
+speaker = "griet_vanbeek"
+mood = "cheerful"
+at = "flushing"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+family = "c13_offer_flushing"
+family_cooldown_days = 20
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应从威尼斯运二十箱玻璃来。"
+next = "deliver"
+reply = "她把额头上那片镜片摘下来，举到你眼前，对着天光让你看边上那道裂。“这道裂，是气泡炸的。”说完又推回额头上，推得很用力，像是怕它掉。"
+effects = [{ kind = "affinity", person = "griet_vanbeek", value = 2 }, { kind = "flag", flag = "c13_request_griet_vanbeek_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_far"
+text = "问她：能看多远？"
+next = "deliver"
+reply = "“现在？看得见港外那条船的旗是什么颜色，红的，边上一圈白。”她把镜片推回额头，眯着眼，“我想看清旗上的字，哪怕只看清一个。”"
+effects = [{ kind = "affinity", person = "griet_vanbeek", value = 2 }, { kind = "flag", flag = "c13_request_griet_vanbeek_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "穆拉诺太远，这趟不跑。"
+next = "failed"
+reply = "她点点头，没有生气，又看了一眼港外。“那条船也是从南边来的，我去问问它。”说完她转身往回走，走两步又停下：“我要的是穆拉诺的。别的，我看不上。”"
+effects = [{ kind = "flag", flag = "c13_request_griet_vanbeek_declined" }]
+
+# 二、第七箱里的三块：玻璃运到弗利辛恩，她当场开箱挑。
+[[tracks.chapters]]
+key = "deliver"
+title = "第七箱里的三块"
+text = "二十箱穆拉诺的玻璃卸在弗利辛恩的码头上，木屑味混着海风。赫丽特蹲在箱子边，当场开了一箱，拿一块对着太阳看，又拿一块，嘴里小声数着。她一箱一箱往下过，数到第七箱停住了。那里头有三块，里面浮着细密的一串气泡，像没串起来的珠子。“三块。”她用指甲敲了一下，“别的我都替你看过了，干净。”"
+speaker = "captain"
+mood = "cheerful"
+at = "flushing"
+when = [{ kind = "alive", person = "griet_vanbeek", value = true }, { kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "goods", good = "glass", qty = 20, at = "flushing", text = "在弗利辛恩码头卸下二十箱玻璃" }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "letter", person = "griet_vanbeek", text = "玻璃没等到，我拿本地的坯子磨了一片，又裂了。" }, { kind = "affinity", person = "griet_vanbeek", value = -3 }, { kind = "flag", flag = "c13_request_griet_vanbeek_late" }] }
+
+[[tracks.chapters.choices]]
+key = "swap"
+text = "把带气泡的三块换成你船上备用的好坯子。"
+next = "settle"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "她换了，动作很快，把三块带气泡的单独放在一边，说可以磨成别的，磨成什么还没想好。“备用的坯子看得过去，下回还找你。”她说完把三块装进一只小木盒。"
+news = "弗利辛恩码头上，米德尔堡眼镜坊的学徒对着太阳一块一块看穆拉诺来的玻璃，挑出三块带气泡的。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "griet_vanbeek", value = 3 }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "griet_vanbeek", value = -2 }, { kind = "letter", person = "griet_vanbeek", text = "你船上备用的坯子也有气泡，我只好都收了。那三块留在我这儿，磨成别的。" }], news = "弗利辛恩码头上，一个船长的备用玻璃也冒着气泡，眼镜坊的学徒只好全收了。" }
+
+[[tracks.chapters.choices]]
+key = "discount"
+text = "那三块让她少付一点。"
+next = "settle"
+reply = "她马上答应了，把那三块往自己这边拢了拢。“这几块我留着练手，不吃亏。”她说完又把最小的一块对着太阳看，看得很认真，像是忘了你还在旁边。"
+news = "弗利辛恩码头上，米德尔堡眼镜坊的学徒对着太阳一块一块看穆拉诺来的玻璃，挑出三块带气泡的。"
+effects = [{ kind = "cash", value = 850 }, { kind = "affinity", person = "griet_vanbeek", value = 3 }, { kind = "flag", flag = "c13_request_griet_vanbeek_first" }]
+
+# 三、一个角是清的：两个月后，她拿新磨的两片镜片来看港外的旗。
+[[tracks.chapters]]
+key = "settle"
+title = "一个角是清的"
+text = "两个月后，赫丽特拿着两片新磨的镜片来码头，一前一后举在眼前，对着港外看。她转着头念旗上的字，念到一半停住，把镜片压低了些，又举起来。“看得见了，真看得见了。”她说，声音有点发飘。说完她自己先笑了，又马上板起脸，怕被人看出来。旗杆上那面旗，只有一个角是清的，其余全是糊的。“一个角，清得很，剩下的全是光。”她把一片镜片收进口袋，只留一片推在额头上，等你说话。"
+speaker = "captain"
+mood = "cheerful"
+at = "flushing"
+when = [{ kind = "alive", person = "griet_vanbeek", value = true }, { kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "wait", days = 60, text = "等两个月" }]
+news = "弗利辛恩的码头上，眼镜坊的学徒举着两片镜片看港外的旗，说看清了一个角。"
+
+[[tracks.chapters.variants]]
+key = "both"
+when = [{ kind = "flag", flag = "c13_request_griet_vanbeek_first" }, { kind = "flag", flag = "c7_pair_griet_vanbeek_matthias_hoffmann_together" }]
+text = "两个月后，赫丽特拿着两片新磨的镜片来码头，一前一后举在眼前，对着港外看。她转着头念旗上的字，念到一半停住，把镜片压低了些，又举起来。“看得见了，真看得见了。”她说，声音有点发飘。说完她自己先笑了，又马上板起脸，怕被人看出来。旗杆上那面旗，只有一个角是清的，其余全是糊的。“一个角，清得很，剩下的全是光。”她把一片镜片收进口袋，又说：“少付的那点，就是让你头一个看。工坊里那只钟走得很吵，我磨镜片的时候，数的就是它的嘀嗒。”"
+
+[[tracks.chapters.variants]]
+key = "first"
+when = [{ kind = "flag", flag = "c13_request_griet_vanbeek_first" }]
+text = "两个月后，赫丽特拿着两片新磨的镜片来码头，一前一后举在眼前，对着港外看。她转着头念旗上的字，念到一半停住，把镜片压低了些，又举起来。“看得见了，真看得见了。”她说，声音有点发飘。说完她自己先笑了，又马上板起脸，怕被人看出来。旗杆上那面旗，只有一个角是清的，其余全是糊的。“一个角，清得很，剩下的全是光。”她把额头上那片也摘下来，递到你手里：“少付的那点，就是让你头一个看。”"
+
+[[tracks.chapters.variants]]
+key = "together"
+when = [{ kind = "flag", flag = "c7_pair_griet_vanbeek_matthias_hoffmann_together" }]
+text = "两个月后，赫丽特拿着两片新磨的镜片来码头，一前一后举在眼前，对着港外看。她转着头念旗上的字，念到一半停住，把镜片压低了些，又举起来。“看得见了，真看得见了。”她说，声音有点发飘。说完她自己先笑了，又马上板起脸，怕被人看出来。旗杆上那面旗，只有一个角是清的，其余全是糊的。“一个角，清得很，剩下的全是光。”她把一片镜片收进口袋，“工坊里那只钟走得很吵，我磨镜片的时候，数的就是它的嘀嗒。”"
+
+[[tracks.chapters.choices]]
+key = "encourage"
+text = "说：一个角清，就比上回多了一个角。"
+next = "done"
+reply = "她笑了，把两片镜片包好放回口袋，说下一副要整面都清，清到能数出港外的船有几根桅。她把钱数给你，额头上换了一片新镜片，没有裂。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "griet_vanbeek", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_griet_vanbeek_done" }, { kind = "memory", memory = "mem-request_griet_vanbeek-settle", title = "只清了一个角的旗" }]
+
+[[tracks.chapters.choices]]
+key = "look"
+text = "要过来，自己对着港外看一眼。"
+next = "done"
+reply = "你看见旗角上半个字母，其余全是一片光。你把镜片还给她，说那半个字母是个“V”。她说是“W”。你们争了半天，争到潮水都退下去一截。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "griet_vanbeek", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_griet_vanbeek_done" }]

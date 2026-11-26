@@ -1,0 +1,166 @@
+# 请托：脚尖磨歪的两脚规（request_pieter）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：彼得·范·德·费尔德（pieter，1531-05-27 生，男），奥特柳斯圈子里的年轻制图师；cast 在 cast/story_europe.toml。
+# 类型：找东西（fd）。三章：offer（报价）、handin（交付）、use（用它）；没有 stage 章，没有 witness / rumor。
+# 报价：T（当面）。auto=false，玩家在安特卫普问“请托”（ask:request_pieter）启动；offer 不写 at，objectives 为 person pieter（在港里找到他）。
+# 窗口：报价 1557-06-01 至 1566-06-30（offer 的 deadline 即止日，timeout 直接 failed，并给一封来信）。
+#       交付与收尾（handin、use）写到 1566-12-31：彼得的日程 1567 年起离开安特卫普（戈尔韦），写死 at 的章节只开在他还在作坊的年份。
+# 依据·史实背景：1570 年奥特柳斯《寰宇大观》与安特卫普的印图圈子；制图两脚规是当时的标准仪器，意大利作的 shop 项。
+# 依据·原创：借来的两脚规与磨歪的脚尖、“偏了半格”的海图、铜匠修旧的一副、彼得晕船的一句话、以及“偏了半格”的那个点。
+#       彼得的口头禅只用一次：offer 的招呼语“上一个岬角外头水深几寻？您亲手量过……”，全轨道不再重复。
+# 物品：plotting_dividers（制图两脚规，shop 为意大利作）。find 只查持有、不扣；give 那一选项写 item -1；lend 不扣（引擎没有延时归还效果，回复写一个月后还回）。
+# 秘密：cast 没写秘密，本请托不涉及任何秘密；不读也不写任何 c7_ 旗标，不写艾希林、不写戈尔韦。请托只写到 1566 年为止，与 C7 的 1567 年起分开。
+# 读写的旗标：写 c13_request_pieter_accepted（offer 的两条接法）、_declined（offer 拒绝）、_given（handin 的交出，use 的 given 变体读）、
+#       _repaired（handin 的修旧，use 的 repaired 变体读）、_done（use 终局，两条都写）。gate_main 为空，不读 c13_main_*。
+# 报酬：现金 400（use，每条都给）+ 900（give 送出时付，即两脚规的钱）；绘图 cartography +20（learn）；好感最多 +13；名声 +1；回忆 mem-request_pieter-use。
+# 修旧（repair）的一条：先付 200 请铜匠，不给 900，不给额外回忆，好感 +2。
+# 依赖：港口 antwerp；人物 pieter（cast/story_europe.toml）；物品 plotting_dividers（items/items_instrument_01.toml）；技能 cartography（skills.toml）。无需 B10b 改名。
+# 回忆插画：mem-request_pieter-use：安特卫普作坊的桌上，一张海岸线只画了一半的海图，两只脚尖对不齐的两脚规，彼得俯身量着航路。
+
+[[tracks]]
+key = "request_pieter"
+name = "脚尖磨歪的两脚规"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["pieter"]
+
+# 一、合不拢的脚尖：安特卫普的印图作坊，他抬头先问了一句水深。
+[[tracks.chapters]]
+key = "offer"
+title = "合不拢的脚尖"
+text = "安特卫普的印图作坊里，彼得·范·德·费尔德正趴在一张海岸图上画浪。他抬头看见你，先拿笔尖点了点你手里的卷子：“上一个岬角外头水深几寻？您亲手量过，还是又一个‘大概’？”他把借来的两脚规拿起来，一只脚尖磨歪了，合不拢，量出来的数总差一点。“要一副好的，意大利作的。不用最好的，脚尖要直，合起来要严。”说完他看了一眼窗外停着的你的船，脸色有点白：“我上船会吐，所以海上的东西只能请人带。”"
+speaker = "captain"
+mood = "cheerful"
+when = [
+  { kind = "date", from = [1557, 6, 1], to = [1566, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "pieter", text = "在港里找到他" }]
+deadline = [1566, 6, 30]
+timeout = { next = "failed", effects = [{ kind = "letter", person = "pieter", text = "两脚规我托了去威尼斯的人，他回话说没有脚尖直的。图我先用借来的画完，慢一点也无妨。——彼得" }] }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，从意大利带一副来。"
+next = "handin"
+reply = "他把那副借来的两脚规合上给你看，脚尖对不齐，中间漏着一道细缝。“就是这道缝。”他说，语气像在说一个老熟人的毛病，“意大利那边的铺子，我记得脚尖都是直的。”"
+effects = [
+  { kind = "affinity", person = "pieter", value = 2 },
+  { kind = "flag", flag = "c13_request_pieter_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_map"
+text = "问他在画什么。"
+next = "handin"
+reply = "他把一张没画完的海图摊开，浪画了半张，海岸线只画到一半。没画的那段，他用铅笔点了几个点，点与点之间隔得很远。“剩下的，等两脚规。”他把笔搁回笔架，搁得很正。"
+effects = [
+  { kind = "affinity", person = "pieter", value = 2 },
+  { kind = "flag", flag = "c13_request_pieter_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "仪器的事我不懂，帮不上忙。"
+next = "failed"
+reply = "他点点头，没再劝。窗边的光一晃一晃，他接着用那副漏缝的两脚规量图，量完一条线，在纸边写下一个数，又摇了摇头，把数划掉。"
+effects = [{ kind = "flag", flag = "c13_request_pieter_declined" }]
+
+# 二、嗒的一声：你来到作坊，他先问两脚规在哪里。三条路，交、借、修。
+[[tracks.chapters]]
+key = "handin"
+title = "嗒的一声"
+text = "彼得正把借来的两脚规合上又打开，听那一声“嗒”，一下一下，像在数拍子。桌角压着他那张画了一半的海图，墨还没干，他的手肘小心地绕着它。你进门，他抬起头，目光先落在你的行囊上。“两脚规呢？”他问，然后又补一句：“带来了，就先在你的海图上量一下，行不行？”"
+speaker = "captain"
+mood = "cheerful"
+at = "antwerp"
+when = [
+  { kind = "alive", person = "pieter", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1566, 12, 31] },
+]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "交给他，海图随他量。"
+requires = [{ kind = "item", item = "plotting_dividers", qty = 1 }]
+hint = "你的行囊里没有一副制图的两脚规。"
+next = "use"
+reply = "他在你的海图上量了三下，说你这张图偏了半格。他数出一袋银币付给你，当着你的面数了两遍，又说偏的那半格他替你改。"
+effects = [
+  { kind = "item", item = "plotting_dividers", qty = -1 },
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "pieter", value = 3 },
+  { kind = "flag", flag = "c13_request_pieter_given" },
+]
+
+[[tracks.chapters.choices]]
+key = "lend"
+text = "借他用一个月，用完还我。"
+requires = [{ kind = "item", item = "plotting_dividers", qty = 1 }]
+hint = "你的行囊里没有一副制图的两脚规。"
+next = "use"
+reply = "一个月后他把两脚规还回来，用软布包着，脚尖擦得发亮，盒底还垫了一张他自己画的小海图。那半张海岸线，他画完了。"
+effects = [{ kind = "affinity", person = "pieter", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "repair"
+text = "没找到新的，请铜匠修他那副旧的。"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你的钱，还请不动一个铜匠。"
+next = "use"
+reply = "铜匠的炉子就在作坊后门，修了两天，巷子里都是焦铁味。脚尖直了，可合起来还是有一点缝。彼得拿在手里看了又看，说够用了。"
+effects = [
+  { kind = "cash", value = -200 },
+  { kind = "affinity", person = "pieter", value = 2 },
+  { kind = "flag", flag = "c13_request_pieter_repaired" },
+]
+
+# 三、偏了半格：他拿你的海图量一遍，问你要不要学。
+[[tracks.chapters]]
+key = "use"
+title = "偏了半格"
+text = "彼得把你的海图摊在他的桌上，用两脚规一格一格量过去。窗外运河上有驳船在卸酒桶，他一句也不理，只顾着量。量到你常走的那段航路，他停了下来：那段线你画过七八遍，每一次都以为画对了。“偏了半格。”他说，把两脚规的一只脚钉在那个点上，“你这张图，是怎么定的位？”他问你要不要学怎么自己量出来。"
+speaker = "captain"
+mood = "cheerful"
+at = "antwerp"
+when = [
+  { kind = "alive", person = "pieter", value = true },
+  { kind = "date", from = [1557, 6, 1], to = [1566, 12, 31] },
+]
+news = "安特卫普的印图作坊里，画浪的彼得又拿起两脚规，见人就要量人家的海图。"
+
+[[tracks.chapters.variants]]
+key = "given"
+when = [{ kind = "flag", flag = "c13_request_pieter_given" }]
+text = "彼得把你的海图摊在桌上，用两脚规一格一格量过去，窗外的卸酒桶还在响，他没抬头。量到你常走的那段航路，手也没停。“这一段，我替你改过了。”他说，又量了一遍，才抬起头，问你要不要学怎么自己量出来。"
+
+[[tracks.chapters.variants]]
+key = "repaired"
+when = [{ kind = "flag", flag = "c13_request_pieter_repaired" }]
+text = "彼得把你的海图摊在他的桌上，用两脚规一格一格量过去。量到你常走的那段航路，他停了下来：那段线你画过七八遍。“偏了半格。”修直的那副两脚规合起来还有一点缝，他每量一次就多看它一眼。他问你要不要学怎么自己量出来。"
+
+[[tracks.chapters.choices]]
+key = "learn"
+text = "学，教我自己量。"
+next = "done"
+reply = "他教了你一下午，怎么从三个已知的点量出第四个，怎么在图上找出偏的那一格。你学会了，他说你学得比他快，可他画浪还是比你好。"
+effects = [
+  { kind = "cash", value = 400 },
+  { kind = "affinity", person = "pieter", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "skill", skill = "cartography", value = 20 },
+  { kind = "memory", memory = "mem-request_pieter-use", title = "偏了半格的海图" },
+  { kind = "flag", flag = "c13_request_pieter_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_him_fix"
+text = "不学了，请他替你改好就行。"
+next = "done"
+reply = "他替你改了，改得一丝不乱，连浪也添了几道，添完还对着纸面吹了吹。“下次还是拿来我看。”他把图卷起来，夹进自己的书架里。"
+effects = [
+  { kind = "cash", value = 400 },
+  { kind = "affinity", person = "pieter", value = 6 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_pieter_done" },
+]

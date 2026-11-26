@@ -1,0 +1,117 @@
+# 请托：借来的礼服（request_margarita）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：玛格丽塔（margarita，1540-01-19 生，女），塞维利亚塔里法侯爵府的侍女；势力 spain，身份档 1。cast：cast/classmates_seville.toml（学院同学，C7 bond_margarita）。
+# 类型：找东西（find）。三章：offer（报价）、handin（试衣，送出或借出）、wedding（婚礼，收尾）。没有 stage 章，因此没有 window 与 default；窗口写在 when 的日期条件里。
+# 报价：T（当面）。人物按日程在塞维利亚港口，玩家在港里“问请托”启动（ask:request_margarita），auto=false；offer 不写 at，目标是在仆役院找到她。
+# 时限：offer 的 deadline 为 1570-12-31，到期走 timeout 直接 failed，不写见闻（没人知道这件事没成）。handin 与 wedding 的 when 卡在 1563-01-01..1572-02-24，之后静默等待，不设期限。
+# 依据·史实背景：塞维利亚的大贵族府邸养着成群的侍女；佛兰德的饰边在西班牙是体面人家的标志。
+# 依据·原创：玛格丽塔与侍女们凑的钱、新郎家的皮匠铺、特里亚纳小教堂的婚礼、管家站在门口的那一刻。
+# 秘密：cast 里写明的 secret 永远不碰，正文与见闻都不写；C7 的其他段落（同一人的 C7 线、1571 年以后的事）归 C7。
+# 读的旗标：bond margarita（至少 C，只在 offer 的变体里读，读的是 C7 的结果）；c13_request_margarita_partial（wedding 的变体，handin 借出检定失败时设）。
+# 设的旗标：c13_request_margarita_accepted（offer 两条接法）、_declined（offer 回绝）、_given（handin 送出）、_partial（handin 借出检定失败）、_done（wedding 两条收尾）。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不设 c13_main_*（玛格丽塔不是主角）。
+# 报酬：现金最多 900、好感最多 +13、名声 +1、回忆 mem-request_margarita-wedding。礼服是玩家买来的，不是奖励；送出那条路 item -1 扣掉它。
+# 依赖：cast/classmates_seville.toml 的 margarita 日程目前只到 1556-12-31，整合时要延到 1572 年在 seville（offer 与 handin 的 person 目标靠它）；物品 flemish_lace_dress（items/items_outfit_01.toml，有 shop）；检定属性 commerce。
+# 回忆插画清单：
+#   mem-request_margarita-wedding「门口一闪一闪的饰边」：特里亚纳小教堂门口的光里，一件佛兰德饰边礼服的袖口一闪一闪，侍女们挤在后排，管家站在门外。
+
+[[tracks]]
+key = "request_margarita"
+name = "借来的礼服"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["margarita"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "姐妹们凑的钱"
+text = "玛格丽塔把一只小布袋往你手里一塞。布袋口拿灰线缝过，里头叮当响，是侍女们凑的钱，一人几枚。府里有个侍女要出嫁，嫁的是个皮匠，婚礼上总得有件像样的礼服。“要佛兰德饰边的，府里夫人穿的那种。”她说，“钱就这些，姐妹们一人一把凑的。不够的我来想办法。”说完朝管家的窗户看了一眼，窗帘没动。"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1570, 12, 31] }, { kind = "age", ge = 17 }, { kind = "age", person = "margarita", ge = 18 }]
+objectives = [{ kind = "person", person = "margarita", text = "在侯爵府的仆役院找到她" }]
+deadline = [1570, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "margarita", level = "C" }]
+text = "玛格丽塔把一只小布袋往你手里一塞，见了你先笑：“你回来得正好，府里正缺一个会挑衣裳的。”布袋里叮当响，是侍女们凑的钱，一人几枚。府里有个侍女要出嫁，嫁的是个皮匠，婚礼上要佛兰德饰边的，“府里夫人穿的那种”。她承认钱不够，“不够的我来想办法”，说完朝管家的窗户看了一眼。"
+
+[[tracks.chapters.choices]]
+key = "find_dress"
+text = "接下，从北方带一件佛兰德饰边的礼服来。"
+next = "handin"
+reply = "她把新娘的尺寸写在一张纸上，写完又改了腰身，说新娘这几个月吃得多，自己先笑了，把纸折好塞给你。“别在管家面前拿出来，”她压着嗓子说，“他看见尺寸，要问是给谁做的。”"
+effects = [{ kind = "affinity", person = "margarita", value = 2 }, { kind = "flag", flag = "c13_request_margarita_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_money"
+text = "接下，先问：不够的，她打算怎么想办法？"
+next = "handin"
+reply = "“府里夫人旧了的饰边，总有人收拾。”她眨眨眼：“别问了，问多了我也得算一份。”她又捏了捏你袖口的线头，像是在估这件衣裳值多少钱。"
+effects = [{ kind = "affinity", person = "margarita", value = 2 }, { kind = "flag", flag = "c13_request_margarita_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "礼服太贵，这点钱买不到。"
+next = "failed"
+reply = "她把布袋收回去，说那就缝一件，“缝得不像，也是姐妹们缝的”。抱着布袋回身走进仆役院，门在身后关得很响，里头很快就传出缝布的沙沙声。"
+effects = [{ kind = "flag", flag = "c13_request_margarita_declined" }]
+
+[[tracks.chapters]]
+key = "handin"
+title = "仆役院里试衣"
+text = "仆役院的小屋窗子开着，外头晒的床单一动一动。侍女们围着那件礼服，新娘不敢伸手去摸。玛格丽塔一边替她比腰身，一边说：“新郎家的皮匠铺上个月刚添了个学徒，是他舅舅硬塞进去的，天天晌午回家吃饭。”说完补一句：“我可没说是我说的。”礼服的腰身小了一指，新娘吸着气才系得上。"
+speaker = "captain"
+mood = "cheerful"
+at = "seville"
+when = [{ kind = "alive", person = "margarita", value = true }, { kind = "date", from = [1563, 1, 1], to = [1572, 2, 24] }]
+objectives = [{ kind = "at", at = "seville", text = "在塞维利亚" }, { kind = "person", person = "margarita", text = "找到玛格丽塔" }, { kind = "item", item = "flemish_lace_dress", qty = 1, text = "手里有一件佛兰德饰边礼服" }]
+news = "塞维利亚一座侯爵府的仆役院里，侍女们围着一件佛兰德饰边的礼服看了一晚上。"
+
+[[tracks.chapters.choices]]
+key = "give_dress"
+text = "把礼服送给新娘，改腰身的事交给姐妹们。"
+next = "wedding"
+reply = "玛格丽塔当场拆了一道缝，说她今夜就改好，不让新娘自己动针。新娘抱着礼服哭了，侍女们笑她，她自己也笑，眼角却湿着。"
+effects = [{ kind = "affinity", person = "margarita", value = 3 }, { kind = "item", item = "flemish_lace_dress", qty = -1 }, { kind = "flag", flag = "c13_request_margarita_given" }]
+
+[[tracks.chapters.choices]]
+key = "lend_dress"
+text = "借她穿一天，婚礼完了还我。"
+next = "wedding"
+check = { attr = "commerce", base = 35, per = 6 }
+reply = "你跟她们说好，一天的租钱就是那袋钱，腰身不许剪，只许放。玛格丽塔说放线她最在行，手指在饰边上一摸，就知道哪一道缝还有余量。"
+effects = [{ kind = "affinity", person = "margarita", value = 2 }]
+fail = { next = "wedding", effects = [{ kind = "affinity", person = "margarita", value = -2 }, { kind = "flag", flag = "c13_request_margarita_partial" }] }
+
+[[tracks.chapters]]
+key = "wedding"
+title = "皮匠的婚礼"
+text = "婚礼在特里亚纳的一座小教堂里，新娘穿着那件礼服，饰边在门口的光里一闪一闪。石阶上还落着撒过的谷粒，几只麻雀在啄。府里的侍女们挤在后排，玛格丽塔站在最前面，比新娘还紧张，手里攥着一张折了又折的纸。散场的时候管家也来了。他是来抓偷跑出府的侍女的，可他站在门口看了很久，没进来，也没走。玛格丽塔凑过来，小声说：“后门的门闩今天没上。”又补一句：“你要是有空，去跟他说说天气。”"
+speaker = "captain"
+mood = "cheerful"
+at = "seville"
+when = [{ kind = "alive", person = "margarita", value = true }, { kind = "date", from = [1563, 1, 1], to = [1572, 2, 24] }]
+objectives = [{ kind = "at", at = "seville", text = "在塞维利亚" }]
+news = "塞维利亚特里亚纳的一座小教堂里，侯爵府的侍女嫁给了皮匠，穿的是佛兰德的饰边。"
+
+[[tracks.chapters.variants]]
+key = "partial"
+when = [{ kind = "flag", flag = "c13_request_margarita_partial" }]
+text = "婚礼在特里亚纳的一座小教堂里，新娘穿着那件礼服，饰边在门口的光里一闪一闪。姐妹们凑的那袋钱，租钱付到一半就空了，剩下的几枚是玛格丽塔从自己的工钱里补上的。她站在府里侍女们的最前面，比新娘还紧张。散场的时候管家也来了，他是来抓偷跑出府的侍女的，却站在门口看了很久，没进来，也没走。玛格丽塔凑过来，小声说：“后门的门闩今天没上。”又补一句：“那几枚我记在自己账上，你别跟她们说。”"
+
+[[tracks.chapters.choices]]
+key = "cover_them"
+text = "去跟管家寒暄，替侍女们拖住他。"
+next = "done"
+reply = "你跟管家聊了半个时辰的天气，侍女们从后门溜回了府。玛格丽塔第二天来谢你，付了钱，说管家昨晚问她那件饰边是打哪儿来的，她只回了一句：“府里的东西，哪儿都有。”"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "margarita", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_margarita_done" }, { kind = "memory", memory = "mem-request_margarita-wedding", title = "门口一闪一闪的饰边" }]
+
+[[tracks.chapters.choices]]
+key = "let_be"
+text = "不去管，看管家自己怎么办。"
+next = "done"
+reply = "管家最后走了，什么也没说。玛格丽塔说管家年轻时也娶过府里的一个侍女，这话是厨房的老婆子讲的，不是她说的。她付了钱，又往你口袋里塞了一把谢礼的杏脯。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "margarita", value = 7 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_margarita_done" }, { kind = "memory", memory = "mem-request_margarita-wedding", title = "门口一闪一闪的饰边" }]

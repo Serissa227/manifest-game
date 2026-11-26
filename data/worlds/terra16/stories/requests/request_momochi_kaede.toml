@@ -1,0 +1,160 @@
+# 请托：濑户内海的第二条船（request_momochi_kaede）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：百地枫（momochi_kaede，1533-06-23 生，女），伊贺来的护卫，在堺的码头替商家护货；势力 iga，身份档 1。cast：story_eastasia.toml。
+# 类型：打一仗（fight）。三章：offer（先看手）、battle（举了两回手）、after（第二条是你挡的）；没有 stage 章。
+#       offer 有一条不打的路：替商人领一面过所的旗（花钱），直接进 after，after 照样付全额。
+# 报价：T（当面）。人物日程在堺（sakai）码头，auto=false，界面用 ask:request_momochi_kaede 启动；
+#       offer 不写 at，目标是在港里找到她；窗口 1571-01-01 至 1580-12-31，deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：battle 章 deadline_days=90，超时走 failed，来信一封（好感 -3，旗标 _late）。after 章在博多（hakata），普通章，可以一直等。
+# 依据·史实背景：十六世纪濑户内海的海上势力在岛上设关，过往商船交钱领一面“过所”的旗就放行，不交的会被截。
+#       本轨道不点名是哪一家；截船的两条快船与船上的人都是叙事里的，不对应任何史上的人。
+# 依据·原创：码头茶棚角上贴墙的长凳、她先看人的手、商人嫌旗贵雇了她、备后的窄口、拖着断桨退回岛后的快船、
+#       朝岛上举了两回手的水手、博多码头上分成两堆的护卫钱、背对着墙吃的一碗面。
+# 招呼语“背对着门坐？换过来。坐那边，我看得见你，也看得见门。说吧。”全轨道只在 offer 开头用一次；
+#       after 的 take_half 回复只回扣“这回没叫你换”，不重复原句。
+# 秘密：她是伊贺的忍者——永远不写，正文与见闻只说“伊贺来的护卫”；“看人先看手”是人设，可以写。不写忍术、不写伊贺的山。
+# 与 C7 的交叉：tie_naya_kaede（小夜×枫，1568、1570、1581、1582 都在堺）。本轨道 1571—80，不写小夜、不写茶事；
+#       茶棚只作 offer 的地点，一笔带过。不读也不设任何 c7_ 旗标。
+# 读写的旗标：写 c13_request_momochi_kaede_accepted（offer 两条接法）、_declined、_flag（领了过所的旗，after 读它换正文）、
+#       _caught（水手交给商人，after 读它换正文）、_late（battle 超时）、_done（after 的终局旗标，两个选项都设）。
+# 报酬：现金最多 1600（只在 after 给一次；推回去的选项给一半）、好感最多 +15（接下 +2、战后 +3 或 +5、收尾 +8）、
+#       名声 +2、回忆 mem-request_momochi_kaede-after（只在 take_half）。领旗花掉的钱是玩家自己出的，不补。
+# 依赖：港口 sakai、hakata；人物 momochi_kaede。无需 B10b 改名。
+# 结构说明：brief 给 battle 与 after 的窗口止于 1581-06-30；普通章不认 window，这里没写，after 也照 brief 不设期限。
+# 回忆插画：mem-request_momochi_kaede-after：博多码头边的面摊，女护卫背靠板墙坐着吃面，对面的船长背对着街，桌上两只冒热气的面碗。
+
+[[tracks]]
+key = "request_momochi_kaede"
+name = "濑户内海的第二条船"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["momochi_kaede"]
+
+# 一、先看手：堺的码头茶棚，她要你挡第二条船。
+[[tracks.chapters]]
+key = "offer"
+title = "先看手"
+text = "堺的码头边有个茶棚，棚角一条长凳贴着砖墙。百地枫坐在那里。你在她对面坐下，背后正对着棚口来来往往的脚夫。“背对着门坐？换过来。坐那边，我看得见你，也看得见门。说吧。”你换了位子，问她是不是在找船。她先看了一眼你的手，看你搁在桌上还是收回膝上，这才开口。码头上那条吃水很深的船是一位堺商人的，十几箱货要运去博多。过所的旗，商人嫌贵，没领，花钱雇了她。“濑户内海里有人等着这条船。”她用指节在桌面上敲了两下，“等的不止一条。”她要你的船跟在商船后面。“打起来的时候，你挡第二条。第一条我来。”"
+speaker = "captain"
+mood = "tense"
+when = [
+  { kind = "date", from = [1571, 1, 1], to = [1580, 12, 31] },
+  { kind = "age", ge = 17 },
+]
+objectives = [{ kind = "person", person = "momochi_kaede", text = "在港里找到她" }]
+deadline = [1580, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "follow"
+text = "答应跟在商船后面，替她挡第二条。"
+next = "battle"
+reply = "她把几枚铜钱压在桌角，站起来，又看了一眼你的手。“过了备后那一段，别离太远。”说完她往码头走，没回头。商船的缆绳已经有人在解了。等你回到自己船上再望过去，商船船尾多了一个蹲着的人影，背靠着舵楼。"
+effects = [
+  { kind = "affinity", person = "momochi_kaede", value = 2 },
+  { kind = "flag", flag = "c13_request_momochi_kaede_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "pay_flag"
+text = "先去领一面过所的旗，交了钱过海，旗钱我出。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你摸了摸钱袋，领一面旗的钱还凑不齐。"
+next = "after"
+reply = "她的指节停在桌面上，想了一会儿。“旗能挡一家，挡不了别家。”可她还是让你去了。你找到替岛上收钱的人，换回一面叠得方方正正的旗，挂上了商船的桅顶。那一路，岛后面的快船探出来看了两回，看见旗，又缩回去了。"
+effects = [
+  { kind = "cash", value = -300 },
+  { kind = "affinity", person = "momochi_kaede", value = 2 },
+  { kind = "flag", flag = "c13_request_momochi_kaede_accepted" },
+  { kind = "flag", flag = "c13_request_momochi_kaede_flag" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "我的船不进濑户内海。"
+next = "failed"
+reply = "她点点头，看着你的手从桌上收回膝上，再没说话。你起身让出位子，棚口进来一个挑担的，在你坐过的地方坐下。她的眼睛跟过去，先落在那人搁下扁担的手上，又回到了门上。"
+effects = [{ kind = "flag", flag = "c13_request_momochi_kaede_declined" }]
+
+# 二、举了两回手：备后的窄口，你打退第二条，她盯住了船尾的一个水手。
+[[tracks.chapters]]
+key = "battle"
+title = "举了两回手"
+text = "过了备后，水道收成一条窄口，两边的岛挨得很近，潮水推着船走。岛后面闪出两条快船，桨一齐落水，一前一后扑上来。枫站在商船船头，迎上了第一条。你转舵横过去，挡住第二条。你打退的那条船拖着两根断桨，退回了岛后。乱的时候，你看见枫没在看海。商船船尾有个水手，朝岛上举了两回手。等你的船靠过去，她已经站在那人身后了。“我看人先看手。”她说，“他举了两回。一回是船来了，一回是来吧。”那水手的手垂着，还在抖。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "momochi_kaede", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在濑户内海挡住截船的第二条快船" }]
+news = "濑户内海一处窄口，两条快船截一条堺的商船，被跟在后头的一条外乡船挡回了岛后。"
+deadline_days = 90
+timeout = { next = "failed", effects = [
+  { kind = "affinity", person = "momochi_kaede", value = -3 },
+  { kind = "flag", flag = "c13_request_momochi_kaede_late" },
+  { kind = "letter", person = "momochi_kaede", text = "船到了博多，丢了两箱货。第二条船，是我挡的。——枫" },
+] }
+
+[[tracks.chapters.choices]]
+key = "tell_merchant"
+text = "把那个水手交给商人处置。"
+next = "after"
+reply = "商人把那水手绑在桅杆底下，说到了博多再交给町里的人。枫什么也没说。那以后一路上，她一直站在那水手一抬眼就看得见的地方，手搭在船舷上，没挪过。"
+effects = [
+  { kind = "affinity", person = "momochi_kaede", value = 3 },
+  { kind = "flag", flag = "c13_request_momochi_kaede_caught" },
+]
+
+[[tracks.chapters.choices]]
+key = "let_her"
+text = "让枫自己去问他。"
+next = "after"
+reply = "枫把那水手叫到船尾，两个人站了一会儿。你听不见说什么，只看见那人的手一直攥着衣角。她回来说，岛上的人押着他家里的老小，叫他一路举手报信。“到了博多，让他自己下船。”她说，“商人那边，我去说。”"
+effects = [{ kind = "affinity", person = "momochi_kaede", value = 5 }]
+
+# 三、第二条是你挡的：博多码头，商人点箱，她数人，把护卫钱分成两堆。
+[[tracks.chapters]]
+key = "after"
+title = "第二条是你挡的"
+text = "博多的码头上，商人蹲在货箱中间，一只一只掀开箱盖，点完一箱，在账上画一道。一箱没少。那个举过手的水手扛着自己的包袱下了船，一转身就混进了人堆。枫站在商人旁边，不看箱子，在数人：船上的水手，码头上的脚夫，一个一个数过去，数到你，停住了。商人把一只钱袋交到她手里，坠得她手腕一沉。她解开袋口，就在箱盖上分成两堆，把一堆推到你面前。“第二条是你挡的。”"
+speaker = "captain"
+mood = "tender"
+at = "hakata"
+when = [{ kind = "alive", person = "momochi_kaede", value = true }]
+deadline_days = 365
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_flag"
+when = [{ kind = "flag", flag = "c13_request_momochi_kaede_flag" }]
+text = "博多的码头上，商人蹲在货箱中间，一只一只掀开箱盖，点完一箱，在账上画一道。一箱没少。这一路没打，商船平平安安进了港，那面过所的旗还挂在桅顶上，被海风吹得发白。枫站在商人旁边，在数人，数到你，停住了。商人把一只钱袋交到她手里，她解开袋口，就在箱盖上分成两堆，把一堆推到你面前。“这回两条都是你挡的。”她抬眼看了看桅顶，“那面旗，倒是比刀好使。”停了停，又说：“下回，还是带刀。”"
+
+[[tracks.chapters.variants]]
+key = "v2_caught"
+when = [{ kind = "flag", flag = "c13_request_momochi_kaede_caught" }]
+text = "博多的码头上，商人蹲在货箱中间，一只一只掀开箱盖，点完一箱，在账上画一道。一箱没少。桅杆底下绑了一路的那个水手，被町里来的两个人解了绳子领走了，枫看着他走远，才把眼睛收回来。她站在商人旁边，在数人：船上的水手，码头上的脚夫，一个一个数过去，数到你，停住了。商人把一只钱袋交到她手里，她解开袋口，就在箱盖上分成两堆，把一堆推到你面前。“第二条是你挡的。”"
+
+[[tracks.chapters.choices]]
+key = "take_half"
+text = "收下这一半。"
+next = "done"
+news = "博多码头上，一条堺的商船货箱一箱没少，伊贺来的女护卫把护卫钱分给了外乡船长一半。"
+reply = "她点点头，把剩下的那堆拢回袋里，揣进怀里。上了岸，她请你在码头边的面摊吃了一碗面。她挑了贴着板墙的位子，你在她对面坐下，背后是一条街的人。她看了一眼，这回没叫你换。面吃到一半，她说：“汤咸了。”你等她往下说，她没再说，端起碗把汤喝干了。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "momochi_kaede", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_momochi_kaede_done" },
+  { kind = "memory", memory = "mem-request_momochi_kaede-after", title = "背对着墙吃面的护卫" },
+]
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "推回去，说她护的是整条船。"
+next = "done"
+reply = "她看了你一会儿，第一次把视线从你的手上移开。“那就算我欠你一回。”可那堆钱她到底没全收，又从里头分出一半，塞进你的袖子。她的手很快，你没来得及缩。"
+news = "博多码头上，伊贺来的女护卫要分外乡船长一半护卫钱，船长推了回去，她又从里头拣出一半，塞进了人家袖子。"
+effects = [
+  { kind = "cash", value = 800 },
+  { kind = "affinity", person = "momochi_kaede", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_momochi_kaede_done" },
+]

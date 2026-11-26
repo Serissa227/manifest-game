@@ -1,0 +1,128 @@
+# 添不添杯（request_fatima）——请托，故事 2.0 格式。C13d，2026-10-25 写，仅中文（不写英文覆盖）。
+# 人物：法蒂玛夫人（fatima，1526-03-23 生，女），伊斯坦布尔塔赫塔卡莱咖啡馆的女主人；cast 在 cast/story_islamic.toml，kind=story，势力 ottoman，身份档 1。
+# 类型：送货（deliver），三章：offer（报价）、deliver（交货）、settle（结账）。三章都是普通章，没有 stage，所以没有 default 与 window。
+# 报价：T（当面）。auto=false，玩家用“问请托”（ask:request_fatima）启动；offer 不写 at，目标是在港里找到她。报价港 istanbul。
+#       offer 的 deadline 为窗口止日 1590-06-30，timeout 直接 failed，不写见闻（没人知道这件事没成）。
+# 窗口：非 stage 章必须有 default，契约里 window 因此不用；deliver 与 settle 的 1580—1590 窗口写成 when 里的 date 条件。
+# 进行中：deliver 章 deadline_days=400（红海与地中海之间没有水路，船得绕非洲，属跨洋）；timeout 走 failed，好感 -3，旗标 _late，来信一封，不写见闻。
+#       deliver 的见闻写在两个选项上，不写在本章：超时时货没有运到，本章的见闻就不能发生。
+#       settle 的 wait 30 只是等一个月；没有期限，可以一直等。
+# 依据·史实：伊斯坦布尔最早的咖啡馆之一，1554 年前后在塔赫塔卡莱开张；咖啡豆产自也门，经摩卡、亚丁、吉达运出，红海航路走的是绕非洲的远道。正文只说“摩卡来的豆子”和“绕非洲”。
+# 原创：法蒂玛的报价与她“听完话才添杯”的规矩、大商人的伙计、门口探头的那一下、炉边的那一杯咖啡。
+# 秘密：cast 写明的“大维齐尔府上的一件事”永远不写，本请托的正文、见闻与来信都不碰。与 C7 的苏莱曼、米丽娅姆两条线不交叉，正文不写这两人。
+# 读的旗标：无（没有主线门禁，没有 c7_* 与 c13_main_* 的读写）。
+# 设的旗标：c13_request_fatima_accepted（接下，分支）、_shared（把一担豆子分给东家，分支）、_declined（回绝，终局）、_late（超时，终局）、_done（结账，终局）。每条只设一面终局旗标。
+# 不用 relation / tie / bond / heart 效果；不写恋爱，不写心动。
+# 报酬：现金最多 900（报酬，settle 给一次）+ 1400（咖啡豆货款，deliver 章付）；唯一奖励 coffee_cup（物品名“咖啡”，只在 settle 的 story 选项里给）；好感最多 +15；名声 +2；回忆 mem-request_fatima-settle。
+# 依赖：港口 istanbul（ports_east_med.toml）；货物 coffee（goods/03_overseas_raw.toml）；物品 coffee_cup（items/items_consumable_01.toml）；属性 commerce、eloquence。无 B10b 改名。
+# 引擎适配：
+#   1. 检定失败分支（fail）没有回复字段，失败时结果文字取分支的见闻，没有见闻才退回本章正文。所以 price 与 settle 的 story 失败分支各写一句见闻，作为失败时的结果。price 的那句写在 offer 上，offer 没有 at，酒馆里没人会听到它。
+#   2. 没有 {days} 形式的期限：deliver 用 deadline_days=400。
+#   3. 普通章不能写窗口：三章的 1580—1590 窗口都写成 when 里的 date 条件。
+# 回忆插画清单：
+#   mem-request_fatima-settle「炉边添的那一杯」：塔赫塔卡莱的炉边，铜壶冒着热气，一小杯咖啡推到船长手边，女主人站在炉子后面。
+
+[[tracks]]
+key = "request_fatima"
+name = "添不添杯"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["fatima"]
+
+# 一、先听完你的话：报价。炉子上的铜壶响着，她先听完一句闲话，再开口。
+[[tracks.chapters]]
+key = "offer"
+title = "先听完你的话"
+text = "炉子上的铜壶咕嘟咕嘟响，塔赫塔卡莱这家咖啡馆挤满了挑夫和书记。一个客人还在讲一句闲话，法蒂玛夫人听完了，才伸手给他添杯。轮到你，她先开口：“远客，嘴边那句新鲜话先说出来——说完了，我再看给不给你添杯。”摩卡来的豆子被几个大商人包了价，她的炉子快断粮了。她要你运二十担咖啡豆来，从红海出发，船得绕过非洲。“买豆子跟添杯一样，我得先听完你的话。你打算走哪条路？”"
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1580, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "fatima", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "cape"
+text = "说：绕非洲，走大洋那一路。"
+next = "deliver"
+reply = "她挑了挑眉，给你添了一杯，又在账本上记下一笔。“绕一圈地球给我送豆子？好。这话我听完了，豆子到了，你再说给我听。”"
+effects = [{ kind = "affinity", person = "fatima", value = 2 }, { kind = "flag", flag = "c13_request_fatima_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "先问她：大商人包了价，你出多少？"
+next = "deliver"
+reply = "她报了个数，说得很轻，说完还往你杯里添了一勺糖。“这个数，是买你不跟他们说的。大商人那边，你一个字也别漏。”"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "fatima", value = 2 }, { kind = "flag", flag = "c13_request_fatima_accepted" }]
+fail = { next = "deliver", news = "塔赫塔卡莱的咖啡馆里，法蒂玛夫人把一个外乡船长的豆子价压低了一截，那船长没争，还是接了。", effects = [{ kind = "flag", flag = "c13_request_fatima_accepted" }] }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "红海的豆子太远，你不接。"
+next = "failed"
+reply = "她点点头，把你面前那只空杯拿走了，没给你添杯。擦桌子的伙计偷偷看了你一眼，又低下头去。"
+effects = [{ kind = "flag", flag = "c13_request_fatima_declined" }]
+
+# 二、门口探头的伙计：二十担豆子抬进后院，大商人的伙计来问价。交货的这一章，货在这里扣。
+[[tracks.chapters]]
+key = "deliver"
+title = "门口探头的伙计"
+text = "二十担咖啡豆抬进咖啡馆后院，满院子都是生豆的味道。法蒂玛夫人蹲下去，抓了一把放在鼻子底下闻，闻完才站起来拍掉手上的灰。门口探出一个脑袋，是大商人的伙计，搓着帽檐说，他东家愿意加价，这批豆子想转过去。“豆子是谁的，你回去问清楚。”她没回头，只把漏在地上的豆子一粒粒拣回麻袋，拣完才补一句：“你东家要的是豆子，还是我这只炉子？”伙计的眼睛盯着麻袋口，一动不动。"
+speaker = "captain"
+mood = "cheerful"
+at = "istanbul"
+when = [{ kind = "date", from = [1580, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "fatima", value = true }]
+objectives = [{ kind = "goods", good = "coffee", qty = 20, at = "istanbul", text = "二十担咖啡豆" }]
+deadline_days = 400
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "fatima", value = -3 }, { kind = "flag", flag = "c13_request_fatima_late" }, { kind = "letter", person = "fatima", text = "豆子没等到，我跟大商人低了头。炉子没断，可添杯添得少了。" }] }
+
+[[tracks.chapters.choices]]
+key = "hers"
+text = "说：这批是给她的，不转。"
+next = "settle"
+reply = "伙计走了。法蒂玛夫人把豆子收进仓里，说今天晚上，满城的人都会知道她的炉子不断粮了——“这话，是我放出去的”。"
+news = "塔赫塔卡莱那家咖啡馆的后院运进了二十担摩卡豆，大商人的伙计在门口探了好几回头。"
+effects = [{ kind = "cash", value = 1400 }, { kind = "affinity", person = "fatima", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "her_call"
+text = "看她，让她决定。"
+next = "settle"
+reply = "她笑着对伙计说，豆子不转，可她可以分他东家一担，价钱照她的，要不要，你回去跟东家说。伙计愣住了，手里的帽子差点掉下来。"
+news = "塔赫塔卡莱那家咖啡馆的后院运进了二十担摩卡豆，女主人分了一担给大商人，价钱照她自己定的。"
+effects = [{ kind = "cash", value = 1400 }, { kind = "affinity", person = "fatima", value = 3 }, { kind = "flag", flag = "c13_request_fatima_shared" }]
+
+# 三、你的话还没听完：一个月后，炉边。她先给你倒一杯，然后问路上的闲话。
+[[tracks.chapters]]
+key = "settle"
+title = "你的话还没听完"
+text = "一个月后，塔赫塔卡莱的咖啡馆比往常还挤，城里的消息大半先经过她的炉子。法蒂玛夫人请你坐到炉边，自己煮了一壶，倒了一杯推到你面前，手指还压着杯沿。“你的话，我还没听完。”她说，“路上听到什么闲话？”炉子上的铜壶响了一声，邻座的挑夫都竖起了耳朵。柜台上搁着那只空麻袋，袋口还沾着一粒咖啡豆，没人去收。"
+speaker = "captain"
+mood = "tender"
+at = "istanbul"
+when = [{ kind = "date", from = [1580, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "fatima", value = true }]
+objectives = [{ kind = "wait", days = 30, text = "等一个月" }]
+news = "塔赫塔卡莱那家咖啡馆最近客人特别多，女主人请一个绕了半个地球送豆子的船长在炉边坐了一下午。"
+
+[[tracks.chapters.choices]]
+key = "story"
+text = "讲你绕好望角时听到的一件怪事。"
+next = "done"
+reply = "她听完了，给你添了一杯，又倒出一小杯咖啡塞进你手里：“这是你的，路上喝。”她付了报酬。"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "fatima", value = 8 }, { kind = "fame", value = 2 }, { kind = "item", item = "coffee_cup", qty = 1 }, { kind = "flag", flag = "c13_request_fatima_done" }, { kind = "memory", memory = "mem-request_fatima-settle", title = "炉边添的那一杯" }]
+fail = { next = "done", news = "塔赫塔卡莱的炉边，一个船长讲他绕好望角听来的怪事，讲得太长，女主人打了个哈欠，还是听完了，付了他报酬。", effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "fatima", value = 6 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_fatima_done" }] }
+
+[[tracks.chapters.choices]]
+key = "no_story"
+text = "说你一路上没听到什么。"
+next = "done"
+reply = "她笑了：“没听到什么，也是一句闲话。”她付了报酬，又看了你一眼，像在掂量你这人说的话值几杯。最后还是没给你添杯。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "fatima", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_fatima_done" }]
+
+[[tracks.chapters.variants]]
+key = "v1_shared"
+when = [{ kind = "flag", flag = "c13_request_fatima_shared" }]
+text = "一个月后，塔赫塔卡莱的咖啡馆比往常还挤。东家那边的伙计在门口站了一阵，最后照她的价钱，把那一担豆子买走了。法蒂玛夫人请你坐到炉边，自己煮了一壶，倒了一杯推到你面前。“你的话，我还没听完。”她说，“路上听到什么闲话？”"

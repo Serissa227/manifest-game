@@ -1,0 +1,145 @@
+# C13d 人物的请托：狼兵回乡（遗事请托，押运／带人，3 章；故事 2.0 契约，按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：瓦氏夫人 wa_shi（cast 在 historical_06_ming.toml，生年不详，1555 年卒）。她本人不出场，也不收好感：由她留下的二十来个老兵出面（不起名，只写“领头的”）。
+# 类型与报价：押运／带人（es），3 章。kind=request，auto=true（L 遗事：legacy，不写 alive 条件）。offer 章 at=ningbo，speaker 省略（老兵不是 cast）；family=c13_offer_ningbo，冷却 20 天。
+# 窗口：报价 1557-03-01 至 1560-12-31（offer 的 deadline 即窗口止日，timeout 无见闻）。passage 起算 12 天后出现，60 天不回应则不罚直接并入 arrive；arrive 限期 90 天，逾期走 failed 并设 late。
+# 依据：史实——1554—55 年瓦氏夫人率田州狼兵赴江南抗倭，见郑若曾《筹海图编》；1555 年卒。狼兵留在江南的老兵，史料没有下文。
+#   原创——滞留宁波码头的二十来个老兵、缠布的旗杆、他们攒钱赎回来的旧刀（亲兵用过的）、广州的广西盐商替他们付船钱、船上米不够和水手的嘀咕、对歌。
+#   不写：战斗、首级、军法；岑家的旧耻与她丈夫的事（她的 secret，本请托不碰）；老兵不起名；旧刀只写在回复里，不发物品；不给 wa_shi 好感、不写来信（人已去世）。
+#   待核：无。招牌话“不与贼俱生”取自 cast 里的 persona，全轨道只在 offer 的接下回复里用一次。
+# 读写的旗标：设 c13_request_wa_shi_accepted / _declined / _done / _late（终局：accepted 为接下，declined、done、late 为结局，各面一次），分支旗标 _thin（口粮排得不好，全船吃了半个月的半份）与 _songs（夜里聊田州、对歌）；
+#   不读外部旗标，不设 c7_ 旗标（c7 一栏为 none）；无主线门禁（不读 c13_main_*）。
+# 依赖：港口 ningbo、guangzhou 都是现有港口，无 B10b 改名；技能 lang_chinese 在 skills.toml；势力 ming 在 factions。
+# 缺省走向：不接（declined → failed）。接了没到广州（arrive 90 天过期）：老兵们在途中的港口另搭了运盐船（late → failed），不写来信。
+# 回忆插画清单：
+#   mem-request_wa_shi-arrive「珠江边的白发狼兵」：广州城外的土路，二十来个白发的狼兵扛着裹布的旗杆往西走，最前头的人没有回头。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_wa_shi"
+name = "狼兵回乡"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["wa_shi"]
+
+# 报价：宁波码头的石阶。二十个白发的人，一根缠死的旗杆。
+[[tracks.chapters]]
+key = "offer"
+title = "码头上的白发兵"
+text = "宁波码头的石阶上蹲着二十来个白发的人，青布头巾洗得发灰，脚边横着一根用布一圈圈缠死的旗杆。脚夫说，这是田州来的狼兵，老夫人没了以后没走成，就一直在码头扛包。领头的见你的船要往南，站起来，官话里拖着壮家的调子：“船主，捎我们到广州。过了广州，路我们自己走回田州。盘缠……没有。”他说“没有”的时候，身后的人谁也没抬头。你随口问起当年江南的仗，石阶上一下子静了，有人低头去数自己的草鞋带子。"
+at = "ningbo"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1560, 12, 31] }]
+deadline = [1560, 12, 31]
+family = "c13_offer_ningbo"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：把他们送到广州"
+next = "passage"
+effects = [{ kind = "flag", flag = "c13_request_wa_shi_accepted" }]
+reply = "领头的把旗杆扛上肩，布缠得太紧，杆头在石阶上磕出一声闷响。“老夫人出门那天说过，‘不与贼俱生’。”他看着你的船，“我们活着回去，算不算数，回去再说。”后头的人一个接一个站起来，膝盖咔咔地响。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "接下，顺口问：老夫人是什么样的人？"
+next = "passage"
+effects = [{ kind = "flag", flag = "c13_request_wa_shi_accepted" }]
+reply = "他们想了半天，你以为没有人肯答。最后是石阶最边上那个瘦子，声音很小：“她走在最前头。”再没有第二句了。旗杆上的布被风掀起一角，领头的伸手按住，按得很紧。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：这条船不载客"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_wa_shi_declined" }]
+reply = "他们没有争，又蹲回石阶上。有人从怀里摸出编了一半的草鞋，接着编。领头的把旗杆横放在膝头，朝你的船点了一下头，像是谢你听完了。"
+
+# 出海第十几天：米不够，水手嘀咕，领头的把自己那碗粥端给了发热的老兵。
+[[tracks.chapters]]
+key = "passage"
+title = "多出二十张嘴"
+text = "出海第十几天，顶风，船走得比账上慢。厨子来报：米缸见底的日子，比算好的早了一个礼拜。二十个老兵挤在底舱，一天两顿稀粥，昨夜有个老兵发了热，躺着不动。领头的把自己那碗粥端过去，一口一口喂他，自己蹲在舱口啃一块生姜，辣得直抽气。甲板上有水手压着嗓子嘀咕，说狼兵一个顶三个，吃得比桨手还多。领头的听见了，把姜咽下去，没有回头。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "wait", days = 12, text = "出海十几天" }]
+deadline_days = 60
+
+[tracks.chapters.timeout]
+next = "arrive"
+
+[[tracks.chapters.choices]]
+key = "ration"
+text = "把全船的口粮重新排一遍，老兵和水手一个标准"
+next = "arrive"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "你把水手和老兵的口粮并成一张表，钉在桅杆上，按人头、按勺数。老兵们不识字，领头的叫人念给他听，听完只问了一句：“老兵和水手，一样？”得到肯定的回答，他把姜收进了怀里。水手围着看了一圈，没人再提谁吃得多。"
+fail = { next = "arrive", effects = [{ kind = "flag", flag = "c13_request_wa_shi_thin" }] }
+
+[[tracks.chapters.choices]]
+key = "buy"
+text = "在最近的港口停一停，多买几担米"
+next = "arrive"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "船上的银子付不起一船人多吃半个月的米。"
+effects = [{ kind = "cash", value = -300 }]
+reply = "你在最近的小港买了几担米拉上船，水手数着麻袋，不嘀咕了。老兵们抢着去搬，二十个白发的人排成一列，把米袋从跳板一路传进底舱，传得比水手还齐。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "晚上坐到老兵堆里，用官话跟他们聊田州"
+next = "arrive"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "他们的官话带着壮家的口音，你听不全，坐下去也接不上话。"
+effects = [{ kind = "flag", flag = "c13_request_wa_shi_songs" }]
+reply = "他们不说仗。说田州的稻子几月熟，山上的雾几时散，谁家的孩子该娶媳妇了，谁家的牛丢在哪个山坳里。领头的说着说着停下来，别人接上，后来有人哼起调子，另一头有人应，应得半句不差。底舱里没有灯，那歌是壮语，你一个字也没听懂。"
+
+# 广州：盐商付了船钱，旧刀塞到你手里，旗杆还缠着布。
+[[tracks.chapters]]
+key = "arrive"
+title = "珠江边的路口"
+text = "船靠广州。码头上有个穿绸衫的广西盐商挤过来，一路喊着“田州的人在不在”，听说船上载的是瓦氏夫人留下的兵，二话没说，把船钱付给了你的账房，不让老兵们再掏一文。城外的路口，往东是城门，往西是土路。领头的解下背上的旧刀，刀鞘磨得发亮，塞到你手里：“老夫人的亲兵用过的。在宁波扛了几年包赎回来的，赎完就没盘缠了。”他把旗杆在地上顿了一顿，“回去以后，没人记得我们来过江南。”"
+at = "guangzhou"
+speaker = "captain"
+mood = "sad"
+news = "广州城外的路口，二十来个白发的狼兵扛着一根缠布的旗杆往西走，说是瓦氏夫人留下的兵。"
+objectives = [{ kind = "at", at = "guangzhou", text = "在广州的码头上" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_wa_shi_late" }]
+news = "广州码头上有人说，从宁波搭船来的那二十来个狼兵半路换了运盐船，不知落在了哪个港。"
+
+[[tracks.chapters.variants]]
+key = "v1_thin"
+when = [{ kind = "flag", flag = "c13_request_wa_shi_thin" }]
+text = "船靠广州。半个月的半份粥，老兵们个个瘦了一圈，下船时扶着跳板，膝盖抖得比上船时厉害。码头上有个穿绸衫的广西盐商挤过来，一路喊着“田州的人在不在”，听说船上载的是瓦氏夫人留下的兵，二话没说，把船钱付给了你的账房，不让老兵们再掏一文。城外的路口，往东是城门，往西是土路。领头的解下背上的旧刀，刀鞘磨得发亮，塞到你手里：“老夫人的亲兵用过的。在宁波扛了几年包赎回来的，赎完就没盘缠了。”他把旗杆在地上顿了一顿，“回去以后，没人记得我们来过江南。”"
+
+[[tracks.chapters.variants]]
+key = "v2_songs"
+when = [{ kind = "flag", flag = "c13_request_wa_shi_songs" }]
+text = "船靠广州。下船时还有老兵在哼那支夜里的调子，哼到跳板尽头，被码头的嘈杂淹了。有个穿绸衫的广西盐商挤过来，一路喊着“田州的人在不在”，听说船上载的是瓦氏夫人留下的兵，二话没说，把船钱付给了你的账房，不让老兵们再掏一文。城外的路口，往东是城门，往西是土路。领头的解下背上的旧刀，刀鞘磨得发亮，塞到你手里：“老夫人的亲兵用过的。在宁波扛了几年包赎回来的，赎完就没盘缠了。”他把旗杆在地上顿了一顿，“回去以后，没人记得我们来过江南。”"
+
+[[tracks.chapters.choices]]
+key = "road"
+text = "送他们到城外的路口，看着他们上路"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "memory", memory = "mem-request_wa_shi-arrive", title = "珠江边的白发狼兵" }, { kind = "flag", flag = "c13_request_wa_shi_done" }]
+reply = "他们一个接一个走上往西的土路，旗杆在最前头，布还缠着，没有人去解。走到第一个坡顶，领头的没有回头，只把旗杆往上提了一提。那把旧刀你带回船上，挂在了舱里。你站在路口，一直到土路上最后一块青布头巾也看不见。"
+
+[[tracks.chapters.choices]]
+key = "rice"
+text = "把船上剩的米分他们一袋"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "memory", memory = "mem-request_wa_shi-arrive", title = "珠江边的白发狼兵" }, { kind = "flag", flag = "c13_request_wa_shi_done" }]
+reply = "领头的推辞了两回，说路上有人家管饭。你说是船上多出来的。他这才叫人把米抓进各人的褡裢，袋子轻了，走路不压肩。临走他说，路上每吃一顿，就念一次你的船名。那把旧刀你收在舱里，刀鞘上还留着他手心的汗。"
+
+[[tracks.chapters.choices]]
+key = "remember"
+text = "答应他：江南的事，我会讲给人听"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "reputation", faction = "ming", value = 2 }, { kind = "flag", flag = "c13_request_wa_shi_done" }]
+reply = "他看了你很久，像在掂这句话有几斤重。然后点点头，什么也没说，把旗杆换到另一边肩上，转身走了。后头的人没有回头，只有最末尾那个瘦子，走出十几步，又转过来朝你抱了一下拳。"

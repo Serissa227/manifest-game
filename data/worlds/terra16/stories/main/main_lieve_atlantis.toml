@@ -1,0 +1,150 @@
+# C13a 亚特兰蒂斯补章 · 莉芙 · 山铜的价（暂存）
+# 2026-11-01 接回登记（C13 收尾）：A8 E63 的帷幕（realms.toml 的 atlantis：钥匙 tabula_smaragdina，另要 c11_atlantis_key_ready、判词不是“合上”）与 C11 的十王会议
+#   （stories/c11_realms.toml 的 atlantis_council，设 atlantis_council_met 与判决旗标）都已在世界里，本文件登记进 world.toml；下文写“暂存 / 不登记”的注释是当时的情形。
+#   接线：每个通向 done / failed 的分支（含 at1 超时）设 c13_main_lieve_atlantis_over，主线“那以后”章 c05_after 的 when 读它；at1 期限由 1584-12-31 收到 1583-12-31（黑暗之海窗口止于 9-30，没进外港的局早点放行主线）。
+# 依据：柏拉图《克里提亚斯》里的亚特兰蒂斯与山铜，只作传说，从人物嘴里和旧书的一句话透出；
+#       欧洲的商号、行情单、债契与港口的价，都是十六世纪的样子。
+#       原创：外港的摊子、说古葡萄牙语的老人、伊斯梅妮、熄了火的会议之夜、律法柱底座上的六角。
+# 轨道：main_lieve_atlantis（kind=main，auto=true，三章：at1_ledger → at2_council → at3_orichalcum）。
+# 读写的共享旗标：
+#   读：c13_main_lieve（main_lieve a00 设）、c13_main_lieve_crossed（main_lieve c04 设，at1 门槛）、
+#       c13_main_lieve_keepsake（main_lieve c03 设，at1 / at2 / at3 的选项）、
+#       c13_main_lieve_stance_open（main_lieve c03 设，at3 选项）、
+#       atlantis_council_met（C11，只在 at2 的 v1_met 变体）。
+#   设：c13_main_lieve_atl_ledger（at1）；c13_main_lieve_atl_read / _atl_recorded（at2，恰好一面）；
+#       c13_main_lieve_atlantis_done 与恰好一面 c13_main_lieve_atl_end_priced / _atl_end_unpriced / _atl_end_ledger（at3）。
+# 等待的包：A8 E63（帷幕、atlantis_port 可达、tabula_smaragdina 醒来）；C11 第二轮（atlantis_council 轨道、atlantis_council_met）。合进来以前整合方不登记本文件；不登记时 main_lieve 照样完整。
+# HIST 占位：本文件没有 HIST 旗标。
+# 见闻：外港与会议不写见闻（外港没有酒馆）。
+# 回忆插画：mem-main_lieve_atlantis-at3（山铜的价）——外港的石阶上放着一小块灰绿的金属，旁边摊着一本旧账簿。
+# 本文件只写莉芙在亚特兰蒂斯的位置与一句话：会议的判决、十王的名字归 C11。
+
+[[tracks]]
+key = "main_lieve_atlantis"
+name = "山铜的价"
+kind = "main"
+start = "at1_ledger"
+auto = true
+cast = ["lieve"]
+
+# at1：外港的行情。期限到了还没进港，轨道静默结束，不写见闻。
+[[tracks.chapters]]
+key = "at1_ledger"
+title = "外港的行情"
+text = "石阶一直伸进墨绿色的水里，石缝里长满了贝。外港的摊子就摆在台阶上：一摞摞灰绿的山铜，一筐发黑的天降石，几口铜锅，锅底刻着谁也认不出的字。收东西的人更怪，一本泡胀了的书、一袋不知哪里来的种子、一把缺了弦的琴，都被人拿秤称过。一个说古葡萄牙语的老人拦住我，手指搭在我的袖口上：“里斯本的胡椒，今年几钱一斤？我们上一回听说，还是你们的国王在打摩尔人。”我听懂一半，剩下的一半是数字。石阶顶上站着一个年轻的女人，穿白布，手里捏着一卷湿透的羊皮。她没先问我是哪一国的，问的是：“你为什么到这里来？先说这个。哪一位王派你来，等你说完再提。”我在心里算：在这里，一张行情单比一袋金币重。父亲那一行欠的人，会不会也在这座城里？"
+at = "atlantis_port"
+cast = ["lieve", "ismene"]
+speaker = "captain"
+mood = "mystic"
+when = [{ kind = "flag", flag = "c13_main_lieve" }, { kind = "flag", flag = "c13_main_lieve_crossed" }]
+deadline = [1583, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_main_lieve_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "show_ledger"
+text = "把父亲的账簿翻到最后一页，给伊斯梅妮看。"
+next = "at2_council"
+requires = [{ kind = "flag", flag = "c13_main_lieve_keepsake" }]
+hint = "账簿锁在家里的钱箱里了。"
+reply = "我把父亲的账簿翻到最后一页。那个没写完的“欠”字后面，画着一个小小的六角，每一边都描得极细。伊斯梅妮看了很久，才说这种六角她在律法柱的底座上见过，那里的刻字被后人凿掉了一半，只剩下这一个。她问：“是谁画的？”我说：“我父亲。”她没有再问，只把手指悬在纸面上方，隔着一寸，没有碰。"
+effects = [{ kind = "affinity", person = "ismene", value = 5 }, { kind = "flag", flag = "c13_main_lieve_atl_ledger" }]
+
+[[tracks.chapters.choices]]
+key = "sell_news"
+text = "先估价：把外面世界一年的行情卖给他们。"
+next = "at2_council"
+check = { attr = "commerce", base = 35, per = 6 }
+fail = { next = "at2_council", effects = [{ kind = "cash", value = 1000 }] }
+reply = "我一口气报了四十几个港口的价：安特卫普的银，里斯本的胡椒，热那亚的丝，弗利辛恩的鲱鱼，报到伦敦的羊毛时还留了个小数。老人们拿铜笔把数字抄在泥板上，抄到一半，一个妇人忽然哭出声来，她认出了其中一个港口的名字。我没有停，把下一个数报完。"
+effects = [{ kind = "cash", value = 3000 }]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "只问一句：山铜几钱一斤？"
+next = "at2_council"
+reply = "伊斯梅妮笑了，笑得很短：“山铜不论斤。它论誓。”她从柱子边的木箱里拿出一块给我看，灰绿的，比看上去轻，又比看上去沉。“要是论斤，这一块值一座城。论誓，它只值一句话，就看你说不说得出口。”"
+effects = [{ kind = "affinity", person = "ismene", value = 3 }]
+
+# at2：熄了火的黑暗。基础正文写会议还没请她进去；两个变体（C11 与 at1 的账簿）写她的位置。
+[[tracks.chapters]]
+key = "at2_council"
+title = "熄了火的黑暗"
+text = "神庙熄了所有的火。殿门比三层楼还高，门缝里漏出的声音很低，一句一句，像在念誓词。门里有人在金板上刻字，刻一下，停一下，刀尖刮过金子，声音细得发涩。石阶是湿的，鞋底踩上去打滑，石阶上没有一盏灯，连月亮也被墙挡住了。伊斯梅妮站在我身边，压着嗓子：“这里不许点灯。说话就好，他们听得见。”我们没有被请进去，只能站在门外听。门里有一个声音说：“外面的世界欠过什么，付过什么，要有人站出来报账。”门里静了很久，没有人站出来。我的手里正好有一本账。我摸到耳坠，又松开。我在心里念：看不见数字的时候，我才发现自己背得出每一笔。"
+cast = ["lieve", "ismene"]
+speaker = "captain"
+mood = "mystic"
+night = true
+
+[[tracks.chapters.choices]]
+key = "read_account"
+text = "在熄了火的黑暗里，念父亲那一笔账。"
+next = "at3_orichalcum"
+requires = [{ kind = "flag", flag = "c13_main_lieve_keepsake" }]
+hint = "账簿不在身边，那一笔你只记得数，不记得父亲的字。"
+reply = "我不用看，一个字一个字背出来：“西方——欠——”念到这里停住了。那个没写完的地方，黑暗里有个声音接上了半句，很低，口音很旧，我听不出是哪一国的话，却听懂了那半句的意思。伊斯梅妮在我身边吸了一口气，什么也没说。"
+effects = [{ kind = "flag", flag = "c13_main_lieve_atl_read" }]
+
+[[tracks.chapters.choices]]
+key = "record"
+text = "一句话也不说，把听见的每一句记进随身的小本子。"
+next = "at3_orichalcum"
+reply = "天亮时，门里抬出金板，搁在石阶上，字朝上。我把听见的每一句对着上面的字，一行一行抄进小本子，抄完才发现手冻僵了，最后一行歪得厉害。金板上那一行本来就只刻到半句。伊斯梅妮接过去看，没说好，也没说坏，只对着门缝里透进来的光，一行一行念了一遍。念到最后，她停下来，问我那一行是不是我写错了。我说不是。她点点头，让我接着抄。"
+effects = [{ kind = "flag", flag = "c13_main_lieve_atl_recorded" }]
+
+[[tracks.chapters.variants]]
+key = "v1_met"
+when = [{ kind = "flag", flag = "atlantis_council_met" }]
+text = "我被请进了会场。熄了火的黑暗里，我坐在最末一席，石凳冷得透过裙子，门里的人声从四面压过来，分不清是谁在说。门里有人在金板上刻字，刀尖刮过金子，声音细得发涩。门里有一个声音说：“外面的世界欠过什么，付过什么，要有人站出来报账。”没有人站出来。我的膝上正好有一本账，封面磨得发白。伊斯梅妮坐在我前面的柱影里，没有看我，只在黑暗里把我的袖子按了一下。"
+
+[[tracks.chapters.variants]]
+key = "v2_ledger"
+when = [{ kind = "flag", flag = "c13_main_lieve_atl_ledger" }]
+text = "伊斯梅妮把我带到律法柱底座边。黑暗里她摸着石头走，脚步很轻，走到一处才停下，拉过我的手，按在一个凹下去的六角上，让我摸它的边。石头冰凉，六角每一边的凿痕都比我想的深，角上还有一道旧的磨痕，像被人用指甲反复描过。“这里不许点灯，你就用手认。”殿墙那一边有人在金板上刻字，声音细得发涩。门里有一个声音说：“外面的世界欠过什么，付过什么，要有人站出来报账。”没有人站出来。我的手指还停在那个六角上，手里正好有一本账。"
+
+# at3：个人终章。会后的清晨，外港的石阶上，她决定山铜的去处。三个选项各设 done 与恰好一面 atl_end_*。
+[[tracks.chapters]]
+key = "at3_orichalcum"
+title = "山铜的价"
+text = "天亮前的石阶凉得很。外港的摊子还没开，潮水刚退到最下一级，露出一片墨绿的贝。我坐在石阶上，面前摆着一小块山铜，灰绿，比手掌还小，表面有细细的纹，像被谁用指甲刮过。它一点也不重，可我拿在手里，总觉得它该有个重量。掌心的凉意留了很久，久到我分不清是山铜凉，还是我的手凉。我顺着那些纹路数了一遍，数到一半，停了下来。拦过我的那个说古葡萄牙语的老人从棚子里探出头来，看了一眼，说：“这块不上秤。”我问他为什么。他想了想，又说了一遍：“书上写着，它如今只剩一个名字。”我这辈子给每样东西都估过价。这一样，我估不出。还是我不想估？"
+cast = ["lieve"]
+speaker = "captain"
+mood = "tender"
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "给山铜定一个价，写进外面的行情单。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_main_lieve_stance_open" }]
+hint = "你当初没想让雾散开。这一块，你还挂不出价。"
+reply = "我把价写在行情单的最后一行，比黄金低一点，比誓言高一点。写的时候我一个数一个数地想，想到第三个数，笔停住了：外面的人拿这个价去换什么，我一清二楚，换来的东西里，有一样我不想再估。写完我把行情单折好，压在山铜底下，等今天第一班出港的船来取。石阶下的贝壳在退潮的水里响了一声，像有人在数，数完了，就不再数了。我把笔帽拧上，又拧下来，再拧上。纸上那个数比我心里估的低一截，我看了它一会儿，没有改。这个价一出港，就收不回来了。"
+effects = [{ kind = "flag", flag = "c13_main_lieve_atlantis_done" }, { kind = "flag", flag = "c13_main_lieve_atl_end_priced" }, { kind = "memory", memory = "mem-main_lieve_atlantis-at3", title = "山铜的价" }, { kind = "flag", flag = "c13_main_lieve_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "unpriced"
+text = "不定价。有的东西不进账。"
+next = "done"
+reply = "我把那块山铜放回石阶上，合上了账本。这是我第一次合上账本，账还没平。老人从棚子里探出头来，看了一眼石阶上的东西，什么也没说，只拿粉笔在棚子的黑板上写下一个问号，又把粉笔放回原处。潮水又涨了一级，把那片贝盖住了一半。我一辈子没有让一笔账挂着过夜，今天它挂着，我也没有去解。我坐着没动，让潮水慢慢盖。那个问号一直留在黑板上，直到第一班船的水手来擦掉它。我站起来，膝盖硬得直响，才想起这块石阶我坐了整整一夜。"
+effects = [{ kind = "flag", flag = "c13_main_lieve_atlantis_done" }, { kind = "flag", flag = "c13_main_lieve_atl_end_unpriced" }, { kind = "memory", memory = "mem-main_lieve_atlantis-at3", title = "山铜的价" }, { kind = "flag", flag = "c13_main_lieve_atlantis_over" }]
+
+[[tracks.chapters.choices]]
+key = "finish_line"
+text = "把价写在父亲那一笔后面，把那一行补完。"
+next = "done"
+requires = [{ kind = "flag", flag = "c13_main_lieve_keepsake" }]
+hint = "账簿锁在家里的钱箱里，那一行接不上。"
+reply = "“西方——欠——”后面，我补上了一个数和一个日期。数是父亲那一年欠下的利，日子是今天。这一行欠的是谁，我还是不知道。数字是我的，日子也是我的，写到这里就够了。写完我看了很久，然后在旁边，学父亲的样子，画了一只小猫。猫的尾巴弯得不好看，我擦掉重画，画到第三次才像。父亲画的猫眼睛总是小的，我的画得大，像在看什么我看不见的东西。画完我吹了吹墨，墨还是湿的。家里那三只流浪猫，也是这样留下来的：先估价，估完了，悄悄再补一份。"
+effects = [{ kind = "flag", flag = "c13_main_lieve_atlantis_done" }, { kind = "flag", flag = "c13_main_lieve_atl_end_ledger" }, { kind = "memory", memory = "mem-main_lieve_atlantis-at3", title = "山铜的价" }, { kind = "flag", flag = "c13_main_lieve_atlantis_over" }]
+
+[[tracks.chapters.variants]]
+key = "v_read"
+when = [{ kind = "flag", flag = "c13_main_lieve_atl_read" }]
+text = "这块山铜不是我带上岸的。昨夜在黑暗里接上我半句话的那个声音，今早在石阶下给我留了一块，什么也没说，留下的脚印很快就被潮水抹平了。天亮前的石阶凉得很，潮水刚退到最下一级，露出一片墨绿的贝。我面前那一小块山铜灰绿，比手掌还小，表面有细细的纹，我顺着纹路数了一遍，数到一半，停了下来。拦过我的那个说古葡萄牙语的老人从棚子里探出头来，看了一眼，说：“这块不上秤。”我问他为什么。他想了想，又说了一遍：“书上写着，它如今只剩一个名字。”我这辈子给每样东西都估过价。这一样，我估不出。还是我不想估？"
+
+[[tracks.chapters.variants]]
+key = "v_recorded"
+when = [{ kind = "flag", flag = "c13_main_lieve_atl_recorded" }]
+text = "我抄下的那份判词摊在膝上，墨已经干了，纸边被夜里的潮气洇出一圈黄。石阶下的潮水刚退到最下一级，露出一片墨绿的贝。我面前摆着一小块山铜，灰绿，比手掌还小，表面有细细的纹。我顺着纹路数了一遍，数到一半，停了下来。拦过我的那个说古葡萄牙语的老人从棚子里探出头来，看了一眼，说：“这块不上秤。”我问他为什么。他想了想，又说了一遍：“书上写着，它如今只剩一个名字。”抄下来的那一行，金板上原本就没有写完。我把纸对折，又展开，怕折痕压坏了一个字。我这辈子给每样东西都估过价。这一样，我估不出。还是我不想估？"
+

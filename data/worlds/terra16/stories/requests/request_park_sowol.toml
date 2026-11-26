@@ -1,0 +1,174 @@
+# C13d 人物的请托：晒网的滩（送信 letter，3 章 + 1 章分流；故事 2.0 契约，按 2026-10-12 的 C13d 总决定写）
+# 人物：朴素月 park_sowol（cast 在 story_eastasia.toml，born 1537-02-09，原创人物）。釜山浦译官家的女儿，书契多半是她起的草，署的是男人的名字。
+# 类型与报价：送信（lt/letter），T 当面。kind=request，auto=false，界面用 ask:request_park_sowol 启动；
+#   offer 章不写 at，objectives 写 person park_sowol（日程 1556—1591 都在 busan）；窗口 1566-01-01 至 1589-06-30，deadline 即窗口止日，timeout 直接 failed，不写见闻。
+#   接下后 handover 在对马严原（tsushima），deadline_days=90（同一海区）；reply / reply_partial 回釜山，不设期限，可以一直等。
+#   brief 给后两章的窗口止于 1589-12-30；普通章没有 window，写死日期又没有期限会把轨道卡住，所以只写 alive，不写日期条件（与同批其他请托一致）。
+# 依据：史实——釜山浦倭馆（1547 年起，丁未约条之后唯一的倭馆）；朝鲜与对马宗氏之间以汉文书契往来，倭馆的事归东莱府管；
+#   宗家的居城在对马府中（今严原），浅茅湾是对马中部的大海湾。
+#   原创——渔户的诉状与那一行谚文“滩是晒网的，网是吃饭的”；扎书契的旧网绳；宗家的家老（叙事人物，不新建 cast，不取史上的名字）；
+#   家老写在书契背面的回文；倭馆伙房里说“吃饭”的粗话。
+#   不写：茂吉、高海月、渔户册子（C7 的事）；战争的预兆；恋爱与心动。倭馆只在 offer 与釜山的两章里当背景出现。
+# 招呼语“请进。公事还是私事？……”全轨道只用一次，在 offer 开头：这一件公事私事都算，正好是那纸书契的样子。
+# 结构说明：brief 的 reply 章让 she_says 选项 requires 本轨道自己设的旗标 _line；这样写故事机器人会报“准备后条件仍不满足”。
+#   改成按 next 分流：handover 的 read_it 与 explain（检定成功）设 _line、走 reply；skip 与 explain 检定失败走 reply_partial。
+#   reply 有 she_says（最好结局）与 i_say（折中）两个选项；reply_partial 只有折中，两个选项一个加好感、一个加名声，回应不同。
+#   引擎在检定失败时不显示选项的 reply，所以 explain 的 reply 只写成功；失败（回文只写“再议”）由 fail 的见闻与 reply_partial 的正文交代。
+#   两章各有一个变体 v1_read（读 _read，她先问那句家常话是怎么说的）。read_it 与 explain 都要把“吃饭”说成日本话，变体只问这个词，两条路都说得通。
+# 读写的旗标：设 c13_request_park_sowol_accepted / _declined / _done / _partial / _late（终局，每条路只设一面）；
+#   分支旗标 _line（家老听懂了那一行）、_read（offer 里问过那一行）。读的只有本轨道自己的 _read（变体）。
+#   不读外部旗标，不设 c7_ 旗标；cast 没写秘密；无主线门禁。
+# 信（letter）：只有 handover 超时一封（brief 原句）。
+# 报酬：现金最好 900、折中 600；好感正向合计至多 +15（接下 +2、念给家老 +5、让她来说 +8）；名声 +2（折中 +1）；回忆一个。无物品、无技能。
+# 依赖：港口 busan、tsushima 是现有港口，无 B10b 改名；技能 lang_japanese 在 skills.toml；检定属性 eloquence。
+# 缺省走向：不接（declined → failed）；窗口过了没来问（offer 超时 → failed，无见闻）；接了没去对马（late → failed，来信说网晒在礁石上）。
+# 回忆插画清单：
+#   mem-request_park_sowol-reply「线外摊开的网」：退潮后的釜山浦滩上划着一道线，线外摊满渔网，倭馆的墙根下站着两个人，船栏上系着一根旧网绳。
+# 只中文：terra16 先出中文，本文件不配英文覆盖。
+
+[[tracks]]
+key = "request_park_sowol"
+name = "晒网的滩"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["park_sowol"]
+
+# 一、釜山浦倭馆外的小屋：一纸书契，旁边空出的那一行。
+[[tracks.chapters]]
+key = "offer"
+title = "滩是晒网的"
+text = "倭馆墙外的小屋里，朴素月正往砚里添水，听见门响，头也不抬：“请进。公事还是私事？公事我替您写书契，私事，替您写家信。”我说船过几天出港，问她有没有要捎的。她这才放下水盂，解开一根旧网绳，把一纸书契摊开。汉文写得端端正正：釜山浦渔户十一家，晒网之滩为倭馆之人所占，乞还。底下按着一排手印。末尾旁边空出一行，她另用谚文抄了一句，指着念给我听：“滩是晒网的，网是吃饭的。”“渔户们的原话，我一个字没改。”她说倭馆的馆守收了书契又退回来，说滩的事他做不得主，要对马的宗家定。“这一件，公事私事都算。我上不了去对马的船，您上得了。”"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1566, 1, 1], to = [1589, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "park_sowol", text = "在釜山浦找到朴素月" }]
+deadline = [1589, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应下来：把书契送到对马严原的宗家"
+next = "handover"
+effects = [{ kind = "affinity", person = "park_sowol", value = 2 }, { kind = "flag", flag = "c13_request_park_sowol_accepted" }]
+reply = "她把书契卷好，用那根旧网绳扎上，绳头掖进结里。“网绳是渔户给的。他们说，看见这根绳，宗家的人就知道是谁写的。”她把卷子递过来，又补了一句：“回文请带回给我，别交给馆守。他看过的东西，到渔户那里就只剩一半了。”"
+
+[[tracks.chapters.choices]]
+key = "ask_line"
+text = "问她：旁边那句谚文，宗家的人看得懂吗？"
+next = "handover"
+effects = [{ kind = "affinity", person = "park_sowol", value = 2 }, { kind = "flag", flag = "c13_request_park_sowol_accepted" }, { kind = "flag", flag = "c13_request_park_sowol_read" }]
+reply = "“看不懂。”她笑了，“所以要您念给他们听。”她把那一行用日本话念了一遍，念得很慢，“吃饭”两个字咬得格外重，念完才拿网绳扎卷子。“记不住整句也不要紧，意思对就行。念错了，回来告诉我错在哪个字。”"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "两国之间的书契，我不经手"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_park_sowol_declined" }]
+reply = "她没劝，把书契重新卷了一遍。网绳在指头上绕了两圈，没再系上，搁在砚台边。“那我再等一条船。”她提起笔，在另一张纸上写起别人的家信，像我已经走了。"
+
+# 二、对马严原的宗家屋敷：家老的手指停在那一行上。
+[[tracks.chapters]]
+key = "handover"
+title = "旁边那一行"
+text = "对马严原的宗家屋敷，收书契的家老是个瘦老头，解那根网绳解了半天。他把汉文读了一遍，眉头一直皱着：“倭馆的人这几年多了一倍，屋子盖到滩边上，滩就那么长。”这话不假，我在釜山浦见过，倭馆的人把鱼干摊在那段滩上，一直摊到水边。读到末尾，他的手指停在旁边那行谚文上，指甲在纸上点了两下：“这一行，写的是什么？”"
+at = "tsushima"
+speaker = "captain"
+mood = "tense"
+news = "对马严原的宗家屋敷里，家老读一份釜山来的书契，读到旁边一行谚文，停了很久。"
+when = [{ kind = "alive", person = "park_sowol", value = true }]
+objectives = [{ kind = "at", at = "tsushima", text = "把书契送到对马严原的宗家屋敷" }]
+deadline_days = 90
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_park_sowol_late" }, { kind = "affinity", person = "park_sowol", value = -3 }, { kind = "letter", person = "park_sowol", text = "书契我托下一条船带去了，回文还没来。滩上的网，今年晒在礁石上。" }]
+
+[[tracks.chapters.choices]]
+key = "read_it"
+text = "照原意用日本话念给他：滩是晒网的，网是吃饭的"
+requires = [{ kind = "skill", skill = "lang_japanese", ge = 60 }]
+hint = "这样一句家常话，你用日本话说不顺口"
+next = "reply"
+effects = [{ kind = "affinity", person = "park_sowol", value = 5 }, { kind = "flag", flag = "c13_request_park_sowol_line" }]
+reply = "我用日本话念了一遍，没添字。家老听完，半天没出声，把书契翻过来，说他小时候在浅茅湾边上也晒过网，网晒不干就烂，烂一张，一冬的饭就少一口。他提笔在背面写回文，写得很慢：滩上从中间划一条线，线外归渔户，倭馆之人不得过线。写完，他把网绳照原样系了回去，结打得比原来还紧。"
+
+[[tracks.chapters.choices]]
+key = "explain"
+text = "说这是起草的人附的一句话：渔户也要吃饭"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "reply"
+effects = [{ kind = "affinity", person = "park_sowol", value = 3 }, { kind = "flag", flag = "c13_request_park_sowol_line" }]
+reply = "家老点点头，说吃饭的事，他懂。回文写得很短，就一行：滩上的事，让倭馆的人退一半。他盖了印，把书契推回给我，网绳没系，卷成一团压在上头。“告诉起草的人，”他说，“下回这种话，写在前头。”"
+fail = { next = "reply_partial", news = "对马严原的宗家屋敷收了一份釜山来的书契，家老听船长解释了半天，回文只写了两个字：再议。" }
+
+[[tracks.chapters.choices]]
+key = "skip"
+text = "说那只是一句闲话，不必管它"
+next = "reply_partial"
+effects = [{ kind = "affinity", person = "park_sowol", value = 1 }]
+news = "对马严原的宗家屋敷回了釜山一封书契，写得公事公办，渔户的那段滩只说让两边商量。"
+reply = "家老“哦”了一声，手指从那一行上挪开。他照汉文回了一封公事公办的回文：倭馆人多，滩上的地方，着馆守与东莱府商量着分。写完盖印，网绳他没再系，随手搁在案角。我出门的时候，把它揣进了怀里。"
+
+# 三、回釜山浦，回文里有那条线：这句话谁来说。
+[[tracks.chapters]]
+key = "reply"
+title = "滩还给不给"
+text = "回到釜山浦，朴素月把回文读了两遍。头一遍不出声，第二遍读出了声，一个字一个字，像替家老在念。读完她把书契压在砚台底下，往窗外看了一眼：那段滩就在倭馆的墙外，鱼干还摊着，渔户的网堆在礁石上。“回文我得照样译给他们听。”她说，“可他们只认一句话：滩还给不给。”她把笔搁下，看着我：“这句话，您来说，还是我来说？”"
+at = "busan"
+speaker = "captain"
+mood = "tender"
+news = "釜山的渔户把网摊在了滩上一条新划的线外头，说是对马那边回了话。"
+when = [{ kind = "alive", person = "park_sowol", value = true }]
+objectives = [{ kind = "person", person = "park_sowol", text = "回釜山浦，把回文交给朴素月" }]
+
+[[tracks.chapters.variants]]
+key = "v1_read"
+when = [{ kind = "flag", flag = "c13_request_park_sowol_read" }]
+text = "回到釜山浦，朴素月没先看回文，先问那句家常话我是怎么说的，“吃饭”两个字用的哪个词。我说了。她皱了皱眉：“那是倭馆伙房里的说法，粗了点。家老听得懂就好。”这才把回文读了两遍，第二遍读出了声。读完她把书契压在砚台底下，往窗外看了一眼：那段滩就在倭馆的墙外，鱼干还摊着，渔户的网堆在礁石上。“回文我得照样译给他们听。可他们只认一句话：滩还给不给。”她看着我：“这句话，您来说，还是我来说？”"
+
+[[tracks.chapters.choices]]
+key = "she_says"
+text = "让她来说：草是她起的，收尾也该她"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "park_sowol", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_park_sowol_done" }, { kind = "memory", memory = "mem-request_park_sowol-reply", title = "线外摊开的网" }]
+reply = "第二天退潮，她站在滩上，渔户围了一圈。她照回文念了一遍，汉文的，没几个人听得懂；又用家常话说了一遍：线这边，网晒得。倭馆的两个人在墙根底下看着，没过来。渔户们把网从礁石上扛下来，摊开在线外，摊了一整个下午。傍晚她回来，把那根网绳系在了我的船栏上，打的是渔户的结，我解了两回没解开。“别解了，”她说，“他们送的。”"
+
+[[tracks.chapters.choices]]
+key = "i_say"
+text = "我来说：对马的人答应了，倭馆退一半"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "park_sowol", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_park_sowol_partial" }]
+news = "釜山浦的滩上新划了一道线，只有两家渔户把网挪了过去，别家的还晒在礁石上，说是信不过对马的话。"
+reply = "我站在滩上说了：对马的人答应了，倭馆退一半。渔户们听了，有人拍手，有人不信，说倭馆的人答应过的事多了。两家把网挪过了线，别的还堆在礁石上看着。朴素月在旁边没说话。回去以后，她另抄了一份回文，旁边又空出一行，提着笔半天没落下去。"
+
+# 三（分流）：回文没说滩的事，还是那一句话谁来说。
+[[tracks.chapters]]
+key = "reply_partial"
+title = "回文里没那句"
+text = "回到釜山浦，朴素月接过书契，回文读了两遍，第二遍念得很慢，念到末尾，声音低了下去。她把纸搁在膝上，半天没动。回文写得端正，盖着宗家的印，说的是再商量，滩还给不给，一个字也没有。窗外退了潮，有个渔妇蹲在礁石上补网，补一个洞，抬头往这边看一眼。“他们只认这一句。回文里没有，我照样译过去，他们也听得出来。”她抬起头：“这句话，您来说，还是我来说？”"
+at = "busan"
+speaker = "captain"
+mood = "sad"
+news = "釜山浦的渔户等来了对马的回文，滩的事还是没个准话，网照旧晒在礁石上，译官家的女儿又在起草了。"
+when = [{ kind = "alive", person = "park_sowol", value = true }]
+objectives = [{ kind = "person", person = "park_sowol", text = "回釜山浦，把宗家的回文带给朴素月" }]
+
+[[tracks.chapters.variants]]
+key = "v1_read"
+when = [{ kind = "flag", flag = "c13_request_park_sowol_read" }]
+text = "回到釜山浦，朴素月先问那句家常话说给家老没有。我把家老怎么回的说了。她听完，把指头按在那行谚文上：“那一行，在那边没人接。”这才把回文读了两遍，第二遍念得很慢。回文写得端正，盖着宗家的印，说的是再商量，滩还给不给，一个字也没有。窗外退了潮，有个渔妇蹲在礁石上补网，补一个洞，抬头往这边看一眼。“他们只认这一句。回文里没有，我照样译过去，他们也听得出来。”她抬起头：“这句话，您来说，还是我来说？”"
+
+[[tracks.chapters.choices]]
+key = "she_says"
+text = "让她来说：回文怎么写，她就怎么念"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "park_sowol", value = 4 }, { kind = "flag", flag = "c13_request_park_sowol_partial" }]
+reply = "她站在滩上，把回文原样念了，又用家常话说了一遍：滩还没还，宗家要再商量，网今年先晒在礁石上，书契她再写。渔户们没散，一个老渔夫问下一封什么时候送。她说开春。回来的路上，她把那根网绳要了回去，绕好收进袖子：“下一封还用得着。”"
+
+[[tracks.chapters.choices]]
+key = "i_say"
+text = "我来说：宗家没给准话，滩还得再争"
+next = "done"
+effects = [{ kind = "cash", value = 600 }, { kind = "affinity", person = "park_sowol", value = 2 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_park_sowol_partial" }]
+reply = "我站在滩上说了：宗家没给准话，滩还得再争。渔户们骂了几句倭馆，又骂了几句宗家，有人当场把网扛回了礁石。朴素月一直没开口。夜里我路过她的小屋，灯还亮着，她在起一份新的书契，把那句谚文从旧纸上抄过来，这回抄在了正文前头。"

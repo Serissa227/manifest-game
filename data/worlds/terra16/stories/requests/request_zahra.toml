@@ -1,0 +1,160 @@
+# C13d 请托：不是他写的字（request_zahra）。中文，Claude 写。
+# 人物：扎赫拉 zahra（1541-03-16 生，女；扎比德学者家的孙女，背圣训一字不差），学院同学（cast/classmates_ship.toml），势力 ottoman，身份档 1。
+# 类型：去某处（gs，kind go）；offer → arrive → result 或 result_note，共 4 章，没有 stage 章。
+#   结构说明：原稿 result 里的 show_note 挂着 c13_request_zahra_attested 的旗标门禁，机器人审计要求门禁在到达该章的每条路径上都能满足，所以拿到字条的两支（compare_hand、ask_witness 成功）去 result_note，没拿到的（ask_witness 失败、just_ask）去 result；两章里的选项都没有旗标门禁。attested 现在只写不读。
+# 报价：到访（V）。人物从扎比德下到摩卡港口，auto=true；offer 章 at=mocha，when 写日期起点 1575-01-01 至 1590-06-30，family c13_offer_mocha、冷却 20 天，deadline 1590-06-30 走 timeout（不写见闻）。
+# 地点：摩卡 mocha（报价与结账）；吉达 jeddah（看字）。
+# 报酬：身份档 1、低风险 ×1.0，现金 900；好感合计最多 +13；名声 +1；回忆 mem-request_zahra-result。
+# 依据（史实）：伊斯兰学术的传授许可（ijaza）——老师亲笔写明传承，学生凭它开讲；老学者晚年失明后，常由门人代笔、老师口授。正文不写老学者的名字与年份。
+# 依据（原创）：扎赫拉与她的学生、吉达的门人（叙事人物，不建 cast）；“出处呢？”的口头禅；门人右手指头上的墨；“对人，不对纸”。
+# 待核：门人代笔的具体做法只按传闻口吻写；麦加老学者的名字与卒年不写。
+# 秘密（cast secret）：属于 C7 pair_rania_zahra，本请托永远不碰；正文不写嗓子、蜂蜜，见闻不写。
+# 与 C7 的交界：不写拉妮娅、纳吉玛（bond_zahra）、她自己领许可的那一天；offer 的 variants 读 bond zahra（C 级）换开场一句，不写名字。不读也不设任何 c7_ 旗标。
+# 读的旗标：无（变体只读人物情谊 bond）。
+# 设的旗标：c13_request_zahra_accepted、c13_request_zahra_declined（offer）；c13_request_zahra_attested（吉达：笔迹认下，或门人写了证明）；c13_request_zahra_late（吉达超时）；c13_request_zahra_done（终局）。
+# 依赖：港口 mocha、jeddah 已在 ports_red_sea_gulf.toml；技能 lang_arabic 在 skills.toml；人物 zahra 的 tracks 已含 request_zahra。
+# 缺省走向：玩家不来，offer 到期走 timeout 直接失败（不写见闻）；吉达 120 天内没去，她收下学生，托人写一封信（letter）；摩卡的结账章没有期限，可以一直等。
+# 回忆插画清单：
+#   mem-request_zahra-result：摩卡码头边的一间屋，许可摊在桌上，门人写的那张纸夹在里面，折了一个角。
+
+[[tracks]]
+key = "request_zahra"
+name = "不是他写的字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["zahra"]
+
+# 一、摩卡码头的一间屋：她拿木条点着许可，托你去吉达请人认字
+[[tracks.chapters]]
+key = "offer"
+title = "一份许可"
+text = "摩卡码头边的一间屋里，扎赫拉把一张许可摊在桌上，拿一根细木条一行一行地点。落款是麦加一位老学者的名字，印是红的。站在桌边的学生低着头，手里攥着一卷抄本。“出处呢？”木条停在落款上，“这笔字太稳。老先生晚年手是抖的，我见过他的字。”她不肯冤枉学生，也不肯放过一条可疑的传承。她抬起眼看见你，把木条往桌上一搁：“跑过远路的人，认得出的手比我多。帮我去吉达，请那位老先生的门人当面认一认这笔字。”"
+speaker = "captain"
+mood = "tense"
+at = "mocha"
+family = "c13_offer_mocha"
+family_cooldown_days = 20
+objectives = [{ kind = "at", at = "mocha", text = "到摩卡码头去" }]
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "zahra", ge = 18 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "bond_c"
+when = [{ kind = "bond", person = "zahra", level = "C" }]
+text = "摩卡码头边的一间屋里，扎赫拉见你进门，先把木条往桌上一搁：“你记海，我记书——这回你也替我记一回书。”然后她才把许可摊开，一行一行地点。落款是麦加一位老学者的名字，印是红的。站在桌边的学生低着头，手里攥着一卷抄本。“出处呢？”木条停在落款上，“这笔字太稳。老先生晚年手是抖的。”她不肯冤枉学生，也不肯放过一条可疑的传承。她看着你：“去吉达，请那位老先生的门人当面认一认这笔字。”"
+
+[[tracks.chapters.choices]]
+key = "go_jeddah"
+text = "接下，带着许可去吉达。"
+next = "arrive"
+effects = [{ kind = "affinity", person = "zahra", value = 2 }, { kind = "flag", flag = "c13_request_zahra_accepted" }]
+reply = "她把许可抄了一份给我，原件不肯离身。“认字的人看抄本就够了，认不出来的人看原件也认不出。”抄本塞进我手里，她又补一句：“抄错一个字，我可是要挑出来的。”"
+
+[[tracks.chapters.choices]]
+key = "ask_student"
+text = "接下，先问：那个学生，她怎么看？"
+next = "arrive"
+effects = [{ kind = "affinity", person = "zahra", value = 2 }, { kind = "flag", flag = "c13_request_zahra_accepted" }]
+reply = "“念得好，背得熟。”她说要是许可是假的，她照样收他，“可他得从头念一遍给我听。”学生把卷子往怀里揣紧，耳根红了一块。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "认笔迹的事，我不在行。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_zahra_declined" }]
+reply = "她把许可收起来，说那就自己写信去麦加问，“一来一回，半年”。木条在桌上敲了两下，不再看你。"
+
+# 二、吉达的客栈：门人看了许可，说字是真的，可字是他写的
+[[tracks.chapters]]
+key = "arrive"
+title = "门人的手"
+text = "吉达一间客栈里，老学者的门人在等去麦加的船。是个中年人，左手拿着一本书，右手的指头上有墨，洗都洗不掉。他看了抄本，又伸手要原件，看了很久，窗外的船都起了锚。“这字是真的。”他把许可翻到落款，指头在那一行上停住，“可字不是老师写的，是我写的。老师那年已经看不见了，口授，我代笔，他最后按了手印。”"
+speaker = "captain"
+mood = "mystic"
+at = "jeddah"
+objectives = [{ kind = "at", at = "jeddah", text = "去吉达找老学者的门人" }]
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "zahra", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "zahra", text = "麦加的回信还没来。那个学生我先收下了，让他从头念。——扎赫拉" }, { kind = "affinity", person = "zahra", value = -3 }, { kind = "flag", flag = "c13_request_zahra_late" }] }
+
+[[tracks.chapters.choices]]
+key = "compare_hand"
+text = "请他当场写几行，跟许可上的字比一比。"
+next = "result_note"
+requires = [{ kind = "skill", skill = "lang_arabic", ge = 60 }]
+hint = "两种笔迹在你眼里差不多"
+effects = [{ kind = "affinity", person = "zahra", value = 3 }, { kind = "flag", flag = "c13_request_zahra_attested" }]
+reply = "他写了三行，笔画的起落跟许可上一模一样。他又在纸上写明：此许可为某师口授、门人代笔，附他自己的名字。"
+news = "吉达一间客栈里，老学者的门人当场写了三行字，笔画跟许可上的一模一样。"
+
+[[tracks.chapters.choices]]
+key = "ask_witness"
+text = "请他写一张证明，说清代笔的来由。"
+next = "result_note"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "zahra", value = 3 }, { kind = "flag", flag = "c13_request_zahra_attested" }]
+reply = "他想了想，写了，写得很短：口授，代笔，手印为证。"
+news = "吉达一间客栈里传出话来，老学者的门人写了一张证明，说许可是口授、代笔。"
+fail = { next = "result", effects = [{ kind = "affinity", person = "zahra", value = -2 }], news = "吉达一间客栈里，一位麦加老学者的门人说老师的事轮不到他写，只肯口头讲，不肯落字。" }
+
+[[tracks.chapters.choices]]
+key = "just_ask"
+text = "只问清来由，记在心里带回去。"
+next = "result"
+effects = [{ kind = "affinity", person = "zahra", value = 2 }]
+reply = "他把代笔的事从头讲了一遍，讲老师怎么口授、他怎么一字一字念回去给老师听。我记下了。"
+news = "吉达一间客栈里，老学者的门人讲完代笔的事，讲到口授那一段，半天没说话。"
+
+# 三、摩卡码头：她把那个学生叫进来，许可上的字认的是人
+[[tracks.chapters]]
+key = "result"
+title = "对人，不对纸"
+text = "扎赫拉听你讲完，把许可又摊开看了一遍，这回看的是落款下面的那枚手印。她沉默了一会儿，说她挑了一辈子别人的错，这回错的是她：她只认字，没认那只按手印的手。手印旁边留着一点淡墨，她用指甲去刮，刮不掉。她把木条放下，朝门口喊那个学生进来。学生在门外站了一会儿才迈步，卷子被手心捏得发白。“从头念。”她说，“许可上传下来的那部书，一句一句给我念。”"
+speaker = "captain"
+mood = "tender"
+at = "mocha"
+objectives = [{ kind = "at", at = "mocha", text = "回摩卡码头" }]
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "zahra", value = true }]
+news = "摩卡码头边的一间屋里，扎比德的女学者收下了一个拿着代笔许可的学生。"
+
+[[tracks.chapters.choices]]
+key = "stay_listen"
+text = "留下来听那个学生念。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "zahra", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_zahra_done" }]
+reply = "学生念了一个下午，扎赫拉挑了七处错，一处也没放过，挑完了说“收下”。她付了钱，把许可重新卷好，夹进书里最厚的那一本。"
+
+[[tracks.chapters.choices]]
+key = "retell"
+text = "把门人的原话一句一句讲给她听。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "zahra", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_zahra_done" }]
+reply = "你把门人的话从头讲了两遍：口授，代笔，最后按了手印。扎赫拉拿笔在书目上那条传承旁边记了一行：门人转述，无字据。她说往后谁替老先生写许可，执笔的人要先写在前头。她付了钱，把那个学生留在了屋里。"
+
+# 三之二、摩卡码头：你带回了门人的字条
+[[tracks.chapters]]
+key = "result_note"
+title = "字条与手印"
+text = "扎赫拉听你讲完，把许可又摊开看了一遍，这回看的是落款下面的那枚手印。你从怀里掏出门人写的那张字条，她没有接，先开了口：她挑了一辈子别人的错，这回错的是她，她只认字，没认那只按手印的手。字条的纸边卷着，墨还新。她放下木条，朝门口喊那个学生进来。学生在门外站了一会儿才迈步，卷子被手心捏得发白。“从头念。”她说，“许可上传下来的那部书，一句一句给我念。”"
+speaker = "captain"
+mood = "tender"
+at = "mocha"
+objectives = [{ kind = "at", at = "mocha", text = "回摩卡码头" }]
+when = [{ kind = "date", from = [1575, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "zahra", value = true }]
+news = "摩卡码头边的一间屋里，扎比德的女学者读了一张门人写的字条，收下了一个拿着代笔许可的学生。"
+
+[[tracks.chapters.choices]]
+key = "show_note"
+text = "把门人写的证明交给她。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "zahra", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_zahra_done" }, { kind = "memory", memory = "mem-request_zahra-result", title = "夹在许可里的一张纸" }]
+reply = "她读完证明，在自己的书目上那条传承旁边写了一行小字：门人代笔。写完她说，往后她发的许可，也要写明谁执笔。她付了钱，又把证明夹进许可里。"
+
+[[tracks.chapters.choices]]
+key = "stay_listen"
+text = "留下来，听那个学生念到底。"
+next = "done"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "zahra", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_zahra_done" }, { kind = "memory", memory = "mem-request_zahra-result", title = "夹在许可里的一张纸" }]
+reply = "学生念到后半夜，扎赫拉只挑了三处错，挑完了说“收下”。她付了钱，把门人的字条折了一个角，夹在许可里。"

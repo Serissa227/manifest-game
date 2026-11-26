@@ -1,0 +1,193 @@
+/* 寰宇的场景插画（components/LoreImage.tsx）：外框、当地天气的叠层，以及传说之船的 CG 画廊（history/LoreGallery.tsx）。 */
+.lore-pic {
+  position: relative;
+}
+.port-lore {
+  margin: 4px 0 8px;
+}
+.port-lore .port-lore-art {
+  margin: 0;
+}
+/* 天气叠层：挑中的一版没画出当地正在下的雨、雪、雾时才有 */
+.lore-pic[data-wx]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.lore-pic[data-wx="rain"]::after,
+.lore-pic[data-wx="storm"]::after {
+  background:
+    repeating-linear-gradient(105deg, transparent 0 9px, rgba(200, 215, 235, 0.28) 9px 10px, transparent 10px 23px),
+    linear-gradient(rgba(40, 52, 70, 0.28), rgba(40, 52, 70, 0.28));
+  background-size: 46px 92px, auto;
+  animation: lore-rain 0.6s linear infinite;
+}
+.lore-pic[data-wx="storm"]::after {
+  background:
+    repeating-linear-gradient(110deg, transparent 0 7px, rgba(210, 220, 240, 0.34) 7px 8px, transparent 8px 17px),
+    linear-gradient(rgba(22, 28, 44, 0.42), rgba(22, 28, 44, 0.42));
+  background-size: 34px 68px, auto;
+  animation: lore-rain 0.4s linear infinite, lore-flash 7s steps(1) infinite;
+}
+.lore-pic[data-wx="snow"]::after {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.85) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.75) 0 1px, transparent 1.5px),
+    linear-gradient(rgba(200, 215, 235, 0.16), rgba(200, 215, 235, 0.16));
+  background-size: 37px 41px, 53px 47px, auto;
+  animation: lore-snow 6s linear infinite;
+}
+.lore-pic[data-wx="fog"]::after {
+  background: linear-gradient(to top, rgba(215, 220, 225, 0.62), rgba(215, 220, 225, 0.32) 55%, rgba(215, 220, 225, 0.42));
+}
+@keyframes lore-rain {
+  to {
+    background-position: -20px 92px, 0 0;
+  }
+}
+@keyframes lore-snow {
+  to {
+    background-position: 30px 205px, -25px 235px, 0 0;
+  }
+}
+@keyframes lore-flash {
+  0%,
+  96% {
+    filter: none;
+  }
+  97% {
+    filter: brightness(2.2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lore-pic[data-wx]::after {
+    animation: none;
+  }
+}
+
+/* 历史事件卡片上的题图 */
+.hs-art {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 16 / 7;
+  margin: 0 0 8px;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+  border: 1px solid var(--line);
+}
+
+/* 传说之船的 CG 画廊 */
+.sc-gallery-btn {
+  margin-top: 6px;
+}
+.lg-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 14, 24, 0.7);
+}
+.lg-modal {
+  width: min(820px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 12px 14px 14px;
+  color: var(--ink);
+  background: linear-gradient(180deg, #f8eed8, #ecdcb8);
+  border: 3px solid var(--wood-0);
+  box-shadow:
+    inset 0 0 0 2px var(--gold-3),
+    0 18px 40px rgba(0, 0, 0, 0.5);
+}
+.lg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.lg-head h3 {
+  margin: 0;
+  font-family: var(--font-title);
+}
+.lg-main {
+  margin: 0;
+}
+.lg-main img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+  border: 1px solid var(--line);
+}
+.lg-main figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+.lg-count {
+  opacity: 0.7;
+}
+.lg-thumbs {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  overflow-x: auto;
+}
+.lg-thumb {
+  flex: 0 0 auto;
+  width: 112px;
+  padding: 0;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+}
+.lg-thumb[aria-pressed="true"] {
+  border-color: var(--gold-2);
+}
+.lg-thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+}
+/* 画廊原来与一个已经删掉的对话框共用 .lg-modal、.lg-head、.lg-main，那边特异度更高的规则一直作用在画廊上：
+   标题一行居中、至少 28 px 高；大图与说明排成两栏的网格（窄窗口一栏）。那个对话框删掉以后，把实际生效的这几条原样补在这里，
+   画廊的样子不变（新界面的那几条在 ui-v2/dialogs.css）。 */
+.lg-modal .lg-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  margin-bottom: 8px;
+}
+.lg-modal .lg-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 640px) {
+  .lg-modal .lg-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lg-modal .lg-head {
+    flex-direction: column;
+  }
+}
+:root[data-ui="v2"] .lg-modal {
+  color: var(--v2-ink);
+  background: var(--v2-paper-0);
+  border: 1px solid rgba(12, 18, 28, 0.5);
+  border-radius: var(--v2-r-md);
+  box-shadow: none;
+}

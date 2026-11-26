@@ -1,0 +1,226 @@
+# 请托：月港的铸匠（request_raja_hijau）。Claude 写（C13d，2026-10-25），仅中文；寰宇先只做中文，不写英文覆盖。
+# 人物：拉惹·希贾乌（raja_hijau，女，生年不详；1584 年即位，1616 年卒）。北大年的女王，人称“绿女王”。cast：cast/historical_03_indian_ocean.toml；身份档 3（王侯）。
+# 类型：押运／带人（escort）。四章：offer（税馆报价）、persuade（月港的铸坊）、passage（海上的巡船）、arrive（城头的炮位）；一年支线另有 passage_one_year、arrive_one_year。
+# 报价：来信／代理人。auto=true；offer 章 at=pattani，出面的是女王的港务官（写身份，不新建 cast）。offer 的 when 写 17 岁、1584-06-01 至 1590-04-30、名声 ≥ 30；deadline=1590-04-30，timeout 走 failed，不写见闻。family=c13_offer_pattani，冷却 20 天。
+# 依据·史实：拉惹·希贾乌 1584 年即位；1567 年月港开海，出洋要船引。北大年的大铜炮与铸炮的唐人匠人见于后世传说，本条不写铸匠与炮的名字。
+# 依据·原创：铸匠与他的老母亲、钥匙串、模子箱、税吏的红章、女王敲钟的那一下、城北的铸坊。巡船的哨船与船上的人都不对应史上某一条船或某一个人。
+# 读的旗标：无（不读 c7_*，不读 noel_unveiled；gate_main 为空，不写 c13_main_ 门禁）。
+# 写的旗标：accepted（offer 两种接法）、declined（终局，回绝）、late（persuade 与 arrive、arrive_one_year 超时，终局）、done（arrive 与 arrive_one_year 的收尾，终局）。
+#       分支旗标共三面：bell（offer 问“为什么”，persuade 的变体读它）、one_year（persuade 的承诺检定失败，老人只放一年）、taxed（passage 的藏货检定失败，模子被认作货；arrive 与 arrive_one_year 的变体读它）。
+# 报酬：现金 3650（arrive 与 arrive_one_year 的收尾各给一次）；好感：接下 +2，办成 +3，收尾 +8（visits 的收尾 +6，一年支线 +6 或 +4），检定失败 −2；名声 +5（身份档 3 的最好结局）；回忆 mem-request_raja_hijau-arrive。无物品、无技能；不给声望（见下）。
+# 依赖：港口 pattani（offer、arrive、arrive_one_year）、yuegang（persuade）；技能 lang_chinese（skills.toml，hokkien 的门槛）；检定属性 eloquence、stewardship；不涉及 B10b 改名。
+# 声望：本条不给。factions_runtime.toml 里已经有 pattani 这一条登记；整合时若确认，可在两个收尾各加 reputation pattani +3。
+# 与旧设计的差别：一年路线拆成 passage_one_year 与 arrive_one_year 两章，choice 不再用 requires 读同一轨道里别的路径才设的旗标；承诺检定失败另给好感 −2（decisions 第二节）；mother_agreed 旗标省去（分支旗标上限三面，它没有读取者）。
+# 回忆插画：mem-request_raja_hijau-arrive：北大年税馆的柜台，一只打开的木模箱，模子沾着泥，女王的指腹蹭上一道灰。
+
+[[tracks]]
+key = "request_raja_hijau"
+name = "月港的铸匠"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["raja_hijau"]
+
+# 一、税馆里的差事：北大年税馆，女王的港务官报价。
+[[tracks.chapters]]
+key = "offer"
+title = "税馆里的差事"
+text = "北大年的税馆里，女王的港务官一边收你的税，一边把账本翻到新的一页。他说城头要架几尊有名有姓的大铜炮：暹罗请过炮匠，葡萄牙人的炮匠也请过，铸出来的炮口都不匀。“女王听说月港有个唐人铸匠，铸钟铸炮都好，就是不肯出海。”他合上账本，“要一条船，去把人请来，连人带模子。”柜台上的银币一枚一枚摆开，他数得很慢。"
+at = "pattani"
+mood = "cheerful"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1584, 6, 1], to = [1590, 4, 30] }, { kind = "fame", ge = 30 }]
+deadline = [1590, 4, 30]
+timeout = { next = "failed" }
+family = "c13_offer_pattani"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去月港请铸匠。"
+next = "persuade"
+reply = "港务官把一封盖着女王印的请帖交给你，又低声补了一句：“女王不爱听‘请不来’三个字。”"
+effects = [{ kind = "affinity", person = "raja_hijau", value = 2 }, { kind = "flag", flag = "c13_request_raja_hijau_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_why_him"
+text = "接下，但问：为什么非要唐人的铸匠？"
+next = "persuade"
+reply = "“唐人的炉子烧得最匀。”港务官说，“女王看过他铸的一口钟，拿指节敲了一下，就定了。”"
+effects = [{ kind = "affinity", person = "raja_hijau", value = 2 }, { kind = "flag", flag = "c13_request_raja_hijau_accepted" }, { kind = "flag", flag = "c13_request_raja_hijau_bell" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这种差事我不接。"
+next = "failed"
+reply = "港务官把请帖收回去，税照收，一文不少。"
+news = "北大年的税馆里，女王想从月港请一个铸炮的唐人，来托的船长一口回绝；港务官收回请帖，税一文不少。"
+effects = [{ kind = "flag", flag = "c13_request_raja_hijau_declined" }]
+
+# 二、铸匠的老母亲：月港北门的铸坊，老人手里的钥匙串。
+[[tracks.chapters]]
+key = "persuade"
+title = "铸匠的老母亲"
+text = "月港北门的铸坊里，炉火半灭，墙角堆着几块黄铜料，料上落着一层炭灰。铸匠听你说到北大年的女王，眼睛亮了一下，又暗下去。门槛上坐着他的老母亲，手里攥着一串钥匙。“他爹当年也是这样出的洋，”她说，“船开走了，人就没回来。”她把钥匙串往怀里收了收，“他要走，这间铸坊我就锁了。”"
+at = "yuegang"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "raja_hijau", value = true }]
+deadline_days = 180
+timeout = { next = "failed", news = "月港北门的铸坊关了炉。铸匠等不到北大年的船，自己雇了一条去南洋的船，他娘在码头上站到船看不见。", effects = [{ kind = "affinity", person = "raja_hijau", value = -3 }, { kind = "flag", flag = "c13_request_raja_hijau_late" }, { kind = "letter", person = "raja_hijau", text = "北大年的港务官来信：女王另从暹罗请到了人。月港那位，就让他守着他娘吧。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_bell"
+when = [{ kind = "flag", flag = "c13_request_raja_hijau_bell" }]
+text = "月港北门的铸坊里，炉火半灭，墙角堆着几块黄铜料，料上落着一层炭灰。铸匠听你说到女王敲了他铸的那口钟，手里的钳子停住，又慢慢放下。门槛上坐着他的老母亲，手里攥着一串钥匙。“他爹当年也是这样出的洋，”她说，“船开走了，人就没回来。”她把钥匙串往怀里收了收，“他要走，这间铸坊我就锁了。”"
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "向老人家保证：铸完就送他回来。"
+next = "passage"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "老人看了你很久，把钥匙串上最小的那把解下来，塞给儿子：“这是你爹的。带着。”"
+news = "月港北门的铸坊要开炉了。铸匠的老母亲解下钥匙串上最小的那把，给儿子带去北大年。"
+effects = [{ kind = "affinity", person = "raja_hijau", value = 3 }]
+fail = { next = "passage_one_year", news = "月港北门的老太太没松口，只放儿子去北大年一年，一年不回来，她就把铸坊锁了。", effects = [{ kind = "affinity", person = "raja_hijau", value = -2 }, { kind = "flag", flag = "c13_request_raja_hijau_one_year" }] }
+
+[[tracks.chapters.choices]]
+key = "settle_money"
+text = "留一笔安家钱，请邻居照应她。"
+next = "passage"
+requires = [{ kind = "cash", ge = 600 }]
+hint = "安家的钱，你的钱袋不够。"
+reply = "你把钱交给隔壁米店的老板，写了字据。老人看着字据，不说话，进屋给儿子收拾了一包衣裳。"
+news = "月港北门有人留下一笔安家钱，托米店的老板照应老太太，铸匠的衣裳收了一包。"
+effects = [{ kind = "cash", value = -600 }, { kind = "affinity", person = "raja_hijau", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "hokkien"
+text = "用闽南话跟老人家聊她男人当年走的那条船路。"
+next = "passage"
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60 }]
+hint = "老人家的闽南话，你一句也接不上。"
+reply = "你说起那条船路上的港口，她一个一个接上了名字。说到最后，她自己站起来：“去吧。他爹没走完的路，你走一段。”"
+news = "月港北门的老太太听一个船长用闽南话说完她男人走过的船路，自己站起来，让儿子去北大年。"
+effects = [{ kind = "affinity", person = "raja_hijau", value = 3 }]
+
+# 三、海上的巡船：出港第六天，哨船查船引。
+[[tracks.chapters]]
+key = "passage"
+title = "海上的巡船"
+text = "出港第六天，一条巡海的哨船靠过来查船引。船引上写的是货，没有一个带着铸炮模子的工匠，私自出洋是要追究的。哨船上的人踩上甲板，一箱一箱地翻。舱里只剩一盏油灯，油烟把人的脸熏得发黑。你站在舱口，手里的船引被汗浸软了一角。铸匠缩在舱底，抱着他的模子箱，一声不敢出。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "raja_hijau", value = true }]
+objectives = [{ kind = "wait", days = 6 }]
+
+[[tracks.chapters.choices]]
+key = "hide"
+text = "让他躲进货舱最里头，把模子混在货里。"
+next = "arrive"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "巡船的人翻了几箱瓷器，嫌舱里闷热，骂了一句，走了。铸匠从舱底钻出来，一身汗，手还抱着模子箱。"
+effects = [{ kind = "affinity", person = "raja_hijau", value = 3 }]
+fail = { next = "arrive", news = "从月港开出的船在北大年外海被查，模子箱翻了出来，只好认作货，船引上补了一笔税。铸匠没事，就是一身冷汗。", effects = [{ kind = "flag", flag = "c13_request_raja_hijau_taxed" }] }
+
+[[tracks.chapters.choices]]
+key = "crew"
+text = "把他报成船上的木匠，给巡船的人塞一笔茶钱。"
+next = "arrive"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "你的钱袋太轻，塞不出一笔像样的茶钱。"
+reply = "巡船的人收了茶钱，在船引上添了“木匠一名”，还提醒你南边海上有人劫船。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "raja_hijau", value = 3 }]
+
+# 三之二、船上的一年：persuade 的承诺检定失败，老人只放一年。路线分开，choice 不另读旗标。
+[[tracks.chapters]]
+key = "passage_one_year"
+title = "船上的一年"
+text = "离开月港的第六天，一条巡海的哨船靠过来要看船引。船引上只写了货，一个工匠也没有。哨船上的人踩上甲板，朝舱口看了一眼。舱里点着一盏油灯，灯芯短得快要熄了。你挡在舱口，把船引往身后藏了藏。铸匠缩在舱底，抱着模子箱，嘴里小声数着：一年，还有一年。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "raja_hijau", value = true }]
+objectives = [{ kind = "wait", days = 6 }]
+
+[[tracks.chapters.choices]]
+key = "hide"
+text = "让他钻进货舱最底下，模子箱压在瓷器箱后面。"
+next = "arrive_one_year"
+check = { attr = "stewardship", base = 20, per = 7 }
+reply = "巡船的人在瓷器箱之间翻了一阵，嫌底下木板潮，甩手走了。铸匠把头从舱底探出来，额上全是汗，嘴里还在数那一年。"
+effects = [{ kind = "affinity", person = "raja_hijau", value = 3 }]
+fail = { next = "arrive_one_year", news = "航路上的一条巡船查了舱，模子箱被认作货物，船引上补了税。铸匠没事，只是又把那一年数了一遍。", effects = [{ kind = "flag", flag = "c13_request_raja_hijau_taxed" }] }
+
+[[tracks.chapters.choices]]
+key = "crew"
+text = "报他是船上的木匠，再给巡船的人塞一笔茶钱。"
+next = "arrive_one_year"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "钱袋里的钱，不够给巡船的人一笔像样的茶钱。"
+reply = "巡船的人掂了掂茶钱，在船引末尾添了个木匠，走之前叫你小心南边的海盗。铸匠在舱底听见了，把模子箱抱得更紧。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "raja_hijau", value = 3 }]
+
+# 四、城头的炮位：女王在税馆看模子箱，城北给一座铸坊。
+[[tracks.chapters]]
+key = "arrive"
+title = "城头的炮位"
+text = "女王亲自到了税馆，站在柜台外头，看铸匠打开模子箱。木模上还沾着泥，她伸手摸了一下，指腹上蹭了一道灰。木模一共三件，一件比一件小，像是试过的。“外来的船先到税馆，再来见本王——今天，本王来税馆见你。”她让铸匠先把要什么铜、什么炉、几个帮工说完，才一句话定下：城北给他一座铸坊。税馆外头的码头上，卸货的苦力正把一包胡椒往秤上抬。"
+at = "pattani"
+speaker = "raja_hijau"
+mood = "cheerful"
+when = [{ kind = "alive", person = "raja_hijau", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "raja_hijau", value = -3 }, { kind = "flag", flag = "c13_request_raja_hijau_late" }, { kind = "letter", person = "raja_hijau", text = "北大年的港务官来信：铸匠自己找到了北大年，女王已经给了他铸坊。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_taxed"
+when = [{ kind = "flag", flag = "c13_request_raja_hijau_taxed" }]
+text = "女王亲自到了税馆，看铸匠打开模子箱。木模一共三件，一件比一件小，像是试过的。箱角的木板上印着一块税吏的红章，她用指甲抠了一下，没抠掉。“外来的船先到税馆，再来见本王——今天，本王来税馆见你。”她让铸匠先把要什么铜、什么炉、几个帮工说完，才一句话定下：城北给他一座铸坊。"
+
+[[tracks.chapters.choices]]
+key = "hand_over"
+text = "把铸匠交给女王，告退。"
+next = "done"
+reply = "她赏钱给得很足，又叫人在城头的炮位上刻一行字——刻的是炮的名字，不是你的。"
+news = "北大年的女王亲自到税馆接了一个月港来的铸匠，城北要起一座铸坊了。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "raja_hijau", value = 8 }, { kind = "fame", value = 5 }, { kind = "memory", memory = "mem-request_raja_hijau-arrive", title = "税馆里打开的模子箱" }, { kind = "flag", flag = "c13_request_raja_hijau_done" }]
+
+[[tracks.chapters.choices]]
+key = "visits"
+text = "替他讨一个条件：每年春天放他回月港一趟。"
+next = "done"
+reply = "她想了想，把请帖翻过来，在背面添了一行字：“每年春天，放他回去一趟。”写完把笔递给你，“本王的话，也要落在纸上。”"
+news = "北大年的女王和一个月港来的铸匠在税馆里定了条件，每年春天放他回去一趟。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "raja_hijau", value = 6 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_raja_hijau_done" }]
+
+# 四之二、一年之约：persuade 的承诺检定失败之后，女王在税馆问铸匠能待几年。
+[[tracks.chapters]]
+key = "arrive_one_year"
+title = "一年之约"
+text = "船靠进北大年港，女王到了税馆。女王坐的椅子搬到了柜台边上，离箱子只有一步远。铸匠把模子箱放在柜台上，说了一大串要的铜、炉子和帮工。女王听完，没有马上应。她看了看铸匠的手，又看了看你，问：“他能在本王这里待几年？”税馆里的人都停了笔。"
+at = "pattani"
+speaker = "raja_hijau"
+mood = "cheerful"
+when = [{ kind = "alive", person = "raja_hijau", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "raja_hijau", value = -3 }, { kind = "flag", flag = "c13_request_raja_hijau_late" }, { kind = "letter", person = "raja_hijau", text = "北大年的港务官来信：铸匠搭别的船先到了，女王已经给了他铸坊，只是他说一年后要回月港。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_taxed"
+when = [{ kind = "flag", flag = "c13_request_raja_hijau_taxed" }]
+text = "女王到了税馆。女王坐的椅子搬到了柜台边上，离箱子只有一步远。铸匠把模子箱放在柜台上，箱角印着税吏的红章。他说了一大串要的铜、炉子和帮工。女王用指甲抠了抠那块红章，没有马上应。她看了看铸匠的手，又看了看你，问：“他能在本王这里待几年？”税馆里的人都停了笔。"
+
+[[tracks.chapters.choices]]
+key = "one_year"
+text = "替铸匠说一句：他娘只放他一年。"
+next = "done"
+reply = "她看了你一眼，又看了铸匠一眼：“一年，铸三尊。铸得好，本王派船送他回去；铸不好，他自己游回去。”铸匠笑了，她也笑了。"
+news = "北大年的女王和一个月港来的铸匠定了一年的约：铸好三尊炮，就派船送他回去。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "raja_hijau", value = 6 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_raja_hijau_done" }]
+
+[[tracks.chapters.choices]]
+key = "quiet"
+text = "把铸匠交给女王，什么也不提。"
+next = "done"
+reply = "女王没有追问那一年的事，只叫人把城北的地基先打下去。铸匠收拾模子的时候，才小声跟你说，他娘还在月港等他的信。"
+news = "北大年的女王接下一个月港来的铸匠，城北的地基已经打了，那一年的约没人提。"
+effects = [{ kind = "cash", value = 3650 }, { kind = "affinity", person = "raja_hijau", value = 4 }, { kind = "fame", value = 5 }, { kind = "flag", flag = "c13_request_raja_hijau_done" }]

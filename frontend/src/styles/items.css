@@ -1,0 +1,724 @@
+/* 第九批：行囊（纸娃娃与物品栏）、道具店、拍卖会与图鉴（components/items/）。窗口是羊皮纸底（Window 的样式），这里只管内容。
+   稀有度的边框：普通（木色）、精良（绿）、稀有（蓝）、传说（金）、神器（品红）。 */
+
+.it-panel,
+.it-shop,
+.au-panel,
+.cx-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.it-pages {
+  align-items: center;
+}
+.it-summary {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 图标格 */
+.it-icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: #2b1b17;
+  border: 3px solid #8a5a32;
+  box-shadow: inset 0 0 0 2px #00000055;
+  flex: none;
+}
+.it-icon--small {
+  width: 36px;
+  height: 36px;
+  border-width: 2px;
+}
+.it-icon--empty {
+  background: #2b1b1722;
+  border-style: dashed;
+  border-color: #b8955f;
+}
+.it-rarity-2.it-icon,
+.it-rarity-2 .it-icon {
+  border-color: #4f9a5b;
+}
+.it-rarity-3.it-icon,
+.it-rarity-3 .it-icon {
+  border-color: #3c7dc4;
+}
+.it-rarity-4.it-icon,
+.it-rarity-4 .it-icon {
+  border-color: #dca434;
+  box-shadow:
+    inset 0 0 0 2px #00000055,
+    0 0 6px #f5d66b88;
+}
+.it-rarity-5.it-icon,
+.it-rarity-5 .it-icon {
+  border-color: #c2408f;
+  box-shadow:
+    inset 0 0 0 2px #00000055,
+    0 0 8px #e57bc288;
+}
+.it-icon.is-selected {
+  outline: 3px solid #239a9a;
+  outline-offset: 1px;
+}
+.it-qty {
+  position: absolute;
+  right: -2px;
+  bottom: -4px;
+  padding: 0 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fffaf0;
+  background: #2b1b17;
+}
+.it-worn {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  background: #4f9a5b;
+  border: 2px solid #2b1b17;
+}
+
+/* 行囊：纸娃娃 + 物品栏 */
+.it-bag {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 14px;
+}
+.it-doll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #2b1b1712;
+  border: 2px solid var(--line);
+}
+.it-doll select {
+  font: inherit;
+  align-self: stretch;
+}
+.it-doll-face {
+  border: 4px solid #5c3a21;
+  box-shadow: 0 0 0 2px #2b1b17;
+}
+.it-slots {
+  display: grid;
+  gap: 4px;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.it-slot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.it-slot-btn {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 36px 4.5em minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  padding: 3px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  /* 纸面上的深字：不要外壳按钮的深色字影（深字叠深影，笔画糊成双影；docs/UI-REDESIGN.md 1.2 第 1 条） */
+  text-shadow: none;
+  cursor: pointer;
+}
+.it-slot-btn:hover {
+  border-color: var(--line);
+}
+.it-slot-name {
+  font-size: 12px;
+  color: var(--muted);
+}
+.it-slot-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.it-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.it-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.it-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.it-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 4px 2px;
+  font: inherit;
+  font-size: 12px;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  /* 纸面上的深字：不要外壳按钮的深色字影 */
+  text-shadow: none;
+  cursor: pointer;
+}
+.it-grid-btn:hover,
+.it-grid-btn[aria-pressed="true"] {
+  background: #fffaf060;
+  border-color: var(--line);
+}
+.it-grid-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 物品详情 */
+.it-detail {
+  padding: 10px 12px;
+  background: #fffaf0b0;
+  border: 2px solid var(--line);
+  border-left-width: 6px;
+}
+.it-detail.it-rarity-2 {
+  border-left-color: #4f9a5b;
+}
+.it-detail.it-rarity-3 {
+  border-left-color: #3c7dc4;
+}
+.it-detail.it-rarity-4 {
+  border-left-color: #dca434;
+}
+.it-detail.it-rarity-5 {
+  border-left-color: #c2408f;
+}
+.it-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.it-name {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 18px;
+}
+.it-kind {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.it-rarity-tag {
+  padding: 0 5px;
+  color: #fffaf0;
+  background: #8a5a32;
+}
+.it-rarity-tag.it-rarity-2 {
+  background: #4f9a5b;
+}
+.it-rarity-tag.it-rarity-3 {
+  background: #3c7dc4;
+}
+.it-rarity-tag.it-rarity-4 {
+  color: #3b2416;
+  background: #dca434;
+}
+.it-rarity-tag.it-rarity-5 {
+  background: #c2408f;
+}
+.it-key {
+  color: #a3242f;
+}
+.it-desc,
+.it-lore,
+.it-book,
+.it-tags,
+.it-source,
+.it-price {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.it-lore {
+  font-family: var(--font-title);
+  font-style: italic;
+  color: #5c3a21;
+}
+.it-book {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.it-tags,
+.it-source,
+.it-price {
+  font-size: 12px;
+  color: var(--muted);
+}
+.it-basis {
+  margin-right: 6px;
+  padding: 0 4px;
+  color: #fffaf0;
+  background: #7d5f36;
+}
+.it-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--up);
+}
+.it-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.it-reading {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: 13px;
+}
+.it-reading-bar,
+.it-set-bar,
+.cx-bar {
+  display: block;
+  height: 6px;
+  background: #2b1b1726;
+  border: 1px solid var(--line);
+}
+.it-reading-bar span,
+.it-set-bar span,
+.cx-bar span {
+  display: block;
+  height: 100%;
+  background: #dca434;
+}
+
+/* 书目与套装 */
+.it-lead {
+  margin: 0;
+  font-size: 13px;
+}
+.it-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 4px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+.it-cats li {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 8px;
+  font-size: 13px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+.it-cats li.has {
+  color: inherit;
+  background: #fffaf060;
+}
+.it-recent li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+.it-sets {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.it-set {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+}
+.it-set.is-done {
+  border-color: #dca434;
+  background: #f5d66b22;
+}
+.it-set-head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 4px;
+}
+.it-set-bonus {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 道具店 */
+.it-restock {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.it-offers {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.it-offer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+}
+.it-offer-main {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--line);
+  /* 纸面上的深字：不要外壳按钮的深色字影 */
+  text-shadow: none;
+  cursor: pointer;
+}
+.it-offer-main[aria-pressed="true"] {
+  background: #fffaf060;
+}
+.it-offer.is-blocked .it-offer-main {
+  opacity: 0.6;
+}
+.it-offer-price {
+  font-weight: 700;
+}
+.it-why {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--down);
+}
+.it-sub {
+  margin: 8px 0 2px;
+  font-size: 14px;
+}
+
+/* 拍卖会 */
+.au-panel {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+.au-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.au-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.au-item.is-on {
+  background: #fffaf080;
+  border-color: #dca434;
+}
+.au-item-name {
+  font-weight: 700;
+  font-size: 13px;
+}
+.au-item-when,
+.au-item-headline {
+  font-size: 12px;
+  color: var(--muted);
+}
+.au-room {
+  display: grid;
+  gap: 10px;
+}
+.au-lots {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.au-lot {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  background: #fffaf080;
+  border: 2px solid var(--line);
+}
+.au-lot--bidding {
+  border-color: #dca434;
+  box-shadow: 0 0 0 2px #dca43444;
+}
+.au-lot--sold,
+.au-lot--passed {
+  opacity: 0.85;
+}
+.au-lot-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+.au-lot-name {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 17px;
+  font-weight: 700;
+}
+.au-lot-price {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 2px 0 0;
+  font-size: 13px;
+}
+.au-lot-status {
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #fffaf0;
+  background: #7d5f36;
+}
+.au-bidders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.au-bidder {
+  display: grid;
+  grid-template-columns: 36px auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0 6px;
+  font-size: 12px;
+}
+.au-bidder-face {
+  grid-row: span 2;
+  border: 2px solid #5c3a21;
+}
+.au-bidder small {
+  color: var(--muted);
+}
+.au-bidder.is-out {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+.au-inspect {
+  margin: 0;
+  font-size: 13px;
+}
+.au-bid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.au-bid label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.au-bid input {
+  width: 8em;
+  font: inherit;
+  padding: 3px 6px;
+  border: 2px solid var(--line-strong);
+}
+.au-bid-btn {
+  font-size: 15px;
+  padding: 6px 16px;
+}
+.au-min {
+  flex-basis: 100%;
+  color: var(--muted);
+}
+.au-won {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  font-weight: 700;
+}
+.au-after {
+  font-weight: 400;
+  color: var(--muted);
+}
+.au-more summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--muted);
+}
+.au-log {
+  margin: 0;
+  padding: 8px 8px 8px 24px;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px dashed var(--line);
+}
+
+/* 图鉴 */
+.cx-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cx-cat {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.cx-cat.is-on {
+  background: #fffaf080;
+  border-color: #dca434;
+}
+.cx-cat small {
+  color: var(--muted);
+}
+.cx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cx-entry button {
+  width: 100%;
+  padding: 5px 6px;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  color: inherit;
+  background: #fffaf040;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.cx-entry--unknown button {
+  color: var(--muted);
+  text-align: center;
+  cursor: default;
+}
+.cx-entry--seen button {
+  font-style: italic;
+}
+.cx-detail {
+  padding: 10px 12px;
+  background: #fffaf0b0;
+  border: 2px solid var(--line);
+}
+.cx-detail h4 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 18px;
+}
+.cx-state {
+  margin: 2px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.cx-changed {
+  color: #5c2a14;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .it-bag,
+  .au-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 物品的专属图标（256×256 的手绘图，透明底；格子用浅底衬它）。2026-11-11 起由 tools/items/draw.py 生成，取代 48 像素的粗颗粒图标；
+   2026-11-12 A02 由 128 改为 256，96 像素的大图标位在 2 倍屏上也不放大 */
+.it-icon--art {
+  background: radial-gradient(circle at 50% 45%, #f3ead6, #dccaa4);
+}
+.it-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+}
+/* 详情抬头的大图标（只在新界面用） */
+.it-icon--large {
+  width: 96px;
+  height: 96px;
+}
+
+/* 交易品的手绘图标（新界面；经典像素界面仍是 16×16 的像素图样） */
+.good-art {
+  flex: none;
+  object-fit: contain;
+  vertical-align: middle;
+  image-rendering: auto;
+  filter: drop-shadow(0 1px 0 #00000040);
+}
+

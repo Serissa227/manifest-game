@@ -1,0 +1,206 @@
+# 十年的名单（request_kinjo_shin）——请托线，类型：送信（kind=letter），报价模式 T 当面（auto=false，玩家在那霸用 ask:request_kinjo_shin 启动；offer 章不写 at，objectives 为 person kinjo_shin，港口 naha）。
+# 人物：金城真（kinjo_shin，1540-11-13 生，男），那霸进贡船书记家的少年，使节家学的同学（cast 见 cast/classmates_custom_naha_envoy.toml）。
+#       一板一眼，说话像念航路：先说岛，再说事；自嘲时也一本正经。口头禅“先认岛，再认旗。”只在 offer 章用一次（变体 v1_bond_c 也是同一章的另一版文字，同样只出现一次）。
+# 时间：offer 1573-01-01—1590-06-30（到期走 timeout，next=failed，不写见闻）；handover 福州柔远驿，期限 120 天；reply 回那霸，无期限（条件满足即进待决队列）。
+# 依据（史实）：明代琉球两年一贡，进贡船经福州入贡；福州设柔远驿安置琉球使团与漂流难民，失事的琉球船员常由沿海官府送到福州，再随贡船回国。驿里的通事是叙事人物，不写名字。
+# 原创：金城真手抄的按岛名单、通事的簿子、修船铺的那个人、“不愿归”的一行、所有台词与情节。
+# 待核（正文一律只写驿里与港口的口吻）：琉球船员的遣返手续与驿馆簿籍的具体格式，正文不写条文，只写“簿子上对出了七个”。变体里“第三座岛”的答案（黄尾）按《使琉球录》的航路次序推的，待确认。
+# 结构说明（引擎约束）：
+#   · handover 的三条路各走各的章：读簿子与付钱走 reply；见修船铺那个人检定成功走 reply_word（“他还活着”的话只在那一章里说，tell_mother 不再需要旗标门槛）；
+#     检定失败直接 failed，来信里给出他隔门说的一句话，报酬为 0（失败不罚钱）。
+#   · reply 只接读簿子与付钱两条路（没有“带话”旗标），所以 reply 的第二个选项 keep_last（折中，现金 700）是原创补充，
+#     原因：章节要求两个选项，而且读簿子的人与见过人的人报酬有别。
+#   · 报价 offer 的 variant v1_bond_c 只改文字，不改效果；“答得上来”的考问在文字里一次完成（引擎没有问答检定）。
+# 读写的旗标：设 c13_request_kinjo_shin_accepted / declined / full / word / failed / late / done / partial。不读任何主线旗标，不读任何 c7_ 旗标。
+# 与 C7 的界线：拉坎、汤都、唐人船的十年信、1562 年重逢都不在本文件出现；本线不替任何人带东西给拉坎；拉坎的请托在汤都，不同港。
+# 秘密：有一夜把岸上的一盏灯认错了，本文件不碰，见闻不写。
+# 回忆插画清单：
+#   mem-request_kinjo_shin-reply：那霸书记房的桌子上，一卷名单摊开，最后一行多出了“福州”两个字，墨还没干。
+
+[[tracks]]
+key = "request_kinjo_shin"
+name = "十年的名单"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["kinjo_shin"]
+
+# 报价：那霸书记房。金城真把十年的名单按岛排好，托你送到福州的琉球馆。
+[[tracks.chapters]]
+key = "offer"
+title = "按岛排的名单"
+text = "那霸贡船书记房的桌上，金城真把一卷纸摊开。名单按岛排，不按人排：哪座岛外失的事，就写在哪座岛名下。这十年里从那霸往福州的船出过几回事，船员有的被渔船救起，有的被官府送进福州，有的再没有消息。“先认岛，再认旗。”他用指甲压住纸角，“家里人问起来，先得知道是在哪片海。”他把卷子往我这边推了一寸：“送去福州的琉球馆。请那边的人一个个对，谁还活着，谁葬在哪里。”"
+cast = ["kinjo_shin"]
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "person", person = "kinjo_shin", text = "在那霸的贡船书记房找到他" }]
+when = [
+  { kind = "date", from = [1573, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "kinjo_shin", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+# 变体：同窗的老交情（bond 金城真 ≥ C）。他先考一句，你答上了，他才把卷子摊开。
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "kinjo_shin", level = "C" }]
+text = "那霸贡船书记房的桌上，金城真没有先摊开纸。他先问：“从那霸往福州，第三座岛叫什么？”我答：“黄尾。”他这才把卷子摊开。名单按岛排，不按人排：哪座岛外失的事，就写在哪座岛名下。这十年里从那霸往福州的船出过几回事，船员有的被渔船救起，有的被官府送进福州，有的再没有消息。“先认岛，再认旗。”他用指甲压住纸角，“家里人问起来，先得知道是在哪片海。”他把卷子往我这边推了一寸：“送去福州的琉球馆。请那边的人一个个对，谁还活着，谁葬在哪里。”"
+
+[[tracks.chapters.choices]]
+key = "take_list"
+text = "接下，把名单送到福州的琉球馆。"
+next = "handover"
+reply = "他把名单卷好，外面裹一层油纸，又裹一层布，说海上的纸比人娇气。"
+effects = [
+  { kind = "affinity", person = "kinjo_shin", value = 2 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "read_list"
+text = "接下，先请他把名单从头念一遍。"
+next = "handover"
+reply = "他念得很慢，念到一座小岛的名字，停了一下，说这座岛他小时候在贡船上见过，“岛上有口泉，水是甜的”。"
+effects = [
+  { kind = "affinity", person = "kinjo_shin", value = 3 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "福州的驿馆，我进不去。"
+next = "failed"
+reply = "他把名单收回柜子里，说那就等下一趟贡船，贡船总会去的。"
+effects = [{ kind = "flag", flag = "c13_request_kinjo_shin_declined" }]
+
+# 进行：福州柔远驿。120 天内没到，名单就由下一趟贡船带去，驿里对过了，没人再回头问这件事。
+[[tracks.chapters]]
+key = "handover"
+title = "驿里的簿子"
+text = "柔远驿的院子里晾着琉球人的衣裳，竹竿横过半个院子。通事是个福州人，琉球话说得比官话还顺。他把名单与驿里的簿子一行行对，对出了七个：四个回了那霸，两个葬在城外的义冢。第七个没死，也没回去。他在福州娶了亲，开了间修船的铺子，簿子上那一行写着“不愿归”。通事把簿子推过来，手指压在那一行上：“人还在城里，你要见，就得自己去找。”"
+at = "fuzhou"
+cast = ["kinjo_shin"]
+speaker = "captain"
+mood = "sad"
+objectives = [{ kind = "at", at = "fuzhou", text = "到福州的琉球馆（柔远驿）" }]
+when = [{ kind = "alive", person = "kinjo_shin", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "kinjo_shin", text = "名单我托下一趟贡船带去了。回来的人说驿里的簿子对过了，对出几个，他没记住。——金城真" }, { kind = "affinity", person = "kinjo_shin", value = -3 }, { kind = "flag", flag = "c13_request_kinjo_shin_late" }] }
+
+[[tracks.chapters.choices]]
+key = "read_register"
+text = "自己读驿里的簿子，把义冢的位置、修船铺的街名都抄下来。"
+next = "reply"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "簿子上的字你认不全，抄到一半就停了笔。"
+reply = "我把能对上的每一行都抄了，义冢在哪座山脚、第几排，修船铺在哪条街，一样不漏。"
+news = "福州柔远驿的通事把一份琉球名单对了一下午，对出了七个人，其中一个在城里开了修船铺。"
+effects = [
+  { kind = "affinity", person = "kinjo_shin", value = 3 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_full" },
+]
+
+[[tracks.chapters.choices]]
+key = "see_him"
+text = "去修船铺见那个人，问他要不要给家里捎句话。"
+next = "reply_word"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "failed", effects = [{ kind = "letter", person = "kinjo_shin", text = "你去修船铺那天，那人没肯出来，隔着门只说了一句：“告诉他们我活着。”这句话我照样记下了。——金城真" }, { kind = "affinity", person = "kinjo_shin", value = -2 }, { kind = "flag", flag = "c13_request_kinjo_shin_failed" }] }
+reply = "他见了我，手上的桐油都没擦。他说回不去了，可托我带一句话给他娘，又写下他孩子的名字，说让家里人知道有这么个孙子。"
+news = "福州城里有家修船铺，前些日子来过一个那霸口音的客人，问的全是他家里的事。"
+effects = [
+  { kind = "affinity", person = "kinjo_shin", value = 3 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_word" },
+]
+
+[[tracks.chapters.choices]]
+key = "pay_clerk"
+text = "付钱请驿里的书办把对上的七人誊一份清单。"
+next = "reply"
+requires = [{ kind = "cash", ge = 100 }]
+hint = "钱袋太瘪，书办只朝你摇了摇头。"
+reply = "书办誊得很工整，七个人一人一行，最后一行写着“不愿归”三个字。"
+news = "福州柔远驿的书办替人誊了一份琉球名单，七行字，最后一行写着“不愿归”。"
+effects = [
+  { kind = "cash", value = -100 },
+  { kind = "affinity", person = "kinjo_shin", value = 2 },
+]
+
+# 收尾（读了簿子，或花钱誊了清单）：回那霸，他把名单挪到最后一行，问那个不是岛的名字该往哪里写。
+[[tracks.chapters]]
+key = "reply"
+title = "七个名字"
+text = "回到那霸的那天，金城真已经在书记房里等着。窗外贡船的水手正把晒干的帆布一卷卷收进舱里。他把带回来的清单铺在名单旁边，一个名字一个名字地挪过去：回来的，划一道；葬在义冢的，画一个圈。挪到第七个，他停住了。“这个人没死，也没回来。”他的手指按在那一行上，“名字该写在哪座岛名下？他不在海里，也不在那霸。”"
+cast = ["kinjo_shin"]
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "kinjo_shin", text = "回那霸，找金城真" }]
+when = [{ kind = "alive", person = "kinjo_shin", value = true }]
+
+[[tracks.chapters.choices]]
+key = "new_heading"
+text = "劝他在名单末尾另起一行，写上“福州”。"
+next = "done"
+reply = "他想了很久，在最后一座岛名下另写了“福州”两个字，把那个名字挪过去。“岛名单上头一回有了一个不是岛的地方。”他付了钱。"
+news = "那霸贡船书记家的儿子，把十年的失事名单又对了一遍，在最后一座岛底下给福州添了一行。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kinjo_shin", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_done" },
+  { kind = "memory", memory = "mem-request_kinjo_shin-reply", title = "名单末尾的福州" },
+]
+
+[[tracks.chapters.choices]]
+key = "keep_last"
+text = "名字照簿子的样子，挨着最后一座岛的名字写。"
+next = "done"
+reply = "他点点头，把那个名字挪到最后一座岛底下，挨着别的名字，没有另起一行。“岛名单就是岛名单，”他说，“这一行就先这样。”他数钱数得很慢，比常例少了一截。"
+news = "那霸贡船书记家的儿子，把十年的失事名单又对了一遍，划掉了几个名字，末尾却没添新的。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "kinjo_shin", value = 4 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_partial" },
+]
+
+# 收尾（见过修船铺的人，带了他的话）：名单上的那一行，他先念了那句话，才去挪名字。
+[[tracks.chapters]]
+key = "reply_word"
+title = "七个名字，外加一句话"
+text = "回到那霸，书记房的门开着，金城真已经等在里头。我先把修船铺那个人的话讲给他听，连孩子的名字也念了。他没有去翻名单，只把那个名字在嘴里念了两遍。然后他才把清单铺在名单旁边，一个名字一个名字地挪过去：回来的，划一道；葬在义冢的，画一个圈。挪到第七个，他的手停住了。“人还活着。”他说，“名字该写在哪座岛名下？”"
+cast = ["kinjo_shin"]
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "kinjo_shin", text = "回那霸，找金城真" }]
+when = [{ kind = "alive", person = "kinjo_shin", value = true }]
+
+[[tracks.chapters.choices]]
+key = "new_heading"
+text = "劝他把这个名字另起一行，写在“福州”名下。"
+next = "done"
+reply = "他把那个名字挪过去，在最后一座岛名下另写了“福州”。他又看了看那行字，“那人在城里，名字就该在城里。”说完才从袖子里摸出钱袋。"
+news = "那霸的书记家传出话来，修船铺那个人托了一句话给家里，名单上的福州添了一行。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kinjo_shin", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_done" },
+  { kind = "memory", memory = "mem-request_kinjo_shin-reply", title = "名单末尾的福州" },
+]
+
+[[tracks.chapters.choices]]
+key = "tell_mother"
+text = "说这人托我给他娘带了话，先去把话带到。"
+next = "done"
+reply = "他把那个人的话抄在一张小纸上，连孩子的名字一起，折好递过来。“你替他念给老人家听。”他说，“念完了，纸留在你那儿。”他付了钱，没再提那片海。"
+news = "那霸街上有人传，贡船书记家的少年要替福州修船的人去见他娘，话已经抄在纸上。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "affinity", person = "kinjo_shin", value = 8 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_kinjo_shin_done" },
+  { kind = "memory", memory = "mem-request_kinjo_shin-reply", title = "名单末尾的福州" },
+]

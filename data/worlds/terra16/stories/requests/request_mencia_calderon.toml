@@ -1,0 +1,152 @@
+# C13d 请托：沿海留下的女人（request_mencia_calderon）。中文，Claude 写。
+# 人物：门西娅·卡尔德龙 mencia_calderon（1514 年生，女；拉普拉塔先遣总督萨纳夫里亚的遗孀；势力 new_spain，身份档 2）。
+# 类型：去某处（go）；3 章，offer → arrive → report。三章都是普通章，没有 stage，TOML 里不写 window / default。
+# 报价：来信（L）。出面的是从亚松森顺流下来的方济各会修士（代理人，不新建 cast），在布宜诺斯艾利斯 buenos_aires 递信；auto=true。
+#   offer 章 family="c13_offer_buenos_aires"、冷却 20 天；deadline=1560-12-31，timeout 直接 failed，不写见闻。
+# 窗口：报价 1557-03-01 至 1560-12-31；arrive 在圣维森特 sao_vicente 进行，deadline_days=150；report 在布宜诺斯艾利斯，止日 1561-06-30。
+# 依据：史实（人物卡 cast/historical_05_americas.toml 已有）：门西娅·卡尔德龙 1550 年率女眷与西班牙女子出海，在圣卡塔琳娜与圣维森特一带滞留多年，1555/56 年徒步抵亚松森；同行有人死了、有人失散、有人半路嫁了人。
+#   原创：三个女人的名字与下落（胡安娜、罗萨、安赫莉卡，常见的西班牙名，不冒用有记载的随行者）；糖坊主杜阿尔特之类的葡萄牙人是虚构的。圣维森特附近的皮拉蒂宁加学舍（耶稣会）作为安赫莉卡的去处。
+# 读的旗标：无。c7_* 旗标一个都不读（人物 c7 为 none）。
+# 设的旗标：c13_request_mencia_calderon_accepted / declined（offer）；words（arrive 葡萄牙话的路）；half（arrive 神父检定失败）；late（超时）；done / partial（report 的终局，每条路只设一面）。
+# 依赖：cast mencia_calderon 已在 cast/historical_05_americas.toml，tracks 已登记 request_mencia_calderon；地点 buenos_aires、sao_vicente 已在 ports_americas.toml；技能 lang_portuguese（skills.toml）；属性 eloquence（captain.toml）。
+# 秘密：门西娅算计女儿与同行女子的婚事。人设无 secret；只在 report 的 truth 回信里露半句，不进见闻。
+# 回忆插画清单：
+#   mem-request_mencia_calderon-report：萨尔瓦多的码头边，修士展开一张写满女人名字的纸，纸角压着一块海螺壳。
+# 地点（2026-11-01 close-places）：报价与回报由 buenos_aires 改 salvador——布宜诺斯艾利斯 1580 年才重建开港，请托窗口 1557—1561 整段走不到。
+#   修士改为从亚松森走陆路到圣维森特、再搭葡萄牙船北上，在萨尔瓦多等回伊比利亚的船（圣维森特的葡萄牙神父不肯给卡斯蒂利亚修士翻簿子，他又赶船，才托给玩家）；offer 的 family 改 c13_offer_salvador（与帕拉瓜苏同港共用冷却）。
+#   上面“报价”“窗口”两条里的布宜诺斯艾利斯作废；arrive 仍在圣维森特。回报章正文与两个变体只换地名，“要带回亚松森”改“要托人捎回亚松森”。
+
+[[tracks]]
+key = "request_mencia_calderon"
+name = "沿海留下的女人"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["mencia_calderon"]
+
+# 一、黑封蜡的名单：萨尔瓦多，来信模式。
+[[tracks.chapters]]
+key = "offer"
+title = "黑衣寡妇的名单"
+text = "萨尔瓦多码头上，一个方济各会修士坐在木箱上等船。他从亚松森沿印第安人的旧路走到圣维森特，袍子下摆还沾着红土。葡萄牙神父不肯让他翻洗礼簿，他只抱怨了一句：“他们的簿子不给卡斯蒂利亚人看。”后来他搭葡萄牙船北上，在这里等回塞维利亚的船。见你走近，他递来一封信，封蜡是黑的。信纸上一行一行写着名字：当年在海边散了的几个女人，谁跟了谁，留在哪里，最后一次听到消息是哪一年。末了一句写得很硬：“我从西班牙带出来的女人，一个一个都有名字。请你去圣维森特，把她们后来怎样了带回来。”"
+mood = "sad"
+cast = ["mencia_calderon"]
+at = "salvador"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 3, 1], to = [1560, 12, 31] }]
+family = "c13_offer_salvador"
+family_cooldown_days = 20
+deadline = [1560, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，把名单收进箱子里。"
+next = "arrive"
+reply = "修士说夫人每晚都把这张名单念一遍，念到哪个名字就停一下。"
+effects = [{ kind = "flag", flag = "c13_request_mencia_calderon_accepted" }, { kind = "affinity", person = "mencia_calderon", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "why_now"
+text = "接下，但先问她为什么现在才问。"
+next = "arrive"
+reply = "修士想了想：“夫人在亚松森等了好几年。这两年才有个从海边回去的人，说还有几个人活着。”"
+effects = [{ kind = "flag", flag = "c13_request_mencia_calderon_accepted" }, { kind = "affinity", person = "mencia_calderon", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，圣维森特太远，我去不了。"
+next = "failed"
+reply = "修士把信收回去，说夫人会等下一条往南的船。"
+effects = [{ kind = "flag", flag = "c13_request_mencia_calderon_declined" }]
+
+# 二、糖坊与学舍：圣维森特，进行中。
+[[tracks.chapters]]
+key = "arrive"
+title = "糖坊与学舍"
+text = "圣维森特的糖坊冒着烟，磨坊的水轮吱呀响，院子里堆着晒干的甘蔗渣。名单上第一个是胡安娜，婚后叫胡安娜·德·卡瓦略，嫁了葡萄牙的糖坊主。她怀里抱着第三个孩子，门口的石板上摊着一簸箕豆子，给骡子过冬用。你把夫人的话转给她，她没起身，只拨了拨豆子。“告诉夫人，我不回去。也请她别替我安排什么。”"
+speaker = "captain"
+mood = "tense"
+cast = ["mencia_calderon"]
+at = "sao_vicente"
+when = [{ kind = "alive", person = "mencia_calderon", value = true }, { kind = "date", from = [1557, 3, 1], to = [1560, 12, 31] }]
+objectives = [{ kind = "at", at = "sao_vicente", text = "到圣维森特去" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "mencia_calderon", value = -3 }, { kind = "flag", flag = "c13_request_mencia_calderon_late" }, { kind = "letter", person = "mencia_calderon", text = "名单我另托人去打听了。路上可好？信纸上的字比上次更用力，别的没有写。" }] }
+
+[[tracks.chapters.choices]]
+key = "portuguese"
+text = "用葡萄牙话挨家去问，记下她们自己的话。"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60 }]
+hint = "你的葡萄牙话还不够顺，问到一半，人家就把门关上了。"
+reply = "她们一个个说了。罗萨埋在小教堂的院子里，是生孩子那年没的；安赫莉卡跟着耶稣会的人上了山，托人捎下来一句：“我在高地上教孩子念书，替我告诉夫人。”胡安娜最后补了一句：“告诉夫人，我过得不坏。”"
+news = "圣维森特的糖坊边上，有个船长用葡萄牙话挨家去问，把三个女人的话都记了下来。"
+effects = [{ kind = "affinity", person = "mencia_calderon", value = 3 }, { kind = "flag", flag = "c13_request_mencia_calderon_words" }]
+
+[[tracks.chapters.choices]]
+key = "priest"
+text = "请小教堂的神父翻一翻洗礼簿。"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "神父翻开簿子，指给你看三个名字：胡安娜嫁了人，罗萨下了葬，安赫莉卡只写了一句“往高地去”。"
+news = "圣维森特的小教堂里，神父翻开洗礼簿，替一个船长指了三个名字，一个嫁了，一个埋了，一个往高地去了。"
+effects = [{ kind = "affinity", person = "mencia_calderon", value = 3 }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "mencia_calderon", value = -2 }, { kind = "flag", flag = "c13_request_mencia_calderon_half" }], news = "圣维森特的小教堂里，有个船长请神父翻洗礼簿，神父只肯翻开一个死人的名字给他看。" }
+
+[[tracks.chapters.choices]]
+key = "notary"
+text = "付钱请公证人把教堂的名册抄一份。"
+next = "report"
+requires = [{ kind = "cash", ge = 150 }]
+hint = "抄一份名册的钱，你这回还带不够。"
+reply = "公证人抄得工工整整，名字、年份、去处，一个字也不多。"
+news = "圣维森特的公证行里，有个船长花钱请人把教堂的名册整个抄了一份，抄完便拿着走了。"
+effects = [{ kind = "cash", value = -150 }, { kind = "affinity", person = "mencia_calderon", value = 3 }]
+
+# 三、带回的名字：回萨尔瓦多交账，完结。两个变体读的是进行中的旗标，只改正文。
+[[tracks.chapters]]
+key = "report"
+title = "带回的名字"
+text = "方济各会的修士在萨尔瓦多的码头等你。你把三个女人的下落一一说给他听：一个嫁了糖坊主，一个埋在教堂的院子里，一个跟着耶稣会的人上了山。他拿出纸笔，逐条记下来，要托人捎回亚松森。写到最后一行，他停了笔，问你那个不肯回去的，要不要照实写进去。"
+speaker = "captain"
+mood = "sad"
+cast = ["mencia_calderon"]
+at = "salvador"
+when = [{ kind = "alive", person = "mencia_calderon", value = true }, { kind = "date", from = [1557, 6, 1], to = [1561, 6, 30] }]
+objectives = [{ kind = "at", at = "salvador", text = "回萨尔瓦多的码头" }]
+deadline = [1561, 6, 30]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "mencia_calderon", value = -3 }, { kind = "flag", flag = "c13_request_mencia_calderon_late" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_words"
+when = [{ kind = "flag", flag = "c13_request_mencia_calderon_words" }]
+text = "方济各会的修士在萨尔瓦多的码头等你。你把三个女人的下落说给他听，还有她们自己托你带的话，他一句一句记在纸上，要托人捎回亚松森。写到最后一行，他停了笔，问你那个不肯回去的，要不要照实写进去。"
+
+[[tracks.chapters.variants]]
+key = "v2_half"
+when = [{ kind = "flag", flag = "c13_request_mencia_calderon_half" }]
+text = "方济各会的修士在萨尔瓦多的码头等你。你把三个女人的下落说给他听。罗萨那一条只有半截，神父只让你看了一眼簿子，别的字都没让抄。修士逐条记下来，要托人捎回亚松森。写到最后一行，他停了笔，问你那个不肯回去的，要不要照实写进去。"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实写：谁嫁了、谁埋了、谁不想回去。"
+next = "done"
+reply = "（她的回信随下一条船到）“每个都有下落，就好。谁也不必回来。”信末还有半句：“那个糖坊主家里，还有没成亲的兄弟么？”"
+news = "萨尔瓦多的码头上，有个船长把三个女人的下落照实说给了修士听，谁不想回去也写了进去。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "mencia_calderon", value = 8 }, { kind = "fame", value = 3 }, { kind = "reputation", faction = "new_spain", value = 2 }, { kind = "memory", memory = "mem-request_mencia_calderon-report", title = "黑封蜡的名单" }, { kind = "flag", flag = "c13_request_mencia_calderon_done" }]
+
+[[tracks.chapters.choices]]
+key = "cover"
+text = "替不想回去的那个遮一句，只写“安好”。"
+next = "done"
+reply = "（回信）“安好是什么意思？”她把这两个字圈了出来，可也没再追问。"
+news = "萨尔瓦多的码头上，有个船长在一张女人的名单上替人写了“安好”两个字。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "mencia_calderon", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_mencia_calderon_partial" }]
+
+[[tracks.chapters.choices]]
+key = "names_only"
+text = "只交名单，不加一句话。"
+next = "done"
+reply = "修士把名单折好。回信只有一行：“收到了。”"
+news = "萨尔瓦多的码头上，有个船长把一张女人的名单交给方济各会的修士，什么也没多说。"
+effects = [{ kind = "cash", value = 1350 }, { kind = "affinity", person = "mencia_calderon", value = 4 }, { kind = "flag", flag = "c13_request_mencia_calderon_partial" }]

@@ -1,0 +1,298 @@
+# 奈·加玛：哪天到港（bond_nyai_gama）+ 价由她开（reunion_nyai_gama）——C7 重写，2026-10-11，Claude（Opus）执笔。
+# 标签：羁绊·友情线。奈·加玛只对男性心动，但本线设计上只写友情（她的恋情归 pair_nyai_gama_huang_shouguan）：
+#   全线没有心动选项、没有恋爱效果，也不写“心照不宣”的段落；S 只有 promise 与 own，重逢只有朋友落点。
+# 人物：奈·加玛（nyai_gama，1540-03-20，万丹胡椒商家的女儿）；主角凯奇利·劳特（kaicili，1540-09-09，特尔纳特苏丹的儿子）。
+#   学院期（1554—1556）两人十三到十六岁；重逢 1563 年两人都二十出头。
+# 依据（史实）：
+#   - 万丹在 16 世纪中叶兴起为胡椒大港，有胡椒市集，中国帆船来收购（皮雷斯《东方志》、后来的荷兰航海记都有记）。
+#   - 格雷西克是爪哇北岸的香料转运港，近旁吉里山有苏南·吉里的学堂（吉里学院以此为原型）。
+#   - 马鲁古的科拉科拉船（多桨快船）；丁香出特尔纳特一带。
+#   - 爪哇海季风：约十二月到三月刮西风，船往东走顺、往万丹难；五月前后转东风，马鲁古的船才往西来。
+#   - 古吉拉特船主在东南亚各港买卖船只与货；东南亚港口的女商人不少见（Reid《东南亚的贸易时代》）。
+#   - 担 ≈ 六十公斤；港务官即沙班达尔（syahbandar）；船头的爪威字即阿拉伯字母写的马来文。
+# 依据（原创）：全部情节与台词；买船信、舅舅定的日子、放信的篮子、两张船期表；重逢时她自己的船。
+# 去重：瓦蒂与奈·加玛的班顿对歌归 tie_wati_nyai；与黄寿官的事归 pair_nyai_gama_huang_shouguan，这里只在重逢作背景。
+# 秘密：那封落款是她自己名字的买船信——A1 给“我”看；本文件的章没有 stage，不写见闻，秘密不进任何 news。
+# 缺省走向：c1 → c2 → b1 → b2 → a1 → a2 → s（default：开重逢、记 _parted）→ 重逢（default：她寄来一封附船期的信、记 _missed）。
+#   C1—A2 的缺省没有效果，只在注释里写“玩家不回应时发生了什么”（无 stage，不出见闻）。
+# 旗标：写 c7_bond_nyai_gama_promise / _own / _parted / _landing_friend / _missed；
+#   不读别的旗标。原有的 with_huang 变体读 c7_pair_nyai_gama_huang_shouguan_together，那个旗标 1572 年才设，
+#   1563 年的重逢永远读不到，整合时中英一起删去（她与黄寿官的事归 pair_nyai_gama_huang_shouguan）。
+# 日程：不改。重逢在万丹（banten_port），cast 里她 1557 年起就在万丹。
+
+[[tracks]]
+key = "bond_nyai_gama"
+name = "奈·加玛：哪天到港"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["nyai_gama"]
+
+# C1：码头上吹的牛。
+[[tracks.chapters]]
+key = "c1"
+title = "哪天到港"
+text = "格雷西克的码头上，胡椒袋子码得比人高。一个万丹来的胡椒商人问我丁香几时到，我笑着说：“我父亲的科拉科拉船，季风一转就到。三十条桨一齐划，比风还快。”商人还没接话，秤杆底下坐着的一个女孩把账本一合，抬起头来。她穿着学堂的衣裳，指头上沾着炭灰。“下回哪天到港，先说清。”我说风到了就到。她把账本夹到胳膊底下，站起来拍掉纱笼上的胡椒末：“风不听王子吹牛。”她叫的是王子，没加那个“小”字。我还在想这算不算客气，她已经走出去十几步了。商人在旁边咂嘴：“那是奈·加玛，万丹胡椒行家的闺女。她那本账里，迟到的人都有一行。”"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_giri" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+# 缺省：那一季的丁香晚到了五天，奈·加玛在账本上记了一笔。
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "give_a_date"
+text = "追上去，把季风和船期掰着指头算一遍，报给她一个日子"
+reply = "我追到货栈门口，借她的炭笔在地上算：季风哪天转，桨手划几天，中途在哪里停靠。她低头看了一会儿地上的算式，把我报的日子记进了账本。到了那一天，船晚了三天。她把账本翻到那一页给我看，那一行底下画了一道横线，旁边写着：“王子的日子，打七折。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }, { kind = "skill", skill = "negotiation", value = 8 }]
+
+[[tracks.chapters.choices]]
+key = "prince_voice"
+text = "端起架子：“苏丹家的船，从不误期。”"
+reply = "“那好。”她又把账本翻开，“误一天，你赔我一斤丁香。写上，按个手印。”我按了。那一季的船误了三天，我托人捎了三斤丁香到她的摊子上。她收下，回给我一张收条，上面写着“王子赔”，三个字写得端端正正。"
+next = "c2"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }]
+
+# C2：一袋泡过水的胡椒。
+[[tracks.chapters]]
+key = "c2"
+title = "湿胡椒"
+text = "东风起了，格雷西克的码头上停满了等胡椒的中国帆船。一个从内地来的胡椒贩子把一袋胡椒往秤上一放，秤砣滑到了头，比同样大的袋子沉出一截。帆船的船主是泉州人，站在船舷上直跺脚，说潮水不等人。奈·加玛从人堆里挤过来，抓起一把，挑一粒放进嘴里咬开，“呸”地吐在地上：“泡过水。”贩子脸红脖子粗，说雨季收的胡椒本来就沉。她不跟他吵，转过身来看我——我在特尔纳特跟福建船上的伙计学过几句他们的话。“你会说他们的话。第一，跟船主说，再等半天。第二，别说是我说的，他不听女孩子的。”贩子一把按住了袋口。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那袋湿胡椒最后上了别的船，奈·加玛说那条船到了广州要倒霉。
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "spread_and_dry"
+text = "跟船主说定再等半天，陪她把整袋胡椒摊开晒，一粒粒挑"
+requires = [{ kind = "affinity", person = "nyai_gama", ge = 20 }]
+hint = "她还不知道你肯不肯为一袋胡椒晒一下午，这种活她不会叫你。"
+reply = "我跟船主磨了一盏茶的工夫，他答应等到傍晚。我们把那袋胡椒倒在货栈前的草席上摊开，一粒一粒地挑，瘪粒和沙子挑出来堆成一小撮。太阳偏西，胡椒晒干了，再上秤，轻了一成。贩子没等称完就扛起袋子走了。船主拍着船帮笑：“这姑娘的牙，比秤还准。”奈·加玛没回头，冲我扬了扬下巴，手上还在挑。"
+next = "b1"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }, { kind = "bond", person = "nyai_gama", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "ask_departure"
+text = "先上船问清楚，这条帆船到底哪天开"
+reply = "我上船问了一圈，回来告诉她：“明天午时，等潮。”她点点头，转向那个贩子：“明天午时以前，晒干了再来称。晒不干，扛回去。”贩子骂骂咧咧地扛走了，第二天中午也没回来，那袋胡椒一粒都没上船。她在账本上记下那条船的名字和开船的时辰：“那就够了。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+# B1：按日子下的棋。
+[[tracks.chapters]]
+key = "b1"
+title = "棋盘上的日子"
+text = "学堂里的人都知道我下棋没输过。一个午后，奈·加玛搬了张凳子坐到我对面，把棋子一摆，先放下一枚铜钱：“输了的给一枚。”她下棋跟谈生意一个样，不贪子，只抢先手。我吃她一个兵，她不理，往前推一步：“这一步算初三。”我再吃一个，她又推：“这一步算初五。”我越吃越多，心却越来越慌。数到“初九”，我的王被她的车和马堵在了角上，旁边看棋的同学一声不吭。她把我的铜钱拿过去，棋子一枚枚收进盒子：“你们王子下棋，总想着吃掉对面的王。我只想着哪天到港。”"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那盘棋奈·加玛赢了，她把赢来的一枚铜钱夹进了胡椒账本里。
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "rematch_by_days"
+text = "把棋子倒出来请她再下一盘，这回我也按日子走"
+requires = [{ kind = "affinity", person = "nyai_gama", ge = 20 }]
+hint = "她刚赢了你，这时候要再来一盘，她只当你输不起。"
+reply = "她看了我一眼，把盒子里的棋子又倒了出来。第二盘我也学她报日子，“初二”“初四”，报得比她还快。这一盘下了一个时辰，我险险赢了，只多出一个兵。她把两枚铜钱一起推过来：“你学得快。”收棋子的时候她又说：“下回我按月份走。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }, { kind = "bond", person = "nyai_gama", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "learn_her_way"
+text = "认输，请她讲讲“按日子”下棋是怎么回事"
+reply = "她讲的是胡椒几月上市，西风几月转东风，从万丹到马六甲要走几天。讲完了，棋盘上一个子也没动。我把她说的日子写在棋盘边上排成一行，竟和方才的棋路对得上。她歪头看了看那一行字：“那你以后谈生意，不会太蠢。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+# B2：舅舅替她定的日子。
+[[tracks.chapters]]
+key = "b2"
+title = "舅舅定的日子"
+text = "万丹来了一条船，捎来奈·加玛舅舅的信。她拿着信到学堂来找我，脸上什么也看不出来，把信摊在我的桌上，用两根指头压着。信是替她定日子的：明年回万丹，跟一个老胡椒商人的儿子定亲，哪一天都写好了。“我爹听舅舅的，家里这种事，都是舅舅开口。”她说得很平，“我想要自己定日子。”我低头去看信上那个日子，落在明年年初。那是西风最大的一个月。格雷西克港里的船那时都往东走，往万丹去的，连帆都不敢挂。我抬起头，她正看着我，等我先开口。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那封信奈·加玛搁了三个月才回，回信写了什么，她没说。
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "no_ship_that_day"
+text = "把舅舅定的日子和船期并排排一遍：那个月有没有船去万丹"
+requires = [{ kind = "affinity", person = "nyai_gama", ge = 50 }, { kind = "bond", person = "nyai_gama", level = "C" }]
+hint = "她还没想好要不要让外人掺和家里的婚事，这封信她不会摊开让你算。"
+reply = "我去港务官那里借来船期簿，把那个月一天一天排出来：往东的船十几条，往万丹的一条也没有。她把那张表抄了一份，夹在回信里寄给舅舅。过了两个月，舅舅回信，定亲的事改成了“再说”。她把我那张底稿折好，夹进账本：“这一回你算的日子，比王子的准。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }, { kind = "bond", person = "nyai_gama", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "sit_with_her"
+text = "什么也不算，陪她在码头上坐着，等她自己想好怎么回"
+reply = "我们在码头的木桩上一直坐到天黑。她借了我的笔，写了划，划了又写，最后回信上只剩一行：“胡椒季我要看货，没空。”写完，她自己先笑出声来，把纸举到灯底下吹干：“这一行，我写了一下午。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+# A1：课本里滑出来的信。
+[[tracks.chapters]]
+key = "a1"
+title = "没寄出的买船信"
+text = "雨季的午后，学堂的屋顶漏了，大家都把书往干的地方挪。奈·加玛挪她那本课本的时候，里面滑出一封信，掉在我脚边。她没有抢，弯腰捡起来，捏在手里想了想，递给了我。信是写给一个古吉拉特船主的，要买他泊在万丹港外的那条旧船，价钱、交船的日子、谁出修补的钱，一条一条写得清清楚楚。落款是“奈·加玛”，不是她父亲的名字。信纸的边已经黄了。“写了一年多，”她说，“一直没寄。”我问为什么。她用课本把窗台上的一摊雨水挡开：“万丹没有女人用自己的名字买船。我怕寄出去，人家笑。”"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那封信奈·加玛又夹回了课本里。
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "carry_it"
+text = "答应把信带上我家的科拉科拉船，等她点头那天再替她交出去"
+requires = [{ kind = "affinity", person = "nyai_gama", ge = 50 }, { kind = "bond", person = "nyai_gama", level = "C" }]
+hint = "她肯把信给你看一眼，可要托你带着走，你们还没熟到那一步。"
+reply = "她把信折好递给我，手刚松开，又抽了回去，捋平折痕，再递过来。来回三趟，信纸的折角都起了毛。最后她把信按在我手心里：“你先拿着。等我攒够了钱，我自己点头。”"
+next = "a2"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }, { kind = "bond", person = "nyai_gama", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "what_ship"
+text = "问她想买一条什么样的船"
+reply = "“不大。”她把信收回课本里，伸出两只手比了比，“能装两百担胡椒就够。第一，要结实。第二，哪天出港，我自己定。”说“自己定”那三个字的时候，她的声音比平时大，隔壁打盹的同学都抬起了头。她瞪了那人一眼，又把课本压严了。"
+next = "a2"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+# A2：放信的篮子。
+[[tracks.chapters]]
+key = "a2"
+title = "放信的篮子"
+text = "东风季的码头上晒满了席子。奈·加玛走过来，把一只小篮子放在我的棋盘上，压住了两个兵。篮子是棕榈叶编的，不大，刚好放得下几封折好的信；提手编了两层，捏上去硬邦邦的。这些天她总坐在讲堂后面的台阶上编东西，编坏了就拆。“编了一个月，”她说，“放信的篮子，提手不能断。”她用指节敲了敲篮沿：“以后写信，先写哪天到港。”我拎起篮子晃了晃，提手一点声响也没有，篮底还留着一股晒过的叶子味。她转身要走，又回过头来补了一句：“别写王子的日子。”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+# 缺省：那只篮子奈·加玛自己用了，里面放着那封没寄出的信。
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_basket"
+text = "收下篮子，请她把那封买船信再抄一份放进去，我替她留底"
+requires = [{ kind = "affinity", person = "nyai_gama", ge = 80 }, { kind = "bond", person = "nyai_gama", level = "B" }]
+hint = "这只篮子她编了一个月。连篮子带她的信一起收下，你们还没熟到这个份上。"
+reply = "她看了我一会儿，去先生那里讨了一张纸，把那封信从头抄了一遍，落款也一笔一画地写上了。抄本折好，放进篮子里，大小正合适。她盯着看了很久：“那这只篮子，就是我的第一条船。”那天傍晚，她在码头边的饭摊上请我吃了一顿饭，饭钱是她付的，账本一直没打开。"
+next = "s"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }, { kind = "bond", person = "nyai_gama", level = "A" }, { kind = "item", item = "woven_basket", qty = 1 }, { kind = "memory", memory = "mem-bond_nyai_gama-a2", title = "放信的篮子" }]
+
+[[tracks.chapters.choices]]
+key = "pay_in_cloves"
+text = "说要拿一斤丁香跟她换"
+reply = "“两斤。”她立刻说，“提手编了两层。”我说篮底只编了一层，她说篮底不用提。我们从午后一直讲到太阳落进海里，最后成交：一斤半丁香，外加一盘棋，输的人去买椰子水。那盘棋她赢了，椰子水是我扛回来的。"
+next = "s"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 3 }]
+
+# S：两张船期表。
+[[tracks.chapters]]
+key = "s"
+title = "两张船期表"
+text = "十二月，学堂最后一回点了名。开春我要回特尔纳特，她要回万丹，两条船往两头走。码头上堆着待装的货箱，奈·加玛把两张船期表摊在一只箱盖上，拿两块秤砣压住纸角。一张是我家科拉科拉船的，一张是她家胡椒船的。她用指头顺着两张表往下比，脚夫在旁边催了两回，她一眼也没看。比到一处，她停住了：明年有一个月，两张表上的船都在万丹。她用指甲在那个月上划了一道，划得很深，纸都起了毛。“这个月，你的船要是到了万丹，”她说，“我请你喝茶。”我问是什么茶。“到了再说。”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "gresik"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：开春我回特尔纳特那天，奈·加玛的船先走了，船期表上那个月被她划了一道。只开重逢、记 _parted，不改关系。
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_nyai_gama" }, { kind = "flag", flag = "c7_bond_nyai_gama_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好每年先写信，把下一季的船期告诉她"
+requires = [{ kind = "bond", person = "nyai_gama", level = "A" }]
+hint = "这样的约，一辈子只许得起一回：要么你们还没走到这一步，要么这句话，你已经对另一个人说过了。"
+reply = "“写错一天，罚一斤丁香。”她说得很快，像是早就想好了。我说那她也得写。“我从来不写错。”她撕下船期表的一角，叫我当场写明年的头一条：哪个月从特尔纳特开船，几时过安汶，几时到万丹。我写一行，她看一行，看到第三行，伸手把“十五”改成了“十八”：“你忘了在安汶要停三天。”我认了。她把那一角纸收进账本，又从账本里撕下同样大的一角，写上她家胡椒船的日子递给我。字方方正正，一处也没改过。“每年一封，先写日子，再写别的。”我把纸收好，她已经去盯脚夫装箱了，隔着三只货箱喊过来：“丁香要好的！”"
+next = "done"
+effects = [{ kind = "bond", person = "nyai_gama", level = "S" }, { kind = "relation", person = "nyai_gama", relation = "friends" }, { kind = "memory", memory = "mem-bond_nyai_gama-s", title = "两张船期表" }, { kind = "flag", flag = "c7_bond_nyai_gama_promise" }, { kind = "start_track", track = "reunion_nyai_gama" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好她买下第一条船那天，我的船去万丹替她押第一趟货"
+reply = "她看着我，好一会儿没说话，手里那块秤砣转了两圈。“那得等好几年。”我说我等得起。她低头又去看那两张表，这一回没有找哪个月对得上，只是把两张纸叠起来，对折，再对折，塞进我手里。“第一，船是我的，货是我的，价也是我开。”她说，“第二，你只管押货，不许替我讲价。”我说好。她没说是哪一年，也没说是哪一个月，难得一回没算日子，只说：“那你可别迟到。”她翻开账本，在最后一页添了一行：“凯奇利，押第一趟货。”合上账本，她又补了一句：“迟到也记账。”"
+next = "done"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 2 }, { kind = "relation", person = "nyai_gama", relation = "friends" }, { kind = "flag", flag = "c7_bond_nyai_gama_own" }, { kind = "start_track", track = "reunion_nyai_gama" }]
+
+[[tracks]]
+key = "reunion_nyai_gama"
+name = "奈·加玛：价由她开"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["nyai_gama"]
+
+# 重逢：1563 年，万丹的胡椒市。
+[[tracks.chapters]]
+key = "reunion"
+title = "价由她开"
+text = "六年以后，我的船进了万丹。这里的胡椒市比格雷西克大，秤也大，人声更大。码头边泊着一条不大的船，吃水浅，我估了估，装得下两百担胡椒；船头用爪威字写着一个名字：奈·加玛。她本人坐在船边的摊子后面定价，买家说一句，她回一个数，一个字也不让。旁边有人说起那个姓黄的福建商人，今年又晚了一个月。“我再等他一个月，”她头也没抬，“最后一个月。”她把秤砣挂好，这才看见我。账本还在膝盖上摊着，她先问：“这回是哪天到的港？”"
+window = [[1563, 1, 1], [1563, 12, 31]]
+at = "banten_port"
+cast = ["nyai_gama"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1563, 1, 1], to = [1563, 12, 31] }, { kind = "age", ge = 18 }]
+
+# 缺省：我错过了万丹，她寄来一封信，附着她自己那条船下一季的船期。
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "nyai_gama", text = "凯奇利：你没来。第一，这回不罚你丁香，今年东风来得晚，往西的船个个误期，我的账上记的是风。第二，船期抄在下面，你照着改你的。我的船你没见过：不大，装两百担，船头写着我的名字。买它那天，卖船的古吉拉特人问我父亲在哪里，我说在家，船是我的。他看了我半天，收了钱。签字的时候我的手没抖，回家以后抖了一晚上。今年它跑了两趟马六甲，一趟巴邻旁，一天也没误。胡椒今年一担涨了六十文；你那边的丁香要是还按去年的价，我先订三十担，价钱等见了面再压。下一季：东风起后第十天出万丹，二十天到马六甲，在那里过季；西风一起就往回走，顺路到格雷西克，停八天，大约在十二月。你要是在那一带，先写信说清你哪天到，别让我在码头上白等一个月。那年在货箱盖上划掉的那个月，我账本里也记着一行。——奈·加玛，于万丹" }, { kind = "flag", flag = "c7_bond_nyai_gama_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "先把货谈完，再上她的船坐下，喝那杯茶"
+reply = "我报丁香的价，她报胡椒的价，两边都笑，两边都不动。从晌午谈到太阳偏西，丁香我让了一成，胡椒她一文没让。成交以后，她合上账本，领我上了她的船。舱里很窄，一张矮桌，一只铜壶。茶是她跟中国帆船换来的，汤色很清。我喝了一口，问她这茶多少钱一斤。“不卖。”她给我续上，“生意是生意，茶是茶。”我说当年船期表上划过的那个月，我的船没赶上。她说她知道，那个月她在码头上等到月底，茶自己喝了。“今年这一杯，”她把杯子往我这边推了推，“算你补上的。”"
+next = "done"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 5 }, { kind = "relation", person = "nyai_gama", relation = "friends" }, { kind = "flag", flag = "c7_bond_nyai_gama_landing_friend" }, { kind = "memory", memory = "mem-reunion_nyai_gama", title = "价由她开" }]
+
+[[tracks.chapters.choices]]
+key = "escort"
+text = "这一季让我的船替她押头一趟货，去马六甲"
+reply = "她的船在前，我的船在后，从万丹往北，贴着苏门答腊的海岸走。每天傍晚她都把船靠过来，隔着船舷问我今天走了多少里，记进账本。过邦加海峡那天起了大雾，我叫人敲了一夜的锣，她的船跟着锣声走，一支桨也没碰着礁。第二十天早上，马六甲的城墙从海上浮出来，和她账本上写的那一天，一天不差。卸货的时候，税吏想照船的大小多收一笔，她把账本摊开跟他一条一条对，对到他不说话。她站在码头上，看着自己的胡椒一袋袋过秤，回过头对我说：“王子的日子，这回不打折。”"
+next = "done"
+effects = [{ kind = "affinity", person = "nyai_gama", value = 5 }, { kind = "relation", person = "nyai_gama", relation = "friends" }, { kind = "flag", flag = "c7_bond_nyai_gama_landing_friend" }, { kind = "memory", memory = "mem-reunion_nyai_gama", title = "价由她开" }]

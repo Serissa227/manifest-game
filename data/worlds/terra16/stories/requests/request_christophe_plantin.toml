@@ -1,0 +1,193 @@
+# C13d 人物的请托：多语圣经的铅（2026-10-18，Claude 写）。
+# 标签：deliver（送货）；T 当面（安特卫普“金圆规”印书坊，auto=false，玩家“问请托”或 ask:request_christophe_plantin 启动；求见门槛低）。
+# 人物：克里斯托夫·普朗坦（christophe_plantin，1520 年生，1589 年卒），安特卫普印书坊主；cast 日程 1553—1582 年在安特卫普 trading_house，窗口内吻合。
+# 窗口：报价 1568-03-01 至 1571-12-31（offer 章的 deadline 为窗口止日，到期走 timeout）；交货章限 150 天；之后两章不设期限。
+# 依据·史实：1568—72 普朗坦印《多语圣经》，为它新铸了希伯来、希腊、叙利亚等字模；店招为云里伸出的手握圆规，铭文“劳作与恒心”（cast 的 persona）；
+#   1567 年起阿尔瓦公爵在尼德兰，“乞丐”的歌与传单是死罪；铅在汉堡与塞维利亚有卖，安特卫普本地不产。
+# 依据·原创：货量（铅 40 份）、货款（40 × 40 × 1.25 = 2000）、夹在废纸里的歌单、被罚工钱的排字工（不写名字）、扬的一句工作上的话、普朗坦的女儿们对校样。
+# 待核：字模铸造的具体年份与铸匠；安特卫普印书坊 1568 年前后的罚钱规矩只写传闻口吻。
+# 秘密：普朗坦多年暗中读、很可能暗中替“爱之家”印书（cast 的 secret）——本请托完全不碰，正文与见闻都不写；1562 年工人偷印加尔文派书、他出走巴黎的事属莉芙主线 3，此处不写。
+#   歌单只写是“乞丐”们的歌，不写书名、不写教派。
+# 同学：扬（bond_jan）是普朗坦的学徒、后来排字，此处只出场一句与工作有关的话；不写扬的请托，不写马蒂斯。
+# 读的旗标：c13_main_lieve（offer 的 variant，莉芙主线设置；未设置时按原文）。
+# 设的旗标：c13_request_christophe_plantin_accepted / declined / late / told / burned / spoke / done。
+# 依赖：无 B10b 改名；cast 日程与各章 at（antwerp）一致。
+# 缺省走向：offer 不在场就一直挂着，到 1571-12-31 走 timeout（无见闻）；交货章 150 天内不交，走 timeout（普朗坦从科隆订了铅，来信说明，不扣钱不扣货）；
+#   之后的歌单章与收尾章不设期限，玩家不回安特卫普就停在那里。
+# 回忆插画清单：
+#   mem-request_christophe_plantin-settle（四种文字的样页）：校对室窗下一张样页，四种文字并排，栏线细如发丝，页角一个签名。
+
+[[tracks]]
+key = "request_christophe_plantin"
+name = "多语圣经的铅"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["christophe_plantin"]
+
+[[tracks.chapters]]
+key = "offer"
+title = "铸字房等着的铅"
+text = "“金圆规”的院子里，几台印机同时在响。普朗坦领你穿过排字房，停在一排空字盒前：“国王要的圣经，希伯来字、希腊字、叙利亚字一个都少不得，都得用铅铸。铸字匠等了一个月，手都闲出了毛病。”安特卫普买不到铅，汉堡和塞维利亚才有。“您是懂行的人，这点账不用我多说。”他报了个价，见你没接话，叹了口气：“国王的钱总是来得慢。货到了，钱我马上付，一分不少。”"
+mood = "cheerful"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1568, 3, 1], to = [1571, 12, 31] },
+  { kind = "alive", person = "christophe_plantin", value = true },
+]
+objectives = [{ kind = "person", person = "christophe_plantin", text = "在印书坊找到他" }]
+deadline = [1571, 12, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.variants]]
+key = "lieve"
+when = [{ kind = "flag", flag = "c13_main_lieve" }]
+text = "“金圆规”的院子里，几台印机同时在响。普朗坦一眼认出你是“月桂树”那几年常来印书坊的学生，客气得过了头，把你让进排字房，停在一排空字盒前：“国王要的圣经，希伯来字、希腊字、叙利亚字一个都少不得，都得用铅铸。铸字匠等了一个月，手都闲出了毛病。”安特卫普买不到铅，汉堡和塞维利亚才有。“您是懂行的人，这点账不用我多说。”他报了个价，见你没接话，叹了口气：“国王的钱总是来得慢。货到了，钱我马上付，一分不少。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下：去汉堡或塞维利亚运铅来"
+next = "deliver"
+effects = [
+  { kind = "affinity", person = "christophe_plantin", value = 2 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_accepted" },
+]
+reply = "他把你送到门口，抬手指了指店招：云里伸出一只手，握着圆规。“劳作与恒心，”他说，“铅也得这样等。”门外的街上有人推着空车过去，车轮吱呀一路响。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_christophe_plantin_declined" }]
+reply = "他客客气气地送你出门，还塞给你半块糖。门一关，你在门外就听见他在屋里骂铅价，骂科隆的商人，骂汉堡的船，骂到后来连纸价也一并骂上了。"
+
+[[tracks.chapters]]
+key = "deliver"
+title = "后门的四十份铅"
+text = "铅锭卸在印书坊后门，一共四十份，码进棚子里，泛着灰蓝的光，堆到棚顶。门框上贴着一长串罚钱的规矩：排错一个字扣一个铜钱，迟到一刻扣半天工钱。铸字匠拿小锤逐块敲，侧着耳朵听，声音脆的留下，哑的推回去。普朗坦站在门口记斤两，嘴里念叨：“比上一回的价钱公道，我说的是实话。”他数货款数得很慢，一枚一枚搁在桌上，每搁一枚都要叹一口气。"
+at = "antwerp"
+speaker = "captain"
+mood = "cheerful"
+news = "安特卫普印书坊“金圆规”的后门一早卸下四十份铅，铸字匠在棚子里敲了整个上午，全街都听得见。"
+when = [{ kind = "alive", person = "christophe_plantin", value = true }]
+objectives = [{ kind = "goods", good = "lead", qty = 40, at = "antwerp", text = "四十份铅运到安特卫普" }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "christophe_plantin", value = -3 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_late" },
+  { kind = "letter", person = "christophe_plantin", text = "这批铅我等不起，已经从科隆订了。价钱比我原先报的贵了一倍，我心疼得三天没睡好。——克里斯托夫·普朗坦" },
+]
+
+[[tracks.chapters.choices]]
+key = "foundry"
+text = "跟着铅锭一起送进铸字房"
+next = "proofs"
+effects = [
+  { kind = "cash", value = 2000 },
+  { kind = "affinity", person = "christophe_plantin", value = 3 },
+]
+reply = "一个年轻的排字工领你穿过后院，是扬。他用指甲在一块铅锭上划了一道白印，说：“这块有砂眼，别往字模里倒。”说完就回去干活了，连头也没抬。"
+
+[[tracks.chapters.choices]]
+key = "door"
+text = "在后门交割，不进去了"
+next = "proofs"
+effects = [{ kind = "cash", value = 2000 }]
+reply = "普朗坦把货款点清，请你明天再来喝一杯，说：“账要一笔一笔算，急不得。”铸字房里的敲打声一直响到天黑，你没有进去，也没有回头看。"
+
+[[tracks.chapters]]
+key = "proofs"
+title = "废纸底下的歌单"
+text = "铸字房的后间里，你在一摞废纸底下看见几张刚印出来的歌单。油墨还没干透，用的是这里的字，唱的是“乞丐”们的歌，一行一行排得整整齐齐。门外有个熟练的排字工在咳嗽，咳一声，手里的字盒就响一下。在这座城里，这几张纸能让人上绞架。你还没想好怎么办，那咳嗽声就停了。"
+at = "antwerp"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "christophe_plantin", value = true }]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把歌单交给普朗坦"
+next = "settle"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "christophe_plantin", value = 5 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_told" },
+]
+news = "安特卫普印书坊“金圆规”的炉子里前几天烧过一沓纸，印书坊里的工人过了好几天都不敢大声咳嗽。"
+reply = "他的脸一下子白了，手抖得半天拨不开炉膛里的炭灰，把那几张纸塞了进去。第二天墙上贴出一张新的罚钱规矩。那个排字工被扣了半年的工钱，人还留着。"
+
+[[tracks.chapters.choices]]
+key = "burn"
+text = "自己把它们塞进铸字炉，谁也不说"
+next = "settle"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "christophe_plantin", value = 3 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_burned" },
+]
+news = "安特卫普印书坊“金圆规”的铸字房前几天有人往炉子里扔纸，火苗窜得老高，没人看清是谁扔的。"
+reply = "纸在铅水边的炭火上卷起来，一眨眼就没了，连纸边都没剩下。那个排字工从门边过，咳了两声，看你的眼神不太一样了。他没有道谢，只是把自己那盒字往你这边挪了挪。"
+
+[[tracks.chapters.choices]]
+key = "speak"
+text = "交给普朗坦，同时替那个排字工说情"
+next = "settle"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "christophe_plantin", value = 5 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_spoke" },
+]
+news = "安特卫普印书坊“金圆规”的普朗坦骂了半个时辰，骂完还是把一个排字工留了下来，罚钱照罚。"
+reply = "你把纸放在他面前，话还没开口，普朗坦已经骂了起来：纸、铅、门外那个咳嗽的排字工，一样不落。你提到那个排字工，他的声音停了一下。他合上账本，抬眼看你，等你把话说完。"
+
+[tracks.chapters.choices.fail]
+next = "settle"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "christophe_plantin", value = 1 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_told" },
+]
+news = "安特卫普印书坊“金圆规”的普朗坦照规矩辞了一个排字工，那人当天就卷铺盖走了，工钱一文也没给。"
+
+[[tracks.chapters]]
+key = "settle"
+title = "四种文字的样页"
+text = "几天后，普朗坦在楼上的校对室里摊开一张刚印好的样页。一页上并排着四种文字，栏线细得像头发。窗下，他的女儿们趴在长桌上对校样，数错一个墨点就从头来。他用指尖点着希伯来字，说：“这一个字，是你运来的铅铸的。”他又翻过页角，指给你看：“国王派人来看过三回，每回都挑这一页。”"
+at = "antwerp"
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "alive", person = "christophe_plantin", value = true }]
+
+[[tracks.chapters.variants]]
+key = "spoke"
+when = [{ kind = "flag", flag = "c13_request_christophe_plantin_spoke" }]
+text = "几天后，普朗坦在楼上的校对室里摊开一张刚印好的样页。一页上并排着四种文字，栏线细得像头发。窗下，他的女儿们趴在长桌上对校样，数错一个墨点就从头来。铸字房那边，那个排字工的咳嗽声又响起来了。普朗坦侧耳听了一会儿，没有骂人。他用指尖点着希伯来字，说：“这一个字，是你运来的铅铸的。”他又翻过页角，指给你看：“国王派人来看过三回，每回都挑这一页。”"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "请他把这张样页送你"
+next = "done"
+effects = [
+  { kind = "fame", value = 3 },
+  { kind = "memory", memory = "mem-request_christophe_plantin-settle", title = "四种文字的样页" },
+  { kind = "flag", flag = "c13_request_christophe_plantin_done" },
+]
+news = "安特卫普“金圆规”的普朗坦在校对室里签了名，把一张四种文字并排的样页送了人，这在城里可是头一回。"
+reply = "他犹豫了一下，还是拿起笔，在页角签了名。吹干墨迹时他又说：“这张纸本来能卖钱的，您知道吗？”说完却把样页对着窗户看了一眼，才慢慢递给你。"
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "问他这一部书要卖多少钱"
+next = "done"
+effects = [
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_christophe_plantin_done" },
+]
+news = "普朗坦在安特卫普的校对室里一边报书价，一边骂国王欠他的钱，楼下的排字工偷偷笑了一下。"
+reply = "他报了一个数，又说国王欠他的比这还多，欠了两年还没还清。问完书价，他把话头拐回纸上：“好纸现在多少一令，您打听过没有？”"

@@ -1,0 +1,256 @@
+# 请托：岬角的名字（request_gaspar_antonio_chi）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：加斯帕尔·安东尼奥·奇（gaspar_antonio_chi，1531 年生，男），马尼人，兰达的学生，1573 年起在梅里达做总通事，替官府与玛雅乡人写呈报。cast 在 cast/historical_05_americas.toml。
+# 类型：去某处（go）。章节：offer（报价）→ arrive（科苏梅尔的井边问地名）→ 三条收尾路：report（两份都有）、report_half（只记得一半）、report_register（只有官府的写法）；终局 done / failed。
+# 报价：V 到访（auto=true）。他从梅里达下到坎佩切的税关，offer 与 report 系在坎佩切。窗口 1578-01-15 至 1582-12-31；family c13_offer_campeche，冷却 20 天。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 依据·史实：1577 年王室发出的五十条地理问询，尤卡坦各镇 1579—81 年作答，奇在 1581—82 年替梅里达一带若干镇执笔。正文只写“印好的问题单”与“第十条”，不写标题与拉丁文。
+# 依据·原创：科苏梅尔的礁石与井，海龟上岸的那个说法，老人们在井边念地名，塌石屋的名字（始终不写出来）。
+# 待核：岛上地名的读法；那口井连着哪一家（正文只按传闻写，不落实）。
+# 依赖：港口 campeche、cozumel（ports_americas.toml）；技能 lang_yucatec（skills.toml）；检定属性 eloquence。B10b 无需改名。主线门禁：无（不是主线人物）。
+# C7：不涉及。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标（只读，不设）：c13_main_ix_nikte，offer 与 report 各一个 variant，只改伊希玩家听出口音的一句；由伊希主线设，尚未写。
+# 写的旗标：accepted（接下）、declined（回绝）、elders（问到老人的名字）、half（只记下一半）、done（两份都交）、partial（只交了一份）、failed（不交）、late（超时）。elders 与 half 是分支记号，没有人读取。
+# 秘密：cast 人设里有两件事他不主动提起，本请托不碰，见闻也不写。
+# 口头禅：“Bix a beel？”只在 offer 说一次。
+# 报酬：现金最多 900（两份都交）；好感最多 +13；lang_yucatec +20（交老人那份时）；名声 +2；new_spain 声望 +2；回忆 mem-request_gaspar_antonio_chi-report。
+# 回忆插画 mem-request_gaspar_antonio_chi-report：烛下的长桌，一张纸折成两栏，左边是税关的印，右边是几个手写的地名，窗外是坎佩切的税关。
+# 写法说明：普通章不写 window 与 default。三条收尾路由 next 分开，各自两到三个选项，不用 requires 门禁本轨道设过的旗标；只有“请老人念”一项要求技能。
+
+[[tracks]]
+key = "request_gaspar_antonio_chi"
+name = "岬角的名字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["gaspar_antonio_chi"]
+
+# 一、第十条问题：税关的长桌上，他先用玛雅话问候，然后请你去科苏梅尔问地名。
+[[tracks.chapters]]
+key = "offer"
+title = "第十条问题"
+text = "税关的长桌上摊着一张印好的问题单，纸边被手指磨得发毛。梅里达的书记官发下来的，五十条，尤卡坦各镇要一条条答。奇坐在桌子那头，第十条底下画了一道线。见你进来，他先用玛雅话问：“Bix a beel？”——你的路走得还好吗？接着把册子推过来，指头点在科苏梅尔那一栏上：“岬角、水井、岛屿，各是什么意思。公证人照耳朵拼的，一半我读不出来。请你去一趟科苏梅尔，让岛上的老人一个个念给你听。”他顿了顿，声音压低：“镇长要的是跟贡赋册对得上的那一份。老人们说的，多半对不上。”"
+speaker = "gaspar_antonio_chi"
+mood = "tense"
+at = "campeche"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1578, 1, 15], to = [1582, 12, 31] },
+  { kind = "fame", ge = 5 },
+]
+family = "c13_offer_campeche"
+family_cooldown_days = 20
+deadline = [1582, 12, 31]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，带上他的问题单"
+next = "arrive"
+reply = "他把问题单折成四折塞给你，用玛雅话说了一句，又用卡斯蒂利亚话说了一遍，两句的意思不太一样。"
+news = "坎佩切税关的通事托一个过路的船长去科苏梅尔，替镇上问几个岛名的读法。"
+effects = [
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_which"
+text = "接下，先问他要哪一份"
+next = "arrive"
+reply = "他想了很久：“镇长要一份，我要一份。你带回来的，最好是两份。”"
+news = "坎佩切税关的通事要去科苏梅尔的船长带回两份地名，镇长一份，老人一份。"
+effects = [
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝"
+next = "failed"
+reply = "他点点头，把单子收好，又从袖里抽出一张空纸，在上头记下了今天的日子。“岛上的老人会等下一条船。”"
+effects = [{ kind = "flag", flag = "c13_request_gaspar_antonio_chi_declined" }]
+
+[[tracks.chapters.variants]]
+key = "ix"
+when = [{ kind = "flag", flag = "c13_main_ix_nikte", value = true }]
+text = "税关的长桌上摊着一张印好的问题单，纸边被手指磨得发毛。梅里达的书记官发下来的，五十条，尤卡坦各镇要一条条答。奇坐在桌子那头，第十条底下画了一道线。见你进来，他先用玛雅话问：“Bix a beel？”——你的路走得还好吗？他听出你的口音，手指在纸上停了一下。接着把册子推过来，指头点在科苏梅尔那一栏上：“岬角、水井、岛屿，各是什么意思。这些名字，你在家里大概听过。公证人照耳朵拼的，一半我读不出来。请你去一趟科苏梅尔，让岛上的老人一个个念给你听。”他顿了顿，声音压低：“镇长要的是跟贡赋册对得上的那一份。老人们说的，多半对不上。”"
+
+# 二、井边的老人：科苏梅尔。老人的一份只能听，官府的一份在纸上。
+[[tracks.chapters]]
+key = "arrive"
+title = "井边的老人"
+text = "科苏梅尔海边的一口井旁，几个老人坐在石头上剥玉米，玉米皮扔了一地。官府册子上叫“白岬”的那块礁石，老人们管它叫另一个名字，意思是海龟上岸的地方。从前朝圣的船也在那儿靠岸。井的名字连着一个家族，哪家的井，哪家的人都知道。你把问题单摊在石头上，最老的那位一个个指过去，用玛雅话念。问到岛中央那座塌了的石屋，他闭了嘴，只说：“那个名字不往纸上写。”"
+speaker = "captain"
+mood = "mystic"
+at = "cozumel"
+objectives = [{ kind = "at", at = "cozumel", text = "到科苏梅尔的井边去" }]
+when = [{ kind = "alive", person = "gaspar_antonio_chi", value = true }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_gaspar_antonio_chi_late" }, { kind = "affinity", person = "gaspar_antonio_chi", value = -3 }, { kind = "letter", person = "gaspar_antonio_chi", text = "镇长等不及，我只好照册子把答卷交了。科苏梅尔的老人身体可好？你若还去那口井，替我谢他们。" }] }
+
+[[tracks.chapters.choices]]
+key = "yucatec"
+text = "请老人用玛雅话一个个念，你照音记"
+next = "report"
+requires = [{ kind = "skill", skill = "lang_yucatec", ge = 60 }]
+hint = "老人念得慢，你的耳朵跟得上，嘴里的音却总绕不过去。得先在学堂里把玛雅话念熟了。"
+reply = "老人念得慢，你一个音一个音跟着记。念到海龟那一句，旁边的孩子笑你的舌头打了结，老人也跟着笑，却又念了一遍，让你照着写。"
+news = "科苏梅尔的井边，一个坎佩切来的船长跟着老人念地名，念到海龟那一句，孩子们笑得直打滚。"
+effects = [
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 3 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_elders" },
+]
+
+[[tracks.chapters.choices]]
+key = "translate"
+text = "请岸上的渔夫帮你译成卡斯蒂利亚话"
+next = "report"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report_half", news = "科苏梅尔海边，渔夫替坎佩切来的船长译地名，译到一半卡住了，只带回几个名字的意思。", effects = [{ kind = "flag", flag = "c13_request_gaspar_antonio_chi_half" }, { kind = "affinity", person = "gaspar_antonio_chi", value = -2 }] }
+reply = "渔夫译得磕磕绊绊，名字的意思却都带了出来。那块礁石是海龟上岸的地方，那口井连着一个家族。"
+news = "科苏梅尔海边，岸上的渔夫替坎佩切来的船长译地名，译得磕磕绊绊，名字的意思却都说清了。"
+effects = [
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 3 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_elders" },
+]
+
+[[tracks.chapters.choices]]
+key = "register"
+text = "只念官府册子上的写法，问老人对不对"
+next = "report_register"
+reply = "老人们听一个摇一次头，听到第三个，干脆挥挥手，让你照册子写。"
+news = "科苏梅尔的老人们听坎佩切来的船长念官府册子上的地名，一个个摇头，最后挥手让他照册子写。"
+
+# 三、两种写法：坎佩切。两份都有时的收尾；只记得一半的、只有官府写法的，各走一章。
+[[tracks.chapters]]
+key = "report"
+title = "两种写法"
+text = "奇在坎佩切等你。你把记下的名字摊开，他先在纸角写下日子和念的人的名字，然后才去找那块礁石，再找那口井。两种话轮着念，念一个停一下。念到海龟那一句，他抬起头：“白岬。这个字是公证人自己加的，音大概是对的，意思错了。”他把官府册子上的那一行找出来，两种写法并排放着，中间隔着一道笔画。隔壁屋里，镇长的书记正等着把答卷誊进正本，墨已经研好了。奇的手指压在那道笔画上，没有马上抬开。"
+speaker = "gaspar_antonio_chi"
+mood = "tense"
+at = "campeche"
+when = [{ kind = "alive", person = "gaspar_antonio_chi", value = true }]
+deadline = [1583, 6, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_gaspar_antonio_chi_late" }, { kind = "affinity", person = "gaspar_antonio_chi", value = -3 }] }
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "两份并排抄，都交上去"
+next = "done"
+reply = "他把纸折成两栏，左边官府的，右边老人的，一个也没删。“国王要问，就让他看两遍。”"
+news = "坎佩切税关的通事把科苏梅尔的地名抄成两栏，一栏官府的，一栏岛上老人的。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 8 },
+  { kind = "skill", skill = "lang_yucatec", value = 20 },
+  { kind = "fame", value = 2 },
+  { kind = "reputation", faction = "new_spain", value = 2 },
+  { kind = "memory", memory = "mem-request_gaspar_antonio_chi-report", title = "两种写法的岬角" },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "elders_only"
+text = "只交老人的那一份"
+next = "done"
+reply = "他捏着纸看了你一眼：“这一份，镇长不会签字。”可他还是收下，夹进自己的皮夹。"
+news = "坎佩切税关的书记嫌科苏梅尔的名字对不上贡赋册，通事却把老人那一份收进了皮夹。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 4 },
+  { kind = "skill", skill = "lang_yucatec", value = 20 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "register"
+text = "交官府那一份"
+next = "done"
+reply = "书记高兴地收走了。奇送你到门口，话只说了一句：“老人那几个字，我替你记着。”"
+news = "坎佩切税关的书记把科苏梅尔的地名照官府册子誊进正本，通事在旁边没有说话。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 4 },
+  { kind = "reputation", faction = "new_spain", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_partial" },
+]
+
+[[tracks.chapters.variants]]
+key = "ix"
+when = [{ kind = "flag", flag = "c13_main_ix_nikte", value = true }]
+text = "奇在坎佩切等你。你把记下的名字摊开，他先在纸角写下日子和念的人的名字，然后才去找那块礁石，再找那口井。两种话轮着念，念一个停一下。念到海龟那个名字，他看了你一眼：“你家里的老人，大概也这么叫。”他把官府册子上的那一行找出来，两种写法并排放着，中间隔着一道笔画。隔壁屋里，镇长的书记正等着把答卷誊进正本，墨已经研好了。奇的手指压在那道笔画上，没有马上抬开。"
+
+# 三之二、记得一半：记录只有一半。照实抄，或照官府的写法交。
+[[tracks.chapters]]
+key = "report_half"
+title = "记得一半"
+text = "你只记下了一半。奇在坎佩切等你，把带回的纸摊开。纸角被海风吹卷了，是在船上记的，字迹歪了好几处。左边是官府的名字，右边老人那一栏只写了几个字，后面空着。他一个一个对，对到海龟那一句就停住，念了两遍，摇头：“你记的这个音，我在老人们嘴里听过，纸上写不出来。”书记在门口催：“好了没有？”奇没有回头，只把空着的那半栏又看了一遍。"
+speaker = "gaspar_antonio_chi"
+mood = "sad"
+at = "campeche"
+when = [{ kind = "alive", person = "gaspar_antonio_chi", value = true }]
+deadline = [1583, 6, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_gaspar_antonio_chi_late" }, { kind = "affinity", person = "gaspar_antonio_chi", value = -3 }] }
+
+[[tracks.chapters.choices]]
+key = "both_half"
+text = "把记下的一半和官府的并排抄"
+next = "done"
+reply = "他把带回的纸和官府的并在一起，右边只有你记得的几个字。“空着也比乱写强。”"
+news = "坎佩切税关里，通事对着科苏梅尔的地名空出了半栏，书记催了两次，他还是没有往下写。"
+effects = [
+  { kind = "cash", value = 600 },
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "official_half"
+text = "照官府的册子交"
+next = "done"
+reply = "书记接过去，翻了两页就放下了。奇没有送你到门口，只把空着的那半栏抄进了自己的册子。"
+news = "科苏梅尔的答卷进了坎佩切的正本，老人们的说法一个也没上纸，税关的人说这样就够了。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 4 },
+  { kind = "reputation", faction = "new_spain", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_partial" },
+]
+
+# 三之三、照册子写：只有官府的写法。交上去，或者把册子还回去。
+[[tracks.chapters]]
+key = "report_register"
+title = "照册子写"
+text = "那几位老人摇了头，你就照册子记了。回到坎佩切，奇把册子翻开，纸页边上有书记用红线划过的记号。他一行一行对，对到科苏梅尔那一栏，手指停住，又挪开。“这些名字是照耳朵拼的，”他说，“老人们听了，大概会摇头。”书记在门口咳了一声，又催。奇把册子合上，又打开，还是那一页。"
+speaker = "gaspar_antonio_chi"
+mood = "tense"
+at = "campeche"
+when = [{ kind = "alive", person = "gaspar_antonio_chi", value = true }]
+deadline = [1583, 6, 30]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_gaspar_antonio_chi_late" }, { kind = "affinity", person = "gaspar_antonio_chi", value = -3 }] }
+
+[[tracks.chapters.choices]]
+key = "hand_official"
+text = "交官府那一份"
+next = "done"
+reply = "书记高兴地收走了。奇送你到门口，什么也没说，只在自己的册子边上记了一行。"
+news = "坎佩切税关的书记收下了只照官府写法的答卷，科苏梅尔那一栏誊得一字不差。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "gaspar_antonio_chi", value = 4 },
+  { kind = "reputation", faction = "new_spain", value = 2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "这一份我不签，把册子还给他"
+next = "failed"
+reply = "他接过册子，没有生气，只是夹回自己的册子里：“那就留着。哪天有人肯去一趟井边，再来找我。”"
+news = "坎佩切税关的通事把一份照册子写成的答卷退了回去，说岛上的老人还没有点头。"
+effects = [
+  { kind = "affinity", person = "gaspar_antonio_chi", value = -2 },
+  { kind = "flag", flag = "c13_request_gaspar_antonio_chi_failed" },
+]

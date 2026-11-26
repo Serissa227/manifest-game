@@ -1,0 +1,170 @@
+# 请托：台风天的泊位（request_amihan_dagat）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：阿米汉·达加特（amihan_dagat，1540-02-22 生，女），汤都河口船匠的女儿；势力 luzon，身份档 1。cast：cast/classmates_custom_tondo_datu.toml。
+# 类型：去某处（go）。四章：offer（报价）、arrive（宿务南边的海湾）、report（量全了，结账）、report_partial（只量了一半，结账）；终点 done / failed。
+#   说明：任务单写三章；“只量了一半”的一支不能靠变体改现金与终局旗标（变体只换文字），所以拆成 report_partial 一章，由 arrive 的 next 路由过去。
+# 报价：T（当面）。人物日程常驻汤都（tondo），auto=false，玩家在港里“问请托”（ask:request_amihan_dagat）启动；offer 不写 at，目标是在船坞里找到她。
+#   offer 写 deadline=1580-06-30，timeout 走 failed，不写见闻（没人知道这件事没成）。
+# 进行中：arrive 是普通章，没有 window 与 default，窗口用 when 的日期条件写；deadline_days=120，超时走 failed，来信一封，好感 -3，旗标 _late。
+#   report、report_partial 没有期限；人在汤都，目标是找到她。
+# 依据·史实背景：米沙鄢的台风季（七月到十月）；1565 年黎牙实比在宿务立足（变体：1565-04-27 以后，宿务港有西班牙人的木栅）。
+#   正文只用渔民的口吻说“南边有个海湾”，不起正式地名，海湾在宿务南边一天的水路。
+# 依据·原创：阿米汉与汤都河口的小船户；口小肚大的海湾；落潮时露出的一道礁；东南风正对着口子灌。
+#   口头禅“这条水路，涨潮才开门。”只在 arrive 章用一次（变体里改成转述，不再引原话）。
+# 秘密：家里靠几条不外传的水道吃饭，她偷记的那一份塞在小船底板下。本文件不碰，见闻一律不写。
+# 读的旗标：bond amihan_dagat ≥ C（offer 的变体，只读，老同学的口气）。不读也不设任何 c7_ 旗标。
+# 设的旗标：c13_request_amihan_dagat_accepted（offer 两种接法）、_declined（offer 回绝）、
+#   分支旗标 _chart（chart_bay 与 time_tide 共用，表示量全了口子与礁）、_scraped（sail_in 检定失败，小船擦了礁）；
+#   终局 _done（report）、_partial（report_partial）、_late（arrive 超时）。
+# 依赖：港口 tondo、cebu（ports_southeast_asia.toml）；技能 cartography、tide_reading（skills.toml）、属性 seamanship。
+#   cast 日程 1554 年起常驻汤都，正文与报价一致，cast 不改。
+# 报酬：现金 1250（只量一半 800）；好感最多 +13；名声 +1；技能 tide_reading +20（只一次）；回忆 mem-request_amihan_dagat-report。无物品奖励。
+# 回忆插画清单：
+#   mem-request_amihan_dagat-report「船坞地上的海湾」：船坞的泥地上铺着一张海湾图，一个赤脚的女船匠蹲在旁边，手指点在礁石后面的角落（只量了一半时，图上礁后面是空的）。
+# 窗口（2026-11-01 close-places）：报价与 arrive 由 1563-10-01 起改为 1565-01-01 起——宿务 1565 年才开港，arrive 限期 120 天，1563-10 至 1564-09 接下的请托必然超时。正文不动。
+
+[[tracks]]
+key = "request_amihan_dagat"
+name = "台风天的泊位"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["amihan_dagat"]
+
+# 一、躲风的地方：船坞里裂成两半的小船，她数着板子，托你去量南边的海湾。
+[[tracks.chapters]]
+key = "offer"
+title = "躲风的地方"
+text = "汤都河口的船坞里，去年台风打碎的小船还躺在泥地上，裂成两半。阿米汉蹲在旁边，一块板一块板地数，数到一半抬头看见你，也没站起来。“要躲风的船不止这一条。”她说，“这几处泊位，浅的挡不住风，深的又挤不进去。现在落潮，两个时辰以后才涨。”她把手里的木板往地上一扣，赤脚在泥里蹭了蹭。“宿务的渔民说，南边有个海湾，口小肚大，没人用过。你去量。进口多宽，水多深，哪个方向的风会灌进来。量错一样，船就碎在里面。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "amihan_dagat", text = "在汤都河口的船坞找到她" }]
+when = [{ kind = "date", from = [1565, 1, 1], to = [1580, 6, 30] }, { kind = "age", ge = 17 }, { kind = "age", person = "amihan_dagat", ge = 18 }]
+deadline = [1580, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond"
+when = [{ kind = "bond", person = "amihan_dagat", level = "C" }]
+text = "汤都河口的船坞里，去年台风打碎的小船还躺在泥地上。阿米汉看见你，把手里那块板放下，说：“螃蟹门你还记得吗？落潮是巷子，涨潮就是另一条水道。”她没等你答，又去数那些裂开的船板。“要躲风的船不止这一条。浅的泊位挡不住风，深的又挤不进去。宿务的渔民说，南边有个海湾，口小肚大，没人用过。你去量。量错一样，船就碎在里面。”"
+
+[[tracks.chapters.choices]]
+key = "go_cebu"
+text = "接下，去宿务南边量那处海湾。"
+next = "arrive"
+reply = "她用炭在一块木板上画了个口小肚大的样子，说渔民就是这么比划的。“剩下的，你替我画满。画不满的地方空着，别乱填，下回来我自己看。”"
+effects = [{ kind = "affinity", person = "amihan_dagat", value = 2 }, { kind = "flag", flag = "c13_request_amihan_dagat_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_boats"
+text = "接下，先问：河口有多少条船要躲？"
+next = "arrive"
+reply = "“十九条，加上我自己那条，一共二十条。”她一条一条报船主的名字，报完了说，最小那条只能坐两个人，“它要是碎了，就是一家人没地方住。”"
+effects = [{ kind = "affinity", person = "amihan_dagat", value = 2 }, { kind = "flag", flag = "c13_request_amihan_dagat_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "宿务太远，小船户也划不过去。"
+next = "failed"
+reply = "她把木板翻过来，说那她再找近的。“近的没有，才找远的。”说完又低下头去数那些裂开的船板，数得比刚才更慢，数到第七块就停了，没再往下数。"
+effects = [{ kind = "flag", flag = "c13_request_amihan_dagat_declined" }]
+
+# 二、口小肚大：海湾的口子只容一条船过，里头却是深绿的水。你要在礁边量出它的脾气。
+[[tracks.chapters]]
+key = "arrive"
+title = "口小肚大"
+text = "那处海湾在宿务南边一天的水路上，口窄得两条小船并排就进不去。里面却宽，水是深绿的。你在口子外头等到水退下去，才看见中间露出一道礁，黑黑的，像一条脊背。渔民比划着说，这里九月的风是从东南来的，正对着口子灌。“这条水路，涨潮才开门。”你想起阿米汉的话，把缆绳系在一块石头上。"
+speaker = "captain"
+mood = "mystic"
+at = "cebu"
+objectives = [{ kind = "at", at = "cebu", text = "在宿务" }]
+when = [{ kind = "alive", person = "amihan_dagat", value = true }, { kind = "date", from = [1565, 1, 1], to = [1581, 8, 24] }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "amihan_dagat", text = "宿务的渔民又来过一回，比划得更清楚了些。我还是要去量，等明年。——阿米汉" }, { kind = "affinity", person = "amihan_dagat", value = -3 }, { kind = "flag", flag = "c13_request_amihan_dagat_late" }] }
+news = "宿务南边一天的水路上，一个口小肚大的海湾，汤都来的船长在口子外守了半个月的潮，说里头的水是深绿的。"
+
+[[tracks.chapters.variants]]
+key = "v1_spanish"
+when = [{ kind = "date", from = [1565, 4, 27] }]
+text = "那处海湾在宿务南边一天的水路上，口窄得两条小船并排就进不去。里面却宽，水是深绿的。宿务港口多了西班牙人的木栅，渔民往南指的时候压低了声音，说南边的海湾“他们还不知道”。你在口子外头等到水退下去，才看见中间露出一道礁，黑黑的。渔民比划着说，这里九月的风是从东南来的，正对着口子灌。你想起阿米汉的话，把缆绳系在一块石头上，等水涨起来。"
+
+[[tracks.chapters.choices]]
+key = "chart_bay"
+text = "把口子、礁石、里面的水深一点点画成图。"
+next = "report"
+reply = "我画了两天，口子宽多少、礁在哪里、里面三处最深的地方都标上了。东南风灌进来能到哪里，画了一条虚线；礁后面一处风灌不到的角落，也用圈圈了出来。"
+effects = [{ kind = "affinity", person = "amihan_dagat", value = 3 }, { kind = "flag", flag = "c13_request_amihan_dagat_chart" }]
+requires = [{ kind = "skill", skill = "cartography", ge = 60 }]
+hint = "你量了数，可画出来口子总是歪的"
+
+[[tracks.chapters.choices]]
+key = "time_tide"
+text = "守一个大潮，记下口子几时开、几时关。"
+next = "report"
+reply = "我守了半个月的潮，把口子能过船的时辰一天一天记下来，几时开、几时关。又照着口子的样子画了一张图，礁后面有一处东南风灌不到的角落，也被我找到了。"
+effects = [{ kind = "affinity", person = "amihan_dagat", value = 3 }, { kind = "flag", flag = "c13_request_amihan_dagat_chart" }]
+requires = [{ kind = "skill", skill = "tide_reading", ge = 60 }]
+hint = "这里的潮跟汤都不一样，你算不准"
+
+[[tracks.chapters.choices]]
+key = "sail_in"
+text = "开小船进去转一圈，凭手感量。"
+next = "report_partial"
+reply = "我在口子上等到涨潮，开小船进去转了一圈，深浅、风向都摸了个大概，有些地方没敢细看，礁边的水我不敢多待，转了一圈就退出来，在船上把看到的画了下来。"
+effects = [{ kind = "affinity", person = "amihan_dagat", value = 3 }]
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "report_partial", effects = [{ kind = "affinity", person = "amihan_dagat", value = -2 }, { kind = "flag", flag = "c13_request_amihan_dagat_scraped" }] }
+
+# 三（一）：量全了。礁后面那个角落，正好塞得下二十条船。
+[[tracks.chapters]]
+key = "report"
+title = "第二十条船"
+text = "阿米汉把你画的海湾铺在船坞的地上，赤着脚蹲在旁边看。看到礁石后面那个角落，她的手指停住了，点了两下。“二十条船，这个角落刚好塞得下。”她抬起头，“最小那条塞最里面，风从口子灌进来，灌不到它。”她把图翻过来，又翻回去，在东南风灌进口子的地方用指甲划了一道。“台风季前得有人带第一趟。船户们不信没去过的地方，你得先开进去，他们才肯跟着。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "amihan_dagat", text = "在汤都找到她" }]
+when = [{ kind = "alive", person = "amihan_dagat", value = true }, { kind = "date", from = [1563, 10, 1], to = [1581, 8, 24] }]
+news = "汤都河口的小船户们说，台风季要有一处躲风的地方了，图是一个汤都来的船长在宿务南边的海湾量出来的。"
+
+[[tracks.chapters.choices]]
+key = "lead_first"
+text = "答应台风季前带第一趟。"
+next = "done"
+reply = "她跳起来，说那就定了。又说那条水路她要给它起个名字，起什么，等第一趟船进去了再说。她付了钱，手还按在图上，不肯松开，过了一会儿才去找钱袋。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "amihan_dagat", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "tide_reading", value = 20 }, { kind = "flag", flag = "c13_request_amihan_dagat_done" }, { kind = "memory", memory = "mem-request_amihan_dagat-report", title = "船坞地上的海湾" }]
+
+[[tracks.chapters.choices]]
+key = "teach_her"
+text = "把潮的时辰教给她，让她自己带。"
+next = "done"
+reply = "她记得很快，一遍就会，又把我教的时辰报了一遍，报得比我还准。她把几个时辰写在木板背面。她付了钱，说第一趟她自己带，“你下回来，那里该有名字了”。"
+effects = [{ kind = "cash", value = 1250 }, { kind = "affinity", person = "amihan_dagat", value = 7 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "tide_reading", value = 20 }, { kind = "flag", flag = "c13_request_amihan_dagat_done" }, { kind = "memory", memory = "mem-request_amihan_dagat-report", title = "船坞地上的海湾" }]
+
+# 三（二）：只量了一半。她说剩下那一半她自己去量。
+[[tracks.chapters]]
+key = "report_partial"
+title = "只量了一半"
+text = "阿米汉把图摊在船坞的泥地上，口子的一截画得最细，礁后面却空着。她蹲下去看，看了很久，手指在口子上来回划，没有往礁后面去。“你只进去转了一圈。”她说，“这样也够了。深的地方我知道在哪儿，剩下那一半，我自己去量。”她脚底沾着泥，蹭到图的边上，又赶紧拿袖子去擦。"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "amihan_dagat", text = "在汤都找到她" }]
+when = [{ kind = "alive", person = "amihan_dagat", value = true }, { kind = "date", from = [1563, 10, 1], to = [1581, 8, 24] }]
+news = "宿务南边的海湾只量了一半，汤都河口的阿米汉说剩下那一半她自己去量，台风季前的泊位还没定下来。"
+
+[[tracks.chapters.variants]]
+key = "v1_scraped"
+when = [{ kind = "flag", flag = "c13_request_amihan_dagat_scraped" }]
+text = "阿米汉把图摊开，手指先停在口子上。那里的线断了一截，是小船在礁上擦了一下，你手上一抖，笔也跟着抖。她指尖摸过去，抬头看你。“擦了一下吧。”她说，“量了一半就退出来，我看得出来。”她没有生气，只把图翻到背面，在上面记了一行字。“这样也够了。剩下那一半，我自己去量。”"
+
+[[tracks.chapters.choices]]
+key = "lead_first"
+text = "答应台风季前带第一趟，剩下的半边由她去量。"
+next = "done"
+reply = "她说那就定了，剩下的半边她自己去量，量完了拿给你看。她付了钱，把图卷起来塞进袖子里，走的时候还回头看了一眼船坞里那条裂成两半的小船。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "amihan_dagat", value = 8 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "tide_reading", value = 20 }, { kind = "flag", flag = "c13_request_amihan_dagat_partial" }, { kind = "memory", memory = "mem-request_amihan_dagat-report", title = "船坞地上的海湾" }]
+
+[[tracks.chapters.choices]]
+key = "teach_her"
+text = "把剩下那半边的潮时教给她，让她自己量。"
+next = "done"
+reply = "她记了两页，又把我教的时辰念了一遍，念到一半停下来，说这个时辰她不信，要自己去看。她付了钱，“你不用再来量，我量给你看”。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "amihan_dagat", value = 7 }, { kind = "fame", value = 1 }, { kind = "skill", skill = "tide_reading", value = 20 }, { kind = "flag", flag = "c13_request_amihan_dagat_partial" }, { kind = "memory", memory = "mem-request_amihan_dagat-report", title = "船坞地上的海湾" }]

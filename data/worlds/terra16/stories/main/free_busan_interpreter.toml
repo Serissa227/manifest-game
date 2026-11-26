@@ -1,0 +1,228 @@
+# 釜山通事之子·个人小线（free_busan_interpreter）
+#
+# 标签：釜山通事之子·个人小线。自由船长的模板小线（custom_busan_interpreter），与主干 main_free 并行，只在选了这个模板时开。
+# “我”是玩家自创的船长：不写性别、外貌、肤色与身高，不写名字；speaker = "captain" 时说话的是“我”，别人称“船长”“某家的孩子”“老师的学徒”。
+# 人物：朴从善（c8_sayeogwon_tutor，司译院派驻釜山浦的倭学训导，全线称“老先生”）。学院的两位同学只作客串，本线不写他们的请托与重逢。
+# 依据：史实——釜山浦倭馆与对马的书契往来；司译院的女真学；姜弘立“观变向背”后随后金军回来、被押（萨尔浒，本世界线平移到 1564 年春，L05）；丁卯之役与江华之盟（本世界线平移到 1572 年春，L12）；1575 年朝鲜朝廷分为东人、西人两党。
+#   原创——朴从善的信与译语、十个女真字、手订的簿子、那封烧掉或交出去的信。
+# 轨道：free_busan_interpreter（kind = "main"，auto = true，start = a00_gate）。门槛章 a00_gate 的 when 读 c12_voyage_custom_busan_interpreter（养成结业时由模板设），default 设 c13_free_busan_interpreter。
+# 本文件设置的旗标：c13_free_busan_interpreter；c13_free_busan_interpreter_letter_court / _letter_family（a01 的前两个选项）；_testified（a02 的上京选项）；_spared（b01 的证词或打点）。
+# 读取的旗标：c12_voyage_custom_busan_interpreter（a00 门槛，由养成写入，审计时可忽略）；本文件自己设的旗标（a02、b01、c01 的变体）。
+# 变体：a02 按 _letter_court（v1_court）与 _letter_family（v2_family）取变体；b01 按 _testified（v1_testified）；c01 按 _spared（v1_spared）。变体按 key 字母序取第一个满足的，同一章至多一条满足。
+# 等待的包：A9（a00 门槛可加 protagonist 条件，按 A9 的做法定）；C10（L05、L12 的结果可作 a02 或 c01 的变体，本线未读，整合方选用）。本文件没有 HIST_ 占位旗标。
+# 禁区：不写 1587 年损竹岛、1589 年对马请使、1590 年通信使（C7 尹海梨×金文永）；不写金文永的书契请托与尹海梨的对马之行（C13d）；不写 1555、1562 年的釜山重逢（C7）。
+# 回忆插画清单（mem-* 键与画面，各不超过 60 字）：
+#   mem-free_busan_interpreter-a01 烧掉的那封信：釜山的夜里，船舱的灯下，一封写在粗纸上的信在火盆里卷起来。
+#   mem-free_busan_interpreter-c01 老先生的译语：釜山的屋檐下，一本三种文字对照的手抄译语摊开着，第一页上是十个女真字。
+
+[[tracks]]
+key = "free_busan_interpreter"
+name = "先生的译语"
+kind = "main"
+start = "a00_gate"
+auto = true
+cast = ["c8_sayeogwon_tutor"]
+
+# 门槛见闻：正月的釜山浦，只在选了这个模板时出现。
+[[tracks.chapters]]
+key = "a00_gate"
+title = "倭馆门口的规矩"
+text = "正月的釜山浦，倭馆的木栅门口又贴了新规矩：对马来的船一年只许几条，书契上的字一个也不许错。司译院的老先生教了三十年日本话和女真话，学生里最用功的那个要自己驾船出海了。倭馆的守门人学老先生的口气说：“一个字，两边都要听得懂。”街上的人还说，老先生把十个女真字写在学生的簿子第一页，叫学生记一辈子。"
+stage = "rumor"
+window = [[1557, 1, 2], [1557, 1, 6]]
+at = "busan"
+cast = ["c8_sayeogwon_tutor"]
+mood = "tender"
+news = "釜山浦倭馆门口又贴了新规矩；司译院的老先生最用功的学生要自己驾船出海，簿子头一页，先生用墨写着十个女真字。"
+when = [{ kind = "flag", flag = "c12_voyage_custom_busan_interpreter" }]
+
+[tracks.chapters.default]
+next = "a01_sarhu"
+effects = [{ kind = "flag", flag = "c13_free_busan_interpreter" }]
+news = "倭馆的新规矩还没贴满，司译院老先生最用功的学生已经要驾船出海，据说簿子上写着十个女真字。"
+
+# 来信：北边来的信，没有 at，哪里都能收到。信里只写人与家信，不写战阵。
+[[tracks.chapters]]
+key = "a01_sarhu"
+title = "从建州来的信"
+text = "信纸是女真人用的粗纸，字是老先生的楷书，歪了几处。信上写道：你收到这封信，大概已经是夏天了。天热了，早饭别省。我在北边，去年冬天被征来，给将军的队伍当女真通事。这一仗你大概听说了，投降那天，营里传话的是我。我译的是将军的话。将军的话，从我嘴里出去，就成了我的话。北边的人只记得是我的嘴。我一向说“话说圆了，人才走得出门”，这回圆不过去。家里的事，你不用管。信末问你一件事：簿子第一页那十个字，你还记得几个？记不全就照着写，写错了也别擦，留着给我看。朴"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1564, 5, 1] }]
+deadline = [1565, 4, 30]
+
+[tracks.chapters.timeout]
+next = "a02_treaty"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "court"
+text = "把信呈给釜山的佥使，请他转进京里"
+next = "a02_treaty"
+effects = [{ kind = "flag", flag = "c13_free_busan_interpreter_letter_court" }]
+reply = "佥使读完信，脸色很难看。他把信折了两折收进袖子，说京里正在议降将的罪，这封信会让很多人睡不着。“我”问他会不会转，他说会转，又说不知道哪天转，转到谁手里，也要看运气。走出衙门时，门口的小吏偷偷看了“我”一眼，像是听说过老先生的名字。"
+
+[[tracks.chapters.choices]]
+key = "family"
+text = "把信交给老先生的家人"
+next = "a02_treaty"
+effects = [{ kind = "flag", flag = "c13_free_busan_interpreter_letter_family" }]
+reply = "老先生的妻子接过信，没有立刻念。她把信压在米缸底下，说等他回来，让他自己念，这样他就知道家里没有人偷看。她摸了摸信纸的边，问了一句北边的冬天冷不冷。没等“我”回答，她已经转身去舀米了。"
+
+[[tracks.chapters.choices]]
+key = "burn"
+text = "把信烧了，免得连累他"
+next = "a02_treaty"
+effects = [{ kind = "memory", memory = "mem-free_busan_interpreter-a01", title = "烧掉的那封信" }]
+reply = "烧之前，“我”把那十个字抄进了自己的簿子，一个不少。火盆里的纸先卷起来，又慢慢展开，末尾那个朴字还是歪的。“我”把灰扒进炉底，没有声响。夜里翻开簿子，第一页的字抄得太用力，纸背都透了。"
+
+# 盟约：1572 年春，釜山。at = busan；期限到 1573 年 6 月底，没有回应就照常去 b01，先生的信另行送到。
+[[tracks.chapters]]
+key = "a02_treaty"
+title = "盟约后面的名字"
+text = "春天，江华岛的盟约抄本传到了釜山：朝鲜与后金结为兄弟，开中江互市。倭馆里的人先拿到了抄本，站在木栅边大声念。抄本最后列着两边的通事。后金那边的通事，写的是老先生的名字，后面跟着“建州通事”四个字。老先生跟着姜弘立的队伍随后金的军队回来，一过江就被朝鲜的人押进了京里的牢。同一个月，对马的通事把茶碗往桌上一放，说：“朝鲜跟北边的人做了兄弟，那跟我们算什么？你照原话译给我听。”“我”用指甲按住抄本上老先生的名字，说：“先看这一行。”倭馆的灯一盏一盏亮起来，抄本的墨还没干透。抄本上排着的那些名字，“我”一个一个叫得出来。“我”（心里）：我没说出口。这一回，哪一边是我的？"
+speaker = "captain"
+mood = "tense"
+at = "busan"
+when = [{ kind = "date", from = [1572, 3, 1] }]
+deadline = [1573, 6, 30]
+
+[tracks.chapters.timeout]
+next = "b01_factions"
+effects = [{ kind = "letter", person = "c8_sayeogwon_tutor", text = "我回来了，被关在京里。听说你不在釜山，也好。北边的人给我的名字是建州通事。两头的话我都译过，两头都没人肯信我。抄本上的字不是我写的，名字是我的。你要是还能译，就别来京里看我。那十个字留着，等我出来，我考你。朴" }]
+
+[[tracks.chapters.choices]]
+key = "full"
+text = "把盟约的条款照实译给对马的人"
+next = "b01_factions"
+effects = [{ kind = "reputation", faction = "so", value = 2 }, { kind = "reputation", faction = "joseon", value = -1 }]
+reply = "对马的通事一边听一边记，记完了让“我”再念一遍北边那几个名字。念到一半，他把笔一停，说：宗氏会很高兴，北边的人管不到南边的海。他走的时候把抄好的条款折进袖子里，没有道谢，也没有骂人。"
+news = "釜山倭馆里的对马通事，今天一整天抄个不停，嘴里念着北边跟朝鲜结了兄弟，宗家要是知道了，可要睡不着。"
+
+[[tracks.chapters.choices]]
+key = "soft"
+text = "只说两边议了和，条款一句不提"
+next = "b01_factions"
+effects = [{ kind = "reputation", faction = "joseon", value = 2 }]
+reply = "对马的人将信将疑地走了，走的时候回头看了“我”一眼，没有再问。过了些日子，崔鸣吉的人托佥使带来一句话：做得对。那句话很短，“我”却在倭馆门口站了很久。"
+news = "倭馆的对马人挨个打听盟约抄本，问到釜山来的通事那里，话只说了半截，人就散了。"
+check = { attr = "intrigue", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "b01_factions"
+effects = [{ kind = "reputation", faction = "so", value = -1 }]
+news = "听说对马的人从别处弄来了抄本，回头找釜山的通事问个明白，通事答不上来。"
+
+[[tracks.chapters.choices]]
+key = "testify"
+text = "上京去，替关在牢里的老先生说话"
+next = "b01_factions"
+effects = [{ kind = "flag", flag = "c13_free_busan_interpreter_testified" }]
+reply = "“我”在京里等了二十天，才见到审案的官。话说完，官只问了一句：你也懂女真话？“我”说懂一点。官点点头，把这句话记在案卷的边上，没有再问。出了刑曹的门，天已经黑了，京里的风很冷。"
+news = "京里的刑曹门前，釜山来的一个通事等了二十天，见到审案的官，说完话，连茶也没喝就走了。"
+
+[[tracks.chapters.variants]]
+key = "v1_court"
+when = [{ kind = "flag", flag = "c13_free_busan_interpreter_letter_court" }]
+text = "春天，江华岛的盟约抄本传到了釜山：朝鲜与后金结为兄弟，开中江互市。倭馆里的人先拿到了抄本，站在木栅边大声念。抄本最后列着两边的通事。后金那边的通事，写的是老先生的名字，后面跟着“建州通事”四个字。京里的人还记得八年前那封信，就是“我”呈上去的那封。老先生跟着姜弘立的队伍随后金的军队回来，一过江就被朝鲜的人押进了京里的牢。同一个月，对马的通事把茶碗往桌上一放，说：“朝鲜跟北边的人做了兄弟，那跟我们算什么？你照原话译给我听。”“我”用指甲按住抄本上老先生的名字，说：“先看这一行。”倭馆的灯一盏一盏亮起来，抄本的墨还没干透。抄本上排着的那些名字，“我”一个一个叫得出来。“我”（心里）：我没说出口。这一回，哪一边是我的？"
+
+[[tracks.chapters.variants]]
+key = "v2_family"
+when = [{ kind = "flag", flag = "c13_free_busan_interpreter_letter_family" }]
+text = "春天，江华岛的盟约抄本传到了釜山：朝鲜与后金结为兄弟，开中江互市。倭馆里的人先拿到了抄本，站在木栅边大声念。抄本最后列着两边的通事。后金那边的通事，写的是老先生的名字，后面跟着“建州通事”四个字。老先生的妻子把米缸底下那封信拿出来，托“我”带进京。老先生跟着姜弘立的队伍随后金的军队回来，一过江就被朝鲜的人押进了京里的牢。同一个月，对马的通事把茶碗往桌上一放，说：“朝鲜跟北边的人做了兄弟，那跟我们算什么？你照原话译给我听。”“我”用指甲按住抄本上老先生的名字，说：“先看这一行。”倭馆的灯一盏一盏亮起来，抄本的墨还没干透。抄本上排着的那些名字，“我”一个一个叫得出来。“我”（心里）：我没说出口。这一回，哪一边是我的？"
+
+# 东西分党：1575 年秋，釜山。at = busan；期限到 1577 年 6 月底，没有回应就去 c01。
+[[tracks.chapters]]
+key = "b01_factions"
+title = "东人与西人"
+text = "秋天，京里的朝臣分成了两党，一党住在城东，一党住在城西。釜山的佥使换人，要先问是哪一党的。老先生的案子还没有结：东人要定他通敌，西人说他不过是个通事。主战的金尚宪派来一个门客，穿着干净的青布袍，在倭馆门口的茶摊上摊开一张纸，纸上只写了一个“朴”字，其余的地方都空着，等人来填。门客说：“证词不怕短，怕不真。你只写你亲眼见过的。”“我”说：“我见过的，一封信，十个字。”证词写得好，老先生就能活；写得太好，“我”就成了下一个通事。釜山佥使的印还是旧的，换人的文书却已经到了。茶摊的老头拿茶壶敲了敲桌子，没接门客的话。"
+speaker = "captain"
+mood = "tense"
+at = "busan"
+when = [{ kind = "date", from = [1575, 9, 1] }]
+deadline = [1577, 6, 30]
+
+[tracks.chapters.timeout]
+next = "c01_glossary"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "testimony"
+text = "写证词：只写那封信和那十个字"
+next = "c01_glossary"
+effects = [{ kind = "flag", flag = "c13_free_busan_interpreter_spared" }]
+reply = "证词送进京的第二年，老先生被放了出来，罚他永远不许再当通事。出狱那天，釜山的人在衙门口等他。他瘦得衣裳挂不住肩，一步一停，像是怕地上的石头会翻起来。见了“我”，他先问簿子还在不在。“我”把簿子递过去，他翻到第一页，手指在那十个字上一个一个点过去，嘴唇动了动，没出声。过了半晌，他把簿子合上，说：“十个字，你一个都没漏。”"
+news = "釜山倭馆寄出的一份证词送进了京里，朝堂上为一个字吵了半天，老先生的案子转了向。"
+check = { attr = "eloquence", base = 20, per = 7 }
+
+[tracks.chapters.choices.fail]
+next = "c01_glossary"
+effects = []
+news = "釜山送进京里的证词，听说被另一党挑出一个字的毛病，案子又拖了一年，倭馆门口的人都在骂。"
+
+[[tracks.chapters.choices]]
+key = "bribe"
+text = "托佥使在京里打点"
+next = "c01_glossary"
+requires = [{ kind = "cash", ge = 1500 }]
+hint = "你的钱不够在京里打点一条命。"
+effects = [{ kind = "cash", value = -1500 }, { kind = "flag", flag = "c13_free_busan_interpreter_spared" }]
+reply = "钱花出去，案子悄悄结了。老先生出狱那天，没人告诉他是谁花的钱。佥使只说京里有人替这件事打过招呼，让倭馆这边的人都闭上嘴。“我”回船上对了一遍账，数字全对得上，只是那一笔后面没有人名，只留了一道横线。"
+news = "釜山佥使的书吏从京里回来，身上多了一封没有署名的回信，说倭馆那边的案子已经有人打点过了。"
+
+[[tracks.chapters.choices]]
+key = "silent"
+text = "不卷进党争，什么也不写"
+next = "c01_glossary"
+effects = []
+reply = "来人走了。“我”在簿子上那十个字旁边添了一个“党”字，又划掉了。划的时候墨洇开一片，像一块湿了的印。傍晚茶摊的老头来收碗，问今天的客是哪一党的。“我”说不知道，他笑了一声，说那就是两党都不是。碗底还剩半口茶，“我”没有喝。"
+news = "倭馆门口茶摊的老头说，京里来的门客在釜山站了一个早上，走的时候，手里的纸还是白的。"
+
+[[tracks.chapters.variants]]
+key = "v1_testified"
+when = [{ kind = "flag", flag = "c13_free_busan_interpreter_testified" }]
+text = "秋天，京里的朝臣分成了两党，一党住在城东，一党住在城西。釜山的佥使换人，要先问是哪一党的。老先生的案子还没有结：东人要定他通敌，西人说他不过是个通事。主战的金尚宪派来一个门客，穿着干净的青布袍，在倭馆门口的茶摊上摊开一张纸，纸上只写了一个“朴”字，其余的地方都空着，等人来填。门客说：“证词不怕短，怕不真。你只写你亲眼见过的。”“我”说：“我见过的，一封信，十个字。”来人又说，两年前“我”在京里说的话，审案的官还记得。证词写得好，老先生就能活；写得太好，“我”就成了下一个通事。釜山佥使的印还是旧的，换人的文书却已经到了。茶摊的老头拿茶壶敲了敲桌子，没接门客的话。"
+
+# 终章：1584 年春，釜山。at = busan；期限 1586 年底。没有回应，布包由老先生托家里人送去司译院（timeout 的 letter）。
+[[tracks.chapters]]
+key = "c01_glossary"
+title = "十个女真字以后"
+text = "春天，釜山浦的海女在礁石上晒头发，海风从礁石那头吹过来。老先生的家人捎来一个布包，里面是一本译语：女真字一页，朝鲜字一页，日本字一页，是老先生这些年在牢里、在家里一个字一个字写的。纸是衙门里废掉的文书纸，背面还印着别人的讼词，一页一页都是翻过来写的。第一页，是当年写在“我”簿子上的那十个字。家人说：“他说，这本书给你。给谁，你定。”家人的手指上还留着没洗净的墨，说老先生在牢里那几年，就是靠写这个数日子。布包的麻线是北边的粗线，结打得很紧，拆了两回才拆开。布包一打开，先闻到一股陈年的霉味。家人站在屋檐下没走，手里还攥着断了的一截麻线。最后一页只写了一行：“一个字，两边都要听得懂。”“我”（心里）：原来他把这句留到了最后一页。那句话，是我出海那年他对我说的。"
+speaker = "captain"
+mood = "tender"
+at = "busan"
+when = [{ kind = "date", from = [1584, 3, 1] }]
+deadline = [1586, 12, 31]
+
+[tracks.chapters.timeout]
+next = "done"
+effects = [{ kind = "letter", person = "c8_sayeogwon_tutor", text = "那本译语，我托家里人交去了司译院。他们说现在没人学女真话了，北边的人改说另一种话了。你的簿子还留着吧？第一页的字，照着再描一遍。朴" }]
+
+[[tracks.chapters.choices]]
+key = "sayeogwon"
+text = "交给司译院，让下一批通事学"
+next = "done"
+effects = [{ kind = "reputation", faction = "joseon", value = 3 }, { kind = "memory", memory = "mem-free_busan_interpreter-c01", title = "老先生的译语" }]
+reply = "司译院的人收下书，翻了几页，脸色从冷变成了热。他说要抄三份，一份放汉城，一份放义州，一份放釜山。收据上写的是“先生之书”，没有写名字。“我”问，学生的名字要不要写在前面。他说，第一页已经有人写过了，不用再写。他指的是那十个女真字。临走他又折回来，问这本书是怎么一个字一个字写出来的。“我”说，是在牢里数着日子写的。他没再问，把收据折好放进怀里。"
+news = "釜山浦的人说，司译院派人来取一本手抄的女真译语，说要抄三份，一份留在釜山。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "自己留着，带上船"
+next = "done"
+effects = [{ kind = "skill", skill = "lang_jurchen", value = 30 }]
+reply = "“我”每天在船上念一页，念女真字的读法，念到第三遍，才发现先生在页边用淡墨写了一行小字：“记不住，就来问我。”船在海上晃，字歪了又正，“我”一页一页往回翻，把每一行都对了一遍。船到对马水道的时候，书页的边角已经卷得不成样子。"
+news = "釜山的船老大说，那个出海的通事船上多了一本手抄的书，每天晚上在舱里念，念的是女真字。"
+
+[[tracks.chapters.choices]]
+key = "tsushima"
+text = "抄一份送给对马的通事"
+next = "done"
+effects = [{ kind = "reputation", faction = "so", value = 2 }]
+reply = "对马的通事收到抄本，翻到第一页，停了很久，没有念出声。过了几天他回赠一本他们自己的朝鲜话手册，封皮旧得发白。第一页也写着十个字，是朝鲜字的母音，一笔一划，像是学童抄在簿子上的。“我”把手册翻到最后，最后一页是空的，像是等人去写。他说，对马的孩子学朝鲜话，也是从这十个字学起的。"
+news = "对马来的通事在釜山倭馆里收了一本抄本，回赠的朝鲜话手册第一页，也写着十个字。"
+
+[[tracks.chapters.variants]]
+key = "v1_spared"
+when = [{ kind = "flag", flag = "c13_free_busan_interpreter_spared" }]
+text = "春天，釜山浦的海女在礁石上晒头发，海风从礁石那头吹过来。老先生亲手把一个布包递过来。他老了，背驼了，可还活着。布包里是一本译语：女真字一页，朝鲜字一页，日本字一页，是他这些年在牢里、在家里一个字一个字写的。纸是衙门里废掉的文书纸，背面还印着别人的讼词，一页一页都是翻过来写的。第一页，是当年写在“我”簿子上的那十个字。他说：“我写完了。给谁，你定。”布包的麻线是北边的粗线，结打得很紧，是他自己解开的。布包一打开，先闻到一股陈年的霉味。他的手指上还留着没洗净的墨，那几年，他就是靠写这个数日子。他把布包的角折回去，又展开，像是怕漏了什么。最后一页只写了一行：“一个字，两边都要听得懂。”“我”（心里）：原来他把这句留到了最后一页。那句话，是我出海那年他对我说的。"

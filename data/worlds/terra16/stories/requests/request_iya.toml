@@ -1,0 +1,136 @@
+# C13d 请托：倒伏的玉米（故事 2.0，A5 / E37 契约；按 2026-10-12 的 C13d 总决定与任务单分片写）
+# 人物：伊亚 iya（1538-08-18 生，女；cast 在 cast/story_americas.toml）。圣多明各码头撑独木舟的泰诺女子，恩里基约部众的后人。
+# 类型与报价：送货（dl），3 章。kind=request，auto=false（T 当面）：由“问请托”（ask:request_iya）启动；offer 章不写 at，objectives 为在港里找到她，人物日程在圣多明各码头。
+# 窗口：报价 1557-06-01 至 1590-06-30，offer 的 deadline 即窗口止日，到期走 timeout（next=failed，不写见闻）。deliver 与 settle 的窗口同为 1557-06-01 至 1590-12-31，写在各章 when 的日期条件里（普通章没有 window）。
+# 依据：史实背景——恩里基约部众 1533 年议和后迁居博亚（只从人物嘴里说出）；加勒比的飓风季（8—10 月）；圣多明各本地不产玉米，由卡塔赫纳或科苏梅尔运来。
+#   原创——博亚的地与村长、独木舟、船帮上的刻痕、夜里的五袋、药剂与发热的孩子。博亚不上地图，只在台词里出现。
+#   待核项：无。
+# 读写的旗标：设 c13_request_iya_accepted（offer 接下，路上的分支）、c13_request_iya_declined（offer 回绝，终局）、c13_request_iya_night（deliver 夜卸，分支，settle 的变体读）、c13_request_iya_late（deliver 超时，终局）、c13_request_iya_done（settle 结局，终局）。每条轨道只设一面终局旗标。
+#   不读 c7_* 旗标，不设任何 c7_ 旗标；不读 c13_main_*（无主线门禁）。
+# 依赖：港口 santo_domingo 现有；物品 herbal_draught（items/items_consumable_01.toml）、商品 maize（goods/03_overseas_raw.toml）现有。无 B10b 改名。
+#   family 不设（T 当面，不走报价冷却）。
+# 缺省走向：回绝（declined）与拖到报价期满（超时不见闻）都走 failed；接下以后，玉米没送到圣多明各码头之前，deliver 章一直挂着，90 天后超时走 failed，不罚钱、不扣物品、不改时间线。
+# 秘密（本请托）：伊亚暗中替山里的逃亡者捎信。本轨道不写逃亡者、不写山里有谁；夜卸的五袋不交代去向；见闻也不写。问急了只说“那五袋是我的，我吃得多”。
+# 回忆插画清单：
+#   mem-request_iya-settle「横着的那道刻痕」：船帮上一排竖着的日子刻痕，最后一道是横的，旁边挂着一串玉米须。
+
+[[tracks]]
+key = "request_iya"
+name = "倒伏的玉米"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["iya"]
+
+# 报价：圣多明各码头。风刮过去第三天，伊亚的独木舟还在码头上，她先要你说一个准日子。
+[[tracks.chapters]]
+key = "offer"
+title = "船帮上的刻痕"
+text = "风刮过去的第三天，伊亚的独木舟还系在圣多明各码头上。舟底积着半舱雨水，她蹲在船尾，一葫芦一葫芦地往外舀。博亚的玉米全倒在地里，种子也泡烂了，村里要撑到下一季，得有三十袋玉米。你走近，她没抬头，先问：“过河还是出海？”你还没答，她又说：“几时到？说个准日子。空口许的，我这条船不载。”说完把葫芦瓢递给你，要你先看看舟底有多少水，再开口。"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "iya", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "说个日子：一季之内，三十袋玉米送到码头。"
+next = "deliver"
+effects = [{ kind = "affinity", person = "iya", value = 2 }, { kind = "flag", flag = "c13_request_iya_accepted" }]
+reply = "她把那个日子用指甲刻在船帮上，跟别的刻痕排在一起。有几道刻痕被划掉了，她没解释。刻完她就低头接着舀水。"
+
+[[tracks.chapters.choices]]
+key = "accept_medicine"
+text = "玉米之外，再问村里有没有病人，要不要药。"
+next = "deliver"
+effects = [{ kind = "affinity", person = "iya", value = 3 }, { kind = "flag", flag = "c13_request_iya_accepted" }]
+reply = "她第一次正眼看你。“发热的有四个，一个是孩子。”她把这句也刻在了船帮上，刻得比日子浅。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "说不准日子，就不许这个诺。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_iya_declined" }]
+reply = "她点点头，接着舀水。“说不准就别说。这比答应了不来强。”舀完一瓢，又补一句：“要是应了又不来，那我可记你一辈子。”"
+
+# 交货：三十袋玉米堆在码头上，她要分趟装船，装完头五趟还剩五袋，她说夜里再卸。
+[[tracks.chapters]]
+key = "deliver"
+title = "五袋不进账"
+text = "三十袋玉米堆在码头上。伊亚叫来三条独木舟轮着跑，一趟只装五袋，一袋一袋数着递上船。装完五趟，地上还剩五袋。她压低声音说，剩下这五袋夜里再卸，不进博亚的账。你问去哪，她说：“那五袋是我的，我吃得多。”说完她才抬眼看你。港务的书记正拿着册子往这边走，册子上要写明这批粮给了哪个村。"
+at = "santo_domingo"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "goods", good = "maize", qty = 30, at = "santo_domingo", text = "三十袋玉米送到圣多明各码头" }]
+deadline_days = 90
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }, { kind = "alive", person = "iya", value = true }]
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "letter", person = "iya", text = "风过去三个月了。玉米是从一条古巴船上换的，贵了一倍。你说过的日子，我刻在船帮上，没划掉。" },
+  { kind = "affinity", person = "iya", value = -5 },
+  { kind = "flag", flag = "c13_request_iya_late" },
+]
+
+[[tracks.chapters.choices]]
+key = "as_agreed"
+text = "按说好的，三十袋全写进博亚的账，白天卸完。"
+next = "settle"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "iya", value = 2 }]
+news = "圣多明各码头上，书记点了大半天的玉米，三十袋全记进博亚的账，泰诺女人的独木舟来回跑了六趟。"
+reply = "书记一袋袋点数，写得很慢。伊亚站在旁边，没再提那五袋，只是把最后一条独木舟系得特别紧。"
+
+[[tracks.chapters.choices]]
+key = "night_five"
+text = "让书记只记二十五袋，剩下五袋等天黑。"
+next = "settle"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "iya", value = 5 }, { kind = "flag", flag = "c13_request_iya_night" }]
+news = "圣多明各码头上，一个泰诺女人撑着独木舟往河上游运玉米，一趟只装五袋。"
+reply = "书记收了一句“余货船长自用”，走了。夜里五袋玉米上了一条没点灯的独木舟，伊亚撑篙出去，天亮才回。她什么也没说，往你的水桶里倒满了淡水。"
+
+[[tracks.chapters.choices]]
+key = "give_draught"
+text = "从药箱里拿出一瓶药剂，给发热的人。"
+next = "settle"
+requires = [{ kind = "item", item = "herbal_draught", qty = 1 }]
+hint = "你的药箱里没有能拿出手的药剂。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "iya", value = 5 }, { kind = "item", item = "herbal_draught", qty = -1 }]
+news = "圣多明各码头上，有个船长从药箱里拿出一瓶药剂递给泰诺女人，说是给博亚发热的人。"
+reply = "她把药瓶揣进怀里，揣得比玉米仔细。“孩子那份，我自己看着他喝。老人嫌苦，得有人哄。”"
+
+# 回来结账：二十天后她回到码头，博亚的地翻过了，村里凑了一袋碎银。
+[[tracks.chapters]]
+key = "settle"
+title = "横着的刻痕"
+text = "二十天后，伊亚回到码头。舟底的水舀干了，舟头挂着一串新玉米须，底下压着一条晒干的鱼。博亚的地重新翻过，她手心磨出了新的血泡，脚边放着一只沾泥的空竹篮，带回村长的一句话：秋天收了，先还种子，再还人情。她把一小袋碎银倒进你手心，说是全村凑的。然后伸手把空袋子要了回去。“袋子是村长的，”她说，“他要看见袋子回去。”"
+at = "santo_domingo"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "wait", days = 20, text = "等伊亚从博亚回来" }]
+news = "圣多明各码头那条独木舟的船帮上，又多了一道横着刻的痕，听说是一船玉米到了。"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1590, 12, 31] }, { kind = "alive", person = "iya", value = true }]
+
+[[tracks.chapters.choices]]
+key = "take_pay"
+text = "收下碎银，把袋子还给她。"
+next = "done"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "iya", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_iya_done" }, { kind = "memory", memory = "mem-request_iya-settle", title = "横着的那道刻痕" }]
+reply = "她把空袋子掖进腰里，用刀在船帮上那个日子旁边划了一道新痕。这道痕是横着的，表示办成了。划完她把碎银掂了掂：“够买种子了。”"
+
+[[tracks.chapters.choices]]
+key = "seed_money"
+text = "碎银不收，留给村里买种子。"
+next = "done"
+effects = [{ kind = "affinity", person = "iya", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_iya_done" }, { kind = "memory", memory = "mem-request_iya-settle", title = "横着的那道刻痕" }]
+reply = "她盯着你看了很久。“不收钱，我就欠你一笔说不清的账。”最后她教你的水手把落水的人拉上独木舟，教了一个下午。"
+
+# 变体：夜里那五袋送到了，她临走前多说半句。
+[[tracks.chapters.variants]]
+key = "night"
+when = [{ kind = "flag", flag = "c13_request_iya_night" }]
+text = "二十天后，伊亚回到码头。舟底的水舀干了，舟头挂着一串新玉米须，底下压着一条晒干的鱼。博亚的地重新翻过，她手心磨出了新的血泡，脚边放着一只沾泥的空竹篮，带回村长的一句话：秋天收了，先还种子，再还人情。她把一小袋碎银倒进你手心，说是全村凑的。然后伸手把空袋子要了回去。“袋子是村长的，”她说，“他要看见袋子回去。”临走前她又添了半句：“那五袋，也到了。”然后就闭嘴，一句不多说。"

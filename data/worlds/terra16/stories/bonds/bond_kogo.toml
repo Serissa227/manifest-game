@@ -1,0 +1,393 @@
+# 小督：替人写的字（bond_kogo）——C7 重写，2026-10-12，Claude（Opus）；C21b 重写，2026-11-12，Claude（Opus）。
+# 走向：交易→交情，账一直没清（各取所需；不敞开，到重逢还是一首一升米，心意局里只有那一首不收）。
+# 标签：GL（纯 GL；小督 romance = [f]，主角一条澪为女）。学院同学羁绊线 bond_kogo（request，academy = true）+ 重逢 reunion_kogo（main）。
+# 人物：小督 kogo（1540-06-16，女，地下官人家的女儿、宫中最末一等的见习，偷偷替人代笔恋歌换米）；一条澪 mio（1540-06-21，女，主角“我”）。
+#   大炊御门菖 ayame 只在 B1 作为歌合的胜者被提到；小督从不叫她的名字，只说“那位”“付米的人”（手册 3.7）。
+#   声音：轻快、快，一句话里常带一个价（米：升、斗）；碰到家里、碰到那首歌，先讲一个笑话岔开；不说“我写得好”。
+#   年龄：学院期 1554-03—1556-12 两人 13—16 岁；A1、A2 的心动选项只写同撑一把伞、同照一面镜子；S 的 heart 只到 crush。重逢 1562 年两人 21—22 岁。
+# 依据·史实：天文末年朝廷穷困，下级女房靠代笔、抄写补贴家用；女房词（水叫おひや、饭叫おだい、饿叫ひもじ）；
+#   《伊势物语》第六段与第二十三段；歌合由判者判胜负；宝镜寺是京都的尼门迹；1562 年是永禄五年，丰后府内是大友家的居城下町。
+# 依据·原创：米袋底下的歌纸与“看一眼也算钱”；“ひもじ”念成“ひめじ”的笑话；B1 那首歌第三句的梅香；纸边批注之间的细线；
+#   宝镜寺讲经散后的夜雨石阶；铜镜的旧纹与自调的香饼；S 章她第一次替自己写的回帖与那一首不收米的歌；代笔的奉书与夹在信里的账。
+# 口头禅：“字我替你写，心事你自己留着。”原句只在 C1 米铺这一场出现一次（手册 3.7）；她的口头禅改用价钱：“一升一首，改稿另算。”
+# 关系会退（C21b；研究 3.3 第 4 场）：B1 加 keep_draft——澪把那张草纸留下，情谊 -4，设 c7_bond_kogo_kept_draft；
+#   小督不哭，照常抄书，B2 起不再在纸边批注（B2 的 kept_draft 变体）。tie_new_ayame_kogo 读这个旗标：澪手里有原稿时，菖是来求的。
+# 撞车改法（手册 4.2 第 4 条、裁决第 2 条）：七夕的歌只归雪。S 的 promise 改成代笔的生意：澪往后给大名递的奉书、礼状托她写，一封一个价，信里夹着账。
+# 心意（C21b，数值见 docs/BALANCE.md）：心动来源 A1 share_umbrella +6、A2 look_together +6、课后同行。
+#   heart（头一份：心动 ≥ 12，带 bond S）/ heart_second（已许一份：心动 ≥ 18、口才 eloquence ≥ 5）/
+#   heart_third（已许两份及以上：心动 ≥ 26、口才 ≥ 7、镜子托给澪 c7_bond_kogo_mirror）。信物是一首不收米的歌。
+#   瞒不住（手册第六节）：许过两份以上的局，她装不知道，价钱照旧；只是那一首不收米的歌，重逢时夹着一张账，写着“一升”。重逢加 pay_the_sheng。
+# 缺省走向：C1—A2 的 default 不写效果；S 的 default 开重逢、设 c7_bond_kogo_parted；重逢的 default 是她从府内寄来的一封信，设 c7_bond_kogo_missed。
+# 羁绊阶梯：C2 learn_all 给 C；B2 keep_arguing 给 B；A2 hear_mirror / look_together 给 A + blended_incense + 回忆“铜镜与香饼”。
+# 旗标：设 c7_bond_kogo_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed / _mirror / _kept_draft / _paid；
+#   共用 c7_mio_heart_1 / _2 / _3；S 的 promise 与三档 heart 另设 c7_tie_new_kogo_mae_sumi_taken。
+# 日程：不改。小督 1557 年春去西边的歌道之家教一季（随后回上京，赁柿子树下的小屋），1562 年应邀在府内大友家教歌。
+# 不写：菖本人的承认（归 tie_new_ayame_kogo，1570）；真荣澄与琉球（归新线，1559 年以后）。
+
+[[tracks]]
+key = "bond_kogo"
+name = "小督：替人写的字"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["kogo"]
+
+# C1：1554 春，宫外的米铺快关门。米袋底下压着的歌纸；口头禅原句只在这里。
+[[tracks.chapters]]
+key = "c1"
+title = "米袋旁的歌"
+text = "米铺的伙计已经在上门板了。我来替局里结这个月的米账，算完账才看见角落里蹲着个宫里装束的女孩，一只手按在米袋上。米袋底下压着一张叠成细条的薄纸，露出来的一角是连绵的假名，细得像檐下的雨丝。“到底买不买？”伙计问她。“等人。”她说得很快。我凑过去看那一角字。她的眼睛先落在我的袖口上，然后才抬起来。“一首歌，三升米，看一眼也算钱。您看了两眼了，我按一眼算，算您便宜。”米铺门口替人写信的老先生，一封收一升半；她报的是两倍。我问她这首歌是写给谁的。她把纸角往米袋底下推进去半寸：“字我替你写，心事你自己留着。”伙计举起了最后一块门板。"
+window = [[1554, 3, 1], [1554, 4, 30]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_kyoto_court" }, { kind = "date", from = [1554, 3, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "buy_it"
+text = "照她报的价买下这首歌，说我认不得这种连绵的假名，想看她写。"
+reply = "我数出铜钱，码在米袋上。她收了钱，手停在半空：“买歌的人，从来不问怎么写。问怎么写，另算。”她跟伙计讨了一张包米的纸，笔尖在砚边舔匀，当着我的面写了一行，一笔连到底，写完才指给我看：这是“あ”，从“安”字草化来的。墨还没干，她就递到我手里，又把米袋底下那张抽出来，叠在上面：“两张，一个价。这一回不另算，下回算。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }, { kind = "skill", skill = "calligraphy", value = 4 }]
+
+[[tracks.chapters.choices]]
+key = "haggle"
+text = "跟她讲价，用船上管账的法子，一升一升地往下砍。"
+reply = "我掰着指头跟她算：纸钱、墨钱、她蹲在这儿的工夫，再扣掉买主爽约的晦气。她起先板着脸，一升一升地退，退到一升半，笑出了声，赶紧拿袖子捂住嘴：“哪家的姬君这样讲价？”“跟船上的管账学的。”她又砍了一截：“一升。条件是你没在这儿见过我。没见过我的人，下回来买，照样三升。”我说成交。她把歌纸从米袋底下抽出来递给我，纸角上按出了一个指印。"
+next = "c2"
+effects = [{ kind = "affinity", person = "kogo", value = 4 }]
+
+# C2：1554 夏，局与局之间的长廊。女房词；“ひもじ”念成“ひめじ”，笔尖按坏了。
+[[tracks.chapters]]
+key = "c2"
+title = "女房词"
+text = "我没去告发她。过了半个月，我在两个局之间的长廊上截住她，请她教我女房词。她先往廊子两头看了看，才压低声音：水不叫水，叫“おひや”；饭叫“おだい”；肚子饿了不能说饿，要说“ひもじ”。我一个个跟着念。念到第七个，她不往下说了，笔尖在纸上点了一个墨点。“外头的人拿这些当笑话讲，说宫里的女人连水都不敢叫水。你学它做什么？”我说船上也有船上的切口，听不懂就上不了船。说完我把“ひもじ”念了一遍，念成了“ひめじ”。她一怔，接着笑得整个人伏在纸上，笔尖压在纸面，散成了一把小扫帚：“姬路！你饿了，要去播磨吗？播磨的米倒是便宜，一斗比京里便宜三十文。”她把那支笔拿起来看，笔毫散了，修不回去了。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "learn_all"
+text = "把她说的女房词一个个记在怀纸上，念到她点头为止。"
+requires = [{ kind = "affinity", person = "kogo", ge = 20 }]
+hint = "情谊 20。她摆摆手，说那些是厨下的话，不值得记。"
+reply = "我们学到灯油见底。她拿小刀把散开的笔毫修齐，我在底下拢着剪落的毛，没让它掉进砚台。修完她试了一笔：“你是头一个肯学这些的上头的人。”我说我不是上头的人，我是土佐的。她在我的怀纸最后添了一个词，不肯告诉我是什么意思：“这个词另算，等你哪天用得上了，再来付钱。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "kogo", value = 4 }, { kind = "skill", skill = "court_etiquette", value = 4 }, { kind = "bond", person = "kogo", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "teach_back"
+text = "教她一句船上骂人的粗话，算作学费。"
+reply = "她拿袖子遮着嘴跟我念了几回，念完说：“这句我这辈子都不会用。学费我收了，算你半升。”三天后，我在长廊拐角听见她小声骂了一句，一个上臈的侍女踩翻了她刚晾开的抄本。用的正是那一句，连土佐腔都学去了。"
+next = "b1"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }]
+
+# B1：1554 秋的歌合，菖赢了我。散场后她递来揉软的草纸——代笔的事在这里揭开，归本文件。
+[[tracks.chapters]]
+key = "b1"
+title = "赢了我的那首"
+text = "秋天的歌合，题是“怨恋”。菖的那首，判者念了两遍；我的只念了一遍。散场以后，回廊里只剩收屏风的人。小督在柱子后面等我，递过来一张揉得发软的草纸。“赢了你的那首，是我写的。”她说得很快，“那位付了米，两斗，够我家吃到年底。你要骂就骂，骂完把纸还我，那是我最好的一首，就这一张。”我把草纸摊在膝上抹平。第三句涂掉了两个词，改上去的，正是判者念了两遍的那一处。别人写怨恋，都写袖上的露、秋夜的长；她写的是袖子上留下的梅香：人走了，香还在。“第三句，”我问她，“你怎么不用惯常的字？”她抬起头，把我的话又问了一遍：“惯常的字？”"
+window = [[1554, 9, 1], [1554, 10, 31]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 10, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "so_good"
+text = "对她说：第三句写得好，草纸还你。"
+reply = "她愣住了：“你……不生气？”“输给这一首，我服气。付米的那一位，下回再算。”我把草纸还给她。她接过去叠成一个小方块，叠得很仔细，嘴上已经换了话：“下回你要赢她，来找我，我给你算便宜些。……不行，这话不算，我收回来。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "kogo", value = 4 }, { kind = "skill", skill = "poetry", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "问她：为什么要替那一位写？"
+reply = "“米。”她说，“两斗。我娘前天还骂我淘米淘得太狠，说淘掉的都是钱。”说完就看着我，等我发火。我没发火，我说那下回我也付米，你替我写一首，赢回来。她把草纸从我膝上抽走：“不行。”我问为什么。“你那一首，我不替。你出三斗也不替。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }]
+
+# keep_draft（研究 3.3 第 4 场，C21b 新加）：把草纸留下。情谊 -4；她不哭，照常抄书，往后不在纸边批注。不在当场和解。
+[[tracks.chapters.choices]]
+key = "keep_draft"
+text = "把草纸收进自己袖子：这张我留着。"
+reply = "我把草纸叠起来，收进了自己袖子。她看着那只袖子：“你留着做什么？”我没答。她点点头，像点一笔账。“行。你留着。往后你托我写什么我都写，价钱照旧，一文不少。你别以为留着它就能压我的价。”她转身去帮收屏风的人抬屏风。第二天局里抄书，她照常来，照常抄，抄完的纸边干干净净，一个批注也没有。"
+next = "b2"
+effects = [{ kind = "affinity", person = "kogo", value = -4 }, { kind = "flag", flag = "c7_bond_kogo_kept_draft" }]
+
+# B2：1555 年，局里抄《伊势物语》。纸边的批注，两句之间的一条细线。kept_draft 局：她不再批注。
+[[tracks.chapters]]
+key = "b2"
+title = "纸边的批注"
+text = "这一年，局里派我们抄《伊势物语》。小督抄得快，抄到不服气的地方，就在纸边批一行小字。第六段，男人带着女人私奔，夜里把她藏进仓里，自己守在门口，天亮一看，人已经被鬼吃了。她在纸边批：“她问草上白的是什么，是不是珠子，他都不答。活该。”我借过她的笔，在旁边添了一句：“他守了一夜，弓都没放下。”她没擦，提笔在两句之间画了一条细线：“你抄你的，别批我的批。批一句，算一文。”外头有衣裾擦过地板的声音。“上臈来了！”我们手忙脚乱，把那几页夹进书衣。书衣合上了，那条细线还露着一截在外头。"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.variants]]
+key = "kept_draft"
+when = [{ kind = "flag", flag = "c7_bond_kogo_kept_draft" }]
+text = "这一年，局里派我们抄《伊势物语》。小督抄得快，抄完一页翻一页，纸边干干净净，从去年秋天起就是这样。抄到第六段，男人带着女人私奔，夜里把她藏进仓里，自己守在门口，天亮一看，人已经被鬼吃了。她的笔在那一行停了一下，接着往下抄。我在纸边批了一句：“他守了一夜，弓都没放下。”她没看，把抄好的一页晾到一边，又铺开一页。上臈从廊下走过，夸她抄得齐整，说局里的人都该照她的样子。她低头应了一声，蘸了墨，接着抄下一页。"
+
+[[tracks.chapters.choices]]
+key = "keep_arguing"
+text = "接着往下一页批，跟她争满一页纸边。"
+requires = [{ kind = "affinity", person = "kogo", ge = 50 }, { kind = "bond", person = "kogo", level = "C" }, { kind = "flag", flag = "c7_bond_kogo_kept_draft", value = false }]
+hint = "情谊 50、羁绊 C。她把纸边的批注擦淡了，只剩几道水痕。"
+reply = "下一页是第二十三段，青梅竹马的那一对。我批那女人的歌写得太好，男人回头也是应该的；她憋了半天，到底提了笔，批男人变心，一句比一句狠。批来批去，纸边全是我们俩的字，正文都快看不见了。她把那一页举起来对着灯看：“这一页不能交。”“留给谁？”“留着，以后吵架的时候翻。按句算，你欠我十一文。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "kogo", value = 4 }, { kind = "bond", person = "kogo", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "agree_once"
+text = "这一回同意她，在她的批注旁边画一个圈。"
+requires = [{ kind = "flag", flag = "c7_bond_kogo_kept_draft", value = false }]
+reply = "她看见那个圈，笔停住了：“你同意我？”“这一句同意。”她蘸了墨，顺着我的圈又描了一道，描得很重，墨洇过纸背，在下一页的正文上印了个黑点。上臈问起这个墨点，她说是我手笨。"
+next = "a1"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }, { kind = "skill", skill = "poetry", value = 4 }]
+
+# kept_draft 局（C21b 审读 1-4）：上面两项关掉；把草纸还回去才拿得到羁绊 B，旗标 _draft_returned 让 tie_new_ayame_kogo 不再当它在澪手里。
+[[tracks.chapters.choices]]
+key = "return_draft"
+text = "把那张草纸夹在抄本里，还给她。"
+requires = [{ kind = "affinity", person = "kogo", ge = 50 }, { kind = "bond", person = "kogo", level = "C" }, { kind = "flag", flag = "c7_bond_kogo_kept_draft" }]
+hint = "情谊 50、羁绊 C；那张草纸还在我手里。"
+reply = "我把草纸夹进她要抄的那一册，推过去。她翻到那一页，把草纸抽出来，对着窗看了看第三句，收回自己的书箱。“这张我收回，不算你还我人情。”她在那一页的纸边批了一行小字，是驳古人的，批完把笔递给我：“你的，一句一文。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }, { kind = "bond", person = "kogo", level = "B" }, { kind = "flag", flag = "c7_bond_kogo_draft_returned" }]
+
+[[tracks.chapters.choices]]
+key = "margin_alone"
+text = "在纸边自己批一句，看她接不接。"
+requires = [{ kind = "flag", flag = "c7_bond_kogo_kept_draft" }]
+hint = "那张草纸还在我手里。"
+reply = "我在第六段的纸边批：“他守了一夜，弓都没放下。”她抄到那一页，把纸翻过去，接着抄下一页。下午上臈来收抄本，那一页的纸边只有我一个人的字，上臈问是谁批的，她说是一条家的姬君，批得不合规矩，该罚。罚的是我，抄十张。"
+next = "a1"
+effects = []
+
+# A1：1556 春，宝镜寺讲经散后的夜雨。回局的石阶，伞每转一个弯就往我这边偏。
+[[tracks.chapters]]
+key = "a1"
+title = "伞向哪边"
+text = "宝镜寺的讲经散得晚，我们回局时下起了夜雨。石阶被雨水冲得发亮，一级一级往上，看不见头。小督撑伞，我提灯。灯光只照得见脚前两级，雨点打在油纸伞面上噼噼啪啪地响。每转一个弯，伞就往我这边偏一点。转到第三个弯，她的半边肩膀已经露在伞外头了。“你往里来些。”我说。“伞是我的，往哪边歪我说了算。这把伞是赁的，一晚五文，你要撑，另付。”我把灯换到两人中间，腾出一只手握住伞柄往回扶。她的手还在伞柄上，没有松开。“别动，”她说，“灯晃。”她那边的袖子湿到了肘弯。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_lamp"
+text = "松开伞柄，提着灯走到前头替她照路，让她自己撑伞。"
+reply = "她在后头跟着，伞总算罩住了她自己。到了局门的檐下，她收伞时才看见我半边身子都湿透了。“你这样，明天咳起来，药钱谁出？”她从怀里抽出一叠怀纸按在我肩上，纸一下就湿成了一团。她又抽了一叠，按得重了些。"
+next = "a2"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "share_umbrella"
+text = "扶正伞柄，跟她挤在同一把伞底下，走完这段石阶。"
+requires = [{ kind = "age", le = 17 }, { kind = "age", person = "kogo", le = 17 }, { kind = "romance_open", romance_open = "kogo" }]
+hint = "这么挤到一把伞底下，她只会把伞塞进你手里，自己冒着雨跑上石阶。"
+reply = "伞不大，两个人挤着，谁的肩膀都有一半在外头。走到檐下，她才发现我的袖子也湿了，皱着眉要埋怨，话到嘴边换成了一句：“五文白付了。”灯芯“啪”地爆了一声，我们同时低头去看。灯没灭。她把伞柄往我手里一放：“你拿着。”自己低下头去拧袖子，拧了好半天，袖子早就不滴水了。"
+next = "a2"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }, { kind = "heart", person = "kogo", value = 6 }]
+
+# A2：1556 夏秋，她要去西边的歌道之家，行李只许一个箱子。铜镜（回忆）与香饼（赠礼）。
+[[tracks.chapters]]
+key = "a2"
+title = "铜镜与香饼"
+text = "小督要被派到西边一家歌道之家去，开春替人家的女眷教一季歌、写信。路远，行李只许带一个箱子，箱子还是局里借的，盖子合不严。她把箱子里的东西一样样拿出来，拿到最后，是一面巴掌大的小铜镜，和一块拿纸包着的香饼。铜镜背面原本铸着花，已经磨得摸不出纹路；镜沿磕扁了一块，镜面上横着一道细细的旧痕。“镜子太重，带不走。”她把香饼推到我面前，“这个轻。我自己调的，沉香是跟香铺讨的碎末，香铺的伙计以为我要买，跟了我半条街。”她把镜子翻过来扣在膝上，手指在那道旧痕上来回地摸。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hear_mirror"
+text = "问她镜面上那道旧痕是怎么来的，把她讲的抄在诗笺背面。"
+requires = [{ kind = "affinity", person = "kogo", ge = 80 }, { kind = "bond", person = "kogo", level = "B" }]
+hint = "情谊 80、羁绊 B。她把镜子包回布里，没往下讲。"
+reply = "她讲第一次梳头进宫那天早上，手抖，镜子掉在石板上。讲到母亲蹲下去捡，她先讲了个笑话，说她娘捡镜子的样子跟捡掉在地上的米粒一样，一粒都不肯少。讲完她说：“这面镜子，照过我最难看的样子。”我把这些抄在一张诗笺背面，和香饼包在一起。她看着我包，伸手把香饼又往里按了按：“点的时候，别省。省着点，香就馊了。”"
+next = "s"
+effects = [{ kind = "affinity", person = "kogo", value = 4 }, { kind = "bond", person = "kogo", level = "A" }, { kind = "item", item = "blended_incense", qty = 1 }, { kind = "memory", memory = "mem-bond_kogo-a2", title = "铜镜与香饼" }]
+
+[[tracks.chapters.choices]]
+key = "look_together"
+text = "拿起铜镜，让我们两个人的脸一起照进去。"
+requires = [{ kind = "affinity", person = "kogo", ge = 80 }, { kind = "bond", person = "kogo", level = "B" }, { kind = "heart", person = "kogo", ge = 6 }, { kind = "age", le = 17 }, { kind = "age", person = "kogo", le = 17 }, { kind = "romance_open", romance_open = "kogo" }]
+hint = "情谊 80、羁绊 B、心动 6。这时候拉她一起照镜子，她会笑你胡闹，把镜子收回箱子里。"
+reply = "镜子太小，照不全两张脸，只照得见两双眼睛，挨得很近。她看了一会儿，没有躲开：“这样就够了。”她把香饼放在镜面上，连镜子一起推到我面前：“镜子你替我收着。保管钱不给，等我回来，再来取。”"
+next = "s"
+effects = [{ kind = "affinity", person = "kogo", value = 3 }, { kind = "heart", person = "kogo", value = 6 }, { kind = "bond", person = "kogo", level = "A" }, { kind = "item", item = "blended_incense", qty = 1 }, { kind = "memory", memory = "mem-bond_kogo-a2", title = "铜镜与香饼" }, { kind = "flag", flag = "c7_bond_kogo_mirror" }]
+
+[[tracks.chapters.choices]]
+key = "buy_mirror"
+text = "说我替她买一面新的、轻些的镜子带走。"
+reply = "她摇头：“新镜子照不出我。再说你买的，我还得算你多少钱，算不清。”她把铜镜包好，放回箱底，箱盖压下去，嘎吱响了一声：“重就重吧。”然后她掰下香饼指甲大的一角，搁在火盆边上。细细的一缕烟升起来，她把剩下的又包好：“闻过了，就算送过你了。”"
+next = "s"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }]
+
+# S：1556 年腊月，聘书到了。她第一次替自己写的回帖；商船常走的港口写在诗笺背面。
+[[tracks.chapters]]
+key = "s"
+title = "聘书与回帖"
+text = "腊月里，西边那家歌道之家的聘书送到了局里，聘她开春去教一季。小督把聘书和她写好的回帖并排摊开给我看。回帖一笔一画，端端正正，拘谨得不像她的手。“头一回替自己写信，手不听使唤。替别人写，一封一升；替自己写，倒贴纸钱。”开春她往西去，我回土佐，跟家里的船出海。我们把商船常走的港口一个个写在一张诗笺背面：堺、兵库、尼崎、牛窗、赤间关、博多、府内、浦户。写到浦户，她停了笔：“你的船，一年到这里几回？”我说看风。“那我的信，也只好看风。”她把诗笺翻过来，正面一个字还没有。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "kyoto"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_kogo" }, { kind = "flag", flag = "c7_bond_kogo_parted" }]
+
+# promise（C21b 改）：代笔的生意，一封一个价，信里夹着账（手册 4.2 第 4 条）。
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好往后我给大名递的奉书、礼状都托她写，一封一个价。"
+requires = [{ kind = "bond", person = "kogo", level = "A" }]
+hint = "羁绊 A。一生一回的约若已许给别人，这回只能互道珍重。"
+reply = "“奉书一封两升，礼状一升半，要盖印的另加半升，印泥我不出。”她报得飞快，像早就算好了，“你的船一年到浦户几回，我就一年写几回。信里我夹一张账，你看了账再看信，别反过来。”“我要是付不起呢？”“付不起就欠着。欠着的我记得比你清楚。”她把聘书叠好，放进箱子最底下，又拿起那张回帖看了看，撕了，重新写了一张。这一张的字连得很长，是她自己的手。"
+next = "done"
+effects = [{ kind = "affinity", person = "kogo", value = 5 }, { kind = "bond", person = "kogo", level = "S" }, { kind = "relation", person = "kogo", relation = "friends" }, { kind = "flag", flag = "c7_bond_kogo_promise" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "flag", flag = "c7_tie_new_kogo_mae_sumi_taken" }, { kind = "memory", memory = "mem-bond_kogo-s", title = "聘书与回帖" }, { kind = "start_track", track = "reunion_kogo" }]
+
+# heart（头一份）：她当场写了一首，不收米。不约“长大再写”。
+[[tracks.chapters.choices]]
+key = "heart"
+text = "请她在诗笺正面写一首，我照价付米。"
+requires = [{ kind = "bond", person = "kogo", level = "A" }, { kind = "heart", person = "kogo", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "kogo", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "kogo" }, { kind = "flag", flag = "c7_mio_heart_1", value = false }]
+hint = "羁绊 A、心动 12，还没对别人许过心意，一生的约也还没许给别人。诗笺正面还空着。"
+reply = "“三升。”她说，提笔就写，写得很慢，写坏了一个字，涂掉，接着写。写完了，她把诗笺翻过去扣在案上，不让我看。我数出米钱，码在诗笺旁边。她把钱推回来，一文一文推得很整齐。“这一首不收。你别算，你一算我就想收了。”她伸手过来握住我的手，握得很轻，握一支刚蘸饱了墨的笔那样，怕它滴下来。外头有人在廊下喊她的名字，喊到第二声，她才把手抽回去，把那张诗笺折起来递给我：“船上看。风大的时候别看。”"
+next = "done"
+effects = [{ kind = "heart", person = "kogo", value = 12 }, { kind = "relation", person = "kogo", relation = "crush" }, { kind = "bond", person = "kogo", level = "S" }, { kind = "flag", flag = "c7_bond_kogo_romance" }, { kind = "flag", flag = "c7_tie_new_kogo_mae_sumi_taken" }, { kind = "memory", memory = "mem-bond_kogo-s", title = "聘书与回帖" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "start_track", track = "reunion_kogo" }]
+
+[[tracks.chapters.choices]]
+key = "heart_second"
+text = "心里已经许过一个人，还是请她在诗笺正面写一首。"
+requires = [{ kind = "bond", person = "kogo", level = "A" }, { kind = "heart", person = "kogo", ge = 18 }, { kind = "attr", attr = "eloquence", ge = 5 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "kogo", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "kogo" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "flag", flag = "c7_mio_heart_2", value = false }]
+hint = "已许过一份心意：要心动 18、口才 5。宫里谁想着谁，她听得最早。"
+reply = "“三升。”她提笔就写，写完把诗笺扣在案上。我数出米钱，她看了那一堆钱一眼，推回来：“这一首不收。”她说得很快，接着讲起局里的一件笑话，典侍家的侍女把“おひや”端成了热水，讲得我笑出了声，她自己没笑。讲完她把诗笺折起来递给我：“船上看。”她起身去收拾回帖，回帖写坏了，她换了一张，第二张写得跟替别人写的一样好。"
+next = "done"
+effects = [{ kind = "heart", person = "kogo", value = 12 }, { kind = "relation", person = "kogo", relation = "crush" }, { kind = "flag", flag = "c7_bond_kogo_romance" }, { kind = "flag", flag = "c7_tie_new_kogo_mae_sumi_taken" }, { kind = "memory", memory = "mem-bond_kogo-s", title = "聘书与回帖" }, { kind = "flag", flag = "c7_mio_heart_2" }, { kind = "start_track", track = "reunion_kogo" }]
+
+[[tracks.chapters.choices]]
+key = "heart_third"
+text = "已经许过两个人，还是请她在诗笺正面写一首。"
+requires = [{ kind = "bond", person = "kogo", level = "A" }, { kind = "heart", person = "kogo", ge = 26 }, { kind = "attr", attr = "eloquence", ge = 7 }, { kind = "flag", flag = "c7_bond_kogo_mirror" }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "kogo", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "kogo" }, { kind = "flag", flag = "c7_mio_heart_2" }]
+hint = "已许过两份心意：要心动 26、口才 7，她那面铜镜还得在你这里替她收着。"
+reply = "她提笔前先问：“那面镜子还在你那里？”我说在。“那就好，那个我还要取的。”她写了一首，写完扣在案上。我数出米钱，她推回来：“这一首不收。”她把诗笺扣着递给我，不让我当面看，也没碰我的手。“镜子那天我来取，取的时候你别在。”"
+next = "done"
+effects = [{ kind = "heart", person = "kogo", value = 12 }, { kind = "relation", person = "kogo", relation = "crush" }, { kind = "flag", flag = "c7_bond_kogo_romance" }, { kind = "flag", flag = "c7_tie_new_kogo_mae_sumi_taken" }, { kind = "memory", memory = "mem-bond_kogo-s", title = "聘书与回帖" }, { kind = "flag", flag = "c7_mio_heart_3" }, { kind = "start_track", track = "reunion_kogo" }]
+
+# own（C21b 改）：她送一首，可是记账——这一首欠着。
+[[tracks.chapters.choices]]
+key = "own"
+text = "不立约：她去她的歌道之家，我回我的海，想写了就写。"
+reply = "她松了一口气似的笑了：“这样也好。约了，就怕哪一年写不出来，白欠你一首。”她把写着港口的那张诗笺对折给我，聘书自己收着。我们在局门口说定，谁先到了新地方，谁先写信。我走出十几步，她又追上来，把一张折得很小的纸塞到我手里：“这一首一升，记你账上，有米了再还。回了土佐再看，船上别看，风大。”那张纸我一直忍到浦户的码头上才拆开，有一个字被潮气洇花了。我在那个字旁边记了一笔：欠小督，一升。"
+next = "done"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }, { kind = "relation", person = "kogo", relation = "friends" }, { kind = "flag", flag = "c7_bond_kogo_own" }, { kind = "memory", memory = "mem-bond_kogo-s", title = "聘书与回帖" }, { kind = "start_track", track = "reunion_kogo" }]
+
+[[tracks]]
+key = "reunion_kogo"
+name = "小督：女先生的席位"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["kogo"]
+
+# 重逢：1562 年（永禄五年），丰后府内，舅舅大友家的宴席。她坐在教和歌的女先生席上；她挪过来的小案。
+# variants（取第一个对上的）：business（promise：一指厚的代笔信与账）→ mirror（镜子托给澪）。
+[[tracks.chapters]]
+key = "reunion"
+title = "女先生的席位"
+text = "永禄五年，丰后府内。舅舅家的宴席摆在大厅，正中坐着家臣，屏风边另设了一席，坐的是请来教和歌的女先生。是小督。几个家臣的女儿围着她，拿着自己的歌稿问东问西。她一个一个答，又低又快：“‘忍ぶ’在这里是忍着，你当成躲起来了。回去再想。”“这个字又写错了，上回说过的。错一个字，罚抄十张，纸钱你家出。”问的人都问完了，她才抬起头，看向门边的我。这几年她寄来过几封信，不多，每封末尾都问浦户的米价。“一条家的姬君，”她说，“站在门口做什么，没人给你让座？”她伸手把席边一张小案挪过来，往旁边推了推，让出一块放纸的地方。"
+window = [[1562, 1, 1], [1562, 12, 31]]
+at = "funai"
+cast = ["kogo"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1562, 1, 1], to = [1562, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "shared"
+when = [{ kind = "flag", flag = "c7_bond_kogo_romance" }, { kind = "flag", flag = "c7_mio_heart_2" }]
+text = "永禄五年，丰后府内。舅舅家的宴席摆在大厅，屏风边另设了一席，坐的是请来教和歌的女先生。是小督。她一个一个答学生的问，答完了才看向门边的我。我怀里揣着她去年托商船寄来的那张诗笺，抄的是当年那一首不收米的歌，一字不改，后头夹着一张小账，她的字：一升。那一升我还没付。“一条家的姬君，”她说，“站在门口做什么？”她伸手把席边一张小案挪过来，让出一块放纸的地方，案角压着一本账簿。"
+
+[[tracks.chapters.variants]]
+key = "business"
+when = [{ kind = "flag", flag = "c7_bond_kogo_promise" }]
+text = "永禄五年，丰后府内。舅舅家的宴席摆在大厅，正中坐着家臣，屏风边另设了一席，坐的是请来教和歌的女先生。是小督。几个家臣的女儿围着她问东问西，她一个一个答，又低又快：“‘忍ぶ’在这里是忍着，你当成躲起来了。回去再想。”问的人都问完了，她才抬起头，看向门边的我。我怀里揣着这几年她替我写的奉书、礼状的底稿，叠起来有一指厚，每一封底下都夹着一张小账：奉书两升，礼状一升半，盖印的另加半升，有三张底下写着“欠”。“一条家的姬君，”她说，“站在门口做什么，账带来了没有？”她没起身，伸手把席边一张小案挪过来，让出一块放纸的地方。"
+
+[[tracks.chapters.variants]]
+key = "mirror"
+when = [{ kind = "flag", flag = "c7_bond_kogo_mirror" }]
+text = "永禄五年，丰后府内。舅舅家的宴席摆在大厅，正中坐着家臣，屏风边另设了一席，坐的是请来教和歌的女先生。是小督。几个家臣的女儿围着她问东问西，她一个一个答，又低又快：“这个字又写错了，上回说过的。错一个字，罚抄十张，纸钱你家出。”问的人都问完了，她才抬起头，看向门边的我。那面她托我收着的铜镜我带来了，包镜的布换过两回，镜面那道旧痕还在。“一条家的姬君，”她说，“镜子带来了？保管钱我可没答应给。”她伸手把席边一张小案挪过来，往旁边推了推。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "kogo", text = "一条姬：府内的宴席，你舅舅家年年都摆，今年你又没来。府内的学生不笨，只是懒，一首歌问我十遍“这样行不行”，就是不肯自己回去再读一回。我教她们写体面的信，写给父亲，写给夫家，写给远处的人。前几天有个姑娘问我，先生自己写信给谁。我说给一个在海上的人，一年一两封，看风。她又问那人回不回信。我说回，字写得比你还难看。你舅舅家里谁写信给谁，我都看得见，你别问，这一样我不卖。米价这里比京都便宜，我如今一个月吃得起两回鱼。附一首，照价，一升，记你账上。小督" }, { kind = "flag", flag = "c7_bond_kogo_missed" }]
+
+[[tracks.chapters.choices]]
+key = "read_all"
+text = "在小案边坐下，把这几年的信和账跟她对一遍。"
+reply = "我把信一封封摊开，按年份排好。宴席那头在唱今样，劝酒的声音一阵高一阵低，我们俩低着头对账。对到第三年那一封，她伸手按住：“这封写得不好。那年家里出了事。”“那年的最短，纸也换了，是包米的纸。”她没接话，把那一封抽出来，翻到背面添了一行小字，又推回给我，写的是那一年家里的事，写得很平，像记账。我顺口问她，舅舅家里谁跟谁通信，哪一位家老常往山口那边写。她把笔搁下：“这一样不卖。”说完接着对账，对出来我还欠她两升半。“明年照旧。你欠的，我记着。”"
+next = "done"
+effects = [{ kind = "affinity", person = "kogo", value = 5 }, { kind = "relation", person = "kogo", relation = "confidants" }, { kind = "flag", flag = "c7_bond_kogo_landing_friend" }, { kind = "memory", memory = "mem-bond_kogo-reunion", title = "女先生的席位" }]
+
+# that_poem：她念那一首不收米的歌，念完照样收别的米（手册第六节）。
+[[tracks.chapters.choices]]
+key = "that_poem"
+text = "问她：当年那一首不收米的，还记不记得。"
+requires = [{ kind = "flag", flag = "c7_bond_kogo_romance" }, { kind = "heart", person = "kogo", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "kogo", ge = 18 }, { kind = "romance_open", romance_open = "kogo" }, { kind = "flag", flag = "c7_mio_heart_2", value = false }]
+hint = "要当年那一首是她亲手写给你的、心动 24，而且后头没夹账。"
+reply = "她不看我，用教学生的那种又低又快的声音念了出来，一个字不差。念到第三句，她慢了下来，那一句写的是浦户的港口，一条船回来的时候。念完，她说：“你那张纸上有个字洇了，我知道是哪个，我当年就写重了。”她把手放在我的手背上，放得很稳。宴席那头有人在唱今样，她没有松手。过了一会儿，她用另一只手从袖子里抽出一张小账，压在小案上：这一回写的奉书三封，六升。"
+next = "done"
+effects = [{ kind = "affinity", person = "kogo", value = 5 }, { kind = "relation", person = "kogo", relation = "lovers" }, { kind = "flag", flag = "c7_bond_kogo_landing_love" }, { kind = "memory", memory = "mem-bond_kogo-reunion", title = "女先生的席位" }]
+
+# pay_the_sheng：许过两份以上心意的局。她装不知道，只在那一首后头夹一张账，写着“一升”。付了，账清了，心意也成了生意。
+[[tracks.chapters.choices]]
+key = "pay_the_sheng"
+text = "照她夹在那一首后头的那张账，付一升。"
+requires = [{ kind = "flag", flag = "c7_bond_kogo_romance" }, { kind = "flag", flag = "c7_mio_heart_2" }]
+hint = "只在那一首寄回来、后头夹着一张账的时候。"
+reply = "去年她托商船寄来一张诗笺，抄的就是当年那一首，一字不改，后头夹了一张小账，她的字：一升。我把一升米的钱码在小案上。她看了一眼，收了，收得很利落：“清了。”她把那张小账从我手里抽回去，撕成两半，扔进火盆。“往后奉书两升，礼状一升半，照旧。”她低头去改学生的歌，一首改完，又拿过一首。"
+next = "done"
+effects = [{ kind = "affinity", person = "kogo", value = 2 }, { kind = "relation", person = "kogo", relation = "confidants" }, { kind = "flag", flag = "c7_bond_kogo_paid" }, { kind = "flag", flag = "c7_bond_kogo_landing_friend" }, { kind = "memory", memory = "mem-bond_kogo-reunion", title = "女先生的席位" }]

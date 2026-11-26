@@ -1,0 +1,36 @@
+// 界面字符串（en）：第九批养成里的比赛与小游戏。与 zh-CN.contests.ts 的键一一对应。
+import type { Translation } from "./translation";
+import type { contests as zh } from "./zh-CN.contests";
+
+export const contests: Translation<typeof zh> = {
+  "ct.list": "Contests",
+  "ct.play": "Compete",
+  "ct.prep": "Prepared +{n}%",
+  "ct.result": "Place {rank} of {total}: {text}",
+  "ct.auto": "About {pct}% to win on skill alone",
+  "ct.autoResolve": "Resolve on skill",
+  "ct.rivals": "Rivals",
+  "ct.kind.match": "Matching",
+  "ct.kind.poem": "Poetry",
+  "ct.kind.rhythm": "Rhythm",
+  "ct.kind.debate": "Debate",
+  "ct.kind.race": "Boat race",
+  "ct.kind.identify": "Connoisseurship",
+  "ct.finish": "Hand it in",
+  "ct.stopHere": "Stop here",
+  "ct.matchStatus": "{pairs:plural(pair,pairs)} matched, {left:plural(flip,flips)} left",
+  "ct.cardDown": "Card {n} (face down)",
+  "ct.theme": "Theme: {theme}",
+  "ct.lineN": "Line {n}",
+  "ct.recite": "Recite",
+  "ct.begin": "Begin",
+  "ct.tap": "Tap here, or press Space, as each beat crosses the line",
+  "ct.rhythmHelp": "Press Space or tap as each beat crosses the line",
+  "ct.grade.perfect": "Perfect!",
+  "ct.grade.good": "Good",
+  "ct.grade.miss": "Off",
+  "ct.topic": "Motion: {topic}",
+  "ct.hand": "Your arguments",
+  "ct.sampleN": "Sample {n}",
+  "ct.guess": "It is…",
+};

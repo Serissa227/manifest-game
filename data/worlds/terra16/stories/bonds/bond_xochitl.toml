@@ -1,0 +1,339 @@
+# 霍奇特尔：大十倍（bond_xochitl / reunion_xochitl）——C7 重写，2026-10-12，Claude（Opus）；旧 GPT 稿作废，只沿用轨道与章节 key、地点与年份。
+# 标签：GL（羁绊线，可恋爱；霍奇特尔是纯 GL，只对女孩子心动）。适用主角：伊希·妮克特（ix_nikte）。
+# 人物：霍奇特尔 xochitl（1540-09-07，女，romance.with = f）——梅里达圣克里斯托瓦尔区一户墨西加辅兵人家的女儿，母家世代做羽毛活，生在行军路上；
+#       伊希·妮克特 ix_nikte（1540-03-21，女，主角，“我”；学校名册上叫“玛丽亚”）。生年相差不到六个月。
+#       学院期 1554—1556：两人 13—16 岁。A1（1556-01..05）伊希 3 月满 16、霍奇特尔 15，心动选项只写握手、把脚伸进水里；
+#       A2（1556-06..11）霍奇特尔 9 月满 16；S（1556-12）两人都是 16，心动选项只到握手与 crush，告白只是“成年再见时当面说一句那瓦特话”。
+#       重逢 1563：两人 22—23 岁，双方成年，恋人落点合法。
+# 两个“外人”的处境不写成相同：伊希是被征服的玛雅人；霍奇特尔的父辈是随蒙特霍打进尤卡坦的墨西加辅兵，她看不起“乡下的玛雅人”，
+#       可在西班牙少年眼里两人都是“印第安丫头”（B1）。
+# 依据：
+#   史实——梅里达的方济各会修院与学校；城西的圣克里斯托瓦尔区住着随征服者来的墨西加辅兵；墨西加的羽毛活（蜂鸟羽毛换个角度就变色）；
+#         1555 年莫利纳修士的《卡斯蒂利亚语—墨西加语词汇》在墨西哥城印出；兰达 1556 年前后任尤卡坦方济各会的监理，修院规矩收紧；
+#         塞诺特（石灰岩溶洞里的深水井）；科巴脂香；那瓦特语 nocniuh（我的朋友）、敬称 nocniuhtzin；墨西哥城的堤道、运河与浅湖；
+#         科苏梅尔独木舟商人沿海岸往来希卡兰戈与洪都拉斯湾。
+#   原创——霍奇特尔其人与她的绿羽毛、她母亲的那篮蜂鸟羽毛、市场上被扯破的惠皮尔袖子、廊下偷看的词典、城外那口塞诺特、
+#         抽绳换了两回的香袋（赠礼 embroidered_pouch）、木棉树下的蜂鸟羽毛、画坊里她贴的第一幅画与扉页上的落款。
+#   待核——加斯帕尔·安东尼奥·奇把词典从墨西哥城带到梅里达（简报所定，只作一笔带过）；兰达任监理的确切月份（正文只写“新来的监理”）。
+# 缺省走向：C1—A2 的 default 无收获，故事照走；S 的 default 开启重逢并设 c7_bond_xochitl_parted（她托人送来那根蜂鸟羽毛，没来送行）；
+#           重逢的 default 是霍奇特尔的一封信（letter，夹一根蜂鸟羽毛，换个角度是另一种颜色），设 c7_bond_xochitl_missed。
+#   各章 default 的情形（只在此记，不进正文与见闻）：C1 两人互不理睬，绿羽毛插在她辫子上；C2 那篮羽毛她一个人分到天黑；
+#   B1 袖子她自己缝了，惠皮尔压进箱底；B2 词典放回修士的书架，第一页多一行小字；A1 她没去塞诺特，说在墨西哥城游过更大的湖；A2 香袋她自己留着，抽绳是蓝的。
+# 羁绊阶梯：C2 sort_by_light（bond C）→ B1 stand_beside（补签 C）→ B2 trade_the_word（bond B）→ A1 never_been（补签 B）
+#           → A2 take_pouch 或 say_nocniuh（bond A，赠礼与回忆）→ S promise / heart（bond S）。
+# 心动：A1 hold_her_hand +6 → A2 say_nocniuh +6（要求 ≥ 6）→ S heart +12（要求 ≥ 12）= 24，正好是重逢恋人落点的门槛（决定表写 S +10，算下来到不了 24，按简报改 +12）。
+# 旗标：写 c7_bond_xochitl_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed；
+#       S 的 promise 与 heart 都写共享旗标 c7_pair_xochitl_ines_solis_taken（pair_xochitl_ines_solis 读：霍奇特尔与伊内斯改走并肩的朋友）；
+#       重逢的 with_ines 变体读 c7_pair_xochitl_ines_solis_together（pair_xochitl_ines_solis 设，together 窗口止于 1563-03-31；重逢窗口整合时从 1563-04-01 起，保证读得到；
+#       taken 时不会出现，所以恋人落点不会和它同时可选）。
+# 日程：学院期各章 at = campeche，正文写的是梅里达修院学校、圣克里斯托瓦尔区、市场与城外的塞诺特（契约里学院章统一挂在坎佩切）；
+#       重逢 1563 在墨西哥城（tenochtitlan），霍奇特尔 1563 起 mexico_city 的静态日程已有，不用改。安娜是她的表姐兼师傅（tie_extra_05）。
+#       重逢里那幅“第一幅”是她夜里自己贴的、不算画坊的活，与 tie_extra_05 里“画坊只盖一个印”的落款之争（1566 冬）不冲突。
+# 口头禅：“这算什么？墨西哥城的比这大十倍。”只在 C1 正文用一次；A2、S own 与重逢换说法呼应。
+# 秘密：她一次也没去过墨西哥城——A1 never_been 由她对“我”说出，不进任何见闻；“放不下伊内斯”属配角线，本文件不写。
+# 不借用：互教玛雅语与卡斯蒂利亚语归 bond_ines_solis；《路得记》与那瓦特语的歌归 pair_xochitl_ines_solis；她第一次站上墨西哥城主广场归 tie_extra_05。
+# 见闻：羁绊章没有 stage，本文件不写 news。
+# 地点（2026-11-01 close-places）：学院章 at 由 campeche 改 merida_city（正文本就写梅里达），正文不动。
+
+[[tracks]]
+key = "bond_xochitl"
+name = "霍奇特尔：大十倍"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["xochitl"]
+
+# C1：1554 年初，修院学校前院的石阶。她指着广场吹墨西哥城；那根“捡来的”绿羽毛。
+[[tracks.chapters]]
+key = "c1"
+title = "大十倍"
+text = "教理课一散，女孩子们挤在修院前院的石阶上等家里来接。一个梳着那瓦特式辫子的女孩站在最高那一级，指着门外的大广场，对围着她的几个人说：“这算什么？墨西哥城的比这大十倍。”她另一只手里攥着一根绿羽毛，羽杆都捏弯了。有人问羽毛是哪儿来的，她说是从鸟市上一个卖鹦鹉的手里抢的，顿了一下，又改口：“好吧，捡的。”我那时刚从科苏梅尔来，名册上那个“玛丽亚”我自己还叫不顺。我说，科苏梅尔岛上的神庙，比梅里达所有的教堂加起来都老。石阶上一下子静了。她从最高那一级低头看我，眼睛眯起来：“乡下来的？”“岛上来的。”她瞪着我，我也瞪着她。嬷嬷在门口摇了两遍铃。她没动，我也没动。"
+window = [[1554, 1, 1], [1554, 4, 30]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_merida_franciscan" }, { kind = "date", from = [1554, 1, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "how_many_streets"
+text = "问她：墨西哥城的市场，到底有几条街？"
+reply = "“二十条。”她张口就来。我还没出声，她又改：“三十。”见我看着她，她改成四十，改完自己先红了脸，把那根绿羽毛在手心里来回捋。“反正很多。多得你走一天都走不完。”我说那我信了。她狐疑地瞅了我一眼，像是拿不准该不该高兴，下台阶的时候，故意从我身边绕了过去。"
+next = "c2"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "brag_back"
+text = "跟她比：我家的独木舟靠过的港口，比她说的街还多。"
+reply = "她不服，我们就一个一个地数。她数墨西哥城的街，我数独木舟靠过的岸，从希卡兰戈一直数到洪都拉斯湾的河口。数到太阳偏西，两个人都不肯先停。最后她把下巴一抬：“那你那些港里，有羽毛市吗？”我想了想，说没有。她得意了一整个傍晚，走出修院大门还回过头来，冲我晃了晃那根羽毛。"
+next = "c2"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }]
+
+# C2：1554 年夏，圣克里斯托瓦尔区她家的院子。她母亲的那篮羽毛；蜂鸟羽毛在太阳底下转。
+[[tracks.chapters]]
+key = "c2"
+title = "羽毛的光"
+text = "霍奇特尔家在城西的圣克里斯托瓦尔区，院子里晒着一排竹匾。她母亲接了一桩活，要把一大篮羽毛分出等次。霍奇特尔在修院门口拦住我：“你手闲着吧？来帮忙。”口气像是赏了我一个差事。我按大小分，大的一堆，小的一堆，分得飞快。她在旁边看了一会儿，看不下去了，从我那堆里拈出一根蜂鸟羽毛，捏着羽杆举到太阳底下，慢慢地转。从这边看是绿的，像雨后的叶子；转一下，成了紫的；再转一下，红得像一块炭火。“大小有什么用。”她说，“我娘的手艺，就是把每一根羽毛贴在它最亮的那个角度上。贴歪一点，就是一根死毛。”她母亲在屋里咳了一声。她压低嗓子，把那根羽毛放回篮子里，又补了一句：“这个，墨西哥城的人也不一定会。”"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "sort_by_light"
+text = "请她教我按光分，陪她把这一整篮都分完。"
+requires = [{ kind = "affinity", person = "xochitl", ge = 20 }]
+hint = "她把篮子往自己那边拖了拖——她娘的羽毛，还不肯让一个岛上来的玛雅人碰。"
+reply = "她起先不肯，后来还是捏着我的手腕教：羽杆朝哪边，眼睛从哪边看，转到哪一下要停。我们从午后分到太阳落山，院墙的影子从这一面挪到了那一面。最后剩下一小撮，在光底下怎么转都拿不准颜色，我一根一根地试，试到天快黑才分完。她把那一小撮用线扎起来，塞进我手里：“这一撮最难分。是你分的，你拿着。”她母亲出来收竹匾，看了一眼我手里的羽毛，冲霍奇特尔点了点头。"
+next = "b1"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "bond", person = "xochitl", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "ask_her_mother"
+text = "问她：你娘的手艺，是跟谁学的？"
+reply = "“跟我外婆。”她手上没停，“外婆跟她的外婆，再往上，一直到墨西哥城还叫特诺奇蒂特兰的时候。”说那个老名字的时候，她的声音轻得我差点没听见，眼睛往院墙外头瞟了一下。说完她又大声起来，拿一根羽毛冲我晃：“所以别乱分。这篮子里有好些，是外婆那时候攒下的，比你岁数还大。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }]
+
+# B1：1554 年秋，礼拜天的市场。西班牙少年扯破她的袖子；在他们眼里，她跟我没有分别。
+[[tracks.chapters]]
+key = "b1"
+title = "被撕破的袖子"
+text = "礼拜天的市场人挤人，我在盐摊前头讲价，听见那边有人起哄。三四个西班牙少年围成一圈，圈当中是霍奇特尔，怀里抱着刚买的一捆棉线。领头的那个扯着她的袖子往外拽：“印第安丫头，跳个舞看看。”她一下子炸了，棉线一扔：“我爹是跟着蒙特霍大人打进尤卡坦的！”少年们笑得更响。袖子“刺啦”一声，从肩头撕开一大块，她母亲绣的那圈花边耷拉下来。有一个冲我这边努努嘴：“喏，那边还有一个。”平日在修院前院，霍奇特尔最爱说“乡下的玛雅人”怎样怎样，说她家跟我们不一样。可在这几个人眼里，她跟我没有分别。她也听见了那句话。她攥着撕破的袖子站在那里，脸上的神气一下子全没了，像一只当街被人拔了毛的鸟。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "stand_beside"
+text = "走过去站在她旁边，用卡斯蒂利亚话把那几个人骂走。"
+requires = [{ kind = "affinity", person = "xochitl", ge = 20 }]
+hint = "她先看见了你，立刻把脸别开——她还不愿意让一个玛雅人看见她这副样子。"
+reply = "我把盐袋往地上一放，走过去站到她身边，用修院里学来的卡斯蒂利亚话，一字一顿地问那领头的：他父亲知不知道他礼拜天在市场上扯姑娘的袖子，要不要我去请修士问问。他们骂了两句，散了。霍奇特尔一句谢谢也没说，弯腰去捡地上的棉线，捡了好一阵，线团早沾满了土。“他们分不出我跟你。”她对着线团说。“那是他们眼瞎。”她这才抬起头来，眼圈红着，嘴角往上扯了一下。"
+next = "b2"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "bond", person = "xochitl", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "mend_sleeve"
+text = "不说话，等人散了，蹲下来替她把袖子缝上。"
+reply = "我跟卖盐的婆婆借了根针，线就从她那捆棉线里抽。我的针脚又粗又歪，缝出来的那道口子像一条趴在她肩上的蜈蚣。霍奇特尔低头看了半天：“你们玛雅人的针线，也就这样。”可后来整整一个月，她都穿着那件惠皮尔来上教理课，那条蜈蚣就趴在她肩上。有人笑话，她就扬着脸回一句：“我乐意。”"
+next = "b2"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }]
+
+# B2：1555 年，修院的廊下。莫利纳的那瓦特语词典；她夜里借着月光偷偷翻。
+[[tracks.chapters]]
+key = "b2"
+title = "莫利纳的字典"
+text = "1555 年，修院里来了一本新书。加斯帕尔·安东尼奥·奇从墨西哥城带回一本刚印出来的那瓦特语词典，是方济各会的莫利纳修士编的，一边卡斯蒂利亚话，一边那瓦特话，厚得像一块砖。修士们在前院传着看，有人叫霍奇特尔过去认几个字。她把手背在身后不肯去：“我才不用字典。我生下来就会。”那天我在修院里帮着晒书，走得晚。从廊下过的时候，看见廊柱后头蹲着一个人，膝盖上摊着那块砖头，借着月光，一个字一个字地往下念，念得很慢，嘴唇跟着动。是霍奇特尔。她听见脚步声，“啪”地合上书，抬头看见是我，又慢慢打开了。月光底下，看不出她脸红没红。她盯着书页问：“‘朋友’，在你们的话里怎么说？”"
+window = [[1555, 1, 1], [1555, 12, 31]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "trade_the_word"
+text = "把玛雅话里的“朋友”告诉她，换她教我那瓦特话里的。"
+requires = [{ kind = "affinity", person = "xochitl", ge = 50 }, { kind = "bond", person = "xochitl", level = "C" }]
+hint = "她把书往怀里一抱，说你看错人了——她还不想让你知道她在偷偷翻字典。"
+reply = "我把玛雅话的那个词告诉她，她跟着念了三遍，第三遍才不像念经。轮到她，她犹豫了好一会儿，才说：“诺克纽。”我念成了“诺克牛”，她笑出声来，又赶紧捂住嘴，怕吵醒修士。“这个词，”她说，“我只对要紧的人说。你别到处乱叫。”说完她把那块砖头往我怀里一塞，提着裙子跑了，跑到廊子尽头才想起来回头：“明天替我还给修士！”"
+next = "a1"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "bond", person = "xochitl", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "pretend_not_see"
+text = "装作没看见，从廊下另一头绕过去。"
+reply = "第二天在前院，她把我拦住，眼睛看着别处，很不自然地说：“那本字典，错的地方挺多的。”我说那你去帮莫利纳改。她愣了一下，“扑哧”笑出来：“他在墨西哥城，我上哪儿找他去。”笑完她把手背到身后，又小声补了一句：“第三百一十二页，有个词印反了。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }]
+
+# A1：1556 年春，城外的塞诺特。她怕深水；“墨西哥城的湖是浅的”。
+[[tracks.chapters]]
+key = "a1"
+title = "塞诺特"
+text = "出城往东走一个时辰，有一口塞诺特。洞顶塌开一个口子，阳光从那里直直地照下去，照在水上，水是深蓝的，看不见底。岛上的孩子是在这样的水里泡大的，我一到洞口就脱了外衣，顺着树根爬下去，在石沿上一蹬，跳了进去。水凉得人一激灵。我浮上来，抹掉脸上的水，喊她下来。霍奇特尔站在上头的石沿上，一动不动，脸白得像修院的墙。“你下来啊。”“我看着就行。”“水里比上头凉快。”她的手攥着裙边，攥出了褶子。憋了好半天，她才说：“我怕深水。从小就怕。”说完又飞快地补一句，“墨西哥城的湖是浅的，站在里头水才到腰，谁用得着会游。”洞壁把“浅的”两个字撞了回来，听着比她本人有底气。我游到石沿底下，冲她伸出手。"
+window = [[1556, 1, 1], [1556, 5, 31]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 1, 1], to = [1556, 5, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_her_hand"
+text = "握住她的手，陪她把脚一点一点伸进水里。"
+requires = [{ kind = "affinity", person = "xochitl", ge = 20 }, { kind = "romance_open", romance_open = "xochitl" }]
+hint = "她往后缩了半步——你们还没熟到她肯把手交给你。"
+reply = "她蹲下来，把手交给我，攥得那么紧，指甲都掐进了我的手背。脚趾先碰到水，她“嘶”了一声；然后是脚背，脚踝。她就坐在石沿上，两只脚泡在深蓝的水里，一寸也不肯再往下。我在水里扶着石头陪她，手被攥得发疼，也没抽开。阳光从洞顶挪到了洞壁上。她低头看着自己的脚在水里变得又白又远，忽然说：“你们玛雅人，真敢。”洞里转了好几圈，才把这句话送回来。"
+next = "a2"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "heart", person = "xochitl", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "never_been"
+text = "轻声问她：墨西哥城的湖，你真的见过吗？"
+requires = [{ kind = "affinity", person = "xochitl", ge = 50 }, { kind = "bond", person = "xochitl", level = "C" }]
+hint = "那句“浅的”还在洞壁上打转。这一问戳得太准，以你们现在的交情，还经不起。"
+reply = "她没接话。她看着水面，水面上晃着洞顶那一块光。过了很久，久到我以为她不会答了，她说：“没见过。一次也没有。”她说她生在行军的路上，她爹跟着蒙特霍打进尤卡坦的那几年，她娘背着她走。墨西哥城的街、湖、市场，全是她娘讲的。说完她把脸埋进膝盖里，肩膀一下一下地动。我爬上石沿，湿淋淋地坐在她旁边，没出声，等她自己把头抬起来。"
+next = "a2"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "bond", person = "xochitl", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "swim_for_her"
+text = "不逼她下水，自己潜到最深的地方，替她看看底下有什么。"
+reply = "我吸足一口气往下潜。蓝变成黑，耳朵胀得生疼，摸到一块冰凉的石头，我才往上浮。冒出水面的时候，霍奇特尔已经趴在石沿上，哭得满脸是泪，喊的是我岛上的名字，伊希·妮克特——我都不知道她什么时候记住的。“底下什么也没有，”我喘着气说，“就一块石头。”“疯子！”她抹了一把脸，“你们玛雅人全是疯子。”骂完，她自己先笑了。"
+next = "a2"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }]
+
+# A2：1556 年夏秋，修院前院。她绣的蜂鸟香袋，抽绳换了两回（赠礼 embroidered_pouch）。
+[[tracks.chapters]]
+key = "a2"
+title = "换了两回的抽绳"
+text = "霍奇特尔把一只香袋塞给我的时候，眼睛看着别处，好像那东西烫手。袋子只有巴掌大，粗棉布，上头绣着一只蜂鸟，蜂鸟的身子是用真羽毛贴的——她娘做活剩下的碎羽，一片一片地叠，在太阳底下一转，从绿到紫。抽绳是蓝的。这只袋子我在她家院子里见过两回：上个月系的是红绳，前几天换成了黄的。她从来没问过我喜欢什么颜色。袋里装着一小撮科巴脂香，凑到鼻子底下，是松脂混着烟的味道。“集上那个卖香的老头，”她说，“我磨了他三天。”她顿了一下：“拿着，诺——”说到一半咽了回去，改成，“拿着就是了，别问那么多。”"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_pouch"
+text = "收下香袋，问她怎么知道我喜欢这种蓝。"
+requires = [{ kind = "affinity", person = "xochitl", ge = 80 }, { kind = "bond", person = "xochitl", level = "B" }]
+hint = "她又把香袋攥回了手心——这份东西太重，你们还没熟到她递得出手。"
+reply = "“你在塞诺特里，”她说，“一直看的就是这种蓝。浮上来看，潜下去也看。”说完她转身就走，辫子甩得老高，走出十几步才回头喊：“别挂在外头！让人看见我绣的蜂鸟歪了一只翅膀，我丢不起这个人！”我低头看，蜂鸟的左边翅膀真的歪了一点。我把香袋挂在了外头。"
+next = "s"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "bond", person = "xochitl", level = "A" }, { kind = "item", item = "embroidered_pouch", qty = 1 }, { kind = "memory", memory = "mem-bond_xochitl-a2", title = "换了两回的抽绳" }]
+
+[[tracks.chapters.choices]]
+key = "say_nocniuh"
+text = "收下香袋，替她把那一声说完：“诺克纽。”"
+requires = [{ kind = "affinity", person = "xochitl", ge = 80 }, { kind = "bond", person = "xochitl", level = "B" }, { kind = "heart", person = "xochitl", ge = 6 }, { kind = "romance_open", romance_open = "xochitl" }]
+hint = "那一声到了你嘴边，又咽了回去——这么叫她，还早。"
+reply = "她一下子愣住了。脸从耳根开始红，一点一点往上漫，漫到额头。半天，她才挤出一句：“发音不对。”“那你再教我。”“……诺克纽。”“诺克纽。”“还是不对。再来。”我又叫了一遍，又一遍。她一遍一遍地纠，纠到后来也不纠了，只是一遍一遍地要我叫。修院的钟响了，她才把香袋的抽绳替我系紧，系了个死结。"
+next = "s"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "heart", person = "xochitl", value = 6 }, { kind = "bond", person = "xochitl", level = "A" }, { kind = "item", item = "embroidered_pouch", qty = 1 }, { kind = "memory", memory = "mem-bond_xochitl-a2", title = "换了两回的抽绳" }]
+
+[[tracks.chapters.choices]]
+key = "mexico_has_better"
+text = "逗她：墨西哥城的香袋，是不是也大十倍？"
+reply = "她瞪了我一眼，伸手就来抢，我举得高高的不给。她够了两回没够着，放下手，哼了一声：“墨西哥城的没有这只好。”“为什么？”“这只是我绣的。”说完她自己先绷不住，笑出声来，趁我笑的工夫一把把香袋夺了回去：“等你哪天不笑话我了，再给你。”"
+next = "s"
+effects = [{ kind = "affinity", person = "xochitl", value = 3 }]
+
+# S：1556 年 12 月，修院墙外的木棉树下。规矩一天比一天紧；她“现在还走不了”；放在我手心的蜂鸟羽毛。
+[[tracks.chapters]]
+key = "s"
+title = "两条路"
+text = "进了十二月，修院的规矩一天比一天紧。新来的监理立了好些条：女孩子散了课就得回家，不许在前院逗留；礼拜天望弥撒要点名，缺一回就跪在廊下念一晚上经。学校一散，我就要回科苏梅尔了。霍奇特尔约我在修院墙外那棵木棉树下见面，来了却不说话，蹲在地上拿树枝划土。过了好一阵，她才说她想去墨西哥城，进羽毛画坊学艺——她表姐安娜在那里开着一间。“可现在还走不了。”我问为什么，她把树枝一扔，没答。然后她从怀里摸出一根蜂鸟羽毛，放在我手心，捏着我的手腕，让我对着太阳转：绿，紫，火一样的红。“你回科苏梅尔，”她说，“就带着海的颜色回来给我看。我倒要看看，你们那片海，能变出几种颜色。”"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "merida_city"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_xochitl" }, { kind = "flag", flag = "c7_bond_xochitl_parted" }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "约好：我带海的颜色来，她把画坊里看见的家讲给我听。"
+requires = [{ kind = "bond", person = "xochitl", level = "A" }]
+hint = "这样的约一辈子只许得一回。海的颜色你带得来，交情却还没深到这一层；要么，这一回，你已经许给了另一个人。"
+reply = "我说好，每回出海，我都留心海是什么颜色，记下来带给她。“光记不行。”她马上说，“你得带东西来。贝壳，鱼鳞，什么都行，要能拿到太阳底下转的。”“那你呢？”她想了一会儿：“我把画坊里的事讲给你听。羽毛画上贴的是什么，城里的湖什么样，我外婆说的那个家，到底还剩下多少。我替你去看，看清楚了，一样一样讲给你。”“那你得写信。”“那你得常来。科苏梅尔到墨西哥城，远得很。”“是远。”“那我等你。”她把那根蜂鸟羽毛往我手心里按了按，“等多远都行。”她站起来拍掉裙子上的土，又蹲下去，在那片划乱了的土上用树枝画了一条长线，一头画个圈，说是科苏梅尔，一头画个方块，说是墨西哥城。“你从这儿，”她点点那个圈，“到这儿。记住了。”"
+next = "done"
+effects = [{ kind = "bond", person = "xochitl", level = "S" }, { kind = "relation", person = "xochitl", relation = "friends" }, { kind = "flag", flag = "c7_bond_xochitl_promise" }, { kind = "flag", flag = "c7_pair_xochitl_ines_solis_taken" }, { kind = "memory", memory = "mem-bond_xochitl-s", title = "两条路" }, { kind = "start_track", track = "reunion_xochitl" }]
+
+[[tracks.chapters.choices]]
+key = "heart"
+text = "说好：等我们都长大了再见，有一句那瓦特话，我要当面说给她听。"
+requires = [{ kind = "bond", person = "xochitl", level = "A" }, { kind = "heart", person = "xochitl", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "xochitl", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "xochitl" }]
+hint = "那句话到了嘴边——可你们还没走到那一步，或者这辈子唯一的约，你已经许给了另一个人。"
+reply = "她手里的树枝停了。“哪一句？”“现在不说。”我说，“等我们都长大了，见了面，我当着你的面说。”“你又不会那瓦特话。”“我会学。”她盯着我，半天没吭声。那种被人戳中了想炸、又炸不起来的样子，我见过好几回，这一回不太一样。她伸过手来，握住我拿着羽毛的那只手，把羽毛夹在我们俩的手心中间。“那我也学一句玛雅话。”她说，“不告诉你是哪一句。到时候，看谁说得准。”修院里敲了晚钟，嬷嬷在门口喊人。我们在墙外站着，站到钟声停了很久，天都暗下来，她的手一直没松。“发音要是不对，”她最后说，“我可不认。”"
+next = "done"
+effects = [{ kind = "heart", person = "xochitl", value = 12 }, { kind = "relation", person = "xochitl", relation = "crush" }, { kind = "bond", person = "xochitl", level = "S" }, { kind = "flag", flag = "c7_bond_xochitl_romance" }, { kind = "flag", flag = "c7_pair_xochitl_ines_solis_taken" }, { kind = "memory", memory = "mem-bond_xochitl-s", title = "两条路" }, { kind = "start_track", track = "reunion_xochitl" }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好：她去她的画坊，我回我的海，十年后看谁先让谁服气。"
+reply = "“十年？”她把树枝在手里掂了掂，“十年以后，我在墨西哥城贴的画，要挂进总督府。”“十年以后，我的独木舟换成大船，去韦拉克鲁斯装货。”“墨西哥城的画坊，”她说，“比你的海还大十倍。”“海没有边。”她噎了一下，眼珠一转：“那就大十倍的十倍。”我们在木棉树底下一条一条地比，比到后来，已经忘了在比什么，只是笑。我说十年太久了。“那你就早点服。”她说。最后她把那根蜂鸟羽毛插进我的头发里：“这个先押在你那儿。十年以后你要是服了，就拿它来还我。”"
+next = "done"
+effects = [{ kind = "affinity", person = "xochitl", value = 2 }, { kind = "relation", person = "xochitl", relation = "friends" }, { kind = "flag", flag = "c7_bond_xochitl_own" }, { kind = "start_track", track = "reunion_xochitl" }]
+
+[[tracks]]
+key = "reunion_xochitl"
+name = "霍奇特尔：画坊的门"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["xochitl"]
+
+# 重逢：1563 年，墨西哥城安娜的羽毛画坊。她教孩子在光下认羽毛；她贴的第一幅画，扉页上落款的地方。
+[[tracks.chapters]]
+key = "reunion"
+title = "画坊的门"
+text = "1563 年，我到了墨西哥城。城比霍奇特尔当年吹的还要大：堤道从湖上一直伸进城里，运河上挤满了独木舟，走一天也走不到头。我在圣胡安那一片的巷子里问了三个人，才找到安娜·德·拉·克鲁斯的羽毛画坊。门开着，屋里很亮，墙上挂着贴了一半的画。霍奇特尔坐在靠窗的长桌边，正教一个七八岁的孩子认羽毛。她捏着孩子的手腕，让他把一根蜂鸟羽毛对着窗户转：“这边，绿的。再转——停。这一下最亮，记住这个角度。”孩子问墨西哥城的人是不是都会这个。“不一定。”她说完抬起头，看见了我。她放下羽毛，在围裙上擦了擦手，什么也没说，领我进了里间。墙上挂着一幅羽毛画，一只蜂鸟停在一枝花上，在光底下从绿转到紫。“我自己贴的第一幅。画坊的活只盖表姐的印，这一幅是我夜里贴的，不算画坊的。”画背后衬着一页厚纸当扉页，右下角是落款的地方，那瓦特字写着她的名字，旁边空着一块。"
+window = [[1563, 4, 1], [1563, 12, 31]]
+at = "tenochtitlan"
+cast = ["xochitl"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1563, 4, 1], to = [1563, 12, 31] }]
+
+[[tracks.chapters.variants]]
+key = "with_ines"
+when = [{ kind = "flag", flag = "c7_pair_xochitl_ines_solis_together" }]
+text = "1563 年，我到了墨西哥城。城比霍奇特尔当年吹的还要大：堤道从湖上一直伸进城里，运河上挤满了独木舟，走一天也走不到头。我在圣胡安那一片的巷子里问了三个人，才找到安娜·德·拉·克鲁斯的羽毛画坊。霍奇特尔坐在靠窗的长桌边，正捏着一个孩子的手腕，让他把一根蜂鸟羽毛对着窗户转：“这边，绿的。再转——停。记住这个角度。”另一张桌子边坐着从梅里达来的伊内斯，正往画的背面写卡斯蒂利亚字的标签。霍奇特尔看见我，朝那边扬了扬下巴：“她跟我一起来的。”说得很骄傲。然后她放下羽毛，领我进了里间。墙上挂着一幅羽毛画，一只蜂鸟停在一枝花上，在光底下从绿转到紫。“我自己贴的第一幅，夜里贴的，不算画坊的。”画背后衬着一页厚纸当扉页，右下角是落款的地方，那瓦特字写着她的名字，底下一行卡斯蒂利亚字，再往旁边，还空着一块。"
+
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "xochitl", text = "伊希·妮克特：画坊里的人说，今年有个岛上来的船长在圣胡安那一片打听羽毛画坊，问的是“霍奇特尔在哪儿”，没问安娜。除了你，谁还会这么问。偏偏那几天我跟表姐去特斯科科收羽毛，回来你的船已经走了。我气得打翻了一整盒碎羽，安娜骂了我半天。告诉你一件事：我到墨西哥城了。城真大。比我当年跟你吹的还大，大多少倍我数不过来，也不数了。湖是浅的，我下去过，水到膝盖，没哭。我贴了第一幅画，一只蜂鸟，扉页上落款的地方写了我的名字，旁边空着一块，留给谁，你自己猜。信里夹着一根蜂鸟羽毛。你对着太阳转，这边看是绿的；换个角度，是另一种颜色。是哪一种，等你来了，我当面告诉你。下回要来，先写信，写清楚哪个月到，我好在画坊门口等。我不想再打翻一盒羽毛。——霍奇特尔" }, { kind = "flag", flag = "c7_bond_xochitl_missed" }]
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "在她的落款旁边，写下我的玛雅名字。"
+reply = "她把笔递给我，墨已经蘸好了。我在那块空着的地方写下 Ix Nikte'，末尾那一撇写得有点抖。她凑过来看了很久，看我的名字和她的名字并排落在一页纸上，一个是她外婆那边的字，一个是我岛上的。“这一幅，”她说，“不卖。”安娜在外间喊她，她应了一声，没动。那天傍晚她关了画坊的门，领我出城，沿着堤道走到湖边。湖是浅的，夕阳照在上面，一片金红。她脱了鞋，提着裙子，一步一步走进去，水没到小腿，没到膝盖。她站在水里回头看我：“我现在敢下水了。浅的也算。”我也脱了鞋走进去，站到她旁边，从怀里摸出一片科苏梅尔的海螺壳，薄得透光，放在她手心里。她对着夕阳转来转去：“这就是海的颜色？”“一种。”“那剩下的，”她把螺壳攥紧，“你下回一样一样带来。”"
+next = "done"
+effects = [{ kind = "affinity", person = "xochitl", value = 5 }, { kind = "relation", person = "xochitl", relation = "friends" }, { kind = "flag", flag = "c7_bond_xochitl_landing_friend" }, { kind = "memory", memory = "mem-reunion_xochitl", title = "画坊的门" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "把那句留了七年的那瓦特话，当面说给她听。"
+requires = [{ kind = "flag", flag = "c7_bond_xochitl_romance" }, { kind = "heart", person = "xochitl", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "xochitl", ge = 18 }, { kind = "romance_open", romance_open = "xochitl" }]
+hint = "落款旁边空着一块。当年木棉树下，那句那瓦特话你没约下；七年过去，它还是卡在舌头底下。"
+reply = "她把笔递过来，我没有接。我看着她，说了那句话：“诺克纽钦。”这七年我在船上念它，对着海念，对着帆念，船上的人都以为我在祷告。霍奇特尔举着笔的手停在半空。然后她的眼泪掉下来，一颗一颗砸在围裙上。“发音还是不对。”她说，嗓子全变了。“那你再教我。”“不教了。”她说，“我学的那句玛雅话，你先听着。”她说了。她念得很慢，喉咙里停住的那一下气，停得不太准。我笑了，她也笑了，一边笑一边哭。然后她走过来，捧住我的脸，吻了我。外间安娜在跟买画的人讲价，窗外运河上有人喊船，满墙的羽毛在光里一片一片地变颜色。她松开我的时候，脸上还是湿的。她拿起笔，在扉页上那瓦特字的旁边写下我的名字，写得很慢，写完把笔塞进我手里：“你也写我的。用你们岛上的写法。”"
+next = "done"
+effects = [{ kind = "affinity", person = "xochitl", value = 5 }, { kind = "relation", person = "xochitl", relation = "lovers" }, { kind = "flag", flag = "c7_bond_xochitl_landing_love" }, { kind = "memory", memory = "mem-reunion_xochitl", title = "画坊的门" }]

@@ -1,0 +1,136 @@
+# 请托：藏起来的两个西班牙水手（request_aisling）。Claude 写（C13d，2026-10-24），仅中文。
+# 人物：艾希林·奥弗莱厄蒂（aisling，1530 年 4 月 22 日生），康诺特海上氏族奥弗莱厄蒂家的女儿，在戈尔韦外海带船。
+# 类型：打一仗（fight）。三章：offer（报价）、run（喊你停船受检，打一仗）、arrive（毕尔巴鄂收尾）。
+#       检定的两条路：开船就打（打一仗）；等雾、贴着礁走（seamanship 难，成功则不打）。失败的雾路线仍要打一仗。
+# 报价：T 当面（戈尔韦 galway，auto=false，玩家“问请托”或 ask:request_aisling 启动）。offer 章不写 at，目标是“在港里找到她”。
+# 窗口：1588-10-01 至 1590-06-30。offer 的 deadline 为窗口止日，timeout 直接 failed，不写见闻；run 章 60 天内打完，超时走 late。
+# 依据·史实：1588 年无敌舰队的船在爱尔兰西岸失事（H60）；英格兰的巡船在康诺特沿岸搜捕西班牙人。正文只写传闻与看得见的巡船，不写战事经过。
+# 依据·原创：奥弗莱厄蒂家的艾希林（cast 的 persona 与口头禅）、岩洞里的两个水手、只会说巴斯克话的那个与他攥着的那块湿石头、毕尔巴鄂码头的船东。
+# 说话人：offer 章是艾希林在说话，speaker 写 aisling（brief 写的是 captain，这里改掉，因为正文是她的台词）；run 与 arrive 是玩家行动，speaker 为 captain。
+# 读写的旗标：
+#   写：c13_request_aisling_accepted（offer 三条接法里答应的两条，以及雾路线检定失败的分支，均设）
+#       c13_request_aisling_fog（雾路线检定成功，分支，arrive 的变体读它）
+#       c13_request_aisling_fogfail（雾路线检定失败，分支，run 的变体读它）
+#       c13_request_aisling_fever（run 绑腿检定失败，分支，arrive 的变体读它）
+#       终局旗标：c13_request_aisling_declined（回绝）、_late（run 超时）、_done（arrive 收钱）；每条只设一面。
+#   分支旗标共三面（fog、fogfail、fever），在上限之内。
+#   读：仅 fog / fogfail / fever（本文件内设的）。不读外部旗标，不设 c7_ 旗标。
+# 依赖：港口 galway、bilbao 已存在（ports_atlantic_eu.toml、ports_iberia.toml）；人物 aisling 已在 cast/story_europe.toml（schedule 1553—1590 在 galway dock）。
+#       不依赖 B10b 改名；没有主线门禁（gate_main 与 variant_main 为空，也不读 c13_main_<主角>）。
+#       cast/story_europe.toml 里 aisling 的旧注释说“让被请来的制图师能自由离船”，与本请托无关；本文件以请托卡为准。
+# 与 C7 的交叉：pair_aisling_pieter 与 tie_extra_11_aisling_juhani 都在 1567 年以后；本轨道 1588 年秋起，不写彼得、尤哈尼，不写心动与恋爱。
+#       没有 relation、tie、bond、heart、title、world、join、leave、start_track、end_track、growth 效果，也没有 schedule。
+# 无秘密：cast 没写 secret；本请托不碰任何秘密，见闻里也没有。
+# 回忆插画清单：
+#   mem-request_aisling-arrive（亲了一下码头石头的水手）：毕尔巴鄂码头，石缝里放着一块湿石头，跪着的水手，远处一条外乡船的桅杆。
+
+[[tracks]]
+key = "request_aisling"
+name = "藏起来的两个西班牙水手"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["aisling"]
+
+# 报价：岩洞里的两个人，她要你送他们回毕尔巴鄂。
+[[tracks.chapters]]
+key = "offer"
+title = "岩洞里的两个人"
+text = "岩洞里潮气重，松明一晃，墙上全是海水拍出来的白印。戈尔韦人在城门上刻过一句祷词，求上帝让他们躲开奥弗莱厄蒂家的人，艾希林听说了，只笑了一声。她蹲在洞口，朝里头努努嘴：一个腿断了，一个只会说巴斯克话。“英格兰的巡船在戈尔韦外海搜每一条出港的船，抓到的西班牙人一律不留。”那个会说巴斯克话的水手攥着一块湿石头，不肯松手。她要你把他们送回毕尔巴鄂。“打一仗，或者趁雾溜过去。我跟你一起走，我的人认得每一块礁。”她站起来拍掉裤腿上的沙，“上不上船你自己说了算——上了船，往哪儿开就是我说了算。想好了再答。”"
+speaker = "aisling"
+mood = "tense"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1588, 10, 1], to = [1590, 6, 30] }]
+objectives = [{ kind = "person", person = "aisling", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "fight"
+text = "答应开船，碰上巡船就打。"
+next = "run"
+reply = "她把短剑插回腰里，拍你肩膀的力道差点把你拍下船。“巡船敢靠近，你就打。后舱的人交给我的人看着。”她说完就去船尾点人，嗓门大得半个港口都听得见。"
+effects = [{ kind = "affinity", person = "aisling", value = 2 }, { kind = "flag", flag = "c13_request_aisling_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "fog"
+text = "等一场雾，贴着礁走。"
+next = "arrive"
+reply = "那天夜里她站在船头报礁，一块一块，像在念自家的账本。“雾什么时候散，你去问天。礁在哪儿，问我。”报到一半，她回头看了看你的舵，又转回去，接着报下一块。"
+check = { attr = "seamanship", base = 5, per = 8 }
+fail = { next = "run", effects = [{ kind = "affinity", person = "aisling", value = -2 }, { kind = "flag", flag = "c13_request_aisling_accepted" }, { kind = "flag", flag = "c13_request_aisling_fogfail" }] }
+effects = [{ kind = "affinity", person = "aisling", value = 3 }, { kind = "flag", flag = "c13_request_aisling_accepted" }, { kind = "flag", flag = "c13_request_aisling_fog" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这一趟你不担。"
+next = "failed"
+reply = "她冷冷地看了你一眼，没有骂人，转身沿着码头往别的船那边走。码头上的人都停了手，看她一个人走过去，脚步踩得很重。走了几步她又回头，只说了一句：“英格兰人不等人。”"
+effects = [{ kind = "flag", flag = "c13_request_aisling_declined" }]
+
+# 打一仗：巡船横过来，喊你停船受检。
+[[tracks.chapters]]
+key = "run"
+title = "喊你停船受检"
+text = "出港不远，一条英格兰巡船横过来，喊你停船受检。你打退的那条船中了几炮，帆歪了，掉头回了港。舱底那个断腿的水手疼得叫出了声，一声比一声高。甲板上没人说话，只有风把破了角的帆拍得啪啪响，舱口的人一个个探出头来看。艾希林站在舵边没回头，嗓门压到最低：“让他叫，叫完了再歇。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "aisling", value = true }]
+objectives = [{ kind = "battle", wins = 1, text = "在外海打退英格兰巡船" }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "aisling", value = -3 }, { kind = "flag", flag = "c13_request_aisling_late" }, { kind = "letter", person = "aisling", text = "巡船堵了一个月港口。那两个人，我让他们扮成我的人，跟着一条捕鱼船走了。" }] }
+
+[[tracks.chapters.variants]]
+key = "fogfail"
+when = [{ kind = "flag", flag = "c13_request_aisling_fogfail" }]
+text = "出港不远，天刚亮，雾才散了一半，一条英格兰巡船横过来，喊你停船受检。艾希林骂了一句，说雾散得太早，她的礁图还没看完。你打退的那条船中了几炮，帆歪了，掉头回了港。舱底那个断腿的水手疼得叫出了声，一声比一声高。甲板上没人说话，只有风把破了角的帆拍得啪啪响。"
+
+[[tracks.chapters.choices]]
+key = "tend"
+text = "让船医把他的腿重新绑一遍。"
+next = "arrive"
+reply = "船医把夹板拆开又绑上，艾希林站在旁边，骂船医的手笨，骂完又让他慢点。绑完了，那水手闭着眼，嘴里还在小声哼着什么。会说巴斯克话的那个握着艾希林的手说了一串谢，她一个字也没听懂，可点了头。"
+check = { attr = "stewardship", base = 20, per = 7 }
+fail = { next = "arrive", effects = [{ kind = "affinity", person = "aisling", value = -2 }, { kind = "flag", flag = "c13_request_aisling_fever" }] }
+effects = [{ kind = "affinity", person = "aisling", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "press_on"
+text = "顾不上，先开出去再说。"
+next = "arrive"
+reply = "艾希林没反对，只把舵交给大副，自己下舱去拎水桶。船一直开到看不见爱尔兰的岸，那水手才不叫了。她回来时浑身是水，却没提一句那水手。"
+effects = [{ kind = "affinity", person = "aisling", value = 2 }]
+
+# 收尾：毕尔巴鄂码头，水手亲了一下石头，船东认出了他们。
+[[tracks.chapters]]
+key = "arrive"
+title = "亲了一下石头"
+text = "毕尔巴鄂的码头上，会说巴斯克话的水手扶着跳板下来，把那块从岩洞里带出来的湿石头放进石缝，跪下去亲了一下。断腿的那个被人抬走了。艾希林叉着腰站在跳板上，等他们一个个下完，一句话也没说。码头上的风从海上吹来，带着鲸油的臭味，有个卖鱼的把篮子放在地上，半天没捡起来。码头上一个船东认出了他们，说两人是他船上的人，要付钱给你们。"
+speaker = "captain"
+mood = "tender"
+at = "bilbao"
+when = [{ kind = "alive", person = "aisling", value = true }]
+news = "毕尔巴鄂的码头上，两个在爱尔兰失事的西班牙水手回来了，送他们的是一条外乡船和一个爱尔兰女人。"
+
+[[tracks.chapters.variants]]
+key = "v1_fog"
+when = [{ kind = "flag", flag = "c13_request_aisling_fog" }]
+text = "毕尔巴鄂的码头上，会说巴斯克话的水手扶着跳板下来，把那块湿石头放进石缝，跪下去亲了一下。一仗也没打，艾希林站在跳板上看着，说英格兰人大概到现在还在雾里找。断腿的那个被人抬走了。码头上的风从海上吹来，带着鲸油的臭味，有个卖鱼的把篮子放在地上，半天没捡起来。码头上一个船东认出了他们，说两人是他船上的人，要付钱给你们。"
+
+[[tracks.chapters.variants]]
+key = "v2_fever"
+when = [{ kind = "flag", flag = "c13_request_aisling_fever" }]
+text = "毕尔巴鄂的码头上，会说巴斯克话的水手扶着跳板下来，把那块湿石头放进石缝，跪下去亲了一下。断腿的那个在舱里烧了一路，到了码头才退，被人抬走时还在哼。他的同伴在码头上一直扶着他的肩，不肯松开。码头上的风从海上吹来，带着鲸油的臭味，艾希林在跳板边上吐了口唾沫，骂那风。码头上一个船东认出了他们，说两人是他船上的人，要付钱给你们。"
+
+[[tracks.chapters.choices]]
+key = "take_owner"
+text = "收下船东的钱。"
+next = "done"
+reply = "船东付了钱，又请艾希林喝酒。她喝了一杯，把杯子往桌上一扣，说这钱算你的，她只要那水手亲石头的样子，看一回就够了。酒馆里的人都笑她，她骂回去，骂得比谁都响。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "aisling", value = 8 }, { kind = "fame", value = 2 }, { kind = "memory", memory = "mem-request_aisling-arrive", title = "亲了一下码头石头的水手" }, { kind = "flag", flag = "c13_request_aisling_done" }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "说不必，他们回家了就好。"
+next = "done"
+reply = "船东坚持要付，最后只付了一半，嘴里还说这是欠的。付钱时他把钱袋倒在桌上，一枚一枚数，数到一半忽然停下，叹了口气，又数了一遍。艾希林说你傻，可笑得很高兴，拍着桌子说下回还找你。"
+effects = [{ kind = "cash", value = 800 }, { kind = "affinity", person = "aisling", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_aisling_done" }]

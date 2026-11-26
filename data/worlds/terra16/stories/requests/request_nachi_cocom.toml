@@ -1,0 +1,175 @@
+# 请托：索图塔的玉米（request_nachi_cocom）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：纳奇·科科姆（nachi_cocom，生年不详，男），索图塔的首领，科科姆家之后；势力 sotuta。cast：cast/historical_05_americas.toml。
+#       本人不到港口，只由管家在坎佩切转述与来信；管家不起名，不进 cast。
+# 类型：送货（deliver）。章节：offer（报价）、deliver（交货，检定与三种交法）、settle（结账，谢礼与棉布）、settle_short（同一结账的短货版，十袋被扣下）。终点 done / failed。
+# 报价：L（来信模式）。管家在坎佩切等你，auto=true；窗口 1557-06-01 至 1561-10-31；offer 写 family=c13_offer_campeche、冷却 20 天，
+#       deadline 为窗口止日，timeout 直接 failed，不写见闻。
+# 进行中：deliver 限期 120 天，超时 failed，来信一封，好感 -3，旗标 _late；settle 与 settle_short 各有 wait 15 天，限期 150 天，超时同样 failed 并写来信。
+# 依据·史实背景：尤卡坦 1550 年代的蝗灾与饥荒（年份待核，正文只写“这两年”）；监护主按册征玉米贡赋；索图塔是科科姆家在内陆的领地。
+#       1536 年的宴席、家藏旧书与 1562 年的焚书一概不写。
+# 依据·原创：白棉披风的老管家、刻痕木板与背面的记号、三个村子、拿棍子的伙计、棉布谢礼与花纹。
+# 秘密：cast 里的旧仇与旧书不进正文；修家只作一句提问，不写他们的来历。本轨道不读任何 c7_ 旗标，也不设任何 c7_ 旗标。
+# 读的旗标：c13_main_ix_nikte（只在 offer 的 ix 变体里读，伊希主线设；主线未写之前门禁等于不存在）。
+# 设的旗标：c13_request_nachi_cocom_accepted（offer 接下，非终局）、_declined（offer 回绝，终局）、_short（deliver 检定失败，转 settle_short）、
+#       _late（超时，终局）、_done（settle 收下谢礼，终局）、_partial（照实说或收下短货的谢礼，终局）。
+#       每个结局只设一面终局旗标。没有 requires 读取本轨道设置的旗标：settle 与 settle_short 按 next 分开，不靠旗标门禁。
+# 不用 relation / tie / bond / heart / growth；reputation 不写（sotuta 不是现有的势力 key）。普通章不写 stage、window、default。
+# 报酬：货款 500（deliver 本章付，检定成败都付）；pay 选项另付 200 给管家，再加 500 货款；谢礼 2250（收下）／1100（只收一半）／1600（照实说）／1350（短货收下）；
+#       好感最多 +13；名声 +3；回忆 mem-request_nachi_cocom-settle。
+# 依赖：港口 campeche（ports_americas.toml）；货物 maize（goods/03_overseas_raw.toml，四十袋作为 goods 目标）；属性 eloquence、seamanship；人物 nachi_cocom。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_nachi_cocom-settle「海滩上的刻痕木板」：月下的海滩，白披风的老管家举着刻痕木板，独木舟里堆满玉米袋。
+
+[[tracks]]
+key = "request_nachi_cocom"
+name = "索图塔的玉米"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["nachi_cocom"]
+
+# 一、蝗虫过后：坎佩切城外的海滩，管家等了三天。
+[[tracks.chapters]]
+key = "offer"
+title = "蝗虫过后"
+text = "坎佩切城外的海滩上，一个穿白棉披风的老管家蹲在独木舟边，已经等了三天。这两年蝗虫一来，三个村子的玉米就被啃成了秆子，监护主的贡赋却一斗不少。他捧出一块刻着记号的木板，说：“主人要四十袋玉米，夜里交给村里来的人，不进监护主的仓。”说完他不急着走，先把你的衣服和手上的茧子看了一遍，又说：“主人说，先说是谁引你来的。在索图塔，没人引荐的客人，连井水都喝不上。”"
+mood = "sad"
+at = "campeche"
+when = [{ kind = "age", ge = 17 }, { kind = "date", from = [1557, 6, 1], to = [1561, 10, 31] }]
+deadline = [1561, 10, 31]
+timeout = { next = "failed" }
+family = "c13_offer_campeche"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "ix"
+when = [{ kind = "flag", flag = "c13_main_ix_nikte", value = true }]
+text = "坎佩切城外的海滩上，一个穿白棉披风的老管家蹲在独木舟边，已经等了三天。这两年蝗虫一来，三个村子的玉米就被啃成了秆子，监护主的贡赋却一斗不少。他听你开口，眼睛在你脸上停了一停，听出你的口音不是这一带的，问：“你家是哪一族的？”问完就不再作声。他把木板推过来，指着上面刻的数：“四十袋，夜里交给村里来的人，不进监护主的仓。”"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，夜里把玉米送到村里来的人手上"
+next = "deliver"
+reply = "管家用指甲在木板上刻了一道，说月亮再圆两次以前，他每晚都在这片海滩。刻痕旁边已经有好几十道，都是等船的日子。他没问你的名字，只问船什么时候能再来。"
+effects = [{ kind = "affinity", person = "nachi_cocom", value = 2 }, { kind = "flag", flag = "c13_request_nachi_cocom_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "接下，但问为什么不走监护主的仓"
+next = "deliver"
+reply = "“进了仓的玉米，出来就成了贡赋。”他把木板翻过来，背面刻的是监护主管家的记号。记号刻得很细，一看就是常年在账上用的。他又翻回去，用手指按了按那道记号，没有再说什么。"
+effects = [{ kind = "affinity", person = "nachi_cocom", value = 2 }, { kind = "flag", flag = "c13_request_nachi_cocom_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝，这趟活我不接"
+next = "failed"
+reply = "管家把木板收进怀里，推舟下水，一句话也没多说。舟尾的水痕一直拖到浪里，拖了很远，才被潮水抹平。海滩上只剩你和几只在礁石间跳的螃蟹。"
+effects = [{ kind = "flag", flag = "c13_request_nachi_cocom_declined" }]
+
+# 二、秤与棍子：玉米靠岸，监护主的管家在码头上等着过秤。
+[[tracks.chapters]]
+key = "deliver"
+title = "秤与棍子"
+text = "你的船带着玉米靠岸，码头上已经搬来一杆大秤。监护主的管家坐在秤旁的椅子上，说三个村子还欠着去年的贡赋，玉米要先过他的秤。村里来的人远远站在海滩上，手里提着空口袋，没有一个人往前走。管家身后站着两个拿棍子的伙计，棍头缠着湿麻绳。“过了秤，才算是交上来的。你要有别的算法，现在说。”"
+speaker = "captain"
+mood = "tense"
+at = "campeche"
+when = [{ kind = "alive", person = "nachi_cocom", value = true }]
+objectives = [{ kind = "goods", good = "maize", qty = 40, at = "campeche", text = "四十袋玉米" }]
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "nachi_cocom", value = -3 }, { kind = "flag", flag = "c13_request_nachi_cocom_late" }, { kind = "letter", person = "nachi_cocom", text = "管家托人带话。村里人没等到船，进林子挖了根茎，熬过来一半。科科姆家记下了你没有来。" }], news = "坎佩切的码头上，一船玉米迟迟没有靠岸，监护主的秤摆了三天，最后撤下去了。" }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "当着他的面，把货交给村里来的人"
+check = { attr = "eloquence", base = 20, per = 7 }
+next = "settle"
+reply = "你把赈荒不抵贡赋的规矩讲给满码头的人听，声音不高，每句都说在人的耳朵里。有人小声应了一句，又赶紧闭上嘴。管家骂了一串，伸手去拿秤杆。"
+news = "坎佩切码头上，一个外地船长当众讲起赈荒不抵贡赋的规矩，管家骂骂咧咧收了秤。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "nachi_cocom", value = 3 }]
+fail = { next = "settle_short", effects = [{ kind = "cash", value = 500 }, { kind = "flag", flag = "c13_request_nachi_cocom_short" }, { kind = "affinity", person = "nachi_cocom", value = -2 }], news = "坎佩切码头上，管家硬扣下十袋玉米当欠贡，村里来的人空着手往林子里走。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "塞一笔钱给他，让他今晚别来码头"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "袖口里得先有一包像样的钱"
+next = "settle"
+reply = "他掂了掂那包钱，连数都没数，秤也扛走了。村里的人一袋一袋背进了林子，走到林边才有人回头，看了一眼空码头。"
+news = "坎佩切的码头上，管家收了一笔钱，把秤扛回了库房，玉米一袋一袋进了林子。"
+effects = [{ kind = "cash", value = -200 }, { kind = "cash", value = 500 }, { kind = "affinity", person = "nachi_cocom", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "beach"
+text = "改在城西的海滩上，夜里卸"
+check = { attr = "seamanship", base = 35, per = 6 }
+next = "settle"
+reply = "没有灯，只有潮声。玉米一袋袋滑下船舷，背进了林子，一路上没有人说话，只有袋口擦着草叶的响。你站在船头数着，数到一半就不数了。"
+news = "坎佩切城西的海滩上，夜里起过潮声，渔户说，有一船玉米是没点灯卸下去的。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "nachi_cocom", value = 3 }]
+fail = { next = "settle_short", effects = [{ kind = "cash", value = 500 }, { kind = "flag", flag = "c13_request_nachi_cocom_short" }], news = "坎佩切城西的海滩上，监护主的伙计夜里追来，抢走了几袋玉米，火把亮到天明。" }
+
+# 三、科科姆家的花纹：半个月后，管家带着棉布回来，问一句修家的事。
+[[tracks.chapters]]
+key = "settle"
+title = "科科姆家的花纹"
+text = "半个月后，老管家又出现在那片海滩，还是那件白棉披风，身后放着一卷棉布。木板递过来，上面刻着新的一道，比别的刻痕都深：科科姆家记得帮过他们的人，也记得谁的秤短了几斤。“主人让我问一句。”他停了一下，指甲在木板边上划了两划，“马尼的修家，有没有派人在码头上打听这批玉米？”海风把棉布的边角吹起来，他按住了，没有放手。"
+mood = "tender"
+at = "campeche"
+when = [{ kind = "alive", person = "nachi_cocom", value = true }]
+objectives = [{ kind = "wait", days = 15 }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_nachi_cocom_late" }, { kind = "letter", person = "nachi_cocom", text = "管家没等到你。谢礼的棉布寄在坎佩切港务处，书记收着，你什么时候来取都行。" }], news = "坎佩切港务处里压着一卷索图塔来的棉布，书记说，等的那个船长一直没来。" }
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下谢礼"
+next = "done"
+reply = "管家把棉布放进你手里，说这是索图塔的女人织的，花纹是科科姆家的。布上的花纹你认不出，他却说得很细，一根线都不肯错。棉布很厚，压在手里沉甸甸的。"
+news = "坎佩切城外，索图塔的老管家在海滩上送来一卷棉布，说是科科姆家谢给帮过他们的船长。"
+effects = [{ kind = "cash", value = 2250 }, { kind = "affinity", person = "nachi_cocom", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_nachi_cocom-settle", title = "海滩上的刻痕木板" }, { kind = "flag", flag = "c13_request_nachi_cocom_done" }]
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "只收一半，余下留给村子买种子"
+next = "done"
+reply = "管家愣了一下，第一次笑了：“我会照这句话原样告诉主人。”笑完他把棉布又叠了一层，说余下的那部分，村里买种子用得着。这句话他说得很慢，像是要记到木板上去。"
+news = "坎佩切的酒馆里有人说，一个船长只收了一半谢礼，余下的说要给村子买种子。"
+effects = [{ kind = "cash", value = 1100 }, { kind = "affinity", person = "nachi_cocom", value = 8 }, { kind = "fame", value = 3 }, { kind = "memory", memory = "mem-request_nachi_cocom-settle", title = "海滩上的刻痕木板" }, { kind = "flag", flag = "c13_request_nachi_cocom_done" }]
+
+[[tracks.chapters.choices]]
+key = "mani"
+text = "照实说：修家的人问过这批货"
+next = "done"
+reply = "管家脸色沉下来，只说一句“他们一向记性好”，放下棉布就走。走到海滩尽头，他才停下来，回头望了一眼海上的船。棉布的一角还压在你的船帮上，他没有回去拿。"
+news = "坎佩切的酒馆里，有个船长当着索图塔管家的面，把马尼的修家问过这批货的事说了出来。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "nachi_cocom", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_nachi_cocom_partial" }]
+
+# 三之二、木板上的短线：同一个结账，只是十袋玉米没有进村里人的口袋。
+[[tracks.chapters]]
+key = "settle_short"
+title = "木板上的短线"
+text = "半个月后，老管家又来到那片海滩，身后放着一卷棉布，木板上比上次多了一条短线。他用指甲一道一道数给你听：十袋玉米，没有进村里人的口袋。他数到第十道才停，停了很久，像是在等你开口。“短的那十袋，主人会去跟监护主算。”他把木板收进怀里，又看了你一眼，“主人还问一句：马尼的修家，有没有派人在码头上打听这批玉米？”"
+mood = "tense"
+at = "campeche"
+when = [{ kind = "alive", person = "nachi_cocom", value = true }]
+objectives = [{ kind = "wait", days = 15 }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_nachi_cocom_late" }, { kind = "letter", person = "nachi_cocom", text = "管家没等到你。短的那十袋，科科姆家记在了监护主的账上。棉布留在坎佩切港务处，你什么时候来取都行。" }], news = "坎佩切的港务书记说，有个船长送完了玉米，半个月都没来取索图塔的棉布。" }
+
+[[tracks.chapters.choices]]
+key = "take_short"
+text = "收下谢礼，那十袋让他们去跟监护主算"
+next = "done"
+reply = "管家把那道短线又看了一遍，说：“棉布收下。那十袋的账，我们自己去算。”棉布他抖开给你看，又叠起来，放进你手里。他的手指在那道短线上停了很久。"
+news = "坎佩切的酒馆里有人说，索图塔的老管家短了十袋玉米的账，要去跟监护主当面算。"
+effects = [{ kind = "cash", value = 1350 }, { kind = "affinity", person = "nachi_cocom", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_nachi_cocom_partial" }]
+
+[[tracks.chapters.choices]]
+key = "mani_short"
+text = "照实说：修家的人问过这批货"
+next = "done"
+reply = "管家脸色沉下来，只说：“修家的手，伸得比船还长。”短的那十袋他没提，放下棉布就走，走得比来时还快。走到船边，他才又回头看了一眼那条短线。"
+news = "坎佩切的码头上有人说，一个船长照实答了索图塔的管家，管家却没提那十袋短了的玉米。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "nachi_cocom", value = 4 }, { kind = "fame", value = 3 }, { kind = "flag", flag = "c13_request_nachi_cocom_partial" }]

@@ -1,0 +1,2251 @@
+# 巴拉卡养成内容（任务 B1 新手旬、B2 家乡玩伴与书信、B3 关键事件三岔、B5 斯瓦希里新年、B7 第一次远足），玩家文案由 Claude 写。
+# B3 的六件关键事件从 baraka_events.toml 挪到本文件：它们改成三岔后结构已变，而寰宇的英文覆盖闭合校验要求改动的段落同步英文；本文件不写英文，回退中文。
+# 门槛数值（检定的 base / per、门槛的属性值）按审计报告的年度中位估的，之后统一校准。检定公式：成功率 = base + 属性等级 × per，夹在 5–95%。
+
+format_version = 1
+
+[event_gates]
+# B1 新手旬：1553 年一整年都可排，具体节点由各章 when 控制。
+c9_baraka_newcomer_month = { stage = "home", years = [1553], from = [1553, 1, 1] }
+# B2 家乡玩伴：卡姆博在 B1 下旬的码头相识后启动；法图玛按日期出场。
+c9_baraka_friend_kombo = { stage = "home", years = [1553], from = [1553, 1, 21] }
+c9_baraka_friend_fatuma = { stage = "home", years = [1553], from = [1553, 3, 1] }
+# B2 书信：进学院后按船期来，每人两封。
+c9_baraka_friend_kombo_letter_1554 = { stage = "academy", from = [1554, 4, 20] }
+c9_baraka_friend_kombo_letter_1555 = { stage = "academy", from = [1555, 10, 1] }
+c9_baraka_friend_fatuma_letter_1554 = { stage = "academy", from = [1554, 6, 1] }
+c9_baraka_friend_fatuma_letter_1556 = { stage = "academy", from = [1556, 2, 1] }
+# B3 关键事件 00–05（由 baraka_events.toml 挪入）。00 从 1553 年 2 月中旬起，01 从 3 月 1 日起，排在 00 之后。
+c9_baraka_critical_00 = { stage = "any", from = [1553, 2, 15] }
+c9_baraka_critical_01 = { stage = "any", from = [1553, 3, 1] }
+c9_baraka_critical_02 = { stage = "any", from = [1553, 4, 1] }
+c9_baraka_critical_03 = { stage = "any", from = [1553, 6, 1] }
+c9_baraka_critical_04 = { stage = "any", from = [1553, 8, 1] }
+c9_baraka_critical_05 = { stage = "any", from = [1553, 11, 1] }
+# B5 斯瓦希里新年：节庆窗口放宽到 40 天，让三节能在两三旬内接上。
+c9_baraka_swahili_weigh_1553 = { stage = "home", years = [1553], festival = "festival_swahili_new_year", festival_window_days = [0, 40] }
+# B7 第一次远足：旗标 outing_permission 有了才会进；做过一次就不再进。
+c9_baraka_first_outing = { stage = "home", not_flag = "c9_baraka_first_outing_done", tier = "timed" }
+# 剧情增写（2026-11-12）：四条人物线，各章用 when 里的家庭旗标与日期排开。
+c9_baraka_rw_hashim = { stage = "any", from = [1553, 1, 1] }
+c9_baraka_rw_needle = { stage = "any", from = [1553, 1, 1] }
+c9_baraka_rw_liongo = { stage = "any", from = [1553, 1, 1] }
+c9_baraka_rw_rope = { stage = "any", from = [1553, 1, 1] }
+c9_baraka_rw_takrur = { stage = "any", from = [1554, 1, 10] }
+
+# ───────────────────────── B1 新手旬（1553 年 1 月）─────────────────────────
+
+[[tracks]]
+key = "c9_baraka_newcomer_month"
+name = "巴拉卡·宾·萨利姆·头一个月"
+kind = "request"
+start = "upper"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "upper"
+title = "头一旬的分派"
+text = "新年的第一旬，姑母把一张纸放在我面前，纸上写着今年家里要做的事：谁管秤房，谁管账房，谁去书商街，谁陪老诗人晒椰纤。父亲在旁边擦他的黄铜砝码，不看那张纸，只说：“你自己挑一样，挑了就别换。”姆泽老人坐在门口，哼着一句地名的调子，等我回答。我的手指在纸上停了很久，最后压在最不起眼的那一行上。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }]
+
+[[tracks.chapters.choices]]
+key = "scale"
+text = "挑秤房，跟父亲学看秤。"
+reply = "我把手指从那一行挪到秤房的位置。父亲擦砝码的手停了一下，接着又擦下去，只说：“那就从看刻线开始。”姑母在账页上记了一笔，没有抬头。"
+next = "middle"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = 3 }, { kind = "growth", attr = "perception", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ledger"
+text = "挑账房，跟姑母对账。"
+reply = "我挑了账房。姑母把钥匙推过来，说账房的门一天开两次，错过了不补。阿莎的眼神里有一点意外，也有一点满意。"
+next = "middle"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 3 }, { kind = "growth", attr = "numeracy", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "stone"
+text = "挑姆泽老人那一行，去听地名。"
+reply = "我挑了那一行。姆泽老人笑起来，缺了两颗牙。他说：“念错的，我敲你。念对的，你要唱给人听。”"
+next = "middle"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 3 }, { kind = "growth", attr = "eloquence", value = 2 }]
+
+[[tracks.chapters]]
+key = "middle"
+title = "第一次排日程"
+text = "过了十日，姑母把一个小布袋放在我手边，里头是一副算账用的筹子。她说，往后每个月初，家里都会给每个小子一笔零用，数目照账上写，花完就没有，别问她还有没有。今天先学看格子。她拿出一张空白的日程纸，纸上已经画好了一行一周、一行三格，让我先把头一周排出来：哪格去码头，哪格去书商街，哪格在家抄账；排好了，往后每周照着走，想改再改。"
+once = true
+mood = "tender"
+when = [{ kind = "date", from = [1553, 1, 11] }]
+
+[[tracks.chapters.choices]]
+key = "full"
+text = "照着格子，把三格都排满。"
+reply = "我把三格都排满，连吃饭和睡觉的时辰都写在格边上。姑母看了，说排得满的人，常常最先失手。"
+next = "lower"
+effects = [{ kind = "item", item = "counting_tokens", qty = 1 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "half"
+text = "只排前半个月，后面留白。"
+reply = "我留了一半的白。姑母没说什么，只在空白处画了个小叉，说：留白也是账，要记得留的是什么。"
+next = "lower"
+effects = [{ kind = "item", item = "counting_tokens", qty = 1 }, { kind = "affinity", person = "baraka_aunt", value = 2 }]
+
+[[tracks.chapters]]
+key = "lower"
+title = "码头东头的少年"
+text = "第一次一个人出门，我走到码头东头，那里有一排小铺子，门口挂着秤盘。一个跟我差不多高的少年蹲在门槛上，拿一块钝了角的秤砣磨来磨去。他看见我，抬起头，眼睛里有一点挑衅：“你是那个称金的？我师傅说你们家的秤是老的。”身后的铺子里传来敲打的声音，一下一下，像在替这一句话作注脚。"
+once = true
+mood = "tense"
+when = [{ kind = "date", from = [1553, 1, 21] }]
+
+[[tracks.chapters.choices]]
+key = "help"
+text = "蹲下来，帮他把秤砣的边磨平。"
+reply = "我接过秤砣，顺着钝角的方向磨下去。少年的手在旁边盯着，不说话，直到我磨出第一道平面，他才伸手来比。“磨偏了，又一边高。”他说完，却把自己那一块也拿来，跟我一起磨。"
+next = "done"
+effects = [{ kind = "affinity", person = "kombo", value = 4 }, { kind = "growth", attr = "perception", value = 2 }, { kind = "start_track", track = "c9_baraka_friend_kombo" }]
+
+[[tracks.chapters.choices]]
+key = "correct"
+text = "指出秤砣的毛病，说他师傅骂得对。"
+reply = "我说，秤砣的角磨钝了，秤就不准，你师傅骂得对。少年的脸一下涨红，把秤砣往地上一放，转身进了铺子。过了一会儿，他又探出头，说：“明天还来，我把角磨给你看。”"
+next = "done"
+effects = [{ kind = "affinity", person = "kombo", value = 1 }, { kind = "growth", attr = "numeracy", value = 2 }, { kind = "start_track", track = "c9_baraka_friend_kombo" }]
+
+# ───────────────────────── B2 家乡玩伴：卡姆博（称金铺学徒，以友情为主）─────────────────────────
+
+[[tracks]]
+key = "c9_baraka_friend_kombo"
+name = "卡姆博·码头的朋友"
+kind = "encounter"
+start = "after_meet"
+auto = false
+academy = true
+cast = ["kombo"]
+
+[[tracks.chapters]]
+key = "after_meet"
+title = "几天后的码头"
+text = "又过了几天，我在码头上碰见那个少年。他手里拎着两个椰子，见我走近，把其中一个扔过来。“我师傅让我来买你家的椰纤绳，说你们家的绳子结实。”他说的是大人的话，耳朵却红得厉害。卡姆博，他自我介绍，说家里在东头的铺子已经开了三代。"
+once = true
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }]
+
+[[tracks.chapters.choices]]
+key = "rope"
+text = "带他去仓房，挑一捆绳子给他。"
+reply = "我带他去仓房，一捆一捆地抽给他看，哪一捆结得紧，哪一捆是底下的旧货。他蹲在地上试着拉，拉断了一根，脸一下白了。我把那捆换给他，没收钱。他把椰子塞还给我一个，说：“下回你来铺子，我请你吃糖。”"
+next = "workshop"
+effects = [{ kind = "affinity", person = "kombo", value = 4 }, { kind = "growth", attr = "commerce", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "coconut"
+text = "把椰子劈开，两人分着喝水。"
+reply = "我用刀把椰子劈开，两人蹲在台阶上，一人一半。他问我是不是真的会称金，我说会，他就问金子是怎么看成色的。我们谈了一上午，谈到日头偏西，他才想起师傅要的绳子还没买。"
+next = "workshop"
+effects = [{ kind = "affinity", person = "kombo", value = 3 }, { kind = "growth", attr = "perception", value = 3 }]
+
+[[tracks.chapters]]
+key = "workshop"
+title = "称金铺的后门"
+text = "春天的风把东头的街道吹得尘土飞扬。卡姆博又来了，这回他不是来买绳子的。他说师傅派他跑一趟，把一张收金的单子送到我家，可他认不全上面的字，又不好意思说。我看了一眼，单子上是三笔金子的重量和成色，还有一笔划掉重写的数字。"
+once = true
+mood = "tense"
+when = [{ kind = "date", from = [1553, 3, 1] }]
+
+[[tracks.chapters.choices]]
+key = "teach"
+text = "一边念，一边教他认那几个数字。"
+reply = "我念一个数字，就让他用手指在地上划一下。划到第三个，他忽然抬头：“这个我会，是我师傅的印记。”我们一起把那张单子抄进他自己的小本子里，他抄得歪七扭八，却一个数都没有错。"
+next = "knot"
+effects = [{ kind = "affinity", person = "kombo", value = 3 }, { kind = "skill", skill = "double_entry", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "hand"
+text = "把单子直接念完，不多说。"
+reply = "我念完，把单子还给他，没有再讲。他收好单子，说了一句：“你们家的人，话都少。”然后走了。我站在门口，觉得他说得不全对，却也没反驳。"
+next = "knot"
+effects = [{ kind = "affinity", person = "kombo", value = 1 }]
+
+[[tracks.chapters]]
+key = "knot"
+title = "海风里的结绳"
+text = "六月的风转了向，码头上的人都在赶季风前的最后一船。卡姆博在傍晚找到我，手里攥着一根编得很细的结绳，结上穿着一颗磨圆的白贝。他说这是他跟师傅学的第一个活计，编了三个月，只有这一根能拿得出手。他把结绳往我手里一塞，转身就跑，跑出几步又回头：“你要是不要，就丢进海里。”"
+once = true
+mood = "tender"
+when = [{ kind = "date", from = [1553, 6, 1] }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "系在腰带上，说收下了。"
+reply = "我把结绳系在腰带上，白贝在日头底下闪了一下。卡姆博站在远处，看见了，才放心地咧开嘴笑。那一夜，我把结绳解下来，又重新系紧一次。"
+next = "farewell"
+effects = [{ kind = "affinity", person = "kombo", value = 4 }, { kind = "item", item = "friendship_knot", qty = 1 }]
+
+[[tracks.chapters.choices]]
+key = "return"
+text = "把结绳还给他，说这太贵重。"
+reply = "我把结绳还给他。他接过去，沉默了很久，才说：“那就等你有像样的东西再给我。”这话后来我想了很多遍，才明白他是把一句承诺留在了我这里。"
+next = "farewell"
+effects = [{ kind = "affinity", person = "kombo", value = 1 }]
+
+[[tracks.chapters]]
+key = "farewell"
+title = "北风起的送别"
+text = "十一月底，季风快要换向了。卡姆博的师傅把他派去蒙巴萨的铺子，要他先学看那里的秤。他来跟我告别，穿着一件新做的长衫，衣角还留着没剪的线头。他说蒙巴萨离这里不远，走海路也就两三天，可他没坐过那么远的船。我问他怕不怕，他说不怕，然后又说，怕也没用。"
+once = true
+mood = "sad"
+when = [{ kind = "date", from = [1553, 11, 20] }]
+
+[[tracks.chapters.choices]]
+key = "walk"
+text = "陪他走到码头尽头，一路不说话。"
+reply = "我们一起走到码头尽头，那里停着一条小船。他上船前回头，朝我扬了扬手里的结绳，我看见他的手指上缠着一圈细线。船开时，他坐在船尾，一直没有转身。"
+next = "done"
+effects = [{ kind = "affinity", person = "kombo", value = 5 }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "往他袖子里塞一枚小秤砣，说到蒙巴萨替我看看那边的秤准不准。"
+reply = "我把父亲给我的一枚小秤砣塞进他的袖子里，让他到了蒙巴萨，替我看一看那边的秤准不准。他推了两下，没推回来，只说：“下次见面，我用一船货换。”"
+next = "done"
+effects = [{ kind = "affinity", person = "kombo", value = 3 }, { kind = "growth", attr = "commerce", value = 2 }]
+
+# ───────────────────────── B2 家乡玩伴：法图玛（绳坊的女儿，以旧字为伏笔）─────────────────────────
+
+[[tracks]]
+key = "c9_baraka_friend_fatuma"
+name = "法图玛·绳坊的女儿"
+kind = "encounter"
+start = "rope"
+auto = false
+academy = true
+cast = ["fatuma"]
+
+[[tracks.chapters]]
+key = "rope"
+title = "椰纤棚里的女孩"
+text = "阿莎姑母的椰纤棚挨着隔壁的绳坊，绳坊的主人家有个女儿，我们在水边碰见过几次，她每次都不说话。这一天，她蹲在棚子底下，把一根湿椰纤拧成细股，手指快得像在数数。我走过去，她头也不抬，说：“你的绳结打反了，阿莎姑母要骂的。”我低头一看，果然打反了。"
+once = true
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 3, 1] }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "请她教我，怎么拧得这么匀。"
+reply = "她把手里的绳子递给我，让我照着拧。我拧歪了三次，第四次才勉强匀。她笑了一声，说我拧绳子的手像是拿惯了笔，我没接她的话，心里却记住了这句。"
+next = "reed"
+effects = [{ kind = "affinity", person = "fatuma", value = 4 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "joke"
+text = "说我的手是拿秤杆的，不是拿绳子的。"
+reply = "她愣了一下，然后笑出了声，说秤杆能压住金子，绳子却能拴住船，两样都是要紧的东西。这一笔账，她算了一下午，最后还是让我留在她的棚子下面。"
+next = "reed"
+effects = [{ kind = "affinity", person = "fatuma", value = 3 }, { kind = "growth", attr = "eloquence", value = 2 }]
+
+[[tracks.chapters]]
+key = "reed"
+title = "抄写的椰叶"
+text = "夏天的时候，绳坊的老妇人病了一阵子，法图玛每天傍晚都在棚下念一小段什么，声音很轻，念的是另一种字，弯弯曲曲，我一个也不认得。我问她念的是什么，她把椰叶藏进袖子里，说是奶奶留下的经，不许外人看。过了一会儿，她又拿出来，指着其中一行，说：“这一个字，你认得吗？”"
+once = true
+mood = "mystic"
+when = [{ kind = "date", from = [1553, 6, 1] }]
+
+[[tracks.chapters.choices]]
+key = "guess"
+text = "凭字形去猜，说它像一只站在水边的鸟。"
+reply = "我看了很久，说它像一只站在水边的鸟。她没有笑，只轻轻把椰叶合上，说：“也许吧。奶奶也是这么说的。”"
+next = "storm"
+effects = [{ kind = "affinity", person = "fatuma", value = 3 }, { kind = "growth", attr = "perception", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "respect"
+text = "说不认得，请她慢慢念给我听。"
+reply = "她没想到我会这样说，怔了怔，然后真的慢慢念起来，一个字一停，念到一半忽然说：“你是第一个不装懂的人。”"
+next = "storm"
+effects = [{ kind = "affinity", person = "fatuma", value = 5 }]
+
+[[tracks.chapters]]
+key = "storm"
+title = "雨前的绳索"
+text = "九月里一阵急雨从海上压过来，海边晒着的椰纤眼看要被打湿。绳坊的人都往棚子里跑，只有法图玛抱着一卷绳，站在风口，喊我帮她把绳子拖进来。雨点打在脸上，我们俩的衣服都湿透了，绳子却一圈没湿。她坐在地上喘气，问我：“你刚才为什么不先跑？”我说，我在等你。她愣住，然后低下头，把手里的绳子递给我。"
+once = true
+mood = "tense"
+when = [{ kind = "date", from = [1553, 9, 1] }]
+
+[[tracks.chapters.choices]]
+key = "share"
+text = "和她一起把绳子拧干，各拿一头。"
+reply = "我们俩把绳子拧干，一人拎一头往棚子里走。路上她的手碰到我的，两个人都没说话，只听见雨打在棚顶的声音。"
+next = "farewell"
+effects = [{ kind = "affinity", person = "fatuma", value = 5 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "cloak"
+text = "先把她的外衣裹在她肩上，绳子之后再说。"
+reply = "我把她的外衣裹在她肩上，然后才去抢那卷绳。她没拒绝，只说：“你这人，先顾人，后顾账。”语气很轻，却不是责备。"
+next = "farewell"
+effects = [{ kind = "affinity", person = "fatuma", value = 3 }]
+
+[[tracks.chapters]]
+key = "farewell"
+title = "绳坊的新绳"
+text = "十二月初，绳坊要搬去北边的港口开新的作坊，法图玛要跟着母亲去做活，走之前来找我。她带了一卷新绳，说这是她亲手拧的，比我家仓房的任何一捆都细。她说，去了北边，要是还有人教她认那些字，她就写信回来告诉我。"
+once = true
+mood = "sad"
+when = [{ kind = "date", from = [1553, 12, 1] }]
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "收下绳子，答应替她看着基尔瓦的仓房。"
+reply = "我把绳子接过来，说，仓房的门我替你守着。她点点头，把一片椰叶塞进我手里：“那就算我欠你一句话。”椰叶上写着一行我看不懂的字。"
+next = "done"
+effects = [{ kind = "affinity", person = "fatuma", value = 5 }, { kind = "flag", flag = "c9_baraka_fatuma_leaf", value = true }]
+
+[[tracks.chapters.choices]]
+key = "letter"
+text = "让她到了北边就写一封信来，不许少写一个字。"
+reply = "她说，写信的人总是少写，等我来读。我说，那我就把每个字都读一遍。她笑了，说这话像她的奶奶。"
+next = "done"
+effects = [{ kind = "affinity", person = "fatuma", value = 4 }]
+
+# ───────────────────────── B2 书信（进学院后，每人两封）─────────────────────────
+
+[[tracks]]
+key = "c9_baraka_friend_kombo_letter_1554"
+name = "卡姆博的来信·1554"
+kind = "encounter"
+start = "event"
+auto = false
+academy = true
+cast = ["kombo"]
+
+[[tracks.chapters]]
+key = "event"
+title = "蒙巴萨来信"
+text = "四月的船靠岸，船夫把一卷信塞进我手里。纸是粗的，边角被海水泡得发皱，字迹歪得厉害，每一行都斜着往下掉。信是卡姆博写的，他在蒙巴萨的铺子里跟着师傅看了两个月的秤，学会了一件事：秤不说话，错的总是人。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "写回信，附上基尔瓦的季风表。"
+reply = "我把基尔瓦的季风表抄了一份，连同一句笑话，写在信纸背面寄出去。我告诉他，学院里的先生比他师傅还严，严到能把一个字的错挑出来。"
+next = "done"
+effects = [{ kind = "letter", person = "kombo", text = "巴拉卡：蒙巴萨的秤房比我们那里大十倍，师傅让我看了两个月的秤，才准我碰秤砣。我学会一件事：秤不说话，错的总是人。这边的人说话都快，我一句也跟不上。你们学院的先生严不严？那枚秤砣我替你收着，等你回来还。卡姆博。" }, { kind = "affinity", person = "kombo", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "读完，把信夹进账本，先不回。"
+reply = "我把信夹进账本，没有立刻回。夜里我又拿出来读了一遍，读到最后一行，才明白他写的是：那枚秤砣我替你收着。"
+next = "done"
+effects = [{ kind = "letter", person = "kombo", text = "巴拉卡：蒙巴萨的秤房比我们那里大十倍，师傅让我看了两个月的秤，才准我碰秤砣。我学会一件事：秤不说话，错的总是人。这边的人说话都快，我一句也跟不上。你们学院的先生严不严？那枚秤砣我替你收着，等你回来还。卡姆博。" }]
+
+[[tracks]]
+key = "c9_baraka_friend_kombo_letter_1555"
+name = "卡姆博的来信·1555"
+kind = "encounter"
+start = "event"
+auto = false
+academy = true
+cast = ["kombo"]
+
+[[tracks.chapters]]
+key = "event"
+title = "雨天的来信"
+text = "十月的雨天，一封信从海那边来，信角上沾着一点发黑的盐。字比上一封整齐了些，看得出是练过的。学院的钟刚敲过午时，我把信拆开，读了很久，才发现信里没有一句抱怨。"
+once = true
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "写回信，告诉他学院里下雨的样子。"
+reply = "我写了学院里的雨，写它怎样打在石板上，写我们在廊下抄书，一抄就是一个下午。信寄出去的时候，我想，他大概会在码头上念给别人听。"
+next = "done"
+effects = [{ kind = "letter", person = "kombo", text = "巴拉卡：我已经能一个人验成色了，师傅说我的眼睛比手快。那枚秤砣我还留着，磨得比以前平了。你们那边的冬天是不是也这么潮？我这里下雨的时候，码头上的人全躲进铺子里，只有我一个人站在外头，看船怎么靠岸。卡姆博。" }, { kind = "affinity", person = "kombo", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "只读，不回，把信夹在日记里。"
+reply = "我把信夹在日记里，那一页的字迹很快被我翻得发毛。我想等下一封一起回，却一直没有等到那一封。"
+next = "done"
+effects = [{ kind = "letter", person = "kombo", text = "巴拉卡：我已经能一个人验成色了，师傅说我的眼睛比手快。那枚秤砣我还留着，磨得比以前平了。你们那边的冬天是不是也这么潮？我这里下雨的时候，码头上的人全躲进铺子里，只有我一个人站在外头，看船怎么靠岸。卡姆博。" }]
+
+[[tracks]]
+key = "c9_baraka_friend_fatuma_letter_1554"
+name = "法图玛的来信·1554"
+kind = "encounter"
+start = "event"
+auto = false
+academy = true
+cast = ["fatuma"]
+
+[[tracks.chapters]]
+key = "event"
+title = "北边的来信"
+text = "六月的船带来一卷信，封口用的是一小片绳结，结打得很紧，一看就是她的手笔。信纸薄，字却比我记得的任何时候都稳。我把绳结拆开，读到第二行，抬头看了一眼窗外的云，才慢慢往下读。"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "回一封信，把学院里的旧字也写给她看。"
+reply = "我把学院里见过的几种旧字照着抄了一份，寄给北边。我没有写别的，只在末尾写：这一个，我认得，你要是认得，就告诉我它是什么意思。"
+next = "done"
+effects = [{ kind = "letter", person = "fatuma", text = "巴拉卡：北边的港口在造新船，我们的绳坊搬到了港口西头。我找到一个肯教我读旧字的老人，他说，那些弯弯的字，在北边的墓碑上也能看到。我没有告诉他是奶奶留下的。你的学院里有没有这样的字？写信时别把我的名字拼错。法图玛。" }, { kind = "affinity", person = "fatuma", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把信折成小方块，收进袖袋里。"
+reply = "我把信折好，收进袖袋里，走到学院的井边才拿出来看。她写的字不多，我却读了很久，直到井边的人都走了。"
+next = "done"
+effects = [{ kind = "letter", person = "fatuma", text = "巴拉卡：北边的港口在造新船，我们的绳坊搬到了港口西头。我找到一个肯教我读旧字的老人，他说，那些弯弯的字，在北边的墓碑上也能看到。我没有告诉他是奶奶留下的。你的学院里有没有这样的字？写信时别把我的名字拼错。法图玛。" }]
+
+[[tracks]]
+key = "c9_baraka_friend_fatuma_letter_1556"
+name = "法图玛的来信·1556"
+kind = "encounter"
+start = "event"
+auto = false
+academy = true
+cast = ["fatuma"]
+
+[[tracks.chapters]]
+key = "event"
+title = "一行旧字"
+text = "二月的信比往常都短，只有一行字，和一张抄下来的椰叶。她没有写问候，只写了一句叮嘱，说这一行字在北边也有人见过，可没人能念全。我把那张椰叶对着灯看了很久，看得灯芯都结了花。"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "写一封信，只写我猜的一个字。"
+reply = "我只写了一个字，是我猜的，写得很小，怕猜错。我把信寄出去，等了整个夏天，才等到她的回信，回信上只有一个字：“对。”"
+next = "done"
+effects = [{ kind = "letter", person = "fatuma", text = "巴拉卡：我把奶奶那一行字抄下来寄给你。你要是认得，就来信告诉我；你要是不认得，也别猜。猜错的人，我见过不少。法图玛。" }, { kind = "affinity", person = "fatuma", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "把椰叶收好，先不回信，等自己能念全了再说。"
+reply = "我把椰叶收好，没有回信。我想，等我能念全了，再告诉她，比现在猜一个字更像样。"
+next = "done"
+effects = [{ kind = "letter", person = "fatuma", text = "巴拉卡：我把奶奶那一行字抄下来寄给你。你要是认得，就来信告诉我；你要是不认得，也别猜。猜错的人，我见过不少。法图玛。" }]
+
+# ───────────────────────── B5 斯瓦希里新年：烧旧年的火 → 海里的沐浴 → 父亲第一次称金（掷骰）─────────────────────────
+
+[[tracks]]
+key = "c9_baraka_swahili_weigh_1553"
+name = "斯瓦希里新年·父亲的第一次称金"
+kind = "request"
+start = "fire"
+auto = false
+academy = true
+cast = ["salim_kilwi", "baraka_poet", "baraka_aunt"]
+
+[[tracks.chapters]]
+key = "fire"
+title = "旧年的火"
+text = "七月下旬，斯瓦希里新年到了。姆泽老人一早就在码头上生起一堆火，说旧年的晦气得烧在岸上，不能带进新年。家家把灶里的旧灰一筐筐倒进海里，孩子们提着空罐子跑来跑去，抢着把最后一把灰扔进水里。父亲没有去看热闹，他在秤房门口站着，一手抓着秤杆，像在等什么人开口。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 7, 23] }]
+
+[[tracks.chapters.choices]]
+key = "burn"
+text = "抱柴去烧旧年的火，火要烧到天亮。"
+reply = "我抱了一捆椰壳去烧火，火星往上蹿，把码头照得通红。姆泽老人在火边敲着拐杖，念了一句地名，火光里，所有人都跟着念。我的手心被火燎了一下，却没有松开柴。"
+next = "sea"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 3 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "ash"
+text = "替姑母把灶灰倒进海里，一筐不落。"
+reply = "我把灶灰倒进海里，一筐一筐，直到姑母在家门口喊停。灰被浪卷走，白花花地漂远了。姑母没说话，只往我手里塞了一把炒米，说：“旧年的账，今天算清。”"
+next = "sea"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 3 }, { kind = "growth", attr = "stewardship", value = 2 }]
+
+[[tracks.chapters]]
+key = "sea"
+title = "海里的沐浴"
+text = "天亮前，人们涌向沙滩，把身子埋进凉水里。孩子们尖叫着往岸上跑，又笑着冲回去。我跟着人群走进海里，浪一下子打在胸口，凉得人发抖。水底下的沙子软软的，踩上去一个个小坑。有人喊：“憋住气，把旧年冲出去！”我就憋住气，一头扎进去，耳朵里全是海水的响声。"
+once = true
+mood = "cheerful"
+when = [{ kind = "date", from = [1553, 7, 24] }]
+
+[[tracks.chapters.choices]]
+key = "dive"
+text = "一口气潜得最深，给海底的旧年打个招呼。"
+reply = "我一口气潜到最深，睁着眼，看见一片摇晃的光。浮出水面时，岸上有个陌生的少年朝我喊，我没听清，只看见他手里攥着一只白贝。"
+next = "weigh"
+effects = [{ kind = "growth", attr = "constitution", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "在水里数浪，数到第十下才上岸。"
+reply = "我在水里数浪，一个，两个，数到第十个，浪头突然平了下来。我上岸时，嘴唇冻得发白，却记住了那十个浪的间隔。"
+next = "weigh"
+effects = [{ kind = "growth", attr = "perception", value = 3 }]
+
+[[tracks.chapters]]
+key = "weigh"
+title = "父亲的第一次称金"
+text = "日头升高，码头上的船陆续靠岸。收金的船主把一包金子放在秤房的木台上，父亲擦了擦手，第一次没有自己动秤杆。他把秤杆递给我，说：“今天你来报数。我看你的眼睛，不看你的手。”船主嘴角带着笑，等着看我出丑。我的手心全是水，握不稳秤杆。"
+once = true
+mood = "tense"
+when = [{ kind = "date", from = [1553, 7, 25] }]
+
+[[tracks.chapters.choices]]
+key = "dice"
+text = "按刻线定住秤杆，一口气报出数来。"
+check = { attr = "perception", base = 35, per = 6 }
+reply = "我眯起眼，看那一根细线停在哪一格。金子的颜色在日光下一点点变深，我的眼睛跟着秤杆走。报出数来时，船主愣了一下，伸手去拿砝码。砝码摆上去，横梁恰好歇在我报的那一格。父亲什么也没说，只把秤房的钥匙轻轻放到我掌心。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_weigh_second", value = true }, { kind = "affinity", person = "salim_kilwi", value = 6 }, { kind = "fame", value = 2 }, { kind = "growth", attr = "perception", value = 4 }, { kind = "memory", memory = "mem-c9-baraka-first-weigh", title = "第一次称金" }]
+fail = { next = "lost", effects = [{ kind = "flag", flag = "c9_baraka_weigh_lost_1553", value = true }], news = "秤杆晃了一下，船主的砝码摆上去，横梁歪向了他那一边。" }
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "请父亲自己报数，我只在一边看刻线。"
+reply = "父亲接过秤杆，报出了数。我一格一格对着刻线看下去，看到的数，跟他报的一样。船主没有笑，只把金子收了回去。父亲回头看我，说：“看得对，就说出来。下回轮到你。”"
+next = "done"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = 3 }, { kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters]]
+key = "lost"
+title = "横梁歪了一线"
+text = "船主把砝码又加了一次，横梁这才歇在父亲报的数上。码头上有人笑，有人替船主叫好。父亲没有骂我，只是把秤杆接过去，把那一线重新称了一遍。他称完，把秤杆在我手里放平，说：“错的，记下来。下一回，眼睛要比手先到。”"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "record"
+text = "把那一线的日子和数字写进本子。"
+reply = "我把那一线的日子、数字和船号都写进本子，写得很小，却一个也不漏。写完，父亲在旁边看了一眼，说：“记得下来，就不会错第二次。”"
+next = "done"
+effects = [{ kind = "growth", attr = "perception", value = 3 }, { kind = "fame", value = -1 }, { kind = "affinity", person = "salim_kilwi", value = 2 }]
+
+# ───────────────────────── 二阶称金（B5 赢了之后的解锁，靠旗标，不靠职业进度）─────────────────────────
+
+[[activities]]
+key = "c9_baraka_gold_weigh_second"
+name = "称金与验秤·二阶"
+description = "父亲点过头的那一天起，码头上的大宗金子可以交给你单独过秤。验成色、报数、签字，一样不差，船主也不再把你当孩子。"
+kind = "job"
+stage = "any"
+scene = "quay_kilwa"
+unlock = { flag = "c9_baraka_weigh_second" }
+age = [12, 17]
+income = [30, 50]
+fatigue = 10
+mood = -1
+gains = { commerce = [5, 7], perception = [3, 5] }
+skills = [{ skill = "double_entry", xp = 14 }]
+risk = { failure_bp = 2200, attr = "commerce", per = 160 }
+failure = { income_pct = 50, gains_pct = 50, extra_fatigue = 3, mood = -2 }
+where = { at = "kilwa" }
+
+# ───────────────────────── B7 第一次远足（旗标 outing_permission 有了才进）─────────────────────────
+
+[[tracks]]
+key = "c9_baraka_first_outing"
+name = "巴拉卡·宾·萨利姆·第一次远足"
+kind = "encounter"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "城外的泥滩"
+text = "父亲终于在饭桌上点了头：可以去远一点的地方了，但要带上水，还要有一个能说话的人。我把这句话在心里念了三遍。第二天一早，我沿着基尔瓦老城外的小路走，过了大清真寺的旧墙，又过了卖椰子的摊子，一直走到葡萄牙人留下的旧堡后面。那里有一片没人收拾的红树林，泥滩在脚底下发出咕咕的声音。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "flag", flag = "outing_permission", value = true }, { kind = "date", to = [1554, 1, 9] }]
+
+[[tracks.chapters.choices]]
+key = "mud"
+text = "蹲下来，把泥滩上每一道潮痕都记下来。"
+reply = "我蹲在泥滩上，一道道数潮痕。最高的那一道，离我脚边只有一个手掌。涨潮时，这里会整片被海水盖住。我把那一道痕画进了本子，在旁边写下日子。"
+next = "done"
+effects = [{ kind = "growth", attr = "perception", value = 3 }, { kind = "flag", flag = "c9_baraka_first_outing_done", value = true }]
+
+[[tracks.chapters.choices]]
+key = "walk"
+text = "沿着小路走回去，把沿途的旧墙和摊子都记住。"
+reply = "我一路往回走，把大清真寺的旧墙、椰子摊子的吆喝、堡墙上的炮位都在心里过了一遍。走到家门口时，天已经黑了，姆泽老人坐在石凳上，问我看见了什么。我一样样说给他听，他敲了两下拐杖，说：“少一样。”我想了想，忘了说那一片红树林。"
+next = "done"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 2 }, { kind = "growth", attr = "eloquence", value = 2 }, { kind = "flag", flag = "c9_baraka_first_outing_done", value = true }]
+
+# ───────────────────────── B3 关键事件 00–05：稳妥 / 靠本事（掷骰）/ 靠关系或物品 三岔 ─────────────────────────
+# 三条路的后续各不相同：谁记住、谁失望、错过了什么、拿到什么。掷骰失败走 _fail 章，不再统一“补课”。
+
+[[tracks]]
+key = "c9_baraka_critical_00"
+name = "父亲的金砝码"
+kind = "request"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "父亲的金砝码"
+text = "二月半，一个古吉拉特来的经纪人趁东北风把船靠上码头，拿着一块金子来秤。他说父亲的秤轻了半钱，要用箱底那套砝码再称一遍。父亲坐在秤房的门槛上，咳了两声，只朝我抬了抬下巴。我十二岁，手心直冒汗。箱子打开，黄铜砝码一枚枚排开，箱底的毡子却鼓着一块。经纪人眼尖，伸手一掀，毡子底下还压着一枚，不合常规：刻字浅，边角磨得发亮，分量比标的差了一点。经纪人指着它说：就用这个。我的第一个念头是把它拿出来看个清楚，第二个念头是别碰它。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 2, 15] }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "把金子原样包好，今天这一单不称了。"
+reply = "我把金子原样包好，推回经纪人面前，说今天这一单不称了。他瞪大了眼，骂了一句古吉拉特话，拂袖而去。父亲从门槛上抬起头，看了我很久，没骂，只把秤盘收了起来。码头上的人都说，基尔瓦的秤房连一单都不敢接。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_00_steady", value = true }, { kind = "flag", flag = "c9_baraka_critical_00_solved", value = true }, { kind = "affinity", person = "salim_kilwi", value = -2 }, { kind = "fame", value = -1 }]
+
+[[tracks.chapters.choices]]
+key = "skill"
+text = "不看刻字，先看金子的颜色，自己把这一单称平。"
+check = { attr = "perception", base = 35, per = 6 }
+reply = "我不去看刻字，先看金子的颜色。斜过来的光一照，成色上那一点差我看得清清楚楚。我把秤杆一抬一放，让经纪人自己看横梁歇在哪一边。他愣了一下，我顺口讲了个海龟借水的笑话，他跟着笑起来，价钱就回到了公道的那一边。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_00_solved", value = true }, { kind = "growth", attr = "perception", value = 6 }, { kind = "fame", value = 2 }]
+fail = { next = "event_fail", effects = [{ kind = "flag", flag = "c9_baraka_critical_00_failed", value = true }], news = "眼力没跟上，那一点差被经纪人抓住，价钱压低了半钱。" }
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "请父亲出面作保，让经纪人认这个家的秤。"
+reply = "我把话递给父亲。父亲听完，把手从秤杆上拿开，第一次正正经经看了我一眼，然后走到经纪人面前，说：“这孩子称的，我认。”经纪人笑着摇头，却把价钱抬回了原处。父亲回来后只说了一句：“以后这种事，先来找我。”"
+next = "done"
+requires = [{ kind = "affinity", person = "salim_kilwi", ge = 6 }]
+effects = [{ kind = "flag", flag = "c9_baraka_critical_00_solved", value = true }, { kind = "flag", flag = "c9_baraka_critical_00_vouched", value = true }, { kind = "affinity", person = "salim_kilwi", value = 4 }]
+
+[[tracks.chapters]]
+key = "event_fail"
+title = "压低的半钱"
+text = "那半钱我没压回来。经纪人付了钱，走的时候把那块金子在手心里颠了颠，像是在掂我的斤两。父亲在门槛上站起来，又坐下去，什么也没说。夜里我把那一笔按两栏记进账本，左边是我看错的那一线，右边是他多付的那半钱。账对上了，心却没有。"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "note"
+text = "把错的那一线记进账本。"
+reply = "我把那一线的日子、重量和成色都写上，字写得很小，却一个不漏。写完，我把笔搁在砚台边上，想了很久，才明白一杆秤的准，靠的是眼睛先到，手才能跟上。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_00_solved", value = true }, { kind = "growth", attr = "resolve", value = 3 }]
+
+[[tracks]]
+key = "c9_baraka_critical_01"
+name = "姑母的家用账"
+kind = "request"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "姑母的家用账"
+text = "东北风还没停，姑母把钥匙、账本和作坊的印章，一样样放到我面前。她说，往后账房由我进出。我翻开那本旧椰纤账，页页数字都对得上，只有一笔例外：卖出十二捆绳，买家那一栏空着，墨色也比前后都淡。我翻回去又看了一遍，确定没有看错。抬头时，姑母正望着窗外晾椰纤的架子，笔尖在纸上停了一下，又收了回去，她没问我看出了什么。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 3, 1] }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "把这一笔记作存疑，照常往下记。"
+reply = "我在那一行旁边写下“存疑”两个字，把后面的账照常记下去。姑母看了一眼那两个字，什么也没说，却把那一页的墨色又抄了一遍，抄得比我的字还淡。这一笔就这么悬着，像是有人在替谁留着余地。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_01_steady", value = true }, { kind = "flag", flag = "c9_baraka_critical_01_solved", value = true }, { kind = "growth", attr = "resolve", value = 2 }, { kind = "affinity", person = "baraka_aunt", value = 1 }]
+
+[[tracks.chapters.choices]]
+key = "skill"
+text = "把那一笔的来龙去脉算清楚。"
+check = { attr = "numeracy", base = 30, per = 6 }
+reply = "我把那笔绳的日子倒推回去，对了三条船的靠岸，又对了账上的数。两样一合，那一笔就落在一天里：卖绳的那天，是一条外港的船进的内港。我把日子写在账页的边上，字写得很小，却清清楚楚。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_01_solved", value = true }, { kind = "growth", attr = "numeracy", value = 6 }]
+fail = { next = "event_fail", effects = [{ kind = "flag", flag = "c9_baraka_critical_01_failed", value = true }, { kind = "affinity", person = "baraka_aunt", value = -2 }], news = "三条船的日子对不上，那一笔还是悬着，姑母的笔又停了一下。" }
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "用姑母给的筹子，把这一笔摆出来。"
+reply = "我把算账的筹子摆在桌上，一根一根对着账页摆过去。摆到第十二根，我停了下来：那一笔的买家，原来是个熟人，写的时候墨色淡，是因为写的人不想让人看清。我把这件事告诉了姑母。她沉默了很久，最后说：“这笔账，你替我留着。”"
+next = "done"
+requires = [{ kind = "item", item = "counting_tokens", qty = 1 }]
+effects = [{ kind = "flag", flag = "c9_baraka_critical_01_solved", value = true }, { kind = "flag", flag = "c9_baraka_aunt_ledger_kept", value = true }, { kind = "affinity", person = "baraka_aunt", value = 6 }]
+
+[[tracks.chapters]]
+key = "event_fail"
+title = "两条船的日子"
+text = "我算了三遍，三遍都对不上。第三遍的时候，我看见姑母在门口站着，手里端着一碗水，没有进来。她看见我停笔，就把水放在门槛上，走了。那碗水我没有喝，只把那一页的日子划掉，重新算。"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "retry"
+text = "把那一页划掉，明天再算。"
+reply = "第二天，我把那一页重新算了一遍。日子还是对不上，可我知道哪一条船不该算进去了。姑母看见账页上多出的一行小字，什么也没说，只把碗从门槛上收了回去。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_01_solved", value = true }, { kind = "growth", attr = "numeracy", value = 2 }]
+
+[[tracks]]
+key = "c9_baraka_critical_02"
+name = "第一段内陆商路"
+kind = "request"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "第一段内陆商路"
+text = "四月本该是雨季，今年却没下几场雨。干河床上的沙硌得脚底发疼，我们走了七天，终于到了内陆的第一处集市。商队的头人把驮着象牙和铜条的骡子赶进场子，一个穿白袍的老头子迎上来，说这一路的过路钱要翻一倍。头人朝我使了个眼色，意思是：你来说。我十二岁，第一次进内陆，嘴里还留着海边的咸味。老头子的眼睛盯着我腰间的黄铜小箱，像在等我先开口。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 4, 1] }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "把这一笔让头人接过去，自己退到骡子后面。"
+reply = "我把这一笔让头人接过去。他接了账，脸色沉得像要下雨。众人都看见我低了头，有人笑了一声。回程的路上我一句话也没说，只在心里把那几个数一遍遍算到天黑。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_02_steady", value = true }, { kind = "flag", flag = "c9_baraka_critical_02_solved", value = true }, { kind = "growth", attr = "resolve", value = 3 }, { kind = "fame", value = -1 }]
+
+[[tracks.chapters.choices]]
+key = "skill"
+text = "用海边的故事，把过路钱讲回来。"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "我用海边的口气讲起史诗，讲的是一个少年怎样用一句话让整条船的商人闭了嘴。讲到第三段，老头子忍不住笑出了声，他身边的人也跟着笑。我趁着笑声把过路钱往回拉了两成，讲完才觉得嗓子发干，手心却攥出了汗。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_02_solved", value = true }, { kind = "growth", attr = "eloquence", value = 8 }]
+fail = { next = "event_fail", effects = [{ kind = "flag", flag = "c9_baraka_critical_02_failed", value = true }, { kind = "fame", value = -1 }], news = "故事讲到一半，老头子先沉下了脸，过路钱一文没少。" }
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "报出姆泽老人的名字，说这些地名是他教的。"
+reply = "我报出姆泽老人的名字，说这些地名是他教我的。白袍老头子愣了一下，接着说出一个地名的古法读音，说那是他祖父讲过的。周围的人听见，都把“姆泽”两个字记住了。过路钱的事，就这样过去了。"
+next = "done"
+requires = [{ kind = "affinity", person = "baraka_poet", ge = 6 }]
+effects = [{ kind = "flag", flag = "c9_baraka_critical_02_solved", value = true }, { kind = "fame", value = 2 }, { kind = "affinity", person = "baraka_poet", value = 3 }]
+
+[[tracks.chapters]]
+key = "event_fail"
+title = "没讲完的故事"
+text = "我的故事只讲到第二段，老头子就摆了摆手，说海边孩子嘴上的咸味太重，听不进去。商队的人低下头，有人小声嘀咕。头人把那笔钱付了，没有看我。我知道，这一笔是我输了。"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "learn"
+text = "记下他的开场，回去改。"
+reply = "我把他摆手前的那句话记在纸上，一个字一个字琢磨。那句话说得不客气，却说中了我故事里最轻的一处。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_02_solved", value = true }, { kind = "growth", attr = "eloquence", value = 3 }]
+
+[[tracks]]
+key = "c9_baraka_critical_03"
+name = "巴罗斯书里的克卢瓦"
+kind = "request"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "巴罗斯书里的克卢瓦"
+text = "六月的西南风吹得门板直响。去年在里斯本印出的一部书，书商街的人已经拆成散页在卖。我买到的那一本少了封面，书页边上，有人用葡萄牙文写着“此处不实”。书里说，1505年葡萄牙人的船队进了克卢瓦，苏丹逃进了内陆，城里的金子被搬空，岛上筑起一座堡。我一行行念下去，念到苏丹逃走那一句，手指停在纸上。我们自己的编年史是阿拉伯文写的，那段我小时候听姆泽老人唱过，口气可不是这样。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 6, 1] }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "把书合上，压进箱底，不读完。"
+reply = "我把书合上，压进箱底，没有读完。父亲问我读到哪里，我没答，只讲了个笑话岔开。姆泽老人在门口听见了，摇了摇头，什么也没说。码头上有人笑我，说巴拉卡读外人的书，比读自家的事还熟。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_03_steady", value = true }, { kind = "flag", flag = "c9_baraka_critical_03_solved", value = true }, { kind = "affinity", person = "baraka_poet", value = -2 }, { kind = "fame", value = -1 }]
+
+[[tracks.chapters.choices]]
+key = "skill"
+text = "拿家里的账，重算书里的数。"
+check = { attr = "learning", base = 30, per = 6 }
+reply = "书里写克卢瓦每年出多少金子、进多少布，我拿家里的账一笔笔重算。算出的数比书里少了一大截。我把两个数都抄进本子，写明出处，谁读都看得出差在哪里。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_03_solved", value = true }, { kind = "growth", attr = "commerce", value = 8 }, { kind = "memory", memory = "mem-c9-baraka-03", title = "巴罗斯书里的克卢瓦" }]
+fail = { next = "event_fail", effects = [{ kind = "flag", flag = "c9_baraka_critical_03_failed", value = true }], news = "书里的数字在我手里对不上，两栏之间有一笔找不到来处。" }
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "请姑母从旧箱里找出早年的账，拿来对。"
+reply = "姑母从旧箱底翻出一摞早年的椰纤账，纸页发黄，字迹却工整。我把书里的数和账上的数一条条对，对到一半，发现书里那个出金的年份，正是账上少了一船货的年份。姑母只说了一句：“这本账，你别拿出去。”"
+next = "done"
+requires = [{ kind = "affinity", person = "baraka_aunt", ge = 8 }]
+effects = [{ kind = "flag", flag = "c9_baraka_critical_03_solved", value = true }, { kind = "affinity", person = "baraka_aunt", value = 3 }, { kind = "memory", memory = "mem-c9-baraka-03", title = "巴罗斯书里的克卢瓦" }]
+
+[[tracks.chapters]]
+key = "event_fail"
+title = "对不上的一笔"
+text = "我重算到第三遍，两边的数字还是不肯合拢。书里的税钱我记在一栏，我们的税钱记在另一栏，中间有一笔数，我怎么也找不到它的来处。我把数字抱到姆泽老人面前，他听完，用手掌在桌上敲了两下，说：“数错，不丢人。记下来，等人来对。”"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "note"
+text = "把那一笔单独记在册子末页。"
+reply = "我把那一笔单独抄在册子最后一页，旁边写上：待对。姆泽老人看见了，没说话，只把那一页的边角折了一个小角。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_03_solved", value = true }, { kind = "affinity", person = "baraka_poet", value = 2 }]
+
+[[tracks]]
+key = "c9_baraka_critical_04"
+name = "港口的旧堡"
+kind = "request"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "港口的旧堡"
+text = "八月的西南风正猛，我过了十三岁的生日，港口里来了一条从索法拉北上的船。船长说进港的水道变浅了，要有人替他指出礁石的位置。码头上的人都看着我。父亲在秤房里，隔着门没有出来。堡墙上还留着葡萄牙人当年的炮位，墙根长满了贝壳。涨潮的水已经漫到第二级台阶，船长的人在堡下挥手，要我下去。我摸了摸腰间的黄铜小箱，心想，今天要是量错了，船就得撞上礁。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 8, 1] }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "说今天潮水不好，回去拿了图再说。"
+reply = "我说今天潮水不好，回去拿了图再说。码头上的人摇头，说小孩子嘴上说得轻巧，名声也跟着薄了一层。父亲从秤房里走出来，把图接过去，说：“这一船今天在外港抛锚，明天再靠。”我一路低着头走回家，耳朵烫得厉害。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_04_steady", value = true }, { kind = "flag", flag = "c9_baraka_critical_04_solved", value = true }, { kind = "flag", flag = "c9_baraka_port_ship_elsewhere", value = true }, { kind = "fame", value = -1 }, { kind = "affinity", person = "salim_kilwi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "skill"
+text = "趁退潮下礁，量水深画刻线。"
+check = { attr = "seamanship", base = 35, per = 6 }
+reply = "我下到礁石边，趁着退潮，一丈一丈地量水深。量完一处，就用炭在堡墙上画一道刻线，写上日子与潮位。涨潮时水漫到哪一道线，我都记下来。船过来的时候，它们要靠着这些线才知道该怎么靠岸。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_04_solved", value = true }, { kind = "growth", attr = "seamanship", value = 8 }]
+fail = { next = "event_fail", effects = [{ kind = "flag", flag = "c9_baraka_critical_04_failed", value = true }], news = "潮水比我想的早来了一刻，礁石一滑，我抓住绳子，手心磨破了。" }
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "请卡姆博来帮忙，他拉着量水的绳头，你放绳。"
+reply = "卡姆博把绳头在手腕上绕了三圈，说：“你放，我拉着。”我一丈一丈放下去，他在礁石上站得稳稳的，绳子在他手里一动不动。船长看着那根绳子，说：“这绳子我信。”"
+next = "done"
+requires = [{ kind = "affinity", person = "kombo", ge = 6 }]
+effects = [{ kind = "flag", flag = "c9_baraka_critical_04_solved", value = true }, { kind = "growth", attr = "seamanship", value = 3 }, { kind = "affinity", person = "kombo", value = 2 }]
+
+[[tracks.chapters]]
+key = "event_fail"
+title = "涨潮早了一刻"
+text = "我下到礁石边，潮水却比我想象的早了一刻。量到第三丈，脚下的礁石滑了一下，我抓住绳子，才没有跌进水里。船长在堡下大声喊，让我别下了。我爬上来，满手是血，刻线一条也没画成。"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "bandage"
+text = "裹好手，去找父亲的老伙计讨一张旧图。"
+reply = "父亲的老伙计听说了，二话不说，从柜子底下抽出一张旧图，图上的礁线画得很细，连每一个涨潮的刻痕都标着。他说：“量不好，就看别人是怎么量的。”"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_04_solved", value = true }, { kind = "growth", attr = "resolve", value = 3 }, { kind = "affinity", person = "salim_kilwi", value = 1 }]
+
+[[tracks]]
+key = "c9_baraka_critical_05"
+name = "北上求学的商队"
+kind = "request"
+start = "event"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "event"
+title = "北上求学的商队"
+text = "从亚丁顺着东北风南下来的三角帆船停在港外，要北返就得等西南风转来，最快也要春天。船东是个老商人，要的船钱是整整两块金子，北上的商队都得搭他的船。父亲只拿得出一块半。他把秤推到我面前，手没有离开秤杆，只说了一句：这笔钱，要用你的嘴去换。我十三岁，头一回觉得港口的风太大，吹得人站不稳。码头上的人围过来看热闹，有人小声打赌，说这孩子开不了口。船东坐在凉棚下，手里捻着一串红珠子，等我开口。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 11, 1] }]
+
+[[tracks.chapters.choices]]
+key = "steady"
+text = "把钱交给父亲，自己守着行李，不再讲价。"
+reply = "我把话递给父亲，父亲把秤杆放下，陪船东喝了一口茶，两人说的话我听不清。船东的脸色沉了下来，说这一班已经满了，下一班没有准日子。码头上的人都看见了，有人在背后笑出了声。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_05_steady", value = true }, { kind = "flag", flag = "c9_baraka_critical_05_solved", value = true }, { kind = "flag", flag = "c9_baraka_north_berth_missed", value = true }, { kind = "fame", value = -1 }, { kind = "affinity", person = "salim_kilwi", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "skill"
+text = "用海边的口气，把船钱讲下来。"
+check = { attr = "eloquence", base = 30, per = 6 }
+reply = "我把北上的路讲成一支船歌：季风怎样推船，港口怎样留人。船东先是摇头，讲到亚丁的海湾，他手里的红珠子停住了。讲完，船钱已经降到一块半，正是父亲拿得出的数。"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_05_solved", value = true }, { kind = "growth", attr = "eloquence", value = 8 }]
+fail = { next = "event_fail", effects = [{ kind = "flag", flag = "c9_baraka_critical_05_failed", value = true }], news = "船东听完，只把红珠子在手里转了一圈，说：“歌是好歌，账要算。”" }
+
+[[tracks.chapters.choices]]
+key = "bond"
+text = "说北边那个港口，我朋友一家要去开绳坊，她的母亲会在那里管事。"
+reply = "我说，北边那个港口，我一个朋友一家要去开绳坊，她的母亲会在那里管事。船东的红珠子停住了，过了很久，说：“那一班，我替你留一个位子。”"
+next = "done"
+requires = [{ kind = "affinity", person = "fatuma", ge = 8 }]
+effects = [{ kind = "flag", flag = "c9_baraka_critical_05_solved", value = true }, { kind = "flag", flag = "c9_baraka_north_berth_kept", value = true }, { kind = "affinity", person = "fatuma", value = 3 }]
+
+[[tracks.chapters]]
+key = "event_fail"
+title = "歌是好歌"
+text = "船东没有降价。他把红珠子往桌上一放，只说了一句：“歌是好歌，账要算。”我把那一句记在心里，一路上船都在想它。船上的账本摊开，我一笔一笔算船上的水、米和人，直算到北风起来。"
+once = true
+mood = "sad"
+when = []
+
+[[tracks.chapters.choices]]
+key = "sail"
+text = "上船，把船上的账一笔笔算清。"
+reply = "船开的那一天，我的账本上已经有了三十多页数字。船东路过，看了一眼，把它合上，说：“这一趟，你替我记账。”"
+next = "done"
+effects = [{ kind = "flag", flag = "c9_baraka_critical_05_solved", value = true }, { kind = "growth", attr = "numeracy", value = 4 }]
+
+# ───────────────────────── 剧情增写（2026-11-12，Claude）：二十年的账（索法拉的老哈希姆），6 章 ─────────────────────────
+# 母本：《一千零一夜》开头“商人与魔鬼”——欠了命的商人一年后如约回来偿还，三个过路的老人各讲一个故事，换下他一部分命；
+# 文化：斯瓦希里商人之间的信用与借贷（不取息，账一辈子挂着）；对同行一丝不差、对山里下来的人另算，是同一套规矩的两面；
+# 张力：哈希姆借钱给萨利姆的妻子治病，借了三回，第四回不借——他把账记得一丝不差，正是这份一丝不差，把萨利姆逼上了山。
+# 接：主线 a01（索法拉草席对面的哈希姆、“让我看看你的手”、他扔进海里的磨角秤砣、母亲药钱那笔二十年的账）；a01 新加的变体读 h5 的 rw_baraka_hashim_story_promised / _debt_promised。
+#     “铜针”n1 读 h0 的 rw_baraka_hashim_asked，h4 读“铜针”n1 的 rw_baraka_needle_aunt_hint。哈希姆没有人物条目（只在正文里出现），他的信由书记或侄子代笔，不用 letter 效果。
+# 设：rw_baraka_hashim_story / _asked / _weighed（h0）、_admitted / _why / _silent（h1）、_route_copied / _asked_women / _letter_shown（h1b）、_story_sent / _paid_part / _asked_forgive（h2）、_inspector / _asked_his / _warned_father（h3）、
+#     _not_wrong / _thanked / _asked_mountain（h4）、_story_promised / _debt_promised / _hands（h5，互斥）。
+[[tracks]]
+key = "c9_baraka_rw_hashim"
+name = "二十年的账"
+kind = "request"
+start = "h0"
+auto = false
+academy = true
+cast = ["salim_kilwi"]
+
+[[tracks.chapters]]
+key = "h0"
+title = "索法拉来的老伙计"
+text = "东北风还在吹，索法拉的老哈希姆搭着顺风船来了。他是父亲年轻时一起跑内陆的伙伴，胡子全白了，一进门先要水，再要故事。他每年来一回，收父亲还他的一笔旧账。父亲把金砂倒上秤，用的是箱子里刻字最清楚的那几枚，称完又往秤盘里添了一小撮，说是路费。哈希姆数也不数，往怀里一揣：“还了这些年，才还了一半。剩下那一半，你儿子替你还。”父亲没笑，我笑了。"
+once = true
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 2, 25] }]
+
+[[tracks.chapters.choices]]
+key = "story"
+text = "给他讲一个故事当见面礼"
+reply = "我讲了一个替苏丹看守金库、最后把钥匙吞进肚子的仆人。哈希姆听得直拍腿，说讲得比他小时候听的还好：“你爹年轻时也讲故事，讲完一个，价钱就松一分。后来他不讲了。”我问为什么。他说：“问你爹。”"
+next = "h1"
+effects = [{ kind = "growth", attr = "eloquence", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_story", value = true }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：这笔账是借什么的"
+reply = "哈希姆看了父亲一眼，父亲在擦秤杆，没抬头。“借的是一个女人的命，”哈希姆说，“没借来。”说完他自己愣了一下，像是说多了，伸手揉了揉我的头，“去，再给我端碗水。”"
+next = "h1"
+effects = [{ kind = "growth", attr = "perception", value = 1 }, { kind = "flag", flag = "rw_baraka_hashim_asked", value = true }]
+
+[[tracks.chapters.choices]]
+key = "weigh"
+text = "替父亲把那撮路费也称一称"
+reply = "我把那一小撮金砂放上秤，报了数。哈希姆眯着眼看横梁：“手稳，比你爹十二岁的时候稳。”他又看了看箱子，“你爹给我称，从来只用这几枚。”说“这几枚”的时候，他拿指头点了点，点得很慢。"
+next = "h1"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_weighed", value = true }]
+
+[[tracks.chapters]]
+key = "h1"
+title = "两副秤"
+text = "哈希姆在基尔瓦住了十来天，每天坐在秤房门口晒太阳，看父亲做买卖。那天内陆的商队下来，父亲给卖金人称金，哈希姆在旁边看着，一句话也没说。商队走了，他把我叫到码头尽头，望着海说：“海边的人给海边的人称，用一副秤；给山里下来的人称，用另一副。这条海岸上，从索法拉到摩加迪沙，都是这个规矩。”他没说哪一副是哪一副。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 3, 5] }]
+
+[[tracks.chapters.choices]]
+key = "you"
+text = "问他：那您呢"
+reply = "哈希姆笑出了声，笑得直咳：“我？我比你爹早用了十年。”他从腰带里摸出一块秤砣，磨过角的，在掌心里颠了颠，又塞回去，“这东西跟人一样，用久了就离不开了。”他说得一点也不羞，像在说自己的老毛病。"
+next = "h1b"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_admitted", value = true }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "问他：山里人为什么另算"
+reply = "“山里人不认得秤，认得脸。你对他笑，他就信你。信你的人，你少给他一点，他不疼；不信你的人，你多给他也没用。”他说这是他师傅教的，他师傅是索法拉最体面的人。"
+next = "h1b"
+effects = [{ kind = "growth", attr = "commerce", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_why", value = true }]
+
+[[tracks.chapters.choices]]
+key = "silent"
+text = "不接话，跟他一起看海"
+reply = "我没接话。海上过来一条小船，船头坐着两个孩子在钓鱼。哈希姆看了很久，说：“你还小，这话本不该跟你说。可你爹不会说，总得有个人说。”他起身回了秤房，拐杖敲在石头上，一声，一声。"
+next = "h1b"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_silent", value = true }]
+
+[[tracks.chapters]]
+key = "h1b"
+title = "河床里的女人"
+text = "十一月，我动身前一个多月，哈希姆从索法拉捎来一封信，是书记写的，说给出远门的人一点路上的话。他写山里的金子是怎么来的：旱季河水落下去，村里的女人和孩子下到河床，挖一人深的坑，一筐一筐淘沙，淘一天，淘出一指甲盖。王的人收走一份，剩下的包进芭蕉叶，男人背着走二十天下山。“你在开罗看见金子，就想想那一指甲盖。你爹看金子，只看成色。我老了，看得见手。”"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 11, 20] }]
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "把那条下山的路抄进本子"
+reply = "我把他写的路一段一段抄下来：河床，坑，王的人，二十天的山路，索法拉的草席，基尔瓦的秤房。抄完一看，金子走的这条路，比我要去开罗的路还长。"
+next = "h2"
+effects = [{ kind = "skill", skill = "double_entry", value = 4 }, { kind = "flag", flag = "rw_baraka_hashim_route_copied", value = true }]
+
+[[tracks.chapters.choices]]
+key = "women"
+text = "回信问：淘金的女人叫什么"
+reply = "我问他，河床里淘沙的女人，他认得几个，叫什么。回信说他一个也叫不出来，四十年了，一个也没问过。“你问得对，”他在信尾写，“可你也会忘了问。人上了船，就只记得金子。”"
+next = "h2"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_asked_women", value = true }]
+
+[[tracks.chapters.choices]]
+key = "father"
+text = "把信拿给父亲看"
+reply = "父亲看完，把信折好还给我，只说：“哈希姆老了，话多。”可那天晚上，他给下山来的一个老卖金人多倒了一碗椰酒，又问了他村里的河今年水落了没有。"
+next = "h2"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = 1 }, { kind = "flag", flag = "rw_baraka_hashim_letter_shown", value = true }]
+
+[[tracks.chapters]]
+key = "h2"
+title = "三个过路的老人"
+text = "哈希姆托往北的船捎来一封信，是他口述、索法拉的书记写的。他说今年父亲又只还了一半的一半，说开罗的书钱紧。“我不催。我给他讲了个故事：一个商人欠了魔鬼一条命，约好一年后回来还，路上来了三个老人，每人讲一个故事，换下他三分之一的命。你爹听完说，他没有三个老人。”信末他问我：在开罗，学到值三分之一条命的故事没有。"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 9, 10] }]
+
+[[tracks.chapters.choices]]
+key = "send_story"
+text = "回信讲一个开罗听来的故事"
+reply = "我把咖啡棚里听来的一段写给他：一个苏丹被人骗进牢里，靠一个肯冒险的看守传话出来。写到苏丹出牢，我加了一句：这个故事，换我父亲一年。"
+next = "h3"
+effects = [{ kind = "growth", attr = "eloquence", value = 3 }, { kind = "flag", flag = "rw_baraka_hashim_story_sent", value = true }]
+
+[[tracks.chapters.choices]]
+key = "send_coin"
+text = "把抄书挣的钱寄去抵账"
+reply = "我把抄书挣的钱包好寄去，信里写：不多，抵一个故事的价。后来父亲来信骂我，说欠哈希姆的是他的账，轮不到我还。骂完，他在信尾多写了一句：哈希姆收下了。"
+next = "h3"
+requires = [{ kind = "cash", ge = 10 }]
+hint = "抄书挣的钱，还不够寄一回。"
+effects = [{ kind = "cash", value = -10 }, { kind = "affinity", person = "salim_kilwi", value = 1 }, { kind = "flag", flag = "rw_baraka_hashim_paid_part", value = true }]
+
+[[tracks.chapters.choices]]
+key = "forgive"
+text = "回信求他把剩下的免了"
+reply = "我写：您那么有钱，剩下的就免了吧。回信来得很快，书记的字，哈希姆的话：“免了，他就欠我一辈子。欠钱好还，欠情还不了。你爹宁可欠钱。”"
+next = "h3"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_asked_forgive", value = true }]
+
+[[tracks.chapters]]
+key = "h3"
+title = "钉在门上的秤砣"
+text = "七月的信又是索法拉书记的字。哈希姆说，石堡里换了新的书记，拿着国王的砝码进集市，见一个摩尔商人的秤就对一个。上个月对出一块轻的，罚了钱，那块秤砣钉在了石堡的大门上，太阳一照，亮得刺眼。“海边人的秤叫外人摸到了，我们就都成了贼。山里人知道了，往后谁还下山？”他让我在开罗问一问，监察官的砝码是怎么校的。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 7, 15] }]
+
+[[tracks.chapters.choices]]
+key = "inspector"
+text = "去监察官那里问校砝码的法子"
+reply = "我在监察官的衙门外等了两天，才等到一个书吏肯跟我说话。他说开罗的砝码一年校两回，拿铜的母砝码对，轻了的当场砸碎，不许回炉改铸。我把法子写给哈希姆，末尾又抄了一遍：砸碎，不许改铸。"
+next = "h4"
+effects = [{ kind = "skill", skill = "double_entry", value = 4 }, { kind = "flag", flag = "rw_baraka_hashim_inspector", value = true }]
+
+[[tracks.chapters.choices]]
+key = "his"
+text = "回信问他：您那一块还留着吗"
+reply = "我问他腰带里那块磨过角的还留着没有。回信过了半年才到，只有一句：“留着。我老了，手离不开它，扔了要发抖。”"
+next = "h4"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_asked_his", value = true }]
+
+[[tracks.chapters.choices]]
+key = "father"
+text = "写信提醒父亲当心石堡的书记"
+reply = "我写给父亲：索法拉石堡里换了书记，见秤就对，您下回去，带刻字清楚的那几枚。写完才发现，这句话我在心里已经说了两年。父亲的回信没提这件事，只说今年的布价。"
+next = "h4"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = -1 }, { kind = "flag", flag = "rw_baraka_hashim_warned_father", value = true }]
+
+[[tracks.chapters]]
+key = "h4"
+title = "不肯再借的那一回"
+text = "开春，哈希姆病了，信是他侄子写的，字很年轻。他说有一件事，这些年没跟人说过：那年我母亲咳血，父亲来索法拉借药钱，借了三回，第四回他没借。“账要平。我借出去的每一枚都记着，他还不上，我就不借了。那天他从我铺子里出去，没回基尔瓦，跟着商队上了山。回来以后药钱就够了，往后再没找我借过。我把账记得一丝不差，你爹就去了山里。”"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 4, 25] }]
+
+[[tracks.chapters.variants]]
+key = "rw_aunt"
+when = [{ kind = "flag", flag = "rw_baraka_needle_aunt_hint", value = true }]
+text = "开春，哈希姆病了，信是他侄子写的，字很年轻。他说有一件事，这些年没跟人说过：那年我母亲咳血，父亲来索法拉借药钱，借了三回，第四回他没借。“账要平。我借出去的每一枚都记着，他还不上，我就不借了。那天他从我铺子里出去，没回基尔瓦，跟着商队上了山。回来以后药钱就够了，往后再没找我借过。我把账记得一丝不差，你爹就去了山里。”姑母在灶边说过的那一趟索法拉，原来是从这扇门出去的。"
+
+[[tracks.chapters.choices]]
+key = "not_wrong"
+text = "回信：那一年您没有错"
+reply = "我写：账要平，您没错。写完又觉得说得太快，像替他把账抹平了。我在后面添了一句：可我母亲还是走了。添完想划掉，到底没划。"
+next = "h5"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_not_wrong", value = true }]
+
+[[tracks.chapters.choices]]
+key = "thank"
+text = "回信谢他借过的那三回"
+reply = "我写：您借过三回，我谢那三回。第四回，那是我父亲自己的事。侄子回信说，他念给哈希姆听，哈希姆把脸转到墙那边去了。"
+next = "h5"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_thanked", value = true }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "回信问：他在山里做了什么"
+reply = "我问他：那一回，我父亲在山里做了什么。侄子的回信说，叔叔听完闭了眼：“他称了金子。称金子的人，在山里还能做什么？”别的他一个字也不肯再说。"
+next = "h5"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_asked_mountain", value = true }]
+
+[[tracks.chapters]]
+key = "h5"
+title = "要看你的手"
+text = "结业前，哈希姆的病好了些，自己口述了一封信，书记的字又回来了。他说他老了，东北风一起，就在索法拉金市的草席上等我：“萨利姆说你回来就自己称金。你先来索法拉，我要看看萨利姆儿子的手。手比金子先动的人，我不卖给他。”末了还有一句：“故事也带上。”"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 11, 25] }]
+
+[[tracks.chapters.variants]]
+key = "rw_paid"
+when = [{ kind = "flag", flag = "rw_baraka_hashim_paid_part", value = true }]
+text = "结业前，哈希姆的病好了些，自己口述了一封信，书记的字又回来了。他说他老了，东北风一起，就在索法拉金市的草席上等我：“萨利姆说你回来就自己称金。你先来索法拉，我要看看萨利姆儿子的手。手比金子先动的人，我不卖给他。”他又说，开罗寄来的那几个抄书钱他没花，压在草席底下，等我来了当着我的面称一回，看看开罗的钱有多重。末了还有一句：“故事也带上。”"
+
+[[tracks.chapters.choices]]
+key = "story"
+text = "回信：故事我攒了一箱"
+reply = "我写：开罗的故事我攒了一箱，够您听一个雨季。您那三个老人的故事我也学会了，换不了命，换个价总行。"
+next = "done"
+effects = [{ kind = "growth", attr = "eloquence", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_story_promised", value = true }]
+
+[[tracks.chapters.choices]]
+key = "debt"
+text = "回信：剩下的账，我来还"
+reply = "我写：剩下那一半的一半，我来还，用我自己挣的。写完算了算自己的钱，差得远，又添了一句：先还一点，慢慢还。"
+next = "done"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_debt_promised", value = true }]
+
+[[tracks.chapters.choices]]
+key = "hands"
+text = "回信：我的手，您看了就知道"
+reply = "我只写了一句：我的手，您看了就知道。写完把手摊在灯下看了很久，手心里有试金石磨出来的一道印子，指头上有墨。不知道他会看出什么。"
+next = "done"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_hashim_hands", value = true }]
+
+
+# ───────────────────────── 剧情增写（2026-11-12，Claude）：铜针（父亲萨利姆的砝码），8 章 ─────────────────────────
+# 母本：斯瓦希里史诗《利昂戈·富莫》——刀枪不入的英雄只怕一根铜针，他把这个秘密告诉了亲生儿子；文化：斯瓦希里城邦的商业与体面，海边人的秤对着内陆人的金子；
+# 张力：萨利姆爱死去的妻子、爱儿子的书、爱这个家在街上抬得起头，这份爱有一部分是从内陆卖金人的秤盘上一丝一丝称出来的。养成期不点破，只到“最底下那一枚，当面讲”。
+# 接：关键事件 00“父亲的金砝码”（经纪人指着的那一枚）、支线“父亲的砝码盒”、关键事件 11“称金的争议”（n5 在它之后）；n5 的卖金人是“西边来的金砂”一线的巴卡里。
+# 设：rw_baraka_needle_asked / _watched（n0）、_aunt_hint（n1）、_swapped / _silent / _away（n2，互斥）、_wrote_cairo / _goldsmith（n3）、_asked_boy / _refused_money（n4）、
+#     rw_baraka_cairo_light_used / _true / _told（n5，互斥）、rw_baraka_needle_teach_boy（n6）、rw_baraka_needle_know / _wait / _mute（n7，互斥，主线旁轨 k1 读）。
+# 读：n6 读 n2 的 swapped / away。
+# 补：n1 另有变体读“二十年的账”h0 的 rw_baraka_hashim_asked；（h5 另有变体读 h2 的 hashim_paid_part；西边来的金砂 d5 另有变体读 d3 的 takrur_delayed）n7 另有变体读 h4 的 rw_baraka_hashim_asked_mountain。
+[[tracks]]
+key = "c9_baraka_rw_needle"
+name = "铜针"
+kind = "request"
+start = "n0"
+auto = false
+academy = true
+cast = ["salim_kilwi", "baraka_aunt"]
+
+[[tracks.chapters]]
+key = "n0"
+title = "夜里的秤房"
+text = "三月里一个闷热的夜，我起来喝水，看见秤房的门缝里漏着灯。父亲一个人坐在矮桌前，砝码箱开着，最底下那层毡子掀起了一角。他从毡子底下摸出一枚砝码，刻字很浅，边角磨得发亮，拿一块软羊皮蘸了油，慢慢地擦，擦完放在掌心里掂。他对着它说了一句话，声音很低，像跟熟人讲价：“你又轻了。”然后拿羊皮包好，塞回毡子底下，把灯吹了。"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 3, 20] }]
+
+[[tracks.chapters.variants]]
+key = "rw_broker"
+when = [{ kind = "flag", flag = "c9_baraka_critical_00_solved", value = true }]
+text = "三月里一个闷热的夜，我起来喝水，看见秤房的门缝里漏着灯。父亲一个人坐在矮桌前，砝码箱开着，最底下那层毡子掀起了一角。他从毡子底下摸出一枚砝码，就是二月里那个古吉拉特经纪人指着的那一枚，拿一块软羊皮蘸了油，慢慢地擦，擦完放在掌心里掂。他对着它说了一句话，声音很低，像跟熟人讲价：“你又轻了。”然后拿羊皮包好，塞回毡子底下，把灯吹了。"
+
+[[tracks.chapters.choices]]
+key = "step_in"
+text = "推门进去，问他那一枚是什么"
+reply = "我推开门，父亲的手还按在箱盖上。他没有慌，把灯重新点上，说：“砝码就是砝码，刻着几就是几。”他叫我坐下，拿一枚最寻常的给我掂，掂完又换一枚，换到我眼皮打架。那一枚他始终没再拿出来。第二天在码头上，他整整一个上午没跟我说话。"
+next = "n1"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = -1 }, { kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_asked", value = true }]
+
+[[tracks.chapters.choices]]
+key = "watch"
+text = "躲在门外，看清他放回哪一层"
+reply = "我贴着门框站到脚麻。毡子底下那一层只放那一枚，包它的羊皮角上缝着一根红线。我回到席子上，一夜没睡着，数他咳了几声：七声。天亮以后，他照常擦他的秤杆，我照常去学堂，两个人谁也不看谁。"
+next = "n1"
+effects = [{ kind = "growth", attr = "perception", value = 3 }, { kind = "flag", flag = "rw_baraka_needle_watched", value = true }]
+
+[[tracks.chapters.choices]]
+key = "back"
+text = "回去躺下，当什么也没看见"
+reply = "我回去躺下，听见秤房的门响了一声，父亲的脚步在院子里停了停，又走远了。早上姑母问我眼睛怎么红了，我说夜里蚊子多。她看了我一眼，往我碗里多舀了一勺椰子米。"
+next = "n1"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "affinity", person = "baraka_aunt", value = 1 }]
+
+[[tracks.chapters]]
+key = "n1"
+title = "药钱的那一年"
+text = "斋月前，姑母在灶边剥椰子，忽然说起我母亲。母亲是蒙巴萨人，嫁过来第四年咳出了血。蒙巴萨来的印度大夫开一剂药，要半个米斯卡尔的金子，一个月要四剂。父亲先卖了船上的帆，又向索法拉的老哈希姆借，借到人家不肯再借。“后来他往索法拉跑了一趟，回来药钱就够了，往后再没借过。”她把一瓣椰肉丢进我嘴里，“那年你三岁，记不得的。”"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 6, 15] }]
+
+[[tracks.chapters.variants]]
+key = "rw_hashim"
+when = [{ kind = "flag", flag = "rw_baraka_hashim_asked", value = true }]
+text = "斋月前，姑母在灶边剥椰子，忽然说起我母亲。母亲是蒙巴萨人，嫁过来第四年咳出了血。蒙巴萨来的印度大夫开一剂药，要半个米斯卡尔的金子，一个月要四剂。父亲先卖了船上的帆，又向索法拉的老哈希姆借，借到人家不肯再借。我这才明白，哈希姆说的“借一个女人的命”是哪一笔。“后来他往索法拉跑了一趟，回来药钱就够了，往后再没借过。”她把一瓣椰肉丢进我嘴里，“那年你三岁，记不得的。”"
+
+[[tracks.chapters.choices]]
+key = "how"
+text = "问她：那一趟他是怎么凑够的"
+reply = "姑母手里的刀停了一下，接着剥。“账上没写。我管家里的账，他管秤房的账，两本账不见面。”隔了一阵，她添了一句：“你父亲那几年夜里不睡，一个人在秤房里称。称什么，我没进去看过。”"
+next = "n2"
+effects = [{ kind = "growth", attr = "numeracy", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_aunt_hint", value = true }]
+
+[[tracks.chapters.choices]]
+key = "mother"
+text = "问她：我母亲是什么样的人"
+reply = "“爱笑，笑起来跟你一样，先拍自己的腿。”姑母说母亲会唱蒙巴萨的船歌，唱错了词也不改，说调子对就行。她走的那天要父亲答应两件事，一件是让我读书，另一件姑母没说。“问你父亲去。他不会告诉你。”"
+next = "n2"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 2 }, { kind = "growth", attr = "sensibility", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "peel"
+text = "不问，帮她把椰子剥完"
+reply = "我们剥了一筐椰子，谁也没再开口。剥到最后一个，姑母把刀擦干净，插回墙缝里，说：“有些账，晚一点看，才看得懂。”我那时以为她说的是椰子钱。"
+next = "n2"
+effects = [{ kind = "growth", attr = "stewardship", value = 2 }, { kind = "affinity", person = "baraka_aunt", value = 1 }]
+
+[[tracks.chapters]]
+key = "n2"
+title = "奇韦舍的孙子"
+text = "十月，内陆的商队下到海边，卖金的老奇韦舍又来了。他是卡兰加人，跟父亲做了二十年买卖，这回带着孙子卡蒂，一个八九岁的男孩，背上捆着芭蕉叶包的金砂，脚底板裂得像旱季的河床。父亲给孩子剥了一把椰枣，问他村里的热病退了没有，问得很细。孩子嚼着枣，眼睛一直盯着秤杆。称的时候，父亲从腰带里摸出一枚砝码放上秤盘，我认得那块羊皮上的红线。老奇韦舍不看秤，他从来不看秤，只看父亲的脸。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 10, 8] }]
+
+[[tracks.chapters.choices]]
+key = "swap"
+text = "趁父亲转身，换上刻字一样的那枚"
+reply = "父亲回身去拿账簿，我把那一枚捏下来，换上箱子里刻字相同的另一枚。横梁往金砂那头沉了一线。父亲回来，看了一眼横梁，又看了我很久。他照横梁上的数付了钱，多付的那一点，一句没提。夜里他把羊皮包收回腰带，只对我说：“手比眼睛快，是要挨骂的。”"
+next = "n3"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = -2 }, { kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_needle_swapped", value = true }]
+
+[[tracks.chapters.choices]]
+key = "silent"
+text = "站在一边看着，什么也不做"
+reply = "横梁停稳了，父亲报了数，老奇韦舍点点头，把金砂倒进父亲的袋子，换走了布和珠子。卡蒂临走冲我笑，露出一颗缺了的门牙。我也对他笑，笑得很像个金商的儿子。他们走远了，我才发现自己一直攥着拳头。"
+next = "n3"
+effects = [{ kind = "growth", attr = "commerce", value = 3 }, { kind = "flag", flag = "rw_baraka_needle_silent", value = true }]
+
+[[tracks.chapters.choices]]
+key = "away"
+text = "拉那孩子出去看船，不让他看秤"
+reply = "我说码头上来了一条有眼睛的船，拉着卡蒂就跑。船头画的眼睛把他看呆了，他问那眼睛看得见海底吗。我说看得见，看得见鲨鱼睡觉。等我们回去，秤已经收了，金砂进了父亲的袋子。他什么也没看见。我替他挡下的到底是什么，我自己也说不清。"
+next = "n3"
+effects = [{ kind = "growth", attr = "eloquence", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_away", value = true }]
+
+[[tracks.chapters]]
+key = "n3"
+title = "金匠街的驴"
+text = "开罗的金匠街窄得两个人要侧着身才过得去。那天街上忽然让出一条道：市场监察官的人牵着一头驴过来，驴背上倒骑着一个白胡子的老金匠，脖子上拿绳子吊着他自己的砝码。公差在前头敲锣，喊他的砝码轻了一粒大麦。小孩子跟在后面扔橘子皮。卖书的人说这还算轻的，从前要把人的耳朵钉在铺门上。那个老金匠我认得，每个主麻日都在清真寺门口散饼。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 5, 18] }]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "写信回家，把这件事讲给父亲"
+reply = "我在信里写了驴、锣、橘子皮，写得很细，像在讲一个笑话，末尾问父亲：基尔瓦有没有这样的官。信过了三个季风才有回音。"
+next = "n4"
+effects = [{ kind = "flag", flag = "rw_baraka_needle_wrote_cairo", value = true }, { kind = "letter", person = "salim_kilwi", text = "开罗的官管开罗的秤。基尔瓦没有这样的官，只有秤和人。你去那边是念书的，别在金匠街上逛。" }]
+
+[[tracks.chapters.choices]]
+key = "follow"
+text = "跟到街尾，扶那老金匠下驴"
+reply = "到了街尾，公差走了，老金匠自己下不来，腿是麻的。我扶他下来，他把脖子上的砝码取下来塞进袖子：“这条街上，人人袖子里都有一枚，我是被摸到了。”他拍拍我的手，问我是哪里人。我说基尔瓦。他说：“哦，金子是从你们那边来的。”"
+next = "n4"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_goldsmith", value = true }]
+
+[[tracks.chapters.choices]]
+key = "class"
+text = "转身回讲席，赶上午的课"
+reply = "我挤出人群回了爱资哈尔。讲席上的先生正讲买卖里的欺瞒，说秤上的欺比嘴上的欺罪重，因为秤不会替自己辩白。我在本子上记下这一句，记完把笔搁下，半天没拿起来。"
+next = "n4"
+effects = [{ kind = "growth", attr = "learning", value = 3 }, { kind = "skill", skill = "lang_arabic", value = 4 }]
+
+[[tracks.chapters]]
+key = "n4"
+title = "新屋顶"
+text = "年底的信是姑母写的，夹着一小包金砂，说是父亲叫寄的书钱。家里换了屋顶，红树木的椽子，珊瑚石灰抹了三遍，雨季再也不漏了。今年父亲自己上了一趟内陆，因为老奇韦舍托人带话，孙子病了，要几样海边的药。“你父亲叫我写：书钱不够就说，别抄书抄坏了眼睛。他自己不写，说他的字丢人。”"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 12, 20] }]
+
+[[tracks.chapters.choices]]
+key = "thank"
+text = "回信谢他，问卡蒂的病好了没有"
+reply = "我写得很长，谢了屋顶，谢了金砂，最后问卡蒂的病。写完才想起父亲不爱看长信，又把谢的那几行划掉了一半。"
+next = "n5"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_asked_boy", value = true }, { kind = "letter", person = "baraka_aunt", text = "孩子好了。药是你父亲背上去的，钱他没收。老奇韦舍送来一只鸡，你父亲养在院子里，谁也不许杀。" }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "回信说钱够了，以后别再寄"
+reply = "我说我在书商街抄书，工钱够买纸墨，家里的金砂留着做买卖。信寄出去，我心里有点得意，像终于站直了一回。回信是父亲自己写的，字很大，一张纸只写了三行。"
+next = "n5"
+effects = [{ kind = "flag", flag = "rw_baraka_needle_refused_money", value = true }, { kind = "letter", person = "salim_kilwi", text = "钱是给书的，不是给你的。你娘要你读书，我答应过她。收着。" }]
+
+[[tracks.chapters.choices]]
+key = "stone"
+text = "拿这笔钱买一块好试金石"
+reply = "我在金匠街买了一块黑得发亮的试金石，比父亲那块还细。卖石头的人说，有了它，谁的金子都骗不了你。我问他，谁的砝码骗得了我？他笑了，说砝码得拿到监察官那里去对，他这里只卖石头。"
+next = "n5"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "skill", skill = "double_entry", value = 6 }]
+
+[[tracks.chapters]]
+key = "n5"
+title = "抽屉里的那一枚"
+text = "我在开罗一家金商铺里替东家看秤，看了快一年，东家渐渐信得过我。这天进来一个西边苏丹来的朝圣学者，是住在廊房里的巴卡里·西塞，他从皮囊里倒出最后一点金砂，要换回程的盘缠。东家拉开抽屉，摸出一枚砝码塞进我手心，压低了嗓子：“给西边来的黑人称，用这个。他们不认得开罗的秤。”那一枚比刻字轻，轻得跟我家毡子底下那一枚差不多。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 6, 10] }]
+
+[[tracks.chapters.variants]]
+key = "rw_dispute"
+when = [{ kind = "flag", flag = "c9_baraka_critical_11_solved", value = true }]
+text = "称金的那场争吵过去一个月，金商东家对我客气了许多，常叫我替他看秤。这天进来一个西边苏丹来的朝圣学者，是住在廊房里的巴卡里·西塞，他从皮囊里倒出最后一点金砂，要换回程的盘缠。东家拉开抽屉，摸出一枚砝码塞进我手心，压低了嗓子：“给西边来的黑人称，用这个。他们不认得开罗的秤。”那一枚比刻字轻，轻得跟我家毡子底下那一枚差不多。"
+
+[[tracks.chapters.choices]]
+key = "use"
+text = "照东家的话，用那一枚"
+reply = "横梁停在东家要的地方。巴卡里看看横梁，又看看我，把金砂推过来：“你称的，我信。”他走后，东家多给了我五个钱。我把钱攥了一路，走到桥上想扔进尼罗河，到底没扔。"
+next = "n6"
+effects = [{ kind = "cash", value = 5 }, { kind = "skill", skill = "double_entry", value = 4 }, { kind = "flag", flag = "rw_baraka_cairo_light_used", value = true }]
+
+[[tracks.chapters.choices]]
+key = "true"
+text = "放回抽屉，用秤盘边上那一副"
+reply = "我把那一枚放回抽屉，用秤盘边上那一副称。横梁往金砂那边沉了一线，东家的脸也沉了一线。巴卡里拿了钱，朝我点点头，什么也没问。他一走，东家说：“明天不用来了。”我收拾东西出门，到了门口才想起这个月的工钱还没结。"
+next = "n6"
+effects = [{ kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_cairo_true", value = true }]
+
+[[tracks.chapters.choices]]
+key = "tell"
+text = "称准，再当面说我认得这一枚"
+reply = "我称准了，等巴卡里走远，把那一枚放在东家面前：“我认得这个。”东家看着我笑了，笑得很和气：“你认得？那你家里也有。基尔瓦来的，哪个金商家里没有？”他把砝码收回抽屉，说我明天照常来。我照常去了，那一枚他再也没递给我。"
+next = "n6"
+effects = [{ kind = "growth", attr = "eloquence", value = 2 }, { kind = "flag", flag = "rw_baraka_cairo_told", value = true }]
+
+[[tracks.chapters]]
+key = "n6"
+title = "雨季的山路"
+text = "二月的信又是姑母的字，墨洇了几处，像是写的时候下着雨。她说老奇韦舍死了，死在下山的路上，雨季的河涨了，他非要过。卡蒂一个人背着金砂走到了基尔瓦，十二岁，脚上的口子比他爷爷的还深。“你父亲那天自己称的，称完坐在门槛上，咳到天黑。孩子问你什么时候回来，他想看你的船。”"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 3, 5] }]
+
+[[tracks.chapters.variants]]
+key = "rw_away"
+when = [{ kind = "flag", flag = "rw_baraka_needle_away", value = true }]
+text = "二月的信又是姑母的字，墨洇了几处，像是写的时候下着雨。她说老奇韦舍死了，死在下山的路上，雨季的河涨了，他非要过。卡蒂一个人背着金砂走到了基尔瓦，十二岁，脚上的口子比他爷爷的还深。“你父亲那天自己称的，称完坐在门槛上，咳到天黑。孩子说他记得你带他看过一条有眼睛的船。秤，他不记得。他问你什么时候回来。”"
+
+[[tracks.chapters.variants]]
+key = "rw_swapped"
+when = [{ kind = "flag", flag = "rw_baraka_needle_swapped", value = true }]
+text = "二月的信又是姑母的字，墨洇了几处，像是写的时候下着雨。她说老奇韦舍死了，死在下山的路上，雨季的河涨了，他非要过。卡蒂一个人背着金砂走到了基尔瓦，十二岁，脚上的口子比他爷爷的还深。“你父亲那天自己称的，称完坐在门槛上，咳到天黑。孩子说，那年秤房里有个哥哥换过一枚砝码，他看见了，没告诉爷爷。他问那是为什么。”"
+
+[[tracks.chapters.choices]]
+key = "teach"
+text = "托姑母教卡蒂认秤杆上的刻线"
+reply = "我在信里画了一根秤杆，一格一格标上数，请姑母找个空，教卡蒂认。写完才想到，这封信要是让父亲看见，他就知道我想做什么。我还是封上了口。"
+next = "n7"
+effects = [{ kind = "flag", flag = "rw_baraka_needle_teach_boy", value = true }, { kind = "letter", person = "baraka_aunt", text = "教了。他学得快，三天就认全了。你父亲在旁边看着，没拦，也没走开。" }]
+
+[[tracks.chapters.choices]]
+key = "cough"
+text = "回信问父亲的咳"
+reply = "我只问父亲的咳，问得很短，怕他嫌啰嗦。又托往南去的船捎了一包开罗的甘草，药铺的人说泡水喝，能压咳。"
+next = "n7"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = 2 }, { kind = "letter", person = "salim_kilwi", text = "甘草收到了，苦。咳是老毛病，不碍事。你别学我。" }]
+
+[[tracks.chapters.choices]]
+key = "none"
+text = "这封信先不回"
+reply = "我把信压在枕头底下，压了一个月。每天夜里摸一摸，像摸那块羊皮。船期过了，信还是没回。"
+next = "n7"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters]]
+key = "n7"
+title = "最底下那一枚"
+text = "十二月初，结业的名单还没贴出来，父亲的信先到了。这回是他自己写的，字大，一行只写得下五六个字，写满了两张纸。他说东北风一起就回来，回来以后秤房归我，箱子归我。“每一枚我都当面交代。最底下那一枚，我留到最后讲。你娘那年——”写到这里，他划掉了，另起一行：“当面讲。”信纸背面，他画了一枚砝码，画得很圆，像个太阳。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 12, 8] }]
+
+[[tracks.chapters.variants]]
+key = "rw_mountain"
+when = [{ kind = "flag", flag = "rw_baraka_hashim_asked_mountain", value = true }]
+text = "十二月初，结业的名单还没贴出来，父亲的信先到了。这回是他自己写的，字大，一行只写得下五六个字，写满了两张纸。他说东北风一起就回来，回来以后秤房归我，箱子归我。“每一枚我都当面交代。最底下那一枚，我留到最后讲。你娘那年——”写到这里，他划掉了，另起一行：“当面讲。”我想起哈希姆侄子的那封信，信里说，父亲那一回在山里称了金子，别的一个字也没有。信纸背面，他画了一枚砝码，画得很圆，像个太阳。"
+
+[[tracks.chapters.choices]]
+key = "know"
+text = "回信：那一枚，我已经知道了"
+reply = "我写了一行，划掉，又写一行，又划掉，最后只留下一句：那一枚我已经知道了，回去再说。纸上划掉的比留下的多，我没另换一张，就那样寄了。"
+next = "done"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_know", value = true }]
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "回信：等我回去，您慢慢讲"
+reply = "我写：等我回去，您慢慢讲，一枚一枚讲，讲到哪一枚都行。我还在信尾画了一条船，桅杆画得笔直，是纳吉玛教的。"
+next = "done"
+effects = [{ kind = "affinity", person = "salim_kilwi", value = 3 }, { kind = "flag", flag = "rw_baraka_needle_wait", value = true }]
+
+[[tracks.chapters.choices]]
+key = "mute"
+text = "回信只写船期，不提砝码"
+reply = "我写了船名、船期、在亚丁换船的日子，写得清清楚楚，一个字也没提砝码。写完我觉得自己像他：话少，账清楚，心里那一笔不往纸上落。"
+next = "done"
+effects = [{ kind = "growth", attr = "numeracy", value = 2 }, { kind = "flag", flag = "rw_baraka_needle_mute", value = true }]
+
+
+# ───────────────────────── 剧情增写（2026-11-12，Claude）：利昂戈的井（老诗人姆泽），7 章 ─────────────────────────
+# 母本：《利昂戈·富莫》的口传（牢里靠母亲烤进饼里的锉刀脱身；被儿子用铜针刺死，跪在井边、弓还拉着，城里的人三天不敢去打水）；
+# 文化：斯瓦希里的口传与婚礼上的贡古舞歌——唱下来的历史能活几百年，也会替出钱的人改词；
+# 张力：姆泽一辈子唱“基尔瓦没有人逃”，葡萄牙人来的那年（1505）他自己就是跑进红树林的那个十五岁的孩子；记性一年年漏（接人设卡“地名记不全”）。
+# 接：支线“老诗人的地名”（n2 要回去年抄的那一页）、“口头诗歌的题目”；与“铜针”互相照：秘密交给儿子。学院期各章都是姑母代笔的信，只 n3 在开罗。
+# 设：rw_baraka_liongo_why / _son（n0）、_bought / _both / _own（n1）、rw_baraka_poet_list_sent / _song_sent / _lied_kind（n2）、rw_baraka_liongo_storyteller / _wrote_mze（n3）、
+#     rw_baraka_poet_1505_nameless / _written / _wait（n4）、rw_baraka_son_guilty / _forgiven / _town（n5，互斥；n6 与主线旁轨 k5 读）、rw_baraka_poet_paper / _ear（n6）。
+# 补：n1b（1553 年 12 月，临行）设 rw_baraka_liongo_promised / _son_deferred / _paper_boat。
+[[tracks]]
+key = "c9_baraka_rw_liongo"
+name = "利昂戈的井"
+kind = "request"
+start = "n0"
+auto = false
+academy = true
+cast = ["baraka_poet", "baraka_aunt"]
+
+[[tracks.chapters]]
+key = "n0"
+title = "饼里的锉刀"
+text = "五月，码头边一户船家娶媳妇，请姆泽老人去唱。院子里点着椰油灯，年轻人围成一圈，鼓一响就跳贡古舞。姆泽唱的是利昂戈：大英雄被国王锁进牢里，托人给母亲带话，要一块饼。母亲把一把锉刀烤进饼里送来。利昂戈请看守跳舞，自己在一边唱，唱得看守满头大汗，锉刀的声音全埋在鼓里。唱到锁链断的那一下，满院子的人一齐跺脚，灯火都晃了。"
+once = true
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 5, 22] }]
+
+[[tracks.chapters.choices]]
+key = "dance"
+text = "下场跟着跳，跺得最响"
+reply = "我跳进圈子，跺脚跺得最响，跺飞了一只鞋。新郎的弟弟把鞋扔回来，正砸在我脑门上，满院子的人又笑又叫。姆泽在鼓边看着我，唱错了一个字，他自己也笑了。"
+next = "n1"
+effects = [{ kind = "growth", attr = "constitution", value = 2 }, { kind = "affinity", person = "baraka_poet", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "why"
+text = "散场后问他：利昂戈后来怎么死的"
+reply = "姆泽擦着嘴角的椰酒：“一根铜针。刀砍不进他，箭射不进他，只有铜针扎进肚脐能要他的命。这个秘密，他告诉了自己的儿子。”我问他为什么要告诉。他把拐杖往地上一顿：“秘密没人接着，就在肚子里长牙，先咬的是自己。”"
+next = "n1"
+effects = [{ kind = "growth", attr = "learning", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_why", value = true }]
+
+[[tracks.chapters.choices]]
+key = "son"
+text = "问他：利昂戈的儿子后来怎样了"
+reply = "“那一段，新郎家的人不爱听。喜事上不唱儿子。”他叫我扶他回家，走到半路停下来喘气，说改天唱给我听，等他的嗓子不卖钱的时候。"
+next = "n1"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_son", value = true }]
+
+[[tracks.chapters]]
+key = "n1"
+title = "两家的结尾"
+text = "九月里，姆泽唱了两回利昂戈的死。头一回在大臣家，大臣跟堡里的葡萄牙代理人是朋友，席上摆着葡萄牙的酒。那一回，儿子是个可怜孩子，被国王许的新娘骗了，刺完父亲就跪下哭，众人都饶了他。隔了五天，在渔夫们的沙滩上，儿子成了卖父亲换女人的东西，唱到他被赶出城，渔夫们拍着大腿骂。两回的调子一样，词差得像两个人编的。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 9, 15] }]
+
+[[tracks.chapters.choices]]
+key = "bought"
+text = "说他：这样唱，历史是买来的"
+reply = "拐杖敲在石凳上，敲得很重。“买来的？大臣家的米是真的，渔夫的鱼也是真的。谁家的米，谁家的结尾。”他气得三天不跟我说话，第四天在门口叫住我，叫我把那句话再说一遍。我说了。他说：“说得不错。可你不许再说。”"
+next = "n1b"
+effects = [{ kind = "affinity", person = "baraka_poet", value = -1 }, { kind = "growth", attr = "eloquence", value = 3 }, { kind = "flag", flag = "rw_baraka_liongo_bought", value = true }]
+
+[[tracks.chapters.choices]]
+key = "both"
+text = "回家把两个结尾都抄下来"
+reply = "我把两个结尾一左一右抄在同一页上，中间留一条缝。姆泽不认字，叫我念。念完他说：“抄得一字不差。可你抄的是我，不是利昂戈。”"
+next = "n1b"
+effects = [{ kind = "skill", skill = "calligraphy", value = 6 }, { kind = "flag", flag = "rw_baraka_liongo_both", value = true }]
+
+[[tracks.chapters.choices]]
+key = "own"
+text = "问他：您自己信哪一个"
+reply = "姆泽想了很久，久到我以为他睡着了。“我信唱到第三遍的那个。头一遍给出钱的人，第二遍给听的人，第三遍给自己。”我问他第三遍唱过没有。他说还没有，那得等他唱不动的那一年。"
+next = "n1b"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_own", value = true }]
+
+[[tracks.chapters]]
+key = "n1b"
+title = "七道沙痕"
+text = "腊月里，北上的船定了日子。姆泽老人把我叫到椰荫底下，说开罗的人只认得书，不认得我们的调子，他要教我一段走到哪里都能唱的。他唱的是基尔瓦的来历：设拉子来的七条船，一条船一座城，船上的人拿彩布换了这座岛。唱完他说：“到了那边，有人问你是哪里人，你别先说名字，先唱这一段。唱错了，也比说对了强。”他拿拐杖在沙上划了七道，一道一条船。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 12, 10] }]
+
+[[tracks.chapters.choices]]
+key = "promise"
+text = "答应他：在开罗唱一回"
+reply = "我答应了，在开罗至少唱一回，当着满屋子不认得基尔瓦的人。姆泽说一回不够：唱一回，人家当你唱着玩；唱三回，人家才记得基尔瓦是个地方。我说那就三回。他伸出三根手指，又弯下一根，说先欠着。"
+next = "n2"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_promised", value = true }]
+
+[[tracks.chapters.choices]]
+key = "son"
+text = "求他先把利昂戈儿子那段唱了"
+reply = "他摇头：“走远路的人不听那一段，听了，路上要想家里的人。”他把沙上的七道一道一道抹平，“等你回来。人回来了，那一段才有人接。”"
+next = "n2"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_son_deferred", value = true }]
+
+[[tracks.chapters.choices]]
+key = "paper"
+text = "掏出纸来，求他让我记下"
+reply = "我掏出纸，他看了一眼，没骂，伸手把纸折成一只小船放进我手心：“记在这上头，你就把它装进箱子了。装进箱子的东西，到了那边要翻出来才想得起。”我把纸船收进袖子，到了开罗也没拆开。"
+next = "n2"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_paper_boat", value = true }]
+
+[[tracks.chapters]]
+key = "n2"
+title = "唱断了的地名"
+text = "八月的信里夹着一张姑母的字条，说是替姆泽写的。斯瓦希里新年烧旧年火的那一夜，姆泽领着码头上的人唱沿岸的老地名，唱到马菲亚以南的第三个，停住了，张着嘴接不下去。一个卖鱼的孩子替他接了，大家都笑，笑得很和气。他拄着拐杖回了家，三天没出门。字条最后一行是他口述的：“金商的儿子，去年抄的那一页，寄回来。”"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 8, 25] }]
+
+[[tracks.chapters.choices]]
+key = "send"
+text = "把那一页地名照抄一份寄回"
+reply = "我照去年的本子抄了一份，抄得比去年工整，又拿朱笔把念错过的音圈出来。寄出去以后才想起，他从来不看纸。"
+next = "n3"
+effects = [{ kind = "flag", flag = "rw_baraka_poet_list_sent", value = true }, { kind = "letter", person = "baraka_poet", text = "（姑母代笔）收到了。纸我没看，叫你姑母念了一遍，她念错两处，我听出来了。听得出来，就还没忘。" }]
+
+[[tracks.chapters.choices]]
+key = "song"
+text = "不寄纸，把那串地名编成调子"
+reply = "我没寄纸，在信里把那一串地名编成四句一段的调子，第三个地名押在韵脚上，一唱到那里就顺嘴出来。编了七夜，比讲席上的功课还用心。"
+next = "n3"
+effects = [{ kind = "skill", skill = "poetry", value = 6 }, { kind = "flag", flag = "rw_baraka_poet_song_sent", value = true }, { kind = "letter", person = "baraka_poet", text = "（姑母代笔）调子跑了，名字对。那卖鱼的孩子学去了，满码头唱。我听着不舒服，又挺舒服。" }]
+
+[[tracks.chapters.choices]]
+key = "lie"
+text = "回信说：是那孩子抢了您的词"
+reply = "我写：码头上的孩子嘴快，抢了您的词，您是让着他。写完我知道这是假话，他也会知道。可假话递过去，总是一个台阶。"
+next = "n3"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 2 }, { kind = "flag", flag = "rw_baraka_poet_lied_kind", value = true }, { kind = "letter", person = "baraka_poet", text = "（姑母代笔）抢了就抢了。下回我让他接，接错了我敲他。" }]
+
+[[tracks.chapters]]
+key = "n3"
+title = "膝上摊着书的说书人"
+text = "开罗的咖啡棚里，每到黄昏就有说书人讲拜伯尔斯苏丹的故事，一讲一个月讲不完。听的人挤在长凳上，讲到苏丹被人出卖，有人拍桌子骂。我挤到前排才看清，说书人膝盖上摊着一本旧书，讲到要紧处，他低头扫一眼，再抬起头，像是从肚子里掏出来的。散场以后，他看见我盯着他的书，冲我挤了挤眼。"
+once = true
+mood = "cheerful"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 4, 12] }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：您是念的，还是记的"
+reply = "他把书合上，拿袖子擦了擦封皮：“这是我师父的嘴。他死了，嘴留在纸上，我念的时候，他就还在讲。”他说开罗的人不在乎是念的还是记的，只在乎讲到苏丹挨刀那一段，声音抖不抖。"
+next = "n4"
+effects = [{ kind = "growth", attr = "learning", value = 2 }, { kind = "flag", flag = "rw_baraka_liongo_storyteller", value = true }]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "写信给姆泽，讲这个说书人"
+reply = "我在信里写了长凳、咖啡、膝上的书，写他怎样低头又抬头。末了问姆泽：要是您也有一本这样的书，是不是就不怕忘了。"
+next = "n4"
+effects = [{ kind = "flag", flag = "rw_baraka_liongo_wrote_mze", value = true }, { kind = "letter", person = "baraka_poet", text = "（姑母代笔）他那是念，不叫唱。念的人眼睛看纸，唱的人眼睛看人。你在开罗学念，回来我再教你看人。" }]
+
+[[tracks.chapters.choices]]
+key = "stay"
+text = "再听一晚，听到苏丹出牢"
+reply = "我又去听了一晚。苏丹被人骗进了牢里，跟利昂戈一样，要等外头有人肯替他传一句话。开罗的牢里没有锉刀，只有一个肯冒险的看守。我回去躺在席子上想：哪里的英雄，都得有人往牢里送点什么。"
+next = "n4"
+effects = [{ kind = "growth", attr = "sensibility", value = 3 }]
+
+[[tracks.chapters]]
+key = "n4"
+title = "丢了一只鞋"
+text = "正月的信又是姑母代笔，这回很长，开头一句是姑母自己的：“他说一句，我写一句，我没改。”姆泽说，葡萄牙人的船开进港那天，他十五岁。我祖父把清真寺的书一捆一捆背上船，他什么也没背，一个人跑进了红树林，跑丢了一只鞋，在泥里趴了两天。“我唱了五十年‘基尔瓦没有人逃’。你要写我们的事，别把我写进去。”"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 1, 28] }]
+
+[[tracks.chapters.choices]]
+key = "nameless"
+text = "回信：不写名字，只写有人跑了"
+reply = "我写：不写您的名字，只写有一个孩子跑丢了一只鞋。写完才觉得这比写名字还清楚，基尔瓦谁不知道您一辈子穿不惯鞋。我还是寄了。"
+next = "n5"
+effects = [{ kind = "flag", flag = "rw_baraka_poet_1505_nameless", value = true }]
+
+[[tracks.chapters.choices]]
+key = "written"
+text = "回信：您跑了，也该写进去"
+reply = "我写：背书的人上了船，跑的人进了红树林，两样都是活下来，两样都该写。姑母后来来信说，他听完拿拐杖敲了一下门框，敲出一道印子，到今天还在。"
+next = "n5"
+effects = [{ kind = "affinity", person = "baraka_poet", value = -2 }, { kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_poet_1505_written", value = true }]
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "回信：等我回去，您当面唱"
+reply = "我写：这一段别写信，等我回去您当面唱，唱给我一个人听。唱完了，写不写，我们俩再商量。"
+next = "n5"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 2 }, { kind = "flag", flag = "rw_baraka_poet_1505_wait", value = true }]
+
+[[tracks.chapters]]
+key = "n5"
+title = "井边的三天"
+text = "七月，姆泽托船捎来利昂戈的最后一段，姑母记得密密麻麻。儿子趁利昂戈睡着，把铜针扎了下去。利昂戈醒过来，拿起弓，走到城外的井边，单膝跪下，弓拉满了，就那样死了。城里的人以为他还活着，谁也不敢去打水，渴了三天。是他母亲走过去，跟他说了几句话，他才倒下来。信末一行是姆泽问我的：“儿子那一段，你说该怎么唱？”"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 7, 18] }]
+
+[[tracks.chapters.choices]]
+key = "guilty"
+text = "回信：儿子该恨，针是他扎的"
+reply = "我写：秘密是父亲给的，针是儿子扎的，给的人没有罪，扎的人有。写完我想起父亲那只砝码箱的毡子，手停了很久，还是照写的寄了。"
+next = "n6"
+effects = [{ kind = "flag", flag = "rw_baraka_son_guilty", value = true }]
+
+[[tracks.chapters.choices]]
+key = "forgiven"
+text = "回信：该饶，针是父亲交出去的"
+reply = "我写：利昂戈不会不知道儿子会扎，他还是说了。一个人把自己的命放进儿子手里，儿子握紧了，这算谁的？写到这里我自己也答不上来，就在后面画了一个圈。"
+next = "n6"
+effects = [{ kind = "flag", flag = "rw_baraka_son_forgiven", value = true }]
+
+[[tracks.chapters.choices]]
+key = "town"
+text = "回信：唱那三天没人敢打水的城"
+reply = "我写：儿子您爱怎么唱怎么唱，我想听城里的人——明知道井边跪着的是个死人，还是渴着，不敢过去。这样的三天，基尔瓦也有过。"
+next = "n6"
+effects = [{ kind = "flag", flag = "rw_baraka_son_town", value = true }]
+
+[[tracks.chapters]]
+key = "n6"
+title = "唱一遍，记一遍"
+text = "年底姆泽的字条只有两行，姑母连称呼都省了：“风一起就回来。我唱一遍，你记一遍，记完这一段，我就不唱了。”姑母在旁边添了一句她自己的：他这几个月嗓子哑了，可每天傍晚还去码头，坐在石凳上看北边来的船。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 12, 15] }]
+
+[[tracks.chapters.variants]]
+key = "rw_forgiven"
+when = [{ kind = "flag", flag = "rw_baraka_son_forgiven", value = true }]
+text = "年底姆泽的字条只有三行，姑母连称呼都省了：“风一起就回来。你画的那个圈，我也画不圆。我唱一遍，你记一遍，记完这一段，我就不唱了。”姑母在旁边添了一句她自己的：他这几个月嗓子哑了，可每天傍晚还去码头，坐在石凳上看北边来的船。"
+
+[[tracks.chapters.variants]]
+key = "rw_guilty"
+when = [{ kind = "flag", flag = "rw_baraka_son_guilty", value = true }]
+text = "年底姆泽的字条只有三行，姑母连称呼都省了：“风一起就回来。你说儿子该恨，我不服，留着当面吵。我唱一遍，你记一遍，记完这一段，我就不唱了。”姑母在旁边添了一句她自己的：他这几个月嗓子哑了，可每天傍晚还去码头，坐在石凳上看北边来的船。"
+
+[[tracks.chapters.variants]]
+key = "rw_town"
+when = [{ kind = "flag", flag = "rw_baraka_son_town", value = true }]
+text = "年底姆泽的字条只有三行，姑母连称呼都省了：“风一起就回来。那三天没敢去打水的人里头，有一个是我。我唱一遍，你记一遍，记完这一段，我就不唱了。”姑母在旁边添了一句她自己的：他这几个月嗓子哑了，可每天傍晚还去码头，坐在石凳上看北边来的船。"
+
+[[tracks.chapters.choices]]
+key = "paper"
+text = "回信：我带纸回去"
+reply = "我写：我带开罗的好纸回去，一刀二十张，够您唱一夜。写完又补了一句：纸不够，我就记在手心上。"
+next = "done"
+effects = [{ kind = "skill", skill = "calligraphy", value = 4 }, { kind = "flag", flag = "rw_baraka_poet_paper", value = true }]
+
+[[tracks.chapters.choices]]
+key = "ear"
+text = "回信：我只带耳朵回去"
+reply = "我写：纸我不带，我带耳朵回去，您唱一遍，我背一遍，背错了您敲我。姑母后来说，他听到这一句笑出了声，笑着笑着咳了半天。"
+next = "done"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 3 }, { kind = "skill", skill = "poetry", value = 4 }, { kind = "flag", flag = "rw_baraka_poet_ear", value = true }]
+
+
+# ───────────────────────── 剧情增写（2026-11-12，Claude）：第二本账（姑母阿莎与椰纤棚里的人），7 章 ─────────────────────────
+# 母本：《古兰经·光明章》第三十三节的赎身契（奴仆求写契，“若知道他们有善，就与他们写”）；后世的斯瓦希里训诫诗《姆瓦娜库波纳》作对照（母亲教女儿管家，家奴只是家什的一部分）；
+# 文化：斯瓦希里海岸的家奴与赎身——放人是功德，临终放人、开斋放人都写进契里；绳坊与椰林照样靠买来的人，绳子也卖给往北运人的船。两面都写；
+# 张力：阿莎的家底是第二本账：卖给帕泰运人船的绳钱记在前头，从船底下赎回来、或让人自己赎回去的名字记在后头；“账平了，心没平”。
+# 接：关键事件 01“姑母的家用账”（空着买家的那十二捆，c1 读 c9_baraka_aunt_ledger_kept）、支线“马库阿孩子的求助”（c1 读 c9_baraka_side_makua_guest_compromise：姑母拿绳钱换了那孩子）；
+#     人物线之间：c4 读不读、写不写进姆泽的地名册（rw_baraka_rope_name_poet）。主线 c01 的秘密（马库阿男孩是谁）这里不碰。
+# 设：rw_baraka_rope_seen / _beat / _name_asked（c0）、_knew_ship / _refused_carry / _ship_named（c1）、_asked_where / _asked_faraji / _gave_coin（c2）、_deed_read / _saw_market / _wrote_aunt（c3）、
+#     _name_wait / _name_poet / _wage（c4）、_faraji_freed / _wrote_faraji（c5）、_ledger_taken / _ledger_shared / _no_more_said（c6，互斥；主线旁轨 s1 读）。
+# 补：c1b（1553 年 12 月，法拉吉与苏迪）设 rw_baraka_rope_faraji_asked_free / _sudi_knife；c5 的变体读 faraji_asked_free，c6 的变体读 ship_named。
+[[tracks]]
+key = "c9_baraka_rw_rope"
+name = "第二本账"
+kind = "request"
+start = "c0"
+auto = false
+academy = true
+cast = ["baraka_aunt"]
+
+[[tracks.chapters]]
+key = "c0"
+title = "沤椰壳的池子"
+text = "退潮的时候，城外的泥滩上露出一排浅池，池里泡着椰壳，泡上几个月，壳烂了，纤维才剥得下来，那股臭味风一转整条街都闻得见。家里椰纤棚的人每天蹲在池边，拿木棒一下一下捶。领头的是个女人，叫希库达尼，脸上有三道竖着的旧疤，是内陆人的记号。那天收工，她往姑母手里放了一枚铜钱，姑母从怀里掏出一本小账，不是家里那三本里的哪一本，记了一笔。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 4, 22] }]
+
+[[tracks.chapters.choices]]
+key = "ask_aunt"
+text = "问姑母：那是什么账"
+reply = "姑母把小账塞回怀里：“她的账，不是家里的。她自己的身价，一枚一枚往回买。”她说得跟说椰纤的价钱一样平。我这才知道，椰纤棚里蹲着捶椰壳的人，有一半是家里买来的。"
+next = "c1"
+effects = [{ kind = "growth", attr = "numeracy", value = 2 }, { kind = "flag", flag = "rw_baraka_rope_seen", value = true }]
+
+[[tracks.chapters.choices]]
+key = "beat"
+text = "下到池子边，跟他们一起捶"
+reply = "我捶了一个上午，手心起了三个泡，臭味钻进指甲缝，洗了两天还在。希库达尼看我捶，没说话，最后把我的木棒拿过去，换了个握法递回来。那个握法省力，她说是她母亲教的。她母亲在哪里，她没说。"
+next = "c1"
+effects = [{ kind = "growth", attr = "constitution", value = 3 }, { kind = "flag", flag = "rw_baraka_rope_beat", value = true }]
+
+[[tracks.chapters.choices]]
+key = "name"
+text = "问希库达尼：这名字是谁起的"
+reply = "“你祖母起的。希库达尼，意思是‘没想到’。买我回来那天，你祖母说没想到这么瘦的孩子也能干活。”我问她原来叫什么。她看了我一眼，接着捶椰壳，捶了很久才说：“那个名字在河那边，不在这边。”"
+next = "c1"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_rope_name_asked", value = true }]
+
+[[tracks.chapters]]
+key = "c1"
+title = "空着买家的那一行"
+text = "八月，一条帕泰来的大船停在外港，船主赛义德是家里的老主顾，每年来买一回绳。我替姑母点货，跟着搬绳的人上了船。舱口一掀，底下铺着木栅，栅上钉着一排铁环，舱壁上留着手掌印。赛义德笑着说，这一趟往北去阿拉伯，舱里装的是从对岸大陆来的人，绳要最结实的。我回到岸上，姑母在账上记了十二捆，买家那一栏空着，墨淡得像水。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 8, 20] }]
+
+[[tracks.chapters.variants]]
+key = "rw_kept"
+when = [{ kind = "flag", flag = "c9_baraka_aunt_ledger_kept", value = true }]
+text = "八月，一条帕泰来的大船停在外港，船主赛义德是家里的老主顾，每年来买一回绳。我替姑母点货，跟着搬绳的人上了船。舱口一掀，底下铺着木栅，栅上钉着一排铁环，舱壁上留着手掌印。赛义德笑着说，这一趟往北去阿拉伯，舱里装的是从对岸大陆来的人，绳要最结实的。我回到岸上，姑母在账上记了十二捆，买家那一栏空着，墨淡得像水。开春她叫我替她留着的那一笔，原来就是这条船。"
+
+[[tracks.chapters.variants]]
+key = "rw_makua"
+when = [{ kind = "flag", flag = "c9_baraka_side_makua_guest_compromise", value = true }, { kind = "flag", flag = "c9_baraka_aunt_ledger_kept", value = false }]
+text = "八月，一条帕泰来的大船停在外港，船主赛义德是家里的老主顾，每年来买一回绳。我替姑母点货，跟着搬绳的人上了船。舱口一掀，底下铺着木栅，栅上钉着一排铁环，舱壁上留着手掌印。赛义德笑着说，这一趟往北去阿拉伯，舱里装的是从对岸大陆来的人，绳要最结实的。我回到岸上，姑母在账上记了十二捆，买家那一栏空着，墨淡得像水。前些天她拿去换那个马库阿孩子的，也是一笔绳钱。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问姑母：绳子是卖给这条船的？"
+reply = "姑母没抬头：“绳子不问拴什么。”她合上账，又从怀里摸出那本小账，翻开第一页给我看。第一页只有一行：赛义德，每年十二捆。“这条船付的钱，记进这一本。从船底下买回来的人，也记在这一本。”"
+next = "c1b"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_knew_ship", value = true }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "不肯再把绳子扛上船"
+reply = "我把肩上那捆绳放下，说我不扛了。搬绳的人看看我，又看看姑母。姑母叫另一个人接过去，扛上了船。赛义德在船头笑：“金商的儿子，手嫩。”那天晚上姑母只跟我说了一句：“你不扛，绳子也上船。你只是没扛。”"
+next = "c1b"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = -1 }, { kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_rope_refused_carry", value = true }]
+
+[[tracks.chapters.choices]]
+key = "note"
+text = "把船名和船主记在本子上"
+reply = "我在自己的本子上记下：帕泰的船，船主赛义德，八月，往北，舱里有铁环。记完不知道记它做什么，就在旁边画了个圈。姑母看见了，没拦，只说：“记就记全，别画圈。”我把圈涂掉，补上了日子。"
+next = "c1b"
+effects = [{ kind = "skill", skill = "double_entry", value = 4 }, { kind = "flag", flag = "rw_baraka_rope_ship_named", value = true }]
+
+[[tracks.chapters]]
+key = "c1b"
+title = "法拉吉的结"
+text = "动身前几天，法拉吉把我叫到椰纤棚后头，说出远门的人要会打一个结，船上的东西捆住了，风再大也不散。他生在这个院子里，比父亲还大两岁，手上全是绳子勒出来的茧。他儿子苏迪在旁边看，九岁，打得比我快。法拉吉一边教一边说：“我这辈子没出过基尔瓦，我的结倒跟着船走遍了。”他说的时候在笑。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1553, 12, 18] }]
+
+[[tracks.chapters.choices]]
+key = "ask_free"
+text = "问他：想不想出去看看"
+reply = "“出去？出去了谁给我饭吃，谁给我盖棚子，谁给我念经？”他把结拉紧，递给我，“你们家的门，我从小就在里头。门外头的路，我不认得。”苏迪抬头看他，没说话。"
+next = "c2"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_rope_faraji_asked_free", value = true }]
+
+[[tracks.chapters.choices]]
+key = "sudi"
+text = "答应从开罗给苏迪带一样东西"
+reply = "我问苏迪要什么。他想了很久，说要一把开罗的刀，削椰壳用的。法拉吉骂他贪心，又偷偷冲我眨了眨眼。我在本子上记下：苏迪，一把刀。"
+next = "c2"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_sudi_knife", value = true }]
+
+[[tracks.chapters.choices]]
+key = "learn"
+text = "专心把那个结学会"
+reply = "我学了一下午，打一回，散一回，打到第七回才不散。法拉吉把我的结拿过去往柱子上一甩，结没散，柱子上的灰掉了一片。“行了，这个结比你们家的金子牢。”"
+next = "c2"
+effects = [{ kind = "growth", attr = "stewardship", value = 2 }, { kind = "skill", skill = "double_entry", value = 2 }]
+
+[[tracks.chapters]]
+key = "c2"
+title = "一双鞋"
+text = "三月的船带来姑母的信。前头是椰纤的价钱，后面另起一行：希库达尼的账结了。最后一枚铜钱是开斋节那天交的，她在法官面前按了手印，赎身契是法官的书记写的，姑母在旁边作证。“她要走，回河那边去。我给了她一双鞋。”信写到这里就完了，连落款都没有。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 3, 15] }]
+
+[[tracks.chapters.choices]]
+key = "where"
+text = "回信问：她要往哪里找"
+reply = "我问她往哪个方向走，跟哪支商队，河那边的村子还有没有人，问了满满一页。回信又过了一个季风。"
+next = "c3"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_asked_where", value = true }, { kind = "letter", person = "baraka_aunt", text = "跟南去的商队走的，去找她自己的名字。别的我没问，问了她也不说。" }]
+
+[[tracks.chapters.choices]]
+key = "faraji"
+text = "回信问：那法拉吉呢"
+reply = "法拉吉是椰纤棚里最老的人，生在这个院子里，我小时候骑过他的脖子。我问姑母，他的账结了没有。"
+next = "c3"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_asked_faraji", value = true }, { kind = "letter", person = "baraka_aunt", text = "法拉吉不买。他说放了他，他就成了没有家的人。他生在这个院子里，他娘埋在后墙外头。" }]
+
+[[tracks.chapters.choices]]
+key = "coin"
+text = "托姑母替我给她一点路钱"
+reply = "我把这个月剩下的钱包好，托姑母转交，信里只写：给她买盐。往内陆走，盐比金子好使，这是父亲说的。"
+next = "c3"
+requires = [{ kind = "cash", ge = 10 }]
+hint = "手头的零用钱，还凑不出一笔路钱。"
+effects = [{ kind = "cash", value = -10 }, { kind = "flag", flag = "rw_baraka_rope_gave_coin", value = true }, { kind = "letter", person = "baraka_aunt", text = "钱给了。她不要，我塞进了她的鞋里。" }]
+
+[[tracks.chapters]]
+key = "c3"
+title = "锡管里的契"
+text = "杰巴尔提住宿区的门房是个老人，说话带着泽拉那边的口音，脖子上挂着一只锡管，管口用蜡封着。一天下雨，没人出门，他坐在井边跟我说，六十年前他在开罗的奴隶市场上被人买下，买他的是一位老先生，教他认字，临死前放了他。锡管里就是那张赎身契，他每天摸一摸，摸了四十年。他问我，基尔瓦的人买不买人。我说买。他点点头，好像早就知道。"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 11, 8] }]
+
+[[tracks.chapters.choices]]
+key = "read"
+text = "请他把赎身契念给我听"
+reply = "他小心地揭开蜡，抽出一张发黄的纸，念得很慢：以真主之名，某某放了某某，求真主照他放掉的这一个，在火里也放他一回。念完他笑了：“老先生放我，是为了放他自己。那也好，两个人都放了。”他把纸卷回去，重新封上蜡，手一点也不抖。"
+next = "c4"
+effects = [{ kind = "growth", attr = "learning", value = 3 }, { kind = "flag", flag = "rw_baraka_rope_deed_read", value = true }]
+
+[[tracks.chapters.choices]]
+key = "market"
+text = "跟他去看那个市场"
+reply = "雨停了，他带我走到哈利利市场后头的一处院子，院门口坐着几个看守，院里的人一排排站着，有人掰开一个少年的嘴看牙口。老门房在门口站了一会儿，没进去，说他认得这扇门，门槛换过三回了。回去的路上他走得很快，我差点跟不上。"
+next = "c4"
+effects = [{ kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_rope_saw_market", value = true }]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "回去写信，把他讲给姑母听"
+reply = "我把锡管、蜡、老先生，一样一样写给姑母，最后问她：我们家的人里，有谁的赎身契是我们写的。"
+next = "c4"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_wrote_aunt", value = true }, { kind = "letter", person = "baraka_aunt", text = "有。二十三张，一张一张都记在那本小账里。你回来，我给你看。这种事别在信里问，信要过好几个人的手。" }]
+
+[[tracks.chapters]]
+key = "c4"
+title = "她带回来的名字"
+text = "九月，姑母来信说，希库达尼回来了。她走了一年，走到河那边，村子烧过了，一个人也没剩，说是南边来的人打过一仗，把能走的都带走了。她背着那双鞋回到基尔瓦，又蹲到了池子边捶椰壳，这回拿工钱。“她让我把她原来的名字写进小账，写在希库达尼旁边。我写了。我不会念，是她一个音一个音教我拼的。”"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 9, 5] }]
+
+[[tracks.chapters.choices]]
+key = "ask_name"
+text = "回信请姑母把那个名字念给我"
+reply = "我问那个名字怎么念，说我想抄进自己的本子。"
+next = "c5"
+effects = [{ kind = "flag", flag = "rw_baraka_rope_name_wait", value = true }, { kind = "letter", person = "baraka_aunt", text = "她不让我念。她说等你回来，自己去池子边问她。名字不过别人的嘴。" }]
+
+[[tracks.chapters.choices]]
+key = "poet"
+text = "回信：把它也添进姆泽的地名"
+reply = "我写：她的村子没人了，名字总得有个地方放。姆泽唱的地名都是海边的，河那边的一个也没有。请姑母跟姆泽说，把她的村名添一句进去。"
+next = "c5"
+effects = [{ kind = "affinity", person = "baraka_poet", value = 1 }, { kind = "flag", flag = "rw_baraka_rope_name_poet", value = true }, { kind = "letter", person = "baraka_aunt", text = "跟姆泽说了。他问了三遍怎么念，记住了，说放在马菲亚后头，那里调子有空。" }]
+
+[[tracks.chapters.choices]]
+key = "wage"
+text = "回信问：她的工钱给多少"
+reply = "我问她一天的工钱，比照别人给，还是另算。写完觉得自己问得像个管账的，又觉得管账的就该问这个。"
+next = "c5"
+effects = [{ kind = "growth", attr = "stewardship", value = 2 }, { kind = "flag", flag = "rw_baraka_rope_wage", value = true }, { kind = "letter", person = "baraka_aunt", text = "跟别人一样。她多要了一样：池子最东头那一口归她管。我答应了。" }]
+
+[[tracks.chapters]]
+key = "c5"
+title = "法拉吉的腿"
+text = "五月的信里，姑母说法拉吉病了，躺在椰纤棚后面的小屋里，腿肿得穿不上鞋。她想趁他还在，让父亲当着法官写一张放他的契：临终放人是功德，也让他死的时候是自己的人。父亲不肯，说：“他是这个家的人，死也是这个家的人。放了他，谁给他抬棺？谁给他念经？”姑母在信末写：“你父亲说的也是实话。你替我想想。”"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 5, 22] }]
+
+[[tracks.chapters.variants]]
+key = "rw_free"
+when = [{ kind = "flag", flag = "rw_baraka_rope_faraji_asked_free", value = true }]
+text = "五月的信里，姑母说法拉吉病了，躺在椰纤棚后面的小屋里，腿肿得穿不上鞋。她想趁他还在，让父亲当着法官写一张放他的契：临终放人是功德，也让他死的时候是自己的人。父亲不肯，说：“他是这个家的人，死也是这个家的人。放了他，谁给他抬棺？谁给他念经？”这话跟法拉吉那年教我打结时说的，几乎一个字不差。姑母在信末写：“你父亲说的也是实话。你替我想想。”"
+
+[[tracks.chapters.choices]]
+key = "plead"
+text = "写信劝父亲放了法拉吉"
+reply = "我写给父亲：法拉吉的棺，我回去抬；法拉吉的经，我回去念。契写了，他还是这个院子里的人，只是这个院子不再记他的价钱。"
+next = "c6"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 2 }, { kind = "flag", flag = "rw_baraka_rope_faraji_freed", value = true }, { kind = "letter", person = "salim_kilwi", text = "放了。法官来的那天，法拉吉按手印的时候问我，是不是要赶他走。我说不是。他哭了，我从没见他哭过。" }]
+
+[[tracks.chapters.choices]]
+key = "faraji"
+text = "写信给法拉吉，请姑母念给他听"
+reply = "我给法拉吉写了一封信，写我小时候骑在他脖子上去看搁浅的鲸鱼，写他教我打的第一个绳结。最后问他：你自己想要什么。"
+next = "c6"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 1 }, { kind = "flag", flag = "rw_baraka_rope_wrote_faraji", value = true }, { kind = "letter", person = "baraka_aunt", text = "念给他听了。他说他想要你回来的时候，他还能站在门口。契的事，他说听主人的。" }]
+
+[[tracks.chapters.choices]]
+key = "out"
+text = "回信说：这是父亲的事"
+reply = "我写：法拉吉是父亲的人，这事该父亲定，我在开罗，看不见他的腿。写完我就知道，我只是不想跟父亲吵。"
+next = "c6"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters]]
+key = "c6"
+title = "二十三张"
+text = "年底姑母的信很厚，里面裹着那本小账的一份抄本，抄得一笔不差。前头是十五年里每年卖给赛义德的十二捆绳，后头是二十三个名字，每个名字底下记着身价、交回多少、哪天写的契。“钱是从那条船上来的，人是从那条船底下买回来的。一进一出，账平了，心没平。我四十一了，这本账总得有个人接。”"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 12, 12] }]
+
+[[tracks.chapters.variants]]
+key = "rw_named"
+when = [{ kind = "flag", flag = "rw_baraka_rope_ship_named", value = true }]
+text = "年底姑母的信很厚，里面裹着那本小账的一份抄本，抄得一笔不差。前头是十五年里每年卖给赛义德的十二捆绳，那年我在自己本子上记下的船名和铁环，原来姑母十五年前就记下了。后头是二十三个名字，每个名字底下记着身价、交回多少、哪天写的契。“钱是从那条船上来的，人是从那条船底下买回来的。一进一出，账平了，心没平。我四十一了，这本账总得有个人接。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "回信：这本账我接"
+reply = "我回信说我接，回去就接，连那十二捆绳一起接。写完才明白，接下这本账，就是接下那条船。"
+next = "done"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 3 }, { kind = "flag", flag = "rw_baraka_rope_ledger_taken", value = true }]
+
+[[tracks.chapters.choices]]
+key = "share"
+text = "回信：您留着，我回去一起记"
+reply = "我写：账还是您记，我在旁边，您记一笔，我对一笔。您嫌我慢，我就再慢一点，慢到您舍不得交出来。"
+next = "done"
+effects = [{ kind = "affinity", person = "baraka_aunt", value = 2 }, { kind = "flag", flag = "rw_baraka_rope_ledger_shared", value = true }]
+
+[[tracks.chapters.choices]]
+key = "stop"
+text = "回信：别再卖绳给那条船"
+reply = "我写：明年起别卖了。姑母的回信只有两句。"
+next = "done"
+effects = [{ kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_rope_no_more_said", value = true }, { kind = "letter", person = "baraka_aunt", text = "不卖，他去马林迪买。船照样往北，舱里照样有人，我这本账就断了。你想好了再说。" }]
+
+
+# ───────────────────────── 剧情增写（2026-11-12，Claude）：西边来的金砂（廷巴克图的巴卡里·西塞与库姆芭），6 章，只在学院期 ─────────────────────────
+# 母本：马里国王曼萨·穆萨 1324 年朝觐过开罗（金子多到开罗的金价十几年回不来，开罗的钱商一直讲到这时候）；伊本·白图泰《游记》写马里的那几页作底色；
+# 文化：西苏丹的学者、书与朝觐路——廷巴克图的批注本、开罗的秤、路上卖人凑盘缠，好的坏的同在一个人身上；
+# 张力：被开罗的秤一钱一钱压价的有学问的人，身边跟着一个他打算在开罗卖掉的女孩；他是真心觉得女孩进讲席好笑。巴卡里与库姆芭都只在正文里出现。
+# 接：“铜针”n5（抽屉里那一枚，卖金人就是巴卡里）；d3 读 n5 的 rw_baraka_cairo_light_used / _true / _told；“第二本账”c3 的奴隶市场是同一处院子。
+# 设：rw_baraka_takrur_spoke / _after / _books（d0）、_joke / _kumba / _asked_price（d1）、_to_merchant / _weighed_self / _waited（d2）、
+#     _bargained / _refused / _delayed / _asked_kumba（d3）、_recited / _wrote（d4）、_letter_kept / _replied / _line_copied（d5）。d4 读 _delayed。
+# 补：d1b（《称量不公者》那一章）设 rw_baraka_takrur_mutaffifin_joke / _asked_redeem / _kumba_recited；d2b（抄副本）设 _copy_paid / _copy_half / _copy_margin，变体读 n5 的 cairo_light_used / cairo_told。
+[[tracks]]
+key = "c9_baraka_rw_takrur"
+name = "西边来的金砂"
+kind = "request"
+start = "d0"
+auto = false
+academy = true
+
+[[tracks.chapters]]
+key = "d0"
+title = "廊房里的皮囊"
+text = "爱资哈尔的廊房一间挨一间，住的人各从一方来。西头那几间住着西边苏丹来的学生，其中一个叫巴卡里·西塞，廷巴克图人，朝觐回来走到开罗，钱花光了，就留下来听课。那天他在书摊前解开一只皮囊，倒出一小撮金砂，换一部法学的注本。书商称的时候，拇指在秤盘底下托了一下，我看得清清楚楚。巴卡里也看见了，笑了笑，照付。他身后站着一个十来岁的女孩，抱着一摞书，叫库姆芭。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 3, 8] }]
+
+[[tracks.chapters.choices]]
+key = "speak"
+text = "当场指出书商的拇指"
+reply = "我说：您的拇指。书商的脸涨成了猪肝色，骂我是哪里来的野孩子。巴卡里拉住我的袖子，出了书市才说：“你替我省了半钱，这条街上，我就少了一个肯卖书给我的人。”他还是谢了我，谢得很认真。"
+next = "d1"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_spoke", value = true }]
+
+[[tracks.chapters.choices]]
+key = "after"
+text = "等他走远，追上去告诉他"
+reply = "我在廊下追上他，说了书商的拇指。他点点头：“我知道。从廷巴克图走到开罗，每一杆秤都轻一点。这是路上的税，交了，才走得到。”他说得很平，像在讲经。库姆芭躲在他身后，偷偷看我腰上的小秤。"
+next = "d1"
+effects = [{ kind = "growth", attr = "perception", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_after", value = true }]
+
+[[tracks.chapters.choices]]
+key = "books"
+text = "问那女孩抱的是什么书"
+reply = "库姆芭不敢答，看她的主人。巴卡里替她说：是廷巴克图一位老法官的批注本，他老师的老师抄的，走了一年的路，一页没湿。“书我背着太沉，她背着不沉。”他摸了摸女孩的头，像摸一匹好骆驼。"
+next = "d1"
+effects = [{ kind = "growth", attr = "learning", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_books", value = true }]
+
+[[tracks.chapters]]
+key = "d1"
+title = "开罗人记得的那一年"
+text = "夏天的夜里，廊房的人在天井里乘凉。一个开罗的老钱商讲起两百多年前，马里的国王曼萨·穆萨朝觐路过开罗，金子撒得满街都是，开罗的金价掉下去，十几年都没回来。“你们西边的人，”他指着巴卡里，“把我们祖父的秤都撒坏了。”大家都笑。巴卡里也笑：“我们的王撒了一回，从此开罗的秤见了我们，每回都轻一分。”库姆芭坐在台阶上，跟着念晚上的经，念得比天井里谁都快。"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 7, 2] }]
+
+[[tracks.chapters.choices]]
+key = "joke"
+text = "接一个笑话，把场子圆过去"
+reply = "我说：那该请我们基尔瓦的苏丹也来撒一回，把秤撒回去。天井里笑成一片，老钱商笑得把茶洒了。巴卡里没笑，他看了我一眼，那一眼像在说：笑话也是一杆秤。"
+next = "d1b"
+effects = [{ kind = "growth", attr = "eloquence", value = 3 }, { kind = "flag", flag = "rw_baraka_takrur_joke", value = true }]
+
+[[tracks.chapters.choices]]
+key = "kumba"
+text = "问巴卡里：她念经是谁教的"
+reply = "“我教的。我在路上教一句，她记一句，记得比我的学生快。到了开罗，她能背半部。”我说那她该进讲席。他像听见了一个好笑的笑话：“女孩，又是这样的女孩，进什么讲席？”他是真心觉得好笑。"
+next = "d1b"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_kumba", value = true }]
+
+[[tracks.chapters.choices]]
+key = "price"
+text = "问老钱商：如今西边的金子怎么称"
+reply = "老钱商压低嗓门：“西边的金砂杂，砂多，眼睛不好的人吃亏。”他看了看巴卡里，又说，“眼睛好的也吃亏，因为没人跟他说实话。”说完他先打了个哈欠，回屋睡了。"
+next = "d1b"
+effects = [{ kind = "growth", attr = "perception", value = 3 }, { kind = "flag", flag = "rw_baraka_takrur_asked_price", value = true }]
+
+[[tracks.chapters]]
+key = "d1b"
+title = "称量的那一章"
+text = "十月，巴卡里在廊房里给西头的几个学生讲经，讲的是《称量不公者》那一章：给自己量的时候要足，给别人称的时候就短。他讲得很慢，一句一句拆开，说廷巴克图的法官为这一章写过三页批注，秤短一粒，跟偷一粒是一样的。库姆芭坐在门槛上跟着背，一字不差。巴卡里讲完，看着我笑：“金商的儿子，这一章，你们家该挂在秤房门口。”"
+once = true
+mood = "mystic"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1554, 10, 20] }]
+
+[[tracks.chapters.choices]]
+key = "joke"
+text = "笑着说：我们门口挂的是椰纤绳"
+reply = "满屋子的人都笑了，巴卡里也笑。笑完他说：“椰纤绳也好。绳子量长短，也能短一截。”那天夜里我没睡好，想起毡子底下那块羊皮。"
+next = "d2"
+effects = [{ kind = "growth", attr = "eloquence", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_mutaffifin_joke", value = true }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：秤短了的，怎么赎"
+reply = "他想了想：“还给被短的人。找不到人，还给他的后人；找不到后人，替他施舍。”停了停又说，“可短了一辈子的，还不清。还不清的，法官写不出来，只能交给真主。”"
+next = "d2"
+effects = [{ kind = "growth", attr = "learning", value = 3 }, { kind = "flag", flag = "rw_baraka_takrur_asked_redeem", value = true }]
+
+[[tracks.chapters.choices]]
+key = "kumba"
+text = "听库姆芭把那一章背完"
+reply = "库姆芭背完了，比巴卡里讲得还清楚。我冲她点点头，她低下头，把手藏进袖子里。巴卡里说背得好，夸完就转过身去讲下一章了。"
+next = "d2"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_kumba_recited", value = true }]
+
+[[tracks.chapters]]
+key = "d2"
+title = "最后的盘缠"
+text = "二月，巴卡里等的那支驼队又延了一季：说是往苏伊士的路上出了劫，回西边的人要等凑齐了再走。他的皮囊瘪了，剩下的金砂倒出来，只盖得住手心。他来找我，说我是金商的儿子，开罗哪家的秤公道，我该知道。他把皮囊放在我手里：“你替我选一家。选错了，算我的。”库姆芭站在他身后，脚上的鞋是拿旧书皮缝的。"
+once = true
+mood = "tense"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 2, 15] }]
+
+[[tracks.chapters.choices]]
+key = "merchant"
+text = "带他去我替人看秤的那家"
+reply = "我带他去了我常替东家看秤的那家铺子，说这是我的朋友。东家很客气，叫他下个月再来，说这几天金价不好。巴卡里谢了他，出门时对我说：“你东家的抽屉，开着一条缝。”我当时没听懂。"
+next = "d2b"
+effects = [{ kind = "flag", flag = "rw_baraka_takrur_to_merchant", value = true }]
+
+[[tracks.chapters.choices]]
+key = "self"
+text = "借一副秤，我自己替他称"
+reply = "我借了金匠街那位老金匠的秤，用监察官验过的砝码，一粒一粒替他称。称出来比他想的少，金砂里砂多。他看着横梁说：“准的秤，也不帮穷人。”可他把称出的数抄了一份，折好夹进了书里。"
+next = "d2b"
+effects = [{ kind = "skill", skill = "double_entry", value = 6 }, { kind = "flag", flag = "rw_baraka_takrur_weighed_self", value = true }]
+
+[[tracks.chapters.choices]]
+key = "wait"
+text = "劝他等驼队里自己人的钱商"
+reply = "我说驼队里有他们自己的钱商，等他们来，至少话听得懂。他摇头：“驼队来了，人家先换驼队的金子，我这一撮轮不到。”可他还是听了我的，又等了一个月。那一个月，他一天只吃一顿。"
+next = "d2b"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_waited", value = true }]
+
+[[tracks.chapters]]
+key = "d2b"
+title = "一页一个价"
+text = "七月，巴卡里抱着那部廷巴克图的批注本来找我，问我在书商街抄书，一页要多少钱。他要请我抄一部副本，把副本卖了，换回西边的路费；原本他舍不得卖，那是他老师的老师抄的。库姆芭在旁边举着灯，灯油是巴卡里一滴一滴省下来的。他说：“你的字我看过，比书商街的人老实。”"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 7, 25] }]
+
+[[tracks.chapters.variants]]
+key = "rw_light"
+when = [{ kind = "flag", flag = "rw_baraka_cairo_light_used", value = true }]
+text = "七月，巴卡里抱着那部廷巴克图的批注本来找我，问我在书商街抄书，一页要多少钱。他要请我抄一部副本，把副本卖了，换回西边的路费；原本他舍不得卖，那是他老师的老师抄的。库姆芭在旁边举着灯，灯油是巴卡里一滴一滴省下来的。他说：“你的字我看过，比书商街的人老实。”他把书递过来的时候又说了一句：“上回你替东家称的那一包，我回去借秤又称了一遍。”他没说称出来是多少，我也没敢问。"
+
+[[tracks.chapters.variants]]
+key = "rw_told"
+when = [{ kind = "flag", flag = "rw_baraka_cairo_light_used", value = false }, { kind = "flag", flag = "rw_baraka_cairo_told", value = true }]
+text = "七月，巴卡里抱着那部廷巴克图的批注本来找我，问我在书商街抄书，一页要多少钱。他要请我抄一部副本，把副本卖了，换回西边的路费；原本他舍不得卖，那是他老师的老师抄的。库姆芭在旁边举着灯，灯油是巴卡里一滴一滴省下来的。他说：“你的字我看过，比书商街的人老实。”他压低声音说：“听说你在东家面前把一枚砝码拍在了桌上。东家的抽屉，这些天关得很紧。”"
+
+[[tracks.chapters.choices]]
+key = "full"
+text = "照书商街的价，一页一个钱"
+reply = "我照书商街的价收，一页一个钱，一个不少。抄了二十多夜，抄到批注最密的那几页，眼睛又酸又涩。巴卡里每天来数页数，数得很仔细，数完付钱，像付给一个真正的抄书匠。他说：“照价，才是看得起我。”"
+next = "d3"
+effects = [{ kind = "cash", value = 10 }, { kind = "skill", skill = "calligraphy", value = 6 }, { kind = "flag", flag = "rw_baraka_takrur_copy_paid", value = true }]
+
+[[tracks.chapters.choices]]
+key = "free"
+text = "说不要钱，就当我借书来读"
+reply = "我说不要钱，就当我借他的书来读。他不肯，说书是能借的，手是不能借的。争到最后，他把一页最难抄的批注留给自己抄，其余的给我，钱照付一半。他抄的那一页，字比我的好看得多。"
+next = "d3"
+effects = [{ kind = "skill", skill = "calligraphy", value = 4 }, { kind = "growth", attr = "eloquence", value = 1 }, { kind = "flag", flag = "rw_baraka_takrur_copy_half", value = true }]
+
+[[tracks.chapters.choices]]
+key = "margin"
+text = "连页边的批注也一并抄上"
+reply = "原本的页边写满了小字，是一代一代的人添的。书商街抄书从不抄页边，我抄了，一个字一个字地抄，抄到有一处写着：“称量那一章，我师父说，海边来的金子也要照这样称。”我抬头看巴卡里，他说他也是头一回注意到这一句。"
+next = "d3"
+effects = [{ kind = "skill", skill = "calligraphy", value = 8 }, { kind = "flag", flag = "rw_baraka_takrur_copy_margin", value = true }]
+
+[[tracks.chapters]]
+key = "d3"
+title = "库姆芭的价钱"
+text = "十一月，回西边的驼队终于凑齐了，巴卡里的盘缠还差一大截。他要把库姆芭带到哈利利后头那个院子卖掉，请我同去：“你是金商的儿子，你在，他们不敢乱压价。”他说得一点也不羞，像请我替他称金子。库姆芭跟在后面，抱着那部批注本，这是她最后一回替他抱书。走到院门口，她把书交给了他。"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1555, 11, 22] }]
+
+[[tracks.chapters.variants]]
+key = "rw_light"
+when = [{ kind = "flag", flag = "rw_baraka_cairo_light_used", value = true }]
+text = "十一月，回西边的驼队终于凑齐了，巴卡里的盘缠还差一大截。六月里我替东家称他的金砂，用的是抽屉里那一枚；少了的那一钱，此刻就跟在他身后。他要把库姆芭带到哈利利后头那个院子卖掉，请我同去：“你是金商的儿子，你在，他们不敢乱压价。”他说得一点也不羞。库姆芭抱着那部批注本，这是她最后一回替他抱书。走到院门口，她把书交给了他。"
+
+[[tracks.chapters.variants]]
+key = "rw_true"
+when = [{ kind = "flag", flag = "rw_baraka_cairo_light_used", value = false }, { kind = "flag", flag = "rw_baraka_cairo_true", value = true }]
+text = "十一月，回西边的驼队终于凑齐了，巴卡里的盘缠还差一大截。六月里我替他称准的那一回，也只够他住到冬天。他要把库姆芭带到哈利利后头那个院子卖掉，请我同去：“你是金商的儿子，你在，他们不敢乱压价。”他说得一点也不羞。库姆芭抱着那部批注本，这是她最后一回替他抱书。走到院门口，她把书交给了他。"
+
+[[tracks.chapters.choices]]
+key = "bargain"
+text = "去，替他把价钱讲上去"
+reply = "我去了。看守报一个价，我就把她背得出半部经、认得字的事一样一样说出来，价钱一回一回往上走。我讲得很好，比在讲席上还好。成交的时候，巴卡里握着我的手谢我。库姆芭被领进里院，没回头。那天晚上，我一口饭也没吃下去。"
+next = "d4"
+effects = [{ kind = "skill", skill = "negotiation", value = 6 }, { kind = "flag", flag = "rw_baraka_takrur_bargained", value = true }]
+
+[[tracks.chapters.choices]]
+key = "refuse"
+text = "说我不去"
+reply = "我说我不去。巴卡里愣了一下，没有生气：“那我自己去，价钱就低一点。”他们走了。我在廊下站到天黑，西头的屋里没有人念经。"
+next = "d4"
+effects = [{ kind = "growth", attr = "resolve", value = 3 }, { kind = "flag", flag = "rw_baraka_takrur_refused", value = true }]
+
+[[tracks.chapters.choices]]
+key = "delay"
+text = "把攒下的钱给他，换晚一季再卖"
+reply = "我把攒了几个月的钱全给了他，说够他再等一季，等驼队里的同乡借他。他看着那些钱看了很久，收下了：“好，晚一季。”回廊房的路上，库姆芭又把那部书接了回去，抱得很紧。我知道一季以后会怎样，可一季也是一季。"
+next = "d4"
+requires = [{ kind = "cash", ge = 40 }]
+hint = "攒下的钱还不够他多住一季。"
+effects = [{ kind = "cash", value = -40 }, { kind = "flag", flag = "rw_baraka_takrur_delayed", value = true }]
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "蹲下来，问库姆芭自己怎么想"
+reply = "她看看主人，说：“主人说开罗的人家吃得饱。”停了停，又说：“我想把那部经背完。”巴卡里在旁边听着，点点头，好像她说的是两件不相干的事。"
+next = "d4"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_asked_kumba", value = true }]
+
+[[tracks.chapters]]
+key = "d4"
+title = "水池边的女孩"
+text = "开春，我在祖韦拉门里的公共水池边看见了库姆芭。她穿着一户人家的衣裳，头上顶着水罐，比去年胖了一点。她认出了我，没有停，只放慢了脚步，嘴里念着什么。我走近才听出来，是去年夏天她在天井里背到一半的那一章，她接着背下去了，一个字也没错。"
+once = true
+mood = "sad"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 4, 18] }]
+
+[[tracks.chapters.variants]]
+key = "rw_delayed"
+when = [{ kind = "flag", flag = "rw_baraka_takrur_delayed", value = true }]
+text = "那一季过完，驼队里的同乡没借给他钱，巴卡里还是把库姆芭卖了，晚了一季，价钱倒高了些，买她的是一位老学者家。开春，我在祖韦拉门里的公共水池边看见了她，头上顶着水罐，比去年胖了一点。她认出了我，没有停，只放慢了脚步，嘴里念着什么。我走近才听出来，是她在天井里背到一半的那一章，她接着背下去了，一个字也没错。"
+
+[[tracks.chapters.choices]]
+key = "recite"
+text = "跟着她念下一句"
+reply = "她念一句，我接一句，一前一后走了半条街，路人以为是两个念经的孩子。到岔口她往东拐，拐之前，把最后一句留给了我。我接上了，她才走。"
+next = "d5"
+effects = [{ kind = "growth", attr = "sensibility", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_recited", value = true }]
+
+[[tracks.chapters.choices]]
+key = "write"
+text = "抄一章经，托人送给她"
+reply = "我抄了她还没背到的那一章，用的是我最好的纸，托水池边卖水的人带给她。卖水的人第二天说，那家的女主人收下了，说家里的女孩用不着认字。那张纸后来在谁手里，我不知道。"
+next = "d5"
+effects = [{ kind = "skill", skill = "calligraphy", value = 6 }, { kind = "flag", flag = "rw_baraka_takrur_wrote", value = true }]
+
+[[tracks.chapters.choices]]
+key = "pass"
+text = "装作没看见，走过去"
+reply = "我低下头走过去。走出十几步，后面的念经声停了一下，又接上了。我在心里替她数到了这一章的末尾。"
+next = "d5"
+effects = [{ kind = "growth", attr = "resolve", value = 2 }]
+
+[[tracks.chapters]]
+key = "d5"
+title = "廷巴克图的信"
+text = "十一月，西边的驼队走了，巴卡里跟着走了。他留给门房一封信，让转给“基尔瓦来的金商之子”。信是马格里布的字，圆得像一串珠子：“你家在南边称金，我家在西边抄书。我们的金子都是走路走到开罗的，走到这里都轻了。你回去以后，替我看看你们那边下山卖金的人，身边是不是也跟着一个孩子。”信末他写了库姆芭的名字，又划了一道。"
+once = true
+mood = "tender"
+when = [{ kind = "flag", flag = "c9_family_baraka", value = true }, { kind = "date", from = [1556, 11, 5] }]
+
+[[tracks.chapters.variants]]
+key = "rw_delayed"
+when = [{ kind = "flag", flag = "rw_baraka_takrur_delayed", value = true }]
+text = "十一月，西边的驼队走了，巴卡里跟着走了。他留给门房一封信，让转给“基尔瓦来的金商之子”。信是马格里布的字，圆得像一串珠子：“你家在南边称金，我家在西边抄书。我们的金子都是走路走到开罗的，走到这里都轻了。你回去以后，替我看看你们那边下山卖金的人，身边是不是也跟着一个孩子。”信末他写了库姆芭的名字，没有划，旁边添了一行小字：多住的那一季，她把那部批注本背完了半部。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "把信夹进两栏的本子"
+reply = "我把信夹进那本两栏的本子，左边记写下的，右边记传下的。这封信该放哪一边，我拿不定，最后夹在两栏中间的缝里。"
+next = "done"
+effects = [{ kind = "skill", skill = "calligraphy", value = 4 }, { kind = "flag", flag = "rw_baraka_takrur_letter_kept", value = true }]
+
+[[tracks.chapters.choices]]
+key = "reply"
+text = "托往西去的人捎一封回信"
+reply = "我写：南边下山卖金的人，身边是跟着一个孩子，背着芭蕉叶包的金砂。写到这里我停住了，不知道下一句该写我父亲，还是写我自己。最后只写了一句：路上保重。"
+next = "done"
+effects = [{ kind = "flag", flag = "rw_baraka_takrur_replied", value = true }]
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "把他那句话抄进地方史"
+reply = "我把“走到这里都轻了”抄在地方史第一页的背面，没写是谁说的。以后谁翻到，就当是基尔瓦人说的吧。我想他不会介意。"
+next = "done"
+effects = [{ kind = "growth", attr = "learning", value = 2 }, { kind = "flag", flag = "rw_baraka_takrur_line_copied", value = true }]

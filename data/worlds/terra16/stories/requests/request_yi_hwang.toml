@@ -1,0 +1,249 @@
+# 请托：渔家孩子的问学信（request_yi_hwang）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：李滉，号退溪（yi_hwang，1502 年生，1571 年卒，男），岭南安东礼安乡下的儒者；cast 在 cast/historical_08_korea_ryukyu.toml。
+# 类型：送信（letter）。四章：offer（报价）→ handover（三页回信）→ reply（寄来的书稿，答了第三页的一路）
+#   或 reply_half（同一件事，第三页没答全的一路）。终点 done / failed。
+#   brief 写的是三章，收尾章按 answered / half 拆选项；引擎不许用本轨道另一路才设的旗标挡选项，
+#   所以改成按 next 分流到两章收尾（reply / reply_half），两章各有两个选项，效果照 brief。
+# 报价：L 来信（auto=true）。offer 章 at=busan（釜山），出面的是釜山的渔家孩子（不新建 cast，不写 speaker）；
+#   老先生只在信里说话，信经东莱府的驿递往返，玩家不去内陆。
+#   family=c13_offer_busan、冷却 20 天；offer 的 deadline 为窗口止日 1568-12-31，timeout 直接 failed，不写见闻。
+# 窗口：offer 1559-01-15 至 1568-12-31，玩家满 17、名声 ≥ 5；handover 进入后等 60 天、150 天期限；
+#   reply / reply_half 进入后等 60 天、150 天期限。最晚一路止于 1569 年秋，在他 1571 年去世之前；后续章都写 alive。
+# 依据·史实背景：李滉书信问学，回信极勤，不分贵贱（《退溪集》）；《朱子书节要》是他从朱子书信里摘编的本子，
+#   1556 年前后编成，先以抄本在门人间传（书目见 items/books_13_east_asia.toml 的 juseo_ms）。1568 年他被召到汉城，信仍经安东转递，正文不提。
+# 依据·原创：釜山浦的渔家孩子（十二三岁，无名）、信角画的三道水、东莱府那个笑过孩子字的驿卒、
+#   第二页的三句反问、油纸包、第二封信的文字。
+# 依赖：港口 busan（ports_east_asia.toml）；物品 juseo_ms；势力 joseon（factions/09_eastasia.toml）；
+#   技能 calligraphy / lang_chinese（skills.toml）；属性 eloquence。B10b：无需改名。主线门禁：无。
+# C7：本条无 C7 线，不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_yi_hwang_copied（reply / reply_half 的 v1_copied 变体，只改文字）。
+# 设的旗标：accepted（offer 两条接法）、declined（offer 回绝，终局）、copied（offer 誊信，分支）、
+#   answered（handover 答了第三页，分支）、half（handover 没答全，分支）、
+#   late（handover 或收尾超时，终局）、done（reply 两个选项，终局）、partial（reply_half 两个选项，终局）。
+#   家族冷却 c13_offer_busan 与釜山别的请托共用。
+# 秘密：无（cast 无 secret）。心学、佛老之争本条不写；老先生只反问，不训人。
+# 要紧的一句（brief 的 voice）：“君在海上，见潮与月，可曾觉得它们是一物？老夫在溪边看了一辈子水，只看见了一半。”
+#   全轨道只用一次，在 handover 章的第三页里。
+# 未成年人：孩子只写字、问问题、跑腿，不写危险。
+# 报酬：无现金（清贫，以书稿代报酬）；唯一奖励 juseo_ms（reply.keep 与 reply_half.keep；give_boy 两路不给玩家物品，书给了孩子，有意如此）；
+#   好感：接下 +2、handover 答了 +3、收尾 keep +8 / give_boy +10（brief 各章的数；最多 15，在全表 +25 之内）；
+#   reply_half 收尾 keep +4 / give_boy +6；朝鲜声望 +2、名声 +3 只在 reply 的两个选项；回忆一张只在 reply.keep。
+#   来信：第二封信 letter 放在收尾两章的 done 选项——reply 两个选项是同一封（写给看海的君），reply_half 两个选项是另一封短信（大半写给孩子）；
+#   每局只收到其中一封，全轨道两种文字，在 ≤2 封之内。超时只写见闻，不写来信（brief：孩子不是 cast，老先生不知道）。
+# 回忆插画 mem-request_yi_hwang-reply：釜山码头的船边，渔家孩子抱着油纸包里的书稿，潮水正涨，天边挂着半个月亮。
+
+[[tracks]]
+key = "request_yi_hwang"
+name = "渔家孩子的问学信"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["yi_hwang"]
+
+# 一、釜山浦的码头：渔家孩子攥着一封字歪的信，想请跑海的人添几句潮水的事。
+[[tracks.chapters]]
+key = "offer"
+title = "歪歪扭扭的一封信"
+text = "釜山浦的码头上晒着一排鱿鱼，一个十二三岁的渔家孩子从鱿鱼架子底下钻出来，拦住了你。他手里攥着一封信，纸被汗浸软了，字歪得认不出几个；“潮”字他不会写，画了三道水。信上问的是：潮水为什么一天来两次？书上说的“理”，管不管潮水？他听人说，安东乡下有个老先生，谁的信都回。可东莱府的驿卒看了他的字就笑，说是鸡爪子刨的。“你是跑海的，”孩子把信往你手里塞，“在后头添几句海上的事。先生没见过海。”"
+mood = "cheerful"
+at = "busan"
+when = [
+  { kind = "date", from = [1559, 1, 15], to = [1568, 12, 31] },
+  { kind = "age", ge = 17 },
+  { kind = "fame", ge = 5 },
+]
+deadline = [1568, 12, 31]
+family = "c13_offer_busan"
+family_cooldown_days = 20
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "替他把信誊清，再添几句潮水的事。"
+requires = [{ kind = "skill", skill = "calligraphy", ge = 60 }]
+hint = "你的字比他的端正不了多少，誊了也是白誊。"
+next = "handover"
+reply = "你誊了一遍，孩子趴在船舷上看，看一笔念一个字。信角那三道水你照原样画上，没改。送到驿站，驿卒这回没笑，翻过来看了看，问是谁写的。孩子挺起胸：“我问的。”"
+effects = [
+  { kind = "affinity", person = "yi_hwang", value = 2 },
+  { kind = "flag", flag = "c13_request_yi_hwang_accepted" },
+  { kind = "flag", flag = "c13_request_yi_hwang_copied" },
+]
+
+[[tracks.chapters.choices]]
+key = "add"
+text = "原样寄出，后头添几行你在海上见过的潮。"
+next = "handover"
+reply = "你在信尾添了几行：哪片海一天两潮，哪片海一天只来一潮，哪处的潮一涨就是两丈。孩子把信折了三折，塞进驿卒的布袋，回头说：“先生要是不回，我就再写。”"
+effects = [
+  { kind = "affinity", person = "yi_hwang", value = 2 },
+  { kind = "flag", flag = "c13_request_yi_hwang_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "这是读书人的事，我只管船。"
+next = "failed"
+reply = "孩子把信塞回怀里，从鱿鱼架子底下钻过去，跑了。后来你在码头上又见过他一回，他蹲在驿站门口的石阶上，拿树枝在地上一遍一遍地写那个“潮”字。"
+effects = [{ kind = "flag", flag = "c13_request_yi_hwang_declined" }]
+
+# 二、三页回信：老先生回了，第三页是写给你的。
+[[tracks.chapters]]
+key = "handover"
+title = "三页回信"
+text = "两个月后，那孩子举着一封厚信在码头上跑，草鞋跑掉了一只也不回头捡。老先生回了三页。第一页夸他问得好，说字歪不要紧，问得正。第二页一句一句反问：潮来之前，岸边的石头先湿还是先干？月亮不圆的夜里，潮还来不来？你爹出海，看潮还是看月？孩子挠着头念，念一句，抬头看一眼海。第三页是写给你的，只有一行半：“君在海上，见潮与月，可曾觉得它们是一物？老夫在溪边看了一辈子水，只看见了一半。”“先生在等你回话。”孩子说。"
+news = "釜山码头上有个渔家孩子，举着安东老先生写来的三页回信满码头跑，见人就念上头的问题。"
+speaker = "captain"
+mood = "tender"
+at = "busan"
+objectives = [
+  { kind = "wait", days = 60, text = "等安东的回信" },
+  { kind = "at", at = "busan", text = "回到釜山" },
+]
+when = [{ kind = "alive", person = "yi_hwang", value = true }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yi_hwang_late" }]
+news = "釜山码头上那个渔家孩子，举着安东老先生的回信等一个外来的船长，等了好几个月，后来自己写了回信寄走了。"
+
+[[tracks.chapters.choices]]
+key = "hanmun"
+text = "提笔用汉文写半页回答。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_chinese", ge = 60, hard = true }]
+hint = "那些字你都认得，提起笔来，却连不成一句文言。"
+next = "reply"
+reply = "你写了半页：潮跟着月走，可大潮小潮又不全跟着月；海上的人只知道它准，不知道它为什么准。写到这里你搁下了笔。孩子凑过来看了半天：“你也有不知道的？”"
+effects = [
+  { kind = "affinity", person = "yi_hwang", value = 3 },
+  { kind = "flag", flag = "c13_request_yi_hwang_answered" },
+]
+
+[[tracks.chapters.choices]]
+key = "dictate"
+text = "我说，你写。"
+next = "reply"
+reply = "你说一句，他问三句：“一物”是什么物？“一半”是哪一半？你说月亮走到哪，潮就跟到哪，可初一十五的大潮也有不准的时候，跑船的只认它来得准。他停了笔：“那它为什么准？”你答不上来。他想了想，把这一问也写了上去，字比上回端正多了。"
+check = { attr = "eloquence", base = 35, per = 6 }
+effects = [
+  { kind = "affinity", person = "yi_hwang", value = 3 },
+  { kind = "flag", flag = "c13_request_yi_hwang_answered" },
+]
+
+[tracks.chapters.choices.fail]
+next = "reply_half"
+effects = [{ kind = "flag", flag = "c13_request_yi_hwang_half" }]
+news = "釜山码头上，一个渔家孩子替外来的船长代笔写回信，写到一半跟不上，哭了一场，那封信只寄出去半页。"
+
+[[tracks.chapters.choices]]
+key = "skip"
+text = "这一页我不回，你回你那两页。"
+next = "reply_half"
+reply = "孩子点点头，像是松了口气，又像有点失望。他蹲在码头的石阶上，把第二页的三句问话抄到自己的纸上，说要先回家问他爹。"
+effects = [{ kind = "flag", flag = "c13_request_yi_hwang_half" }]
+
+# 三、寄来的一部书稿（第三页答了的一路）。
+[[tracks.chapters]]
+key = "reply"
+title = "寄来的一部书稿"
+text = "又过了两个月，东莱府的驿卒在码头上找到你，就是当初笑那孩子字的那一个。他递来一个油纸包，捆得方方正正。包里是老先生的第二封信，只有七八行；底下压着一部书稿，抄得一笔不苟，是他这些年从朱子的书信里一封一封挑出来、编成的节要。信里说，这部稿子送给“看海的君”，也让那孩子借去读。孩子不知从哪里听到了风声，早就蹲在你的船边等着，两只手在裤腿上擦了又擦。"
+news = "釜山一个渔家的孩子收到了安东老先生的回信，听说信里还问起了海上的潮水。"
+mood = "tender"
+at = "busan"
+objectives = [
+  { kind = "wait", days = 60, text = "等安东的第二封信" },
+  { kind = "at", at = "busan", text = "回到釜山" },
+]
+when = [{ kind = "alive", person = "yi_hwang", value = true }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yi_hwang_late" }]
+news = "东莱府的驿卒抱着一个油纸包，在釜山码头等一条外来的船，等了一季没等到，最后把书稿交给了那个渔家孩子。"
+
+[[tracks.chapters.variants]]
+key = "v1_copied"
+when = [{ kind = "flag", flag = "c13_request_yi_hwang_copied" }]
+text = "又过了两个月，东莱府的驿卒在码头上找到你，就是当初笑那孩子字的那一个。他递来一个油纸包，捆得方方正正，包上写着一行字：交釜山誊信的君。驿卒说，这是他头一回替安东送东西给一条船。包里是老先生的第二封信，只有七八行；底下压着一部书稿，抄得一笔不苟，是他这些年从朱子的书信里一封一封挑出来、编成的节要。信里说，这部稿子送给“看海的君”，也让那孩子借去读。孩子不知从哪里听到了风声，早就蹲在你的船边等着，两只手在裤腿上擦了又擦。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "收下书稿，让孩子随时来借。"
+next = "done"
+reply = "孩子当天就借走了第一册，抱在怀里，走路都不敢甩手。第二天一早他来还，书页里夹着一张纸，抄着他看不懂的字，一个字后头画一个圈，等着问。"
+effects = [
+  { kind = "item", item = "juseo_ms", qty = 1 },
+  { kind = "affinity", person = "yi_hwang", value = 8 },
+  { kind = "reputation", faction = "joseon", value = 2 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_yi_hwang_done" },
+  { kind = "memory", memory = "mem-request_yi_hwang-reply", title = "看海的君" },
+  { kind = "letter", person = "yi_hwang", text = "君回的那几行，老夫读了三遍。说海上的人只认潮来得准，不知道它为什么准——这一句，老夫抄下来贴在书堂的柱子上，学生们来问，老夫也答不上，只好反问回去。那孩子的信，字一回比一回正，问得也一回比一回深。他问理管不管潮，老夫至今没敢替他下断语。寄去的是老夫案头的一部抄本，这些年添删过几处，和外头传的不全一样。君在海上若有闲，替老夫看看，哪几封信里说的是水。老夫老了，溪边的路也走得慢。君再到釜山，叫那孩子接着写信来。" },
+]
+
+[[tracks.chapters.choices]]
+key = "give_boy"
+text = "书稿整部送给那孩子。"
+next = "done"
+reply = "孩子抱着书稿站了半天，不知道说什么，最后跪下给你磕了个头，爬起来就往家跑。驿卒在后头喊他跑慢些，油纸别沾了水。"
+effects = [
+  { kind = "affinity", person = "yi_hwang", value = 10 },
+  { kind = "reputation", faction = "joseon", value = 2 },
+  { kind = "fame", value = 3 },
+  { kind = "flag", flag = "c13_request_yi_hwang_done" },
+  { kind = "letter", person = "yi_hwang", text = "君回的那几行，老夫读了三遍。说海上的人只认潮来得准，不知道它为什么准——这一句，老夫抄下来贴在书堂的柱子上，学生们来问，老夫也答不上，只好反问回去。那孩子的信，字一回比一回正，问得也一回比一回深。他问理管不管潮，老夫至今没敢替他下断语。寄去的是老夫案头的一部抄本，这些年添删过几处，和外头传的不全一样。君在海上若有闲，替老夫看看，哪几封信里说的是水。老夫老了，溪边的路也走得慢。君再到釜山，叫那孩子接着写信来。" },
+]
+
+# 三′、寄来的一部书稿（第三页没答全的一路：代笔只写了半页，或者这一页没回）。
+[[tracks.chapters]]
+key = "reply_half"
+title = "大半写给孩子的信"
+text = "又过了两个月，还是东莱府那个驿卒，把一个油纸包送到你船上。包里是老先生的第二封信，比头一封还短，大半是写给那孩子的：哪一句问得好，哪一个字又歪了。写给你的只有一句：“潮与月的事，君想好了，再写不迟。”信底下压着他从朱子书信里编的节要，一笔不苟的抄本，说是送给看海的君，也让那孩子借去读。孩子已经蹲在你的船边，手里攥着他自己那封回信的底稿，边角都揉毛了。"
+news = "釜山一个渔家孩子又收到了安东老先生的信，还跟着一部厚厚的书稿，码头上的渔夫都围过去看。"
+mood = "tender"
+at = "busan"
+objectives = [
+  { kind = "wait", days = 60, text = "等安东的第二封信" },
+  { kind = "at", at = "busan", text = "回到釜山" },
+]
+when = [{ kind = "alive", person = "yi_hwang", value = true }]
+deadline_days = 150
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_yi_hwang_late" }]
+news = "东莱府的驿卒说，安东寄给一个外来船长的书稿在驿站放了半年，后来让釜山那个渔家孩子领走了。"
+
+[[tracks.chapters.variants]]
+key = "v1_copied"
+when = [{ kind = "flag", flag = "c13_request_yi_hwang_copied" }]
+text = "又过了两个月，还是东莱府那个驿卒，把一个油纸包送到你船上，包上写着：交釜山誊信的君。包里是老先生的第二封信，比头一封还短，大半是写给那孩子的：哪一句问得好，哪一个字又歪了。写给你的只有一句：“潮与月的事，君想好了，再写不迟。”信底下压着他从朱子书信里编的节要，一笔不苟的抄本，说是送给看海的君，也让那孩子借去读。孩子已经蹲在你的船边，手里攥着他自己那封回信的底稿，边角都揉毛了。"
+
+[[tracks.chapters.choices]]
+key = "keep"
+text = "收下书稿，也让孩子来借。"
+next = "done"
+reply = "孩子借走了第一册。他说先生的信他已经背下来了，又仰着脸问你：潮跟月，到底是不是一物？你没答上来，他也没再追问，抱着书走了。"
+effects = [
+  { kind = "item", item = "juseo_ms", qty = 1 },
+  { kind = "affinity", person = "yi_hwang", value = 4 },
+  { kind = "flag", flag = "c13_request_yi_hwang_partial" },
+  { kind = "letter", person = "yi_hwang", text = "这回的“潮”字写出来了，三点水挤成一堆，倒比上回画的三道水还难认。你问理管不管潮，这一问老夫还在想。你爹出海，看潮还是看月，问过他没有？问了写来。稿子是给那位看海的君的，你去借，看不懂的字圈出来。潮与月的事，君想好了，再写不迟。" },
+]
+
+[[tracks.chapters.choices]]
+key = "give_boy"
+text = "把整部书稿给那孩子。"
+next = "done"
+reply = "孩子抱着书稿，嘴张了几回，一个字也没说出来。走出几步又跑回来，把那张揉毛了的底稿塞进你手里：“这个给你看。先生问的，我答了一半。”"
+effects = [
+  { kind = "affinity", person = "yi_hwang", value = 6 },
+  { kind = "flag", flag = "c13_request_yi_hwang_partial" },
+  { kind = "letter", person = "yi_hwang", text = "这回的“潮”字写出来了，三点水挤成一堆，倒比上回画的三道水还难认。你问理管不管潮，这一问老夫还在想。你爹出海，看潮还是看月，问过他没有？问了写来。稿子是给那位看海的君的，你去借，看不懂的字圈出来。潮与月的事，君想好了，再写不迟。" },
+]

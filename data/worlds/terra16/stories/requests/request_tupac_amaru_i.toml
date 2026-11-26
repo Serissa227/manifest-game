@@ -1,0 +1,172 @@
+# 请托：一串名字（request_tupac_amaru_i）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：图帕克·阿马鲁（tupac_amaru_i，1545 年生，男），曼科·印加之子，1571 年兄长死后被推上比尔卡班巴的王位；势力 vilcabamba。cast：cast/historical_05_americas.toml。请托人只在使者的转述里说话，本人不下山。
+# 类型：送信（letter）。章节：offer（报价）、handover（城门口）、reply（海滩上回绳）；接“请库西念”的一支走 reply_named（同一片海滩，多一个选项）；终点 done / failed。
+# 报价：L（来信 / 代理人）。出面的是比尔卡班巴派来的使者，不进城，只在卡亚俄以北的海滩上等，不新建 cast，offer 不写 speaker；auto=true；at=callao。
+#       窗口 1571-03-01 至 1572-03-31；when 另加 age（玩家 17、请托人 18）与 fame ≥ 30（窗口起年封顶，见 decisions）。family=c13_offer_callao，family_cooldown_days=20。
+#       offer 写 deadline=1572-03-31，timeout 直接 failed，不写见闻。
+# 进行中：handover 写 deadline_days=90，超时 failed、好感 -3、旗标 _late，不写来信与见闻（山里无人写信）。
+#       reply 与 reply_named 写 deadline=1572-06-15，objectives 为 wait 10 天；超时 failed、旗标 _late、库西的一封来信（≤120 字）。
+#       普通章（无 stage）不写 window 与 default；brief 的 window 只是规划用的出现区间。
+# 依据·史实（只到传闻口吻）：1571 年提图·库西死，将领们推举图帕克·阿马鲁即位（具体月份待核，正文不写日期）；1572 年托莱多讨伐比尔卡班巴（H41，结局归时间线，本文件不写）。
+# 依据·原创：绳上的副绳与户数、卡亚俄的城门与托莱多的新规矩、芦苇棚里念到第四十七户、回绳末端那根白色的副绳、海滩上的使者与报酬。
+# 秘密：边境上西班牙信使被杀，那道命令是谁下的，本请托不碰。库西·瓦伊纳替比尔卡班巴记账的事（人设写明不主动说破）：正文只写“这种打法的结，只有他认得”，见闻永远不写库西与山里的关系。
+# 设的旗标：c13_request_tupac_amaru_i_accepted（offer 两条接法）、_declined（offer 回绝，终局 failed）、_hurried（handover 城门口检定失败；reply 的 hurried 变体读）、_aloud（handover 请库西念；只决定进入 reply_named）、
+#           _late（两处超时，终局）、_done（give / names，终局）、_partial（ask，终局）。每条路径只设一面终局旗标。
+# 读的旗标：无。不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不用 growth、title、join、leave。
+# 报酬：现金 4700（give / names）或 3300（ask），各给一次；好感图帕克最多 +15（offer 2、handover 3、names 10），库西 +3；vilcabamba 声望 +3（give / names）或 +2（ask）；名声 0（密信）；无物品。
+#       回忆 mem-request_tupac_amaru_i-reply（give 与 names 各给一次，同一条回忆）。
+# 依赖：港口 callao（ports_americas.toml）；人物 tupac_amaru_i、kusi_wayna（story_americas.toml，日程 chincha 与本文件的 callao 不同，见整合须知）；无需 B10b 改名；不读 request_kusi_wayna，不写其题目里的那串绳。
+# 整合须知：库西的日程地点 chincha 不是现有地点 key，玩家无法用 person 目标与他同处。handover 写死 at=callao，正文写他下到卡亚俄的集市（与他自己的请托一样是“到访”）。
+# 回忆插画清单：
+#   mem-request_tupac_amaru_i-reply「海滩上的回绳」：黄昏的沙丘，斗篷使者把两根结绳系在一起，远处是卡亚俄的船桅。
+
+[[tracks]]
+key = "request_tupac_amaru_i"
+name = "一串名字"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["tupac_amaru_i", "kusi_wayna"]
+
+# 一、海边不进城的人：卡亚俄以北的海滩，使者等了两天。
+[[tracks.chapters]]
+key = "offer"
+title = "海边不进城的人"
+text = "卡亚俄以北的海滩上，一个裹着粗毛斗篷的使者坐在沙里，嚼着古柯叶，已经等了两天。港务的人赶他进城，他不进；给他的水，他只喝一半，剩下的倒在沙上。他从斗篷里抽出一根打满结的主绳，下面垂着几十根彩色的副绳，被海风吹得乱飞。“山里新王的意思。”他说，“这根绳要交给钦查来的库西·瓦伊纳。这种打法的结，只有老记事官认得。”他的手指停在主绳上的第一个结上，又说：“新王见外人，头一句总是这个：你是从哪条路进山的？……那条路，西班牙人知道吗？”说完，他不再解释，只说，“绳上记的是一串名字。”"
+mood = "mystic"
+at = "callao"
+when = [{ kind = "age", ge = 17 }, { kind = "age", person = "tupac_amaru_i", ge = 18 }, { kind = "date", from = [1571, 3, 1], to = [1572, 3, 31] }, { kind = "fame", ge = 30 }]
+deadline = [1572, 3, 31]
+timeout = { next = "failed" }
+family = "c13_offer_callao"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下"
+next = "handover"
+reply = "使者把绳子一圈圈盘好，放进我手里。绳子比看上去沉，像放下一只活物。他站起来，拍掉斗篷上的沙：“进城的时候，别让人解它。”"
+effects = [{ kind = "flag", flag = "c13_request_tupac_amaru_i_accepted" }, { kind = "affinity", person = "tupac_amaru_i", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "whose"
+text = "接下，问绳上的名字是谁的"
+next = "handover"
+reply = "“活着的人。”他停了停，“还活着的人。”他把斗篷的边往上拉了拉，手指按着主绳上的第一个结，没有再往下说。"
+effects = [{ kind = "flag", flag = "c13_request_tupac_amaru_i_accepted" }, { kind = "affinity", person = "tupac_amaru_i", value = 2 }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：山里的事，我不沾手"
+next = "failed"
+reply = "使者点点头，把绳子收回斗篷，往北边的沙丘走了。走到沙丘顶上，他回头望了一眼港里的桅杆，才翻过去。"
+effects = [{ kind = "flag", flag = "c13_request_tupac_amaru_i_declined" }]
+
+# 二、城门口的包袱：绳子要带进城，去集市的棚子下见库西。
+[[tracks.chapters]]
+key = "handover"
+title = "城门口的包袱"
+text = "托莱多的新规矩下，卡亚俄的城门要翻每一个包袱。兵丁拿长矛挑开棉布，连鱼干也要闻一闻。我的包袱里是那根绳，隔着粗布也摸得出一个个结。库西·瓦伊纳每逢集日从钦查下来，在城里集市的棚子下替筏商点棉包，这回的约就在那里。我站在门洞里，还没把绳子递出去，一个兵丁已经伸手来解我的包袱带子。"
+speaker = "captain"
+mood = "tense"
+at = "callao"
+cast = ["kusi_wayna"]
+when = [{ kind = "alive", person = "kusi_wayna", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "tupac_amaru_i", value = -3 }, { kind = "flag", flag = "c13_request_tupac_amaru_i_late" }] }
+
+[[tracks.chapters.choices]]
+key = "gate"
+text = "带着绳子过城门，跟兵丁说是渔网的样子"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "兵丁捏了捏，嫌它不像网，也不像钱，挥手放我过去。棚子下，库西·瓦伊纳接过绳子，先摸的是最后一根。“这一根是问话。不是名字。”他说完，才从第一个结往回摸，把回答系成一根新的副绳，交到我手里。"
+effects = [{ kind = "affinity", person = "tupac_amaru_i", value = 3 }]
+fail = { next = "reply", effects = [{ kind = "affinity", person = "tupac_amaru_i", value = -2 }, { kind = "flag", flag = "c13_request_tupac_amaru_i_hurried" }], news = "卡亚俄的城门口，兵丁扣下一捆打满结的绳子，说像网，又不像网，扣了一夜。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "往兵丁手里塞几枚银币"
+next = "reply"
+requires = [{ kind = "cash", ge = 200 }]
+hint = "身上的银币不够塞进兵丁的手里"
+reply = "银币进了口袋，包袱没打开，绳子原样过了城门。库西·瓦伊纳接过去，先看包袱上的结还在不在原处，没有解。他没问银子的事，一个结一个结摸到最后一根，说：“这一根是人在问。”然后系上一根新的副绳，连一句客气话也没有。"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "tupac_amaru_i", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "aloud"
+text = "请库西出城来，当面一个结一个结地读"
+next = "reply_named"
+requires = [{ kind = "affinity", person = "kusi_wayna", ge = 20 }]
+hint = "他还不肯出城见你，这话现在说不出口"
+reply = "他出城来见我，就在城外的芦苇棚里，不进城门。他一根一根念：一户，两户……念到第四十七户停了一下，又接着念。“报整数的，不是懒，就是撒谎。四十七户，就是四十七户。”念到最后一根，他说：“这一根要人答。”"
+effects = [{ kind = "affinity", person = "tupac_amaru_i", value = 3 }, { kind = "affinity", person = "kusi_wayna", value = 3 }, { kind = "flag", flag = "c13_request_tupac_amaru_i_aloud" }]
+
+# 三、海滩上的回绳：使者在沙丘后面等，山下的兵一天比一天多。
+[[tracks.chapters]]
+key = "reply"
+title = "海滩上的回绳"
+text = "我回到那片海滩，使者已经在沙丘后面等。他接过回绳，用手指一节一节摸过去，脸上没有表情。回绳末端新系了一根白色的副绳，别的副绳都是彩的，白得扎眼。他摸到那根白绳，手停了一下，又接着往下摸。他把绳子在手里掂了掂，像在估它还能撑多久。他说山下的兵一天比一天多，这根绳他今晚就要带进山。"
+speaker = "captain"
+mood = "sad"
+at = "callao"
+deadline = [1572, 6, 15]
+objectives = [{ kind = "wait", days = 10, text = "山上的人还没下来，再等十天" }]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tupac_amaru_i_late" }, { kind = "letter", person = "kusi_wayna", text = "筏商从北边回来，说海滩上再没人来。回绳我先收着，哪天有人下山，我再交给他。" }] }
+
+[[tracks.chapters.variants]]
+key = "hurried"
+when = [{ kind = "flag", flag = "c13_request_tupac_amaru_i_hurried" }]
+text = "我回到那片海滩，使者已经在沙丘后面等。绳子在城门口扣了一夜，第二天才还回来。库西只匆匆读了一遍，回绳末端的白色副绳打得松。使者接过去先拉了一下，才放手，又把每一根副绳都摸了一遍，摸到一半停下来，像心里还有一笔没算完。他说山下的兵一天比一天多，这根绳他今晚就要带进山。"
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把回绳交给他"
+next = "done"
+reply = "使者把回绳和主绳系在一起，系得很紧，一个结都没有松。他向我低了低头，说了一句山里的话，我听不懂，他也没有译。然后他往山的方向走了，背影很快就被沙丘遮住。"
+effects = [{ kind = "cash", value = 4700 }, { kind = "affinity", person = "tupac_amaru_i", value = 8 }, { kind = "reputation", faction = "vilcabamba", value = 3 }, { kind = "memory", memory = "mem-request_tupac_amaru_i-reply", title = "海滩上的回绳" }, { kind = "flag", flag = "c13_request_tupac_amaru_i_done" }]
+news = "卡亚俄北边的海滩上，一个裹斗篷的使者等了两天，收了回绳，往北边的沙丘走了。码头上的人说，他是从山里来的。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：山里还撑得住吗"
+next = "done"
+reply = "他没有回答，只把绳子收好，手指在白色的副绳上停了一下。“新王让我谢你。”他说，“山里的事，你问了，我记住了。”报酬照数放在沙上，一枚一枚排得很整齐。"
+effects = [{ kind = "cash", value = 3300 }, { kind = "affinity", person = "tupac_amaru_i", value = 4 }, { kind = "reputation", faction = "vilcabamba", value = 2 }, { kind = "flag", flag = "c13_request_tupac_amaru_i_partial" }]
+news = "卡亚俄北边的海滩上，山里来的使者被人问了一句山里还撑不撑得住，没有答，把报酬排在沙上，走了。"
+
+# 三之二、城外芦苇棚的那一支：库西念过的名字，使者自己也听得懂。
+[[tracks.chapters]]
+key = "reply_named"
+title = "回绳与四十七户"
+text = "海滩上的风比上一次大，使者坐在沙丘背风的一侧。他接过回绳，用手指一节一节摸过去，脸上没有表情。手指停在一个结上，他抬起头看了我一眼，又低下去。他说，山下的兵一天比一天多，今晚这根绳就要进山。风把沙吹过来，落在绳子上，他一根一根拨干净。绳子又软又重，他抱在怀里，像抱着一个睡着的孩子。"
+speaker = "captain"
+mood = "tender"
+at = "callao"
+deadline = [1572, 6, 15]
+objectives = [{ kind = "wait", days = 10, text = "山上的人还没下来，再等十天" }]
+timeout = { next = "failed", effects = [{ kind = "flag", flag = "c13_request_tupac_amaru_i_late" }, { kind = "letter", person = "kusi_wayna", text = "筏商从北边回来，说海滩上再没人来。回绳我先收着，哪天有人下山，我再交给他。" }] }
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把回绳交给他"
+next = "done"
+reply = "他把回绳系到主绳上，系到一半停住，手指在一个结上按了很久，像在数什么，数完才系紧。他往山的方向走了，走得不快，也没有回头。"
+effects = [{ kind = "cash", value = 4700 }, { kind = "affinity", person = "tupac_amaru_i", value = 8 }, { kind = "reputation", faction = "vilcabamba", value = 3 }, { kind = "memory", memory = "mem-request_tupac_amaru_i-reply", title = "海滩上的回绳" }, { kind = "flag", flag = "c13_request_tupac_amaru_i_done" }]
+news = "卡亚俄北边的沙丘后面，一个裹斗篷的使者坐了半个下午，收了回绳，往北边走了。码头上有人认出那件粗毛斗篷，说是山里来的。"
+
+[[tracks.chapters.choices]]
+key = "names"
+text = "把库西念过的名字也说给他听"
+next = "done"
+reply = "我念到第四十七户，使者开口接了下去。接的是他自己家的人，一户一户，声音很低，没有停。念到后面，他的声音稳了，像说到太阳的时候那样。"
+effects = [{ kind = "cash", value = 4700 }, { kind = "affinity", person = "tupac_amaru_i", value = 10 }, { kind = "reputation", faction = "vilcabamba", value = 3 }, { kind = "memory", memory = "mem-request_tupac_amaru_i-reply", title = "海滩上的回绳" }, { kind = "flag", flag = "c13_request_tupac_amaru_i_done" }]
+news = "卡亚俄北边的海滩上，山里来的使者对着一根打满结的绳子念了很久，念完才收进斗篷。"
+
+[[tracks.chapters.choices]]
+key = "ask"
+text = "问他：山里还撑得住吗"
+next = "done"
+reply = "他没有答，只看了一眼沙丘的那一边，才说新王让他谢我。报酬照数放在沙上，一枚也没有少。我问的那一句，就这样留在了沙上，他没有去捡。"
+effects = [{ kind = "cash", value = 3300 }, { kind = "affinity", person = "tupac_amaru_i", value = 4 }, { kind = "reputation", faction = "vilcabamba", value = 2 }, { kind = "flag", flag = "c13_request_tupac_amaru_i_partial" }]
+news = "码头上有人看见，山里来的使者被问了一句山里撑不撑得住，没有答，报酬照数排在沙上。"

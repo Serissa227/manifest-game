@@ -1,0 +1,169 @@
+# 请托：披风上的纹样（request_theodoros）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：西奥多·帕莱奥洛戈斯（theodoros，1531-09-20 生，男），替威尼斯卖命的斯特拉迪奥蒂轻骑兵，自称拜占庭末代皇朝的后人；势力 venice，身份档 1。cast：cast/story_europe.toml。
+# 类型：去某处（go）。四章加一个分支章：offer（报价）、corfu（科孚的教堂）、candia（坎迪亚的教堂）、report（威尼斯，照实说或不照实说）；candia 只抄家徽时走 report_partial。
+# 报价：T（当面）。他按日程 1558 年起在威尼斯的酒馆；offer 不写 at，objectives 为在港里找到他；auto=false，玩家“问请托”（ask:request_theodoros）启动。窗口 1561-01-01..1590-06-30。
+# 进行中：corfu、candia 各 deadline_days=120，超时 next=failed，来信一封，好感 -3，旗标 _late；report 与 report_partial 没有期限，可以一直等。
+# 依据·史实背景：斯特拉迪奥蒂（Stradioti）是十五、十六世纪替威尼斯服役的巴尔干轻骑兵；1453 年君士坦丁堡陷落后，巴列奥略一家的后人之说在流散的希腊人中间流传；双头鹰是巴列奥略王朝的徽记。科孚与坎迪亚都是威尼斯治下的希腊正教地方。
+# 依据·原创：西奥多的披风与绣片、他的母亲、科孚老神父与一面旧军旗、坎迪亚修士的 1460 年代流亡者名册、页边那行小字。正文只写纸上写了什么，不判定他是不是皇朝后人。
+# 秘密：cast 没写秘密。本请托不触碰他的身份；见闻只写地方上的闲话。
+# 读的旗标：无。不读 c7_ 旗标，不写托马索。
+# 设的旗标：c13_request_theodoros_accepted（offer 两条接法）、_declined（offer 回绝）、_letter（corfu 用希腊语翻出开头的字母）、_page（candia 抄了那一页，含修士替抄的）、_skipped（candia 只抄家徽和姓）、_done（report 照实说）、_partial（report 或 report_partial 的终局）、_late（corfu 或 candia 超时）。
+# 依赖：港口 venice、corfu、candia（ports_east_med.toml）；技能 lang_greek（skills.toml）；属性 eloquence、stewardship；人物 theodoros。无需 B10b 改名。
+# 回忆插画清单：
+#   mem-request_theodoros-report「缝进衬里的抄本」：营房长凳上摊开的抄本，一根黑线穿过披风的衬里，线头还没剪。
+
+[[tracks]]
+key = "request_theodoros"
+name = "披风上的纹样"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["theodoros"]
+
+# 一、经得起雨：威尼斯的小酒铺，他把纹样摊在条凳上。当面问他才会启动。
+[[tracks.chapters]]
+key = "offer"
+title = "经得起雨"
+text = "“帕莱奥洛戈斯，皇帝的那一家。……不信？无妨，我的刀比我的家谱好认。”西奥多坐在威尼斯一间卖甜酒的小铺门口，靴子搁在条凳上，手里转着一只木头海鸥。他那件斯特拉迪奥蒂的披风补了又补，颜色早分不清原来是红是褐。他把披风翻过来，后背上绣着一只两个头的鸟，金线已经发黑。“这是我母亲缝上去的，她说是皇家的。”他把一张纸推过来，纸上是用炭条描下的纹样，“科孚和坎迪亚的教堂，替我查一查，有没有人在旧簿上见过它。查到什么，都照实告诉我。我这件披风经得起雨，家谱经不经得起，我也想知道。”"
+speaker = "captain"
+mood = "tender"
+objectives = [{ kind = "person", person = "theodoros", text = "在威尼斯找到他" }]
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应，去科孚和坎迪亚的教堂查。"
+next = "corfu"
+reply = "他把披风解下来，让你摸那块绣片。摸上去比别处硬，底下垫了一层纸。“换过两回线，纸是我自己垫的。”他说完，又把披风披回肩上，抖了抖，才把带子系上。"
+effects = [{ kind = "affinity", person = "theodoros", value = 2 }, { kind = "flag", flag = "c13_request_theodoros_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_mother"
+text = "答应，但先问他：你母亲还说过什么？"
+next = "corfu"
+reply = "“她还说我父亲是英雄。”他想了想，“皇家那句我信。英雄那句，信一半。”他把纸折起来，又展开，像是要确认纹样没有画歪。"
+effects = [{ kind = "affinity", person = "theodoros", value = 2 }, { kind = "flag", flag = "c13_request_theodoros_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "家谱的事，我不查。"
+next = "failed"
+reply = "他把纸收回去，又把披风披上，系得很紧。“行。”他说，“那这件事就不是你的。”他看了看天色，像要下雨，把领子也竖了起来。"
+effects = [{ kind = "flag", flag = "c13_request_theodoros_declined" }]
+
+# 二、老队长的军旗：科孚的希腊正教教堂，老神父对着窗光看那张纸。
+[[tracks.chapters]]
+key = "corfu"
+title = "老队长的军旗"
+text = "科孚的希腊正教教堂，老神父把那张描纹样的纸对着窗光看。簿子是十几年前的，纸边洇了水，字一行一行黏在一起。“这个纹样，我见过。”他用拇指按住纸角，“不在皇家的簿上。在一面旧军旗上，斯特拉迪奥蒂的一个老队长，那面旗挂在圣龛后面，后来被人拿走了。”他指着一行洇了的字：“队长的姓就在这儿，水把它泡没了。”"
+speaker = "captain"
+mood = "mystic"
+at = "corfu"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "theodoros", value = true }]
+news = "科孚的老神父翻了一下午洇了水的旧簿，查的是一件旧披风上的纹样。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "theodoros", text = "科孚的神父换了人，新来的说旧簿子不外借，也不许人翻。披风我还穿着。——西奥多" }, { kind = "affinity", person = "theodoros", value = -3 }, { kind = "flag", flag = "c13_request_theodoros_late" }] }
+
+[[tracks.chapters.choices]]
+key = "greek"
+text = "用希腊语跟神父一起翻那本洇了的簿。"
+next = "candia"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_greek", ge = 60, hard = true }]
+hint = "你的希腊语只够问价钱，翻不动这种老账。"
+reply = "你们翻了一下午。洇得最厉害的那一行，你认出了开头的一个字母：П。神父说，可能是任何一个姓，也可能只是墨点。"
+effects = [{ kind = "affinity", person = "theodoros", value = 3 }, { kind = "flag", flag = "c13_request_theodoros_letter" }]
+
+[[tracks.chapters.choices]]
+key = "ask_banner"
+text = "问神父：那面军旗现在在哪？"
+next = "candia"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "神父说旗被人带去了坎迪亚，那边的教堂或许还留着记录。他说完叹了口气，说那个队长是个爱赌的人，赌输了就卖旗。"
+effects = [{ kind = "affinity", person = "theodoros", value = 3 }]
+fail = { next = "candia", effects = [{ kind = "affinity", person = "theodoros", value = -2 }], news = "科孚的老神父想不起那面军旗后来挂去了哪里，只说教堂里原先挂过一面。" }
+
+# 三、未经认可：坎迪亚的教堂，修士从铁箱里取出一本流亡者名册。
+[[tracks.chapters]]
+key = "candia"
+title = "未经认可"
+text = "坎迪亚的教堂里，管簿的修士从铁箱里取出一本1460年代的流亡者名册。册子是拉丁文写的，人名却照希腊音拼。修士翻到一页，指给你看：一户从君士坦丁堡逃来的人家，姓巴列奥略，页边画着一只两个头的鸟。“逃来的人自己报名，我们只管记。”他说。页边还有一行更小的字，墨色淡，像是后来添上的：“此户家徽系自绘，未经认可。”"
+speaker = "captain"
+mood = "mystic"
+at = "candia"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "theodoros", value = true }]
+news = "坎迪亚教堂的修士翻出一本老名册，说有一户姓巴列奥略的人家，页边画着家徽。"
+deadline_days = 120
+timeout = { next = "failed", effects = [{ kind = "letter", person = "theodoros", text = "坎迪亚那边没人去查。我就当它是皇家的吧。——西奥多" }, { kind = "affinity", person = "theodoros", value = -3 }, { kind = "flag", flag = "c13_request_theodoros_late" }] }
+
+[[tracks.chapters.choices]]
+key = "copy"
+text = "把那一页照样抄下来，小字也抄。"
+next = "report"
+check = { attr = "stewardship", base = 35, per = 6 }
+reply = "你一笔一划抄完，小字也抄了，抄得比原页还齐。修士在抄本末尾盖了教堂的印，说：“这一页，有人对过。”"
+effects = [{ kind = "affinity", person = "theodoros", value = 3 }, { kind = "flag", flag = "c13_request_theodoros_page" }]
+fail = { next = "report", effects = [{ kind = "affinity", person = "theodoros", value = -2 }, { kind = "flag", flag = "c13_request_theodoros_page" }], news = "坎迪亚教堂的修士看不下去外来人歪歪扭扭的笔迹，替他重抄了那一页。" }
+
+[[tracks.chapters.choices]]
+key = "skip_note"
+text = "只抄家徽和姓，那行小字不抄。"
+next = "report_partial"
+reply = "你抄完了，那行小字留在原簿上。修士看了你一眼，没说话，把簿子合上，锁回铁箱，钥匙挂回了自己的脖子上。"
+effects = [{ kind = "affinity", person = "theodoros", value = 1 }, { kind = "flag", flag = "c13_request_theodoros_page" }, { kind = "flag", flag = "c13_request_theodoros_skipped" }]
+
+# 四、你信不信：威尼斯营房，他拿抄本比着绣片看。抄了小字的一路走这里。
+[[tracks.chapters]]
+key = "report"
+title = "你信不信"
+text = "威尼斯的营房里，西奥多把你带回来的抄本摊在长凳上，一页一页地看。看到那只两个头的鸟，他的手停住了，把披风解下来铺在旁边，拿抄本的线和绣片的线一根根比。看到页边那行小字，他没出声，指腹在“未经认可”四个字上压了很久。“小字也抄在上面。”他终于说，“别人抄到家徽就停了。”他抬起头，看着你，像在等一句不会让他难堪的话。“照实说，你信不信？”"
+speaker = "captain"
+mood = "tender"
+at = "venice"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "theodoros", value = true }]
+objectives = [{ kind = "person", person = "theodoros", text = "找到他，把抄本给他看" }]
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：纹样是一样的，可那户人家自己画的，没人认。"
+next = "done"
+reply = "他笑了，笑得很轻松，说自己画的也好，至少是他们自己想当皇家。他把抄本折好，缝进了披风的衬里，付了钱，说这件披风现在又多了一层。"
+news = "威尼斯营房里那个自称拜占庭皇族后人的轻骑兵，把一页坎迪亚的旧名册抄本缝进了披风衬里。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "theodoros", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_theodoros_done" }, { kind = "memory", memory = "mem-request_theodoros-report", title = "缝进衬里的抄本" }]
+
+[[tracks.chapters.choices]]
+key = "hold_back"
+text = "说：纹样一样，簿上有姓，这就够了。"
+next = "done"
+reply = "他高兴得请了全营喝酒。你喝着酒，抄本还揣在怀里，那行小字压在最底下，没人再翻到。"
+news = "威尼斯营房的轻骑兵请全营喝了一夜酒，席间没人再提他的家谱，也没人问那件披风。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "theodoros", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_theodoros_partial" }]
+
+# 四之二：只抄了家徽和姓，那行小字没有抄。
+[[tracks.chapters]]
+key = "report_partial"
+title = "没抄的那一行"
+text = "西奥多把抄本拿在手里，先看家徽，又看那个姓。他看得很慢，像是怕那只鸟会从纸上飞起来。“有姓，有家徽。”他把纸按在长凳上压平，“够了。”说完他才想起什么，抬头问你，“那行小字呢？你抄了没有？”纸的右下角干干净净，小字那一行没有抄。他的手指还停在那个姓上，没有挪开。"
+speaker = "captain"
+mood = "tender"
+at = "venice"
+when = [{ kind = "date", from = [1561, 1, 1], to = [1590, 12, 31] }, { kind = "alive", person = "theodoros", value = true }]
+objectives = [{ kind = "person", person = "theodoros", text = "回营房，把抄本交给他" }]
+
+[[tracks.chapters.choices]]
+key = "comfort"
+text = "说：纹样一样，姓也对得上，够了。"
+next = "done"
+reply = "他松了口气，拍了拍你的肩，叫人再添一壶酒。你坐着喝完，想起坎迪亚那行没抄的小字，没有再提。"
+news = "威尼斯营房里的轻骑兵一连几天逢人便讲，他的披风经得起雨，又补了一层。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "theodoros", value = 4 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_theodoros_partial" }]
+
+[[tracks.chapters.choices]]
+key = "tell_skip"
+text = "照实说：那行小字，我没抄。"
+next = "done"
+reply = "他问为什么没抄。你说不想替别人的名字多记一笔。他想了想，说这样也好，那一行，他自己去想。付钱的时候，他没有多给一文，也没有少给一文。"
+news = "威尼斯营房的轻骑兵付钱时把银币一枚枚排开，一个子儿也不肯含糊。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "theodoros", value = 5 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_theodoros_partial" }]

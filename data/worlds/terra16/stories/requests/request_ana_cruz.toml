@@ -1,0 +1,167 @@
+# 请托：圣像缺的那一抹绿（2026-10-25，Claude 写）。
+# 标签：find（找东西，目标物 mexica_feather_cape，替代 paradise_feather）；L 来信（报价港 veracruz，auto=true；出面的是安娜的一封信，offer 章 speaker 省略；骡夫只是叙事人物，不进 cast）。
+# 人物：安娜·德·拉·克鲁斯（ana_cruz，1536-03-26 生），墨西哥城羽毛画坊的女画师，霍奇特尔的表姐。cast 日程 1555—1590 年全程在墨西哥城（内陆，不可达），所以只在信里说话。
+# 窗口：报价 1568-01-01 至 1590-06-30（offer 的 deadline 为窗口止日，到期 next=failed，不写见闻）；handin 与 use 的 when 只写 alive，不写日期（普通章的 window 必须带 default，此处不用）。
+# 依据·史实：墨西加羽毛画（amanteca）与殖民时期的羽毛圣像；墨西加羽毛斗篷当年有被当作珍玩运往塞维利亚的说法，正文只用传闻口吻，不写具体的船与人。
+# 依据·原创：安娜的画坊与她的信、骡夫、东窗的光、教堂的司事、“四十一次”的配色。天堂鸟羽饰是马尼拉大帆船带来的东方羽饰，作替代品。
+# 秘密：cast 没写秘密。本请托不碰安娜与卢西娅、安娜与霍奇特尔的任何线；见闻一律不写她的心事。
+# 同学与 C7：C7 pair_ana_cruz_lucia 的 c7_pair_ana_cruz_lucia_together 只在 use 章的 lucia 变体里读，写一个拼错的字被人用另一种笔迹改过，不写名字。本轨道从 1568 年起，避开 C7 的 1563—73 年各章与 C7 的 1566 年港口。
+# 读的旗标：c7_pair_ana_cruz_lucia_together（use 的 lucia 变体，只读）。
+# 设的旗标：c13_request_ana_cruz_accepted（offer 接受）、_declined（offer 回绝）、_cape（交出斗篷）、_lent（借看斗篷）、_east（交天堂鸟羽饰）、_done（最好的结局）、_partial（只回钱收到了）。
+# 依赖：无 B10b 改名（veracruz 为现有港口）；无主线门禁（gate_main 为空，c13_main_<主角> 不读）；items mexica_feather_cape、paradise_feather 均有 shop。
+# 实现说明：（a）普通章不写 window：引擎规定带 window 的章必须有 default，而请托的章没有缺省结算。窗口改写进 offer 的 when（date 条件），handin 与 use 只写 alive。
+#           （b）handin 不写 objectives（引擎里 objectives 会挡住章节出现，挡掉天堂鸟羽饰的选项）；三个选项各用 requires 控制，没有对应的物品时，hint 用骡夫的手空着来说明缺什么。
+#           （c）use 的 wait 120 写成 objectives 的 wait 目标，由 handin 结算后起算。
+#           （d）variants 替换整章正文，所以 use 的两个变体都是完整正文；变体只换文字，不改效果。
+#           （e）报酬按 brief 的 rewards 行实现：交斗篷或羽饰另付 900（handin），use 报酬 900 或 500。与表里 cash_total 900 不一致，待定：总额按 brief 为最多 1800。
+# 回忆插画清单：
+#   mem-request_ana_cruz-use「东窗下转成金色的衣袍」：东窗的光里，一幅圣像的衣袍由绿转金，画坊的女画师背着手站在画前，身后是一排排按光摆好的羽毛。
+
+[[tracks]]
+key = "request_ana_cruz"
+name = "圣像缺的那一抹绿"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ana_cruz"]
+
+# 来信：一根蜂鸟羽毛，绿里透金，信里只写要一件旧斗篷。
+[[tracks.chapters]]
+key = "offer"
+title = "发灰的绿"
+text = "骡夫在码头上找到你，递过一封折成方块的信。信纸上压着一根蜂鸟的羽毛，绿里透着金，光一晃就换了颜色。墨西哥城羽毛画坊的安娜写得很快，墨水在纸背洇开一片。她接了一幅大圣像，圣者的衣袍要用这种绿，可这些年进贡的羽毛断了，市面上剩的几包，换个光就发灰。信末单独一行：“听说当年运去塞维利亚的墨西加羽毛斗篷，有的又被商人转卖回来了。找一件给我。我要拆。”"
+mood = "tender"
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+at = "veracruz"
+family = "c13_offer_veracruz"
+family_cooldown_days = 20
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "回信：去找一件旧斗篷。"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "ana_cruz", value = 2 },
+  { kind = "flag", flag = "c13_request_ana_cruz_accepted" },
+]
+reply = "骡夫把你的回信塞进鞍袋，拍了拍，说画坊的女主人收信从不当场拆，要等下午光好的时候再看。她还说，别让斗篷在路上压坏了羽毛。"
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "回信问：一件旧斗篷，为什么非拆不可？"
+next = "handin"
+effects = [
+  { kind = "affinity", person = "ana_cruz", value = 2 },
+  { kind = "flag", flag = "c13_request_ana_cruz_accepted" },
+]
+reply = "三个月后骡夫带来一句回话，他学得一字不差：“羽毛放在斗篷上，没人看得见；放在圣像上，每个礼拜天都有人看。”学完他又补了一句，说这是她让他原样带的，不许改。"
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回信：这种东西，我不经手。"
+next = "failed"
+effects = [{ kind = "flag", flag = "c13_request_ana_cruz_declined" }]
+reply = "骡夫没有收走那根蜂鸟羽毛，说女主人交代过，不接的人，也可以留一根。你把它夹进随身的小本子里，翻开时它还是绿的，只是在灯下才显出一点金。"
+
+# 交货：骡夫在仓房门口等着。东西不在身上时，三个选项都挡住，hint 说明缺的是什么。
+[[tracks.chapters]]
+key = "handin"
+title = "拆，还是不拆"
+text = "骡夫在仓房门口等你，手伸着，等东西递过去。仓房的长桌上铺着一块旧麻布，画坊的羽毛一包包排开，像一排排小窗。替画坊收货，他先对着太阳把每一片羽毛看一遍，看不清的就转个角度再看。女主人交代过，东西要是完整的，问船长一句：拆，还是不拆。他把这句话说了两遍，像是怕你听漏。"
+mood = "tense"
+speaker = "captain"
+at = "veracruz"
+when = [{ kind = "alive", person = "ana_cruz", value = true }]
+news = "韦拉克鲁斯码头上，替墨西哥城画坊运货的骡夫，对着太阳把一包羽毛看了一上午。"
+
+[[tracks.chapters.choices]]
+key = "give_cape"
+text = "交出羽毛斗篷，让她拆。"
+next = "use"
+requires = [{ kind = "item", item = "mexica_feather_cape", qty = 1 }]
+hint = "斗篷不在你身上，骡夫的手还伸着，空的。"
+effects = [
+  { kind = "item", item = "mexica_feather_cape", qty = -1 },
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "ana_cruz", value = 3 },
+  { kind = "flag", flag = "c13_request_ana_cruz_cape" },
+]
+reply = "骡夫把斗篷用棉布裹了两层，说女主人会一片一片拆，拆下来的每一片都按光排好。钱他在桌上数了两遍，说画坊的账从不欠人，一个铜子也不少。"
+
+[[tracks.chapters.choices]]
+key = "lend_cape"
+text = "斗篷借她看颜色，看完还我，别拆。"
+next = "use"
+requires = [{ kind = "item", item = "mexica_feather_cape", qty = 1 }]
+hint = "没有斗篷，就借不出那片绿。"
+effects = [
+  { kind = "affinity", person = "ana_cruz", value = 2 },
+  { kind = "flag", flag = "c13_request_ana_cruz_lent" },
+]
+reply = "斗篷两个月后原样回到你手里，一根羽毛都没少，裹布的折痕也和你送出去时一样。裹布里夹着一张纸条：“好，那它就整件留着。我照着它的绿去配。”"
+
+[[tracks.chapters.choices]]
+key = "give_paradise"
+text = "斗篷没找到，交一件东方来的天堂鸟羽饰。"
+next = "use"
+requires = [{ kind = "item", item = "paradise_feather", qty = 1 }]
+hint = "你身上没有东方来的那种羽饰。"
+effects = [
+  { kind = "item", item = "paradise_feather", qty = -1 },
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "ana_cruz", value = 3 },
+  { kind = "flag", flag = "c13_request_ana_cruz_east" },
+]
+reply = "骡夫对着光翻了半天，说这种绿他没见过，像是从海那边漂过来的。他把羽饰收进箱底，说女主人要是问起，就说是一片从海上回来的绿。"
+
+# 结尾：四个月后的长信。安娜在信里学自己的口气，招呼语只用这一次。
+[[tracks.chapters]]
+key = "use"
+title = "转成金的绿"
+text = "四个月后，骡夫又来，带来一封写满两面的长信。圣像挂进了教堂。安娜写她把圣者衣袍上的绿排了三层，每一层都按光换过位置。早上的光从东窗进来，衣袍是绿的；到了下午，光斜过去，同一片羽毛就转成了金。教堂的司事站在门口看，她让他往旁边挪一步：“别站在那儿挡光。换到这边——好，现在看。比西班牙人的油画亮吧？”信末她问你：在海上见过的绿，哪一种最像。"
+mood = "tender"
+speaker = "captain"
+at = "veracruz"
+when = [{ kind = "alive", person = "ana_cruz", value = true }]
+objectives = [{ kind = "wait", days = 120, text = "四个月后，骡夫带信来韦拉克鲁斯。" }]
+news = "墨西哥城有一幅羽毛圣像挂进了教堂，从韦拉克鲁斯来的骡夫说，早上看是绿的，下午看是金的。"
+
+[[tracks.chapters.variants]]
+key = "lent"
+when = [{ kind = "flag", flag = "c13_request_ana_cruz_lent", value = true }]
+text = "四个月后，骡夫又来，带来一封写满两面的长信。圣像挂进了教堂。斗篷她没拆，两个月前就原样还给了你，信里说圣者衣袍上的绿是照着它配的，配了四十一次。早上的光从东窗进来，衣袍是绿的；到了下午，光斜过去，同一片羽毛就转成了金。教堂的司事站在门口看，她让他往旁边挪一步：“别站在那儿挡光。换到这边——好，现在看。比西班牙人的油画亮吧？”信末她问你：在海上见过的绿，哪一种最像。"
+
+[[tracks.chapters.variants]]
+key = "lucia"
+when = [{ kind = "flag", flag = "c7_pair_ana_cruz_lucia_together", value = true }]
+text = "四个月后，骡夫又来，带来一封写满两面的长信。圣像挂进了教堂。安娜写她把圣者衣袍上的绿排了三层，每一层都按光换过位置。早上的光从东窗进来，衣袍是绿的；到了下午，光斜过去，同一片羽毛就转成了金。教堂的司事站在门口看，她让他往旁边挪一步：“别站在那儿挡光。换到这边——好，现在看。比西班牙人的油画亮吧？”信末她问你：在海上见过的绿，哪一种最像。那个问句旁边，有一个拼错的字，被人用另一种笔迹改了过来。"
+
+[[tracks.chapters.choices]]
+key = "sea_green"
+text = "回信：浅滩上，太阳刚出来那一刻的海水。"
+next = "done"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "ana_cruz", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_ana_cruz_done" },
+  { kind = "memory", memory = "mem-request_ana_cruz-use", title = "东窗下转成金色的衣袍" },
+]
+reply = "又过了几个月，骡夫带来一句话：“下一幅，我用那种。”信封里还压着一根小小的蜂鸟羽毛，绿里透着金，和第一封信上的那根一样。"
+
+[[tracks.chapters.choices]]
+key = "no_answer"
+text = "回信只说：钱收到了，别的不答。"
+next = "done"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "ana_cruz", value = 4 },
+  { kind = "fame", value = 1 },
+  { kind = "flag", flag = "c13_request_ana_cruz_partial" },
+]
+reply = "骡夫把回信收好，说女主人看信的时候，大概又要等到下午。他问你还有没有别的话要带，你说没有，他就把回信又看了一遍，说这一句够了。"

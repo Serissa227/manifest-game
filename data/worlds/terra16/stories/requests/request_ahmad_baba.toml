@@ -1,0 +1,169 @@
+# 请托：四十令意大利纸（request_ahmad_baba）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：艾哈迈德·巴巴（ahmad_baba，1556 年生，男），廷巴克图阿基特家的年轻学者；cast 在 cast/historical_04_africa.toml。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（交货，三个选项都交货，只是怎么交）、letter（收尾：抄本与来信）。终点 done / failed。
+# 报价：L 来信／代理人（auto=true）。offer 章 at=sale（萨累港），出面的是萨累客栈里等驼队的学生（不新建 cast，不写 speaker）。
+#   family=c13_offer_sale、冷却 20 天；offer 的 deadline 为窗口止日 1590-04-30，timeout 直接 failed，不写见闻。
+# 窗口：offer 以 when 的 date 表达（1576-03-01 至 1590-04-30），并要求玩家满 17、人物满 18、名声 ≥ 5；deliver 进入后 240 天期限；letter 进入后等 120 天，再 300 天期限。
+# 依据·史实背景：艾哈迈德·巴巴（1556—1627）在廷巴克图讲学藏书，抄书校书（史实）；意大利纸经摩洛哥驼队南运（史实背景）；
+#   纸上的三个新月水印、非斯纸坊供不上、驼队在萨累加脚钱，为传闻口吻（待核的细节）。他 1594 年被押往摩洛哥在剧本以后，本条不写。
+# 依据·原创：学生、阿基特家的艾哈迈德要纸的这一次、驼队头领、抄本页边的两种墨色批注、哈利勒简编的第三遍校对。
+# 依赖：港口 sale（ports_north_africa.toml）；物品 khalil_ms（items/books_08_history_politics.toml）；桑海势力 songhai（factions/06_africa.toml）；
+#   属性 numeracy / commerce / eloquence。B10b：无需改名。主线门禁：无（不是主线人物）。
+# C7：本条无 C7 线，不读也不设任何 c7_ 旗标。
+# 读的旗标：c13_request_ahmad_baba_one_short（letter 章的 v1_one_short 变体，只改文字）。
+# 设的旗标：accepted（offer 两条接法）、declined（offer 回绝，终局）、one_short（交货的数纸检定失败，分支）、
+#   cheap_camel（压脚钱检定成功，分支，只设不读）、late（交货超时，终局）、done（终局）、partial（收尾超时，终局）、ms_to_poor（分支，只设不读）。
+# 秘密：无（cast 无 secret）。
+# 口头禅：“是亲眼见过，还是听人说的？”，cast 的 greet 原句，只在 letter 章的信里用一次。他只在信里说话；正文里的“他说”都是学生转述。
+# 报酬：货款 1600（deliver 三个选项，失败也付，属于交货的货款）＋报酬 1600（letter 章的 done 路）；唯一奖励 khalil_ms（accept 一路）；
+#   好感最多 2+5+8=15；名声 +3（letter 章的 done 路）；桑海声望 +2；回忆 mem-request_ahmad_baba-letter（accept 一路）。
+# 回忆插画 mem-request_ahmad_baba-letter：一本抄完的法学书，页边两种墨色的批注，窗外是萨累港的白墙。
+
+[[tracks]]
+key = "request_ahmad_baba"
+name = "四十令意大利纸"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["ahmad_baba"]
+
+# 一、萨累的客栈：廷巴克图来的学生等驼队，要四十令纸。
+[[tracks.chapters]]
+key = "offer"
+title = "廷巴克图的学生"
+text = "萨累港的客栈里，一个廷巴克图来的学生守着行李，等南下的驼队。他的同学阿基特家的艾哈迈德要纸：意大利造的，四十令。纸从海船上卸下来，驼队再往南背，到了廷巴克图，一令就贵得像银子；非斯的纸坊供不上。“价要公道，”学生说，“他的账记得比谁都清楚。”说完，他从包袱里抽出一张，举到窗口的光里，纸上浮着三个新月的水印。"
+mood = "cheerful"
+at = "sale"
+when = [
+  { kind = "date", from = [1576, 3, 1], to = [1590, 4, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "fame", ge = 5 },
+  { kind = "age", person = "ahmad_baba", ge = 18 },
+]
+deadline = [1590, 4, 30]
+timeout = { next = "failed", effects = [] }
+family = "c13_offer_sale"
+family_cooldown_days = 20
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：去威尼斯带四十令这种纸。"
+next = "deliver"
+reply = "学生把那张样纸送给你：“照着这个买。他说，水印歪了的不要——歪了的，墨会洇。”"
+effects = [
+  { kind = "affinity", person = "ahmad_baba", value = 2 },
+  { kind = "flag", flag = "c13_request_ahmad_baba_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_why"
+text = "接下，但问：一个学者要四十令纸做什么？"
+next = "deliver"
+reply = "“抄书。”学生说，“他抄一部，校一部，再抄一部给穷学生。他说，书比人活得久，纸要配得上书。”"
+effects = [
+  { kind = "affinity", person = "ahmad_baba", value = 2 },
+  { kind = "flag", flag = "c13_request_ahmad_baba_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "威尼斯那一趟我不走。"
+next = "failed"
+reply = "学生把样纸收回去，说他再等一季。"
+effects = [{ kind = "flag", flag = "c13_request_ahmad_baba_declined" }]
+
+# 二、交货：纸卸在萨累的码头上，驼队的头领要加脚钱。三个选项都交货，只是怎么交。
+[[tracks.chapters]]
+key = "deliver"
+title = "驼队的人"
+text = "纸卸到萨累的码头上，学生一令一令地数，数完一令，在账上划一道。数到一半，他又抽出几张，对着太阳看水印，一张放回去，一张攥在手里。驼队的头领在旁边等着装驼，骆驼嚼着草，头领开口就要加一成的脚钱：“路上水井、草料都涨了。不加，纸留在码头上。”学生回头看你，嘴唇动了动，没出声。"
+news = "萨累港的码头上，一个廷巴克图来的学生对着太阳一张一张看纸，从正午看到日头偏西，一纸也不肯略过。"
+speaker = "captain"
+mood = "cheerful"
+at = "sale"
+objectives = [{ kind = "goods", good = "paper", qty = 40, at = "sale", text = "四十令纸运到萨累" }]
+when = [{ kind = "alive", person = "ahmad_baba", value = true }]
+deadline_days = 240
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "ahmad_baba", value = -3 }, { kind = "flag", flag = "c13_request_ahmad_baba_late" }, { kind = "letter", person = "ahmad_baba", text = "你的纸没有赶上。非斯的纸坊凑了一些，纸脆，墨一洇就散，只能先抄这些。下一回，再托你。" }] }
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "陪他一令一令数完，一张张验水印。"
+next = "letter"
+reply = "学生在账上签了名，四十令，字写得极小、极工整。水印他一张张看过，没有一张歪的。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ahmad_baba", value = 3 },
+]
+check = { attr = "numeracy", base = 35, per = 6 }
+fail = { next = "letter", effects = [{ kind = "cash", value = 1600 }, { kind = "flag", flag = "c13_request_ahmad_baba_one_short" }] }
+
+[[tracks.chapters.choices]]
+key = "haggle_camel"
+text = "替他跟驼队的头领压脚钱。"
+next = "letter"
+reply = "你跟头领从骆驼的岁口谈到路上的水井。头领一边听，一边把鞭子在手里绕了两圈，最后报出一个数。学生在旁边听得发愣。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ahmad_baba", value = 5 },
+  { kind = "flag", flag = "c13_request_ahmad_baba_cheap_camel" },
+]
+check = { attr = "commerce", base = 20, per = 7 }
+fail = { next = "letter", effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "ahmad_baba", value = 2 }] }
+
+[[tracks.chapters.choices]]
+key = "hand_over"
+text = "交给学生，驼队的事让他自己谈。"
+next = "letter"
+reply = "学生道了谢，转身跟头领吵起来。你走的时候，他们还在吵。"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ahmad_baba", value = 2 },
+]
+
+# 三、校过的那一部：过了一个驼队的来回，学生又在萨累等你，带来了信和抄本。
+[[tracks.chapters]]
+key = "letter"
+title = "校过的那一部"
+text = "过了一个驼队的来回，那个学生又在萨累的客栈里等你，手里多了一封信。信是阿基特家的艾哈迈德写的，字小，行距却留得宽。纸到了，他写道。他先抄了一部《哈利勒简编》，抄完自己校，校完又让学生照着校过的本子再校一遍。信上写：“第三遍还有错，那就是我的错。”末了一行：“你在威尼斯看见他们造纸了吗？是亲眼见过，还是听人说的？”学生把包袱放上桌。他说，那封信艾哈迈德改了两遍才肯封口。"
+news = "萨累港的客栈里，廷巴克图来的学生把一部新抄的法学书交给了一个外来的船长。"
+mood = "cheerful"
+at = "sale"
+objectives = [{ kind = "wait", days = 120 }]
+when = [{ kind = "alive", person = "ahmad_baba", value = true }]
+deadline_days = 300
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_ahmad_baba_partial" }, { kind = "letter", person = "ahmad_baba", text = "纸到了，书也抄完了。你的那一部还在萨累的客栈里，去问那个学生要。" }] }
+
+[[tracks.chapters.variants]]
+key = "v1_one_short"
+when = [{ kind = "flag", flag = "c13_request_ahmad_baba_one_short" }]
+text = "过了一个驼队的来回，那个学生又在萨累的客栈里等你，手里多了一封信。信是阿基特家的艾哈迈德写的，字小，行距却留得宽。纸到了，他写道。四十令少了一令，他问是谁数的。他不要你补，只要你下回数清楚。他先抄了一部《哈利勒简编》，抄完自己校，校完又让学生照着校过的本子再校一遍。信上写：“第三遍还有错，那就是我的错。”末了一行：“你在威尼斯看见他们造纸了吗？是亲眼见过，还是听人说的？”学生把包袱放上桌。他说，那封信艾哈迈德改了两遍才肯封口。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下他托学生带来的抄本。"
+next = "done"
+reply = "学生解开包袱，是那部刚校完的《哈利勒简编》，页边有两种墨色的批注。“他说，第一部给送纸的人。第二部给穷学生。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ahmad_baba", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "songhai", value = 2 },
+  { kind = "item", item = "khalil_ms", qty = 1 },
+  { kind = "memory", memory = "mem-request_ahmad_baba-letter", title = "两种墨色的批注" },
+  { kind = "flag", flag = "c13_request_ahmad_baba_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "to_poor"
+text = "请他把这一部也给穷学生。"
+next = "done"
+reply = "学生把包袱又系上，说艾哈迈德会生气：“他会说，送纸的人凭什么替他做主。”学生想了想，“然后他会照办。”"
+effects = [
+  { kind = "cash", value = 1600 },
+  { kind = "affinity", person = "ahmad_baba", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "songhai", value = 2 },
+  { kind = "flag", flag = "c13_request_ahmad_baba_done" },
+  { kind = "flag", flag = "c13_request_ahmad_baba_ms_to_poor" },
+]

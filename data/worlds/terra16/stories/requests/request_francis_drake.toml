@@ -1,0 +1,227 @@
+# C13d 人物的请托（2026-10-18，Claude 写）：故事 2.0 轨道格式，遵循 DECISIONS“故事 2.0 TOML 契约”。
+# 人物：弗朗西斯·德雷克（francis_drake），1540 年生（月日不详，按 1 月 1 日占位），1596 年卒；1570 年代初在普利茅斯的年轻船长，
+#       1568 年圣胡安·德·乌卢阿之后一心要向西班牙人讨债。嗓门大、爱笑、对水手慷慨。
+# 类型：去某处（kind=go）。5 章：offer（报价）→ town（农布雷德迪奥斯打听）→ noticed（临走被盯上）→ report（回普利茅斯交差）；打听没问出月份的走 report_blind。
+# 报价：T 当面，普利茅斯（plymouth）。玩家在港里找到他才会有 offer；求见门槛（fame 40 或 england 声望 20）由 cast 的 audience 管，本文件不写。
+# 窗口：报价 1570-03-01..1572-03-31（offer 的 when 与 deadline）；town 的期限 180 天，超时走 failed 并来信。
+# 依据·史实：1568 年圣胡安·德·乌卢阿，西班牙人背信开火，德雷克驾小船逃回；1570、1571 年两次去巴拿马地峡侦察；
+#       1572—73 年袭击农布雷德迪奥斯与运银骡队。请托只决定“报哪个月”，不决定袭击的结果，正文不写骡队被截。
+#       德雷克早年随霍金斯跑几内亚的船，正文只用一句带过（“几内亚那些旧账，不用翻”），不美化。
+# 依据·原创：骡队下山的月份（本世界线的虚构）；农布雷德迪奥斯的仓库、酒铺、骡夫与书记官；韦拉克鲁斯的旧事只作传闻；跳板与缆绳。
+# 待核（正文一律用传闻口吻）：农布雷德迪奥斯 1570 年代仓库与船队的时令；韦拉克鲁斯那条船的来历。
+# 分支：问出月份的（打听成功、或用西班牙话对账）走 noticed → report，report 里可以“照实说”；没问出月份的（喝酒、谈买卖检定失败）直接收拢缆绳回港，走 report_blind，
+#       只剩“报错的月份”和“不掺和”。引擎审计里互斥的旗标门禁会报“准备后条件仍不满足”，所以不用 date 旗标挡选项，用 next 走到各自的章节；date 旗标只设不读。
+# 读的旗标：无。
+#       设的旗标：c13_request_francis_drake_accepted / declined / date / seen / late / done / partial / false / failed。
+#       不设 c7_ 旗标；不写 relation / tie / bond / heart / title / world / join / leave / start_track / end_track / growth。
+# 依赖：plymouth、nombre_de_dios 都是现有港口，不需要 B10b 改名；report 的 person 目标跟着德雷克的日程走，
+#       他 1572—73 年在外，report 章会一直挂着，直到他回到普利茅斯（最早 1574 年），这是设计内的。
+# 缺省走向（玩家什么也不做）：offer 到 1572-03-31 超时，走 failed，无见闻、不扣钱。
+# 回忆插画清单：
+#   mem-request_francis_drake-report：普利茅斯码头，一只桶盖上摊着手画的地峡图，一枚银币压着图角。
+
+[[tracks]]
+key = "request_francis_drake"
+name = "骡队下山的月份"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["francis_drake"]
+
+# 一、报价：1570—1572 年间，德雷克在普利茅斯的酒馆后屋，要一个船长替他去农布雷德迪奥斯打听一个月份。
+[[tracks.chapters]]
+key = "offer"
+title = "德雷克的一笔账"
+text = "普利茅斯的酒馆后屋，德雷克把一枚西班牙银币拍在桌上，嗓门大得隔壁的人都回了头。“他们欠我一笔账，我只是去收。”他说这话时在笑，像在说一季好收成。圣胡安·德·乌卢阿那一仗，西班牙人背信开火，霍金斯的船队散了，是他驾一条小船先跑回来的。提到霍金斯，他只摆摆手：“几内亚那些旧账，不用翻。”他要的是一个跟西班牙人做过买卖、不挂英格兰旗的船长，去农布雷德迪奥斯打听一件事：巴拿马那边的银子从山上下来，骡队哪个月到。"
+when = [
+  { kind = "age", ge = 17 },
+  { kind = "date", from = [1570, 3, 1], to = [1572, 3, 31] },
+  { kind = "alive", person = "francis_drake", value = true },
+]
+objectives = [{ kind = "person", person = "francis_drake", text = "在普利茅斯找到他" }]
+mood = "cheerful"
+deadline = [1572, 3, 31]
+
+[tracks.chapters.timeout]
+next = "failed"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "接下，去农布雷德迪奥斯走一趟"
+next = "town"
+reply = "他又拍下一枚银币，说是请你在那边喝酒用的。“骡子下山那几天，酒铺最热闹。”"
+effects = [{ kind = "affinity", person = "francis_drake", value = 2 }, { kind = "flag", flag = "c13_request_francis_drake_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "回绝：你不替人踩点"
+next = "failed"
+reply = "他大笑着把银币收回袖子里：“那你喝我的酒总行。”"
+effects = [{ kind = "flag", flag = "c13_request_francis_drake_declined" }]
+
+# 二、打听：1570—1572 年间，农布雷德迪奥斯的酒铺与仓库。三种打听法，只有一种不靠检定。
+[[tracks.chapters]]
+key = "town"
+title = "农布雷德迪奥斯的酒铺"
+text = "农布雷德迪奥斯是一排木头房子和一座空荡荡的仓库，热得人发昏。船队不来的时候，城里只剩病人和看库的兵。骡夫们歇在仓库后面的酒铺里赌钱，输了的人一边骂山，一边骂骡子。一个晒黑的骡夫把骰子往桌上一磕，冲你扬下巴：“这地方，除了骡子，什么都不下山。船长要不要押一把？”隔着一道门，仓库里的书记官正对着账本摇头。"
+when = [{ kind = "alive", person = "francis_drake", value = true }]
+objectives = [{ kind = "at", at = "nombre_de_dios" }]
+at = "nombre_de_dios"
+speaker = "captain"
+mood = "tense"
+deadline_days = 180
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [
+  { kind = "affinity", person = "francis_drake", value = -3 },
+  { kind = "flag", flag = "c13_request_francis_drake_late" },
+  { kind = "letter", person = "francis_drake", text = "你没来，我就自己去了农布雷德迪奥斯。骡夫们喝了两圈，话是多，就是没一句准的。下回别让我一个人等。" },
+]
+
+[[tracks.chapters.choices]]
+key = "drink"
+text = "在酒铺里请骡夫喝酒，听他们抱怨"
+next = "noticed"
+reply = "一个骡夫喝到舌头发硬，拍着桌子说，船队一到，骡子就从山上一串一串下来。"
+news = "农布雷德迪奥斯后街的酒铺里，一个陌生船长请骡夫们喝了两轮酒，有人醉后说起山上的骡子。"
+check = { attr = "eloquence", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "francis_drake", value = 3 }, { kind = "flag", flag = "c13_request_francis_drake_date" }]
+fail = { next = "report_blind", news = "农布雷德迪奥斯的酒铺里吆喝盖过了一切，骡夫们含含糊糊，你只听见一句：“船队来的时候。”", effects = [{ kind = "affinity", person = "francis_drake", value = -2 }] }
+
+[[tracks.chapters.choices]]
+key = "spanish"
+text = "用卡斯蒂利亚话跟仓库的书记官对账"
+next = "noticed"
+reply = "书记官一边抱怨，一边把今年的骡子要从几月备到几月说给你听，你一一记下。"
+news = "农布雷德迪奥斯的仓库里，书记官用西班牙话抱怨今年的骡子备得太晚，一个说西班牙话的船长在旁边记满了一页纸。"
+requires = [{ kind = "skill", skill = "lang_spanish", ge = 60 }]
+hint = "你的卡斯蒂利亚话一开口就露了底。"
+effects = [{ kind = "affinity", person = "francis_drake", value = 3 }, { kind = "flag", flag = "c13_request_francis_drake_date" }]
+
+[[tracks.chapters.choices]]
+key = "trade"
+text = "跟仓库的管事谈一笔买卖，顺口问他们几时付钱"
+next = "noticed"
+reply = "管事说等骡队下来就结账，连月份都说了。"
+news = "农布雷德迪奥斯的仓库管事答应骡队下来就结账，一个船长跟他谈完买卖，就去了码头。"
+check = { attr = "commerce", base = 20, per = 7 }
+effects = [{ kind = "flag", flag = "c13_request_francis_drake_date" }]
+fail = { next = "report_blind", news = "农布雷德迪奥斯的仓库管事把账本一合，说钱等船队来了再付。哪个月下山，他一个字都不肯吐，只让你明年再来。" }
+
+# 三、临走：1570—1572 年间，仓库的兵认出了这条船。脱身只写缆绳与跳板，不写打斗。
+[[tracks.chapters]]
+key = "noticed"
+title = "临走的跳板"
+text = "临走那天，仓库门口的一个兵盯着你的船看了很久，然后说，在韦拉克鲁斯见过这条船跟英格兰人停在一起。他回头叫来了另一个兵，两人都把枪抱在胸前。码头上的跳板还搭在船舷边，缆绳只解了一半。“船长，先别走，”第一个兵说，“韦拉克鲁斯的账，我们这儿也记着。”"
+when = [{ kind = "alive", person = "francis_drake", value = true }]
+at = "nombre_de_dios"
+speaker = "captain"
+mood = "tense"
+
+[[tracks.chapters.choices]]
+key = "walk"
+text = "不慌不忙地上跳板"
+next = "report"
+reply = "你上了船，跳板一抽，两个兵只能在岸上喊。"
+news = "农布雷德迪奥斯的码头上，一条船收了跳板就走，看库的兵在岸上骂了半天，骡夫们拿这个当笑话讲。"
+check = { attr = "arms", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "francis_drake", value = 1 }]
+fail = { next = "report", news = "农布雷德迪奥斯的码头上，有条船砍断缆绳丢下一只小艇，两个看库的兵追了半条街，骂声一路跟到海边。", effects = [{ kind = "affinity", person = "francis_drake", value = -2 }, { kind = "flag", flag = "c13_request_francis_drake_seen" }] }
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟他说你常跟谁都停在一起，谁的钱都收"
+next = "report"
+reply = "他嘟囔了两句，把枪往肩上一扛，慢慢走回了仓库。"
+news = "农布雷德迪奥斯的码头边，一个兵看了那条船半天，说今天只当没见过，这话很快传进了仓库后面的酒铺。"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report", news = "农布雷德迪奥斯的码头上，那个兵不信你的话，盯着桅杆看了半天，转身去仓库叫了人。那条船连夜出了港。", effects = [{ kind = "flag", flag = "c13_request_francis_drake_seen" }] }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "塞给他一袋钱"
+next = "report"
+reply = "他把钱袋掂了掂，说自己大概认错了。"
+news = "农布雷德迪奥斯的仓库门口，一个兵收下了一袋钱，骡夫们在酒铺里传这件事，说那条船的船长出手阔绰。"
+requires = [{ kind = "cash", ge = 300 }]
+hint = "你身上没有那么多现钱，塞不出一袋像样的。"
+effects = [{ kind = "cash", value = -300 }]
+
+# 四、交差：德雷克在普利茅斯码头等你，只问一件事。
+[[tracks.chapters]]
+key = "report"
+title = "码头上的地峡图"
+text = "回到普利茅斯，德雷克在码头上等你。桶盖上摊着一张手画的地峡图，一枚银币压着图角，旁边放着一只鼓鼓的钱袋。地峡中间画着一条虚线，线旁的小字被划掉又重写了两遍。码头另一头，水手们正把空酒桶往船上滚，没人抬头看这边。他没寒暄，手指点在那条虚线上，指节被太阳晒得发红，只问一件事：“哪个月？”"
+when = [{ kind = "alive", person = "francis_drake", value = true }]
+objectives = [{ kind = "person", person = "francis_drake" }]
+speaker = "captain"
+mood = "tense"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说"
+next = "done"
+reply = "他用炭笔在图上圈了一个月份，笑得像个收账的。“好，这笔账我记上。”"
+effects = [
+  { kind = "cash", value = 2900 },
+  { kind = "reputation", faction = "england", value = 3 },
+  { kind = "reputation", faction = "spain", value = -3 },
+  { kind = "affinity", person = "francis_drake", value = 8 },
+  { kind = "memory", memory = "mem-request_francis_drake-report", title = "桶盖上的地峡图" },
+  { kind = "flag", flag = "c13_request_francis_drake_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "false"
+text = "报一个错的月份"
+next = "done"
+reply = "他记下了，付了一半的钱。你报的那个月，山上的骡子大概不会下来。"
+effects = [
+  { kind = "cash", value = 1450 },
+  { kind = "affinity", person = "francis_drake", value = 2 },
+  { kind = "flag", flag = "c13_request_francis_drake_partial" },
+  { kind = "flag", flag = "c13_request_francis_drake_false" },
+]
+
+[[tracks.chapters.choices]]
+key = "quit"
+text = "说你看过了，不想掺和"
+next = "done"
+reply = "他瞪了你一会儿，把钱袋收回去，说下回别让他请你喝酒。"
+effects = [
+  { kind = "affinity", person = "francis_drake", value = -2 },
+  { kind = "flag", flag = "c13_request_francis_drake_failed" },
+]
+
+# 四·二、交差（没问出月份）：德雷克在码头上等，桶盖上的虚线旁边空着一格。
+[[tracks.chapters]]
+key = "report_blind"
+title = "空着的一格"
+text = "回到普利茅斯，德雷克在码头上等你。桶盖上摊着那张手画的地峡图，一枚银币压着图角，旁边放着一只鼓鼓的钱袋。他没寒暄，手指点在地峡中间那条虚线旁边空着的一格上，指节被太阳晒得发红，只问一件事：“哪个月？”你脑子里只剩酒铺里那句含含糊糊的“船队来的时候”。码头另一头，水手们正把空酒桶往船上滚，没人抬头看这边。"
+when = [{ kind = "alive", person = "francis_drake", value = true }]
+objectives = [{ kind = "person", person = "francis_drake" }]
+speaker = "captain"
+mood = "tense"
+
+[[tracks.chapters.choices]]
+key = "false"
+text = "随口报一个月份"
+next = "done"
+reply = "他用炭笔在空格里记下了，付了一半的钱。那个月山上的骡子下不下来，你自己也不知道。"
+effects = [
+  { kind = "cash", value = 1450 },
+  { kind = "affinity", person = "francis_drake", value = 2 },
+  { kind = "flag", flag = "c13_request_francis_drake_partial" },
+  { kind = "flag", flag = "c13_request_francis_drake_false" },
+]
+
+[[tracks.chapters.choices]]
+key = "quit"
+text = "说酒铺里什么也没听出来，不想再掺和"
+next = "done"
+reply = "他把银币从图角上拿开，揣回袖子里：“那就算我白请了你一顿酒。”他转身去看码头上的空桶，再没回头。"
+effects = [
+  { kind = "affinity", person = "francis_drake", value = -2 },
+  { kind = "flag", flag = "c13_request_francis_drake_failed" },
+]

@@ -1,0 +1,135 @@
+# C13d 请托：赊账本上的那一页（request_griet）。中文，Claude 写。
+# 人物：格里特 griet（1523-12-08 生，女；安特卫普码头边小酒馆的寡妇老板娘，身份档 0 平民）。
+# 类型：送货（dl）；3 章 offer → deliver → settle，不收货款的分支多一章 settle_waived（换一种记法，同样三章的骨架）。
+# 报价：当面（T）。人物按日程在安特卫普（antwerp），auto=false，玩家“问请托”（ask:request_griet）启动。
+# 窗口：报价 1557-06-01 至 1573-06-30（offer 的 deadline 即窗口止日，到期走 failed，不写见闻）；
+#   交货进行中 90 天（deliver 的 deadline_days，超时走 failed 并寄一封信）；结账只开到 1573-12-30。
+#   本轨道到 1573 年为止：C7 的卡斯帕线从 1574 年起在同一家酒馆，本线不越界。
+# 依据·史实：1566—67 年低地国家的饥荒与粮价（安特卫普城里面包与谷子的价钱）。史实背景只在这里说，正文用传闻口吻。
+# 依据·原创：赊账本的最后一页、粉笔与墨、酒桶、后门卸货、划名字、“信了的人”那一栏、船名的写法、跑腿的钱、利息是一杯酒。
+# 读的旗标：无（不读 c7_* 与 c13_main_*，本轨道没有主线门禁）。
+# 设的旗标：c13_request_griet_accepted（offer 接下）/ declined（回绝，终局 failed）/ waived（deliver 不收货款，分支）/ late（deliver 超时，终局 failed）/ done（结账，终局 done）。
+# 依赖：B10b 日程与港口 antwerp；商品 grain（goods/01_staples_raw.toml）；人物 griet（cast/story_europe.toml）。
+# 避开 C7：不写卡斯帕，不写酒馆的门板；不写恋爱、不写心动。cast 没写秘密，本请托也不碰。
+# 回忆插画：mem-request_griet-settle，画面：赊账本摊在吧台上，最后一页的名字划去大半，旁边的空页上是新墨写的船名。
+
+[[tracks]]
+key = "request_griet"
+name = "赊账本上的那一页"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["griet"]
+
+# 一、不记酒钱的一页：1557—1573 年间，玩家在安特卫普找到她，她开口要粮。
+[[tracks.chapters]]
+key = "offer"
+title = "不记酒钱的一页"
+text = "格里特的小酒馆在码头边，门口的台阶被雨水泡得发黑。你进去的时候，她正把一本旧赊账本翻到最后一页，头也没抬。“坐。你刚才在门口跟谁说话来着？”最后一页不记酒钱。一栏一栏，记的是谁家的孩子今天还没吃饭。今年冬天，这一页写满了，又续了半页。她用指甲按住一个名字：“我要二十袋谷子，船一靠岸就卸在我后门。钱我慢慢还。你要是不信，就把这一页撕走，当押。”"
+speaker = "captain"
+mood = "sad"
+when = [{ kind = "date", from = [1557, 6, 1], to = [1573, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "griet", text = "在港里找到她" }]
+deadline = [1573, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应运二十袋谷子来，那一页不撕。"
+next = "deliver"
+reply = "她把本子合上，压在酒桶上，手掌在封皮上按了两下，像是压住什么要跑掉的东西。“那你就是信了。信了的人，我记在另一页。”她又看了你一眼，“另一页我很少给人看。”"
+effects = [{ kind = "affinity", person = "griet", value = 2 }, { kind = "flag", flag = "c13_request_griet_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "ask_count"
+text = "问她：这一页上，一共几个孩子？"
+next = "deliver"
+reply = "她从第一行数到最后一行，嘴唇跟着动，数完是二十三个。“有几个是同一家的，”她说，“饿起来不分，一个一个都得记。”她用笔尖点着其中一个名字，说那是最小的，还不会走路。"
+effects = [{ kind = "affinity", person = "griet", value = 2 }, { kind = "flag", flag = "c13_request_griet_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "粮价这个样子，我不跑这一趟。"
+next = "failed"
+reply = "她点点头，没有劝你，只是把笔从耳朵上取下来，在那一页最底下又添了一个名字。写的时候，她的手一点也没抖。门口的风把那一页的边角掀起来，她用手压住了。"
+effects = [{ kind = "flag", flag = "c13_request_griet_declined" }]
+
+# 二、划掉一个名字：谷子卸在酒馆后门，她一袋一袋划；划到第二十个，钱袋不够。
+[[tracks.chapters]]
+key = "deliver"
+title = "划掉一个名字"
+text = "运粮的船把谷子卸在码头，一共二十袋，脚夫扛到酒馆后门，再由孩子们一袋一袋搬进去。格里特每搬进一袋，就在那一页上划掉一个名字。孩子们搬得快，划得也快。有个光脚的男孩搬完了还不走，眼睛一直盯着她手里的笔。划到第二十个，她停了，从围裙里掏出钱袋倒在桌上，一枚一枚数过去，数完又数了一遍。"
+speaker = "captain"
+mood = "tender"
+at = "antwerp"
+when = [{ kind = "alive", person = "griet", value = true }]
+objectives = [{ kind = "goods", good = "grain", qty = 20, at = "antwerp", text = "二十袋谷子" }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "griet", value = -5 }, { kind = "flag", flag = "c13_request_griet_late" }, { kind = "letter", person = "griet", text = "谷子没等到，我把酒馆的两桶酒卖了，换了十袋。那一页还剩一半没划。" }] }
+news = "安特卫普码头边的小酒馆后门卸了二十袋谷子，老板娘每搬一袋，就在本子上划掉一个名字。"
+
+[[tracks.chapters.choices]]
+key = "take_some"
+text = "照她能付的收。"
+next = "settle"
+reply = "她把钱袋倒空，凑出来的是货钱的大半。她说剩下的记在“信了的人”那一页，慢慢还。钱推到你面前，推到一半，她又收回一枚，说那枚是给光脚的男孩的。"
+effects = [{ kind = "cash", value = 200 }, { kind = "affinity", person = "griet", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "waive"
+text = "不收，那一页划完就行。"
+next = "settle_waived"
+reply = "她看了你很久，说那就不记“信了的人”那一页了，改成另一种记法。她没说是哪一种，只把钱袋收回围裙里，系绳子的时候打了个死结。"
+effects = [{ kind = "affinity", person = "griet", value = 6 }, { kind = "flag", flag = "c13_request_griet_waived" }]
+
+# 三、信了的人：那一页划完两个月后，她翻出一页空的，请你签名。收钱的那一条。
+[[tracks.chapters]]
+key = "settle"
+title = "信了的人"
+text = "又过了两个月，那一页划完了。划完的名字一排排压在一起，纸都起了毛。格里特没再翻本子。她把旧本子推到你面前，指着中间一栏，栏头写着“信了的人”，底下只有一行还是空的。那一栏的字比别的栏写得小，她说写大了，欠账的人会当真。窗外码头上有人在卸桶，一声一声敲在石头上。她的指甲缝里还有一点粉笔灰。“签个名。”她说，“签了，你跟这一页就有账了。”"
+speaker = "captain"
+mood = "tender"
+at = "antwerp"
+when = [{ kind = "alive", person = "griet", value = true }, { kind = "date", to = [1573, 12, 30] }, { kind = "flag", flag = "c13_request_griet_waived", value = false }]
+objectives = [{ kind = "wait", days = 60 }]
+news = "安特卫普码头边那家小酒馆，赊账本上记孩子吃饭的那一页，终于划完了。"
+
+[[tracks.chapters.choices]]
+key = "sign"
+text = "签。"
+next = "done"
+reply = "你签了名。她把一小袋钱塞进你手里，说是这阵子攒的，还你剩下的货钱，多出来的算利息。“头一杯付现钱，第二杯才能记账。”她给你斟满一杯，“这一杯是利息，随时来喝。”"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "griet", value = 8 }, { kind = "fame", value = 1 }, { kind = "memory", memory = "mem-request_griet-settle", title = "划完的那一页" }, { kind = "flag", flag = "c13_request_griet_done" }]
+
+[[tracks.chapters.choices]]
+key = "no_sign"
+text = "不签了，记在她心里就行。"
+next = "done"
+reply = "她笑了，说心里记不住，她得写下来。笔悬在纸上停了一会儿，她还是替你写了，写的是你的船名，一笔一笔，比别的字都写得慢。钱她照还。"
+effects = [{ kind = "cash", value = 500 }, { kind = "affinity", person = "griet", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_griet_done" }]
+
+# 三之二、另一种记法：不收货款的分支。只给跑腿的钱，不还货款；没有回忆。
+[[tracks.chapters]]
+key = "settle_waived"
+title = "另一种记法"
+text = "又过了两个月，最后一个名字也划掉了。格里特没去拿旧本子，只在新页上写了一行。你凑过去看，写的是你的船名，底下一栏空着。“你没收的那笔钱，”她说，“我拿去给码头上做零工的人家买了一冬的炭。”她把一小袋钱放在柜台上，“这是跑腿的钱，不是货款。你不拿，我就拿去买炭。”她说话的时候一直没看你，只盯着柜台上的水渍，用手指一点一点把它抹开。"
+speaker = "captain"
+mood = "tender"
+at = "antwerp"
+when = [{ kind = "alive", person = "griet", value = true }, { kind = "date", to = [1573, 12, 30] }, { kind = "flag", flag = "c13_request_griet_waived", value = true }]
+objectives = [{ kind = "wait", days = 60 }]
+news = "安特卫普码头边那家小酒馆，老板娘那一页划完了，货钱一文不收，倒给跑腿的人发了酒钱。"
+
+[[tracks.chapters.choices]]
+key = "sign"
+text = "签个名，跑腿的钱收下。"
+next = "done"
+reply = "你在底下那一栏签了名。她把钱袋往你这边推了推，又斟了一杯放在你手边。“喝完再走，这杯不记账。”"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "griet", value = 8 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_griet_done" }]
+
+[[tracks.chapters.choices]]
+key = "no_sign"
+text = "不签，跑腿的钱收下。"
+next = "done"
+reply = "她没再写什么，只说：“我说的是实话，拿着。”钱没再推，她把你的杯子往回挪了挪，挪到你伸手就够得着的地方。"
+effects = [{ kind = "cash", value = 400 }, { kind = "affinity", person = "griet", value = 6 }, { kind = "fame", value = 1 }, { kind = "flag", flag = "c13_request_griet_done" }]

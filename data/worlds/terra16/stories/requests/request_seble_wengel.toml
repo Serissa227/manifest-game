@@ -1,0 +1,179 @@
+# 请托：码头上的修士（request_seble_wengel）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：塞布莱·温格尔（seble_wengel，女），埃塞俄比亚的太后，先皇莱布纳·丹格尔的遗孀；生年不详（cast 占位 0 年，待核），1568 年卒（史料）。cast 在 cast/historical_04_africa.toml。
+# 类型：说服（persuade）。三章：offer（报价）、persuade（驻军长官）、result（修士上了船，含 wait 15 天的目标）。终点 done / failed。
+# 报价：L 来信／代理人。auto=true；offer 章 at=massawa，出面的是山上修道院的执事（写身份，不新建 cast，speaker 省略）；请托人只在信里说话。family=c13_offer_massawa，冷却 20 天。deadline 为窗口止日 1567-12-31，timeout 直接 failed，不写见闻。
+# 窗口：offer 为 when 里的 date 条件 1557-10-01 至 1567-12-31；persuade 进入后 60 天期限；result 进入后 120 天期限。引擎里普通章没有 window，不写 window/default。
+# 依据·史实背景：1557 年奥斯曼取马萨瓦、设哈贝什省（见 ports_east_africa.toml 的 massawa 与 setting）；埃塞俄比亚太后在崖顶修院的旧事只作人物来历，正文只写一只铜十字。修道院的名字不写。
+# 依据·原创：执事、驻军长官与书记、仓房的铁条与气窗、几部经书与念珠、太后的几句话、被手磨圆边角的手持十字。驻军长官是叙事人物，不进 cast，正文不写名字。
+# 依赖：港口 massawa（ports_east_africa.toml）；物品 ethiopian_hand_cross（items/items_curio_01.toml，唯一奖励）；技能 lang_turkish（skills.toml）；势力 ethiopia（factions/06_africa.toml）；人物 seble_wengel。B10b：无需改名。主线门禁：无。
+# 主线旗标：offer 的变体读 c13_main_baraka（由主线第一章设，尚未写入，所以未设时这一句不出现）。
+# C7：无。本文件不读也不设任何 c7_ 旗标；与巴蒂·德尔·万巴拉的请托互不引用，不写换俘。
+# 读的旗标：c13_main_baraka（offer 变体，只多一句）；c13_request_seble_wengel_carried（本轨道自设自读，persuade 变体）。
+# 设的旗标：accepted（offer 两条接法）、carried（offer 问过修士带着什么）、declined（offer 回绝，终局）、freed（persuade 三条解法与检定失败共用）、books_kept（检定失败，经书留在仓房）、document（用土耳其文书）、late（persuade 超时，终局）、done（result 终局）、cross_to_monk（十字给了修士）、partial（result 超时，终局）。
+# 秘密：cast 无 secret，本条不写。太后“赎人先赎王子”的看法不评判、不写。
+# 口头禅：“路上可还平安？”只在 result 章的信里用一次。
+# 报酬：现金 3650（王侯档中等，基数 2600 × 1.4）；好感最多 2+3+8=13；名声 +5；埃塞俄比亚声望 +3；物品 ethiopian_hand_cross 一件（accept 一路）；回忆 mem-request_seble_wengel-result（accept 一路）。
+# 回忆插画 mem-request_seble_wengel-result：一只边角被手磨圆的铜十字压在折好的信纸上，信纸边上落着一粒码头的沙，窗外是马萨瓦的白墙与海。
+
+[[tracks]]
+key = "request_seble_wengel"
+name = "码头上的修士"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["seble_wengel"]
+
+# 一、执事带来的信：山上来的执事，信里是太后的话。
+[[tracks.chapters]]
+key = "offer"
+title = "执事带来的信"
+text = "马萨瓦的码头上，一个穿旧僧袍的执事从山上下来，怀里揣着一封信，火漆已经发白。他不寒暄，把信递过来，自己退到一边站着。信上的字写得很密，一笔一笔都很稳：“我派去亚历山大港的修士，被奥斯曼人扣在码头的仓房里，已经一个月了。他带着几部经书，还有一封给牧首的信。我不要你低头去求那位长官。我要你把他带出来。”执事说，仓房的门是用一根铁条别着的，修士每天只能从气窗里看一次海。"
+at = "massawa"
+mood = "tense"
+when = [
+  { kind = "date", from = [1557, 10, 1], to = [1567, 12, 31] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1567, 12, 31]
+timeout = { next = "failed" }
+family = "c13_offer_massawa"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_baraka"
+when = [{ kind = "flag", flag = "c13_main_baraka", value = true }]
+text = "马萨瓦的码头上，一个穿旧僧袍的执事从山上下来，怀里揣着一封信，火漆已经发白。他听说你在开罗读过书，问你认不认得杰巴尔提住宿区的老人，问完也不等你答，就把信递了过来，自己退到一边站着。信上的字写得很密，一笔一笔都很稳：“我派去亚历山大港的修士，被奥斯曼人扣在码头的仓房里，已经一个月了。他带着几部经书，还有一封给牧首的信。我不要你低头去求那位长官。我要你把他带出来。”执事说，仓房的门是用一根铁条别着的，修士每天只能从气窗里看一次海。"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下，去见驻军的长官。"
+next = "persuade"
+reply = "执事在胸前画了个十字：“太后说，修士的命比书要紧，书比信要紧。”"
+effects = [
+  { kind = "affinity", person = "seble_wengel", value = 2 },
+  { kind = "flag", flag = "c13_request_seble_wengel_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_carried"
+text = "接下，先问：修士身上到底带着什么？"
+next = "persuade"
+reply = "“几部经书，一封给牧首的信，一串念珠。”执事想了想，“还有他自己的脚——他走了两个月才下到海边。”"
+effects = [
+  { kind = "affinity", person = "seble_wengel", value = 2 },
+  { kind = "flag", flag = "c13_request_seble_wengel_accepted" },
+  { kind = "flag", flag = "c13_request_seble_wengel_carried" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "奥斯曼人的仓房，我不去碰。"
+next = "failed"
+reply = "执事点头，把信收进怀里，说他回山上再想办法。"
+effects = [
+  { kind = "flag", flag = "c13_request_seble_wengel_declined" },
+]
+
+# 二、驻军长官的台阶：长官不想放人，也不想得罪山上的人。解法三条：检定、钱、文书。
+[[tracks.chapters]]
+key = "persuade"
+title = "驻军长官的台阶"
+text = "驻军的长官是个刚从吉达调来的年轻人，坐在仓房对面的办公室里，一条腿搁在桌子上。桌上摆着一只没剥完的橘子，他没碰。他不想放人，也不想为一个修士得罪山上的人。“放了，”他说，“上头问起来，我怎么交代？”书记在一旁低头写字，笔尖停了一下，又接着往下写。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "seble_wengel", value = true }]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "seble_wengel", value = -3 }, { kind = "flag", flag = "c13_request_seble_wengel_late" }, { kind = "letter", person = "seble_wengel", text = "执事代笔：修士被押去了吉达。太后说，再想别的办法。" }], news = "马萨瓦的码头上，奥斯曼驻军把一个关在仓房里的埃塞俄比亚修士押上了去吉达的船。" }
+news = "马萨瓦的奥斯曼驻军，放了一个在码头仓房里关了许久的埃塞俄比亚修士。"
+
+[[tracks.chapters.variants]]
+key = "v1_carried"
+when = [{ kind = "flag", flag = "c13_request_seble_wengel_carried", value = true }]
+text = "驻军的长官是个刚从吉达调来的年轻人，坐在仓房对面的办公室里，一条腿搁在桌子上。你把执事的话转给他听：修士走了两个月才下到海边。他抬起头看了你一眼，手里的笔转了一圈。桌上摆着一只没剥完的橘子，他没碰。他不想放人，也不想为一个修士得罪山上的人。“放了，”他说，“上头问起来，我怎么交代？”书记在一旁低头写字，笔尖停了一下，又接着往下写。"
+
+[[tracks.chapters.choices]]
+key = "talk"
+text = "跟他讲：扣一个修士，山上的人就不卖粮给驻军了。"
+next = "result"
+reply = "他想了一夜，第二天让人打开仓房的门。修士走出来，先抬头看了看天。"
+effects = [
+  { kind = "affinity", person = "seble_wengel", value = 3 },
+  { kind = "flag", flag = "c13_request_seble_wengel_freed" },
+]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "result", effects = [{ kind = "flag", flag = "c13_request_seble_wengel_freed" }, { kind = "flag", flag = "c13_request_seble_wengel_books_kept" }], news = "马萨瓦的码头上传开了：驻军放了一个山上下来的修士，他带的几部经书却留在了仓房里。" }
+
+[[tracks.chapters.choices]]
+key = "pay"
+text = "付一笔“保释金”，让他写修士交了保。"
+next = "result"
+reply = "他收了钱，写了张收据，说上头问起来，就说修士交了保。"
+requires = [{ kind = "cash", ge = 500 }]
+hint = "长官报的数目，你付不起。"
+effects = [
+  { kind = "cash", value = -500 },
+  { kind = "affinity", person = "seble_wengel", value = 3 },
+  { kind = "flag", flag = "c13_request_seble_wengel_freed" },
+]
+
+[[tracks.chapters.choices]]
+key = "document"
+text = "用土耳其文替他拟一份文书：修士是“过境的朝圣者”。"
+next = "result"
+reply = "他读了你拟的文书，笑了：“过境的朝圣者——这个好，上头最怕管朝圣的事。”他在文书上盖了印。"
+# U02：下面的 hard = true 表示这道语言（或结绳）门槛按道理必须先会——读、写、译这种文字靠运气做不到，掷骰规则下照旧锁住。
+requires = [{ kind = "skill", skill = "lang_turkish", ge = 60, hard = true }]
+hint = "土耳其的公文腔，你一句也拟不出来。"
+effects = [
+  { kind = "affinity", person = "seble_wengel", value = 3 },
+  { kind = "flag", flag = "c13_request_seble_wengel_freed" },
+  { kind = "flag", flag = "c13_request_seble_wengel_document" },
+]
+
+# 三、修士上了船：太后的回信，一只磨圆了边的十字。
+[[tracks.chapters]]
+key = "result"
+title = "修士上了船"
+text = "修士在码头上等去吉达的船，他还要往亚历山大港去。他把包袱从肩上放下，又背起来，像是在试它的轻重。执事带来太后的回信，信很短，第一句是：“路上可还平安？”她问的是你。随信来的是一个铜铸的手持十字，边角已经被手磨圆了，是太后在崖顶修院那几年用过的。"
+at = "massawa"
+mood = "tender"
+when = [{ kind = "alive", person = "seble_wengel", value = true }]
+objectives = [{ kind = "wait", days = 15 }]
+deadline_days = 120
+timeout = { next = "done", effects = [{ kind = "flag", flag = "c13_request_seble_wengel_partial" }, { kind = "letter", person = "seble_wengel", text = "执事代笔：修士已经上路了。太后的谢礼留在修道院，等你来取。" }], news = "马萨瓦的码头上，等船等了一季的埃塞俄比亚修士，最后背着包袱上了去吉达的船。" }
+news = "马萨瓦的码头上，一个埃塞俄比亚修士上了去吉达的船，手里握着一个铜十字。"
+
+[[tracks.chapters.variants]]
+key = "v1_books_kept"
+when = [{ kind = "flag", flag = "c13_request_seble_wengel_books_kept", value = true }]
+text = "修士在码头上等去吉达的船，他还要往亚历山大港去。几部经书留在了仓房里，修士说：“书会有人再抄。”他把空了一半的包袱从肩上放下，又背起来，像是在试它的轻重。执事带来太后的回信，信很短，第一句是：“路上可还平安？”她问的是你。随信来的是一个铜铸的手持十字，边角已经被手磨圆了，是太后在崖顶修院那几年用过的。"
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "收下手持十字。"
+next = "done"
+reply = "执事把十字放在你掌心，十字的边已经被手磨圆了。修士在一旁为你祝福，用的是你听不懂的古老的话。"
+news = "马萨瓦的码头上，修道院的执事把一个铜十字交给了一个外乡船长，站在一旁的修士替他祝了福。"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "seble_wengel", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "ethiopia", value = 3 },
+  { kind = "item", item = "ethiopian_hand_cross", qty = 1 },
+  { kind = "memory", memory = "mem-request_seble_wengel-result", title = "磨圆的手持十字" },
+  { kind = "flag", flag = "c13_request_seble_wengel_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "to_monk"
+text = "请修士带着十字上路，路还长。"
+next = "done"
+reply = "执事愣了一下，把十字交给修士。修士握着它，向你深深鞠了一躬。太后后来的信里说：“你替我想得比我周到。”"
+effects = [
+  { kind = "cash", value = 3650 },
+  { kind = "affinity", person = "seble_wengel", value = 8 },
+  { kind = "fame", value = 5 },
+  { kind = "reputation", faction = "ethiopia", value = 3 },
+  { kind = "flag", flag = "c13_request_seble_wengel_done" },
+  { kind = "flag", flag = "c13_request_seble_wengel_cross_to_monk" },
+]

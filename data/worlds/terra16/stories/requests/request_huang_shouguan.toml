@@ -1,0 +1,121 @@
+# 请托：这回船期要准（request_huang_shouguan）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：黄寿官（huang_shouguan，1538-04-19 生，男），福建漳州人，在吕宋做买卖的商人；cast：cast/story_eastasia.toml，kind=story，势力 luzon。
+# 类型：送货（deliver）。三章：offer（报价）、deliver（丝绸卸在马尼拉，书记说只许装九成）、settle（大帆船开走，描朱圈，结账）。没有 stage 章，因此没有 window 与 default；日期与人物存活写在 when 里。
+# 报价：T（当面）。auto=false，玩家在马尼拉（manila）用“问请托”（ask:request_huang_shouguan）启动；offer 不写 at，目标是在港里找到他。
+#       窗口 1573-01-01 至 1590-06-30（offer 的 when 与 deadline），timeout 直接 failed，不写见闻。
+# 进行中：deliver 章 deadline_days=150，超时走 failed：来信一封、好感 -3、旗标 _late；settle 是普通章（目标：等二十天，大帆船开走），可以一直等。
+# 依据·史实背景：1571 年西班牙人在马尼拉立城后，每年七月前后有大帆船载着丝绸去阿卡普尔科换白银（1565 年起通航，丝银贸易 1571 年起兴起）；丝绸多由福建商人从月港运来；舱位按商家分配，配额紧张。
+# 依据·原创：黄寿官本人、他的账本与朱笔、“每家只许装九成”的写法、书记的刻痕木牌、买第十匹丝的军官、染得不匀的一匹。
+# 秘密：cast 没写秘密，本请托无须处理。C7 的线（pair_nyai_gama_huang_shouguan，1559—72 年，缺省圆满）不在本轨道出场：本轨道从 1573 年起，不写万丹，不写那位胡椒女商，只说他“晚了很多年”。不写任何恋爱。
+# 待核：大帆船具体开船月份（正文只写“七月前后”）；舱位配额的实际算法（原创为“每家九成”）。
+# 读的旗标：c13_request_huang_shouguan_early（本轨道 offer 设的分支旗标，settle 的变体读它）；不读 C7 旗标；本请托不设主线门禁，没有 gate_main、variant_main。
+# 设的旗标：c13_request_huang_shouguan_accepted（offer 答应两条）、_early（offer 说提前半个月，分支旗标）、_declined（offer 回绝，终局）、_late（deliver 超时，终局）、_done（settle 两条收尾，终局）。
+# 依赖：港口 manila、yuegang（ports_southeast_asia.toml / 明朝港口，已是现名，无需 B10b 改名）；货物 silk（goods/02_manufactures.toml，基准价 260）；属性 eloquence、commerce（captain.toml）；人物 huang_shouguan（日程 1571—1590 在马尼拉）。
+# 报酬（每份只给一次）：现金 900（settle 一次）+ 货款 3250（deliver 各分支互斥，只付一次；卖亏的那条少付 200，即 3050）；好感最多 +14（offer +3、deliver +3、settle +8）；名声 +2；回忆 mem-request_huang_shouguan-settle。没有唯一奖励物品，没有技能奖励，没有声望变化。
+# 回忆插画清单：
+#   mem-request_huang_shouguan-settle「描了两遍的朱圈」：货栈桌上摊开的账本，朱笔把一个圈描了两遍，墨未干；窗外码头尽头，一张帆缩成海面上的一点。
+
+[[tracks]]
+key = "request_huang_shouguan"
+name = "这回船期要准"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["huang_shouguan"]
+
+# 一、报价：货栈里翻账本的人，用朱笔圈了船期。
+[[tracks.chapters]]
+key = "offer"
+title = "朱笔圈的船期"
+text = "黄寿官的账本摊在货栈的桌上，每一页最上头写船期，货价写在底下。他翻到今年这页：去阿卡普尔科的大帆船，七月前后开，舱位订好了，丝绸还差十匹。“要月港的货，别处的我不收，南边水汽重，丝容易潮。”他拿起朱笔，在船期那一行圈了一圈，想想又圈一圈。“这回准时，先让我把风向算清——”他自己先笑了，“这话我在码头上讲了多少年，你随便问个脚夫。大帆船从来不等人，头家，我已经晚了很多年了。”"
+speaker = "captain"
+mood = "cheerful"
+objectives = [{ kind = "person", person = "huang_shouguan", text = "在港里找到他" }]
+when = [{ kind = "date", from = [1573, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应从月港运十匹丝绸来，赶上船期。"
+next = "deliver"
+reply = "他在朱圈旁边写上你的船名，字写得很慢，写完拿起账本吹了吹墨。“月港的铺子认这个名字，你报给他们就行。”"
+effects = [{ kind = "affinity", person = "huang_shouguan", value = 2 }, { kind = "flag", flag = "c13_request_huang_shouguan_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "early"
+text = "说你提前半个月到，让他有工夫验货。"
+next = "deliver"
+reply = "他抬头看了你一眼，在朱圈外又画了一个圈，朱笔在纸上洇开一小团。“提前的人，我这辈子没遇见过几个。”他把笔在砚边刮了刮，“半个月，够我把每匹丝都抖开看一遍了。”"
+effects = [{ kind = "affinity", person = "huang_shouguan", value = 3 }, { kind = "flag", flag = "c13_request_huang_shouguan_accepted" }, { kind = "flag", flag = "c13_request_huang_shouguan_early" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "今年你不跑月港。"
+next = "failed"
+reply = "他把朱圈旁那一格空着，笔搁回笔架上。“那就再晚一年。”他说得很平，像在报一个风向。"
+effects = [{ kind = "flag", flag = "c13_request_huang_shouguan_declined" }]
+
+# 二、交货：十匹丝卸在马尼拉码头，书记拿着木牌来，只许装九成。
+[[tracks.chapters]]
+key = "deliver"
+title = "只许装九成"
+text = "十匹丝绸卸在马尼拉的码头上，湿气还没散。黄寿官蹲下去，一匹一匹抖开，迎着光看经纬，看完叫人装箱，箱盖上用墨写“阿卡普尔科”，字比账本上的大。大帆船的书记拿着一块刻满记号的木牌走过来，翻了翻，说舱挤，今年每家只许装九成。黄寿官手里还捏着一角丝。“九成。”他算得很快，又问了一遍，这回是看着手里那角丝问的，声音很轻：“十匹，装九匹，剩下那匹往哪里放？”"
+speaker = "captain"
+mood = "tense"
+at = "manila"
+when = [{ kind = "alive", person = "huang_shouguan", value = true }, { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "goods", good = "silk", qty = 10, at = "manila", text = "十匹丝绸" }]
+deadline_days = 150
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "huang_shouguan", value = -3 }, { kind = "flag", flag = "c13_request_huang_shouguan_late" }, { kind = "letter", person = "huang_shouguan", text = "大帆船走了，我又晚了一年。丝绸从别人手里凑齐了，贵了三成。朱圈我没擦，留着。——黄寿官" }] }
+news = "马尼拉码头上，一个福建商人的十箱丝绸赶在大帆船开船前装了舱，他守在舱口，直到最后一箱落了盖。"
+
+[[tracks.chapters.choices]]
+key = "all_ten"
+text = "跟书记争：订了十匹的舱，就装十匹。"
+next = "settle"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "书记嘟囔着，拿小刀在木牌上多划了一道刻痕，让开了路。十箱都上了大帆船，黄寿官站在码头上，看着最后一箱进舱，舱盖落下去，他才把手里那角丝塞回袖子里。"
+effects = [{ kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_shouguan", value = 3 }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_shouguan", value = -2 }], news = "码头上有人和大帆船的书记争舱位，木牌上的刻痕没动，福建商人的丝绸只装上九箱，剩下一匹他夹在腋下带走了。" }
+
+[[tracks.chapters.choices]]
+key = "nine"
+text = "装九匹，剩一匹折价卖给码头上的西班牙人。"
+next = "settle"
+check = { attr = "commerce", base = 35, per = 6 }
+reply = "最后一匹卖给了一个要给太太做衣裳的军官，价钱不坏，军官临走还问丝是哪家染的。黄寿官说这一匹算你的，账他另记。九箱封好，上了大帆船。"
+news = "马尼拉码头上，福建商人的丝绸装了九箱上大帆船，第十匹卖给了一个要给太太做衣裳的西班牙军官。"
+effects = [{ kind = "cash", value = 3250 }, { kind = "affinity", person = "huang_shouguan", value = 2 }]
+fail = { next = "settle", effects = [{ kind = "cash", value = 3050 }], news = "码头上，第十匹丝被一个西班牙军官压到对折才肯收，其余九箱上了大帆船，差价记在运丝的船长账上。" }
+
+# 三、结账：大帆船开走，他在账本上把朱圈又描了一遍。
+[[tracks.chapters]]
+key = "settle"
+title = "某年，准"
+text = "大帆船在退潮时出了港。黄寿官站在码头尽头，帽子拿在手里，一直站到船帆缩成海面上的一个点，再看不见。回到货栈，他翻开账本，把今年那一行的朱圈又描了一遍，笔尖沙沙响，描出来的圈比原来粗了一圈。“头一回。”他对着账本说，没有看你，“头一回没晚。”货栈外面有脚夫在抬空箱子，有人吹着口哨走过去。"
+speaker = "captain"
+mood = "tender"
+at = "manila"
+when = [{ kind = "alive", person = "huang_shouguan", value = true }, { kind = "date", from = [1573, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "wait", days = 20, text = "等大帆船开走" }]
+news = "马尼拉的大帆船开走那天，一个福建商人在码头上站到看不见帆，回去在账本上描了一个朱圈。"
+
+[[tracks.chapters.variants]]
+key = "v1_early"
+when = [{ kind = "flag", flag = "c13_request_huang_shouguan_early" }]
+text = "大帆船在退潮时出了港。黄寿官站在码头尽头，帽子拿在手里，一直站到船帆缩成海面上的一个点，再看不见。回到货栈，他翻开账本，把今年那一行的朱圈又描了一遍，描得比原来粗。“你提前到的那半个月，我把每匹丝都多看了一遍。”他用笔杆指指墙角卷着的一匹，“这匹染得不匀，一边深一边浅，挑出来了，换的是对面铺子的。要是你晚到，它今天就在海上了。”他合上账本，“头一回没晚。”"
+
+[[tracks.chapters.choices]]
+key = "toast"
+text = "陪他喝一杯，庆他准了一回。"
+next = "done"
+reply = "他喝了一杯就脸红了，把报酬推过来，又在账本的最后一页写了一行小字：某年，准。写完他没合账本，摊在桌上晾着，等墨干。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "huang_shouguan", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_huang_shouguan_done" }, { kind = "memory", memory = "mem-request_huang_shouguan-settle", title = "描了两遍的朱圈" }]
+
+[[tracks.chapters.choices]]
+key = "next_year"
+text = "问他明年的船期，你再跑一趟。"
+next = "done"
+reply = "他笑着摇头，手掌压在账本封皮上。“明年的事明年说，先把今年的钱付了。”他数钱数得很慢，一枚一枚推到你面前，一枚也没多。"
+effects = [{ kind = "cash", value = 900 }, { kind = "affinity", person = "huang_shouguan", value = 5 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_huang_shouguan_done" }]

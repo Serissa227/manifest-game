@@ -1,0 +1,165 @@
+# 请托：冻伤的法子（request_elene_urruti）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：埃莱内·乌鲁蒂（elene_urruti，1540-02-13 生，女），鱼叉手的女儿，在毕尔巴鄂跟姨妈认草药；cast 在 cast/classmates_custom_basque_whaling.toml。
+# 类型：找东西（find）。三章：offer（有图的书）、handin（第二张单子）、use（圣约翰斯的冬天）。终点 done / failed。
+# 报价：T 当面（auto=false）。玩家在毕尔巴鄂用 ask:request_elene_urruti 启动；offer 不写 at，目标是在港里找到她。
+#       offer 的 deadline=1590-06-30，timeout 直接 failed，不写见闻。
+# 窗口：普通章不写 window（引擎要求写了 window 就必须有 default），窗口写进 when 的 date 条件里。
+#       offer 1568-01-01..1590-06-30；handin 与 use 1568-01-01..1590-12-31；use 进入后 300 天期限（deadline_days=300）。
+#       use 不写 default：它没有 window，超时走 timeout 即可。
+# 依据·史实背景：纽芬兰渔场与在岸上过冬的渔夫（圣约翰斯的火堆）；冻伤的民间处置。正文不写成医疗建议，只写“书上画的”和“他们做的”不一样。
+# 依据·原创：埃莱内、门框上的药篮、门板上抄的图、两张单子、老渔夫少了的两个脚趾。《健康之园》是书店里的书（hortus_mainz，有 shop），正文只写它有图、看不懂拉丁文。
+# 依赖：港口 bilbao（ports_iberia.toml）、st_johns（ports_americas.toml）；技能 herbal_medicine（skills.toml）；属性 eloquence；物品 hortus_mainz（items/books_06_medicine.toml）；人物 elene_urruti。B10b：无需改名。主线门禁：无（埃莱内不是主线人物）。
+# C7：请托 1568 年起；不写阿玛娅、不写马丁、不写“女巫”的闲话。本文件不读也不设任何 c7_ 旗标。
+# 读的旗标：bond elene_urruti ≥ C（offer 的 variant，只改开头她查看手的一句，其余不变）。
+# 设的旗标：c13_request_elene_urruti_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_given（handin 把书留给她）、_done（终局）、_partial（终局）、_late（超时，终局）。
+#       lend_book 检定失败不设旗标（按请托的写法，失败只走 news，仍进 use）。
+# 引擎注记：借书一冬的选项（lend_book）成功时书仍留在玩家身上，由玩家陪着埃莱内每天翻一页——引擎没有“借出再还回”的机制，所以不让书离手。
+# 秘密：她第一本药草簿的来历。正文不碰，见闻不写。
+# 口头禅：“伤口要洗，逞强留到岸上。”只写在 handin 章第二张单子的最后一行，全文件只出现这一次。
+# 报酬：现金最多 1250（折中 700）；技能 herbal_medicine +20（只在最好结局）；好感最多 +13；名声 +2；来信两封；回忆 mem-request_elene_urruti-use。
+# 回忆插画 mem-request_elene_urruti-use：火边一只脱下的靴子，靴子旁摊开一页画着草的书，书页上压着一张冻伤的脚的素描。
+
+[[tracks]]
+key = "request_elene_urruti"
+name = "冻伤的法子"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["elene_urruti"]
+
+# 一、有图的书：毕尔巴鄂的门框，药篮，门板上的炭笔图。
+[[tracks.chapters]]
+key = "offer"
+title = "有图的书"
+text = "毕尔巴鄂的码头上，埃莱内·乌鲁蒂的门框挂着一只药篮，篮里是晒干的叶子。她门板上用炭笔抄着几幅草的图。每年冬天船一回港，冻伤的水手就来敲她的门。“我要编一套照着做就行的法子，不识字的人也得看得懂。”她把一张写满问题的单子塞过来，“图我看得懂，拉丁文我看不懂。找一部有图的草药书。”她顿了顿，又说，“还有，书上说的，和在冰上过冬的人做的，是不是一回事，我要知道。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "elene_urruti", text = "在毕尔巴鄂找到她" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "age", person = "elene_urruti", ge = 18 },
+]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.variants]]
+key = "v1_bond_c"
+when = [{ kind = "bond", person = "elene_urruti", level = "C" }]
+text = "毕尔巴鄂的码头上，埃莱内·乌鲁蒂先抓过你的手，翻过来看指节上有没有冻疮，看完才说正事。她门框上挂着一只药篮，篮里是晒干的叶子。她门板上用炭笔抄着几幅草的图。每年冬天船一回港，冻伤的水手就来敲她的门。“我要编一套照着做就行的法子，不识字的人也得看得懂。”她把一张写满问题的单子塞过来，“图我看得懂，拉丁文我看不懂。找一部有图的草药书。”她顿了顿，又说，“还有，书上说的，和在冰上过冬的人做的，是不是一回事，我要知道。”"
+
+[[tracks.chapters.choices]]
+key = "find_book"
+text = "接下，先去找一部有图的草药书。"
+next = "handin"
+reply = "“书上要有这些草。没有的，我不认。”她嘟囔了一句，把药篮挎到另一边肩上，去门口的台阶上坐下，等我把书找来。“先拿来给我看图，拉丁字我不看。”"
+effects = [
+  { kind = "affinity", person = "elene_urruti", value = 2 },
+  { kind = "flag", flag = "c13_request_elene_urruti_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_latin"
+text = "接下，问她：看不懂拉丁文，怎么知道图画的是哪种草？"
+next = "handin"
+reply = "“草我认得，名字我不认得。”她瞪我一眼，“名字是给你们这些念书的人用的。”她把单子翻过来，背面写上一行：“图对了，名字你来找。”"
+effects = [
+  { kind = "affinity", person = "elene_urruti", value = 2 },
+  { kind = "flag", flag = "c13_request_elene_urruti_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "草药书难找，劝她先照姨妈的法子来。"
+next = "failed"
+reply = "“姨妈的法子治了一辈子，你要是也这么说，就照姨妈的来。”她骂了一句，把药篮挎上，去给下一个人换药了。门板上的炭笔图还留在那里，没有人擦。"
+effects = [{ kind = "flag", flag = "c13_request_elene_urruti_declined" }]
+
+# 二、第二张单子：书摊在石阶上，她翻到画错的那一页。
+[[tracks.chapters]]
+key = "handin"
+title = "第二张单子"
+text = "埃莱内把《健康之园》摊在门口的石阶上，一页一页翻图。翻到一种叶子边缘有锯齿的草，她用指甲点着，说书上画错了，“叶脉不是这么走的。”她又掏出第二张单子，是给圣约翰斯那些过冬的人的问题。最后一行，她写得很用力：“伤口要洗，逞强留到岸上。”她说自己走不开，“你替我去问。”"
+speaker = "captain"
+mood = "tense"
+objectives = [
+  { kind = "item", item = "hortus_mainz", qty = 1, text = "带着那部书" },
+  { kind = "person", person = "elene_urruti", text = "在毕尔巴鄂找到她" },
+]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "elene_urruti", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "give_book"
+text = "把书留给她。"
+next = "use"
+reply = "她把书抱在怀里，说门板上要抄的第一幅图，就是那棵画错的草，旁边写上“书上错了”。她没说谢，只把第二张单子又往我手里塞了塞。"
+effects = [
+  { kind = "item", item = "hortus_mainz", qty = -1 },
+  { kind = "affinity", person = "elene_urruti", value = 3 },
+  { kind = "flag", flag = "c13_request_elene_urruti_given" },
+]
+
+[[tracks.chapters.choices]]
+key = "read_together"
+text = "书我留着，先陪她把图上的名字一个个念出来。"
+next = "use"
+requires = [{ kind = "skill", skill = "herbal_medicine", ge = 60 }]
+hint = "“拉丁名你念得出几个？念不出，就别说陪我念。”"
+reply = "我念名字，她认草。认到第二十种，她就不用我念了，自己把每种草的样子画进本子。“你念错一个，我就得翻三页。”她说，眉头没松。"
+effects = [{ kind = "affinity", person = "elene_urruti", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "lend_book"
+text = "书不离我的手，陪她抄一冬。"
+next = "use"
+check = { attr = "eloquence", base = 35, per = 6 }
+reply = "“一冬够了。”她说，冻伤的人也只在冬天来。书就放在你手边，你每回靠港，陪她翻一页，她抄到哪一页，就在哪一页夹一根草，开春再看草夹了几根。"
+effects = [{ kind = "affinity", person = "elene_urruti", value = 2 }]
+fail = { next = "use", news = "毕尔巴鄂的药铺里有人说，埃莱内想借一部拉丁文的草药书抄一整个冬天，没借成，只抄了几幅图。" }
+
+# 三、圣约翰斯的冬天：火堆边的渔夫，老渔夫脱下靴子。
+[[tracks.chapters]]
+key = "use"
+title = "圣约翰斯的冬天"
+text = "圣约翰斯的岸边有座草棚，棚里烧着一堆湿柴，几个过冬的渔夫围着，身上一股鲸油味。你照埃莱内的单子一条条问：脚冻白了，先干什么？有人说用雪搓，有人说离火远点，书上画的是温水，几个人听了直摇头。问到最后，那个老渔夫脱下靴子，把脚伸到火边，给你看他少了的两个脚趾。“用雪搓是我爹教的。”他说，“这两根，就是搓掉的。”"
+news = "圣约翰斯渔港的火堆边，有个外港的船长拿着一张单子挨个问冻伤的事，问到一个少了脚趾的老渔夫。"
+speaker = "captain"
+mood = "sad"
+at = "st_johns"
+objectives = [{ kind = "at", at = "st_johns", text = "到圣约翰斯去" }]
+when = [
+  { kind = "date", from = [1568, 1, 1], to = [1590, 12, 31] },
+  { kind = "alive", person = "elene_urruti", value = true },
+]
+deadline_days = 300
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "elene_urruti", value = -3 }, { kind = "flag", flag = "c13_request_elene_urruti_late" }, { kind = "letter", person = "elene_urruti", text = "新地的船回来了，带回来的人我自己问了。你不用去了。" }], news = "毕尔巴鄂的码头上，新地回来的船卸了人，埃莱内把冻伤的水手领进门，自己一个个问。" }
+
+[[tracks.chapters.choices]]
+key = "write_both"
+text = "两种都记下，连老渔夫的脚也记进去，寄回去。"
+next = "done"
+reply = "两样都记。老渔夫的脚我也画进了本子，他瞪着我画，画到一半嘟囔一句：“脚趾是斜的，你画直了。”我改过来，他才把脚挪进火光里。"
+effects = [
+  { kind = "cash", value = 1250 },
+  { kind = "skill", skill = "herbal_medicine", value = 20 },
+  { kind = "affinity", person = "elene_urruti", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_elene_urruti_done" },
+  { kind = "memory", memory = "mem-request_elene_urruti-use", title = "火边脱下的靴子" },
+  { kind = "letter", person = "elene_urruti", text = "门板上写了两行，一行“书上的”，一行“他们做的”，中间画了一只少了两个脚趾的脚。问题单背面写着你的名字，算是谢。冬天来敲门的人，我先让他看那只脚。" },
+]
+
+[[tracks.chapters.choices]]
+key = "write_book"
+text = "只记书上画的那一种，免得她犹豫。"
+next = "done"
+reply = "我只把书上的那一种写进单子，另一种一个字也没提。老渔夫把靴子穿回去，没再看我一眼，火边的人也都不说话，只剩柴火噼啪地响着。"
+effects = [
+  { kind = "cash", value = 700 },
+  { kind = "affinity", person = "elene_urruti", value = 4 },
+  { kind = "flag", flag = "c13_request_elene_urruti_partial" },
+  { kind = "letter", person = "elene_urruti", text = "你替我拿主意，我骂你。钱照付了一半。犹豫是我的事，下回两样都给我。" },
+]

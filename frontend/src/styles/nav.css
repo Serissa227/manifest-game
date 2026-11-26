@@ -1,0 +1,670 @@
+/* 第九批：手动航行的航行视图（components/nav/）。沿用海图的木框、羊皮纸与黄铜配色。
+ * 航行视图是整屏场景（盖在世界图上），不是浮窗：平视显示在上方，罗经盘与帆在右下（手机在左下的拇指区），
+ * 操作按钮在罗经盘旁边，今天会停下的地方列在左下。 */
+
+.nav-view {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  background: var(--sea-1);
+}
+.nav-sea {
+  position: absolute;
+  inset: 0;
+}
+.nav-canvas {
+  display: block;
+  image-rendering: pixelated;
+  cursor: crosshair;
+  touch-action: none;
+}
+.nav-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--paper);
+  font-size: 15px;
+}
+
+/* —— 平视显示：上方一条羊皮纸 —— */
+.nav-hud {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 14px;
+  max-width: min(980px, calc(100% - var(--stage-cover-right, 0px) - 16px));
+  margin: 0;
+  padding: 6px 12px;
+  color: #2b1b17;
+  background-color: #f3e3c3;
+  background-image: var(--ui-parchment, radial-gradient(#e2c79666 1px, transparent 1px));
+  border: 3px solid #5c3a21;
+  outline: 1px solid #1a1423;
+  box-shadow:
+    inset 0 0 0 1px #b8804a,
+    4px 4px 0 #1a142380;
+}
+.nav-hud-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+.nav-hud-item dt {
+  color: #6b4f33;
+  font-size: 12px;
+}
+.nav-hud-item dd {
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+.nav-hud-heading dd {
+  font-family: var(--font-title);
+  font-size: 16px;
+  color: #5c2a14;
+}
+.nav-hud-item.warn dd {
+  color: #a3242f;
+}
+.nav-hud-auto dd {
+  color: #15656f;
+}
+/* H10hF：慢行、等风、延误时“自动航行”一栏改成琥珀色 */
+.nav-hud-auto.slow dd {
+  color: #8a5a12;
+}
+.nav-view.compact .nav-hud {
+  top: 4px;
+  gap: 0 10px;
+  padding: 3px 8px;
+  max-width: calc(100% - 12px);
+}
+.nav-view.compact .nav-hud-item dd {
+  font-size: 13px;
+}
+.nav-view.compact .nav-hud-heading dd {
+  font-size: 14px;
+}
+
+/* —— 罗经盘与帆（桌面右下；手机左下的拇指区） —— */
+.nav-thumb {
+  position: absolute;
+  z-index: 3;
+  right: calc(var(--stage-cover-right, 0px) + 16px);
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.nav-view.compact .nav-thumb {
+  right: auto;
+  left: 10px;
+  bottom: 10px;
+}
+.nav-compass {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  filter: drop-shadow(3px 3px 0 #1a142380);
+}
+.nav-compass.dragging {
+  cursor: grabbing;
+}
+.nav-compass.disabled {
+  opacity: 0.75;
+}
+.nav-compass:focus-visible {
+  outline: 2px solid var(--gold-3);
+  outline-offset: 3px;
+}
+.nav-view.compact .nav-compass {
+  width: 150px;
+  height: 150px;
+}
+.nav-compass svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.nav-compass-face {
+  fill: #f3e3c3;
+  stroke: #5c3a21;
+  stroke-width: 4;
+}
+.nav-compass-rim {
+  fill: none;
+  stroke: #b8804a;
+  stroke-width: 1.5;
+}
+.nav-compass-nogo {
+  fill: rgba(200, 55, 58, 0.28);
+  stroke: rgba(140, 31, 40, 0.7);
+  stroke-width: 1;
+}
+.nav-compass .tick {
+  stroke: #7d5f36;
+  stroke-width: 1;
+}
+.nav-compass .tick.mid {
+  stroke-width: 1.5;
+}
+.nav-compass .tick.major {
+  stroke: #2b1b17;
+  stroke-width: 2;
+}
+.nav-compass-label {
+  fill: #2b1b17;
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: bold;
+}
+.nav-compass-label.north {
+  fill: #8c1f28;
+}
+.nav-compass-wind line {
+  stroke: #239a9a;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.nav-compass-wind circle {
+  fill: #239a9a;
+}
+.nav-compass-current {
+  stroke: #4fd0c4;
+  stroke-width: 2;
+  stroke-dasharray: 2 2;
+}
+.nav-compass-needle {
+  stroke: #8c1f28;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.nav-compass-needle-tail {
+  stroke: #5c3a21;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.nav-compass-draft {
+  stroke: #dca434;
+  stroke-width: 3;
+  stroke-dasharray: 4 3;
+  stroke-linecap: round;
+}
+.nav-compass.irons .nav-compass-needle,
+.nav-compass.irons .nav-compass-draft {
+  stroke: #c8373a;
+}
+.nav-compass-hub {
+  fill: #dca434;
+  stroke: #1a1423;
+  stroke-width: 1;
+}
+.nav-compass-readout {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  padding: 1px 8px;
+  white-space: nowrap;
+  color: #fff3b0;
+  font-size: 12px;
+  background: #5c3a21;
+  border: 1px solid #1a1423;
+  pointer-events: none;
+}
+.nav-irons {
+  max-width: 168px;
+  margin: 0;
+  padding: 2px 8px;
+  color: #fff3b0;
+  font-size: 12px;
+  text-align: center;
+  background: #8c1f28;
+  border: 1px solid #1a1423;
+}
+/* H10hF：船为什么慢、为什么不走的一行（琥珀底；逆风提示是红底） */
+.nav-why {
+  background: #7a5414;
+}
+.nav-sails {
+  display: flex;
+  gap: 4px;
+}
+.nav-sail {
+  min-width: 52px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+.nav-sail.active {
+  color: #fff3b0;
+  background: #8c1f28;
+}
+@media (pointer: coarse) {
+  .nav-sail {
+    min-width: 56px;
+    min-height: 44px;
+  }
+}
+
+/* —— 操作：世界图、暂停、自动航行、登陆、缩放 —— */
+.nav-actions {
+  position: absolute;
+  z-index: 3;
+  right: calc(var(--stage-cover-right, 0px) + 200px);
+  bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 420px;
+}
+.nav-view.compact .nav-actions {
+  right: 8px;
+  left: auto;
+  bottom: 10px;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 46%;
+}
+.nav-zoom {
+  display: flex;
+  gap: 4px;
+}
+.nav-zoom .chart-zoom-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+.nav-pop {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 260px;
+  max-height: 50vh;
+  overflow: auto;
+  padding: 8px;
+  color: #2b1b17;
+  background-color: #f3e3c3;
+  background-image: var(--ui-parchment, radial-gradient(#e2c79666 1px, transparent 1px));
+  border: 3px solid #5c3a21;
+  outline: 1px solid #1a1423;
+  box-shadow: 4px 4px 0 #1a142380;
+}
+.nav-pop h4 {
+  margin: 0 0 4px;
+  font-family: var(--font-title);
+  color: #5c2a14;
+}
+.nav-pop-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+.nav-pop-item small {
+  color: #6b4f33;
+}
+/* FIX5F：这一程比粮水撑得久：那一项折成两行，第二行写“粮水只够 N 天” */
+.nav-pop-item.is-short {
+  flex-wrap: wrap;
+}
+.nav-pop-item .nav-dest-short {
+  flex: 1 1 100%;
+  color: #a0301c;
+  font-weight: bold;
+}
+/* R10-FIX8：这支舰队去不了的港（禁港、进港限制）：灰着，第二行写原因 */
+.nav-pop-item.is-blocked,
+.nav-depart-dest.is-blocked {
+  flex-wrap: wrap;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.nav-dest-blocked {
+  flex: 1 1 100%;
+  color: #6b4f33;
+  font-size: 12px;
+}
+.nav-dest-short-note,
+.nav-worldbar-short {
+  color: #a0301c;
+}
+.nav-pop-row {
+  display: flex;
+  gap: 4px;
+}
+.nav-note {
+  margin: 0;
+  color: #6b4f33;
+  font-size: 12px;
+}
+
+/* —— 今天会停下的地方与按键提示 —— */
+.nav-stops {
+  position: absolute;
+  z-index: 2;
+  left: 10px;
+  bottom: 40px;
+  margin: 0;
+  padding: 6px 10px;
+  list-style: none;
+  max-width: 320px;
+  color: #2b1b17;
+  font-size: 12px;
+  background: rgba(243, 227, 195, 0.92);
+  border: 2px solid #5c3a21;
+}
+/* 手机：罗经盘、逆风提示与帆一共约 270 像素高，停靠列在它上面 */
+.nav-view.compact .nav-stops {
+  left: 8px;
+  top: auto;
+  bottom: 300px;
+  max-width: 60%;
+}
+.nav-stop-land {
+  color: #8c1f28;
+}
+.nav-stop-port {
+  color: #6b4312;
+}
+.nav-stop-storm {
+  color: #5b3a8a;
+}
+.nav-stop-sight {
+  color: #15656f;
+}
+/* FIX6F：粮水到了警戒线（与触礁同一种警示红） */
+.nav-stop-supplies_low {
+  color: #8c1f28;
+}
+.nav-keys {
+  position: absolute;
+  z-index: 2;
+  left: 10px;
+  bottom: 8px;
+  margin: 0;
+  padding: 2px 8px;
+  color: var(--paper);
+  font-size: 12px;
+  background: rgba(26, 20, 35, 0.6);
+}
+
+/* —— 世界图上的“回到航行”提示条 —— */
+.nav-worldbar {
+  position: absolute;
+  z-index: 5;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 10px;
+  background: rgba(26, 20, 35, 0.78);
+  border: 2px solid #5c3a21;
+}
+.nav-worldbar-pick {
+  display: flex;
+  gap: 6px;
+}
+
+/* —— 出港框 —— */
+.nav-depart .nav-compass {
+  margin: 8px auto 12px;
+}
+
+/* H03：最快的风角（盘沿两枚绿色小三角） */
+.nav-compass-fast {
+  fill: #6aad48;
+  stroke: #16301f;
+  stroke-width: 0.6;
+}
+
+/* H04 海上所见的小卡片：罗经盘左边、靠下，不挡海面中央 */
+.nav-sighting {
+  position: absolute;
+  right: 196px;
+  bottom: 96px;
+  z-index: 4;
+  width: 280px;
+  max-width: calc(100% - 32px);
+  padding: 8px 10px;
+  color: #2b1b17;
+  background-color: #f3e3c3;
+  background-image: var(--ui-parchment, radial-gradient(#e2c79666 1px, transparent 1px));
+  border: 3px solid #5c3a21;
+  outline: 1px solid #1a1423;
+  box-shadow: 4px 4px 0 #1a142380;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.nav-sighting h4 {
+  margin: 0 0 4px;
+  font-family: var(--font-title);
+  color: #5c2a14;
+}
+.nav-sighting p {
+  margin: 0 0 6px;
+}
+.nav-sighting-result {
+  color: #3a5a2a;
+}
+.nav-sighting-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nav-view.compact .nav-sighting {
+  right: 16px;
+  left: 16px;
+  bottom: 200px;
+  width: auto;
+}
+.nav-sighting-result.harm {
+  color: #8c1f28;
+}
+
+/* H08 航海日志：缺省收起，左侧中部一个小按钮；展开后是窄侧栏，不挡海图中央 */
+.nav-journal-tab {
+  position: absolute;
+  left: 0;
+  top: 45%;
+  z-index: 4;
+  writing-mode: vertical-rl;
+  padding: 10px 4px;
+  font-size: 12px;
+  color: #f3e3c3;
+  background: rgba(26, 20, 35, 0.78);
+  border: 1px solid rgba(220, 164, 52, 0.5);
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}
+.nav-journal-tab small {
+  margin-top: 4px;
+  color: #f5d66b;
+}
+.nav-journal {
+  position: absolute;
+  left: 8px;
+  top: 140px;
+  max-height: calc(100% - 260px);
+  z-index: 4;
+  width: 280px;
+  max-width: calc(100% - 32px);
+  overflow: auto;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e8e2d4;
+  background: rgba(18, 24, 38, 0.92);
+  border: 1px solid rgba(220, 164, 52, 0.45);
+  border-radius: 8px;
+}
+.nav-journal header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-journal h4 {
+  margin: 0;
+  color: #f5d66b;
+}
+.nav-journal ol {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.nav-journal li {
+  margin: 0 0 4px;
+}
+.nav-journal li .mark {
+  display: inline-block;
+  width: 1.2em;
+  color: #a8c8ec;
+}
+.nav-journal li.nav-journal-loss .mark {
+  color: #f2917f;
+}
+.nav-journal li.nav-journal-port .mark {
+  color: #f5d66b;
+}
+.nav-journal-meta,
+.nav-journal-empty {
+  margin: 4px 0;
+  color: #b8b0a0;
+}
+/* H08 甲板闲话：右上角冒一句，9 秒后自己淡掉（动画只管淡出，组件到时卸下） */
+.nav-banter {
+  position: absolute;
+  right: 16px;
+  top: 140px;
+  z-index: 4;
+  max-width: 320px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #2b1b17;
+  background: rgba(243, 227, 195, 0.95);
+  border: 2px solid #5c3a21;
+  border-radius: 10px 10px 10px 2px;
+  box-shadow: 2px 2px 0 rgba(26, 20, 35, 0.5);
+}
+.nav-banter.fading {
+  animation: nav-banter-fade 9s ease-in forwards;
+}
+.nav-banter b {
+  margin-right: 6px;
+  color: #5c2a14;
+}
+.nav-banter .chart-btn {
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+@keyframes nav-banter-fade {
+  0%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-banter {
+    animation: none;
+  }
+}
+/* H08 一句话提示：底部左侧一条，不挡罗经盘 */
+.nav-hint {
+  position: absolute;
+  left: 16px;
+  bottom: 64px;
+  z-index: 4;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: min(560px, calc(100% - 32px));
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #e8e2d4;
+  background: rgba(18, 24, 38, 0.92);
+  border-left: 3px solid #f5d66b;
+  border-radius: 4px;
+}
+.nav-view.compact .nav-journal,
+.nav-view.compact .nav-banter {
+  top: 200px;
+}
+/* H08 航程总结：海图上方正中一张小卡，不挡操作 */
+.trip-summary {
+  position: absolute;
+  left: 50%;
+  top: 140px;
+  z-index: 6;
+  width: 340px;
+  max-width: calc(100% - 32px);
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #e8e2d4;
+  background: rgba(18, 24, 38, 0.94);
+  border: 1px solid rgba(220, 164, 52, 0.55);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+.trip-summary header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.trip-summary h4 {
+  margin: 0;
+  color: #f5d66b;
+}
+.trip-summary dl {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0 0;
+}
+.trip-summary dl div {
+  display: flex;
+  gap: 8px;
+}
+.trip-summary dt {
+  flex: 0 0 4em;
+  color: #b8b0a0;
+}
+.trip-summary dd {
+  margin: 0;
+}
+.trip-summary .loss dd {
+  color: #f2917f;
+}
+.trip-summary .gain dd {
+  color: #a9d86a;
+}

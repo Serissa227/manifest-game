@@ -1,0 +1,188 @@
+# 请托：珠子的价她说了算（request_radhika）——类型：说服（kind=persuade），四章（offer、persuade、result、result_cold）。
+# 人物：拉迪卡（radhika，1531-09-05 生），坎贝的玛瑙珠匠；纯 GL（tags pure_gl），cast 见 cast/story_indian_ocean.toml。
+# 报价：T 当面（auto=false，玩家“问请托”即 ask:request_radhika 启动）；offer 章不写 at，用 person 目标“在港里找到她”。报价港 khambhat（坎贝）。
+# 窗口：报价 1561-01-01..1572-06-30（到期走 timeout，不写见闻）；商馆与收尾 1561-01-01..1572-12-31。
+#       商馆章的期限 60 天，超时由 letter 与好感 −3 收尾；收尾章没有期限，可以一直等。
+# 依据：史实——葡萄牙人的卡塔兹（cartaz）通行证制度，没有它的船在印度洋会被扣；坎贝（khambhat）以玛瑙与红玉髓珠子著名；第乌（diu）是葡萄牙人的堡垒港，货在那里也卖得出去。
+#       原创——拉迪卡、磨盘与石粉、手腕上的红玉髓串、书记（不起名，正文只写“书记”）、一成的通行费、第乌的运费与账本。
+# 依赖：B10b 改名 cambay→khambhat（ports_india.toml 已登记 khambhat）；不依赖主线旗标（无 c13_main_*）。
+# 旗标：写 c13_request_radhika_accepted（答应、问价）/ declined（回绝）/ fair（商馆谈成）/ cold（谈不拢、运去别处的分支）/ late（超时）/ done（终局）。
+#       fair 与 cold 现在只设不读：原先 result 的三个选项靠它们门禁，审计机器人会报“准备后条件仍不满足”，改为 elsewhere 失败直接走新章 result_cold（只剩 partial）。不设、不读 c7_*。
+# 与 C7：配角线 pair_radhika_aishath 的年份与港口全部避开；本轨道 1561—72 只写坎贝的珠坊与商馆，不写另一个港的人与货。
+# 检定与解法：portuguese（葡萄牙话 ≥ 60）、negotiate（谈判 ≥ 60）、elsewhere（口才，一般 20/7；失败走 fail：好感 −2，设 cold，只剩 partial 一条路，报酬降为折中）。
+# 报酬：现金最多 900（give_back、keep_asking 各 900；partial 500）；好感最多 +13（accept 或 ask_price +2，商馆谈成 +3，give_back +8，keep_asking +5，partial +4）；名声 +2（两条最好的结局）；
+#       回忆 mem-request_radhika-result（只给 give_back）。珠串只写在正文，不发物品。
+# 回忆插画清单：
+#   mem-request_radhika-result：磨盘边的矮凳上，一串红玉髓被一颗颗数过，数到最后一颗，又挂回你的手腕上。
+
+[[tracks]]
+key = "request_radhika"
+name = "珠子的价她说了算"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["radhika"]
+
+# 报价：坎贝的珠坊。磨盘的水声一刻不停，她的话只说一半。
+[[tracks.chapters]]
+key = "offer"
+title = "磨盘的水声"
+text = "坎贝的珠坊里，磨盘的水声一刻不停。拉迪卡坐在磨盘边，一手转着红玉髓，一手侧着耳朵听水，听出离船期还有几天。门口站着一个拿卡塔兹通行证的葡萄牙书记，来过两回，要她按商馆的价卖一批珠子。拉迪卡头也没抬：“别站在磨盘边，石粉溅到身上就洗不掉了。这一颗磨好，就快到船期了。”书记把通行证往案上一拍，说没有这张纸，坎贝的珠子一颗也出不了港。拉迪卡这才看你一眼：“我的珠子卖多少钱，只有我自己说了算。去跟他谈。谈不拢，你替我把货运去别处卖。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "radhika", text = "在港里找到她" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1572, 6, 30] },
+  { kind = "age", ge = 17 },
+]
+deadline = [1572, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应去跟书记谈。"
+next = "persuade"
+reply = "她把一串红玉髓挂在你手腕上，拨正了位置：“戴着去。他看见了，就知道是谁的货。”"
+effects = [
+  { kind = "affinity", person = "radhika", value = 2 },
+  { kind = "flag", flag = "c13_request_radhika_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_price"
+text = "问她：你的价是多少？"
+next = "persuade"
+reply = "她说了一个数，不让价，然后把一串红玉髓挂在你手腕上：“少一个铜子，这串就不是这串了。”"
+effects = [
+  { kind = "affinity", person = "radhika", value = 2 },
+  { kind = "flag", flag = "c13_request_radhika_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "通行证的事，我惹不起。"
+next = "failed"
+reply = "她点点头，磨盘的水声又响了起来。"
+effects = [{ kind = "flag", flag = "c13_request_radhika_declined" }]
+
+# 商馆：书记的高桌。他看见你手腕上那串珠子，愣了一下。
+[[tracks.chapters]]
+key = "persuade"
+title = "通行证管的是船"
+text = "商馆的书记坐在一张高桌后面，桌上压着一叠卡塔兹。他说没有通行证，坎贝的珠子出不了港，所以价钱他定，一个子也不让。说话时他的眼睛一直往你身上扫，扫到你的手腕，停住了。那一串红玉髓在窗光里发亮，书记的笔悬在纸上，愣了一下：“这串珠子，是哪家的？”"
+speaker = "captain"
+mood = "tense"
+at = "khambhat"
+objectives = [{ kind = "at", at = "khambhat", text = "到坎贝的葡萄牙商馆，找那个书记" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1572, 12, 31] },
+  { kind = "alive", person = "radhika", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "letter", person = "radhika", text = "船期到了，珠子按他的价卖了。磨盘我停了一天。" }, { kind = "affinity", person = "radhika", value = -3 }, { kind = "flag", flag = "c13_request_radhika_late" }] }
+
+[[tracks.chapters.choices]]
+key = "portuguese"
+text = "用葡萄牙话跟他说：通行证只管船，管不着价。"
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60 }]
+hint = "你的葡萄牙话还读不懂通行证上的条文。"
+next = "result"
+reply = "书记听你一字一句引了通行证上的条文，脸慢慢红了。他说价钱就照她定的，他只收通行证的钱。"
+news = "坎贝葡萄牙商馆里，一个外乡船长用葡萄牙话把通行证的条文念给书记听，念到他脸发红。"
+effects = [
+  { kind = "affinity", person = "radhika", value = 3 },
+  { kind = "flag", flag = "c13_request_radhika_fair" },
+]
+
+[[tracks.chapters.choices]]
+key = "negotiate"
+text = "跟他谈：按她的价收，另加一成的通行费给他。"
+requires = [{ kind = "skill", skill = "negotiation", ge = 60 }]
+hint = "这种账，你还不敢拿去跟他算。"
+next = "result"
+reply = "书记拨了一会儿算盘，终于点头。一成的通行费他好交代，说完就在单子上签了字。"
+news = "坎贝葡萄牙商馆的书记今天松了口，多收一成通行费，珠子照珠匠的价出了港。"
+effects = [
+  { kind = "affinity", person = "radhika", value = 3 },
+  { kind = "flag", flag = "c13_request_radhika_fair" },
+]
+
+[[tracks.chapters.choices]]
+key = "elsewhere"
+text = "谈不拢，告诉他这批货你运去别处卖。"
+next = "result"
+check = { attr = "eloquence", base = 20, per = 7 }
+reply = "你话一出口，书记的笔停在通行证上。他盯着你看了半天，像在掂量这句话值多少钱，最后说：“算了，价钱照她的。”"
+news = "坎贝葡萄牙商馆的书记被一个外乡船长盯得没了话，这一船珠子最后还是按珠匠的价出港。"
+effects = [
+  { kind = "affinity", person = "radhika", value = 3 },
+  { kind = "flag", flag = "c13_request_radhika_fair" },
+]
+fail = { next = "result_cold", effects = [{ kind = "affinity", person = "radhika", value = -2 }, { kind = "flag", flag = "c13_request_radhika_cold" }], news = "坎贝的商馆里，一个外乡船长扬言要把红玉髓运去别处卖，书记冷笑一声，说那就去。" }
+
+# 收尾：珠子装船。她伸手要回那串珠子，又停住了。
+[[tracks.chapters]]
+key = "result"
+title = "这串的价"
+text = "珠子的账算清了，装船的日子也定下来了。书记在单子上最后看了一遍，把笔搁回砚台里，没再多说一句。拉迪卡在珠坊里听着磨盘的水声，算出还有九天船期，手里的石粉刷了一遍又一遍。她伸手要回你手腕上那串珠子，手伸到一半，又停住了。"
+speaker = "captain"
+mood = "tender"
+at = "khambhat"
+objectives = [{ kind = "person", person = "radhika", text = "在珠坊里找到她" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1572, 12, 31] },
+  { kind = "alive", person = "radhika", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "give_back"
+text = "把珠串摘下来还她。"
+next = "done"
+reply = "她接过去，一颗一颗数过，数到最后一颗，又把它挂回你手腕上：“这串的价我说了算。这一串，白送你。”酬金她照付，一文不少。"
+news = "坎贝的酒馆里都在说，玛瑙珠坊这一船珠子按珠匠自己定的价卖了，一个子没让。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "radhika", value = 8 },
+  { kind = "fame", value = 2 },
+  { kind = "memory", memory = "mem-request_radhika-result", title = "数过一遍又挂回来的珠串" },
+  { kind = "flag", flag = "c13_request_radhika_done" },
+]
+
+[[tracks.chapters.choices]]
+key = "keep_asking"
+text = "问她：这串卖多少？我买。"
+next = "done"
+reply = "她笑了：“你买不起。”她把珠串从你手腕上取下来收进怀里，酬金照数付给了你。"
+news = "坎贝的码头上有人传，一个外乡船长想买下珠匠给他的那串红玉髓，被她笑着回了一句。"
+effects = [
+  { kind = "cash", value = 900 },
+  { kind = "affinity", person = "radhika", value = 5 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_radhika_done" },
+]
+
+# 收尾之二：elsewhere 没压住书记，珠子没按她的价装船。只剩“替她运去第乌”一个选项。
+[[tracks.chapters]]
+key = "result_cold"
+title = "第乌的价"
+text = "珠子没有按她的价装船。书记冷笑一声，说那就去，看哪个港收没有通行证的红玉髓，说完把卷宗往桌上一扔。拉迪卡在珠坊里听着磨盘的水声，把账从头重算了一遍，算出还有九天船期。她伸手要回你手腕上那串珠子，手伸到一半，又停住了。"
+speaker = "captain"
+mood = "tense"
+at = "khambhat"
+objectives = [{ kind = "person", person = "radhika", text = "在珠坊里找到她" }]
+when = [
+  { kind = "date", from = [1561, 1, 1], to = [1572, 12, 31] },
+  { kind = "alive", person = "radhika", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "partial"
+text = "这批货别在坎贝卖了，我替你运去第乌。"
+next = "done"
+reply = "她把账本推过来，第乌的价比坎贝低一截，运费却省下大半。“你替我跑这一趟。”她把酬金数给你，压在账本上，磨盘边的石粉落在钱上。"
+news = "坎贝的玛瑙珠坊这一船货没在坎贝卖，珠匠托船运去了第乌，磨盘的水声一天也没停。"
+effects = [
+  { kind = "cash", value = 500 },
+  { kind = "affinity", person = "radhika", value = 4 },
+  { kind = "flag", flag = "c13_request_radhika_done" },
+]

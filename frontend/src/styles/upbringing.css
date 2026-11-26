@@ -1,0 +1,2446 @@
+/* 养成主画面（components/upbringing/）：整屏的书桌——深色木框里一张羊皮纸，三栏：主角、本月日程与活动、分页。
+   季节改变底色的一点色调（data-season：0 春 1 夏 2 秋 3 冬）。颜色取自 art/palette.ts 的共享调色板。 */
+
+.ub-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: #2b1b17;
+  background:
+    radial-gradient(ellipse at 50% 0%, #00000000 40%, #1a142355 100%),
+    linear-gradient(180deg, #3b2416 0%, #2b1b17 100%);
+  font-family: var(--font-ui);
+  --ub-tint: #e2c796;
+}
+.ub-screen[data-season="0"] {
+  --ub-tint: #e8d3a6;
+}
+.ub-screen[data-season="1"] {
+  --ub-tint: #e6cf96;
+}
+.ub-screen[data-season="2"] {
+  --ub-tint: #e2c08c;
+}
+.ub-screen[data-season="3"] {
+  --ub-tint: #dccfb8;
+}
+.ub-loading {
+  display: grid;
+  place-items: center;
+  color: #f3e3c3;
+}
+
+/* ───────────── 顶栏 ───────────── */
+.ub-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  color: #f3e3c3;
+  background: linear-gradient(180deg, #5c3a21, #3b2416);
+  border-bottom: 3px solid #2b1b17;
+  box-shadow: inset 0 -2px 0 #8a5a32;
+}
+.ub-top-stage {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  white-space: nowrap;
+}
+.ub-stage {
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5d66b;
+  text-shadow: 2px 2px 0 #2b1b17;
+}
+.ub-date,
+.ub-season {
+  font-size: 14px;
+}
+.ub-season {
+  padding: 0 6px;
+  color: #2b1b17;
+  background: #dca434;
+}
+.ub-countdowns {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+.ub-countdown {
+  padding: 2px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+  background: #2b1b1799;
+  border: 1px solid #8a5a32;
+}
+.ub-cal-heart {
+  margin-right: 3px;
+  color: #ff8fa3;
+}
+.ub-top-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* ───────────── 三栏 ───────────── */
+.ub-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr) 360px;
+  gap: 12px;
+  padding: 12px;
+}
+.ub-hero,
+.ub-planner,
+.ub-running,
+.ub-side {
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--ub-tint) var(--ts-parchment, none) repeat;
+  background-size: 64px 64px;
+  border: 3px solid #2b1b17;
+  box-shadow:
+    inset 0 0 0 2px #b8955f,
+    0 4px 0 #1a142399;
+}
+
+/* ───────────── 左栏：主角 ───────────── */
+.ub-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+}
+.ub-hero-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ub-hero-portrait {
+  display: block;
+  padding: 5px;
+  background: #f3e3c3;
+  border: 5px solid #5c3a21;
+  box-shadow:
+    0 0 0 2px #2b1b17,
+    inset 0 0 0 2px #dca434;
+  box-sizing: content-box;
+}
+.ub-hero-plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -10px;
+  padding: 4px 16px 5px;
+  color: #f5d66b;
+  background: #5c3a21;
+  border: 2px solid #2b1b17;
+  box-shadow: inset 2px 2px 0 #b8804a;
+  position: relative;
+}
+.ub-hero-name {
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 2px 2px 0 #2b1b17;
+}
+.ub-hero-age {
+  font-size: 12px;
+  color: #f3e3c3;
+}
+.ub-dot {
+  margin: 0 5px;
+}
+.ub-meters {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+.ub-meter {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) 4.5em;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.ub-meter-name {
+  font-weight: 700;
+  color: #5c3a21;
+}
+.ub-meter-track {
+  height: 10px;
+  background: #2b1b1733;
+  border: 2px solid #2b1b17;
+}
+.ub-meter-fill {
+  display: block;
+  height: 100%;
+  background: #4f9a5b;
+  transition: width 0.4s;
+}
+.ub-meter--warn .ub-meter-fill {
+  background: #dca434;
+}
+.ub-meter--bad .ub-meter-fill {
+  background: #c0392b;
+}
+.ub-meter-label {
+  font-size: 12px;
+  color: #6b4f33;
+  text-align: right;
+}
+.ub-ratings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 5px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-rating {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 3px 6px;
+  font-size: 12px;
+  background: #f3e3c3;
+  border: 1px solid #b8955f;
+}
+.ub-rating-name {
+  font-weight: 700;
+}
+.ub-rating-rank {
+  color: #a3242f;
+  font-weight: 700;
+}
+.ub-rating-value {
+  grid-column: 1 / -1;
+  color: #7d5f36;
+}
+.ub-cash {
+  margin: 0;
+  font-weight: 700;
+  color: #5c3a21;
+}
+
+/* ───────────── 中栏：日程 ───────────── */
+.ub-planner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+}
+.ub-planner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ub-month {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 22px;
+  color: #5c2a14;
+}
+.ub-preset {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.ub-preset select,
+.ub-refine select {
+  font: inherit;
+  font-size: 13px;
+  padding: 2px 4px;
+  background: #fffaf0;
+  border: 2px solid #7d5f36;
+  max-width: 100%;
+}
+.ub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.ub-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  background: #fffaf060;
+  border: 2px dashed #b8955f;
+}
+.ub-col.is-current {
+  border-style: solid;
+  border-color: #dca434;
+}
+.ub-col-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.ub-col-label {
+  font-weight: 700;
+  color: #5c3a21;
+}
+.ub-col-days {
+  color: #7d5f36;
+}
+.ub-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ub-cell-btn {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  align-items: center;
+  gap: 2px 8px;
+  min-height: 64px;
+  padding: 6px;
+  font: inherit;
+  text-align: left;
+  color: #2b1b17;
+  background: #f3e3c3;
+  border: 2px solid #7d5f36;
+  /* 浅底深字：不要外壳按钮的深色字影（深字叠深影，笔画糊成双影；docs/UI-REDESIGN.md 1.2 第 1 条） */
+  text-shadow: none;
+  cursor: pointer;
+}
+.ub-cell-btn:disabled {
+  cursor: default;
+}
+.ub-cell.is-active .ub-cell-btn {
+  background: #fffaf0;
+  border-color: #2b1b17;
+  box-shadow: 0 0 0 3px #dca434;
+}
+.ub-cell-btn:focus-visible {
+  outline: 3px solid #239a9a;
+  outline-offset: 2px;
+}
+.ub-cell-part {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #7d5f36;
+}
+.ub-cell-btn .ub-scene {
+  grid-row: 2;
+}
+.ub-cell-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.ub-cell-empty {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  color: #8a6a46;
+}
+.ub-cell.is-done .ub-cell-btn {
+  opacity: 0.8;
+}
+.ub-cell-extra,
+.ub-cell-result {
+  font-size: 12px;
+  color: #5c3a21;
+}
+.ub-cell-result.is-fail {
+  color: #a3242f;
+}
+.ub-refine {
+  display: grid;
+  gap: 4px;
+}
+
+/* 活动的小场景：天、地两层色块 + 像素图标 */
+.ub-scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 44px;
+  overflow: hidden;
+  border: 2px solid #2b1b17;
+  --sky: #9cc3d8;
+  --ground: #5c3a21;
+  background: var(--sky);
+}
+.ub-scene--large {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 7;
+}
+.ub-scene-sky,
+.ub-scene-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.ub-scene-sky {
+  top: 0;
+  height: 62%;
+  background: linear-gradient(180deg, var(--sky), color-mix(in srgb, var(--sky) 70%, #fff));
+}
+.ub-scene-ground {
+  bottom: 0;
+  height: 38%;
+  background: var(--ground);
+  box-shadow: inset 0 3px 0 color-mix(in srgb, var(--ground) 70%, #fff);
+}
+.ub-scene-icon {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(2px 2px 0 #2b1b1788);
+}
+.ub-scene--harbor {
+  --sky: #a7cbe0;
+  --ground: #2f6f9a;
+}
+.ub-scene--sea {
+  --sky: #b7d7ea;
+  --ground: #1f5f8b;
+}
+.ub-scene--river {
+  --sky: #bfe0d0;
+  --ground: #3d8c8a;
+}
+.ub-scene--street {
+  --sky: #e8c99a;
+  --ground: #9a6d45;
+}
+.ub-scene--warm {
+  --sky: #c98a5a;
+  --ground: #5c3a21;
+}
+.ub-scene--indoor {
+  --sky: #d8c09a;
+  --ground: #7d5f36;
+}
+.ub-scene--court {
+  --sky: #d9c5e0;
+  --ground: #6b4a7a;
+}
+.ub-scene--shrine {
+  --sky: #c9e0b0;
+  --ground: #a3242f;
+}
+.ub-scene--desert {
+  --sky: #f0d9a0;
+  --ground: #c99a55;
+}
+.ub-scene--garden {
+  --sky: #cfe6b8;
+  --ground: #4f9a5b;
+}
+.ub-scene--forest {
+  --sky: #a9c79a;
+  --ground: #2f5f3a;
+}
+.ub-scene--cave {
+  --sky: #6b5a4a;
+  --ground: #2b1b17;
+}
+.ub-scene--night {
+  --sky: #23305e;
+  --ground: #14213d;
+}
+.ub-running-caption {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 1;
+  padding: 4px 12px;
+  font-family: var(--font-title);
+  font-size: 18px;
+  color: #f5d66b;
+  background: #2b1b17cc;
+}
+
+/* 活动卡片 */
+.ub-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ub-tab {
+  padding: 3px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: #5c3a21;
+  background: #ebd6ae;
+  border: 2px solid #b8955f;
+  cursor: pointer;
+}
+.ub-tab.is-on {
+  color: #fffaf0;
+  background: #8a5a32;
+  border-color: #2b1b17;
+}
+/* 没选中的分类签是浅底深字：不要外壳按钮的深色字影（选中的木色底白字照旧带字影） */
+.ub-tab:not(.is-on) {
+  text-shadow: none;
+}
+.ub-badge {
+  margin-left: 4px;
+  padding: 0 5px;
+  font-size: 11px;
+  color: #fffaf0;
+  background: #a3242f;
+  border-radius: 8px;
+}
+.ub-acts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-act-btn {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 7px;
+  font: inherit;
+  text-align: left;
+  color: #2b1b17;
+  background: #f3e3c3;
+  border: 2px solid #7d5f36;
+  box-shadow: 0 2px 0 #7d5f36;
+  /* 浅底深字：不要外壳按钮的深色字影 */
+  text-shadow: none;
+  cursor: pointer;
+}
+.ub-act-btn:hover:not(:disabled) {
+  background: #fffaf0;
+  border-color: #2b1b17;
+}
+.ub-act-btn:disabled {
+  cursor: not-allowed;
+}
+.ub-act.is-blocked .ub-act-btn {
+  opacity: 0.6;
+  filter: grayscale(0.6);
+}
+.ub-act-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ub-act-name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-weight: 700;
+}
+.ub-new {
+  padding: 0 4px;
+  font-size: 11px;
+  color: #fffaf0;
+  background: #a3242f;
+}
+.ub-tier {
+  padding: 0 4px;
+  font-size: 11px;
+  color: #3b2416;
+  background: #dca434;
+}
+.ub-act-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #4a3a30;
+}
+.ub-act-gains,
+.ub-act-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  font-size: 12px;
+}
+.ub-gain b {
+  color: #1e6b34;
+}
+.ub-gain-skill b {
+  color: #2e5a86;
+}
+.ub-act-meta {
+  color: #6b4f33;
+}
+/* 活动卡每一行前面的小标题（长进 / 得失），熟练度单独一行：名字 + 进度条 */
+.ub-act-label {
+  padding: 0 4px;
+  font-size: 11px;
+  line-height: 16px;
+  color: #6b4f33;
+  border: 1px solid #b39b72;
+}
+.ub-gain-skill {
+  color: #2e5a86;
+}
+.ub-tier-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6b4f33;
+}
+.ub-tier-line .ub-tier-track {
+  flex: 1 1 auto;
+  min-width: 40px;
+}
+.ub-tier-name {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.is-cost {
+  color: #a3242f;
+}
+.is-good {
+  color: #1e6b34;
+}
+.ub-tier-track,
+.ub-attr-track,
+.ub-aff {
+  display: block;
+  height: 6px;
+  background: #2b1b1726;
+  border: 1px solid #7d5f36;
+}
+.ub-tier-track span,
+.ub-attr-track span,
+.ub-aff span {
+  display: block;
+  height: 100%;
+  background: #dca434;
+}
+.ub-act-why {
+  font-size: 12px;
+  color: #a3242f;
+}
+.ub-plan-foot {
+  position: sticky;
+  bottom: -12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 -14px -12px;
+  padding: 10px 14px;
+  background: #e2c796f0;
+  border-top: 2px solid #b8955f;
+}
+.ub-proj {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  font-size: 13px;
+}
+.ub-warn {
+  color: #a3242f;
+  font-weight: 700;
+}
+.ub-go {
+  flex: none;
+}
+
+/* 执行中 */
+.ub-running {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 14px;
+}
+.ub-running-slots {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-rslot {
+  display: grid;
+  grid-template-columns: 4em minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+}
+.ub-rslot--current {
+  border-color: #dca434;
+  box-shadow: 0 0 0 2px #dca43466;
+}
+.ub-rslot-label {
+  font-weight: 700;
+  color: #5c3a21;
+}
+.ub-rslot-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 13px;
+}
+.ub-rslot-result .is-fail {
+  color: #a3242f;
+}
+.ub-up {
+  color: #1e6b34;
+  animation: ub-pop 0.6s ease-out;
+}
+.ub-down {
+  color: #a3242f;
+}
+.ub-item-got {
+  color: #2e5a86;
+}
+.ub-rslot-line {
+  flex-basis: 100%;
+  font-style: italic;
+  color: #5c3a21;
+}
+.ub-rslot-wait {
+  color: #7d5f36;
+}
+@keyframes ub-pop {
+  0% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ───────────── 右栏：分页 ───────────── */
+.ub-side {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 8px;
+}
+.ub-side-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+.ub-attr-group h4 {
+  margin: 6px 0 4px;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: #5c3a21;
+}
+.ub-attr-group ul {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-attr {
+  display: grid;
+  grid-template-columns: 4em minmax(0, 1fr) 2em;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.ub-attr-proj {
+  font-weight: 700;
+  text-align: right;
+  color: #5c2a14;
+}
+.ub-skills li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  font-size: 13px;
+}
+.ub-skill-xp {
+  color: #7d5f36;
+}
+/* K01：技能效果占技能行下面一整行；生效中的深色，下一级浅色 */
+.ub-skill-fx {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: -4px 0 2px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.ub-skill-fx b {
+  margin-right: 4px;
+  font-weight: 600;
+}
+.ub-skill-fx-now {
+  color: #3f5a2a;
+}
+.ub-skill-fx-next {
+  color: #9a8466;
+}
+.ub-skill-fx-item + .ub-skill-fx-item::before {
+  content: "、";
+}
+.ub-skill-fx-note {
+  font-style: normal;
+  color: #9a5a2a;
+}
+.ub-skill-fx-next .ub-skill-fx-note {
+  color: inherit;
+}
+.ub-bonds,
+.ub-cal,
+.ub-album,
+.ub-letters,
+.ub-diary,
+.ub-path-options,
+.ub-exams {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-bond {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 8px;
+  padding: 6px;
+  background: #f3e3c3;
+  border: 1px solid #b8955f;
+}
+.ub-bond-face {
+  border: 2px solid #5c3a21;
+}
+.ub-bond-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 3px;
+}
+.ub-bond-name {
+  font-weight: 700;
+}
+.ub-bond-role {
+  font-size: 11px;
+  color: #7d5f36;
+}
+.ub-rank {
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fffaf0;
+  background: #7d5f36;
+}
+.ub-rank-A {
+  background: #2e5a86;
+}
+.ub-rank-S {
+  background: #a3242f;
+}
+.ub-heart span {
+  color: #d7c3b0;
+  font-size: 12px;
+}
+.ub-heart span.is-on {
+  color: #d9536f;
+}
+.ub-bond-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+.ub-bond-sub {
+  color: #6b4f33;
+}
+.ub-bond-hint {
+  margin: 3px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: #5c3a21;
+}
+.ub-cal-item {
+  display: grid;
+  grid-template-columns: 4.5em minmax(0, 1fr) auto;
+  gap: 6px;
+  padding: 4px 6px;
+  font-size: 13px;
+  background: #f3e3c3;
+  border-left: 4px solid #b8955f;
+}
+.ub-cal--festival {
+  border-left-color: #d9536f;
+}
+.ub-cal--exam,
+.ub-cal--contest {
+  border-left-color: #2e5a86;
+}
+.ub-cal--birthday {
+  border-left-color: #dca434;
+}
+.ub-cal-days {
+  font-weight: 700;
+  color: #5c2a14;
+}
+.ub-cal-kind {
+  font-size: 11px;
+  color: #7d5f36;
+}
+.ub-cal-note {
+  grid-column: 2 / -1;
+  font-size: 12px;
+  color: #6b4f33;
+}
+.ub-memory {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 0 8px;
+  padding: 6px;
+  background: #f3e3c3;
+  border: 1px solid #b8955f;
+}
+.ub-memory-art {
+  grid-row: 1 / span 3;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #dca434, #a3242f);
+  border: 2px solid #2b1b17;
+}
+.ub-memory-title {
+  font-weight: 700;
+}
+.ub-memory-date {
+  font-size: 11px;
+  color: #7d5f36;
+}
+.ub-memory-line {
+  font-size: 12px;
+}
+.ub-letter-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 8px;
+  width: 100%;
+  padding: 5px 6px;
+  font: inherit;
+  text-align: left;
+  background: #f3e3c3;
+  border: 1px solid #b8955f;
+  cursor: pointer;
+}
+.ub-letter.is-new .ub-letter-head {
+  border-left: 4px solid #a3242f;
+}
+.ub-letter-from {
+  font-weight: 700;
+}
+.ub-letter-date {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  color: #7d5f36;
+}
+.ub-letter-body,
+.ub-diary p {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  font-family: var(--font-title);
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  background: #fffaf0;
+  border: 1px solid #c9a979;
+}
+.ub-diary h5 {
+  margin: 0;
+  font-size: 12px;
+  color: #7d5f36;
+}
+.ub-empty,
+.ub-lead {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #6b4f33;
+}
+.ub-path h4 {
+  margin: 6px 0;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: #5c3a21;
+}
+.ub-path-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  text-align: left;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+  cursor: pointer;
+}
+.ub-path-options li.is-chosen .ub-path-btn {
+  border-color: #dca434;
+  background: #fffaf0;
+}
+.ub-path-name {
+  font-weight: 700;
+}
+.ub-path-desc {
+  font-size: 12px;
+  color: #4a3a30;
+}
+.ub-path-chosen {
+  font-family: var(--font-title);
+  font-size: 18px;
+  color: #5c2a14;
+}
+.ub-exam {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 5px 6px;
+  font-size: 13px;
+  background: #f3e3c3;
+  border: 1px solid #b8955f;
+}
+.ub-exam-name {
+  font-weight: 700;
+}
+.ub-exam--passed .ub-exam-status {
+  color: #1e6b34;
+}
+.ub-exam--failed .ub-exam-status {
+  color: #a3242f;
+}
+.ub-exam-req {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: #6b4f33;
+}
+
+/* ───────────── 窄屏 ───────────── */
+@media (max-width: 1200px) {
+  .ub-body {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+  .ub-side {
+    grid-column: 1 / -1;
+    max-height: 50vh;
+  }
+}
+@media (max-width: 760px) {
+  .ub-screen {
+    overflow-y: auto;
+  }
+  .ub-top {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: max(6px, var(--safe-top, 0px)) 10px 6px;
+  }
+  .ub-countdowns {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+  }
+  .ub-body {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    overflow: visible;
+  }
+  /* 每一块按内容的高度排下去，不被压扁（压扁了会和下一块叠在一起） */
+  .ub-body > * {
+    flex: none;
+    min-height: auto;
+  }
+  .ub-hero {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+  }
+  .ub-hero-figure {
+    grid-row: span 2;
+  }
+  .ub-hero-portrait {
+    width: 96px !important;
+    height: 96px !important;
+  }
+  .ub-hero-plate {
+    margin-top: -6px;
+    padding: 2px 8px;
+  }
+  .ub-hero-name {
+    font-size: 16px;
+  }
+  .ub-ratings,
+  .ub-cash {
+    grid-column: 1 / -1;
+  }
+  .ub-plan-foot {
+    position: static;
+    margin: 0;
+    padding: 8px 0 0;
+    background: transparent;
+  }
+  .ub-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ub-acts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ub-hero,
+  .ub-planner,
+  .ub-running,
+  .ub-side {
+    overflow: visible;
+    max-height: none;
+  }
+}
+
+/* 活动场景的插画（1536×672；新界面里有权重图的会动，见 components/scene/） */
+.ub-scene--art {
+  background: #2b1b17;
+}
+.ub-scene-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+}
+
+/* 周条（按周播放的世界，components/upbringing/UbWeek.tsx）：顶栏下面一条——这一周几号到几号、这个月的几周过到哪儿、
+   开始 / 继续 / 暂停的主按钮。不按周播放的世界不画。 */
+.ub-week {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin: 8px 12px 0;
+  padding: 6px 10px;
+  color: #f3e3c3;
+  background: #2b1b17cc;
+  border: 2px solid #8a5a32;
+}
+.ub-week-now {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+.ub-week-no {
+  font-family: var(--font-title);
+  font-size: 16px;
+  color: #f5d66b;
+}
+.ub-week-range {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.ub-week-track {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-week-seg {
+  position: relative;
+  min-width: 46px;
+  padding: 1px 6px 4px;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  color: #c9b08a;
+  background: #3b2416;
+  border: 1px solid #8a5a32;
+  font-variant-numeric: tabular-nums;
+}
+.ub-week-seg.is-done {
+  color: #2b1b17;
+  background: #b8955f;
+}
+.ub-week-seg.is-current {
+  font-weight: 700;
+  color: #2b1b17;
+  background: #f5d66b;
+  border-color: #f5d66b;
+}
+.ub-week-seg-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: #2b1b1755;
+}
+.ub-week-seg-fill {
+  display: block;
+  height: 100%;
+  background: #a3242f;
+}
+.ub-week-note {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 13px;
+  color: #e2c796;
+}
+.ub-week-go {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.ub-week-key {
+  display: inline-flex;
+}
+@media (max-width: 760px) {
+  .ub-week {
+    margin: 6px 8px 0;
+  }
+  .ub-week-note {
+    order: 5;
+    flex-basis: 100%;
+  }
+  .ub-week-go {
+    margin-left: auto;
+  }
+}
+
+/* 比赛：顶上的一条与对话框（components/contests/） */
+.ub-contests {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-content: flex-start;
+  max-height: min(144px, 24vh);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  gap: 8px;
+  margin: 8px 12px 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-contest {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #2b1b17;
+  background: #f5d66b;
+  border: 2px solid #2b1b17;
+}
+.ub-contest--done {
+  background: #e2c796;
+}
+.ub-contest-name {
+  font-weight: 700;
+}
+.ub-contest-kind {
+  font-size: 12px;
+  color: #5c3a21;
+}
+.ct-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: #1a142399;
+}
+.ct-dialog {
+  width: min(720px, calc(100vw - 24px));
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 14px 16px;
+  color: #2b1b17;
+  background: #e2c796 var(--ts-parchment, none) repeat;
+  border: 4px solid #5c3a21;
+  box-shadow: 0 0 0 2px #2b1b17, 0 10px 0 #1a142366;
+}
+.ct-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+}
+.ct-head h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 20px;
+}
+.ct-kindname {
+  padding: 0 6px;
+  font-size: 12px;
+  color: #fffaf0;
+  background: #8a5a32;
+}
+.ct-auto {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6b4f33;
+}
+.ct-rivals {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.ct-rivals li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ct-body {
+  margin: 8px 0;
+}
+.ct-foot {
+  display: flex;
+  justify-content: flex-end;
+}
+.ct-status,
+.ct-theme,
+.ct-hints,
+.ct-preview {
+  margin: 4px 0;
+  font-size: 13px;
+}
+.ct-hints {
+  color: #2e5a86;
+}
+.ct-preview {
+  font-family: var(--font-title);
+  font-size: 15px;
+  color: #5c2a14;
+}
+.ct-cards {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0;
+}
+.ct-card {
+  aspect-ratio: 3 / 4;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fffaf0;
+  background: repeating-linear-gradient(45deg, #5c3a21 0 6px, #8a5a32 6px 12px);
+  border: 2px solid #2b1b17;
+  cursor: pointer;
+}
+.ct-card.is-up {
+  color: #2b1b17;
+  background: #fffaf0;
+}
+.ct-card.is-matched {
+  background: #f5d66b;
+  cursor: default;
+}
+.ct-lines,
+.ct-rounds,
+.ct-legs,
+.ct-samples {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+  padding-left: 22px;
+}
+.ct-prompt {
+  display: block;
+  font-family: var(--font-title);
+}
+.ct-options,
+.ct-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ct-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: #2b1b17;
+  background: #f3e3c3;
+  border: 2px solid #b8955f;
+  /* 浅底深字：不要外壳按钮的深色字影 */
+  text-shadow: none;
+  cursor: pointer;
+}
+.ct-opt.is-on {
+  background: #fffaf0;
+  border-color: #2b1b17;
+  box-shadow: 0 0 0 2px #dca434;
+}
+.ct-kind {
+  padding: 0 4px;
+  font-size: 11px;
+  color: #fffaf0;
+  background: #7d5f36;
+}
+.ct-opp,
+.ct-mine {
+  display: flex;
+  gap: 6px;
+  margin: 2px 0;
+  font-size: 13px;
+}
+.ct-mine.ct-edge1 {
+  color: #1e6b34;
+  font-weight: 700;
+}
+.ct-mine.ct-edge-1 {
+  color: #a3242f;
+}
+.ct-legs li.is-done {
+  color: #6b4f33;
+}
+.ct-picked {
+  font-size: 12px;
+  color: #5c3a21;
+}
+.ct-rhythm:focus {
+  outline: none;
+}
+.ct-track {
+  position: relative;
+  height: 64px;
+  margin: 8px 0;
+  overflow: hidden;
+  background: #23305e;
+  border: 2px solid #2b1b17;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ct-line {
+  position: absolute;
+  left: 10%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #f5d66b;
+}
+.ct-beat {
+  position: absolute;
+  top: 18px;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  background: #fffaf0;
+  border: 3px solid #dca434;
+  border-radius: 50%;
+}
+.ct-grade {
+  position: absolute;
+  right: 10px;
+  top: 18px;
+  font-weight: 700;
+  color: #f5d66b;
+}
+.ct-grade--miss {
+  color: #ff8a7a;
+}
+.ct-clues {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+.ct-samples select {
+  font: inherit;
+}
+
+/* 11-03 手感：规则一行、就地的加分、胜算一栏、快捷键、交卷后的名次讲解。经典像素：方角、硬投影、羊皮纸配色 */
+.ct-dialog:focus {
+  outline: none;
+}
+.ct-rule {
+  margin: 6px 0 2px;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: #2b1b17;
+  background: #f3e3c3;
+  border-left: 4px solid #8a5a32;
+}
+.ct-beats {
+  margin: 4px 0;
+  font-size: 12px;
+  color: #5c3a21;
+}
+.ct-beats-label {
+  margin-right: 6px;
+  padding: 0 4px;
+  color: #fffaf0;
+  background: #5c3a21;
+}
+/* 选项前的数字键小标；触屏没有键盘，不显示 */
+.ct-num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 14px;
+  height: 14px;
+  font-size: 10px;
+  line-height: 1;
+  color: #5c3a21;
+  border: 1px solid #b8955f;
+}
+.ct-opt.is-on .ct-num {
+  color: #2b1b17;
+  border-color: #2b1b17;
+}
+/* 一步拿了几分：拿满绿、没拿满黄铜、没拿到红 */
+.ct-step {
+  display: inline-block;
+  margin: 4px 0 0 6px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fffaf0;
+  background: #8a5a32;
+  box-shadow: 2px 2px 0 #2b1b1755;
+}
+.ct-step.is-full {
+  background: #1e6b34;
+}
+.ct-step.is-zero {
+  background: #a3242f;
+}
+/* 作诗：一句的选项与这一句的加分排在一行（窄了换行） */
+.ct-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.ct-pick .ct-step {
+  margin: 4px 0 0;
+}
+.ct-lines > li.is-now,
+.ct-samples > li.is-now,
+.ct-rounds > li.is-now,
+.ct-legs > li.is-now {
+  margin-left: -8px;
+  padding-left: 4px;
+  border-left: 4px solid #dca434;
+}
+.ct-flash {
+  margin: 4px 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.ct-flash.is-hit {
+  color: #1e6b34;
+}
+.ct-flash.is-miss {
+  color: #6b4f33;
+}
+/* 辩论：手牌一张一行（整宽，好点）；右边写它对上这一回合的对手 */
+.ct-hand > li {
+  flex: 1 1 100%;
+}
+.ct-hand .ct-opt {
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  text-align: left;
+}
+.ct-legs .ct-opt {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  text-align: left;
+}
+.ct-opt-text {
+  flex: 1 1 12em;
+  min-width: 0;
+}
+.ct-vs {
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fffaf0;
+  background: #6b4f33;
+}
+.ct-vs1 {
+  background: #1e6b34;
+}
+.ct-vs-1 {
+  background: #a3242f;
+}
+.ct-mine .ct-step {
+  margin-top: 0;
+}
+.ct-undo {
+  margin: 6px 0 0;
+}
+.ct-worth {
+  font-size: 11px;
+  color: #1e6b34;
+}
+.ct-verdict {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fffaf0;
+}
+.ct-verdict.is-good {
+  background: #1e6b34;
+}
+.ct-verdict.is-bad {
+  background: #a3242f;
+}
+.ct-answers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+/* 胜算：一根像素条（底色是拿满时、实色是照现在、竖线是不玩时） */
+.ct-odds {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 10px 0 4px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #2b1b17;
+  background: #f3e3c3;
+  border: 2px solid #5c3a21;
+  box-shadow: 3px 3px 0 #2b1b1766;
+}
+.ct-odds.is-stale {
+  opacity: 0.6;
+}
+.ct-odds-label {
+  font-weight: 700;
+}
+.ct-odds-bar {
+  position: relative;
+  flex: 1 1 120px;
+  min-width: 80px;
+  height: 10px;
+  background: #e2c796;
+  border: 2px solid #2b1b17;
+}
+.ct-odds-best,
+.ct-odds-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+}
+.ct-odds-best {
+  background: #f5d66b66;
+}
+.ct-odds-fill {
+  background: #dca434;
+}
+.ct-odds-base {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  background: #2b1b17;
+}
+.ct-odds-now {
+  font-size: 14px;
+  color: #5c2a14;
+}
+.ct-odds-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  color: #6b4f33;
+}
+.ct-foot {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+.ct-keys-v1 {
+  flex: 1 1 16em;
+  margin: 0;
+  font-size: 11px;
+  color: #6b4f33;
+}
+/* 交卷以后：名次、各人的分、你的分怎么来的 */
+.ct-result {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  background: #f3e3c3;
+  border: 2px solid #5c3a21;
+  box-shadow: 3px 3px 0 #2b1b1766;
+}
+.ct-result.is-win {
+  border-color: #dca434;
+  box-shadow: 0 0 0 2px #5c3a21, 3px 3px 0 2px #2b1b1766;
+}
+.ct-result-rank {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 18px;
+}
+.ct-result-rank b {
+  color: #a3242f;
+}
+.ct-result-why {
+  margin: 6px 0;
+  font-size: 13px;
+}
+.ct-field {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.ct-field li {
+  display: flex;
+  gap: 8px;
+  padding: 2px 6px;
+}
+.ct-field li.is-you {
+  font-weight: 700;
+  background: #f5d66b;
+}
+.ct-field-rank {
+  min-width: 1.5em;
+}
+.ct-field-name {
+  flex: 1;
+  min-width: 0;
+}
+.ct-result-sum {
+  margin: 6px 0;
+  font-size: 12px;
+  color: #5c3a21;
+}
+.ct-result .ts-btn-go {
+  display: block;
+  margin: 8px 0 0 auto;
+}
+/* 手机与触屏：点按区不小于 44 px；数字键小标与键盘提示不显示 */
+@media (max-width: 760px), (pointer: coarse) {
+  .ct-opt,
+  .ct-dialog .ts-btn,
+  .ct-undo {
+    min-height: 44px;
+  }
+  .ct-opt {
+    padding: 4px 12px;
+  }
+}
+/* 手机：竞渡的走法也一行一个 */
+@media (max-width: 760px) {
+  .ct-legs .ct-options > .ct-opt {
+    flex: 1 1 100%;
+  }
+}
+@media (pointer: coarse) {
+  .ct-num,
+  .ct-keys-v1 {
+    display: none;
+  }
+}
+
+/* 第九批 I10：AI 写的书信与日记的小标记（一支小羽毛笔） */
+.ub-ai-mark {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 6px;
+  vertical-align: -1px;
+  background: currentColor;
+  opacity: 0.55;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath d='M10 1h1v1h-1zM9 2h1v1h-1zM8 3h2v1H8zM7 4h2v1H7zM6 5h2v1H6zM5 6h2v1H5zM4 7h2v1H4zM3 8h2v1H3zM2 9h1v1H2zM1 10h1v1H1z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath d='M10 1h1v1h-1zM9 2h1v1h-1zM8 3h2v1H8zM7 4h2v1H7zM6 5h2v1H6zM5 6h2v1H5zM4 7h2v1H4zM3 8h2v1H3zM2 9h1v1H2zM1 10h1v1H1z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+/* 回忆相册：有插画的回忆用缩略画（养成事件的插画，按 cover 裁成方块） */
+.ub-memory-art.has-art {
+  overflow: hidden;
+  background: #2b1b17;
+}
+.ub-memory-art.has-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+}
+
+/* 羁绊页：一句话身份（这个人是谁、做什么） */
+.ub-bond-summary {
+  margin: 1px 0 3px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted, #594938);
+}
+
+/* 跳过养成：对话框里推进到哪年哪月（P05 的分段进度） */
+.ub-skip-progress {
+  display: block;
+  margin-top: 8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 养成画面的菜单：存档、读档、回主菜单 */
+.ub-menu {
+  position: relative;
+}
+.ub-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ub-menu-pop {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 260px;
+  padding: 10px;
+  /* 挂在深色顶栏下面：不用随底色变的 --text / --paper，固定纸面配色 */
+  color: var(--v2-ink, #241c15);
+  background: var(--v2-paper-1, #f8f3e9);
+  border: 2px solid var(--v2-line-strong, #b39b72);
+  box-shadow: 3px 3px 0 rgba(5, 11, 20, 0.35);
+}
+.ub-menu-saves {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.ub-menu-saves input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* FIX4F：行动制主菜单里的“养成期播放的停顿”（与设置里同一项） */
+.ub-menu-pause {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+.ub-menu-pause select {
+  min-height: 30px;
+}
+/* FIX5F：三种停顿方式排成三行，各带一行小字说明；菜单最宽 300 px，说明折行 */
+fieldset.ub-menu-pause {
+  margin: 0;
+  padding: 6px 0 0;
+  border: 0;
+  border-top: 1px solid var(--v2-line, #d8c8a8);
+  max-width: 300px;
+}
+fieldset.ub-menu-pause legend {
+  padding: 0 0 4px;
+  font-weight: 600;
+}
+.ub-menu-pause-opt {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 5px 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.ub-menu-pause-opt.is-on {
+  border-color: var(--v2-line-strong, #b39b72);
+  background: rgba(179, 155, 114, 0.14);
+}
+.ub-menu-pause-opt input {
+  margin: 3px 0 0;
+  flex: none;
+}
+.ub-menu-pause-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ub-menu-pause-text small {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--v2-ink-soft, #5b4c3c);
+}
+.ub-menu-saves button,
+.ub-menu-leave {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 32px;
+}
+
+/* ───────────── 中栏最上面：城中各处（UbTown.tsx） ─────────────
+   这一阶段所在城市的 CG（像素画，放大保持硬边，与活动小场景同一种处理）与可以去的地点。
+   日程纸宽 ≥ 520 px：地点按数据的 x、y（--x、--y，已往里收一圈）摆在画面上，图标在点上，地名小签缺省在图标下面，
+   会压到邻近的图标时换到上面、右边或左边（data-label，townKit.ts 的 labelSides 按最小的画面 520×240 算）；
+   窄于 520 px（手机竖屏、窄平板、手机横屏）：画面缩成一条横幅，地点改成画面下面一行左右滑的小签（容器查询 ub-town），不挤在一起。
+   画面高按 16:7，但在 240–300 px 之间、不超过窗高的 34%（家乡的十个地点上下三排，再矮图标就挨上了），免得把日程与活动卡挤到下面去；
+   没有图时是按季节着色的渐变底（data-season：0 春 1 夏 2 秋 3 冬）。
+   叠放：所有图标在所有地名小签之上（万一小签还是挨上了邻近的图标，图标永远完整、点得着）；悬停 / 聚焦的那一个地名浮到最上面、写全。
+   所以地点的 li 与按钮都不建层叠上下文（不用 transform 定位，用宽 0 的弹性盒居中）。 */
+.ub-town {
+  container: ub-town / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: none;
+  min-width: 0;
+}
+.ub-town-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.ub-town-name {
+  font-family: var(--font-title);
+  font-size: 17px;
+  color: #5c2a14;
+}
+.ub-town-hint {
+  color: #6b4f33;
+}
+.ub-town-hint.is-blocked {
+  color: #a3242f;
+}
+.ub-town-view {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  min-height: 240px;
+  max-height: clamp(240px, 34vh, 300px);
+  overflow: hidden;
+  background: #2b1b17;
+  border: 3px solid #2b1b17;
+  --plain-sky: #e9d6ae;
+  --plain-ground: #b98e5c;
+}
+/* 画框的内线与下沿的一点暗角（地名小签在亮的画面上也看得清）：盖在图上、地点下 */
+.ub-town-view::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(26, 20, 35, 0) 55%, rgba(26, 20, 35, 0.3));
+  box-shadow: inset 0 0 0 2px #b8955f;
+}
+.ub-town-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto; /* 2026-11-11：场景图重画成 1152×504，比显示尺寸大，不再按硬边放大 */
+}
+.ub-town-plain {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 240, 0.35), rgba(255, 250, 240, 0) 40%),
+    linear-gradient(180deg, var(--plain-sky) 0%, var(--plain-sky) 58%, var(--plain-ground) 58%, var(--plain-ground) 100%);
+}
+.ub-town-view[data-season="0"] {
+  --plain-sky: #cfe0d6;
+  --plain-ground: #8fae7a;
+}
+.ub-town-view[data-season="1"] {
+  --plain-sky: #b8d6e6;
+  --plain-ground: #6f9a62;
+}
+.ub-town-view[data-season="2"] {
+  --plain-sky: #ead2a8;
+  --plain-ground: #b07c4c;
+}
+.ub-town-view[data-season="3"] {
+  --plain-sky: #d8dde3;
+  --plain-ground: #a6adb5;
+}
+
+/* 地点：一枚图标（木牌底上的像素图标）+ 地名小签；图标中心落在数据的位置上 */
+.ub-town-spots {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* 宽、高都是 0 的一个点，按钮在它上面水平居中（弹性盒让放不下的内容向两边等分溢出），图标中心落在点上 */
+.ub-town-spot {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 0;
+  height: 0;
+}
+.ub-spot {
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: 0;
+  margin-top: -18px;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+  cursor: pointer;
+}
+/* 按下不下沉（外壳按钮的 translateY 会给按钮建层叠上下文，图标与地名就不再和别的地点一起排先后） */
+.ub-spot:active {
+  transform: none;
+}
+/* 地名在图标上面 / 右边 / 左边（下面会压到邻近的图标时，townKit.ts 的 labelSides 挑的）：图标中心仍落在点上 */
+.ub-town-spot[data-label="above"] {
+  align-items: flex-end;
+}
+.ub-town-spot[data-label="above"] .ub-spot {
+  flex-direction: column-reverse;
+  margin-top: 0;
+  margin-bottom: -18px;
+}
+.ub-town-spot[data-label="right"] {
+  align-items: center;
+  justify-content: flex-start;
+}
+.ub-town-spot[data-label="right"] .ub-spot {
+  flex-direction: row;
+  gap: 4px;
+  margin-top: 0;
+  margin-left: -18px;
+}
+.ub-town-spot[data-label="left"] {
+  align-items: center;
+  justify-content: flex-end;
+}
+.ub-town-spot[data-label="left"] .ub-spot {
+  flex-direction: row-reverse;
+  gap: 4px;
+  margin-top: 0;
+  margin-right: -18px;
+}
+.ub-spot-icon {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: #3b2416eb;
+  border: 2px solid #2b1b17;
+  box-shadow:
+    inset 0 0 0 2px #8a5a32,
+    0 3px 0 #1a1423a6;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.ub-spot-name {
+  position: relative;
+  z-index: 1;
+  max-width: 7.5em;
+  padding: 1px 6px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #f3e3c3;
+  background: #2b1b17db;
+}
+.ub-spot:hover .ub-spot-icon,
+.ub-spot:focus-visible .ub-spot-icon {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 2px #f5d66b,
+    0 5px 0 #1a1423a6;
+}
+/* 悬停 / 聚焦时地名写全（长名字平时只露前七八个字） */
+.ub-spot:hover .ub-spot-name,
+.ub-spot:focus-visible .ub-spot-name {
+  z-index: 3;
+  max-width: 16em;
+  color: #f5d66b;
+}
+.ub-spot:focus-visible {
+  outline: none;
+}
+.ub-spot:focus-visible .ub-spot-icon {
+  outline: 3px solid #239a9a;
+  outline-offset: 2px;
+}
+/* 这个月已经排了去这里：黄铜底，上面一枚写着哪几旬的小签 */
+.ub-spot.is-chosen .ub-spot-icon {
+  background: #dca434;
+  box-shadow:
+    inset 0 0 0 2px #f5d66b,
+    0 3px 0 #1a1423a6;
+}
+.ub-spot-when {
+  position: absolute;
+  z-index: 2;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: #2b1b17;
+  background: #f5d66b;
+  border: 1px solid #2b1b17;
+}
+/* 现在在那里的人数：图标右上角一枚红签 */
+.ub-spot-people {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: #fffaf0;
+  background: #a3242f;
+  border: 1px solid #2b1b17;
+}
+/* 点不了：灰掉（悬停照样有提示，见 UbTown.tsx 的 aria-disabled） */
+.ub-spot.is-off {
+  cursor: not-allowed;
+}
+/* 牌子照旧不透明（在花哨的画面上也找得到），里面的图标褪成灰、描边换虚线 */
+.ub-spot.is-off .ub-spot-icon {
+  border-style: dashed;
+  box-shadow: 0 3px 0 #1a1423a6;
+}
+.ub-spot.is-off .ub-spot-icon .shell-icon {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+.ub-spot.is-off .ub-spot-name {
+  color: #cdbfa6;
+}
+.ub-spot.is-off:hover .ub-spot-icon {
+  transform: none;
+  box-shadow: 0 3px 0 #1a1423a6;
+}
+/* 只给读屏的说明（谁在那里、已排哪几旬、为什么去不了） */
+.ub-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 日程纸窄（< 520 px）：画面是一条横幅，地点是下面一行左右滑的小签（图标 + 地名，点按区 ≥ 44 px） */
+@container ub-town (max-width: 519px) {
+  .ub-town-view {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+    background: #3b2416;
+  }
+  .ub-town-view::after {
+    bottom: auto;
+    height: 112px;
+  }
+  .ub-town-img,
+  .ub-town-plain {
+    position: relative;
+    display: block;
+    flex: none;
+    height: 112px;
+  }
+  .ub-town-spots {
+    position: static;
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+  /* 选择器带上 [data-label]：盖过地图摆法里按小签方位写的规则（它们的特异度更高） */
+  .ub-town-spot[data-label] {
+    position: static;
+    display: block;
+    flex: none;
+    width: auto;
+    height: auto;
+  }
+  .ub-town-spot[data-label] .ub-spot {
+    flex-direction: row;
+    gap: 6px;
+    min-height: 44px;
+    margin: 0;
+    padding: 2px 10px 2px 2px;
+    background: #2b1b17;
+    border: 1px solid #8a5a32;
+  }
+  .ub-spot-icon {
+    width: 36px;
+    height: 36px;
+    box-shadow: inset 0 0 0 2px #8a5a32;
+  }
+  .ub-spot-name,
+  .ub-spot:hover .ub-spot-name,
+  .ub-spot:focus-visible .ub-spot-name {
+    max-width: 9em;
+    padding: 0;
+    font-size: 14px;
+    background: none;
+  }
+  .ub-spot:hover .ub-spot-icon,
+  .ub-spot:focus-visible .ub-spot-icon {
+    transform: none;
+  }
+  .ub-spot-when {
+    position: static;
+    transform: none;
+  }
+}
+
+/* ── U04：年度目标卡、活动解锁差项、心情条小标、新开放提示 ── */
+.ub-meter-tag {
+  grid-column: 2 / -1;
+  justify-self: end;
+  padding: 0 6px;
+  font-size: 11px;
+  border: 1px solid currentColor;
+}
+.ub-near {
+  margin-left: 4px;
+  padding: 0 4px;
+  font-size: 11px;
+  color: #fffaf0;
+  background: #b7791f;
+}
+.ub-act-gap {
+  font-size: 12px;
+  color: #6b4f33;
+}
+.ub-hidden-count {
+  margin: 6px 2px 0;
+  font-size: 12px;
+  color: #6b4f33;
+}
+.ub-goals {
+  margin-bottom: 10px;
+}
+.ub-goal-list,
+.ub-goal-history ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-goal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 5px 6px;
+  font-size: 13px;
+  background: #f3e3c3;
+  border: 1px solid #b8955f;
+}
+.ub-goal-text {
+  flex: 1 1 12em;
+  font-weight: 700;
+}
+.ub-goal-status {
+  font-size: 12px;
+  color: #6b4f33;
+}
+.ub-goal--done .ub-goal-status {
+  color: #2f6b3a;
+}
+.ub-goal--missed {
+  opacity: 0.75;
+}
+.ub-goal-progress,
+.ub-goal-reward {
+  font-size: 12px;
+}
+.ub-goal-year {
+  font-size: 12px;
+  color: #6b4f33;
+}
+.ub-goal-history summary {
+  margin: 6px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ub-unlocked {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 12px 0;
+  padding: 0;
+  list-style: none;
+}
+.ub-unlocked-item {
+  padding: 2px 10px;
+  font-size: 13px;
+  background: #fffaf0e6;
+  border: 1px solid #b8955f;
+}
+.ub-summary {
+  margin: 8px 12px 0;
+  padding: 10px 14px;
+  background: #fffaf0f2;
+  border: 1px solid #8a5a32;
+}
+.ub-summary h3 {
+  margin: 0 0 6px;
+  font-family: var(--font-title);
+  color: #5c2a14;
+}
+.ub-summary h4 {
+  margin: 10px 0 4px;
+  font-size: 13px;
+}
+.ub-summary-text,
+.ub-summary-extra,
+.ub-summary-near {
+  font-size: 13px;
+}
+.ub-summary-near {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+/* U05 按周排程（经典像素界面）：本周一行格子，3 或 5 列；窄窗下左右滑 */
+.ub-grid--week {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.ub-grid--n5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.ub-cell-gain {
+  font-size: 11px;
+  color: #5c3a21;
+}
+.ub-cell.is-locked {
+  opacity: 0.6;
+}
+.ub-cell.is-problem .ub-cell-btn {
+  outline: 2px solid #b4483a;
+}
+.ub-week-of {
+  margin-left: 2px;
+  font-weight: 400;
+}
+.ub-week-pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .ub-grid--week,
+  .ub-grid--n5 {
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: minmax(108px, 1fr);
+    overflow-x: auto;
+  }
+}
+
+/* U05 收尾（二）：结算过的格变灰；手机横条右边还有格时渐隐 */
+.ub-grid--week .ub-cell.is-done .ub-cell-btn {
+  background: #e4d8bf;
+  color: #7d5f36;
+}
+.ub-grid--week .ub-cell.is-done .ub-scene {
+  filter: grayscale(0.7);
+  opacity: 0.6;
+}
+.ub-week-pause select {
+  font-size: 13px;
+}
+@media (max-width: 760px) {
+  .ub-grid--week[data-more="right"] {
+    -webkit-mask-image: linear-gradient(to right, #000 78%, transparent);
+    mask-image: linear-gradient(to right, #000 78%, transparent);
+  }
+}
+
+/* L01F2：主菜单里的“剧情文本”（借“养成期的停顿”的单选样式），下面一行说明 */
+.ub-menu-storytext-help {
+  display: block;
+  margin-top: 4px;
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--v2-ink-soft, #5b4c3c);
+}

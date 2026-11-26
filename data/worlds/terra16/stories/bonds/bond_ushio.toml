@@ -1,0 +1,407 @@
+# 先看看脚下（bond_ushio）——羁绊线，标签 GL（汐纯 GL；主角一条澪为女性）。
+# 走向：一直在→各自一条船（无条件支持；她不肯的是在澪手下当差）。
+# 人物：汐（ushio，1540-01-01 生，romance = 女性），能岛村上家的女儿，澪的乳姐妹；扮作侍女跟澪进京，在宫里被人看不起。
+#       主角：一条澪（mio，1540-06-21 生），土佐一条家的长女，1554 年起在京都做宫中女房的见习；第一人称“我”。
+#       年龄：学院期（1554—1556）两人都未满 18；A1（1555-08）两人 15；S 章（1556-12）汐 16、澪 16；重逢（1560）汐 20、澪 19—20，都已成年。
+# 声音（照 docs/world/voices/japan.md 3.3）：人前憋着、打死结；没人时或吵潮时一口气连着说，摆证据；借娘的话（“我娘说”）；
+#       人前叫“姬君”，人后叫“你”。不当面夸澪，不说“姬君待我好”，不“算一半”（归鹰丸）。
+# 口头禅：“等着，潮会转的。”只在 c1；“先看看脚下”c1 起头、重逢呼应；“我娘说”全文件 4 处（c1 talk_back、b2、s heart、s heart_second）。
+# 依据（史实）：一条本家在京都，土佐一条家以幡多郡中村为本据，下田在渡川（四万十川）河口；能岛村上家是濑户内的海上武家，
+#       出船前参拜大三岛的大山祇神社；京都到堺可走淀川，堺到土佐要绕纪伊水道；岚山下有桂川；关船是村上水军常用的中型船。
+# 原创：本线全部场面与对白——光滑的廊下、半夜描“澪”字、桂川上夺篙、能岛的叔父来信、盂兰盆夜里举灯过河口、
+#       大三岛御守与船结、写着舵位的纸与空着的工钱一栏、汐每月退回的那一成、汐自己挑的关船。
+# 待核：1554 年岚山一带桂川的游船走法（正文只写“岚山上头一段水急”）；盂兰盆按本游戏的历日放在 8 月上旬。
+# 秘密：汐怕自己的字让澪在宫中丢脸，半夜偷偷描字（C2 澪撞见）——永远不进见闻；本文件没有 stage 章，不写 news。
+# 羁绊阶梯：C2 teach_her 给 C；B1 back_her_up 补签 C；B2 count_the_fare 给 B；A1 learn_her_line 补签 B；
+#       A2 wear_charm / tie_one_for_her 给 A + 大三岛御守（omishima_amulet）+ 回忆。
+# 关系会退（C21b）：c1 talk_back 情谊 -2（挨罚的是汐）；b1 back_her_up 不加情谊，汐人后改口叫回“姬君”，到 b2 才改回来（不在当场和解）。
+#       无条件支持者全线只此一处负值（R11）。
+# 心意（C21b；裁决第 1 条“可以多份，每多一份更难”，数值见 docs/BALANCE.md 2026-11-12 C21b 一节）：
+#       心动来源 A1 hold_lantern_all_night +6、A2 tie_one_for_her +6、课后同行（每回 2—4）。
+#       S 的三档：heart（头一份，心动 ≥ 12，带 bond S）/ heart_second（已许一份，心动 ≥ 18、意志 resolve ≥ 5）/
+#       heart_third（已许两份及以上，心动 ≥ 26、意志 ≥ 7、发绳 c7_bond_ushio_cord）。第二、三档不带 bond S（一生一约归引擎，只有一位）。
+#       共用计数旗标 c7_mio_heart_1 / _2 / _3（五条可许心意的羁绊共用；后端加“已许心意的人数”条件以后改用它）。
+# 替打的账（研究 3.3 第 6 场）：重逢读 rw_mio_cane_silent / _confessed 各一段变体（不加好感）；
+#       _silent 局的 love 拆成 love（要 _silent 为假）与 love_cane（要 _silent 且 A2 speak_of_cane 设过 c7_bond_ushio_cane_spoken）。
+# 缺省走向：每章 default 都往下走、不加任何东西；S 的 default 设 c7_bond_ushio_parted 并开启重逢；
+#       重逢的 default 是汐的一封来信（附下田河口的潮时表）并设 c7_bond_ushio_missed。
+# 共享旗标：S 的 promise 与三档 heart 都设 c7_pair_ushio_reizei_yuki_taken（配角线 pair_ushio_reizei_yuki 据此改走“并肩的朋友”）；
+#       重逢的 variants 读 c7_pair_ushio_reizei_yuki_together（由配角线设）、c7_mio_heart_2（许过两份以上）。
+# 本文件写的旗标：c7_bond_ushio_promise / _romance / _own / _parted / _landing_friend / _landing_love / _missed / _cord / _cane_spoken；
+#       c7_mio_heart_1 / _2 / _3。主线 main_mio 读 _landing_friend、_landing_love（键不变）。
+# 不写的事：七夕白绢归 bond_reizei_yuki，岬角渔火归 bond_takamaru，汐与雪的故事归 pair_ushio_reizei_yuki。
+# 入口：bond_ushio 由与汐交谈（ask:bond_ushio）开启；reunion_ushio 由 S 章的任一选项与 default 开启。日程不需要改。
+
+[[tracks]]
+key = "bond_ushio"
+name = "汐：先看看脚下"
+kind = "request"
+start = "c1"
+auto = true
+academy = true
+cast = ["ushio"]
+
+# C1：1554 年春，一条本家的廊下。擦得发亮的地板，光着的脚。口头禅在这里用唯一一次。
+[[tracks.chapters]]
+key = "c1"
+title = "光滑的地板"
+text = "进京第二个月，汐还是穿不惯本家宅子里的足袋。一条本家的廊下天天拿米糠擦，亮得照见人影，她走一步滑半步，索性把足袋脱了拎在手里，光着脚跟在我后头。拐过中庭，迎面撞上管衣裳的老女房。扇子“啪”地合上，指着汐的脚：“乡下来的丫头，连脚都不知道收着？这是本家的廊下，不是你们海贼的船板。”汐低着头，脚趾头抠住了地板。我一步跨上去要顶回去，脚底一溜，整个人往后仰。汐一把揪住我的胳膊拽稳了，凑在我耳边，声音压得只有我听得见：“先看看脚下。等着，潮会转的。”老女房的扇子又打开了半面，等我开口。"
+window = [[1554, 3, 1], [1554, 4, 30]]
+at = "kyoto"
+cast = ["ushio"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "flag", flag = "family_access_kyoto_court" }, { kind = "date", from = [1554, 3, 1], to = [1554, 4, 30] }, { kind = "age", le = 17 }]
+
+# 缺省：那天汐被老女房罚跪了半个时辰，我偷偷给她送了一块点心。
+[tracks.chapters.default]
+next = "c2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "take_off_shoes"
+text = "也把足袋脱了，光着脚陪她走完这条廊下。"
+reply = "我蹬掉足袋，光着脚往前走。老女房张着嘴，扇子忘了合。汐跟在后头憋着笑，憋得肩膀直抖，脚底下倒一步也没再滑。走到廊下尽头她才凑过来：“你脚底下没茧，踩这种地吃亏。脚趾头要抓着，跟站船板一样，船一晃你先晃，别等它晃你。”她蹲下去，拿指头把我的脚趾头一个一个按下去。"
+next = "c2"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "talk_back"
+text = "用宫里最客气的话，把老女房顶回去。"
+reply = "我理了理衣袖，笑着说：“劳您费心。本家的廊下擦得这样亮，原是要照人的；照见谁的脚，都是廊下的福气。”老女房的脸一阵青一阵白，扇子打不开了。罚下来的是汐：在廊下跪半个时辰，替老女房的局里剪灯芯。我隔着纸门问她冷不冷。她说：“我娘说，姬君顶嘴，挨罚的是跟着的人。你下回顶之前，先看看我站在哪儿。”"
+next = "c2"
+effects = [{ kind = "affinity", person = "ushio", value = -2 }]
+
+# C2：1554 年夏，宫中女房的局。一张写满“澪”字的练习纸。汐的秘密在这里被澪撞见，永远不进见闻。
+[[tracks.chapters]]
+key = "c2"
+title = "半夜描字"
+text = "梅雨下了半个月，局里的纸窗潮得发软。半夜我醒过来，屏风后头还亮着一点灯，灯芯剪得只剩米粒大。汐趴在地上，手肘底下压着一张纸，纸角磨破了。纸上一个挨一个全是“澪”字：三点水歪歪扭扭，右边那个“零”底下总写散。她描完一个，拿指头量一量，再描一个。我踩响了一块地板，她慌忙把纸翻过去，墨还没干，在背面洇出一片影子。“你在宫里的信，”她盯着灯说，“要是我替你送，字丑了，人家笑的是你。”说完拿袖子去蹭指头上的墨，越蹭越黑。"
+window = [[1554, 5, 1], [1554, 8, 31]]
+at = "kyoto"
+cast = ["ushio"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1554, 5, 1], to = [1554, 8, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那一夜我装作没醒，汐描到灯油烧完。
+[tracks.chapters.default]
+next = "b1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "teach_her"
+text = "在她旁边坐下，握着她的手，一笔一笔教她写。"
+requires = [{ kind = "affinity", person = "ushio", ge = 20 }]
+hint = "情谊 20。她把纸往身子底下一按，灯也吹了。"
+reply = "我在她旁边跪坐下，握住她拿笔的手。她的手比我的硬，掌心一层茧，笔杆在里头直打滑。“三点水要像水，”我说，“一点比一点低，落笔轻，收笔快，你别拿它当钉子钉。”她照着点，点出来三块礁石。我们描到窗纸发白，最后一个“澪”是她自己写的，端端正正。“那以后你的信，我能替你写了。”“我的信我自己写。你要写，写你自己的。”她把那张纸叠成小块，起身去添灯油，添完才想起天已经亮了。"
+next = "b1"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "bond", person = "ushio", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "read_her_letter"
+text = "不看那张纸，请她把想写给家里的信念给我听。"
+reply = "我没看那张纸，只问她想给家里写什么。她犹豫半天，把纸翻回来，背面还有几行，是写给她娘的：京都的水是死的，不咸；廊下太滑；今年的鲷鱼一条要六十文，宫里的人吃得眼都不眨。再往下一行涂成了黑块，涂了又写，写了又涂。她拿沾墨的指头按住那一块：“这句不念。写出来像假话。”"
+next = "b1"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+# B1：1554 年秋，岚山的桂川。一根撑船的竹篙；宫里的人不听一个侍女的。
+[[tracks.chapters]]
+key = "b1"
+title = "桂川的急流"
+text = "十月，宫里的女房们去岚山看红叶，雇了两条船，从岚山上头顺着桂川往下放。我和汐坐后一条。转过一道弯，水声变粗，船夫一篙没撑住，船头被急流一推，横了过来。女房们尖叫成一团，有人去抓船舷，有人抱着衣箱不撒手，船晃得更厉害。汐从船夫手里夺过竹篙，脚往船底一蹬，几下把船头扳正了。可是没人听一个侍女的：管衣裳的老女房还在喊船夫的名字，两个年轻的女房挤到一边去看前头的石头，船又歪了。一块黑礁石从白浪里冒出来，越来越近。汐把竹篙抵上礁石，篙身弯了下去：“都别动！左边的往右挪，衣箱放下，放下！”船上的人还在喊船夫的名字。"
+window = [[1554, 9, 1], [1554, 12, 31]]
+at = "kyoto"
+cast = ["ushio"]
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1554, 9, 1], to = [1554, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：船撞上一块小礁石，没翻；上岸以后，宫里的人只记得船夫救了船。
+[tracks.chapters.default]
+next = "b2"
+effects = []
+
+# back_her_up：给 bond C，但不加情谊——她怕的就是这个。人后改口叫“姬君”，b2 才改回“你”。
+[[tracks.chapters.choices]]
+key = "back_her_up"
+text = "站起来，以一条家姬君的身份，喊所有人照汐说的做。"
+requires = [{ kind = "affinity", person = "ushio", ge = 20 }]
+hint = "情谊 20。她背对着我，肩膀绷着。"
+reply = "我在晃荡的船上站起来，把嗓门提到在宫里从没用过的高度：“一条家的人在这条船上，照她说的做！”船上一下子静了。汐喊左，大家往左靠；喊蹲下，十几层衣裳一齐矮下去。船擦着礁石滑过了急流。上了岸，女房们围着我，说一条家的姬君好胆量，又说姬君的侍女手劲真大。汐把竹篙还给船夫，一个人走到前头去了。回局的路上我叫她，她站住，回过身，低着头：“姬君有什么吩咐。”回廊里一个旁人也没有。"
+next = "b2"
+effects = [{ kind = "bond", person = "ushio", level = "C" }]
+
+[[tracks.chapters.choices]]
+key = "hold_her_steady"
+text = "什么也不说，从后面抱住她的腰，替她稳住身子。"
+reply = "我扑过去，从后面抱住她的腰。她撑篙时整个人往前压，我就往后坠。船擦着礁石过去，翻进下面平缓的水里，我还没松手。她这才回过头，看见我的胳膊：“姬君，放手。岸上有人看。”我松开了。剩下那一段水，她背对着我撑完，篙一下一下戳得很重。"
+next = "b2"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+# B2：1555 年春夏，京都。一封能岛家里寄来的信：回去学做船头。
+[[tracks.chapters]]
+key = "b2"
+title = "能岛来的信"
+text = "开春，能岛的盐船到了堺，捎来一封给汐的信，信封上的字比她的还歪。信是她叔父写的：她表兄鹰丸快当上船头了，她一个村上家的女儿在京都给人端茶倒水，是浪费；夏天以前回来，跟船学舵。汐把信给我看。我看完还给她，她叠起来，又打开。窗外有人晒被子，竹竿敲得啪啪响。“鹰丸那家伙，小时候连橹都摇不直，他那条破小早的舵柄还是我十岁那年削的。叔父说他快当船头了，快是几年？能岛只有一条好船，他当了，我回去也是跟在他后头收缆。”她把信往膝盖底下一垫，指头在榻上划来划去，划的是一条弯弯曲曲的水路。"
+window = [[1555, 1, 1], [1555, 7, 31]]
+at = "kyoto"
+cast = ["ushio"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1555, 1, 1], to = [1555, 7, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：那封信汐没回，压在她的枕头底下压了半年。
+[tracks.chapters.default]
+next = "a1"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "count_the_fare"
+text = "陪她把回能岛的路费一笔一笔算清，算完推到她面前。"
+requires = [{ kind = "affinity", person = "ushio", ge = 50 }, { kind = "bond", person = "ushio", level = "C" }]
+hint = "情谊 50、羁绊 C。那封信她不肯给我看第二回。"
+reply = "我拿过算盘：下淀川的船四十文，堺到能岛搭盐船一人一百二，路上的饭钱、两道关钱，打到三百一十文，末尾添上我攒的私房钱，够，还多出九文。我把纸推过去。她把纸推回来：“路费我自己挣。学会掌舵以后，我再回来找你的水路。”当天夜里她回了信，只写了一句：“再等两年。”"
+next = "a1"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "bond", person = "ushio", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "ask_what_she_wants"
+text = "问她：她自己想去哪里。"
+reply = "“海上。”她答得很快。停了一下又说：“我娘说，奶喂过的孩子走到哪儿，奶娘的女儿跟到哪儿。我娘说的，不是我。”说完她自己先瞪圆了眼睛，低头去叠那封信，叠成一个方方正正的小块，又拆开重叠。"
+next = "a1"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+# A1：1555 年盂兰盆，回土佐的海路，下田的河口外。船头的一盏灯笼；汐掌舵，澪提灯。（七夕归雪，渔火归鹰丸，这里都不写。）
+[[tracks.chapters]]
+key = "a1"
+title = "盂兰盆的海路"
+text = "盂兰盆，我们回土佐。船从堺出来，绕过纪伊水道，沿着土佐的海岸往西走了七天。最后一夜正赶上大潮，下田的河口外，海水往里推，河水往外冲，两股水在沙洲前撞成一道白线，船在线外打转，进不去也退不开。船老大的手在抖。汐把他往旁边一推，接过了舵，回头冲我一扬下巴：“姬君，提灯，去船头，照水。”我提着灯笼爬到船头。浪一个接一个打上来，灯笼让风扯得横过来，我两只手攥着提杆举着。灯光底下，水面上有一条颜色发深的线，弯弯曲曲伸进河口。“往左一点，”她在船尾喊，“好，别动。”船头顺着那条深色的水线，一寸一寸挤了进去。"
+window = [[1555, 8, 6], [1555, 10, 5]]
+at = "shimoda_tosa"
+cast = ["ushio"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1555, 8, 6], to = [1555, 10, 5] }, { kind = "age", le = 17 }]
+
+# 缺省：那一夜的潮太大，船在河口外等到天亮才进港，汐一夜没合眼。
+[tracks.chapters.default]
+next = "a2"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "hold_lantern_all_night"
+text = "把灯笼一直举着，举到船靠上栈桥为止。"
+requires = [{ kind = "affinity", person = "ushio", ge = 20 }, { kind = "romance_open", romance_open = "ushio" }]
+hint = "情谊 20。举到后半夜，胳膊抖得握不住提杆，灯笼换到了水夫手里。"
+reply = "我一直举着。船过了沙洲，进了河口，靠上下田的栈桥，天边已经发白。汐跳过来把灯笼从我手里掰下来，我的两条胳膊一落下就再抬不起来。她蹲在船头替我揉，从手腕揉到肩膀，嘴里一路数落：“提杆要架在肘弯里，你拿手腕吊着，吊一夜，明天筷子都拿不住。浪打过来你要矮下去，你偏站着，灯油洒了半盏。”揉到肩膀，她的手停在那里没拿开，数落也停了。"
+next = "a2"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "heart", person = "ushio", value = 6 }]
+
+[[tracks.chapters.choices]]
+key = "learn_her_line"
+text = "上岸以后请她教我：那条深色的水线是怎么看出来的。"
+requires = [{ kind = "affinity", person = "ushio", ge = 50 }, { kind = "bond", person = "ushio", level = "C" }]
+hint = "情谊 50、羁绊 C。她累得眼睛都睁不开，看水线是村上家的看家本事。"
+reply = "上了岸她倒头睡到中午，醒来就拉我去河口的沙滩，折一根芦苇在沙上画。“河水浑，海水清，两股水碰头的地方，底下冲出一道沟，水深，颜色就沉。大潮沟宽，小潮沟窄，你别看浪，浪骗人，你看浪底下那一层颜色。”她画沙洲，画沟，画浪从哪边来。潮水涨上来，把沙上的画一道道抹掉，她就往高处挪一挪接着画，一直画到点起火把。“以后你的船，我来看水线。”“那你得一直在船头。”她把芦苇插进沙里，去看潮水涨到哪儿了。"
+next = "a2"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "bond", person = "ushio", level = "B" }]
+
+[[tracks.chapters.choices]]
+key = "thank_her_mother"
+text = "上岸以后先去找乳母阿濑，告诉她是汐把船带进来的。"
+reply = "阿濑在栈桥边等了一夜，头发被海风吹得乱糟糟的。我跑过去，话说得又快又乱：浪多大，水线多深，汐怎么把船老大推开接了舵。阿濑先把船老大骂了一大串，骂完才伸手摸了摸汐的头：“我的女儿。”汐站在后头任她摸，眼睛一直看着我。"
+next = "a2"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+# A2：1556 年夏秋，京都。一只大三岛的御守（omishima_amulet），系在腰带上的船结。
+[[tracks.chapters]]
+key = "a2"
+title = "大三岛的御守"
+text = "入夏，能岛的盐船又到了堺，汐托船上的人带回一个小布包。打开，是一只大三岛大山祇神社的御守，布袋缝得密密实实，袋口用麻线扎了好几道。“泡过海水也不散，”她说，“我叫婶子拿缝帆的线缝的，一尺线两文，她多收了我一文，说是神前的线。”她让我站好，蹲下去，把御守系在我的腰带上。系的不是宫里的花结，是船上拴缆的结，她两只手一绕一穿一勒，我扯了一下，纹丝不动。“村上家的人出船以前，都要去拜那里的神，”她低着头还在调那个结，“你以后出海，也算村上家的船。”她拿牙咬断了线头。"
+window = [[1556, 6, 1], [1556, 11, 30]]
+at = "kyoto"
+cast = ["ushio"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 6, 1], to = [1556, 11, 30] }, { kind = "age", le = 17 }]
+
+# 缺省：那只御守汐自己留着，系在了她的腰带上。
+[tracks.chapters.default]
+next = "s"
+effects = []
+
+[[tracks.chapters.choices]]
+key = "wear_charm"
+text = "收下御守，说：那你就是这条船的船头。"
+requires = [{ kind = "affinity", person = "ushio", ge = 80 }, { kind = "bond", person = "ushio", level = "B" }]
+hint = "情谊 80、羁绊 B。系在腰上的不只是一只布袋。"
+reply = "她系结的手停了一下。“船头是要自己挣的，不是姬君封的。”“那我等你挣。”她又把那个结紧了紧，紧得我吸了一口气。那年秋天我腰上一直坠着那只御守，走得快了，它就拍一下我的胯。"
+next = "s"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "bond", person = "ushio", level = "A" }, { kind = "item", item = "omishima_amulet", qty = 1 }, { kind = "memory", memory = "mem-bond_ushio-a2", title = "大三岛的御守" }]
+
+# tie_one_for_her：发绳是只能给一次的东西，设 c7_bond_ushio_cord（S 的第三档读它）。
+[[tracks.chapters.choices]]
+key = "tie_one_for_her"
+text = "收下御守，解下自己的发绳，系在她的手腕上。"
+requires = [{ kind = "affinity", person = "ushio", ge = 80 }, { kind = "bond", person = "ushio", level = "B" }, { kind = "heart", person = "ushio", ge = 6 }, { kind = "romance_open", romance_open = "ushio" }]
+hint = "情谊 80、羁绊 B、心动 6。发绳捏在指间，又放下了。"
+reply = "我把头上那根红白的发绳解下来，从小用到大的，绳头起了毛，拉过她的手绕两圈，学她的样子打了个船结，打得歪歪扭扭。她低头拿另一只手的指头拨那个歪结，拨了拨，没去改。“这个我不还了。”她把那只手缩进袖子，一路缩到回局里。那天晚上我散着头发去见老女房，又挨了一顿说。"
+next = "s"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "bond", person = "ushio", level = "A" }, { kind = "item", item = "omishima_amulet", qty = 1 }, { kind = "memory", memory = "mem-bond_ushio-a2", title = "大三岛的御守" }, { kind = "heart", person = "ushio", value = 6 }, { kind = "flag", flag = "c7_bond_ushio_cord" }]
+
+[[tracks.chapters.choices]]
+key = "ask_the_god"
+text = "问她：大三岛的神，灵不灵？"
+reply = "“灵不灵，看你回不回来。”她拍了拍我腰上的御守，又低头把那个船结一扯，解下来，系回她自己的腰带上。“你不信，就先放我这儿，它照样看着你。”我说那它可要累坏了。她瞪了我一眼，又忍不住笑：“那你就少去些远地方。”"
+next = "s"
+effects = [{ kind = "affinity", person = "ushio", value = 3 }]
+
+# speak_of_cane（研究 3.3 第 6 场）：只在替打那夜沉默的局（rw_mio_cane_silent）可选；与 wear_charm 同给 A、御守与回忆（C21b 审读 1-1：不能锁死 S 章）；设 _cane_spoken，重逢的 love_cane 读它。
+[[tracks.chapters.choices]]
+key = "speak_of_cane"
+text = "收下御守，说起那年下田网棚底下的竹子。"
+requires = [{ kind = "affinity", person = "ushio", ge = 80 }, { kind = "bond", person = "ushio", level = "B" }, { kind = "flag", flag = "rw_mio_cane_silent" }]
+hint = "情谊 80、羁绊 B。这件事，我还没想好怎么开口。"
+reply = "我说那年割缆的是我。她系结的手没停：“我知道是你。我娘也知道。”“那十下——”“十下。你记着就行，别拿钱来算，算不清。”她把结勒紧，抬头看我一眼。我没打算拿钱，可我刚才确实在心里把姜膏钱又数了一遍。"
+next = "s"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "bond", person = "ushio", level = "A" }, { kind = "item", item = "omishima_amulet", qty = 1 }, { kind = "memory", memory = "mem-bond_ushio-a2", title = "大三岛的御守" }, { kind = "flag", flag = "c7_bond_ushio_cane_spoken" }]
+
+# S：1556 年腊月，京都。一张写着舵位的纸；汐第一次在澪面前抬着头。
+# 一生一约：promise 与头一档 heart 带 bond S（引擎只许一位）；第二、三档 heart 不带 S。四个都设 c7_pair_ushio_reizei_yuki_taken。
+[[tracks.chapters]]
+key = "s"
+title = "不是陪嫁的船"
+text = "腊月里本家来人说，弟弟年底回中村，我也跟着回去，开春从下田出海。消息传到局里那天，汐不在，到傍晚才回来，鞋底全是泥，是在鸭川边上走了一下午。她在我面前跪坐下。“姬君出嫁带一条陪嫁的船，船上跟几个使唤的人，跟到哪里算哪里。我不当那条船。”我说我又不嫁人，她抬手止住我。“我要当你的船头。凭本事掌舵，拿工钱，船怎么走我说了算。你不愿意，我就回能岛跟鹰丸抢一条船，抢不过就在他船上收三年缆，三年以后再抢。”她从怀里掏出一张纸铺在我们中间，纸上一个字也没有。她的拳头搁在膝盖上，下巴抬着。"
+window = [[1556, 12, 1], [1556, 12, 31]]
+at = "kyoto"
+cast = ["ushio"]
+speaker = "captain"
+mood = "tender"
+when = [{ kind = "date", from = [1556, 12, 1], to = [1556, 12, 31] }, { kind = "age", le = 17 }]
+
+# 缺省：开春我出海那天，汐没有上我的船，她回了能岛。只开重逢、记 parted，不改关系。
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "start_track", track = "reunion_ushio" }, { kind = "flag", flag = "c7_bond_ushio_parted" }]
+
+# promise：工钱多写一成，她每月退回（手册 3.3、第九节第 11 条）。
+[[tracks.chapters.choices]]
+key = "promise"
+text = "把舵位和工钱一笔一笔写在那张纸上，签上名字交给她。"
+requires = [{ kind = "bond", person = "ushio", level = "A" }]
+hint = "羁绊 A。一生一回的约，若已许给别人，这张纸就落不下笔。"
+reply = "我磨了墨写：“船头，汐。舵归她管，船上的人听她的。工钱每月——”写了一个数，比本家给管事的多一成，底下签上一条澪。汐拿过去读，嘴唇跟着动。“多了一成。”“没多。”“多了。你照管事的数写，多出来的你自己留着。”我不改。她也不争，把纸对折再对折，起身去给我铺被，走到屏风那里回头：“开春出海那天，我掌舵。工钱一文也不许少。”第二年起，每到发工钱的日子，我的枕头底下就多出一小串钱，数一数，正好是那一成。"
+next = "done"
+effects = [{ kind = "bond", person = "ushio", level = "S" }, { kind = "relation", person = "ushio", relation = "friends" }, { kind = "memory", memory = "mem-bond_ushio-s", title = "不是陪嫁的船" }, { kind = "flag", flag = "c7_bond_ushio_promise" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "flag", flag = "c7_pair_ushio_reizei_yuki_taken" }, { kind = "start_track", track = "reunion_ushio" }]
+
+# heart（头一份）：只写舵位，工钱一栏空着；她把纸包进小时候的旧手巾。不说“那句话”。
+[[tracks.chapters.choices]]
+key = "heart"
+text = "只写舵位，工钱那一栏空着，签了名交给她。"
+requires = [{ kind = "bond", person = "ushio", level = "A" }, { kind = "heart", person = "ushio", ge = 12 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "ushio", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "ushio" }, { kind = "flag", flag = "c7_mio_heart_1", value = false }]
+hint = "羁绊 A、心动 12，还没对别人许过心意，一生的约也还没许给别人。笔停在工钱那一栏上。"
+reply = "我写：“船头，汐。舵归她管，船上的人听她的。”工钱那一栏空着，底下签了一条澪。她拿指甲在那一栏空白上划了一道。“工钱呢？”“你自己填，填多少都行。”“填多少都行的，那不叫工钱。”她没去拿笔，从怀里掏出一块洗得发白的旧手巾，小时候在中村阿濑给我们俩擦鼻涕的那一块，把纸包进去，系了个船结。“我娘说，账不清的东西不上船。这个不上船，我自己带着。”那一夜我们坐在局外的廊下，廊板冰凉，腊月的风从中庭灌进来。她把头靠在我肩上，我把她的手拉进我的袖子。远处寺里敲钟，数到后来就数乱了。第二天一早她来收被褥，说：“你的肩膀太硬。开春我掌舵，你坐船尾去。”"
+next = "done"
+effects = [{ kind = "bond", person = "ushio", level = "S" }, { kind = "heart", person = "ushio", value = 12 }, { kind = "relation", person = "ushio", relation = "crush" }, { kind = "flag", flag = "c7_bond_ushio_romance" }, { kind = "memory", memory = "mem-bond_ushio-s", title = "不是陪嫁的船" }, { kind = "flag", flag = "c7_pair_ushio_reizei_yuki_taken" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "start_track", track = "reunion_ushio" }]
+
+# heart_second：已许过一份。汐最先知道，不问，不撤；开春掌完这一趟就回能岛下水自己的关船（手册第六节）。
+[[tracks.chapters.choices]]
+key = "heart_second"
+text = "心里已经许过一个人，还是只写舵位，把空着工钱的那张纸交给她。"
+requires = [{ kind = "bond", person = "ushio", level = "A" }, { kind = "heart", person = "ushio", ge = 18 }, { kind = "attr", attr = "resolve", ge = 5 }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "ushio", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "ushio" }, { kind = "flag", flag = "c7_mio_heart_1" }, { kind = "flag", flag = "c7_mio_heart_2", value = false }]
+hint = "已许过一份心意：要心动 18、意志 5。这几天晚上我不在局里，灯油是她替我留的。"
+reply = "我写了舵位，空着工钱那一栏，签了名。她接过去，先不看纸，看我：“这几天晚上你不在局里，灯油我替你留着，剩了半盏。”我说是。“我没问你去哪儿。”她掏出那块洗得发白的旧手巾，小时候在中村阿濑给我们俩擦鼻涕的那一块，把纸包进去，系了个船结。“我娘说，交了钱的船护到底。我这条没交钱，也护。”她起身去给我铺被，走到屏风那里又说：“开春出海那天我掌舵。这一趟走完，我回能岛把那条关船下水。我早想好了，跟这事没关系，你别问了。”"
+next = "done"
+effects = [{ kind = "heart", person = "ushio", value = 12 }, { kind = "relation", person = "ushio", relation = "crush" }, { kind = "flag", flag = "c7_bond_ushio_romance" }, { kind = "memory", memory = "mem-bond_ushio-s", title = "不是陪嫁的船" }, { kind = "flag", flag = "c7_pair_ushio_reizei_yuki_taken" }, { kind = "flag", flag = "c7_mio_heart_2" }, { kind = "flag", flag = "c7_bond_ushio_left_crew" }, { kind = "start_track", track = "reunion_ushio" }]
+
+# heart_third：已许过两份及以上，还要那根发绳在她手上。
+[[tracks.chapters.choices]]
+key = "heart_third"
+text = "已经许过两个人，还是只写舵位，把那张纸交给她。"
+requires = [{ kind = "bond", person = "ushio", level = "A" }, { kind = "heart", person = "ushio", ge = 26 }, { kind = "attr", attr = "resolve", ge = 7 }, { kind = "flag", flag = "c7_bond_ushio_cord" }, { kind = "age", ge = 16, le = 17 }, { kind = "age", person = "ushio", ge = 16, le = 17 }, { kind = "romance_open", romance_open = "ushio" }, { kind = "flag", flag = "c7_mio_heart_2" }]
+hint = "已许过两份心意：要心动 26、意志 7，她腕上还得系着我那根发绳。"
+reply = "我写了舵位，空着工钱那一栏。她接过去翻到背面，背面也空着。她把左手袖子往上一捋，手腕上那根红白的发绳还在，绳头磨得更毛了。她把纸包进那块旧手巾，系了个船结，起身去给我铺被。开春我出海那天她掌舵，出了河口，她一路只喊潮时和水深，喊了一整天，嗓子都哑了。到了浦户，她把舵交给水夫，自己搭盐船回了能岛。"
+next = "done"
+effects = [{ kind = "heart", person = "ushio", value = 12 }, { kind = "relation", person = "ushio", relation = "crush" }, { kind = "flag", flag = "c7_bond_ushio_romance" }, { kind = "memory", memory = "mem-bond_ushio-s", title = "不是陪嫁的船" }, { kind = "flag", flag = "c7_pair_ushio_reizei_yuki_taken" }, { kind = "flag", flag = "c7_mio_heart_3" }, { kind = "flag", flag = "c7_bond_ushio_left_crew" }, { kind = "start_track", track = "reunion_ushio" }]
+
+# own：比潮不比桨（“一半”归鹰丸，手册 4.2 第 3 条）。
+[[tracks.chapters.choices]]
+key = "own"
+text = "约好她先回能岛学成，再来比一比谁的船快。"
+reply = "“那你可要输，”她一点也不客气，“我是村上家的人。”“我也有一半是村上家的人，吃你娘的奶长大的。”“那就比潮，不比桨。”她说得飞快，“桨你划不过我，潮你兴许看得过我。大潮那天，从下田河口外头那道白线算起，谁先把船带进栈桥谁赢。我娘在栈桥上看着，她不偏。”她伸出小指头，跟小时候在中村的河滩上一样，我勾上去，她使劲一拽，差点把我拽倒。开春我从下田出海那天，能岛的盐船三天前已经走了，船尾挂着一面我没见过的小旗。"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 2 }, { kind = "relation", person = "ushio", relation = "friends" }, { kind = "flag", flag = "c7_bond_ushio_own" }, { kind = "start_track", track = "reunion_ushio" }]
+
+[[tracks]]
+key = "reunion_ushio"
+name = "汐：先问船头"
+kind = "main"
+start = "reunion"
+auto = false
+cast = ["ushio"]
+
+# 重逢：1560 年，下田的栈桥。她自己挑的那条关船，她自己谈下的运费。
+# variants（取第一个对上的）：cane_silent / cane_confessed（替打的账，不加好感）→ shared（许过两份以上心意的局）→ with_yuki（配角线 together）。
+# friend 落点永远可选（姐妹）；love 落点要 romance 旗标、心动 ≥ 24、双方满 18，_silent 局走 love_cane。
+[[tracks.chapters]]
+key = "reunion"
+title = "先问船头"
+text = "隔了三年多，我又回到下田。河口的沙洲还在老地方，涨潮时那条深色的水线一眼就看得见。栈桥边泊着一条关船，不大，船身漆得乌亮。汐站在栈桥上，跟一个堺来的商人谈一船纸的运费。商人嫌贵，说别家的船便宜两成。我张嘴就想替她报数，又咽了回去。“别家的船进不了这个河口。”汐说，“你去看那根桩子，今天小潮，水才到第二道绳。你那条船吃水五尺，到不了栈桥，只能搁在沙洲外头雇驳船，一船纸驳三趟，驳船钱比我这两成多，纸还得多淋一回雨。”商人算了半天，认了价。她这才转过头来，抬手招我上船：“船是我自己挑的。你先看看脚下。”栈桥的板子湿着，第三块松了。"
+window = [[1560, 1, 1], [1560, 12, 31]]
+at = "shimoda_tosa"
+cast = ["ushio"]
+speaker = "captain"
+mood = "cheerful"
+when = [{ kind = "date", from = [1560, 1, 1], to = [1560, 12, 31] }, { kind = "age", ge = 18 }, { kind = "age", person = "ushio", ge = 18 }]
+
+# 缺省：我错过了中村，汐托一条能岛的船捎来一张潮时表，背面写着“先看看脚下”。
+[tracks.chapters.default]
+next = "done"
+effects = [{ kind = "letter", person = "ushio", text = "姬君：这封信是我自己写的，字丑，你认得。你没来。我在下田等了一个夏天，等到秋天的大潮过去，船要去堺装货，不能再等了。我现在是船头。船是我自己挑的，关船，不大，吃水浅，进得了下田的河口。别家的船进不了，所以我的运费比别家贵两成，堺的商人骂我，骂完还是雇我。水夫七个，两个是能岛来的，一个是你家的，就是小时候偷柿子被我娘追着打的那个，他现在会收帆了。我娘身子还好，盂兰盆还去河口点灯，说是给那年提灯的人点的。她问你什么时候回来，我说不知道。随信捎一张下田河口的潮时表，我自己记的，一天记两回，记了三年，中间病了四天，那四天是水夫替我记的，字更丑。你以后的船要进这个河口，照着它走。大潮那几天别硬闯，在外头等一夜，我在里头看得见你的灯。背面那句话，你听我说过。汐" }, { kind = "flag", flag = "c7_bond_ushio_missed" }]
+
+[[tracks.chapters.variants]]
+key = "cane_silent"
+when = [{ kind = "flag", flag = "rw_mio_cane_silent" }]
+text = "隔了三年多，我又回到下田。河口的沙洲还在老地方，涨潮时那条深色的水线一眼就看得见。栈桥边泊着一条关船，不大，船身漆得乌亮。汐站在栈桥上，跟一个堺来的商人谈一船纸的运费。商人嫌贵，说别家的船便宜两成。“别家的船进不了这个河口。”汐说，“今天小潮，水才到第二道绳，你那条船吃水五尺，只能搁在沙洲外头雇驳船，一船纸驳三趟，驳船钱比我这两成多。”商人认了价。她转过头来看见我，手没抬。“那年的竹子，我替你记着十下。”说完这句，她才招手叫我上船。"
+
+[[tracks.chapters.variants]]
+key = "cane_confessed"
+when = [{ kind = "flag", flag = "rw_mio_cane_confessed" }]
+text = "隔了三年多，我又回到下田。河口的沙洲还在老地方，涨潮时那条深色的水线一眼就看得见。栈桥边泊着一条关船，不大，船身漆得乌亮。汐站在栈桥上，跟一个堺来的商人谈一船纸的运费。商人嫌贵，说别家的船便宜两成。“别家的船进不了这个河口。”汐说，“今天小潮，水才到第二道绳，你那条船吃水五尺，只能搁在沙洲外头雇驳船，一船纸驳三趟，驳船钱比我这两成多。”商人认了价。她转过头来看见我，先笑了一下：“你那回认了，我白挨了。”这话她小时候就说过，一个字没改。然后她抬手招我上船。"
+
+[[tracks.chapters.variants]]
+key = "shared"
+when = [{ kind = "flag", flag = "c7_bond_ushio_romance" }, { kind = "flag", flag = "c7_mio_heart_2" }]
+text = "隔了三年多，我又回到下田。河口的沙洲还在老地方，涨潮时那条深色的水线一眼就看得见。栈桥边泊着一条关船，不大，船身漆得乌亮。汐站在栈桥上，跟一个堺来的商人谈一船纸的运费，商人嫌贵，她把桩子上的水痕、小潮的时辰、驳船的价钱一样一样摆出来，商人认了价。她转过头招我上船。舱口压着一封信，封皮上的字不是她的手。“半路上捎的，给你的。”她说，“送信那天我顺道见了那个人一面，说了一句话，别的没说。这条船跑下田到堺，你的船队往西，咱们不同路。你先看看脚下。”她舱里挂着的是能岛的过所旗。"
+
+[[tracks.chapters.variants]]
+key = "with_yuki"
+when = [{ kind = "flag", flag = "c7_pair_ushio_reizei_yuki_together" }]
+text = "隔了三年多，我又回到下田。河口的沙洲还在老地方，涨潮时那条深色的水线一眼就看得见。栈桥边泊着一条关船，不大，船身漆得乌亮。汐站在栈桥上，跟一个堺来的商人谈一船纸的运费。商人嫌贵，说别家的船便宜两成。“别家的船进不了这个河口。”汐说，“今天小潮，水才到第二道绳，你那条船吃水五尺，只能搁在沙洲外头雇驳船，驳船钱比我这两成多。”商人认了价。她招我上船：“船是我自己挑的。你先看看脚下。”舱里的横梁上压着一卷歌稿，纸是京都的薄样，字细细的，是冷泉家的手。她见我在看，咳了一声：“现在她的信，不经过你的手了。”她把歌稿往横梁里头推了推，推完又拉出来一点，让我看得见封皮。"
+
+[[tracks.chapters.choices]]
+key = "friend"
+text = "上她的船，跟她出一趟海，看她怎么当船头。"
+reply = "第二天一早我们出了河口，往西去绕足摺岬。她掌舵，我提灯，天还没亮，她非要我提，说船上的规矩，客人也得干活。浪比那年盂兰盆小，她比那年凶，一会儿嫌水夫收缆慢，一会儿嫌我灯举歪了。“往左一点。”“好，别动。”绕过岬角，太阳出来，她把舵交给水夫，走到船头挨着我站。回港以后她数一船的货钱，我在旁边报了个总数，她不理，从头数，数出来跟我报的差三文，是我错了。她把一串钱放到我手里，说是提灯的工钱。“你还是我的姬君，我也还是你的乳姐妹。可这条船是我的。”我说下回要涨价。她说：“那你先学会看水线。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 5 }, { kind = "relation", person = "ushio", relation = "sisters" }, { kind = "flag", flag = "c7_bond_ushio_landing_friend" }, { kind = "memory", memory = "mem-reunion_ushio", title = "先问船头" }]
+
+[[tracks.chapters.choices]]
+key = "love"
+text = "把那年空着的工钱那一栏，现在说清楚。"
+requires = [{ kind = "flag", flag = "c7_bond_ushio_romance" }, { kind = "heart", person = "ushio", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "ushio", ge = 18 }, { kind = "romance_open", romance_open = "ushio" }, { kind = "flag", flag = "rw_mio_cane_silent", value = false }]
+hint = "要当年许过心意、心动 24。"
+reply = "我说我想把那年空着的那一栏说清楚。汐转身对水夫喊：“舵你看着。”她拉着我的手腕穿过堆着纸包的甲板，一直走到船头。船头的横木上刻着一个字，我在栈桥上没看见：一个“澪”，三点水一点比一点低。“刻坏了两块板，”她说，“这是换上去的那块。”她从怀里摸出那块旧手巾，解开，纸还在，工钱那一栏还空着。“不填了。这船是我的，你是坐我船的人，填什么都不对。”我说那我不填，我说别的。说得不慢，也不好听，说到一半她就笑了，笑着凑过来吻了我。一个浪打上船头，船晃了一下，她没松手。水夫在后头咳嗽，她头也不回：“看你的舵。”"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 5 }, { kind = "relation", person = "ushio", relation = "lovers" }, { kind = "flag", flag = "c7_bond_ushio_landing_love" }, { kind = "memory", memory = "mem-reunion_ushio", title = "先问船头" }]
+
+# love_cane：替打那夜沉默、后来在大三岛那回提过的局（研究 3.3 第 6 场的“真关上的门”在没提过的局）。
+[[tracks.chapters.choices]]
+key = "love_cane"
+text = "先说那十下竹子，再把那年空着的那一栏说清楚。"
+requires = [{ kind = "flag", flag = "c7_bond_ushio_romance" }, { kind = "heart", person = "ushio", ge = 24 }, { kind = "age", ge = 18 }, { kind = "age", person = "ushio", ge = 18 }, { kind = "romance_open", romance_open = "ushio" }, { kind = "flag", flag = "rw_mio_cane_silent" }, { kind = "flag", flag = "c7_bond_ushio_cane_spoken" }]
+hint = "要当年许过心意、心动 24，那十下竹子也得在京都时就跟她提过。"
+reply = "我先说那十下竹子。汐脸朝着海听，听到一半打断我：“你在京都说过一回了。说过一回就够，再说就成了讨价。”她转身对水夫喊“舵你看着”，拉我去船头。横木上刻着一个“澪”，三点水一点比一点低，最后一点刻得太深，裂进了木纹。她从怀里摸出那块旧手巾，纸还在，工钱那一栏空着。我说我也有话要说。她说那你说，说慢些。我说了，说得很快，说到一半手巾让风掀起来，往舷边卷，她一脚踩住，弯腰捡起来，把它系在了我的手腕上，系的是船结。"
+next = "done"
+effects = [{ kind = "affinity", person = "ushio", value = 5 }, { kind = "relation", person = "ushio", relation = "lovers" }, { kind = "flag", flag = "c7_bond_ushio_landing_love" }, { kind = "memory", memory = "mem-reunion_ushio", title = "先问船头" }]

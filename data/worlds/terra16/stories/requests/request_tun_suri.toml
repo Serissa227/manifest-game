@@ -1,0 +1,209 @@
+# 请托：先写粮单的盟书（request_tun_suri）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：敦·苏丽（tun_suri，1533-01-10 生，女），流亡马六甲王廷的王女，生在柔佛，没见过马六甲；cast 在 cast/story_southeast_asia.toml。
+# 类型：送信（letter）。三章：offer（报价）、handover（亚齐王廷交信）、reply（柔佛回话，成功）、reply_partial（回话，只给了一半）。终点 done / failed。
+#   结构说明：检定的失败分支转入 reply_partial，由它自己的两个选项结账；成功的三条路（礼数、马来话、检定通过）都转入 reply。
+#   两章的选项都不用 requires 去读 c13_request_tun_suri_first，路由全部用 next 完成。
+# 报价：T 当面（auto=false，“问请托”即 ask:request_tun_suri 启动）；报价港 johor_port，人物日程在 johor_port 码头（cast 已写 johor_port，B10b 改名已经完成）。
+#   offer 不写 at，只写 person 目标；deadline 为窗口止日 1586-06-30，timeout 直接 failed，不写见闻。
+# 窗口：offer 1571-01-01 至 1586-06-30；handover 进入后 60 天期限（deadline_days = 60），窗口内 1571-01-01 至 1586-12-31；reply 与 reply_partial 1571-01-01 至 1586-12-31。
+# 依据·史实背景：1511 年葡萄牙人攻陷马六甲，王廷流亡到柔佛河上；柔佛与亚齐在十六世纪后半时而结盟、时而反目，葡萄牙马六甲夹在中间（TERRA16 §14）。
+#   亚齐的苏丹与宫中大臣不写名字，只写“苏丹”“大臣”。本文件不写王廷里主和的人，也不写对葡萄牙人的生意。
+# 依据·原创：敦·苏丽、漆盒与盒盖上柔佛的纹、粮单的货目、宫门口的侍卫与鹦鹉、回信的一半。
+# 依赖：港口 johor_port、aceh_port（ports_southeast_asia.toml）；技能 court_etiquette、lang_malay（skills.toml）；势力 johor（factions/08_southeast_asia.toml）；人物 tun_suri。
+#   主线门禁：无（敦·苏丽不是主线人物，不写 gate_main，不写 variant_main）。
+# C7：tie_tun_suri_mali 在 C7 线里，本请托不读也不设任何 c7_ 旗标；不写玛莉，不写象。
+# 设的旗标：c13_request_tun_suri_accepted（offer 两条接法）、_declined（offer 回绝，终局）、_first（handover 三条成功的路，只设不读）、_late（超时，终局）、_done（reply 两条，终局）、_partial（reply_partial 两条，终局）。
+# 读的旗标：无。
+# 秘密：王廷里有人宁愿跟葡萄牙人做买卖，她瞒着他们募船。正文一字不提，见闻不写。
+# 口头禅：敦·苏丽的“船上载了多少米？先答这个。”只在 offer 章用一次，放在她第一次开口的地方。
+# 报酬：现金最多 2250（折中 1300，不收酬金的一条为 0）；好感最多 +13；名声 +3；声望 johor +2（两条完结都给）；回忆 mem-request_tun_suri-reply（只给 reply 的第一条最好的结局）。
+# 回忆插画清单：mem-request_tun_suri-reply：漆盒开着，粮单第一页摊在河岸的石阶上，米、盐、麻绳三行字朝着看的人。
+# 与任务单的小差别：粮单的货目原来写了“火绳的引线”，按 fixes 不写兵器买卖，改成“麻绳、桐油”；reply 章按 next 分成 reply 与 reply_partial 两章；reply_partial 另加了一条“不收酬金”的选项，使两章都有两个选项。
+
+[[tracks]]
+key = "request_tun_suri"
+name = "先写粮单的盟书"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["tun_suri"]
+
+# 一、顺序不能反：柔佛的码头上，她先看你的船吃了多深的水，再说话。
+[[tracks.chapters]]
+key = "offer"
+title = "顺序不能反"
+text = "柔佛旧都港的码头上，一个女人站在晒网的木架边，身后没有随从。她先不问你是谁，只回头看了一眼你的船吃了多深的水。“船上载了多少米？先答这个。别的话——光复也好，交情也好——吃饱了再说。”她要给亚齐的苏丹送一封结盟的信。信头一页写的是一张粮单：多少米，多少盐，多少麻绳，多少桐油。“亚齐的宫里有人只想看信的最后一行，”她把信上的火漆指给你看，“你要让他们从第一行看起。”"
+speaker = "captain"
+mood = "tense"
+objectives = [{ kind = "person", person = "tun_suri", text = "在港里找到她" }]
+when = [
+  { kind = "date", from = [1571, 1, 1], to = [1586, 6, 30] },
+  { kind = "age", ge = 17 },
+  { kind = "alive", person = "tun_suri", value = true },
+]
+deadline = [1586, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "accept"
+text = "答应把信送去亚齐。"
+next = "handover"
+reply = "她把信装进一只漆盒，盒盖上刻着柔佛的纹，又拿布条把锁扣缠了两道。“盒子要当着苏丹打开，不能让别人先开。”"
+effects = [
+  { kind = "affinity", person = "tun_suri", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_last"
+text = "问她：最后一行写的是什么？"
+next = "handover"
+reply = "“写的是我想要的。”她把漆盒合上，停了一下，“前面写的，是我能给的。顺序不能反。”她没有解释后半句。"
+effects = [
+  { kind = "affinity", person = "tun_suri", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_accepted" },
+]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "两国结盟的事，我一个外人不碰。"
+next = "failed"
+reply = "她点点头，把漆盒收回去，夹在胳膊底下。走到码头尽头，她回头看了一眼你的船，才转身走了。"
+effects = [{ kind = "flag", flag = "c13_request_tun_suri_declined" }]
+
+# 二、亚齐的侧门：大臣伸手要漆盒。三条路都能进去，只有一条路先看到粮单。
+[[tracks.chapters]]
+key = "handover"
+title = "先看最后一行"
+text = "亚齐王廷的侧门外，一位大臣迎你进去，伸手就要漆盒。“苏丹忙，”他说，“信先由我替他看看最后一行。”他的手已经碰到了盒盖。门廊里两排侍卫站着，没人动。檐下挂着一只鹦鹉，叫了一声，也没人理它。这一趟路你走了两个潮水，漆盒一直揣在怀里，到这一刻才觉得有点沉。"
+speaker = "captain"
+mood = "tense"
+at = "aceh_port"
+objectives = [{ kind = "at", at = "aceh_port", text = "到亚齐去" }]
+when = [
+  { kind = "date", from = [1571, 1, 1], to = [1586, 12, 31] },
+  { kind = "alive", person = "tun_suri", value = true },
+]
+deadline_days = 60
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "tun_suri", value = -3 }, { kind = "flag", flag = "c13_request_tun_suri_late" }, { kind = "letter", person = "tun_suri", text = "信我托了别人。亚齐那边，先看了最后一行。" }] }
+
+[[tracks.chapters.choices]]
+key = "etiquette"
+text = "照宫里的礼数说：柔佛王女的信，要当着苏丹打开。"
+next = "reply"
+requires = [{ kind = "skill", skill = "court_etiquette", ge = 60 }]
+hint = "宫里的礼数，你还没学到能拿来说话的地步。"
+reply = "大臣的手停住了，看了你一眼，收回去，领你去见苏丹。苏丹打开漆盒，从粮单看起，一页一页。他读得很慢，读到米的那一行，抬头看了你一眼。"
+news = "亚齐王廷里，柔佛王女的一只漆盒当着苏丹打开了，听说信的头一页是一张粮单。"
+effects = [
+  { kind = "affinity", person = "tun_suri", value = 3 },
+  { kind = "flag", flag = "c13_request_tun_suri_first" },
+]
+
+[[tracks.chapters.choices]]
+key = "malay"
+text = "用马来话跟大臣说，这是王女的意思，你不敢违。"
+next = "reply"
+requires = [{ kind = "skill", skill = "lang_malay", ge = 60 }]
+hint = "你的马来话够跟船商讲价，还压不住宫里的人。"
+reply = "大臣听你说马来话，笑了，说外乡人也懂规矩，就领你进去了。走过两道门，他一路用马来话问你，柔佛的河水是不是还那么浅。"
+news = "亚齐王廷里有人说，一个外乡船长用马来话替柔佛王女把漆盒送进了宫。"
+effects = [
+  { kind = "affinity", person = "tun_suri", value = 3 },
+  { kind = "flag", flag = "c13_request_tun_suri_first" },
+]
+
+[[tracks.chapters.choices]]
+key = "give"
+text = "把漆盒交给大臣，请他别先看最后一行。"
+next = "reply"
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "reply_partial", news = "亚齐王廷有人说，柔佛王女的漆盒送进宫时，大臣先翻开看了最后一页。", effects = [{ kind = "affinity", person = "tun_suri", value = -2 }] }
+reply = "大臣看了你一眼，又看了看盒盖上的纹，没有再伸手。他捧着漆盒，一步一步走进内殿，像捧着一只会晃的碗。"
+news = "亚齐王廷的侍从说，柔佛来的漆盒原样呈进了内殿，没人先拆开看。"
+effects = [
+  { kind = "affinity", person = "tun_suri", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_first" },
+]
+
+# 三、回柔佛：苏丹的回信很短，她问的是他从哪一页看起。
+[[tracks.chapters]]
+key = "reply"
+title = "从哪一页看起"
+text = "回到柔佛，你把苏丹的回信交给敦·苏丽。她还坐在码头的木箱上，腿上压着那张粮单。回信很短：粮单上的东西，给一半；最后一行，他要再想想。她的指头沿着粮单一行一行划下去，划到米那一行停住。“他给的是米，”她说，“盐呢，麻绳呢？”她把信纸翻过来看了背面，背面什么也没写。她把纸折回去压在粮单底下，然后问你苏丹是从哪一页看起的。"
+speaker = "captain"
+mood = "tender"
+at = "johor_port"
+objectives = [{ kind = "person", person = "tun_suri", text = "把回信交给她" }]
+when = [
+  { kind = "date", from = [1571, 1, 1], to = [1586, 12, 31] },
+  { kind = "alive", person = "tun_suri", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "first_page"
+text = "说：从粮单看起，一页一页。"
+next = "done"
+reply = "她点点头，说那就够了，一半的粮，比一整行的盟誓实在。“盟誓写在纸上，谁都能念；粮食得一袋一袋过秤。”她付了你酬金，说下回回家的路上，要有一条你的船。"
+news = "柔佛的码头上传开了：亚齐苏丹的回信，粮单上的东西给了一半；王女说，一半比一行盟誓实在。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "tun_suri", value = 8 },
+  { kind = "fame", value = 3 },
+  { kind = "reputation", faction = "johor", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_done" },
+  { kind = "memory", memory = "mem-request_tun_suri-reply", title = "当着苏丹打开的漆盒" },
+]
+
+[[tracks.chapters.choices]]
+key = "ask_when"
+text = "问她：那一半粮，什么时候运到柔佛？"
+next = "done"
+reply = "“下个北风。”她在纸上记下日子，记完又划掉一个，改成更早的一天。她付了你酬金，数得很仔细，一句话也没多讲。"
+news = "柔佛的码头上有人说，亚齐送来的粮，下个北风就要运到，王女亲自算的日子。"
+effects = [
+  { kind = "cash", value = 2250 },
+  { kind = "affinity", person = "tun_suri", value = 5 },
+  { kind = "fame", value = 2 },
+  { kind = "reputation", faction = "johor", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_done" },
+]
+
+# 三之二、只给了一半：大臣先翻了最后一页。她照旧问，你照实答。
+[[tracks.chapters]]
+key = "reply_partial"
+title = "只给了一半"
+text = "回到柔佛，你把回信交给敦·苏丽。她先翻到背面看了一眼，是空的，这才从正面读起。米给了一半，盐和桐油只字未提，最后一行写着要再想想。她把信折好，夹回粮单里，抬头问你，苏丹是先翻到哪一页的。你想起亚齐侧门外那只先伸过来的手，指头上戴着一枚大臣的戒指。"
+speaker = "captain"
+mood = "tender"
+at = "johor_port"
+objectives = [{ kind = "person", person = "tun_suri", text = "把回信交给她" }]
+when = [
+  { kind = "date", from = [1571, 1, 1], to = [1586, 12, 31] },
+  { kind = "alive", person = "tun_suri", value = true },
+]
+
+[[tracks.chapters.choices]]
+key = "last_page"
+text = "照实说：大臣先翻了最后一页。"
+next = "done"
+reply = "她沉默了一会儿，说那苏丹回的一半，是大臣替他回的。“大臣替人回话，回得比苏丹还快。”她付了钱，又拿出一张新的粮单，开始重写。"
+news = "柔佛旧都港有人说，亚齐回来的粮单只给了一半，是那边的大臣替苏丹回的。王女付了钱，当场又拟了一张粮单。"
+effects = [
+  { kind = "cash", value = 1300 },
+  { kind = "affinity", person = "tun_suri", value = 4 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_partial" },
+]
+
+[[tracks.chapters.choices]]
+key = "not_pay"
+text = "不收酬金，请她把那张粮单抄一份给我。"
+next = "done"
+reply = "她愣了一下，把笔在指间转了一圈。“抄给你做什么？”“看看一张粮单能吃几天。”她没笑，抄的时候字写得很慢。"
+news = "柔佛旧都港的书记说，王女不收酬金，只要一张粮单的抄本，说要看它能吃几天。"
+effects = [
+  { kind = "affinity", person = "tun_suri", value = 6 },
+  { kind = "fame", value = 2 },
+  { kind = "flag", flag = "c13_request_tun_suri_partial" },
+]

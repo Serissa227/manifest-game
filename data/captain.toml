@@ -1,0 +1,570 @@
+# 主角身世与属性（docs/ECONOMY.md 第 5 节）。开局依次选外貌、生日、姓名，回答五道身世问答，再分配属性点。
+# 可以随意改文字与数值；各表的 key 只允许追加、不要改名或删除（存档按 key 记下主角的身世）。
+#
+# 属性取值 1–10：每项从 [points].base 起，身世问答与星座加点，再自由分配 [points].free 点；
+# 开局时单项不超过 [points].creation_cap。开局时算学达到 [points].genius_numeracy 的主角本人就是算学奇才，
+# 可以从五种奇才之法里挑一种（见 docs/ECONOMY.md 4.3.1）。
+
+[points]
+base = 1              # 每项属性的起点
+free = 5              # 自由分配的点数
+creation_cap = 7      # 开局时单项上限
+max = 10              # 单项上限（以后成长）
+genius_numeracy = 7   # 开局算学达到这个值：本人是算学奇才
+manual_numeracy = 4   # 算学达到这个值：行情窗口里可以手调参数与拟合窗口（低于它只能用默认值）
+learn_numeracy = 5    # 算学达到这个值：与算学奇才共事满一年后，学会他的一种方法
+learn_days = 360      # 共事多少天
+age_min = 16          # 开局年龄的范围（出生年份 = 航海历开局年份 − 年龄）
+age_max = 45
+age_default = 18      # 开局向导里年龄的缺省值（须在 age_min 与 age_max 之间；“随机生日”仍在整个范围里随机）
+birthday_morale = 5   # 每年生日：旗舰船员士气增加
+
+# ── 六项属性（顺序即界面顺序；key 不能改） ──
+# desc 写效果，系数在代码里与航海士的加成共用一套公式（属性 × 10 相当于航海士的 1–100 能力）。
+[[attributes]]
+key = "seamanship"
+name = "航海"
+desc = "旗舰的航速（与旗舰舰长取较高者）。"
+
+[[attributes]]
+key = "commerce"
+name = "交易"
+desc = "交易税的折扣（与交易员取较高者）。"
+
+[[attributes]]
+key = "arms"
+name = "武艺"
+desc = "旗舰的海战火力与白刃战（与旗舰舰长取较高者）。"
+
+[[attributes]]
+key = "stewardship"
+name = "管理"
+desc = "船员与工人的工资折扣（与会计取较高者）。"
+
+[[attributes]]
+key = "numeracy"
+name = "算学"
+desc = "行情窗口能同时追踪几条预测、能否手调参数；开局算学够高，本人就是算学奇才。"
+
+[[attributes]]
+key = "eloquence"
+name = "口才"
+desc = "议价时多争到一点折扣；招募航海士更便宜。"
+
+# ── 星座 ──
+# 生日（月、日）所在的星座给一项属性 +1。[[signs]] 里有两种条目：
+#   · 现行的十二星座（排在后面，写 start）：按现实的日期划分，新开局的主角只会得到它们；
+#   · 旧版星宫（排在前面，写 legacy = true）：早先按出生月份判定的十二个原创星宫，已停用，只为旧存档保留——
+#     旧存档按 key 记下了主角的星宫，名字照常显示。不要删除它们，也不要改 key。
+
+# 旧版星宫（legacy = true，不参与按生日判定）：原先 1–12 月依次是海燕、羽笔、铁锚、罗盘、钱袋、弯刀、星盘、商船、蜂巢、号角、灯塔、提灯。
+[[signs]]
+key = "petrel"
+name = "海燕座"
+desc = "报春的海燕，替水手们捎来远方的口信。"
+attribute = "eloquence"
+legacy = true
+
+[[signs]]
+key = "quill"
+name = "羽笔座"
+desc = "修道院抄写员的守护星，据说在它下面出生的人账算得又快又准。"
+attribute = "numeracy"
+legacy = true
+
+[[signs]]
+key = "anchor"
+name = "铁锚座"
+desc = "稳住船、也稳住一家人的生计。"
+attribute = "stewardship"
+legacy = true
+
+[[signs]]
+key = "compass"
+name = "罗盘座"
+desc = "阿尔坎的领航员对着它校准罗盘。"
+attribute = "seamanship"
+legacy = true
+
+[[signs]]
+key = "purse"
+name = "钱袋座"
+desc = "商人们在它升起的夜里结清一年的账目。"
+attribute = "commerce"
+legacy = true
+
+[[signs]]
+key = "cutlass"
+name = "弯刀座"
+desc = "夏夜里最亮的一把刀，海盗也怕它三分。"
+attribute = "arms"
+legacy = true
+
+[[signs]]
+key = "astrolabe"
+name = "星盘座"
+desc = "天文台的学徒们第一颗要学会找的星。"
+attribute = "numeracy"
+legacy = true
+
+[[signs]]
+key = "merchantman"
+name = "商船座"
+desc = "满载的商船从东方驶来，秋天的集市就要开张。"
+attribute = "commerce"
+legacy = true
+
+[[signs]]
+key = "hive"
+name = "蜂巢座"
+desc = "丰收之月，千百只蜜蜂各司其职。"
+attribute = "stewardship"
+legacy = true
+
+[[signs]]
+key = "horn"
+name = "号角座"
+desc = "冬季出征前吹响的号角。"
+attribute = "arms"
+legacy = true
+
+[[signs]]
+key = "lighthouse"
+name = "灯塔座"
+desc = "长夜将至，灯塔替迷途的船照亮归航之路。"
+attribute = "seamanship"
+legacy = true
+
+[[signs]]
+key = "lantern"
+name = "提灯座"
+desc = "一年最长的夜里，守夜人提着灯，把码头走了一遍又一遍。"
+attribute = "eloquence"
+legacy = true
+
+# 现行的十二星座：按现实的日期划分。start 是首日 [月, 日]，每个星座到下一个星座首日的前一天为止，
+# 摩羯座从 12 月 22 日跨年到 1 月 19 日。航海历每月 30 天，现实里落在 19–23 日的边界照搬即可
+# （数据加载时校验：正好十二个，日期区间首尾相接、互不重叠、合起来正好一年 360 天）。
+# 每项属性恰好两个星座：航海 = 射手、双鱼；交易 = 金牛、天秤；武艺 = 白羊、天蝎；管理 = 巨蟹、摩羯；算学 = 处女、水瓶；口才 = 双子、狮子。
+# 摩羯座接过旧版提灯座的小特性（冬至，一年最长的夜）。
+[[signs]]
+key = "aries"
+name = "白羊座"
+desc = "春分后头一个升起的星座；护航船的船首爱刻一对弯角，说它能替整支船队顶开开春的头一道浪。"
+attribute = "arms"
+start = [3, 21]   # 3 月 21 日—4 月 19 日
+
+[[signs]]
+key = "taurus"
+name = "金牛座"
+desc = "春天的集市上，牲口贩子与布商都在它底下讨价还价——牛走得慢，可一步也不白走。"
+attribute = "commerce"
+start = [4, 20]   # 4 月 20 日—5 月 20 日
+
+[[signs]]
+key = "gemini"
+name = "双子座"
+desc = "两颗并肩的亮星，像一桩买卖的两方——一个开价，一个还价，谁也离不开谁。"
+attribute = "eloquence"
+start = [5, 21]   # 5 月 21 日—6 月 21 日
+
+[[signs]]
+key = "cancer"
+name = "巨蟹座"
+desc = "夏至后的星座；蟹把家背在身上，船长也一样——一条船的粮、水、人手与账目，都得随身照管周全。"
+attribute = "stewardship"
+start = [6, 22]   # 6 月 22 日—7 月 22 日
+
+[[signs]]
+key = "leo"
+name = "狮子座"
+desc = "盛夏归它当值；在港口的酒馆里，能把一场风暴讲得满座屏息的人，往往也谈得下最难谈的合同。"
+attribute = "eloquence"
+start = [7, 23]   # 7 月 23 日—8 月 22 日
+
+[[signs]]
+key = "virgo"
+name = "处女座"
+desc = "收割时节的星座，手里握着一束麦穗；过秤、点数、记账，一粒也不能错。"
+attribute = "numeracy"
+start = [8, 23]   # 8 月 23 日—9 月 22 日
+
+[[signs]]
+key = "libra"
+name = "天秤座"
+desc = "秋分前后昼夜等长，天上挂起一杆秤；码头上的公道价，就是在这杆秤底下谈出来的。"
+attribute = "commerce"
+start = [9, 23]   # 9 月 23 日—10 月 23 日
+
+[[signs]]
+key = "scorpio"
+name = "天蝎座"
+desc = "秋深浪急，海盗也要赶在封港前捞最后一笔；天蝎心上那颗红星一亮，护航的炮手就该把火绳备好了。"
+attribute = "arms"
+start = [10, 24]  # 10 月 24 日—11 月 22 日
+
+[[signs]]
+key = "sagittarius"
+name = "射手座"
+desc = "入冬前最后一个远航的时节；射手的箭指着星河最亮的一段，领航员说，照着它走，船就不会迷在外洋。"
+attribute = "seamanship"
+start = [11, 23]  # 11 月 23 日—12 月 21 日
+
+[[signs]]
+key = "capricorn"
+name = "摩羯座"
+desc = "从冬至起，一年最长的夜：粮仓与账房都得精打细算地过冬。"
+attribute = "stewardship"
+start = [12, 22]  # 12 月 22 日—次年 1 月 19 日（跨年）
+
+[[signs]]
+key = "aquarius"
+name = "水瓶座"
+desc = "持瓶人一瓢一瓢地分水；远航的淡水也得按人、按天算清，差一瓢，就多受一分罪。"
+attribute = "numeracy"
+start = [1, 20]   # 1 月 20 日—2 月 18 日
+
+[[signs]]
+key = "pisces"
+name = "双鱼座"
+desc = "冰化的时节，鱼群顺着暖流北上，渔船跟着鱼群，商船跟着渔船——认得水的人，先一步出海。"
+attribute = "seamanship"
+start = [2, 19]   # 2 月 19 日—3 月 20 日
+
+# ── 身世五问 ──
+# [[questions]] 是问题（title 标题、prompt 问句）；[[options]] 是选项，question 写所属问题的 key，选项的 key 在整个文件里唯一。
+# 每个选项：一段叙述、属性加点（attrs，每项 0–3，合计不超过 3）、至多一项开局效果（effect）。开局效果是封闭集合，内核按下面的范围校验：
+#   cash_pct   开局现金增减的百分比（−20…20）          effect = { kind = "cash_pct", value = 10 }
+#   reputation 起始港所属势力的声望（−10…10）          effect = { kind = "reputation", value = 8 }
+#   fame       名声（0…20）                            effect = { kind = "fame", value = 10 }
+#   morale     旗舰船员士气（0…20）                    effect = { kind = "morale", value = 10 }
+#   chart      某海区的海图（海区 key）                 effect = { kind = "chart", region = "silvermist" }
+#   rumor      一条尚未发现的发现物的传闻（按种子挑）   effect = { kind = "rumor" }
+#   goods      旗舰货舱里的一批货（商品 key、数量；货值不超过 3000 金币）  effect = { kind = "goods", good = "wine", qty = 20 }
+#   loan       一笔银行贷款（带同额现金，照常计息）（金额 1000…20000、期限 6…24 个月）  effect = { kind = "loan", amount = 8000, months = 12 }
+# 开局效果只在开局那一天生效；旧存档补建身世时只给属性，不再发放开局效果。
+
+[[questions]]
+key = "family"
+title = "你的家世"
+prompt = "你出生在什么样的人家？"
+
+[[options]]
+question = "family"
+key = "merchant_house"
+name = "港口商人之家"
+text = "你生在一家商行的后院，听着讨价还价长大，十岁就能替父亲看住一整排货架。"
+attrs = { commerce = 2 }
+effect = { kind = "cash_pct", value = 10 }
+
+[[options]]
+question = "family"
+key = "fallen_noble"
+name = "没落贵族"
+text = "祖上有过封地与纹章，到你这一代只剩一枚旧印章、一身礼数，和几封还能递得出去的荐书。"
+attrs = { eloquence = 1, stewardship = 1 }
+effect = { kind = "reputation", value = 8 }
+
+[[options]]
+question = "family"
+key = "shipwrights"
+name = "船匠与渔民"
+text = "你家在码头边修了三代的船，你会游泳比会走路还早，水手们都当你是自家孩子。"
+attrs = { seamanship = 2 }
+effect = { kind = "morale", value = 10 }
+
+[[options]]
+question = "family"
+key = "veterans"
+name = "老兵之家"
+text = "父亲在王家海军里当了二十年炮长，家里的墙上挂着一把卷了刃的弯刀。"
+attrs = { arms = 2 }
+
+[[options]]
+question = "family"
+key = "lighthouse_scribes"
+name = "灯塔修道院的抄写员"
+text = "你在拉玛塔的灯塔修道院长大，替修士们誊抄星图与账册，修道院的藏书室是你的游乐场。"
+attrs = { numeracy = 2 }
+effect = { kind = "chart", region = "lighthouse" }
+
+[[options]]
+question = "family"
+key = "caravan_folk"
+name = "沙漠商队"
+text = "你生在城外的驼队里，第一眼看到的是沙丘上的星星；驼铃一响，你就知道该起身赶路了。"
+attrs = { stewardship = 1, commerce = 1 }
+effect = { kind = "goods", good = "spice", qty = 12 }
+
+[[questions]]
+key = "childhood"
+title = "你的童年"
+prompt = "小时候，你的日子是怎么过的？"
+
+[[options]]
+question = "childhood"
+key = "dock_ledger"
+name = "在码头上替人记账"
+text = "你蹲在货箱上替搬运工记数，一天下来，谁扛了几包、谁偷了懒，你都记得清清楚楚。"
+attrs = { numeracy = 1, commerce = 1 }
+
+[[options]]
+question = "childhood"
+key = "fishing_boats"
+name = "跟着渔船出海"
+text = "天不亮就跟着渔船出港，你学会了看云识风，也学会了在颠簸的甲板上站稳。"
+attrs = { seamanship = 2 }
+
+[[options]]
+question = "childhood"
+key = "street_urchin"
+name = "在街头讨生活"
+text = "你在港口的小巷里长大，靠一张嘴和一双拳头活下来。"
+attrs = { eloquence = 1, arms = 1 }
+
+[[options]]
+question = "childhood"
+key = "star_charts"
+name = "在修道院抄写星图"
+text = "你趴在高高的书桌上，一笔一画地描下星辰的位置，也记住了它们随季节的起落。"
+attrs = { numeracy = 1, seamanship = 1 }
+
+[[options]]
+question = "childhood"
+key = "manor"
+name = "在庄园里长大"
+text = "你跟着管家巡视田庄、清点仓廪，也在宴会上学会了怎样同客人说话。"
+attrs = { stewardship = 1, eloquence = 1 }
+
+[[questions]]
+key = "youth"
+title = "你的少年"
+prompt = "十几岁时，你在哪里学本事？"
+
+[[options]]
+question = "youth"
+key = "guild_apprentice"
+name = "商会学徒"
+text = "你在一家大商会当学徒，从扫地、搬货做起，渐渐摸清了行情的涨落。"
+attrs = { commerce = 1, numeracy = 1 }
+
+[[options]]
+question = "youth"
+key = "naval_cadet"
+name = "海军见习生"
+text = "你穿上了见习生的蓝外套，学会了操帆、装炮，也挨够了水手长的骂。"
+attrs = { arms = 1, seamanship = 1 }
+
+[[options]]
+question = "youth"
+key = "university"
+name = "在大学学算学与天文"
+text = "你在大学的讲堂里学几何与天文，夜里还偷偷去天文台看星星——那里的老师说你是块算学的材料。"
+attrs = { numeracy = 2 }
+
+[[options]]
+question = "youth"
+key = "smuggler_runner"
+name = "在走私船上跑腿"
+text = "你替一条走私船送信、望风，学会了在夜里摸黑进港，也学会了怎么跟关卡上的人打交道。"
+attrs = { seamanship = 1, eloquence = 1 }
+
+[[options]]
+question = "youth"
+key = "steward_apprentice"
+name = "管家学徒"
+text = "你跟着一位严厉的老管家学管账、管人、管仓库，一笔糊涂账都逃不过你的眼睛。"
+attrs = { stewardship = 2 }
+
+[[questions]]
+key = "adulthood"
+title = "成年之后"
+prompt = "出海之前，你做过什么营生？"
+
+[[options]]
+question = "adulthood"
+key = "shopkeeper"
+name = "在别人的商会当掌柜"
+text = "你替东家管着一间铺面，攒下了一点积蓄，也认识了几位靠得住的熟客。"
+attrs = { commerce = 1, stewardship = 1 }
+effect = { kind = "cash_pct", value = 5 }
+
+[[options]]
+question = "adulthood"
+key = "navy"
+name = "在海军服役"
+text = "你在王家海军里服了几年役，剿过海盗，也在港口官员那里留下了好名声。"
+attrs = { arms = 1, stewardship = 1 }
+effect = { kind = "reputation", value = 5 }
+
+[[options]]
+question = "adulthood"
+key = "privateer"
+name = "在私掠船上当过水手"
+text = "你拿着私掠许可跟着船长抢过几条商船，刀法练出来了，名声却不太好听。"
+attrs = { arms = 2 }
+effect = { kind = "reputation", value = -5 }
+
+[[options]]
+question = "adulthood"
+key = "broker"
+name = "在交易所做经纪"
+text = "你在交易所的大厅里替人买卖远期的货，见识过一夜暴富，也见识过一夜倾家荡产。"
+attrs = { numeracy = 1, commerce = 1 }
+
+[[options]]
+question = "adulthood"
+key = "expedition"
+name = "随探险队远航"
+text = "你跟着一支探险队越过巨人之门，在新大陆的海岸边插过旗，回来时已经小有名气。"
+attrs = { seamanship = 1, eloquence = 1 }
+effect = { kind = "fame", value = 10 }
+
+[[questions]]
+key = "motive"
+title = "出海的理由"
+prompt = "是什么让你买下这条船、出海经商？"
+
+[[options]]
+question = "motive"
+key = "family_debt"
+name = "还清家族的债务"
+text = "家里欠下一大笔钱，你以家族的名义又借了一笔，赌上一切出海——赢了还清债务，输了一无所有。"
+attrs = { stewardship = 1 }
+effect = { kind = "loan", amount = 8000, months = 12 }
+
+[[options]]
+question = "motive"
+key = "lost_relative"
+name = "寻找失踪的亲人"
+text = "几年前，一位亲人随船出海再也没有回来。你手里只有他留下的一封信，信里提到了一个地方。"
+attrs = { seamanship = 1 }
+effect = { kind = "rumor" }
+
+[[options]]
+question = "motive"
+key = "fortune"
+name = "发一笔横财"
+text = "你见过别人靠一船胡椒成了富翁。这一次，轮到你了。"
+attrs = { commerce = 1 }
+
+[[options]]
+question = "motive"
+key = "new_world"
+name = "去新大陆看看"
+text = "你从小就听说巨人之门外有一片新大陆，那里的河流闪着银光。你想亲眼去看看。"
+attrs = { seamanship = 1 }
+effect = { kind = "chart", region = "silvermist" }
+
+[[options]]
+question = "motive"
+key = "escape_marriage"
+name = "逃离一桩婚约"
+text = "家里替你定下了一门亲事，你连对方的面都没见过。婚礼前一夜，你上了船。"
+attrs = { eloquence = 1 }
+effect = { kind = "reputation", value = -5 }
+
+[[options]]
+question = "motive"
+key = "freedom"
+name = "只为自由"
+text = "你不欠谁的，也不想替谁卖命。海那么大，你只想看看自己能走多远。"
+attrs = { arms = 1 }
+effect = { kind = "morale", value = 10 }
+
+# ── 推荐角色专属的身世选项（第九批）──
+# 写了 hero（带主角的剧本的 key）的选项只给那位推荐角色用：开局向导里不列出，别的剧本也不能选；
+# 每道问题在向导里仍至少要有两个不带 hero 的选项。其余写法与上面相同。
+
+# 罗塞拉·萨利纳（scenarios/05_rossella.toml）
+[[options]]
+question = "family"
+key = "salt_pans"
+hero = "rossella"
+name = "蒙特萨尔的盐田人家"
+text = "你家在蒙特萨尔的盐田上晒了四代盐。一家十二口挤在一间刷了白灰的屋子里，屋顶漏雨，盐却从来不缺。"
+attrs = { commerce = 1, stewardship = 1 }
+
+[[options]]
+question = "youth"
+key = "salt_runner"
+hero = "rossella"
+name = "替盐商跑腿"
+text = "十几岁起你替盐商送货收账。有一年运盐的驴车翻进了沟里，你一个人把十二袋盐全捞了回来——那之后大家都说，这孩子胆子小，手倒快得吓人。"
+attrs = { arms = 2 }
+
+[[options]]
+question = "adulthood"
+key = "salt_shop"
+hero = "rossella"
+name = "盐铺的伙计"
+text = "你在镇上唯一的盐铺当了三年伙计，称盐、记账、赔笑脸。老板说你算账从不出错，就是客人嗓门一大，你就想躲到柜台底下。"
+attrs = { commerce = 1, numeracy = 1 }
+
+# 诺埃尔·德·卡德纳（scenarios/06_noel.toml）
+[[options]]
+question = "family"
+key = "chain_order"
+hero = "noel"
+name = "守链骑士团的弃婴"
+text = "你是被人放在守链堡门口的弃婴，襁褓里只有一截红缎带。骑士团收养了你——那时团里只剩十一个人，全是老头子。"
+attrs = { arms = 1, eloquence = 1 }
+
+[[options]]
+question = "childhood"
+key = "oath_hall"
+hero = "noel"
+name = "在誓约厅里长大"
+text = "老骑士们教你认帝国的古字、擦剑、背誓词。你学什么都快，只是每天早上都起不来。"
+attrs = { numeracy = 1, arms = 1 }
+
+[[options]]
+question = "youth"
+key = "strait_watch"
+hero = "noel"
+name = "守望海峡"
+text = "你在巨人之门的岬角上守夜，看潮水一天两次倒灌进内海，也看着一条条商船大摇大摆地穿过那道早已没有铁链的海峡。"
+attrs = { seamanship = 2 }
+
+[[options]]
+question = "adulthood"
+key = "last_knighting"
+hero = "noel"
+name = "最后一次授勋"
+text = "十五岁那年，老团长出海之前给你授了勋——骑士团九百年来最后一次，也是最潦草的一次。他把自己的红缎带系在你的剑柄上，说“去看看门外面”，第二天就上了船。"
+attrs = { arms = 1, eloquence = 1 }
+effect = { kind = "fame", value = 5 }
+
+# 温星槎（scenarios/07_xingcha.toml）
+[[options]]
+question = "family"
+key = "treasure_fleet"
+hero = "xingcha"
+name = "宝船人家"
+text = "你父亲是瑶华宝船队的船长，母亲在朝岚的船坞里记账。你三岁就分得清罗盘上的二十四个方位，五岁就会看水色。"
+attrs = { seamanship = 1, numeracy = 1 }
+
+[[options]]
+question = "childhood"
+key = "star_raft"
+hero = "xingcha"
+name = "数领航星"
+text = "父亲出海的那些年，你每晚趴在窗台上看天河，数他教过你的那几颗领航星。三十一年前的那一夜，你数到一半就睡着了。"
+attrs = { numeracy = 1, seamanship = 1 }
+
+[[options]]
+question = "adulthood"
+key = "fleet_navigator"
+hero = "xingcha"
+name = "宝船队的领航"
+text = "你在宝船队做了二十年领航，走遍了南方海路上的每一道季风。市舶司的官员都说，有你在船头，宝船就不会迷路。"
+attrs = { seamanship = 1, stewardship = 1 }
+effect = { kind = "reputation", value = 8 }
+
+[[options]]
+question = "motive"
+key = "zhaoyuan"
+hero = "xingcha"
+name = "找到昭远号"
+text = "三十一年前，父亲掌舵的昭远号载着旧世界的国书，沉在了归航的路上。官府说是台风。你从来不信。"
+attrs = { seamanship = 1 }

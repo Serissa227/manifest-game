@@ -1,0 +1,213 @@
+# 请托：扎巴拉的火药（request_kalinyamat）。Claude 写（C13d，2026-10-25），仅中文。
+# 人物：卡林亚玛特女王（kalinyamat，生年不详，cast 占位 0；卒于 1579，女，扎巴拉之主）。cast：cast/historical_03_indian_ocean.toml。
+# 类型：混合（mixed）。五章：offer（报价）、supply（送货：米五十袋、硫磺二十担，到扎巴拉）、strait（去某处：数马六甲外海的巡船）、patrol（巡船拦下，转折）、report（女王见客，收尾）。终点 done / failed。
+# 报价：L（来信／代理人）。auto=true；offer 章 at=jepara，出面的是宰相（代理人，不新建 cast，offer 不写 speaker）。family=c13_offer_jepara，冷却 20 天；deadline 为 1574-05-31，timeout 直接 failed，不写见闻。
+# 窗口：以 when 的 date 条件表达（普通章不写 window、default）。offer 1573-06-01 至 1574-05-31；supply、strait、patrol 1573-06-01 起；report 至 1574-08-31。
+# 进行中：supply 期限 180 天，strait 期限 90 天，超时走 failed，各一封来信、好感 −3 或 −5，旗标 _late；report 期限至 1574-08-31。patrol 没有期限，只等两天。
+# 门禁：玩家 17 岁以上；名声 ≥ 30（表里 fame_gate）。请托人是历史人物，offer 之后的章节不写 age 条件。
+# 依据·史实背景：1574-10 至 1575-03 卡林亚玛特的舰队围攻马六甲，女王本人没有随军（cast 写明）。本条止于 1574-08-31，舰队的结果不写。扎巴拉以柚木造船；硫磺从琉球一带向外输出；火药要用硫磺。
+# 依据·原创：宰相、铜牌、粮仓管事、火药坊老匠人、马来渔夫、堡里的炮手、巡船军官、画了记号的木板。
+# 改动：表里的 gunpowder×10 改为 sulfur×20（数据里火药只在伊斯坦布尔、威尼斯有货，路程太远；硫磺是做火药的原料）。货款按 1.25 倍重算为 1500。
+# 秘密：“仇人不死便不着衣裳”的传说本条不写（没人敢当面提，她也不接）。
+# 口头禅：“先说一件我不知道的事，再谈别的。”只在 report 当面用一次。
+# 读的旗标：c13_main_kaicili（offer 的 variant：宰相认出凯奇利，只这一句；由主线第一章设，尚未写）；c13_request_kalinyamat_fort_weak（report 的 variant）；c13_request_kalinyamat_board_lost（report 的 variant）；c13_request_kalinyamat_half_count（patrol 的 variant）。
+# 设的旗标：accepted（offer 接下）、declined（offer 回绝）、rice_gift（supply 米不收钱）、counted（strait 数清了）、half_count（strait 数船检定失败）、fort_weak（strait 炮手）、board_lost（patrol 木板没了）、late（超时）、done（report 实话）、partial（report 讨好）。其中 accepted、declined、rice_gift、counted、late、partial、done 只设不读，留给别处。
+# 不设任何 c7_ 旗标；不用 relation / tie / bond / heart 效果；不写 bond 条件。
+# 依赖：港口 jepara、malacca（ports_southeast_asia.toml）；商品 rice、sulfur；技能 lang_portuguese；属性 seamanship、eloquence；势力 kalinyamat、portugal；人物 kalinyamat。B10b 改名：无需。
+# 报酬（各只给一次）：货款 1500（送米一路 750）＋报酬 4700（讨好 3000）；好感最多 +22（送米一路）；名声 +7；卡林亚玛特声望 +4、葡萄牙声望 −2；回忆 mem-request_kalinyamat-report。
+# 回忆插画清单：
+#   mem-request_kalinyamat-report「柚木船壳前的女王」：船厂高台上，女王站着，手边压着一张写满名字的纸；身后的柚木船壳一直架到棚顶。
+
+[[tracks]]
+key = "request_kalinyamat"
+name = "舰队出发之前"
+kind = "request"
+start = "offer"
+auto = true
+cast = ["kalinyamat"]
+
+# 一、柚木棚下的宰相：扎巴拉的船厂，宰相替女王传话。
+[[tracks.chapters]]
+key = "offer"
+title = "柚木棚下的宰相"
+text = "扎巴拉的船厂里，新的柚木船壳一排排架着，刨花堆到了脚边。女王的宰相在棚子底下见你，身后站着两个捧账册的书吏。他替女王传话，每一句都先停一停：“舰队要再去马六甲，不用你上阵。要五十袋米，二十担硫磺做火药。再要一条外人的船，进马六甲海峡，看清葡萄牙人的巡船停在哪里。”说到最后一句，他又说了一遍，“女王说，这一样最要紧。”"
+mood = "tense"
+at = "jepara"
+when = [{ kind = "date", from = [1573, 6, 1], to = [1574, 5, 31] }, { kind = "age", ge = 17 }, { kind = "fame", ge = 30 }]
+deadline = [1574, 5, 31]
+timeout = { next = "failed" }
+family = "c13_offer_jepara"
+family_cooldown_days = 20
+
+[[tracks.chapters.variants]]
+key = "v1_kaicili"
+when = [{ kind = "flag", flag = "c13_main_kaicili", value = true }]
+text = "扎巴拉的船厂里，新的柚木船壳一排排架着，刨花堆到了脚边。女王的宰相在棚子底下见你，身后站着两个捧账册的书吏。他看了你一会儿，问：“吉里出来的那位王子？”你还没答，他已经替女王传起话来：“舰队要再去马六甲，不用你上阵。要五十袋米，二十担硫磺做火药。再要一条外人的船，进马六甲海峡，看清葡萄牙人的巡船停在哪里。”说到最后一句，他又说了一遍，“女王说，这一样最要紧。”"
+
+[[tracks.chapters.choices]]
+key = "take"
+text = "接下：米、硫磺，还有海峡。"
+next = "supply"
+reply = "宰相把一枚铜牌交给你，牌面刻着扎巴拉的船纹，边上磨得发亮：“粮仓的人认这个。女王说，硫磺要干的，湿了的她不收。”"
+effects = [{ kind = "affinity", person = "kalinyamat", value = 2 }, { kind = "flag", flag = "c13_request_kalinyamat_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "no_fight"
+text = "接下，但说清楚：我只运货、只看，不打仗。"
+next = "supply"
+reply = "“女王不要你打仗。”宰相说，“她自己的人去打。她只要你看清楚，回来照实说：哪条船吃水深，哪根桅杆是新换的，都要说。”"
+effects = [{ kind = "affinity", person = "kalinyamat", value = 2 }, { kind = "flag", flag = "c13_request_kalinyamat_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "葡萄牙人的海峡，我这一季不进。"
+next = "failed"
+reply = "宰相点头，叫人把铜牌收回去。他走之前又看了一眼船壳，什么也没说。"
+effects = [{ kind = "flag", flag = "c13_request_kalinyamat_declined" }]
+
+# 二、粮仓与火药坊：米进仓，硫磺进火药坊，管事问钱怎么算。
+[[tracks.chapters]]
+key = "supply"
+title = "粮仓与火药坊"
+text = "米进了粮仓，一袋袋码到房梁下，袋口的麻绳上还挂着港口的湿沙。硫磺抬到火药坊，木桶一揭盖，黄色的粉末呛得人往后退。火药坊的老匠人捏起一撮，搓了搓，又凑近闻了闻，点头：“是干的。”粮仓的管事拿着铜牌对账，笔尖蘸了两次墨，抬头问你：“米钱和硫磺钱，是一起算，还是分开算？”"
+speaker = "captain"
+mood = "tense"
+at = "jepara"
+when = [{ kind = "alive", person = "kalinyamat", value = true }]
+objectives = [{ kind = "goods", good = "rice", qty = 50, at = "jepara", text = "把稻米（50）运到扎巴拉" }, { kind = "goods", good = "sulfur", qty = 20, at = "jepara", text = "把硫磺（20）运到扎巴拉" }]
+deadline_days = 180
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kalinyamat", value = -3 }, { kind = "flag", flag = "c13_request_kalinyamat_late" }, { kind = "letter", person = "kalinyamat", text = "扎巴拉的宰相来信：粮与硫磺已从别处备齐，火药坊不再等你。海峡的事，也另有人去了。女王说，这一回不怪你。" }] }
+news = "扎巴拉的粮仓收了五十袋米，火药坊收了二十担硫磺，老匠人闻过一撮，连说了三声好。"
+
+[[tracks.chapters.choices]]
+key = "both_paid"
+text = "一起算，照账付。"
+next = "strait"
+reply = "管事把钱一串一串数给你，每数完一串就在桌沿上掐一道。数完，他在账上画了个记号，和桌沿上的道数对得上。"
+effects = [{ kind = "cash", value = 1500 }, { kind = "affinity", person = "kalinyamat", value = 3 }]
+
+[[tracks.chapters.choices]]
+key = "rice_gift"
+text = "米不要钱，算是给出海的人的；只收硫磺钱。"
+next = "strait"
+reply = "管事愣了一下，抱着账本跑去禀报。回来时他说：“女王记下了。米的数，记在她自己的册子上。”"
+effects = [{ kind = "cash", value = 750 }, { kind = "affinity", person = "kalinyamat", value = 6 }, { kind = "flag", flag = "c13_request_kalinyamat_rice_gift" }]
+
+# 三、马六甲外海：葡萄牙人的堡在山上，要数清港外的巡船。
+[[tracks.chapters]]
+key = "strait"
+title = "马六甲外海"
+text = "马六甲外海，葡萄牙人的堡在山上，石墙被海风吹得发黄，旗杆上的十字旗一动不动。港外停着一排巡船，桅杆排成一线，船头都朝着海峡的方向。你要数清它们停在哪里、几条、什么时候换班。黄昏时外锚地风大，船上的灯一盏盏亮起来，灯影落在水上，晃得人眼花。堡墙上的哨兵换了一班，新来的先往外锚地看一眼。"
+speaker = "captain"
+mood = "tense"
+at = "malacca"
+when = [{ kind = "alive", person = "kalinyamat", value = true }]
+deadline_days = 90
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kalinyamat", value = -3 }, { kind = "flag", flag = "c13_request_kalinyamat_late" }, { kind = "letter", person = "kalinyamat", text = "扎巴拉的宰相来信：海峡的消息另有人带回来了。女王请你下一回早些来。" }] }
+news = "马六甲外锚地，一条外国船黄昏时停了很久，船上有人一直往山上葡萄牙人的堡那边看，天黑才走。"
+
+[[tracks.chapters.choices]]
+key = "count"
+text = "黄昏时在外锚地数船，数到天黑。"
+next = "patrol"
+reply = "七条大的，十几条小的。换班在月亮升起之前，小的先走，大的留到天亮。你把位置一条条画在一块木板上。"
+effects = [{ kind = "affinity", person = "kalinyamat", value = 3 }, { kind = "flag", flag = "c13_request_kalinyamat_counted" }]
+check = { attr = "seamanship", base = 20, per = 7 }
+fail = { next = "patrol", effects = [{ kind = "flag", flag = "c13_request_kalinyamat_half_count" }] }
+
+[[tracks.chapters.choices]]
+key = "fisherman"
+text = "买通一个给堡里送鱼的马来渔夫。"
+next = "patrol"
+reply = "渔夫每天进堡送鱼，哪条船修了舵、哪条船缺了人，他全知道，一条一条掰着指头数。他讲完说：“别说是我讲的。”"
+effects = [{ kind = "cash", value = -200 }, { kind = "affinity", person = "kalinyamat", value = 3 }, { kind = "flag", flag = "c13_request_kalinyamat_counted" }]
+requires = [{ kind = "cash", ge = 200 }]
+hint = "渔夫要的价，你出不起。"
+
+[[tracks.chapters.choices]]
+key = "gunners"
+text = "用葡萄牙话请堡里的炮手喝酒。"
+next = "patrol"
+reply = "炮手们喝多了，抱怨缺火药、缺人、缺饷，有一个说堡里的火药是去年受潮的。你一边陪笑，一边把他们的话一句句记在心里。"
+effects = [{ kind = "affinity", person = "kalinyamat", value = 3 }, { kind = "flag", flag = "c13_request_kalinyamat_counted" }, { kind = "flag", flag = "c13_request_kalinyamat_fort_weak" }]
+requires = [{ kind = "skill", skill = "lang_portuguese", ge = 60 }]
+hint = "你的葡萄牙话说不到让炮手放下心来的地步。"
+
+# 四、巡船拦下了你：你刚要出海峡，军官跳上甲板，要看那块木板。
+[[tracks.chapters]]
+key = "patrol"
+title = "巡船拦下了你"
+text = "你刚要出海峡，一条葡萄牙巡船从礁石后面绕过来，靠上你的船舷。军官跳上你的甲板，靴底踩得咯吱作响。船舷外的水里浮着一截断桨，他用靴尖把它踢开，问你在外锚地停那么久做什么，伸手去拿船舱里那块画了记号的木板。“这是什么？”他看着板上的线，又抬头看你，眼睛里没有笑。"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "kalinyamat", value = true }]
+objectives = [{ kind = "wait", days = 2 }]
+
+[[tracks.chapters.variants]]
+key = "v1_half_count"
+when = [{ kind = "flag", flag = "c13_request_kalinyamat_half_count", value = true }]
+text = "你刚要出海峡，一条葡萄牙巡船从礁石后面绕过来，靠上你的船舷。军官跳上你的甲板，靴底踩得咯吱作响。他问你在外锚地停那么久做什么，伸手去拿船舱里那块木板。板上的线只画了一半，雾起来的那一段是空的。“这是什么？”他看着空出来的地方，又抬头看你，眼睛里没有笑。"
+
+[[tracks.chapters.choices]]
+key = "bluff"
+text = "说木板是你记潮水的，你在等风。"
+next = "report"
+reply = "他看了看木板上的线，又看了看天，嘟囔着说这风确实不好。木板还给了你，他跳回自己的船上去了。"
+effects = [{ kind = "affinity", person = "kalinyamat", value = 3 }]
+check = { attr = "eloquence", base = 20, per = 7 }
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_kalinyamat_board_lost" }] }
+
+[[tracks.chapters.choices]]
+key = "cartaz"
+text = "掏钱买一张通行证，让他闭嘴。"
+next = "report"
+reply = "他收了钱，从怀里摸出一张盖了章的卡塔兹，墨还没干，吹了两下才递过来，还祝你一路顺风。"
+effects = [{ kind = "cash", value = -300 }, { kind = "affinity", person = "kalinyamat", value = 3 }]
+requires = [{ kind = "cash", ge = 300 }]
+hint = "通行证的价钱，你的钱袋付不起。"
+
+[[tracks.chapters.choices]]
+key = "run"
+text = "趁他回船的工夫，升满帆跑。"
+next = "report"
+reply = "你的船吃着风冲出了海峡。巡船追了半个时辰，船头的炮没有响，最后调头回去了，桅杆上的灯一直亮到看不见。"
+effects = [{ kind = "affinity", person = "kalinyamat", value = 3 }]
+check = { attr = "seamanship", base = 5, per = 8 }
+fail = { next = "report", effects = [{ kind = "flag", flag = "c13_request_kalinyamat_board_lost" }] }
+
+# 五、她问的那一句：船厂高台上，女王见你，只问一句。
+[[tracks.chapters]]
+key = "report"
+title = "她问的那一句"
+text = "女王在船厂高处的台子上见你。柚木船壳在下面一排排架到棚顶，锤子一下一下，压着说话的声音。她手边压着一张纸，纸上密密地写满了名字。她的手指从上往下点过去，点到一个名字就停一下，又往下点。通事站在一旁，她说的每一句，他都照样转成你的话。她先开口：“先说一件我不知道的事，再谈别的。”你说了。她听完，没有问船有几条，问的是：“如果是你，这一回去不去？”"
+speaker = "kalinyamat"
+mood = "tense"
+at = "jepara"
+when = [{ kind = "alive", person = "kalinyamat", value = true }]
+deadline = [1574, 8, 31]
+timeout = { next = "failed", effects = [{ kind = "affinity", person = "kalinyamat", value = -5 }, { kind = "flag", flag = "c13_request_kalinyamat_late" }, { kind = "letter", person = "kalinyamat", text = "扎巴拉的宰相来信：舰队已经备齐了，你的话来得晚。女王说，不怪你，海峡难走。" }] }
+news = "扎巴拉船厂的高台上，女王听一个外来的船长讲了半天马六甲，船厂里的锤子声一直没停。"
+
+[[tracks.chapters.variants]]
+key = "v1_fort_weak"
+when = [{ kind = "flag", flag = "c13_request_kalinyamat_fort_weak", value = true }]
+text = "女王在船厂高处的台子上见你。柚木船壳在下面一排排架到棚顶，锤子一下一下，压着说话的声音。她手边压着一张纸，纸上密密地写满了名字。她的手指从上往下点过去，点到一个名字就停一下，又往下点。通事站在一旁，她说的每一句，他都照样转成你的话。她先开口：“先说一件我不知道的事，再谈别的。”你说了。你又提到堡里的炮手，说他们抱怨缺火药，她点了一下头，没有追问。她听完，问的是：“如果是你，这一回去不去？”"
+
+[[tracks.chapters.variants]]
+key = "v2_board_lost"
+when = [{ kind = "flag", flag = "c13_request_kalinyamat_board_lost", value = true }]
+text = "女王在船厂高处的台子上见你。柚木船壳在下面一排排架到棚顶，锤子一下一下，压着说话的声音。她手边压着一张纸，纸上密密地写满了名字。她的手指从上往下点过去，点到一个名字就停一下，又往下点。通事站在一旁，她说的每一句，他都照样转成你的话。她先开口：“先说一件我不知道的事，再谈别的。”你说了。木板没了，你只能凭记性讲。她没有问木板的事，听完问的是：“如果是你，这一回去不去？”"
+
+[[tracks.chapters.choices]]
+key = "truth"
+text = "照实说：堡很硬，巡船很多；去，就要做好回不来的准备。"
+next = "done"
+reply = "她看着船厂里的柚木船壳，看了很久。“我知道回不来的人有多少。”她说，“上一回，我一个一个记着。”她让人付钱，没有说去还是不去。"
+effects = [{ kind = "cash", value = 4700 }, { kind = "affinity", person = "kalinyamat", value = 8 }, { kind = "fame", value = 7 }, { kind = "reputation", faction = "kalinyamat", value = 4 }, { kind = "reputation", faction = "portugal", value = -2 }, { kind = "memory", memory = "mem-request_kalinyamat-report", title = "柚木船壳前的女王" }, { kind = "flag", flag = "c13_request_kalinyamat_done" }]
+
+[[tracks.chapters.choices]]
+key = "pleasing"
+text = "说她想听的：堡里缺火药，这一回能成。"
+next = "done"
+reply = "她没有笑，也没有生气，只说：“你看见的，跟我想的一样。”赏钱照付，少了一些——不知是账房算的，还是她吩咐的。"
+effects = [{ kind = "cash", value = 3000 }, { kind = "affinity", person = "kalinyamat", value = 4 }, { kind = "fame", value = 7 }, { kind = "reputation", faction = "kalinyamat", value = 4 }, { kind = "reputation", faction = "portugal", value = -2 }, { kind = "flag", flag = "c13_request_kalinyamat_partial" }]

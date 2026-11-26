@@ -1,0 +1,129 @@
+# C13d 请托：真的劫镖（request_qin_hongying）。中文，Claude 写。
+# 人物：秦红缨 qin_hongying（1532-11-21 生，女；漳州月港镖局的女镖头，cast/story_eastasia.toml）。
+# 类型：打一仗（ft），带一条不打的路；3 章，offer → battle → after；没有 stage 章。
+# 报价：当面（T），报价港月港 yuegang。人物按日程在月港，auto=false，玩家“问请托”（ask:request_qin_hongying）启动；
+#   offer 章不写 at，目标是在港里找到她。
+# 窗口：offer 1569-01-01 至 1590-06-30（期限，超时走 failed，不写见闻）；battle 进入后 60 天内要打赢一仗；after 在广州结账，到 1590-12-31。
+# 依据：1567 年（隆庆元年）月港开海以后的白银贸易与镖局是史实背景；秦红缨、这趟十二箱银、托人劫镖的银号东家、
+#   镖旗与米袋压舱的空船都是原创。托人的东家只写成“月港一个被她拒了低价的银号东家”，不写名字，也不交官。
+# 解法：offer 三条路——跟船开打、外海夜里换船（seamanship 一般检定，失败被望见，转 battle）、回绝；
+#   battle 章救人是 stewardship 一般检定（失败降级：人还在发烧，好感少一点），或者追上去看清船尾的记号（设 mark 旗标）。
+#   打仗本身由目标 battle 1 计数，不认对手是谁。
+# 读的旗标（只读，不设）：无外部旗标。章内读自己设的 swapped（after 的 v1 变体）、mark（after 的 v2 变体）。
+# 设的旗标：c13_request_qin_hongying_accepted（接下，含换船失败后开打）、declined（回绝）、swapped（换船成功，没打）、
+#   mark（追上去看清了船尾的记号）、late（battle 超时）、done（结账）。每条终局只设一面。
+# 依赖：港口 yuegang、guangzhou 已有；人物与日程在 cast/story_eastasia.toml，无 B10b 改名。无主线门禁。
+# 秘密：cast 没写秘密；persona 里她和别人的私事不进入本请托任何一章。托人的东家不写名字。
+# 不写：沈知微、温星槎（C7 秦×沈 1565—68、温×秦 1555—67 已有，本轨道从 1569 起）；报酬数字（界面显示）；恋爱。
+# 回忆插画：mem-request_qin_hongying-after，一面洗得发白的红镖旗插在船头，旗角补过两道，船后是散不开的晨雾。
+
+[[tracks]]
+key = "request_qin_hongying"
+name = "真的劫镖"
+kind = "request"
+start = "offer"
+auto = false
+cast = ["qin_hongying"]
+
+# 一、先点人，再点银箱：镖局的院子里，十二口箱子。
+[[tracks.chapters]]
+key = "offer"
+title = "先点人，再点银箱"
+text = "镖局的院子里，天刚亮。秦红缨手里攥着一把竹筹，点一个人，往陶碗里丢一支，丢满十四支，才抬头看你。点完了人，她转向墙根下那一排箱子，十二口，封条上的红印还没干，她拿刀鞘挨个敲过去，听响。“这回的劫镖是真的。”她说得跟报菜价一样平，“托人的是谁，我知道，月港一个银号东家，想压我的镖价，被我顶回去了。你想问为什么不报官？报了官，银子先在衙门里住三个月。”她拿刀鞘点点你的船：“我要你的船跟着。遇上了就打，或者半路换船，让他们扑个空。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "date", from = [1569, 1, 1], to = [1590, 6, 30] }, { kind = "age", ge = 17 }]
+objectives = [{ kind = "person", person = "qin_hongying", text = "在港里找到她" }]
+deadline = [1590, 6, 30]
+timeout = { next = "failed" }
+
+[[tracks.chapters.choices]]
+key = "escort"
+text = "跟着她的船，遇上劫的就打。"
+next = "battle"
+reply = "她从墙角抽出一面镖旗，旗面洗得发白，边上补过两道，二话不说上了你的船，往船头一插，旗杆震得嗡嗡响。“插上这个，你就是镖局的人。”她拍了拍杆子，“少一个人，我不收钱。”"
+effects = [{ kind = "affinity", person = "qin_hongying", value = 2 }, { kind = "flag", flag = "c13_request_qin_hongying_accepted" }]
+
+[[tracks.chapters.choices]]
+key = "swap"
+text = "半夜在外海换船，让空镖船照原路走。"
+next = "after"
+reply = "夜里两条船并在一处，不点灯。秦红缨站在跳板口，一箱过去，她拿刀鞘在箱角敲一下，敲满十二下才叫人收跳板。空镖船上换上了封条一样的空箱，里头压的是米袋，吃水得对得上，镖旗也留给它挂着。天亮，那条船照原路走，你绕外海，一路没见人影。"
+check = { attr = "seamanship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "qin_hongying", value = 3 }, { kind = "flag", flag = "c13_request_qin_hongying_accepted" }, { kind = "flag", flag = "c13_request_qin_hongying_swapped" }]
+fail = { next = "battle", effects = [{ kind = "affinity", person = "qin_hongying", value = -2 }, { kind = "flag", flag = "c13_request_qin_hongying_accepted" }], news = "九龙江口外，夜里有人瞧见两条船并在一处搬箱子，月港镖局的银船没瞒住，天亮前就被盯上了。" }
+
+[[tracks.chapters.choices]]
+key = "decline"
+text = "你的船不押这趟镖。"
+next = "failed"
+reply = "她点点头，没劝。把陶碗里的竹筹倒出来，又从头点了一遍人。"
+effects = [{ kind = "flag", flag = "c13_request_qin_hongying_declined" }]
+
+# 二、倒在银箱上的镖师：出了九龙江口，两条快船从岛后头钻出来。
+[[tracks.chapters]]
+key = "battle"
+title = "倒在银箱上的镖师"
+text = "出了九龙江口第二天，雾刚散，两条快船从岛后头钻出来，直扑镖船。你把舵打满，船身横了过去，铳声压住了浪声。你打退的那条船挨了几下，帆都没收齐就掉了头，另一条见势不对，跟着溜了。镖船甲板上，一个年轻镖师倒在银箱上，左手还按着封条，血顺着红印往下淌。秦红缨没看箱子，蹲下去先摸他的脖子。“喘气。”她站起来，刀往箱盖上一拍，“出去多少人，我带回来多少。”"
+speaker = "captain"
+mood = "tense"
+when = [{ kind = "alive", person = "qin_hongying", value = true }, { kind = "date", from = [1569, 1, 1], to = [1590, 12, 31] }]
+objectives = [{ kind = "battle", wins = 1, text = "打退劫镖的船" }]
+deadline_days = 60
+news = "九龙江口外，月港镖局的银船被两条快船截住，一条外乡船横过来把劫船打跑了。"
+
+[tracks.chapters.timeout]
+next = "failed"
+effects = [{ kind = "affinity", person = "qin_hongying", value = -3 }, { kind = "letter", person = "qin_hongying", text = "镖我自己押到了，丢了两箱，人一个没少。你的船没来，旗我收回去了。下回你别插我的旗了。" }, { kind = "flag", flag = "c13_request_qin_hongying_late" }]
+news = "九龙江口外，月港镖局的银船被劫走了两箱银子，女镖头说人一个没少，自己押到了广州。"
+
+[[tracks.chapters.choices]]
+key = "surgeon"
+text = "把他接到你船上，让船医治。"
+next = "after"
+reply = "你把舱里的烈酒、干净布条和船医的针线一样样摆开，缝了九针，血止在第三针上。后半夜镖师醒了，睁眼第一句：“箱子呢？”秦红缨骂他：“箱子比你命长？”骂完，把自己的外衣脱下来盖在他身上。"
+check = { attr = "stewardship", base = 20, per = 7 }
+effects = [{ kind = "affinity", person = "qin_hongying", value = 5 }]
+fail = { next = "after", effects = [{ kind = "affinity", person = "qin_hongying", value = 2 }], news = "九龙江口外挨了一刀的年轻镖师，血是止住了，一路发着烧，到广州还要两个人扶着下船。" }
+
+[[tracks.chapters.choices]]
+key = "chase"
+text = "追上去，看清是谁家的船。"
+next = "after"
+reply = "你咬着那条船追出十几里。它的船尾刮掉了字号，新漆底下露着一个圈，圈里一个方孔，铜钱的样子。回来说给秦红缨听，她正拿布按着镖师的伤口，听完只说了一声：“果然。”手上的布没松。"
+effects = [{ kind = "affinity", person = "qin_hongying", value = 3 }, { kind = "flag", flag = "c13_request_qin_hongying_mark" }]
+
+# 三、镖行的嘴：广州的银号，十二口箱子一口一口交割。
+[[tracks.chapters]]
+key = "after"
+title = "镖行的嘴"
+text = "广州，银号的柜台后头算盘响成一片。秦红缨把十二口箱子一口一口抬上柜台，拿指甲挑开封条，掌柜过戥，她在边上报数，一路报到十二，才在条凳上坐下，要了碗凉茶，一口灌完。门口另一条凳上，那个年轻镖师肩上缠着布，嘴还不闲：“十二口，我数过。”她把碗往柜台上一扣：“东家那头，我不报官。你说，这口气怎么出？”"
+speaker = "captain"
+mood = "cheerful"
+at = "guangzhou"
+when = [{ kind = "alive", person = "qin_hongying", value = true }, { kind = "date", from = [1569, 1, 1], to = [1590, 12, 31] }]
+news = "广州的银号里，月港的女镖头交割了十二箱银子，一箱不少，交完才坐下喝了口水。"
+
+[[tracks.chapters.variants]]
+key = "v1_swapped"
+when = [{ kind = "flag", flag = "c13_request_qin_hongying_swapped" }]
+text = "广州，银号的柜台后头算盘响成一片。十二口箱子一口一口抬上柜台，秦红缨拿指甲挑开封条，掌柜过戥，她在边上报数，一路报到十二，才坐下喝了碗凉茶。空镖船比你们晚一天进港，船上的伙计蹲在码头上啃饼，说外海来了一帮人，爬上船翻了半天箱子，翻出几袋米，骂了一句，又下了船。秦红缨把碗往柜台上一扣：“东家那头，我不报官。你说，这口气怎么出？”"
+
+[[tracks.chapters.variants]]
+key = "v2_mark"
+when = [{ kind = "flag", flag = "c13_request_qin_hongying_mark" }]
+text = "广州，银号的柜台后头算盘响成一片。秦红缨把十二口箱子一口一口抬上柜台，拿指甲挑开封条，掌柜过戥，她在边上报数，一路报到十二，才坐下喝了碗凉茶。她从掌柜的账纸背面撕下一角，照你说的画了那个圈里带方孔的记号，画得很用力，看了半晌，揉成一团丢进炭盆。“东家那头，我不报官。你说，这口气怎么出？”"
+
+[[tracks.chapters.choices]]
+key = "guild"
+text = "让镖行的人都知道，往后没人替他押镖。"
+next = "done"
+reply = "她点头：“镖行的嘴，比衙门的板子疼。”当晚她在广州镖行的茶楼里坐了一圈，谁来敬酒，她就把事情说一遍，一个字不添，只省了东家的字号，不用报，行里的人自己会猜。镖金第二天一早送到你船上，还有一面叠得整整齐齐的镖旗：“插着它，月港没人拦你。”"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "qin_hongying", value = 8 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_qin_hongying_done" }, { kind = "memory", memory = "mem-request_qin_hongying-after", title = "船头的镖旗" }]
+
+[[tracks.chapters.choices]]
+key = "let_go"
+text = "算了，银子到了就好，别结仇。"
+next = "done"
+reply = "她抬了抬眼皮：“你心软，我不。”说完低头数镖金，数得很慢。数完推过来，镖旗她自己收走了，没留给你。走下跳板，她也没回头。"
+effects = [{ kind = "cash", value = 1600 }, { kind = "affinity", person = "qin_hongying", value = 4 }, { kind = "fame", value = 2 }, { kind = "flag", flag = "c13_request_qin_hongying_done" }]
